@@ -1,0 +1,110 @@
+trainer captain_riverwatch found under Trainers
+ground under captain_riverwatch after 10 frames at y=-1.90 (trainer y=-2.05)
+challenge: settle frame 0 at 30 ms, paused=false
+challenge: settle frame 10 at 194 ms, paused=false
+challenge: settle frame 20 at 354 ms, paused=false
+challenge: settle frame 30 at 518 ms, paused=false
+challenge: settle frame 40 at 701 ms, paused=false
+challenge: settle frame 50 at 865 ms, paused=false
+challenge: settled in 1015 ms
+challenge: press 1 at 1064 ms, panel open=true
+challenge: press 2 at 1250 ms, panel open=true
+challenge: press 3 at 1429 ms, panel open=true
+challenge: press 4 at 2172 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs captain_riverwatch
+dodge: blocked, steering +60 deg
+row captain_riverwatch opponent=mosshell_L13 strike=1 move=quick tell=0.85s policy=stand outcome=hit damage=24.4 gap_tell=4.62 gap_strike=4.61 moved=0.00 reach=7.39 cone=90 action=1 arena_off=2.50
+row captain_riverwatch opponent=mosshell_L13 strike=2 move=quick tell=0.85s policy=dodge outcome=hit damage=26.5 gap_tell=5.82 gap_strike=6.81 moved=0.96 reach=7.39 cone=90 action=0 arena_off=2.71
+row captain_riverwatch opponent=mosshell_L13 strike=3 move=quick tell=0.85s policy=stand outcome=hit damage=23.2 gap_tell=6.87 gap_strike=6.74 moved=0.00 reach=7.39 cone=90 action=1 arena_off=4.84
+row captain_riverwatch opponent=mosshell_L13 strike=4 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=6.69 gap_strike=9.83 moved=3.20 reach=7.39 cone=90 action=0 arena_off=4.97
+row captain_riverwatch opponent=mosshell_L13 strike=5 move=quick tell=0.85s policy=stand outcome=hit damage=23.1 gap_tell=6.85 gap_strike=6.68 moved=0.00 reach=7.39 cone=90 action=1 arena_off=9.89
+row captain_riverwatch opponent=mosshell_L13 strike=6 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=6.88 gap_strike=7.92 moved=1.16 reach=7.39 cone=90 action=0 arena_off=9.90
+row captain_riverwatch opponent=mosshell_L13 strike=7 move=quick tell=0.85s policy=stand outcome=hit damage=25.4 gap_tell=6.86 gap_strike=6.69 moved=0.00 reach=7.39 cone=90 action=1 arena_off=11.00
+row captain_riverwatch opponent=mosshell_L13 strike=8 move=quick tell=0.85s policy=dodge outcome=hit damage=24.6 gap_tell=6.85 gap_strike=6.83 moved=1.86 reach=7.39 cone=90 action=0 arena_off=11.00
+trainer captain_field found under Trainers
+ground under captain_field after 10 frames at y=-1.65 (trainer y=-1.43)
+challenge: settle frame 0 at 4 ms, paused=false
+challenge: settle frame 10 at 185 ms, paused=false
+challenge: settle frame 20 at 371 ms, paused=false
+challenge: settle frame 30 at 511 ms, paused=false
+challenge: settle frame 40 at 674 ms, paused=false
+challenge: settle frame 50 at 842 ms, paused=false
+challenge: settled in 999 ms
+challenge: press 1 at 1043 ms, panel open=true
+challenge: press 2 at 1225 ms, panel open=true
+challenge: press 3 at 1408 ms, panel open=true
+challenge: press 4 at 2112 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs captain_field
+row captain_field opponent=duskhush_L13 strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=12.1 gap_tell=4.57 gap_strike=4.55 moved=0.00 reach=6.76 cone=90 action=1 arena_off=2.50
+row captain_field opponent=duskhush_L13 strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=4.66 gap_strike=7.93 moved=3.33 reach=6.76 cone=90 action=0 arena_off=2.73
+row captain_field opponent=duskhush_L13 strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=12.9 gap_tell=6.19 gap_strike=5.75 moved=0.00 reach=6.76 cone=90 action=2 arena_off=7.10
+row captain_field opponent=duskhush_L13 strike=4 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.03 gap_strike=9.51 moved=3.49 reach=6.76 cone=90 action=0 arena_off=7.44
+row captain_field opponent=duskhush_L13 strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=10.9 gap_tell=6.25 gap_strike=5.80 moved=0.00 reach=6.76 cone=90 action=1 arena_off=11.00
+row captain_field opponent=duskhush_L13 strike=6 move=quick tell=0.90s policy=dodge outcome=hit damage=10.8 gap_tell=5.43 gap_strike=5.72 moved=1.16 reach=6.76 cone=90 action=0 arena_off=11.00
+row captain_field opponent=duskhush_L13 strike=7 move=quick tell=0.90s policy=stand outcome=hit damage=12.9 gap_tell=6.21 gap_strike=5.82 moved=0.00 reach=6.76 cone=90 action=1 arena_off=11.00
+row captain_field opponent=duskhush_L13 strike=8 move=quick tell=0.90s policy=dodge outcome=hit damage=10.8 gap_tell=6.20 gap_strike=5.96 moved=0.44 reach=6.76 cone=90 action=0 arena_off=11.00
+trainer captain_ridge found under Trainers
+ground under captain_ridge after 10 frames at y=4.84 (trainer y=4.87)
+challenge: settle frame 0 at 33 ms, paused=false
+challenge: settle frame 10 at 192 ms, paused=false
+challenge: settle frame 20 at 376 ms, paused=false
+challenge: settle frame 30 at 547 ms, paused=false
+challenge: settle frame 40 at 702 ms, paused=false
+challenge: settle frame 50 at 846 ms, paused=false
+challenge: settled in 1002 ms
+challenge: press 1 at 1044 ms, panel open=true
+challenge: press 2 at 1215 ms, panel open=true
+challenge: press 3 at 1410 ms, panel open=true
+challenge: press 4 at 2109 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs captain_ridge
+dodge: blocked, steering +60 deg
+dodge: blocked, steering -60 deg
+dodge: blocked, steering +120 deg
+dodge: blocked, steering -120 deg
+dodge: blocked, steering +60 deg
+dodge: blocked, steering -60 deg
+dodge: blocked, steering +60 deg
+dodge: blocked, steering -60 deg
+dodge: blocked, steering +120 deg
+row captain_ridge opponent=trailpup_L14 strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=22.9 gap_tell=4.63 gap_strike=4.62 moved=0.00 reach=6.65 cone=90 action=1 arena_off=2.50
+row captain_ridge opponent=trailpup_L14 strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=5.70 gap_strike=8.79 moved=3.02 reach=6.65 cone=90 action=0 arena_off=2.64
+row captain_ridge opponent=trailpup_L14 strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=20.0 gap_tell=6.11 gap_strike=5.69 moved=0.00 reach=6.65 cone=90 action=2 arena_off=6.33
+row captain_ridge opponent=trailpup_L14 strike=4 move=quick tell=0.90s policy=dodge outcome=hit damage=21.6 gap_tell=6.13 gap_strike=5.72 moved=0.00 reach=6.65 cone=90 action=0 arena_off=6.33
+row captain_ridge opponent=trailpup_L14 strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=22.0 gap_tell=6.11 gap_strike=6.17 moved=0.00 reach=6.65 cone=90 action=1 arena_off=5.95
+row captain_ridge opponent=trailpup_L14 strike=6 move=quick tell=0.90s policy=dodge outcome=hit damage=19.4 gap_tell=6.08 gap_strike=5.88 moved=0.58 reach=6.65 cone=90 action=0 arena_off=5.99
+row captain_ridge opponent=trailpup_L14 strike=7 move=quick tell=0.90s policy=stand outcome=hit damage=22.6 gap_tell=6.13 gap_strike=5.71 moved=0.00 reach=6.65 cone=90 action=2 arena_off=6.29
+row captain_ridge opponent=trailpup_L14 strike=8 move=quick tell=0.90s policy=dodge outcome=hit damage=23.1 gap_tell=6.10 gap_strike=5.79 moved=0.02 reach=6.65 cone=90 action=0 arena_off=6.31
+trainer warden_aldis found under WardenTrainer
+ground under warden_aldis after 0 frames at y=6.17 (trainer y=6.17)
+challenge: settle frame 0 at 2 ms, paused=false
+challenge: settle frame 10 at 140 ms, paused=false
+challenge: settle frame 20 at 313 ms, paused=false
+challenge: settle frame 30 at 477 ms, paused=false
+challenge: settle frame 40 at 645 ms, paused=false
+challenge: settle frame 50 at 796 ms, paused=false
+challenge: settled in 950 ms
+challenge: press 1 at 1004 ms, panel open=true
+challenge: press 2 at 1194 ms, panel open=true
+challenge: press 3 at 1377 ms, panel open=true
+challenge: press 4 at 1571 ms, panel open=true
+challenge: press 5 at 1777 ms, panel open=false
+challenge: 5 presses, fighting=true
+fight live vs warden_aldis
+dodge: blocked, steering +60 deg
+dodge: blocked, steering +60 deg
+row warden_aldis opponent=burrowback_L18 strike=1 move=quick tell=0.85s policy=stand outcome=hit damage=25.3 gap_tell=4.61 gap_strike=4.60 moved=0.00 reach=7.47 cone=90 action=1 arena_off=2.50
+row warden_aldis opponent=burrowback_L18 strike=2 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=5.61 gap_strike=8.62 moved=2.94 reach=7.47 cone=90 action=0 arena_off=2.62
+row warden_aldis opponent=burrowback_L18 strike=3 move=quick tell=0.85s policy=stand outcome=hit damage=23.2 gap_tell=6.92 gap_strike=6.75 moved=0.00 reach=7.47 cone=90 action=2 arena_off=7.31
+row warden_aldis opponent=burrowback_L18 strike=4 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=6.94 gap_strike=9.53 moved=2.76 reach=7.47 cone=90 action=0 arena_off=7.44
+row warden_aldis opponent=burrowback_L18 strike=5 move=quick tell=0.85s policy=stand outcome=hit damage=22.7 gap_tell=6.94 gap_strike=6.77 moved=0.00 reach=7.47 cone=90 action=1 arena_off=11.00
+row warden_aldis opponent=burrowback_L18 strike=6 move=quick tell=0.85s policy=dodge outcome=hit damage=23.7 gap_tell=6.95 gap_strike=6.75 moved=1.51 reach=7.47 cone=90 action=0 arena_off=11.00
+row warden_aldis opponent=burrowback_L18 strike=7 move=quick tell=0.85s policy=stand outcome=hit damage=23.5 gap_tell=6.96 gap_strike=6.80 moved=0.00 reach=7.47 cone=90 action=2 arena_off=11.00
+row warden_aldis opponent=burrowback_L18 strike=8 move=quick tell=0.85s policy=dodge outcome=hit damage=25.6 gap_tell=6.92 gap_strike=7.04 moved=1.81 reach=7.47 cone=90 action=0 arena_off=11.00
+PASS captain_riverwatch: player_hits=12 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS captain_field: player_hits=9 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS captain_ridge: player_hits=10 stand_strikes_landed=4 dodges_avoided=1/4 strikes=8
+PASS warden_aldis: player_hits=9 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving
