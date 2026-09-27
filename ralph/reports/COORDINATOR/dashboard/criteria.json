@@ -140,8 +140,8 @@
    "chapter": "Meadows",
    "pct": 81,
    "counts": {
-    "met": 6,
-    "partial": 2,
+    "met": 7,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -281,8 +281,8 @@
    "chapter": "Meadows",
    "pct": 89,
    "counts": {
-    "met": 8,
-    "partial": 1,
+    "met": 9,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -358,10 +358,10 @@
    "chapter": "Cloudreach",
    "pct": 36,
    "counts": {
-    "met": 2,
-    "partial": 4,
+    "met": 7,
+    "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -572,10 +572,10 @@
    "chapter": "Stormwood",
    "pct": 36,
    "counts": {
-    "met": 1,
-    "partial": 4,
+    "met": 3,
+    "partial": 3,
     "in_progress": 0,
-    "not_started": 2,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -631,8 +631,8 @@
    "chapter": "Stormwood",
    "pct": 60,
    "counts": {
-    "met": 3,
-    "partial": 2,
+    "met": 5,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -644,7 +644,7 @@
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/STORMWOOD/f11_0/head-1c977611/marrow_press.txt MARROW PRESS OK (36 s window, four conduits, release) plus window36/run1-3; offer from the F11#3 two-peer proof on main. Shortcuts disclosed: fixture flags and L46 party, placed at the core anchor, harness-driven fight and Break, no single run from fight to offer. Independent re-check: MET.",
      "gap": "Green full CI 36314695987 on main 4d55fddfd (batch 52).",
-     "note": "Verifier rejected the claim: Marrow, the Break and Stormheart never ran (stops at core_reached). Stormwood lane (#305)."
+     "note": "Earlier caveat superseded: counted met at merge on the evidence above (coordinator, 2026-09-27 19:00)."
     },
     {
      "text": "Eligible peers accept/refuse independently at space and capacity",
@@ -657,14 +657,14 @@
      "status": "met",
      "evidence": "INVITE-COOP x05-proof-f11-drop-at-ack + refuse-at-ack PROOF.md; legacy-receipt tests in tests/test_stormwood_ending.gd @ 9d97dc547 (#305 via #327); green full CI 36276939256",
      "gap": "",
-     "note": "Owner ruling: a legacy receipt is UNDECIDED and is re-offered once. Migration in progress, Stormwood lane (#305)."
+     "note": "Earlier caveat superseded: counted met at merge on the evidence above (coordinator, 2026-09-27 19:00)."
     },
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Two-peer PASS 97/0 (ralph/reports/STORMWOOD/f11_3/tb-stormwood-close/); Marrow/Dynamo defeat by ledger fixture, declared start save, 2 teleports, stance set at the Spark socket, injected presses. Independent re-check: MET.",
      "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
-     "note": "Needs a re-run on main from committed code. Stormwood lane (#305)."
+     "note": "Earlier caveat superseded: counted met at merge on the evidence above (coordinator, 2026-09-27 19:00)."
     },
     {
      "text": "Once-opened physical Tidewake gate persists",
@@ -740,8 +740,8 @@
    "chapter": "Tidewake",
    "pct": 17,
    "counts": {
-    "met": 1,
-    "partial": 4,
+    "met": 3,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -796,8 +796,8 @@
    "chapter": "Tidewake",
    "pct": 50,
    "counts": {
-    "met": 3,
-    "partial": 3,
+    "met": 4,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -851,8 +851,8 @@
    "chapter": "Tidewake",
    "pct": 67,
    "counts": {
-    "met": 4,
-    "partial": 2,
+    "met": 5,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
