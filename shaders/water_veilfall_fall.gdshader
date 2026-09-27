@@ -6,7 +6,7 @@ render_mode blend_mix, cull_disabled, depth_draw_never, diffuse_burley, specular
 // more geometry: the ribbon widens to a minimum angular width, and its
 // view-space position is pulled a small fraction toward the camera, which
 // leaves the projected shape unchanged but keeps distant terrain LOD from
-// swallowing it. COLOR.rgb carries the horizontal lateral direction and
+// swallowing it. COLOR.r/b carry the horizontal lateral direction and
 // COLOR.g half the column opacity, COLOR.a the authored width / 100 m. UV.x is across (0..1); UV.y is metres
 // from the lip.
 uniform vec4 foam_colour : source_color = vec4(0.96, 0.99, 1.0, 1.0);
@@ -14,6 +14,7 @@ uniform vec4 shade_colour : source_color = vec4(0.70, 0.84, 0.88, 1.0);
 uniform float flow_speed = 7.0;
 uniform float opacity = 0.94;
 uniform float edge_feather = 0.16;
+uniform float foot_feather_m = 24.0;
 uniform float min_angular_width = 0.012;
 uniform float depth_pull_fraction = 0.004;
 uniform float depth_pull_max_m = 30.0;
@@ -46,7 +47,8 @@ void vertex() {
 	float distance_m = length(world - camera);
 	float width_m = COLOR.a * 100.0;
 	float wanted = max(width_m, distance_m * min_angular_width);
-	vec3 lateral = COLOR.rgb * 2.0 - 1.0;
+	// Green stores opacity, not a direction: widening must stay horizontal.
+	vec3 lateral = vec3(COLOR.r * 2.0 - 1.0, 0.0, COLOR.b * 2.0 - 1.0);
 	world += lateral * (UV.x - 0.5) * (wanted - width_m);
 	v_distance = distance_m;
 	vec3 view = (VIEW_MATRIX * vec4(world, 1.0)).xyz;
@@ -68,20 +70,24 @@ void fragment() {
 	float stream = smoothstep(0.2, 0.8, broad * 0.7 + fine * 0.3);
 	// Far away the fine flow is sub-pixel; large slow bands of spray and thinner
 	// strands keep the column from reading as a painted stripe.
-	float far_band = noise(vec2(UV.x * 3.0, UV.y / 45.0 - TIME * 0.05));
-	float body = mix(smoothstep(0.1, 0.7, far_band + 0.25), stream, detail);
+	// Broad separated streams survive the distance fade; the former saturated
+	// noise made an almost solid white stripe as soon as detail faded out.
+	float far_band = noise(vec2(UV.x * 7.0, (UV.y - TIME * flow_speed) / 65.0));
+	float body = mix(smoothstep(0.2, 0.8, far_band), stream, detail);
 	float across = abs(UV.x - 0.5) * 2.0;
 	float core = 1.0 - smoothstep(0.2, 1.0, across);
-	float ragged = smoothstep(0.1, 0.55, body * 0.6 + core * 0.7);
+	float ragged = mix(0.3, 1.0, body) * mix(0.7, 1.0, core);
 	// The column's outline wanders down its length instead of a ruled edge.
 	float wander = 0.55 + 0.45 * noise(vec2(UV.x > 0.5 ? 3.0 : 7.0, UV.y / 22.0 - TIME * 0.08));
 	float edge = 1.0 - smoothstep(wander - edge_feather, wander, across);
 	float lip = smoothstep(0.0, 10.0, UV.y);
-	vec3 colour = mix(shade_colour.rgb, foam_colour.rgb, mix(0.55 + 0.45 * far_band, stream, detail));
+	// Fade into the plunge mist instead of exposing the last triangle row.
+	float foot = smoothstep(0.0, max(foot_feather_m, 0.001), UV2.y);
+	vec3 colour = mix(shade_colour.rgb, foam_colour.rgb, body);
 	ALBEDO = colour;
 	EMISSION = colour * night_lift;
 	ROUGHNESS = 0.55;
 	SPECULAR = 0.3;
-	ALPHA = opacity * strength * edge * lip * ragged;
+	ALPHA = opacity * strength * edge * lip * foot * ragged;
 	FOG = vec4(fog_colour, fog_enabled ? (1.0 - exp(-fog_density * v_distance)) * fog_keep : 0.0);
 }

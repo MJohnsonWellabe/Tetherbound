@@ -27,7 +27,6 @@ const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
 const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
-const MEADOWHART_BARE_BODY := preload("res://scripts/creatures/meadowhart_bare_body.gd")
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
@@ -539,6 +538,13 @@ func _build_placeholder() -> void:
 
 ## Load the species' model and fit it to the gameplay size. Returns false when
 ## there is nothing to load or it failed, so the caller can fall back.
+## Keep the complete Meadowhart source resident just as the former repair kept
+## its rebuilt mesh resident. Otherwise freeing the last body releases the
+## weakly cached scene, and the next spawn reloads another skin/material set.
+## One shared PackedScene replaces the old per-source stripped-mesh cache.
+static var _meadowhart_model_source: PackedScene
+
+
 func _build_model(look: Dictionary) -> bool:
 	var path := str(look.get("model", ""))
 	if path == "":
@@ -546,7 +552,13 @@ func _build_model(look: Dictionary) -> bool:
 	if not ResourceLoader.exists(path):
 		push_error("species '%s' names a model at %s that does not exist" % [species_id, path])
 		return false
-	var packed: PackedScene = load(path) as PackedScene
+	var packed: PackedScene
+	if species_id == "meadowhart":
+		if _meadowhart_model_source == null or _meadowhart_model_source.resource_path != path:
+			_meadowhart_model_source = load(path) as PackedScene
+		packed = _meadowhart_model_source
+	else:
+		packed = load(path) as PackedScene
 	if packed == null:
 		push_error("species '%s' model at %s did not load as a scene" % [species_id, path])
 		return false
@@ -558,27 +570,7 @@ func _build_model(look: Dictionary) -> bool:
 		push_error("species '%s' model root is not a Node3D" % species_id)
 		return false
 	_model.add_child(art)
-	# The installed Meadowhart source carries baked tack.  Strip it before
-	# bounds fitting so the unfitted production animal is actually bare and the
-	# later RideSaddle remains the sole fitted saddle silhouette.
-	var bare_config: Dictionary = {}
-	if species_id == "meadowhart":
-		var raw_bare_config: Variant = look.get("bare_body_repair", {})
-		if not raw_bare_config is Dictionary:
-			push_error("Meadowhart bare-body config is missing")
-			_release_art(art)
-			return false
-		bare_config = raw_bare_config as Dictionary
-		if not MEADOWHART_BARE_BODY.apply(art, bare_config):
-			push_error("Meadowhart bare-body production repair failed; refusing the misleading baked-tack art")
-			_release_art(art)
-			return false
 	_fit(art, float(look.get("model_scale", 1.0)))
-	if species_id == "meadowhart" \
-			and not MEADOWHART_BARE_BODY.bind_torso_to_rig(art, bare_config):
-		push_error("Meadowhart bare torso could not bind to its production rig")
-		_release_art(art)
-		return false
 
 	# Sourced models point in whatever direction their author chose, and there
 	# is no convention to rely on. Combat faces creatures along +Z (`facing()`),
@@ -593,11 +585,12 @@ func _build_model(look: Dictionary) -> bool:
 	return true
 
 
-## Read-only capture/smoke seam.  It reports the production repair node; it
-## does not create a saddle, pose a rider, or mutate the creature.
+## Read-only capture/smoke seam for the complete, authored bare-body skin.
+## Fitted tack is still supplied exclusively by RidingController.
 func meadowhart_bare_body_present() -> bool:
 	return species_id == "meadowhart" \
-		and _model.find_child(MEADOWHART_BARE_BODY.TORSO_NODE, true, false) != null
+		and _has_model \
+		and _model.find_child("MeadowhartBareBody", true, false) is MeshInstance3D
 
 
 ## Free a piece of art this body dressed, without the engine error every

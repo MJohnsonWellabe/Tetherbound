@@ -1251,6 +1251,27 @@ func steam_level() -> float:
 func _sky_cfg() -> Dictionary:
 	return _pres_cfg().get("sky_lightning", {})
 
+## F10#3 (code-blind judge): a decorative distant bolt on screen during a real
+## strike's ground warning read as "already striking elsewhere". While a
+## warning is drawn, stormwood_lightning.gd holds decorative bolts for its
+## telegraph; events in the hold become in-cloud flashes (Break's flash rhythm
+## and the photosensitivity budget are unchanged), and a bolt already on screen
+## goes out. Any drawn warning holds them, including another co-op player's
+## far away (conservative). Timing only, no look value.
+var _bolt_hold := 0.0
+
+func hold_sky_bolts(seconds: float) -> void:
+	if not bool(_sky_cfg().get("hold_bolts_during_warning", true)):
+		return
+	_bolt_hold = maxf(_bolt_hold, seconds)
+	# A bolt already on screen goes out now (a drop in light, not a new flash
+	# onset); the next _advance_sky_lightning hides its mesh.
+	for index in _bolt_levels.size():
+		_bolt_levels[index] = 0.0
+
+func sky_bolts_held() -> bool:
+	return _bolt_hold > 0.0
+
 func max_flashes_per_second() -> int:
 	return mini(3, int(_sky_cfg().get("max_flashes_per_second", 3)))
 
@@ -1291,6 +1312,7 @@ func bolt_level() -> float:
 func _advance_sky_lightning(delta: float) -> void:
 	var cfg := _sky_cfg()
 	_sky_clock += delta
+	_bolt_hold = maxf(0.0, _bolt_hold - delta)
 	# Decay first, then fire: a pulse fired this frame is drawn at full
 	# strength even when a frame is long (slow capture renders).
 	var reduced := MOTION_PREFS.reduced_motion()
@@ -1334,6 +1356,8 @@ func _advance_sky_lightning(delta: float) -> void:
 func _schedule_sky_event(cfg: Dictionary) -> void:
 	var reduced := MOTION_PREFS.reduced_motion()
 	var kind := "bolt" if _sky_rng.randf() < float(cfg.get("bolt_chance", 0.35)) else "cloud"
+	if kind == "bolt" and sky_bolts_held():
+		kind = "cloud"
 	var event := {"kind": kind, "at": _sky_clock, "first": true, "dir": _sky_direction(cfg, kind),
 		"seed": _sky_rng.randi(), "strength": _sky_rng.randf_range(float(cfg.get("cloud_strength_min", 0.35)), float(cfg.get("cloud_strength_max", 0.7)))}
 	_sky_pulses.append(event)
@@ -1359,12 +1383,16 @@ func _sky_direction(cfg: Dictionary, kind: String) -> Vector3:
 	return Vector3(sin(azimuth) * cos(elevation), sin(elevation), cos(azimuth) * cos(elevation)).normalized()
 
 func _fire_sky_pulse(pulse: Dictionary, cfg: Dictionary) -> void:
-	_note_onset(str(pulse.kind) + ("" if bool(pulse.get("first", false)) else "_flicker"))
+	# A bolt pulse scheduled before a warning started fires as cloud light only.
+	var held := str(pulse.kind) == "bolt" and sky_bolts_held()
+	_note_onset(("cloud" if held else str(pulse.kind)) + ("" if bool(pulse.get("first", false)) else "_flicker"))
 	var strength := float(pulse.strength)
 	var dir: Vector3 = pulse.dir
 	_cloud_flash_dir = dir
 	var scale := flash_motion_scale()
-	if str(pulse.kind) == "bolt":
+	if held:
+		_cloud_flash = maxf(_cloud_flash, strength * float(cfg.get("bolt_cloud_fraction", 0.8)) * scale)
+	elif str(pulse.kind) == "bolt":
 		_cloud_flash = maxf(_cloud_flash, strength * float(cfg.get("bolt_cloud_fraction", 0.8)) * scale)
 		_show_bolt(dir, int(pulse.seed), cfg, bool(pulse.get("first", false)))
 	else:

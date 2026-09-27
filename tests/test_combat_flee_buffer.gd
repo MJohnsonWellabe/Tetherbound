@@ -43,8 +43,12 @@ class Manager extends "res://scripts/combat/combat_manager.gd":
 	## The disengage EDGE for this tick. Injected `Input` edges are not
 	## observable from a deferred call, so the edge is the test's to set.
 	var run_edge := false
+	## The attack EDGE for this tick ("quick", "charged" or "").
+	var attack_edge := ""
 	func _flee_pressed() -> bool:
 		return run_edge
+	func _attack_pressed() -> String:
+		return attack_edge
 	func _ready() -> void:
 		set_physics_process(false)
 		_throw = ThrowAdapter.new()
@@ -151,7 +155,31 @@ func _case_a_run_while_aiming_is_the_aims_not_the_fights() -> void:
 		manager._tick_active(TICK)
 	assert_false(_fled(), "Run cancels an aim; it is not also buffered into a withdrawal")
 
+## The same loss for attacks: an enemy blow landing on the ally opens a 30ms
+## hitstop, and a quick pressed on that tick was dropped (main CI
+## verify-combat-shard after batch 26). Attack presses are recorded whatever
+## state the creature is in (COMBAT: input buffer 0.30s) and hitstop freezes
+## combat clocks, not input.
+func _case_an_attack_pressed_during_hitstop_is_buffered() -> void:
+	manager._input_guard = 0.0
+	manager._hitstop_left = 0.03
+	manager.attack_edge = "quick"
+	manager._tick_active(TICK)
+	manager.attack_edge = ""
+	assert_eq(manager._buffered_attack, "quick", "a quick pressed during hitstop is buffered")
+	assert_true(manager._buffer_left > 0.0, "the buffered press has its full buffer window")
+
+func _case_an_attack_during_hitstop_inside_the_guard_is_not_buffered() -> void:
+	manager._input_guard = 0.2
+	manager._hitstop_left = 0.03
+	manager.attack_edge = "charged"
+	manager._tick_active(TICK)
+	manager.attack_edge = ""
+	assert_eq(manager._buffered_attack, "", "the engage press's guard still owns the attack buttons")
+
 const CASES := ["_case_a_run_pressed_during_hitstop_is_honoured_after_it",
+	"_case_an_attack_pressed_during_hitstop_is_buffered",
+	"_case_an_attack_during_hitstop_inside_the_guard_is_not_buffered",
 	"_case_a_run_pressed_during_the_opening_guard_survives_it",
 	"_case_a_run_survives_the_guard_plus_hits_inside_it", "_case_a_stale_run_expires",
 	"_case_a_run_while_aiming_is_the_aims_not_the_fights"]

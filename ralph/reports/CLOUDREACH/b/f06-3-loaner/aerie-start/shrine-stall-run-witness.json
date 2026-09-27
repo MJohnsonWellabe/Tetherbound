@@ -1,0 +1,89 @@
+{
+  "accelerated": true,
+  "combat_mode": "mechanics_only_test_lethal",
+  "criterion": "F06#3",
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Walking stalled toward (1121.0, 1050.0, 2938.5)",
+      "position": "(1099.003, 1051.301, 2941.399)",
+      "simulated_seconds": 177.9,
+      "stage": "shrine_vane_east",
+      "wall_seconds": 180.321435
+    }
+  ],
+  "final_party": [
+    "sparkit",
+    "mudsnout",
+    "bramblebun",
+    "terrapup",
+    "brooktail"
+  ],
+  "flight_frames": 8815,
+  "initial_party_keys": [
+    "creature-b3f4d1cf6c96fd08c5170352b705c55c",
+    "creature-615d523bf307eaa2b2116178892b94f9",
+    "creature-d0fbacca13f8b3ba65aa7de84cd615db",
+    "creature-d1cea8f9b0261313979524bc54635eac",
+    "creature-50c225bb044fbc90d14fa1986b2671be"
+  ],
+  "launches": [
+    {
+      "fly_unlocked": false,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(400.0224, 611.3935, 3248.483)",
+      "stage": "flight_trial_start",
+      "trial_active": true
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(400.2994, 611.3935, 3251.096)",
+      "stage": "witness_sealed_upper_attempt",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(398.787, 611.3935, 3250.568)",
+      "stage": "mandatory_high_roost_flight",
+      "trial_active": false
+    }
+  ],
+  "leg": "flight",
+  "leg_persistence": {},
+  "loaner_frames": 8815,
+  "loaner_species": "galecrest",
+  "owned_carrier_frames": 0,
+  "passed": false,
+  "pre_trial_probe": {
+    "eligible_carrier": false,
+    "fly_unlocked": false,
+    "flying_after_double_jump": false,
+    "position": "(387.9039, 610.4971, 3257.651)",
+    "trial_active": false
+  },
+  "sealed_attempt": {
+    "closest_gap_to_box_m": 0.750732421875,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.4938, 723.84, 3599.249)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "peak_y_after_lift": 770.281311035156,
+    "refused_after_frames": 1406,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
+  "skipped_steps": 21,
+  "stage": "shrine_vane_east",
+  "start_state": "DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward",
+  "violations": []
+}
