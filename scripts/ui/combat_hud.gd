@@ -684,8 +684,14 @@ func _draw_enemy() -> void:
 	if bool(_manager.call("is_resolving_catch")) or str(_manager.call("outcome")) != "":
 		_telegraph.text = ""
 	elif bool(_manager.call("enemy_is_winding_up")):
-		_telegraph.text = "!  incoming — move"
-		_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
+		# F04#0: a heavy (Earth Fist, an ACE's final-exam strike) reads apart
+		# from an ordinary one -- the judge saw both under one warning.
+		if _manager.has_method("enemy_windup_is_heavy") and bool(_manager.call("enemy_windup_is_heavy")):
+			_telegraph.text = "!!  HEAVY — get clear"
+			_telegraph.add_theme_color_override("font_color", UITokens.DANGER)
+		else:
+			_telegraph.text = "!  incoming — move"
+			_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
 	elif bool(_manager.call("enemy_is_rooted")) and not bool(_manager.call("player_is_staggered")):
 		# Not while your own creature is staggered: it cannot act on "hit it",
 		# and the red stagger banner beneath said the opposite at the same time.

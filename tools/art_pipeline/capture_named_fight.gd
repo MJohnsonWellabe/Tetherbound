@@ -47,6 +47,12 @@ const CAP_DODGE_TAIL_S := 0.25
 var _tell_frames := false
 const CAP_TELL_FRAME_LIMIT := 4
 var _cap_tells: Array[Dictionary] = []
+## `--live-member=<trainer>:<index>,...`: before the in-fight frames, resolve
+## the trainer's earlier creatures (the same `_begin_resolve("won")` the
+## aftermath uses) until team member <index> is out, so the frames show the
+## creature that carries the fight's named shape (BOSSES 4.2-4.5: Halder's
+## CHARGER, Vess's DIVER, the Warden's ACE). DISCLOSED shortcut.
+var _live_member := {}
 var _tell_source: Node = null
 ## `--keep-alive` (DISCLOSED harness help): tops the player's active creature
 ## back up when it falls below KEEP_ALIVE_FRACTION, so a level-3 capture
@@ -76,6 +82,9 @@ func _run() -> void:
 			_dodge = true
 		elif arg == "--tell-frames":
 			_tell_frames = true
+		elif arg.begins_with("--live-member="):
+			for pair: String in arg.trim_prefix("--live-member=").split(",", false):
+				_live_member[pair.get_slice(":", 0)] = int(pair.get_slice(":", 1))
 		elif arg == "--keep-alive":
 			_keep_alive = true
 		elif arg.begins_with("--after-frames="):
@@ -146,6 +155,25 @@ func _on_tell(seconds: float) -> void:
 	_cap_tells.append({"n": _cap_tells.size() + 1, "seconds": seconds,
 		"frame": Engine.get_physics_frames(), "dodge": dodge, "saved": {}})
 	print("tell %d: %.2fs, policy %s" % [_cap_tells.size(), seconds, "dodge" if dodge else "stand"])
+
+
+func _advance_to_member(index: int) -> void:
+	var team: Array = _spec.get("team", _spec.get("creatures", [])) as Array
+	if index <= 0 or index >= team.size():
+		return
+	var want := str((team[index] as Dictionary).get("species", (team[index] as Dictionary).get("species_id", "")))
+	for step in 400:
+		var enemy: RefCounted = _manager.get("_enemy")
+		if bool(_manager.call("is_fighting")) and enemy != null and str(enemy.get("species_id")) == want:
+			for i in 60:
+				await physics_frame
+			print("live member %d (%s) out vs %s after %d steps (earlier members resolved: disclosed)" % [index, want, _tid, step])
+			return
+		if bool(_manager.call("is_fighting")):
+			_manager.call("_begin_resolve", "won")
+		for i in 6:
+			await physics_frame
+	print("LIVE MEMBER %d (%s) NEVER CAME OUT vs %s" % [index, want, _tid])
 
 
 func _cap_since(tell: Dictionary) -> float:
@@ -234,6 +262,8 @@ func _capture_one() -> bool:
 		print("FIGHT DID NOT START vs %s" % _tid)
 		return false
 	print("fight live vs %s" % _tid)
+	if _live_member.has(_tid):
+		await _advance_to_member(int(_live_member[_tid]))
 	_cap_tells.clear()
 	_tell_source = null
 	var on_hit := func(on_enemy: bool, amount: float) -> void:

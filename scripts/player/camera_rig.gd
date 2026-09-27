@@ -40,6 +40,8 @@ var _deadzone: float = 0.18
 var _invert_y: bool = false
 var _follow_lag: float = 14.0
 var _recover_speed: float = 4.0
+## Exploration's `collision_recover_speed`, restored by an empty profile.
+var _base_recover_speed: float = 4.0
 
 ## How far the arm stops short of whatever it hit. SpringArm3D's own property;
 ## kept here as a named default so it is data-driven like the rest of the rig
@@ -238,6 +240,7 @@ func _load_config() -> void:
 	_invert_y = bool(cfg.get("invert_y", false))
 	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
 	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
+	_base_recover_speed = _recover_speed
 	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
 	_probe_radius = float(cfg.get("collision_probe_radius", _probe_radius))
 	_base_distance = _distance
@@ -273,6 +276,11 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_distance = float(profile.get("distance", _base_distance))
 	_height = float(profile.get("height", _base_height))
 	_retarget_lag = float(profile.get("retarget_lag", 0.0))
+	# F04#7: a profile may carry its own arm recovery speed. The combat arm
+	# wants 9.5m plus framing (13-24m measured) against exploration's 5.2m, and
+	# at exploration's 4 m/s it spent the first 2-4s of every fight short
+	# enough to put the lens inside the creatures (code-blind judge, F04).
+	_recover_speed = float(profile.get("collision_recover_speed", _base_recover_speed))
 	_shoulder = float(profile.get("shoulder_offset", 0.0))
 	_sensitivity_scale = float(profile.get("sensitivity_scale", 1.0))
 	_response_exponent = maxf(float(profile.get("response_exponent", 1.0)), 0.1)
@@ -570,6 +578,22 @@ func _apply_tracking(delta: float) -> void:
 		float(_tracking_config.get("max_speed_deg", 120.0)))) * delta
 	yaw = wrapf(yaw + clampf(correction * strength * delta, -max_step, max_step), -PI, PI)
 	rotation = Vector3(pitch, yaw, 0.0)
+
+
+## F04#7: cut straight to the tracker's neutral composition. Combat calls
+## this once when a fight opens (combat.json `tracking.snap_on_open`): the
+## exploration yaw left from walking up to a trainer ran the arm back through
+## the opponent just sent out, `body_clear` pinned the lens at its 2m floor
+## inside the player's creature, and the tracker needed ~0.75s at its 120
+## deg/s cap to swing clear (tools/f04_fight_camera_probe.gd). Returns
+## whether it moved.
+func snap_to_tracking() -> bool:
+	var neutral: Variant = _tracking_neutral_yaw()
+	if neutral == null:
+		return false
+	yaw = wrapf(float(neutral), -PI, PI)
+	rotation = Vector3(pitch, yaw, 0.0)
+	return true
 
 
 ## The yaw the neutral combat tracker aims for BEFORE any clear-orbit swing,

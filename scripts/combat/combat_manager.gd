@@ -956,6 +956,8 @@ func _take_camera() -> void:
 		var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
 			.get("tracking", {}) as Dictionary
 		_camera_rig.call("set_tracking_target", _wild, tracking)
+		if bool(tracking.get("snap_on_open", false)) and _camera_rig.has_method("snap_to_tracking"):
+			_camera_rig.call("snap_to_tracking")
 
 
 ## OP23-02 (owner playtest 2026-08-23): "teleported to the stronghold, battle
@@ -4004,6 +4006,18 @@ func player_is_committed() -> bool:
 ## moving out of the way.
 func enemy_is_winding_up() -> bool:
 	return _wild != null and bool(_wild.call("is_winding_up"))
+
+
+## F04#0: true while the current wind-up is a heavy -- a tell authored at or
+## above combat.json `telegraph.heavy_tell_s` (BOSSES: Earth Fist's 1.1s, the
+## ACE's 1.1s). The HUD names it differently from an ordinary strike so a
+## heavy and a quick no longer share one warning (code-blind judge, F04).
+func enemy_windup_is_heavy() -> bool:
+	if not enemy_is_winding_up() or not _wild.has_method("combat_config"):
+		return false
+	var cfg: Dictionary = _wild.call("combat_config")
+	var floor_s := float((MATH.config().get("telegraph", {}) as Dictionary).get("heavy_tell_s", 1.1))
+	return float(cfg.get("telegraph", 0.0)) >= floor_s - 0.001
 
 
 ## True while the enemy is rooted — winding up or recovering. The recovery half
