@@ -478,8 +478,8 @@
     {
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
      "status": "partial",
-     "evidence": "Finale pending/restore fixes and test_cloudreach_finale on main fe07d0d2; smoke_cloudreach_finale not in CI, fails in lane container",
-     "gap": "Normal-input finale witness passing",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/b/f08-0-veyra-exam/earned-tightened/ (WITNESS PASS, EXIT 0, run at d01c0e7b with the tightened assertions). Shortcuts disclosed: earned c1_arrival checkpoint start; accelerated clock (fights at 1x); live-combat pilot writes camera yaw; --fail-exam-first idle pilot for the planned loss; Title Load by signal emit and reload by direct save/load; held Fly input; 3 relay legs stick-walked around lee windbreaks; arc active in the arena only during Overload. Independent re-check: MET.",
+     "gap": "Landing in batch 50; flips on the next green full CI.",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {

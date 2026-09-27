@@ -285,13 +285,13 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 	var roll_mark := int(camp._bedroll.get_meta("placed_index", -1))
 	if not await _reload_transition(game, "rested_team"):
 		_finish(false)
-		return
+		return false
 	# The rebuilt world stood the placed camp back up from the save; re-find
 	# its beds and bedroll by their saved placement index for the bracket's
 	# recovery (the pre-reload nodes are gone).
 	if OS.get_cmdline_user_args().has("--reload-at-transitions") and not _refind_camp(camp, bed_marks, roll_mark):
 		_finish(false)
-		return
+		return false
 	if OS.get_cmdline_user_args().has("--through-rest"):
 		_finish(true)
 		return false
