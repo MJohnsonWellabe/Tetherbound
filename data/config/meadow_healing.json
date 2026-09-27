@@ -32,6 +32,19 @@
       ],
       "stronghold_works": [
         "stronghold_works"
+      ],
+      "highfield": [
+        {
+          "id": "highfield_pasture",
+          "centre": [
+            398.0,
+            5872.0
+          ],
+          "radius": 62.0,
+          "inner": 30.0,
+          "strength": 0.85,
+          "_why": "F05#7 round 7 (owner: the Highfield's healed state must change the ground, not only bring the herd). The terrain bake never drained the Highfield, so its drained ground is authored here: the pasture round the herd site, drained while the herd is gone and green again when it comes back."
+        }
       ]
     },
     "cell": 2.0,
@@ -43,14 +56,74 @@
     "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
     "normal_depth": 0.34,
     "uv_scale": 0.27,
-    "tint": "#e9dfc0",
+    "tint": "#a8d890",
     "edge_jitter_m": 4.0,
     "_comment_edge": "edge_jitter_m: the falloff is read at a deterministic per-corner offset of up to this many metres, so the regreen's contour is ragged, not a stencil (blind round 4).",
     "radius_scale": 1.25,
     "inner_scale": 2.2,
-    "value": 1.08,
+    "value": 1.12,
     "view_bias": 0.45,
-    "_comment_round6": "F05#7 round 6. The pale hard-edged polygon a blind judge saw at the works (round 5, h08) is the BAKE's own splat swap to soil, blocky and inside the authored radius; at max_alpha 0.7 it showed through the regreen, and a regreen that stopped at the same radius shared its contour. Now: full cover over the whole scar (inner_scale widens the fully-drained core, max_alpha 1.0), reaching radius_scale past it so the feathered edge (meadow_healing.gd OVERLAY_SHADER: world-noise threshold, feather_scale/feather_amount/feather_soft) falls on ordinary grass, on a finer 2 m cell with a view_bias decal pull so the slope no longer clips it. value lifts the texture toward the lit field around it."
+    "_comment_round6": "F05#7 round 6. The pale hard-edged polygon a blind judge saw at the works (round 5, h08) is the BAKE's own splat swap to soil, blocky and inside the authored radius; at max_alpha 0.7 it showed through the regreen, and a regreen that stopped at the same radius shared its contour. Now: full cover over the whole scar (inner_scale widens the fully-drained core, max_alpha 1.0), reaching radius_scale past it so the feathered edge (meadow_healing.gd OVERLAY_SHADER: world-noise threshold, feather_scale/feather_amount/feather_soft) falls on ordinary grass, on a finer 2 m cell with a view_bias decal pull so the slope no longer clips it. value lifts the texture toward the lit field around it.",
+    "reach": {
+      "_comment": "F05#7 round 7 (owner: the healed land must read as green grass out to the far field, not as a near-field colour grade). Regreen-only discs per group: the healed green carries out over the field the player looks across at each healed place; the drained BEFORE state keeps to the stations (drain_groups never reads this). Same falloff grammar as a station.",
+      "approach": [
+        {
+          "id": "approach_valley",
+          "centre": [
+            -20.0,
+            7400.0
+          ],
+          "radius": 150.0,
+          "inner": 80.0,
+          "strength": 0.9
+        }
+      ],
+      "stronghold_works": [
+        {
+          "id": "works_slopes",
+          "centre": [
+            -5.0,
+            7545.0
+          ],
+          "radius": 95.0,
+          "inner": 45.0,
+          "strength": 0.9
+        }
+      ],
+      "quarry": [
+        {
+          "id": "quarry_floor",
+          "centre": [
+            405.0,
+            1800.0
+          ],
+          "radius": 55.0,
+          "inner": 28.0,
+          "strength": 0.9
+        }
+      ],
+      "highfield": [
+        {
+          "id": "highfield_meadow",
+          "centre": [
+            398.0,
+            5880.0
+          ],
+          "radius": 110.0,
+          "inner": 55.0,
+          "strength": 0.9
+        }
+      ]
+    },
+    "desaturate": -0.12,
+    "field_green": {
+      "enabled": true,
+      "tint": "#5f9e3c",
+      "amount": 0.5,
+      "fade_seconds": 6.0,
+      "_comment": "F05#7 round 7: after the drain lifts, the grass field's live blades inside every regreen disc lean toward this lush green at full density (meadow_healing.gd::_green_the_field, through the field's own drain channel with drain_thin 0). TUNABLE."
+    },
+    "_comment_round7": "F05#7 round 7: tint/value/desaturate (negative = saturate) push the installed grass texture from its olive H67 toward a lush spring green; reach carries it over the far field."
   },
   "bloom": {
     "enabled": true,

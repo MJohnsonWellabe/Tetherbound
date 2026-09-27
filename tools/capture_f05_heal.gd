@@ -65,6 +65,8 @@ var _last_delta := 0.0
 
 func _process(delta: float) -> bool:
 	_last_delta = delta
+	if _player != null:
+		_hide_transient_hud()
 	if _look != null and is_instance_valid(_look):
 		_look.set("_elapsed_seconds", HOLD_CLOCK_S)
 	return false
@@ -245,7 +247,26 @@ func _shot(name: String, flat: Vector2, target: Vector3, pitch_deg: float, settl
 	await _grab(name)
 
 
+## Disclosed staging (blind round 6, defect 11: the HUD differed between the
+## before and after frames): the transient HUD -- the team panel, the toast
+## strip, the objective hint card and the region title card -- is hidden the
+## same way in every frame, right before it is drawn. The persistent HUD
+## (objective, minimap, hotbar, bars) stays as the player sees it.
+const TRANSIENT_HUD := [&"_party_strip", &"_hotbar_message", &"_objective_hint_card",
+	&"_objective_hint_card_backing", &"_region_banner"]
+
+
+func _hide_transient_hud() -> void:
+	for hud: Node in _world.find_children("*", "CanvasLayer", true, false) + root.find_children("*", "CanvasLayer", true, false):
+		for key: StringName in TRANSIENT_HUD:
+			if key in hud:
+				var control := hud.get(key) as CanvasItem
+				if control != null and is_instance_valid(control):
+					control.visible = false
+
+
 func _grab(name: String) -> void:
+	_hide_transient_hud()
 	var path := "%s/%s.png" % [_out, name]
 	RenderingServer.force_draw(false)
 	root.get_texture().get_image().save_png(path)

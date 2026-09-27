@@ -113,7 +113,7 @@ void fragment() {
 	vec2 uv = v_world.xz * uv_scale;
 	vec3 tex = texture(albedo_tex, uv).rgb;
 	float lum = dot(tex, vec3(0.299, 0.587, 0.114));
-	ALBEDO = mix(tex, vec3(lum), desaturate) * tint.rgb * value;
+	ALBEDO = clamp(mix(tex, vec3(lum), desaturate), 0.0, 1.0) * tint.rgb * value;
 	if (use_normal) {
 		NORMAL_MAP = texture(normal_tex, uv).rgb;
 		NORMAL_MAP_DEPTH = normal_depth;
@@ -324,6 +324,7 @@ func apply(immediate: bool = false) -> Dictionary:
 		"regreened": _regreen_the_scars(immediate),
 		"lights_killed": _kill_the_tether_lights(),
 		"drain_lifted": _lift_the_drain(immediate),
+		"field_greened": _green_the_field(immediate),
 		# After the lights: what falls is already dead.
 		"pylons_toppled": _topple_the_pylons(immediate),
 		"herd_returned": _return_the_herd(),
@@ -396,12 +397,21 @@ func heal_stations(station_ids: Array, immediate: bool = false) -> Dictionary:
 ## if* ("a before/after frame shows no ground change inside the site radius").
 func _station_discs(station_ids: Array) -> Array:
 	var wanted: Dictionary = {}
+	var inline: Array = []
 	for raw: Variant in station_ids:
+		# F05#7 round 7: an entry may be an authored disc of its own
+		# ({id, centre, radius, inner, strength}) for ground the terrain bake
+		# never drained (the Highfield), read exactly like a station.
+		if raw is Dictionary:
+			var disc := inline_disc(raw as Dictionary)
+			if not disc.is_empty():
+				inline.append(disc)
+			continue
 		var id := str(raw)
 		if not id.is_empty():
 			wanted[id] = true
 	if wanted.is_empty():
-		return []
+		return inline
 	var terrain := _load_json(TERRAIN_PATH)
 	var discs: Array = []
 	for raw: Variant in ((terrain.get("drains", {}) as Dictionary).get("stations", []) as Array):
@@ -422,6 +432,37 @@ func _station_discs(station_ids: Array) -> Array:
 		})
 	for missing: String in wanted.keys():
 		push_warning("meadow_healing: no drain station '%s' in terrain_playground.json" % missing)
+	discs.append_array(inline)
+	return discs
+
+
+## One authored config disc as a station disc, or {} when malformed. Pure.
+static func inline_disc(entry: Dictionary) -> Dictionary:
+	var centre: Array = entry.get("centre", [])
+	if centre.size() < 2 or float(entry.get("radius", 0.0)) <= 0.0:
+		return {}
+	return {
+		"id": str(entry.get("id", "inline")),
+		"centre": Vector2(float(centre[0]), float(centre[1])),
+		"radius": float(entry["radius"]),
+		"inner": float(entry.get("inner", 0.0)),
+		"strength": float(entry.get("strength", 1.0)),
+	}
+
+
+## F05#7 round 7: the regreen discs of one group -- its stations scaled by
+## `radius_scale`/`inner_scale`, plus the group's `reach` discs (regreen only:
+## the healed green carries out over the surrounding field the player looks
+## across, while the drained BEFORE state keeps to the stations). Stable order.
+func regreen_discs(group_name: String) -> Array:
+	var block: Dictionary = _config.get("regreen", {})
+	var groups: Dictionary = block.get("groups", {})
+	var discs := scaled_discs(_station_discs(groups.get(group_name, []) as Array), block)
+	for raw: Variant in ((block.get("reach", {}) as Dictionary).get(group_name, []) as Array):
+		if raw is Dictionary:
+			var disc := inline_disc(raw as Dictionary)
+			if not disc.is_empty():
+				discs.append(disc)
 	return discs
 
 
@@ -748,7 +789,7 @@ func _regreen_the_scars(immediate: bool) -> int:
 	var group_names: Array = groups.keys()
 	group_names.sort()
 	for group_name: Variant in group_names:
-		var discs := scaled_discs(_station_discs(groups[group_name] as Array), block)
+		var discs := regreen_discs(str(group_name))
 		if discs.is_empty():
 			continue
 		var skin := _regreen_group(str(group_name), discs, block, global_strength, material)
@@ -1143,6 +1184,56 @@ func _lift_the_drain(immediate: bool) -> int:
 			tween.parallel().tween_method(Callable(field, "set_drain_amount"), 1.0, 0.0, seconds)
 		tween.tween_callback(_hide_the_drain)
 	return _drain_nodes.size()
+
+
+## F05#7 round 7 (owner: "the healed land must read as green grass"). Once
+## the drain has lifted, the grass field's live blades inside every regreen
+## disc (stations and `reach`) lean toward `regreen.field_green.tint` at full
+## density: the field's own drain channel, re-aimed -- `drain_thin` 0 so no
+## blade is culled, `drain_tint` the lush green, the regreen discs as its
+## discs, its amount faded 0 -> `amount` over `fade_seconds` after the drain
+## has faded out (a load snaps). Set through the field's public `set_drain`
+## and its `material_override` uniforms; derived from `legendary_freed` alone,
+## identical on every peer and load, nothing saved.
+func _green_the_field(immediate: bool) -> int:
+	var spec: Dictionary = (_config.get("regreen", {}) as Dictionary).get("field_green", {})
+	if not bool(spec.get("enabled", false)):
+		return 0
+	var field := _grass_field()
+	if field == null:
+		return 0
+	var discs: Array = []
+	var names: Array = ((_config.get("regreen", {}) as Dictionary).get("groups", {}) as Dictionary).keys()
+	names.sort()
+	for group_name: Variant in names:
+		for disc: Dictionary in regreen_discs(str(group_name)):
+			discs.append(disc)
+	if discs.is_empty():
+		return 0
+	var wait := 0.0
+	if not immediate and not _drain_nodes.is_empty():
+		wait = float((_config.get("drain", {}) as Dictionary).get("fade_seconds", 12.0)) + 0.1
+	var seconds := 0.0 if immediate else float(spec.get("fade_seconds", 6.0))
+	if (wait <= 0.0 and seconds <= 0.0) or not is_inside_tree():
+		_start_field_green(field, discs, spec, float(spec.get("amount", 0.6)))
+		return discs.size()
+	var tween := create_tween()
+	if wait > 0.0:
+		tween.tween_interval(wait)
+	tween.tween_callback(_start_field_green.bind(field, discs, spec, 0.0))
+	tween.tween_method(Callable(field, "set_drain_amount"), 0.0, float(spec.get("amount", 0.6)), maxf(seconds, 0.01))
+	return discs.size()
+
+
+func _start_field_green(field: Node, discs: Array, spec: Dictionary, amount: float) -> void:
+	if not is_instance_valid(field):
+		return
+	var material := (field as GeometryInstance3D).material_override as ShaderMaterial \
+		if field is GeometryInstance3D else null
+	if material != null:
+		material.set_shader_parameter("drain_thin", 0.0)
+		material.set_shader_parameter("drain_tint", Color(str(spec.get("tint", "#5ea83a"))))
+	field.call("set_drain", discs, amount)
 
 
 func _hide_the_drain() -> void:
