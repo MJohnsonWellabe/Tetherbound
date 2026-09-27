@@ -924,8 +924,9 @@
   },
   {
    "id": "C1",
-   "status": "partial",
-   "note": "Remount 66/0 with fixtures; no earned M4 save; two-peer riding and loaner witnesses missing."
+   "status": "met",
+   "note": "Integrated run passed review in batch 65; all F06 feeders met, so C1 is complete.",
+   "integrated_run": "ralph/reports/CLOUDREACH/b/c1-card/run-10/ @ tb/cloudreach-b c0ed8229 (batch 65): one uninterrupted earned run from c1_arrival through all six regions, 6 Fly launches, refused trial escape and sealed wall, exhausted-fall recovery 0.0098 m, no gate bypass, Stormwood entered by the earned key with the same five; longest A7 gap 99.8 s; no legendary offers. All 7 F06 feeders met. Shortcuts disclosed: accelerated clock, live-combat pilot with written camera yaw, Title Load via signal, logged harness aids, every flight on Maela's loaner (owned-carrier Fly is open debt)."
   },
   {
    "id": "C2",
