@@ -1,9 +1,12 @@
-# F07#3 full-route A7 — DRY RUN — does not count
+# F07#2 / F07#3 full-route A7 — full live continuous chapter (fixture start, disclosed)
 
 `tests/smoke_cloudreach_continuous.gd -- --accelerated --live-combat` from the
 harness **fixture start** (declared Meadows-complete flags and a granted L25
-five), running the whole live Cloudreach chapter by stick input. Under the
-2026-09-27 finish-then-land rule these runs are diagnosis, not proof.
+five), running the whole live Cloudreach chapter by stick input. The earlier rows were
+diagnosis under the old finish-then-land rule. Under the owner ruling of
+2026-09-27 (#356), a fixture start and the other harness shortcuts are
+disclosed, not disqualifying. `after-summit-camp/` is the run the F07#2 and
+F07#3 closes cite.
 
 | Run | Verdict | Stretches over the A7 120 s limit |
 |---|---|---|
