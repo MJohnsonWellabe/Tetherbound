@@ -442,15 +442,15 @@
     {
      "text": "Measured 885-second no-action stretch removed",
      "status": "in_progress",
-     "evidence": "Baseline measured (Windscar return 1,609 m / 322 s); route edits drafted",
-     "gap": "Coordinator ruling (a): restore the XP on the shortened legs, then the ledger test and an A7 re-measure",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
+     "gap": "Landing in batch 51.",
      "note": "Verifier rejected the batch 26 claim: data only, with no engine re-walk or committed A7 re-measure. Cloudreach lane (#311)."
     },
     {
      "text": "Every A7 empty interval gone",
      "status": "not_started",
-     "evidence": "Listed open",
-     "gap": "Route A7 measurement"
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
+     "gap": "Landing in batch 51."
     },
     {
      "text": "Earned route resource/XP ledger needs no new catch",
@@ -478,8 +478,8 @@
     {
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
      "status": "partial",
-     "evidence": "Finale pending/restore fixes and test_cloudreach_finale on main fe07d0d2; smoke_cloudreach_finale not in CI, fails in lane container",
-     "gap": "Normal-input finale witness passing",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/b/f08-0-veyra-exam/earned-tightened/ (WITNESS PASS, EXIT 0, run at d01c0e7b with the tightened assertions). Shortcuts disclosed: earned c1_arrival checkpoint start; accelerated clock (fights at 1x); live-combat pilot writes camera yaw; --fail-exam-first idle pilot for the planned loss; Title Load by signal emit and reload by direct save/load; held Fly input; 3 relay legs stick-walked around lee windbreaks; arc active in the arena only during Overload. Independent re-check: MET.",
+     "gap": "Landing in batch 50; flips on the next green full CI.",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
