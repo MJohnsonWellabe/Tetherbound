@@ -248,6 +248,12 @@ var _pending_tournament_join_deadline_ms: int = 0
 var _pending_tournament_join_announcement: Dictionary = {}
 var _pending_tournament_members: Array[RefCounted] = []
 var _shared_opponent_proxy: Node3D = null
+## F14#1. A guest's body for the host's CURRENT trainer/boss creature, built
+## from the record's opponent row (card, level, hp) rather than borrowing a
+## nearby ambient wild. Swapped when the host sends out the next creature.
+var _legacy_mirror: Node3D = null
+var _legacy_mirror_key := ""
+var _legacy_mirror_pose_seq := 0
 var _shared_active_id: String = ""
 var _shared_body_generation: int = 0
 var _shared_presentation_seq: int = 0
@@ -2023,6 +2029,7 @@ func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if _manager != null and bool(_manager.call("is_fighting")) \
 				and str(_manager.get("_encounter_id")) == encounter_id:
 			_encounter = rec
+			_refresh_legacy_mirror(rec.get("opponent", {}) as Dictionary)
 			_manager.call("apply_encounter_record", rec, quiet)
 		return
 	if not _shared_record_is_current_realm(rec):
@@ -4356,6 +4363,17 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		"owner_npc": str(_trainer_spec.get("id", "")) if opponent_owned else "",
 		"position": [at.x, at.y, at.z],
 	}
+	if opponent_owned:
+		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
+		# (`_legacy_mirror_body`), so the record carries its card and pose too.
+		# `round` tells two identical consecutive team members apart.
+		opponent.merge({
+			"card": WATER_CAPTURE_CODEC.encode(instance as RefCounted),
+			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
+			"foot_position": [feet.x, feet.y, feet.z],
+			"facing": [facing.x, facing.y, facing.z],
+			"round": _trainer_sent,
+		})
 	if not opponent_owned:
 		_shared_body_generation += 1
 		_shared_presentation_seq = 1
@@ -4530,15 +4548,25 @@ func _join_legacy_encounter(encounter_id: String, announced: Dictionary) -> bool
 
 
 func _begin_legacy_encounter_body(encounter_id: String, announced: Dictionary) -> bool:
-	var stand_in := nearest_live_wild()
+	var opponent: Dictionary = announced.get("opponent", {}) as Dictionary
+	var stand_in := _legacy_mirror_body(encounter_id, opponent)
+	var mirrored := stand_in != null
+	if stand_in == null:
+		# A record without a buildable opponent (an older host): the previous
+		# nearby stand-in, whose numbers the host still decides.
+		stand_in = nearest_live_wild()
 	if stand_in == null:
 		push_warning("no creature here to stand in for encounter '%s'" % encounter_id)
 		return false
 	var party_obj := _party()
 	var best: RefCounted = party_obj.call("best") if party_obj != null else null
 	if not bool(_manager.call("begin", _player, stand_in, _ally_body, _fight_party(),
-			_camera_rig, best, false)):
+			_camera_rig, best, false, mirrored)):
+		if mirrored:
+			_cleanup_legacy_mirror()
 		return false
+	if mirrored:
+		_manager.call("detach_realm_opponent_callbacks", stand_in)
 	_engaged_with = stand_in
 	_set_exploration_active(false)
 	_manager.call("bind_encounter", self, encounter_id,
@@ -4951,6 +4979,11 @@ func _on_combat_exited(outcome: String) -> void:
 			_dispose_shared_host_fight(finished_id,
 				str(hosted_runtime.get("terminal_outcome")).is_empty())
 		return
+	if wild != null and wild == _legacy_mirror:
+		# The host's creature is not a local wild: nothing to faint, respawn,
+		# catch or award here. The host journals the round and the battle.
+		_cleanup_legacy_mirror()
+		return
 	var shared_guest := wild != null and wild == _shared_opponent_proxy
 	if shared_guest:
 		if outcome == CAUGHT:
@@ -5057,6 +5090,110 @@ func _end_shared_guest_presentation() -> void:
 			_shared_opponent_proxy)):
 		return
 	_cleanup_shared_guest_proxy()
+
+
+static func _legacy_opponent_key(opponent: Dictionary) -> String:
+	return "%s|%d|%d" % [str(opponent.get("species_id", "")), int(opponent.get("level", 0)),
+		int(opponent.get("round", 0))]
+
+
+## The host's current creature as a local instance: its own card when the
+## record carries one, else the species at the record's level. Either way the
+## HP pool is the record's, so the bar reads the host's numbers.
+func _legacy_opponent_instance(opponent: Dictionary) -> RefCounted:
+	var species := str(opponent.get("species_id", ""))
+	var level := int(opponent.get("level", 0))
+	var card: RefCounted = null
+	var wire: Variant = opponent.get("card", {})
+	if wire is Dictionary and not (wire as Dictionary).is_empty():
+		card = WATER_CAPTURE_CODEC.decode(wire) as RefCounted
+	if card == null and SPECIES.has(species) and level > 0:
+		card = SPECIES.spawn(species)
+		if card != null:
+			card.call("set_level", level, PROGRESSION.config())
+	if card == null or str(card.get("species_id")) != species or int(card.get("level")) != level:
+		return null
+	card.set("max_hp", maxf(1.0, float(opponent.get("hp_max", card.get("max_hp")))))
+	card.set("hp", clampf(float(opponent.get("hp", card.get("max_hp"))), 0.0, float(card.get("max_hp"))))
+	return card
+
+
+func _legacy_opponent_feet(opponent: Dictionary) -> Variant:
+	var feet: Variant = _wire_vec3(opponent.get("foot_position", []))
+	if feet == null:
+		feet = _wire_vec3(opponent.get("position", []))
+	return feet
+
+
+func _legacy_mirror_body(encounter_id: String, opponent: Dictionary) -> Node3D:
+	_cleanup_legacy_mirror()
+	var card := _legacy_opponent_instance(opponent)
+	var feet: Variant = _legacy_opponent_feet(opponent)
+	var facing: Variant = _wire_vec3(opponent.get("facing", []))
+	if facing == null:
+		facing = Vector3.FORWARD
+	if card == null or feet == null:
+		return null
+	var proxy: Node3D = CREATURE_SCENE.instantiate()
+	proxy.set_script(SHARED_OPPONENT_PROXY)
+	proxy.name = "LegacyOpponent_%s" % encounter_id.replace(":", "_")
+	proxy.set("body_scale", maxf(0.01, float(opponent.get("body_scale", 1.0))))
+	get_parent().add_child(proxy)
+	var half_life := float(ENCOUNTER_HOST_SCRIPT.config().get(
+		"shared_opponent_interpolation_half_life_s", 0.05))
+	if not bool(proxy.call("configure_presentation", card, 1, feet as Vector3,
+			facing as Vector3, half_life)):
+		proxy.queue_free()
+		return null
+	_legacy_mirror = proxy
+	_legacy_mirror_key = _legacy_opponent_key(opponent)
+	_legacy_mirror_pose_seq = 0
+	return proxy
+
+
+## A record for the fight this guest is mirroring. A new roster member (the
+## host's next send-out) replaces the instance the manager fights; otherwise
+## the body follows the host's last sampled position.
+func _refresh_legacy_mirror(opponent: Dictionary) -> void:
+	if _legacy_mirror == null or not is_instance_valid(_legacy_mirror) \
+			or _engaged_with != _legacy_mirror or opponent.is_empty():
+		return
+	var generation := int(_legacy_mirror.get("body_generation"))
+	var key := _legacy_opponent_key(opponent)
+	if key != _legacy_mirror_key:
+		var card := _legacy_opponent_instance(opponent)
+		var feet: Variant = _legacy_opponent_feet(opponent)
+		var facing: Variant = _wire_vec3(opponent.get("facing", []))
+		if card == null or feet == null:
+			return
+		var half_life := float(ENCOUNTER_HOST_SCRIPT.config().get(
+			"shared_opponent_interpolation_half_life_s", 0.05))
+		if not bool(_legacy_mirror.call("configure_presentation", card, generation + 1,
+				feet as Vector3, (facing if facing != null else Vector3.FORWARD) as Vector3, half_life)):
+			return
+		_legacy_mirror_key = key
+		_legacy_mirror_pose_seq = 0
+		# The manager captured the previous member's instance at `begin()`;
+		# the round continues against the new one without a second begin.
+		if _manager != null:
+			_manager.set("_enemy", card)
+		return
+	var at: Variant = _wire_vec3(opponent.get("position", []))
+	if at != null:
+		var step_feet := Vector3((at as Vector3).x, _legacy_mirror.global_position.y, (at as Vector3).z)
+		var facing_now: Vector3 = _legacy_mirror.call("facing") if _legacy_mirror.has_method("facing") \
+			else Vector3.FORWARD
+		_legacy_mirror_pose_seq += 1
+		_legacy_mirror.call("apply_pose", generation, _legacy_mirror_pose_seq, step_feet, facing_now)
+
+
+func _cleanup_legacy_mirror() -> void:
+	var proxy := _legacy_mirror
+	_legacy_mirror = null
+	_legacy_mirror_key = ""
+	_legacy_mirror_pose_seq = 0
+	if proxy != null and is_instance_valid(proxy):
+		proxy.queue_free()
 
 
 func _cleanup_shared_guest_proxy() -> void:
