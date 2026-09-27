@@ -1,0 +1,34 @@
+[
+  {
+    "fight_s": 0.0,
+    "file": "/tmp/claude-0/venn_q3/venn/t-000.00.png",
+    "gap_m": 5.0,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 0.65,
+    "file": "/tmp/claude-0/venn_q3/venn/tell-start-000.65.png",
+    "gap_m": 4.82,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 1.25,
+    "file": "/tmp/claude-0/venn_q3/venn/tell-late-001.25.png",
+    "gap_m": 8.18,
+    "opponent": "water_cannonback",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 3.02,
+    "file": "/tmp/claude-0/venn_q3/venn/t-003.02.png",
+    "gap_m": 9.2,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]
