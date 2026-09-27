@@ -1,0 +1,738 @@
+{
+  "label": "tw-f14-0-tess-gpu",
+  "sha": "aafa4c76c6e0b5ca34b6439d8b8800b3579bb4d8",
+  "script": "tests/capture_tidewake_named_fights.gd",
+  "args": [
+    "--trainer=water_trainer_tess",
+    "--out=res://shots/tidewake/f14_0_tess_gpu",
+    "--interval=8.0",
+    "--max-frames=80",
+    "--pilot=READER",
+    "--cap-s=600",
+    "--level=43",
+    "--tells-per-opponent=3"
+  ],
+  "mode": "render",
+  "comment_id": 5854973990,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/tw-f14-0-tess-gpu",
+  "stage": "ready_to_publish",
+  "runner_pid": 10520,
+  "started_utc": "2026-09-27T13:16:44.583549+00:00",
+  "engine_pid": 16048,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\tw-f14-0-tess-gpu",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tests/capture_tidewake_named_fights.gd",
+    "--",
+    "--trainer=water_trainer_tess",
+    "--out=res://shots/tidewake/f14_0_tess_gpu",
+    "--interval=8.0",
+    "--max-frames=80",
+    "--pilot=READER",
+    "--cap-s=600",
+    "--level=43",
+    "--tells-per-opponent=3"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T13:36:41.753169+00:00",
+  "output_worktree_files": [
+    "shots/tidewake/f14_0_tess_gpu/frames.json",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-000.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-008.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-016.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-024.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-032.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-040.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-048.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-056.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-064.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-072.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-080.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-088.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-096.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-104.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-112.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-120.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-128.02.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-136.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-144.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-152.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-160.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-168.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-176.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-184.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-192.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-200.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-208.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-216.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-224.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-232.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-240.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-248.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-256.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-264.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-272.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-280.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-288.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-296.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-304.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-312.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/t-320.00.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-001.25.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-003.47.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-005.72.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-098.58.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-100.97.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-103.18.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-218.85.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-221.15.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-late-223.60.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-000.65.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-002.87.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-005.10.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-097.97.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-100.35.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-102.57.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-218.25.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-220.55.png",
+    "shots/tidewake/f14_0_tess_gpu/tess/tell-start-223.00.png"
+  ],
+  "collection_note": "Cache preparation changed source timestamps while the capture had just started. Unchanged repository source files are excluded; the full requested output folder, all user data and logs are preserved. No capture script, argument or game source was edited.",
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 311,
+      "sha256": "2d73f4b1ec443884a662f5b9369a8bbe7f2465af8e3b895e3a29fe62d2a42b7d"
+    },
+    {
+      "path": "import.log",
+      "bytes": 232526,
+      "sha256": "6a9adf6fd5bfad820f88932b8e795e6fac357c3533ec4397e6d42578e62448e0"
+    },
+    {
+      "path": "run.log",
+      "bytes": 1454,
+      "sha256": "078788da2cd2e9560d11306b6ddd61123a05559674c5a4222688555245da0317"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 219,
+      "sha256": "345438352fcb419b954d19b2cdb62368f529aa616f7d5468f54db2d2f6a2ddf3"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 50033,
+      "sha256": "bd844932c0e450887ef3c2c97ecac916823c29f69b2f94b51e18263c74d479de"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 1438,
+      "sha256": "6ef4f3875772d3a2bdc91965806b439c8ac18642fe8785f375dc69027953e7ed"
+    },
+    {
+      "path": "user/shader_cache/CanvasShaderGLES3/7c031e087d38a21a2b702ec534c46a20f33c6438a46501f445ba2a5574dd658f/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 51565,
+      "sha256": "dadcb2ed934ec6b17b853cd6bd7c2c0f00394ccbfd59548fb516ab89ea0a7989"
+    },
+    {
+      "path": "user/shader_cache/CopyShaderGLES3/83277179491d134674d67060b198ff75c555e8867f19d861cffb61da9b89360b/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 118003,
+      "sha256": "53dfa6f222231a2c7778be67031f900e96d854053ada1505647734e5e3d006b7"
+    },
+    {
+      "path": "user/shader_cache/CubemapFilterShaderGLES3/9cba4f30fd80e4ff3a85bbb3abfad10ffe6e0ee75e5db6904b7db3958d978a3d/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 26049,
+      "sha256": "467c8f6fcdbce38cdb1e14722fd0fad3acd45baac8d45d8a124782aedcd519ef"
+    },
+    {
+      "path": "user/shader_cache/FeedShaderGLES3/8dcd8e258b3ceae6ff6f4a0c3dedd60872aee6fa4b5ae0149da2241f8c6a19be/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 8257,
+      "sha256": "c846a5442185c9c19e050a6501c9d773039e2d85de83f1811dd22f0af5458341"
+    },
+    {
+      "path": "user/shader_cache/ParticlesCopyShaderGLES3/9759013b9d714cb62fa96f10d90523817ef23d83b75276ad9d89af4583546dca/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 45109,
+      "sha256": "201cd6c2f2af38e9c0dbcdb400752983ed1a39b614bd9ba31d69bc1f400ef915"
+    },
+    {
+      "path": "user/shader_cache/ParticlesShaderGLES3/8beaef0415894113ceabeef48ad3661ec6fd246c2fa5ae3c242c935779dbd09d/38a2463afbb95e5dd5856c54883234a4adc80128.cache",
+      "bytes": 304036,
+      "sha256": "bd5e52001f4d051ba241ab2708054ef1d8e313d9a6cb9995cd9c42a6b5269c39"
+    },
+    {
+      "path": "user/shader_cache/ParticlesShaderGLES3/8beaef0415894113ceabeef48ad3661ec6fd246c2fa5ae3c242c935779dbd09d/677ef8c4b5c0a60a2dc6660e2d12b9ae7906f07c.cache",
+      "bytes": 292863,
+      "sha256": "5605bc51c3818c58479ca577cf40cb407fce82a578c164ca65e90a8999c01d1e"
+    },
+    {
+      "path": "user/shader_cache/ParticlesShaderGLES3/8beaef0415894113ceabeef48ad3661ec6fd246c2fa5ae3c242c935779dbd09d/93516fe33f5f935f039f719f49bb5120b832bafd.cache",
+      "bytes": 297469,
+      "sha256": "685e01d667388f3c2e6328eb9087608ccb2a200b8f2f162bcd33fefbb06bca9c"
+    },
+    {
+      "path": "user/shader_cache/PostShaderGLES3/1476b81a5185dfe8258349d6f46d2cb240ac13bc6c4a84c61a13228bd9a967f0/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 30200,
+      "sha256": "e88692a73e3139b3cd10f5f2e50c34edd920b6aafe1dd599cda24f514af6b783"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/0143f5ea411f3d8a6a366c3d137112d572298aa5.cache",
+      "bytes": 1508460,
+      "sha256": "48ebb152a82fcf26871233137b207c41907840c8163976edb8ef305dfc9558a0"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/025c5f7924864dd83d5ef0dc83189c513966c5ea.cache",
+      "bytes": 2164508,
+      "sha256": "a8a53e3081d05e2a829854cf89f989e5110b10ee3b2b48d7f5d31adf7ef15667"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/13ab7ceb2c3df96664de240b3f363f14cb44c19c.cache",
+      "bytes": 1463645,
+      "sha256": "c70dd5928624c9a5e847f0ba38c6e971d13ddb67d8f47876027934784d966227"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/1c391b2d44274649404846aed0752d6dc54823a3.cache",
+      "bytes": 1505781,
+      "sha256": "145d4b12504e4020af9c123588a06250a91da9b43da92caa946b6dce60e24abc"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/1ec0123743a4d1cc73e25ebb40fa89572262e3b6.cache",
+      "bytes": 1464073,
+      "sha256": "acad2a351209bb87808d8c39b2d92d07ef67c48fb233d6611518dcb8c1dab4db"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/312ad42a7fd06585fad3eca6bb0eef83490b1da7.cache",
+      "bytes": 1682322,
+      "sha256": "0f2b3753157cca3777dcf23be39567eb1ff53637da2060b159e82673226733ca"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/459e4010898dde26a6b92d3602a8b6d0c125a151.cache",
+      "bytes": 1547083,
+      "sha256": "582941ad8ca2536a5d0d3ded809f17a5dfbd821fe42328e673974596f92a3801"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/5c713fc8d058958121c19e372afe99b4a4024856.cache",
+      "bytes": 1747512,
+      "sha256": "69c0f8487a937780a28c05a08a737d0c31b6dd824907ba82678d74c9cacaaa5a"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/66549625e9c5a3c5fa5bb95dec35ec30a96af5a4.cache",
+      "bytes": 1537141,
+      "sha256": "9a945f026b88cc1337d8828641d428417b02f3b63efc74365e02d6d6abd0eb74"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/6a0938a9a0fc1fd50d0db66009eca4d3fe324bcc.cache",
+      "bytes": 1506484,
+      "sha256": "5b4776f020041fb3fd1446413ee21836c3e679b519b963665c7f5fe14c1c7008"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 1368453,
+      "sha256": "3327e0f8dc36d5dacbe2d10279724434a7c2b80f06602c38b7a26dfdc499d382"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/6dbea70c3cbe110fea1c697597719d3dd9894a09.cache",
+      "bytes": 1317308,
+      "sha256": "30a0502efccbc7d5ce1370c7dbb420d114c8b555d2727afe529669c13b5123c5"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/75dbda390b4d6b8d1bba67e8943ace8a4f64f756.cache",
+      "bytes": 1867852,
+      "sha256": "6d098cb0740dad9ae323b37e65b7c31691cae969f6a325a70187fec3882c8a1c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/76eb3470d76bd8b759e123d8aefb517d33f71999.cache",
+      "bytes": 1506063,
+      "sha256": "fef7c36f688b4b976ca518ed3fc0e678f61f04f8268ed593ea613ac6b4872fc8"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/77047cd41f429f33ceff24e890e174f5465e755e.cache",
+      "bytes": 1409169,
+      "sha256": "09f7391c57db008c90faf16db585bdaa4de760d207f9f0eec4666844575adcdd"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/79b92e0eaa374b797c1f1f9b8c3da44c004d72ba.cache",
+      "bytes": 1292362,
+      "sha256": "c3721ace635427f953eb0cc7d2ad48a6ab4a3884936222a2b6ef9578cd4ed94e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/7b0606ca573c4619080b2a789e9af0a5d049d9ce.cache",
+      "bytes": 1574369,
+      "sha256": "1db8ad3706de161051cec24c695408af866200f012f355e60d9bce1bfbd9b426"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/8344af024c80c1540827f04c086102d99c6715a5.cache",
+      "bytes": 1764462,
+      "sha256": "78d42aa4717ea5b9c0a42c97b8e791fd70a48d3c80b31f9de1db003fe5af08b3"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/84366ed46520476083c6b869fefb772ed1a067ee.cache",
+      "bytes": 1778941,
+      "sha256": "8dc774a689d7ea43ec1372b7e292294128eebc83b8cf84e5ac9db264d9394eaf"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/89cb37decad3dbfe7c51842ccc9acec217fabdc0.cache",
+      "bytes": 1741639,
+      "sha256": "fcd7357d281bd83aed4c7d9010203977cc92ff03c409876864f45032d973fb96"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/8aa2ca0d142139a382e42dd317881cf2ee88335d.cache",
+      "bytes": 1331170,
+      "sha256": "2c2a8558e62a680125fb9807916a50967af7ad9634caa87bf23d0ed3a3662668"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/928cabbe1c59c1025608a336089807ac84403089.cache",
+      "bytes": 1503791,
+      "sha256": "ac22cb5fb1c97c00438b418d983eef7cc92e935cb998808249c7ebe7314f474c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/95b9c3e1a5f3b26e9a87a680b216c8a691c24d2e.cache",
+      "bytes": 1506014,
+      "sha256": "ea13c42bc74c653c6b371acc45b205b59cbaead168f65a3aaf28591a228f291e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/9ad932b85d83715cf97e30764da1bd0f8b80a8d8.cache",
+      "bytes": 1734110,
+      "sha256": "1d8b407059de0fc1154039de7aec958148e34516b9c5304a618ccf5af2be9451"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/9d6f27f40b27f4de9f13f947d48ded9f2e67247f.cache",
+      "bytes": 1679268,
+      "sha256": "bd52aeabeed57f7dd663178bbbd35fdcf0ed59babccca0d922922d82c106d45f"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a2ddf2302bafb2503e1359bb4116cfc29d9c7985.cache",
+      "bytes": 1314591,
+      "sha256": "18b59d969b8abcd806ae7d35f8cc29a769dc7836c4b0d5374dbacb72c0b557ac"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a643e60b6757a25ef55b77b702168cd4f6808447.cache",
+      "bytes": 1793266,
+      "sha256": "06a29b3014e930524fbdde5db086500930e940a973029278b0460ebb6a5ad360"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a6712e925863fb1a995c70645cad9d69d70bbb87.cache",
+      "bytes": 1706076,
+      "sha256": "d40207bb08fa96df124c3164100f5a18fffdf47725722a766c43ae89f1867991"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a8777be15f781463e27cb3b841a738f050b8c925.cache",
+      "bytes": 1509925,
+      "sha256": "557777715c8b4620dd2cb5d7e0d51a5e37414e5cba33ab64ce2b01e9479812fd"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/aefff12cfaa14849010e7fed61c8973f2d55722e.cache",
+      "bytes": 1783099,
+      "sha256": "c1d2c10e1c967a7382fe1de26909b46941b7cab6a37e76adb53d349859de1e40"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/b9b61a6fbc041c69befc5004bbb85deda7cc4b59.cache",
+      "bytes": 1771944,
+      "sha256": "4c8b48943f5804b8c2b7030194d1f64eb0adceb7e4d5905cd29b726c7c802d58"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/ba45550439f819044f7dca8232a5aecc4c7e928d.cache",
+      "bytes": 1552262,
+      "sha256": "4cdce488ec919afb7644a29ff5d170a27a5e5eb7b06a68285d38fde8242e16cd"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/bd3ec329b8d412569093905d27cab3f30a500a45.cache",
+      "bytes": 1497428,
+      "sha256": "c20b7746300ed4818bc3526c9c7d4e6864622300a1532161d87ce1632a0e8b81"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/c52e1350cafdf45fba658dc2aa34a99014221c53.cache",
+      "bytes": 1701414,
+      "sha256": "13f6cea9fbf3dd2d341e62085a599488d3d20649f7e2e817e7847d41465730f7"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/cff41c46c9761fadeb31bdac88c7af1296f3e20b.cache",
+      "bytes": 1782195,
+      "sha256": "14fdb5e0a9834ac23cb57c07e4d629f3f5c1aa6683feb51fe90be579128c72e7"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/d66cd92dcecb8b97995d48d1fa89044f76b80ccf.cache",
+      "bytes": 1304321,
+      "sha256": "c3b8c90b602b050c3c10d9e1c33c2ef0621908617731a68b18ab7ed2c5fef967"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/ece60f59cc51e620a46dcbc363e0f6a8de08c819.cache",
+      "bytes": 1321206,
+      "sha256": "efe56ef77300b08549da62865c7ac45ffbbc2452eda9385fb2aef26b07eabc6e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f00cbd7a1b5573406fd43d486793e520640b1325.cache",
+      "bytes": 1320158,
+      "sha256": "2492cb9563fe77efb9363edec2a91aaa2225e628805122e6abbcb58fbc81bcdb"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f2e328ac8a780a17a0c65e242b0c8bc4fc063f03.cache",
+      "bytes": 1764551,
+      "sha256": "8fc6e4b8f3c9c2fcb197a643336dd3b0b635fc537c28e28aec3179b4d33715f5"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3898120a1b86c86cb0b128ae6a563c539a13e3f.cache",
+      "bytes": 1694967,
+      "sha256": "d69c82bae4cb4a75fa24e4c5f618f8d7eb2df5e26c08c3dfca9e4e3b4909eff8"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3d38ef465c59bc9091bfc25876abd6e62e9b744.cache",
+      "bytes": 1508460,
+      "sha256": "a5f5bcf11a57392c88ad8215e3bd628d1068e4043857d67e0c588ceeb703a8b3"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f8ab93aeebbe5f7232a9778ed024a542819aa220.cache",
+      "bytes": 1726681,
+      "sha256": "1ec3703107988e196903bb98381d6f1cc3efc3c54342385af8c2ee02c53484c9"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/fd411a04ee5fac0e114fb87a6c6d28f32d325805.cache",
+      "bytes": 1535225,
+      "sha256": "68cd03e0150ffc4568bfb11954f6278c97ac2176466690a4509af9552e48ea36"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/fec03c535999cdaa57cbe3862dea7521873aaf32.cache",
+      "bytes": 1504075,
+      "sha256": "d09fd78c05e069db3193916f072b06da2f88ff407ecaa090c1bbd9d35fa51104"
+    },
+    {
+      "path": "user/shader_cache/SkeletonShaderGLES3/97be9536d60b9601b92136a85ef4815a2b488345169e702ea7328ea503c309bc/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 28055,
+      "sha256": "09de218fc7a3220c996da50c110f5e0b0953a661c078ef595c38cbf766f16ea3"
+    },
+    {
+      "path": "user/shader_cache/SkyShaderGLES3/4797eb681bd52648317f1c86841acba6734092fd4db1cd285e9695d4eefa0875/da1b7da2ee3464a48514015c41474f7d92626b72.cache",
+      "bytes": 138825,
+      "sha256": "2330afe75b140ca7a28dfd42172fff04b9b1887df25c9c2a696f6fa4356d1981"
+    },
+    {
+      "path": "user/tidewake_c3_capture_7504354/characters/tidewake-c3-capture/character.json",
+      "bytes": 2779021,
+      "sha256": "3b5e51320a8eb160c967f45ef087870e128dfe07e7f08d88ee8aba7047b3b500"
+    },
+    {
+      "path": "user/tidewake_c3_capture_7504354/slot_0.json",
+      "bytes": 3128741,
+      "sha256": "e07098d334b10e0ba9fac2bf1d49b47189255e81ad3b7b1f896b9841ac746f92"
+    },
+    {
+      "path": "user/tidewake_c3_capture_7504354/worlds/slot-0/world.json",
+      "bytes": 613,
+      "sha256": "1403999673e9f3dd8f57bff725763b7bb65ea6db82a6bbb5604c123a67d07618"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/frames.json",
+      "bytes": 11381,
+      "sha256": "0bba2e84ec403eb0efe68de2547f5a5e975958f84933cb8e25b708d183ed6133"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-000.00.png",
+      "bytes": 1342599,
+      "sha256": "a5e929ff724f7bdfc9e9b5d7177b298dcf6507bd5b2e51ae2f9542b8d719333a"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-008.02.png",
+      "bytes": 3456828,
+      "sha256": "b65516ee29a994b75e0d013a4ced6f68b627cc9a08c499923d79b0190fd6cf94"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-016.00.png",
+      "bytes": 2566964,
+      "sha256": "e9b9f890c5d3143e0a01dcb1a47939bac2eb3ab4aa602095eca2c49ac5cdfa26"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-024.02.png",
+      "bytes": 264638,
+      "sha256": "b23f8796de75cdbb0927df3aef9008975484ad09673c2f480aa44d36f222ef21"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-032.02.png",
+      "bytes": 230060,
+      "sha256": "9d5a3712d93d7b10f7de08ac92b3b4d141c357e5fd34725010df04bf2354186c"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-040.02.png",
+      "bytes": 221261,
+      "sha256": "77641f2c05af9ee9d2d2459c1e7a99748276b9fb2cba02062c58721b67cb041f"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-048.02.png",
+      "bytes": 235938,
+      "sha256": "1294215f3b081041ca43a45e3083aca2793e1de15bde9a71ac27cc83e60b6023"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-056.02.png",
+      "bytes": 232273,
+      "sha256": "559603803242ee1643186eb351d26bc7f080301a609f60dc520e7ceb5828c4f8"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-064.02.png",
+      "bytes": 216312,
+      "sha256": "e4844057cb2b191e9e49d87e19abce1ca1bfb0320ebea1021c4ec7d66e583b10"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-072.02.png",
+      "bytes": 253541,
+      "sha256": "42762dee837a846043877bc520fca6824cbe44e0fbb6a2d83e89fcfc41cbfd18"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-080.02.png",
+      "bytes": 220210,
+      "sha256": "d5e14ad21170f868efc2cc79dcdced98417f695b3378c91cea9ab1fa0795dc31"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-088.02.png",
+      "bytes": 228814,
+      "sha256": "7bf5e58b3f94a27c7a98660ee113f6192f5a0e12ebf3e8f603c3f27a647f2a95"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-096.02.png",
+      "bytes": 372762,
+      "sha256": "772520c525aa72d84919e032bb366940e1c93ab85007c80dd2cff12b289aec0a"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-104.02.png",
+      "bytes": 3511080,
+      "sha256": "28b0abd422bc700401f12bd8bba927caa9a1a9a382b60a7e622672f47b52e079"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-112.02.png",
+      "bytes": 3293338,
+      "sha256": "1d25be6e1ded2631d62cc625cdb415f8baf82240efdd4d639c85e719261570ed"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-120.02.png",
+      "bytes": 247214,
+      "sha256": "606a572e78bfca25db4a17e006b5c5ba8449d46e99ec34d0aacb6578127c72b5"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-128.02.png",
+      "bytes": 273295,
+      "sha256": "eb60d8c37f7647376571740110a43d145e543600cf4d6fc2de1bae7aa9a6fb68"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-136.00.png",
+      "bytes": 233354,
+      "sha256": "cc0276850a6d25a92a649a676b7ed173daaadbaf73693b419141ab0ee6f561a6"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-144.00.png",
+      "bytes": 246954,
+      "sha256": "a401fc4893cf7868ae9f3433dcaff6e68514111c0a2a8ed634238a672b0b2406"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-152.00.png",
+      "bytes": 227924,
+      "sha256": "3cf54ec2306454453de9325324f0b61906f81d581e98175d609ae69b41ba8f20"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-160.00.png",
+      "bytes": 233625,
+      "sha256": "1c23e8c6aae5e680ded1b3e899e29a193d0b2193b31db1f2d260a2f9c5d826c7"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-168.00.png",
+      "bytes": 249696,
+      "sha256": "91972633ca87ee500e9b6c2a0bea32374d379107e97286a254015f4bf6b191c8"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-176.00.png",
+      "bytes": 233550,
+      "sha256": "368e6f13b38846845c73c59e8b15d8e2692ba2ff6d85a8c7cbbddfa73198a5f2"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-184.00.png",
+      "bytes": 257662,
+      "sha256": "1563756980cbdfdadfdb06305bb30f0166bb08cf359c19ed3e98a832a48db194"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-192.00.png",
+      "bytes": 246382,
+      "sha256": "d76ef2ff6793c8073224623a46a7e3ee502d22e64f7a737f39a45f049eb6acf0"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-200.00.png",
+      "bytes": 248725,
+      "sha256": "fed315b21315b9b2fc7b45720c1476aef8e3f918fcd411de60a86355e6c9f37d"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-208.00.png",
+      "bytes": 236615,
+      "sha256": "de30b356031b1ca68d02d9d81da2334e847e7c7e68ef79cec02ef18d0a6c254e"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-216.00.png",
+      "bytes": 558115,
+      "sha256": "8260a1d14f9995d95abd66071f9d0c4e822353318f20abea8dea14ffd046a2e2"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-224.00.png",
+      "bytes": 949514,
+      "sha256": "1ebe5033883adf9280ba4b7d0267217ba937c1dc291ecb1ea197f4899a544bf2"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-232.00.png",
+      "bytes": 256855,
+      "sha256": "807b4b190e2b4490b8369be9ae25c23808508c0f2b2c5083a1f7fc634d975393"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-240.00.png",
+      "bytes": 225407,
+      "sha256": "90c7e3fded4166fb344f4c988e78d78393c84ebdf7b9b00ec004c2b04e79aa39"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-248.00.png",
+      "bytes": 237811,
+      "sha256": "119b2be69c12084dc33d19b997b5244cd83ea5d4a2372be32301cf2def203473"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-256.00.png",
+      "bytes": 232475,
+      "sha256": "63482c883e8acad4a82ba3753a6aeedc43514ee20528ebeaaeecc6424914fdbd"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-264.00.png",
+      "bytes": 272015,
+      "sha256": "379c11abc2e66791f36c913b1b8eb63576e4452a3c4d90c2506ccfc1bd5d00c0"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-272.00.png",
+      "bytes": 238528,
+      "sha256": "32a1c4d0bcfa9532d1055b9db91436e6c6517e788026a7e13f23b79521211e3d"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-280.00.png",
+      "bytes": 224899,
+      "sha256": "06e19749e0c5cf8c1dccceb0f7fe92f5f6005a9d450561b58f1904434ae2ac3a"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-288.00.png",
+      "bytes": 234357,
+      "sha256": "d6b020e65b602beacaf1b49b549d226ebcc798a3b78b438476fd78b78815579b"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-296.00.png",
+      "bytes": 221657,
+      "sha256": "a8cac28738fee7ec552959cd2e04920c729760e5e5c7adf48dc1f4204582ce9e"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-304.00.png",
+      "bytes": 231460,
+      "sha256": "fc14582a2fdbbbc4e2d5d67313d735ca12aa4dcc3ca2caa8ca69a796c36f79cb"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-312.00.png",
+      "bytes": 245422,
+      "sha256": "6c82f8d58874e05780653663a8de6c38918a211e4773c185c8072c972aeeb5d3"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/t-320.00.png",
+      "bytes": 207545,
+      "sha256": "553eef6b5dcdfb229a2f337517399fd580060a5088ab962f9c4061167a25082d"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-001.25.png",
+      "bytes": 3318734,
+      "sha256": "eb7463d9d8d4dc69bbbf4aa8d7108450d14f89b657da108b384ea4e8ebc8a99b"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-003.47.png",
+      "bytes": 3334871,
+      "sha256": "f2a0ff1f6eea855f7fea8804c6c2de913d2da7edadd6e7644232c6f5343c43f8"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-005.72.png",
+      "bytes": 3354525,
+      "sha256": "b7d06dc365dc76100828f11b313f6dbb1ae984ba497c3f32d197bff5dcda08a5"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-098.58.png",
+      "bytes": 3082900,
+      "sha256": "ca7cf493620d2f65a582863354bb8f0b1d8521c6675f58a5ff39f9c8a2975b6e"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-100.97.png",
+      "bytes": 3361084,
+      "sha256": "ec16e4910b380b200b2a44b15fcde395633213c156676728b20c30776c32f551"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-103.18.png",
+      "bytes": 3421385,
+      "sha256": "19e82b22af0cc21884d700bd0caf1edf351820c90bde5193b6a19dbc0b935da8"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-218.85.png",
+      "bytes": 2734304,
+      "sha256": "3308d41954acff05e2ee7148ea53c180719b52feaa5de8095a8298947cd8e50a"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-221.15.png",
+      "bytes": 2773173,
+      "sha256": "9c89d49164be6e8cad0491638efbc796856510858e00f1abe18dd82ef143152b"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-late-223.60.png",
+      "bytes": 2901147,
+      "sha256": "832b3c8479c28f6c16f57ad98037c11267e404149eee89eef979bec75397303d"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-000.65.png",
+      "bytes": 3057384,
+      "sha256": "736173bd776a02640d8b4d99d635d6fecacc9ea459a0b7454becefaedb634877"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-002.87.png",
+      "bytes": 3332923,
+      "sha256": "d2125e24521bddf6176f73074158d642a5968f9a74c7d189331007bbe54b4f15"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-005.10.png",
+      "bytes": 3346100,
+      "sha256": "4330b2c31468705a8621f26cb0ce425de9e33f968019749e42b05a8f996b02ee"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-097.97.png",
+      "bytes": 2966941,
+      "sha256": "3ad58c61b473585942dc31b9a1474b88c29c98517a93f98a89a873640b05b38f"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-100.35.png",
+      "bytes": 3276075,
+      "sha256": "c3124b785e9c620ef25af5575685f58b39e006a8200fc236b05888f872206ada"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-102.57.png",
+      "bytes": 3388280,
+      "sha256": "a84b7322c3e2b0656b7f0dafd47316558a8bc5c32d4f3a87b6ecd540f40a0c8e"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-218.25.png",
+      "bytes": 2694576,
+      "sha256": "5f715fc831b34cef1d603d75b4de40c45f5fb3d3773d5fac5dbc5975a4c2d244"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-220.55.png",
+      "bytes": 2790703,
+      "sha256": "599e1a5a96431935019a089014f33b4114cc5b71839e64c39a3885c110f256e9"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_0_tess_gpu/tess/tell-start-223.00.png",
+      "bytes": 2770171,
+      "sha256": "85f789e0b69756a109239110d9585d56bd687b09ee55436f50444ba3e3d58edc"
+    }
+  ]
+}

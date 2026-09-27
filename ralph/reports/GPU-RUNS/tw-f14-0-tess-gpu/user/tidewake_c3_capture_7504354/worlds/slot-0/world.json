@@ -1,0 +1,26 @@
+{
+	"clock_elapsed_seconds": 379.992378111081,
+	"created_at": "2026-09-27T13:31:06",
+	"day": 1,
+	"death_satchels": [],
+	"display_name": "",
+	"farm_plots": [],
+	"felled_vegetation": {},
+	"flags": {
+		"flags": [
+			"water_veilfall_intake_stopped",
+			"water_veilfall_return_opened"
+		]
+	},
+	"harvested_vegetation": {},
+	"last_played": "2026-09-27T13:31:06",
+	"migrated_from": "",
+	"placed_buildings": [],
+	"realm_environment": {},
+	"reward_deliveries": {},
+	"reward_delivery_namespace": "b75d4aaba7e993bd025798ae1f9da1e5",
+	"version": 2,
+	"water_capture_claims": {},
+	"world_id": "slot-0",
+	"world_seed": 146263283
+}
