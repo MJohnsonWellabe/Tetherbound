@@ -2385,6 +2385,15 @@ static func _water_swim_to_anchor(tree: SceneTree, args: Dictionary) -> Dictiona
 		return {"verdict": "ERROR", "detail": "no authored Water anchor '%s'" % id}
 	var swimming: Node = player.get("swim_controller")
 	var vitals: RefCounted = player.get("vitals")
+	# Each probe starts from a full, living trainer: a previous probe that
+	# drowned must not make the next one vacuous (0 m swum while dead).
+	if bool(args.get("restore_vitals", true)):
+		vitals.health = float(vitals.max_health)
+		vitals.stamina = float(vitals.max_stamina)
+		for f in 5:
+			await tree.physics_frame
+	if bool(vitals.call("is_dead")):
+		return {"verdict": "ERROR", "detail": "water_swim_to_anchor: trainer is dead before the swim starts"}
 	var arrive_m := float(args.get("arrive_m", 10.0))
 	var jump_m := float(args.get("jump_m", 12.0))
 	var start := player.global_position
@@ -2443,7 +2452,7 @@ static func _water_swim_to_anchor(tree: SceneTree, args: Dictionary) -> Dictiona
 	data["party_has_swimmer"] = load("res://scripts/world/water_local_chain_rules.gd").has_swimmer(species)
 	data["mounted"] = bool(world.get_node_or_null(^"RidingController") != null
 		and world.get_node(^"RidingController").call("is_mounted"))
-	var ok: bool = bool(data.reached) == bool(args.get("expect_reached", false))
+	var ok: bool = bool(data.reached) == bool(args.get("expect_reached", false)) and float(data.swum_m) > 1.0
 	if args.has("expect_swimmer"):
 		ok = ok and bool(data.party_has_swimmer) == bool(args.expect_swimmer)
 	ok = ok and not bool(data.mounted)
