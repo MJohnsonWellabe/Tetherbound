@@ -637,3 +637,19 @@ func _on_player_died() -> void:
 	print("EARNED DEATHWATCH DIED cause=%s at=%s last_floor_y=%s last_landing=%s fighting=%s leg=%s frame=%d" % [
 		cause, _player.global_position, _last_floor_y, _last_landing, _fighting(), _leg_target, Engine.get_physics_frames()])
 	_fail("The trainer died on the acknowledgement road (cause %s at %s); see EARNED DEATHWATCH" % [cause, _player.global_position])
+
+
+## Arrival diagnosis (B16): name which production-readiness condition of the
+## inherited arrival wait did not hold when it times out.
+func _fail(message: String) -> bool:
+	if message.contains("did not complete production arrival"):
+		var scene := _tree.current_scene
+		var owner := INPUT_OWNER.current(_tree)
+		print("EARNED ARRIVAL DIAG ", JSON.stringify({"realm": str(_game.get("current_realm")),
+			"scene": str(scene.name) if scene != null else "", "new_scene": scene != null and scene.get_instance_id() != _source_world_id,
+			"pending_entry": str(_game.get("pending_realm_entry")),
+			"scene_ready": bool(_game.call("_realm_scene_ready", scene, "cloudreach")),
+			"shell_build_complete": bool(scene.call("shell_build_complete")) if scene != null and scene.has_method("shell_build_complete") else null,
+			"input_owner": str(owner.get_path()) if owner != null else "",
+			"input_owner_script": str(owner.get_script().resource_path) if owner != null and owner.get_script() != null else ""}))
+	return super._fail(message)
