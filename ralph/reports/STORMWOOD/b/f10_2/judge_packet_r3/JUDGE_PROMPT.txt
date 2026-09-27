@@ -1,0 +1,44 @@
+You are a code-blind visual judge. You see ONLY the images in this folder:
+sheet-fight-X.jpg and sheet-fight-Y.jpg (each is a labelled contact sheet;
+each tile is a 1280x720 production frame downscaled). If the operator gives
+you full-size copies of individual tiles, they carry the same neutral names.
+Do not read any other file in the repository.
+
+Each sheet is one real-time creature fight in a game, captured from the
+game's normal fight camera. The player pilots a small companion creature
+(the one near the bottom-left of the frame, with the HUD card) against a
+larger wild opponent. The on-screen HUD is the real game HUD. Frame labels:
+  - iNN            : fixed one-second interval frames
+  - tellN-a-start  : the opponent's attack warning (tell) has just begun
+  - tellN-b-mid    : halfway through that warning
+  - tellN-c-late   : late in that warning, just before the attack
+  - tellN-d-strike : the attack is released
+  - tellN-e-impact : about 0.2 s after release
+  - tellN-f-recovery: the opponent's recovery after the attack
+  - 00-before / 99-after : before engaging / after the fight ends
+
+The bar these fights must pass:
+  "All meaningful tells >= 0.8 s, heavy >= 1.1 s. Framing/readability passes
+   at actual creature scale." Each fight must show, at the normal fight
+   camera, a distinct readable tell and a real hit or avoidance.
+
+Intended visible identity of each fight (one line each; shuffled, do not
+guess which is which from this order):
+  - A diving alpha: "a visible route line shown for about a second BEFORE the
+    strike warning begins, then the strike warning, then a dive along that route."
+  - A crown guardian: "Crown glass and a stationary frontal guard stance: the
+    area in front of it that its blow covers is shown while it winds up."
+
+For EACH fight X and Y answer, citing frame names:
+ (a) At the normal fight camera, is the opponent's attack warning (tell)
+     clearly visible and distinguishable before it lands?
+ (b) Can you see where it will hit (route / zone / facing) and where to move
+     to avoid it?
+ (c) Are both creatures readable at their actual scale (not tiny, cropped,
+     or occluded by vegetation, HUD or camera)?
+ (d) Is there a visible hit or a visible avoidance?
+ (e) Which identity line does it match, and does the frame evidence actually
+     show that identity (PASS) or not (FAIL)?
+Answer each with PASS or FAIL plus one or two concrete sentences. Then list
+the three most important LOOK defects across both, each naming a frame.
+Score nothing else.

@@ -225,3 +225,12 @@ func test_segment_chain_compiles_through_the_warden() -> void:
 func test_on_the_bank_reads_height_above_the_apron() -> void:
 	assert_true(SEGMENT.on_the_bank(7.43, 4.15), "the seed-15 stall stood 3.3 m above the apron")
 	assert_false(SEGMENT.on_the_bank(4.9, 4.15), "ordinary apron slope is not the bank")
+
+
+func test_quarry_nodes_above_the_worked_cut_are_reached_up_the_haul_apron() -> void:
+	assert_true(SEGMENT.needs_haul_apron(Vector2(371.0, 1771.6), Vector2(394.0, 1797.0)),
+		"the seed-15 stall: below the cut, node on the upper bench")
+	assert_false(SEGMENT.needs_haul_apron(Vector2(398.0, 1800.0), Vector2(394.0, 1797.0)),
+		"already on the bench")
+	assert_false(SEGMENT.needs_haul_apron(Vector2(371.0, 1771.6), Vector2(381.0, 1784.0)),
+		"a node below the cut needs no ramp")

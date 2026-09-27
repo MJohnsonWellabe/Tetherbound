@@ -1,0 +1,124 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+FRESH CAMPAIGN scratch=/root/.local/share/godot/app_userdata/Tetherbound/four_biome_fresh_8008_7187 slot=user://four_biome_fresh_8008_7187/slot_0.json checkpoints=/root/.local/share/godot/app_userdata/Tetherbound/four_biome_checkpoints_8008_7187
+DRY RUN — does not count: declared Water-arrival fixture (tests/helpers/tidewake_b_water_arrival_dry_fixture.gd), not an earned water_arrived save
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+DRY RUN fixture ready: realm=water player=(0.0, 1.931024, 162.0) party=5
+WATER EARNED OPENING ARRIVED: actual First Shore pose=(0.0, 1.931024, 162.0)
+WATER OPENING BRIEFED through Pell's production dialogue
+WATER EARNED OPENING: Pell and physical lesson complete; swimming=64.673m
+F13#3 VISIT ["lantern"] from (102.6179, 1.915619, 125.5476) on first_shore (party=[{"level":55,"nickname":"","species":"terrapup","uid":"creature-e84931068b06051acef4bb3a949d83cd"},{"level":55,"nickname":"","species":"bramblebun","uid":"creature-1ef97278d31110ade2d34b871501356f"},{"level":55,"nickname":"","species":"mudsnout","uid":"creature-c85ce85fab20469bc33d0f8408beef25"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-48e71217c5639b4c4d0cadaac4c8a6f3"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-d7c211420c7236a3caee4a42936a7ccb"}])
+WALK water_pell DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK water_pell island=first_shore walked=159m legs=2
+TALK water_pell conversation=water_pell_lantern_lead hud='Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore.'
+WALK start of first_shore_to_lantern_cove_sheltered DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK start of first_shore_to_lantern_cove_sheltered island=first_shore walked=225m legs=2
+SWIM first_shore_to_lantern_cove_sheltered swum=95m min_stamina=30.6 rest_frames=281 health 100->100 dry=true elapsed_s=39
+WALK water:lantern_cove:pickup:002 island=lantern_cove walked=204m legs=34
+CLAIM water:lantern_cove:pickup:002 skill_candy_i 0->1
+WALK start of first_shore_to_lantern_cove_sheltered (reversed) island=lantern_cove walked=200m legs=33
+SWIM first_shore_to_lantern_cove_sheltered (reversed) swum=95m min_stamina=34.8 rest_frames=266 health 100->100 dry=true elapsed_s=38
+WALK water_pell DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK water_pell island=first_shore walked=226m legs=2
+TALK water_pell conversation=water_pell_lantern_return hud='Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse.'
+WALK water_pell island=first_shore walked=0m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+F13#3 CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+WALK return after lantern DIRECT TO first_shore landing THEN PLANNED (attempt 1)
+WALK return after lantern island=first_shore walked=227m legs=26
+F13#3 returned to (102.1273, 2.028627, 124.5858) on first_shore after ["lantern"]
+WATER REEDHAVEN: ordinary human crossing reached Reedhaven
+WATER REEDHAVEN: water:reedhaven:harvest:019 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:017 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:003 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:001 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift
+FRESH WATER SEGMENT water_reedhaven_paid {"failures":[],"ok":true,"transcript":["ordinary human crossing reached Reedhaven","water:reedhaven:harvest:019 +3 reed_fiber through controller interaction","water:reedhaven:harvest:017 +3 driftwood through controller interaction","water:reedhaven:harvest:003 +3 driftwood through controller interaction","water:reedhaven:harvest:001 +3 reed_fiber through controller interaction","four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift"]}
+WATER BRINE: ordinary 107.088m human crossing reached Brine Steps
+WATER BRINE: Tovin production combat reached two opponents; ally_hp=446.3/508.8
+WATER BRINE: Tovin durable victory and Brine Steps trial completion earned
+FRESH WATER SEGMENT water_brine_trial_won {"failures":[],"ok":true,"transcript":["ordinary 107.088m human crossing reached Brine Steps","Tovin production combat reached two opponents; ally_hp=446.3/508.8","Tovin durable victory and Brine Steps trial completion earned"]}
+F13#3 VISIT ["gull"] from (398.4108, 8.620649, 808.8818) on brine_steps (party=[{"level":55,"nickname":"","species":"terrapup","uid":"creature-e84931068b06051acef4bb3a949d83cd"},{"level":55,"nickname":"","species":"bramblebun","uid":"creature-1ef97278d31110ade2d34b871501356f"},{"level":55,"nickname":"","species":"mudsnout","uid":"creature-c85ce85fab20469bc33d0f8408beef25"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-48e71217c5639b4c4d0cadaac4c8a6f3"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-d7c211420c7236a3caee4a42936a7ccb"}])
+WALK water_adair island=brine_steps walked=230m legs=31
+TALK water_adair conversation=water_adair_gull_lead hud='Adair's request: recover the survey satchel left at Gull Rest, off Reedhaven's sheltered line.'
+WALK start of reedhaven_to_brine_steps_sheltered (reversed) island=brine_steps walked=453m legs=69
+SWIM reedhaven_to_brine_steps_sheltered (reversed) swum=55m min_stamina=82.0 rest_frames=108 health 100->100 dry=true elapsed_s=34
+WALK start of reedhaven_to_gull_rest_sheltered island=reedhaven walked=277m legs=42
+SWIM reedhaven_to_gull_rest_sheltered swum=151m min_stamina=0.0 rest_frames=383 health 100->98 dry=true elapsed_s=56
+WALK gull_research_satchel island=gull_rest walked=125m legs=21
+SITE gull_research_satchel hud='Survey satchel recovered: Adair's current observations. Carry them back on your next Brine Steps passage.'
+WALK water:gull_rest:pickup:002 island=gull_rest walked=4m legs=1
+CLAIM water:gull_rest:pickup:002 skill_candy_ii 0->1
+WALK start of reedhaven_to_gull_rest_sheltered (reversed) island=gull_rest walked=129m legs=21
+SWIM reedhaven_to_gull_rest_sheltered (reversed) swum=151m min_stamina=5.0 rest_frames=366 health 98->98 dry=true elapsed_s=54
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=277m legs=42
+SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=82.4 rest_frames=107 health 98->98 dry=true elapsed_s=35
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_return hud='Adair charts the safe Gull Rest crossing from the recovered observations.'
+WALK water_adair island=brine_steps walked=0m legs=1
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+F13#3 CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+WALK return after gull island=brine_steps walked=227m legs=31
+F13#3 returned to (399.1002, 8.97878, 808.0876) on brine_steps after ["gull"]
+WATER SHELLWATCH: ordinary 93.320m human crossing reached Shellwatch
+[rest] rested; day 4
+WATER SHELLWATCH: Shellwatch camp recovered active creature before Solm
+WATER SHELLWATCH: water_trainer_solm victory opponents=["water_mirejaw", "water_mangrove_monitor"] ally_hp=368.1/508.8
+WATER SHELLWATCH: Shellwatch dock action earned water_shellwatch_residents_freed
+WATER SHELLWATCH: before Irva matchup lead sparkit (3 party_cycle presses)
+[rest] rested; day 5
+WATER SHELLWATCH: Shellwatch camp recovered active creature between Solm and Irva
+WATER SHELLWATCH: water_trainer_irva victory opponents=["water_riptusk", "water_cannonback"] ally_hp=352.3/373.1
+WATER SHELLWATCH: Shellwatch dock action earned water_shellwatch_pump_disabled
+WATER SHELLWATCH: Solm, resident release, Irva, pump and departure barrier all resolved
+FRESH WATER SEGMENT water_shellwatch_liberated {"failures":[],"ok":true,"transcript":["ordinary 93.320m human crossing reached Shellwatch","Shellwatch camp recovered active creature before Solm","water_trainer_solm victory opponents=[\"water_mirejaw\", \"water_mangrove_monitor\"] ally_hp=368.1/508.8","Shellwatch dock action earned water_shellwatch_residents_freed","before Irva matchup lead sparkit (3 party_cycle presses)","Shellwatch camp recovered active creature between Solm and Irva","water_trainer_irva victory opponents=[\"water_riptusk\", \"water_cannonback\"] ally_hp=352.3/373.1","Shellwatch dock action earned water_shellwatch_pump_disabled","Solm, resident release, Irva, pump and departure barrier all resolved"]}
+WATER TIDAL: 112.113m authored sheltered human crossing completed
+[rest] rested; day 6
+WATER TIDAL: Shellwatch camp recovered active creature Tidal before Aquaryn
+WATER TIDAL: Aquaryn challenge activated outside both physical capsules
+WATER TIDAL: FAIL: Aquaryn fight exceeded 180 seconds
+FRESH WATER SEGMENT water_swim_stone_and_recipe_earned {"failures":["Aquaryn fight exceeded 180 seconds"],"ok":false,"transcript":["112.113m authored sheltered human crossing completed","Shellwatch camp recovered active creature Tidal before Aquaryn","Aquaryn challenge activated outside both physical capsules","FAIL: Aquaryn fight exceeded 180 seconds"]}
+FRESH COVERAGE OBSERVATIONS {"below_two_samples":49,"camera_below_two_samples":749,"caveat":"below_two_samples grades only aligned <=5m road samples; camera_below_two_samples retains all observed-camera telemetry; unvisited routes and rendered silhouette readability remain unproved","complete_coverage":false,"failures":[],"graded_road_samples":66,"kind":"summary","observed_travel_m":8253.72958963545,"off_route_samples":451,"samples":816,"unaligned_road_samples":295,"undersampled_intervals":0,"unusable_heading_samples":4}
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":[],"cumulative_elapsed_seconds":2463.903,"dry_run":true,"elapsed_seconds":2463.903,"failures":["Aquaryn fight exceeded 180 seconds"],"local_chains":["CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks","CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks"],"reached":"water_shellwatch_liberated","requested_prefix_passed":false,"resumed_from":{},"scratch":"user://four_biome_fresh_8008_7187"}
+EXIT 1

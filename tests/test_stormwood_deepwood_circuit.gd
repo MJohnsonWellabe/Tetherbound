@@ -29,7 +29,7 @@ func test_any_three_distinct_production_trainers_advance_real_quest_events() -> 
 	var entries: Array = LOGIC.side_entries(flags, chapter)
 	var circuit: Dictionary = entries.filter(func(row: Dictionary) -> bool:
 		return str(row.id) == "stormwood_deepwood_circuit")[0]
-	assert_eq(circuit.how, "Accept Rook's circuit at Lantern Hollow.")
+	assert_eq(circuit.how, "Accept Rook's circuit at the Fallen Giant.")
 	assert_true(LOGIC.dispatch(flags, chapter, "side:stormwood_deepwood_circuit:step_1").changed)
 	assert_false(LOGIC.dispatch(flags, chapter, "side:stormwood_deepwood_circuit:step_2").changed,
 		"The aggregate step cannot be completed without real trainer-win facts")

@@ -1,0 +1,49 @@
+DRY RUN — does not count. F10#2 named-fight route tooling check.
+Capture: render.yml run 36291122935 @ fc291557029b614b09bfebf1fd3f9b3cb9aa1e5f,
+tests/smoke_stormwood_b_named_detour_dryrun.gd --ids=hollows_alpha. The inherited
+chapter-entry seam supplies an in-memory completed-Cloudreach L44 party. The player walked
+from the Stormwood arrival to Lantern Pools, fought three road wilds (won 2, lost 1), and
+then fought Hollows Alpha with the reader pilot: cleared, 116.75 s, 38 tells measured
+0.8-0.85 s, 19 enemy hits and 18 enemy misses.
+KEY (not shown to the judge): Z = hollows_alpha.
+Scores: (a) PASS (b) PASS with caveats (c) FAIL (d) FAIL (e) FAIL.
+
+TOOLING DEFECT FOUND BY THIS JUDGE, FIXED IN THE RECORDER AFTERWARDS: the tell-phase labels
+were late. Under slow software GL several physics steps ran per drawn frame, so a queued
+"tellN-b-mid" frame was taken after the strike. While a named fight is recorded in a render
+run, the recorder now caps physics at one step per drawn frame.
+
+--- judge answers, verbatim ---
+Visual judge verdict for sheet-fight-Z (Voltarach vs Mudsnout). I read JUDGE_PROMPT.txt, the sheet and these full-size tiles: 00-engaged, 99-over, i14, i15, i22, i39, all six tell1 frames, tell2-c/d/e/f, all six tell3 frames and tell4-c/d/e. Note: the tiles on the sheet are labelled "a1-…" but the files are named fight-Z-…; the frames are the same.
+
+**Tell timing cannot be checked from these frames.** The tell labels do not match the phases they claim:
+- tell1-b-mid, the supposed halfway point of the warning, already shows no lane, "it's open — hit it" and "it missed you".
+- tell3-b-mid shows the hit landing.
+- tell3-d-strike and tell3-e-impact show a new "! incoming — move" lane.
+- tell4-d-strike shows no lane at all.
+So the ">= 0.8 s / heavy >= 1.1 s" timing can't be confirmed from these frames. The only support is that the lane appears in consecutive 1 s frames (i20/i21, i29/i30, i25/i26), and that could be one tell or two.
+
+(a) Is the warning visible and distinguishable before it lands? **PASS.** A bright magenta ground lane with chevrons and a ring at Voltarach's feet, plus the "! incoming — move" banner, is unmistakable against the dark field (tell1-a-start, i14, tell2-c-late, tell3-a-start, tell4-c-late). The warning is only the ground marking and the text, though: Voltarach's own pose looks the same in tell and idle frames (compare tell1-a-start with tell1-c-late).
+
+(b) Can you see where it will hit and where to move? **PASS, with caveats.** The lane shows the direction of the charge and its edges, so a sideways dodge is obvious (i14, i39, tell1-a-start). But the lane often runs under Mudsnout and into the bottom-left HUD or off-screen (tell3-a-start, tell4-c-late, tell2-c-late), and its start point is hidden under the spider's body.
+
+(c) Are both creatures readable at actual scale? **FAIL.**
+- The team panel and creature card cover Mudsnout's head or body in many frames (tell1-a-start, tell3-a-start, tell3-f-recovery, i39, 00-engaged).
+- In 00-engaged the camera is so close that Voltarach's top is cut off behind the enemy name card and Mudsnout is cropped by the HUD.
+- In tell2-d-strike the camera is inside Voltarach's mesh, so the whole screen is flat blue geometry.
+- In tell4-d-strike and tell4-e-impact the spider's legs cover Mudsnout.
+The relative scale itself (small boar, large spider) reads correctly when the frame is clear (tell1-c-late, tell2-f-recovery).
+
+(d) Is there a visible hit and a visible avoidance? **FAIL.**
+- **Hit:** visible and clear. A gold starburst on Mudsnout, "your type held — that barely landed" and a falling HP bar (i22, tell3-b-mid). The player's hit back also shows: "STAGGERED — punish now" with a cyan ring (tell2-f-recovery, i18).
+- **Avoidance:** shown only by the text "it missed you". The charge is never seen travelling the lane. In tell2-e-impact and tell4-e-impact Mudsnout is still pressed against or under the spider when "it missed you" appears. Only i14 to i15 roughly suggests a sidestep, with Mudsnout just left of the lane.
+
+(e) Does it show the intended identity (glowmoss setting, full-body lane cue)? **FAIL.**
+- No glowing moss is visible anywhere. The arena is dark generic grass with small lilac flowers in night rain (i14, tell1-c-late, i39). The only green moss is on Mudsnout's back and on distant background creatures.
+- The "full-body lane cue" is a ground marking, not a cue on the alpha's body, and the "charging" action is never visible.
+- The glowmoss exists only as text in 99-over ("The Hollows Alpha yields the glowmoss lanes").
+
+**The three most important LOOK defects:**
+1. **tell2-d-strike:** at the moment of the strike the camera clips inside Voltarach's mesh and the screen is solid blue polygons. The single most important instant of the attack is unreadable.
+2. **tell3-a-start (also tell1-a-start, 00-engaged, i39):** the player's creature sits under the left HUD column. The team list and Mudsnout card cover its head and body, and the danger lane runs underneath the HUD. The fight camera needs to frame the pair away from the HUD, and in 00-engaged it needs to pull back.
+3. **tell4-e-impact (also tell2-e-impact, i14):** there is no glowmoss environment, no body tell on the alpha and no visible charge. "it missed you" appears while Mudsnout is still tangled in the spider's legs. The fight's intended identity is missing and the avoidance reads only from text. The 99-over frame shows the same problem at the end: the beaten Voltarach clips into Mudsnout behind the reward banner.

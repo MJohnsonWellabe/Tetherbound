@@ -1,0 +1,83 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"control_port": 44551,
+			"exited": true,
+			"hashes": [
+				2766643196,
+				2766643196,
+				2766643196
+			],
+			"hello": {
+				"enet_port": 34081.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "e237c90dd6fa",
+				"peer": 0.0,
+				"pid": 7878.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/tmp/claude-0/-home-user-Tetherbound/514e25e3-5581-5cbe-8b81-fab518e9a091/scratchpad/wt7/ralph/reports/INVITE-COOP/x05-proof-f06-5-solo-local-r2/net/net-proof_two_peer-20260927T075454Z/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 1077.0,
+				"physics_frame": 240.0,
+				"pos": [
+					407.501312255859,
+					610.029541015625,
+					3230.48974609375
+				],
+				"session_peers": [
+					1.0
+				],
+				"state_hash": 2766643196.0,
+				"t": 111.525,
+				"type": "heartbeat"
+			},
+			"pid": 7878,
+			"role": "host",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "net-20260927T075454Z-7433",
+	"scene": "title",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}
