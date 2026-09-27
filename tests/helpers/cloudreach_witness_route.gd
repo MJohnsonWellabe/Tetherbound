@@ -225,7 +225,24 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 	var bed_prompt := _camp_bed_prompt_for(target) if body == null and str(stage).begins_with("rest_") else null
 	if bed_prompt != null:
 		return await _approach_bed_offer(bed_prompt, target, radius)
-	return await super._walk(target, radius, body)
+	# Start each foot leg from the authored waypoint it follows, not from
+	# anywhere inside that waypoint's 0.75 m arrival radius: a leg that runs close
+	# to a cliff shoulder (the lower-east causeway leg past
+	# BrokenCausewayMainCliffShoulders/Ridge000) clips it from a start 0.4 m off
+	# (C1 run at 4d8dd8f0, 428 s) and clears it from the waypoint (runs 3 and 4).
+	var mover: Node3D = body if body != null else player
+	if body == null and _last_walk_target.is_finite() and mover != null:
+		var off := Vector2(mover.global_position.x - _last_walk_target.x, mover.global_position.z - _last_walk_target.z).length()
+		if off > 0.3 and off < 1.0 and absf(mover.global_position.y - _last_walk_target.y) < 3.0:
+			_log("witness_waypoint_recentre", {"waypoint": str(_last_walk_target), "off_m": snappedf(off, 0.01), "next": str(target)})
+			if not await super._walk(_last_walk_target, 0.3, body): return false
+	var walked: bool = await super._walk(target, radius, body)
+	if body == null:
+		_last_walk_target = target if walked else Vector3.INF
+	return walked
+
+
+var _last_walk_target := Vector3.INF
 
 
 ## The base camp-recovery step walks to a fixed point 1.2 m -z of a creature
