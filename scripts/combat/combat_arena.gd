@@ -22,6 +22,9 @@ const HOLD_SLIDE_ITERATIONS := 4
 ## A hit whose normal opposes the return by less than this (cosine) is a
 ## pre-existing contact, not an obstacle ahead.
 const HOLD_FACING_EPSILON := 0.05
+## Height above the body origin (its feet) of the tunnelling check's ray, so a
+## floor the fighter stands on is not itself "crossed".
+const HOLD_CROSS_CHECK_LIFT_M := 0.6
 
 var _boundary_height: float = 3.5
 var _boundary_alpha: float = 0.16
@@ -102,6 +105,7 @@ func hold_inside(body: CharacterBody3D) -> Vector3:
 	# in and keeps the write.
 	var target := global_position + outward * radius + Vector3.UP * (body.global_position.y - global_position.y)
 	if body.is_inside_tree():
+		var start := body.global_position
 		var motion := target - body.global_position
 		for _slide in HOLD_SLIDE_ITERATIONS:
 			var hit := body.move_and_collide(motion)
@@ -114,6 +118,8 @@ func hold_inside(body: CharacterBody3D) -> Vector3:
 			motion = remainder.slide(hit.get_normal())
 			if motion.length() < 0.001:
 				break
+		if _crossed_a_surface(body, start):
+			body.global_position = start
 	else:
 		body.global_position = target
 
@@ -125,6 +131,23 @@ func hold_inside(body: CharacterBody3D) -> Vector3:
 		body.velocity.z = flat.z
 		return -outward
 	return Vector3.ZERO
+
+
+## F14#0 (Tess, Deep Watch crown): on the real Terrain3D heightfield a fighter
+## standing at the foot of a 74-degree rise was swept 2.3 m horizontally into
+## it without a reported contact, ended 6 m inside the hill and fell out of the
+## world (the camera's opponent tracker followed it into the void). Whatever the
+## sweep reported, a return whose own centre line passes through solid
+## geometry went through a surface: the caller keeps the start position (the
+## outward velocity is still removed, so the soft wall still holds next tick).
+func _crossed_a_surface(body: CharacterBody3D, start: Vector3) -> bool:
+	var lift := Vector3.UP * HOLD_CROSS_CHECK_LIFT_M
+	var from := start + lift
+	var to := body.global_position + lift
+	if from.distance_to(to) < 0.01:
+		return false
+	var query := PhysicsRayQueryParameters3D.create(from, to, body.collision_mask, [body.get_rid()])
+	return not body.get_world_3d().direct_space_state.intersect_ray(query).is_empty()
 
 
 ## Is this point inside the arena? Used by the AI, which should never choose to
