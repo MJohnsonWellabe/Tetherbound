@@ -1,0 +1,20 @@
+F03#0 lure renders for doss-e, vault-e and hall-e (2026-09-27), rendered locally in the lane container per the coordinator's PHASE 2 comment on #356.
+
+Command (one at a time; two at once ran out of memory at ~7 GB each):
+  XDG_DATA_HOME=<scratch> xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+    --resolution 1280x720 --script tests/capture_activity_lures.gd -- --activity=<id> <save args> --capture-dir=<dir>
+  doss : --save=res://tests/fixtures/f03_lure_saves/S07-exit-band3.json.gz --off-road-cost=10
+  vault: --save=res://tests/fixtures/f03_lure_saves/S06-exit-band3-warrens-uncleared.json.gz
+  hall : --save-dir=res://tests/fixtures/earned_saves/checkpoints/seed4_hall/save
+Godot 4.7-stable (official Linux build), full checkout (skip-worktree cleared on addons/ and assets/), clean
+`godot --headless --path . --import` from an empty .godot/.
+Adapter: Mesa llvmpipe (LLVM 20.1.2, 256 bits), OpenGL 4.5 Core, Mesa 25.2.8 — CPU, same path as render.yml.
+PNG frames converted to JPEG (quality 85) for the repo; receipts are the walker's own [lure-walk] lines.
+
+Set F (2026-09-27, 21:00-22:30 UTC), same command and adapter, at the lane working tree that became the READY head:
+  doss-f   : --activity=doss  --save=...S07-exit-band3.json.gz --off-road-cost=10 (Banner_2 river pennant)
+  hall-f   : --activity=hall  --save-dir=...earned_saves/checkpoints/seed4_hall/save (alpha label no_depth_test)
+  herd-f   : --activity=herd  --save=...S04-exit-pose-on-road.json.gz --off-road-cost=10 --budget-s=2400
+  vault-f2 : --activity=vault --save=...S06-exit-band3-warrens-uncleared.json.gz  (judge frame: at the door)
+  vault-f3 : same as vault-f2, same code and config  (judge frame: den entry; f2's den-entry shot came from the passage)
+Walker: lure frames (first seen, first readable, approach, non-Engage prompt) put the companion away first; the recall does not always take (herd-f 55 m frame, vault door frames).

@@ -24,7 +24,7 @@ const DISTANCES_M := [220.0, 160.0, 110.0, 70.0]
 ## `--distances=480,420` overrides (Juno's patrol camp is ~470 m off any road).
 const CUES := {
 	"bram": Vector2(184.0, 901.0),
-	"doss": Vector2(-11.0, 4184.5),
+	"doss": Vector2(-23.5, 4160.5),
 	"juno": Vector2(-175.0, 5470.0),
 	"vault": Vector2(-351.0, 2611.8),
 }

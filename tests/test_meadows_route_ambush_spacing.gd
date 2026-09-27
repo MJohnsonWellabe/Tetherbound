@@ -24,7 +24,7 @@ const ROLLED_SEEDS_FROM := 1
 const ROLLED_SEEDS_TO := 200
 const A7_WALK_WINDOW_M := 600.0
 const BAND5_ENTRY_M := 3400.0  # chainage of (0,7000) on the band4+band5 route
-const HALL_ALPHA_CENTRE := Vector2(-58.0, 7255.0)
+const HALL_ALPHA_CENTRE := Vector2(-30.0, 7295.0)
 
 
 func _rolled_seeds() -> Array:
@@ -118,7 +118,7 @@ func test_rolled_worlds_keep_the_danger_floor() -> void:
 		if int((raw as Dictionary).get("order", -1)) == 5001:
 			pack = raw
 	var centre: Array = pack.get("centre", [0, 0, 0])
-	assert_eq(Vector2(float(centre[0]), float(centre[2])), HALL_ALPHA_CENTRE, "order 5001 is not moved")
+	assert_eq(Vector2(float(centre[0]), float(centre[2])), HALL_ALPHA_CENTRE, "order 5001 sits at its F03#0 road-sightline site (#356)")
 	assert_eq(int(pack.get("count", 0)), 3, "order 5001 keeps its three-body pack")
 
 

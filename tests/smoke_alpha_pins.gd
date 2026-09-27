@@ -67,9 +67,12 @@ const START_XZ := Vector2(-180.0, 1700.0)
 
 const HALL_ONCE_FLAG := "wild_once_5001"
 ## Interpolated on Band 5's authored spine segment [-80,7120] -> [-20,7250].
-## This keeps the fixture on the road about 50m south of Alpha Galecrest 5001,
-## inside the existing 1800-frame real-input walking budget.
+## The pack moved to (-30,7295) (F03#0), so this start is now about 85 m from
+## Alpha Galecrest 5001; HALL_WALK_FRAMES covers that walk (1800 frames did
+## not reliably: 1 in 3 runs stopped 23 m short). The start itself stays on
+## the spine because `--hall-decline` walks the road north from it too.
 const HALL_ROAD_XZ := Vector2(-38.5, 7210.0)
+const HALL_WALK_FRAMES := 3600
 const HALL_PARTY := ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]
 const HALL_LEVEL := 18
 const HALL_SLOT := 4
@@ -403,7 +406,21 @@ func _run_hall_activity() -> void:
 		return
 	pilot.listen()
 	var capture_dir := _hall_capture_dir()
-	var gap := await pilot.walk_trainer_to(player, alpha, 4.0, 1800)
+	var gap := await pilot.walk_trainer_to(player, alpha, 4.0, HALL_WALK_FRAMES)
+	# The pack's own aggression usually starts the fight on arrival; when it
+	# has not (1 in 3 runs stopped beside a quiet alpha), a player presses the
+	# alpha's Engage prompt. Re-close and press, with real input, up to 3 times.
+	for attempt in 3:
+		if bool(manager.call("is_fighting")):
+			break
+		gap = await pilot.walk_trainer_to(player, alpha, 2.5, 900)
+		if bool(manager.call("is_fighting")):
+			break
+		Input.action_press("interact")
+		await physics_frame
+		Input.action_release("interact")
+		for _frame in 60:
+			await physics_frame
 	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != alpha:
 		_fail("hall activity: real road input did not reach and engage Alpha Galecrest (gap %.2f)" % gap)
 		_report()
@@ -449,7 +466,7 @@ func _run_hall_activity() -> void:
 ## along the authored `band5_stronghold_approach` trail polyline past the
 ## aggressive pack. Fails if any fight starts, the pack follows the trainer to
 ## the far waypoint, or the road is not walked.
-const HALL_PACK_CENTRE := Vector2(-58.0, 7255.0)
+const HALL_PACK_CENTRE := Vector2(-30.0, 7295.0)
 ## Deliberately wider than the authored 18 m cluster radius, as a margin.
 const HALL_PACK_TERRITORY_M := 25.0
 const HALL_DECLINE_WAYPOINTS := [Vector2(-20.0, 7250.0), Vector2(30.0, 7310.0), Vector2(80.0, 7370.0)]

@@ -1,0 +1,50 @@
+[lure-walk] START activity=herd save=S04-exit-pose-on-road.json.gz pos=[13.2, 0.9, 20.26] lure=[-70.0, 1310.0] route_m=2323.5 hour=8.20
+[lure-walk] CAPTURE herd_01_start.png t=0.0s walked=0.0m pos=(13.2,20.3) lure_m=1292.4
+[lure-walk] PROGRESS t=10.0s walked=78.7m pos=(3.6,97.8) cursor=11/302
+[lure-walk] PROGRESS t=20.0s walked=140.9m pos=(-25.5,152.7) cursor=19/302
+[lure-walk] PROGRESS t=30.0s walked=202.4m pos=(-60.2,202.8) cursor=27/302
+[lure-walk] PROGRESS t=40.0s walked=264.6m pos=(-101.5,249.2) cursor=35/302
+[lure-walk] PROGRESS t=50.0s walked=326.9m pos=(-150.5,286.6) cursor=43/302
+[lure-walk] PROGRESS t=60.0s walked=388.8m pos=(-204.8,316.2) cursor=51/302
+[lure-walk] PROGRESS t=70.0s walked=450.6m pos=(-259.2,345.7) cursor=59/302
+[lure-walk] PROGRESS t=80.0s walked=512.5m pos=(-313.6,375.0) cursor=67/302
+[lure-walk] PROGRESS t=90.0s walked=574.6m pos=(-364.4,408.7) cursor=75/302
+[lure-walk] PROGRESS t=100.0s walked=636.6m pos=(-389.9,464.9) cursor=84/302
+[lure-walk] PROGRESS t=110.0s walked=697.5m pos=(-393.9,525.7) cursor=91/302
+[lure-walk] PROGRESS t=120.0s walked=747.8m pos=(-379.3,517.6) cursor=98/302
+[lure-walk] PROGRESS t=133.6s walked=784.9m pos=(-362.4,510.0) cursor=102/302
+[lure-walk] PROGRESS t=143.6s walked=844.8m pos=(-339.2,551.7) cursor=110/302
+[lure-walk] PROGRESS t=153.6s walked=906.6m pos=(-310.0,601.4) cursor=118/302
+[lure-walk] CAPTURE herd_02_fight-wild_meadowhart_1911_2.png t=160.0s walked=927.6m pos=(-297.8,608.6) lure_m=737.5
+[lure-walk] PROGRESS t=166.5s walked=957.7m pos=(-271.9,623.2) cursor=124/302
+[lure-walk] PROGRESS t=176.5s walked=1025.2m pos=(-208.2,644.8) cursor=133/302
+[lure-walk] PROGRESS t=186.5s walked=1086.5m pos=(-150.1,664.3) cursor=141/302
+[lure-walk] PROGRESS t=196.5s walked=1148.3m pos=(-91.9,685.0) cursor=149/302
+[lure-walk] PROGRESS t=206.5s walked=1209.5m pos=(-34.6,706.6) cursor=157/302
+[lure-walk] PROGRESS t=216.5s walked=1270.8m pos=(21.7,730.7) cursor=165/302
+[lure-walk] PROGRESS t=226.5s walked=1332.2m pos=(78.2,754.9) cursor=173/302
+[lure-walk] PROGRESS t=236.5s walked=1394.4m pos=(134.1,782.1) cursor=181/302
+[lure-walk] PROGRESS t=246.5s walked=1456.1m pos=(189.3,809.7) cursor=189/302
+[lure-walk] PROGRESS t=256.5s walked=1508.1m pos=(235.3,833.6) cursor=196/302
+[lure-walk] CAPTURE herd_03_fight-wild_mudsnout_1030_2.png t=259.1s walked=1508.2m pos=(233.5,840.6) lure_m=559.0
+[lure-walk] PROGRESS t=269.5s walked=1569.4m pos=(282.3,867.3) cursor=203/302
+[lure-walk] PROGRESS t=279.5s walked=1632.5m pos=(329.3,909.3) cursor=211/302
+[lure-walk] PROGRESS t=289.5s walked=1694.8m pos=(371.2,954.7) cursor=219/302
+[lure-walk] PROGRESS t=299.5s walked=1757.1m pos=(391.2,1013.7) cursor=227/302
+[lure-walk] PROGRESS t=309.5s walked=1819.6m pos=(384.1,1071.8) cursor=236/302
+[lure-walk] PROGRESS t=319.5s walked=1882.1m pos=(345.1,1118.7) cursor=244/302
+[lure-walk] PROGRESS t=329.5s walked=1944.5m pos=(290.4,1148.5) cursor=252/302
+[lure-walk] PROGRESS t=339.5s walked=2007.2m pos=(233.6,1175.0) cursor=260/302
+[lure-walk] PROGRESS t=349.5s walked=2068.7m pos=(177.7,1200.6) cursor=268/302
+[lure-walk] PROGRESS t=359.5s walked=2130.5m pos=(119.1,1220.3) cursor=276/302
+[lure-walk] PROGRESS t=369.5s walked=2192.4m pos=(60.4,1239.9) cursor=284/302
+[lure-walk] CAPTURE herd_04_lure-first-seen.png t=375.2s walked=2217.8m pos=(36.3,1247.9) lure_m=123.1
+[lure-walk] CAPTURE herd_05_road-glance-at-first-sighting.png t=376.9s walked=2217.8m pos=(36.3,1247.9) lure_m=123.1
+[lure-walk] PROGRESS t=384.2s walked=2268.3m pos=(-3.4,1278.7) cursor=294/302
+[lure-walk] CAPTURE herd_06_lure-first-readable.png t=388.7s walked=2287.5m pos=(-18.0,1291.1) lure_m=55.3
+[lure-walk] CAPTURE herd_07_road-glance-before-exit.png t=390.6s walked=2299.1m pos=(-26.8,1298.7) lure_m=44.6
+[lure-walk] CAPTURE herd_08_road-exit-glance-toward-lure.png t=394.8s walked=2314.4m pos=(-38.6,1308.5) lure_m=31.4
+[lure-walk] CAPTURE herd_09_approach-30m.png t=397.3s walked=2316.8m pos=(-41.0,1308.6) lure_m=29.0
+[lure-walk] CAPTURE herd_10_prompt-offered.png t=402.9s walked=2335.3m pos=(-59.4,1309.5) lure_m=10.6
+[lure-walk] RECEIPT {"activity":"herd","budget_s":2400.0,"clock_hour":8.2041082304762,"companion_out_at_start":true,"entered_road_at":[14.0,20.0],"fights":[{"foe":"Wild_meadowhart_1911_2","resolved_by":"combat_run","t_s":160.0},{"foe":"Wild_mudsnout_1030_2","resolved_by":"combat_run","t_s":259.1}],"final_position":[-59.4,1309.5],"flags_set_by_game_during_walk":["alpha_pin_intro_seen"],"frames":[{"file":"herd_01_start.png","label":"start","lure_m":1292.4,"pos":[13.2,20.3],"t_s":0.0,"walked_m":0.0},{"file":"herd_02_fight-wild_meadowhart_1911_2.png","label":"fight-wild_meadowhart_1911_2","lure_m":737.5,"pos":[-297.8,608.6],"t_s":160.0,"walked_m":927.6},{"file":"herd_03_fight-wild_mudsnout_1030_2.png","label":"fight-wild_mudsnout_1030_2","lure_m":559.0,"pos":[233.5,840.6],"t_s":259.1,"walked_m":1508.2},{"file":"herd_04_lure-first-seen.png","label":"lure-first-seen","lure_m":123.1,"pos":[36.3,1247.9],"t_s":375.2,"walked_m":2217.8},{"file":"herd_05_road-glance-at-first-sighting.png","label":"road-glance-at-first-sighting","lure_m":123.1,"pos":[36.3,1247.9],"t_s":376.9,"walked_m":2217.8},{"file":"herd_06_lure-first-readable.png","label":"lure-first-readable","lure_m":55.3,"pos":[-18.0,1291.1],"t_s":388.7,"walked_m":2287.5},{"file":"herd_07_road-glance-before-exit.png","label":"road-glance-before-exit","lure_m":44.6,"pos":[-26.8,1298.7],"t_s":390.6,"walked_m":2299.1},{"file":"herd_08_road-exit-glance-toward-lure.png","label":"road-exit-glance-toward-lure","lure_m":31.4,"pos":[-38.6,1308.5],"t_s":394.8,"walked_m":2314.4},{"file":"herd_09_approach-30m.png","label":"approach-30m","lure_m":29.0,"pos":[-41.0,1308.6],"t_s":397.3,"walked_m":2316.8},{"file":"herd_10_prompt-offered.png","label":"prompt-offered","lure_m":10.6,"pos":[-59.4,1309.5],"t_s":402.9,"walked_m":2335.3}],"game_seconds":404.2,"left_road_at":[-40.0,1310.0],"load_vs_saved_xz_m":0.26,"lure_first_readable":{"after_deliberate_look":false,"camera_to_lure_m":62.9,"height_px":32,"t_s":387.0,"walked_m":2286.5,"while_on_road":true},"lure_first_seen":{"after_deliberate_look":false,"camera_to_lure_m":129.1,"screen_px":[562,261],"t_s":373.5,"walked_m":2217.6,"while_on_road":true},"lure_node":"/root/MeadowsPlayground/MeadowhartHerdVisit","lure_position":[-70.0,1310.0],"notes":["pressed creature_recall (attempt 1); companion out afterwards: true","t=123.0s no progress at (-382.3,517.6); unstick attempt 1 (jump + strafe)","t=128.9s no progress at (-385.6,516.7); unstick attempt 2 (jump + strafe)","t=159.8s blocked beside { \"label\": \"Engage Meadowhart\", \"distance\": 0.40126989000702, \"priority\": 0, \"actionable\": true }; pressed interact","t=258.8s blocked beside { \"label\": \"Engage Mudsnout\", \"distance\": 0.40899093151093, \"priority\": 0, \"actionable\": true }; pressed interact","first-sighting glance; pressed creature_recall (attempt 1); companion out afterwards: true","approach-30m frame; pressed creature_recall (attempt 1); companion out afterwards: true","prompt-offered frame; pressed creature_recall (attempt 1); companion out afterwards: true"],"off_road_leg_m":30.0,"position_after_load":[13.2,0.9,20.26],"prompt":{"t_s":400.7,"walked_m":2334.4,"winner":"{ \"label\": \"Watch the Meadowhart herd\", \"distance\": 11.6093063354492, \"priority\": 5, \"actionable\": true }"},"road_exit_glance":{"camera_to_lure_m":32.2,"t_s":393.1},"road_glance_before_exit":{"camera_to_lure_m":45.5,"t_s":390.1},"route_m":2323.5,"route_road_points":300,"save":"res://tests/fixtures/f03_lure_saves/S04-exit-pose-on-road.json.gz","save_sha256":"25d221d3828422a5370fdc367d209a553707820130c1f2dbb2fdcacf23285371","save_version":15.0,"saved_position":[13.2,0.4,20.0],"scene":"res://scenes/world/meadows_playground.tscn","script_state_writes":"none","start_distance_to_lure_m":1292.4,"verdict":"PASS","walked_m":2335.3,"why":"lure seen and the activity's prompt was offered"}
+[lure-walk] PASS activity=herd: lure seen and the activity's prompt was offered
