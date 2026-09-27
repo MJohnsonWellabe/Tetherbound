@@ -40,7 +40,10 @@ repo-native geometry; the reference board supplies direction only.
 ## Verification
 
 - Native Windows Godot 4.7 `5b4e0cb0f`, Compatibility/OpenGL 3.3, GTX 1060 3 GB,
-  driver 560.94, 1920×1080. These are desktop captures, not Ally performance proof.
+  driver 560.94. Requested 1920×1080, but inspection of the raw PNGs confirms
+  **1920×1061**: Windows constrained the startup client area. Baseline/candidate
+  rasters match, so the bounded comparison remains useful; this does not meet the
+  exact 1080p capture requirement. These are desktop captures, not Ally performance proof.
 - Baseline: 9 frames, zero skipped, exit 0; candidate: 13 frames, zero skipped,
   exit 0. Overview day/dusk/night; entrance/interior/reverse day/night; candidate
   also includes lower gate/high shrine day/night to inspect the shared path.
