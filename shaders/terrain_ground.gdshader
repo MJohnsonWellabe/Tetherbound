@@ -648,7 +648,7 @@ void fragment() {
 	float rock_weight = steep_rock_strength * (1.0 - smoothstep(
 		steep_rock_full_y, max(steep_rock_start_y, steep_rock_full_y + 0.001), abs(rock_face.y)));
 	if (rock_weight > 0.001) {
-		int rock_id = steep_rock_texture_id;
+		int rock_id = clamp(steep_rock_texture_id, 0, min(31, textureSize(_texture_array_albedo, 0).z - 1));
 		float rock_scale = _texture_uv_scale_array[rock_id];
 		vec2 side_sign = vec2(rock_face.x < 0.0 ? -1.0 : 1.0, rock_face.z < 0.0 ? -1.0 : 1.0);
 		vec2 side_weight = abs(rock_face.xz);
@@ -732,6 +732,10 @@ void fragment() {
 		float bank_area = (1.0 - smoothstep(bank_inner.x, long_water_bank_half_extent.x, bank_delta.x))
 				* (1.0 - smoothstep(bank_inner.y, long_water_bank_half_extent.y, bank_delta.y));
 		float bank_rock = texture_id_weight(control, weights, bilerp, long_water_bank_rock_texture_id);
+		// Newly exposed cliff rock receives the same regional bank treatment.
+		if (steep_rock_texture_id == long_water_bank_rock_texture_id) {
+			bank_rock = mix(bank_rock, 1.0, rock_weight);
+		}
 		float bank_noise = texture(noise_texture,
 				v_vertex.xz / max(long_water_bank_noise_tile_m, 0.1) + vec2(0.19, 0.71)).r;
 		vec3 bank_tint = mix(long_water_bank_earth_tint, long_water_bank_moss_tint,
