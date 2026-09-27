@@ -58,6 +58,12 @@ const MIN_OFF_ROAD_M := 25.0
 const ARENA_CLEAR_M := 6.0
 const CANOPY_FACTOR := 0.7
 const CANOPY_MODELS := ["CommonTree", "CherryBlossom", "TwistedTree", "Pine", "Birch"]
+## `--six`: the game camera's vertical field of view and frame height, to turn
+## an element's angular size into on-screen pixels (meadows_playground.tscn).
+const CAMERA_VFOV_DEG := 70.0
+const FRAME_H_PX := 720.0
+## Smoke columns are sampled at these heights above the fire.
+const COLUMN_SAMPLES_M := [6.0, 12.0, 18.0, 24.0, 30.0, 36.0, 40.0]
 
 var _world: Node3D
 var _terrain_data: Object
@@ -75,6 +81,7 @@ func _run() -> void:
 	var only := ""
 	var ats: Array = []
 	var grids: Array = []
+	var six := false
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--activity="):
 			only = a.trim_prefix("--activity=")
@@ -82,6 +89,8 @@ func _run() -> void:
 			ats.append(a.trim_prefix("--at="))
 		elif a.begins_with("--grid="):
 			grids.append(a.trim_prefix("--grid="))
+		elif a == "--six":
+			six = true
 	_load_roads()
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
@@ -110,6 +119,10 @@ func _run() -> void:
 	_space = _world.get_world_3d().direct_space_state
 
 	_collect_canopies()
+	if six:
+		_six_lures()
+		quit(0)
+		return
 	for id: String in ["bram", "herd", "doss"]:
 		if only != "" and only != id:
 			continue
@@ -362,3 +375,153 @@ func _load_roads() -> void:
 				var steps := maxi(1, int(ceil(line[j - 1].distance_to(line[j]) / DENSIFY_M)))
 				for s in range(0 if j == 1 else 1, steps + 1):
 					_nodes.append(line[j - 1].lerp(line[j], float(s) / float(steps)))
+
+
+# --- `--six`: every F03 lure element against the road network ---------------
+#
+# For each of the six activities and each element that makes its lure (the
+# figure, the signal column, the herd, the alpha and its nameplate, the vault
+# door's lit seam), report how many road samples within SAMPLE_RANGE_M see it
+# (terrain + hard scatter + soft scatter; canopy reported separately), the
+# nearest and farthest clear distances, and the element's angular size and
+# on-screen height at the farthest and nearest clear sample. The vault's
+# "road" is the required Warrens route (entrance -> mouth -> hall -> den).
+
+func _six_lures() -> void:
+	var fire_cfg := _prop_specs(["OldBramCampFire", "DossCampFire", "TetherHoldingFire"])
+	var trainers := _world.get_node_or_null(^"Trainers")
+	var elements: Array = []  # {activity, element, points[], size_m}
+	var bram := trainers.call("body_for", "old_champion_bram") as Node3D if trainers != null else null
+	if bram != null:
+		elements.append({"activity": "bram", "element": "figure", "points": [bram.global_position + Vector3.UP * 0.9], "size_m": 1.8})
+	elements.append(_column_element("bram", fire_cfg.get("OldBramCampFire", {})))
+	var doss := _world.get_node_or_null(^"RiverNestClear/Doss") as Node3D
+	if doss != null:
+		elements.append({"activity": "doss", "element": "figure", "points": [doss.global_position + Vector3.UP * 0.9], "size_m": 1.8})
+	elements.append(_column_element("doss", fire_cfg.get("DossCampFire", {})))
+	var rue := trainers.call("body_for", "lost_creature_rue") as Node3D if trainers != null else null
+	if rue != null:
+		elements.append({"activity": "juno", "element": "patrol figure", "points": [rue.global_position + Vector3.UP * 0.9], "size_m": 1.8})
+	elements.append(_column_element("juno", fire_cfg.get("TetherHoldingFire", {})))
+	var herd := _live_targets("herd")
+	if herd.size() > 1:
+		elements.append({"activity": "herd", "element": "meadowharts", "points": herd.slice(1), "size_m": 2.4})
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	var pack: Array = []
+	if director != null:
+		for candidate: Variant in director.get("_wild_creatures"):
+			var b := candidate as Node3D
+			if b != null and is_instance_valid(b) and str(b.name).begins_with("Wild_galecrest_5001_"):
+				pack.append(b.global_position + Vector3.UP * 1.2)
+	if not pack.is_empty():
+		elements.append({"activity": "hall", "element": "alpha pack", "points": pack, "size_m": 2.4})
+		elements.append({"activity": "hall", "element": "nameplate", "points": pack.map(func(q: Vector3) -> Vector3: return q + Vector3.UP * 3.2), "size_m": 0.6})
+	for e: Dictionary in elements:
+		if (e.points as Array).is_empty():
+			print("[lure-six] %s %s MISSING" % [e.activity, e.element])
+			continue
+		_six_report(e, _nodes, true)
+	_six_vault()
+
+
+func _column_element(activity: String, spec: Dictionary) -> Dictionary:
+	var pts: Array = []
+	if spec.has("at"):
+		var at: Array = spec["at"]
+		var top := float(spec.get("smoke_top_m", 0.0))
+		var base := _ground(float(at[0]), float(at[1])) - Vector3.UP * BODY_M
+		for h: float in COLUMN_SAMPLES_M:
+			if h <= top:
+				pts.append(base + Vector3.UP * h)
+		return {"activity": activity, "element": "signal column %.0f m" % top, "points": pts, "size_m": top, "column": true}
+	return {"activity": activity, "element": "signal column", "points": pts, "size_m": 0.0}
+
+
+func _six_report(e: Dictionary, nodes: PackedVector2Array, outdoor: bool) -> void:
+	var anchor: Vector3 = (e.points as Array)[0]
+	var a2 := Vector2(anchor.x, anchor.z)
+	var samples := 0
+	var clear := 0
+	var clear_canopy := 0
+	var near := -1.0
+	var far := -1.0
+	var visible_share_far := 0.0
+	for n: Vector2 in nodes:
+		var d := n.distance_to(a2)
+		if d > SAMPLE_RANGE_M:
+			continue
+		samples += 1
+		var ground := float(_terrain_data.call("get_height", Vector3(n.x, 0, n.y))) if outdoor else anchor.y - 0.9
+		var eye := Vector3(n.x, ground + EYE_M, n.y)
+		var seen := 0
+		var seen_canopy := 0
+		for t: Vector3 in e.points:
+			var ok := _clear_physics(eye, t) and (not outdoor or (_clear_terrain(eye, t) and _clear_soft(eye, t)))
+			if ok:
+				seen += 1
+				if not outdoor or _canopies.is_empty() or _clear_canopy(eye, t):
+					seen_canopy += 1
+		if seen > 0:
+			clear += 1
+			if near < 0.0 or d < near:
+				near = d
+			if d > far:
+				far = d
+				visible_share_far = float(seen) / float((e.points as Array).size())
+		if seen_canopy > 0:
+			clear_canopy += 1
+	var size_m := float(e.size_m)
+	if bool(e.get("column", false)):
+		size_m *= visible_share_far
+	print("[lure-six] %-5s %-22s samples=%3d clear=%3d clear_canopy=%3d nearest=%s farthest=%s size_at_far=%s size_at_near=%s" % [
+		e.activity, e.element, samples, clear, clear_canopy,
+		_m(near), _m(far), _ang(size_m, far), _ang(float(e.size_m), near)])
+
+
+func _six_vault() -> void:
+	var warrens := _world.get_node_or_null(^"BurrowWarrens")
+	var door := _world.find_child("VaultDoor", true, false) as Node3D
+	if warrens == null or door == null:
+		print("[lure-six] vault  door/route MISSING (warrens=%s door=%s)" % [warrens != null, door != null])
+		return
+	var route := PackedVector2Array()
+	var legs: Array = []
+	for key: String in ["entrance", "mouth", "hall", "den"]:
+		legs.append(warrens.call("marker", key))
+	for i in range(1, legs.size()):
+		var a: Vector3 = legs[i - 1]
+		var b: Vector3 = legs[i]
+		var steps := maxi(1, int(Vector2(a.x, a.z).distance_to(Vector2(b.x, b.z)) / 2.0))
+		for k in steps + 1:
+			var q := a.lerp(b, float(k) / float(steps))
+			route.append(Vector2(q.x, q.z))
+	var seam := door.global_position
+	_six_report({"activity": "vault", "element": "lit door seam", "points": [seam, seam + Vector3.UP * 0.8, seam - Vector3.UP * 0.8], "size_m": 2.4}, route, false)
+
+
+func _prop_specs(names: Array) -> Dictionary:
+	var out := {}
+	for dir_name: String in DirAccess.get_directories_at("res://data/config/bands"):
+		var path := "res://data/config/bands/%s/props.json" % dir_name
+		if not FileAccess.file_exists(path):
+			continue
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if not parsed is Dictionary:
+			continue
+		for cluster: Variant in (parsed as Dictionary).get("clusters", []):
+			for prop: Variant in (cluster as Dictionary).get("props", []):
+				var nm := str((prop as Dictionary).get("name", ""))
+				if nm in names:
+					out[nm] = prop
+	return out
+
+
+func _m(v: float) -> String:
+	return "-" if v < 0.0 else "%.0fm" % v
+
+
+func _ang(size_m: float, d: float) -> String:
+	if d <= 0.0 or size_m <= 0.0:
+		return "-"
+	var deg := rad_to_deg(2.0 * atan(size_m * 0.5 / d))
+	return "%.1fdeg/%.0fpx" % [deg, deg / CAMERA_VFOV_DEG * FRAME_H_PX]
