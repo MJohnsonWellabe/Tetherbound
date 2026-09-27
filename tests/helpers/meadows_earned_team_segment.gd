@@ -114,8 +114,13 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 		# _engage verifies the actual admitted body, including after the input
 		# frame. A different nearby wild cannot silently replace this selection.
 		var before := _party_ids()
-		var catch_driver := CATCH.new()
-		var caught: Dictionary = await catch_driver.catch_existing(tree, world, game, _player, _rig, wild)
+		var caught: Dictionary = await _catch_with_retries(wild)
+		if caught.is_empty():
+			# The fight ended without a catch (the lead fell while a tree
+			# held the throw line, seed 15 CI r38). A player picks a fresh
+			# lead and another wild; this body is skipped.
+			_avoid.append(wild)
+			continue
 		if not bool(caught.get("passed", false)):
 			_fail("Live catch failed: " + str(caught.get("failures", [])))
 			return result()
@@ -172,7 +177,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_receipt("team_ready", {"required_size": TOURNAMENT.required_party_size(),
 		"required_level": TOURNAMENT.required_level(), "party": _party_snapshot(),
 		"world_seed": int(_director.call("world_seed")), "training_wins": wins,
-		"respawn_waits": _respawn_waits, "training_losses": _training_losses, "fought": _fought.duplicate(),
+		"respawn_waits": _respawn_waits, "training_losses": _training_losses, "catch_retries": _catch_retries, "fought": _fought.duplicate(),
 		"repeated_wilds": repeated_names(_fought),
 		"unused_eligible": _unused_eligible_names()})
 	return result()
@@ -651,6 +656,37 @@ func _unused_eligible_names() -> Array[String]:
 ## fight), exploration resumes where the player stands, and the Satchel revive
 ## in `_prepare_pilot` brings the lead back. Seed 15 (CI r5, bade6d57) lost one
 ## such fight with an L5 lead at 84% HP and ended the whole route on it.
+## A live catch can fail without the player doing anything wrong: a tree
+## holds the throw line while the wild keeps attacking (seed 15, CI r38:
+## 12 s line_of_sight_blocked on CommonTree_1, the lead fell, the fight
+## ended). While the fight is still on, throw again with a fresh driver;
+## once it has ended, report an empty result so the caller picks another
+## wild. Bounded; the last driver's failures stand.
+const MAX_CATCH_ATTEMPTS := 3
+var _catch_retries := 0
+
+
+func _catch_with_retries(wild: Node3D) -> Dictionary:
+	var caught: Dictionary = {}
+	for attempt in MAX_CATCH_ATTEMPTS:
+		var catch_driver := CATCH.new()
+		caught = await catch_driver.catch_existing(_tree, _world, _game, _player, _rig, wild)
+		if bool(caught.get("passed", false)):
+			return caught
+		_catch_retries += 1
+		_receipt("catch_retry", {"attempt": attempt + 1, "failures": caught.get("failures", []),
+			"fighting": _fighting(), "party": _party_snapshot()})
+		if _catch_retries > MAX_CATCH_ATTEMPTS * 2:
+			return caught
+		if not _fighting() or not is_instance_valid(wild):
+			for _frame in 240:
+				if INPUT_OWNER.current(_tree) == null:
+					break
+				await _tree.physics_frame
+			return {}
+	return caught
+
+
 const MAX_TRAINING_LOSSES := 3
 var _training_losses := 0
 var _avoid: Array[Node3D] = []
