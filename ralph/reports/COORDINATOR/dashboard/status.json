@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 20:55 UTC",
+ "updated": "2026-09-27T21:05Z",
  "headline": [
-  "Criteria met: 79 of 101. Batches 63-64 merged (F15#2; T1, S3, S1 card runs). Batch 65: Cloudreach card C1 complete.",
+  "Criteria met: 80 of 101 once batch 65 lands. Batches 63-64 merged (F15#2; T1, S3, S1 card runs). Batch 65 staged: Cloudreach card C1 complete, F13#2 Tidewake pockets met.",
   "Owner rules today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary; build the game, not proof machinery (every round player-visible, two-strike harness rule, hourly Balance line). 9 Claude lanes plus Codex."
  ],
  "batches": [
@@ -272,8 +272,8 @@
   {
    "name": "Batch 65",
    "sha": "pending",
-   "state": "Awaiting VERIFIER 2",
-   "contents": "Cloudreach card C1 earned flight-route run (card complete)"
+   "state": "Staged; F13#2 verified, C1 awaiting VERIFIER 2",
+   "contents": "Cloudreach card C1 earned flight-route run (card complete); F13#2 eight pockets walked and paid (dd9f504a)"
   }
  ],
  "lanes": [

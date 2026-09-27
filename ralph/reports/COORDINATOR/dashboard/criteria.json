@@ -738,10 +738,10 @@
    "id": "F13",
    "title": "Tidewake islands, chains and look",
    "chapter": "Tidewake",
-   "pct": 17,
+   "pct": 67,
    "counts": {
-    "met": 3,
-    "partial": 2,
+    "met": 4,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -763,10 +763,10 @@
     },
     {
      "text": "Eight reward pockets reachable and paid",
-     "status": "partial",
-     "evidence": "Six candy pockets walked and claimed in engine (smoke_water_pocket_walk_claim, disclosed arrival fixture) + Cradle nest payout (main fe07d0d2)",
-     "gap": "Reed hollow recipe half unpaid; no long-range lure; Deep Watch opened by flag fixture; islands reached by position writes; no co-op per-character claim. (strict re-score 23:40)",
-     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/full/f13_2_pockets/SUMMARY.md at dd9f504a: all eight pockets walked and paid in one production run with the real Tidecoil fight (53 checks, 0 failures); two-peer per-character claims, including the reed recipe, green in 4 of 5 runs. Shortcuts disclosed: arrival landing per island (swims proven in T1), post-Tidecoil pose, granted L43 five and tools, teleported stand-offs in the two-peer run. VERIFIER 1: 5159 tests, 0 failed. Independent re-check: MET.",
+     "gap": "",
+     "note": "Open bug for Tidewake full: in 1 of 5 two-peer runs, the host's reed gather press was dropped with the knife held. Root-cause it; it does not reopen the row."
     },
     {
      "text": "Six local chains, one per group, satisfy §5",
