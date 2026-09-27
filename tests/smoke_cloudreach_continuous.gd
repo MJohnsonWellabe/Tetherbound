@@ -277,7 +277,12 @@ func _run() -> void:
 	if not await _physical_action("summit_feed", "cloudreach_upper_anchors_disabled"): return _finish()
 	_purpose("Prepare the injured team at the last safe bivouac before the captain", "Use authored creature-bed assignment and trainer sleep; spend no direct healing seam")
 	if not await _rest("summit_bivouac"): return _finish()
-	if not await _navigate(Vector3(100,1160,5350)): return _finish()
+	# F07#3: the summit bivouac stands on the terrace 32 m east of the
+	# threshold, outside the stronghold's east wall. The way back is south
+	# round the wall's end and in by the feed road's own gap (12 s; measured
+	# by tests/probe_cloudreach_summit_camp_reach.gd). The nearest route beside
+	# the camp, the loop's east leg, climbs away from the terrace.
+	if not await _leave_summit_bivouac(): return _finish()
 	if not _require(_has("summit_extraction_engine_reached"), "Real summit threshold"): return _finish()
 	if not await _battle("captain_veyra_storm_anchor"): return _finish()
 	stage = "creature_relay_phase"
@@ -364,6 +369,16 @@ func _input(action: String, strength: float) -> void:
 	event.pressed = strength > 0
 	event.strength = strength
 	Input.parse_input_event(event)
+
+## F07#3: from the summit bivouac (threshold terrace, outside the stronghold's
+## east wall) back to the arena threshold: south round the wall's end and in
+## by the feed road's gap. Witnesses that rest there call this, not
+## `_navigate`, whose nearest-route snap aims at the loop's east leg.
+func _leave_summit_bivouac() -> bool:
+	for waypoint: Vector3 in [Vector3(132,1160,5330), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
+		if not await _walk(waypoint):
+			return false
+	return true
 
 
 func _release() -> void:

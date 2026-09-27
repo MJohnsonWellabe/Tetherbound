@@ -51,7 +51,7 @@
     "lift_speed_mps": 15.0,
     "inward_speed_mps": 10.0,
     "safe_camp_id": "summit_bivouac",
-    "safe_position": [-520.0, 1080.2, 5300.0]
+    "safe_position": [132.0, 1160.2, 5342.0]
   },
   "aftermath_witness": {
     "position": [-420.0, 1110.0, 5650.0],
