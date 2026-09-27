@@ -10,6 +10,12 @@ const ASCENT_FRAMES := 6000
 const ASCENT_SCALE := 4.0
 const ASCENT_HZ := 60
 const CORE_TOLERANCE := 3.5
+## The Outer Works approach causeway's foot (14 m east of the rod station
+## since F09#1 blocker B2; 10 m wide, closed sides at x -91..-81) and a lane
+## 5 m west of its west side, 4 m east of Kestrel's NPC seat (x -100).
+const APPROACH_FOOT := preload("res://scripts/world/stormwood_world.gd").APPROACH_FOOT
+const APPROACH_WEST_LANE_X := -96.0
+const APPROACH_SOUTH_Z := 5345.0
 const TRAINERS := ["officer_nysa_deepwood_rod", "outerworks_lieutenant_sera",
 	"officer_kestrel_outer_works"]
 var _outcomes: Dictionary = {}
@@ -316,8 +322,14 @@ func _climb_core() -> bool:
 	var trunk := _world.get_node_or_null("StormheartTree") as Node3D
 	if trunk == null:
 		return _fail("actual Stormheart ascent absent")
-	if not await _walk_xz(Vector2(-100, 5350), "Stormheart approach foot"):
-		return false
+	# The Outer Works approach is a raised causeway with closed sides (it once
+	# floated with an open underside a body wedged under: relay DRY RUN
+	# 44adfbe4 at z 5374.6). Keep west of it and mount it at its foot from the
+	# south, as a player would.
+	var from := Vector2(_player.global_position.x, _player.global_position.z)
+	for point: Vector2 in approach_foot_route(from):
+		if not await _walk_xz(point, "Stormheart approach foot"):
+			return false
 	var scale_before := Engine.time_scale
 	var hz_before := Engine.physics_ticks_per_second
 	await _tree.process_frame
@@ -331,6 +343,18 @@ func _climb_core() -> bool:
 	Engine.physics_ticks_per_second = hz_before
 	return passed
 
+## From north of the foot (Kestrel's fight is beside the causeway): out
+## sideways to the west lane, south past the foot, then onto it. From the south
+## (Ember Bivouac after a rest): along the south side straight to the foot.
+static func approach_foot_route(from: Vector2) -> Array[Vector2]:
+	var route: Array[Vector2] = []
+	if from.y > APPROACH_SOUTH_Z:
+		route.append(Vector2(APPROACH_WEST_LANE_X, from.y))
+		route.append(Vector2(APPROACH_WEST_LANE_X, APPROACH_SOUTH_Z))
+	route.append(Vector2(APPROACH_FOOT.x, APPROACH_SOUTH_Z))
+	route.append(APPROACH_FOOT)
+	return route
+
 func _walk_actual_ascent(trunk: Node3D) -> bool:
 	var started := Engine.get_physics_frames()
 	var approach := trunk.to_global(Vector3(0, 6, -40))
@@ -343,8 +367,18 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 	var furthest := 0.0
 	_navigator.reset()
 	while Engine.get_physics_frames() - started < ASCENT_FRAMES:
-		if _manager.is_fighting() or _director.trainer_battle_active():
-			return _fail("unexpected combat blocks the bounded physical Stormheart ascent")
+		if _director.trainer_battle_active():
+			return _fail("unexpected trainer combat blocks the bounded physical Stormheart ascent")
+		if _manager.is_fighting():
+			# A wild on the Outer Works approach can engage, as on any road
+			# (relay DRY RUN a9b6da46): fight it at 1x like every walk does,
+			# then resume. Its frames are not climbing, so the budget excludes them.
+			var fight_started := Engine.get_physics_frames()
+			if not await _fight_ascent_wild():
+				return false
+			started += Engine.get_physics_frames() - fight_started
+			_navigator.reset()
+			continue
 		if stage == 0 and _player.global_position.distance_to(approach) < CORE_TOLERANCE:
 			stage = 1
 			_navigator.reset()
@@ -373,6 +407,23 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 		else:
 			await _tree.physics_frame
 	return _fail("physical Stormheart ascent exceeded its shared 6000-frame budget at " + str(_player.global_position))
+
+func _fight_ascent_wild() -> bool:
+	var scale_before := Engine.time_scale
+	var hz_before := Engine.physics_ticks_per_second
+	_drive_stick(0, 0)
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	# Won or lost, a resolved fight returns true; a healthy member leads on.
+	var resolved := await _fight_current("Stormheart ascent")
+	if resolved:
+		resolved = await _ensure_usable_ally("resuming the Stormheart ascent")
+	await _tree.process_frame
+	Engine.time_scale = scale_before
+	Engine.physics_ticks_per_second = hz_before
+	return resolved
 
 func _receipt(flag: String) -> bool:
 	if flag.is_empty() or not await _wait_flag(flag, 300):

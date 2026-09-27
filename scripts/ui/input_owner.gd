@@ -39,6 +39,15 @@ extends RefCounted
 ## Panels that own input while open join this. Named as a group rather than
 ## kept as a list here so this file never has to know what panels exist.
 const GROUP := &"input_owner"
+## Traversal states that take a world trigger for themselves WITHOUT owning
+## locomotion: flying on the Fly carrier and being carried. X03 (F06#2): LT is
+## both `fly_descend` and `build_shortcut`, so descending mid-flight also
+## opened the build catalogue. A member of `GROUP` cannot express this --
+## `player_controller.gd` freezes movement (and flight steering) whenever
+## `current()` is non-null -- so traversal owners are asked separately, by the
+## world-verb polls that share a trigger with a traversal verb.
+## A member answers `owns_traversal_input()`.
+const TRAVERSAL_GROUP := &"input_owner_traversal"
 
 
 ## The panel currently owning input, or null if the world has it.
@@ -56,6 +65,18 @@ static func current(tree: SceneTree) -> Node:
 		return null
 	for node: Node in tree.get_nodes_in_group(GROUP):
 		if _owns(node):
+			return node
+	return null
+
+
+## The traversal state (flight, being carried) that owns the shared triggers
+## right now, or null. See `TRAVERSAL_GROUP`.
+static func traversal(tree: SceneTree) -> Node:
+	if tree == null:
+		return null
+	for node: Node in tree.get_nodes_in_group(TRAVERSAL_GROUP):
+		if is_instance_valid(node) and node.has_method("owns_traversal_input") \
+				and bool(node.call("owns_traversal_input")):
 			return node
 	return null
 

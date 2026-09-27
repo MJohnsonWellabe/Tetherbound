@@ -3,6 +3,8 @@
   "activation_distance_m": 130.0,
   "trainer_prompt_radius_m": 4.2,
   "wild_respawn_seconds": 180.0,
+  "wild_site_max_resolution_m": 45.0,
+  "_why_wild_site_max_resolution_0926": "cloudreach_world_runtime.gd::resolve_wild_sites drops a ground wild site whose resolved home lies more than this far (XZ) from its authored point instead of binding it to the nearest route anywhere (#340).",
   "behavior_profiles": {
     "scout": {
       "telegraph": 0.8,
@@ -248,73 +250,12 @@
     }
   ],
   "wild_sites": [
-    {
-      "id": "lower_cliff_foragers",
-      "table_id": "cloudreach_lower_wild",
-      "position": [
-        -200,
-        180,
-        630
-      ],
-      "count": 2,
-      "radius_m": 8.0
-    },
-    {
-      "id": "causeway_watch",
-      "table_id": "cloudreach_causeway_wild",
-      "position": [
-        -280,
-        320,
-        1750
-      ],
-      "count": 2,
-      "radius_m": 8.0
-    },
-    {
-      "id": "ravine_wind",
-      "table_id": "cloudreach_windscar_wild",
-      "position": [
-        220,
-        556,
-        3333
-      ],
-      "count": 2,
-      "radius_m": 8.0,
-      "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette."
-    },
-    {
-      "id": "roost_perches",
-      "table_id": "cloudreach_high_roost_wild",
-      "position": [
-        970,
-        1050,
-        3450
-      ],
-      "count": 2,
-      "radius_m": 8.0
-    },
-    {
-      "id": "upper_scouts",
-      "table_id": "cloudreach_upper_wild",
-      "position": [
-        400,
-        850,
-        4300
-      ],
-      "count": 2,
-      "radius_m": 8.0
-    },
-    {
-      "id": "summit_watch",
-      "table_id": "cloudreach_summit_wild",
-      "position": [
-        -460,
-        1080,
-        5300
-      ],
-      "count": 2,
-      "radius_m": 8.0
-    },
+    {"id": "lower_cliff_foragers", "table_id": "cloudreach_lower_wild", "position": [-200, 180, 630], "count": 2, "radius_m": 8.0, "trainer_corridor_clear": true, "_why_trainer_corridor_0926": "Route blockers B2/B3 (#294/#340): this pair's resolved home is on a walking lane (road clearance below zero), so its bodies take the trainer-corridor exemption like every ROAD CP-2 pair: they still collide with terrain, attacks and every other body; only the trainer walks through."},
+    {"id": "causeway_watch", "table_id": "cloudreach_causeway_wild", "position": [-235.984, 390.0, 1569.269], "count": 2, "radius_m": 8.0, "trainer_corridor_clear": true, "_why_trainer_corridor_0926": "Route blockers B2/B3 (#294/#340): this pair's resolved home is on a walking lane (road clearance below zero), so its bodies take the trainer-corridor exemption like every ROAD CP-2 pair: they still collide with terrain, attacks and every other body; only the trainer walks through.", "_why_resolution_0926": "B3 fail-closed resolution (#340): the old authored point had no ground and resolved 186 m away through the nearest-route fallback, which now fails closed beyond 45 m. Re-authored at the exact home the runtime already gave this site, so where it stands in play (and every route ledger, cadence and visibility credit) is unchanged."},
+    {"id": "ravine_wind", "table_id": "cloudreach_windscar_wild", "position": [220, 556, 3333], "count": 2, "radius_m": 8.0, "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette.", "trainer_corridor_clear": true, "_why_trainer_corridor_0926": "Route blockers B2/B3 (#294/#340): this pair's resolved home is on a walking lane (road clearance below zero), so its bodies take the trainer-corridor exemption like every ROAD CP-2 pair: they still collide with terrain, attacks and every other body; only the trainer walks through."},
+    {"id": "roost_perches", "table_id": "cloudreach_high_roost_wild", "position": [900.0, 1020.0, 2715.0], "count": 2, "radius_m": 8.0, "_why_high_roost_ground_0926": "Route blocker B3 (#340): the old authored point (970, 1050, 3450) had no ground, and the runtime's nearest-route fallback bound the pair 1.5 km away onto the Voss summit road, where it walled the walk. Re-authored onto real High Roost ground: the north side of the High Perches court (landmark high_roost_perches at 900, 1020, 2700), past the landing apron and the roost perches. Fly-only, like its gated table; off every road."},
+    {"id": "upper_scouts", "table_id": "cloudreach_upper_wild", "position": [314.847, 907.235, 4423.713], "count": 2, "radius_m": 8.0, "trainer_corridor_clear": true, "_why_trainer_corridor_0926": "Route blockers B2/B3 (#294/#340): this pair's resolved home is on a walking lane (road clearance below zero), so its bodies take the trainer-corridor exemption like every ROAD CP-2 pair: they still collide with terrain, attacks and every other body; only the trainer walks through.", "_why_resolution_0926": "B3 fail-closed resolution (#340): the old authored point had no ground and resolved 150 m away through the nearest-route fallback, which now fails closed beyond 45 m. Re-authored at the exact home the runtime already gave this site, so where it stands in play (and every route ledger, cadence and visibility credit) is unchanged."},
+    {"id": "summit_watch", "table_id": "cloudreach_summit_wild", "position": [-460, 1080, 5300], "count": 2, "radius_m": 8.0, "trainer_corridor_clear": true, "_why_trainer_corridor_0926": "Route blockers B2/B3 (#294/#340): this pair's resolved home is on a walking lane (road clearance below zero), so its bodies take the trainer-corridor exemption like every ROAD CP-2 pair: they still collide with terrain, attacks and every other body; only the trainer walks through."},
     {
       "id": "road_visibility_arrival_gate_road_01",
       "table_id": "cloudreach_lower_wild",
@@ -325,6 +266,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -338,6 +280,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -351,6 +294,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -364,6 +308,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -377,6 +322,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -390,6 +336,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -403,6 +350,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -416,6 +364,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
       "_why_waycamp_composition_0911": "Moved down the same arrival road, 65.8m from Galefoot's centre, so the safe refuge no longer stages two large wild creatures against its rest bed and HUD. Count, table, radius and road visibility are unchanged."
@@ -430,6 +379,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
       "_why_waycamp_composition_0911": "Moved onto the outgoing lower-cliff road, 36.1m from Galefoot's centre and outside its 28m safe radius, preserving the visible wildlife cadence without occupying the camp commons."
@@ -444,6 +394,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -457,6 +408,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -470,6 +422,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -483,6 +436,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -496,6 +450,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -509,6 +464,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -522,6 +478,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -535,6 +492,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -548,6 +506,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
       "_why_three_bells_composition_0911": "Moved 50m down the incoming causeway so two large creatures no longer occupy the west bell landing or cover the bridge signal; table, count, scatter radius and road-side visibility are unchanged."
@@ -562,6 +521,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
       "_why_three_bells_composition_0911": "Placed on the outgoing causeway beyond the east landing so the complete bell portal stays readable while the pair remains forward-visible through the approach; table, count, scatter radius and route cadence are unchanged."
@@ -576,6 +536,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -589,6 +550,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -602,6 +564,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -615,6 +578,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -628,6 +592,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -641,6 +606,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -654,6 +620,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -667,6 +634,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -680,6 +648,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -693,6 +662,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -706,6 +676,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -719,6 +690,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -732,6 +704,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -745,6 +718,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -758,6 +732,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -771,6 +746,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -784,6 +760,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -797,6 +774,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -810,6 +788,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -823,6 +802,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 pair on the Windscar turn's production landing crown. Both the old 5.49m shoulder and a one-metre polyline projection failed the full runtime creature footprints; this centre is four metres inside each axis of the authored (-300,460,3100) broad pad and preserves the same table/count without inflating radius, draw distance or budget."
     },
@@ -836,6 +816,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 pair on the opposite side of the Windscar turn's production landing crown. Both the old 5.49m shoulder and a one-metre polyline projection failed the full runtime creature footprints; this centre is four metres inside each axis of the authored (-300,460,3100) broad pad and keeps four bodies separated on real collision without changing population budget."
     },
@@ -883,6 +864,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -896,6 +878,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -909,6 +892,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -922,6 +906,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -935,6 +920,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -942,14 +928,16 @@
       "id": "road_visibility_windscar_floor_loop_14",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        340.0,
-        600.0,
-        3350.0
+        311.413,
+        589.695,
+        3288.428
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 pair shifted to the broad outer shoulder before the Aerie turn so it bridges the measured forward sightline to site 15 without entering the launch dais. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 pair shifted to the broad outer shoulder before the Aerie turn so it bridges the measured forward sightline to site 15 without entering the launch dais. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
+      "_why_resolution_0926": "B3 fail-closed resolution (#340): the old authored point had no ground and resolved 68 m away through the nearest-route fallback, which now fails closed beyond 45 m. Re-authored at the exact home the runtime already gave this site, so where it stands in play (and every route ledger, cadence and visibility credit) is unchanged."
     },
     {
       "id": "road_visibility_windscar_floor_loop_15",
@@ -961,6 +949,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
       "_why_flight_aerie_composition_0911": "Placed 99m off the flight-lesson centre and beyond the route endpoint, keeping two giant wildlife bodies off the launch dais while preserving a forward-visible arrival sightline. Count, table, scatter radius and road cadence are unchanged."
@@ -975,6 +964,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -988,6 +978,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1001,6 +992,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1014,6 +1006,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1027,6 +1020,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1040,6 +1034,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1053,6 +1048,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1066,6 +1062,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1079,6 +1076,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1092,6 +1090,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1105,6 +1104,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1118,6 +1118,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1131,6 +1132,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1144,6 +1146,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1157,6 +1160,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1170,6 +1174,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1183,6 +1188,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1196,6 +1202,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1209,6 +1216,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1222,6 +1230,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1235,6 +1244,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1248,6 +1258,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1261,6 +1272,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1274,6 +1286,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1287,6 +1300,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1300,6 +1314,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1313,6 +1328,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
     },
@@ -1326,6 +1342,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1341,6 +1358,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_counterweight_return",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1356,6 +1374,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_counterweight_return",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1371,6 +1390,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_counterweight_return",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1386,6 +1406,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "upper_plateau_circuit",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1401,6 +1422,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "upper_plateau_circuit",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1416,6 +1438,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "observatory_summit_link",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1431,10 +1454,43 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "observatory_summit_link",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
       "_why_cadence_f07": "F07 cadence, re-placed by F07#2: this pair paced the observatory segment the required route used to walk back west to the plateau fork after the east anchor. observatory_summit_link now takes the route straight from the observatory pad to the summit road's first bend, so the pair moves onto that link (the walk it paced) and the route ledger still credits it (coordinator ruling (a)). Uses cloudreach_upper_released_wild, gated by storm_anchor_upper_east_disabled, so it appears only once that anchor is off. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_05",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -450.98,
+        876.23,
+        4643.93
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "trainer_corridor_clear": true,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F15#2 return cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F15#2 return cadence (Tidewake #330, tests/test_tidewake_return_cadence.gd): the measured Stormwood->Meadows return crossed this plateau segment with no live offer for 156 s (road_visibility_upper_summit_road_01 -> road_visibility_upper_plateau_circuit_02, A7 limit 120 s). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height, at the gap's midpoint; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_06",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -759.87,
+        766.16,
+        4035.33
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "trainer_corridor_clear": true,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F15#2 return cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F15#2 return cadence (Tidewake #330, tests/test_tidewake_return_cadence.gd): the measured Stormwood->Meadows return crossed this plateau segment with no live offer for 151 s (road_visibility_upper_plateau_circuit_01 -> road_visibility_windscar_counterweight_pass_13, A7 limit 120 s). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height, at the gap's midpoint; no pickup, flag or route change."
     },
     {
       "id": "road_visibility_summit_overlook_loop_01",
@@ -1446,6 +1502,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "summit_overlook_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1461,10 +1518,11 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "summit_overlook_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
-      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by cloudreach_winds_restored, so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by captain_veyra_defeated (was cloudreach_winds_restored, which opens only at the overlook itself), so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
     },
     {
       "id": "road_visibility_summit_overlook_loop_03",
@@ -1476,10 +1534,11 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "summit_overlook_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
-      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by cloudreach_winds_restored, so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by captain_veyra_defeated (was cloudreach_winds_restored, which opens only at the overlook itself), so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
     },
     {
       "id": "road_visibility_windscar_floor_loop_return_05",
@@ -1491,6 +1550,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1506,6 +1566,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1521,6 +1582,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1536,6 +1598,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1551,6 +1614,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1566,6 +1630,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1581,6 +1646,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_floor_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1596,6 +1662,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_counterweight_return",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
@@ -1611,6 +1678,7 @@
       ],
       "count": 2,
       "radius_m": 3.0,
+      "trainer_corridor_clear": true,
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "windscar_counterweight_return",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by the F07 route ledger, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",

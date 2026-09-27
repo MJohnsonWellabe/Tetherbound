@@ -86,7 +86,7 @@ func _paid() -> bool:
 
 func mount(owner_world: Node3D) -> void:
 	game = get_node_or_null("/root/Game")
-	if owner_world != null and bool(owner_world.get("simulation_only")):
+	if owner_world != null and owner_world.get("simulation_only") == true:
 		set_process(false)
 		return
 	var transport := LEDGER_CLAIM.transport(self)

@@ -28,6 +28,7 @@ var _signal_left := 0.0
 var _state: Dictionary = {}
 var _configured := false
 var aerie_rests := 0
+var _map_check_left := 0.0
 
 
 static func state_for(flags: RefCounted, data: Dictionary) -> Dictionary:
@@ -45,6 +46,49 @@ static func state_for(flags: RefCounted, data: Dictionary) -> Dictionary:
 	for spec: Dictionary in data.get("survey_markers", []):
 		state.surveys[spec.id] = DATA.holds(flags, [spec.flag])
 	return state
+
+
+## WORLD §11: the Three Bells "reveal the three known safe landing points",
+## and each aeries survey is "map knowledge". Both are derived map pins, never
+## saved: known once the bells are rung or that landing is surveyed, and only
+## where the landing's region is open (`map_reveal_requires`), so the map never
+## spoils a later region.
+const LANDING_MAP_PREFIX := "cloudreach_landing_"
+const LANDING_MAP_ICON := "camp"
+
+
+static func landing_map_markers(flags: RefCounted, data: Dictionary) -> Dictionary:
+	var out := {}
+	var bells := DATA.holds(flags, ["side_three_bells_complete"]) or DATA.holds(flags, ["cloudreach_winds_restored"])
+	for spec: Dictionary in data.get("survey_markers", []):
+		var surveyed := DATA.holds(flags, [str(spec.flag)])
+		if not (bells or surveyed) or not DATA.holds(flags, spec.get("map_reveal_requires", [])):
+			continue
+		var at: Array = spec.position
+		out[LANDING_MAP_PREFIX + str(spec.id)] = {"at": Vector3(float(at[0]), float(at[1]), float(at[2])),
+			"name": str(spec.label) + (" (surveyed)" if surveyed else "")}
+	return out
+
+
+## Adds owed landing pins, removes stale ones and renames changed ones;
+## returns whether the map changed. Idempotent, so it is safe to call after a
+## map load (which clears dynamic markers) as well as on flag changes.
+static func sync_landing_map(map: RefCounted, flags: RefCounted, data: Dictionary) -> bool:
+	var wanted := landing_map_markers(flags, data)
+	var present := {}
+	for entry: Dictionary in map.call("landmarks"):
+		if bool(entry.get("dynamic", false)) and str(entry.get("id", "")).begins_with(LANDING_MAP_PREFIX):
+			present[str(entry.id)] = str(entry.get("display_name", entry.get("name", "")))
+	var changed := false
+	for id: String in present:
+		if not wanted.has(id):
+			map.call("remove_dynamic_marker", id)
+			changed = true
+	for id: String in wanted:
+		if not present.has(id) or str(present[id]) != str(wanted[id].name):
+			map.call("add_dynamic_marker", id, LANDING_MAP_ICON, wanted[id].at, str(wanted[id].name))
+			changed = true
+	return changed
 
 
 func configure(owner_world: Node3D, chapter_node: Node, arena: Node) -> void:
@@ -83,6 +127,12 @@ func _process(delta: float) -> void:
 	var flags: RefCounted = game.get("progression")
 	if int(flags.get("revision")) != _revision:
 		sync_progression()
+	_map_check_left -= delta
+	if _map_check_left <= 0.0:
+		_map_check_left = 1.0
+		var map: RefCounted = game.call("bind_realm_map", "cloudreach") if game.has_method("bind_realm_map") else null
+		if map != null:
+			sync_landing_map(map, flags, config)
 	if bool(_state.get("bells", false)):
 		_signal_left -= delta
 		if _signal_left <= 0.0 and player.global_position.distance_to(signal_audio.global_position) < signal_audio.max_distance:

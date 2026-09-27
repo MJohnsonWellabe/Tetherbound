@@ -317,8 +317,9 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if node == null:
 		_fail("no unspent authored %s node exists in the opening route" % item_id)
 		return false
-	if not await _walk_toward(node.global_position, 1800, 1.55):
-		_fail("natural controller travel could not reach the authored %s node" % item_id)
+	if not await _walk_toward(node.global_position, 1800, 1.55) \
+			and not await _go_around_to(node.global_position, 1.55):
+		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
 		return false
 	# A visible swing owns the held prop for its full production animation.  Do
 	# not overlap the next hotbar edge with it: the player cannot switch tools
@@ -735,6 +736,37 @@ static func activation_verdict(provider: Object, target: Object) -> int:
 
 ## Travel one leg. The detour logic lives in `stick_navigator.gd`; this only
 ## adds the settle frames the callers here rely on after arriving.
+## One go-around after a timed-out approach, as a player walks round what the
+## straight line keeps meeting: ten metres to either side of the heading, then
+## the target again. Seed-15 runs twice failed the first wood node here with
+## no position logged (CI r18 36291504880, a local run at 145a2229).
+const GO_AROUND_M := 10.0
+
+
+func _go_around_to(point: Vector3, close_enough: float) -> bool:
+	var at := _player.global_position
+	var heading := point - at
+	heading.y = 0.0
+	if heading.length() < 0.01:
+		return false
+	var side := Vector3(-heading.z, 0.0, heading.x).normalized() * GO_AROUND_M
+	for sign: float in [1.0, -1.0]:
+		print("GATE A NPC/GATHER go-around: player=%s target=%s via=%s" % [at, point, at + side * sign])
+		await _walk_toward(at + side * sign, 600, 1.5)
+		if await _walk_toward(point, 1200, close_enough):
+			return true
+	return false
+
+
+func _walk_diagnosis(point: Vector3) -> String:
+	var colliders: Array[String] = []
+	for index in _player.get_slide_collision_count():
+		var collider: Object = _player.get_slide_collision(index).get_collider()
+		colliders.append(str((collider as Node).get_path()) if collider is Node else str(collider))
+	return "player=%s target=%s distance=%.2f colliders=%s" % [_player.global_position, point,
+		Vector2(point.x - _player.global_position.x, point.z - _player.global_position.z).length(), colliders]
+
+
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	var arrived: bool = await _nav.walk_to(point, budget, close_enough)
 	_stop_left_stick()

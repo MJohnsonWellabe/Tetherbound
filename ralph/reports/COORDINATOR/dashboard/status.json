@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-27 00:30 UTC",
+ "updated": "2026-09-27 12:00 UTC",
  "headline": [
-  "Criteria met: 54 of 101. Full CI 36280097924 on main (7a6b45ee0) is fully green, including the formerly known-red continuous-core job; F01#0 flipped.",
-  "Nothing else is queued to flip: the batch 30–34 claims re-scored partial. Lanes now post READY only for a full close (WORKFLOW §8, owner 2026-09-27); Cloudreach B1–B3 route fixes are the top unblocker (five criteria waiting).",
-  "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
+  "Criteria met: 69 of 101. Batch 52 flipped F11#0 and F05#7 on green full CI 36314695987. F13#4 (batch 53, #372) is merged and in full CI (makes 70). F06#0 is in re-check.",
+  "Re-checking or held: F11#0 (Stormwood must commit its Marrow logs), F01#2/#3 (independent code-blind verdict), F05#7 (green-grass heal in progress). Each lane targets one close per hour; the enforcement check runs at :55.",
+  "Remaining 34 after these: visual rows (Codex art queue plus capture work, now with Codex GPU runs), failing behavior, missing evidence."
  ],
  "batches": [
   {

@@ -298,6 +298,23 @@
       "visible_state_change": "Three Bells Bridge gains moving travelers and audible route signals after Fly unlock and completion."
     },
     {
+      "id": "waycamp_shelter",
+      "title": "A Roof for Galefoot",
+      "category": "affected_locals",
+      "giver_npc_id": "courier_neri",
+      "revealed_by": "cloudreach_crisis_learned",
+      "completion_flag": "side_waycamp_shelter_complete",
+      "scope": "world",
+      "persistence": "save",
+      "_why_f07_0": "WORLD §11 Lower Cliffs: Neri's canvas bundle points to Galefoot Waycamp (coordinator ruling (b), #356: the shelter upgrades the installed camp, no new camp or terrain footprint); deliver 4 Gale Fiber (optional, never the Fly gate) and assign a companion to its existing bed once. Payoff: the rain cover repaired over Galefoot's camp and bed.",
+      "steps": [
+        {"id": "find_canvas_bundle", "flag_id": "side_waycamp_bundle_found", "region_id": "gate_lower_cliffs", "requires_flags": [], "label": "Find Neri's canvas bundle on the arrival road."},
+        {"id": "supply_shelter", "flag_id": "side_waycamp_shelter_supplied", "region_id": "gate_lower_cliffs", "requires_flags": ["side_waycamp_bundle_found"], "label": "Bring 4 Gale Fiber to raise the shelter at Galefoot."},
+        {"id": "rest_companion", "flag_id": "side_waycamp_shelter_complete", "region_id": "gate_lower_cliffs", "requires_flags": ["side_waycamp_shelter_supplied"], "label": "Settle a companion in the sheltered Galefoot bed."}
+      ],
+      "visible_state_change": "A canvas rain cover stands over Galefoot Waycamp's fire and creature bed."
+    },
+    {
       "id": "packs_on_the_wrong_side",
       "title": "Packs on the Wrong Side",
       "category": "affected_locals",
@@ -659,8 +676,9 @@
       "selection_key": "cloudreach.wild.summit_restored",
       "replaceable": true,
       "catchable": true,
-      "requires_unlock": "cloudreach_winds_restored",
+      "requires_unlock": "captain_veyra_defeated",
       "_why_cadence_f07": "Aftermath consequence (WORLD 4.3, restored wind reconnects the routes): once the winds return, summit wildlife comes back to the stronghold loop the player walks from the finale deck to the Waterward overlook. Same species, weights and level band as cloudreach_summit_wild; only the gate differs, so these pairs never appear before Veyra falls.",
+      "_why_gate_0927": "F07#3: gated on captain_veyra_defeated, not cloudreach_winds_restored. The finale sets winds_restored only on physical arrival at the overlook (cloudreach_finale_controller.gd::witness_restoration), so under that gate these pairs could never appear on the walk TO the overlook they exist for. The full live continuous DRY RUN measured that walk at 161 s with no action (ralph/reports/CLOUDREACH/f07-a7-full-route/).",
       "entries": [
         {"role": "summit_sentinel", "placeholder_species": "solmane", "weight": 2, "roster_identity": "legendary"},
         {"role": "engine_scavenger", "placeholder_species": "breezetail", "weight": 2},
@@ -885,7 +903,7 @@
       {"id": "west_causeway_refuge", "region_id": "broken_causeways", "position": [-760.0, 400.0, 2050.0], "requires_flag": "causeway_survivors_reconnected", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 22.0, "creature_bed": {"at": [-756.5, 2053.0], "yaw_deg": 125.0, "bed_index": -22}},
       {"id": "windscar_flight_aerie_camp", "region_id": "windscar_ravine", "position": [388.0, 610.0, 3258.0], "requires_flag": "windscar_aerie_prepared", "services": ["save", "rest", "cook", "creature_recovery", "fly_rest"], "safe_radius_m": 24.0, "creature_bed": {"at": [391.5, 3261.0], "yaw_deg": 215.0, "bed_index": -23}},
       {"id": "cliffhold_commons", "region_id": "upper_cloudreach", "position": [-340.0, 830.0, 3970.0], "requires_flag": "cloudreach_upper_route_unlocked", "services": ["save", "rest", "cook", "creature_recovery", "trade"], "safe_radius_m": 32.0, "creature_bed": {"at": [-336.5, 3973.0], "yaw_deg": 305.0, "bed_index": -24}},
-      {"id": "summit_bivouac", "region_id": "summit_final_stronghold", "position": [-520.0, 1080.0, 5300.0], "requires_flag": "cloudreach_upper_anchors_disabled", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 20.0, "creature_bed": {"at": [-516.5, 5303.0], "yaw_deg": 65.0, "bed_index": -25}}
+      {"id": "summit_bivouac", "region_id": "summit_final_stronghold", "position": [132.0, 1160.0, 5342.0], "requires_flag": "cloudreach_upper_anchors_disabled", "services": ["save", "rest", "cook", "creature_recovery"], "safe_radius_m": 20.0, "creature_bed": {"at": [135.5, 5345.0], "yaw_deg": 65.0, "bed_index": -25}, "_why_position_0927": "F07#3 (coordinator ruling (a), #356): moved from (-520, 1080, 5300), the far end of a 620 m out-and-back spur off the stronghold threshold, to the threshold terrace 32 m east of the threshold (100, 1160, 5350): the one flat candidate the ordinary route walker reached from both the summit feed road and the threshold (tests/probe_cloudreach_summit_camp_reach.gd), clear of the approach towers. Resting before Captain Veyra no longer doubles that corridor with nothing new on the way back (full live run: 152 s with no action, over the A7 120 s limit). The old spot stays a point on summit_overlook_loop."}
     ]
   },
   "map_navigation": {

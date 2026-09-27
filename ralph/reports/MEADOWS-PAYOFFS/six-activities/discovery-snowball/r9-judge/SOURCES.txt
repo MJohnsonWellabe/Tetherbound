@@ -1,0 +1,1 @@
+Walk: local act render at 14d1abf9 data (camp 7 m north, west road standard off the escort line). 01 is the 160 m road cue view from the previous layout; the smoke column position is unchanged except 7 m north.

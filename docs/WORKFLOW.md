@@ -344,9 +344,11 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Lanes:** each lane works on one long-lived `tb/<lane>` branch
     (`tb/meadows-core`, `tb/meadows-activities`, `tb/meadows-route`,
     `tb/cloudreach`, `tb/cloudreach-b`, `tb/stormwood`, `tb/stormwood-b`,
-    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`), with one standing
-    draft PR. The lane merges `origin/main` into it after each landing and
-    keeps going. It never opens a new branch per task.
+    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`). The lane opens no
+    PR: READY posts, SHARED-FILE REQUESTs and questions go on the single
+    Lane channel issue #356 (owner, 2026-09-27), with the READY SHA pushed to
+    origin first. The lane merges `origin/main` into its branch after each
+    landing and keeps going. It never opens a new branch per task.
   - **Batches:** the coordinator reuses one `tb/integration` branch, reset to
     `main` for each batch.
   - **No scratch branches:** dispatch `render.yml` with `checkout_ref` set to a
@@ -357,22 +359,19 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 - **Finish, then land (owner, 2026-09-27).** Lanes commit and push to their own
   branch freely; that is backup, not landing. A lane posts READY only when:
   - **a criterion fully closes.** State it as `closes F0x#n`. Partial progress
-    stays on the branch; or
-  - **it is a fix another lane is blocked on.** State it as `unblocks <lane>:
-    <blocker>`.
+    and fixes other lanes need stay on the branch (other lanes merge it).
 
   Rules for READY:
   - **Attach an independent strict re-check.** Before READY, a read-only
     subagent re-scores the claim against ACCEPTANCE §6.1 using the board's
     strict rules, and its verdict is attached to the READY post.
-    - **Fixtures count as partial.** A fixture or declared start save,
-      position/teleport writes, flag or ledger fixtures, harness-simulated
-      fights and granted parties all make a claim partial, unless the
-      criterion itself allows them.
+    - **Fixtures and shortcuts are allowed (owner, 2026-09-27).** Fixture or
+      declared start saves, position/teleport writes, flag/ledger/inventory/
+      party writes, harness-driven fights and skipped sub-parts no longer make
+      a claim partial (ACCEPTANCE §6.1). The READY post and the re-check list
+      each one; the board carries the disclosure.
     - **Visual criteria** need a passing code-blind judge verdict.
     - **Co-op criteria** need two-peer evidence.
-  - **Fixtures only in labelled dry runs.** Fixture-start runs are allowed only
-    as labelled blocker-finding dry runs (`DRY RUN — does not count`).
   - **Earned checkpoints are allowed starts (coordinator, 2026-09-27).** A save
     written by a recorded run that itself used no fixtures, position writes,
     flag/ledger sets or granted parties is an earned checkpoint, not a
@@ -385,9 +384,13 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Codex-queue IDs carry a lane prefix and are append-only**
     (`V-MC-n`, `V-CR-n`, `V-SW-n`, `V-TW-n`, `V-VIS-n`, `V-X05-n`). Rows never
     renumber, and existing `V1`–`V35` keep their IDs.
-  - **The coordinator lands on a cadence.** It lands READY heads in one batch
-    about every 2 hours, or at once for `unblocks` fixes, and dispatches a
-    full CI run on `main` after each batch.
+  - **Main moves only when a criterion closes (owner, 2026-09-27).** The
+    coordinator lands `closes` READY heads in one batch about every 2 hours
+    and dispatches a full CI run on `main` after each batch. There are no
+    `unblocks` landings: a lane blocked on another lane's fix merges that
+    lane's `tb/<lane>` branch into its own and keeps going; the fix reaches
+    main with the first close that carries it. Docs, board data and Codex
+    work ride with the next close batch.
 - **CI runs only on `pull_request` events and on pushes to `main`.** A branch
   with no pull request is **never verified** — open a draft PR early and batch
   pushes to it (a newer push cancels the run in flight on the same ref).
@@ -419,6 +422,12 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   every file the run wrote, `user://` and `run.log`. Several may run at once.
   `tools/cloud_setup.sh` installs the pinned Godot, xvfb and a warm import
   cache in a fresh container (also usable as the environment setup script).
+- **GPU runs through Codex (owner, 2026-09-27).** Codex runs on the owner's
+  GPU machine and serves heavy visual renders after its art queue. A lane
+  posts on #356 `GPU RUN <label>: sha=<commit> script=<tests/ or tools/ .gd>
+  args=<...> mode=<render|headless>`; Codex answers `GPU DONE <label>` with
+  the output under `ralph/reports/GPU-RUNS/<label>/` on `tb/gpu-runs`. Lanes
+  fetch it from there. Headless logic runs stay on GitHub runners.
 - **A CI run under five minutes is not a verification.** CI skips every code
   job when the diff against the base is documentation-only — check the run
   duration **and** that code jobs actually ran.

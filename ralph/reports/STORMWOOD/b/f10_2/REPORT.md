@@ -1,0 +1,94 @@
+# F10#2: Stormwood named fights vs C2 and measurable C3
+
+**C2 and measurable C3: PASS for all 18 fight × starter rows** (six named fights × three starters). The run was 864 fights with 0 errors and 0 stalls, and exited 0.
+
+This closes only the **numeric** part of "Named fights pass C2/C3". C3 also requires "framing/readability passes at actual creature scale". That needs production-camera footage and a code-blind judge, which is a separate slice (`FOOTAGE_VERDICT.md`, in progress). Until that passes, F10#2 stays open.
+
+Scope: the six BOSSES §7 named wilds are Hollows Alpha, Capacitor Alpha, Crown Guardian, Old Rodfolk Hall Guardian, Blackwater Elder and Glass Field Alpha. Captain Marrow and the Dynamo are F11, owned by the Stormwood main lane.
+
+## Method
+
+- **Harness.** `tests/smoke_stormwood_b_named_c2c3.gd` over the shared `tests/helpers/combat_depth_pilot.gd`, unmodified. It is the same method as the Tidewake F14#0 report: the real CombatManager, the WildCreature AI and CharacterBody3D bodies on a flat collider, with READER and MASHER policies.
+- **Foes.** Built as production builds them: the placeholder species at the authored level, with the BOSSES §7 combat block the encounter director installs as `combat_override` (`stormwood_encounter_catalogue.gd::named_combat`), `trainer_owned=false`.
+- **Party.**
+  - The retained five: the starter plus bramblebun, mudsnout, pipwing and trailpup.
+  - The lead cycles through terrapup, ripplet and galewisp.
+  - No items.
+- **Party level.** COMBAT §7 says "region-entry levels". This report uses each region's Calm wild band midpoint + 1: Hollows L35, Conductor Run L37, Crown L39, Deepwood L41, Dynamo L42. This is disclosed, and `--party-level` overrides it. Calibration: the chapter's declared entry level, L33, is one above Cinder Verge's 30–34 band midpoint.
+- **Seeds.** 24 per policy per starter.
+- **Engine.** Godot 4.7, headless, `--fixed-fps 60`.
+- **Command.** `godot --headless --path . --fixed-fps 60 --script tests/smoke_stormwood_b_named_c2c3.gd -- --seeds=24 --json=res://ralph/reports/STORMWOOD/b/f10_2/c2c3_runs.json`
+- **Commit.** Measured on 6459f2aa. The only later branch changes to game code are Rook's reward, which does not touch combat.
+- **Artifacts.**
+  - `RUN_c2c3.txt`: every row.
+  - `c2c3_runs.json`: every run.
+  - `SUMMARY_TABLE.md`: the tabulated rows (`summarize.py`).
+
+## Rules applied
+
+These are the ACCEPTANCE C2/C3 bars, applied per fight × starter:
+
+| Rule | Bar |
+|---|---|
+| C2, named wild | READER median lead HP cost ≤ 0.55 × MASHER's, and READER win ≥ 90% |
+| C3, single hit | No incoming hit ≥ 50% of an entry creature's HP. This is the worst hit seen in any matchup, which is harsher than the neutral-only bar. |
+| C3, tells | Every tell ≥ 0.8 s. A fight BOSSES authors as heavy (≥ 1.1 s, here the Hall Guardian) must show ≥ 1.1 s. |
+
+## Result (see `SUMMARY_TABLE.md`)
+
+- **Reader vs masher.**
+  - The reader wins 100% everywhere, at a 0–4.7% median lead cost.
+  - The masher pays 21–100% of its lead's HP.
+  - Against Hollows Alpha, the Terrapup and Galewisp mashers lose their lead in 79–83% of runs and win only 17–21%.
+  - The ratio is at most 0.15 (Blackwater Elder with Terrapup leading).
+- **Worst single hit:** 12.9% of an entry creature's HP (Old Rodfolk Hall Guardian vs Galewisp).
+- **Tells:** exactly the authored values. Hollows, Capacitor, Blackwater and Glass Field are 0.80 s, the Crown Guardian is 0.85 s and the Hall Guardian is 1.10 s.
+
+## Caveats (disclosed, not waived)
+
+1. **The passes are strong on "decisions have value" but thin on reader pressure.** The reader is often never hit: 0 incoming hits in 12 of 18 rows. The pilot's READER reacts after 0.25 s to a 0.8 s tell and steps out of the shown geometry cleanly. This is the same pattern the Tidewake F14#0 report records. A human player will be hit more; the C2 bar is relative and is met.
+2. **Heavy tells.** Only the Hall Guardian authors a ≥ 1.1 s tell. No other named fight used a heavy or charged signature during these runs, so C3's heavy rule is exercised by that one fight.
+3. **Pacing** (COMBAT §7, informational, not part of C2/C3). A single named wild takes the reader 34–123 s. Capacitor Alpha takes 96–123 s and Glass Field 54–96 s, which is long against the 20–45 s ordinary-wild target. That target does not bind named wilds, but long fights with no decision point are a known failure mode.
+4. **Not covered by this fixture:**
+   - terrain and arena geometry;
+   - storm strikes in the fight;
+   - Y skills and manual switch or burst;
+   - co-op scaling;
+   - a party from an earned save;
+   - framing, which needs the footage slice.
+5. **Pilot artefact:** a fainted lead ends a wild fight, and the pilot never switches by hand. The masher's low win rate against Hollows Alpha partly reflects that.
+
+## Next
+
+- **Footage slice:** production fight-camera frames and a code-blind judge per fight, for C3 framing and readability.
+- **Optional:** re-run from an earned Stormwood save's party once F09#0 produces one.
+
+## Co-op findings (hosted shared fights)
+
+These were found by reading the hosted path. They are not yet two-peer evidence.
+
+1. **The host ignores the lane outcome.**
+   - Where: `SharedWildHostFight` (through `stormwood_authoritative_fight.gd::_on_enemy_strike`) never reads `take_lunge_outcome()`.
+   - Effect on a `lunge_travels` body: after the charge, the host adds a second impulse and judges the blow with the ordinary cone from where the charge stopped. A co-op player who stepped off the lane can still be hit.
+   - Status: a fix is parked pending a SHARED-FILE REQUEST on #356 (comment 5851571019). `tests/test_stormwood_b_hosted_lunge_outcome.gd` fails 2/3 without the fix and passes 3/3 with it.
+2. **Guests see none of the cues.**
+   - Cause: `SharedOpponentProxy` receives only `present_telegraph`, which draws a ring and plays the anticipation.
+   - Effect: a guest sees no lane, no Capacitor route line (its tell arrives only after the 1.1 s cue) and no Crown guard cone.
+   - Status: a presentation-only fix is proposed as a question on #356 (comment 5851577069).
+
+F10#2 cannot close on two-peer evidence until both are fixed.
+
+## Round 3: Capacitor route cue and Crown guard cone (fixture captures; partial)
+
+This judge round uses fixture captures: teleport placement, a granted L42 party and the storm pinned to Calm. The answers and key are in `JUDGE_ANSWERS_r3.txt`.
+- **Capacitor Alpha:** all five questions PASS.
+  - The route line is visible about 1 s before the warning (i08, i09, i14 show the lane without "incoming"; the warning appears at i15), and the dive runs down it.
+  - Tells measured 0.867 s after the cue on three tells.
+- **Crown Guardian:** (a), (b) and (d) PASS.
+  - The frontal cone shows the covered area, and a pilot outside it is missed.
+  - Tells measured 0.85–0.90 s.
+  - (c) FAILS on HUD occlusion of the companion (V-SW-3).
+  - (e) FAILS on identity: no crown glass, no guard pose, and the body looks like the background herd. Filed as **V-SW-6**.
+- **Across both:** the hit-flash whitening during tells (V-SW-4) recurs.
+
+Every remaining failure is a LOOK row in the Codex queue. The two cues' logic reads as intended.

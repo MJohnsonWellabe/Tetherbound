@@ -26,9 +26,24 @@ extends SceneTree
 ## The Reedhaven leg (on unless `--no-reed`) walks from the Reedhaven arrival
 ## to `reed_root_hollow` and gathers its reed patch with a hotbar knife
 ## (DISCLOSED FIXTURE: carried knife granted with the pickaxe) by the same real
-## Interact press: the pocket's reed-fiber half. Its recipe half is not paid.
+## Interact press: the pocket's reed-fiber half. The same host-validated
+## character-once claim pays the recipe half: Reed Camp Cordage
+## (`water_camp_cordage`, the row's `learn_recipe_flag`) must be unknown to the
+## fresh character before the press and known after it (F13#2).
 ##   godot --headless --path . --script tests/smoke_water_pocket_walk_claim.gd
-##     [-- --only=<pocket_id>] [--no-cradle] [--no-reed]
+##     [-- --only=<pocket_id>] [--no-cradle] [--no-reed] [--real-tidecoil]
+## `--real-tidecoil` replaces the Deep Watch gate-flag fixture with the real
+## named fight: after proving the cache absent, the trainer walks from the
+## candy to dry ground inside Tidecoil's activation reach, deploys the lead by
+## the `creature_recall` action, closes on Tidecoil with the stick, enters the
+## fight by the production Interact/aggression path and wins it with the shared
+## campaign pilot (real quick/charged/party_cycle inputs through the production
+## CombatManager). The completion flag must then be set by the director's own
+## won terminal. DISCLOSED FIXTURE for that mode: the retained five (terrapup,
+## bramblebun, mudsnout, pipwing, trailpup) at `--party-level` (default 43,
+## the Tidewake region-entry level, PROGRESSION §3) are placed in the party
+## before the world loads; no swim mount/saddle is granted because the
+## trainer is placed on Deep Watch's arrival landing rather than swimming there.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -42,6 +57,10 @@ const MARGIN_M := 80.0
 const WAYPOINT_EVERY := 3
 const CRADLE_POCKET := "cradle_shell_nest"
 const REED_POCKET := "reed_root_hollow"
+const REED_RECIPE := "water_camp_cordage"
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const RETAINED_FIVE := ["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]
 
 var game: Node
 var world: Node3D
@@ -55,6 +74,9 @@ var failures: Array[String] = []
 var checks := 0
 var finished := false
 var _refusal := ""
+var real_tidecoil := false
+var party_level := 43
+var tidecoil_note := ""
 
 
 func _init() -> void:
@@ -70,6 +92,17 @@ func _run() -> void:
 	game.save_system = SAVE.new("user://smoke_water_pocket_walk_claim_%d/" % Time.get_ticks_usec())
 	game.reset_for_new_game()
 	game.current_realm = "water"
+	real_tidecoil = OS.get_cmdline_user_args().has("--real-tidecoil")
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--party-level="):
+			party_level = int(argument.trim_prefix("--party-level="))
+	if real_tidecoil:
+		# DISCLOSED FIXTURE: the retained five at the Tidewake band level.
+		game.local.party.clear()
+		for species: String in RETAINED_FIVE:
+			var creature: RefCounted = SPECIES.spawn(species)
+			creature.set_level(party_level, PROGRESSION.config())
+			game.local.party.add(creature)
 	# Disclosed carried tool for the Cradle leg: Reef Stone needs a held pickaxe.
 	if game.inventory.add("pickaxe", 1) != 0 or not game.assign_hotbar(0, "pickaxe") \
 			or game.inventory.add("knife", 1) != 0 or not game.assign_hotbar(1, "knife"):
@@ -137,11 +170,29 @@ func _walk_and_claim(row: Dictionary) -> String:
 		service.call("refresh")
 		await _frames(2)
 		_check(service.call("node_for", id) == null, "%s resident before its gate %s" % [id, gates])
-		for flag: Variant in gates:
-			game.world.flags.set_flag(str(flag))
+		if real_tidecoil:
+			var won: bool = await _fight_tidecoil()
+			for flag: Variant in gates:
+				_check(game.world.flags.has(str(flag)), "real Tidecoil win did not set gate flag %s" % flag)
+			if not won:
+				return "POCKET %s FAIL real Tidecoil fight (%s)" % [pocket, tidecoil_note]
+			# Walk back from wherever the fight ended to the candy, real input only.
+			# The fight ends in the shallows under Deep Watch's ~12 m reef cliff.
+			# No wading route climbs out (planner at dry_m=-1.0 finds none) and an
+			# open-water stick return stalled against the cliff base twice
+			# (PROOF.md). DISCLOSED FIXTURE: a second position write, back to
+			# Deep Watch's arrival landing -- the same write every pocket walk
+			# starts from -- then the ordinary walk and Interact claim.
+			var back: Variant = await _walk_from(landing, target, 1.6, pocket + "_after_tidecoil")
+			if back == null:
+				return "POCKET %s FAIL walk after Tidecoil" % pocket
+			gate_note = "locked_before_REAL_tidecoil_win(%s)[%s]" % [",".join(gates), tidecoil_note]
+		else:
+			for flag: Variant in gates:
+				game.world.flags.set_flag(str(flag))
+			gate_note = "locked_before_fixture_flag(%s)" % ",".join(gates)
 		service.call("refresh")
 		await _frames(2)
-		gate_note = "locked_before_fixture_flag(%s)" % ",".join(gates)
 	var candy: Node3D = service.call("node_for", id)
 	if not _check(candy != null, "%s candy not resident on arrival" % id):
 		return "POCKET %s FAIL not resident" % pocket
@@ -272,6 +323,13 @@ func _seam_leg(data: Dictionary, pocket_id: String, island_id: String, expected:
 	for item: String in expected:
 		before[item] = game.inventory.count(item)
 	var main_item := str(row.item_id)
+	var learn := str(row.get("learn_recipe_flag", ""))
+	var recipe_note := ""
+	if not learn.is_empty():
+		var known_before: bool = game.recipe_known(REED_RECIPE)
+		_check(not known_before and not game.local.flags.has(learn),
+			"%s: %s already known before the claim" % [pocket_id, REED_RECIPE])
+		recipe_note = " recipe_before=%s" % known_before
 	await _press_interact()
 	for _frame in 240:
 		await physics_frame
@@ -288,21 +346,32 @@ func _seam_leg(data: Dictionary, pocket_id: String, island_id: String, expected:
 	await _frames(2)
 	var gone: bool = service.call("node_for", id) == null
 	_check(gone, "%s seam still resident after its one gather: %s" % [pocket_id, id])
+	if not learn.is_empty():
+		var known_after: bool = game.recipe_known(REED_RECIPE)
+		var listed: bool = game.known_recipe_ids().has(REED_RECIPE)
+		_check(known_after and listed and game.local.flags.has(learn),
+			"%s: the claim did not teach %s (known=%s listed=%s)" % [pocket_id, REED_RECIPE, known_after, listed])
+		paid = paid and known_after and listed
+		recipe_note += " recipe_after=%s listed=%s" % [known_after, listed]
 	var baked: float = world.call("ground_height_at", centre.x, centre.z)
 	var in_pocket := Vector2(centre.x, centre.z).distance_to(Vector2(float(pocket.position[0]), float(pocket.position[2])))
-	return "SEAM %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg tool=%s baked_y=%.3f analytic_y=%.3f from_pocket_centre=%.2fm gains=%s result=%s" % [
+	return "SEAM %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg tool=%s baked_y=%.3f analytic_y=%.3f from_pocket_centre=%.2fm gains=%s%s result=%s" % [
 		pocket_id, id, _landing_id(island_id), float(walked.metres), int(walked.legs), float(walked.spur_m), float(walked.spur_max_slope),
-		tool, baked, field.height_at(centre.x, centre.z), in_pocket, gains, "PAID" if paid and gone else "FAIL"]
+		tool, baked, field.height_at(centre.x, centre.z), in_pocket, gains, recipe_note, "PAID" if paid and gone else "FAIL"]
 
 
 ## Places the trainer on `landing` (the one disclosed position write) and walks
 ## the planned route to within `tolerance` of `target`. Returns
 ## {metres, legs} or null after recording a failure.
 func _walk_from(landing: Vector3, target: Vector3, tolerance: float, label: String) -> Variant:
-	var deck: float = world.call("ground_height_at", landing.x, landing.z)
-	player.global_position = Vector3(landing.x, maxf(deck, landing.y) + 0.3, landing.z)
-	player.velocity = Vector3.ZERO
-	await _frames(60)
+	if landing.is_finite():
+		var deck: float = world.call("ground_height_at", landing.x, landing.z)
+		player.global_position = Vector3(landing.x, maxf(deck, landing.y) + 0.3, landing.z)
+		player.velocity = Vector3.ZERO
+		await _frames(60)
+	else:
+		# Continue from where the trainer already stands: no position write.
+		landing = player.global_position
 	var plan := plan_route(world, Vector2(landing.x, landing.z), Vector2(target.x, target.z))
 	var route: Array[Vector2] = plan.points
 	if not _check(route.size() >= 1, "%s: no dry route over the baked ground from %s to %s" % [label, landing, target]):
@@ -325,6 +394,13 @@ func _walk_from(landing: Vector3, target: Vector3, tolerance: float, label: Stri
 	_stick(0.0, 0.0)
 	await _frames(20)
 	return {"metres": metres, "legs": route.size(), "spur_m": float(plan.spur_m), "spur_max_slope": float(plan.spur_max_slope)}
+
+
+## The real Deep Watch gate (tests/helpers/tidewake_b_tidecoil_fight.gd).
+func _fight_tidecoil() -> bool:
+	var fight: Dictionary = await load("res://tests/helpers/tidewake_b_tidecoil_fight.gd").new().run(self, world)
+	tidecoil_note = str(fight)
+	return _check(bool(fight.get("won", false)), "real Tidecoil fight did not end in a recorded win: " + tidecoil_note)
 
 
 ## Steps toward the body until the arbiter's winning provider is `prompt`.

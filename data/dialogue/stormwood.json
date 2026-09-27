@@ -773,7 +773,7 @@
       "requires_flags": ["stormwood:side_deepwood_circuit_1"],
       "lines": [
         "Rook: Any three distinct Circuit trainers will do. A rematch cannot count twice.",
-        "Follow the loop between Lantern Hollow, the Fallen Giant, Blackwater edge, and Rodline. Return when three posts are behind you."
+        "Circuit trainers keep posts at Lantern Hollow, the Deepwood Rod Station, the Old Rodfolk Hall, the Blackwater edge, and mine here at the Fallen Giant. Return when three posts are behind you."
       ]
     },
     "stormwood_rook_circuit_return": {
@@ -784,7 +784,7 @@
       "lines": [
         "Rook: Three posts, one continuous road. That is a circuit.",
         "You learned where the forest opens and where it closes. Keep that rhythm when the storm turns.",
-        "Take this: Thunder Break, sealed in glass. Teach it to an electric partner. Anyone who ran the loop with you can collect their own from me."
+        "Take this: Thunder Break, sealed in glass. Teach it to an electric partner. Any trainer who has not had one from me yet can collect their own."
       ]
     },
     "stormwood_rook_circuit_thanks": {

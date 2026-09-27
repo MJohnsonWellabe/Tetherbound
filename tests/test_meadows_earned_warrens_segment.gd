@@ -119,7 +119,8 @@ func test_rotated_live_marker_approach_is_outside_and_never_projects_rooms_to_te
 	var rotated := Basis(Vector3.UP, 1.1)
 	assert_true(SEGMENT.outside_approach(rotated * entrance, rotated * mouth, 8).is_equal_approx(rotated * outside))
 	var source := FileAccess.get_file_as_string("res://tests/helpers/meadows_earned_warrens_segment.gd")
-	assert_true(source.contains('await _walk(_warrens.call("marker", chamber))'))
+	assert_true(source.contains('var marker: Vector3 = _warrens.call("marker", chamber)'))
+	assert_true(source.contains('await _chamber_leg(previous, marker)'))
 	assert_false(source.contains('_walk_ground(_warrens.call("marker"'))
 
 
@@ -205,3 +206,31 @@ func test_reachable_source_uses_input_and_observation_without_fixture_callbacks(
 		"no quarry stop is special-cased with a hand-authored detour")
 	assert_true(source.contains("_walk_ground(at, 2.2)"),
 		"the pre-approach yields to the authored node's real 2.4m prompt envelope")
+
+
+func test_segment_chain_compiles_through_the_warden() -> void:
+	# Relay, Hall and Warden extend this segment and override `_walk`; a
+	# signature change here once broke all three at run time only.
+	for name: String in ["warrens", "relay", "hall", "warden"]:
+		var script := ResourceLoader.load("res://tests/helpers/meadows_earned_%s_segment.gd" % name,
+			"", ResourceLoader.CACHE_MODE_IGNORE) as GDScript
+		var methods: Array[String] = []
+		if script != null:
+			for method: Dictionary in script.get_script_method_list():
+				methods.append(str(method.get("name", "")))
+		# A script that fails to parse loads with no compiled methods at all.
+		assert_true(methods.has("_walk") and methods.has("run"), "%s segment compiles" % name)
+
+
+func test_on_the_bank_reads_height_above_the_apron() -> void:
+	assert_true(SEGMENT.on_the_bank(7.43, 4.15), "the seed-15 stall stood 3.3 m above the apron")
+	assert_false(SEGMENT.on_the_bank(4.9, 4.15), "ordinary apron slope is not the bank")
+
+
+func test_quarry_nodes_above_the_worked_cut_are_reached_up_the_haul_apron() -> void:
+	assert_true(SEGMENT.needs_haul_apron(Vector2(371.0, 1771.6), Vector2(394.0, 1797.0)),
+		"the seed-15 stall: below the cut, node on the upper bench")
+	assert_false(SEGMENT.needs_haul_apron(Vector2(398.0, 1800.0), Vector2(394.0, 1797.0)),
+		"already on the bench")
+	assert_false(SEGMENT.needs_haul_apron(Vector2(371.0, 1771.6), Vector2(381.0, 1784.0)),
+		"a node below the cut needs no ramp")

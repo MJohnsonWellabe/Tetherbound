@@ -183,8 +183,8 @@ func _run() -> void:
 	var frozen: float = controller.rules.window_left()
 	for _i in 5:
 		await process_frame
-	_check(is_equal_approx(controller.rules.window_left(), frozen) and is_equal_approx(frozen, 30.0),
-		"Break waits with a fresh 30 s window while nobody is there")
+	_check(is_equal_approx(controller.rules.window_left(), frozen) and is_equal_approx(frozen, controller.rules.break_window_seconds()),
+		"Break waits with a fresh window while nobody is there")
 
 	# Reloading a waiting Break neither replays the wipe nor loses the wait.
 	var saved: Dictionary = controller.save_payload()
@@ -210,7 +210,7 @@ func _run() -> void:
 	for _i in 3:
 		await process_frame
 	_check(controller.participants == [2], "the returning fighter's creature at the arena edge rejoins Break")
-	_check(controller.rules.window_left() < 30.0, "the window runs again once someone is there")
+	_check(controller.rules.window_left() < controller.rules.break_window_seconds(), "the window runs again once someone is there")
 	_check(hub.recoveries() == 1, "no further recovery after rejoining")
 
 	# A bystander who never fought the captain team: a join from far away is

@@ -5752,7 +5752,8 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
+      "combat": {"lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "completion_reward": {"title": "Hollows Alpha", "items": [{"id": "great_candy", "count": 1}], "acknowledgement": "The Hollows Alpha yields the glowmoss lanes. Great Candy for each trainer who stood in the fight."},
       "once_only": true
     },
@@ -5769,7 +5770,8 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
+      "_why_route_cue_f10": "BOSSES §7: a 1.1 s visible route-line cue before the 0.8 s strike tell. route_cue_seconds draws the dive lane for 1.1 s first (wild_creature.gd, granted on #345); the dive then travels its 5.5 m down that lane (lunge_travels) and locks its heading at 0.25 of the tell like the 0.8 s lane CHARGERs.",
+      "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
       "once_only": true
     },
     {
@@ -5786,7 +5788,8 @@
       "placeholder_species": "staticub",
       "replacement_point": "named_encounters.crown_guardian_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4, "reposition_distance": 2.5, "power": 12.0},
+      "_why_guard_stance_f10": "BOSSES §7: a stationary frontal guard stance provides the look. guard_stance draws its frontal cone (its own range and cone) on the ground for the tell; presentation only, no block or damage change (wild_creature.gd, granted on #345). Its numbers are unchanged.",
+      "combat": {"guard_stance": true, "telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4, "reposition_distance": 2.5, "power": 12.0},
       "once_only": true
     },
     {
@@ -5803,7 +5806,8 @@
       "placeholder_species": "tanglevolt",
       "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
+      "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
+      "combat": {"lunge_travels": true, "telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
       "completion_reward": {"title": "Old Rodfolk Hall Guardian", "items": [{"id": "rare_candy", "count": 1}], "acknowledgement": "The Hall's guardian stands down. Rare Candy for each trainer who stood in the fight."},
       "once_only": true
     },
@@ -5821,7 +5825,9 @@
       "placeholder_species": "mosshock",
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
+      "_why_guard_stance_f10": "F10#2 C3 code-blind judge (fight B): the only ground mark was the manager's small ring at the elder's feet, half under its body, and a strike landed on a pilot outside it. guard_stance draws the frontal cone the manager's hit test uses (its own range and cone) for the tell, as the Crown Guardian does; presentation only, no block or damage change. Its BOSSES numbers are unchanged.",
+      "_why_face_lock_f10": "F10#2 C3 re-judge (fight G): an ordinary strike tracks its target through the whole tell, so the drawn cone followed the pilot and a sidestep could never leave it. COMBAT section 5: facing tracks for the first half of the wind-up, then locks, and the shown shape is the locked strike shape. 0.5 of the 0.8 s tell leaves 0.4 s to step out of the cone (wild_creature.gd face_lock_fraction).",
+      "combat": {"guard_stance": true, "face_lock_fraction": 0.5, "telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
       "completion_reward": {"title": "Blackwater Elder", "items": [{"id": "glowmoss_tonic", "count": 1}], "acknowledgement": "The Blackwater Elder slips back into the pool. A Glowmoss Tonic for each trainer who stood in the fight."},
       "once_only": true
     },
@@ -5838,7 +5844,8 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.glass_field_alpha_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
+      "combat": {"lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "completion_reward": {"title": "Glass Field Alpha", "items": [{"id": "stormglass", "count": 2}], "acknowledgement": "The Glass Field lane goes quiet. Two Stormglass for each trainer who stood in the fight."},
       "once_only": true
     }

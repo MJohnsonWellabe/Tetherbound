@@ -87,14 +87,25 @@ func test_regreen_config_names_real_baked_stations_and_installed_textures() -> v
 	for raw: Variant in ((_json(TERRAIN_PATH).get("drains", {}) as Dictionary).get("stations", []) as Array):
 		ids[str((raw as Dictionary).get("id", ""))] = true
 	var groups: Dictionary = block.get("groups", {})
-	assert_eq(groups.keys().size(), 3, "quarry / approach / stronghold_works, one mesh each")
+	assert_eq(groups.keys().size(), 4, "quarry / approach / stronghold_works / highfield, one mesh each")
 	var total := 0
+	var inline := 0
 	for group: Variant in groups.keys():
 		for raw: Variant in (groups[group] as Array):
+			if raw is Dictionary:
+				# F05#7 r7: authored ground the bake never drained (the Highfield).
+				inline += 1
+				assert_false(HEALING.inline_disc(raw as Dictionary).is_empty(), "inline disc in %s is well formed" % str(group))
+				continue
 			total += 1
 			assert_true(ids.has(str(raw)), "station '%s' exists" % str(raw))
 			assert_false(str(raw).begins_with("relay_"), "the relay heals its own skin at the console")
 	assert_eq(total, 12)
+	assert_eq(inline, 1, "the Highfield pasture")
+	for group: Variant in (block.get("reach", {}) as Dictionary).keys():
+		if str(group).begins_with("_"):
+			continue
+		assert_true(groups.has(group), "reach names a real group (%s)" % str(group))
 	assert_true(ResourceLoader.exists(str(block.get("albedo", ""))), "installed grass albedo")
 	assert_true(ResourceLoader.exists(str(block.get("normal", ""))), "installed grass normal")
 	assert_almost_eq(float(block.get("fade_seconds", 0.0)),
@@ -393,3 +404,97 @@ func test_the_herd_groups_around_the_stag() -> void:
 		assert_true(off.length() <= 14.0, "member %s is %.1f m from the stag" % [str(place["at"]), off.length()])
 		sides[("E" if off.x >= 0.0 else "W") + ("N" if off.y >= 0.0 else "S")] = true
 	assert_true(sides.size() >= 3, "the herd stands on at least three sides of the stag (%s)" % str(sides.keys()))
+
+
+func test_the_herd_grazes_in_clusters_not_a_ring() -> void:
+	# F05#7 round 6 (blind round 5: "a row along a fence, evenly spaced, same
+	# facing -- placed props"). The seeded scatter puts the herd in loose
+	# clusters: uneven spacing, mixed facing, and nobody in the open arc toward
+	# the hero stand.
+	var block: Dictionary = _config().get("herd_return", {})
+	assert_true(block.get("scatter", null) is Dictionary, "the herd is scattered from a seed")
+	var spec: Dictionary = block["scatter"]
+	var places := HEALING.herd_placements(block)
+	var total := 0
+	for cluster: Dictionary in (spec["clusters"] as Array):
+		total += int(cluster["count"])
+	assert_eq(places.size(), total, "every cluster member found a spot")
+	var around := Vector2(float(spec["around"][0]), float(spec["around"][1]))
+	var nearest: Array[float] = []
+	var facings: Array[float] = []
+	for i in places.size():
+		var at: Vector2 = places[i]["at"]
+		var az := fposmod(rad_to_deg(atan2(at.x - around.x, at.y - around.y)), 360.0)
+		assert_false(az >= float(spec["open_arc"][0]) and az <= float(spec["open_arc"][1]),
+			"member %d stands in the open arc (%.0f deg)" % [i, az])
+		var best := INF
+		for j in places.size():
+			if j != i:
+				best = minf(best, at.distance_to(places[j]["at"] as Vector2))
+		nearest.append(best)
+		facings.append(float(places[i]["facing_deg"]))
+	nearest.sort()
+	assert_true(nearest[-1] - nearest[0] >= 1.5, "spacing varies (nearest-neighbour %.1f..%.1f m)" % [nearest[0], nearest[-1]])
+	facings.sort()
+	assert_true(facings[-1] - facings[0] >= 90.0, "facing varies (%.0f..%.0f deg)" % [facings[0], facings[-1]])
+
+
+func test_the_herd_scatter_is_a_pure_function_of_its_seed() -> void:
+	var spec: Dictionary = (_config().get("herd_return", {}) as Dictionary)["scatter"]
+	var a := HEALING.herd_scatter(spec)
+	var b := HEALING.herd_scatter(spec)
+	assert_eq(a.size(), b.size())
+	for i in a.size():
+		assert_true((a[i]["at"] as Vector2).is_equal_approx(b[i]["at"] as Vector2), "same spot every build")
+		assert_almost_eq(float(a[i]["facing_deg"]), float(b[i]["facing_deg"]))
+		assert_true(float(a[i]["scale"]) >= 1.0, "up-only scale")
+	var other := spec.duplicate(true)
+	other["seed"] = int(spec["seed"]) + 1
+	var c := HEALING.herd_scatter(other)
+	assert_false((a[0]["at"] as Vector2).is_equal_approx(c[0]["at"] as Vector2), "the seed is what places them")
+
+
+func test_the_overlays_feather_their_edge_and_bias_over_the_slope() -> void:
+	# F05#7 round 6 (blind round 5: the works patch "a hard-edged polygon").
+	var code := HEALING.OVERLAY_SHADER
+	assert_true(code.contains("mh_noise(v_world.xz * feather_scale)"), "world-noise feathered contour")
+	assert_true(code.contains("view.xyz *= max(len - view_bias, 0.05) / len;"), "decal bias toward the camera")
+	assert_true(code.contains("ALPHA = a * max_alpha * master_alpha;"), "one master fade over the authored cap")
+
+
+func test_the_healed_ground_blooms_deterministically_inside_the_stations() -> void:
+	# F05#7 round 6: wildflower drifts come up on the healed stations.
+	var config := _config()
+	var block: Dictionary = config.get("bloom", {})
+	assert_true(bool(block.get("enabled", false)), "the bloom is on")
+	for path: Variant in (block.get("models", []) as Array):
+		assert_true(ResourceLoader.exists(str(path)), "installed model %s" % str(path))
+	var discs := [{"id": "a", "centre": Vector2(0, 0), "radius": 20.0, "inner": 6.0, "strength": 1.0}]
+	var spots := HEALING.bloom_spots(discs, block, "g")
+	var again := HEALING.bloom_spots(discs, block, "g")
+	assert_true(spots.size() > 20, "a real drift count (%d)" % spots.size())
+	assert_eq(spots.size(), again.size())
+	for i in spots.size():
+		assert_true((spots[i]["at"] as Vector2).is_equal_approx(again[i]["at"] as Vector2), "same spot every build")
+		assert_true((spots[i]["at"] as Vector2).length() <= 20.0 + float(block.get("drift_radius", 2.4)) + 0.01, "inside the station")
+
+
+func test_inline_disc_reads_like_a_station_and_rejects_malformed() -> void:
+	var disc := HEALING.inline_disc({"id": "h", "centre": [1.0, 2.0], "radius": 10.0, "inner": 4.0, "strength": 0.5})
+	assert_true((disc["centre"] as Vector2).is_equal_approx(Vector2(1, 2)))
+	assert_almost_eq(float(disc["radius"]), 10.0)
+	assert_almost_eq(float(disc["inner"]), 4.0)
+	assert_almost_eq(float(disc["strength"]), 0.5)
+	assert_true(HEALING.inline_disc({"centre": [1.0], "radius": 3.0}).is_empty(), "no centre")
+	assert_true(HEALING.inline_disc({"centre": [1.0, 2.0], "radius": 0.0}).is_empty(), "no radius")
+
+
+func test_the_healed_field_greens_at_full_density() -> void:
+	# F05#7 r7 (owner: the healed land reads as green grass).
+	var spec: Dictionary = (_config().get("regreen", {}) as Dictionary).get("field_green", {})
+	assert_true(bool(spec.get("enabled", false)), "the field greens")
+	var green := Color(str(spec.get("tint", "")))
+	assert_true(green.g > green.r and green.g > green.b, "the tint is green (%s)" % str(green))
+	assert_between(float(spec.get("amount", 0.0)), 0.3, 1.0, "a visible, not total, lean")
+	var code := FileAccess.get_file_as_string("res://scripts/world/meadow_healing.gd")
+	assert_true(code.contains('material.set_shader_parameter("drain_thin", 0.0)'), "no blade culled while greening")

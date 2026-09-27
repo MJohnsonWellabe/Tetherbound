@@ -56,6 +56,7 @@ extends SceneTree
 
 const REMOTE_CREATURE_TP := preload("res://scripts/creatures/remote_creature.gd")
 const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
+const PRESS_INJECT := preload("res://tools/net/press_inject.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
@@ -1470,41 +1471,7 @@ func _step_wait(args: Dictionary) -> Dictionary:
 ## `tools/gate_f/operator_harness.gd::_edge`, trimmed to the event kinds a net
 ## smoke actually needs (no mouse aiming in Wave 0).
 func _press_edge(action: String, pressed: bool) -> Dictionary:
-	var a := StringName(action)
-	if not InputMap.has_action(a):
-		return {"ok": false, "why": "no input action '%s' in the live InputMap" % action}
-	var binding: InputEvent = GATE_F_HARNESS._physical_binding(a)
-	if binding == null:
-		return {"ok": false, "why": "action '%s' has no physical binding to inject" % action}
-	if binding is InputEventJoypadButton:
-		var b := InputEventJoypadButton.new()
-		b.button_index = (binding as InputEventJoypadButton).button_index
-		b.pressed = pressed
-		Input.parse_input_event(b)
-	elif binding is InputEventJoypadMotion:
-		var m := InputEventJoypadMotion.new()
-		m.axis = (binding as InputEventJoypadMotion).axis
-		m.axis_value = (binding as InputEventJoypadMotion).axis_value if pressed else 0.0
-		Input.parse_input_event(m)
-	elif binding is InputEventKey:
-		var k := InputEventKey.new()
-		k.keycode = (binding as InputEventKey).keycode
-		k.physical_keycode = (binding as InputEventKey).physical_keycode
-		k.pressed = pressed
-		Input.parse_input_event(k)
-	elif binding is InputEventMouseButton:
-		var mb := InputEventMouseButton.new()
-		mb.button_index = (binding as InputEventMouseButton).button_index
-		mb.pressed = pressed
-		Input.parse_input_event(mb)
-	else:
-		return {"ok": false, "why": "action '%s' binds an event type this harness cannot synthesize (%s)"
-			% [action, binding.get_class()]}
-	if pressed:
-		Input.action_press(a, 1.0)
-	else:
-		Input.action_release(a)
-	return {"ok": true}
+	return PRESS_INJECT.edge(GATE_F_HARNESS._physical_binding, action, pressed)
 
 
 ## Adapted from `operator_harness.gd::_inject`, with one deliberate
@@ -1525,16 +1492,15 @@ func _press_edge(action: String, pressed: bool) -> Dictionary:
 ## physics frame goes first here; if a menu-focused action needs this file
 ## later, gate the idle-frame placement on the control rather than reverting
 ## this wholesale.
+##
+## F11#3: the sequence lives in `press_inject.gd::tap()`, which also lets the
+## queued physical press flush right after the press (it used to land after
+## the release on a slow frame and read as a second press). The idle frame
+## there no longer starves a physics reader: the polled press has already set
+## its edge on the physics frame it was made in, and the measured sequences
+## are in `tests/smoke_peer_runner_press_edge.gd`.
 func _inject(action: String, frames: int) -> Dictionary:
-	var down := _press_edge(action, true)
-	if not bool(down.get("ok", false)):
-		return down
-	for i in maxi(1, frames):
-		await physics_frame
-	var up := _press_edge(action, false)
-	await process_frame
-	await physics_frame
-	return {"ok": bool(up.get("ok", false)), "why": str(up.get("why", ""))}
+	return await PRESS_INJECT.tap(self, GATE_F_HARNESS._physical_binding, action, frames)
 
 
 ## CL-H13, ported: `GATE_F_HARNESS._resolve_press`/`_load_input_contexts` are
@@ -3322,6 +3288,17 @@ func _run_assert(check: String, args: Dictionary) -> Dictionary:
 				player.global_position.z - float(at[1])).length()
 			return {"ok": d <= within, "actual": "%.2f m from (%.1f, %.1f), wanted within %.2f"
 				% [d, float(at[0]), float(at[1]), within]}
+		"on_floor":
+			# F06#5: standing on a floor, not flying and not carried by a mount.
+			var grounded := _probe.call("player") as CharacterBody3D
+			if grounded == null:
+				return {"ok": false, "actual": "no live player"}
+			var fly_node := _fly_controller()
+			var flying := fly_node != null and bool(fly_node.call("is_flying"))
+			var carried := grounded.has_method("is_carried") and bool(grounded.call("is_carried"))
+			return {"ok": grounded.is_on_floor() and not flying and not carried,
+				"actual": "on_floor=%s flying=%s carried=%s at %s" % [grounded.is_on_floor(), flying,
+					carried, str(grounded.global_position)]}
 		"party_size":
 			var have := (_probe.call("party_state") as Array).size()
 			if args.has("min"):

@@ -2102,11 +2102,17 @@ func _apply_shared_cue(payload: Dictionary) -> void:
 	_rpc_shared_opponent_pose(payload)
 	var kind := str(payload.get("kind", ""))
 	var serial := int(payload.get("cue_serial", 0))
+	# F04/F10#2: optional ground-mark shape; an older host sends none.
+	var shape: Dictionary = payload.get("shape", {}) if payload.get("shape", {}) is Dictionary else {}
 	if kind == "telegraph":
 		var seconds := float(payload.get("remaining_s", 0.0))
 		if is_finite(seconds):
 			_shared_opponent_proxy.call("present_telegraph", serial, seconds,
-				int(payload.get("telegraph_count", 0)))
+				int(payload.get("telegraph_count", 0)), shape)
+	elif kind == "route":
+		var route_s := float(payload.get("remaining_s", 0.0))
+		if is_finite(route_s):
+			_shared_opponent_proxy.call("present_route", serial, route_s, shape)
 	elif kind == "strike":
 		_shared_opponent_proxy.call("present_strike", serial,
 			int(payload.get("strike_count", 0)))
@@ -2847,6 +2853,20 @@ func _on_shared_host_telegraph(seconds: float, encounter_id: String = "") -> voi
 	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "telegraph", seconds))
 
 
+## F10#2: a route cue precedes the tell proper. Guests get it as its own cue
+## kind so their proxy draws the route for as long as the host body shows it.
+func _on_shared_host_route(seconds: float, encounter_id: String = "") -> void:
+	if not _is_host() or not is_finite(seconds) or seconds <= 0.0:
+		return
+	if encounter_id.is_empty():
+		encounter_id = _local_bound_encounter_id()
+	var runtime := _shared_host_fight(encounter_id)
+	if runtime == null:
+		return
+	runtime.set("cue_serial", int(runtime.get("cue_serial")) + 1)
+	_broadcast_shared_cue(_shared_cue_payload(encounter_id, "route", seconds))
+
+
 func _on_shared_host_strike(encounter_id: String = "") -> void:
 	if not _is_host():
 		return
@@ -2874,6 +2894,12 @@ func _shared_cue_payload(encounter_id: String, kind: String, remaining_s: float)
 		"telegraph_count": int(runtime.get("telegraph_count")) if runtime != null else 0,
 		"strike_count": int(runtime.get("strike_count")) if runtime != null else 0,
 	})
+	if runtime != null and (kind == "telegraph" or kind == "route"):
+		var wild: Variant = runtime.call("body")
+		if wild != null and is_instance_valid(wild) and (wild as Node).has_method("presentation_shape"):
+			var shape: Dictionary = (wild as Node).call("presentation_shape")
+			if not shape.is_empty():
+				payload["shape"] = shape
 	return payload
 
 
@@ -3005,6 +3031,10 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 		return
 	var wild: Node3D = runtime.call("body") as Node3D
 	var terminal := str(runtime.get("terminal_outcome"))
+	if wild != null and is_instance_valid(wild) and wild.has_signal("route_cue_started"):
+		var route_cue := _on_shared_host_route.bind(encounter_id)
+		if wild.route_cue_started.is_connected(route_cue):
+			wild.route_cue_started.disconnect(route_cue)
 	if terminal.is_empty():
 		runtime.call("stop_opponent")
 		if restore_ambient and wild != null and is_instance_valid(wild):
@@ -4380,6 +4410,10 @@ func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: 
 		MATH.config().get("arena", {}).get("radius", 11.0))
 	runtime.telegraph.connect(_on_shared_host_telegraph.bind(encounter_id))
 	runtime.swung.connect(_on_shared_host_strike.bind(encounter_id))
+	if wild.has_signal("route_cue_started"):
+		var route_cue := _on_shared_host_route.bind(encounter_id)
+		if not wild.route_cue_started.is_connected(route_cue):
+			wild.route_cue_started.connect(route_cue)
 	runtime.call("start_shared", wild, _ally_body, centre, radius, self, encounter_id, generation)
 	_manager.call("detach_realm_opponent_callbacks", wild)
 

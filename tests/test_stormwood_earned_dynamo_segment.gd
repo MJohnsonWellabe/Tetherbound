@@ -70,6 +70,50 @@ func test_whole_ascent_matches_existing_smoke_clock_and_budget() -> void:
 	assert_eq(SEGMENT.ASCENT_HZ, 60)
 	assert_true(smoke.contains("const CORE_TOLERANCE := %.1f" % SEGMENT.CORE_TOLERANCE))
 	var source := FileAccess.get_file_as_string("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
-	var ascent := source.substr(source.find("func _walk_actual_ascent"))
+	var from := source.find("func _walk_actual_ascent")
+	var ascent := source.substr(from, source.find("\nfunc ", from + 1) - from)
 	assert_true(ascent.contains("Engine.get_physics_frames() - started < ASCENT_FRAMES"))
-	assert_false(ascent.contains("await _fight_current"))
+	# The budget measures climbing only. A wild that engages on the approach
+	# (relay DRY RUN a9b6da46) is fought outside it, and its frames are given
+	# back; a trainer battle mid-ascent still fails.
+	assert_false(ascent.contains("await _fight_current"), "the ascent body never fights inline")
+	assert_true(ascent.contains("await _fight_ascent_wild()"))
+	assert_true(ascent.contains("started += Engine.get_physics_frames() - fight_started"))
+	assert_true(ascent.contains("trainer_battle_active()") and ascent.contains("unexpected trainer combat blocks"))
+
+
+## Relay DRY RUN 44adfbe4 wedged the player under the Outer Works approach
+## slab walking from Kestrel to its foot. The approach is now a closed
+## causeway 10 m wide north from its foot (F09#1 blocker B2); no route may
+## cross its footprint north of the foot.
+func test_the_walk_to_the_approach_foot_never_passes_under_the_slab() -> void:
+	var kestrel := _seat("res://data/config/stormwood_trainers.json", "trainers", "officer_kestrel_outer_works")
+	var kestrel_npc := _seat("res://data/config/stormwood_npcs.json", "characters", "officer_kestrel")
+	for from: Vector2 in [kestrel, Vector2(-140, 5242)]:
+		var route := SEGMENT.approach_foot_route(from)
+		assert_eq(route[route.size() - 1], SEGMENT.APPROACH_FOOT, "every route ends on the slab's foot")
+		var at := from
+		for point: Vector2 in route:
+			# Sample each leg; from the first sideways step on, no sample may be
+			# over the slab's footprint (plus a body radius) north of its foot.
+			for i in 21:
+				var p := at.lerp(point, i / 20.0)
+				var under := p.y > SEGMENT.APPROACH_FOOT.y + 0.5 and absf(p.x - SEGMENT.APPROACH_FOOT.x) < 5.0 + 0.5
+				# Only a straight sideways step out from under it keeps headroom.
+				if under and not (at == from and is_equal_approx(point.y, from.y)):
+					assert_true(false, "leg %s -> %s passes under the slab at %s" % [str(at), str(point), str(p)])
+				if at != from or i > 0:
+					assert_true(p.distance_to(kestrel_npc) > 2.0 or p.distance_to(SEGMENT.APPROACH_FOOT) < 9.0,
+						"leg passes %.1f m from Kestrel's NPC" % p.distance_to(kestrel_npc))
+			at = point
+	var sideways := SEGMENT.approach_foot_route(kestrel)[0]
+	assert_eq(sideways.y, kestrel.y, "from under the slab the first step is straight sideways, keeping its headroom")
+
+
+func _seat(path: String, key: String, id: String) -> Vector2:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	for row: Dictionary in parsed.get(key, []):
+		if str(row.get("id", "")) == id:
+			return Vector2(float(row.position[0]), float(row.position[2]))
+	assert_true(false, "%s seat %s missing" % [path, id])
+	return Vector2.ZERO

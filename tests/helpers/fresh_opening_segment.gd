@@ -50,9 +50,15 @@ func _earned_walk_stick(x: float, y: float) -> void:
 	_send_axis(JOY_AXIS_LEFT_Y, y)
 
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+	# Walk with the obstacle-aware navigator, as the prompt approach above does.
+	# A straight push stalled 7-9 m short against the work-area workbench
+	# whenever the tutorial Bramblebun had wandered behind it (2 of 16 local
+	# runs; colliders Props/work_area/Workbench_Collision + Terrain).
+	var nav := EARNED_NAV.new(_tree, _player, _rig, _earned_walk_stick)
 	for _frame in budget:
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
 			_stop_left_stick()
+			print("live wild approach: target freed or not alive at frame ", _frame)
 			return false
 		if bool(_combat.call("is_fighting")):
 			_stop_left_stick()
@@ -72,8 +78,17 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 				await _tree.physics_frame
 			_fail("exact wild offer did not enter combat after Interact")
 			return false
-		await _drive_body_toward(_player, target.global_position, 1)
+		nav.step(target.global_position)
+		await _tree.physics_frame
 	_stop_left_stick()
+	var colliders: Array[String] = []
+	for index in _player.get_slide_collision_count():
+		var collider: Object = _player.get_slide_collision(index).get_collider()
+		colliders.append(str(collider.get_path()) if collider is Node else str(collider))
+	print("live wild approach exhausted: target=%s at %s player=%s alive=%s winner=%s engageable=%s colliders=%s" % [
+		target.name if is_instance_valid(target) else "<freed>", target.global_position if is_instance_valid(target) else Vector3.INF,
+		_player.global_position, bool(target.call("is_alive")) if is_instance_valid(target) else false,
+		_arbiter.call("winning_provider"), _encounter.call("_engageable"), colliders])
 	return false
 
 
@@ -285,6 +300,22 @@ func _step_until_the_shot_is_clear() -> bool:
 		_checkpoint("live catch preview is obstructed; changing the physical angle")
 		return false
 	return true
+
+
+## The inherited aim recovery walks for a new angle only on a camera
+## `line_of_sight_blocked`. A clear camera ray whose hand-to-target trajectory
+## is blocked (seed 15: CommonTree_1 between hand and Bramblebun) reads
+## "eligible", so it re-aimed from the same spot until the deadline. Report a
+## blocked trajectory as the blocked line it is, so the player steps round.
+func _launch_reason() -> String:
+	var reason := super._launch_reason()
+	if reason != "eligible":
+		return reason
+	var throw: Node = _combat.call("throw_aim") if _combat != null else null
+	if throw != null and throw.has_method("aim_report") \
+			and bool((throw.call("aim_report") as Dictionary).get("trajectory_blocked", false)):
+		return "line_of_sight_blocked"
+	return reason
 
 
 func _live_catch_finished() -> bool:

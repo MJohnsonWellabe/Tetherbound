@@ -36,6 +36,7 @@ const CLOUDREACH_MAP_STATE := preload("res://scripts/world/cloudreach_map_state.
 const REALM_MAP_STATE := preload("res://scripts/world/realm_map_state.gd")
 const WATER_MAP_STATE := preload("res://scripts/world/water_map_state.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const WATER_RECIPE_MIGRATION := preload("res://scripts/save/water_recipe_migration.gd")
 const REALM_HEART_STATE := preload("res://autoload/realm_heart_state.gd")
 const PLAYER_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
@@ -433,6 +434,8 @@ func load_data(data: Dictionary) -> void:
 		flags = PROGRESSION_STATE.new()
 	var raw_flags: Variant = data.get("flags", {})
 	flags.call("load_data", raw_flags if typeof(raw_flags) == TYPE_DICTIONARY else {})
+	# F13#2: never take away a recipe the character knew before its gate.
+	WATER_RECIPE_MIGRATION.repair(flags)
 	var raw_maps: Variant = data.get("realm_maps", {})
 	load_map_payloads(raw_maps as Dictionary if typeof(raw_maps) == TYPE_DICTIONARY else {})
 	if hearts != null:

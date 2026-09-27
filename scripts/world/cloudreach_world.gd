@@ -130,6 +130,9 @@ var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
 var _all_route_lines: Array[Dictionary] = []
+## Embedded shelves not built because they would stand in a road's walking
+## space (`_shelf_in_route_headroom`). Reported by the route-blocker smoke.
+var shelves_skipped_for_routes := 0
 ## Audit hook (tools/audit_cloudreach_shoulder_overpass.gd): when set before
 ## the world enters the tree, every route-shoulder top vertex's UNclamped
 ## position is recorded here as {route, ridge, row, column, raw}.
@@ -4215,7 +4218,15 @@ func _build_sky_shrine(root: Node3D) -> void:
 		_box(root, "ShrineApproachStep", Vector3(0, height * 0.5, -12.4 + step * 0.8), Vector3(7.0, height, 1.0), _materials["masonry_trim"], true)
 	_box(root, "Dais", Vector3(0.0, 0.65, 0.0), Vector3(26.0, 1.3, 20.0), _materials["masonry_trim"], true)
 	for x in [-9.5, 9.5]:
-		_box(root, "SkyPillar", Vector3(x, 10.0, 2.5), Vector3(2.2, 20.0, 2.2), _materials["masonry"], true)
+		# Route stall (#340, Cloudreach-B): a 2.2 m BOX collider here trapped a
+		# trainer on the dais at (1099.003, 1051.301, 2941.399) -- every move
+		# with an x component was swept into the dais top beside the box's
+		# corner, never a wall, so no step-up or unwedge could fire -- and it
+		# overlapped the Fly companion's launch room at the shrine landing.
+		# The drawn pillar keeps its shape; its collider is the inscribed
+		# cylinder, which has no corner to catch on.
+		var pillar := _box(root, "SkyPillar", Vector3(x, 10.0, 2.5), Vector3(2.2, 20.0, 2.2), _materials["masonry"], false)
+		_add_cylinder_collider(pillar, float(_visual_config.get("landmass", {}).get("sky_pillar_collider_radius_m", 1.1)), 20.0)
 		for band in [1.8, 6.5, 15.0, 18.2]:
 			_box(root, "CarvedPillarCourse", Vector3(x, band, 2.5), Vector3(3.0, 0.7, 3.0), _materials["masonry_trim"], false)
 		_box(root, "PillarFoot", Vector3(x, 2.0, 2.5), Vector3(4.3, 1.4, 4.3), _materials["masonry"], false)
@@ -5058,6 +5069,21 @@ func _box(parent: Node, label: String, centre: Vector3, size: Vector3, material:
 	return root
 
 
+## A "Collision" StaticBody3D with an upright cylinder shape under `parent`,
+## the same body name `_box(..., true)` uses, so probes and seals that look
+## for `<label>/Collision` keep finding it.
+func _add_cylinder_collider(parent: Node3D, radius: float, height: float) -> void:
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var shape_node := CollisionShape3D.new()
+	var shape := CylinderShape3D.new()
+	shape.radius = radius
+	shape.height = height
+	shape_node.shape = shape
+	body.add_child(shape_node)
+	parent.add_child(body)
+
+
 ## A flat collidable disc (cylinder), used where a square box's corners would
 ## poke past a circular crown's flat cap.
 func _disc(parent: Node, label: String, centre: Vector3, radius: float, height: float,
@@ -5892,6 +5918,15 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			# this cannot move a collider. i<3 keep their authored heights.
 			shelf_top=maxf(shelf_top, -size.y*0.5+shelf_height+4.0)
 		var shelf := Vector3(cos(angle) * size.x * 0.44, shelf_top, sin(angle) * size.z * 0.44)
+		# Route blocker B1 (Cloudreach-B, #294): a colliding shelf inside a
+		# drawn-only RockShoulder spur overhung the arrival->lower_west_anchor
+		# road at (-128.4, 205.5, 704.5) and stopped every ordinary walk.
+		# A shelf that would stand in any ground route's walking space is
+		# not built at all (its tree and cover go with it).
+		if i < 3 and _shelf_in_route_headroom(parent.global_transform * shelf, shelf_width * 0.5,
+				shelf_height):
+			shelves_skipped_for_routes += 1
+			continue
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
 			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"],
 			i<3, seed_value + 131 + i)
@@ -5904,6 +5939,25 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			_apply_tree_palette(tree, seed_value + i)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, 1050.0)
+
+
+## Whether a colliding shelf whose top centre is `top` (global) would stand in
+## a ground route's walking space: horizontally within the road ribbon plus the
+## shelf's own radius, and vertically overlapping the band from just above the
+## road surface to a walker's headroom (`landmass.route_shelf_headroom_m`).
+func _shelf_in_route_headroom(top: Vector3, radius: float, height: float) -> bool:
+	if _all_route_lines.is_empty():
+		_collect_all_route_lines()
+	var bottom_y := top.y - height
+	var headroom := float(_visual_config.get("landmass", {}).get("route_shelf_headroom_m", 3.2))
+	for line: Dictionary in _lines_near(top.x - radius, top.x + radius, top.z - radius, top.z + radius):
+		var hit := _line_point_xz(line, top)
+		if float(hit["distance"]) > float(line["half_width"]) + radius + 1.0:
+			continue
+		var road_y := float(hit["height"])
+		if bottom_y < road_y + headroom and top.y > road_y + 0.3:
+			return true
+	return false
 
 
 func _cylinder(parent: Node, label: String, centre: Vector3, radius: float, height: float, material: Material) -> MeshInstance3D:

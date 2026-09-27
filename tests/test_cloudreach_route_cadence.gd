@@ -54,13 +54,9 @@ const AFTERMATH: Array[String] = ["fly_traversal_unlocked", "cloudreach_upper_ro
 	"cloudreach_winds_restored"]
 ## Still-open A7 intervals, keyed "<from> -> <to>". Each must keep failing so a
 ## fix has to delete its row, and nothing else may exceed the limit.
-## The summit bivouac is a 626 m out-and-back spur off the stronghold threshold:
-## no flag changes while the player rests, so no gated data can make the walk
-## back new. Closing it needs a camp/route layout decision (move the bivouac
-## onto the approach or connect it to the threshold), not more scatter.
-const KNOWN_OPEN := {
-	"arrive:summit_bivouac -> arrive:summit_threshold": "bivouac spur return; layout decision",
-}
+## Empty since F07#3 moved the summit bivouac beside the stronghold threshold
+## (coordinator ruling (a), #356); it was a 626 m out-and-back spur.
+const KNOWN_OPEN := {}
 
 
 func test_required_route_has_no_a7_empty_interval() -> void:
@@ -71,7 +67,9 @@ func test_required_route_has_no_a7_empty_interval() -> void:
 		"longest_gap_m": snappedf(worst.gap_m, 0.1),
 		"longest_gap_s_at_walk": snappedf(worst.gap_m / _walk_speed(), 0.1), "over_limit": result.over_limit,
 		"from": worst.from, "to": worst.to, "at": worst.at, "leg": worst.leg}))
-	assert_true(float(result.route_m) > 12000.0, "the modelled itinerary covers the grounded chapter route")
+	# 11.0 km floor: the route lost the 1.24 km bivouac out-and-back when the
+	# camp moved beside the threshold (F07#3); it measured 11.86 km after.
+	assert_true(float(result.route_m) > 11000.0, "the modelled itinerary covers the grounded chapter route")
 	for key: String in KNOWN_OPEN:
 		assert_true((result.over_limit as Dictionary).has(key),
 			"known-open interval %s no longer exceeds A7; delete its KNOWN_OPEN row" % key)
@@ -204,7 +202,7 @@ func test_cadence_sites_are_gated_native_route_pairs() -> void:
 		assert_true(float(projected.offset_m) <= 1.01, "%s stands in the one-metre route core" % id)
 		assert_almost_eq(float(site.position[1]), float(projected.height), 0.05,
 			"%s keeps the authored route stratum" % id)
-	assert_eq(added, 11, "F07 adds exactly eleven cadence pairs")
+	assert_eq(added, 13, "F07 (11) and the F15#2 return (2) add exactly thirteen cadence pairs")
 
 
 # --- measurement ------------------------------------------------------------

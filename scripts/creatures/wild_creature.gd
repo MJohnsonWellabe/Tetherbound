@@ -29,6 +29,9 @@ signal telegraph_started(seconds: float)
 ## F04: an opted-in CHARGER's charge has left the ground. `strike_ready` follows
 ## when it stops -- on contact, at its full length, or against an obstacle.
 signal lunge_started(heading: Vector3, distance: float)
+## F10#2: a `route_cue_seconds` phase began (the tell proper follows, with
+## `telegraph_started`). A host relays it so a guest's proxy draws the route.
+signal route_cue_started(seconds: float)
 
 ## Live state. The combat manager reads this off the node by name; it is the one
 ## piece of a creature that has to survive being knocked out.
@@ -108,6 +111,10 @@ var _lunge_speed := 0.0
 var _lunge_heading_locked := false
 var _lunge_outcome: Dictionary = {}
 var _lunge_lane: Node3D = null
+## F10#2: seconds left in a `route_cue_seconds` phase before the tell proper.
+var _route_cue_left := 0.0
+## F10#2: the `guard_stance` frontal cone drawn for the current tell.
+var _guard_cone: MeshInstance3D = null
 var _lunge_tell_total := 0.0
 
 ## OWNER PLAYTEST 2026-09-02 finding #6: "aiming at the creature is too hard...
@@ -427,6 +434,14 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# F04: opt-in travelling lunge for a named CHARGER. Absent or false, the
 	# body keeps the instantaneous strike and `lunge` stays an impulse.
 	"lunge_travels",
+	# F10#2 (BOSSES §7 Capacitor Alpha, DIVER): seconds of a visible route line
+	# drawn BEFORE the ordinary tell. Absent or 0, the tell starts as before.
+	"route_cue_seconds",
+	# F10#2 (BOSSES §7 Crown Guardian, WALL): the "stationary frontal guard
+	# stance" LOOK -- a frontal cone drawn on the ground for the tell, sized by
+	# this body's own range and cone. Presentation only: no block, no damage
+	# change (COMBAT: no shields). Absent or false, nothing is drawn.
+	"guard_stance",
 ]
 
 
@@ -531,6 +546,7 @@ func _tick_combat(delta: float) -> void:
 	# so the punish window after a travelling lunge is the profile's full one.
 	if not _lunge_active:
 		_beat_left = maxf(0.0, _beat_left - delta)
+	_advance_route_cue(delta)
 	_tick_poise(delta)
 	if _staggered:
 		if _beat_left <= 0.0:
@@ -570,6 +586,7 @@ func _tick_combat(delta: float) -> void:
 	if not _selected_heading_is_locked() and not _lunge_heading_is_locked():
 		face_towards(_opponent.global_position)
 	_aim_lunge_lane()
+	_seat_guard_cone()
 
 	var waiting := distance <= float(spaced.get("preferred_range", 2.1))
 	var direction := AI.movement_for(_intent, to, _side_sign, waiting)
@@ -703,6 +720,10 @@ static func spaced_config_for(cfg: Dictionary, mine: float, theirs: float) -> Di
 func _enter(intent: int) -> void:
 	var previous := _intent
 	_intent = intent
+	if intent != AI.Intent.TELEGRAPH:
+		# A route cue or guard cone belongs to one tell and never outlives it.
+		_route_cue_left = 0.0
+		_hide_guard_cone()
 	var named_enabled := int(_combat_cfg.get("charged_every", 0)) > 0 and instance != null
 	if intent == AI.Intent.TELEGRAPH and named_enabled:
 		_selected_attack = _select_attack()
@@ -728,21 +749,33 @@ func _enter(intent: int) -> void:
 	if intent == AI.Intent.TELEGRAPH:
 		_lunge_outcome.clear()
 		_lunge_heading_locked = false
+		# The heading-lock clocks measure the tell proper, never the route cue.
 		_lunge_tell_total = _beat_left
-		if lunge_travels():
+		# F10#2: an opted-in body shows its route for `route_cue_seconds` first;
+		# the ordinary tell (and its announcement) follows unchanged.
+		var cue := route_cue_seconds()
+		_route_cue_left = cue
+		if cue > 0.0:
+			_beat_left += cue
+		if lunge_travels() or cue > 0.0:
 			_show_lunge_lane()
-		# Only rigs with an authored attack contact phase opt in. Their visible
-		# anticipation spans this body's real profile duration, while legacy clips
-		# retain the existing impact-time animation.
-		if _animator != null and _animator.has_method("begin_attack_telegraph"):
-			_animator.call("begin_attack_telegraph", _beat_left)
-		telegraph_started.emit(_beat_left)
+		if guard_stance():
+			_show_guard_cone()
+		if cue <= 0.0:
+			_announce_tell()
+		else:
+			route_cue_started.emit(cue)
 	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER and lunge_travels():
 		# F04: the wind-up completed and the charge begins. The blow is not
 		# resolved yet: `strike_ready` follows when the body stops.
 		_cooldown = float(_selected_attack.get("attack_cooldown", _combat_cfg.get("attack_cooldown", 1.1)))
 		_begin_lunge()
 	elif previous == AI.Intent.TELEGRAPH:
+		# A route line drawn for a strike that does not travel ends with its tell
+		# (only a route cue draws one without travelling).
+		if not lunge_travels() and _lunge_lane != null and is_instance_valid(_lunge_lane):
+			_lunge_lane.queue_free()
+			_lunge_lane = null
 		# The wind-up just completed, so the blow lands now. Whether it connects
 		# is the manager's call, not this creature's.
 		strike_ready.emit()
@@ -769,6 +802,183 @@ func lunge_travels() -> bool:
 
 func is_lunging() -> bool:
 	return _lunge_active
+
+
+## --- F10#2 named-fight cues ------------------------------------------------
+
+## Only for a body whose own override opted in; 0 for every other creature.
+func route_cue_seconds() -> float:
+	return maxf(0.0, float(_attack_row().get("route_cue_seconds", 0.0)))
+
+
+func route_cue_left() -> float:
+	return _route_cue_left
+
+
+func guard_stance() -> bool:
+	return bool(_attack_row().get("guard_stance", false))
+
+
+## What a guest's proxy needs to draw this tell's ground marks exactly as this
+## body draws them: the lane (`lane_*`, with seconds until its heading locks)
+## and/or the guard cone (`guard_*`), plus `route_s` while a route cue runs.
+## Empty outside a tell, or for a tell that draws nothing.
+func presentation_shape() -> Dictionary:
+	var shape := {}
+	if _intent != AI.Intent.TELEGRAPH:
+		return shape
+	var cue := route_cue_seconds()
+	if lunge_travels() or cue > 0.0:
+		var half := _lunge_lane_half_width()
+		shape["lane_start"] = half
+		shape["lane_length"] = maxf(0.1, float(_attack_row().get("lunge", 0.0)))
+		shape["lane_half_width"] = half
+		shape["lane_travels"] = lunge_travels()
+		var lock_in := -1.0
+		if lunge_travels():
+			var fraction := clampf(float(_lunge_cfg().get("face_lock_fraction", 0.5)), 0.0, 1.0)
+			if _lunge_heading_locked:
+				lock_in = 0.0
+			elif fraction > 0.0:
+				lock_in = maxf(0.0, _beat_left - maxf(0.001, _lunge_tell_total) * (1.0 - fraction))
+		shape["lane_lock_in_s"] = lock_in
+	if guard_stance():
+		var cfg := combat_config()
+		shape["guard_reach"] = maxf(0.5, float(cfg.get("range", 2.6)))
+		shape["guard_cone"] = clampf(float(cfg.get("cone_degrees", 90.0)), 5.0, 360.0)
+	if _route_cue_left > 0.0:
+		shape["route_s"] = _route_cue_left
+	return shape
+
+
+## The tell proper begins: the rig's anticipation and the announcement the
+## manager's warning ring and HUD read. Called at telegraph entry, or when a
+## route cue ends.
+func _announce_tell() -> void:
+	# Only rigs with an authored attack contact phase opt in. Their visible
+	# anticipation spans this body's real profile duration, while legacy clips
+	# retain the existing impact-time animation.
+	if _animator != null and _animator.has_method("begin_attack_telegraph"):
+		_animator.call("begin_attack_telegraph", _beat_left)
+	telegraph_started.emit(_beat_left)
+
+
+## Counts a route cue down; its end announces the ordinary tell.
+func _advance_route_cue(delta: float) -> void:
+	if _route_cue_left <= 0.0 or _intent != AI.Intent.TELEGRAPH:
+		return
+	_route_cue_left = maxf(0.0, _route_cue_left - delta)
+	# A sub-microsecond remainder is float residue, not cue left to show.
+	if _route_cue_left <= 0.000001:
+		_route_cue_left = 0.0
+		_announce_tell()
+
+
+## A fan on the ground in front of the body, `range` long and `cone_degrees`
+## wide -- the same shape the manager's hit test uses -- in the shared hazard
+## colour. A child, so it turns with the body and holds when its heading locks.
+## A guest's proxy passes the host body's `reach`/`cone` instead of its own.
+##
+## F10#2 C3 (Blackwater Elder r3): a flat fan at the feet was buried by the
+## sloping pool edge and a judge saw only the feet ring. The fan is now drawn
+## the way `lunge_lane.gd` draws a lane: vertices seated on the real ground
+## height (re-seated whenever the body moves or turns) and the lane's
+## depth-pull shader, so it lies on slopes and still sits behind a body.
+const GUARD_CONE_RING_STEP := 0.75
+const GUARD_CONE_RIM := 0.2
+static var _guard_cone_shader: Shader = null
+var _guard_cone_seated := Transform3D()
+
+
+func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -> void:
+	_hide_guard_cone()
+	var cfg := combat_config()
+	var reach := maxf(0.5, reach_override if reach_override > 0.0 else float(cfg.get("range", 2.6)))
+	var cone := clampf(cone_override if cone_override > 0.0 else float(cfg.get("cone_degrees", 90.0)),
+		5.0, 360.0)
+	if _guard_cone_shader == null:
+		_guard_cone_shader = Shader.new()
+		_guard_cone_shader.code = LUNGE_LANE.LANE_SHADER
+	var material := ShaderMaterial.new()
+	material.shader = _guard_cone_shader
+	material.set_shader_parameter("depth_pull", maxf(0.0, float(_lunge_cfg().get("lane_depth_pull", 0.45))))
+	_guard_cone = MeshInstance3D.new()
+	_guard_cone.name = "GuardCone"
+	_guard_cone.material_override = material
+	_guard_cone.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_guard_cone.set_meta("reach", reach)
+	_guard_cone.set_meta("cone_degrees", cone)
+	add_child(_guard_cone)
+	_seat_guard_cone(true)
+
+
+## Rebuilds the fan's mesh on the ground under it; a no-op while the body has
+## neither moved nor turned since the last seating.
+func _seat_guard_cone(force: bool = false) -> void:
+	if _guard_cone == null or not is_instance_valid(_guard_cone):
+		return
+	var here := global_transform if is_inside_tree() else transform
+	if not force and here.is_equal_approx(_guard_cone_seated):
+		return
+	_guard_cone_seated = here
+	var reach := float(_guard_cone.get_meta("reach", 2.6))
+	var cone := float(_guard_cone.get_meta("cone_degrees", 90.0))
+	var colour := Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6")))
+	var fill := Color(colour, 0.35)
+	var rim := Color(colour, 0.9)
+	var steps := maxi(6, int(cone / 6.0))
+	var rings := maxi(1, ceili((reach - GUARD_CONE_RIM) / GUARD_CONE_RING_STEP))
+	var half := deg_to_rad(cone) * 0.5
+	var radii: Array[float] = []
+	for r in rings + 1:
+		radii.append((reach - GUARD_CONE_RIM) * float(r) / float(rings))
+	radii.append(reach)
+	var seated := is_inside_tree()
+	var bias := 0.0
+	if seated:
+		var under := _ground_height(global_position.x, global_position.z)
+		if is_finite(under):
+			bias = clampf(global_position.y - under, 0.0, LUNGE_LANE.MAX_SURFACE_BIAS)
+	var point := func(radius: float, angle: float) -> Vector3:
+		var local := Vector3(sin(angle) * radius, 0.05, cos(angle) * radius)
+		if not seated:
+			return local
+		var world := global_transform * Vector3(local.x, 0.0, local.z)
+		var height := _ground_height(world.x, world.z)
+		if not is_finite(height):
+			return local
+		world.y = height + bias + LUNGE_LANE.GROUND_LIFT
+		return global_transform.affine_inverse() * world
+	var grid: Array = []
+	for radius: float in radii:
+		var row := PackedVector3Array()
+		for i in steps + 1:
+			row.append(point.call(radius, -half + 2.0 * half * float(i) / float(steps)))
+		grid.append(row)
+	var vertices := PackedVector3Array()
+	var colours := PackedColorArray()
+	for r in radii.size() - 1:
+		var tint := rim if r == radii.size() - 2 else fill
+		var inner: PackedVector3Array = grid[r]
+		var outer: PackedVector3Array = grid[r + 1]
+		for i in steps:
+			for v: Vector3 in [inner[i], outer[i], outer[i + 1], inner[i], outer[i + 1], inner[i + 1]]:
+				vertices.append(v)
+				colours.append(tint)
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_COLOR] = colours
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	_guard_cone.mesh = mesh
+	_guard_cone.custom_aabb = AABB(Vector3(-reach, -4.0, -reach), Vector3(reach * 2.0, 8.0, reach * 2.0))
+
+
+func _hide_guard_cone() -> void:
+	if _guard_cone != null and is_instance_valid(_guard_cone):
+		_guard_cone.queue_free()
+	_guard_cone = null
 
 
 ## How the last travelling lunge ended, for the manager to resolve exactly
@@ -923,6 +1133,10 @@ func _finish_lunge(contact: bool, stopped_by: String) -> void:
 
 ## Stops a charge (and its lane) without a strike: stagger, faint, disengage.
 func _cancel_lunge() -> void:
+	# F10#2: every path that abandons a tell (stagger, faint, disengage) comes
+	# through here, so a route cue or guard cone never outlives its tell.
+	_route_cue_left = 0.0
+	_hide_guard_cone()
 	if _lunge_active:
 		_lunge_active = false
 		cancel_combat_burst()
@@ -953,7 +1167,9 @@ func set_catch_aim_active(value: bool) -> void:
 
 
 func is_winding_up() -> bool:
-	return engaged and _intent == AI.Intent.TELEGRAPH
+	# A route cue (F10#2) comes BEFORE the wind-up: only the tell proper counts
+	# for interrupts and the HUD's warning. Unset, `_route_cue_left` is 0.
+	return engaged and _intent == AI.Intent.TELEGRAPH and _route_cue_left <= 0.0
 
 
 func _poise_config() -> Dictionary:
@@ -1043,8 +1259,10 @@ func stagger_seconds_left() -> float:
 
 func is_rooted() -> bool:
 	# A charging body is committed, not open: the HUD's "it's open" waits for
-	# the charge to stop.
-	return engaged and AI.is_rooted(_intent) and not _lunge_active
+	# the charge to stop. Nor is a body showing its route cue (F10#2): the drawn
+	# lane is the cue there, so the HUD says nothing until the tell.
+	return engaged and AI.is_rooted(_intent) and not _lunge_active \
+		and not (_intent == AI.Intent.TELEGRAPH and _route_cue_left > 0.0)
 
 
 func intent() -> int:
