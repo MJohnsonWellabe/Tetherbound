@@ -57,6 +57,11 @@ const APPROACH_FRAME_M := 30.0
 
 var _activity := ""
 var _save_path := ""
+## `--save-dir=`: a whole split-format save directory (slot_1.json plus its
+## worlds/ and characters/ halves, e.g. an earned-chain checkpoint), copied
+## unmodified into the scratch slot directory. `_save_path` is its slot_1.json.
+var _save_dir := ""
+var _receipt_save_dir := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
 ## Minimum on-screen height, in 1280x720 FRAME pixels, for a lure to count as
@@ -102,6 +107,9 @@ func _run() -> void:
 			_activity = a.trim_prefix("--activity=")
 		elif a.begins_with("--save="):
 			_save_path = a.trim_prefix("--save=")
+		elif a.begins_with("--save-dir="):
+			_save_dir = a.trim_prefix("--save-dir=").trim_suffix("/")
+			_save_path = _save_dir + "/slot_%d.json" % SLOT
 		elif a.begins_with("--budget-s="):
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
 		elif a.begins_with("--off-road-cost="):
@@ -130,6 +138,9 @@ func _run() -> void:
 	_game.set("save_system", SAVE_GAME.new(SLOT_DIR))
 	var dst := str(_game.get("save_system").call("slot_path", SLOT))
 	var save_bytes := _save_bytes(_save_path)
+	if not _save_dir.is_empty():
+		_copy_tree(_save_dir, SLOT_DIR.trim_suffix("/"))
+		_receipt_save_dir = _save_dir
 	var out := FileAccess.open(dst, FileAccess.WRITE)
 	out.store_buffer(save_bytes)
 	out.close()
@@ -139,6 +150,8 @@ func _run() -> void:
 		"save_sha256": _sha256(save_bytes), "save_version": raw.get("version"),
 		"saved_position": saved_pose, "script_state_writes": "none",
 		"budget_s": WALK_BUDGET_S}
+	if not _receipt_save_dir.is_empty():
+		_receipt["save_dir"] = _receipt_save_dir
 	if not bool(_game.call("load_game", SLOT)):
 		_finish("FAIL", "Game.load_game refused the real save")
 		return
@@ -936,6 +949,22 @@ func _ensure_companion_out(prefix: String = "") -> void:
 ## render.yml runner, whose checkout leaves ralph/ out) is standard gzip,
 ## inflated here; the sha256 in the receipt is of the inflated JSON, so it
 ## matches the original save under ralph/reports/.
+## Copies a save directory tree byte for byte (no JSON rewrite).
+func _copy_tree(from: String, to: String) -> void:
+	DirAccess.make_dir_recursive_absolute(to)
+	var dir := DirAccess.open(from)
+	if dir == null:
+		return
+	for f in dir.get_files():
+		if f.ends_with(".import") or f.ends_with(".uid"):
+			continue
+		var out := FileAccess.open(to + "/" + f, FileAccess.WRITE)
+		out.store_buffer(FileAccess.get_file_as_bytes(from + "/" + f))
+		out.close()
+	for d in dir.get_directories():
+		_copy_tree(from + "/" + d, to + "/" + d)
+
+
 func _save_bytes(path: String) -> PackedByteArray:
 	var bytes := FileAccess.get_file_as_bytes(path)
 	if path.ends_with(".gz"):
