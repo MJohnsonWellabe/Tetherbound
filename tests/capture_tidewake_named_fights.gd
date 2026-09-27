@@ -34,6 +34,9 @@ const INTERIOR_FLAGS := ["water_veilfall_intake_stopped", "water_veilfall_return
 var _fight_cap_s := 240.0
 const TELL_START_LAG_S := 0.1
 var _policy := "QUICK"
+## Disclosed world-flag fixture for a trainer's own `requires_flags` gate
+## (e.g. Calder needs `water_dock_salt_crown_landing_charted`).
+var _extra_flags: PackedStringArray = []
 var _reader: RefCounted
 
 var _out := ""
@@ -65,6 +68,7 @@ func _run() -> void:
 		elif arg.begins_with("--tells-per-opponent="): _tells_per_opponent = maxi(0, int(arg.trim_prefix("--tells-per-opponent=")))
 		elif arg.begins_with("--pilot="): _policy = arg.trim_prefix("--pilot=").to_upper()
 		elif arg.begins_with("--cap-s="): _fight_cap_s = maxf(30.0, float(arg.trim_prefix("--cap-s=")))
+		elif arg.begins_with("--flags="): _extra_flags = arg.trim_prefix("--flags=").split(",", false)
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
@@ -81,6 +85,9 @@ func _run() -> void:
 		game.local.party.add(creature)
 	for flag: String in INTERIOR_FLAGS:
 		game.world.flags.set_flag(flag)
+	for flag: String in _extra_flags:
+		game.world.flags.set_flag(flag)
+		print("TIDEWAKE C3 CAPTURE fixture flag: " + flag)
 	var world: Node3D = load("res://scenes/world/water_archipelago.tscn").instantiate()
 	root.add_child(world)
 	current_scene = world
