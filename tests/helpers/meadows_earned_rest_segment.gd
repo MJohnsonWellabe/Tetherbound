@@ -368,9 +368,27 @@ func _assign_with_retry(party_index: int, member: RefCounted) -> bool:
 	return false
 
 
+## The bedroll prompt can lose to a wild that wandered into camp ("Engage
+## Bramblebun", seed 15 local @e793778d, mid-tournament recovery). As with a
+## bed, a player waits for it to wander off and walks back. Bounded; the last
+## attempt's reasons stand.
+func _reach_bedroll(prompt: Node3D) -> bool:
+	for attempt in BED_ATTEMPTS:
+		if await _driver._walk_to_prompt(prompt, "paid bedroll"):
+			return true
+		_receipt("bedroll_retry", {"attempt": attempt + 1,
+			"reasons": _driver.failures.duplicate(), "player": _player.global_position})
+		if attempt == BED_ATTEMPTS - 1:
+			break
+		_driver.failures.clear()
+		for _frame in 600:
+			await _tree.physics_frame
+	return false
+
+
 func _sleep_once() -> bool:
 	var prompt := _bedroll.get_node_or_null("Interactable") as Node3D
-	if prompt == null or not await _driver._walk_to_prompt(prompt, "paid bedroll"):
+	if prompt == null or not await _reach_bedroll(prompt):
 		return _fail("Ordinary travel did not reach the paid bedroll: " + str(_driver.failures))
 	var day_before := int(_game.get("day"))
 	var children_before := _bedroll.get_children()
