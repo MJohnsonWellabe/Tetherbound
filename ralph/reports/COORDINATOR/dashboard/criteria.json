@@ -208,8 +208,8 @@
    "chapter": "Meadows",
    "pct": 47,
    "counts": {
-    "met": 2,
-    "partial": 5,
+    "met": 3,
+    "partial": 4,
     "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
@@ -242,9 +242,10 @@
     },
     {
      "text": "Real hit/avoidance witness per fight",
-     "status": "partial",
-     "evidence": "smoke_warrens --guardian-attacks 3 hits/1 miss (branch); charger sidestep whiff, blind 'partly' (main fe07d0d2)",
-     "gap": "Witnesses for captains and Warden"
+     "status": "met",
+     "evidence": "tests/smoke_named_fight_hit_avoid.gd + ralph/reports/MEADOWS-CORE/f04/hit_avoid/ @ tb/meadows-core c86258f3 (batch 59): Oreth, Halder, Vess and Warden each show pad-input dodges avoided plus landed strikes via combat_manager hit_landed/attack_missed; mutation check fails the test; Warrens guardian and relay officers already on main; independent re-check re-ran it and passed. Shortcuts disclosed: fixture Terrapup healed after each strike; fixture teleport to stand spot (skips progression gates); four fights in one world each ended by forced loss; ordinary quicks only; headless; dodge counts vary run to run (Vess can pass on one dodge).",
+     "gap": "",
+     "note": "Counted at merge of batch 59."
     },
     {
      "text": "Specified tell/recovery timing",
@@ -913,8 +914,9 @@
   },
   {
    "id": "M4",
-   "status": "in_progress",
-   "note": "Veridian choice held out of batch 4 (not on main fe07d0d2); main offers every peer (journal defect); healing payoff blind-fail; crossing witness fixture-only."
+   "status": "met",
+   "note": "Integrated run passed review in batch 59.",
+   "integrated_run": "ralph/reports/MEADOWS-FINALE/m4/ @ tb/meadows-route 6cd2ca83 (batch 59): 19/19 steps PASS, party max 5; independent re-check re-ran exit 0; all F05 feeders met. Shortcuts disclosed: declared start save seed4_hall; harness title/Load; branches C and A from copied offer-open save; Kell acknowledgement skipped; with-space covered by fixture witness; co-op halves from earlier two-peer runs."
   },
   {
    "id": "C1",
