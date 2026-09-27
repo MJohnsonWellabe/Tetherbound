@@ -120,8 +120,32 @@ func setup(spec: Dictionary) -> void:
 	add_child(_prompt)
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	var game := get_node_or_null(^"/root/Game")
-	if was_taken(game, _node_id):
+	if _already_taken(game):
 		_deactivate()
+
+
+## Overridable claim seam (F13#2 `water_scene_pickups.gd::PersonalHarvest`):
+## whether this node is already gathered for the viewer, the intent a gather
+## submits, and whether a committed delta is the one that retires it. The base
+## node is world-once under `harvest_node:<id>`; these defaults are exactly the
+## behaviour this file always had.
+func _already_taken(game: Node) -> bool:
+	return was_taken(game, _node_id)
+
+
+func _claim_intent(actual_amount: int) -> Dictionary:
+	return {
+		"kind": "stormwood_harvest" if has_meta("stormwood_harvest_site") else "harvest",
+		"site_id": str(get_meta("stormwood_harvest_site", "")),
+		"realm": _realm_id,
+		"flag": flag_id(_node_id),
+		"item": _item_id,
+		"amount": actual_amount,
+	}
+
+
+func _claim_committed(delta: Dictionary) -> bool:
+	return LEDGER_CLAIM.sets_world_flag(delta, flag_id(_node_id))
 
 
 ## Stable per-node flag id -- pure, so a route/test can predict it without a
@@ -143,7 +167,7 @@ static func was_taken(game: Node, node_id: String) -> bool:
 ## answer: a mid-session load must hide/free an already-gathered node the live
 ## world still has standing.
 func restore_progression_from_game(game: Node) -> void:
-	if was_taken(game, _node_id):
+	if _already_taken(game):
 		_deactivate()
 
 
@@ -519,14 +543,7 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	# D72's flag, unchanged in shape and still the node's own identity -- the
 	# ledger takes it as the intent's `flag` rather than learning a second id
 	# scheme, and writes it once, on the host, for every peer.
-	var verdict := LEDGER_CLAIM.submit(self, {
-		"kind": "stormwood_harvest" if has_meta("stormwood_harvest_site") else "harvest",
-		"site_id": str(get_meta("stormwood_harvest_site", "")),
-		"realm": _realm_id,
-		"flag": flag_id(_node_id),
-		"item": _item_id,
-		"amount": actual_amount,
-	})
+	var verdict := LEDGER_CLAIM.submit(self, _claim_intent(actual_amount))
 	if not LEDGER_CLAIM.in_flight(verdict):
 		# `already_taken` (a race this peer lost, arbitrated on the host before
 		# the round trip) or an offline transport. The sentence has already been
@@ -542,7 +559,7 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 ## player the FEEDBACK for a gather that was theirs, and owes a peer who merely
 ## watched somebody else gather nothing but the removal.
 func _on_delta_applied(delta: Dictionary) -> void:
-	if not LEDGER_CLAIM.sets_world_flag(delta, flag_id(_node_id)):
+	if not _claim_committed(delta):
 		return
 	# The `_taken` guard is deliberately NOT first. On a client `_rpc_delta`
 	# runs `_restore_progression()` -- the same group sweep a mid-session load

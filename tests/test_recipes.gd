@@ -312,6 +312,20 @@ func test_every_unlock_flag_named_by_a_recipe_is_actually_written_by_something()
 	for earned: String in water_progress.all_set():
 		if earned != "water_swim_stone_earned":
 			written.append(earned)
+	# F13#2: a reward-pocket harvest row's `learn_recipe_flag` is written by
+	# the host's personal-pickup rule. Evaluate each such row at its own spot.
+	const WATER_PICKUP := preload("res://scripts/world/water_personal_pickup.gd")
+	var pocket_source: Dictionary = _load_json(WATER_PICKUP.DATA)
+	for row: Dictionary in pocket_source.get("harvest", []):
+		if not row.has("learn_recipe_flag"):
+			continue
+		var at: Array = row.position
+		var spot := Vector3(float(at[0]), WATER_PICKUP.FIELD.new().height_at(float(at[0]), float(at[2])), float(at[2]))
+		var verdict: Dictionary = WATER_PICKUP.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false},
+			{"peer": 2, "character_id": "writer-check", "realm": "water", "position": spot}, {})
+		for op: Dictionary in verdict.get("ops", []):
+			if str(op.get("op", "")) == "flag" and str(op.get("scope", "")) == "player":
+				written.append(str(op.id))
 	# Cloudreach arrival is a real world event, not a conversation reward.
 	# Exercise the chapter transition instead of accepting arbitrary flag text.
 	const CLOUDREACH := preload("res://scripts/world/cloudreach_chapter.gd")

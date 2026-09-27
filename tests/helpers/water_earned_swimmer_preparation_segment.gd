@@ -4,6 +4,7 @@ extends RefCounted
 const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_segment.gd")
 const HARVEST := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const POCKET := preload("res://tests/smoke_water_pocket_walk_claim.gd")
 var failures: Array[String] = []
 var _tree: SceneTree
 var world: Node3D
@@ -119,9 +120,25 @@ func _run_live(outgoing: int) -> void:
 		if not await _care._recover_at_camp("before earned swimmer catch", "water_camp_tidal_cradle"):
 			_fail("Ordinary Tidal recovery failed: %s" % str(_care.failures))
 			return
-	var target := _nearest_dry_swimmer()
-	if target == null:
+	var candidates := _dry_swimmers_by_reach()
+	if candidates.is_empty():
 		_fail("No currently resident living dry ordinary compatible swimmer; no spawn or reroll permitted")
+		return
+	# DRY RUN 6: the nearest swimmer stood on a ledge ~10 m above the supply
+	# rows and the straight engage drive pressed into the cliff. Rank resident
+	# swimmers by horizontal distance plus climb, walk planned legs (real
+	# stick input), and move on to the next resident one if no dry route
+	# reaches it. Nothing is spawned or rerolled.
+	var target: Node3D
+	for candidate: Node3D in candidates.slice(0, 3):
+		if await planned_approach(_harvest, world, player, candidate.global_position, "swimmer " + candidate.name):
+			target = candidate
+			break
+		print("WATER SWIMMER unreachable resident %s: %s" % [candidate.name, str(_harvest.failures)])
+		_harvest._stop_stick()
+		_harvest.failures.clear()
+	if target == null:
+		_fail("No resident dry swimmer reachable by a planned walk")
 		return
 	swimmer = target.get("instance")
 	print("WATER SWIMMER chosen real body=%s species=%s level=%d position=%s" % [
@@ -195,6 +212,12 @@ func _gather_costs() -> bool:
 		if selected.has("approach_from") and not await _harvest._walk_to(_point(selected.approach_from), str(selected.id) + " authored approach"):
 			_fail("Saddle supply approach failed: %s" % str(_harvest.failures))
 			return false
+		elif not selected.has("approach_from"):
+			var node_at := _point(selected.position)
+			node_at.y = float(world.call("ground_height_at", node_at.x, node_at.z)) + 0.1
+			if not await planned_approach(_harvest, world, player, node_at, str(selected.id)):
+				_fail("Saddle supply planned approach failed: %s" % str(_harvest.failures))
+				return false
 		var item := str(selected.item_id)
 		var tool := "knife" if item == "reed_fiber" else str(selected.gather_action)
 		if not await _harvest._gather(str(selected.id), item, tool):
@@ -208,9 +231,30 @@ func _gather_costs() -> bool:
 	_fail("Finite unclaimed Tidal supplies did not cover the exact production saddle cost")
 	return false
 
-func _nearest_dry_swimmer() -> Node3D:
-	var selected: Node3D
-	var distance := INF
+## Route planning only (real stick input, no position write): the straight
+## residency walk cannot leave the Tidal Cradle plateau (the preparation's
+## own harvest:013/014 detour and the Aquaryn end pose are ~40 m above the
+## driftwood/reed rows; DRY RUN 5 stalled at its rim). Walk the baked-ground
+## A* legs toward a row first; the residency walk then finishes the approach.
+## An empty plan (row already at hand or no dry route) keeps the old path.
+static func planned_approach(harvest: RefCounted, actual_world: Node3D, body: Node3D,
+		target: Vector3, label: String) -> bool:
+	var from := Vector2(body.global_position.x, body.global_position.z)
+	if from.distance_to(Vector2(target.x, target.z)) <= 12.0:
+		return true
+	var route: Array = POCKET.plan_route(actual_world, from, Vector2(target.x, target.z)).points
+	# The last A* point is the row itself; the residency walk owns that leg.
+	for index in maxi(route.size() - 1, 0):
+		var point: Vector2 = route[index]
+		var leg := Vector3(point.x, float(actual_world.call("ground_height_at", point.x, point.y)) + 0.1, point.y)
+		if not await harvest._walk_to(leg, "%s planned leg %d/%d" % [label, index + 1, route.size()], 1.8):
+			return false
+	return true
+
+## Resident dry compatible swimmers, nearest first by horizontal distance
+## plus a climb penalty (a ledge above the trainer is a detour, not a step).
+func _dry_swimmers_by_reach() -> Array:
+	var ranked: Array = []
 	for body: Node3D in director.wild_creatures():
 		if not is_instance_valid(body) or not body.is_visible_in_tree() or not body.is_alive() \
 				or not body.has_meta("water_site_id") or body.has_meta("water_named_encounter") \
@@ -218,11 +262,10 @@ func _nearest_dry_swimmer() -> Node3D:
 				or not SWIMMER.compatible_swimmer(str(body.species_id)) \
 				or float(world.water_depth_at(body.global_position)) > 0.0:
 			continue
-		var separation := player.global_position.distance_squared_to(body.global_position)
-		if separation < distance:
-			selected = body
-			distance = separation
-	return selected
+		var offset := body.global_position - player.global_position
+		ranked.append([Vector2(offset.x, offset.z).length() + 4.0 * absf(offset.y), body])
+	ranked.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	return ranked.map(func(entry: Array) -> Node3D: return entry[1])
 
 func _mount_caught() -> bool:
 	for _slot in game.party.size():
