@@ -1,0 +1,196 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _run (res://tests/smoke_tidewake_b_route_depletion.gd:153)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ROUTE 140 base-material harvest rows on 10 no-saddle islands (stages 0-7)
+CLAIM water:first_shore:harvest:001 stage=0 A +3 reed_fiber -> A (inv 3) depleted_for_B=true
+CLAIM water:first_shore:harvest:002 stage=0 B +3 reed_fiber -> B (inv 3) depleted_for_C=true
+CLAIM water:first_shore:harvest:003 stage=0 A +3 driftwood -> A (inv 3) depleted_for_B=true
+CLAIM water:first_shore:harvest:004 stage=0 B +3 driftwood -> B (inv 3) depleted_for_C=true
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+CLAIM water:first_shore:harvest:005 stage=0 A +2 reef_stone -> A (inv 2) depleted_for_B=true
+CLAIM water:first_shore:harvest:006 stage=0 B +2 reef_stone -> B (inv 2) depleted_for_C=true
+CLAIM water:first_shore:harvest:007 stage=0 C +3 driftwood -> C (inv 3) depleted_for_D=true
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+CLAIM water:first_shore:harvest:008 stage=0 C +2 reef_stone -> C (inv 2) depleted_for_D=true
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+CLAIM water:first_shore:harvest:009 stage=0 C +3 reed_fiber -> C (inv 3) depleted_for_D=true
+CLAIM water:first_shore:harvest:010 stage=0 A +2 tide_bloom -> A (inv 2) depleted_for_B=true
+CLAIM water:first_shore:harvest:011 stage=0 D +3 driftwood -> D (inv 3) depleted_for_A=true
+CLAIM water:first_shore:harvest:012 stage=0 D +2 reef_stone -> D (inv 2) depleted_for_A=true
+CLAIM water:first_shore:harvest:013 stage=0 B +2 tide_bloom -> B (inv 2) depleted_for_C=true
+CLAIM water:first_shore:harvest:014 stage=0 A +2 reef_stone -> A (inv 4) depleted_for_B=true
+CLAIM water:first_shore:harvest:015 stage=0 D +3 reed_fiber -> D (inv 3) depleted_for_A=true
+CLAIM water:first_shore:harvest:016 stage=0 B +2 reef_stone -> B (inv 4) depleted_for_C=true
+CLAIM water:first_shore:harvest:017 stage=0 C +2 reef_stone -> C (inv 4) depleted_for_D=true
+CLAIM water:first_shore:harvest:018 stage=0 A +3 reed_fiber -> A (inv 6) depleted_for_B=true
+CLAIM water:first_shore:harvest:019 stage=0 B +3 reed_fiber -> B (inv 6) depleted_for_C=true
+CLAIM water:first_shore:harvest:020 stage=0 A +3 driftwood -> A (inv 6) depleted_for_B=true
+CLAIM water:lantern_cove:harvest:001 stage=0 D +2 reef_stone -> D (inv 4) depleted_for_A=true
+CLAIM water:lantern_cove:harvest:002 stage=0 C +3 reed_fiber -> C (inv 6) depleted_for_D=true
+CLAIM water:lantern_cove:harvest:003 stage=0 D +3 reed_fiber -> D (inv 6) depleted_for_A=true
+CLAIM water:lantern_cove:harvest:004 stage=0 C +2 tide_bloom -> C (inv 2) depleted_for_D=true
+CLAIM water:lantern_cove:harvest:005 stage=0 A +3 reed_fiber -> A (inv 9) depleted_for_B=true
+CLAIM water:lantern_cove:harvest:006 stage=0 B +3 driftwood -> B (inv 6) depleted_for_C=true
+CLAIM water:lantern_cove:harvest:007 stage=0 B +3 reed_fiber -> B (inv 9) depleted_for_C=true
+CLAIM water:lantern_cove:harvest:008 stage=0 C +3 driftwood -> C (inv 6) depleted_for_D=true
+END OF STAGE 0: A={ "reed_fiber": 9, "driftwood": 6, "reef_stone": 4, "tide_bloom": 2, "swim_saddle": 0, "potion_small": 0 } B={ "reed_fiber": 9, "driftwood": 6, "reef_stone": 4, "tide_bloom": 2, "swim_saddle": 0, "potion_small": 0 } C={ "reed_fiber": 6, "driftwood": 6, "reef_stone": 4, "tide_bloom": 2, "swim_saddle": 0, "potion_small": 0 } D={ "reed_fiber": 6, "driftwood": 3, "reef_stone": 4, "tide_bloom": 0, "swim_saddle": 0, "potion_small": 0 }
+CLAIM water:gull_rest:harvest:001 stage=1 D +2 tide_bloom -> D (inv 2) depleted_for_A=true
+CLAIM water:gull_rest:harvest:002 stage=1 A +2 reef_stone -> A (inv 6) depleted_for_B=true
+CLAIM water:gull_rest:harvest:003 stage=1 C +3 reed_fiber -> C (inv 9) depleted_for_D=true
+CLAIM water:gull_rest:harvest:004 stage=1 D +3 driftwood -> D (inv 6) depleted_for_A=true
+CLAIM water:gull_rest:harvest:005 stage=1 A +2 tide_bloom -> A (inv 4) depleted_for_B=true
+CLAIM water:gull_rest:harvest:006 stage=1 D +3 reed_fiber -> D (inv 9) depleted_for_A=true
+CLAIM water:gull_rest:harvest:007 stage=1 A +3 driftwood -> A (inv 9) depleted_for_B=true
+CLAIM water:gull_rest:harvest:008 stage=1 B +2 tide_bloom -> B (inv 4) depleted_for_C=true
+CLAIM water:reedhaven:harvest:001 stage=1 A +3 reed_fiber -> A (inv 12) depleted_for_B=true
+CLAIM water:reedhaven:harvest:002 stage=1 B +3 reed_fiber -> B (inv 12) depleted_for_C=true
+CLAIM water:reedhaven:harvest:003 stage=1 B +3 driftwood -> B (inv 9) depleted_for_C=true
+CLAIM water:reedhaven:harvest:004 stage=1 C +3 driftwood -> C (inv 9) depleted_for_D=true
+CLAIM water:reedhaven:harvest:005 stage=1 B +2 reef_stone -> B (inv 6) depleted_for_C=true
+CLAIM water:reedhaven:harvest:006 stage=1 C +2 reef_stone -> C (inv 6) depleted_for_D=true
+CLAIM water:reedhaven:harvest:007 stage=1 D +3 driftwood -> D (inv 9) depleted_for_A=true
+CLAIM water:reedhaven:harvest:008 stage=1 A +3 driftwood -> A (inv 12) depleted_for_B=true
+CLAIM water:reedhaven:harvest:009 stage=1 C +2 tide_bloom -> C (inv 4) depleted_for_D=true
+CLAIM water:reedhaven:harvest:010 stage=1 D +2 reef_stone -> D (inv 6) depleted_for_A=true
+CLAIM water:reedhaven:harvest:011 stage=1 C +3 reed_fiber -> C (inv 12) depleted_for_D=true
+DELTA ops=[{ "op": "flag", "scope": "world", "realm": "water", "id": "water_claim:character-13b465b50439b55da72e24c988329f9d:water:reedhaven:harvest:012", "value": true }, { "op": "flag", "scope": "player", "realm": "water", "id": "water_candy:water:reedhaven:harvest:012", "value": true, "peers": [1] }, { "op
+CLAIM water:reedhaven:harvest:012 stage=1 A +3 reed_fiber -> A (inv 15) depleted_for_self=true
+DELTA ops=[{ "op": "flag", "scope": "world", "realm": "water", "id": "water_claim:character-e15d528d4b467a03a14bf625e6d7bbee:water:reedhaven:harvest:012", "value": true }, { "op": "flag", "scope": "player", "realm": "water", "id": "water_candy:water:reedhaven:harvest:012", "value": true, "peers": [1] }, { "op
+CLAIM water:reedhaven:harvest:012 stage=1 B +3 reed_fiber -> B (inv 15) depleted_for_self=true
+DELTA ops=[{ "op": "flag", "scope": "world", "realm": "water", "id": "water_claim:character-ac62162798c43a11604a77b8d1c44a53:water:reedhaven:harvest:012", "value": true }, { "op": "flag", "scope": "player", "realm": "water", "id": "water_candy:water:reedhaven:harvest:012", "value": true, "peers": [1] }, { "op
+CLAIM water:reedhaven:harvest:012 stage=1 C +3 reed_fiber -> C (inv 15) depleted_for_self=true
+DELTA ops=[{ "op": "flag", "scope": "world", "realm": "water", "id": "water_claim:character-1196a7bec18e1be88114361264f90d49:water:reedhaven:harvest:012", "value": true }, { "op": "flag", "scope": "player", "realm": "water", "id": "water_candy:water:reedhaven:harvest:012", "value": true, "peers": [1] }, { "op
+CLAIM water:reedhaven:harvest:012 stage=1 D +3 reed_fiber -> D (inv 12) depleted_for_self=true
+CLAIM water:reedhaven:harvest:013 stage=1 A +2 reef_stone -> A (inv 8) depleted_for_B=true
+CLAIM water:reedhaven:harvest:014 stage=1 A +3 reed_fiber -> A (inv 18) depleted_for_B=true
+CLAIM water:reedhaven:harvest:015 stage=1 B +3 reed_fiber -> B (inv 18) depleted_for_C=true
+CLAIM water:reedhaven:harvest:016 stage=1 D +2 tide_bloom -> D (inv 4) depleted_for_A=true
+CLAIM water:reedhaven:harvest:017 stage=1 B +3 driftwood -> B (inv 12) depleted_for_C=true
+CLAIM water:reedhaven:harvest:018 stage=1 C +3 reed_fiber -> C (inv 18) depleted_for_D=true
+CLAIM water:reedhaven:harvest:019 stage=1 D +3 reed_fiber -> D (inv 15) depleted_for_A=true
+CLAIM water:reedhaven:harvest:020 stage=1 B +2 reef_stone -> B (inv 8) depleted_for_C=true
+CLAIM water:reedhaven:harvest:021 stage=1 C +2 reef_stone -> C (inv 8) depleted_for_D=true
+CLAIM water:reedhaven:harvest:022 stage=1 D +2 reef_stone -> D (inv 8) depleted_for_A=true
+CLAIM water:reedhaven:harvest:023 stage=1 A +2 tide_bloom -> A (inv 6) depleted_for_B=true
+CLAIM water:reedhaven:harvest:024 stage=1 A +2 reef_stone -> A (inv 10) depleted_for_B=true
+END OF STAGE 1: A={ "reed_fiber": 18, "driftwood": 12, "reef_stone": 10, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 } B={ "reed_fiber": 18, "driftwood": 12, "reef_stone": 8, "tide_bloom": 4, "swim_saddle": 0, "potion_small": 0 } C={ "reed_fiber": 18, "driftwood": 9, "reef_stone": 8, "tide_bloom": 4, "swim_saddle": 0, "potion_small": 0 } D={ "reed_fiber": 15, "driftwood": 9, "reef_stone": 8, "tide_bloom": 4, "swim_saddle": 0, "potion_small": 0 }
+DELTA ops=[{ "op": "flag", "scope": "world", "realm": "water", "id": "water_dock_reedhaven_repaired", "value": true }, { "op": "flag", "scope": "world", "realm": "water", "id": "water_claim:dock_paid:reedhaven_repair:character-13b465b50439b55da72e24c988329f9d:91228c68e00d09b1f018405bc7cd212470e890eb301269ad50
+CLAIM water:brine_steps:harvest:001 stage=2 A +3 reed_fiber -> A (inv 15) depleted_for_B=true
+CLAIM water:brine_steps:harvest:002 stage=2 B +3 reed_fiber -> B (inv 21) depleted_for_C=true
+CLAIM water:brine_steps:harvest:003 stage=2 C +3 driftwood -> C (inv 12) depleted_for_D=true
+CLAIM water:brine_steps:harvest:004 stage=2 D +3 driftwood -> D (inv 12) depleted_for_A=true
+CLAIM water:brine_steps:harvest:005 stage=2 B +2 reef_stone -> B (inv 10) depleted_for_C=true
+CLAIM water:brine_steps:harvest:006 stage=2 C +2 reef_stone -> C (inv 10) depleted_for_D=true
+CLAIM water:brine_steps:harvest:007 stage=2 A +3 driftwood -> A (inv 11) depleted_for_B=true
+UNREACHABLE water:brine_steps:harvest:008 reef_stone x2: no stance within 1.2 m of the node's baked ground at <= 40 deg (gentlest 63 deg)
+CLAIM water:brine_steps:harvest:009 stage=2 C +3 reed_fiber -> C (inv 21) depleted_for_D=true
+CLAIM water:brine_steps:harvest:010 stage=2 D +3 reed_fiber -> D (inv 18) depleted_for_A=true
+CLAIM water:brine_steps:harvest:011 stage=2 B +3 driftwood -> B (inv 15) depleted_for_C=true
+CLAIM water:brine_steps:harvest:012 stage=2 B +2 tide_bloom -> B (inv 6) depleted_for_C=true
+CLAIM water:brine_steps:harvest:013 stage=2 A +3 reed_fiber -> A (inv 18) depleted_for_B=true
+CLAIM water:brine_steps:harvest:014 stage=2 C +3 driftwood -> C (inv 15) depleted_for_D=true
+CLAIM water:brine_steps:harvest:015 stage=2 C +2 tide_bloom -> C (inv 6) depleted_for_D=true
+CLAIM water:brine_steps:harvest:016 stage=2 B +3 reed_fiber -> B (inv 24) depleted_for_C=true
+CLAIM water:brine_steps:harvest:017 stage=2 D +2 reef_stone -> D (inv 10) depleted_for_A=true
+CLAIM water:brine_steps:harvest:018 stage=2 D +3 driftwood -> D (inv 15) depleted_for_A=true
+END OF STAGE 2: A={ "reed_fiber": 18, "driftwood": 11, "reef_stone": 10, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 } B={ "reed_fiber": 24, "driftwood": 15, "reef_stone": 10, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 } C={ "reed_fiber": 21, "driftwood": 15, "reef_stone": 10, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 } D={ "reed_fiber": 18, "driftwood": 15, "reef_stone": 10, "tide_bloom": 4, "swim_saddle": 0, "potion_small": 0 }
+CLAIM water:shellwatch:harvest:001 stage=3 C +3 reed_fiber -> C (inv 24) depleted_for_D=true
+CLAIM water:shellwatch:harvest:002 stage=3 D +3 reed_fiber -> D (inv 21) depleted_for_A=true
+CLAIM water:shellwatch:harvest:003 stage=3 A +3 driftwood -> A (inv 14) depleted_for_B=true
+CLAIM water:shellwatch:harvest:004 stage=3 B +3 driftwood -> B (inv 18) depleted_for_C=true
+UNREACHABLE water:shellwatch:harvest:005 reef_stone x2: no stance within 1.2 m of the node's baked ground at <= 40 deg (gentlest 60 deg)
+CLAIM water:shellwatch:harvest:006 stage=3 A +2 reef_stone -> A (inv 12) depleted_for_B=true
+CLAIM water:shellwatch:harvest:011 stage=3 D +2 tide_bloom -> D (inv 6) depleted_for_A=true
+UNREACHABLE water:shellwatch:harvest:012 reef_stone x2: no stance within 1.2 m of the node's baked ground at <= 40 deg (gentlest 60 deg)
+CLAIM water:shellwatch:harvest:013 stage=3 A +2 tide_bloom -> A (inv 8) depleted_for_B=true
+CLAIM water:shellwatch:harvest:014 stage=3 C +3 driftwood -> C (inv 18) depleted_for_D=true
+CLAIM water:shellwatch:harvest:015 stage=3 B +2 reef_stone -> B (inv 12) depleted_for_C=true
+CLAIM water:shellwatch:harvest:016 stage=3 C +2 reef_stone -> C (inv 12) depleted_for_D=true
+CLAIM water:shellwatch:harvest:017 stage=3 A +3 reed_fiber -> A (inv 21) depleted_for_B=true
+CLAIM water:shellwatch:harvest:018 stage=3 B +2 tide_bloom -> B (inv 8) depleted_for_C=true
+END OF STAGE 3: A={ "reed_fiber": 21, "driftwood": 14, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } B={ "reed_fiber": 24, "driftwood": 18, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } C={ "reed_fiber": 24, "driftwood": 18, "reef_stone": 12, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 } D={ "reed_fiber": 21, "driftwood": 15, "reef_stone": 10, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 }
+CLAIM water:tidal_cradle:harvest:001 stage=4 B +3 reed_fiber -> B (inv 27) depleted_for_C=true
+CLAIM water:tidal_cradle:harvest:002 stage=4 C +3 reed_fiber -> C (inv 27) depleted_for_D=true
+CLAIM water:tidal_cradle:harvest:003 stage=4 D +3 driftwood -> D (inv 18) depleted_for_A=true
+CLAIM water:tidal_cradle:harvest:004 stage=4 A +3 driftwood -> A (inv 17) depleted_for_B=true
+CLAIM water:tidal_cradle:harvest:005 stage=4 D +2 reef_stone -> D (inv 12) depleted_for_A=true
+CLAIM water:tidal_cradle:harvest:006 stage=4 A +2 reef_stone -> A (inv 14) depleted_for_B=true
+CLAIM water:tidal_cradle:harvest:007 stage=4 A +4 reef_stone -> A (inv 18) depleted_for_B=true
+CLAIM water:tidal_cradle:harvest:008 stage=4 D +3 reed_fiber -> D (inv 24) depleted_for_A=true
+CLAIM water:tidal_cradle:harvest:009 stage=4 B +3 driftwood -> B (inv 21) depleted_for_C=true
+CLAIM water:tidal_cradle:harvest:010 stage=4 A +3 reed_fiber -> A (inv 24) depleted_for_B=true
+CLAIM water:tidal_cradle:harvest:011 stage=4 C +2 tide_bloom -> C (inv 8) depleted_for_D=true
+CLAIM water:tidal_cradle:harvest:012 stage=4 C +3 driftwood -> C (inv 21) depleted_for_D=true
+CLAIM water:tidal_cradle:harvest:013 stage=4 B +3 reed_fiber -> B (inv 30) depleted_for_C=true
+CLAIM water:tidal_cradle:harvest:014 stage=4 D +3 driftwood -> D (inv 21) depleted_for_A=true
+END OF STAGE 4: A={ "reed_fiber": 24, "driftwood": 17, "reef_stone": 18, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } B={ "reed_fiber": 30, "driftwood": 21, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } C={ "reed_fiber": 27, "driftwood": 21, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } D={ "reed_fiber": 24, "driftwood": 21, "reef_stone": 12, "tide_bloom": 6, "swim_saddle": 0, "potion_small": 0 }
+CLAIM water:salt_crown:harvest:005 stage=5 A +3 driftwood -> A (inv 20) depleted_for_B=true
+CLAIM water:salt_crown:harvest:006 stage=5 C +3 reed_fiber -> C (inv 30) depleted_for_D=true
+CLAIM water:salt_crown:harvest:007 stage=5 B +3 driftwood -> B (inv 24) depleted_for_C=true
+CLAIM water:salt_crown:harvest:008 stage=5 D +2 tide_bloom -> D (inv 8) depleted_for_A=true
+CLAIM water:salt_crown:harvest:009 stage=5 B +2 reef_stone -> B (inv 14) depleted_for_C=true
+CLAIM water:salt_crown:harvest:010 stage=5 C +3 driftwood -> C (inv 24) depleted_for_D=true
+CLAIM water:salt_crown:harvest:011 stage=5 C +2 reef_stone -> C (inv 14) depleted_for_D=true
+CLAIM water:salt_crown:harvest:012 stage=5 D +3 driftwood -> D (inv 24) depleted_for_A=true
+CLAIM water:salt_crown:harvest:013 stage=5 D +3 reed_fiber -> D (inv 27) depleted_for_A=true
+CLAIM water:salt_crown:harvest:014 stage=5 A +3 reed_fiber -> A (inv 27) depleted_for_B=true
+CLAIM water:salt_crown:harvest:015 stage=5 B +3 reed_fiber -> B (inv 33) depleted_for_C=true
+CLAIM water:salt_crown:harvest:016 stage=5 A +3 driftwood -> A (inv 23) depleted_for_B=true
+CLAIM water:salt_crown:harvest:017 stage=5 A +2 tide_bloom -> A (inv 10) depleted_for_B=true
+CLAIM water:salt_crown:harvest:018 stage=5 C +3 reed_fiber -> C (inv 33) depleted_for_D=true
+END OF STAGE 5: A={ "reed_fiber": 27, "driftwood": 23, "reef_stone": 18, "tide_bloom": 10, "swim_saddle": 0, "potion_small": 0 } B={ "reed_fiber": 33, "driftwood": 24, "reef_stone": 14, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } C={ "reed_fiber": 33, "driftwood": 24, "reef_stone": 14, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 } D={ "reed_fiber": 27, "driftwood": 24, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 0, "potion_small": 0 }
+CLAIM water:sluice_isle:harvest:009 stage=6 D +2 reef_stone -> D (inv 10) depleted_for_A=true
+CLAIM water:sluice_isle:harvest:010 stage=6 B +3 driftwood -> B (inv 21) depleted_for_C=true
+CLAIM water:sluice_isle:harvest:011 stage=6 D +3 reed_fiber -> D (inv 22) depleted_for_A=true
+CLAIM water:sluice_isle:harvest:012 stage=6 A +3 reed_fiber -> A (inv 22) depleted_for_B=true
+CLAIM water:sluice_isle:harvest:013 stage=6 A +2 reef_stone -> A (inv 16) depleted_for_B=true
+CLAIM water:sluice_isle:harvest:014 stage=6 B +2 reef_stone -> B (inv 12) depleted_for_C=true
+CLAIM water:sluice_isle:harvest:015 stage=6 B +2 tide_bloom -> B (inv 10) depleted_for_C=true
+CLAIM water:sluice_isle:harvest:016 stage=6 C +2 tide_bloom -> C (inv 10) depleted_for_D=true
+CLAIM water:sluice_isle:harvest:017 stage=6 D +2 tide_bloom -> D (inv 10) depleted_for_A=true
+CLAIM water:sluice_isle:harvest:018 stage=6 C +3 driftwood -> C (inv 21) depleted_for_D=true
+CLAIM water:sluice_isle:harvest:019 stage=6 B +3 reed_fiber -> B (inv 28) depleted_for_C=true
+CLAIM water:sluice_isle:harvest:020 stage=6 A +2 tide_bloom -> A (inv 12) depleted_for_B=true
+END OF STAGE 6: A={ "reed_fiber": 22, "driftwood": 17, "reef_stone": 16, "tide_bloom": 12, "swim_saddle": 1, "potion_small": 0 } B={ "reed_fiber": 28, "driftwood": 21, "reef_stone": 12, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 0 } C={ "reed_fiber": 25, "driftwood": 21, "reef_stone": 10, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 0 } D={ "reed_fiber": 22, "driftwood": 18, "reef_stone": 10, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 0 }
+CLAIM water:veilfall:harvest:005 stage=7 C +3 reed_fiber -> C (inv 26) depleted_for_D=true
+CLAIM water:veilfall:harvest:006 stage=7 D +3 driftwood -> D (inv 21) depleted_for_A=true
+CLAIM water:veilfall:harvest:007 stage=7 A +3 driftwood -> A (inv 20) depleted_for_B=true
+CLAIM water:veilfall:harvest:008 stage=7 B +2 tide_bloom -> B (inv 10) depleted_for_C=true
+CLAIM water:veilfall:harvest:009 stage=7 C +2 reef_stone -> C (inv 12) depleted_for_D=true
+CLAIM water:veilfall:harvest:011 stage=7 B +3 driftwood -> B (inv 24) depleted_for_C=true
+CLAIM water:veilfall:harvest:012 stage=7 C +2 tide_bloom -> C (inv 10) depleted_for_D=true
+CLAIM water:veilfall:harvest:013 stage=7 D +2 reef_stone -> D (inv 12) depleted_for_A=true
+END OF STAGE 7: A={ "reed_fiber": 20, "driftwood": 20, "reef_stone": 16, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 2 } B={ "reed_fiber": 26, "driftwood": 24, "reef_stone": 12, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 2 } C={ "reed_fiber": 26, "driftwood": 21, "reef_stone": 12, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 2 } D={ "reed_fiber": 20, "driftwood": 21, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 1, "potion_small": 2 }
+DELTA ops=[{ "op": "item_take", "scope": "player", "peers": [1], "item": "driftwood", "count": 4, "txn_id": "water_claim:local:lastlight_shelter:supplied" }, { "op": "item_take", "scope": "player", "peers": [1], "item": "reed_fiber", "count": 4, "txn_id": "water_claim:local:lastlight_shelter:supplied" }, { "o
+---- ROUTE DEPLETION RESULT ----
+PAID stage 1: A repaired the Reedhaven dock by Interact, spent { "reed_fiber": 6, "driftwood": 4 } -> OK
+PAID stage 5: A crafted Swim Saddle (8 reed, 6 driftwood, 4 reef stone) OK
+PAID stage 5: B crafted Swim Saddle (8 reed, 6 driftwood, 4 reef stone) OK
+PAID stage 5: C crafted Swim Saddle (8 reed, 6 driftwood, 4 reef stone) OK
+PAID stage 5: D crafted Swim Saddle (8 reed, 6 driftwood, 4 reef stone) OK
+PAID stage 6: A crafted 2 Small Potions (1 tide bloom + 1 reed each)
+PAID stage 6: B crafted 2 Small Potions (1 tide bloom + 1 reed each)
+PAID stage 6: C crafted 2 Small Potions (1 tide bloom + 1 reed each)
+PAID stage 6: D crafted 2 Small Potions (1 tide bloom + 1 reed each)
+PAID stage 7: B delivered Lastlight shelter supply by Interact, spent { "reed_fiber": 4, "driftwood": 4 } -> OK
+CHARACTER A claims=37 gathered={ "reed_fiber": 36, "driftwood": 30, "reef_stone": 20, "tide_bloom": 12 } remaining={ "reed_fiber": 20, "driftwood": 20, "reef_stone": 16, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 2 } reef_stone_without_cradle=12 party=["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]
+CHARACTER B claims=36 gathered={ "reed_fiber": 36, "driftwood": 30, "reef_stone": 16, "tide_bloom": 12 } remaining={ "reed_fiber": 22, "driftwood": 20, "reef_stone": 12, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 2 } party=["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]
+CHARACTER C claims=35 gathered={ "driftwood": 27, "reef_stone": 16, "reed_fiber": 36, "tide_bloom": 12 } remaining={ "reed_fiber": 26, "driftwood": 21, "reef_stone": 12, "tide_bloom": 10, "swim_saddle": 1, "potion_small": 2 } party=["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]
+CHARACTER D claims=32 gathered={ "driftwood": 27, "reef_stone": 16, "reed_fiber": 30, "tide_bloom": 10 } remaining={ "reed_fiber": 20, "driftwood": 21, "reef_stone": 12, "tide_bloom": 8, "swim_saddle": 1, "potion_small": 2 } party=["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]
+TRAINER landing_damage=0.0 health_top_ups=0 stance_retries=0
+UNREACHABLE_NODES 3: water:brine_steps:harvest:008 (reef_stone x2, gentlest ring slope 63 deg); water:shellwatch:harvest:005 (reef_stone x2, gentlest ring slope 60 deg); water:shellwatch:harvest:012 (reef_stone x2, gentlest ring slope 60 deg)
+FIGHTS 0 CATCHES 0 cradle_seam_to=A cradle_reef_stone=4
+Tidewake route depletion smoke: 598 checks, 0 failures

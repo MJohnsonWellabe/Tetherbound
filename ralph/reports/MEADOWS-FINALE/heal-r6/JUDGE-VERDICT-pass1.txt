@@ -1,0 +1,77 @@
+F05#7 r6 — blind visual verdict (code-blind; images only)
+Frames: ralph/reports/MEADOWS-FINALE/heal-r6/*.jpg, _sheet_pairs.jpg, _sheet_fall.jpg
+References: docs/reference/tetherbound-meadows-keyart.png, docs/reference/palworld-0*.jpg
+
+====================================================================
+Q. Does the land visibly heal between each -a and -b pair, in a way a player can read without being told?
+
+YES, overall. Three of the four pairs read clearly at contact-sheet size. The fall sequence reads as an event. h04 heals through wildlife arriving, not through the land changing. In every pair the change is a subtraction (machinery switched off) plus a colour-grade shift, not a visible regrowth.
+
+h01 quarry: YES, readable. In -a the ground is dry ochre and straw-brown and two teal-crystal pylons with a lit cyan tether wire stand in the middle distance. In -b the ground is a noticeably greener yellow-green, the nearer pylon lies toppled on its side behind the centre boulder (dark, no glow), the far pylon has vanished, and the cyan wire and cyan glow in the doorframe prop (left) have gone dark. There's also a new green leafy plant beside the yellow bulb at lower right. At 30% the grass colour shift is the main signal and it survives. The weakness is that the fallen pylon is small and sits behind a boulder, so the story beat (the machine fell) is easy to miss. Also, the left third of the frame (quarry wall, dark boulders) doesn't change at all.
+
+h02 approach: YES, and the strongest pair. -a: the path is flanked by ochre/brown ground, a large lit pylon stands centre-left, and three cyan tether lines cross the whole frame to the Hall. -b: the tall pylon is gone, replaced by a toppled wreck lying beside a dark dome/mound. The cyan lines are gone, and the whole meadow grades to a saturated spring green, including under the flower clusters. Anyone would read this as "the machine died and the land came back." Leftovers undercut it: (1) a small pylon right of centre is still standing in -b (its crystal is dark, but the silhouette is unchanged); (2) a thin dark wire still runs from the wreck to that small pylon; (3) a faint pale vertical beam line is still visible at top right in -b where the cyan beam was in -a. These read as "not finished", not as intentional remnants.
+
+h03 works: PARTIAL YES. The foreground grass on the left goes from brown/olive to green, the cyan tether line across the sky above the Hall wall is gone, and a pale slab/ramp appears at right against the Hall. A second boar creature and extra boulders appear at left. The Hall itself doesn't change: the same oxblood Team Tether banners, the same cyan-teal vertical trim strips glowing on the wall. If the Hall is where the machine was shut down, the Hall still reads as fully "on". The right-hand grass was already bright green in -a, so half the frame shows no before/after contrast. At 30% the pair reads as "some boars arrived", not "the land healed".
+
+h04 highfield: YES as an event, NO as healing land. Terrain, grass, trees and flowers are pixel-for-pixel the same; -a was already a lush green meadow. The only change is seven or eight deer appearing across the mid-ground. That reads as "wildlife returned", which is a legitimate healing beat, but the ground doesn't tell it. The deer also clip props (see defects), which makes the herd look spawned in rather than arrived.
+
+f-sequence (one vantage, t=0..12 s): readable as an event: YES.
+- f00 (0 s): tall dark pylon directly behind the trainer, cyan crystal lit, cyan tether line running left and right across the whole frame. A second pylon at far left is almost fully hidden behind the TEAM panel.
+- f01 (1 s): crystal and wire go dark. The tether is now a black sagging cable. The left pylon is now visible. The quest box already says "Settle who walks with you." This is a clear "power cut" beat.
+- f02–f03 (2–3 s): the cable disappears (f03 shows a dark cable only to the right). Both pylons are still upright, crystals grey.
+- f04–f07 (3.25–4 s): the left pylon begins leaning left. The centre pylon begins leaning slightly.
+- f08 (4.25 s): the centre pylon is visibly tilting right about 15°, its base plate lifting on one edge. The left pylon is at about 45°.
+- f09–f12 (4.5–5.25 s): the centre pylon swings through 30°→60°, pivoting on its base corner, falling right and slightly toward camera. The left pylon is down, lying flat on the horizon at far left.
+- f13–f15 (5.5–6 s): the centre pylon is near horizontal; the base slab stands up vertically as a dark block with the spires pointing right. At f14 a THIRD tower enters from off-screen top-right (over the quest box) and falls into the treeline.
+- f16 (6.25 s): impact. A pale dust/haze puff at the centre wreck and a dust cloud around the right-hand wreck in the trees.
+- f17–f23 (6.5–8 s): the dust fades. The wreck settles, lying on the grass.
+- f24 (12 s): the final state is three toppled wrecks: the centre one directly behind the trainer, one at far left on the horizon, one at right in the treeline.
+Verdict on the fall: it reads as "the towers came down". The timing (about 1 s of power-off, then a slow 3-second topple, then a dust hit) is legible across the sheet. Weaknesses: the fall is a rigid pivot with no break-up, no crumple and no debris, so it reads as a model being rotated rather than a structure failing. The impact dust is faint, pale grey against a pale sky, and barely visible at sheet size. The land doesn't change in this sequence (the grass colour at f24 is identical to f00), so the fall carries the whole beat. The wreck ends up almost exactly behind the trainer at camera height and is half-hidden by the character.
+
+====================================================================
+DEFECTS, ranked
+
+1. h02-b: survivors from the pre-heal state. A small pylon still stands right of centre, a dark wire still runs from the wreck to it, and a faint pale beam line remains at top right. The frame's own story says the machine is gone. These read as missed cleanup.
+2. h03-b: the Hall doesn't change at all. It still has oxblood banners and cyan-teal glowing strips on the walls. Of all the places, the one where the machine was shut down shows no evidence of it.
+3. h04-b: the deer clip props. The deer at left-centre stands inside the white cart. The deer at centre-right overlaps the white fence. One deer on the right edge of the herd has a leg/body inside the fence line. The whole herd is spread evenly across the mid-ground at nearly identical spacing, which reads as spawned, not arrived.
+4. f09–f16: the tower falls as a single rigid mesh around its base corner. The base slab ends up standing on edge (f15–f24), which reads as a physics error rather than a collapse. There's no fragmenting, no secondary pieces, no crystal shatter.
+5. f14: the third tower enters from off-screen top-right and is briefly drawn over or next to the quest box. It's unexplained in the frame (it was never visible at f00), so it reads as something falling out of the sky.
+6. f16/f20: the impact dust is a low-contrast pale haze almost the same value as the sky and horizon. It's invisible at 30%.
+7. f00: the TEAM 4/5 panel covers the left pylon, so the viewer sees one tower at t=0 and suddenly two at t=1 s (the panel hides at t=1).
+8. h01-b: the key visual (the fallen pylon) is small and occluded by the centre boulder. The dialogue box also sits directly over the area where the change happens.
+9. h03-a/b: the cyan-teal vertical strips on the Hall walls and the oxblood banners are the only saturated accents. The oxblood is correctly reserved for Team Tether, but because it doesn't change after the event, the Hall still signals active danger.
+10. All frames: the grass-colour change is a global grade (the whole terrain tint shifts), not local regrowth. There are no new flowers blooming, no moss creeping onto the wrecks, no water returning. The healing reads as "the filter changed" rather than "life came back".
+11. h03-a: the "+bond · discovered" labels next to the team panel overlap and are cut off by the panel edge (UI clutter).
+12. The two boar creatures in h03 are knee-to-waist height next to the 1.80 m trainer, with a matted texture and clumsy proportions. They read as a sourced stock animal, not a bespoke creature. The deer in h04 are about shoulder height to the trainer, which is plausible, but they are also plainly stock quadrupeds. They don't match the trainer's stylised proportions or each other's styling (the left deer has orange antlers or face and a different body texture).
+
+====================================================================
+THE THREE THINGS THAT MOST SEPARATE THESE FRAMES FROM THE REFERENCES
+
+1. The healing is a colour grade plus deleted props; in the references the world is richly authored. The key art's meadow has layered wildflower drifts, streams, fences, cottages and oak groves arranged in clusters. Palworld 04 has a landmark with dramatic silhouette and mist depth. h02-b and h04-b have one colour of green, evenly scattered flower sprites and a flat horizon of repeated pale cardboard mountains. The "after" state isn't more alive in composition, only in hue. Frames: h02-b, h04-b, f24.
+
+2. The creatures and fauna are not at the bar. Palworld's creatures (02, 04) are bespoke, bright, expressive and readable at distance. The boars in h03 and the deer in h04-b are generic stock animals with muddy textures, and they clip scenery. In h04-b, the frame that's supposed to be the emotional payoff, they look like a spawned herd. Frames: h03-a/b, h04-b.
+
+3. The event lacks weight. Palworld 01 and 03 make a fight or boss read as an event through VFX, particles and scale. The tower fall here is a rigid rotation with a faint pale dust puff, no debris, no light or sound cue visible in stills, and no crystal break. At sheet size it's the right story told quietly. Frames: f09–f16.
+
+====================================================================
+BAR QUESTIONS
+
+A. Do these frames read as belonging to the world in docs/reference/tetherbound-meadows-keyart.png?
+YES. Rolling green meadow, violet wildflowers, oak-like trees, the dark stone Hall with oxblood banners, a warm daytime palette, and the trainer in teal and brown with an orange backpack all fit the art-direction board. The post-heal greens (h02-b, h03-b, h04-b) sit closer to the key-art palette than the ochre "sick" state does, which is the intended direction. What pulls it back: the flat, pale, repeating mountain backdrop; the absence of water, settlements and clustered groves; and the Hall's cyan wall strips, which aren't in the key art.
+
+B. Shown beside docs/reference/palworld-0*.jpg, would someone say these are trying to be the same kind of game?
+YES, in genre (third-person, stylised open field, creature companions, a Hall/landmark, the HUD layout). NO, on quality: the creatures and the event staging clearly don't reach it.
+
+What is fixable by changing the scene (no new art):
+- Remove the survivors in h02-b (the small standing pylon, the leftover wire, the beam line).
+- Change the Hall after the event (lower or remove the banners, switch off the cyan wall strips) with existing assets.
+- Place the deer in h04-b in clusters with varied spacing and clear of the cart and fence; stagger their arrival.
+- Hide the TEAM panel in f00 or reframe so both towers are visible before the fall.
+- Stronger, darker, more opaque impact dust; a brief camera shake or flash; stagger the three towers so the third doesn't enter from off-screen.
+- Local regrowth instead of a global tint: scatter extra flowers and grass clumps around the wreck sites, place moss or vines on the wrecks, add a brighter flower patch where the pylon stood.
+- Frame h01 so the fallen pylon isn't behind the boulder and dialogue box.
+
+What needs art not in the build:
+- Bespoke creatures (boar, deer, the companions) at Palworld's stylised quality. The stock animals can't be staged into that.
+- A destructible or breakable tower (fragments, a crystal shatter) so the fall reads as a collapse rather than a rotation.
+- A higher-quality distant backdrop (real mountain silhouettes, mist layers) matching the key art's depth.
