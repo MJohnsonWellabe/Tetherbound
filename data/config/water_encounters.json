@@ -7247,9 +7247,9 @@
         -249.844
       ],
       "position": [
-        338.991,
-        139.396,
-        3890.156
+        307.209,
+        141.538,
+        3896.134
       ],
       "count": 2,
       "radius_m": 3.0,
@@ -7259,7 +7259,8 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre.",
+      "_why_trainer_ring_0927": "Moved 27.5 m back along the spine when Venn moved onto veilfall_venn_fight_pad (B4); the old spot was 13.4 m from his ring (needs 16)."
     },
     {
       "id": "road_visibility_veilfall_exploration_spine_02",

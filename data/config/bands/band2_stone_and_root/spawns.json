@@ -1156,6 +1156,7 @@
       "radius": 3.0,
       "habitat": "roadside_sightline",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair for band2_stone_and_root; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
-    }
+    },
+    {"order": 2923, "species": "burrowback", "count": 2, "centre": [345.27, 0.0, 1598.42], "radius": 3.0, "habitat": "roadside_sightline", "_why_f15_2_return_pair": "F15#2 (owner-approved 2026-09-27): return-trip roadside pair on the haul-road shortcut, 5.5 m shoulder offset. Closes a 132 s Tidewake-return A7 gap measured by tests/test_tidewake_return_cadence.gd (ralph/reports/TIDEWAKE/f15_return_cadence/PROPOSAL_meadows.txt). Appended with a fresh order, so no existing cluster moves or rerolls."}
   ]
 }

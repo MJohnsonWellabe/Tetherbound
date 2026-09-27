@@ -210,6 +210,8 @@ func _run() -> void:
 		_failures.append(str(line))
 	_prefix_complete = _failures.is_empty() and bool(result.get("passed", false))
 	_step_end("prefix: arrival through Ondra's arch recipe", _prefix_complete)
+	if _prefix_complete:
+		_checkpoint(game, test_save_dir, "1_prefix")
 	if _segment.get("safety") != null:
 		print("F11 WITNESS STRIKES prefix %s" % JSON.stringify(_segment.safety.counts))
 		_add_safety(_segment.safety.counts)
@@ -234,12 +236,14 @@ func _run() -> void:
 		_add_safety(crown.strike_counts())
 		_live_segment = null
 		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
+		if _crown_complete:
+			_checkpoint(game, test_save_dir, "2_crown_arch")
 	if _crown_complete and through_aftermath(OS.get_cmdline_user_args()):
 		_aftermath_watchdog.call_deferred()
-		for entry: Array in [[ROOTGATE_SEGMENT, "Crown arrival, guardian, Wen, Rootgate"],
-				[DYNAMO_SEGMENT, "Deepwood, rods, Kestrel, core ascent"],
-				[MARROW_SEGMENT, "Marrow five rounds and the real four-conduit Break"],
-				[AFTERMATH_SEGMENT, "Stormheart offer kept at five, Waterward aftermath"]]:
+		for entry: Array in [[ROOTGATE_SEGMENT, "Crown arrival, guardian, Wen, Rootgate", "3_rootgate"],
+				[DYNAMO_SEGMENT, "Deepwood, rods, Kestrel, core ascent", "4_core"],
+				[MARROW_SEGMENT, "Marrow five rounds and the real four-conduit Break", "5_marrow"],
+				[AFTERMATH_SEGMENT, "Stormheart offer kept at five, Waterward aftermath", "6_aftermath"]]:
 			_step_begin()
 			var later_segment: RefCounted = (entry[0] as GDScript).new()
 			_live_segment = later_segment
@@ -256,6 +260,7 @@ func _run() -> void:
 			if not passed:
 				_finish()
 				return
+			_checkpoint(game, test_save_dir, str(entry[2]))
 		_aftermath_complete = true
 		if not _witness_dir.is_empty():
 			_write_witness_save(game, test_save_dir)
@@ -308,6 +313,44 @@ func _print_save_files(label: String, dir: String) -> void:
 			for name: String in DirAccess.get_files_at(path.path_join(child)):
 				var nested := path.path_join(child).path_join(name)
 				print("%s %s sha256=%s" % [label, nested, FileAccess.get_sha256(nested)])
+
+
+## `--checkpoint-dir=user://<dir>` (needs `--witness-dir`): after each passed
+## step, autosave and copy the whole split-save tree to `<dir>/<label>`. Later
+## capture processes Load these earned saves through the title screen instead
+## of staging Stormwood flags or positions. Instrumentation only: the live run
+## continues unchanged from the same state.
+func _checkpoint(game: Node, dir: String, label: String) -> void:
+	var target := checkpoint_dir(OS.get_cmdline_user_args())
+	if target.is_empty() or _witness_dir.is_empty():
+		return
+	_expect(bool(game.call("save_game", int(game.call("autosave_slot")))),
+		"checkpoint %s: autosave written" % label)
+	var out := target.path_join(label)
+	_copy_tree(ProjectSettings.globalize_path(dir), ProjectSettings.globalize_path(out))
+	var meta := {"label": label, "realm": str(game.get("current_realm")),
+		"msec": Time.get_ticks_msec(),
+		"flags": (game.get("progression").call("all_set") as Array).filter(
+			func(f: Variant) -> bool: return str(f).begins_with("stormwood:")).size()}
+	var file := FileAccess.open(out.path_join("checkpoint.json"), FileAccess.WRITE)
+	file.store_string(JSON.stringify(meta, "\t"))
+	file.close()
+	print("CHECKPOINT %s -> %s %s" % [label, out, JSON.stringify(meta)])
+
+
+static func checkpoint_dir(arguments: PackedStringArray) -> String:
+	for argument: String in arguments:
+		if argument.begins_with("--checkpoint-dir="):
+			return argument.trim_prefix("--checkpoint-dir=")
+	return ""
+
+
+static func _copy_tree(from: String, to: String) -> void:
+	DirAccess.make_dir_recursive_absolute(to)
+	for name: String in DirAccess.get_files_at(from):
+		DirAccess.copy_absolute(from.path_join(name), to.path_join(name))
+	for child: String in DirAccess.get_directories_at(from):
+		_copy_tree(from.path_join(child), to.path_join(child))
 
 
 ## The final disk save of the earned run, plus the facts a restarted process

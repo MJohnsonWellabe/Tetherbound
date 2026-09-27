@@ -17,7 +17,17 @@
     {"id":"sluice_isle_to_veilfall_rest_03","anchor_id":"sluice_isle_to_veilfall_rest_03","route_id":"sluice_isle_to_veilfall_sheltered","parent_island_id":"sluice_isle","center_xz_m":[485.375,3411.788],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
     {"id":"sluice_isle_to_veilfall_rest_04","anchor_id":"sluice_isle_to_veilfall_rest_04","route_id":"sluice_isle_to_veilfall_sheltered","parent_island_id":"veilfall","center_xz_m":[440.077,3494.021],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
     {"id":"sluice_isle_to_veilfall_rest_05","anchor_id":"sluice_isle_to_veilfall_rest_05","route_id":"sluice_isle_to_veilfall_sheltered","parent_island_id":"veilfall","center_xz_m":[424.383,3592.560],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
-    {"id":"sluice_isle_to_veilfall_rest_06","anchor_id":"sluice_isle_to_veilfall_rest_06","route_id":"sluice_isle_to_veilfall_sheltered","parent_island_id":"veilfall","center_xz_m":[408.689,3691.100],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]}
+    {"id":"sluice_isle_to_veilfall_rest_06","anchor_id":"sluice_isle_to_veilfall_rest_06","route_id":"sluice_isle_to_veilfall_sheltered","parent_island_id":"veilfall","center_xz_m":[408.689,3691.100],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_01","anchor_id":"salt_crown_to_drowned_garden_rest_01","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"salt_crown","center_xz_m":[490.183,2315.839],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_02","anchor_id":"salt_crown_to_drowned_garden_rest_02","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"salt_crown","center_xz_m":[570.942,2338.973],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_03","anchor_id":"salt_crown_to_drowned_garden_rest_03","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"salt_crown","center_xz_m":[651.701,2362.107],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_04","anchor_id":"salt_crown_to_drowned_garden_rest_04","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"drowned_garden","center_xz_m":[732.46,2385.241],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_05","anchor_id":"salt_crown_to_drowned_garden_rest_05","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"drowned_garden","center_xz_m":[809.434,2351.591],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_06","anchor_id":"salt_crown_to_drowned_garden_rest_06","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"drowned_garden","center_xz_m":[886.407,2317.942],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"salt_crown_to_drowned_garden_rest_07","anchor_id":"salt_crown_to_drowned_garden_rest_07","route_id":"salt_crown_to_drowned_garden_sheltered","parent_island_id":"drowned_garden","center_xz_m":[963.381,2284.292],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"sluice_isle_to_deep_watch_rest_01","anchor_id":"sluice_isle_to_deep_watch_rest_01","route_id":"sluice_isle_to_deep_watch_sheltered","parent_island_id":"sluice_isle","center_xz_m":[1077.75,3245.173],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"sluice_isle_to_deep_watch_rest_02","anchor_id":"sluice_isle_to_deep_watch_rest_02","route_id":"sluice_isle_to_deep_watch_sheltered","parent_island_id":"deep_watch","center_xz_m":[1108.473,3317.554],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
+    {"id":"sluice_isle_to_deep_watch_rest_03","anchor_id":"sluice_isle_to_deep_watch_rest_03","route_id":"sluice_isle_to_deep_watch_sheltered","parent_island_id":"deep_watch","center_xz_m":[1178.281,3353.745],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]}
   ],
   "rest_shoal_marker": {"model":"res://assets/environment/stylized_nature/Rock_Medium_3.gltf","size_m":[2.0,3.8,1.3],"offset_xz_m":[6.0,4.0],"torch_scene":"res://assets/props/built/torch_prop.tscn","torch_height_m":1.3},
   "anchors": [
@@ -532,7 +542,17 @@
     {"id":"sluice_isle_to_veilfall_rest_03","island_id":"sluice_isle","parent_island_id":"sluice_isle","kind":"rest_shoal","route_id":"sluice_isle_to_veilfall_sheltered","safe_position":[485.375,1.5,3411.788],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[500.388,0.0,3398.574]},
     {"id":"sluice_isle_to_veilfall_rest_04","island_id":"veilfall","parent_island_id":"veilfall","kind":"rest_shoal","route_id":"sluice_isle_to_veilfall_sheltered","safe_position":[440.077,1.5,3494.021],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[449.727,0.0,3476.503]},
     {"id":"sluice_isle_to_veilfall_rest_05","island_id":"veilfall","parent_island_id":"veilfall","kind":"rest_shoal","route_id":"sluice_isle_to_veilfall_sheltered","safe_position":[424.383,1.5,3592.560],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[427.529,0.0,3572.809]},
-    {"id":"sluice_isle_to_veilfall_rest_06","island_id":"veilfall","parent_island_id":"veilfall","kind":"rest_shoal","route_id":"sluice_isle_to_veilfall_sheltered","safe_position":[408.689,1.5,3691.100],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[411.835,0.0,3671.349]}
+    {"id":"sluice_isle_to_veilfall_rest_06","island_id":"veilfall","parent_island_id":"veilfall","kind":"rest_shoal","route_id":"sluice_isle_to_veilfall_sheltered","safe_position":[408.689,1.5,3691.100],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[411.835,0.0,3671.349]},
+    {"id":"salt_crown_to_drowned_garden_rest_01","island_id":"salt_crown","parent_island_id":"salt_crown","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[490.183,1.5,2315.839],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[470.956,0.0,2310.331]},
+    {"id":"salt_crown_to_drowned_garden_rest_02","island_id":"salt_crown","parent_island_id":"salt_crown","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[570.942,1.5,2338.973],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[551.715,0.0,2333.465]},
+    {"id":"salt_crown_to_drowned_garden_rest_03","island_id":"salt_crown","parent_island_id":"salt_crown","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[651.701,1.5,2362.107],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[632.474,0.0,2356.599]},
+    {"id":"salt_crown_to_drowned_garden_rest_04","island_id":"drowned_garden","parent_island_id":"drowned_garden","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[732.46,1.5,2385.241],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[713.233,0.0,2379.733]},
+    {"id":"salt_crown_to_drowned_garden_rest_05","island_id":"drowned_garden","parent_island_id":"drowned_garden","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[809.434,1.5,2351.591],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[791.109,0.0,2359.602]},
+    {"id":"salt_crown_to_drowned_garden_rest_06","island_id":"drowned_garden","parent_island_id":"drowned_garden","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[886.407,1.5,2317.942],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[868.082,0.0,2325.953]},
+    {"id":"salt_crown_to_drowned_garden_rest_07","island_id":"drowned_garden","parent_island_id":"drowned_garden","kind":"rest_shoal","route_id":"salt_crown_to_drowned_garden_sheltered","safe_position":[963.381,1.5,2284.292],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[945.056,0.0,2292.303]},
+    {"id":"sluice_isle_to_deep_watch_rest_01","island_id":"sluice_isle","parent_island_id":"sluice_isle","kind":"rest_shoal","route_id":"sluice_isle_to_deep_watch_sheltered","safe_position":[1077.75,1.5,3245.173],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[1069.936,0.0,3226.763]},
+    {"id":"sluice_isle_to_deep_watch_rest_02","island_id":"deep_watch","parent_island_id":"deep_watch","kind":"rest_shoal","route_id":"sluice_isle_to_deep_watch_sheltered","safe_position":[1108.473,1.5,3317.554],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[1100.659,0.0,3299.144]},
+    {"id":"sluice_isle_to_deep_watch_rest_03","island_id":"deep_watch","parent_island_id":"deep_watch","kind":"rest_shoal","route_id":"sluice_isle_to_deep_watch_sheltered","safe_position":[1178.281,1.5,3353.745],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[1160.525,0.0,3344.54]}
   ],
   "currents": [
     {
@@ -3494,7 +3514,7 @@
     "human_capacity": 100.0,
     "human_drain_s": 2.8,
     "human_speed_m_s": 3.8,
-    "rest_shoal_route_metadata": {"_comment":"Analytical polyline segment metadata only; not runtime terrain, collision, stamina, or playability proof.","routes":[{"route_id":"reedhaven_to_brine_steps_sheltered","measured_full_route_length_m":107.088,"polyline_leg_lengths_m":[53.544,53.544],"rest_anchor_ids":["reedhaven_to_brine_steps_rest_01"]},{"route_id":"brine_steps_to_shellwatch_sheltered","measured_full_route_length_m":93.32,"polyline_leg_lengths_m":[46.66,46.66],"rest_anchor_ids":["brine_steps_to_shellwatch_rest_01"]},{"route_id":"shellwatch_to_tidal_cradle_sheltered","measured_full_route_length_m":112.113,"polyline_leg_lengths_m":[56.056,56.056],"rest_anchor_ids":["shellwatch_to_tidal_cradle_rest_01"]},{"route_id":"tidal_cradle_to_salt_crown_sheltered","measured_full_route_length_m":461.703,"polyline_leg_lengths_m":[92.341,92.34,46.17,46.171,92.34,92.341],"rest_anchor_ids":["tidal_cradle_to_salt_crown_rest_01","tidal_cradle_to_salt_crown_rest_02","tidal_cradle_to_salt_crown_rest_03","tidal_cradle_to_salt_crown_rest_04"]},{"route_id":"salt_crown_to_sluice_isle_sheltered","measured_full_route_length_m":430.709,"polyline_leg_lengths_m":[86.142,86.141,43.071,43.071,86.142,86.142],"rest_anchor_ids":["salt_crown_to_sluice_isle_rest_01","salt_crown_to_sluice_isle_rest_02","salt_crown_to_sluice_isle_rest_03","salt_crown_to_sluice_isle_rest_04"]},{"route_id":"sluice_isle_to_veilfall_sheltered","measured_full_route_length_m":698.47,"polyline_leg_lengths_m":[99.781,99.782,99.781,49.891,49.891,99.781,99.782,99.781],"rest_anchor_ids":["sluice_isle_to_veilfall_rest_01","sluice_isle_to_veilfall_rest_02","sluice_isle_to_veilfall_rest_03","sluice_isle_to_veilfall_rest_04","sluice_isle_to_veilfall_rest_05","sluice_isle_to_veilfall_rest_06"]}]}
+    "rest_shoal_route_metadata": {"_comment":"Analytical polyline segment metadata only; not runtime terrain, collision, stamina, or playability proof.","routes":[{"route_id":"reedhaven_to_brine_steps_sheltered","measured_full_route_length_m":107.088,"polyline_leg_lengths_m":[53.544,53.544],"rest_anchor_ids":["reedhaven_to_brine_steps_rest_01"]},{"route_id":"brine_steps_to_shellwatch_sheltered","measured_full_route_length_m":93.32,"polyline_leg_lengths_m":[46.66,46.66],"rest_anchor_ids":["brine_steps_to_shellwatch_rest_01"]},{"route_id":"shellwatch_to_tidal_cradle_sheltered","measured_full_route_length_m":112.113,"polyline_leg_lengths_m":[56.056,56.056],"rest_anchor_ids":["shellwatch_to_tidal_cradle_rest_01"]},{"route_id":"tidal_cradle_to_salt_crown_sheltered","measured_full_route_length_m":461.703,"polyline_leg_lengths_m":[92.341,92.34,46.17,46.171,92.34,92.341],"rest_anchor_ids":["tidal_cradle_to_salt_crown_rest_01","tidal_cradle_to_salt_crown_rest_02","tidal_cradle_to_salt_crown_rest_03","tidal_cradle_to_salt_crown_rest_04"]},{"route_id":"salt_crown_to_sluice_isle_sheltered","measured_full_route_length_m":430.709,"polyline_leg_lengths_m":[86.142,86.141,43.071,43.071,86.142,86.142],"rest_anchor_ids":["salt_crown_to_sluice_isle_rest_01","salt_crown_to_sluice_isle_rest_02","salt_crown_to_sluice_isle_rest_03","salt_crown_to_sluice_isle_rest_04"]},{"route_id":"sluice_isle_to_veilfall_sheltered","measured_full_route_length_m":698.47,"polyline_leg_lengths_m":[99.781,99.782,99.781,49.891,49.891,99.781,99.782,99.781],"rest_anchor_ids":["sluice_isle_to_veilfall_rest_01","sluice_isle_to_veilfall_rest_02","sluice_isle_to_veilfall_rest_03","sluice_isle_to_veilfall_rest_04","sluice_isle_to_veilfall_rest_05","sluice_isle_to_veilfall_rest_06"]},{"route_id":"salt_crown_to_drowned_garden_sheltered","measured_full_route_length_m":672.058,"polyline_leg_lengths_m":[84.007,84.007,84.007,84.007,84.008,84.007,84.008,84.007],"rest_anchor_ids":["salt_crown_to_drowned_garden_rest_01","salt_crown_to_drowned_garden_rest_02","salt_crown_to_drowned_garden_rest_03","salt_crown_to_drowned_garden_rest_04","salt_crown_to_drowned_garden_rest_05","salt_crown_to_drowned_garden_rest_06","salt_crown_to_drowned_garden_rest_07"]},{"route_id":"sluice_isle_to_deep_watch_sheltered","measured_full_route_length_m":314.527,"polyline_leg_lengths_m":[78.632,78.631,78.632,78.632],"rest_anchor_ids":["sluice_isle_to_deep_watch_rest_01","sluice_isle_to_deep_watch_rest_02","sluice_isle_to_deep_watch_rest_03"]}]}
   },
   "schema_version": 1.0,
   "swim_lesson": {
@@ -4393,6 +4413,7 @@
     },
     {
       "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "_why_human_rest_shoals_0927": "Owner direction 2026-09-27 (#356 5856118692): rest shoals every <=85 m let a no-swimmer party make this optional crossing by level-0 human swimming; the direct choice stays the swim-mount route.",
       "center_distance_m": 1052.331,
       "choice": "sheltered",
       "current_id": "salt_crown_to_drowned_garden_sheltered_current",
@@ -4400,7 +4421,7 @@
       "from_anchor": "salt_crown_to_drowned_garden_departure",
       "from_island": "salt_crown",
       "id": "salt_crown_to_drowned_garden_sheltered",
-      "intended_traversal": "swim_mount",
+      "intended_traversal": "human_level_0",
       "interception_roles": [
         "amphibious_surface_patrol",
         "current_edge_wild"
@@ -4410,29 +4431,66 @@
       "polyline": [
         [
           409.424,
-          0.0,
+          0,
           2292.705
         ],
         [
+          490.183,
+          1.5,
+          2315.839
+        ],
+        [
+          570.942,
+          1.5,
+          2338.973
+        ],
+        [
+          651.701,
+          1.5,
+          2362.107
+        ],
+        [
           732.46,
-          0.0,
+          1.5,
           2385.241
         ],
         [
+          809.434,
+          1.5,
+          2351.591
+        ],
+        [
+          886.407,
+          1.5,
+          2317.942
+        ],
+        [
+          963.381,
+          1.5,
+          2284.292
+        ],
+        [
           1040.354,
-          0.0,
+          0,
           2250.643
         ]
       ],
       "radial_shore_gap_m": 632.331,
       "required_departure_flag": "",
-      "required_equipment": [
-        "swim_saddle"
-      ],
+      "required_equipment": [],
       "required_personal_flags": [
         "water_swim_stone_earned"
       ],
-      "requires_compatible_active_swim_mount": true,
+      "requires_compatible_active_swim_mount": false,
+      "rest_anchor_ids": [
+        "salt_crown_to_drowned_garden_rest_01",
+        "salt_crown_to_drowned_garden_rest_02",
+        "salt_crown_to_drowned_garden_rest_03",
+        "salt_crown_to_drowned_garden_rest_04",
+        "salt_crown_to_drowned_garden_rest_05",
+        "salt_crown_to_drowned_garden_rest_06",
+        "salt_crown_to_drowned_garden_rest_07"
+      ],
       "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
       "to_anchor": "salt_crown_to_drowned_garden_arrival",
       "to_island": "drowned_garden"
@@ -4480,6 +4538,7 @@
     },
     {
       "_comment": "Actual shore-to-shore polyline; conservative against later wading threshold. No dock lengths or extra distance invented. Return-current help is not used for outbound safety.",
+      "_why_human_rest_shoals_0927": "Owner direction 2026-09-27 (#356 5856118692): rest shoals every <=85 m let a no-swimmer party make this optional crossing by level-0 human swimming; the direct choice stays the swim-mount route.",
       "center_distance_m": 735.935,
       "choice": "sheltered",
       "current_id": "sluice_isle_to_deep_watch_sheltered_current",
@@ -4487,7 +4546,7 @@
       "from_anchor": "sluice_isle_to_deep_watch_departure",
       "from_island": "sluice_isle",
       "id": "sluice_isle_to_deep_watch_sheltered",
-      "intended_traversal": "swim_mount",
+      "intended_traversal": "human_level_0",
       "interception_roles": [
         "amphibious_surface_patrol",
         "current_edge_wild"
@@ -4497,29 +4556,42 @@
       "polyline": [
         [
           1047.028,
-          0.0,
+          0,
           3172.791
         ],
         [
-          1108.472,
-          0.0,
+          1077.75,
+          1.5,
+          3245.173
+        ],
+        [
+          1108.473,
+          1.5,
           3317.554
         ],
         [
+          1178.281,
+          1.5,
+          3353.745
+        ],
+        [
           1248.089,
-          0.0,
+          0,
           3389.936
         ]
       ],
       "radial_shore_gap_m": 295.935,
       "required_departure_flag": "",
-      "required_equipment": [
-        "swim_saddle"
-      ],
+      "required_equipment": [],
       "required_personal_flags": [
         "water_swim_stone_earned"
       ],
-      "requires_compatible_active_swim_mount": true,
+      "requires_compatible_active_swim_mount": false,
+      "rest_anchor_ids": [
+        "sluice_isle_to_deep_watch_rest_01",
+        "sluice_isle_to_deep_watch_rest_02",
+        "sluice_isle_to_deep_watch_rest_03"
+      ],
       "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
       "to_anchor": "sluice_isle_to_deep_watch_arrival",
       "to_island": "deep_watch"

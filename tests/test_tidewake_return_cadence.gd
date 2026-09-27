@@ -444,17 +444,14 @@ func _whole_return(with_wilds: bool, use_arches: bool, use_haul_road: bool = tru
 ## turn this test red. A fix that closes a gap prints the stale row; a gap
 ## anywhere else fails the test.
 const KNOWN_MATCH_M := 200.0
-const KNOWN_OPEN: Array[Dictionary] = [
-	{"realm": "meadows", "midpoint": Vector2(316, 1535),
-		"note": "quarry haul road, upper half (133 s at walk); the band trail has no gap"},
-	{"realm": "meadows", "midpoint": Vector2(65, 469),
-		"note": "quarry haul road, village half (138 s at walk, daytime); the band trail has no gap"},
-]
+## Empty since F15#2's two Meadows haul-road return pairs (band1 order 1924,
+## band2 order 2923; owner-approved 2026-09-27) closed the last two.
+const KNOWN_OPEN: Array[Dictionary] = []
 
 
-func _known(gap: Dictionary) -> int:
-	for index in KNOWN_OPEN.size():
-		var row: Dictionary = KNOWN_OPEN[index]
+func _known(gap: Dictionary, rows: Array = KNOWN_OPEN) -> int:
+	for index in rows.size():
+		var row: Dictionary = rows[index]
 		if str(gap.get("realm", "")) == str(row.realm) \
 				and (gap.midpoint as Vector2).distance_to(row.midpoint) <= KNOWN_MATCH_M:
 			return index
@@ -483,9 +480,10 @@ func test_whole_return_has_only_known_open_intervals() -> void:
 ## The midpoint match is what keeps other lanes' partial edits from turning
 ## this red, so it must still reject a gap somewhere unlisted.
 func test_known_open_match_rejects_an_unlisted_gap() -> void:
-	assert_true(_known({"realm": "meadows", "midpoint": Vector2(316, 1600)}) >= 0, "a nearby midpoint matches")
-	assert_eq(_known({"realm": "meadows", "midpoint": Vector2(0, 5000)}), -1, "a distant midpoint is new")
-	assert_eq(_known({"realm": "stormwood", "midpoint": Vector2(-451, 4644)}), -1, "another realm is new")
+	var rows: Array = [{"realm": "meadows", "midpoint": Vector2(316, 1535), "note": "fixture"}]
+	assert_true(_known({"realm": "meadows", "midpoint": Vector2(316, 1600)}, rows) >= 0, "a nearby midpoint matches")
+	assert_eq(_known({"realm": "meadows", "midpoint": Vector2(0, 5000)}, rows), -1, "a distant midpoint is new")
+	assert_eq(_known({"realm": "stormwood", "midpoint": Vector2(-451, 4644)}, rows), -1, "another realm is new")
 
 
 ## Reports only: the strict no-respawn definition, lit arches, the Meadows band
