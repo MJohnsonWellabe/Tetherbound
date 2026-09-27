@@ -53,14 +53,9 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 ### Open owner decisions
 
 1. **Internet co-op resources:** a real Steam AppID with Steamworks partner access, and four Steam accounts, two or more on separate home networks, for the internet co-op proof. `steam_api64.dll` redistribution is approved. Packaging (`ship_steam_runtime`) stays off until an AppID exists.
-2. **F04#7 trainer difficulty:** the Meadows named trainers are too soft. Their team-wipe rate is 0 against the 0.25 C2 bar, which needs a COMBAT/BOSSES tuning decision. The DIVER 0.4 s tell also needs a harness exemption.
-3. **F10#2 C2 for ripplet and galewisp:** their ratios of 0.98 and 0.71 are above the 0.55 C2 bar. This needs a rules decision.
-4. **M2 Hall-exit window:** a 326 m window at the Hall exit exceeds the WORLD §3.1 spacing. It needs a ruling.
-5. **F08#3 aerie art is unassigned:** the dome, towers, banners, rock and cloud floor. The high-perch camera read passes.
+2. **Four decisions made by the owner at 23:55 and now in implementation (batch 68):** F04#7 difficulty (the Meadows named trainers get harder), F10#2 (starter parity), female officer Vess, and aerie art. See ruling 11 below.
 
-**Interim rulings the owner may reverse:**
-- Stormwood Capacitor Alpha does not stagger during its route cue (F10#2 option a; BOSSES).
-- A Stormwood storm strike spares a trainer whose creature is in a fight. This is the one config value `stormwood_surge.json` `strike.spare_trainer_in_fight=true`; the code default is `false`.
+**Settled by the owner (2026-09-27, 23:55):** the Capacitor Alpha no-stagger ruling and the storm strike sparing a trainer in a fight are **kept**. They are no longer interim.
 
 ## 1. Rulings in force
 
@@ -72,13 +67,19 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 5. **Build the game, not proof machinery.** Every round is player-visible. The two-strike harness rule applies, and each READY/FINAL post carries a `Balance: game N / tests-tools M` line (WORKFLOW §8).
 6. **Return route.** The homeward return after Tidewake is exempt from A7 (T3/F15).
 7. **Art split.** Claude lanes may do scene-level art from installed asset families: kitbash, materials, shaders, lighting and dressing. New meshes and Meshy work stay with Codex. This partly supersedes the 2026-09-26 "all art to Codex" ruling.
-8. **Capacitor Alpha** does not stagger during the route cue. This is an interim coordinator ruling (F10#2 option a).
+8. **Capacitor Alpha** does not stagger during the route cue (F10#2 option a). Kept by the owner. A Stormwood storm strike spares a trainer whose creature is in a fight (`stormwood_surge.json` `strike.spare_trainer_in_fight=true`). Also kept by the owner.
 9. **Process.**
    - Every branch uses the `tb/` prefix, with one reused `tb/<lane>` branch per lane and no lane PRs.
    - Lanes post READY/FINAL on #356; the coordinator batches through `tb/integration`; VERIFIER lanes run the full suite.
    - **Wind-down:** lanes finish and push everything, work in progress included, and unjudged visual work in progress lands behind a config flag that defaults to off, or unwired. The coordinator consolidates, then runs the unit tests once and CI once.
    - READY means a criterion fully closes, with an attached strict re-check, one criterion at a time. Codex-queue IDs are lane-prefixed and append-only.
 10. **F04 split.** Meadows core had F04#0, #1 and #7; Meadows F04 bosses had F04#2, #3 and #6. Both lanes are wound down. The F04 bosses round-1 evidence is `ralph/reports/MEADOWS/f04_bosses/r1/`.
+11. **Owner decisions, 23:55.**
+   - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7).
+   - **Galewisp and ripplet are tuned to match terrapup in skill and strength**, so starter C2 difficulty is even (F10#2, CREATURES).
+   - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
+   - **Codex does the Cloudreach aerie art** (F08#3).
+   - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
 
 **Owner, 2026-09-26 (still in force):**
 - The tournament creature grant is a non-starter species; starters stay player-exclusive.
@@ -129,7 +130,7 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 | Combat | Wind, poise, burst and quick/charged geometry; per-body named-fight overrides; the hitstop attack buffer. | C2/C3 on named fights (F04#7, F10#2, F14#0/#1), large-body camera framing. |
 | Creatures | 57 base species, individual IVs and bond, and limited evolution. Galecrest was rebuilt from a reference; its `companion_presence` head-tracking override did not land because main lacks that code. | Creature finish for Bars A/B, and attack-pose clipping (AUDIT §A). |
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
-| Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
+| Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
 | Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F11 is met; the S1 and S3 runs passed. | Pocket lures (F09#3), named-fight C2/C3 and lightning cues, forest and rod-line art, device profile. |
 | Tidewake | Human swim route (F12 met), eight pockets, dock exchange, return, Grandpa and credits (F15 met, T3 complete). | Local chains (F13#3), currents/docks/Veilfall art (F13#5), Veilfall and named-fight C2/C3. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
