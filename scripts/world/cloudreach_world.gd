@@ -143,6 +143,14 @@ var shoulder_audit_vertices: Array[Dictionary] = []
 ## over an overpass road/deck (`_overpass_ceiling`), recorded with the above.
 var shoulder_audit_arches: Array[Dictionary] = []
 var _all_pad_points: Array[Dictionary] = []
+## F07#0 Observatory latch: bridges whose deck exists only while a world flag
+## holds (`built_by_flag`). Each record: {flag, sections, shapes}. The flag's
+## current state gates the deck's visibility, collision and ground surfaces.
+var _flag_built_bridges: Array[Dictionary] = []
+var _open_bridge_flags := {}
+## Deck lines of those flag-built bridges (a subset of `_all_route_lines`):
+## ridge spurs and rooted shelves are not grown across them.
+var _latched_deck_lines: Array[Dictionary] = []
 var _all_crown_reference_lines: Array[Dictionary] = []
 var _built_pad_keys: Dictionary = {}
 const SURFACE_CELL_M := 128.0
@@ -510,6 +518,8 @@ func ground_height_at(x: float, z: float, preferred_y: float = NAN) -> float:
 		_rebuild_surface_index()
 	var best := -INF
 	for surface: Dictionary in _surface_cells.get(Vector2i(floori(x/SURFACE_CELL_M),floori(z/SURFACE_CELL_M)), []):
+		if surface.has("built_by_flag") and not bool(_open_bridge_flags.get(surface["built_by_flag"], false)):
+			continue
 		var kind := str(surface.get("kind", "rect"))
 		if kind == "rect":
 			var centre: Vector2 = surface.get("centre", Vector2.ZERO)
@@ -1521,6 +1531,7 @@ func _collect_all_route_lines() -> void:
 	# half in the ground" the owner reported. Bridge decks are joined the same
 	# way `_build_bridges` joins them (0.75 fraction) and count as routes.
 	_all_route_lines.clear()
+	_latched_deck_lines.clear()
 	_all_pad_points.clear()
 	var landmass: Dictionary = _visual_config.get("landmass", {})
 	for raw: Variant in _config.get("routes", []):
@@ -1559,6 +1570,9 @@ func _collect_all_route_lines() -> void:
 			continue
 		var bridge := raw as Dictionary
 		var profile: Array = bridge.get("deck_profile", bridge.get("endpoints", []))
+		# A latch-built deck (`built_by_flag`) still counts: its pads' crowns
+		# must taper to meet it once it exists, or the deck runs into a mesa's
+		# side (F07#0 latch stair, climbing onto the mid landing).
 		if profile.size() < 2:
 			continue
 		var cap_half := float(landmass.get("landing_size_m", 16.0)) * 0.41
@@ -1575,6 +1589,8 @@ func _collect_all_route_lines() -> void:
 			# Matches `_build_bridge_section`'s deck lift for stone paving.
 			var lift := _segment_basis(a, b).y * (0.2 if stone_bridge else 0.0)
 			_append_route_line(deck_id, a + lift, b + lift, deck_half_width)
+			if not str(bridge.get("built_by_flag", "")).is_empty():
+				_latched_deck_lines.append(_all_route_lines[-1])
 	# Landmark ledges are flat crowns too (see `_build_landmarks`): a shoulder
 	# running onto one conforms to it exactly as to a landing pad.
 	for raw: Variant in _config.get("landmarks", []):
@@ -2329,6 +2345,18 @@ func _overpass_ceiling(centre: Vector3, right: Vector3, reach: float, lines: Arr
 
 
 ## Whether any overpass line (below `below_y`) passes within `radius` of `p`.
+## F07#0: does a latch-built deck pass within `radius` (XZ) of `p` at a height
+## inside [low_y, high_y]? Its pads sit on other routes' ridges, so it leaves
+## them at ridge height, where the overpass rule does not see it.
+func _latched_deck_through(p: Vector3, radius: float, low_y: float, high_y: float) -> bool:
+	for line: Dictionary in _latched_deck_lines:
+		var hit := _line_point_xz(line, p)
+		if float(hit["distance"]) <= radius and float(hit["height"]) >= low_y - 2.0 \
+				and float(hit["height"]) <= high_y + 3.0:
+			return true
+	return false
+
+
 func _overpass_near(p: Vector3, radius: float, lines: Array[Dictionary], below_y: float) -> bool:
 	for line: Dictionary in lines:
 		var hit := _line_point_xz(line, p)
@@ -2441,7 +2469,7 @@ func _resource_position(authored: Vector3) -> Vector3:
 	var best := Vector3.ZERO
 	var best_distance := INF
 	for surface: Dictionary in _surfaces:
-		if str(surface.get("kind", "")) != "segment":
+		if str(surface.get("kind", "")) != "segment" or surface.has("built_by_flag"):
 			continue
 		var a: Vector3 = surface["a"]
 		var b: Vector3 = surface["b"]
@@ -2567,13 +2595,15 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			spur_at += right * side * (half_width + spur_width * 0.40)
 			# No rock spur/shelf standing in an overpass deck's corridor.
 			if not _overpass_near(spur_at, spur_width * 0.6 + arch_margin, overpass_lines,
-					centre.y - arch_clearance):
+					centre.y - arch_clearance) \
+					and not _latched_deck_through(spur_at, spur_width * 0.6, spur_at.y - spur_height * 0.5, spur_at.y + spur_height * 0.5):
 				_mesa(parent, "%sRockShoulder%d" % [label, i], spur_at,
 					Vector3(spur_width, spur_height, spur_width * (0.7 + depth_mix * 0.5)),
 					_materials["cliff_mid"], _materials["cliff_high"], false, seed_value + i * 7, true)
 			var shelf := centre + right * side * (half_width + 8.0) - Vector3.UP * 8.0
 			if posmod(i + seed_value, 3) == 0 and not straddles_closed_ground_gate(shelf - Vector3.UP * 9.0, Vector3(23, 18, 21)) \
-					and not _overpass_near(shelf, 16.0 + arch_margin, overpass_lines, centre.y - arch_clearance):
+					and not _overpass_near(shelf, 16.0 + arch_margin, overpass_lines, centre.y - arch_clearance) \
+					and not _latched_deck_through(shelf, 16.0, shelf.y - 18.0, shelf.y + 4.0):
 				_mesa(parent, "%sRootedShelf%d" % [label, i], shelf - Vector3.UP * 9.0,
 					Vector3(23, 18, 21), _materials["cliff"], _materials["upland"], true, seed_value + i)
 				var tree := NATURE_TREES[posmod(seed_value + i, NATURE_TREES.size())].instantiate() as Node3D
@@ -3147,10 +3177,13 @@ func _build_bridges() -> void:
 		var bridge:=Node3D.new()
 		bridge.name=_safe_name(str(spec.get("id","Bridge")))
 		root.add_child(bridge)
+		var built_by := str(spec.get("built_by_flag",""))
+		var sections: Array[Node3D] = []
 		for i in points.size()-1:
 			var section:=Node3D.new()
 			section.name="DeckSection%d"%i
 			bridge.add_child(section)
+			sections.append(section)
 			var a:=_vec3(points[i])
 			var b:=_vec3(points[i+1])
 			var cap_half:=float(_visual_config.get("landmass",{}).get("landing_size_m",16.0))*0.41
@@ -3158,7 +3191,17 @@ func _build_bridges() -> void:
 				a=_landing_join(a,b,cap_half,0.75)
 			if i==points.size()-2:
 				b=_landing_join(b,a,cap_half,0.75)
+			var surface_count := _surfaces.size()
 			_build_bridge_section(section,spec,a,b)
+			if not built_by.is_empty():
+				for surface_index in range(surface_count, _surfaces.size()):
+					_surfaces[surface_index]["built_by_flag"] = built_by
+		if not built_by.is_empty():
+			var shapes: Array[CollisionShape3D] = []
+			for section: Node3D in sections:
+				for node: Node in section.find_children("*", "CollisionShape3D", true, false):
+					shapes.append(node as CollisionShape3D)
+			_flag_built_bridges.append({"flag": built_by, "sections": sections, "shapes": shapes})
 		for end_index in [0,points.size()-1]:
 			var endpoint:=_vec3(points[end_index])
 			var neighbor:=_vec3(points[1] if end_index==0 else points[points.size()-2])
@@ -3386,6 +3429,15 @@ func _sync_progression_gates(game: Node) -> void:
 			shape.set_deferred("disabled", opened)
 		if veil != null:
 			veil.visible = not opened
+	for record: Dictionary in _flag_built_bridges:
+		var flag := str(record["flag"])
+		var built := progression is RefCounted and bool((progression as RefCounted).call("has", flag))
+		# ground_height_at() reads this per query; the surface index is unchanged.
+		_open_bridge_flags[flag] = built
+		for section: Node3D in record["sections"]:
+			section.visible = built
+		for shape: CollisionShape3D in record["shapes"]:
+			shape.set_deferred("disabled", not built)
 
 
 func _build_landmarks() -> void:
