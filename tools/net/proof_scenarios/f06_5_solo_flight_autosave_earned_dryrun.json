@@ -1,0 +1,172 @@
+{
+  "name": "DRY RUN \u2014 does not count: F06#5 solo half from the earned flight-trained checkpoint",
+  "claim": "DRY RUN \u2014 does not count until Cloudreach's tap-climb fix (held-button flight, #356 05:20) lands and the strict re-check runs. From the earned checkpoint c1_flight_trained (tb/cloudreach-b b084432d; Fly unlocked by Maela's trial, the same earned five, upper gate closed): the trainer walks off the Aerie deck by stick and TAPS jump in the air (the ordinary launch; Maela's loaner carries it -- none of the five flies); the game's OWN periodic autosave is taken while it is flying; the process ends and a fresh one loads that save through the title. Then: same five UIDs, standing on a floor, not flying/carried, upper gate still closed and not inside sealed Upper Cloudreach. No flag, party, item or position is written.",
+  "peers": 1,
+  "scene": "title",
+  "budget_s": 2400,
+  "build_allowance_s": 300,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "load_save",
+      "args": {
+        "from": "tests/fixtures/earned_saves/checkpoints/c1_flight_trained/save",
+        "slot": 1
+      },
+      "budget_frames": 20000,
+      "label": "the EARNED flight-trained checkpoint, loaded through Game.load_game"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "fly_traversal_unlocked"
+      },
+      "label": "Fly was earned (Maela's trial) in this save"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "the upper counterweight gate is CLOSED"
+    },
+    {
+      "peer": 0,
+      "action": "party_uids",
+      "args": {
+        "remember": "five"
+      },
+      "label": "the earned five"
+    },
+    {
+      "peer": 0,
+      "probe": "position",
+      "label": "on the Aerie deck"
+    },
+    {
+      "peer": 0,
+      "action": "ledge_probe",
+      "args": {
+        "max_m": 40,
+        "drop_m": 20
+      },
+      "label": "read-only: where the deck drops away"
+    },
+    {
+      "peer": 0,
+      "action": "ledge_launch",
+      "args": {
+        "wait_autosave_s": 165,
+        "max_m": 40,
+        "drop_m": 20,
+        "max_frames": 900
+      },
+      "label": "LAUNCH by input: waits for the game's autosave timer to near its next save, walks off the deck by stick, TAPS jump in the air"
+    },
+    {
+      "peer": 0,
+      "action": "await_autosave",
+      "args": {
+        "budget_frames": 3600,
+        "require_flying": true
+      },
+      "label": "SAVE WHILE FLYING: the game's own periodic autosave is taken mid-flight"
+    },
+    {
+      "peer": 0,
+      "probe": "flying",
+      "label": "still flying after the save"
+    },
+    {
+      "peer": 0,
+      "probe": "position",
+      "label": "mid-flight position"
+    },
+    {
+      "peer": 0,
+      "action": "capture_saves",
+      "args": {
+        "label": "saved_mid_flight"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "restart_peer",
+      "args": {
+        "scene": "title"
+      },
+      "label": "RELOAD: the process ends mid-flight; a fresh one starts at the title on the same disk"
+    },
+    {
+      "peer": 0,
+      "action": "title_load",
+      "args": {
+        "slot": 1
+      },
+      "budget_frames": 20000,
+      "label": "RELOAD: the title's own Load of the save made mid-flight"
+    },
+    {
+      "peer": 0,
+      "action": "wait",
+      "args": {
+        "frames": 120
+      }
+    },
+    {
+      "peer": 0,
+      "probe": "flying",
+      "label": "RELOAD: flight state"
+    },
+    {
+      "peer": 0,
+      "label": "RELOAD: standing on a floor (not in the air, not in the void)",
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_uids",
+      "args": {
+        "equals": "five"
+      },
+      "label": "RELOAD: exactly the same five UIDs, same order"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "RELOAD: the upper gate is still closed"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "expect": "FAIL",
+      "label": "RELOAD: not inside sealed Upper Cloudreach"
+    },
+    {
+      "peer": 0,
+      "probe": "position",
+      "label": "RELOAD: position"
+    }
+  ]
+}
