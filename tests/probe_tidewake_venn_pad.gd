@@ -10,7 +10,7 @@ extends SceneTree
 ## the real baked ground on rings out to the camera distance. It reports the
 ## flattest candidates: arena disc (11 m) within ±--flat-m of the centre, and
 ## no ground more than --wall-m above the centre inside the camera ring.
-##   godot --headless --path . --script tests/probe_tidewake_venn_pad.gd [-- --search-m=70]
+##   godot --headless --path . --script tests/probe_tidewake_venn_pad.gd [-- --search-m=70] [--trainer=<id>]
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const ARENA_M := 11.0
 const CAMERA_M := 16.0
@@ -24,10 +24,12 @@ func _run() -> void:
 	var search := 70.0
 	var flat := 1.6
 	var wall := 3.0
+	var trainer := "water_trainer_venn"
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--search-m="): search = float(arg.trim_prefix("--search-m="))
 		elif arg.begins_with("--flat-m="): flat = float(arg.trim_prefix("--flat-m="))
 		elif arg.begins_with("--wall-m="): wall = float(arg.trim_prefix("--wall-m="))
+		elif arg.begins_with("--trainer="): trainer = arg.trim_prefix("--trainer=")
 	await process_frame
 	root.get_node("Game").current_realm = "water"
 	var world: Node3D = WORLD.instantiate()
@@ -38,7 +40,7 @@ func _run() -> void:
 		if world.shell_build_complete():
 			break
 	var director: Node = world.get_node("EncounterDirector")
-	var spec: Dictionary = director.trainer_specs.get("water_trainer_venn", {})
+	var spec: Dictionary = director.trainer_specs.get(trainer, {})
 	var at: Array = spec.get("position", [])
 	var centre := Vector2(float(at[0]), float(at[2]))
 	print("VENN PAD current spot ", at, " score ", _score(world, centre, flat, wall))

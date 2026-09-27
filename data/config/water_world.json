@@ -3714,6 +3714,14 @@
         "height_m": 138.7,
         "flat_radius_m": 16.0,
         "feather_m": 12.0
+      },
+      {
+        "id": "deep_watch_tess_fight_pad",
+        "_why": "F14#0 C3 (tb/tidewake-full): Tess's stand near the Deep Watch crown drops 7.5 m inside her 11 m arena, and no open 16 m disc exists within 60 m (tests/probe_tidewake_venn_pad.gd --trainer=water_trainer_tess). In-world captures showed the fight sliding off the shoulder into the cut below and the camera facing the cliff. The pad fills the shoulder level at her stand height; her position is unchanged.",
+        "center_xz_m": [1356.0, 3480.0],
+        "height_m": 52.6,
+        "flat_radius_m": 16.0,
+        "feather_m": 12.0
       }
     ],
     "sea_level_m": 0.0,
