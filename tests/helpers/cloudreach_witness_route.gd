@@ -94,7 +94,7 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 
 ## A failure after the verdict was written must not vanish silently.
 func _fail(message: String) -> bool:
-	if exhausted_window and message.begins_with("Unexpected recovery interrupts"):
+	if exhausted_window and message == "Unexpected recovery interrupts continuous route: " + EXHAUSTED_RECOVERY_REASON:
 		_log("witness_expected_recovery", {"message": message})
 		return false
 	if verdict_written:
@@ -293,6 +293,7 @@ func _exhausted_fall_attempt() -> bool:
 		if not await _walk(spot, 0.6): return false
 		await _frames(10)
 		anchor = player.global_position
+	var controller_anchor: Vector3 = fly.safe_anchor
 	if not await _deploy(): return false
 	exhausted_window = true
 	var reasons: Array[String] = []
@@ -305,6 +306,9 @@ func _exhausted_fall_attempt() -> bool:
 		if not fly.is_flying() or failed: break
 		if fly.state == "exhausted":
 			exhausted_frame = frame
+			exhausted_fall["stamina_at_exhaustion"] = player.vitals.stamina
+			exhausted_fall["flight_seconds_at_exhaustion"] = fly.flight_seconds
+			exhausted_fall["exhaustion_cause"] = "flight_clock" if fly.flight_seconds >= float(fly_config.get("maximum_flight_seconds", 180.0)) else ("stamina" if player.vitals.stamina <= 0.0 else "carrier_or_other")
 			break
 		_steer(Vector3(lift_centre.x - player.global_position.x, 0, lift_centre.z - player.global_position.z), 0.25)
 		_input("jump", 1)
@@ -314,9 +318,12 @@ func _exhausted_fall_attempt() -> bool:
 	var lowest_y := player.global_position.y
 	var recovered_frame := -1
 	var landed_elsewhere := false
+	var state_before_recovery := ""
+	var last_state := str(fly.state)
 	for frame in 60 * 60:
 		if reasons.size() > 0:
 			recovered_frame = frame
+			state_before_recovery = last_state
 			break
 		if not fly.is_flying():
 			landed_elsewhere = true
@@ -324,16 +331,17 @@ func _exhausted_fall_attempt() -> bool:
 		_input("jump", 0)
 		_steer(Vector3(850 - player.global_position.x, 0, 2975 - player.global_position.z), 1.0)
 		lowest_y = minf(lowest_y, player.global_position.y)
+		last_state = str(fly.state)
 		await _frames(1)
 	_release()
 	fly.recovered.disconnect(on_recovered)
-	await _frames(20)
 	exhausted_window = false
+	await _frames(20)
 	var floor_query := PhysicsRayQueryParameters3D.create(player.global_position + Vector3.UP, player.global_position - Vector3.UP * 3, 1)
 	floor_query.exclude = [player.get_rid()]
 	var floor_hit := player.get_world_3d().direct_space_state.intersect_ray(floor_query)
 	exhausted_fall.merge({"anchor": str(anchor), "hover_frames": hover_frames, "exhausted_after_frames": exhausted_frame,
-		"exhausted_at": str(exhausted_at), "stamina_at_exhaustion_logged": true, "lowest_y_before_recovery": lowest_y,
+		"exhausted_at": str(exhausted_at), "controller_safe_anchor": str(controller_anchor), "state_before_recovery": state_before_recovery, "lowest_y_before_recovery": lowest_y,
 		"drop_below_anchor_m": anchor.y - lowest_y, "recovery_drop_m": drop_m, "recovered_after_frames": recovered_frame,
 		"recovery_reasons": reasons, "landed_elsewhere": landed_elsewhere, "end": str(player.global_position),
 		"end_distance_to_anchor_m": player.global_position.distance_to(anchor), "on_floor": player.is_on_floor(),
@@ -342,8 +350,11 @@ func _exhausted_fall_attempt() -> bool:
 	_log("witness_exhausted_fall", exhausted_fall)
 	if not _require(exhausted_frame >= 0, "Holding Jump in the shrine lift ran the flight to exhaustion"): return false
 	if not _require(not landed_elsewhere and recovered_frame >= 0, "The exhausted flyer was recovered by production recover_to_anchor, not landed elsewhere"): return false
-	if not _require(anchor.y - lowest_y >= drop_m - 1.0, "Recovery fired only after falling the configured drop below the anchor"): return false
-	if not _require(player.global_position.distance_to(anchor) < 3.0 and player.is_on_floor() and not floor_hit.is_empty() and not fly.is_flying(), "Recovered onto the verified shrine anchor floor"): return false
+	if not _require(reasons.size() == 1 and reasons[0] == EXHAUSTED_RECOVERY_REASON and state_before_recovery == "exhausted", "Exactly one recovery, from the exhausted branch (state before: %s, reasons %s)" % [state_before_recovery, str(reasons)]): return false
+	var drop := anchor.y - lowest_y
+	if not _require(drop >= drop_m - 1.0 and drop <= drop_m + 1.0, "Recovery fired at the configured drop below the anchor (%.3f m vs %.1f m)" % [drop, drop_m]): return false
+	if not _require(controller_anchor.is_finite() and controller_anchor.distance_to(anchor) < 0.5, "The recorded anchor is the controller's own safe anchor"): return false
+	if not _require(player.global_position.distance_to(controller_anchor) < 0.5 and player.is_on_floor() and not fly.is_flying() and str(exhausted_fall.get("floor_path", "")).contains("SkyShrineHeartstone"), "Recovered onto the verified shrine anchor floor"): return false
 	if not _require(_flag_snapshot() == flags_before and game.party.members().size() == expected_party_size, "Exhausted fall changed no flag and lost no creature"): return false
 	# Ordinary standing rest before the route's next flight (as the base _deploy does).
 	for tick in 60 * 120:
@@ -354,6 +365,9 @@ func _exhausted_fall_attempt() -> bool:
 
 
 const LAUNCH_PROBE_LIFT_M := 1.9
+## fly_controller.gd's exhausted-fall recovery message (the restriction branch
+## passes the restriction reason instead).
+const EXHAUSTED_RECOVERY_REASON := "The wind carried you back to your last safe landing."
 
 
 ## The production launch overhead query (fly_controller.launch_blockers), read
