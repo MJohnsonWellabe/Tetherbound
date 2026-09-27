@@ -4806,6 +4806,7 @@ func _build_machine() -> void:
 				instance.name = "Model"
 				_machine.add_child(instance)
 				_fit_to_height(instance, height)
+				preload("res://scripts/world/tether_machine_finish.gd").apply(_machine, spec)
 				_machine_shell(spec, height)
 				_markers["machine"] = _machine.global_position
 				return

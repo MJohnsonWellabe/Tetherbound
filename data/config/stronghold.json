@@ -2747,6 +2747,9 @@
     "model": "res://assets/environment/team_tether/tether_machine.glb",
     "chamber": "legendary_chamber",
     "height": 19.5,
+    "finish": {
+      "hardware": "res://assets/environment/team_tether/machine_hardware.glb"
+    },
     "base_radius": 5.6,
     "ring_radius": 7.2,
     "ring_pillars": 8,

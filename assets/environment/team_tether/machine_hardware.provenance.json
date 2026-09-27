@@ -1,0 +1,19 @@
+{
+  "asset": "machine_hardware.glb",
+  "purpose": "Supplement the installed Tether Machine with upper-core suspension links, brass anchor fittings and small runic plaques.",
+  "reference": "docs/art/reference/15_Legendary_Tether_Machine.png",
+  "reference_use": "Owner board used for visual direction only; no reference pixels embedded or traced.",
+  "creation": "Authored geometry with Blender 4.2.9; tools/art_pipeline/build_machine_hardware.py",
+  "generation_service": null,
+  "meshy_credits_spent": 0,
+  "source_machine_sha256": "b1acfeea35d303b1e37009dc2032d2430eaff9b416df61c162f75a9d6e4bafc1",
+  "hardware_sha256": "84fed7dddd3dd6bbed079563b47c1dd2b15676cdc283895dc63c765f725c0b2c",
+  "source_asset_disposition": "Existing owner-authorized Meshy hero remains unchanged, including its albedo and material. Supplemental geometry is a sibling of Model, never part of cage measurement or collision.",
+  "authored_height_metres": 19.5,
+  "triangles": 7280,
+  "mesh_material_surfaces": 4,
+  "chain_links": 30,
+  "bounds_min": [-4.8584, 13.233, -0.74232],
+  "bounds_max": [4.8584, 18.027, 0.74232],
+  "acceptance": "Scoped suspension/shutdown candidate. Whole-machine Bars A/B remain open; original shell geometry and texture defects remain. See ralph/reports/VISUAL/TETHER-MACHINE.md."
+}
