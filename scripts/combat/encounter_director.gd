@@ -3031,6 +3031,10 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 		return
 	var wild: Node3D = runtime.call("body") as Node3D
 	var terminal := str(runtime.get("terminal_outcome"))
+	if wild != null and is_instance_valid(wild) and wild.has_signal("route_cue_started"):
+		var route_cue := _on_shared_host_route.bind(encounter_id)
+		if wild.route_cue_started.is_connected(route_cue):
+			wild.route_cue_started.disconnect(route_cue)
 	if terminal.is_empty():
 		runtime.call("stop_opponent")
 		if restore_ambient and wild != null and is_instance_valid(wild):

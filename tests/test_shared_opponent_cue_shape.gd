@@ -248,3 +248,32 @@ func test_wild_body_reports_its_shape_and_announces_a_route_cue() -> void:
 	assert_eq(tells.size(), 1, "an ordinary tell announces itself at entry")
 	assert_eq(wild.presentation_shape(), {}, "an ordinary tell draws nothing")
 	wild.free()
+
+
+func test_a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks() -> void:
+	# A catch pause ends a tell on the host with no strike cue to the guests.
+	var proxy := _tree_proxy()
+	var shape := LANE_SHAPE.duplicate()
+	shape.merge(GUARD_SHAPE)
+	assert_true(proxy.present_telegraph(1, 0.9, 1, shape))
+	var old_lane := proxy.shape_lane()
+	var old_cone := proxy.shape_guard_cone()
+	proxy._advance_shape_lane(0.5)
+	assert_true(bool(old_lane.call("is_locked")))
+	var next := LANE_SHAPE.duplicate()
+	next["lane_length"] = 5.5
+	next["guard_reach"] = 2.0
+	next["guard_cone"] = 40.0
+	assert_true(proxy.present_telegraph(2, 0.9, 2, next))
+	assert_true(proxy.shape_lane() != old_lane, "the next tell draws its own lane")
+	assert_false(bool(proxy.shape_lane().call("is_locked")), "and it tracks again")
+	assert_almost_eq(float(proxy.shape_lane().call("lane_length")), 5.5)
+	assert_true(proxy.shape_guard_cone() != old_cone, "the next tell draws its own cone")
+	assert_almost_eq(float(proxy.shape_guard_cone().get_meta("reach")), 2.0)
+	var stale := proxy.shape_lane()
+	assert_true(proxy.present_route(3, 1.1, next))
+	assert_true(proxy.shape_lane() != stale, "a route cue always starts a fresh lane")
+	proxy._clear_shape()
+	assert_true(proxy.shape_lane() == null and proxy.shape_guard_cone() == null,
+		"the catch-absorb path clears every mark")
+	proxy.free()

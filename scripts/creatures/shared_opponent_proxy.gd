@@ -21,6 +21,9 @@ var _interpolation_half_life_s := 0.05
 ## the optional cue `shape` (presentation only; the host still decides hits).
 var _shape_lane_travels := false
 var _shape_lane_lock_left := -1.0
+## Set by a route cue and consumed by the telegraph that follows it in the same
+## tell: only then is the drawn lane carried over instead of redrawn.
+var _shape_route_pending := false
 
 
 func configure_presentation(card: RefCounted, generation: int, feet: Vector3, facing_now: Vector3,
@@ -73,6 +76,11 @@ func present_telegraph(serial: int, seconds: float, total: int, shape: Dictionar
 	telegraph_count = maxi(telegraph_count, total)
 	if _animator != null and _animator.has_method("begin_attack_telegraph"):
 		_animator.call("begin_attack_telegraph", seconds)
+	# A new tell never inherits marks from an earlier one (a catch pause, say,
+	# ends a tell on the host without a strike cue); only its own route carries.
+	if not _shape_route_pending:
+		_clear_shape()
+	_shape_route_pending = false
 	_present_shape(shape)
 	telegraph_started.emit(seconds)
 	return true
@@ -85,7 +93,9 @@ func present_route(serial: int, seconds: float, shape: Dictionary = {}) -> bool:
 		return false
 	last_cue_serial = serial
 	route_count += 1
+	_clear_shape()
 	_present_shape(shape)
+	_shape_route_pending = true
 	return true
 
 
@@ -134,6 +144,18 @@ func _present_shape(shape: Dictionary) -> void:
 		_hide_guard_cone()
 
 
+## An orb took the body: whatever tell was showing ended with it on the host.
+func play_absorb(world_point: Vector3, seconds: float) -> void:
+	_clear_shape()
+	super(world_point, seconds)
+
+
+func _clear_shape() -> void:
+	_free_shape_lane()
+	_hide_guard_cone()
+	_shape_route_pending = false
+
+
 ## The strike: a travelling lane stays where it was drawn and fades under the
 ## running body, as the host's does; a route line ends with its tell.
 func _release_shape() -> void:
@@ -146,6 +168,7 @@ func _release_shape() -> void:
 	else:
 		_free_shape_lane()
 	_shape_lane_lock_left = -1.0
+	_shape_route_pending = false
 	_hide_guard_cone()
 
 
@@ -155,6 +178,7 @@ func _free_shape_lane() -> void:
 		lane.queue_free()
 	_lunge_lane = null
 	_shape_lane_lock_left = -1.0
+	_shape_lane_travels = false
 
 
 ## Follows the host-sent facing until the host's lock point, then holds.
