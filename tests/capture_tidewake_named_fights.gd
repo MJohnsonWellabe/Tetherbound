@@ -8,7 +8,7 @@ extends SceneTree
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script res://tests/capture_tidewake_named_fights.gd \
 ##     -- --trainer=water_trainer_venn[,water_trainer_nerissa] --out=res://shots/tidewake/f14_c3 \
-##     [--interval=1.0] [--max-frames=40] [--level=53]
+##     [--interval=1.0] [--max-frames=40] [--level=53] [--pilot=QUICK|READER|MASHER] [--cap-s=240]
 ##
 ## Path: the actual Water world (water_archipelago.tscn); a legal five-member
 ## party of the original five at the given level (Ripplet lead); the player
@@ -19,14 +19,21 @@ extends SceneTree
 ## strike), so the tell and the response space around it are both on record.
 ## A frames.json beside the images logs each frame's fight time, opponent,
 ## tell length and the ally/opponent gap.
+## --pilot=READER drives the fight with the shared READER policy (the in-world
+## C2 smoke's pilot), so a capture reaches the whole roster, including
+## Nerissa's final Riptusk and its heavy tell. QUICK (the default) is the
+## captain smoke's close-and-tap loop.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const SMOKE := preload("res://tests/smoke_tidewake_named_inworld_c2.gd")
 const PARTY := ["ripplet", "bramblebun", "mudsnout", "pipwing", "trailpup"]
 ## Nerissa stands in the Heart Chamber; these upstream pump flags let the
 ## interior body stand up, exactly as smoke_water_veilfall_captain.gd prepares.
 const INTERIOR_FLAGS := ["water_veilfall_intake_stopped", "water_veilfall_return_opened"]
-const FIGHT_CAP_S := 240.0
+var _fight_cap_s := 240.0
+var _policy := "QUICK"
+var _reader: RefCounted
 
 var _out := ""
 var _interval := 1.0
@@ -55,6 +62,8 @@ func _run() -> void:
 		elif arg.begins_with("--max-frames="): _max_frames = maxi(4, int(arg.trim_prefix("--max-frames=")))
 		elif arg.begins_with("--level="): _level = int(arg.trim_prefix("--level="))
 		elif arg.begins_with("--tells-per-opponent="): _tells_per_opponent = maxi(0, int(arg.trim_prefix("--tells-per-opponent=")))
+		elif arg.begins_with("--pilot="): _policy = arg.trim_prefix("--pilot=").to_upper()
+		elif arg.begins_with("--cap-s="): _fight_cap_s = maxf(30.0, float(arg.trim_prefix("--cap-s=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
@@ -146,7 +155,19 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 	var next_periodic := 0.0
 	var tick := 0
 	var watched: Dictionary = {}
-	while director.trainer_battle_active() and _fight_t < FIGHT_CAP_S and saved < _max_frames:
+	_reader = null
+	if _policy != "QUICK":
+		_reader = SMOKE.WorldPilot.new()
+		_reader.rig = world.get_node("CameraRig")
+		_reader._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "events": [],
+			"player_windup_cancellations": 0, "charged_interrupts": 0, "stagger_events": 0,
+			"burst_uses": 0, "charged_uses": 0, "quick_uses": 0}
+		for index in game.local.party.size():
+			var member: RefCounted = game.local.party.at(index)
+			_reader._entry_maxima[member.get_instance_id()] = float(member.max_hp)
+		manager.hit_landed.connect(_reader._on_hit)
+		manager.state_changed.connect(_reader._on_state_changed)
+	while director.trainer_battle_active() and _fight_t < _fight_cap_s and saved < _max_frames:
 		var enemy: Node3D = manager.enemy_body()
 		var ally: Node3D = director.ally_body()
 		if is_instance_valid(enemy) and not watched.has(enemy.get_instance_id()):
@@ -169,11 +190,19 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		if _fight_t >= next_periodic:
 			next_periodic += _interval
 			saved += _save(dir, "t", _fight_t, enemy, ally, {})
-		_pilot(world, manager, enemy, ally, tick)
+		if _reader != null:
+			_reader.bind(manager, ally as CharacterBody3D, enemy as CharacterBody3D)
+			if manager.is_fighting():
+				_reader.step(_policy)
+		else:
+			_pilot(world, manager, enemy, ally, tick)
 		tick += 1
 		await physics_frame
 		_fight_t += 1.0 / Engine.physics_ticks_per_second
 	_release()
+	if _reader != null:
+		_reader._release_attack()
+		_reader._release_move()
 	print("TIDEWAKE C3 CAPTURE %s: %d frames over %.1f s, fight active=%s" % [id, saved, _fight_t,
 		director.trainer_battle_active()])
 	if director.trainer_battle_active():
