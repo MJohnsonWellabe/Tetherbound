@@ -156,9 +156,9 @@
     },
     {
      "text": "Each is a distinct optional action",
-     "status": "in_progress",
+     "status": "met",
      "evidence": "Six activities, each run uninterrupted from the earned seed4_hall checkpoint (receipts + BLOCKERS B1-B6 routing only); code-blind distinctness judge D 6/6; ralph/reports/MEADOWS-PAYOFFS/six-activities/earned/. Independent strict re-check: MET.",
-     "gap": "On main via batch 47; flips on the next green full CI."
+     "gap": "Green full CI 36296863144 on main 1ba253eb0."
     },
     {
      "text": "Useful once-only reward and acknowledgement",
