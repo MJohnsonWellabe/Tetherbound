@@ -1,0 +1,217 @@
+{
+  "label": "sw-f10-3-countdown",
+  "sha": "387cf60fdcf9b65c1ef01c418b4f3bb07718e1d6",
+  "script": "tools/vis_capture_strike_motion.gd",
+  "args": [
+    "--motion=normal",
+    "--hours=12",
+    "--out=res://shots/sw_f10_3_countdown/seqA",
+    "--label=seqA",
+    "--only=quick"
+  ],
+  "mode": "render",
+  "comment_id": 5856177070,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/sw-f10-3-countdown",
+  "stage": "ready_to_publish",
+  "runner_pid": 10504,
+  "started_utc": "2026-09-27T13:56:51.774437+00:00",
+  "engine_pid": 17700,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\sw-f10-3-countdown",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tools/vis_capture_strike_motion.gd",
+    "--",
+    "--motion=normal",
+    "--hours=12",
+    "--out=res://shots/sw_f10_3_countdown/seqA",
+    "--label=seqA",
+    "--only=quick"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T14:00:59.372573+00:00",
+  "output_worktree_files": [
+    "shots\\sw_f10_3_countdown\\seqA\\frames_seqA.json",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t000.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t010.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t020.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t030.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t040.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t050.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t060.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t070.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t080.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t090.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t100.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t110.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t120.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t125.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t130.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t140.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t150.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t160.png",
+    "shots\\vis_f10_3_motion\\seqA\\seqA_h12_t170.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "d8128fd4c7837ad4ac99993b2dfe908b77a9dc4329cbaa02bc19b3617179a300"
+    },
+    {
+      "path": "import.log",
+      "bytes": 9483,
+      "sha256": "8c3792d4f35b03829b72f523289175837d7f214bb69a39cea92d71cbbe644cd4"
+    },
+    {
+      "path": "run.log",
+      "bytes": 572,
+      "sha256": "7343b79294a163e99087b6f4282f3143dfe49086359c9002a3f26df9466c219a"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 438,
+      "sha256": "2cd1506d405515ce45060e0cf9057a1da9fb991b8c42cab1b49fac234069bc74"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 619171,
+      "sha256": "ad98824e37f519b718cbc6ab8c7e3393a32522c3cdd8214931551d50ca7b1de8"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 6501,
+      "sha256": "47b0d86f200559f1f208ebf7195cbf4af176ad291e8580839f596b1a919c1909"
+    },
+    {
+      "path": "user/logs/godot2026-09-27T08.58.15.log",
+      "bytes": 533,
+      "sha256": "e0cab122edf8d91623b621e4b8f8eea8da32de752d6b237dc668ddd2346e1817"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/28c0b7b40c8426ade22eb1437b12209ee993032c.cache",
+      "bytes": 1567716,
+      "sha256": "436a2925403bd56ed89ad8fea7ff05dd9f9b4ac466f75f7e633aa2def0ee5111"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 152,
+      "sha256": "d05f52986991a8dec748c26f1200b339d9d74408be9712b9e912ad023d785107"
+    },
+    {
+      "path": "worktree/shots/sw_f10_3_countdown/seqA/frames_seqA.json",
+      "bytes": 32047,
+      "sha256": "ffab38d8cc374628ecd0f038852756ea7db275d0d0492a0130ab94e395442996"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t000.png",
+      "bytes": 2317298,
+      "sha256": "8a2b109227b8edae776d7fd68fb4fc6f178cb9f51ff8ce9f3c74bb9b2b443ceb"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t010.png",
+      "bytes": 2372314,
+      "sha256": "e744a37e5ef4389a87dad607520691b3b2faeec030c2ef270631cc72ba46a573"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t020.png",
+      "bytes": 2378704,
+      "sha256": "35749f7724c27cf7f5fcb985eb08b1abbf61f7bc22746f0e948921a1b9d4c311"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t030.png",
+      "bytes": 2376386,
+      "sha256": "99582f36b424fc035e4badc86ed28ea2f8319b9d05190b3fe50765901aece5ff"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t040.png",
+      "bytes": 2392034,
+      "sha256": "03200f726fd10af0cfbe8be5507d256c3f3440cf831ec3a48eb59765b19d17c8"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t050.png",
+      "bytes": 2395432,
+      "sha256": "854732ca51261bbba31c9a02a981f47d3cfbdcb3551d167fc6b6dd7d05096a27"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t060.png",
+      "bytes": 2353884,
+      "sha256": "389a02bdb222281472bf01a47fa3f191fd0c349b5ce363c08308097a40b024cf"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t070.png",
+      "bytes": 2340272,
+      "sha256": "b482349599ca0c425c01372f3e66ead200b635d268f0b5a560afedd78ea3af24"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t080.png",
+      "bytes": 2308776,
+      "sha256": "1a5908e94161756c1fd93758ed93ef1deffcb64e01f4103a56f92cd4e9e45423"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t090.png",
+      "bytes": 2318006,
+      "sha256": "a85e66fd440d6e838fc83605b6571ad5c9d92ee1f4e8b86056792893f8f4a0a6"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t100.png",
+      "bytes": 2253713,
+      "sha256": "259626215c48608925e3d55071ed58b85962c02557339c71b781f24343828939"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t110.png",
+      "bytes": 2190295,
+      "sha256": "09e8c23d7367b76d27e4a7467d39f2ec42c1e82bbeb15ba12e72763f45b223a7"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t120.png",
+      "bytes": 2590362,
+      "sha256": "bbe3d75dcbf8706712d6a8d420a16246eb0c699a8496fd8d9d77e3de524160cf"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t125.png",
+      "bytes": 2714640,
+      "sha256": "d0e5e5eed52367b15d65e6f0841d0ebafed27a06f1506237d35686f9382014a7"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t130.png",
+      "bytes": 2743360,
+      "sha256": "a7744ac7c1b4a0db8b471e7a4b2dc9c36fd225a96b6cd06f86ba85ea8a20fc7b"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t140.png",
+      "bytes": 2752367,
+      "sha256": "d8762ff312d3fe9d56706a724894b2fa6cbf5550fba5463a05e9e6aea1da9d5f"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t150.png",
+      "bytes": 2567525,
+      "sha256": "1f1e189f5b826e091b4638772c608d5471373269c02d6f6f3889c7fc37ae14a9"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t160.png",
+      "bytes": 2399645,
+      "sha256": "146f36237be138a91399435b03585c5dd7bf10766500e7d57a81d3f86b998c74"
+    },
+    {
+      "path": "worktree/shots/vis_f10_3_motion/seqA/seqA_h12_t170.png",
+      "bytes": 2405010,
+      "sha256": "b5ac06e61cef7d3f373c8d91f696ec47c314bf5813a2668d5f62327dfcd7a6bc"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}
