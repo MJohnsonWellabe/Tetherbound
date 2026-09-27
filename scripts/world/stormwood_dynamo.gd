@@ -32,8 +32,9 @@ const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 ## The DynamoCore deck's outer radius (`stormheart_tree.gd` `_ring("DynamoCore", 9, 44, ...)`).
 const DECK_OUTER_RADIUS_M := 44.0
 const DECK_INNER_RADIUS_M := 9.0
-## How near the deck this peer's trainer must stand for the deck floor claim.
-const DECK_CLAIM_VERTICAL_M := 6.0
+## How near the deck this peer's trainer must stand for the deck floor claim
+## (the ascent's last turn runs 3-5.7 m under solid deck from ~214 to 242 deg).
+const DECK_CLAIM_VERTICAL_M := 3.0
 ## `_ring("DynamoCore")` leaves segments 43-47 of 64 open for the ascent's
 ## final turn. The ascent needs headroom only over its own band (radius
 ## RAMP_RADIUS +- RAMP_WIDTH/2, rails included); the rest of that wedge is
