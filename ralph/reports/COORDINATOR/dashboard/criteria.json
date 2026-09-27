@@ -513,9 +513,9 @@
     {
      "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
      "status": "met",
-     "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/ at tb/cloudreach-b 45ef17fd (batch 67): two-peer run3 PASS. The host accepts at four and ends with five including Solmane; the guest refuses at five with the same uids. Each character gets its own receipt, with no re-offer after rejoin or host reload. Solo: 5 of 6 cases pass, 0 failures. Summit tables hold tempestwing. Coordinator re-check: MET apart from the solo sixth case, now disclosed.",
+     "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/ at tb/cloudreach-b 45ef17fd (batch 67): two-peer run3 PASS. The host accepts at four and ends with five including Solmane; the guest refuses at five with the same uids. Each character gets its own receipt, with no re-offer after rejoin or host reload. Solo: 6 of 6 cases pass (VERIFIER 1 rerun). Summit tables hold tempestwing. Coordinator re-check: MET apart from the solo sixth case, now disclosed.",
      "gap": "",
-     "note": "Disclosed shortcut: the solo save-while-open case was not run (timeout, two-strike). Rerun it with a timeout above 3000 s."
+     "note": "Solo sixth case (save while the choice is open) since passed: VERIFIER 1 serial run, 6 of 6 cases (#356 5860765391)."
     }
    ]
   },
