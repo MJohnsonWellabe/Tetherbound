@@ -1,0 +1,38 @@
+{
+  "_comment": "Warm mounted lanterns light the outside of the aviary and Cliffhold watch crown. Their source meshes remain visible in daylight; light fades with the local WorldLook clock. No collision, gameplay, shared materials or global exposure changes.",
+  "dawn_hours": [5.0, 7.0],
+  "dusk_hours": [17.0, 19.0],
+  "sites": [
+    {
+      "id": "SummitEyrieStronghold", "height_m": 1.8,
+      "reuse_lights": "AviaryEntryLanternLight",
+      "_comment": "Move the four existing entry accent lights to mounted exterior sources; retain all six interior lights without increasing the aviary light count. Backplates seat 1 cm into the actual pier shafts, below the capitals.",
+      "colour": "#ffc17d", "energy": 4.0, "range_m": 36.0, "attenuation": 1.0,
+      "fixtures": [
+        {"at": [16.88990, 6.3, 24.12128], "yaw": 35.0},
+        {"at": [-16.88990, 6.3, 24.12128], "yaw": -35.0},
+        {"at": [-16.88990, 6.3, -24.12128], "yaw": -145.0},
+        {"at": [16.88990, 6.3, -24.12128], "yaw": 145.0}
+      ]
+    },
+    {
+      "id": "CliffholdSettlement", "height_m": 1.8,
+      "colour": "#ffc17d", "energy": 3.0, "range_m": 24.0, "attenuation": 1.0,
+      "fixtures": [
+        {"at": [-20.0, 14.0, 22.10028], "yaw": 0.0},
+        {"at": [-20.0, 14.0, 13.91972], "yaw": 180.0},
+        {"at": [-15.92680, 14.0, 18.0], "yaw": 90.0},
+        {"at": [-23.98290, 14.0, 18.0], "yaw": -90.0}
+      ]
+    },
+    {
+      "id": "WindscarBeacon", "frame_base_node": "OpenWindscarBeacon", "height_m": 2.0,
+      "_comment": "Mounted on the two approach-facing arch posts. Y follows the beacon's existing terrain-fit frame base; the opening/colliders stay untouched.",
+      "colour": "#ffc17d", "energy": 3.0, "range_m": 14.0, "attenuation": 1.0,
+      "fixtures": [
+        {"at": [12.79626, 5.5, 5.23753], "yaw": -130.815085},
+        {"at": [7.04440, 5.5, 11.89758], "yaw": -130.815085}
+      ]
+    }
+  ]
+}

@@ -24,6 +24,7 @@ const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
 const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
 const ROUTE_VERGES := preload("res://scripts/world/cloudreach_route_verges.gd")
+const LANDMARK_LIGHTING := preload("res://scripts/world/cloudreach_landmark_lighting.gd")
 
 const LOOK_TREES: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/CommonTree_1.gltf"),
@@ -162,6 +163,10 @@ func dress(world: Node3D) -> void:
 	_dress_trees_and_stones(config_data)
 	if profile_look: print("[cloudreach_look] trees_stones ms=", Time.get_ticks_msec() - phase_started)
 	_dress_settlement_materials()
+	var landmark_lighting := LANDMARK_LIGHTING.new()
+	landmark_lighting.name = "LandmarkLighting"
+	add_child(landmark_lighting)
+	landmark_lighting.build(world)
 	_dress_fog()
 
 
