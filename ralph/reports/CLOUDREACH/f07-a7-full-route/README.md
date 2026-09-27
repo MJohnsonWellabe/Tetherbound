@@ -9,6 +9,8 @@ five), running the whole live Cloudreach chapter by stick input. Under the
 |---|---|---|
 | `before/` (tb/cloudreach 02229683) | PASS, 15.9 km | **161.0 s** aftermath walk (Veyra deck → overlook); **152.0 s** bivouac → Veyra |
 | `after-restored-gate/` | FAIL at the final reload check (see below) | **153.0 s** bivouac → Veyra only |
+| `confirm-reload-instant/` | FAIL at the final reload check (first, wrong fix) | 152.3 s bivouac → Veyra only |
+| `after-json-team-check/` (both fixes) | **PASS**, 15.9 km, live | **152.3 s** bivouac → Veyra only (open design item) |
 
 **Aftermath walk (fixed).** `cloudreach_summit_restored_wild` was gated on
 `cloudreach_winds_restored`. The finale sets that flag only on arrival at the
@@ -36,5 +38,3 @@ exact field check just above it already treats that case as equal. The team
 check now compares the JSON form too. (A first attempt that only moved the
 check to the reload instant assumed HP regeneration was the cause; the
 confirming run disproved that.)
-
-| `after-json-team-check/` (both fixes) | **PASS**, 15.9 km, live | **152.3 s** bivouac → Veyra only (open design item) |
