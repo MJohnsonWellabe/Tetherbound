@@ -1,0 +1,67 @@
+{
+ "disclosures": [
+  "The save is written by the witness helper's --export-flight-trained hook (tests/helpers/cloudreach_witness_route.gd) on the first physics frame after Fly is trained where the trainer stands on a floor, out of flight, fights and modals; it swaps the save directory for that one Game.save_game(1) call only.",
+  "Fly climb in the trial uses the production held-jump updraft climb (fly_controller.gd), the hard-rule conflict assigned to the Cloudreach lane on #356.",
+  "The export's 'stage' label reads flight_trial_start because the harness updates its stage label after the trial method returns.",
+  "warden: Veridian offer ACCEPTED with a full belt through the production farewell ceremony; released lowest-level earned member {\"index\":4,\"level\":15,\"species\":\"bramblebun\",\"uid\":\"creature-3fd010116aee4ec96d669fb5d4ecca74\"}",
+  "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)"
+ ],
+ "export": {
+  "dir": "/tmp/claude-0/runs/flight_export/save/",
+  "flags": 146,
+  "fly_unlocked": true,
+  "from_save": "res://tests/fixtures/earned_saves/c1_arrival",
+  "position": "(399.7367, 610.1301, 3249.184)",
+  "saved": true,
+  "simulated_seconds": 1272.08,
+  "stage": "flight_trial_start",
+  "team": [
+   {
+    "hp": 237.3,
+    "label": "Bud",
+    "level": 22,
+    "species_id": "ripplet",
+    "xp": 67
+   },
+   {
+    "hp": 232.418284986496,
+    "label": "Bramblebun",
+    "level": 23,
+    "species_id": "bramblebun",
+    "xp": 923
+   },
+   {
+    "hp": 210.02629275322,
+    "label": "Mudsnout",
+    "level": 21,
+    "species_id": "mudsnout",
+    "xp": 1079
+   },
+   {
+    "hp": 209.174718427658,
+    "label": "Mudsnout",
+    "level": 21,
+    "species_id": "mudsnout",
+    "xp": 1009
+   },
+   {
+    "hp": 1075.2,
+    "label": "Veridian Stag",
+    "level": 27,
+    "species_id": "veridian",
+    "xp": 318
+   }
+  ]
+ },
+ "fixture": "earned C1 checkpoint: trainer standing on the aerie deck right after Maela's flight trial unlocked Fly (fly_traversal_unlocked), same earned five",
+ "for": "X05 F06#5 (coordinator ruling on #356)",
+ "injections": "none on the leg: --from-save loads through the title Load list; the fixture/aerie branches never run; skipped_steps 0; fights are live input",
+ "leg_code_sha": "080c59f6 (tb/cloudreach-b)",
+ "leg_command": "godot --headless --path . --script tests/smoke_cloudreach_fly_training_witness.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival --leg=flight --live-combat --accelerated --export-flight-trained=<dir>",
+ "leg_result": "the exporting run itself passed: F06#2 WITNESS PASS (refused trial escape, 4 verified landings) and CONTINUOUS LEG PASS leg=flight, EXIT 0",
+ "parent_fixture": "tests/fixtures/earned_saves/c1_arrival (see its PROVENANCE.json)",
+ "parent_source_sha": "a850e47647d04504407ec8afda9157e1063971ea",
+ "slot_check": "slot_1.json: current_realm cloudreach; fly_traversal_unlocked and realm_gate_cloudreach_unlocked set; cloudreach_upper_route_unlocked and captain_veyra_defeated not set; party ripplet, bramblebun, mudsnout x2, veridian",
+ "world_seed": 4
+}
