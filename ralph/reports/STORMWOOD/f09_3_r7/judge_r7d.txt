@@ -1,0 +1,7 @@
+Code-blind judge r7d (subagent; saw only /tmp/sw/judge_r7d/view_J..N.jpg; key blind_key_r7d.json)
+J (conductor_ridge_cleft): PROBABLY - very noticeable (highest-contrast thing in frame) but on the road's axis, reads as where the road goes; gold road lines run into its base; no branching trail.
+K (deepwood_ridge_shelter): YES - warm shaft on big dead tree + two lanterns; pale stone edging leaves the road to the tree base; branches partly hide shaft, left lantern weak.
+L (verge_ash_hollow): YES - pale yellow shaft between two trees + two lit lanterns; white cobblestone strip branches left from the road; shaft washed out over trunk; white house at vanishing point competes.
+M (dynamo_scorch_pen): YES - large glowing lantern with strong bloom, brightest element in the frame, yellow shaft beside dead tree; low stone line from road edge to post base; crossbeam tight against top edge, bloom hides lantern shapes, small/far on the slope.
+N (hollows_moss_nook): YES (weakest) - green-yellow shaft + two bright lanterns; pale strip runs from road to post base; upper shaft blends into canopy.
+Tally: 4 of 5 YES (K, L, M, N).

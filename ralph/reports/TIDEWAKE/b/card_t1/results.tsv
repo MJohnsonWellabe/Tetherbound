@@ -1,0 +1,18 @@
+step	exit	elapsed_s	sha	last_verdict_line	log
+card_integrated	0	1478	b514938e46	CARD T1 PASS items=12 failed=0 assertions=500	ralph/reports/TIDEWAKE/b/card_t1/card_integrated.log
+chain_direct_0_3	0	462	b514938e46	WATER HOP WALKED OK variant=direct routes=0..3 hops=4 assertions=151 worst_min_stamina_pct=33.41 position_writes=1 island_walk_m=1355.6 rest=true party=[terrapup:L44,bramblebun:L43,mudsnout:L42,pipwing:L42,trailpup:L41] max_gain_per_frame=0	ralph/reports/TIDEWAKE/b/card_t1/chain_direct_0_3.log
+f12_2_smoke_water_swimming	0	69	b514938e46	WATER SWIMMING OK assertions=22 actual_lesson_swim_m=60.142 final_health=91.200	ralph/reports/TIDEWAKE/b/card_t1/f12_2_smoke_water_swimming.log
+f12_2_smoke_water_swimming_original_five	0	69	b514938e46	WATER SWIMMING OK assertions=22 actual_lesson_swim_m=60.142 final_health=91.133	ralph/reports/TIDEWAKE/b/card_t1/f12_2_smoke_water_swimming_original_five.log
+f12_2_smoke_water_player_death	0	7	b514938e46	Water death smoke: 37 checks, 0 failures	ralph/reports/TIDEWAKE/b/card_t1/f12_2_smoke_water_player_death.log
+f12_1_smoke_water_combat_pause	0	60	b514938e46	WATER COMBAT PAUSE OK checks=38	ralph/reports/TIDEWAKE/b/card_t1/f12_1_smoke_water_combat_pause.log
+f12_3_smoke_water_mounted_swimming	0	147	b514938e46	WATER MOUNTED SWIMMING OK checks=91 mounts=5	ralph/reports/TIDEWAKE/b/card_t1/f12_3_smoke_water_mounted_swimming.log
+f12_3_smoke_water_dismount_state	0	86	b514938e46	WATER DISMOUNT STATE OK assertions=68 real_path=[{"dismount_depth":0.54,"from_deep":false,"mode_before":0,"same_frame_mode":0,"settled_depth":0.54,"settled_mode":0,"target":0.5},{"dismount_depth":0.87,"from_deep":false,"mode_before":0,"same	ralph/reports/TIDEWAKE/b/card_t1/f12_3_smoke_water_dismount_state.log
+f12_4_smoke_water_reconnect_save	0	49	b514938e46	Water fresh-world character save smoke: 21 checks, 0 failures	ralph/reports/TIDEWAKE/b/card_t1/f12_4_smoke_water_reconnect_save.log
+f12_4_smoke_water_mounted_reconnect_save	0	48	b514938e46	Water mounted disk reconstruction smoke: 43 checks, 0 failures	ralph/reports/TIDEWAKE/b/card_t1/f12_4_smoke_water_mounted_reconnect_save.log
+f12_6_smoke_water_closed_gate_seal	0	94	b514938e46	WATER CLOSED GATE SEAL OK assertions=23 closed_first_closest_m=34.50 closed_second_closest_m=116.70 stamina_at_open=0.00 health=77.27 explanation='The tide race on the Salt Crown crossing throws you back. Clear the Tidal Cradle dock first.'	ralph/reports/TIDEWAKE/b/card_t1/f12_6_smoke_water_closed_gate_seal.log
+f12_6_smoke_water_sealed_anchor_reload	0	38	b514938e46	Water sealed-anchor reload smoke: 14 checks, 0 failures	ralph/reports/TIDEWAKE/b/card_t1/f12_6_smoke_water_sealed_anchor_reload.log
+f12_units	0	74	b514938e46	33 tests, 78942 assertions, 0 failed	ralph/reports/TIDEWAKE/b/card_t1/f12_units.log
+net_water_swimming	0	81	b514938e46	ALL CHECKS PASSED	ralph/reports/TIDEWAKE/b/card_t1/net_water_swimming.log
+net_water_mounted_swimming	0	70	b514938e46	ALL CHECKS PASSED	ralph/reports/TIDEWAKE/b/card_t1/net_water_mounted_swimming.log
+proof_f12_combat_pause_two_peer	0	89	b514938e46	ALL CHECKS PASSED	ralph/reports/TIDEWAKE/b/card_t1/proof_f12_combat_pause_two_peer.log
+proof_f12_remote_rider_identity_reconnect	0	71	b514938e46	ALL CHECKS PASSED	ralph/reports/TIDEWAKE/b/card_t1/proof_f12_remote_rider_identity_reconnect.log

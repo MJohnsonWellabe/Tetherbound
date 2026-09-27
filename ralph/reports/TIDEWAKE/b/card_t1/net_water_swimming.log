@@ -1,0 +1,61 @@
+== net_water_swimming: tools/net/run_net_smoke.sh water_swimming --out=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming
+run id:  net-20260927T143406Z-13682
+run dir: /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z
+smoke:   tests/smoke_net_water_swimming.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=13713 control_port=46581 home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/home-0 log=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/peer-0.log
+coordinator: launched peer 1 (client) pid=13714 control_port=36043 home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/home-1 log=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28241.0,"godot_version":"4.7-stable (official)","main_sha":"b514938e4696","peer":0.0,"pid":13713.0,"role":"host","type":"hello","user_data_dir":"/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28242.0,"godot_version":"4.7-stable (official)","main_sha":"b514938e4696","peer":1.0,"pid":13714.0,"role":"client","type":"hello","user_data_dir":"/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: both Water scene fixtures also hold the Water player realm
+PASS: peer user directories are isolated: /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/home-0/godot/app_userdata/Tetherbound / /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/home-1/godot/app_userdata/Tetherbound
+PASS: host Water: hosting udp/28241 as peer 1
+PASS: client joined Water snapshot: joined 127.0.0.1:28241 as peer 1662588603 after 7 frames; snapshot applied; 2 peer(s) in registry
+PASS: both peers registered: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: both peers registered: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: SETUP host dry First Shore: SETUP: Water island fixture at (0.0, 1.931176, 162.0); catching level 0
+PASS: SETUP client lesson surface and catching level four: SETUP: Water lesson fixture at (66.01924, -0.7, 174.3487); catching level 4
+PASS: client began actual lesson input: Started real camera-relative input across the authored 60m lesson
+PASS: host observed client HUMAN swimming mode
+PASS: replicated aquatic resource owner equals actual client peer ID
+PASS: host observed spent, nonzero swim stamina fraction
+PASS: host observed client catching level four
+PASS: replicated aquatic revisions advanced during movement
+PASS: real input completed lesson: { "completed": true, "distance_m": 59.5327153098769, "failure": "", "running": false }
+PASS: real swimming displacement crossed at least58m
+PASS: SETUP client zero stamina: SETUP: owning player's stamina set to zero; location/controller unchanged
+PASS: client drowning is gradual health loss
+PASS: host received drowning flag
+PASS: remote presentation accepted drowning state
+PASS: SETUP separated island bodies: SETUP: Water island fixture at (0.0, 1.931176, 162.0); catching level 0
+PASS: SETUP separated island bodies: SETUP: Water island fixture at (289.458, 1.931017, 2112.224); catching level 0
+PASS: both actual bodies retain floor collision on separated islands
+PASS: bodies are over1.5km apart
+PASS: both separated bodies are dry LAND mode
+Water network scope: human swimming/state, catching summary, drowning and separated local collisions; no mount/reconnect/chapter claim
+ALL CHECKS PASSED
+# Net smoke run net-20260927T143406Z-13682
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=13713 exited=true unexpected_exit=false
+- peer 1 (client) pid=13714 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+=== /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_swimming/net-water_swimming-20260927T143406Z/SUMMARY.md ===
+# Net smoke run net-20260927T143406Z-13682
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=13713 exited=true unexpected_exit=false
+- peer 1 (client) pid=13714 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+== net_water_swimming exit=0

@@ -29,7 +29,9 @@ const COMPLETED_STORMWOOD_FLAGS: Array[String] = ["stormwood:marrow_defeated", "
 
 
 ## Returns {world, game, player, rig} once the Water arrival is ready, or {}.
-func start(tree: SceneTree, game: Node) -> Dictionary:
+## `party` overrides ENTRY_PARTY: species ids (at ENTRY_LEVEL) or
+## {"species", "level"} entries (card T1 passes the original five).
+func start(tree: SceneTree, game: Node, party: Array = ENTRY_PARTY) -> Dictionary:
 	await tree.process_frame
 	game.call("reset_for_new_game")
 	game.get("local").set("character_id", "f13-3-dry-run")
@@ -41,9 +43,11 @@ func start(tree: SceneTree, game: Node) -> Dictionary:
 			print("DRY RUN fixture: ledger refused %s (%s); set directly" % [flag, verdict])
 			game.world.flags.set_flag(flag)
 	game.local.flags.set_flag("stormwood:legendary_ceremony_settled")
-	for species_id: String in ENTRY_PARTY:
+	for entry: Variant in party:
+		var species_id := str((entry as Dictionary).species) if entry is Dictionary else str(entry)
+		var level := int((entry as Dictionary).level) if entry is Dictionary else ENTRY_LEVEL
 		var creature: RefCounted = SPECIES.spawn(species_id)
-		creature.call("set_level", ENTRY_LEVEL, PROGRESSION.config())
+		creature.call("set_level", level, PROGRESSION.config())
 		game.get("party").call("add", creature)
 	for item_id: String in ["knife", "axe", "pickaxe"]:
 		game.get("inventory").call("add", item_id, 1)

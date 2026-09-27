@@ -248,19 +248,34 @@ func _deep_watch() -> String:
 		# With a mount, always ride back: a non-empty baked-ground plan from the
 		# cliff-foot shallows still stalls on foot (ridden DRY RUN: every walk
 		# from (1487, -0.2, 3439) stalled at leg 1).
-		if mount != null or (up.points as Array).is_empty() or (swimming != null and swimming.is_swimming()):
-			if mount != null:
-				_check(await _ride_to_point(_landing("deep_watch"), "Tidecoil return to the Deep Watch landing"),
-					"Deep Watch: rode the owned swimmer from the fight back to the landing")
-			else:
-				_pose(_landing("deep_watch"), "deep_watch arrival landing after the Tidecoil win (stranded below the cliff)")
-				await _frames(60)
+		if mount != null:
+			_check(await _ride_to_point(_landing("deep_watch"), "Tidecoil return to the Deep Watch landing"),
+				"Deep Watch: rode the owned swimmer from the fight back to the landing")
+		elif not await _tidecoil_walk_back(fight, up):
+			_pose(_landing("deep_watch"), "deep_watch arrival landing after the Tidecoil win (stranded below the cliff)")
+			await _frames(60)
 	else:
 		await _tidecoil_fixture()
 	_check(game.world.flags.has(resolved), "Deep Watch: Tidecoil resolution recorded")
 	heard = await _talk("water_orsen")
 	_check(heard[0] == "water_orsen_deep_watch_chart_lead", "Deep Watch: Orsen gives the chart lead (%s)" % heard[0])
 	return await _deep_watch_rest(charted, gated)
+
+
+## No swimmer: stick-walk back from wherever the fight left the trainer, first
+## to the shore stand the fight was engaged from (reached on foot on the way
+## in), then to the Deep Watch landing. Single attempts that never count as a
+## failure; false means the caller falls back to the disclosed landing write.
+func _tidecoil_walk_back(fight: Dictionary, up: Dictionary) -> bool:
+	if swimming != null and swimming.is_swimming():
+		return false
+	var shore: Variant = fight.get(&"shore", fight.get("shore", null))
+	if shore is Vector3 and Vector2(player.global_position.x - shore.x, player.global_position.z - shore.z).length() > 2.0:
+		if not await _walk_attempt(shore, 2.0, "Tidecoil return to the engage stand", "deep_watch", 0, false):
+			return false
+	elif (up.points as Array).is_empty():
+		return false
+	return await _walk_attempt(_landing("deep_watch"), 2.0, "Tidecoil return to the Deep Watch landing", "deep_watch", 0, false)
 
 
 func _tidecoil_fixture() -> void:
@@ -324,12 +339,13 @@ func _lastlight() -> String:
 	_check(game.world.flags.has(lead), "Lastlight: lead recorded")
 	if continuous:
 		# Gathered: reed patches on Veilfall (3) and Sluice Isle (3, swum to and
-		# back), driftwood from two Veilfall rows with the carried axe (3 + 3).
-		_check(await _gather_hand("water:veilfall:harvest:005"), "Lastlight: Veilfall reed gathered by walk + Interact")
+		# back) with the carried knife (Reed Fiber is gathered_with knife), driftwood
+		# from two Veilfall rows with the carried axe (3 + 3).
+		_check(await _mine_seam("water:veilfall:harvest:005"), "Lastlight: Veilfall reed cut with the carried knife by walk + Interact")
 		_check(await _mine_seam("water:veilfall:harvest:007"), "Lastlight: Veilfall driftwood 007 cut by walk + Interact")
 		_check(await _mine_seam("water:veilfall:harvest:011"), "Lastlight: Veilfall driftwood 011 cut by walk + Interact")
 		if game.inventory.count("reed_fiber") < 4:
-			_check(await _gather_hand("water:sluice_isle:harvest:012"), "Lastlight: Sluice Isle reed gathered by walk + Interact")
+			_check(await _mine_seam("water:sluice_isle:harvest:012"), "Lastlight: Sluice Isle reed cut with the carried knife by walk + Interact")
 		_check(game.inventory.count("driftwood") >= 4 and game.inventory.count("reed_fiber") >= 4,
 			"Lastlight: gathered 4+ driftwood and 4+ reed (%d, %d)" % [game.inventory.count("driftwood"), game.inventory.count("reed_fiber")])
 	else:
@@ -508,7 +524,12 @@ func _mine_seam(id: String) -> bool:
 		await _tree.physics_frame
 	if not _check(node != null, id + " resident on arrival"):
 		return false
-	var tool := str(row.get("gather_action", "pickaxe"))
+	# The harvest node asks ItemDB's gathered_with, not the row's gather_action
+	# label (Water reed rows say "hand" but Reed Fiber needs a knife).
+	var items: RefCounted = game.get("items")
+	var tool := str(items.call("gathered_with", str(row.get("item_id", "")))) if items != null else ""
+	if tool.is_empty():
+		tool = str(row.get("gather_action", "pickaxe"))
 	if str(game.equipped_tool) != tool:
 		await _tap(StringName("hotbar_%d" % (game.hotbar.find(tool) + 1)))
 		await _frames(20)

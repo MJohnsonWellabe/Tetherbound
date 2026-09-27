@@ -47,7 +47,13 @@ extends SceneTree
 ## wall from outside must never put the trainer inside the pocket interior.
 ##
 ##   godot --headless --path . --script tests/smoke_stormwood_pocket_walks.gd \
-##     [-- --only=<pocket_id>] [--measure-only]
+##     [-- --only=<pocket_id>] [--measure-only] [--from-save=user://<dir>]
+##
+## `--from-save=user://<dir>` replaces seam 1 (and, when that save earned it,
+## seam 3): the process binds the split-save tree a checkpoint of
+## smoke_stormwood_continuous.gd wrote (`--checkpoint-dir`) and presses the
+## real title screen's Load on its autosave, so the party, inventory and
+## Stormwood facts are the ones that run earned.
 
 const GAME := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
@@ -60,6 +66,7 @@ const PICKUPS_PATH := "res://data/config/stormwood_pickups.json"
 const WORLD_PATH := "res://data/config/stormwood_world.json"
 const MOVEMENT_PATH := "res://data/config/movement.json"
 const ROOTGATE_FLAG := "stormwood:rootgate_released"
+const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SCENE_WAIT_FRAMES := 7200
 const WATCHDOG_S := 3600.0
 ## Road arc-length before the junction where each walk starts.
@@ -81,6 +88,7 @@ const COMPLETED_CLOUDREACH_FLAGS: Array[String] = [
 ]
 const ENTRY_PARTY: Array[String] = ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]
 
+var _from_save := ""
 var game: Node
 var world: Node3D
 var player: CharacterBody3D
@@ -114,6 +122,8 @@ func _run() -> void:
 			only = argument.trim_prefix("--only=")
 		elif argument == "--measure-only":
 			_measure_only = true
+		elif argument.begins_with("--from-save="):
+			_from_save = argument.trim_prefix("--from-save=")
 	if not await _enter_stormwood():
 		_finish()
 		return
@@ -143,6 +153,8 @@ func _enter_stormwood() -> bool:
 		game = GAME.new()
 		game.name = "Game"
 		root.add_child(game)
+	if not _from_save.is_empty():
+		return await _enter_from_save()
 	game.set("save_system", SAVE_GAME.new("user://smoke_stormwood_pocket_walks_%d_%d" % [
 		OS.get_process_id(), Time.get_ticks_usec()]))
 	await process_frame
@@ -180,6 +192,38 @@ func _enter_stormwood() -> bool:
 		if str(game.get("pending_realm_entry")) == "":
 			break
 		await physics_frame
+	return await _bind_world()
+
+
+## Earned start: the title screen's own Load of a continuous-run checkpoint.
+func _enter_from_save() -> bool:
+	game.set("save_system", SAVE_GAME.new(_from_save))
+	await process_frame
+	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
+	root.add_child(title)
+	current_scene = title
+	for _i in 30:
+		await process_frame
+	title.set("_host_port", 0)
+	title.call("_load_slot", int(game.call("autosave_slot")))
+	for _frame in SCENE_WAIT_FRAMES:
+		var candidate := current_scene as Node3D
+		if candidate != null and candidate.name == "Stormwood" and bool(candidate.call("shell_build_complete")):
+			world = candidate
+			break
+		await physics_frame
+	if not _check(world != null, "title Load reopened the earned Stormwood save %s" % _from_save):
+		return false
+	for _frame in SCENE_WAIT_FRAMES:
+		if str(game.get("pending_realm_entry")) == "":
+			break
+		await physics_frame
+	print("POCKET WALKS earned start %s rootgate_released=%s party=%d" % [_from_save,
+		str(game.get("progression").call("has", ROOTGATE_FLAG)), (game.get("party").call("members") as Array).size()])
+	return await _bind_world()
+
+
+func _bind_world() -> bool:
 	player = world.get_node_or_null(^"Player") as CharacterBody3D
 	rig = world.get_node_or_null(^"CameraRig") as Node3D
 	arbiter = get_first_node_in_group(&"interaction_arbiter")
