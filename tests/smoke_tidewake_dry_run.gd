@@ -15,7 +15,9 @@ extends SceneTree
 ##   godot --headless --path . --script tests/smoke_tidewake_dry_run.gd -- \
 ##     [--from=<checkpoint>] [--through=<checkpoint>] [--out=<dir>]
 ##
-## Checkpoints, in order: start, pell, reedhaven, brine, shellwatch, tidal.
+## Checkpoints, in order: start, pell, reedhaven, brine, shellwatch, tidal,
+## late (Salt Crown -> Sluice -> Veilfall -> Nerissa -> tether, by human
+## swimming with the same five), ending (Guardian invitation, full-belt decline).
 ## Each segment prints "TIDEWAKE DRY RUN SEGMENT <name> {result}". The run ends
 ## with "TIDEWAKE DRY RUN {summary}". The summary is also written to <out>/summary.json.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
@@ -27,6 +29,8 @@ const REEDHAVEN := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const BRINE := preload("res://tests/helpers/water_brine_segment.gd")
 const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const TIDAL := preload("res://tests/helpers/water_tidal_segment.gd")
+const HUMAN_LATE := preload("res://tests/helpers/water_human_late_segment.gd")
+const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
 const LABEL := "DRY RUN — fixture start, does not count"
 const SLOT := 1
 ## Same disclosed belt the opening diagnostic carries through Brine (L44).
@@ -34,7 +38,7 @@ const PARTY: Array[String] = ["sparkit", "mudsnout", "bramblebun", "terrapup", "
 const PARTY_LEVEL := 44
 ## The handoff facts the earned Waterward segment leaves behind.
 const HANDOFF_WORLD_FLAGS: Array[String] = ["realm_gate_water_unlocked", "stormwood:waterward_revealed"]
-const CHECKPOINTS: Array[String] = ["start", "pell", "reedhaven", "brine", "shellwatch", "tidal"]
+const CHECKPOINTS: Array[String] = ["start", "pell", "reedhaven", "brine", "shellwatch", "tidal", "late", "ending"]
 
 var game: Node
 var world: Node3D
@@ -161,6 +165,19 @@ func _segment(name: String) -> Dictionary:
 			var completed: bool = await segment.run()
 			var result: Dictionary = segment.result()
 			outcome.passed = completed and bool(result.get("ok", false))
+			outcome.failures = result.get("failures", [])
+		"late":
+			var late := HUMAN_LATE.new()
+			late.setup(self, world, player, rig)
+			var completed: bool = await late.run_human()
+			var result: Dictionary = late.result()
+			outcome.passed = completed and bool(result.get("passed", false))
+			outcome.failures = result.get("failures", [])
+			outcome.transcript_tail = (result.get("transcript", []) as Array).slice(-6)
+		"ending":
+			var ending := WATER_ENDING.new()
+			var result: Dictionary = await ending.run_earned(self, world, game)
+			outcome.passed = bool(result.get("ok", false))
 			outcome.failures = result.get("failures", [])
 	outcome.seconds = snappedf((Time.get_ticks_msec() - started) / 1000.0, 0.1)
 	outcome.player = _pose()
