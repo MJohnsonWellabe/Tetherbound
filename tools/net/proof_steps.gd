@@ -179,6 +179,9 @@ static func out_dir(tree: SceneTree) -> String:
 ##    `characters/`; any file may be `.gz`): copied as-is, locator kept, so it
 ##    loads through the current split path exactly like a player's Continue.
 ##    This is the faithful form.
+##  * an earned-save fixture root with `slot` given (`tests/fixtures/earned_saves/
+##    <name>/save`, slot files beside worlds/ and characters/): loaded as-is
+##    through the same split path.
 ##  * a single slot json (or `.json.gz`): its `split_locator` names files this
 ##    home does not have, so it is dropped and the save loads through the
 ##    LEGACY-migration path, split into this home's own pair (the character id
@@ -196,7 +199,24 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "no Game.save_system"}
 	var slot := int(args.get("slot", 0))
 	var form := ""
-	if DirAccess.dir_exists_absolute(from):
+	if DirAccess.dir_exists_absolute(from) and args.has("slot") \
+			and FileAccess.file_exists(from.path_join("slot_%d.json" % slot)):
+		# An earned-save fixture's `save/` (tests/fixtures/earned_saves/<name>/save):
+		# the slot files sit at its root beside worlds/ and characters/, exactly
+		# as a production save root lays them out, so they map onto this home's
+		# user://saves/, user://worlds/ and user://characters/ unchanged.
+		form = "earned save fixture root (split path)"
+		var user_root := OS.get_user_data_dir()
+		DirAccess.make_dir_recursive_absolute(user_root.path_join("saves"))
+		var copied_earned := 0
+		for sub: String in ["worlds", "characters"]:
+			copied_earned += _copy_tree(from.path_join(sub), user_root.path_join(sub), true)
+		if DirAccess.copy_absolute(from.path_join("slot_%d.json" % slot),
+				ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))) != OK:
+			return {"verdict": "FAIL", "detail": "could not copy slot_%d.json from %s" % [slot, from]}
+		if copied_earned == 0:
+			return {"verdict": "FAIL", "detail": "no worlds/ or characters/ under %s" % from}
+	elif DirAccess.dir_exists_absolute(from):
 		form = "captured directory (split path)"
 		var found := -1
 		var saves := DirAccess.open(from.path_join("saves"))
