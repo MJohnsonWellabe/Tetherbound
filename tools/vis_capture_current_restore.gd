@@ -10,7 +10,8 @@ extends SceneTree
 ##  - `water_currents_restored` is set/cleared directly on the world flag store
 ##    between captures at the same pose; the view polls it once a second, so
 ##    the tool waits past the poll and checks the shader's calm_scale.
-##  - The rig's follow logic, the trainer and the WorldLook clock are paused;
+##  - The rig (a SpringArm3D, process-disabled so it cannot re-place its
+##    camera), the trainer and the WorldLook clock are paused;
 ##    the Camera3D is posed directly (production fov/far/environment). The
 ##    trainer is hidden and parked under the stand; HUD layers are hidden.
 ##  - The smoke test's fixture flags plus the Salt Crown and Sluice Isle dock
@@ -68,6 +69,7 @@ var world: Node3D
 var game: Node
 var camera: Camera3D
 var pinned: Array[ShaderMaterial] = []
+var expected_eye := Vector3.ZERO
 
 
 func _init() -> void:
@@ -99,10 +101,12 @@ func _shot(stand: String, state: String, tick: String, t_start: int) -> void:
 	var image := root.get_texture().get_image()
 	image.convert(Image.FORMAT_RGB8)
 	var path := "%s/%s_%s_%s.png" % [out_dir, stand, state, tick]
+	if camera.global_position.distance_to(expected_eye) > 0.5:
+		_fail("camera at %s, not the stand eye %s" % [camera.global_position, expected_eye])
 	if image.save_png(path) != OK:
 		_fail("save " + path)
-	print("SHOT %s vis_time=%.2f ms_since_t0=%d calm_scale=%.3f flag=%s size=%dx%d" % [
-		path, float(pinned[0].get_shader_parameter("vis_time")) if not pinned.is_empty() else -1.0, Time.get_ticks_msec() - t_start, _calm(), game.world.flags.has(FLAG),
+	print("SHOT cam=%s %s vis_time=%.2f ms_since_t0=%d calm_scale=%.3f flag=%s size=%dx%d" % [
+		camera.global_position, path, float(pinned[0].get_shader_parameter("vis_time")) if not pinned.is_empty() else -1.0, Time.get_ticks_msec() - t_start, _calm(), game.world.flags.has(FLAG),
 		image.get_width(), image.get_height()])
 
 
@@ -183,8 +187,10 @@ func _run() -> void:
 		_fail("production CameraRig/Camera3D missing")
 		quit(1)
 		return
-	rig.set_process(false)
-	rig.set_physics_process(false)
+	# CameraRig is a SpringArm3D: its internal physics step rewrites the
+	# Camera3D's transform every frame (set_physics_process(false) does not
+	# stop that), so the whole rig subtree is disabled and the camera posed.
+	rig.process_mode = Node.PROCESS_MODE_DISABLED
 	var player := world.get_node_or_null("Player") as Node3D
 	if player != null:
 		player.process_mode = Node.PROCESS_MODE_DISABLED
@@ -219,6 +225,7 @@ func _stand(stand: Dictionary, look: Node, player: Node3D) -> void:
 	if player != null:
 		player.global_position = Vector3(eye_xz.x, ground, eye_xz.y)
 	await _set_restored(false)
+	expected_eye = eye
 	camera.global_position = eye
 	camera.look_at(target, Vector3.UP)
 	await _frames(SETTLE_FRAMES)
