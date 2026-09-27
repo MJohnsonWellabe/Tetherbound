@@ -22,13 +22,13 @@ SOURCE_INVARIANTS = {'tuskroot': {'binary_length': 11080356,
               'binary_sha256': 'a673676febe7f9af0d8a9bbb013e4e7f6c77fc3f115f8ce86762a117fe7ff3e0',
               'accessor_count': 289,
               'view_count': 293,
-              'structure_sha256': 'c3c2791b03b0312a9d39b46b73f6082de15458cdcb829b324183499de1f34b02',
+              'structure_sha256': 'fc1adf65ab5edbbe91bcb60acf4eef82b9054d2decd0b3302aa07e179e4c69df',
               'duration': 0.9583333134651184},
  'riptusk': {'binary_length': 5555196,
              'binary_sha256': 'ac51201e71298d4612d7527b7350f49f90f3682a70bd0758db8dd14c1a70a993',
              'accessor_count': 289,
              'view_count': 290,
-             'structure_sha256': '4678be0b203059e7488e46fa2157227b57020a9cd72c8607dff3a1fcc73c5d52',
+             'structure_sha256': '7239dda38f82e42f69f0f2842e75854d2e0f2e893add549cc1dfc943d2bae4a9',
              'duration': 0.9583333134651184},
  'staticub': {'binary_length': 4937768,
               'binary_sha256': '22086d6941fdd582adb02d220f07e609d8c3a388496e194a9029c117b13fcb9b',
@@ -55,12 +55,24 @@ def motion(pitch=None,yaw=None):
     return {'pitch':pitch or [0]*6,'yaw':yaw or [0]*6}
 PRESETS={
  'tuskroot':{
-  'neck':motion([0,-1,-8,4,1,0]),
-  'head':motion([0,-1,-6,7,2,0],[0,-2,-10,12,3,0]),
+  # Load the shoulders above a planted pelvis, then turn the forequarter into
+  # the tusk strike. Imported spine X points backwards: positive raises it.
+  'spine':motion([0,1,10,2,1,0],[0,-1,-7,10,2,0]),
+  'neck':motion([0,-1,-6,5,1,0]),
+  'head':motion([0,-1,-5,9,2,0],[0,-2,-8,10,2,0]),
+  'front_upper_l':motion([0,-3,-28,-5,-2,0]),
+  'front_lower_l':motion([0,-1,-12,-2,-1,0]),
+  'front_upper_r':motion([0,-1,-9,-2,-1,0]),
+  'front_lower_r':motion([0,-1,-4,-1,-.5,0]),
  },
  'riptusk':{
-  'neck':motion([0,-2,-10,4,1,0],[0,-1,-5,6,1,0]),
-  'head':motion([0,-1,-8,8,2,0],[0,-2,-10,12,3,0]),
+  'spine':motion([0,1,11,2,1,0],[0,-1,-6,9,2,0]),
+  'neck':motion([0,-1,-7,5,1,0],[0,-1,-3,4,1,0]),
+  'head':motion([0,-1,-6,9,2,0],[0,-2,-8,10,2,0]),
+  'front_upper_l':motion([0,-3,-25,-5,-2,0]),
+  'front_lower_l':motion([0,-1,-10,-2,-1,0]),
+  'front_upper_r':motion([0,-1,-8,-2,-1,0]),
+  'front_lower_r':motion([0,-1,-4,-1,-.5,0]),
  },
  'staticub':{
   'spine':motion(yaw=[0,-.5,-2,3,1,0]),
@@ -84,6 +96,14 @@ PRESETS={
   'neck':motion([0,-2,-9,8,2,0],[0,-1,-4,5,1,0]),
   'head':motion([0,-3,-12,18,4,0],[0,-1,-4,6,1,0]),
  },
+}
+
+# Limb-local authored clearance, in source model units. These channels move
+# only the named forelimbs; pelvis/root and posterior supports remain planted.
+FORELIMB_LIFTS={
+ 'tuskroot':{'front_upper_l':.06},
+ 'riptusk':{'front_upper_l':.06},
+ 'staticub':{'front_upper_l':.085,'front_upper_r':.085},
 }
 
 def mul(a,b):
@@ -120,7 +140,7 @@ def invariant_digest(model,name,accessor_count,view_count):
     frozen['unchanged_attack_channels']=[]
     for c in attack['channels']:
         t=c['target'];bone=model.nodes[t['node']]['name']
-        changed=t['path']=='rotation' or (name=='staticub' and t['path']=='translation' and bone in ['front_upper_l','front_upper_r'])
+        changed=t['path']=='rotation' or (t['path']=='translation' and bone in FORELIMB_LIFTS.get(name,{}))
         if not changed:frozen['unchanged_attack_channels'].append([t,attack['samplers'][c['sampler']]])
     return hashlib.sha256(json.dumps(frozen,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
@@ -139,14 +159,15 @@ def author(name,source):
     ti=append_accessor(doc,binary,times,'SCALAR');modified=[]
     for channel in attack['channels']:
         target=channel['target'];node=target['node'];bone=m.nodes[node]['name']
-        if target['path']=='translation' and name=='staticub' and bone in ['front_upper_l','front_upper_r']:
+        if target['path']=='translation' and bone in FORELIMB_LIFTS.get(name,{}):
             # This broad paw first rotates through its sole before rising. Raise
             # only this forelimb while it curls, preserving rear support and body
             # origin. The authored lift returns to zero at both clip boundaries.
             parent=m.parent[node]
             up=np.linalg.solve(m.globals[parent][:3,:3],np.array([0,1,0]))
             peak=abs(PRESETS[name][bone]['pitch'][2])
-            values=[m.base[node]['translation']+up*(.085*abs(envelope(PRESETS[name][bone]['pitch'],float(t/duration)))/peak) for t in times]
+            lift=FORELIMB_LIFTS[name][bone]
+            values=[m.base[node]['translation']+up*(lift*abs(envelope(PRESETS[name][bone]['pitch'],float(t/duration)))/peak) for t in times]
             oi=append_accessor(doc,binary,values,'VEC3');si=len(attack['samplers'])
             attack['samplers'].append({'input':ti,'output':oi,'interpolation':'LINEAR'});channel['sampler']=si
             continue
@@ -187,9 +208,9 @@ def author(name,source):
     assert candidate.d['bufferViews'][:len(m.d['bufferViews'])]==m.d['bufferViews']
     for c0,c1 in zip(m.clips['attack']['channels'],candidate.clips['attack']['channels']):
         assert c0['target']==c1['target']
-        local_lift=name=='staticub' and c0['target']['path']=='translation' and m.nodes[c0['target']['node']]['name'] in ['front_upper_l','front_upper_r']
+        local_lift=c0['target']['path']=='translation' and m.nodes[c0['target']['node']]['name'] in FORELIMB_LIFTS.get(name,{})
         if c0['target']['path']!='rotation' and not local_lift:assert c0==c1
-    return m,candidate,duration,{'source_sha256':m.sha,'candidate_sha256':candidate.sha,'original_binary_prefix_unchanged':True,'all_original_accessors_unchanged':True,'geometry_weights_materials_node_hierarchy_unchanged':True,'other_animation_json_and_binary_unchanged':True,'root_pelvis_translation_and_all_scale_channels_unchanged':True,'changed_attack_translation_bones':['front_upper_l','front_upper_r'] if name=='staticub' else [],'changed_attack_rotation_bones':modified,'active_motion_bones':list(PRESETS[name]),'duration_seconds':duration}
+    return m,candidate,duration,{'source_sha256':m.sha,'candidate_sha256':candidate.sha,'original_binary_prefix_unchanged':True,'all_original_accessors_unchanged':True,'geometry_weights_materials_node_hierarchy_unchanged':True,'other_animation_json_and_binary_unchanged':True,'root_pelvis_translation_and_all_scale_channels_unchanged':True,'changed_attack_translation_bones':list(FORELIMB_LIFTS.get(name,{})),'changed_attack_rotation_bones':modified,'active_motion_bones':list(PRESETS[name]),'duration_seconds':duration}
 
 def validate(name,source,candidate,duration,cfg):
     pos=np.concatenate([p[0] for p in source.parts]);size=np.ptp(pos,axis=0)
@@ -217,6 +238,7 @@ def validate(name,source,candidate,duration,cfg):
 
 def make_figures(report):
     from PIL import Image, ImageDraw, ImageFont
+    checking=all(r['invariants'].get('check_only',False) for r in report.values())
     try:
         font=ImageFont.load_default(size=18);small=ImageFont.load_default(size=13)
     except TypeError:
@@ -224,7 +246,9 @@ def make_figures(report):
     sheet=Image.new('RGB',(1800,1750),'white');draw=ImageDraw.Draw(sheet)
     draw.text((25,10),'CPU skin projections: bind / anticipation / strike. Blue = vertices moved > 1 cm; native art review still required.',font=font,fill='black')
     curves=Image.new('RGB',(1200,1550),'white');cd=ImageDraw.Draw(curves)
-    cd.text((25,10),'Minimum deformed vertex height: original (red), candidate (blue), bind floor (black). Metres at gameplay scale.',font=font,fill='black')
+    legend=('Minimum deformed vertex height: installed asset (blue), bind floor (black). Metres at gameplay scale.' if checking else
+            'Minimum deformed vertex height: original (red), candidate (blue), bind floor (black). Metres at gameplay scale.')
+    cd.text((25,10),legend,font=font,fill='black')
     for row,(name,r) in enumerate(report.items()):
         data=np.load(OUT/(name+'-poses.npz'));poses=[data['bind'],data['anticipation'],data['strike']];bind=data['bind'];fit=float(data['fit']);floor=float(data['floor'])
         allp=np.concatenate(poses);lo=allp.min(axis=0);hi=allp.max(axis=0)
@@ -244,7 +268,8 @@ def make_figures(report):
         def plotxy(t,y):return (x0+t/.9583333134651184*w,y0+(ymax-y)/(ymax-ymin)*h)
         cd.text((25,y0-25),name,font=font,fill='black')
         floor_y=plotxy(0,0)[1];cd.line((x0,floor_y,x0+w,floor_y),fill='black',width=1)
-        for seq,color in [(baseline,'#cc4455'),(candidate,'#2277bb')]:cd.line([plotxy(float(x['seconds']),float(x['minimum_m'])) for x in seq],fill=color,width=3)
+        series=[(candidate,'#2277bb')] if checking else [(baseline,'#cc4455'),(candidate,'#2277bb')]
+        for seq,color in series:cd.line([plotxy(float(x['seconds']),float(x['minimum_m'])) for x in seq],fill=color,width=3)
         cd.text((25,y0+h-15),'%.2f m'%ymin,font=small,fill='black');cd.text((x0,y0+h+5),'0.0 s',font=small,fill='black');cd.text((x0+w-60,y0+h+5),'0.958 s',font=small,fill='black')
         cd.text((x0,y0+h+25),'Candidate minimum: %.6f m; maximum vertex displacement: %.3f m'%(r['metrics']['worst_sample']['minimum_m'],r['metrics']['max_vertex_displacement_m']),font=small,fill='black')
     sheet.save(OUT/'candidate-pose-projections.png');curves.save(OUT/'contact-curves.png')
@@ -256,11 +281,12 @@ def main():
     parser.add_argument('--output-dir',type=pathlib.Path,required=True,help='Candidate and diagnostic directory outside input repository')
     parser.add_argument('--check-only',action='store_true',help='Validate currently installed attacks without authoring candidate GLBs')
     parser.add_argument('--no-figures',action='store_true',help='Skip optional Pillow figures')
+    parser.add_argument('--species',nargs='+',choices=list(SHAS),default=list(SHAS),help='Bound authoring/checking to selected species')
     args=parser.parse_args();ROOT=args.input_root.resolve();OUT=args.output_dir.resolve()
     if OUT==ROOT or ROOT in OUT.parents:parser.error('output directory must be outside the input repository')
     OUT.mkdir(parents=True,exist_ok=True)
     cfg=json.loads((ROOT/'data/creatures/species.json').read_text(encoding='utf-8'))['species'];report={}
-    for name in SHAS:
+    for name in args.species:
         settings=cfg[name]['placeholder'];path=ROOT/settings['model'].removeprefix('res://')
         if args.check_only:
             source=candidate=Model(path)
