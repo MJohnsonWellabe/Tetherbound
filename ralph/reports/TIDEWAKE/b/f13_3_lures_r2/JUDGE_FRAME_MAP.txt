@@ -1,0 +1,12 @@
+frame_01 lantern_1_landing
+frame_02 lantern_2_approach
+frame_03 gull_1_landing
+frame_04 gull_2_approach
+frame_05 cradle_1_landing
+frame_06 cradle_2_approach
+frame_07 garden_1_landing
+frame_08 garden_2_approach
+frame_09 deep_1_landing
+frame_10 deep_2_approach
+frame_11 lastlight_1_landing
+frame_12 lastlight_2_approach
