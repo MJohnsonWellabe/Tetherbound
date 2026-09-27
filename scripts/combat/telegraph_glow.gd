@@ -123,6 +123,11 @@ func _material() -> StandardMaterial3D:
 	# keeps the terrain from winning the test. The `impact_flash.gd` argument
 	# (a burst BETWEEN two intersecting bodies) never applied to a ground ring.
 	material.no_depth_test = false
+	# F14#0 (Tidecoil): over water the ring shares the transparent pass with
+	# the sea surface, which sorts by origin; the ring's origin is at the
+	# creature's feet on the seabed, so the sea drew over it. Drawn after the
+	# default priority, still depth-tested against bodies.
+	material.render_priority = 1
 	return material
 
 
