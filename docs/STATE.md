@@ -70,6 +70,14 @@ A/B NO for both. V-CX-11's reproduced floating-root defect is resolved on this
 branch; broader planting shape/edges, fence joins and settlement depth remain.
 Evidence: `cloudreach-c2-candidate/route-root-support`. Return to occupied
 terraces and cliff identity after this bounded repair; F08#4 remains open.
+Occupied-street candidate now gives Cliffhold a real second housing level,
+stairs, colliding rails, smaller local grass and installed lanterns. First
+blind scene trial was mixed; revised narrower/staggered street wins court and
+Windwatch day/night pairs, baseline slightly wins distant approaches. Both
+still fail Bars A/B. Native physics27/27 and prefab fit2/2 pass. Evidence:
+`cloudreach-c2-candidate/occupied-street`. Retained WIP, no integration READY.
+Next substantial gap is surrounding cliff/landscape depth and ground integration;
+do not spend another iteration merely rearranging these same houses.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

@@ -1062,6 +1062,7 @@ func _fill_tuft(at: Vector2, height_hint: float, extra_clear: float, rng: Random
 	var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role,
 		GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max),
 		GRASS_ROLES.unit_jitter(legacy_width, 1.6, 2.3), 1.0, role_cfg, tall_eligible)
+	role_scales *= GRASS_ROLES.local_scale(ground, role_cfg)
 	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 		role_scales)
 	return Transform3D(basis, ground + Vector3.UP * 0.02)
@@ -1205,6 +1206,7 @@ func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerato
 	var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role,
 		GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max),
 		GRASS_ROLES.unit_jitter(legacy_width, 1.6, 2.3), 1.0, role_cfg, tall_eligible)
+	role_scales *= GRASS_ROLES.local_scale(point, role_cfg)
 	var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 		role_scales)
 	return Transform3D(basis, point + Vector3.UP * 0.02)
@@ -1263,6 +1265,7 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 		var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role,
 			GRASS_ROLES.unit_jitter(legacy_scale, scale_min, scale_max),
 			GRASS_ROLES.unit_jitter(legacy_width, 1.6, 2.3), 1.0, role_cfg, tall_eligible)
+		role_scales *= GRASS_ROLES.local_scale(ground, role_cfg)
 		role_scales.x *= width_mul
 		role_scales.z *= width_mul
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(role_scales)

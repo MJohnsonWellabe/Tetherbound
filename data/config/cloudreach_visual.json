@@ -244,6 +244,7 @@
     "landing_flat_fraction": 0.82
   },
   "ground_cover": {
+    "grass_scale_zones": [{"centre": [-340, 830, 3970], "inner_radius_m": 55.0, "outer_radius_m": 130.0, "vertical_reach_m": 50.0, "scale": 0.55}],
     "grass_density_per_m2": 4.8,
     "turf_match": 0.85,
     "turf_root_gain": 0.8,
@@ -296,6 +297,18 @@
     "bush_tip": "#647a31"
   },
   "settlement": {
+    "occupied_terrace": {
+      "enabled": true,
+      "height_m": 4.2,
+      "front_z": 16.0,
+      "back_z": 29.5,
+      "west_x": -13.4,
+      "east_x": 5.0,
+      "masonry_tile": 0.62,
+      "stair_x": -11.0,
+      "stair_start_z": 6.0,
+      "stair_width_m": 3.2
+    },
     "visibility_range_m": 850.0,
     "windwatch": {
       "_comment": "Installed Quaternius castle lookout on a lower stone base. Gallery floor is seated above the existing crown; houses, paths and gameplay remain authored in their existing locations.",
@@ -316,9 +329,11 @@
     "houses": [
       {"prefab": "cottage_a", "position": [-10.0, 0.0, -8.0], "yaw_deg": 28.0},
       {"prefab": "cottage_b", "position": [10.0, 0.0, -7.0], "yaw_deg": -38.0},
-      {"prefab": "cottage_b", "position": [-9.0, 0.0, 9.0], "yaw_deg": 138.0},
+      {"prefab": "cottage_b", "position": [-9.0, 0.0, 9.0], "yaw_deg": 138.0,
+       "upper_terrace_position": [-8.0, 4.2, 22.0]},
       {"prefab": "cottage_a", "position": [9.0, 0.0, 10.0], "yaw_deg": -148.0,
-       "lower_position": [2.0, 0.0, 18.0], "lower_yaw_deg": 180.0}
+       "lower_position": [2.0, 0.0, 18.0], "lower_yaw_deg": 180.0,
+       "upper_terrace_position": [1.0, 4.2, 25.0]}
     ]
   },
   "route_details": {

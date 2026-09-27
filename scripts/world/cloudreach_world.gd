@@ -58,6 +58,7 @@ const CASTLE_GATE := preload("res://assets/buildings/quaternius_castle/WallEntra
 const GATE_PORTCULLIS_PANEL := preload("res://assets/buildings/quaternius_medieval/Prop_MetalFence_Simple.gltf")
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
 const WINDWATCH := preload("res://scripts/world/cloudreach_windwatch.gd")
+const CLIFFHOLD_TERRACE := preload("res://scripts/world/cloudreach_cliffhold_terrace.gd")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
@@ -3785,6 +3786,10 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		_building_prefabs = BUILDING_PREFABS.new()
 		_building_prefabs.call("load_recipes")
 	var settlement: Dictionary = _visual_config.get("settlement", {})
+	var terrace_cfg: Dictionary = settlement.get("occupied_terrace", {})
+	var raised_street := upper_settlement and bool(terrace_cfg.get("enabled", false))
+	if raised_street:
+		CLIFFHOLD_TERRACE.build(self, root, terrace_cfg, _materials)
 	for house: Dictionary in settlement.get("houses", []):
 		var prefab := str(house["prefab"])
 		var model := _building_prefabs.call("instantiate", prefab) as Node3D
@@ -3793,6 +3798,11 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		model.name = "Terrace_%s_%d" % [prefab, root.get_child_count()]
 		model.position = _vec3(house.get("lower_position",house["position"]) if not upper_settlement else house["position"])
 		model.rotation.y = deg_to_rad(float(house.get("lower_yaw_deg",house.get("yaw_deg",0.0)) if not upper_settlement else house.get("yaw_deg",0.0)))
+		var elevated := raised_street and house.has("upper_terrace_position")
+		if elevated:
+			model.position = _vec3(house["upper_terrace_position"])
+			model.position.y = float(terrace_cfg.get("height_m", 4.2))
+			model.rotation.y = PI
 		root.add_child(model)
 		# The kit roof is a thin tile shell. Its underside must also cover the
 		# rafters when a cliff approach sees the eaves from below.
@@ -3827,6 +3837,9 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		var doorway:=model.to_global(Vector3(1,0.18,4.1 if prefab=="cottage_a" else 3.1))
 		var local_door:=root.to_local(doorway)
 		var hub:=Vector3(0,0.18,-1)
+		if elevated:
+			hub = Vector3(float(terrace_cfg.get("stair_x", -11.0)), model.position.y + 0.18,
+				float(terrace_cfg.get("front_z", 16.0)) + 0.5)
 		_path_ribbon(root,"WornHouseThreshold",local_door,hub,2.4,root.get_child_count()*13)
 		_exclude_local_wear_segment(root,local_door,hub,1.05)
 		var threshold:=MeshInstance3D.new()
@@ -3871,7 +3884,10 @@ func _build_worn_activity_patch(parent: Node3D,label: String,at: Vector3,half: V
 	# yard at one edge so it reads as lived movement, not a decorative island.
 	var tool:=SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	tool.set_material(ENVIRONMENT_MATERIALS.worn_ground(parent.to_global(at),maxf(half.x,half.y)))
+	var worn := ENVIRONMENT_MATERIALS.worn_ground(parent.to_global(at),maxf(half.x,half.y))
+	if parent.global_position.y > 700.0:
+		worn.set_shader_parameter("footprint_half", half)
+	tool.set_material(worn)
 	for i in 28:
 		var a:=TAU*float(i)/28.0
 		var b:=TAU*float(i+1)/28.0
@@ -3951,7 +3967,10 @@ func _place_local_prop(parent: Node3D, asset: String, at: Vector3, height: float
 func _build_settlement_yard(parent: Node3D) -> void:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	tool.set_material(ENVIRONMENT_MATERIALS.worn_ground(parent.global_position+Vector3(0,0,-2),16.0))
+	var worn := ENVIRONMENT_MATERIALS.worn_ground(parent.global_position+Vector3(0,0,-2),16.0)
+	if parent.global_position.y > 700.0:
+		worn.set_shader_parameter("footprint_half", Vector2(12.5,15.0))
+	tool.set_material(worn)
 	var centre := Vector3(0, 0.17, -2)
 	for i in 32:
 		var a := float(i) * TAU / 32.0

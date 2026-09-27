@@ -156,6 +156,7 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 				tall_eligible = lateral >= tall_clear
 			var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role, height_jitter,
 				width_jitter, float(patch.get("height_scale", 1.0)), config, tall_eligible)
+			role_scales *= GRASS_ROLES.local_scale(at, config)
 			scale_value = role_scales.y
 			width_scale = role_scales.x
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
