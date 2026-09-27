@@ -283,6 +283,18 @@ func _build_heart_chamber() -> void:
 			for edge in [-1, 1]:
 				_box(interior, Vector3(side * (banner_x - 0.1), 7, 105 + edge * 1.46), Vector3(0.1, 6, 0.1), Color(rules.colours.brass), false)
 			_box(interior, Vector3(side * (banner_x - 0.1), 4.05, 105), Vector3(0.12, 0.14, 3.2), Color(rules.colours.brass), false)
+			# The board's banner ends in a point below the bar, not a square hem.
+			var tip := MeshInstance3D.new()
+			var point := PrismMesh.new()
+			point.size = Vector3(3.0, 1.3, 0.1)
+			var cloth := StandardMaterial3D.new()
+			cloth.albedo_color = Color(rules.colours.banner)
+			cloth.roughness = 0.85
+			point.material = cloth
+			tip.mesh = point
+			interior.add_child(tip)
+			tip.position = Vector3(side * banner_x, 3.35, 105)
+			tip.rotation = Vector3(PI, PI * 0.5, 0.0)
 			_box(interior, Vector3(side * (banner_x - 0.1), 10.1, 105), Vector3(0.14, 0.14, 3.6), Color(rules.colours.brass), false)
 		_box(interior, Vector3(side * 7, 1, 113), Vector3(2, 2, 3), Color(rules.colours.metal), true)
 
