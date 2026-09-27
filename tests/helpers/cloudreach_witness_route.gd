@@ -26,6 +26,18 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## battle, so XP from those fights is not earned: the party enters the trial at
 ## the fixture's level 25. Without `--start` behaviour is the full route.
 ##
+## `--checkpoints` (debug aid): each time the controlled body first stands on
+## the floor of a new map region (not flying, no battle), the run writes an
+## ordinary save of that moment to
+## user://cloudreach_witness_checkpoints/<region>/save/ (slot 1). Those are
+## EARNED checkpoints when the run itself started from the earned handoff.
+## `--from-save=<checkpoint dir> --resume` then loads one through the title's
+## Load list and skips route steps already completed in that save (a step whose
+## completion flag / trainer defeat flag is set, and the plain walks before the
+## first incomplete step), so a failure can be iterated from just before it.
+## A resumed run is a debugging dry run, never `closes` evidence: the proof is
+## one uninterrupted run from the earned handoff.
+##
 ## Precedent: smoke_cloudreach_floor_loop_return.gd / aerie_services.gd use the
 ## same declared flags-before-build plus single placement fixture.
 const ACT_ONE_FLAGS: Array[String] = ["cloudreach_chapter_started", "cloudreach_crisis_learned",
@@ -48,11 +60,21 @@ var exhausted_attempted := false
 var exhausted_window := false
 var exhausted_fall: Dictionary = {}
 var sealed_upper_box := AABB()
+var write_checkpoints := false
+var resume_mode := false
+var checkpoint_regions: Dictionary = {}
+var checkpoint_world: Dictionary = {}
+const CHECKPOINT_ROOT := "user://cloudreach_witness_checkpoints/"
+const MAP_STATE_SCRIPT := preload("res://scripts/world/cloudreach_map_state.gd")
 
 
 func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--start="): start_point = arg.trim_prefix("--start=")
+		elif arg == "--checkpoints": write_checkpoints = true
+		elif arg == "--resume": resume_mode = true
+	checkpoint_world = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+	if resume_mode: skipping_to_aerie = false
 	if start_point == "aerie":
 		skipping_to_aerie = true
 		node_added.connect(_seed_act_one_on_scene_entry)
@@ -80,6 +102,43 @@ func _purpose(purpose: String, choice: String) -> void:
 			"team": _team_snapshot(), "note": "Declared fixture: Act I flags seeded before scene build; single placement beside the aerie repair; route from the aerie camp rest onward is ordinary input"}
 		_log("witness_start_state", start_record)
 	super._purpose(purpose, choice)
+
+
+func _record_frame() -> void:
+	super._record_frame()
+	if not write_checkpoints or failed or not is_instance_valid(player) or runtime == null: return
+	if fly == null or fly.is_flying() or not player.is_on_floor() or runtime.creature_piloted(): return
+	if director != null and director.trainer_battle_active(): return
+	if manager != null and manager.is_fighting(): return
+	var region := MAP_STATE_SCRIPT.region_at(checkpoint_world, player.global_position)
+	if region.is_empty() or checkpoint_regions.has(region): return
+	checkpoint_regions[region] = true
+	var dir := CHECKPOINT_ROOT + region + "/save/"
+	DirAccess.make_dir_recursive_absolute(dir)
+	var previous: RefCounted = game.save_system
+	game.save_system = SAVE.new(dir)
+	var ok: bool = game.save_game(EARNED_SLOT)
+	game.save_system = previous
+	_log("witness_checkpoint", {"region": region, "dir": dir, "saved": ok, "earned": from_save.is_empty() == false and not resume_mode and start_point.is_empty()})
+
+
+## Resume mode: a step already completed in the loaded save is skipped; plain
+## walks are skipped until the first incomplete flagged step runs.
+var resume_walks_done := false
+
+
+func _resume_skip(kind: String, flag: String) -> bool:
+	if not resume_mode: return false
+	if not flag.is_empty():
+		if _has(flag):
+			skipped_steps.append("resume:" + kind + ":" + flag)
+			return true
+		resume_walks_done = true
+		return false
+	if not resume_walks_done:
+		skipped_steps.append("resume:" + kind)
+		return true
+	return false
 
 
 ## In an aerie start the base route's fiber lines would read as gathered; say
@@ -111,16 +170,19 @@ func _skip(kind: String, id: String) -> bool:
 
 func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) -> bool:
 	if skipping_to_aerie: return _skip("walk", str(target))
+	if _resume_skip("walk", ""): return true
 	return await super._walk(target, radius, body)
 
 
 func _navigate(target: Vector3) -> bool:
 	if skipping_to_aerie: return _skip("navigate", str(target))
+	if _resume_skip("navigate", ""): return true
 	return await super._navigate(target)
 
 
 func _interact(prompt: Node3D, flag: String = "", approach: bool = true) -> bool:
 	if skipping_to_aerie: return _skip("interact", flag)
+	if _resume_skip("interact", flag): return true
 	return await super._interact(prompt, flag, approach)
 
 
@@ -135,11 +197,13 @@ func _arrival_gather(id: String, item: String) -> bool:
 
 func _talk(id: String, flag: String, navigate: bool = true) -> bool:
 	if skipping_to_aerie: return _skip("talk", id)
+	if _resume_skip("talk", flag): return true
 	return await super._talk(id, flag, navigate)
 
 
 func _physical_action(id: String, flag: String, navigate: bool = true) -> bool:
 	if skipping_to_aerie: return _skip("physical", id)
+	if _resume_skip("physical", flag): return true
 	return await super._physical_action(id, flag, navigate)
 
 
@@ -150,6 +214,8 @@ func _pickup(id: String) -> bool:
 
 func _battle(id: String) -> bool:
 	if skipping_to_aerie: return _skip("battle", id)
+	var spec: Dictionary = director.trainer_specs.get(id, {}) if director != null else {}
+	if _resume_skip("battle", str(spec.get("defeat_flag", "battle_" + id))): return true
 	return await super._battle(id)
 
 
@@ -419,6 +485,8 @@ func _finish_already_done() -> bool:
 
 
 func _start_state_label() -> String:
+	if resume_mode:
+		return "DRY RUN — does not count: resumed from checkpoint " + from_save + " (debugging aid; closes evidence is one uninterrupted earned run)"
 	if start_point == "aerie":
 		return "DRY RUN — does not count (owner rule 2026-09-27, WORKFLOW §8): DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward"
 	if not from_save.is_empty():
