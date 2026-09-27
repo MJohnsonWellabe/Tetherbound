@@ -1,0 +1,11 @@
+PROBE restored /root/Stormwood/GlassForBryn
+PROBE static /root/Stormwood/RodfolkSettlements/workshop_3/Collision at (-720.0, 47.1, 2310.0)
+PROBE static /root/Stormwood/RodfolkSettlements/workshop_3/Interior/WorkbenchCollision at (-721.7421, 47.66, 2312.816)
+PROBE static /root/Stormwood/RodfolkSettlements/workshop_3/Interior/Anvil_LogCollision at (-723.1613, 47.75, 2309.501)
+PROBE static /root/Stormwood/RodfolkSettlements/workshop_3/Interior/Prop_CrateCollision at (-721.8586, 47.745, 2308.548)
+PROBE static /root/Stormwood/GlassForBryn/CarePoint/CampCreatureBed/@Node3D@16958/@StaticBody3D@16960 at (-719.5039, 47.27727, 2309.793)
+PROBE start player=(-720.7, 47.42458, 2310.2)
+PROBE ray h=0.3 hit=clear
+PROBE ray h=1.0 hit=clear
+PROBE ray h=1.6 hit=clear
+PROBE walk ok=true end=(-714.9722, 47.15083, 2308.178) remain=1.14
