@@ -1,0 +1,499 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only water: 66 of 597 test files
+  ok    test_long_water_visual_identity.gd :: test_long_water_bank_palette_is_local_runtime_presentation
+  ok    test_long_water_visual_identity.gd :: test_long_water_bank_wander_changes_landform_without_opening_a_crossing
+  ok    test_long_water_visual_identity.gd :: test_long_water_far_bank_is_a_broad_asymmetric_floodplain
+  ok    test_long_water_visual_identity.gd :: test_long_water_has_an_authored_open_bank_rhythm
+  ok    test_long_water_visual_identity.gd :: test_long_water_ordinary_route_arrival_keeps_water_and_road_visible
+  ok    test_long_water_visual_identity.gd :: test_long_water_overlook_is_open_and_isolated_from_old_mill
+  ok    test_stonewater_reach.gd :: test_arch_collisions_preserve_the_open_waterwork_apertures
+  ok    test_stonewater_reach.gd :: test_arches_face_the_water_axis_at_landmark_scale
+  ok    test_stonewater_reach.gd :: test_broad_sequence_has_three_distinct_landmark_beats
+  ok    test_stonewater_reach.gd :: test_capture_hides_overlays_and_freezes_player_motion
+  ok    test_stonewater_reach.gd :: test_causeway_front_keeps_stepped_buttresses_clear_of_the_bank_stone
+  ok    test_stonewater_reach.gd :: test_overlook_keeps_the_water_axis_open_instead_of_rebuilding_a_boulder_row
+  ok    test_stonewater_reach.gd :: test_overlook_standard_supports_instead_of_owning_the_approach
+  ok    test_stonewater_reach.gd :: test_production_world_wires_stonewater_after_existing_authored_props
+  ok    test_stonewater_reach.gd :: test_shallow_water_material_does_not_emit_or_read_as_metal
+  ok    test_stonewater_reach.gd :: test_springhead_authored_props_remain_on_the_dry_bank
+  ok    test_stonewater_reach.gd :: test_springhead_cascade_has_drop_steps_and_clear_bank_reeds
+  ok    test_stonewater_reach.gd :: test_springhead_ground_creatures_stay_on_dry_banks
+  ok    test_stonewater_reach.gd :: test_springhead_has_a_bounded_canopy_clearing_without_balding_the_reach
+  ok    test_stonewater_reach.gd :: test_stone_riffles_break_up_the_exposed_run_without_blocking_the_route
+  ok    test_stonewater_reach.gd :: test_water_and_stone_composition_is_large_enough_for_an_ordinary_camera
+  ok    test_stonewater_reach.gd :: test_water_footprint_clears_local_scatter_and_camera_grass
+  ok    test_stonewater_reach.gd :: test_water_is_nonblocking_and_only_solid_landmarks_collide
+  ok    test_stonewater_reach.gd :: test_waterwork_arches_and_complete_standards_unify_the_sequence
+  ok    test_stonewater_reach.gd :: test_wreck_has_one_offset_authored_standard
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_descent_reverses_tested_mouth_inside_one_existing_whole_route_budget
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_gate_observer_counts_only_the_exact_provider
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_handoff_preserves_production_ceremony_key_and_scene_contracts
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_missing_earned_world_cannot_claim_water_arrival
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_real_creature_instance_ids_preserve_the_five
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_unchanged_five_requires_exact_distinct_identities
+  ok    test_stormwood_earned_waterward_handoff.gd :: test_water_readiness_is_an_observed_signal_not_a_boolean_property
+  ok    test_stormwood_water_gate.gd :: test_failed_journal_restores_key_unlock_revision_and_sequence
+  ok    test_stormwood_water_gate.gd :: test_open_gate_is_idempotent_and_routes_to_authored_water_arrival
+  ok    test_stormwood_water_gate.gd :: test_production_gate_is_within_content_floor_of_waterward_view
+  ok    test_stormwood_water_gate.gd :: test_unlock_consumes_key_and_opens_gate_in_one_saved_delta
+  ok    test_stormwood_water_gate.gd :: test_unlock_requires_host_waterward_key_and_host_observed_proximity
+  ok    test_water_alpha_face_lock.gd :: test_authored_face_lock_locks_after_its_fraction
+  ok    test_water_alpha_face_lock.gd :: test_face_lock_is_an_allowed_override_key
+  ok    test_water_alpha_face_lock.gd :: test_ordinary_strike_without_lock_tracks_the_whole_tell
+  ok    test_water_alpha_rewards.gd :: test_attunement_rejects_invalid_actor_distance_client_and_rolls_back_save_failure
+  ok    test_water_alpha_rewards.gd :: test_journal_failure_rolls_back_before_grant_and_can_retry
+  ok    test_water_alpha_rewards.gd :: test_late_joiner_attunes_once_from_host_observed_iona_context
+  ok    test_water_alpha_rewards.gd :: test_reconnect_reissues_only_the_entitled_characters_idempotent_flag
+  ok    test_water_alpha_rewards.gd :: test_rejects_nonhost_nonvictory_missing_identity_and_wrong_world_ledger
+  ok    test_water_alpha_rewards.gd :: test_result_and_stable_entitlements_round_trip_real_world_file
+  ok    test_water_alpha_state.gd :: test_abandoned_fight_cannot_replace_the_original_wounded_opponent
+  ok    test_water_alpha_state.gd :: test_breakout_restores_active_fight_without_unlocking
+  ok    test_water_alpha_state.gd :: test_catch_uses_stored_claimant_decision_rejects_outsider_and_replay
+  ok    test_water_alpha_state.gd :: test_expired_catch_cannot_resolve_or_cancel_a_new_claim
+  ok    test_water_alpha_state.gd :: test_only_live_enemy_zero_hp_resolves_defeat_once
+  ok    test_water_alpha_state.gd :: test_phase_thresholds_are_monotonic_and_do_not_reset_on_healing
+  ok    test_water_alpha_state.gd :: test_repeated_peer_cannot_add_a_different_character_entitlement
+  ok    test_water_alpha_state.gd :: test_runtime_transport_stamps_monotonic_strike_actions
+  ok    test_water_alpha_state.gd :: test_two_participants_join_the_same_wounded_enemy_without_reset
+  ok    test_water_brine_segment.gd :: test_authored_crossing_and_tovin_contracts_match_segment
+  ok    test_water_brine_segment.gd :: test_result_requires_explicit_clean_completion
+  ok    test_water_capture_codec.gd :: test_aquaryn_json_round_trip_matches_every_canonical_saved_field
+  ok    test_water_capture_codec.gd :: test_malformed_records_refuse_without_repair_or_species_invention
+  ok    test_water_capture_codec.gd :: test_repeat_decode_does_not_add_to_any_gameplay_party
+  ok    test_water_capture_transaction.gd :: test_catching_xp_saves_with_receipt_and_rolls_back_on_failure
+  ok    test_water_capture_transaction.gd :: test_failed_decline_remains_retryable_and_released_best_loses_title
+  ok    test_water_capture_transaction.gd :: test_failed_save_restores_exact_members_order_selection_and_flags
+  ok    test_water_capture_transaction.gd :: test_full_party_replacement_keeps_other_members_in_place_and_decline_is_durable
+  ok    test_water_capture_transaction.gd :: test_receipt_and_party_are_visible_in_one_save_and_replay_is_inert
+  ok    test_water_capture_transaction.gd :: test_wrong_identity_invalid_claim_and_owned_pending_never_mutate
+  ok    test_water_closed_gate_seals.gd :: test_a_later_fact_keeps_every_earlier_landform_open
+  ok    test_water_closed_gate_seals.gd :: test_core_band_pushes_every_heading_outward_while_the_chain_is_closed
+  ok    test_water_closed_gate_seals.gd :: test_every_island_is_reached_by_a_dock_or_is_the_arrival
+  ok    test_water_closed_gate_seals.gd :: test_every_landform_behind_a_mandatory_dock_is_sealed_in_dock_order
+  ok    test_water_closed_gate_seals.gd :: test_flight_volumes_cover_only_equally_sealed_land
+  ok    test_water_closed_gate_seals.gd :: test_fly_refuses_a_sealed_volume_until_its_dock_opens
+  ok    test_water_closed_gate_seals.gd :: test_forced_dismount_never_crosses_a_closed_seal
+  ok    test_water_closed_gate_seals.gd :: test_open_chain_restores_the_authored_crossing_current_exactly
+  ok    test_water_closed_gate_seals.gd :: test_overlapping_races_hold_their_seam
+  ok    test_water_closed_gate_seals.gd :: test_race_outpaces_every_swimmer_and_swim_mount
+  ok    test_water_closed_gate_seals.gd :: test_races_leave_every_less_gated_shore_and_anchor_swimmable
+  ok    test_water_closed_gate_seals.gd :: test_seal_follows_the_landforms_own_dock_fact
+  ok    test_water_closed_gate_seals.gd :: test_swimmers_and_mounts_cannot_land_but_open_gate_swimmer_can
+  ok    test_water_continuous_mount_diagnostic.gd :: test_diagnostic_calls_real_mount_surface_helper_with_player_and_body
+  ok    test_water_cradle_care.gd :: test_lead_is_heard_beside_otto
+  ok    test_water_cradle_care.gd :: test_local_request_follows_the_chain
+  ok    test_water_cradle_care.gd :: test_otto_leads_waits_and_pays_without_pushing_aquaryn
+  ok    test_water_cradle_care.gd :: test_return_needs_an_owned_swimmer_or_a_settled_aquaryn_trial
+  ok    test_water_cradle_care.gd :: test_return_needs_the_gathered_nest
+  ok    test_water_cradle_care.gd :: test_return_pays_three_berries_once_to_the_returning_character
+  ok    test_water_cradle_care.gd :: test_steps_are_world_records_and_the_nest_is_the_existing_seam
+  ok    test_water_cradle_care.gd :: test_swimmer_species_come_from_the_live_catalogue
+  ok    test_water_creature_replacements.gd :: test_replacements_import_with_complete_gameplay_animation_sets
+  ok    test_water_creature_replacements.gd :: test_torrentoad_is_squat_and_abyssal_is_long_bodied
+  ok    test_water_current_field.gd :: test_authored_return_shortcuts_bind_only_their_exact_current_routes
+  ok    test_water_current_field.gd :: test_edges_blend_and_open_sea_has_no_synthetic_wall
+  ok    test_water_current_field.gd :: test_equal_priority_uses_nearest_centerline
+  ok    test_water_current_field.gd :: test_live_and_restored_shortcut_flags_reduce_only_the_authored_current
+  ok    test_water_current_field.gd :: test_priority_selects_shelter_without_adding_overlapping_current
+  ok    test_water_current_field.gd :: test_shared_dock_result_changes_actual_current_without_rebuilding_field
+  ok    test_water_current_field.gd :: test_two_independent_peers_sample_identical_authored_field
+  ok    test_water_current_field.gd :: test_world_liberation_changes_same_field_for_visuals_and_traversal
+  ok    test_water_deep_watch_chart.gd :: test_chart_control_requires_resolution_and_is_a_separate_action
+  ok    test_water_deep_watch_chart.gd :: test_gated_row_declares_the_named_resolution_requirement
+  ok    test_water_deep_watch_chart.gd :: test_host_rule_accepts_after_resolution_with_both_flag_shapes
+  ok    test_water_deep_watch_chart.gd :: test_host_rule_refuses_locked_before_resolution
+  ok    test_water_deep_watch_chart.gd :: test_local_request_is_revealed_by_resolution_and_completed_by_chart
+  ok    test_water_deep_watch_chart.gd :: test_malformed_requirement_fails_closed
+  ok    test_water_deep_watch_chart.gd :: test_orsen_acknowledges_the_charted_current
+  ok    test_water_deep_watch_chart.gd :: test_orsen_gives_the_chart_lead_only_after_resolution
+  ok    test_water_deep_watch_chart.gd :: test_orsen_names_deep_watch_before_and_after_the_currents
+  ok    test_water_deep_watch_chart.gd :: test_other_pickup_rows_are_unaffected_by_the_gate
+  ok    test_water_deep_watch_chart.gd :: test_relay_forwards_only_local_transitions_once
+  ok    test_water_deep_watch_chart.gd :: test_relay_names_only_world_scoped_named_completion_flags
+  ok    test_water_deep_watch_chart.gd :: test_streamer_admission_uses_the_same_world_flag_rule
+  ok    test_water_dialogue_delivery.gd :: test_iona_delivery_without_an_idle_frame
+  ok    test_water_dock_actions_wiring.gd :: test_journal_failed_keeps_the_row_pending_and_the_same_txn_resend_settles_once
+  ok    test_water_dock_actions_wiring.gd :: test_refusal_for_a_local_chain_step_keeps_the_paid_copy_in_flight
+  ok    test_water_dock_actions_wiring.gd :: test_refusal_naming_another_txn_keeps_the_copy_in_flight
+  ok    test_water_dock_actions_wiring.gd :: test_refusal_with_two_dock_copies_in_flight_releases_neither
+  ok    test_water_dock_actions_wiring.gd :: test_the_only_copy_in_flight_is_released_by_an_unattributed_refusal
+  ok    test_water_dock_debit.gd :: test_allow_listed_refusal_refunds_once
+  ok    test_water_dock_debit.gd :: test_already_done_refusal_needs_receipt_and_never_refunds_own_payment
+  ok    test_water_dock_debit.gd :: test_already_done_with_other_txn_receipt_refunds_paid_by_other
+  ok    test_water_dock_debit.gd :: test_begin_corrupt_matching_pending_row_is_never_handed_back
+  ok    test_water_dock_debit.gd :: test_begin_ignores_another_characters_row
+  ok    test_water_dock_debit.gd :: test_begin_partial_remove_rolls_back
+  ok    test_water_dock_debit.gd :: test_begin_pending_wins_over_settled_tombstone_in_any_order
+  ok    test_water_dock_debit.gd :: test_begin_rejects_mixed_invalid_cost_entries
+  ok    test_water_dock_debit.gd :: test_begin_reserves_exact_cost_and_refuses_second_begin
+  ok    test_water_dock_debit.gd :: test_begin_txn_collision_on_next_key_reserves_nothing
+  ok    test_water_dock_debit.gd :: test_callable_dictionary_adapter
+  ok    test_water_dock_debit.gd :: test_crash_after_world_save_reconcile_settles_once
+  ok    test_water_dock_debit.gd :: test_crash_before_world_save_reconcile_resubmits_never_refunds
+  ok    test_water_dock_debit.gd :: test_duplicate_settle_and_refund_are_noops
+  ok    test_water_dock_debit.gd :: test_in_flight_race_poll_before_host_commit_never_refunds
+  ok    test_water_dock_debit.gd :: test_insufficient_items_change_nothing
+  ok    test_water_dock_debit.gd :: test_intent_fields_recompute_txn_id
+  ok    test_water_dock_debit.gd :: test_malformed_receipt_with_empty_txn_or_payer_never_refunds
+  ok    test_water_dock_debit.gd :: test_open_txns_filters_by_world
+  ok    test_water_dock_debit.gd :: test_p4_legacy_placeholder_resolves_open_row
+  ok    test_water_dock_debit.gd :: test_real_inventory_object_adapter
+  ok    test_water_dock_debit.gd :: test_receipt_for_another_action_never_settles
+  ok    test_water_dock_debit.gd :: test_receipt_paid_by_other_character_refunds_this_row
+  ok    test_water_dock_debit.gd :: test_refund_due_retried_in_another_world
+  ok    test_water_dock_debit.gd :: test_refund_due_row_refund_never_reports_paid_by_this_txn
+  ok    test_water_dock_debit.gd :: test_refund_due_txn_is_never_offered_for_resubmission
+  ok    test_water_dock_debit.gd :: test_refund_requires_world_instance
+  ok    test_water_dock_debit.gd :: test_refund_without_room_stays_owed_until_room
+  ok    test_water_dock_debit.gd :: test_restored_world_allows_new_attempt_after_settled_tombstone
+  ok    test_water_dock_debit.gd :: test_resubmitted_committed_txn_refused_too_far_never_refunds
+  ok    test_water_dock_debit.gd :: test_retry_after_refund_starts_fresh_txn
+  ok    test_water_dock_debit.gd :: test_rollback_unsent_returns_reservation_when_persist_fails
+  ok    test_water_dock_debit.gd :: test_rows_roundtrip_as_plain_json
+  ok    test_water_dock_debit.gd :: test_same_txn_receipt_with_foreign_payer_never_refunds
+  ok    test_water_dock_debit.gd :: test_txn_id_is_deterministic_and_scoped
+  ok    test_water_dock_debit.gd :: test_wrong_world_never_settles_or_refunds
+  ok    test_water_dock_debit_wiring.gd :: test_crash_after_delta_settles_on_rejoin_and_charges_once
+  ok    test_water_dock_debit_wiring.gd :: test_escrowed_intent_commits_a_receipt_and_no_item_take
+  ok    test_water_dock_debit_wiring.gd :: test_flag_without_receipt_answers_the_legacy_receipt_and_refunds
+  ok    test_water_dock_debit_wiring.gd :: test_forged_foreign_receipt_while_in_flight_never_refunds_and_settles_once
+  ok    test_water_dock_debit_wiring.gd :: test_forged_foreign_receipt_with_flag_set_refunds_only_when_not_in_flight
+  ok    test_water_dock_debit_wiring.gd :: test_forged_own_receipt_without_action_flag_neither_blocks_nor_charges_for_nothing
+  ok    test_water_dock_debit_wiring.gd :: test_forged_receipt_before_press_does_not_settle_the_victims_row
+  ok    test_water_dock_debit_wiring.gd :: test_host_commits_but_delta_never_arrives_then_resubmit_settles_once
+  ok    test_water_dock_debit_wiring.gd :: test_host_receipt_lookup_needs_action_payer_and_flag
+  ok    test_water_dock_debit_wiring.gd :: test_host_refuses_a_txn_that_does_not_match_the_resolved_payer_or_attempt
+  ok    test_water_dock_debit_wiring.gd :: test_host_world_instance_in_context_refuses_a_stale_world
+  ok    test_water_dock_debit_wiring.gd :: test_intent_lost_before_the_host_resubmits_and_commits_once
+  ok    test_water_dock_debit_wiring.gd :: test_journal_failed_keeps_the_row_pending_and_the_same_txn_commits_once
+  ok    test_water_dock_debit_wiring.gd :: test_legacy_unescrowed_intent_keeps_its_item_take
+  ok    test_water_dock_debit_wiring.gd :: test_resubmitted_committed_txn_is_answered_already_done_before_other_checks
+  ok    test_water_dock_debit_wiring.gd :: test_someone_else_repaired_first_refunds_the_pending_payment
+  ok    test_water_dock_dressing.gd :: test_every_dressing_model_is_installed
+  ok    test_water_dock_dressing.gd :: test_installed_lantern_emits_only_from_glass_and_light_follows_insert
+  ok    test_water_dock_dressing.gd :: test_lantern_light_and_piling_tint_are_not_team_tether_red
+  ok    test_water_dock_dressing.gd :: test_layer_is_presentation_only_and_clear_of_the_lane
+  ok    test_water_dock_dressing.gd :: test_material_override_covers_root_mesh_and_children_without_mutating_source
+  ok    test_water_dock_rules.gd :: test_dock_actions_require_actual_place_and_fixed_world_prerequisites
+  ok    test_water_dock_rules.gd :: test_repair_costs_are_fixed_and_completed_dock_cannot_charge_again
+  ok    test_water_dock_rules.gd :: test_sluice_controls_keep_the_salt_chart_and_trainer_prerequisites
+WATER SHELLWATCH: FAIL: Ending requires the retained actual Water world
+  ok    test_water_earned_ending_segment.gd :: test_missing_live_entry_cannot_claim_ending
+  ok    test_water_earned_ending_segment.gd :: test_settlement_requires_personal_receipt_world_ack_and_exact_five
+  ok    test_water_earned_late_segment.gd :: test_authored_opponent_and_mounted_route_contracts_remain_intact
+EARNED LATE WATER 79.127: FAIL: Late Water exceeded its unchanged 50-minute total watchdog
+  ok    test_water_earned_late_segment.gd :: test_deadline_calls_terminal_owner_once_and_releases_real_inputs
+  ok    test_water_earned_late_segment.gd :: test_expired_navigation_exits_before_any_player_or_physics_access
+  ok    test_water_earned_late_segment.gd :: test_helper_never_loads_the_fixture_or_invites_the_guardian
+EARNED LATE WATER 79.128: FAIL: Late Water requires live services and caller-owned terminal abort callback
+  ok    test_water_earned_late_segment.gd :: test_missing_live_receipt_cannot_credit_the_late_route
+  ok    test_water_earned_late_segment.gd :: test_same_five_preserves_real_signed_instance_identities
+  ok    test_water_earned_opening_segment.gd :: test_extraction_retains_original_input_distance_and_evidence_limits
+  ok    test_water_earned_opening_segment.gd :: test_missing_natural_arrival_is_not_a_fixture_fallback
+  ok    test_water_earned_opening_segment.gd :: test_retained_five_accepts_actual_creature_instance_ids
+  ok    test_water_earned_opening_segment.gd :: test_swim_stick_preserves_world_direction_for_current_camera_without_pose_write
+  ok    test_water_earned_opening_segment.gd :: test_water_key_and_gate_receipts_have_production_world_scope
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_authored_clearance_leaves_workbench_and_bed_even_at_walk_tolerance
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_farewell_policy_preserves_unique_species_and_picks_lowest_duplicate
+WATER SWIMMER PREPARATION FAILED: Preparation requires the actual post-Iona ready Water world and settled belt
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_missing_live_entry_fails_without_synthetic_fallback
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_real_refcounted_identities_are_not_rejected_by_sign
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_supply_selection_respects_surplus_and_actual_tidal_recipe_rows
+  ok    test_water_earned_swimmer_segment.gd :: test_current_saddle_recipe_preserves_paid_cost_and_personal_gates
+  ok    test_water_earned_swimmer_segment.gd :: test_realm_override_keeps_meadows_default_and_real_swimmer_catalogue
+  ok    test_water_encounter_residency.gd :: test_overlapping_peers_do_not_duplicate_sites_and_empty_world_is_empty
+  ok    test_water_encounter_residency.gd :: test_two_islands_each_keep_their_nearest_population_budget
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [1] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [2] test_water_spawn_path_clears_only_ordinary_road_creatures_from_player (res://tests/test_water_encounter_residency.gd:77)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] teleport_body (res://scripts/creatures/remote_creature.gd:401)
+       [1] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [2] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [3] test_water_spawn_path_clears_only_ordinary_road_creatures_from_player (res://tests/test_water_encounter_residency.gd:77)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [1] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [2] test_water_spawn_path_clears_only_ordinary_road_creatures_from_player (res://tests/test_water_encounter_residency.gd:77)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] teleport_body (res://scripts/creatures/remote_creature.gd:401)
+       [1] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [2] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [3] test_water_spawn_path_clears_only_ordinary_road_creatures_from_player (res://tests/test_water_encounter_residency.gd:77)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [1] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [2] test_water_spawn_path_clears_only_ordinary_road_creatures_from_player (res://tests/test_water_encounter_residency.gd:77)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] teleport_body (res://scripts/creatures/remote_creature.gd:401)
+       [1] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [2] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [3] test_water_spawn_path_clears_only_ordinary_road_creatures_from_player (res://tests/test_water_encounter_residency.gd:77)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_water_encounter_residency.gd :: test_water_spawn_path_clears_only_ordinary_road_creatures_from_player
+  ok    test_water_encounter_runtime_data.gd :: test_complete_counts_and_namespaced_board_species_without_story_leak
+  ok    test_water_encounter_runtime_data.gd :: test_foe_power_multiplier_scales_member_combat_power
+  ok    test_water_encounter_runtime_data.gd :: test_invalid_species_or_ground_fails_atomically_and_inputs_do_not_mutate
+  ok    test_water_encounter_runtime_data.gd :: test_positions_are_regrounded_and_existing_npc_bodies_are_reused
+  ok    test_water_encounter_runtime_data.gd :: test_reserved_named_sites_use_the_fixed_actor_and_once_flag_in_production_selector
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [1] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [2] test_spawn_bridge_applies_named_identity_metadata_once_opts_and_clean_cleared_state (res://tests/test_water_encounter_runtime_data.gd:332)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] teleport_body (res://scripts/creatures/remote_creature.gd:401)
+       [1] settle_spawn_transform (res://scripts/combat/water_encounter_director.gd:287)
+       [2] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:242)
+       [3] test_spawn_bridge_applies_named_identity_metadata_once_opts_and_clean_cleared_state (res://tests/test_water_encounter_runtime_data.gd:332)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: Water site lacks a valid authored encounter or supported creature footing: water_lantern_cove_wild_006
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_available_sites (res://scripts/combat/water_encounter_director.gd:274)
+         [1] test_spawn_bridge_applies_named_identity_metadata_once_opts_and_clean_cleared_state (res://tests/test_water_encounter_runtime_data.gd:378)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_water_encounter_runtime_data.gd :: test_spawn_bridge_applies_named_identity_metadata_once_opts_and_clean_cleared_state
+  ok    test_water_encounter_runtime_data.gd :: test_surface_site_contract_rejects_wrong_waterline_or_submerge
+  ok    test_water_encounter_runtime_data.gd :: test_table_levels_weights_and_named_replacements_remain_exact
+  ok    test_water_encounter_runtime_data.gd :: test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content
+  ok    test_water_encounter_runtime_data.gd :: test_unreserved_site_keeps_deterministic_table_population
+  ok    test_water_first_shore_dock_barrier_visual.gd :: test_every_departure_barrier_wears_the_installed_fence
+  ok    test_water_first_shore_dock_barrier_visual.gd :: test_first_shore_blocker_visually_fills_the_existing_collision
+  ok    test_water_first_shore_gate_site.gd :: test_first_shore_gate_site_uses_installed_visuals_without_collision
+  ok    test_water_first_shore_gate_site.gd :: test_framing_stones_and_pavers_preserve_the_gate_clearance
+  ok    test_water_first_shore_horizon_stones.gd :: test_horizon_stones_build_grounded_visuals_and_bounded_night_practicals
+  ok    test_water_first_shore_horizon_stones.gd :: test_horizon_stones_frame_the_authored_view_clear_of_the_live_route
+  ok    test_water_first_shore_horizon_stones.gd :: test_production_mount_and_authoritative_landmark_remain_registered
+  ok    test_water_first_shore_welcome_site.gd :: test_welcome_beacon_builds_an_open_collidable_arch_and_practical_light
+  ok    test_water_first_shore_welcome_site.gd :: test_welcome_beacon_realizes_the_authored_landmark_clear_of_the_route
+  ok    test_water_garden_records.gd :: test_candy_ii_is_the_existing_pocket_row_and_stays_ungated
+  ok    test_water_garden_records.gd :: test_edda_leads_reminds_hears_and_explains_the_docks
+  ok    test_water_garden_records.gd :: test_guardian_ceremony_keeps_priority_over_the_chain
+  ok    test_water_garden_records.gd :: test_lead_is_heard_beside_edda
+  ok    test_water_garden_records.gd :: test_local_request_follows_the_chain
+  ok    test_water_garden_records.gd :: test_report_needs_the_account_and_edda
+  ok    test_water_garden_records.gd :: test_three_steps_are_declared_world_records
+  ok    test_water_garden_records.gd :: test_wall_account_is_copied_at_the_vault
+  ok    test_water_garden_records.gd :: test_wall_is_offered_only_while_open
+  ok    test_water_garden_records.gd :: test_wall_site_is_in_the_above_water_vault_pocket
+  ok    test_water_guardian_confirm.gd :: test_a_put_off_guardian_does_not_starve_other_claims
+  ok    test_water_guardian_confirm.gd :: test_a_put_off_offer_can_still_be_declined_from_the_chamber
+  ok    test_water_guardian_confirm.gd :: test_cancel_puts_the_offer_off_without_declining_it
+  ok    test_water_guardian_confirm.gd :: test_confirm_no_service_branches_clear_the_stale_claim_creature
+  ok    test_water_guardian_confirm.gd :: test_decline_refuses_through_the_host_and_grants_nothing
+  ok    test_water_guardian_confirm.gd :: test_full_party_guardian_is_left_to_the_release_choice
+  ok    test_water_guardian_confirm.gd :: test_guardian_with_room_waits_for_accept_and_accept_completes_exactly_once
+  ok    test_water_guardian_confirm.gd :: test_non_guardian_capture_cannot_be_put_off
+  ok    test_water_guardian_confirm.gd :: test_non_guardian_water_capture_with_room_still_completes_at_once
+  ok    test_water_guardian_confirm.gd :: test_opening_the_tab_does_not_re_present_a_put_off_offer
+  ok    test_water_guardian_confirm.gd :: test_resume_keeps_the_offer_put_off_until_it_is_really_presented
+  ok    test_water_guardian_confirm.gd :: test_tab_fallback_refuses_a_claim_creature_the_service_does_not_own
+  ok    test_water_guardian_confirm.gd :: test_the_veilfall_answer_path_re_presents_a_put_off_offer
+  ok    test_water_guardian_legacy.gd :: test_guest_fights_alone_then_leaves_and_host_is_refused
+  ok    test_water_guardian_legacy.gd :: test_journal_failure_on_a_legacy_offer_restores_everything
+  ok    test_water_guardian_legacy.gd :: test_journal_less_solo_win_then_invite_delays_the_answer_until_solo_again
+  ok    test_water_guardian_legacy.gd :: test_legacy_settled_world_with_journal_offers_each_named_participant_once
+  ok    test_water_guardian_legacy.gd :: test_legacy_world_offer_marker_before_legacy_flag_still_counts_as_legacy
+  ok    test_water_guardian_legacy.gd :: test_legacy_world_without_journal_keeps_the_single_recipient_outcome
+  ok    test_water_guardian_legacy.gd :: test_pending_legacy_recipient_answers_only_its_claim_and_others_get_their_own
+  ok    test_water_guardian_legacy.gd :: test_recorded_legacy_recipient_is_already_resolved
+  ok    test_water_guardian_legacy.gd :: test_refused_begin_and_refuse_leave_the_world_unchanged
+  ok    test_water_guardian_legacy.gd :: test_resolving_the_pending_legacy_claim_first_does_not_block_others
+  ok    test_water_guardian_legacy.gd :: test_solo_win_then_invite_the_host_answers_while_the_guest_is_connected
+  ok    test_water_guardian_legacy.gd :: test_unidentified_legacy_recipient_new_claim_is_acknowledged_away_with_no_creature
+  ok    test_water_guardian_legacy.gd :: test_view_cache_and_host_rule_follow_the_peer_count_at_runtime
+  ok    test_water_guardian_legacy.gd :: test_view_cache_follows_the_local_legacy_receipt
+  ok    test_water_guardian_participants.gd :: test_ack_rpc_guardian_branch_resolves_only_the_senders_claim
+  ok    test_water_guardian_participants.gd :: test_begin_and_refuse_establish_world_identity_before_minting
+  ok    test_water_guardian_participants.gd :: test_chamber_decline_refused_by_host_leaves_the_next_invite_presentable
+  ok    test_water_guardian_participants.gd :: test_chamber_refusal_without_a_claim_settles_once_and_grants_nothing
+  ok    test_water_guardian_participants.gd :: test_character_receipt_makes_replayed_claim_inert_and_never_a_sixth
+  ok    test_water_guardian_participants.gd :: test_claim_ids_key_on_world_instance_and_fall_back_to_world_id_only_when_empty
+  ok    test_water_guardian_participants.gd :: test_decline_grants_nothing_settles_offer_and_forbids_a_second
+  ok    test_water_guardian_participants.gd :: test_decline_in_flight_holds_a_crossing_claim_until_the_host_answers
+  ok    test_water_guardian_participants.gd :: test_decline_journal_failure_restores_everything
+  ok    test_water_guardian_participants.gd :: test_decline_rpc_maps_the_sender_to_its_own_character_only
+  ok    test_water_guardian_participants.gd :: test_each_participant_has_an_independent_claim_id
+  ok    test_water_guardian_participants.gd :: test_edda_fallback_is_authored_speech_without_effects
+  ok    test_water_guardian_participants.gd :: test_edda_greeting_is_rerouted_through_the_participant_gate
+  ok    test_water_guardian_participants.gd :: test_edda_offers_only_to_a_character_that_may_still_answer
+  ok    test_water_guardian_participants.gd :: test_held_claim_decline_is_confirmed_only_after_the_host_journals_it
+  ok    test_water_guardian_participants.gd :: test_legacy_pending_claim_is_replayed_for_its_recipient_and_marked_on_resolve
+  ok    test_water_guardian_participants.gd :: test_legacy_receipt_for_the_same_slot_is_treated_as_received_conservatively
+  ok    test_water_guardian_participants.gd :: test_legacy_recipient_is_recorded_when_the_legacy_claim_is_answered
+  ok    test_water_guardian_participants.gd :: test_legacy_settled_recipient_is_never_granted_a_duplicate
+  ok    test_water_guardian_participants.gd :: test_multi_peer_empty_journal_offers_nobody
+  ok    test_water_guardian_participants.gd :: test_other_participants_in_a_legacy_world_with_a_journal_get_their_own_offer
+  ok    test_water_guardian_participants.gd :: test_participants_are_every_journaled_nerissa_row_whatever_its_status
+  ok    test_water_guardian_participants.gd :: test_pending_only_guest_row_admits_the_guest_and_refuses_the_non_fighting_host
+  ok    test_water_guardian_participants.gd :: test_pure_rule_mirrors_meadows_but_empty_set_means_host_local_only
+  ok    test_water_guardian_participants.gd :: test_receive_claim_keeps_separate_characters_and_world_instances_apart
+  ok    test_water_guardian_participants.gd :: test_refusal_journal_failure_restores_everything
+  ok    test_water_guardian_participants.gd :: test_reload_mid_claim_replays_and_resolves_from_disk
+  ok    test_water_guardian_participants.gd :: test_solo_view_only_the_host_may_answer
+  ok    test_water_guardian_participants.gd :: test_solo_world_without_rows_offers_only_the_local_character
+  ok    test_water_guardian_participants.gd :: test_stale_queued_claim_from_another_world_or_character_cannot_drive_a_decline
+  ok    test_water_guardian_participants.gd :: test_trainer_id_is_the_installed_veilfall_captain
+  ok    test_water_guardian_participants.gd :: test_two_characters_have_separate_prompt_state
+  ok    test_water_guardian_participants.gd :: test_two_worlds_sharing_slot_zero_have_independent_claims_and_no_erasure
+  ok    test_water_guardian_participants.gd :: test_unknown_legacy_recipient_world_offers_named_participants_and_the_receipt_holder_gets_nothing
+  ok    test_water_guardian_participants.gd :: test_world_restoration_settles_once_on_first_resolution_whoever_accepts
+  ok    test_water_guardian_reward.gd :: test_disk_refusal_restores_world_revision_sequence_and_allows_retry
+  ok    test_water_guardian_reward.gd :: test_exact_guardian_per_participant_offers_survive_real_world_file
+  ok    test_water_guardian_reward.gd :: test_refuses_wrong_species_missing_release_identity_and_host_authority
+  ok    test_water_guardian_reward.gd :: test_release_requires_captain_and_journals_both_flags_or_neither
+  ok    test_water_guardian_solo_win.gd :: test_a_legacy_defeat_journals_nothing
+  ok    test_water_guardian_solo_win.gd :: test_a_solo_win_that_cannot_journal_pays_locally_once
+  ok    test_water_guardian_solo_win.gd :: test_other_trainers_solo_wins_are_unchanged
+  ok    test_water_guardian_solo_win.gd :: test_solo_win_in_a_one_peer_session_journals_the_local_character
+  ok    test_water_guardian_solo_win.gd :: test_solo_win_with_no_session_journals_the_local_character
+  ok    test_water_gull_research.gd :: test_adair_leads_reminds_hears_and_acknowledges
+  ok    test_water_gull_research.gd :: test_candy_ii_is_the_existing_pocket_row_and_stays_ungated
+  ok    test_water_gull_research.gd :: test_lead_is_heard_beside_adair
+  ok    test_water_gull_research.gd :: test_local_request_follows_the_chain
+  ok    test_water_gull_research.gd :: test_report_needs_the_satchel_and_adair
+  ok    test_water_gull_research.gd :: test_satchel_needs_the_lead_and_the_island
+  ok    test_water_gull_research.gd :: test_satchel_site_sits_in_the_authored_pocket_on_dry_ground
+  ok    test_water_gull_research.gd :: test_site_is_offered_only_while_open
+  ok    test_water_gull_research.gd :: test_three_steps_are_declared_world_records
+  ok    test_water_gull_rest_signal_site.gd :: test_initialized_signal_site_geometry_passes_without_engine_errors
+  ok    test_water_gull_rest_signal_site.gd :: test_signal_spire_is_an_installed_bounded_gull_rest_composition
+  ok    test_water_harvest_density.gd :: test_island_harvest_minima_and_new_dry_approaches
+  ok    test_water_hazard.gd :: test_full_submersion_deals_no_damage_during_the_grace_period
+  ok    test_water_hazard.gd :: test_full_submersion_past_grace_damages_on_the_configured_tick
+  ok    test_water_hazard.gd :: test_head_just_at_the_surface_is_not_submerged
+  ok    test_water_hazard.gd :: test_head_well_above_water_is_not_submerged
+  ok    test_water_hazard.gd :: test_head_well_past_the_threshold_is_submerged
+  ok    test_water_hazard.gd :: test_surfacing_before_grace_resets_the_clock
+  ok    test_water_hazard.gd :: test_wading_never_accumulates_toward_damage_however_long
+  ok    test_water_hazard.gd :: test_wading_with_head_above_surface_is_never_submerged
+  ok    test_water_hazard.gd :: test_warning_fraction_never_exceeds_one_once_damage_is_ticking
+  ok    test_water_hazard.gd :: test_warning_fraction_rises_from_zero_to_one_across_grace
+  ok    test_water_heightfield.gd :: test_authored_safe_landings_match_data_and_are_gentle
+  ok    test_water_heightfield.gd :: test_constructor_freezes_recipe_and_nonfinite_positions_are_rejected
+  ok    test_water_heightfield.gd :: test_graded_main_approaches_and_veilfall_hike_have_walkable_centrelines
+  ok    test_water_heightfield.gd :: test_landing_sector_feather_has_no_height_step
+  ok    test_water_heightfield.gd :: test_landing_sector_wraps_across_negative_positive_pi
+  ok    test_water_heightfield.gd :: test_mandatory_sheltered_human_legs_retain_twenty_percent_with_steering
+  ok    test_water_heightfield.gd :: test_nearest_island_uses_shore_distance_not_centre_distance
+  ok    test_water_heightfield.gd :: test_ocean_falls_away_from_shore_and_clamps_at_seafloor
+  ok    test_water_heightfield.gd :: test_overlapping_islands_resolve_highest_land_surface
+  ok    test_water_heightfield.gd :: test_real_island_peaks_and_full_shorelines_match_authored_mass
+  ok    test_water_heightfield.gd :: test_real_rest_shoals_are_dry_gentle_bounded_and_inside_baked_regions
+  ok    test_water_heightfield.gd :: test_real_terrain_grid_is_finite_bounded_and_reproducible
+  ok    test_water_heightfield.gd :: test_rest_shoal_reuses_terrain_profile_without_becoming_a_named_island
+  ok    test_water_heightfield.gd :: test_sparse_region_membership_uses_floor_for_negative_coordinates
+  ok    test_water_lantern_return.gd :: test_cache_is_the_original_candy_i_row_and_stays_ungated
+  ok    test_water_lantern_return.gd :: test_chain_records_are_declared_world_flags
+  ok    test_water_lantern_return.gd :: test_chain_speech_carries_no_line_effects
+  ok    test_water_lantern_return.gd :: test_lead_needs_the_lesson_and_pell_beside_the_speaker
+  ok    test_water_lantern_return.gd :: test_local_request_is_revealed_by_the_lead_and_completed_by_the_return
+  ok    test_water_lantern_return.gd :: test_pell_briefs_first_then_leads_to_the_arch
+  ok    test_water_lantern_return.gd :: test_pell_hears_the_return_only_from_a_character_who_claimed
+  ok    test_water_lantern_return.gd :: test_return_before_the_lead_also_records_the_lead
+  ok    test_water_lantern_return.gd :: test_return_requires_this_characters_own_cache_receipt
+  ok    test_water_lantern_return.gd :: test_unknown_or_malformed_step_requests_refuse
+  ok    test_water_lastlight_shelter.gd :: test_delivery_and_rest_are_at_the_existing_veilfall_camp_exterior
+  ok    test_water_lastlight_shelter.gd :: test_delivery_debits_the_deliverer_once
+  ok    test_water_lastlight_shelter.gd :: test_halen_leads_reminds_and_acknowledges
+  ok    test_water_lastlight_shelter.gd :: test_lead_is_heard_beside_halen
+  ok    test_water_lastlight_shelter.gd :: test_local_request_follows_the_chain
+  ok    test_water_lastlight_shelter.gd :: test_optional_cost_leaves_every_character_a_saddle
+  ok    test_water_lastlight_shelter.gd :: test_rest_is_watched_only_while_open
+  ok    test_water_lastlight_shelter.gd :: test_rest_needs_the_shelter_and_the_camp_bed
+  ok    test_water_lastlight_shelter.gd :: test_three_steps_are_declared_world_records
+  ok    test_water_lesson.gd :: test_real_course_requires_swimming_then_dry_arrival
+  ok    test_water_lesson.gd :: test_short_loops_do_not_replace_the_swimming_course
+  ok    test_water_lesson.gd :: test_teleport_walking_and_other_players_cannot_complete_your_lesson
+  ok    test_water_map_state.gd :: test_character_json_roundtrip_keeps_water_fog_landmark_region_and_alpha_pin
+  ok    test_water_map_state.gd :: test_old_character_without_water_map_starts_hidden_and_preserves_meadows_map
+  ok    test_water_map_state.gd :: test_two_characters_on_different_islands_never_share_fog_regions_or_pins
+  ok    test_water_map_state.gd :: test_water_extent_and_authored_destinations_are_independent_of_meadows
+          WATER_DISMOUNT_PUBLISHES=8 over 120 ticks (revisions 121, stamina drop 6 quanta, host deltas 8)
+  ok    test_water_mount_dismount_replication.gd :: test_water_mount_dismount_reaches_host_while_unreliable_sync_is_throttled
+  ok    test_water_mounted_replication.gd :: test_actual_driver_recovery_packets_reach_remote_state
+  ok    test_water_opening_continuous_args.gd :: test_optional_segment_arguments_preserve_shorter_modes
+  ok    test_water_personal_pickup.gd :: test_authored_ownership_and_host_proximity
+  ok    test_water_realm_transition.gd :: test_primary_callback_retires_alpha_and_releases_catch_without_losing_durable_result
+  ok    test_water_realm_transition.gd :: test_primary_settlement_tracks_only_local_pending_results_not_active_fights
+  ok    test_water_realm_transition.gd :: test_veilfall_inherits_closed_request_and_response_gates
+  ok    test_water_realm_transition.gd :: test_water_submit_completion_names_and_receiver_dispatch
+  ok    test_water_recovery_closed_seals.gd :: test_bed_behind_a_closed_seal_is_skipped_for_the_next_candidate
+  ok    test_water_recovery_closed_seals.gd :: test_closed_seal_at_covers_the_landform_and_its_race_band_only_while_closed
+  ok    test_water_recovery_closed_seals.gd :: test_every_sealed_landform_landing_is_skipped_until_its_own_fact
+  ok    test_water_recovery_closed_seals.gd :: test_foreign_safe_landing_on_a_sealed_island_is_not_a_recovery_point
+  ok    test_water_recovery_closed_seals.gd :: test_same_landing_is_used_once_this_world_opens_the_dock
+  ok    test_water_reedhaven_segment.gd :: test_each_named_stop_uses_the_live_item_database_tool_contract
+  ok    test_water_reedhaven_segment.gd :: test_result_never_reports_success_before_explicit_segment_completion
+  ok    test_water_relic.gd :: test_compass_cannot_be_placed_unearned_or_activated_unplaced
+  ok    test_water_relic.gd :: test_compass_replaces_each_older_power_without_stacking
+  ok    test_water_relic.gd :: test_compass_uses_the_production_named_relic_and_tunable_guard
+  ok    test_water_relic.gd :: test_save_round_trip_preserves_only_the_placed_compass_selection
+  ok    test_water_return_connection.gd :: test_durable_world_unlock_routes_to_existing_stormwood_destination_without_key_write
+  ok    test_water_return_connection.gd :: test_return_refuses_personal_unlock_and_water_key_shortcuts_without_mutation
+  ok    test_water_return_connection.gd :: test_shared_world_unlock_opens_same_return_path_for_a_second_peer
+  ok    test_water_return_connection.gd :: test_stormwood_arrival_preserves_authored_stormheart_deck_height
+  ok    test_water_return_connection.gd :: test_stormwood_existing_cloudreach_entry_keeps_its_authored_position
+  ok    test_water_return_connection.gd :: test_water_mounts_generic_return_gate_at_authored_connection
+  ok    test_water_reward_pockets.gd :: test_candy_tiers_and_identities_unchanged
+  ok    test_water_reward_pockets.gd :: test_cradle_nest_pays_the_care_chain_once
+  ok    test_water_reward_pockets.gd :: test_eight_pockets_are_six_filled_cradle_paid_and_reed_hollow_paid
+  ok    test_water_reward_pockets.gd :: test_every_pickup_keeps_dry_spawn_ground
+  ok    test_water_reward_pockets.gd :: test_reed_hollow_pays_one_reed_seam_and_invents_no_recipe
+  ok    test_water_reward_pockets.gd :: test_single_item_pockets_hold_exactly_one_matching_existing_row
+  ok    test_water_shellwatch_segment.gd :: test_authored_route_trainers_and_actions_match_segment
+  ok    test_water_shellwatch_segment.gd :: test_live_trainer_contract_uses_production_namespaced_species
+  ok    test_water_shellwatch_segment.gd :: test_recovery_reselects_bedded_member_after_party_auto_cycle
+  ok    test_water_shellwatch_segment.gd :: test_result_requires_explicit_clean_completion
+  ok    test_water_shellwatch_segment.gd :: test_solm_path_avoids_unwalkable_landing_sector_flank
+  ok    test_water_source_colourways.gd :: test_outputs_keep_blue_cream_and_coral_without_purple_collapse
+  ok    test_water_source_colourways.gd :: test_policy_preserves_the_water_board_regions
+  ok    test_water_species_catalog.gd :: test_installed_models_contain_every_authored_animation_and_existing_moves
+  ok    test_water_species_catalog.gd :: test_invalid_roster_and_forbidden_swimmer_are_atomic
+  ok    test_water_species_catalog.gd :: test_merge_preserves_every_existing_definition_and_is_deeply_isolated
+  ok    test_water_species_catalog.gd :: test_namespaced_collision_rejects_the_entire_roster_without_mutation
+  ok    test_water_species_catalog.gd :: test_namespaced_water_presentations_reach_their_authored_colourways
+  ok    test_water_species_catalog.gd :: test_production_catalogue_registers_water_without_replacing_meadows
+  ok    test_water_species_catalog.gd :: test_production_species_spawn_preserves_names_stats_moves_and_five_capabilities
+  ok    test_water_species_catalog.gd :: test_stable_ids_survive_a_new_base_collision_and_merge_is_idempotent
+  ok    test_water_surface_material.gd :: test_material_only_candidate_preserves_water_shape_contract
+  ok    test_water_surface_material.gd :: test_production_surface_binds_mature_fresnel_contract
+  ok    test_water_surface_material.gd :: test_production_surface_extends_past_far_clip_without_expanding_height_region
+  ok    test_water_surface_material.gd :: test_water_terrain_factory_disables_flat_world_background
+  ok    test_water_tidal_guard_combat.gd :: test_actual_owner_health_mutation_and_ordinary_strike_in_initialized_tree
+Aquaryn radius=1.66521627906977 player radius=0.40000000596046 stance distance=3.06522345542908
+  ok    test_water_tidal_segment.gd :: test_alpha_center_is_occupied_and_challenge_stance_clears_capsules
+  ok    test_water_tidal_segment.gd :: test_next_crossing_requires_earned_shellwatch_gate
+  ok    test_water_tidal_segment.gd :: test_unrun_helper_cannot_claim_alpha_recipe_completion
+  ok    test_water_traversal_save.gd :: test_corrupt_aquatic_data_rejects_the_entire_pose
+  ok    test_water_traversal_save.gd :: test_exhaustion_survives_json_and_pose_sanitisation_without_session_ids
+  ok    test_water_traversal_save.gd :: test_mount_identity_round_trip_uses_owned_party_slot_not_transport_id
+  ok    test_water_traversal_save.gd :: test_old_pose_is_preserved_and_aquatic_state_cannot_attach_to_another_realm
+  ok    test_water_traversal_save.gd :: test_pause_and_mount_modes_are_data_without_importing_transport_revision
+  ok    test_water_veilfall_geometry.gd :: test_generated_cave_geometry_and_authority_in_initialized_tree
+
+422 tests, 113922 assertions, 0 failed

@@ -137,9 +137,14 @@ class WorldStub extends RefCounted:
 	var world_id := "world-5f3a"
 
 
+class LocalStub extends RefCounted:
+	var display_name := "Wren"
+
+
 class GameStub extends Node:
 	var session: Node
 	var world: RefCounted = WorldStub.new()
+	var local: RefCounted = LocalStub.new()
 
 
 class MenuStub extends Node:
@@ -695,3 +700,47 @@ func test_a_seat_held_for_a_returning_player_stops_new_invites_but_keeps_the_lob
 	menu.free()
 	h.game.free()
 	steam.free()
+
+
+
+## MULTIPLAYER §1.1 Join: the joiner sees the host/session identity before
+## joining, not only the Steam name of whoever sent the invitation.
+func test_lobby_metadata_carries_the_host_trainer_name() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	assert_eq(steam.metadata.get("host_name"), "Wren")
+	assert_eq(h.lobby.lobby_host_name(777), "Wren")
+	h.game.free()
+	steam.free()
+
+
+func test_an_overlong_or_missing_host_name_is_clamped_or_left_out() -> void:
+	var steam := MockSteam.new()
+	var game := GameStub.new()
+	(game.local as LocalStub).display_name = "  " + "x".repeat(80) + "  "
+	game.session = HostSessionStub.new()
+	game.add_child(game.session)
+	var lobby := STEAM_LOBBY.new()
+	game.add_child(lobby)
+	lobby._inject_native_for_test(steam, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
+	assert_true(lobby.initialize())
+	lobby._state = "host_creating"
+	steam.lobby_created.emit(STEAM_LOBBY.CALLBACK_OK, 779)
+	assert_eq(str(steam.metadata.get("host_name")).length(), STEAM_LOBBY.HOST_NAME_MAX_CHARS)
+	game.free()
+	var steam2 := MockSteam.new()
+	var game2 := GameStub.new()
+	game2.local = null
+	game2.session = HostSessionStub.new()
+	game2.add_child(game2.session)
+	var lobby2 := STEAM_LOBBY.new()
+	game2.add_child(lobby2)
+	lobby2._inject_native_for_test(steam2, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
+	assert_true(lobby2.initialize())
+	lobby2._state = "host_creating"
+	steam2.lobby_created.emit(STEAM_LOBBY.CALLBACK_OK, 780)
+	assert_true(lobby2.is_hosting(), "no local trainer is never a reason to fail hosting")
+	assert_false(steam2.metadata.has("host_name"))
+	game2.free()
+	steam.free()
+	steam2.free()

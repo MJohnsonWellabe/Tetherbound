@@ -32,20 +32,139 @@
       ],
       "stronghold_works": [
         "stronghold_works"
+      ],
+      "highfield": [
+        {
+          "id": "highfield_pasture",
+          "centre": [
+            398.0,
+            5872.0
+          ],
+          "radius": 62.0,
+          "inner": 30.0,
+          "strength": 0.85,
+          "_why": "F05#7 round 7 (owner: the Highfield's healed state must change the ground, not only bring the herd). The terrain bake never drained the Highfield, so its drained ground is authored here: the pasture round the herd site, drained while the herd is gone and green again when it comes back."
+        }
       ]
     },
-    "cell": 3.0,
+    "cell": 2.0,
     "lift": 0.11,
-    "max_alpha": 0.7,
+    "max_alpha": 0.94,
     "fade_seconds": 12.0,
     "spare_roads": true,
     "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
     "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
     "normal_depth": 0.34,
     "uv_scale": 0.27,
-    "tint": "#e9dfc0",
+    "tint": "#a8d890",
     "edge_jitter_m": 4.0,
-    "_comment_edge": "edge_jitter_m: the falloff is read at a deterministic per-corner offset of up to this many metres, so the regreen's contour is ragged, not a stencil (blind round 4)."
+    "_comment_edge": "edge_jitter_m: the falloff is read at a deterministic per-corner offset of up to this many metres, so the regreen's contour is ragged, not a stencil (blind round 4).",
+    "radius_scale": 1.25,
+    "inner_scale": 2.2,
+    "value": 1.12,
+    "view_bias": 0.45,
+    "_comment_round6": "F05#7 round 6. The pale hard-edged polygon a blind judge saw at the works (round 5, h08) is the BAKE's own splat swap to soil, blocky and inside the authored radius; at max_alpha 0.7 it showed through the regreen, and a regreen that stopped at the same radius shared its contour. Now: full cover over the whole scar (inner_scale widens the fully-drained core, max_alpha 1.0), reaching radius_scale past it so the feathered edge (meadow_healing.gd OVERLAY_SHADER: world-noise threshold, feather_scale/feather_amount/feather_soft) falls on ordinary grass, on a finer 2 m cell with a view_bias decal pull so the slope no longer clips it. value lifts the texture toward the lit field around it.",
+    "reach": {
+      "_comment": "F05#7 round 7 (owner: the healed land must read as green grass out to the far field, not as a near-field colour grade). Regreen-only discs per group: the healed green carries out over the field the player looks across at each healed place; the drained BEFORE state keeps to the stations (drain_groups never reads this). Same falloff grammar as a station.",
+      "approach": [
+        {
+          "id": "approach_valley",
+          "centre": [
+            -20.0,
+            7400.0
+          ],
+          "radius": 150.0,
+          "inner": 80.0,
+          "strength": 0.9
+        }
+      ],
+      "stronghold_works": [
+        {
+          "id": "works_slopes",
+          "centre": [
+            -5.0,
+            7545.0
+          ],
+          "radius": 95.0,
+          "inner": 45.0,
+          "strength": 0.9
+        }
+      ],
+      "quarry": [
+        {
+          "id": "quarry_floor",
+          "centre": [
+            405.0,
+            1800.0
+          ],
+          "radius": 55.0,
+          "inner": 28.0,
+          "strength": 0.9
+        }
+      ],
+      "highfield": [
+        {
+          "id": "highfield_meadow",
+          "centre": [
+            398.0,
+            5880.0
+          ],
+          "radius": 110.0,
+          "inner": 55.0,
+          "strength": 0.9
+        }
+      ]
+    },
+    "desaturate": -0.12,
+    "field_green": {
+      "enabled": true,
+      "tint": "#5f9e3c",
+      "amount": 0.5,
+      "fade_seconds": 6.0,
+      "_comment": "F05#7 round 7: after the drain lifts, the grass field's live blades inside every regreen disc lean toward this lush green at full density (meadow_healing.gd::_green_the_field, through the field's own drain channel with drain_thin 0). TUNABLE."
+    },
+    "_comment_round7": "F05#7 round 7: tint/value/desaturate (negative = saturate) push the installed grass texture from its olive H67 toward a lush spring green; reach carries it over the far field."
+  },
+  "bloom": {
+    "enabled": true,
+    "_comment": "F05#7 round 6 (blind round 5: at the quarry and approach 'grass, flowers, trees and light identical'). meadow_healing.gd::_bloom_the_healed_ground grows wildflower drifts over every regreen station once the land heals: the installed stylized-nature flower groups (the models vegetation.json's `flowers` layer places, retinted the same way plus a gold drift like grass_field.json's flowers_gold tier), drift centres per 100 m2 of station disc accepted with the station's own falloff (the worst ground blooms most), per_drift flowers within drift_radius, off the roads (path_factor <= max_path), growing in over grow_seconds after grow_delay. One seeded RNG per group: identical on every peer and every load, nothing saved; a load snaps. TUNABLE.",
+    "models": [
+      "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+      "res://assets/environment/stylized_nature/Flower_4_Group.gltf",
+      "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+      "res://assets/environment/stylized_nature/Flower_4_Single.gltf"
+    ],
+    "tints": [
+      {
+        "Flowers": "#c8b7cf",
+        "Leaves": "#7d8f4e"
+      },
+      {
+        "Flowers": "#e2c25a",
+        "Leaves": "#7d8f4e"
+      },
+      {
+        "Flowers": "#f1ecdc",
+        "Leaves": "#7d8f4e"
+      },
+      {
+        "Flowers": "#b9a3d6",
+        "Leaves": "#7d8f4e"
+      }
+    ],
+    "seed": 7250113,
+    "drifts_per_100m2": 1.6,
+    "per_drift": [
+      6,
+      14
+    ],
+    "drift_radius": 2.8,
+    "scale_min": 0.16,
+    "scale_max": 0.26,
+    "sink": 0.02,
+    "max_path": 0.25,
+    "grow_delay": 3.0,
+    "grow_seconds": 8.0
   },
   "tether_lights": {
     "enabled": true,
@@ -116,10 +235,10 @@
     "creak_fraction": 0.07,
     "dust": {
       "enabled": true,
-      "amount": 90,
+      "amount": 140,
       "lifetime": 2.2,
-      "colour": "#dccfb2",
-      "alpha": 0.6,
+      "colour": "#9a8766",
+      "alpha": 0.85,
       "speed_min": 0.6,
       "speed_max": 2.8,
       "gravity": 0.6,
@@ -131,7 +250,8 @@
     "trunk_margin": 0.3,
     "tall_prop_min_height": 2.0,
     "tall_prop_max_width": 10.0,
-    "_comment_trees": "Bake only (bake_fall_table): a fall must not newly lie through a tree or a standing authored prop. Trees come from the scatter (collidable trunks at layer collision radius x scale, plus the visually solid non-colliding soft occluders) grown by `trunk_margin`; authored MeshInstance3D bounds at least `tall_prop_min_height` tall and at most `tall_prop_max_width` across (trees, posts, dead trees; not buildings, which the collider check owns). When every direction lies through a tree, the first otherwise-clear direction is kept (nothing is left standing)."
+    "_comment_trees": "Bake only (bake_fall_table): a fall must not newly lie through a tree or a standing authored prop. Trees come from the scatter (collidable trunks at layer collision radius x scale, plus the visually solid non-colliding soft occluders) grown by `trunk_margin`; authored MeshInstance3D bounds at least `tall_prop_min_height` tall and at most `tall_prop_max_width` across (trees, posts, dead trees; not buildings, which the collider check owns). When every direction lies through a tree, the first otherwise-clear direction is kept (nothing is left standing).",
+    "_comment_dust_round6": "F05#7 round 6: blind judge 'impact dust a low-contrast pale haze, invisible at 30%' -- darker earth colour, more opaque, more particles."
   },
   "barriers": {
     "enabled": true,
@@ -201,6 +321,50 @@
         1.08
       ]
     ],
+    "scatter": {
+      "seed": 5869398,
+      "around": [
+        398.0,
+        5869.0
+      ],
+      "min_r": 8.5,
+      "max_r": 13.8,
+      "min_gap_m": 4.1,
+      "open_arc": [
+        140.0,
+        275.0
+      ],
+      "heading_jitter_deg": 55.0,
+      "scale_range": [
+        1.0,
+        1.12
+      ],
+      "clusters": [
+        {
+          "bearing_deg": 318.0,
+          "distance_m": 10.5,
+          "count": 3,
+          "spread_m": 5.5,
+          "heading_deg": 250.0
+        },
+        {
+          "bearing_deg": 50.0,
+          "distance_m": 10.0,
+          "count": 2,
+          "spread_m": 4.0,
+          "heading_deg": 320.0
+        },
+        {
+          "bearing_deg": 108.0,
+          "distance_m": 10.5,
+          "count": 2,
+          "spread_m": 4.0,
+          "heading_deg": 150.0
+        }
+      ],
+      "tries": 200
+    },
+    "_comment_scatter": "F05#7 round 6 (blind round 5: 'deer in a row along a fence, evenly spaced, same facing -- placed props'). When `scatter` is present it REPLACES `members` (kept only as the round-5 record): meadow_healing.gd::herd_scatter draws the herd as three loose grazing clusters (west three, north two, east two) off the stag's site from one seeded RNG, rejection-sampled to 8.5-13.5 m from it (F05#3: every member within 14 m, on at least three sides, clear of the stag), out of the open 140-275 degree arc toward the hero stand, at least min_gap_m apart, facing its cluster's heading +- heading_jitter_deg, scale up-only. Pure function of this block: identical on every peer and every load. TUNABLE.",
     "keep_clear_of_display_m": 8.0,
     "idle_phase_step": 0.37,
     "_comment_members": "[x, z, facing_deg, scale>=1]. F05#3: the herd GROUPS AROUND the stag at herd_display.at -- a loose ring 8.5-10.5 m out on its north, east and west, most facing roughly toward it, slight up-only size variety. The arc from 140 to 275 degrees (south to west-south-west, toward the Highfield approach and the hero stand) is left open so no animal stands between a player coming up the meadow and the stag (blind check round 1: a deer in front of it from the west)."
@@ -221,21 +385,27 @@
   "drain": {
     "_comment": "Coordinator ruling 2026-09-25 (F05 heal before-state): keep no re-bake; the runtime owns both halves. meadow_healing.gd::_build_the_drain lays dry browned grass over every station in regreen.groups (their own authored strength/radius/inner from terrain_playground.json drains.stations) and a disc round every pylon of pylons.holders (pylon_radius/inner/strength), joined to the station group within join_m. Built only while legendary_freed is unset; faded out over fade_seconds on the freeing (as the regreen fades in); never built on a load after it. edge_jitter_m ragged-edges the contour deterministically. The grass-field half (thin and brown the live blades) is a shared-file request on grass_field.gd.",
     "enabled": true,
-    "cell": 3.0,
+    "cell": 2.0,
     "lift": 0.13,
-    "max_alpha": 0.85,
+    "max_alpha": 0.92,
     "fade_seconds": 12.0,
     "spare_roads": true,
     "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
     "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
     "normal_depth": 0.34,
     "uv_scale": 0.27,
-    "tint": "#a08a5c",
+    "tint": "#c9ab6f",
     "edge_jitter_m": 4.0,
-    "pylon_radius": 7.0,
-    "pylon_inner": 2.0,
-    "pylon_strength": 0.7,
-    "join_m": 30.0
+    "pylon_radius": 11.0,
+    "pylon_inner": 4.0,
+    "pylon_strength": 0.85,
+    "join_m": 30.0,
+    "desaturate": 0.65,
+    "value": 1.0,
+    "radius_scale": 1.35,
+    "inner_scale": 1.8,
+    "view_bias": 0.45,
+    "_comment_round6": "F05#7 round 6 (blind round 5: at the quarry and approach 'the land itself does not change'). Measured in engine: the drain read as a faint olive wash, and every round-5 vantage stood on the rim of its disc where the authored falloff is ~0. Now sun-killed straw (the grass texture desaturated 65% under a straw tint, 92% cover) reaching radius_scale past each station with a wider fully-drained core (inner_scale), wider pylon discs; the grass field's blades thin and brown in the same scaled discs. Same feathered, view-biased overlay shader as the regreen."
   },
   "presentation_hold_seconds": 14.0,
   "_comment_presentation_hold": "X03 (batch 9): while the heal plays live, MeadowHealing stands in the `presentation_hold` group for this many seconds (the 12 s fades plus the last pylon's fall), which stands down the objective beacon, the hint card and the recall line. A load never holds."

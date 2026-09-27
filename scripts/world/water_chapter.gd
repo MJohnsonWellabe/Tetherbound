@@ -6,6 +6,7 @@ const LESSON := preload("res://scripts/world/water_lesson.gd")
 const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
 const NPCS := preload("res://scripts/world/water_scene_npcs.gd")
 const NAMED := preload("res://scripts/world/water_named_resolution.gd")
+const RECIPE_MIGRATION := preload("res://scripts/save/water_recipe_migration.gd")
 ## F13 local chains: a guarded conversation's `water:local_step:<step id>`
 ## asks WaterLocalChains to submit that host-validated step.
 const LOCAL_STEP_EVENT := "water:local_step:"
@@ -45,7 +46,11 @@ static func apply_personal_event(flags: RefCounted, event: String, realm: String
 	if flags == null or realm != "water":
 		return false
 	if event == "arrival":
+		# F13#2: a character that started the chapter before the reed hollow
+		# taught cordage keeps it; every arrival then stamps the gate marker.
+		RECIPE_MIGRATION.repair(flags)
 		flags.set_flag("water_chapter_started", true)
+		flags.set_flag(RECIPE_MIGRATION.GATE_MARKER, true)
 		return true
 	if event == "saddle_taught" and flags.has("water_swim_stone_earned"):
 		flags.set_flag("water_swim_saddle_recipe_learned", true)

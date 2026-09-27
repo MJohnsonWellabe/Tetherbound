@@ -48,6 +48,7 @@
     {"id": "b3_mushroom_north_bank", "item": "speed_mushroom", "pos": [66.0, 4482.0], "tier": "side",
      "why": "under the felled round at the ironwood cut: a Speed Shroom for the long open climb into Band 4"},
     {"id": "b3_candy_far_east_pocket", "item": "great_candy", "pos": [506.0, 4214.0], "tier": "detour",
-     "why": "with the orb cache at (515,4225), the band's deepest side pocket, 350m east of the spine on the east bank: the deepest optional walk in the band pays Great, and the galecrest pair guarding it makes it a choice"}
+     "why": "with the orb cache at (515,4225), the band's deepest side pocket, 350m east of the spine on the east bank: the deepest optional walk in the band pays Great, and the galecrest pair guarding it makes it a choice"},
+    {"id": "b3_road_mushroom_4700", "item": "wild_mushroom", "pos": [80.5, 4700.9], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1, A7): a roadside find on the crossing watchpost to the ironwood seam stretch, which the earned seed-15 route walked 335 m with no beat; a recovery/food find, not a candy, so the critical path's two-Good-candy rule stands."}
   ]
 }

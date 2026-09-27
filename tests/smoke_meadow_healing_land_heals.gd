@@ -197,8 +197,9 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 	var report: Dictionary = healing.call("report")
 	# (A)
 	var skins: Array = healing.call("regreen_nodes")
-	if skins.size() != 3:
-		_fail("(%s) %d regreen meshes, expected one per station group (3)" % [tag, skins.size()])
+	var group_count := (((_healing_config().get("regreen", {}) as Dictionary).get("groups", {})) as Dictionary).size()
+	if skins.size() != group_count:
+		_fail("(%s) %d regreen meshes, expected one per station group (%d)" % [tag, skins.size(), group_count])
 	for raw: Variant in skins:
 		var skin := raw as MeshInstance3D
 		if skin == null or not skin.visible or skin.mesh == null:
