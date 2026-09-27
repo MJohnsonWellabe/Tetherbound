@@ -1,0 +1,53 @@
+From 28a3976c8706fd848faf56e9b49b37ed87609695 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 27 Sep 2026 06:26:29 +0000
+Subject: [PATCH] Route harnesses: type the no-hold flight intent locals
+ (fly.state is untyped)
+
+`var tap_climb := ... fly.state != "climb"` could not infer a type, so
+smoke_cloudreach_continuous.gd and every script extending it (25, including
+the Cloudreach-B witnesses) failed to parse. Explicit bool locals; all 25
+parse again.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AbnCQbYpP3f5KQ9hTrct95
+---
+ tests/helpers/cloudreach_live_segment.gd | 4 ++--
+ tests/smoke_cloudreach_continuous.gd     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tests/helpers/cloudreach_live_segment.gd b/tests/helpers/cloudreach_live_segment.gd
+index 17fad465..020b971f 100644
+--- a/tests/helpers/cloudreach_live_segment.gd
++++ b/tests/helpers/cloudreach_live_segment.gd
+@@ -341,9 +341,9 @@ func _input(action: String, strength: float) -> void:
+ ## wants instead of holding. A pressed action is released on the next call,
+ ## which makes every press a fresh edge.
+ func _fly_intent(climb: bool, descend: bool) -> void:
+-	var tap_descend := descend != bool(fly.descend_toggled)
++	var tap_descend: bool = descend != bool(fly.descend_toggled)
+ 	_input("fly_descend", 1.0 if tap_descend and float(input_values.get("fly_descend", 0.0)) == 0.0 else 0.0)
+-	var tap_climb := climb and not descend and fly.state != "climb"
++	var tap_climb: bool = climb and not descend and str(fly.state) != "climb"
+ 	_input("jump", 1.0 if tap_climb and float(input_values.get("jump", 0.0)) == 0.0 else 0.0)
+ 
+ 
+diff --git a/tests/smoke_cloudreach_continuous.gd b/tests/smoke_cloudreach_continuous.gd
+index 49a46c96..ffe34afc 100644
+--- a/tests/smoke_cloudreach_continuous.gd
++++ b/tests/smoke_cloudreach_continuous.gd
+@@ -370,9 +370,9 @@ func _input(action: String, strength: float) -> void:
+ ## wants instead of holding. A pressed action is released on the next call,
+ ## which makes every press a fresh edge.
+ func _fly_intent(climb: bool, descend: bool) -> void:
+-	var tap_descend := descend != bool(fly.descend_toggled)
++	var tap_descend: bool = descend != bool(fly.descend_toggled)
+ 	_input("fly_descend", 1.0 if tap_descend and float(input_values.get("fly_descend", 0.0)) == 0.0 else 0.0)
+-	var tap_climb := climb and not descend and fly.state != "climb"
++	var tap_climb: bool = climb and not descend and str(fly.state) != "climb"
+ 	_input("jump", 1.0 if tap_climb and float(input_values.get("jump", 0.0)) == 0.0 else 0.0)
+ 
+ 
+-- 
+2.43.0
+

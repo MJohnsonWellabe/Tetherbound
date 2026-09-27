@@ -1,0 +1,156 @@
+{
+  "name": "X05 guest lane presentation: a guest in the host's Hollows Alpha fight sees the travelling lane",
+  "claim": "Presentation evidence for the guest-side lane/cue change (#356 01:40 ruling; not a criterion close). The host engages the Hollows Alpha (a Stormwood named CHARGER, lunge_travels) through the production engage press; the guest joins through the production joinable list. Each peer then waits until ITS OWN view draws the lane: the host's real wild body, and the guest's SharedOpponentProxy drawing it from the host's optional cue shape. Setup, disclosed: the host save has the Stormwood route open and both peers use explore_at to stand at the Hollows Alpha instead of walking there.",
+  "peers": 2,
+  "scene": "title",
+  "budget_s": 2400,
+  "build_allowance_s": 480,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "load_save",
+      "args": {
+        "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+      },
+      "budget_frames": 30000
+    },
+    {
+      "peer": 1,
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "budget_frames": 30000,
+      "label": "guest: a fresh trainer in the Meadows"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_gate_stormwood_unlocked"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 30000
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 30000
+    },
+    {
+      "peer": 0,
+      "action": "explore_at",
+      "args": {
+        "at": [
+          -526,
+          1660
+        ],
+        "settle": 180
+      },
+      "label": "SETUP: the host stands at the Hollows Alpha"
+    },
+    {
+      "peer": 1,
+      "action": "explore_at",
+      "args": {
+        "at": [
+          -530,
+          1654
+        ],
+        "settle": 180
+      },
+      "label": "SETUP: the guest stands a few metres behind the host"
+    },
+    {
+      "peer": 0,
+      "action": "deploy_creature",
+      "label": "SETUP: the host's lead creature is out (the engage press needs a standing ally)"
+    },
+    {
+      "peer": 0,
+      "probe": "deployed_creatures",
+      "label": "DIAG: host's deployed bodies before the engage"
+    },
+    {
+      "peer": 0,
+      "probe": "tournament",
+      "label": "DIAG: host party before the engage"
+    },
+    {
+      "peer": 0,
+      "action": "engage_wild",
+      "args": {
+        "settle": 30
+      },
+      "label": "the host engages the Hollows Alpha (production engage press)"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "label": "SETUP: the guest's lead creature is out (joining needs a standing ally)"
+    },
+    {
+      "peer": 1,
+      "action": "join_running_fight",
+      "args": {
+        "kind": "wild",
+        "budget_frames": 1800
+      },
+      "label": "the guest joins the host's fight in progress (production join_encounter)"
+    },
+    {
+      "peer": 1,
+      "action": "shared_cue_shape",
+      "args": {
+        "want": "lane",
+        "budget_frames": 2400,
+        "screenshot": "01_guest_sees_lane"
+      },
+      "label": "GUEST: its proxy draws the Alpha's lane from the host's cue shape"
+    },
+    {
+      "peer": 0,
+      "action": "shared_cue_shape",
+      "args": {
+        "want": "lane",
+        "budget_frames": 2400,
+        "screenshot": "02_host_sees_lane"
+      },
+      "label": "HOST: the real body draws the same lane"
+    },
+    {
+      "peer": 1,
+      "action": "shared_cue_shape",
+      "args": {
+        "want": "lane",
+        "budget_frames": 2400,
+        "screenshot": "03_guest_sees_lane_again"
+      },
+      "label": "GUEST: a later tell draws it again"
+    }
+  ]
+}

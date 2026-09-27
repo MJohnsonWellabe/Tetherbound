@@ -3288,6 +3288,17 @@ func _run_assert(check: String, args: Dictionary) -> Dictionary:
 				player.global_position.z - float(at[1])).length()
 			return {"ok": d <= within, "actual": "%.2f m from (%.1f, %.1f), wanted within %.2f"
 				% [d, float(at[0]), float(at[1]), within]}
+		"on_floor":
+			# F06#5: standing on a floor, not flying and not carried by a mount.
+			var grounded := _probe.call("player") as CharacterBody3D
+			if grounded == null:
+				return {"ok": false, "actual": "no live player"}
+			var fly_node := _fly_controller()
+			var flying := fly_node != null and bool(fly_node.call("is_flying"))
+			var carried := grounded.has_method("is_carried") and bool(grounded.call("is_carried"))
+			return {"ok": grounded.is_on_floor() and not flying and not carried,
+				"actual": "on_floor=%s flying=%s carried=%s at %s" % [grounded.is_on_floor(), flying,
+					carried, str(grounded.global_position)]}
 		"party_size":
 			var have := (_probe.call("party_state") as Array).size()
 			if args.has("min"):

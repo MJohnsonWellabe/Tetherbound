@@ -29,6 +29,9 @@ signal telegraph_started(seconds: float)
 ## F04: an opted-in CHARGER's charge has left the ground. `strike_ready` follows
 ## when it stops -- on contact, at its full length, or against an obstacle.
 signal lunge_started(heading: Vector3, distance: float)
+## F10#2: a `route_cue_seconds` phase began (the tell proper follows, with
+## `telegraph_started`). A host relays it so a guest's proxy draws the route.
+signal route_cue_started(seconds: float)
 
 ## Live state. The combat manager reads this off the node by name; it is the one
 ## piece of a creature that has to survive being knocked out.
@@ -759,6 +762,8 @@ func _enter(intent: int) -> void:
 			_show_guard_cone()
 		if cue <= 0.0:
 			_announce_tell()
+		else:
+			route_cue_started.emit(cue)
 	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER and lunge_travels():
 		# F04: the wind-up completed and the charge begins. The blow is not
 		# resolved yet: `strike_ready` follows when the body stops.
@@ -813,6 +818,38 @@ func guard_stance() -> bool:
 	return bool(_attack_row().get("guard_stance", false))
 
 
+## What a guest's proxy needs to draw this tell's ground marks exactly as this
+## body draws them: the lane (`lane_*`, with seconds until its heading locks)
+## and/or the guard cone (`guard_*`), plus `route_s` while a route cue runs.
+## Empty outside a tell, or for a tell that draws nothing.
+func presentation_shape() -> Dictionary:
+	var shape := {}
+	if _intent != AI.Intent.TELEGRAPH:
+		return shape
+	var cue := route_cue_seconds()
+	if lunge_travels() or cue > 0.0:
+		var half := _lunge_lane_half_width()
+		shape["lane_start"] = half
+		shape["lane_length"] = maxf(0.1, float(_attack_row().get("lunge", 0.0)))
+		shape["lane_half_width"] = half
+		shape["lane_travels"] = lunge_travels()
+		var lock_in := -1.0
+		if lunge_travels():
+			var fraction := clampf(float(_lunge_cfg().get("face_lock_fraction", 0.5)), 0.0, 1.0)
+			if _lunge_heading_locked:
+				lock_in = 0.0
+			elif fraction > 0.0:
+				lock_in = maxf(0.0, _beat_left - maxf(0.001, _lunge_tell_total) * (1.0 - fraction))
+		shape["lane_lock_in_s"] = lock_in
+	if guard_stance():
+		var cfg := combat_config()
+		shape["guard_reach"] = maxf(0.5, float(cfg.get("range", 2.6)))
+		shape["guard_cone"] = clampf(float(cfg.get("cone_degrees", 90.0)), 5.0, 360.0)
+	if _route_cue_left > 0.0:
+		shape["route_s"] = _route_cue_left
+	return shape
+
+
 ## The tell proper begins: the rig's anticipation and the announcement the
 ## manager's warning ring and HUD read. Called at telegraph entry, or when a
 ## route cue ends.
@@ -839,11 +876,13 @@ func _advance_route_cue(delta: float) -> void:
 ## A flat fan on the ground in front of the body, `range` long and `cone_degrees`
 ## wide -- the same shape the manager's hit test uses -- in the shared hazard
 ## colour. A child, so it turns with the body and holds when its heading locks.
-func _show_guard_cone() -> void:
+## A guest's proxy passes the host body's `reach`/`cone` instead of its own.
+func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -> void:
 	_hide_guard_cone()
 	var cfg := combat_config()
-	var reach := maxf(0.5, float(cfg.get("range", 2.6)))
-	var cone := clampf(float(cfg.get("cone_degrees", 90.0)), 5.0, 360.0)
+	var reach := maxf(0.5, reach_override if reach_override > 0.0 else float(cfg.get("range", 2.6)))
+	var cone := clampf(cone_override if cone_override > 0.0 else float(cfg.get("cone_degrees", 90.0)),
+		5.0, 360.0)
 	var colour := Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6")))
 	colour.a = 0.35
 	var steps := maxi(6, int(cone / 6.0))
