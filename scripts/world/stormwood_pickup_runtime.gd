@@ -233,13 +233,11 @@ void vertex() {
 }
 void fragment() {
 	// Soft across (no hard edges), brightest at the foot, fading to nothing
-	// toward the top. Round 7 (judge 14: the column washed out against the
-	// pale horizon): a narrow bright core reads as a beam, not a haze.
+	// toward the top.
 	float across = 1.0 - smoothstep(0.0, 0.5, abs(UV.x - 0.5));
-	float core = 1.0 - smoothstep(0.0, 0.09, abs(UV.x - 0.5));
 	float up = 1.0 - UV.y;
-	float along = smoothstep(0.0, 0.08, up) * (1.0 - smoothstep(0.4, 1.0, up));
-	ALBEDO = tint.rgb * alpha * (across * across + 1.4 * core) * along;
+	float along = smoothstep(0.0, 0.08, up) * (1.0 - smoothstep(0.25, 1.0, up));
+	ALBEDO = tint.rgb * alpha * across * across * along;
 }
 """
 
