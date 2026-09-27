@@ -1,0 +1,82 @@
+vmax(p95 loose) m/s 5.02
+== LOOSE whole: beats 1380 gaps 1379 median 5.1 mean 10.1 max 203.5
+ >250m: 0
+ 150-250: 1  >150: 1
+ max dt: {'m': 1.2, 'dt': 43.9, 'up': 43.9, 'lo': 0.2, 'fights': 1, 'stage': 'tournament_won', 'a': ('fight_started', 'TrainerCreature_tournament_final_oskar_7', [23.4, 0.9, 10.4]), 'b': ('flag_set', 'tournament_won', [22.4, 0.9, 11.3]), 't': 704.7}
+  #dt>120: []
+ max up: {'m': 1.2, 'dt': 43.9, 'up': 43.9, 'lo': 0.2, 'fights': 1, 'stage': 'tournament_won', 'a': ('fight_started', 'TrainerCreature_tournament_final_oskar_7', [23.4, 0.9, 10.4]), 'b': ('flag_set', 'tournament_won', [22.4, 0.9, 11.3]), 't': 704.7}
+  #up>120: []
+ max lo: {'m': 203.5, 'dt': 40.9, 'up': 40.9, 'lo': 40.5, 'fights': 0, 'stage': 'earned_team', 'a': ('flag_set', 'home_materials_gathered', [-229.0, 6.8, -24.2]), 'b': ('offer', 'Mine', [-30.8, 4.0, 21.7]), 't': 444.8}
+  #lo>120: []
+== LOOSE post-tournament: beats 1143 gaps 1142 median 5.1 mean 10.8 max 117.7
+ >250m: 0
+ 150-250: 0  >150: 0
+ max dt: {'m': 89.2, 'dt': 35.1, 'up': 35.1, 'lo': 17.8, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4001_2', [-408.3, 5.0, 5144.9]), 'b': ('wild_within_radius', 'Wild_galecrest_4911_1 galecrest', [-370.5, -0.2, 5224.9]), 't': 2841.7}
+  #dt>120: []
+ max up: {'m': 89.2, 'dt': 35.1, 'up': 35.1, 'lo': 17.8, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4001_2', [-408.3, 5.0, 5144.9]), 'b': ('wild_within_radius', 'Wild_galecrest_4911_1 galecrest', [-370.5, -0.2, 5224.9]), 't': 2841.7}
+  #up>120: []
+ max lo: {'m': 117.7, 'dt': 23.7, 'up': 23.7, 'lo': 23.4, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('offer', 'Chop', [381.7, -1.9, 1885.5]), 'b': ('wild_within_radius', 'Wild_trailpup_2032_1 trailpup', [300.6, 1.6, 1969.2]), 't': 1493.7}
+  #lo>120: []
+== STRICT whole: beats 249 gaps 248 median 3.5 mean 56.4 max 1579.3
+ >250m: 18
+   {'m': 322.5, 'dt': 70.8, 'up': 70.8, 'lo': 64.2, 'fights': 0, 'stage': 'earned_team', 'a': ('flag_set', 'home_materials_gathered', [-229.0, 6.8, -24.2]), 'b': ('offer', 'Craft', [34.8, -0.9, -38.5]), 't': 444.8}
+   {'m': 511.3, 'dt': 103.3, 'up': 103.3, 'lo': 101.8, 'fights': 0, 'stage': 'tournament_won', 'a': ('flag_set', 'alpha_pin_intro_seen', [-129.0, 1.3, 274.4]), 'b': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 't': 812.7}
+   {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+   {'m': 276.7, 'dt': 55.8, 'up': 55.8, 'lo': 55.1, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('wild_within_radius', 'Wild_duskhush_2081_1 duskhush', [41.0, 0.5, 1412.0]), 'b': ('wild_within_radius', 'Wild_burrowback_2910_2 burrowback', [245.6, -1.2, 1595.7]), 't': 1314.9}
+   {'m': 380.7, 'dt': 82.7, 'up': 82.7, 'lo': 75.8, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('flag_set', 'harvest_node:order:2021.0', [413.1, 3.9, 1821.7]), 'b': ('wild_within_radius', 'Wild_sparkit_2082_1 sparkit', [165.3, 4.6, 2057.2]), 't': 1467.3}
+   {'m': 953.9, 'dt': 196.3, 'up': 196.3, 'lo': 189.9, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('wild_within_radius', 'Wild_sparkit_2082_1 sparkit', [165.3, 4.6, 2057.2]), 'b': ('fight_started', 'Warrens_mudsnout_1', [-357.1, 4.2, 2610.6]), 't': 1550.0}
+   {'m': 946.4, 'dt': 197.8, 'up': 197.8, 'lo': 188.4, 'fights': 0, 'stage': 'warrens_cleared_and_exited', 'a': ('flag_set', 'warrens_cleared', [-387.3, 4.1, 2637.2]), 'b': ('offer', 'Cut river fiber', [-58.8, -0.7, 3238.6]), 't': 1809.4}
+   {'m': 277.7, 'dt': 70.8, 'up': 70.8, 'lo': 55.3, 'fights': 1, 'stage': 'warrens_cleared_and_exited', 'a': ('fight_started', 'Wild_galecrest_3015_2', [-120.5, 4.9, 3452.9]), 'b': ('offer', 'Take the potion', [103.3, -4.4, 3606.6]), 't': 2061.5}
+   {'m': 285.4, 'dt': 57.8, 'up': 57.8, 'lo': 56.8, 'fights': 0, 'stage': 'warrens_cleared_and_exited', 'a': ('offer', 'Take the candy', [251.6, 5.3, 3927.8]), 'b': ('wild_within_radius', 'Wild_mosshell_3003_2 mosshell', [-6.7, -0.5, 4048.4]), 't': 2329.7}
+   {'m': 423.6, 'dt': 86.2, 'up': 86.2, 'lo': 84.3, 'fights': 0, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('offer', 'Cut river fiber', [150.9, -0.8, 4561.8]), 'b': ('fight_started', 'Wild_galecrest_4910_1', [-113.2, -8.9, 4843.2]), 't': 2652.1}
+   {'m': 434.2, 'dt': 103.4, 'up': 103.4, 'lo': 86.4, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4910_1', [-113.2, -8.9, 4843.2]), 'b': ('fight_started', 'Wild_galecrest_4001_2', [-408.3, 5.0, 5144.9]), 't': 2738.3}
+   {'m': 270.1, 'dt': 70.8, 'up': 70.8, 'lo': 53.8, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4001_2', [-408.3, 5.0, 5144.9]), 'b': ('fight_started', 'Wild_galecrest_4912_1', [-256.8, -1.2, 5344.2]), 't': 2841.7}
+   {'m': 393.4, 'dt': 89.3, 'up': 89.3, 'lo': 78.3, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4912_1', [-256.8, -1.2, 5344.2]), 'b': ('fight_started', 'Wild_galecrest_4913_1', [84.2, -5.3, 5535.8]), 't': 2912.5}
+   {'m': 305.0, 'dt': 76.4, 'up': 76.4, 'lo': 60.7, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4043_1', [426.0, 2.7, 5935.2]), 'b': ('fight_started', 'Wild_galecrest_4070_3', [239.2, 2.2, 6140.2]), 't': 3238.5}
+   {'m': 303.7, 'dt': 72.9, 'up': 72.9, 'lo': 60.4, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4070_1', [227.6, 3.7, 6146.0]), 'b': ('fight_started', 'Wild_galecrest_4914_1', [-37.7, 0.0, 6286.3]), 't': 3333.5}
+   {'m': 259.6, 'dt': 64.1, 'up': 64.1, 'lo': 51.7, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4914_1', [-37.7, 0.0, 6286.3]), 'b': ('offer', 'Take the candy', [-248.3, 0.9, 6437.7]), 't': 3406.4}
+   {'m': 337.4, 'dt': 80.6, 'up': 78.6, 'lo': 67.2, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4917_1', [-121.9, 3.6, 6677.0]), 'b': ('fight_started', 'Wild_galecrest_4919_2', [44.6, -2.6, 6898.3]), 't': 3604.3}
+   {'m': 381.8, 'dt': 83.2, 'up': 83.2, 'lo': 76.0, 'fights': 0, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('wild_within_radius', 'Wild_cindercub_5000_1 cindercub', [-62.5, 0.3, 7101.0]), 'b': ('offer', 'Try the Hall gate', [65.3, -1.4, 7396.9]), 't': 3769.6}
+ 150-250: 10  >150: 28
+ max dt: {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+  #dt>120: [(323.5, 'tournament_won', 'Wild_brooktail_1045_1 brooktail', 'Try the bridge gate', 916.0), (196.3, 'south_bridge_crossed', 'Wild_sparkit_2082_1 sparkit', 'Warrens_mudsnout_1', 1550.0), (197.8, 'warrens_cleared_and_exited', 'warrens_cleared', 'Cut river fiber', 1809.4)]
+ max up: {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+  #up>120: [(323.5, 'tournament_won', 'Wild_brooktail_1045_1 brooktail', 'Try the bridge gate', 916.0), (196.3, 'south_bridge_crossed', 'Wild_sparkit_2082_1 sparkit', 'Warrens_mudsnout_1', 1550.0), (197.8, 'warrens_cleared_and_exited', 'warrens_cleared', 'Cut river fiber', 1809.4)]
+ max lo: {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+  #lo>120: [(314.3, 'tournament_won', 'Wild_brooktail_1045_1 brooktail', 'Try the bridge gate', 916.0), (189.9, 'south_bridge_crossed', 'Wild_sparkit_2082_1 sparkit', 'Warrens_mudsnout_1', 1550.0), (188.4, 'warrens_cleared_and_exited', 'warrens_cleared', 'Cut river fiber', 1809.4)]
+== STRICT post-tournament: beats 117 gaps 116 median 14.8 mean 106.6 max 1579.3
+ >250m: 17
+   {'m': 511.3, 'dt': 103.3, 'up': 103.3, 'lo': 101.8, 'fights': 0, 'stage': 'tournament_won', 'a': ('flag_set', 'alpha_pin_intro_seen', [-129.0, 1.3, 274.4]), 'b': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 't': 812.7}
+   {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+   {'m': 276.7, 'dt': 55.8, 'up': 55.8, 'lo': 55.1, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('wild_within_radius', 'Wild_duskhush_2081_1 duskhush', [41.0, 0.5, 1412.0]), 'b': ('wild_within_radius', 'Wild_burrowback_2910_2 burrowback', [245.6, -1.2, 1595.7]), 't': 1314.9}
+   {'m': 380.7, 'dt': 82.7, 'up': 82.7, 'lo': 75.8, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('flag_set', 'harvest_node:order:2021.0', [413.1, 3.9, 1821.7]), 'b': ('wild_within_radius', 'Wild_sparkit_2082_1 sparkit', [165.3, 4.6, 2057.2]), 't': 1467.3}
+   {'m': 953.9, 'dt': 196.3, 'up': 196.3, 'lo': 189.9, 'fights': 0, 'stage': 'south_bridge_crossed', 'a': ('wild_within_radius', 'Wild_sparkit_2082_1 sparkit', [165.3, 4.6, 2057.2]), 'b': ('fight_started', 'Warrens_mudsnout_1', [-357.1, 4.2, 2610.6]), 't': 1550.0}
+   {'m': 946.4, 'dt': 197.8, 'up': 197.8, 'lo': 188.4, 'fights': 0, 'stage': 'warrens_cleared_and_exited', 'a': ('flag_set', 'warrens_cleared', [-387.3, 4.1, 2637.2]), 'b': ('offer', 'Cut river fiber', [-58.8, -0.7, 3238.6]), 't': 1809.4}
+   {'m': 277.7, 'dt': 70.8, 'up': 70.8, 'lo': 55.3, 'fights': 1, 'stage': 'warrens_cleared_and_exited', 'a': ('fight_started', 'Wild_galecrest_3015_2', [-120.5, 4.9, 3452.9]), 'b': ('offer', 'Take the potion', [103.3, -4.4, 3606.6]), 't': 2061.5}
+   {'m': 285.4, 'dt': 57.8, 'up': 57.8, 'lo': 56.8, 'fights': 0, 'stage': 'warrens_cleared_and_exited', 'a': ('offer', 'Take the candy', [251.6, 5.3, 3927.8]), 'b': ('wild_within_radius', 'Wild_mosshell_3003_2 mosshell', [-6.7, -0.5, 4048.4]), 't': 2329.7}
+   {'m': 423.6, 'dt': 86.2, 'up': 86.2, 'lo': 84.3, 'fights': 0, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('offer', 'Cut river fiber', [150.9, -0.8, 4561.8]), 'b': ('fight_started', 'Wild_galecrest_4910_1', [-113.2, -8.9, 4843.2]), 't': 2652.1}
+   {'m': 434.2, 'dt': 103.4, 'up': 103.4, 'lo': 86.4, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4910_1', [-113.2, -8.9, 4843.2]), 'b': ('fight_started', 'Wild_galecrest_4001_2', [-408.3, 5.0, 5144.9]), 't': 2738.3}
+   {'m': 270.1, 'dt': 70.8, 'up': 70.8, 'lo': 53.8, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4001_2', [-408.3, 5.0, 5144.9]), 'b': ('fight_started', 'Wild_galecrest_4912_1', [-256.8, -1.2, 5344.2]), 't': 2841.7}
+   {'m': 393.4, 'dt': 89.3, 'up': 89.3, 'lo': 78.3, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4912_1', [-256.8, -1.2, 5344.2]), 'b': ('fight_started', 'Wild_galecrest_4913_1', [84.2, -5.3, 5535.8]), 't': 2912.5}
+   {'m': 305.0, 'dt': 76.4, 'up': 76.4, 'lo': 60.7, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4043_1', [426.0, 2.7, 5935.2]), 'b': ('fight_started', 'Wild_galecrest_4070_3', [239.2, 2.2, 6140.2]), 't': 3238.5}
+   {'m': 303.7, 'dt': 72.9, 'up': 72.9, 'lo': 60.4, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4070_1', [227.6, 3.7, 6146.0]), 'b': ('fight_started', 'Wild_galecrest_4914_1', [-37.7, 0.0, 6286.3]), 't': 3333.5}
+   {'m': 259.6, 'dt': 64.1, 'up': 64.1, 'lo': 51.7, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4914_1', [-37.7, 0.0, 6286.3]), 'b': ('offer', 'Take the candy', [-248.3, 0.9, 6437.7]), 't': 3406.4}
+   {'m': 337.4, 'dt': 80.6, 'up': 78.6, 'lo': 67.2, 'fights': 1, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('fight_started', 'Wild_galecrest_4917_1', [-121.9, 3.6, 6677.0]), 'b': ('fight_started', 'Wild_galecrest_4919_2', [44.6, -2.6, 6898.3]), 't': 3604.3}
+   {'m': 381.8, 'dt': 83.2, 'up': 83.2, 'lo': 76.0, 'fights': 0, 'stage': 'relay_disabled_and_mill_crossed', 'a': ('wild_within_radius', 'Wild_cindercub_5000_1 cindercub', [-62.5, 0.3, 7101.0]), 'b': ('offer', 'Try the Hall gate', [65.3, -1.4, 7396.9]), 't': 3769.6}
+ 150-250: 10  >150: 27
+ max dt: {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+  #dt>120: [(323.5, 'tournament_won', 'Wild_brooktail_1045_1 brooktail', 'Try the bridge gate', 916.0), (196.3, 'south_bridge_crossed', 'Wild_sparkit_2082_1 sparkit', 'Warrens_mudsnout_1', 1550.0), (197.8, 'warrens_cleared_and_exited', 'warrens_cleared', 'Cut river fiber', 1809.4)]
+ max up: {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+  #up>120: [(323.5, 'tournament_won', 'Wild_brooktail_1045_1 brooktail', 'Try the bridge gate', 916.0), (196.3, 'south_bridge_crossed', 'Wild_sparkit_2082_1 sparkit', 'Warrens_mudsnout_1', 1550.0), (197.8, 'warrens_cleared_and_exited', 'warrens_cleared', 'Cut river fiber', 1809.4)]
+ max lo: {'m': 1579.3, 'dt': 323.5, 'up': 323.5, 'lo': 314.3, 'fights': 0, 'stage': 'tournament_won', 'a': ('wild_within_radius', 'Wild_brooktail_1045_1 brooktail', [-444.4, -14.1, 598.4]), 'b': ('offer', 'Try the bridge gate', [7.9, -2.9, 1318.9]), 't': 916.0}
+  #lo>120: [(314.3, 'tournament_won', 'Wild_brooktail_1045_1 brooktail', 'Try the bridge gate', 916.0), (189.9, 'south_bridge_crossed', 'Wild_sparkit_2082_1 sparkit', 'Warrens_mudsnout_1', 1550.0), (188.4, 'warrens_cleared_and_exited', 'warrens_cleared', 'Cut river fiber', 1809.4)]
+rested_team coin 30 pot 0 rev 10 heals 1 False restock 112 margin -82 fainted 0
+tournament_won coin 115 pot 5 rev 10 heals 9 True restock 0 margin 115 fainted 1
+south_bridge_crossed coin 140 pot 3 rev 10 heals 8 True restock 28 margin 112 fainted 1
+warrens_cleared_and_exited coin 230 pot 3 rev 10 heals 11 True restock 28 margin 202 fainted 0
+relay_disabled_and_mill_crossed coin 290 pot 3 rev 11 heals 13 True restock 28 margin 262 fainted 0
+stop coin 725 pot 10 rev 8 heals 35 True restock 0 margin 725 fainted 3
+fights 64 wild 32 distinct 32 repeated []
+non-wild fight names Counter({'TrainerCreature_tournament_quarter_mira_1': 1, 'TrainerCreature_tournament_quarter_mira_2': 1, 'TrainerCreature_tournament_semi_tam_3': 1, 'TrainerCreature_tournament_semi_tam_4': 1, 'TrainerCreature_tournament_final_oskar_5': 1, 'TrainerCreature_tournament_final_oskar_6': 1, 'TrainerCreature_tournament_final_oskar_7': 1, 'TrainerCreature_south_bridge_grunt_8': 1, 'TrainerCreature_south_bridge_grunt_9': 1, 'Warrens_mudsnout_1': 1, 'Warrens_burrowback_1': 1, 'WarrenGuardian': 1, 'TrainerCreature_relay_captain_1': 1, 'TrainerCreature_relay_captain_2': 1, 'TrainerCreature_relay_captain_3': 1, 'TrainerCreature_captain_riverwatch_1': 1, 'TrainerCreature_captain_riverwatch_2': 1, 'TrainerCreature_captain_riverwatch_3': 1, 'TrainerCreature_captain_field_4': 1, 'TrainerCreature_captain_field_5': 1, 'TrainerCreature_captain_field_6': 1, 'TrainerCreature_captain_ridge_7': 1, 'TrainerCreature_captain_ridge_8': 1, 'TrainerCreature_captain_ridge_9': 1, 'TrainerCreature_stronghold_patrol_10': 1, 'TrainerCreature_stronghold_patrol_11': 1, 'TrainerCreature_stronghold_courtyard_12': 1, 'TrainerCreature_stronghold_courtyard_13': 1, 'TrainerCreature_stronghold_courtyard_14': 1, 'TrainerCreature_stronghold_elite_15': 1, 'TrainerCreature_stronghold_elite_16': 1, 'TrainerCreature_stronghold_elite_17': 1})
+speed max 14.24 p99 6.92
+total path post-tw 12369.400000000001 last beat t 4120.9
