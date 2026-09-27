@@ -1,0 +1,7 @@
+Code-blind judge r7b (subagent; saw only /tmp/sw/judge_f093/view_A..E.jpg; key blind_key_r7b.json)
+A (conductor_ridge_cleft): PROBABLY - cyan beam + lanterns dead centre at the road's end; gold cracks run straight to it; reads as the road's destination, not a side place; low contrast against grey-violet sky; boulder and crystals compete.
+B (verge_ash_hollow): YES - warm lanterns + gold shaft between two trees left of road; pale stone strip branches off the road; shaft partly merges with trunk; white house at vanishing point competes.
+C (dynamo_scorch_pen): PROBABLY - two warm lanterns + short shaft upper right; weak lead-in (faint stone strip); small, high, shaft/canopy cut by top edge; reads as roadside marker.
+D (deepwood_ridge_shelter): YES - gnarled tree with lanterns + warm shaft; line of pale stones leaves the road to the tree base; shaft laced by branches, left lantern dim.
+E (hollows_moss_nook): YES - lantern gallows + green-yellow shaft right of road; weak lead-in (pebbles, faint strip); greenish shaft low-contrast against canopy.
+Tally: 3 of 5 YES (B, D, E).

@@ -1,0 +1,34 @@
+# Per-frame assessment
+
+**frame_01: WEAK** — Small blue banner on a wooden gate frame sits background-left on the hill crest, plus a hard-edged black conical shape spiking down from the top of the frame, half-hidden behind a tree. The banner's color pops a little, but it's small, off-center, and the black shape reads more like a lens/shadow glitch than an in-world landmark since nothing at its base explains it. Would read stronger centered, or with visible smoke/fire at its source.
+
+**frame_02: NOTICEABLE** — Same black spike, now unobstructed dead-center above the hill crest, sitting right over a blue banner post — a clean "go toward the anomaly" read. There's also a large turtle-shelled creature right in front of the player, which grabs attention but is a foreground curiosity rather than a distant pull.
+
+**frame_03: WEAK** — A soft grey dust/smoke puff and small banner occupy the valley notch dead ahead, but they're pale and low-contrast against the sky, and a tiny distant figure/green blob top-right is too small to register. Converging cliff walls help funnel the eye, but nothing at the far end is bold enough to reward the look.
+
+**frame_04: NOTICEABLE** — Twin blue banners plus a soft grey smoke plume sit mid-ground amid trees, and a distinctive snow-capped peak anchors the background. The combination of color (banners), motion cue (smoke), and landmark silhouette (peak) gives a clear "there's a place ahead" read.
+
+**frame_05: WEAK** — A small camp (tent, campfire props, a standing figure) sits under a tree/banner marker with the same black spike overhead. The camp objects are small and blend into the grass; only the banner+spike overhead give it any pull, and that pull is muted since the spike isn't tied to the camp visually.
+
+**frame_06: NOTICEABLE** — The narrow canyon corridor funnels the eye straight down the grass path to a banner post and a green creature/blob sitting exactly at the vanishing point, with the smoke spike overhead. Strong forced-perspective composition — the best "lure" shot in the set.
+
+**frame_07: NOTICEABLE** — Two large blue banners dominate the mid-frame against grey cliff walls, black spike overhead. Bold color and size, but the space reads as an enclosed pocket rather than a through-path, so it invites a look more than a walk.
+
+**frame_08: WEAK** — Banner posts are pushed to the background/edge and partly cropped; tall grass fills most of the frame. The ocean sliver on the right is pleasant but there's no single strong focal object — the eye has nowhere obvious to land.
+
+**frame_09: WEAK** — A single banner-and-lantern post on a raised plinth is visible background-center-left, but it sits high in the frame with a large empty sand foreground pulling focus away. Readable, not compelling.
+
+**frame_10: NOTICEABLE** — Now close on the post: banner, hanging lantern, and a stone/wood step read clearly as a built landmark — the clearest "point of interest" object in the whole set.
+
+**frame_11: NOTICEABLE** — Small camp with tent, a lit campfire (warm orange glow), and a standing NPC-like figure next to the banner post. The fire color and the humanoid silhouette both signal "someone is here" — good draw.
+
+**frame_12: WEAK** — Player is now in the water; the shoreline camp is small and distant on the right, and an odd blue kite/flag-shaped object floats in the water to the left. It's visually odd enough to notice but unclear what it is (creature? debris? torn banner?), so it reads as confusing rather than as a destination.
+
+# Per-place summary
+
+- **PLACE 1 (frames 01+02): YES** — smoke/spike + banner strengthen convincingly on approach.
+- **PLACE 2 (frames 03+04): WEAK** — soft, washed-out first look; only clarifies once closer.
+- **PLACE 3 (frames 05+06): YES** — weak arrival shot, but the canyon corridor sells it hard on approach.
+- **PLACE 4 (frames 07+08): WEAK** — strong up close, but the establishing shot is cluttered with grass and the banners are cropped/backgrounded.
+- **PLACE 5 (frames 09+10): YES** — soft at distance, becomes a clear built landmark once near.
+- **PLACE 6 (frames 11+12): WEAK** — good camp/fire read at arrival, but the water approach shot muddies the focal point with an ambiguous floating object.

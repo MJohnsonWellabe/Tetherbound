@@ -1,0 +1,482 @@
+[
+  {
+    "fight_s": 0.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-000.00.png",
+    "gap_m": 5.0,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 0.65,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-000.65.png",
+    "gap_m": 4.86,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 1.25,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-late-001.25.png",
+    "gap_m": 8.27,
+    "opponent": "water_cannonback",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 2.9,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-002.90.png",
+    "gap_m": 8.79,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 3.5,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-late-003.50.png",
+    "gap_m": 9.28,
+    "opponent": "water_cannonback",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 6.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-006.02.png",
+    "gap_m": 8.46,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 12.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-012.00.png",
+    "gap_m": 8.36,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 18.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-018.00.png",
+    "gap_m": 8.57,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 24.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-024.02.png",
+    "gap_m": 9.87,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 30.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-030.02.png",
+    "gap_m": 8.69,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 36.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-036.02.png",
+    "gap_m": 8.71,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 42.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-042.02.png",
+    "gap_m": 8.52,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 48.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-048.02.png",
+    "gap_m": 8.51,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 54.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-054.02.png",
+    "gap_m": 11.4,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 60.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-060.02.png",
+    "gap_m": 10.83,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 66.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-066.02.png",
+    "gap_m": 9.04,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 72.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-072.02.png",
+    "gap_m": 8.6,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 78.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-078.02.png",
+    "gap_m": 7.75,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 84.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-084.02.png",
+    "gap_m": 8.33,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 90.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-090.02.png",
+    "gap_m": 9.91,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 94.55,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-094.55.png",
+    "gap_m": 4.8,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 95.17,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-late-095.17.png",
+    "gap_m": 8.24,
+    "opponent": "water_mirejaw",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 96.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-096.02.png",
+    "gap_m": 6.4,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 96.68,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-096.68.png",
+    "gap_m": 7.01,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 97.28,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-ended-097.28.png",
+    "gap_m": 7.01,
+    "opponent": "water_mirejaw",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 102.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-102.02.png",
+    "gap_m": 6.85,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 108.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-108.02.png",
+    "gap_m": 9.36,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 114.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-114.02.png",
+    "gap_m": 9.49,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 120.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-120.02.png",
+    "gap_m": 6.47,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 126.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-126.02.png",
+    "gap_m": 6.7,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 132.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-132.02.png",
+    "gap_m": 6.63,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 138.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-138.00.png",
+    "gap_m": 7.15,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 144.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-144.00.png",
+    "gap_m": 6.84,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 150.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-150.00.png",
+    "gap_m": 8.15,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 156.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-156.00.png",
+    "gap_m": 7.22,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 162.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-162.00.png",
+    "gap_m": 6.49,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 163.73,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-163.73.png",
+    "gap_m": 4.6,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 164.33,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-ended-164.33.png",
+    "gap_m": 4.6,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 165.65,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-165.65.png",
+    "gap_m": 6.1,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 166.25,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-late-166.25.png",
+    "gap_m": 8.97,
+    "opponent": "water_riverdrake",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 168.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-168.00.png",
+    "gap_m": 9.03,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 174.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-174.00.png",
+    "gap_m": 7.04,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 180.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-180.00.png",
+    "gap_m": 7.05,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 186.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-186.00.png",
+    "gap_m": 7.36,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 192.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-192.00.png",
+    "gap_m": 7.53,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 198.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-198.00.png",
+    "gap_m": 7.69,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 204.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-204.00.png",
+    "gap_m": 7.49,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 210.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-210.00.png",
+    "gap_m": 8.27,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 216.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-216.00.png",
+    "gap_m": 8.71,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 222.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-222.00.png",
+    "gap_m": 7.06,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 226.27,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-226.27.png",
+    "gap_m": 4.6,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 1.1
+  },
+  {
+    "fight_s": 226.87,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-ended-226.87.png",
+    "gap_m": 4.6,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 1.1
+  },
+  {
+    "fight_s": 228.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-228.00.png",
+    "gap_m": 5.77,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 228.12,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-start-228.12.png",
+    "gap_m": 5.84,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 1.1
+  },
+  {
+    "fight_s": 229.02,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/tell-late-229.02.png",
+    "gap_m": 6.54,
+    "opponent": "water_riptusk",
+    "tag": "tell-late",
+    "tell_s": 1.1
+  },
+  {
+    "fight_s": 234.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-234.00.png",
+    "gap_m": 4.2,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 240.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-240.00.png",
+    "gap_m": 5.3,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 246.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-246.00.png",
+    "gap_m": 6.43,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 252.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-252.00.png",
+    "gap_m": 10.82,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 258.0,
+    "file": "res://shots/tidewake/c3_nerissa/nerissa/t-258.00.png",
+    "gap_m": 2.8,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

@@ -62,7 +62,7 @@ func test_every_landform_behind_a_mandatory_dock_is_sealed_in_dock_order() -> vo
 	var by_id: Dictionary = {}
 	for seal: Dictionary in _seals:
 		by_id[str(seal.id)] = seal
-	assert_eq(_config.rest_shoals.size(), 17)
+	assert_eq(_config.rest_shoals.size(), 27)
 	for shoal: Dictionary in _config.rest_shoals:
 		assert_true(by_id.has(str(shoal.id)), "rest shoal sealed: " + str(shoal.id))
 	# Open arrival and optional open landing stay unsealed.
