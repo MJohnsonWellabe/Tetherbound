@@ -1,2 +1,0 @@
-FAIL captain_ridge: player_hits=12 stand_strikes_landed=4 dodges_avoided=0/4 strikes=8
-FAIL: 1 of 1 named fights lack a full hit/avoidance witness

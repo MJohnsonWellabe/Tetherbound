@@ -1,0 +1,22 @@
+Command: godot --headless --path . --script tests/smoke_named_fight_hit_avoid.gd -- --trainer=captain_field
+Applied to scripts/combat/combat_math.gd, then reverted (git checkout):
+
+diff --git a/scripts/combat/combat_math.gd b/scripts/combat/combat_math.gd
+index 8b3c85ab..31dcc576 100644
+--- a/scripts/combat/combat_math.gd
++++ b/scripts/combat/combat_math.gd
+@@ -118,7 +118,7 @@ static func in_hit_cone(
+ 	to.y = 0.0
+ 	var distance := to.length()
+ 	if distance > reach:
+-		return false
++		return true  # MUTATION
+ 	# Standing inside somebody always connects. Without this, two creatures
+ 	# overlapping produce a zero-length direction and every attack whiffs, which
+ 	# reads as the game being broken at exactly the moment it is most frantic.
+
+Result (exit 1):
+FAIL captain_field: player_hits=16 stand_strikes_landed=4 dodges_avoided=0/4 strikes=9
+FAIL: 1 of 1 named fights lack a full hit/avoidance witness
+
+The player's own hits still land under the mutation (16), and held-still strikes still land. Only the out-of-reach dodges stop missing, so the witness's avoidance rows depend on the real reach test.

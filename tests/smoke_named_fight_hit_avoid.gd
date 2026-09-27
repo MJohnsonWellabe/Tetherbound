@@ -11,19 +11,25 @@ extends "res://tools/art_pipeline/capture_named_fight.gd"
 ##   `hit_landed(on_enemy=true)` is the player's hit landing.
 ## - STAND: on alternate tells the stick is left at rest; a
 ##   `hit_landed(on_enemy=false)` is the opponent's strike landing.
-## - DODGE: on the other tells the left stick drives the creature out of the
-##   strike (movement is the dodge -- combat_manager.gd `_drive_player_creature`,
+## - DODGE: on the other tells the left stick backs the creature straight
+##   away from the opponent, out of reach, steering round anything it is
+##   stuck on (movement is the dodge -- combat_manager.gd `_drive_player_creature`,
 ##   there is no dodge button), from DODGE_REACTION_S into the tell until
 ##   WITNESS_DODGE_TAIL_S after it; an `attack_missed(by_player=false)` is the strike
 ##   avoided.
 ##
-## Every tell is logged as a row: trainer, strike number, move id, tell
-## seconds, policy, outcome, damage. A fight passes with at least one landed
+## Ordinary quicks track the target live through the tell, so stepping
+## sideways does not escape them; reach is the only way out.
+##
+## Every tell is logged as a row: trainer, opponent species and level, strike
+## number, move id, tell seconds, policy, outcome, damage, gaps and reach. A fight passes with at least one landed
 ## player hit, one landed STAND strike and one missed DODGE strike.
 ##
-## Disclosed harness help: the player's active creature is healed to full
-## after every strike so a starter survives a level 11-19 trainer for the
-## sample; the stand spot is a fixture teleport (capture_named_fight.gd).
+## Disclosed harness help: the ally is a fixture Terrapup (adopt_starter, a
+## party of one) healed to full after every strike so it survives a level
+## 13-20 trainer for the sample; the stand spot is a fixture teleport that
+## skips each trainer's progression and physical gates; the four fights run
+## in one world, each ended by a forced loss after its sample.
 ##
 ##   godot --headless --path . --script tests/smoke_named_fight_hit_avoid.gd \
 ##     [-- --trainer=captain_riverwatch,captain_field,captain_ridge,warden_aldis]
@@ -34,7 +40,7 @@ const FIGHT_FRAME_LIMIT := 60 * 120
 ## A player reacting to the tell they can see: ~0.2 s, not a frame-perfect input.
 const DODGE_REACTION_S := 0.2
 const WITNESS_DODGE_TAIL_S := 0.25
-const POLICIES := ["stand", "dodge", "stand", "dodge_side"]
+const POLICIES := ["stand", "dodge"]
 const WITNESS_ATTACK_EVERY_FRAMES := 20
 
 var _rows: Array[Dictionary] = []
@@ -121,7 +127,8 @@ func _witness_one() -> bool:
 			in_tell = not s.has("outcome") or since < float(s.seconds) + WITNESS_DODGE_TAIL_S
 			if str(s.policy).begins_with("dodge") and in_tell \
 					and since >= DODGE_REACTION_S:
-				stick = _stick_away_from_opponent(str(s.policy) == "dodge_side")
+				stick = _stick_away_from_opponent()
+				stick = _steer_around_obstacle(stick)
 		_left_stick(stick)
 		# A player who means to step out of the next swing is watching for
 		# it, not mashing: a quick roots the creature through its wind-up and
@@ -149,8 +156,8 @@ func _witness_one() -> bool:
 	var dodge_miss := 0
 	var dodged := 0
 	for s in _strikes:
-		print("row %s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f" % [
-			_tid, int(s.n), str(s.move), float(s.seconds), str(s.policy),
+		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f" % [
+			_tid, str(s.opponent), int(s.n), str(s.move), float(s.seconds), str(s.policy),
 			str(s.get("outcome", "none")), float(s.get("damage", 0.0)),
 			float(s.get("gap_at_tell", -1.0)), float(s.get("gap_at_strike", -1.0)),
 			float(s.get("moved", -1.0)), float(s.reach), float(s.cone), int(s.action),
@@ -193,6 +200,7 @@ func _on_witness_tell(seconds: float) -> void:
 		"n": _strikes.size() + 1,
 		"seconds": seconds,
 		"move": str(cfg.get("move_id", "quick")),
+		"opponent": _opponent_label(),
 		"policy": policy,
 		"frame": Engine.get_physics_frames(),
 		"ally_at_tell": _ally_pos(),
@@ -221,7 +229,7 @@ func _settle_outcome(outcome: String, amount: float) -> void:
 
 ## Camera-space stick that drives the creature straight away from the
 ## opponent's body, the way a player backs out of a swing they can see coming.
-func _stick_away_from_opponent(sideways := false) -> Vector2:
+func _stick_away_from_opponent() -> Vector2:
 	var ally := _director.call("ally_body") as Node3D
 	if ally == null or _body == null or not is_instance_valid(_body) or _camera == null:
 		return Vector2.ZERO
@@ -230,8 +238,6 @@ func _stick_away_from_opponent(sideways := false) -> Vector2:
 	if away.length() < 0.01:
 		return Vector2.ZERO
 	away = away.normalized()
-	if sideways:
-		away = Vector3(-away.z, 0.0, away.x)
 	var right := _camera.global_transform.basis.x
 	right.y = 0.0
 	var forward := -_camera.global_transform.basis.z
@@ -242,6 +248,13 @@ func _stick_away_from_opponent(sideways := false) -> Vector2:
 func _ally_pos() -> Vector3:
 	var ally := _director.call("ally_body") as Node3D
 	return ally.global_position if ally != null else Vector3.ZERO
+
+
+func _opponent_label() -> String:
+	var enemy: RefCounted = _manager.get("_enemy")
+	if enemy == null:
+		return "?"
+	return "%s_L%d" % [str(enemy.get("species_id")), int(enemy.get("level"))]
 
 
 func _arena_offset() -> float:
@@ -259,6 +272,37 @@ func _gap() -> float:
 	var d := _ally_pos() - (_body as Node3D).global_position
 	d.y = 0.0
 	return d.length()
+
+
+## A player whose creature stops against a tree or rock steers round it
+## rather than pushing into it: when the body has not moved for
+## STUCK_CHECK_FRAMES, the escape direction turns by STUCK_TURN_DEG (cycling
+## +60, -60, +120, -120 from straight away). Still stick input only.
+const STUCK_CHECK_FRAMES := 12
+const STUCK_MOVE_M := 0.05
+const STUCK_TURNS_DEG := [0.0, 60.0, -60.0, 120.0, -120.0]
+var _stuck_at := Vector3.INF
+var _stuck_frames := 0
+var _turn_index := 0
+var _turn_strike := -1
+
+
+func _steer_around_obstacle(stick: Vector2) -> Vector2:
+	if stick == Vector2.ZERO:
+		return stick
+	if _turn_strike != _strikes.size():
+		_turn_strike = _strikes.size()
+		_turn_index = 0
+		_stuck_at = _ally_pos()
+		_stuck_frames = 0
+	_stuck_frames += 1
+	if _stuck_frames >= STUCK_CHECK_FRAMES:
+		if _ally_pos().distance_to(_stuck_at) < STUCK_MOVE_M:
+			_turn_index = (_turn_index + 1) % STUCK_TURNS_DEG.size()
+			print("dodge: blocked, steering %+.0f deg" % float(STUCK_TURNS_DEG[_turn_index]))
+		_stuck_at = _ally_pos()
+		_stuck_frames = 0
+	return stick.rotated(deg_to_rad(float(STUCK_TURNS_DEG[_turn_index])))
 
 
 func _left_stick(v: Vector2) -> void:
