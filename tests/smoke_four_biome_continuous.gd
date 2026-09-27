@@ -34,6 +34,9 @@ const LATE_WATER := preload("res://tests/helpers/water_earned_late_segment.gd")
 const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
 const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
+const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
+const RESUME_SETTLE_FRAMES := 300
 const LOOK_ALIGNMENT_TOLERANCE_DEG := 0.75
 const LOOK_ALIGNMENT_STRENGTH := 0.65
 var coverage: RefCounted
@@ -47,6 +50,16 @@ var finished := false
 var _measurement_camera_alignment := false
 var _measurement_previous := Vector3.INF
 var _measurement_look_action := StringName()
+## Checkpoint boundaries (see tests/helpers/four_biome_checkpoints.gd).
+var checkpoint_args: Dictionary = {}
+var checkpoint_dir := ""
+var resume_boundary := ""
+var resume_info: Dictionary = {}
+## Absolute path of the checkpoint this run resumed from; an export never overwrites it.
+var resume_source_abs := ""
+var carried_receipts: Dictionary = {}
+var prior_elapsed_seconds := 0.0
+var checkpoints_written: Array = []
 
 
 func _init() -> void:
@@ -56,9 +69,24 @@ func _init() -> void:
 func _run() -> void:
 	started_ms = Time.get_ticks_msec()
 	var game := root.get_node("Game")
+	checkpoint_args = CHECKPOINTS.parse_args(OS.get_cmdline_user_args())
+	for line: Variant in checkpoint_args["errors"]:
+		failures.append("CHECKPOINT ARGS: " + str(line))
+	if not failures.is_empty():
+		_finish(false)
+		return
+	checkpoint_dir = str(checkpoint_args["checkpoint_dir"])
+	if checkpoint_dir.is_empty():
+		checkpoint_dir = "user://four_biome_checkpoints_%d_%d" % [OS.get_process_id(), started_ms]
 	scratch = "user://four_biome_fresh_%d_%d" % [OS.get_process_id(), started_ms]
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(scratch)):
 		failures.append("fresh scratch save already exists")
+		_finish(false)
+		return
+	var resuming := not str(checkpoint_args["resume_source"]).is_empty()
+	# A resumed piece copies the checkpoint's save into its own scratch BEFORE
+	# the save system is installed, so the checkpoint itself is never written.
+	if resuming and not _stage_resume_files():
 		_finish(false)
 		return
 	# Install before any title input, reset, world construction or autosave.
@@ -68,47 +96,67 @@ func _run() -> void:
 		failures.append_array(coverage.failures)
 		_finish(false)
 		return
-	print("FRESH CAMPAIGN scratch=%s slot=%s" % [ProjectSettings.globalize_path(scratch),
-		game.get("save_system").call("slot_path", 0)])
+	print("FRESH CAMPAIGN scratch=%s slot=%s checkpoints=%s" % [ProjectSettings.globalize_path(scratch),
+		game.get("save_system").call("slot_path", 0), ProjectSettings.globalize_path(checkpoint_dir)])
+	var from := -1
+	if resuming:
+		if not await _resume_from_checkpoint(game):
+			_finish(false)
+			return
+		from = CHECKPOINTS.boundary_index(resume_boundary)
+	if from < 0 and not await _stage_fresh_through_hall(game):
+		return
+	if from < 1 and not await _stage_warden_to_cloudreach(game):
+		return
+	if from < 2 and not await _stage_cloudreach_to_stormwood(game):
+		return
+	if from < 3 and not await _stage_stormwood_to_water(game):
+		return
+	await _stage_water_to_ending(game)
+
+
+## Each stage returns false once the run has finished (a failure, a requested
+## --through-* prefix, or --stop-at), true to continue with the next stage.
+func _stage_fresh_through_hall(game: Node) -> bool:
 	var opening := OPENING.new()
 	live = await opening.run(self)
 	for line: Variant in live.get("failures", []):
 		failures.append(str(line))
 	if not bool(live.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	print("FRESH PREFIX: title through first live catch; no seeded progress, HP pinning or reload")
 	reached = "opening"
 	if OS.get_cmdline_user_args().has("--through-opening"):
 		_finish(true)
-		return
+		return false
 	live = await opening.open_road_gate()
 	for line: Variant in live.get("failures", []):
 		failures.append(str(line))
 	if not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "road_gate"
 	var village_failures: Array[String] = await VILLAGE.new().run(self,
 		live["world"], live["game"], live["player"], live["rig"])
 	failures.append_array(village_failures)
 	if not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "village"
 	if OS.get_cmdline_user_args().has("--through-village"):
 		_finish(true)
-		return
+		return false
 	var team_result: Dictionary = await TEAM.new().run(self, live["world"], game)
 	for line: Variant in team_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(team_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "earned_team"
 	if OS.get_cmdline_user_args().has("--through-team"):
 		_finish(true)
-		return
+		return false
 	var camp := CAMP.new()
 	for segment: RefCounted in [MATERIALS.new(), camp]:
 		var result: Dictionary
@@ -125,11 +173,11 @@ func _run() -> void:
 		if not bool(result.get("passed", false)) or not failures.is_empty():
 			print("FRESH MATERIAL/CAMP DIAGNOSTIC %s" % JSON.stringify(result))
 			_finish(false)
-			return
+			return false
 	reached = "paid_camp"
 	if OS.get_cmdline_user_args().has("--through-camp"):
 		_finish(true)
-		return
+		return false
 	print("FRESH STAGE ENTRY stage=rest frame=", Engine.get_physics_frames(), " player=", live["player"].global_position)
 	var rest_result: Dictionary = await REST.new().run(self,
 		live["world"], game, camp._beds, camp._bedroll, false)
@@ -138,113 +186,133 @@ func _run() -> void:
 		failures.append(str(line))
 	if not bool(rest_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "rested_team"
 	if OS.get_cmdline_user_args().has("--through-rest"):
 		_finish(true)
-		return
+		return false
 	var tournament_result: Dictionary = await TOURNAMENT.new().run(self,
 		live["world"], game, live["player"], live["rig"])
 	for line: Variant in tournament_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(tournament_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "tournament_won"
 	if OS.get_cmdline_user_args().has("--through-tournament"):
 		_finish(true)
-		return
+		return false
 	_start_meadows_road_camera_alignment()
 	var bridge_result: Dictionary = await BRIDGE.new().run(self, live["world"], game)
 	for line: Variant in bridge_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(bridge_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "south_bridge_crossed"
 	if OS.get_cmdline_user_args().has("--through-bridge"):
 		_finish(true)
-		return
+		return false
 	if not await _reload_transition(game, "south_bridge_crossed"):
 		_finish(false)
-		return
+		return false
 	var warrens_result: Dictionary = await WARRENS.new().run(self, live["world"], game)
 	for line: Variant in warrens_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(warrens_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "warrens_cleared_and_exited"
 	if OS.get_cmdline_user_args().has("--through-warrens"):
 		_finish(true)
-		return
+		return false
 	if not await _reload_transition(game, "warrens_cleared_and_exited"):
 		_finish(false)
-		return
+		return false
 	var relay_result: Dictionary = await RELAY.new().run(self, live["world"], game)
 	for line: Variant in relay_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(relay_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "relay_disabled_and_mill_crossed"
 	if OS.get_cmdline_user_args().has("--through-relay"):
 		_finish(true)
-		return
+		return false
 	if not await _reload_transition(game, "relay_disabled_and_mill_crossed"):
 		_finish(false)
-		return
+		return false
 	var hall_result: Dictionary = await HALL.new().run(self, live["world"], game)
 	for line: Variant in hall_result.get("failures", []):
 		failures.append(str(line))
 	if not bool(hall_result.get("passed", false)) or not failures.is_empty():
 		_finish(false)
-		return
+		return false
 	reached = "warden_arena_entered"
+	if not await _checkpoint_boundary(game, "hall"):
+		return false
 	if OS.get_cmdline_user_args().has("--through-hall"):
 		_finish(true)
-		return
+		return false
 	if not await _reload_transition(game, "warden_arena_entered"):
 		_finish(false)
-		return
+		return false
+	return true
+
+
+func _stage_warden_to_cloudreach(game: Node) -> bool:
 	if not _accepted(await WARDEN.new().run(self, live["world"], game), "passed"):
-		return
+		return false
 	live["world"] = current_scene
 	reached = "cloudreach_arrived"
+	if not await _checkpoint_boundary(game, "c1_arrival"):
+		return false
 	if OS.get_cmdline_user_args().has("--through-meadows"):
 		_finish(true)
-		return
+		return false
+	return true
+
+
+func _stage_cloudreach_to_stormwood(game: Node) -> bool:
 	var cloudreach := CLOUDREACH.new()
 	if not _accepted(await cloudreach.run(self, live["world"], game), "ok"):
-		return
+		return false
 	reached = "cloudreach_completed"
 	if OS.get_cmdline_user_args().has("--through-cloudreach"):
 		_finish(true)
-		return
+		return false
 	if not _accepted(await STORMWARD.new().run(self, cloudreach), "ok"):
-		return
+		return false
 	live["world"] = current_scene
 	reached = "stormwood_arrived"
+	return await _checkpoint_boundary(game, "stormwood_arrived")
+
+
+func _stage_stormwood_to_water(game: Node) -> bool:
 	var stormwood := STORMWOOD.Segment.new()
 	if not _accepted(await stormwood.run(self, live["world"], game), "passed"):
-		return
+		return false
 	reached = "stormwood_arch_recipe_earned"
 	if not _accepted(await CROWN.new().run(self, live["world"], game), "passed"):
-		return
+		return false
 	reached = "stormwood_paid_crown"
 	if not _accepted(await ROOTGATE.new().run(self, live["world"], game), "passed"):
-		return
+		return false
 	reached = "stormwood_rootgate_released"
 	if not _accepted(await DYNAMO.new().run(self, live["world"], game), "passed"):
-		return
+		return false
 	reached = "stormwood_dynamo_core_reached"
 	if not _accepted(await MARROW.new().run(self, live["world"], game), "passed"):
-		return
+		return false
 	reached = "stormwood_marrow_and_core_released"
 	if not _accepted(await WATERWARD.new().run(self, live["world"], game), "passed"):
-		return
+		return false
 	live["world"] = current_scene
 	reached = "water_arrived"
+	return await _checkpoint_boundary(game, "water_arrived")
+
+
+func _stage_water_to_ending(game: Node) -> void:
 	var water_opening := WATER_OPENING.new()
 	if not _accepted(await water_opening.run(self, live["world"], game), "passed"):
 		return
@@ -285,6 +353,174 @@ func _run() -> void:
 	reached = "tidewake_ending_earned"
 	campaign_complete = true
 	_finish(true)
+
+
+## Checkpoint boundary: a production save (`Game.save_game`, the menu Save
+## call) into the chain slot, exported in the earned_saves layout with a
+## receipt. Explicitly requested checkpoints (--checkpoint-dir/--stop-at/
+## --resume-from) fail the run when the save or export is refused; a default
+## run only warns, so its pass/fail meaning is unchanged. Returns false when
+## the run finished here (failure or --stop-at).
+func _checkpoint_boundary(game: Node, boundary: String) -> bool:
+	if bool(checkpoint_args.get("no_checkpoints", false)):
+		return true
+	var strict := bool(checkpoint_args.get("requested", false))
+	var problem := ""
+	var out := ""
+	var receipt := {}
+	if not bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT)):
+		problem = "Game.save_game(%d) refused at boundary %s" % [CHECKPOINTS.CHECKPOINT_SLOT, boundary]
+	else:
+		var elapsed := (Time.get_ticks_msec() - started_ms) / 1000.0
+		var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
+		receipt = CHECKPOINTS.build_receipt(boundary, {
+			"commit": CHECKPOINTS.commit_sha(),
+			"world_seed": int(game.get("world_seed")),
+			"world_seed_env": OS.get_environment("TB_WORLD_SEED"),
+			"elapsed_seconds": elapsed,
+			"cumulative_elapsed_seconds": prior_elapsed_seconds + elapsed,
+			"realm": str(game.get("current_realm")),
+			"player": [player.global_position.x, player.global_position.y, player.global_position.z] if player != null else [],
+			"game_day": int(game.get("day")) if game.get("day") != null else 0,
+			"party": _party_rows(game.get("party")),
+			"flags": (game.get("progression").call("all_set") as Array).duplicate(),
+			"resumed_from": resume_info,
+		})
+		var target_abs := ProjectSettings.globalize_path(checkpoint_dir.path_join(boundary)).simplify_path()
+		if not resume_source_abs.is_empty() and (target_abs == resume_source_abs or resume_source_abs.begins_with(target_abs + "/")):
+			out = ""
+			problem = "checkpoint export refused: target %s would overwrite the resume source %s (use a different --checkpoint-dir)" % [target_abs, resume_source_abs]
+		else:
+			out = CHECKPOINTS.export_checkpoint(scratch, checkpoint_dir, boundary, boundary, receipt, carried_receipts)
+		if not problem.is_empty():
+			pass  # refused above: never overwrite the checkpoint this run resumed from
+		elif out.is_empty():
+			problem = "checkpoint export to %s failed at boundary %s" % [checkpoint_dir, boundary]
+		else:
+			carried_receipts[boundary] = receipt
+			checkpoints_written.append(ProjectSettings.globalize_path(out))
+			print("FOUR BIOME CHECKPOINT %s" % JSON.stringify({"boundary": boundary, "dir": ProjectSettings.globalize_path(out),
+				"commit": receipt["commit"], "world_seed": receipt["world_seed"], "elapsed_seconds": receipt["elapsed_seconds"],
+				"party": receipt["party"], "flags_total": receipt["flags_total"]}))
+	if not problem.is_empty():
+		if strict:
+			failures.append("CHECKPOINT " + problem)
+			_finish(false)
+			return false
+		print("FOUR BIOME CHECKPOINT WARNING " + problem)
+	if str(checkpoint_args.get("stop_at", "")) == boundary:
+		print("FOUR BIOME CHECKPOINT stop-at %s reached" % boundary)
+		_finish(true)
+		return false
+	return true
+
+
+## Resolves --resume-from and copies its save into this run's fresh scratch.
+func _stage_resume_files() -> bool:
+	var source := CHECKPOINTS.resolve_source(str(checkpoint_args["resume_source"]), checkpoint_dir)
+	if source.is_empty():
+		failures.append("RESUME: no checkpoint with a save/ at '%s' (as a dir, under %s, or under %s)" % [
+			checkpoint_args["resume_source"], checkpoint_dir, CHECKPOINTS.FIXTURE_ROOT])
+		return false
+	resume_source_abs = ProjectSettings.globalize_path(source).simplify_path()
+	resume_boundary = CHECKPOINTS.pick_boundary(source, str(checkpoint_args["resume_boundary"]))
+	if resume_boundary.is_empty():
+		failures.append("RESUME: %s has no receipt for boundary '%s' (known: %s)" % [source,
+			checkpoint_args["resume_boundary"], ", ".join(CHECKPOINTS.boundary_names())])
+		return false
+	var stop_at := str(checkpoint_args["stop_at"])
+	if not stop_at.is_empty() and CHECKPOINTS.boundary_index(stop_at) < CHECKPOINTS.boundary_index(resume_boundary):
+		failures.append("RESUME: --stop-at=%s is before the resumed boundary %s" % [stop_at, resume_boundary])
+		return false
+	carried_receipts = CHECKPOINTS.read_all_receipts(source)
+	var receipt: Dictionary = carried_receipts.get(resume_boundary, {})
+	if receipt.has("cumulative_elapsed_seconds"):
+		prior_elapsed_seconds = float(receipt["cumulative_elapsed_seconds"])
+	else:
+		for other: Variant in carried_receipts.values():
+			prior_elapsed_seconds += float((other as Dictionary).get("wall_seconds", 0.0))
+	resume_info = {"source": source, "boundary": resume_boundary,
+		"source_commit": str(receipt.get("commit", "")), "source_kind": str(receipt.get("kind", "earned_chain_runner"))}
+	if not CHECKPOINTS.copy_tree(source.path_join("save"), scratch):
+		failures.append("RESUME: could not copy %s/save into %s" % [source, scratch])
+		return false
+	print("RESUME staged %s at boundary %s (next segment %s) into %s" % [source, resume_boundary,
+		CHECKPOINTS.next_segment(resume_boundary), ProjectSettings.globalize_path(scratch)])
+	return true
+
+
+## Loads the staged checkpoint through the production title's Load list (the
+## same path as tools/earned_saves/earned_chain_runner.gd), then refuses the
+## resume unless the loaded party and flags match the receipt.
+func _resume_from_checkpoint(game: Node) -> bool:
+	if not bool(game.call("has_save", CHECKPOINTS.CHECKPOINT_SLOT)):
+		failures.append("RESUME: the staged checkpoint has no slot %d save" % CHECKPOINTS.CHECKPOINT_SLOT)
+		return false
+	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
+	root.add_child(title)
+	current_scene = title
+	for _i in 10:
+		await process_frame
+	var load_button := title.get("_load_button") as Button
+	if load_button == null:
+		failures.append("RESUME: the production title has no Load button")
+		return false
+	load_button.pressed.emit()
+	await process_frame
+	var chosen: Button = null
+	for node: Node in (title.get("_load_box") as Node).get_children():
+		if node is Button and (node as Button).text.begins_with("Save %d" % CHECKPOINTS.CHECKPOINT_SLOT) \
+				and not (node as Button).disabled:
+			chosen = node
+	if chosen == null:
+		failures.append("RESUME: the title's Load list does not offer Save %d" % CHECKPOINTS.CHECKPOINT_SLOT)
+		return false
+	chosen.pressed.emit()
+	var world: Node = null
+	for _frame in 3600:
+		await process_frame
+		var scene := current_scene
+		if scene != null and scene != title and is_instance_valid(scene) \
+				and scene.get_node_or_null("Player") != null \
+				and str(game.get("pending_realm_entry")).is_empty() \
+				and bool(game.call("_realm_scene_ready", scene, str(game.get("current_realm")))):
+			world = scene
+			break
+	if world == null:
+		failures.append("RESUME: the loaded checkpoint never reached a ready world scene")
+		return false
+	for _i in RESUME_SETTLE_FRAMES:
+		await physics_frame
+	for _i in 600:
+		if INPUT_OWNER.current(self) == null:
+			break
+		await process_frame
+	var receipt: Dictionary = carried_receipts.get(resume_boundary, {})
+	var loaded_flags: Array = (game.get("progression").call("all_set") as Array).duplicate()
+	var problems := CHECKPOINTS.validate(receipt, resume_boundary, _party_uids(game.get("party")), loaded_flags)
+	var want_seed := int(receipt.get("world_seed", receipt.get("saved_world_seed", 0)))
+	if want_seed != 0 and want_seed != int(game.get("world_seed")):
+		problems.append("loaded world seed %d does not match the receipt's %d" % [int(game.get("world_seed")), want_seed])
+	if not problems.is_empty():
+		for line: Variant in problems:
+			failures.append("RESUME REFUSED: " + str(line))
+		return false
+	live = {"world": world, "game": game, "player": world.get_node_or_null(^"Player"),
+		"rig": get_first_node_in_group("camera_rig")}
+	reached = CHECKPOINTS.reached_label(resume_boundary)
+	print("RESUME VERIFIED boundary=%s realm=%s player=%s party=%s flags=%d seed=%d" % [resume_boundary,
+		game.get("current_realm"), (live["player"] as Node3D).global_position, JSON.stringify(_party_rows(game.get("party"))),
+		loaded_flags.size(), int(game.get("world_seed"))])
+	# The fresh run's ROAD camera alignment is on from the tournament onward
+	# while in the Meadows; keep a Meadows-resumed piece measuring the same way.
+	if CHECKPOINTS.boundary_index(resume_boundary) == 0:
+		_start_meadows_road_camera_alignment()
+	# `--stop-at` the resumed boundary itself: re-export this verified load
+	# through a fresh production save (write/resume round trip) and stop.
+	if str(checkpoint_args["stop_at"]) == resume_boundary:
+		await _checkpoint_boundary(game, resume_boundary)
+		return false
+	return true
 
 
 func _abort_late(reason: String) -> void:
@@ -370,6 +606,18 @@ func _party_uids(party: RefCounted) -> Array:
 	return out
 
 
+func _party_rows(party: RefCounted) -> Array:
+	var out: Array = []
+	if party == null:
+		return out
+	for i in int(party.call("size")):
+		var member := party.call("at", i) as RefCounted
+		if member != null:
+			out.append({"uid": str(member.get("uid")), "species": str(member.get("species_id")),
+				"level": int(member.get("level")), "nickname": str(member.get("nickname"))})
+	return out
+
+
 func _finish(prefix_passed: bool) -> void:
 	if finished:
 		return
@@ -385,6 +633,9 @@ func _finish(prefix_passed: bool) -> void:
 		"campaign_complete": campaign_complete and failures.is_empty(),
 		"scratch": scratch,
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
+		"cumulative_elapsed_seconds": prior_elapsed_seconds + (Time.get_ticks_msec() - started_ms) / 1000.0,
+		"resumed_from": resume_info,
+		"checkpoints": checkpoints_written,
 		"failures": failures,
 	}))
 	quit(0 if prefix_passed and failures.is_empty() else 1)
