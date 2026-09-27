@@ -76,8 +76,9 @@ func _record_frame() -> void:
 			region_first_entry[region] = {"mode": mode, "stage": stage, "position": str(at),
 				"simulated_seconds": snappedf(simulated_seconds, 0.01)}
 			_log("witness_region_entered", {"region": region, "mode": mode})
-		# `region_at` picks the nearest centre; a gated region entered before its
-		# unlock flag would be a gate bypass (or a boundary artefact to inspect).
+		# `region_at` requires the point inside a region box and breaks overlaps
+		# by nearest centre; a gated region entered before its unlock flag would
+		# be a gate bypass (an overlap can only raise a false alarm, not hide one).
 		var unlock := str(region_unlock.get(region, ""))
 		if not unlock.is_empty() and not _has(unlock) and locked_entries.size() < 50:
 			locked_entries.append({"region": region, "flag": unlock, "mode": mode, "stage": stage, "position": str(at)})
