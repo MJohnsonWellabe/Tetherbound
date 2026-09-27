@@ -1,0 +1,30 @@
+F10#4 Stormwood capture set. 1920x1080, production scene and camera, normal third-person camera.
+Stormwood has no day/night cycle (owner ruling: one fixed storm look at every hour); the time column is the storm cycle phase (calm / building / break).
+Stand ids: frames with the same stand id were taken from the same position and camera heading.
+Pairing: 'pair' names the frame from the same stand and phase in the other story state (before the region's victory vs after it).
+
+frame | group | time (storm phase) | stand | story state | pair
+F01 | forest | calm | S1 | before victory | F19
+F02 | forest | break | S1 | before victory | F20
+F03 | forest | calm | S2 | before victory | F21
+F04 | forest | break | S2 | before victory | -
+F05 | forest | calm | S3 | before victory | -
+F06 | forest | break | S3 | before victory | -
+F07 | forest | calm | S4 | before victory | -
+F08 | forest | break | S4 | before victory | -
+F09 | forest | calm | S5 | before victory | F22
+F10 | forest | break | S5 | before victory | -
+F11 | forest | calm | S6 | before victory | F23
+F12 | forest | break | S6 | before victory | -
+F13 | rod line | calm | R1 | before victory | -
+F14 | rod line | calm | R2 | before victory | F24
+F15 | rod line | building | R3 | before victory | -
+F16 | rod line | calm | R4 | before victory | -
+F17 | rod line | break | R5 | before victory | -
+F18 | rod line | calm | R6 | before victory | -
+F19 | sky-after-victory | calm | S1 | after victory | F01
+F20 | sky-after-victory | break | S1 | after victory | F02
+F21 | sky-after-victory | calm | S2 | after victory | F03
+F22 | sky-after-victory | calm | S5 | after victory | F09
+F23 | sky-after-victory | calm | S6 | after victory | F11
+F24 | sky-after-victory | calm | R2 | after victory | F14

@@ -1,0 +1,20 @@
+Tetherbound, Tidewake sea: four camera stands. Each stand is one fixed camera pose. At each stand there are two states, X and Y, and each state has two frames taken 1 s apart (t0 and t0+1 s). Within a stand, all four frames share the same pose and the same time of day.
+
+frames/S1_X_t0.png   stand S1, state X, t0,      day
+frames/S1_X_t1.png   stand S1, state X, t0+1 s,  day
+frames/S1_Y_t0.png   stand S1, state Y, t0,      day
+frames/S1_Y_t1.png   stand S1, state Y, t0+1 s,  day
+frames/S2_X_t0.png   stand S2, state X, t0,      day
+frames/S2_X_t1.png   stand S2, state X, t0+1 s,  day
+frames/S2_Y_t0.png   stand S2, state Y, t0,      day
+frames/S2_Y_t1.png   stand S2, state Y, t0+1 s,  day
+frames/S3_X_t0.png   stand S3, state X, t0,      day
+frames/S3_X_t1.png   stand S3, state X, t0+1 s,  day
+frames/S3_Y_t0.png   stand S3, state Y, t0,      day
+frames/S3_Y_t1.png   stand S3, state Y, t0+1 s,  day
+frames/S4_X_t0.png   stand S4, state X, t0,      late afternoon (golden)
+frames/S4_X_t1.png   stand S4, state X, t0+1 s,  late afternoon (golden)
+frames/S4_Y_t0.png   stand S4, state Y, t0,      late afternoon (golden)
+frames/S4_Y_t1.png   stand S4, state Y, t0+1 s,  late afternoon (golden)
+
+Contact sheets (2x2, top row X t0 | X t1, bottom row Y t0 | Y t1): sheet_S1.jpg, sheet_S2.jpg, sheet_S3.jpg, sheet_S4.jpg

@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-27 12:00 UTC",
+ "updated": "2026-09-27 13:50 UTC",
  "headline": [
-  "Criteria met: 69 of 101. Batch 52 flipped F11#0 and F05#7 on green full CI 36314695987. F13#4 (batch 53, #372) is merged and in full CI (makes 70). F06#0 is in re-check.",
-  "Re-checking or held: F11#0 (Stormwood must commit its Marrow logs), F01#2/#3 (independent code-blind verdict), F05#7 (green-grass heal in progress). Each lane targets one close per hour; the enforcement check runs at :55.",
-  "Remaining 34 after these: visual rows (Codex art queue plus capture work, now with Codex GPU runs), failing behavior, missing evidence."
+  "Criteria met: 75 of 101 (counted at merge). F14#2 landed in batch 57. Batches 54-55 confirmed by green full CI 5709.",
+  "Next: F10#5 (re-check MET) lands after that CI. Stormwood-B pushed the fight-camera fix (95664d01), which unblocks F10#2, F14#0, F14#1 and the F04 Meadows fights. Every lane is on a coding task; renders go to the owner's desktop GPU via Codex.",
+  "Rules: relaxed proofs with disclosed shortcuts; independent re-check per close; one render per lane; a green full CI on main flips a criterion."
  ],
  "batches": [
   {

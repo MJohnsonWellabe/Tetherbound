@@ -25,6 +25,8 @@ extends SceneTree
 ##
 ## Common flags: `--only=a,b` limits subjects/rows by id; `--fast` shortens
 ## settles (iteration only, never evidence); `--out=res://...` output root.
+## Region only: `--flags=a,b` sets extra story flags before the scene loads;
+## `--times=a,b` replaces every row's times (Stormwood: Surge phases).
 ##
 ## STAGES. Roster and cast use the calibrated neutral stage from
 ## tools/_capture_creature_roster.gd (floor albedo renders at its own value, a
@@ -58,6 +60,8 @@ var _only := {}
 var _fast := false
 var _kind := ""  # region rows: "", "env" or "places"
 var _variant := ""  # region: "aftermath" for post-finale state
+var _extra_flags: Array = []  # region: --flags=a,b story flags set before the scene loads
+var _times: Array = []  # region: --times=a,b overrides every row's times/phases
 
 var _dir := ""
 var _manifest: FileAccess = null
@@ -89,6 +93,12 @@ func _parse_args() -> void:
 			_kind = arg.substr(7)
 		elif arg.begins_with("--variant="):
 			_variant = arg.substr(10)
+		elif arg.begins_with("--flags="):
+			for part: String in arg.substr(8).split(",", false):
+				_extra_flags.append(part.strip_edges())
+		elif arg.begins_with("--times="):
+			for part: String in arg.substr(8).split(",", false):
+				_times.append(part.strip_edges())
 		elif arg == "--fast":
 			_fast = true
 		elif arg.begins_with("--out="):
@@ -477,6 +487,9 @@ func _run_region() -> bool:
 		return false
 	if _variant == "aftermath":
 		spec["flags"] = (spec.get("flags", []) as Array) + (spec.get("aftermath_flags", []) as Array)
+	if not _extra_flags.is_empty():
+		spec["flags"] = (spec.get("flags", []) as Array) + _extra_flags
+	_log_line({"kind": "note", "text": "flags set: %s" % [spec.get("flags", [])]})
 	if not await _boot_region(spec):
 		return false
 	var rows: Array = _build_rows(spec)
@@ -485,7 +498,7 @@ func _run_region() -> bool:
 		var id := str(row["id"])
 		if not _only.is_empty() and not _only.has(id):
 			continue
-		for t: String in row["times"]:
+		for t: String in (_times if not _times.is_empty() else row["times"]):
 			await _capture_region_row(spec, row, t)
 	_write_sheet("_sheet_%s_env" % _region, "_env_")
 	_write_sheet("_sheet_%s_places" % _region, "_place_")
@@ -942,6 +955,8 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 	_rig.spring_length = float(_rig.get("_distance"))
 	var ally := _ally()
 	var companion := "none"
+	var ally_hold := Vector3.INF
+	var ally_side := 0.0
 	if ally != null and not id.begins_with("env_"):
 		# Place rows judge the landmark; park the companion out of shot.
 		ally.global_position = feet + Basis(Vector3.UP, yaw) * Vector3(0.0, 0.0, 30.0)
@@ -961,6 +976,11 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 		ally.global_position = Vector3(spot.x, (fy if is_finite(fy) else feet.y) + 0.05, spot.z)
 		if ally is CharacterBody3D:
 			(ally as CharacterBody3D).velocity = Vector3.ZERO
+		# DISCLOSED FIXTURE: the companion's follow logic otherwise walks it back
+		# onto the trainer during the settle frames (Cloudreach E031-E033
+		# recapture). Pin it where it was placed until the frame is shot.
+		ally_hold = ally.global_position
+		ally_side = side
 		companion = str(ally.get("species_id")) if ally.get("species_id") != null else ally.name
 	var interrupted: Array = _clear_interruptions()
 	_rig.set("yaw", yaw)
@@ -969,10 +989,15 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 	for i in POSE_FRAMES - RENDERED_FRAMES:
 		await process_frame
 		interrupted += _clear_interruptions()
+		_hold_ally(ally, ally_hold)
 	RenderingServer.render_loop_enabled = true
 	for i in RENDERED_FRAMES:
 		await process_frame
 		interrupted += _clear_interruptions()
+		_hold_ally(ally, ally_hold)
+	var ally_gap := -1.0
+	if ally != null and is_instance_valid(ally):
+		ally_gap = Vector2(ally.global_position.x - feet.x, ally.global_position.z - feet.z).length()
 	_rig.set("yaw", yaw)
 	_rig.set("pitch", pitch)
 	var arm := float(_rig.get("_distance"))
@@ -986,7 +1011,17 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 	await _shoot(name, {"subject": id, "label": row.get("label", id), "region": _region, "time": t,
 		"feet": _v(feet), "target": _v(target), "target_dist_m": snappedf(dist, 0.1),
 		"yaw_deg": snappedf(rad_to_deg(yaw), 0.1), "pitch_deg": snappedf(rad_to_deg(pitch), 0.1),
-		"camera": _v(_rcam.global_position), "companion": companion, "closed_dialogue": interrupted, "why": row.get("why", "")})
+		"camera": _v(_rcam.global_position), "companion": companion,
+		"companion_side_m": snappedf(ally_side, 0.1), "companion_gap_m": snappedf(ally_gap, 0.1), "closed_dialogue": interrupted, "why": row.get("why", "")})
+
+
+## Keeps an env-row companion where it was placed (see the fixture note there).
+func _hold_ally(ally: Node3D, at: Vector3) -> void:
+	if ally == null or not is_instance_valid(ally) or at == Vector3.INF:
+		return
+	ally.global_position = at
+	if ally is CharacterBody3D:
+		(ally as CharacterBody3D).velocity = Vector3.ZERO
 
 
 ## An NPC greeting opened by walking onto a stand suspends the production rig
