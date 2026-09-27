@@ -1,0 +1,1286 @@
+{
+  "asset_commit": "edba05c92",
+  "integrated_main": "7f875a85d",
+  "proof": "DRY RUN \u2014 does not count",
+  "renderer": "Godot 4.7 5b4e0cb0f, Compatibility OpenGL3.3, GTX1060 3GB driver560.94",
+  "frames": [
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/001_elixir_might_trainer_scale.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "cd182eff551cc4339397e6c05923b9461906abbf1fa1d00550775e575cabe9a2"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/002_elixir_might_detail_8.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "e43b90a356d9fe26500249687f796f4a8c53764dd1693636e1a010aef3816810"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/003_elixir_might_detail_100.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "5714f043b3d83ad6700f3a19df7977107c2ce058c56392cb59b91b8891e33739"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/004_elixir_might_detail_188.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "0afb52bed6a358a1d14677615149e7f673b1d755968752e89d0f55c587de564d"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/005_elixir_guard_trainer_scale.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "21d8f06c67dd2dafd3d8dcd1851cc2db9810a899001e862d4fd828be89d809bf"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/006_elixir_guard_detail_8.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "016481043853fd7da5f195e96a2cd981413529498a8e427873dc05b0e8ca6a2d"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/007_elixir_guard_detail_100.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "b977bfc471d50989720a21f9acbf169bff8367781c96a094c777e5625baae55c"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/008_elixir_guard_detail_188.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "50348c181c1439cef041a201464e4b16d28c937b23ca562cd5a5a209345445e5"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/009_elixir_vigour_trainer_scale.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7239c6af06e3d9d64c4ea952a5485a3d3c10422729aea3844b2bd06c705583d0"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/010_elixir_vigour_detail_8.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "673d972553343b165111ede733920860d1729fe9b0fb4b9aff7ee721e770bc45"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/011_elixir_vigour_detail_100.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "e84cc44aa8cda5170c0b627a9771200423209434aff7540bbdf88cce5708afc1"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/012_elixir_vigour_detail_188.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "422ce090718634817189c37409864119ea13e8e56e6e84be7905a0977ccf3e6a"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/013_swift_tonic_trainer_scale.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "241982bc0f3d02dffe48b34a1869c568deab4b7779bb9cf02419e8ad8e496362"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/014_swift_tonic_detail_8.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "3fb56f72bb94b4df593c21d9e6a029a18dbc1090979cab7d331c1d9cd5b8fcfb"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/015_swift_tonic_detail_100.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "d8cdbbefb313473356270c515de97758d13b098a25d25c1497923e7132a3bbbb"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/016_swift_tonic_detail_188.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "70c1c6f18dfbfdc501f020faf71970308706044ffc3ae03060bea5b0abc6ece3"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/017_attack_tonic_trainer_scale.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "ccccbec5642e4cbb082d4c2736736c284f0521e58e2a35a3738f0dfb78331ea7"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/018_attack_tonic_detail_8.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "c2ac7772306c3554d2d8df37d3cef19860646914c4a0efee27632f2481fc1fdd"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/019_attack_tonic_detail_100.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "38fa5eaf02d2abaa46ca8ad8e4edcce8bab08babbf91751340b44eb0b71ddc0e"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/020_attack_tonic_detail_188.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "caf3331293abc274207a46b093be56d35510bc35d6d660cef276c21fabe3f653"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/021_stoneguard_brew_trainer_scale.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "f690308090b79258be9426f4ff28e42daf9a1de3074f05347a60ab81f9bef010"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/022_stoneguard_brew_detail_8.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "366f3646cdd3a8a5fb5a2028012e586dac493fbe3c1a6f4dda584163c6e28e46"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/023_stoneguard_brew_detail_100.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7125550aeb84f526ad558e675c764b10303b9699ecde388ffb019de3c4184e00"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/024_stoneguard_brew_detail_188.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "c2ba85f43fdc7930b3da87d615a37e52a6b76fbff9aa584c701aa976bfeac901"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/025_stoneguard_brew_harvest.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "d09304feb29ac88fa015a6d8337b3b337c1f5dabd2cdf0f67993c88ffda3518f"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/026_attack_tonic_harvest.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "5529bb0ccfded43c71d8e25b1879a79bee71788b9bfa4f8ef0ba7544b33f8e98"
+    },
+    {
+      "path": "shots/draught-meshy-accepted-candidate/roster/027_swift_tonic_harvest.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "2c074889c24c070ffdf6385bf6309cb1a38bacc1cbbed4345650e31c4f50c62b"
+    },
+    {
+      "path": "shots/draught-meshy-meadows-final/region/meadows/001_meadows_stoneguard_brew_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "b5f6f233762a050136fdf0cc7e6c921e39cef25bf97b9e47336e16b2e66a4893"
+    },
+    {
+      "path": "shots/draught-meshy-meadows-final/region/meadows/002_meadows_stoneguard_brew_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "758535be4b6f03cb9546db605ecd4ef6ad7988923c98280387f4235cf4811fac"
+    },
+    {
+      "path": "shots/draught-meshy-meadows-final/region/meadows/003_meadows_attack_tonic_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "115638b9a4cf8890da14eab43077c6e7c9eb7a1d195ff38b3e8dc247f8ad492e"
+    },
+    {
+      "path": "shots/draught-meshy-meadows-final/region/meadows/004_meadows_attack_tonic_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "b871e7ee2d7718d73d3fffaf6a4f3a499be7023661390a755eee68bf7ad44163"
+    },
+    {
+      "path": "shots/draught-meshy-meadows-final/region/meadows/005_meadows_elixir_might_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "53429a88db58ebc262ed158b0e767b7a30b66f1b0354b326500f1805b025fe5f"
+    },
+    {
+      "path": "shots/draught-meshy-meadows-final/region/meadows/006_meadows_elixir_might_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "f98ea315db47cc31946b85184a052e24a288c05b0144bed41ac569bc6fcbec43"
+    },
+    {
+      "path": "shots/draught-meshy-tidewake-final/region/tidewake/001_tidewake_attack_tonic_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "6c7f5a071e984cc2edbef7ef47167e8c152c2aaf5bd544b19063412226b86e3e"
+    },
+    {
+      "path": "shots/draught-meshy-tidewake-final/region/tidewake/002_tidewake_attack_tonic_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "e8133b5ddc2522fbd17077e5f6ed73bdc202f621e0254ee5d2d2e44c8b3b97bd"
+    },
+    {
+      "path": "shots/draught-meshy-tidewake-final/region/tidewake/003_tidewake_swift_tonic_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "273427ce0599afecf50d7c4e0ccd236ade575ae24a7c36c60109a6a1457833bf"
+    },
+    {
+      "path": "shots/draught-meshy-tidewake-final/region/tidewake/004_tidewake_swift_tonic_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "e2a21b497c5afb6c9ddb521bc30c55a95780d6b705750fa22e32ab6157e692aa"
+    },
+    {
+      "path": "shots/draught-meshy-stormwood-final/region/stormwood/001_stormwood_swift_tonic_break.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "00694f894cc1e4033037a4bfefdfe2a29a9b9aa880250af27c7ae23621f93e3e"
+    },
+    {
+      "path": "shots/draught-meshy-stormwood-final/region/stormwood/002_stormwood_stoneguard_brew_break.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "448497258c6ef07fea97eeddb44a3b7cf9285c58f536c57886b2cac0fc8a959b"
+    }
+  ],
+  "receipts": [
+    {
+      "file": "001_elixir_might_trainer_scale.png",
+      "item": "elixir_might",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "trainer scale",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 8.0,
+      "file": "002_elixir_might_detail_8.png",
+      "item": "elixir_might",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 100.0,
+      "file": "003_elixir_might_detail_100.png",
+      "item": "elixir_might",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 188.0,
+      "file": "004_elixir_might_detail_188.png",
+      "item": "elixir_might",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "005_elixir_guard_trainer_scale.png",
+      "item": "elixir_guard",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "trainer scale",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 8.0,
+      "file": "006_elixir_guard_detail_8.png",
+      "item": "elixir_guard",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 100.0,
+      "file": "007_elixir_guard_detail_100.png",
+      "item": "elixir_guard",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 188.0,
+      "file": "008_elixir_guard_detail_188.png",
+      "item": "elixir_guard",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "009_elixir_vigour_trainer_scale.png",
+      "item": "elixir_vigour",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "trainer scale",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 8.0,
+      "file": "010_elixir_vigour_detail_8.png",
+      "item": "elixir_vigour",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 100.0,
+      "file": "011_elixir_vigour_detail_100.png",
+      "item": "elixir_vigour",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 188.0,
+      "file": "012_elixir_vigour_detail_188.png",
+      "item": "elixir_vigour",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "013_swift_tonic_trainer_scale.png",
+      "item": "swift_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "trainer scale",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 8.0,
+      "file": "014_swift_tonic_detail_8.png",
+      "item": "swift_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 100.0,
+      "file": "015_swift_tonic_detail_100.png",
+      "item": "swift_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 188.0,
+      "file": "016_swift_tonic_detail_188.png",
+      "item": "swift_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "017_attack_tonic_trainer_scale.png",
+      "item": "attack_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "trainer scale",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 8.0,
+      "file": "018_attack_tonic_detail_8.png",
+      "item": "attack_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 100.0,
+      "file": "019_attack_tonic_detail_100.png",
+      "item": "attack_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 188.0,
+      "file": "020_attack_tonic_detail_188.png",
+      "item": "attack_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "021_stoneguard_brew_trainer_scale.png",
+      "item": "stoneguard_brew",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "trainer scale",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 8.0,
+      "file": "022_stoneguard_brew_detail_8.png",
+      "item": "stoneguard_brew",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 100.0,
+      "file": "023_stoneguard_brew_detail_100.png",
+      "item": "stoneguard_brew",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "azimuth": 188.0,
+      "file": "024_stoneguard_brew_detail_188.png",
+      "item": "stoneguard_brew",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "view": "detail",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "025_stoneguard_brew_harvest.png",
+      "item": "stoneguard_brew",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "production harvest loader",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "026_attack_tonic_harvest.png",
+      "item": "attack_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "production harvest loader",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "027_swift_tonic_harvest.png",
+      "item": "swift_tonic",
+      "kind": "frame",
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "size_m": [
+        0.4,
+        0.6,
+        0.4
+      ],
+      "view": "production harvest loader",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "kind": "summary",
+      "text": "visual audit roster: 27 frames, 0 skips"
+    },
+    {
+      "kind": "note",
+      "text": "meadows: 4 rows (env+places)"
+    },
+    {
+      "camera": [
+        -347.0,
+        8.0,
+        2578.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -347.0,
+        5.2,
+        2584.0
+      ],
+      "file": "001_meadows_stoneguard_brew_day.png",
+      "kind": "frame",
+      "label": "Authored Stoneguard Brew",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            -345.0,
+            5.3,
+            2585.0
+          ],
+          "base_y": 5.29440402984619,
+          "ground_gap_m": 0.0,
+          "ground_y": 5.29440402984619,
+          "height_m": 0.639999866485596,
+          "node": "/root/MeadowsPlayground/@Node3D@64017"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "stoneguard_brew",
+      "target": [
+        -347.0,
+        6.3,
+        2610.0
+      ],
+      "target_dist_m": 26.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        -347.0,
+        8.0,
+        2578.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -347.0,
+        5.2,
+        2584.0
+      ],
+      "file": "002_meadows_stoneguard_brew_night.png",
+      "kind": "frame",
+      "label": "Authored Stoneguard Brew",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            -345.0,
+            5.3,
+            2585.0
+          ],
+          "base_y": 5.29440402984619,
+          "ground_gap_m": 0.0,
+          "ground_y": 5.29440402984619,
+          "height_m": 0.639999866485596,
+          "node": "/root/MeadowsPlayground/@Node3D@64017"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "stoneguard_brew",
+      "target": [
+        -347.0,
+        6.3,
+        2610.0
+      ],
+      "target_dist_m": 26.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        198.0,
+        -1.3,
+        3681.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        198.0,
+        -4.2,
+        3687.0
+      ],
+      "file": "003_meadows_attack_tonic_day.png",
+      "kind": "frame",
+      "label": "Authored Attack Tonic",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            200.0,
+            -4.0,
+            3688.0
+          ],
+          "base_y": -4.04061651229858,
+          "ground_gap_m": 0.0,
+          "ground_y": -4.04061651229858,
+          "height_m": 0.640000104904175,
+          "node": "/root/MeadowsPlayground/@Node3D@64097"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "attack_tonic",
+      "target": [
+        198.0,
+        -2.8,
+        3713.0
+      ],
+      "target_dist_m": 26.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        198.0,
+        -1.3,
+        3681.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        198.0,
+        -4.2,
+        3687.0
+      ],
+      "file": "004_meadows_attack_tonic_night.png",
+      "kind": "frame",
+      "label": "Authored Attack Tonic",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            200.0,
+            -4.0,
+            3688.0
+          ],
+          "base_y": -4.04061651229858,
+          "ground_gap_m": 0.0,
+          "ground_y": -4.04061651229858,
+          "height_m": 0.640000104904175,
+          "node": "/root/MeadowsPlayground/@Node3D@64097"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "attack_tonic",
+      "target": [
+        198.0,
+        -2.8,
+        3713.0
+      ],
+      "target_dist_m": 26.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        -167.0,
+        4.6,
+        7058.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -167.0,
+        1.7,
+        7064.0
+      ],
+      "file": "005_meadows_elixir_might_day.png",
+      "kind": "frame",
+      "label": "Authored Might cache",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            -165.0,
+            1.9,
+            7065.0
+          ],
+          "base_y": 1.93363535404205,
+          "ground_gap_m": 0.0,
+          "ground_y": 1.93363535404205,
+          "height_m": 0.639999985694885,
+          "node": "/root/MeadowsPlayground/Cache_elixir_might"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "elixir_might",
+      "target": [
+        -167.0,
+        1.1,
+        7090.0
+      ],
+      "target_dist_m": 26.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        -167.0,
+        4.6,
+        7058.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -167.0,
+        1.7,
+        7064.0
+      ],
+      "file": "006_meadows_elixir_might_night.png",
+      "kind": "frame",
+      "label": "Authored Might cache",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            -165.0,
+            1.9,
+            7065.0
+          ],
+          "base_y": 1.93363535404205,
+          "ground_gap_m": 0.0,
+          "ground_y": 1.93363535404205,
+          "height_m": 0.639999985694885,
+          "node": "/root/MeadowsPlayground/Cache_elixir_might"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "elixir_might",
+      "target": [
+        -167.0,
+        1.1,
+        7090.0
+      ],
+      "target_dist_m": 26.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "kind": "summary",
+      "text": "visual audit region/meadows: 6 frames, 0 skips"
+    },
+    {
+      "kind": "note",
+      "text": "tidewake: 2 rows (env+places)"
+    },
+    {
+      "camera": [
+        94.0,
+        4.3,
+        131.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        94.0,
+        1.5,
+        137.0
+      ],
+      "file": "001_tidewake_attack_tonic_day.png",
+      "kind": "frame",
+      "label": "First Shore authored Attack",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            96.0,
+            1.3,
+            138.0
+          ],
+          "base_y": 1.2742383480072,
+          "ground_gap_m": 0.0,
+          "ground_y": 1.2742383480072,
+          "height_m": 0.640000104904175,
+          "node": "/root/WaterArchipelago/WaterPickups/water_first_shore_pickup_005"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "tidewake",
+      "subject": "attack_tonic",
+      "target": [
+        94.0,
+        -0.8,
+        162.0
+      ],
+      "target_dist_m": 25.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        94.0,
+        4.3,
+        131.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        94.0,
+        1.5,
+        137.0
+      ],
+      "file": "002_tidewake_attack_tonic_night.png",
+      "kind": "frame",
+      "label": "First Shore authored Attack",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            96.0,
+            1.3,
+            138.0
+          ],
+          "base_y": 1.2742383480072,
+          "ground_gap_m": 0.0,
+          "ground_y": 1.2742383480072,
+          "height_m": 0.640000104904175,
+          "node": "/root/WaterArchipelago/WaterPickups/water_first_shore_pickup_005"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "tidewake",
+      "subject": "attack_tonic",
+      "target": [
+        94.0,
+        -0.8,
+        162.0
+      ],
+      "target_dist_m": 25.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        172.0,
+        15.0,
+        -12.1
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        172.0,
+        12.1,
+        -7.0
+      ],
+      "file": "003_tidewake_swift_tonic_day.png",
+      "kind": "frame",
+      "label": "First Shore authored Swift",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            174.0,
+            12.0,
+            -6.0
+          ],
+          "base_y": 12.0423250198364,
+          "ground_gap_m": 0.0,
+          "ground_y": 12.0423250198364,
+          "height_m": 0.640000343322754,
+          "node": "/root/WaterArchipelago/WaterPickups/water_first_shore_pickup_020"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "tidewake",
+      "subject": "swift_tonic",
+      "target": [
+        172.0,
+        13.9,
+        18.0
+      ],
+      "target_dist_m": 25.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        172.0,
+        15.0,
+        -12.1
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        172.0,
+        12.1,
+        -7.0
+      ],
+      "file": "004_tidewake_swift_tonic_night.png",
+      "kind": "frame",
+      "label": "First Shore authored Swift",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            174.0,
+            12.0,
+            -6.0
+          ],
+          "base_y": 12.0423250198364,
+          "ground_gap_m": 0.0,
+          "ground_y": 12.0423250198364,
+          "height_m": 0.640000343322754,
+          "node": "/root/WaterArchipelago/WaterPickups/water_first_shore_pickup_020"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "tidewake",
+      "subject": "swift_tonic",
+      "target": [
+        172.0,
+        13.9,
+        18.0
+      ],
+      "target_dist_m": 25.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "kind": "summary",
+      "text": "visual audit region/tidewake: 4 frames, 0 skips"
+    },
+    {
+      "kind": "note",
+      "text": "stormwood: 2 rows (env+places)"
+    },
+    {
+      "camera": [
+        -128.0,
+        101.4,
+        5229.9
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -128.0,
+        98.5,
+        5235.0
+      ],
+      "file": "001_stormwood_swift_tonic_break.png",
+      "kind": "frame",
+      "label": "Stormwood pocket 178",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            -126.0,
+            98.8,
+            5236.0
+          ],
+          "base_y": 98.4393005371094,
+          "ground_gap_m": -5.81516587772057e-07,
+          "ground_y": 98.439301118626,
+          "height_m": 0.639999389648438,
+          "node": "/root/Stormwood/StormwoodPickups/stormwood_pickup_pocket_178"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "stormwood",
+      "subject": "swift_tonic",
+      "target": [
+        -128.0,
+        100.0,
+        5260.0
+      ],
+      "target_dist_m": 25.0,
+      "time": "break",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        -453.0,
+        82.2,
+        5246.7
+      ],
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -453.0,
+        79.4,
+        5251.8
+      ],
+      "file": "002_stormwood_stoneguard_brew_break.png",
+      "kind": "frame",
+      "label": "Stormwood enlarged pocket 188",
+      "pickup_contacts": [
+        {
+          "anchor": [
+            -451.0,
+            80.2,
+            5252.8
+          ],
+          "base_y": 79.8683471679688,
+          "ground_gap_m": -1.89349746904099e-06,
+          "ground_y": 79.8683490614662,
+          "height_m": 0.639999389648438,
+          "node": "/root/Stormwood/StormwoodPickups/stormwood_pickup_pocket_188"
+        }
+      ],
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "stormwood",
+      "subject": "stoneguard_brew",
+      "target": [
+        -453.0,
+        82.0,
+        5277.8
+      ],
+      "target_dist_m": 26.0,
+      "time": "break",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "kind": "summary",
+      "text": "visual audit region/stormwood: 2 frames, 0 skips"
+    }
+  ]
+}
