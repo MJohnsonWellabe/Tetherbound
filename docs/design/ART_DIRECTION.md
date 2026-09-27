@@ -126,6 +126,7 @@ This section is the live provenance/disposition ledger within the authorized doc
 
 | Subject | Standing disposition |
 |---|---|
+| Tuskroot/Ashtusk, Riptusk, Staticub, Fulgocobra, Solmane attack derivatives | Code-authored attack-only transformations of the already installed assets, 2026-09-26. Original mesh, skin, material, reference and acquisition/redistribution provenance remain unchanged; no new external asset or generation. `tools/art_pipeline/author_attack_candidates.py` pins source SHA-256 and preserves original binary data and all other clips. Ground-contact and native playback evidence: `ralph/reports/VISUAL/CREATURE-ATTACK-CONTACT.md`; whole-creature Bars A/B remain open. |
 | Camp set | Owner selected the generated tent despite fidelity limits; fire-ring scaling and the bed passed. Preserve the accepted result unless current gameplay evidence reopens it. |
 | Pickups | Candy and potion-plant assets shipped with known defects; revive and mushroom passed. Do not infer a general pickup-generation allowance. |
 | South Bridge gate | Thin from inaccessible angles and explicitly accepted ship-as-is. Reachable-view failure may reopen it; an inaccessible reverse view does not. |

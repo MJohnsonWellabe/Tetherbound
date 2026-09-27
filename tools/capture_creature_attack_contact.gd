@@ -11,6 +11,12 @@ var _samples: Array[Dictionary] = []
 
 func _run() -> void:
 	await process_frame
+	root.size = Vector2i(1920, 1080)
+	await process_frame
+	if root.size != Vector2i(1920, 1080):
+		push_error("attack witness requires native 1920x1080; got %s" % root.size)
+		quit(2)
+		return
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--species="): _subject = arg.trim_prefix("--species=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
@@ -86,6 +92,7 @@ func _contact_frame(frame: int, after_press: bool) -> Dictionary:
 	var model: Node3D = _ally.get("_model")
 	var at := _ally.global_position
 	var sample := {"frame":frame,"physics_frame":Engine.get_physics_frames(),
+		"viewport_size":[root.size.x,root.size.y],
 		"after_press":after_press,"species":_subject,"view":_view,
 		"animation":str(player.current_animation) if player != null else "",
 		"animation_time":player.current_animation_position if player != null and player.is_playing() else -1.0,

@@ -14,12 +14,16 @@ body position and terrain height through the production combat camera. It does
 not alter fighter stats, terrain, animation time, body transforms during combat,
 or combat timing. `--view=side` is an optional disclosed camera-yaw diagnostic.
 
-Native Windows Godot 4.7 Compatibility, 1920×1080, GTX 1060 3 GB. Fixed 60 Hz
+Native Windows Godot 4.7 Compatibility, GTX 1060 3 GB. The first baseline
+requested 1920×1080 but Windows constrained its client area to **1920×1061**;
+those images are diagnostic evidence. Subsequent captures use a borderless window
+and record the actual viewport dimensions in the trace. Fixed 60 Hz
 capture is visual evidence, not performance telemetry or earned progression.
 Shared `D:/tetherbound/RENDER_LOCK.json` must be held by `combat`.
 
 ```
-godot --path . --rendering-method gl_compatibility --resolution 1920x1080 \
+godot --path . --rendering-method gl_compatibility --borderless --position 0,0 \
+  --resolution 1920x1080 \
   --fixed-fps 60 --script tools/capture_creature_attack_contact.gd -- \
   --species=tuskroot --out=<absolute-output-directory>
 ```
