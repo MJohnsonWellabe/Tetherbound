@@ -16,6 +16,12 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 
 var radius: float = 11.0
+## Sweep-and-slide passes `hold_inside` spends returning a fighter (the same
+## bounded loop `move_and_slide` uses).
+const HOLD_SLIDE_ITERATIONS := 4
+## A hit whose normal opposes the return by less than this (cosine) is a
+## pre-existing contact, not an obstacle ahead.
+const HOLD_FACING_EPSILON := 0.05
 
 var _boundary_height: float = 3.5
 var _boundary_alpha: float = 0.16
@@ -85,7 +91,31 @@ func hold_inside(body: CharacterBody3D) -> Vector3:
 		return Vector3.ZERO
 
 	var outward := offset / distance
-	body.global_position = global_position + outward * radius + Vector3.UP * (body.global_position.y - global_position.y)
+	# Swept, not written: a raw position write on a steep slope embeds the body
+	# in the terrain and it free-falls through it (Tidewake F15 ally FLOOR LOST).
+	# move_and_collide stops at a surface that faces the motion and the
+	# remainder slides along it. A contact that does NOT face the motion is one
+	# the body already had -- a tall fighter wedged against the Burrow Warrens
+	# `mouth` ceiling reports it on every sweep with zero travel -- so it cannot
+	# be what the return runs into; the rest of the return is written as before.
+	# A body outside a physics world (a detached fixture) has no space to sweep
+	# in and keeps the write.
+	var target := global_position + outward * radius + Vector3.UP * (body.global_position.y - global_position.y)
+	if body.is_inside_tree():
+		var motion := target - body.global_position
+		for _slide in HOLD_SLIDE_ITERATIONS:
+			var hit := body.move_and_collide(motion)
+			if hit == null:
+				break
+			var remainder := hit.get_remainder()
+			if hit.get_normal().dot(remainder) >= -HOLD_FACING_EPSILON * remainder.length():
+				body.global_position += remainder
+				break
+			motion = remainder.slide(hit.get_normal())
+			if motion.length() < 0.001:
+				break
+	else:
+		body.global_position = target
 
 	var flat := Vector3(body.velocity.x, 0.0, body.velocity.z)
 	var outward_speed := flat.dot(outward)
