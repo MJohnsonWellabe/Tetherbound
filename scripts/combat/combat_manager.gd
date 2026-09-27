@@ -1173,7 +1173,108 @@ func _update_combat_camera_framing(delta: float) -> void:
 	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
 		# Use the live pitch/distance, and never retarget/reset manual orbit.
 		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
+		shoulder = minf(shoulder, _hud_safe_shoulder_cap(cfg.get("hud_safe", {}) as Dictionary))
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
+	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+
+
+## F10#2 C3 (V-SW-3/5): the largest shoulder that keeps the ally's live render
+## bounds out of the combat HUD's left column, measured through the live
+## camera. INF when disabled, without a live camera, or while the ally's bounds
+## stay above the column; otherwise finite (it may exceed the live shoulder when
+## the ally has room to spare).
+func _hud_safe_shoulder_cap(hud: Dictionary) -> float:
+	if not bool(hud.get("enabled", false)) or _camera_rig == null or _ally_body == null \
+			or not is_instance_valid(_ally_body):
+		return INF
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null or not camera.is_inside_tree():
+		return INF
+	var viewport := camera.get_viewport().get_visible_rect().size
+	var world := _body_world_bounds(_ally_body)
+	if world.size.is_zero_approx() or viewport.x <= 1.0 or viewport.y <= 1.0:
+		return INF
+	var corners: Array[Vector2] = []
+	var depth := 0.0
+	var forward := -camera.global_basis.z
+	for i in 8:
+		var corner := world.get_endpoint(i)
+		var ahead := (corner - camera.global_position).dot(forward)
+		if ahead <= 0.05:
+			return INF
+		depth = maxf(depth, ahead)
+		corners.append(camera.unproject_position(corner))
+	var column: Dictionary = hud.get("left_column", {}) as Dictionary
+	var centre := world.get_center()
+	var centre_depth := maxf((centre - camera.global_position).dot(forward), 0.05)
+	# Pixels one metre of shoulder moves the ally at its own depth.
+	var pixels_per_metre := viewport.y * 0.5 / (centre_depth * tan(deg_to_rad(camera.fov) * 0.5))
+	return hud_safe_shoulder_cap(float(_camera_rig.get("_shoulder")), corners, viewport,
+		pixels_per_metre, float(column.get("right", 0.26)), float(column.get("top", 0.42)),
+		float(hud.get("margin", 0.02)), float(hud.get("min_shoulder", -1.5)))
+
+
+## Pure form of the cap. Lowering the shoulder by one metre moves the pivot
+## one metre left and the ally `pixels_per_metre` right on screen, so the cap
+## is the live shoulder plus the ally's clearance (negative = overlap) from the
+## column's right edge, converted to metres. INF when the ally's bounds stay
+## above the column's top.
+static func hud_safe_shoulder_cap(live_shoulder: float, corners: Array[Vector2], viewport: Vector2,
+		pixels_per_metre: float, column_right: float, column_top: float, margin: float,
+		min_shoulder: float) -> float:
+	if corners.is_empty() or pixels_per_metre <= 0.0:
+		return INF
+	var left := INF
+	var bottom := -INF
+	for p: Vector2 in corners:
+		left = minf(left, p.x)
+		bottom = maxf(bottom, p.y)
+	if bottom < column_top * viewport.y:
+		return INF
+	var clearance_px := left - (column_right + margin) * viewport.x
+	return maxf(min_shoulder, live_shoulder + clearance_px / pixels_per_metre)
+
+
+## F10#2 C3 (V-SW-7): keep the lens out of the foe's render mesh, which
+## reaches past its collision capsule (the SpringArm only knows the capsule).
+func _update_combat_body_clear(clear: Dictionary) -> void:
+	if _camera_rig == null or not _camera_rig.has_method("set_body_limit"):
+		return
+	if not bool(clear.get("enabled", false)) or _wild == null or not is_instance_valid(_wild):
+		_camera_rig.call("set_body_limit", INF)
+		return
+	var pivot: Vector3 = (_camera_rig as Node3D).global_position
+	var arm := (_camera_rig as Node3D).global_basis.z * float(_camera_rig.get("_distance"))
+	_camera_rig.call("set_body_limit", body_limit_along_arm(pivot, pivot + arm,
+		_body_world_bounds(_wild), float(clear.get("margin_m", 0.35)),
+		float(clear.get("min_length_m", 2.0))))
+
+
+## Pure form: the arm length that stops `margin` short of where the arm first
+## enters `bounds` (grown by `margin`), never below `min_length`; INF when the
+## arm misses the box or the pivot is already inside it (a clinch: the
+## ally-side guards own that case).
+static func body_limit_along_arm(pivot: Vector3, arm_end: Vector3, bounds: AABB, margin: float,
+		min_length: float) -> float:
+	if bounds.size.is_zero_approx():
+		return INF
+	var grown := bounds.grow(maxf(margin, 0.0))
+	if grown.has_point(pivot):
+		return INF
+	var hit: Variant = grown.intersects_segment(pivot, arm_end)
+	if hit == null:
+		return INF
+	return maxf(min_length, pivot.distance_to(hit as Vector3) - maxf(margin, 0.0))
+
+
+## A body's live render bounds in world space (the model's transform applied
+## to `_body_render_bounds`, which is measured in the model's own space).
+func _body_world_bounds(body: Node3D) -> AABB:
+	var local := _body_render_bounds(body)
+	if local.size.is_zero_approx() or not body.is_inside_tree():
+		return AABB()
+	var model := body.call("model_pivot") as Node3D
+	return model.global_transform * local if model != null and model.is_inside_tree() else AABB()
 
 
 ## MEADOWS-VISUAL-PASS: while the piloted ally hides the foe from the live
@@ -1200,7 +1301,11 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 	if _camera_rig != null and _camera_rig.has_method("set_composition_extra"):
 		var current := float(_camera_rig.call("composition_extra"))
 		var holding := current > 0.0 and _ally_clear_for < float(cfg.get("composition_hold_s", 1.5))
-		var extra_target := float(cfg.get("composition_extra_deg", 40.0)) if hidden or holding else 0.0
+		# F10#2 C3: a low, wide foe reads as "hidden" behind even a small ally,
+		# and the wider swing then put the foe's body in front of the ally.
+		var foe_in_front := (hidden or holding) and _wild_hides_ally(model, int(cfg.get("hidden_points", 2)))
+		var extra_target := composition_swing_target(hidden, holding, foe_in_front,
+			float(cfg.get("composition_extra_deg", 40.0)))
 		var ease_rate := maxf(float(cfg.get("composition_ease_deg_per_s", 90.0)), 1.0)
 		_camera_rig.call("set_composition_extra", move_toward(current, extra_target, ease_rate * delta))
 	var target := 0.0
@@ -1232,6 +1337,36 @@ func _ally_hides_wild(ally_model: Node3D, needed: int) -> bool:
 	var base := Vector3(_wild.global_position.x, wild_world.position.y, _wild.global_position.z)
 	return OCCLUSION_FADE.hidden_points(camera.global_position, base, wild_world.size.y,
 		ally_model.global_transform, ally_bounds) >= maxi(1, needed)
+
+
+## The occlusion swing's target: the authored extra while the ally hides the
+## foe (or the swing is holding), but never while the foe's own body stands
+## between the lens and the ally -- then the piloted creature is the one lost,
+## and the dither fallback keeps the foe readable instead.
+static func composition_swing_target(ally_hides_foe: bool, holding: bool, foe_hides_ally: bool,
+		extra_deg: float) -> float:
+	if foe_hides_ally:
+		return 0.0
+	return extra_deg if ally_hides_foe or holding else 0.0
+
+
+## True when the foe's inscribed render ellipsoid hides at least `needed` of
+## the ally's three sample heights from the live camera.
+func _wild_hides_ally(ally_model: Node3D, needed: int) -> bool:
+	if _wild == null or not is_instance_valid(_wild) or not _wild.has_method("model_pivot"):
+		return false
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var wild_model := _wild.call("model_pivot") as Node3D
+	if camera == null or wild_model == null:
+		return false
+	var ally_bounds := _body_render_bounds(_ally_body)
+	var wild_bounds := _body_render_bounds(_wild)
+	if ally_bounds.size.is_zero_approx() or wild_bounds.size.is_zero_approx():
+		return false
+	var ally_world: AABB = ally_model.global_transform * ally_bounds
+	var base := Vector3(_ally_body.global_position.x, ally_world.position.y, _ally_body.global_position.z)
+	return OCCLUSION_FADE.hidden_points(camera.global_position, base, ally_world.size.y,
+		wild_model.global_transform, wild_bounds) >= maxi(1, needed)
 
 
 func _clear_ally_fade() -> void:
@@ -1367,12 +1502,37 @@ func _update_combat_camera_height(framing: Dictionary, weight: float) -> void:
 	var base_height := float((MATH.config().get("camera", {}) as Dictionary).get("height", 2.3))
 	if not bool(follow.get("enabled", false)):
 		return
+	var max_height := float(follow.get("max_height", 6.0))
 	var target := follow_height_for(_combined_top_above_ally(), float(follow.get("fraction_of_top", 0.55)),
-		base_height, float(follow.get("max_height", 6.0)))
+		base_height, max_height)
+	# Under a roof the lift stops `ceiling_headroom_m` short of the ceiling over
+	# the ally, never below the base height: Keeper Hald's 6.5 m room with a
+	# 6.0 m lift left the arm no room to stand back (F04, frames 19-22).
+	var headroom := float(follow.get("ceiling_headroom_m", 0.0))
+	if headroom > 0.0:
+		var ceiling := _ceiling_above_ally(max_height + headroom)
+		if ceiling > 0.0:
+			target = minf(target, maxf(base_height, ceiling - headroom))
 	if _camera_framing_height <= 0.0:
 		_camera_framing_height = _rig_float("_height", base_height)
 	_camera_framing_height = lerpf(_camera_framing_height, target, weight)
 	_camera_rig.set("_height", _camera_framing_height)
+
+
+## Metres from the ally's feet up to the first solid surface over it, within
+## `reach`; 0 when open sky (or no ally/world to ask).
+func _ceiling_above_ally(reach: float) -> float:
+	if _ally_body == null or not is_instance_valid(_ally_body) or not _ally_body.is_inside_tree():
+		return 0.0
+	var feet := _ally_body.global_position
+	var query := PhysicsRayQueryParameters3D.create(feet + Vector3.UP * 0.5, feet + Vector3.UP * reach)
+	query.collision_mask = 1
+	if _ally_body is CollisionObject3D:
+		query.exclude = [(_ally_body as CollisionObject3D).get_rid()]
+	var hit := _ally_body.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return 0.0
+	return (hit.position as Vector3).y - feet.y
 
 
 ## F04#7 defects 1-3: a wall or trunk behind the ally collapsed the arm, and

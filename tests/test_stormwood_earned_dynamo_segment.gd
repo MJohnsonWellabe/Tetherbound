@@ -83,8 +83,9 @@ func test_whole_ascent_matches_existing_smoke_clock_and_budget() -> void:
 
 
 ## Relay DRY RUN 44adfbe4 wedged the player under the Outer Works approach
-## slab (x -105..-95 from the rod station at z 5350 to the deck edge at z 5426,
-## floating up to 3 m over the terrain) walking from Kestrel to its foot.
+## slab walking from Kestrel to its foot. The approach is now a closed
+## causeway 10 m wide north from its foot (F09#1 blocker B2); no route may
+## cross its footprint north of the foot.
 func test_the_walk_to_the_approach_foot_never_passes_under_the_slab() -> void:
 	var kestrel := _seat("res://data/config/stormwood_trainers.json", "trainers", "officer_kestrel_outer_works")
 	var kestrel_npc := _seat("res://data/config/stormwood_npcs.json", "characters", "officer_kestrel")

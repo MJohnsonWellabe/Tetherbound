@@ -77,6 +77,10 @@ var _probe_radius: float = 0.25
 
 var _target: Node3D = null
 var _mouse_delta := Vector2.ZERO
+## F10#2 C3 (V-SW-7): the longest the arm may be this frame so the lens stays
+## outside a large foe's render mesh, which reaches past its collision capsule.
+## INF = no limit. Set every physics frame by `combat_manager.gd`.
+var _body_limit := INF
 
 ## Combat keeps the opponent findable without replacing the player's orbit.
 ## The right stick/mouse always wins immediately; after a short neutral grace,
@@ -264,6 +268,7 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_composition_extra_deg = 0.0
 	_clearance_extra_deg = 0.0
 	_tracking_manual_left = 0.0
+	_body_limit = INF
 
 	_distance = float(profile.get("distance", _base_distance))
 	_height = float(profile.get("height", _base_height))
@@ -601,8 +606,23 @@ static func _world_point(node: Node3D) -> Vector3:
 	return node.global_position if node.is_inside_tree() else node.position
 
 
+## F04 (Keeper Hald's room): the pivot rises `_height` straight up from the
+## target, and nothing swept that leg -- a combat `height_follow` lift toward
+## 6 m under a 6.5 m ceiling put the pivot into the slab, and `cast_motion`
+## ignores overlaps it starts inside, so the lens then shot through the roof.
+## The leg above VERTICAL_SWEEP_FROM_M is swept like the shoulder leg below.
+const VERTICAL_SWEEP_FROM_M := 1.0
+
+func _pivot_anchor() -> Vector3:
+	var base_up := minf(_height, VERTICAL_SWEEP_FROM_M)
+	var anchor := _world_point(_target) + Vector3.UP * base_up
+	if _height > base_up:
+		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, _height - base_up)
+	return anchor
+
+
 func _follow(delta: float) -> void:
-	var anchor := _target.global_position + Vector3.UP * _height
+	var anchor := _pivot_anchor()
 	var desired := anchor
 	if not is_zero_approx(_shoulder):
 		# Sideways relative to where the camera is looking, so the offset stays
@@ -642,6 +662,17 @@ func _follow(delta: float) -> void:
 	# The spring arm collapses instantly on intrusion (SpringArm3D's own
 	# behaviour) and is eased back out here, so leaving cover is smooth.
 	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
+	# A render-mesh limit clamps at once, like the arm's own collision does.
+	spring_length = minf(spring_length, _body_limit)
+
+
+## F10#2 C3: cap the arm short of a body's render mesh (INF clears it).
+func set_body_limit(length: float) -> void:
+	_body_limit = length if is_finite(length) and length > 0.0 else INF
+
+
+func body_limit() -> float:
+	return _body_limit
 
 
 ## --- the conversation push-in -----------------------------------------------

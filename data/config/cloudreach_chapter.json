@@ -298,6 +298,23 @@
       "visible_state_change": "Three Bells Bridge gains moving travelers and audible route signals after Fly unlock and completion."
     },
     {
+      "id": "waycamp_shelter",
+      "title": "A Roof for Galefoot",
+      "category": "affected_locals",
+      "giver_npc_id": "courier_neri",
+      "revealed_by": "cloudreach_crisis_learned",
+      "completion_flag": "side_waycamp_shelter_complete",
+      "scope": "world",
+      "persistence": "save",
+      "_why_f07_0": "WORLD §11 Lower Cliffs: Neri's canvas bundle points to Galefoot Waycamp (coordinator ruling (b), #356: the shelter upgrades the installed camp, no new camp or terrain footprint); deliver 4 Gale Fiber (optional, never the Fly gate) and assign a companion to its existing bed once. Payoff: the rain cover repaired over Galefoot's camp and bed.",
+      "steps": [
+        {"id": "find_canvas_bundle", "flag_id": "side_waycamp_bundle_found", "region_id": "gate_lower_cliffs", "requires_flags": [], "label": "Find Neri's canvas bundle on the arrival road."},
+        {"id": "supply_shelter", "flag_id": "side_waycamp_shelter_supplied", "region_id": "gate_lower_cliffs", "requires_flags": ["side_waycamp_bundle_found"], "label": "Bring 4 Gale Fiber to raise the shelter at Galefoot."},
+        {"id": "rest_companion", "flag_id": "side_waycamp_shelter_complete", "region_id": "gate_lower_cliffs", "requires_flags": ["side_waycamp_shelter_supplied"], "label": "Settle a companion in the sheltered Galefoot bed."}
+      ],
+      "visible_state_change": "A canvas rain cover stands over Galefoot Waycamp's fire and creature bed."
+    },
+    {
       "id": "packs_on_the_wrong_side",
       "title": "Packs on the Wrong Side",
       "category": "affected_locals",

@@ -35,6 +35,8 @@ const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const TM_DB := preload("res://scripts/creatures/tm_db.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 ## F06: the companion twin of the trainer's grounded-fall rule below.
 const COMPANION_FALL := preload("res://scripts/world/cloudreach_companion_fall.gd")
@@ -248,6 +250,13 @@ func activate(id: String) -> bool:
 		return false
 	if spec.get("action", "") == "start_trial":
 		return _start_trial()
+	if spec.has("requires_resting_bed_index") and not party_resting_in_bed(int(spec["requires_resting_bed_index"])):
+		_message(str(spec.get("refusal", "Assign a companion to the bed first.")))
+		return false
+	var prize_refusal := tm_prize_refusal(spec)
+	if not prize_refusal.is_empty():
+		_message(prize_refusal)
+		return false
 	var cost: Dictionary = spec.get("cost", {})
 	var inventory: RefCounted = _game.get("inventory")
 	if not cost.is_empty() and (inventory == null or int(inventory.call("count", cost["item_id"])) < int(cost["count"])):
@@ -257,7 +266,8 @@ func activate(id: String) -> bool:
 	var pending := false
 	if spec.has("set_physical_flag"):
 		var flag := str(spec["set_physical_flag"])
-		if not (npc_runtime.get("physical_state_flags", []) as Array).has(flag):
+		if not (npc_runtime.get("physical_state_flags", []) as Array).has(flag) \
+				and not (npc_runtime.get("world_choice_flags", []) as Array).has(flag):
 			return false
 		var verdict := _write_flag(flag)
 		changed = bool(verdict.get("ok", false))
@@ -298,6 +308,14 @@ func _settle_interaction(id: String, spec: Dictionary) -> void:
 		var inventory: RefCounted = _game.get("inventory") if _game != null else null
 		if inventory != null:
 			inventory.call("remove", cost["item_id"], int(cost["count"]))
+	# F07#0 Cliff Circuit prize: the chosen TM is collected through its own
+	# placed pickup's receipt (`claim_pickup`, the cache flag), granted to the
+	# peer that chose it; the field cache then reads as taken everywhere.
+	var pickup := str(spec.get("claims_pickup", ""))
+	if not pickup.is_empty():
+		LEDGER_CLAIM.submit(self, {"kind": "claim_pickup", "realm": REALM_ID,
+			"flag": CACHE.flag_id(str(spec["item_id"]), pickup, REALM_ID),
+			"item": str(spec["item_id"]), "count": 1})
 	interaction_completed.emit(id)
 	_message(str(spec["label"]).split(" (")[0] + " — complete")
 	sync_progression()
@@ -520,10 +538,13 @@ func sync_progression() -> void:
 		_emit(event)
 	_revision = int(_flags.get("revision"))
 	for entry: Dictionary in _prompts.values():
-		entry["prompt"].call("set_enabled", RULES.available(_flags, entry["spec"]))
+		entry["prompt"].call("set_enabled", RULES.available(_flags, entry["spec"]) and tm_prize_refusal(entry["spec"]).is_empty())
 		var visual: Node3D = entry["root"].get_node_or_null("Presentation")
 		if visual != null:
 			visual.rotation.y = PI * 0.5 if _flags.call("has", entry["spec"].get("completion_flag", "")) else 0.0
+		var decor: Node3D = entry["root"].get_node_or_null("CompletionDecor")
+		if decor != null:
+			decor.visible = bool(_flags.call("has", entry["spec"].get("completion_flag", "")))
 	if _build_content:
 		_sync_pickups_and_camps()
 		_sync_npcs()
@@ -717,8 +738,9 @@ func _build_trial_markers() -> void:
 
 func _build_prop(root: Node3D, spec: Dictionary) -> void:
 	var kind := str(spec.get("kind", ""))
-	if kind in ["bell", "vane", "windlass", "launch"]:
-		_build_authored_marker(root, kind)
+	if kind in ["bell", "vane", "windlass", "launch", "latch"]:
+		_build_authored_marker(root, "windlass" if kind == "latch" else kind)
+		_build_completion_decor(root, spec)
 		return
 	var path := "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"
 	if spec.get("kind", "") == "pack":
@@ -737,6 +759,7 @@ func _build_prop(root: Node3D, spec: Dictionary) -> void:
 			visual.add_child(prop)
 			if kind == "anchor":
 				_apply_pylon_material(prop)
+			_build_completion_decor(root, spec)
 			return
 	var marker := MeshInstance3D.new()
 	var mesh := CylinderMesh.new()
@@ -746,6 +769,71 @@ func _build_prop(root: Node3D, spec: Dictionary) -> void:
 	marker.mesh = mesh
 	marker.position.y = 0.55
 	visual.add_child(marker)
+
+
+## F07#0: an interaction may leave something in the world once complete
+## (`completion_decor`: an installed scene, local offset and yaw), e.g. the
+## Waycamp shelter's rain cover. Hidden until its completion flag holds.
+func _build_completion_decor(root: Node3D, spec: Dictionary) -> void:
+	var decor: Dictionary = spec.get("completion_decor", {})
+	var path := str(decor.get("scene", ""))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return
+	var resource: Resource = load(path)
+	if not resource is PackedScene:
+		return
+	var holder := Node3D.new()
+	holder.name = "CompletionDecor"
+	var offset: Array = decor.get("offset", [0, 0, 0])
+	holder.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
+	holder.rotation.y = deg_to_rad(float(decor.get("yaw_deg", 0.0)))
+	holder.scale = Vector3.ONE * float(decor.get("scale", 1.0))
+	holder.add_child((resource as PackedScene).instantiate())
+	holder.visible = false
+	root.add_child(holder)
+
+
+## F07#0 Cliff Circuit prize (WORLD §11: "one existing compatible TM choice from
+## the chapter's three placed TM rewards, collected through its original source
+## receipt"). Empty when this prize may be chosen by this peer now.
+func tm_prize_refusal(spec: Dictionary) -> String:
+	var pickup := str(spec.get("claims_pickup", ""))
+	if pickup.is_empty() or _flags == null:
+		return ""
+	var item := str(spec.get("item_id", ""))
+	if bool(_flags.call("has", CACHE.flag_id(item, pickup, REALM_ID))):
+		return "That TM has already been collected."
+	if not party_can_learn(item):
+		return "None of your companions can learn that TM."
+	var inventory: RefCounted = _game.get("inventory") if _game != null else null
+	if inventory != null and not bool(inventory.call("has_room_for", item, 1)):
+		return "Satchel is full."
+	return ""
+
+
+## Whether one of THIS peer's party members may learn the TM (the shared
+## `teaching.gd::can_learn` rule over `tm_db.gd`).
+func party_can_learn(tm_id: String) -> bool:
+	var party: Variant = _game.get("party") if _game != null else null
+	if party == null:
+		return false
+	var tms: RefCounted = TM_DB.new()
+	for member: Variant in party.call("members"):
+		if member != null and TEACHING.can_learn(str(member.get("creature_type")), tm_id, tms):
+			return true
+	return false
+
+
+## F07#0 Waycamp: "assign a companion to its existing bed once". True when one
+## of THIS peer's party members is resting in the creature bed with that index.
+func party_resting_in_bed(bed_index: int) -> bool:
+	var party: Variant = _game.get("party") if _game != null else null
+	if party == null:
+		return false
+	for member: Variant in party.call("members"):
+		if member != null and bool(member.get("resting")) and int(member.get("rest_bed_index")) == bed_index:
+			return true
+	return false
 
 
 func _apply_pylon_material(node: Node) -> void:
