@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-27 08:47 UTC",
+ "updated": "2026-09-27 10:10 UTC",
  "headline": [
-  "Criteria met: 61 of 101. Batch 48 (PR #367) flipped F06#1, F06#2, F06#3, F11#3 and F15#3 on green full CI 36304146998, under the owner's relaxed-proof ruling (shortcuts disclosed per criterion).",
-  "Next: F08#0 (one passing rerun of the tightened Veyra witness), F02#4 (one passing recovery rerun), F01#2/#3 (code-blind judge of the reframed village walks), F03#0 (Bram and Hall sightlines).",
-  "Rules in force: owner ruling 2026-09-27 — fixtures, teleports, state writes, harness fights and skipped sub-parts allowed if disclosed; held Fly input lawful. Still required: code-blind judge for visual rows, two-peer evidence for co-op rows, green full CI on main."
+  "Criteria met: 64 of 101. Batch 49 flipped F02#4, F06#5 and F10#0 on green full CI 36308727062. Merged and waiting on the full CI dispatched 10:10: F08#0 (batch 50) and F07#2, F07#3 (batch 51), which make 67.",
+  "Re-checking or held: F11#0 (Stormwood must commit its Marrow logs), F01#2/#3 (independent code-blind verdict), F05#7 (green-grass heal in progress). Each lane targets one close per hour; the enforcement check runs at :55.",
+  "Remaining 34 after these: visual rows (Codex art queue plus capture work, now with Codex GPU runs), failing behavior, missing evidence."
  ],
  "batches": [
   {
