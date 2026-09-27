@@ -11,11 +11,16 @@ var last_pose_seq: int = 0
 var last_cue_serial: int = 0
 var telegraph_count: int = 0
 var strike_count: int = 0
+var route_count: int = 0
 
 var _target_feet: Vector3 = Vector3.ZERO
 var _target_facing: Vector3 = Vector3.FORWARD
 var _pose_received := false
 var _interpolation_half_life_s := 0.05
+## F04/F10#2: the host body's ground marks for the current tell, drawn from
+## the optional cue `shape` (presentation only; the host still decides hits).
+var _shape_lane_travels := false
+var _shape_lane_lock_left := -1.0
 
 
 func configure_presentation(card: RefCounted, generation: int, feet: Vector3, facing_now: Vector3,
@@ -61,14 +66,26 @@ func apply_pose(generation: int, sequence: int, feet: Vector3, facing_now: Vecto
 	return true
 
 
-func present_telegraph(serial: int, seconds: float, total: int) -> bool:
+func present_telegraph(serial: int, seconds: float, total: int, shape: Dictionary = {}) -> bool:
 	if serial <= last_cue_serial or not is_finite(seconds) or seconds <= 0.0:
 		return false
 	last_cue_serial = serial
 	telegraph_count = maxi(telegraph_count, total)
 	if _animator != null and _animator.has_method("begin_attack_telegraph"):
 		_animator.call("begin_attack_telegraph", seconds)
+	_present_shape(shape)
 	telegraph_started.emit(seconds)
+	return true
+
+
+## F10#2: the host body's route cue began; the tell proper follows as an
+## ordinary telegraph cue. Draws the route only, no anticipation.
+func present_route(serial: int, seconds: float, shape: Dictionary = {}) -> bool:
+	if serial <= last_cue_serial or not is_finite(seconds) or seconds <= 0.0:
+		return false
+	last_cue_serial = serial
+	route_count += 1
+	_present_shape(shape)
 	return true
 
 
@@ -77,9 +94,86 @@ func present_strike(serial: int, total: int) -> bool:
 		return false
 	last_cue_serial = serial
 	strike_count = maxi(strike_count, total)
+	_release_shape()
 	# Visual only. Never emit strike_ready: the host sends damage separately.
 	play_attack()
 	return true
+
+
+func shape_lane() -> Node3D:
+	return _lunge_lane if _lunge_lane != null and is_instance_valid(_lunge_lane) else null
+
+
+func shape_guard_cone() -> MeshInstance3D:
+	return _guard_cone if _guard_cone != null and is_instance_valid(_guard_cone) else null
+
+
+## Draws what `shape` names and clears what it does not, so a cue without a
+## shape (an older host, or an ordinary strike) leaves nothing stale behind.
+## A lane already drawn for this tell's route cue is kept, not redrawn.
+func _present_shape(shape: Dictionary) -> void:
+	var length := _shape_number(shape, "lane_length")
+	var half := _shape_number(shape, "lane_half_width")
+	if length > 0.0 and half > 0.0:
+		if shape_lane() == null:
+			_lunge_lane = LUNGE_LANE.begin(self, maxf(0.0, _shape_number(shape, "lane_start")),
+				length, half, _lunge_cfg())
+			_lunge_lane.call("aim", global_position, _target_facing)
+		_shape_lane_travels = bool(shape.get("lane_travels", false))
+		var lock_in := _shape_number(shape, "lane_lock_in_s", -1.0)
+		_shape_lane_lock_left = lock_in
+		if lock_in == 0.0 and not bool(_lunge_lane.call("is_locked")):
+			_lunge_lane.call("lock")
+	else:
+		_free_shape_lane()
+	var reach := _shape_number(shape, "guard_reach")
+	if reach > 0.0:
+		if shape_guard_cone() == null:
+			_show_guard_cone(reach, _shape_number(shape, "guard_cone"))
+	else:
+		_hide_guard_cone()
+
+
+## The strike: a travelling lane stays where it was drawn and fades under the
+## running body, as the host's does; a route line ends with its tell.
+func _release_shape() -> void:
+	var lane := shape_lane()
+	if lane != null and _shape_lane_travels:
+		if not bool(lane.call("is_locked")):
+			lane.call("lock")
+		lane.call("release")
+		_lunge_lane = null
+	else:
+		_free_shape_lane()
+	_shape_lane_lock_left = -1.0
+	_hide_guard_cone()
+
+
+func _free_shape_lane() -> void:
+	var lane := shape_lane()
+	if lane != null:
+		lane.queue_free()
+	_lunge_lane = null
+	_shape_lane_lock_left = -1.0
+
+
+## Follows the host-sent facing until the host's lock point, then holds.
+func _advance_shape_lane(delta: float) -> void:
+	var lane := shape_lane()
+	if lane == null or bool(lane.call("is_locked")):
+		return
+	lane.call("aim", global_position, _target_facing)
+	if _shape_lane_lock_left > 0.0:
+		_shape_lane_lock_left = maxf(0.0, _shape_lane_lock_left - delta)
+		if _shape_lane_lock_left <= 0.0:
+			lane.call("lock")
+
+
+static func _shape_number(shape: Dictionary, key: String, fallback: float = 0.0) -> float:
+	var value: Variant = shape.get(key, fallback)
+	if not (value is int or value is float) or not is_finite(float(value)):
+		return fallback
+	return float(value)
 
 
 func _physics_process(delta: float) -> void:
@@ -93,6 +187,7 @@ func _physics_process(delta: float) -> void:
 	if _animator != null:
 		var speed := global_position.distance_to(before) / maxf(delta, 0.0001)
 		_animator.call("tick", delta, speed, _speed)
+	_advance_shape_lane(delta)
 
 
 func _face_exact(direction: Vector3) -> void:
