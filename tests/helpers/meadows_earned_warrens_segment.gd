@@ -402,6 +402,35 @@ func _prepare() -> bool:
 	return _fail("Actual care, party selection and deployment left no usable ally")
 
 
+## Before a named trainer (relay captain, Sigil captains, Hall gauntlet) a
+## player tops the whole team up, not only the lead: seed 15 (5152b44a) lost
+## stronghold_elite with two fainted and the rest at 23-48 HP while carrying
+## seven small potions. Revive and pilot as `_prepare` does, then carried
+## potions on every member under TOP_UP_BELOW while the stock lasts.
+const TOP_UP_BELOW := 0.6
+
+
+func _prepare_for_trainer() -> bool:
+	if not await _prepare():
+		return false
+	var care := CARE.new()
+	care._tree = _tree
+	care._world = _world
+	care._game = _game
+	care._menu = _game.call("menu")
+	var party := _game.get("party") as RefCounted
+	var inventory := _game.get("inventory") as RefCounted
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		while member != null and not bool(member.get("fainted")) \
+				and float(member.get("hp")) < float(member.get("max_hp")) * TOP_UP_BELOW \
+				and int(inventory.call("count", "potion_small")) > 0:
+			if not await care._use_remedy("potion_small", index):
+				return _fail("Pre-trainer Satchel top-up failed: " + str(care.result().failures))
+	_receipt("trainer_top_up", {"party": _party_hp(), "potions_left": int(inventory.call("count", "potion_small"))})
+	return true
+
+
 ## Wild fights on a long walk wear the five down; with no care between them
 ## seed 15 lost an L15 wild on the Hall spine with four of five fainted and ten
 ## revives carried. After a win, a fainted member or a lead under half health
