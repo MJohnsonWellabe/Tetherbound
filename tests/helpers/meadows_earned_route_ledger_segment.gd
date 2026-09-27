@@ -51,6 +51,8 @@ var _seen_wilds := {}
 var _seen_offers := {}
 var _flags := {}
 var _revealed := {}
+var _seen_caches := {}
+const CACHE_SCRIPT := "res://scripts/world/item_cache_pickup.gd"
 var _discontinuities := 0
 var beats: Array = []
 var ledger: Array = []
@@ -69,7 +71,8 @@ func start(tree: SceneTree, stage_of: Callable, output_path: String) -> bool:
 		"spacing_min_m": SPACING_MIN_M, "a7_limit_s": A7_LIMIT_S, "sample_s": SAMPLE_S,
 		"beats": ["fight_started", "wild_within_radius (first time per body)",
 			"offer (first time per provider+prompt)", "flag_set",
-			"reveal (a map landmark or region first discovered)"],
+			"reveal (a map landmark or region first discovered)",
+			"cache_within_radius (an untaken world pickup, first time per cache)"],
 		"not_detected": ["unmapped vista"], "gaps_are_upper_bounds": true})
 	_seed_flags()
 	_seed_reveals()
@@ -337,6 +340,21 @@ func _observe() -> void:
 	# A7 names "new vista/landmark reveal" as a beat: the map's own discovery
 	# of a landmark (within its discover_radius) or a region (on entering it,
 	# the HUD's place title) is that reveal, read from the game's map state.
+	# An untaken roadside cache within the beat radius is a discovery and a
+	# preparation opportunity (A7) whether or not this walker detours the last
+	# 2.4 m to its prompt; counted once, like a wild body.
+	for node: Node in _tree.get_nodes_in_group(&"progression_restore"):
+		var script := node.get_script() as Script
+		if script == null or script.resource_path != CACHE_SCRIPT or bool(node.get("_taken")):
+			continue
+		var cache := node as Node3D
+		if cache == null or cache.global_position.distance_to(pos) > BEAT_RADIUS_M:
+			continue
+		var cache_key := str(cache.get_path())
+		if not _seen_caches.has(cache_key):
+			_seen_caches[cache_key] = true
+			_beat("cache_within_radius", cache.name, pos)
+
 	for id: String in _discovered_places(game):
 		if not _revealed.has(id):
 			_revealed[id] = true
