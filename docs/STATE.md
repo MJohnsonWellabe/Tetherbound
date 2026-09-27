@@ -12,6 +12,34 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
+**Newest F08#4 ownership:** owner explicitly assigns Codex the complete
+Cloudreach settlements/cliff-identity C2 matrix pass, including new assets,
+placement and tint (#356 5857157478). After F04 fight renders and F10#3, read
+Cloudreach's HANDOFF and merge done work from `tb/cloudreach`; do not redo it.
+Complete remaining M1–M12, capture native C2 frames and obtain a code-blind PASS.
+Only then post `READY FOR INTEGRATION: <tb/ branch> <sha> — closes F08#4`,
+with evidence and `Shortcuts disclosed:`. The former asset-only Cloudreach
+split below is superseded for this criterion. HANDOFF 5857179877 is `tb/cloudreach@b764a197a`: M1–M12 not started,
+except the capture output-folder option; r0 has 13 software baseline frames.
+Merge that work before the remaining Cloudreach changes. Native high-perch
+request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
+missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.
+
+**Owner PR cleanup:** Codex closed #329, #342, #352, #355, #363 and #365
+under the explicit instruction to merge or close its PRs. All six published
+heads were draft/conflicting; no complete current engine/export validation was
+available. Branches, assets and evidence are retained. Passing bounded bottle
+and attack reviews remain useful; closing stale PRs does not close the visual
+criteria. #356 comment 5857027751 records the disposition. References below to
+these PRs as open/draft describe their historical evidence, not current state.
+The latest lightning branch integrates main `9850b3be1` in `63f3006b1`, preserves
+Claude's warning-centre and sky-phase changes, and passes 64 focused tests /
+819 assertions after the capsule revision. Native normal/reduced samples exist;
+R5 passed warning/countdown, lightning identification and retained reduced
+information but failed thin-channel/contact finish; whole Bars A/B remain NO.
+A stronger channel and short return leaders with soft capsule joins are
+being independently judged on native normal/reduced frames.
+
 **Current owner-directed visual goal (Codex):** inspect and improve every visual
 domain against ART_DIRECTION and ACCEPTANCE §4, on isolated branches from current
 main; Claude continues gameplay work and owns PR merges. PR288 is the first bounded
@@ -27,6 +55,24 @@ from the production worktree; native layer isolation is placement evidence for
 Claude, not an accepted visual fix. Main `ddaf7a7bd` integrated in `f8b07a081`.
 See `ralph/reports/VISUAL/VEGETATION-ISOLATION.md`. GPU service remains secondary
 and now skips replaced/withdrawn requests under the owner's updated instructions.
+All further renders must use the owner's Windows NVIDIA GPU; the owner has
+prohibited Linux renders. Cloud task llvmpipe failures do not describe this
+local runner. #356 correction 5856128624 and restriction 5856147826 record this.
+The owner-prioritized GPU backlog is served. Vance, Hald and the new Tidewake
+four-fight request failed individual frame inspection even after one corrective
+retry; GPU FAIL replies 5856863671 / 5856864014 / 5856864344 link all diagnostics.
+The service opens every frame before GPU DONE, includes a per-file description,
+and never repeats a terminal failed request without a corrected lane request.
+Results remain on `tb/gpu-runs`; no Linux rendering or lane-source patching.
+
+The owner explicitly reassigned F10#3's purple bolt and ground-warning shape
+to Codex, superseding the earlier VFX split for this scope (#356 5856599855).
+Main `298d1694f` is integrated in `aaeab82f6`. The lightning candidate replaces
+the pole/disc reading with thin branching discharge and ground leaders that
+grow inward over the actual warning duration. Normal/reduced native GPU
+evidence and independent verdicts: `ralph/reports/VISUAL/LIGHTNING-SHAPE.md`.
+No broader Stormwood/visual criterion is closed by source or tests alone.
+The Cloudreach distant-spire candidate remains local, unjudged and paused.
 
 The current F04#1 native relay witness still fails visible travel/path readability.
 After integrating main `4ee9f4157`, measured Vance/Tuskroot travel is

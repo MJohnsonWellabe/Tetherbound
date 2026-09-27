@@ -211,7 +211,7 @@ func _receive(event: Dictionary) -> void:
 ## stormwood_surge.gd::sky_flash_for_strike). Values:
 ## stormwood_surge.json presentation.flash.strike_*.
 static var _bolt_mesh: ArrayMesh
-static var _bolt_material: StandardMaterial3D
+static var _bolt_material: ShaderMaterial
 static var _bolt_glow_mesh: ArrayMesh
 static var _bolt_glow_material: ShaderMaterial
 static var _telegraph_shader: Shader
@@ -222,22 +222,48 @@ func _strike_flash(at: Vector3) -> void:
 	var seconds := float(cfg.get("strike_bolt_seconds", 0.18))
 	if _bolt_mesh == null:
 		_bolt_mesh = _build_strike_bolt(cfg)
-		_bolt_material = StandardMaterial3D.new()
-		_bolt_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		_bolt_material.albedo_color = colour.lerp(Color.WHITE, 0.62)
-		_bolt_material.emission_enabled = true
-		_bolt_material.emission = colour
-		_bolt_material.emission_energy_multiplier = float(cfg.get("strike_bolt_emission", 6.0))
-		_bolt_material.disable_fog = true
+		var core_shader := Shader.new()
+		core_shader.code = """
+shader_type spatial;
+render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
+uniform vec4 tint : source_color;
+void vertex() {
+	vec3 centre = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 tangent = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	vec3 across = cross(tangent, -centre / max(length(centre), 0.0001));
+	if (dot(across, across) < 0.0001) { across = vec3(1.0, 0.0, 0.0); }
+	centre += normalize(across) * UV.x * UV.y;
+	POSITION = PROJECTION_MATRIX * vec4(centre, 1.0);
+}
+void fragment() {
+	ALBEDO = tint.rgb;
+	float end_distance = max(max(-UV2.x, UV2.x - UV2.y), 0.0) / max(UV.y, 0.0001);
+	float d2 = UV.x * UV.x + end_distance * end_distance;
+	ALPHA = exp(-4.0 * d2) * (1.0 - smoothstep(0.64, 1.0, d2)) * tint.a;
+}
+"""
+		_bolt_material = ShaderMaterial.new()
+		_bolt_material.shader = core_shader
+		_bolt_material.set_shader_parameter("tint", colour.lerp(Color.WHITE, 0.62))
 		_bolt_glow_mesh = _build_strike_bolt(cfg, float(cfg.get("strike_glow_radius_scale", 4.0)))
 		var glow_shader := Shader.new()
 		glow_shader.code = """
 shader_type spatial;
 render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
 uniform vec4 tint : source_color;
+void vertex() {
+	vec3 centre = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 tangent = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	vec3 across = cross(tangent, -centre / max(length(centre), 0.0001));
+	if (dot(across, across) < 0.0001) { across = vec3(1.0, 0.0, 0.0); }
+	centre += normalize(across) * UV.x * UV.y;
+	POSITION = PROJECTION_MATRIX * vec4(centre, 1.0);
+}
 void fragment() {
 	ALBEDO = tint.rgb;
-	ALPHA = pow(abs(dot(normalize(NORMAL), normalize(VIEW))), 2.0) * tint.a;
+	float end_distance = max(max(-UV2.x, UV2.x - UV2.y), 0.0) / max(UV.y, 0.0001);
+	float d2 = UV.x * UV.x + end_distance * end_distance;
+	ALPHA = exp(-4.0 * d2) * (1.0 - smoothstep(0.64, 1.0, d2)) * tint.a;
 }
 """
 		_bolt_glow_material = ShaderMaterial.new()
@@ -245,6 +271,7 @@ void fragment() {
 		_bolt_glow_material.set_shader_parameter("tint", Color(colour, float(cfg.get("strike_glow_opacity", 0.32))))
 	var bolt := MeshInstance3D.new()
 	bolt.name = "StrikeBolt"
+	bolt.extra_cull_margin = 1.0
 	bolt.mesh = _bolt_mesh
 	bolt.material_override = _bolt_material
 	bolt.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -252,6 +279,7 @@ void fragment() {
 	bolt.global_position = at
 	var glow := MeshInstance3D.new()
 	glow.name = "StrikeGlow"
+	glow.extra_cull_margin = 1.0
 	glow.mesh = _bolt_glow_mesh
 	glow.material_override = _bolt_glow_material
 	glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -295,6 +323,8 @@ func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh
 			fraction * height, sin(k * 1.73) * jitter * 0.55 * minf(fraction * 8.0, 1.0)))
 	var vertices := PackedVector3Array()
 	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var capsule_uvs := PackedVector2Array()
 	var indices := PackedInt32Array()
 	var paths: Array[PackedVector3Array] = [spine]
 	var widths: Array[float] = [1.0]
@@ -310,7 +340,7 @@ func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh
 			start + away * 1.75 - across * 0.13 + Vector3.DOWN * 1.6,
 			start + away * 2.55 + across * 0.16 + Vector3.DOWN * 2.8,
 			start + away * 2.95 + Vector3.DOWN * 3.9]))
-		widths.append(0.48)
+		widths.append(0.34)
 	# A second scale of hairline leaders supplies the irregular branching
 	# hierarchy of the inspected electrical-channel reference. This visual
 	# generator owns its seed and never touches encounter or weather RNG.
@@ -321,32 +351,45 @@ func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh
 			start + Vector3(side * 0.34, -0.19, 0.12),
 			start + Vector3(side * 0.65, -0.55, 0.25),
 			start + Vector3(side * 0.88, -0.91, 0.3)]))
-		widths.append(0.22)
+		widths.append(0.18)
+	# Short upward return leaders give the discharge a visible termination
+	# outside the trainer's boots, instead of burying all contact under them.
+	for k in 7:
+		var angle := float(k) * TAU / 7.0 + 0.31
+		var outward := Vector3(cos(angle), 0.0, sin(angle))
+		var sideways := Vector3(-outward.z, 0.0, outward.x)
+		paths.append(PackedVector3Array([Vector3.ZERO,
+			outward * 0.33 + Vector3.UP * 0.22,
+			outward * 0.53 + sideways * 0.13 + Vector3.UP * 0.54,
+			outward * 0.78 - sideways * 0.08 + Vector3.UP * 0.29,
+			outward * 1.12 + Vector3.UP * 0.08]))
+		widths.append(0.42)
 	for path_index in paths.size():
 		var points := _fracture_channel(paths[path_index], 7139 + path_index * 277)
-		var base := vertices.size()
-		for k in points.size():
-			# The discharge narrows into one ground contact, rather than a
-			# broad pole base. Side leaders taper away from their junctions.
-			var radius := lerpf(tip, width, float(k) / float(points.size() - 1)) if path_index == 0 else lerpf(width * widths[path_index], 0.001, float(k) / float(points.size() - 1))
-			radius *= radius_scale
-			for side in 4:
-				var normal := Vector3(cos(side * TAU / 4.0), 0.0, sin(side * TAU / 4.0))
-				vertices.append(points[k] + normal * radius)
-				normals.append(normal)
 		for k in points.size() - 1:
-			for side in 4:
-				var a := base + k * 4 + side
-				var b := base + k * 4 + (side + 1) % 4
-				if path_index == 0:
-					indices.append_array(PackedInt32Array([a, b, a + 4, b, b + 4, a + 4]))
-				else:
-					# Forks descend; reverse their winding to face outward.
-					indices.append_array(PackedInt32Array([a, a + 4, b, b, a + 4, b + 4]))
+			# Capsule ends overlap softly at bends instead of exposing hard
+			# triangular gaps. UV2 carries longitudinal metres and channel length.
+			var a := vertices.size()
+			var tangent := (points[k + 1] - points[k]).normalized()
+			var length_m := points[k].distance_to(points[k + 1])
+			var fraction := (float(k) + 0.5) / float(points.size() - 1)
+			var radius := lerpf(tip, width, fraction) if path_index == 0 else lerpf(width * widths[path_index], 0.001, fraction)
+			radius *= radius_scale * (0.82 + 0.18 * sin((float(k) + 0.5) * 0.39 + float(path_index)))
+			for endpoint in [k, k + 1]:
+				var extension := -radius if endpoint == k else radius
+				var along := -radius if endpoint == k else length_m + radius
+				for side in [-1.0, 1.0]:
+					vertices.append(points[endpoint] + tangent * extension)
+					normals.append(tangent)
+					uvs.append(Vector2(side, radius))
+					capsule_uvs.append(Vector2(along, length_m))
+			indices.append_array(PackedInt32Array([a, a + 1, a + 2, a + 1, a + 3, a + 2]))
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = vertices
 	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_TEX_UV2] = capsule_uvs
 	arrays[Mesh.ARRAY_INDEX] = indices
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
@@ -365,7 +408,7 @@ func _fracture_channel(control: PackedVector3Array, visual_seed: int) -> PackedV
 		for k in points.size() - 1:
 			var a := points[k]
 			var b := points[k + 1]
-			var amount := minf(a.distance_to(b) * 0.18, 0.24)
+			var amount := minf(a.distance_to(b) * 0.23, 0.40)
 			var offset := Vector3(rng.randf_range(-amount, amount),
 				0.0, rng.randf_range(-amount, amount))
 			refined.append(a)
@@ -400,7 +443,6 @@ shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
 uniform vec3 rim_colour : source_color = vec3(1.0, 0.25, 0.9);
 uniform vec3 edge_colour : source_color = vec3(1.0, 0.25, 0.9);
-uniform vec3 fill_colour : source_color = vec3(0.06, 0.05, 0.05);
 uniform float rim_fraction = 0.87;
 uniform float rim_width = 0.05;
 uniform float intensity = 2.2;
@@ -473,12 +515,13 @@ void fragment() {
 	float b = sin((joint + 1.0) * 2.31 + noise_sector * 1.7);
 	float kink = mix(a, b, fract(step_m)) * leader_kink * min(distance_m, 1.0);
 	float tapered_width = leader_width * (0.45 + 0.55 * min(distance_m / rim_radius, 1.0));
-	float leader = (1.0 - smoothstep(tapered_width, tapered_width + 0.022, abs(lateral - kink))) * inside;
+	float leader_distance = abs(lateral - kink) / max(tapered_width, 0.005);
+	float leader = (exp(-leader_distance * leader_distance) + 0.12 * exp(-leader_distance * leader_distance / 9.0)) * inside;
 	float charge_radius = rim_radius * (1.0 - progress);
 	float head = 1.0 - smoothstep(leader_head_width * 0.25, leader_head_width, abs(distance_m - charge_radius));
 	float charged = smoothstep(charge_radius - 0.08, charge_radius + 0.08, distance_m);
 	float urgency = smoothstep(ramp_start, 1.0, progress);
-	float leaders = leader * (charged * 0.70 + head * 0.9 + urgency * 0.16);
+	float leaders = leader * (charged * 0.45 + head * 0.5 + urgency * 0.12);
 	// A compact lightning-shaped contact mark distinguishes the intended
 	// impact point from a persistent electrical floor. It stays readable
 	// while the six surrounding leaders visibly grow toward it.
@@ -489,7 +532,7 @@ void fragment() {
 	leaders += contact * (0.65 + urgency * 0.25);
 	// Fine broken perimeter marks preserve the exact 3 m hazard boundary
 	// without making a second broad disc compete with the impact point.
-	float dash = step(0.35, fract((angle / 6.2831853 + 0.5) * 24.0));
+	float dash = 1.0 - smoothstep(0.27, 0.49, abs(fract((angle / 6.2831853 + 0.5) * 24.0) - 0.5));
 	float a_rim = rim * dash * (0.32 + urgency * 0.45) * mix(pulse, 1.0, strike);
 	float a_edge = outer * dash * 0.10;
 	vec3 hot = mix(rim_colour, vec3(0.92, 0.72, 1.0), strike);
@@ -583,7 +626,6 @@ func _telegraph_material() -> ShaderMaterial:
 	var hazard := telegraph_colour()
 	material.set_shader_parameter("rim_colour", hazard)
 	material.set_shader_parameter("edge_colour", hazard)
-	material.set_shader_parameter("fill_colour", Color(str(cfg.get("fill_colour", "#100c10"))))
 	material.set_shader_parameter("rim_fraction", rim_r / outer_r)
 	material.set_shader_parameter("rim_width", float(cfg.get("rim_width_m", 0.16)) / outer_r)
 	material.set_shader_parameter("intensity", float(cfg.get("rim_intensity", 2.4)))
