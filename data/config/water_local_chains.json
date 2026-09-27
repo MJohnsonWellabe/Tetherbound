@@ -24,6 +24,143 @@
       "facing_xz": [0.0, -1.0]
     }
   ],
+  "_comment_wayfinding_lures": "F13#3 chain lures (V-TW-2..6) and F13#2 reward-pocket lures: always-standing wayfinding groups built by WaterLocalChains on every peer from the first frame, whatever the chain state. Installed Water pieces only: the Lastlight bark lamp post + Quaternius wall lantern (collides, post width), the Quaternius standing banner Banner_2 (teal/white cloth, never Team Tether red; art only) and the Water camps' own campfire (scripts/build/campfire.gd) with its smoke column raised as a signal (campfire_glow.gd configure_smoke). Offsets are world metres from at_xz; every piece is grounded at its own spot. Spots were chosen by a terrain sightline probe from the island's arrival landing and the approach stand, and kept aside from the walked chain routes (tests/smoke_tidewake_b_chain_route.gd).",
+  "wayfinding_lures": [
+    {
+      "id": "lantern_cove_rise", "chain": "side_water_lantern_return", "at_xz": [-292.0, 155.0],
+      "_why_at": "F13#3 r3: on the grass crest left of the crest tree, 41 m from the lantern_cove landing camera and 17 m north of the walked route (baked-ground plan (-291.7, 138.0)), so the banner stands near the centre of the landing frame against the pale rock and the smoke column rises against open sky, not the canopy. Round 2 had it 65 m off beside the trunk (judge: 'half-hidden behind a tree trunk', 'far, small, muted').",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [3.0, 6.0], "smoke_top_m": 42.0, "smoke_alpha": 1.0, "smoke_top_size_m": 14.0, "smoke_base_size_m": 2.5, "smoke_fade": 0.2, "smoke_colour": "#2e2a27"},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 300, "height_m": 9.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [-1.0, -1.2], "yaw_deg": 240, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "lantern_cove_nook", "chain": "side_water_lantern_return", "at_xz": [-411.5, 213.0],
+      "_why_at": "Beside the dry nook cache water:lantern_cove:pickup:002 (-407.7, 210.4), 4.6 m beyond it from the landing. From the mid-approach stand the site is in sight (2.3 m); from the landing the crest hides it, so the signal smoke rises past the crest (28 m).",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [0, 0], "smoke_top_m": 42.0, "smoke_alpha": 1.0, "smoke_top_size_m": 14.0, "smoke_base_size_m": 2.5, "smoke_fade": 0.2, "smoke_colour": "#2e2a27"},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [2.2, 1.4], "yaw_deg": 240, "height_m": 9.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [-1.6, 1.8], "yaw_deg": 240, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "gull_rest_survey_marker", "chain": "side_water_gull_research", "at_xz": [-43.3, 890.0],
+      "_why_at": "Adair's survey marker on the west shoulder, 21 m downhill of the satchel site: the satchel's own spot is behind the hilltop from the gull_rest landing (15.5 m), this shoulder is in view from the landing and the 40 m stand.",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [-1.8, 1.4], "smoke_top_m": 20.0, "smoke_alpha": 0.7, "smoke_top_size_m": 9.0, "smoke_base_size_m": 2.6, "smoke_fade": 0.5},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 200, "height_m": 9.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.3, -0.8], "yaw_deg": 200, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "gull_rest_satchel_lamp", "chain": "side_water_gull_research", "at_xz": [-19.6, 886.2],
+      "_why_at": "Survey lamp and banner 3.5 m uphill-east of the satchel prompt (-22.34, 883.98), seen from the mid-approach stand and from the survey marker below.",
+      "pieces": [
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [1.3, 0.9], "yaw_deg": 200, "height_m": 7.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [0, 0], "yaw_deg": 200, "post_height_m": 4.8, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.9, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "tidal_cradle_rise", "chain": "side_water_cradle_care", "at_xz": [555.5, 1377.0],
+      "_why_at": "On the walked route's climb from Otto's camp (plan point (552, 1376), 31 m from the landing camera), 3.5 m east of it, so the whole banner stands inside the landing frame beside Otto's camp; higher points of the climb leave the frame's top edge: the part of the way to the nest a player at the tidal_cradle landing can see inside the frame (the nest is 406 m on, behind the massif).",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [-2.0, 1.0], "smoke_top_m": 16.0, "smoke_alpha": 0.7, "smoke_top_size_m": 9.0, "smoke_base_size_m": 2.6, "smoke_fade": 0.5},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 225, "height_m": 7.5, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.4, -0.4], "yaw_deg": 225, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "tidal_cradle_nest", "chain": "side_water_cradle_care", "at_xz": [796.0, 1652.0],
+      "_why_at": "Head of the walked gully, 23 m short of the shell nest seam water:tidal_cradle:harvest:007 (818, 55, 1644) and 5 m aside from the route; the seam itself sits below a lip, this spot is in sight from the walked-route stand 100 m short (740, 1584).",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [-1.5, -2.0], "smoke_top_m": 30.0, "smoke_alpha": 0.55, "smoke_top_size_m": 9.8, "smoke_base_size_m": 1.8, "smoke_fade": 0.6},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [1.5, -0.6], "yaw_deg": 220, "height_m": 7.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [0, 0], "yaw_deg": 220, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "drowned_garden_rise", "chain": "side_water_garden_records", "at_xz": [1079.0, 2259.0],
+      "_why_at": "F13#3 r3: on the flat sand 28 m from the drowned_garden landing camera, near the centre of the landing frame, 8 m right of the walked route (baked-ground plan (1076.3, 2250.0) to (1082.3, 2252.0)) where it bends toward the saddle; banner, lamp, an ordinary camp fire and a crate-and-barrel stack (no signal column this close: the saddle group beyond carries it). Round 2 had it in the saddle 87 m away, left of centre and low contrast (judge: 'small, off-center').",
+      "pieces": [
+        {"kind": "prop", "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "offset_xz": [0.9, -1.3], "yaw_deg": 20, "height_m": 1.1, "sink_m": 0.05},
+        {"kind": "prop", "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "offset_xz": [1.8, -0.6], "yaw_deg": 55, "height_m": 0.8, "sink_m": 0.05},
+        {"kind": "prop", "model": "res://assets/props/quaternius_fantasy/Barrel.gltf", "offset_xz": [0.0, -1.9], "yaw_deg": 0, "height_m": 1.2, "sink_m": 0.05},
+        {"kind": "signal_fire", "offset_xz": [-1.6, -1.6]},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 240, "height_m": 9.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.3, 0.5], "yaw_deg": 240, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "drowned_garden_saddle", "chain": "side_water_garden_records", "at_xz": [1137.5, 2270.2],
+      "_why_at": "F13#3 r3: the round-2 saddle spot on the walked route (plan point (1136.3, 2274.0), 87 m from the landing camera, 4 m aside), now only the signal column (Meadows Juno treatment) and a banner: seen from the landing it rises beyond the near banner group, so the frame has one column at a distance instead of a close black wedge (r3 iteration-1 judges: 'reads as a rendering artifact' at 28 m).",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [-1.6, -1.6], "smoke_top_m": 42.0, "smoke_alpha": 1.0, "smoke_top_size_m": 14.0, "smoke_base_size_m": 2.5, "smoke_fade": 0.2, "smoke_colour": "#2e2a27"},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 240, "height_m": 9.0, "sink_m": 0.3}
+      ]
+    },
+    {
+      "id": "drowned_garden_vault", "chain": "side_water_garden_records", "at_xz": [1206.0, 2342.0],
+      "_why_at": "Behind the exposed vault wall (1204.5, 2337.6; the wall runs along X), so banner and smoke rise over it as seen from the approach; clear of the wall's prompt side.",
+      "pieces": [
+        {"kind": "signal_fire", "offset_xz": [0, 1.0], "smoke_top_m": 42.0, "smoke_alpha": 1.0, "smoke_top_size_m": 14.0, "smoke_base_size_m": 2.5, "smoke_fade": 0.2, "smoke_colour": "#2e2a27"},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [-2.2, 0], "yaw_deg": 180, "height_m": 7.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [2.6, 0.2], "yaw_deg": 180, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "drowned_garden_crest", "chain": "side_water_garden_records", "at_xz": [1168.5, 2307.0],
+      "_why_at": "F13#3 r3: on the approach slope 27 m ahead of the mid-approach stand, left of the player in the frame and about 20 m aside from the walked route (plan (1166.3, 2286.0) to (1172.3, 2290.0)), with a crate-and-barrel stack at its foot so it reads as a built survey point (r3 iteration-2 judges: banners 'high and small', 'no strong focal object'); the vault wall group beyond sits behind the crest over open water (round-2 judge: 'tiny near the horizon'), so this group (banner, lamp, ordinary camp fire, crates; the vault group keeps the signal column) marks the way at a readable size.",
+      "pieces": [
+        {"kind": "prop", "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "offset_xz": [0.9, -1.3], "yaw_deg": 20, "height_m": 1.1, "sink_m": 0.05},
+        {"kind": "prop", "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "offset_xz": [1.8, -0.6], "yaw_deg": 55, "height_m": 0.8, "sink_m": 0.05},
+        {"kind": "prop", "model": "res://assets/props/quaternius_fantasy/Barrel.gltf", "offset_xz": [0.0, -1.9], "yaw_deg": 0, "height_m": 1.2, "sink_m": 0.05},
+        {"kind": "signal_fire", "offset_xz": [-1.6, -1.6]},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 240, "height_m": 9.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.3, 0.5], "yaw_deg": 240, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5000000000000004, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "deep_watch_chart", "chain": "side_water_deep_watch_chart", "at_xz": [1266.3, 3414.7],
+      "_why_at": "Chart-station lamp 2.5 m beside the Deep Watch chart control (1268.3, 3413.1; WaterDocks deep_watch_chart), on the left of the walk up from the landing 13 m away, so the low table reads as a station. It stood 2.4 m beyond the chart until tb/tidewake-full: its colliding post sat on the walked line from the landing and every walk inland stalled against it.",
+      "pieces": [
+        {"kind": "lamp_post", "offset_xz": [0, 0], "yaw_deg": 215, "post_height_m": 4.8, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.9, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0},
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [1.2, 1.0], "yaw_deg": 215, "height_m": 4.5, "sink_m": 0.3}
+      ]
+    },
+    {
+      "id": "reed_root_hollow_marker", "pocket": "reed_root_hollow", "at_xz": [-104.5, 460.5],
+      "_why_at": "F13#2 pocket reed_root_hollow (-101.0, 457.8): 4.5 m beyond its centre from the walked approach (plan points (-92, 444) to (-100, 456)), in sight of the 40 m lure stand (-92, 420).",
+      "pieces": [
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 200, "height_m": 6.5, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.3, -0.6], "yaw_deg": 200, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "brine_upper_shelf_marker", "pocket": "brine_upper_shelf", "at_xz": [519.5, 612.5],
+      "_why_at": "F13#2 pocket brine_upper_shelf (516.4, 615.0): 4 m beyond its centre from the 40 m lure stand (493.6, 644), where the shelf is behind the grass crest (2.1 m needed at the centre); the banner and lamp clear it.",
+      "pieces": [
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 320, "height_m": 7.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.2, 0.8], "yaw_deg": 320, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "salt_bell_terrace_marker", "pocket": "salt_bell_terrace", "at_xz": [31.5, 2398.0],
+      "_why_at": "F13#2 pocket salt_bell_terrace (30.7, 2393.5): 4.5 m north of its centre, beyond the walked approach up x = 30 from the 40 m stand (30, 2352).",
+      "pieces": [
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 180, "height_m": 6.5, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.3, 0.4], "yaw_deg": 180, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    },
+    {
+      "id": "deep_watch_cache_marker", "pocket": "deep_watch_tidecoil_cache", "at_xz": [1400.8, 3553.1],
+      "_why_at": "F13#2 pocket deep_watch_tidecoil_cache (1409.8, 3550.1) sits on a ledge 10.5 m out of sight from the 40 m lure stand (1372, 3535); this rim spot 9 m short of it is in sight (0.8 m) and 7 m aside from the walked climb (1404, 3563) to (1410, 3551).",
+      "pieces": [
+        {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [0, 0], "yaw_deg": 240, "height_m": 7.0, "sink_m": 0.3},
+        {"kind": "lamp_post", "offset_xz": [1.2, -0.7], "yaw_deg": 240, "post_height_m": 4.4, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.5, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0}
+      ]
+    }
+  ],
   "steps": [
     {
       "id": "lantern_return_lead",

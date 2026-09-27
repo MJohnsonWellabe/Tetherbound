@@ -1,0 +1,96 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:89)
+STORMWOOD BUILD shell=false elapsed_ms=178 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=498 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=745 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=751 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=753 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=760 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=761 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=761 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=763 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=763 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1045 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1064 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1064 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=79 reorder[7 layers]=31
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=142 mark_harvestable=20 group_by_model=40 register_mesh_assets=23 build_batches_total=828 (of which harvest_points[11099 nodes]=659, initial_collision_stream[11161 solid]=42) update_mmis=145
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+POCKET WALKS earned start user://swcp_a/3_rootgate rootgate_released=true party=5
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=806
+POCKET WALKS viewport=(1920.0, 1080.0) realm=stormwood pockets_node=true
+LURE verge_ash_hollow side=along back=30m stand=(-329.6,339.7) cam=(-328.6,31.6,334.7) flame=(-323.0,31.4,366.5) dist=32.3m bearing=-20.5deg in_frustum=true screen=(0.347,0.352) ray=clear spur_visible=7/10 result=PASS
+LURE verge_ash_hollow side=along back=25m stand=(-330.5,344.6) cam=(-329.6,31.4,339.6) flame=(-323.0,31.4,366.5) dist=27.7m bearing=-24.1deg in_frustum=true screen=(0.316,0.347) ray=clear spur_visible=8/10 result=PASS
+LURE verge_ash_hollow side=along back=20m stand=(-331.4,349.5) cam=(-330.5,31.0,344.5) flame=(-323.0,31.4,366.5) dist=23.2m bearing=-29.2deg in_frustum=true screen=(0.270,0.333) ray=clear spur_visible=7/10 result=PASS
+LURE verge_ash_hollow side=against back=30m stand=(-340.5,398.7) cam=(-341.4,31.1,403.7) flame=(-323.0,31.4,366.5) dist=41.5m bearing=+15.9deg in_frustum=true screen=(0.617,0.342) ray=clear spur_visible=7/10 result=PASS
+LURE verge_ash_hollow side=against back=25m stand=(-339.6,393.8) cam=(-340.5,30.9,398.8) flame=(-323.0,31.4,366.5) dist=36.7m bearing=+18.0deg in_frustum=true screen=(0.634,0.337) ray=clear spur_visible=9/10 result=PASS
+LURE verge_ash_hollow side=against back=20m stand=(-338.7,388.9) cam=(-339.6,30.9,393.9) flame=(-323.0,31.4,366.5) dist=32.0m bearing=+20.8deg in_frustum=true screen=(0.656,0.335) ray=clear spur_visible=8/10 result=PASS
+LURE hollows_moss_nook side=along back=30m stand=(93.7,1733.0) cam=(92.5,24.6,1728.3) flame=(94.0,27.2,1765.0) dist=36.8m bearing=+12.6deg in_frustum=true screen=(0.593,0.294) ray=clear spur_visible=7/10 result=PASS
+LURE hollows_moss_nook side=along back=25m stand=(95.0,1737.9) cam=(93.7,24.7,1732.9) flame=(94.0,27.2,1765.0) dist=32.1m bearing=+14.5deg in_frustum=true screen=(0.608,0.288) ray=clear spur_visible=8/10 result=PASS
+LURE hollows_moss_nook side=along back=20m stand=(96.3,1742.7) cam=(95.0,24.7,1737.8) flame=(94.0,27.2,1765.0) dist=27.3m bearing=+17.1deg in_frustum=true screen=(0.629,0.276) ray=clear spur_visible=7/10 result=PASS
+LURE hollows_moss_nook side=against back=30m stand=(109.3,1791.0) cam=(110.6,27.3,1795.9) flame=(94.0,27.2,1765.0) dist=35.1m bearing=-13.2deg in_frustum=true screen=(0.404,0.351) ray=clear spur_visible=9/10 result=PASS
+LURE hollows_moss_nook side=against back=25m stand=(108.0,1786.1) cam=(109.3,27.0,1791.1) flame=(94.0,27.2,1765.0) dist=30.2m bearing=-15.4deg in_frustum=true screen=(0.387,0.343) ray=clear spur_visible=9/10 result=PASS
+LURE hollows_moss_nook side=against back=20m stand=(106.7,1781.3) cam=(108.0,26.5,1786.2) flame=(94.0,27.2,1765.0) dist=25.5m bearing=-18.3deg in_frustum=true screen=(0.363,0.326) ray=clear spur_visible=8/10 result=PASS
+LURE conductor_ridge_cleft side=along back=30m stand=(-679.2,3393.2) cam=(-683.9,59.2,3392.1) flame=(-643.2,57.9,3395.9) dist=41.0m bearing=-7.8deg in_frustum=true screen=(0.444,0.372) ray=clear spur_visible=10/10 result=PASS
+LURE conductor_ridge_cleft side=along back=25m stand=(-674.3,3394.3) cam=(-679.3,58.8,3393.1) flame=(-643.2,57.9,3395.9) dist=36.2m bearing=-8.9deg in_frustum=true screen=(0.436,0.368) ray=clear spur_visible=10/10 result=PASS
+LURE conductor_ridge_cleft side=along back=20m stand=(-669.5,3395.4) cam=(-674.4,58.4,3394.3) flame=(-643.2,57.9,3395.9) dist=31.3m bearing=-10.3deg in_frustum=true screen=(0.426,0.360) ray=clear spur_visible=10/10 result=PASS
+LURE conductor_ridge_cleft side=against back=30m stand=(-650.0,3430.0) cam=(-650.0,55.6,3435.1) flame=(-643.2,57.9,3395.9) dist=39.9m bearing=+9.9deg in_frustum=true screen=(0.572,0.304) ray=clear spur_visible=8/10 result=PASS
+LURE conductor_ridge_cleft side=against back=25m stand=(-650.0,3425.0) cam=(-650.0,55.8,3430.1) flame=(-643.2,57.9,3395.9) dist=35.0m bearing=+11.3deg in_frustum=true screen=(0.583,0.303) ray=clear spur_visible=7/10 result=PASS
+LURE conductor_ridge_cleft side=against back=20m stand=(-650.0,3420.0) cam=(-650.0,55.8,3425.1) flame=(-643.2,57.9,3395.9) dist=30.1m bearing=+13.2deg in_frustum=true screen=(0.597,0.296) ray=clear spur_visible=7/10 result=PASS
+DISCLOSED SEAM 4: surge is building; waiting for Calm at time_scale 8
+LURE deepwood_ridge_shelter side=along back=30m stand=(-992.3,3887.2) cam=(-987.2,43.1,3887.8) flame=(-1021.8,43.4,3875.1) dist=36.9m bearing=+12.5deg in_frustum=true screen=(0.591,0.340) ray=clear spur_visible=7/10 result=PASS
+LURE deepwood_ridge_shelter side=along back=25m stand=(-997.2,3886.5) cam=(-992.2,42.8,3887.2) flame=(-1021.8,43.4,3875.1) dist=32.0m bearing=+14.4deg in_frustum=true screen=(0.606,0.334) ray=clear spur_visible=8/10 result=PASS
+LURE deepwood_ridge_shelter side=along back=20m stand=(-1002.2,3885.8) cam=(-997.1,42.8,3886.5) flame=(-1021.8,43.4,3875.1) dist=27.2m bearing=+17.0deg in_frustum=true screen=(0.626,0.331) ray=clear spur_visible=7/10 result=PASS
+LURE deepwood_ridge_shelter side=against back=30m stand=(-1051.7,3879.2) cam=(-1056.8,40.9,3878.5) flame=(-1021.8,43.4,3875.1) dist=35.2m bearing=-13.1deg in_frustum=true screen=(0.403,0.291) ray=clear spur_visible=9/10 result=PASS
+LURE deepwood_ridge_shelter side=against back=25m stand=(-1046.8,3879.8) cam=(-1051.8,40.4,3879.2) flame=(-1021.8,43.4,3875.1) dist=30.4m bearing=-15.3deg in_frustum=true screen=(0.385,0.268) ray=clear spur_visible=9/10 result=PASS
+LURE deepwood_ridge_shelter side=against back=20m stand=(-1041.8,3880.5) cam=(-1046.9,40.4,3879.8) flame=(-1021.8,43.4,3875.1) dist=25.6m bearing=-18.2deg in_frustum=true screen=(0.361,0.251) ray=clear spur_visible=9/10 result=PASS
+LURE dynamo_scorch_pen side=along back=30m stand=(-440.3,5134.2) cam=(-444.9,68.6,5132.6) flame=(-411.2,76.7,5151.8) dist=39.6m bearing=+9.8deg in_frustum=true screen=(0.575,0.182) ray=clear spur_visible=7/10 result=PASS
+LURE dynamo_scorch_pen side=along back=25m stand=(-435.6,5135.9) cam=(-440.4,69.4,5134.2) flame=(-411.2,76.7,5151.8) dist=34.8m bearing=+11.3deg in_frustum=true screen=(0.586,0.177) ray=clear spur_visible=7/10 result=PASS
+LURE dynamo_scorch_pen side=along back=20m stand=(-430.9,5137.6) cam=(-435.7,70.4,5135.9) flame=(-411.2,76.7,5151.8) dist=29.8m bearing=+13.2deg in_frustum=true screen=(0.601,0.175) ray=clear spur_visible=8/10 result=PASS
+LURE dynamo_scorch_pen side=against back=30m stand=(-383.9,5154.5) cam=(-379.1,78.1,5156.2) flame=(-411.2,76.7,5151.8) dist=32.5m bearing=-11.8deg in_frustum=true screen=(0.415,0.382) ray=clear spur_visible=8/10 result=PASS
+LURE dynamo_scorch_pen side=against back=25m stand=(-388.6,5152.8) cam=(-383.8,77.3,5154.5) flame=(-411.2,76.7,5151.8) dist=27.6m bearing=-14.0deg in_frustum=true screen=(0.398,0.364) ray=clear spur_visible=7/10 result=PASS
+LURE dynamo_scorch_pen side=against back=20m stand=(-393.3,5151.1) cam=(-388.5,76.4,5152.8) flame=(-411.2,76.7,5151.8) dist=22.8m bearing=-17.0deg in_frustum=true screen=(0.374,0.339) ray=clear spur_visible=8/10 result=PASS
+WALK verge_ash_hollow from=(-329.2,337.7) on ash_road before junction, 3 legs, walked=312m, confined_resets=0, reached mouth=(-70.9,418.1) inside_at_mouth=false, reward=stormwood_pickup_pocket_008 prompt='[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Take Good Candy' good_candy 3->4 flag=true node_gone=true wall=64s result=PASS
+NEGATIVE verge_ash_hollow pushed 480 frames at the back wall from (-44.7,422.7): closest to centre 9.90 m (interior half 8.0 m) entered=false result=PASS
+WALK hollows_moss_nook from=(93.2,1731.1) on crown_sightline_loop before junction, 3 legs, walked=179m, confined_resets=0, reached mouth=(-29.3,1797.1) inside_at_mouth=false, reward=stormwood_pickup_pocket_068 prompt='[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Take Great Candy' great_candy 1->2 flag=true node_gone=true wall=37s result=PASS
+NEGATIVE hollows_moss_nook pushed 480 frames at the back wall from (-55.0,1804.0): closest to centre 9.90 m (interior half 8.0 m) entered=false result=PASS
+WALK conductor_ridge_cleft from=(-681.2,3392.7) on conductor_road before junction, 3 legs, walked=384m, confined_resets=0, reached mouth=(-311.0,3380.6) inside_at_mouth=false, reward=stormwood_pickup_pocket_077 prompt='[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Take Great Candy' great_candy 2->3 flag=true node_gone=true wall=79s result=PASS
+NEGATIVE conductor_ridge_cleft pushed 480 frames at the back wall from (-284.5,3379.2): closest to centre 9.90 m (interior half 8.0 m) entered=false result=PASS
+WALK deepwood_ridge_shelter from=(-990.3,3887.4) on hall_loop before junction, 3 legs, walked=197m, confined_resets=0, reached mouth=(-1001.5,3731.0) inside_at_mouth=false, reward=stormwood_pickup_pocket_138 prompt='[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Take Revive' revive 0->1 flag=true node_gone=true wall=41s result=PASS
+NEGATIVE deepwood_ridge_shelter pushed 480 frames at the back wall from (-997.8,3704.7): closest to centre 9.91 m (interior half 8.0 m) entered=false result=PASS
+WALK dynamo_scorch_pen from=(-442.2,5133.6) on dynamo_west_approach before junction, 3 legs, walked=145m, confined_resets=0, reached mouth=(-446.3,5239.6) inside_at_mouth=false, reward=stormwood_pickup_pocket_188 prompt='[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Take Stoneguard Brew' stoneguard_brew 0->1 flag=true node_gone=true wall=31s result=PASS
+NEGATIVE dynamo_scorch_pen pushed 480 frames at the back wall from (-455.3,5264.6): closest to centre 9.90 m (interior half 8.0 m) entered=false result=PASS
+Stormwood pocket walks smoke: 102 checks, 0 failures

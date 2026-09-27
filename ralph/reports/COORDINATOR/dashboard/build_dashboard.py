@@ -93,9 +93,40 @@ for name, letter, ids in CHAPTERS:
 cc = "".join(
     f'<tr><td>{E(x["id"])}</td><td>{pill(x.get("status"))}</td><td>{E(x.get("note", ""))}</td></tr>'
     for x in crit.get("cross_cutting", []))
-cards_tbl = "".join(
-    f'<tr><td>{E(x["id"])}</td><td>{pill(x.get("status"))}</td><td>{E(x.get("note", ""))}</td></tr>'
-    for x in crit.get("chapter_cards", []))
+# Chapter exit cards: progress = the weighted share of their feeder F-row criteria
+# met (80%) plus the integrated continuous-path run and its evidence card (20%),
+# which only counts once a card's `integrated_run` field is set.
+CARD_FEEDERS = {"M1": ["F01"], "M2": ["F02"], "M3": ["F03", "F04"], "M4": ["F05"],
+                "C1": ["F06"], "C2": ["F07"], "C3": ["F08"],
+                "S1": ["F09"], "S2": ["F10"], "S3": ["F11"],
+                "T1": ["F12"], "T2": ["F13", "F14"], "T3": ["F15"]}
+
+
+def card_pct(card):
+    feeders = [x for f in CARD_FEEDERS.get(card["id"], []) for x in rows.get(f, {}).get("criteria", [])]
+    w = {"met": 1.0, "partial": 0.5, "in_progress": 0.25}
+    fp = sum(w.get(norm(x.get("status")), 0) for x in feeders) / max(1, len(feeders))
+    met = sum(1 for x in feeders if norm(x.get("status")) == "met")
+    run = 1.0 if card.get("integrated_run") else 0.0
+    return round(100 * (0.8 * fp + 0.2 * run)), met, len(feeders)
+
+
+def card_row(x):
+    cp, met, n = card_pct(x)
+    run = x.get("integrated_run") or "not yet run"
+    return (f'<tr><td>{E(x["id"])}</td><td>{bar(cp)} {cp}%</td><td>{met} / {n} feeder criteria met '
+            f'({E(", ".join(CARD_FEEDERS.get(x["id"], [])))})</td><td>{E(run)}</td><td>{E(card_note(x))}</td></tr>')
+
+
+def card_note(card):
+    open_ids = [f"{f}#{i}" for f in CARD_FEEDERS.get(card["id"], [])
+                for i, c in enumerate(rows.get(f, {}).get("criteria", [])) if norm(c.get("status")) != "met"]
+    if not open_ids:
+        return "All feeder criteria met; needs the integrated continuous run and its evidence card."
+    return "Open: " + ", ".join(open_ids) + "."
+
+
+cards_tbl = "".join(card_row(x) for x in crit.get("chapter_cards", []))
 
 
 def li(items):
@@ -105,6 +136,61 @@ def li(items):
 batches = "".join(
     f'<tr><td>{E(b["name"])}</td><td><code>{E(b.get("sha", ""))}</code></td><td>{E(b.get("state", ""))}</td><td>{E(b.get("contents", ""))}</td></tr>'
     for b in status.get("batches", []))
+# Shortcut debt (owner, 2026-09-27): every criterion closed under the relaxed-proof
+# rule, with what its proof skipped, so the chapter-exit and release playthroughs
+# exercise each item. Kinds are classified from the disclosure text.
+CHAPTER_OF = {**{f"F0{n}": "Meadows" for n in range(1, 6)},
+              **{f"F0{n}": "Cloudreach" for n in range(6, 9)},
+              **{f"F{n:02d}": "Stormwood" for n in range(9, 12)},
+              **{f"F{n:02d}": "Tidewake" for n in range(12, 16)}}
+DEBT_KINDS = [
+    ("Skipped part", "high", ("skipped", "skips", "no single run", "not proven", "excluded", "not exercised", "missing", "not covered", "no two-peer", "static computation", "not a four-peer", "open")),
+    ("Flag or ledger written", "medium", ("flag", "ledger fixture", "set directly", "guardian_fixture", "defeat by ledger")),
+    ("Fixture state", "medium", ("party", "L25", "L44", "L46", "granted", "fixture start", "declared start")),
+    ("Start, position or checkpoint", "low", ("teleport", "position", "start save", "checkpoint", "placed", "joins", "resume")),
+    ("Harness input", "low", ("harness", "pilot", "scripted", "accelerated", "signal")),
+]
+debt_rows = []
+for r in crit["rows"]:
+    for i, c in enumerate(r["criteria"]):
+        ev = c.get("evidence", "")
+        if c["status"] != "met" or "Shortcuts disclosed" not in ev:
+            continue
+        disc = ev.split("Shortcuts disclosed:", 1)[1].split("Independent re-check", 1)[0].strip()
+        low = disc.lower()
+        kinds = [k for k, _sev, words in DEBT_KINDS if any(w.lower() in low for w in words)]
+        sev = next((sv for k, sv, _w in DEBT_KINDS if k in kinds), "low")
+        debt_rows.append((sev, r["id"], i, c["text"], kinds, disc))
+SEV_ORDER = {"high": 0, "medium": 1, "low": 2}
+# Retirement (owner, 2026-09-27): a chapter card's passing integrated run replays its
+# feeders' route on an earned save, so it retires their route shortcuts (starts,
+# teleports, written flags, fixture state, skipped route parts). Harness input and
+# accelerated clocks survive every scripted run; only a human play pass retires them.
+# The four-chapter run (status.json "four_chapter_run") retires chapter-boundary
+# fixture starts everywhere once it passes.
+ROUTE_KINDS = {"Skipped part", "Flag or ledger written", "Fixture state", "Start, position or checkpoint"}
+FEATURE_CARD = {f: cid for cid, fs in CARD_FEEDERS.items() for f in fs}
+CARD_RUN = {x["id"]: bool(x.get("integrated_run")) for x in crit.get("chapter_cards", [])}
+FOUR_CHAPTER = bool(status.get("four_chapter_run"))
+def debt_state(rid, kinds):
+    card = FEATURE_CARD.get(rid)
+    open_kinds = [k for k in kinds if not ((k in ROUTE_KINDS and card and CARD_RUN.get(card))
+                                           or (k == "Fixture state" and FOUR_CHAPTER))]
+    if not open_kinds:
+        return True, f"Retired by {card} run" if card and CARD_RUN.get(card) else "Retired by four-chapter run"
+    how = []
+    if any(k in ROUTE_KINDS for k in open_kinds):
+        how.append(f"{card} integrated run" if card else "four-chapter run")
+    if "Harness input" in open_kinds:
+        how.append("human play pass")
+    return False, "Open: " + ", ".join(open_kinds) + (" (retire via " + " + ".join(how) + ")" if how else "")
+debt_rows = [(sev, rid, i, text, kinds, disc, *debt_state(rid, kinds)) for sev, rid, i, text, kinds, disc in debt_rows]
+debt_rows.sort(key=lambda t: (t[6], SEV_ORDER[t[0]], t[1], t[2]))
+debt_open = sum(1 for t in debt_rows if not t[6])
+debt_summary = f"{debt_open} open, {len(debt_rows) - debt_open} retired of {len(debt_rows)} shortcut-closed criteria."
+debt_tbl = "".join(
+    f'<tr><td>{E(sev)}</td><td>{E(rid)}#{i}</td><td>{E(CHAPTER_OF.get(rid, ""))}</td><td>{E(text)}</td><td>{E(", ".join(kinds))}</td><td>{E(state)}</td><td>{E(disc)}</td></tr>'
+    for sev, rid, i, text, kinds, disc, retired, state in debt_rows)
 lanes = "".join(
     f'<tr><td>{E(l["lane"])}</td><td>{E(l.get("now", ""))}</td><td>{E(l.get("next", ""))}</td></tr>'
     for l in status.get("lanes", []))
@@ -200,10 +286,12 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="legend">{legend}</div>
   <section class="panel"><h2>This hour</h2><ul class="plain">{li(status.get("headline", []))}</ul></section>
   {''.join(chapter_html)}
-  <section class="panel"><h2>Chapter exit cards</h2><p class="note">Integrated continuous-path gates; required even when every F row passes.</p>
-    <div class="tbl"><table><thead><tr><th>Card</th><th>Status</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
+  <section class="panel"><h2>Chapter exit cards</h2><p class="note">Integrated continuous-path gates; required even when every F row passes. Progress = 80% feeder criteria met (weighted) + 20% for the integrated continuous run with its evidence card.</p>
+    <div class="tbl"><table><thead><tr><th>Card</th><th>Progress</th><th>Feeder criteria</th><th>Integrated run</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
   <section class="panel"><h2>Release-wide requirements</h2>
     <div class="tbl"><table><thead><tr><th>Requirement</th><th>Status</th><th>Note</th></tr></thead><tbody>{cc}</tbody></table></div></section>
+  <section class="panel"><h2>Shortcut debt</h2><p class="note">Criteria closed under the relaxed-proof rule, and what each proof skipped. The chapter-exit and release playthroughs must exercise every row; a failure there points at the row. High = a sub-part not proven anywhere else. A passing chapter-card run retires its feeders\u2019 route shortcuts; harness input needs a human play pass; the final four-chapter run retires chapter-boundary fixture starts. <b>{debt_summary}</b></p>
+    <div class="tbl"><table><thead><tr><th>Risk</th><th>Criterion</th><th>Chapter exit</th><th>Criterion text</th><th>Debt kind</th><th>State</th><th>Disclosed shortcuts</th></tr></thead><tbody>{debt_tbl}</tbody></table></div></section>
   <section class="panel"><h2>Integration batches</h2>
     <div class="tbl"><table><thead><tr><th>Batch</th><th>SHA</th><th>State</th><th>Contents</th></tr></thead><tbody>{batches}</tbody></table></div></section>
   <section class="panel"><h2>Lanes</h2>

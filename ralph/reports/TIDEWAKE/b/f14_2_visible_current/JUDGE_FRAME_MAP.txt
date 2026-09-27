@@ -1,0 +1,1 @@
+iter1: A=live (S1_live_t0.jpg) B=restored (S1_restored_t0.jpg)

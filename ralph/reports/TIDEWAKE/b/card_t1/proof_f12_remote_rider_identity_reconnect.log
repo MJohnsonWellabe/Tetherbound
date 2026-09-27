@@ -1,0 +1,61 @@
+== proof_f12_remote_rider_identity_reconnect: tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/f12_remote_rider_identity_reconnect.json --out=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect
+proof:    f12_remote_rider_identity_reconnect
+scenario: /home/user/wt/f15-3-full/tools/net/proof_scenarios/f12_remote_rider_identity_reconnect.json
+out:      /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect
+run id:  net-20260927T143806Z-14867
+run dir: /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14898 control_port=37383 home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/home-0 log=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/peer-0.log
+coordinator: launched peer 1 (client) pid=14899 control_port=38207 home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/home-1 log=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":35481.0,"godot_version":"4.7-stable (official)","main_sha":"b514938e4696","peer":0.0,"pid":14898.0,"role":"host","type":"hello","user_data_dir":"/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":35482.0,"godot_version":"4.7-stable (official)","main_sha":"b514938e4696","peer":1.0,"pid":14899.0,"role":"client","type":"hello","user_data_dir":"/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 host -> PASS -- hosting udp/35481 as peer 1
+PASS: #2 peer 1 join -> PASS -- joined 127.0.0.1:35481 as peer 155037996 after 10 frames; snapshot applied; 2 peer(s) in registry
+PASS: #3 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #3 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #4 peer 0 water_fixture (setup: host on the first shore) -> PASS -- SETUP: Water island fixture at (0.0, 1.931176, 162.0); catching level 0
+PASS: #5 peer 1 water_mount_fixture (setup: guest has its Aquaryn and tack) -> PASS -- SETUP: water_aquaryn standing as AllyCreature, swim_saddle in the satchel
+PASS: #6 peer 1 ride_mount -> PASS -- riding AllyCreature
+PASS: #7 peer 1 water_mounted_swim -> PASS -- Started real mounted input from lesson shore to deep offshore point
+PASS: #8 peer 1 await_probe (the mounted swim reaches deep water) -> PASS -- water_mounted.motion.completed == true after 403 polls
+PASS: #9 peer 1 rider_self (BEFORE: the guest's own ride) -> PASS -- {"character_id":"character-16f916a1bdb2c3791b9b62e895ca8d6e","mount_species":"water_aquaryn","mounted":true,"peer_id":155037996,"realm":"water","saddle_worn":true,"swim_mode":2}
+PASS: #10 peer 0 rider_identity (BEFORE: the host's picture of that rider agrees) -> PASS -- character character-16f916a1: {"agree":true,"bodies":1,"body_peer_id":155037996,"body_visible_in_scene":true,"mount_authority":155037996,"mount_owner_peer_id":155037996,"mount_saddle_worn":true,"mount_species":"water_aquaryn","mount_swim_mode":2,"mount_swim_owner":155037996,"mounts":1,"nameplate":"T
+PASS: #11 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #11 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #12 peer 1 save_character_here (the guest's character is written while mounted mid-water) -> PASS -- character 'character-16f916a1bdb2c3791b9b62e895ca8d6e' is on disk (wrote_world=false)
+PASS: #13 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-4192a90fd538b1fed3a60d25434f9e54' on disk=true; copied 3 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/peer-0/before_drop
+PASS: #13 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-16f916a1bdb2c3791b9b62e895ca8d6e' on disk=true; copied 1 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/peer-1/before_drop
+PASS: #14 peer 1 check_saved (the saved character carries the ride) -> PASS -- missing []; unexpectedly present []; read ["character-16f916a1bdb2c3791b9b62e895ca8d6e/character.json"] under before_drop/characters
+PASS: #15 peer 1 drop_link -> PASS -- transport closed without a Session.leave()
+PASS: #16 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: #17 peer 1 leave (tear down if anything is left (after a dropped link there is no session, as smoke_net_reconnect_keeps_character expects)) -> FAIL -- no active session to leave
+PASS: #18 peer 1 wipe_character (the live character is blanked, so the ride must come back from the save) -> PASS -- in-memory character blanked (party 1 -> 0), id 'character-16f916a1bdb2c3791b9b62e895ca8d6e' kept, file untouched
+PASS: #19 peer 1 production_join -> PASS -- title returning entry built 'WaterArchipelago' first, then JoinDriver joined 127.0.0.1:35481 as peer 361132757 after 41 frames
+PASS: #20 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #20 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #21 peer 1 await_probe (the ride is restored) -> PASS -- riding.local.mounted == true after 0 polls
+PASS: #22 peer 1 rider_self (AFTER: the guest's own ride, same character) -> PASS -- {"character_id":"character-16f916a1bdb2c3791b9b62e895ca8d6e","mount_species":"water_aquaryn","mounted":true,"peer_id":361132757,"realm":"water","saddle_worn":true,"swim_mode":2}
+PASS: #23 peer 0 await_probe (the host sees the new peer id riding) -> PASS -- riding.remote.361132757.0.riding == true after 0 polls
+PASS: #24 peer 0 await_probe (give the returning rider's mount time to reach the host (about 25 s)) -> PASS -- water_mounted.remote_mounts.361132757.0.owner_peer_id == 361132757.0 after 0 polls
+PASS: #25 peer 0 rider_identity (AFTER: the host's picture agrees, found by character, nothing stale) -> PASS -- character character-16f916a1: {"agree":true,"bodies":1,"body_peer_id":361132757,"body_visible_in_scene":true,"mount_authority":361132757,"mount_owner_peer_id":361132757,"mount_saddle_worn":true,"mount_species":"water_aquaryn","mount_swim_mode":2,"mount_swim_owner":361132757,"mounts":1,"nameplate":"T
+PASS: #26 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #26 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+ALL CHECKS PASSED
+
+=== /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/SUMMARY.md ===
+# Net smoke run net-20260927T143806Z-14867
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14898 exited=true unexpected_exit=false
+- peer 1 (client) pid=14899 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+PROOF.md: /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/PROOF.md (exit 0)
+== proof_f12_remote_rider_identity_reconnect exit=0

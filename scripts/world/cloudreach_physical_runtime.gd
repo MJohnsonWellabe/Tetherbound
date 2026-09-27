@@ -35,6 +35,7 @@ const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const PROGRESSION_CONFIG := preload("res://scripts/creatures/progression.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
@@ -105,6 +106,7 @@ func configure(player: CharacterBody3D, fly: Node, event_adapter: Callable,
 	chapter = RULES.read(CHAPTER_PATH)
 	npc_runtime = RULES.read(NPC_PATH)
 	add_to_group("progression_restore")
+	add_to_group("creature_bed_rest_bonus")
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	if _fly != null:
 		_register_flight()
@@ -262,6 +264,8 @@ func activate(id: String) -> bool:
 	if not cost.is_empty() and (inventory == null or int(inventory.call("count", cost["item_id"])) < int(cost["count"])):
 		_message("Bring %d %s to finish this repair." % [int(cost["count"]), str(cost["item_id"]).replace("_", " ")])
 		return false
+	if spec.has("claims_pickup"):
+		return _claim_circuit_prize(id, spec)
 	var changed := false
 	var pending := false
 	if spec.has("set_physical_flag"):
@@ -308,17 +312,59 @@ func _settle_interaction(id: String, spec: Dictionary) -> void:
 		var inventory: RefCounted = _game.get("inventory") if _game != null else null
 		if inventory != null:
 			inventory.call("remove", cost["item_id"], int(cost["count"]))
-	# F07#0 Cliff Circuit prize: the chosen TM is collected through its own
-	# placed pickup's receipt (`claim_pickup`, the cache flag), granted to the
-	# peer that chose it; the field cache then reads as taken everywhere.
-	var pickup := str(spec.get("claims_pickup", ""))
-	if not pickup.is_empty():
-		LEDGER_CLAIM.submit(self, {"kind": "claim_pickup", "realm": REALM_ID,
-			"flag": CACHE.flag_id(str(spec["item_id"]), pickup, REALM_ID),
-			"item": str(spec["item_id"]), "count": 1})
 	interaction_completed.emit(id)
 	_message(str(spec["label"]).split(" (")[0] + " — complete")
 	sync_progression()
+
+
+## F07#0 Waycamp shelter payoff (ruling (a), #356 14:00): a companion whose
+## night in Galefoot's sheltered bed completes is paid the bed's rest XP
+## (`PROGRESSION.rest_xp`) once more, times `rest_xp_multiplier`. Called by
+## `game_state.complete_creature_bed_rests()` through the
+## `creature_bed_rest_bonus` group, before the sleep autosave, on each peer
+## for its own party.
+func on_creature_bed_rest_completed(creature: RefCounted, bed_index: int) -> void:
+	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}))
+
+
+static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary) -> int:
+	if creature == null or flags == null or cfg.is_empty() or bed_index != int(cfg.get("bed_index", 0)):
+		return 0
+	if not bool(flags.call("has", str(cfg.get("requires_flag", "")))):
+		return 0
+	var progression_cfg := PROGRESSION_CONFIG.config()
+	var bonus := int(round(float(PROGRESSION_CONFIG.rest_xp(progression_cfg)) * float(cfg.get("rest_xp_multiplier", 1.0))))
+	if bonus > 0:
+		creature.call("gain_xp", bonus, progression_cfg)
+	return bonus
+
+
+## F07#0 Cliff Circuit prize. The chosen TM is collected through its own
+## placed pickup's receipt first (`claim_pickup`: the cache flag, the item to
+## the peer that chose it). Only a committed claim spends the world's one
+## choice (`side_cliff_circuit_tm_chosen`), so a claim the host refuses
+## (another peer took that TM in the field meanwhile) leaves the choice open.
+## Disclosed limit: two peers claiming DIFFERENT TMs within one round trip are
+## each paid one; an atomic choice+claim needs a world_ledger op.
+func _claim_circuit_prize(id: String, spec: Dictionary) -> bool:
+	var cache_flag := CACHE.flag_id(str(spec["item_id"]), str(spec["claims_pickup"]), REALM_ID)
+	var verdict := LEDGER_CLAIM.submit(self, {"kind": "claim_pickup", "realm": REALM_ID,
+		"flag": cache_flag, "item": str(spec["item_id"]), "count": 1})
+	if bool(verdict.get("ok", false)):
+		_commit_circuit_choice(id, spec)
+		return true
+	if bool(verdict.get("pending", false)):
+		_pending_interactions[cache_flag] = {"kind": "prize", "id": id, "spec": spec}
+	return false
+
+
+func _commit_circuit_choice(id: String, spec: Dictionary) -> void:
+	var flag := str(spec.get("set_physical_flag", ""))
+	if (npc_runtime.get("world_choice_flags", []) as Array).has(flag):
+		var verdict := _write_flag(flag)
+		if str(verdict.get("code", "")) == "offline":
+			_flags.call("set_flag", flag)
+	_settle_interaction(id, spec)
 
 
 ## A committed delta landed on this peer, host or client. The only thing this
@@ -352,6 +398,8 @@ func _on_delta_applied(delta: Dictionary) -> void:
 				if bool(ticket.get("bond", false)):
 					_award_fly_route_bond()
 				_message("Fly unlocked. Follow the rising currents to the Sky Shrine.")
+			"prize":
+				_commit_circuit_choice(str(ticket["id"]), ticket["spec"] as Dictionary)
 			_:
 				_settle_interaction(str(ticket["id"]), ticket["spec"] as Dictionary)
 
@@ -611,6 +659,7 @@ func _sync_pickups_and_camps() -> void:
 		# world-coordinate `at` would be applied twice. The decorative trainer
 		# bed remains a local camp prop, deliberately separate from this pad.
 		_place_camp_creature_bed(rest, spec, at)
+		_build_camp_lip_rail(rest, spec)
 		var bed_path := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
 		if ResourceLoader.exists(bed_path):
 			var bed_scene := load(bed_path) as PackedScene
@@ -661,6 +710,62 @@ func _place_camp_creature_bed(rest: Node3D, camp: Dictionary, resolved: Vector3)
 	var bed := rest.get_node_or_null(^"CampCreatureBed") as Node3D
 	if bed != null:
 		bed.global_position = bed_world
+
+
+const LIP_RAIL_PANEL := "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf"
+## Prop_WoodenFence_Single's raw length along its local X (stronghold.gd and
+## water_return_ramps.gd measure the same module).
+const LIP_RAIL_PANEL_LENGTH_M := 2.0641
+
+
+## Optional `lip_rail` on a camp: {"points": [[x, z], ...], "height_m", "scale"}.
+## Installed camp-family timber fence panels along a dangerous terrace lip, with
+## one thin static collider per leg so a trainer or piloted creature cannot
+## walk or slide off it (the summit bivouac's south lip, #356 11:20). Placement
+## only: no terrain changes.
+func _build_camp_lip_rail(rest: Node3D, camp: Dictionary) -> void:
+	var raw: Variant = camp.get("lip_rail", {})
+	if not raw is Dictionary or not ResourceLoader.exists(LIP_RAIL_PANEL):
+		return
+	var spec := raw as Dictionary
+	var points: Array = spec.get("points", [])
+	if points.size() < 2:
+		return
+	var scene := load(LIP_RAIL_PANEL) as PackedScene
+	var panel_scale := float(spec.get("scale", 1.2))
+	var height := float(spec.get("height_m", 1.3))
+	var rail := Node3D.new()
+	rail.name = "CampLipRail"
+	rest.add_child(rail)
+	var y := rest.global_position.y
+	for i in points.size() - 1:
+		var a := Vector3(float(points[i][0]), y, float(points[i][1]))
+		var b := Vector3(float(points[i + 1][0]), y, float(points[i + 1][1]))
+		var length := a.distance_to(b)
+		if length < 0.5:
+			continue
+		var direction := (b - a) / length
+		var yaw := atan2(-direction.z, direction.x)
+		var count := maxi(1, int(ceilf(length / (LIP_RAIL_PANEL_LENGTH_M * panel_scale))))
+		for k in count:
+			var centre := a.lerp(b, (float(k) + 0.5) / float(count))
+			var grounded: Vector3 = _ground.call(centre) if _ground.is_valid() else centre
+			var panel := scene.instantiate() as Node3D
+			panel.name = "RailPanel%d_%d" % [i, k]
+			rail.add_child(panel)
+			panel.global_position = grounded if grounded.is_finite() else centre
+			panel.global_rotation = Vector3(0.0, yaw, 0.0)
+			panel.scale = Vector3(length / float(count) / LIP_RAIL_PANEL_LENGTH_M, panel_scale, panel_scale)
+		var body := StaticBody3D.new()
+		body.name = "RailCollider%d" % i
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(length, height, 0.3)
+		shape.shape = box
+		body.add_child(shape)
+		rail.add_child(body)
+		body.global_position = a.lerp(b, 0.5) + Vector3.UP * height * 0.5
+		body.global_rotation = Vector3(0.0, yaw, 0.0)
 
 
 func _sync_npcs() -> void:

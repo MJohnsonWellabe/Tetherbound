@@ -1,0 +1,2 @@
+CLOUDREACH FOUNDATION OK regions=6 landmarks=12 bridges=7 player=(0.0, 105.0302, -260.0)
+exit 0

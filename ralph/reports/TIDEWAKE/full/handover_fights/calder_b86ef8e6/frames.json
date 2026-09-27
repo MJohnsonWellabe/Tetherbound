@@ -1,0 +1,290 @@
+[
+ {
+  "image": "frame_00.png",
+  "kind": "periodic",
+  "fight_time_s": 0.0,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 5.0
+ },
+ {
+  "image": "frame_01.png",
+  "kind": "tell start (first frame of the opponent's telegraph)",
+  "fight_time_s": 0.65,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 5.15
+ },
+ {
+  "image": "frame_02.png",
+  "kind": "tell late (frame before the strike lands)",
+  "fight_time_s": 1.25,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 5.77
+ },
+ {
+  "image": "frame_03.png",
+  "kind": "tell start (first frame of the opponent's telegraph)",
+  "fight_time_s": 2.88,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 7.47
+ },
+ {
+  "image": "frame_04.png",
+  "kind": "tell late (frame before the strike lands)",
+  "fight_time_s": 3.48,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 9.38
+ },
+ {
+  "image": "frame_05.png",
+  "kind": "periodic",
+  "fight_time_s": 8.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.35
+ },
+ {
+  "image": "frame_06.png",
+  "kind": "periodic",
+  "fight_time_s": 16.0,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.41
+ },
+ {
+  "image": "frame_07.png",
+  "kind": "periodic",
+  "fight_time_s": 24.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.96
+ },
+ {
+  "image": "frame_08.png",
+  "kind": "periodic",
+  "fight_time_s": 32.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.26
+ },
+ {
+  "image": "frame_09.png",
+  "kind": "periodic",
+  "fight_time_s": 40.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.5
+ },
+ {
+  "image": "frame_10.png",
+  "kind": "periodic",
+  "fight_time_s": 48.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 9.44
+ },
+ {
+  "image": "frame_11.png",
+  "kind": "periodic",
+  "fight_time_s": 56.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.18
+ },
+ {
+  "image": "frame_12.png",
+  "kind": "periodic",
+  "fight_time_s": 64.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 9.96
+ },
+ {
+  "image": "frame_13.png",
+  "kind": "periodic",
+  "fight_time_s": 72.02,
+  "opponent_creature": "riptusk",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.0
+ },
+ {
+  "image": "frame_14.png",
+  "kind": "tell start (first frame of the opponent's telegraph)",
+  "fight_time_s": 76.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 4.92
+ },
+ {
+  "image": "frame_15.png",
+  "kind": "tell late (frame before the strike lands)",
+  "fight_time_s": 76.63,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 4.92
+ },
+ {
+  "image": "frame_16.png",
+  "kind": "tell start (first frame of the opponent's telegraph)",
+  "fight_time_s": 77.82,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 6.5
+ },
+ {
+  "image": "frame_17.png",
+  "kind": "tell late (frame before the strike lands)",
+  "fight_time_s": 78.43,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 8.93
+ },
+ {
+  "image": "frame_18.png",
+  "kind": "periodic",
+  "fight_time_s": 80.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.58
+ },
+ {
+  "image": "frame_19.png",
+  "kind": "periodic",
+  "fight_time_s": 88.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.86
+ },
+ {
+  "image": "frame_20.png",
+  "kind": "periodic",
+  "fight_time_s": 96.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.54
+ },
+ {
+  "image": "frame_21.png",
+  "kind": "periodic",
+  "fight_time_s": 104.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.46
+ },
+ {
+  "image": "frame_22.png",
+  "kind": "periodic",
+  "fight_time_s": 112.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.42
+ },
+ {
+  "image": "frame_23.png",
+  "kind": "periodic",
+  "fight_time_s": 120.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.77
+ },
+ {
+  "image": "frame_24.png",
+  "kind": "periodic",
+  "fight_time_s": 128.02,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.5
+ },
+ {
+  "image": "frame_25.png",
+  "kind": "periodic",
+  "fight_time_s": 136.0,
+  "opponent_creature": "torrentoad",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.41
+ },
+ {
+  "image": "frame_26.png",
+  "kind": "tell start (first frame of the opponent's telegraph)",
+  "fight_time_s": 138.8,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 4.95
+ },
+ {
+  "image": "frame_27.png",
+  "kind": "tell late (frame before the strike lands)",
+  "fight_time_s": 139.4,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 4.95
+ },
+ {
+  "image": "frame_28.png",
+  "kind": "tell start (first frame of the opponent's telegraph)",
+  "fight_time_s": 140.65,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 6.56
+ },
+ {
+  "image": "frame_29.png",
+  "kind": "tell late (frame before the strike lands)",
+  "fight_time_s": 141.25,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.8,
+  "ally_opponent_gap_m": 7.18
+ },
+ {
+  "image": "frame_30.png",
+  "kind": "periodic",
+  "fight_time_s": 144.0,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.25
+ },
+ {
+  "image": "frame_31.png",
+  "kind": "periodic",
+  "fight_time_s": 152.0,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.63
+ },
+ {
+  "image": "frame_32.png",
+  "kind": "periodic",
+  "fight_time_s": 160.0,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 8.41
+ },
+ {
+  "image": "frame_33.png",
+  "kind": "periodic",
+  "fight_time_s": 168.0,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.28
+ },
+ {
+  "image": "frame_34.png",
+  "kind": "periodic",
+  "fight_time_s": 176.0,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 7.02
+ },
+ {
+  "image": "frame_35.png",
+  "kind": "periodic",
+  "fight_time_s": 184.0,
+  "opponent_creature": "riverdrake",
+  "measured_tell_s": 0.0,
+  "ally_opponent_gap_m": 10.18
+ }
+]

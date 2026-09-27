@@ -1,0 +1,38 @@
+  PASS: StormwoodSurgeAudio is mounted by the production Stormwood world
+  PASS: an open, exposed trainer stance found by the lightning's own exposed() ((-1400.0, 29.86957, 2300.0), conductor_run)
+  PASS: the Long Storm's end committed through the ledger
+  PASS: a replayed impact/warning id fires no second cue (89 -> 89 rows)
+  PASS: phase cues fire exactly once each, in order Calm, Building, Break, Fading, release: ["sw_surge_calm_bed", "sw_surge_building_bed", "sw_surge_break_bed", "sw_surge_fading_decay", "sw_release_forest_sky_bed"]
+  PASS: sw_surge_building_bed fires at its phase boundary (clock 240.006, boundary 240)
+  PASS: sw_surge_break_bed fires at its phase boundary (clock 330.001, boundary 330)
+  PASS: sw_surge_fading_decay fires at its phase boundary (clock 450.001, boundary 450)
+  PASS: every impact fires its strike, body and decay layers once each
+  PASS: real Break strikes happened (21 warnings, 21 impacts)
+  PASS: no strike warning fires in Calm, Building or Fading (0 outside Break)
+  PASS: every strike has a warning with its id (0 without)
+  PASS: every warning's position equals its strike's position
+IMPACTS RESOLVING OUTSIDE BREAK (from a Break warning): 0
+  PASS: warning -> strike is telegraph_seconds 1.20 (+ one frame): min 1.200 max 1.211 s over 21 strikes
+STRIKE SPACING warnings: n=20 min=4.269 max=7.687  scheduler slots: n=21 min=4.269 max=7.687
+STRIKE SPACING gaps: ["5.34", "7.69", "6.66", "4.89", "5.33", "5.60", "6.25", "6.63", "7.04", "5.48", "4.44", "6.36", "5.40", "5.53", "6.34", "7.07", "4.53", "4.27", "4.71", "5.10"]
+  PASS: Break strike spacing is within 4-8 s (measured 4.269..7.687)
+  PASS: no cue claims playback without its asset
+  PASS: every caption is resolved (direction wedge filled)
+=================== MISSING ASSETS (9) ===================
+  MISSING res://assets/audio/stormwood/surge_calm_bed.wav  <- cue sw_surge_calm_bed (§4.3 Calm, 240 s baseline: rain/drip and low moss/forest life; distant thunder with long spacing)
+  MISSING res://assets/audio/stormwood/surge_building_bed.wav  <- cue sw_surge_building_bed (§4.3 Building, 90 s: copper-vine ticks, increasing canopy motion and rising electrical bed; birds/insects fall away; no strike yet)
+  MISSING res://assets/audio/stormwood/surge_break_bed.wav  <- cue sw_surge_break_bed (§4.3 Break, 120 s: the Break bed under the strike chain; rhythm follows the authored 4-8 s strike spacing)
+  MISSING res://assets/audio/stormwood/surge_fading_decay.wav  <- cue sw_surge_fading_decay (§4.3 Fading, 60 s: strike density stops; steam, glass and low rolling thunder decay; charged nodes/afterglow remain audible locally)
+  MISSING res://assets/audio/stormwood/release_forest_sky_bed.wav  <- cue sw_release_forest_sky_bed (§4.3 Stormheart release: removes the oppressive rod-line bed and opens ordinary forest/sky sound; it does not leave the same loop under brighter lighting)
+  MISSING res://assets/audio/stormwood/strike_warning.wav  <- cue sw_strike_warning (§4.3 Break: each strike uses a spatial 1.2 s warning whose direction and ground location are readable)
+  MISSING res://assets/audio/stormwood/strike_crack.wav  <- cue sw_strike_crack (§4.3 Break: followed by strike/body/decay layers (strike))
+  MISSING res://assets/audio/stormwood/strike_body.wav  <- cue sw_strike_body (§4.3 Break: followed by strike/body/decay layers (body))
+  MISSING res://assets/audio/stormwood/strike_decay.wav  <- cue sw_strike_decay (§4.3 Break: followed by strike/body/decay layers (decay))
+  No Stormwood Surge/lightning cue was heard: every row played=false.
+============================================================
+WITNESS WRITTEN /root/.local/share/godot/app_userdata/Tetherbound/f10_audio_witness
+  PASS: the cue log is empty after realm teardown
+  PASS: the observer is disconnected from the replicated lightning event after teardown
+STORMWOOD SURGE AUDIO WITNESS OK: 19 passed, 0 failed (wiring and timing only; no audio played)
+EXIT 0
+code SHA: 5a6f195bb0281440da2505100cf781a98f8854c7 (tb/vis = main 4316362e.. + VIS tools; no game code differs from origin/main)

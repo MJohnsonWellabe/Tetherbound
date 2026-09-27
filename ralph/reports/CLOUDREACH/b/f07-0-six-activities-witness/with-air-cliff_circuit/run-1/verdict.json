@@ -1,0 +1,126 @@
+{
+  "activities": {
+    "cliff_circuit": {
+      "ack": "cloudreach_tavi_defeated",
+      "ack_expected": "cloudreach_tavi_defeated",
+      "battle": true,
+      "chain_complete": true,
+      "lure": true,
+      "other_prizes_refused": true,
+      "pairs_from_fixture": true,
+      "pass": true,
+      "payoff_tm": 1,
+      "payoff_tm_item": "tm_wind_blade",
+      "prize": true,
+      "prize_id": "circuit_prize_wind_blade",
+      "prizes_before": {
+        "circuit_prize_aerial_flash": {
+          "available": true,
+          "item": "tm_aerial_flash",
+          "refusal": ""
+        },
+        "circuit_prize_heavenfall": {
+          "available": true,
+          "item": "tm_heavenfall",
+          "refusal": ""
+        },
+        "circuit_prize_wind_blade": {
+          "available": true,
+          "item": "tm_wind_blade",
+          "refusal": ""
+        }
+      },
+      "region": "upper_cloudreach",
+      "saved_after_reload": true,
+      "saved_flags": [
+        "side_cliff_circuit_lower",
+        "side_cliff_circuit_windscar",
+        "side_cliff_circuit_complete",
+        "side_cliff_circuit_tm_chosen"
+      ],
+      "trainer_id": "young_trainer_tavi_upper_ring",
+      "trainer_ids": [
+        "young_trainer_tavi_upper_ring",
+        "young_trainer_tavi_rematch"
+      ]
+    }
+  },
+  "criterion": "F07#0",
+  "dialogues": [
+    "cloudreach_tavi_defeated"
+  ],
+  "only": "cliff_circuit",
+  "passed": true,
+  "persistence": {
+    "flags_equal": true,
+    "flags_set_before_save": [
+      "side_cliff_circuit_lower",
+      "side_cliff_circuit_windscar",
+      "side_cliff_circuit_complete",
+      "side_cliff_circuit_tm_chosen"
+    ],
+    "inventory_after": {
+      "potion_small": 0,
+      "tm_aerial_flash": 0,
+      "tm_heavenfall": 0,
+      "tm_wind_blade": 1
+    },
+    "inventory_before": {
+      "potion_small": 0,
+      "tm_aerial_flash": 0,
+      "tm_heavenfall": 0,
+      "tm_wind_blade": 1
+    },
+    "load_ok": true,
+    "missing_flags": [],
+    "ok": true,
+    "party_size": 5,
+    "save_ok": true
+  },
+  "shortcuts": [
+    "fixture flags through Act II (+ lower/Windscar circuit pair defeats, engine truth)",
+    "teleport to each prompt pad",
+    "4 Gale Fiber granted",
+    "Tavi mechanics-mode lethal seam",
+    "accelerated clock, physics 1/60 s",
+    "Maela's loaner carries every flight (no owned flier)"
+  ],
+  "team": [
+    {
+      "hp": 241.12,
+      "label": "Sparkit",
+      "level": 30,
+      "species_id": "sparkit",
+      "xp": 1418
+    },
+    {
+      "hp": 274.0,
+      "label": "Mudsnout",
+      "level": 30,
+      "species_id": "mudsnout",
+      "xp": 709
+    },
+    {
+      "hp": 260.3,
+      "label": "Bramblebun",
+      "level": 30,
+      "species_id": "bramblebun",
+      "xp": 709
+    },
+    {
+      "hp": 328.8,
+      "label": "Terrapup",
+      "level": 30,
+      "species_id": "terrapup",
+      "xp": 709
+    },
+    {
+      "hp": 213.72,
+      "label": "Pipwing",
+      "level": 30,
+      "species_id": "pipwing",
+      "xp": 709
+    }
+  ],
+  "with_air": true
+}

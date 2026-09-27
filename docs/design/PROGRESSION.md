@@ -52,7 +52,7 @@ The sequence below is an **adjustable illustration**, not a duration promise or 
 |---|---|
 | Opening | Grandpa, named starter, real practice fight/catch, five-space rule, village camp and tournament readiness. The candidate L4 skill may be absent for the first fun check. |
 | Meadows | Cross South Bridge; use Quarry/Warrens and River Lock; ride into Upper Meadows; earn Sigils; prepare for and defeat the Warden; resolve the legendary offer and cross into Cloudreach. |
-| Cloudreach | Learn vertical wayfinding and Fly, reconnect the wind roads, challenge Veyra and open Stormwood. Cloudreach has no legendary offer. |
+| Cloudreach | Learn vertical wayfinding and Fly, reconnect the wind roads, challenge Veyra, free the tethered Solmane (each finale participant gets their own volunteer offer, as with Meadows' Veridian (owner, 2026-09-27)) and open Stormwood. |
 | Stormwood | Read grounded/exposed terrain, repair the Stormglass route, prepare for the Long Storm, resolve Stormheart and reach Tidewake. |
 | Tidewake | Learn safe human swimming/currents, optionally earn a compatible mount without forced replacement, approach Nerissa and the final guardian, restore the regional network, return to Grandpa with the retained team and roll credits. Aquaryn and Tidecoil remain optional. |
 

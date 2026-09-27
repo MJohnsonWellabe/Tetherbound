@@ -69,7 +69,7 @@
     },
     "cloudreach_rusk_observatory_latch": {
       "speaker": "Rusk", "portrait": "res://assets/ui/portraits/ren.png",
-      "lines": ["You threw the latch on the far side? I watched that descent rust shut for a season.", "From the summit you can walk straight down to the Observatory now. Nobody has to climb back the long way round."]
+      "lines": ["You threw the latch on the far side? I watched that descent rust shut for a season.", "From the summit's west edge you can walk straight down to the plateau fork now, and on to the Observatory. Nobody has to go back the long way round."]
     },
     "cloudreach_neri_home": {
       "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
