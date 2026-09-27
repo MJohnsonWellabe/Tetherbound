@@ -1,0 +1,18 @@
+{
+  "base_commit": "47e0700912fa684d5717db849f07f3dcf847b566",
+  "generation": "No new asset generation or Meshy submission. Existing installed Galecrest mesh and animations retained.",
+  "runtime": "Windows Godot 4.7 Compatibility, NVIDIA GTX1060 3GB, native 1920x1080",
+  "sha256": {
+    "scripts/creatures/companion_presence.gd": "fd7f19d99fa05ee1e3216e38e9af468f519a10737a482e057d64865959a7df5d",
+    "data/config/companion_presence.json": "a1b1c4798ef6cf6fd83d0c38b4079628be07d4fa0fa016898ef83fff3932f37f",
+    "assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb": "260968dd84700011a79d6a17a58d6d5985f758f0f0fd4922c3f004fda7f6288e"
+  },
+  "blind_labels": {
+    "P": "candidate",
+    "Q": "original",
+    "1": "Windscar route day",
+    "2": "Windscar route night",
+    "3": "Windscar reverse day",
+    "4": "Windscar reverse night"
+  }
+}

@@ -1,0 +1,13 @@
+# Galecrest head tracking evidence
+
+The owner-reported strained neck was reproduced with the existing mesh. On the installed head, bone +Y points forward. The live CompanionLook layer also chose Y for its primary turn, aimed at the trainer origin (feet), and used a 110-degree primary limit from doubled configured 55 degrees. A target on the opposite flank produces the conspicuous upward/sideways face in the old variant.
+
+The Galecrest-only look recipe measures a perpendicular axis closest to body-up (Z for this rig), limits the primary turn to 55 degrees and secondary to 30, and follows an owned marker 1.55m above the trainer origin. Other species retain their existing defaults. Hurt still targets the separate droop marker. No scale, model, animation binary, follower placement or camera change.
+
+Validation: 32 companion-presence tests / 183 assertions pass, including the installed Galecrest rig, moving/elevated trainer, rotated companion transform, single target reuse and hurt/healed target transitions. Independent source review clean. Eight native world frames all individually opened: near eagle and trainer in view, camera clear, day/night lighting present. This is environment evidence with HUD deliberately hidden; no combat or effects claim.
+
+Frame inventory: 12 route original/candidate day/night shows the eagle on the trainer's left; 13 reverse original/candidate day/night shows it on the right, exposing the old upward neck kink. The run manifest logs each actual active modifier, forward/primary axes, limits and target. Six studio left/right/rear comparison frames supplement the world evidence.
+
+Shortcuts disclosed: staged Cloudreach progression and five-creature party; two production-camera stands; native follower settles before each frame, then movement pauses and idle is sought at 1.2s for comparison. Old behavior is reconstructed by removing the Galecrest override in the capture fixture, leaving legacy defaults. Hidden HUD, pinned time and fixed60fps. Background creatures continue moving, and this does not certify the full idle/gait cycle, combat, injury motion, or full C2. Preliminary unpaired baseline frames are excluded from the comparison because source/config changed during that separate boot. This paired run logs its actual settings and is the evidence of record.
+
+The older local-turn-axis observation in rig_bird.py remains a lead, not the proven cause of this particular live pose. No authored bird clips were changed. Texture breakup, small facial features and night-blue finish remain V30 work. Meshy regeneration is not needed to remedy this proven runtime defect; a reference-backed material/mesh improvement can be assessed separately.

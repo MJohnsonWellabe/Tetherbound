@@ -103,6 +103,15 @@
     "radius": 7.0,
     "limit_deg": 55.0,
     "duration_s": 0.35,
-    "influence": 0.75
+    "influence": 0.75,
+    "species_overrides": {
+      "galecrest": {
+        "_comment": "V30: native comparison reproduced a strained neck when the head-forward Y axis was also used for the primary rotation. Measure an upright turn axis, aim at the trainer upper body, and bound the turn without changing the mesh, scale or other species.",
+        "align_to_body_up": true,
+        "primary_limit_deg": 55.0,
+        "secondary_limit_deg": 30.0,
+        "target_height_m": 1.55
+      }
+    }
   }
 }

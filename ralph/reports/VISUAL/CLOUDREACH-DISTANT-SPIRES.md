@@ -161,3 +161,26 @@ the variants at night. No full creature-art, F08#4 or C2 closure claimed.
 Galecrest remains next: rest-basis inspection shows its neck turn channel has
 only 0.191 alignment to upright yaw, versus 0.98 on the head; motion/weights
 still need a reproduced correction before blaming the mesh or calling it fixed.
+
+
+## Galecrest strained-neck reproduction
+
+The live CompanionLook layer, rather than a broken mesh, reproduces the owner's
+specific strained pose. Galecrest's head-forward Y was also selected for the
+primary turn, with a 110-degree limit and target at the trainer's feet. An
+opt-in Galecrest recipe measures body-up, uses 55/30-degree limits and a target
+1.55m above the trainer origin. Other species retain their prior behavior.
+
+Eight native NVIDIA1920x1080 production-camera frames compare the original
+settings and candidate by day/night from both Windscar directions. All were
+opened. Modifier settings are logged. Thirty-two companion tests /183
+assertions pass, including installed Galecrest target movement, transform,
+reuse and injury/healed transitions; independent source review clean.
+Evidence: `cloudreach-c2-candidate/galecrest-gaze/`. Scoped blind head/neck verdict PASS (old variant FAIL), especially the reverse
+view. Overall Bars A/B NO. No full creature, motion-cycle or C2 pass is claimed.
+
+Shortcuts disclosed: staged progression/party, two stands, frozen follower and
+idle sought at1.2s, old settings explicitly reconstructed, HUD hidden, fixed60fps,
+pinned day/night. No changed model/scale or Meshy generation. Feather breakup,
+face and night colour remain art work; the separate authored idle-axis suspicion
+is not treated as the proven cause of the live head-look defect.

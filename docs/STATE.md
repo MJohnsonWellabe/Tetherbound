@@ -41,7 +41,12 @@ creature defects diagnosed: Cloudfang shiny invokes a hot-pink placeholder
 (missing authored shiny texture); Galecrest rest/idle requires motion/weight
 review before deciding on Meshy replacement. Cloudfang now has an authored shiny texture with six native day/night frames
 and scoped placeholder-replacement PASS; coarse fur/night variant recognition
-remain open. Galecrest motion/weight defect remains open.
+remain open. Galecrest strained neck is reproduced in live head tracking: the
+Galecrest-only candidate corrects its turn axis, limit and trainer gaze target.
+Eight native day/night comparisons and 32 tests/183 assertions are in
+`cloudreach-c2-candidate/galecrest-gaze`; independent source review clean.
+Blind scoped head/neck PASS (old variant FAIL); texture/whole-motion and full
+C2 remain open, overall Bars A/B NO.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.
