@@ -1,0 +1,199 @@
+{
+  "label": "tw-f14-c3-cam",
+  "sha": "5084826c9accfbddb00a66e25e7ccaaa6a16468b",
+  "script": "tests/capture_tidewake_named_fights.gd",
+  "args": [
+    "--trainer=water_trainer_tess,water_trainer_calder,water_trainer_venn,water_trainer_nerissa",
+    "--out=res://shots/tidewake/f14_c3_cam",
+    "--interval=8.0",
+    "--max-frames=80",
+    "--pilot=READER",
+    "--cap-s=600",
+    "--level=43",
+    "--tells-per-opponent=3",
+    "--flags=water_dock_salt_crown_landing_charted"
+  ],
+  "mode": "render",
+  "comment_id": 5856401382,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/tw-f14-c3-cam",
+  "stage": "ready_to_publish",
+  "runner_pid": 10824,
+  "started_utc": "2026-09-27T14:07:52.307367+00:00",
+  "engine_pid": 15400,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\tw-f14-c3-cam",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tests/capture_tidewake_named_fights.gd",
+    "--",
+    "--trainer=water_trainer_tess,water_trainer_calder,water_trainer_venn,water_trainer_nerissa",
+    "--out=res://shots/tidewake/f14_c3_cam",
+    "--interval=8.0",
+    "--max-frames=80",
+    "--pilot=READER",
+    "--cap-s=600",
+    "--level=43",
+    "--tells-per-opponent=3",
+    "--flags=water_dock_salt_crown_landing_charted"
+  ],
+  "exit_code": 1,
+  "completed_utc": "2026-09-27T14:11:28.221831+00:00",
+  "output_worktree_files": [
+    "shots\\tidewake\\f14_c3_cam\\frames.json",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-000.00.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-008.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-016.00.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-024.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-032.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-040.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-048.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-056.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-064.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-072.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-late-001.23.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-late-003.45.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-late-007.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-start-000.63.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-start-002.85.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-start-006.40.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "be7b11ab6c9aa326bf69d8e472df59e8c0f8337ae0afb7973fbcc3ae05c43ce2"
+    },
+    {
+      "path": "import.log",
+      "bytes": 12433,
+      "sha256": "d9de5d7128cb820b47696fadc65bba980e557642a3cc743e0affd695a1603b71"
+    },
+    {
+      "path": "run.log",
+      "bytes": 2428,
+      "sha256": "3969b08772b09e003277fe6fd16eec0212b4b2244ed2c5c411233e8aa37306e3"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 219,
+      "sha256": "d08aac348efd761f1b19b50ecf469845b77d879204a5684541fa1c462db437bb"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 50033,
+      "sha256": "bd844932c0e450887ef3c2c97ecac916823c29f69b2f94b51e18263c74d479de"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 2396,
+      "sha256": "02ca02f79e4d1213f455aa9a8a7d77469ce1370a3ce7a6b76431783b99b5476a"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 77,
+      "sha256": "71a2890b57b251332b8c59c827eab36910958b4e287ce46e41be3a6eaab2a27c"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/frames.json",
+      "bytes": 3003,
+      "sha256": "805aa8403744be9c3bf38021064c3f880c2fbc29879a8bdda2ae09f17241bf56"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-000.00.png",
+      "bytes": 1316363,
+      "sha256": "19bf35b83d0afdc548f1bfea7993f96284cef5e03240e1c6909204ae2cd47fd4"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-008.02.png",
+      "bytes": 3126409,
+      "sha256": "43e97c3390d009ed323d4ac756f9da54cd65c42c38676df598700511a373c771"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-016.00.png",
+      "bytes": 3093874,
+      "sha256": "1d0474503c389c2b111a1a180492711ebf3668b1305d1583d2c6466a5bd897a4"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-024.02.png",
+      "bytes": 3251537,
+      "sha256": "05c2acb572bc99dd88d3bbc54c09ab351242ca8f4c8aa6f30c49cb7f01feced8"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-032.02.png",
+      "bytes": 2274699,
+      "sha256": "b5e6ca9ed1a46f747bb1ec9c53e1c18a0b4d99313e04c18a7a9e528bf88abeb3"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-040.02.png",
+      "bytes": 2428768,
+      "sha256": "a757ff829b0c7a218d83c2b235706d6b3058369e357bcff214397b1e7971aa47"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-048.02.png",
+      "bytes": 2416252,
+      "sha256": "29f0f965357e2fa5b45b5e8681d33f548c7a6538e22992f529186d601522d6ee"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-056.02.png",
+      "bytes": 2190822,
+      "sha256": "a0f734f7aa7930a2a8dfd2b94bff120215d896ad8162eaa5ade27d2df0e596c7"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-064.02.png",
+      "bytes": 2215997,
+      "sha256": "edec2aa6484525918f582cde05453683717de1fb45f727bf7b0e101d4bb0236d"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-072.02.png",
+      "bytes": 2136920,
+      "sha256": "2532405df65c73ecee5479a6aefecbe84cbc601c1f299598b634a9c9e3c41b86"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-late-001.23.png",
+      "bytes": 3506424,
+      "sha256": "17b0c7fd69c1ed3ce0598068ad21f1779421252c6fc04ea67d780d792ec3fa12"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-late-003.45.png",
+      "bytes": 3561858,
+      "sha256": "59d3ae0006c51dd14cd87b6474c36c10b6b1c253a34d844feb3fb76ea16b30e1"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-late-007.02.png",
+      "bytes": 3239937,
+      "sha256": "7185a89154f8d048351855bda12dd1680d492999f5767a8a94384cf032be26cd"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-start-000.63.png",
+      "bytes": 3053836,
+      "sha256": "5d03c86771626c39728fcae5f1cc4851ce902ec3bf18ce88db70cc9bd30a3ba1"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-start-002.85.png",
+      "bytes": 3554502,
+      "sha256": "2d73c8bf9af9e5f2bf7af7be517f302694d698f4e98fb4756ff473937306f3c7"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-start-006.40.png",
+      "bytes": 3333431,
+      "sha256": "355fa72f417e40f8a0e68fbd54c74c1240bf7a2608e812b834579cc0f715cd03"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions",
+  "visual_review_required": true,
+  "visual_retry_label": "tw-f14-c3-cam-review-retry"
+}
