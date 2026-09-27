@@ -1,0 +1,42 @@
+extends RefCounted
+## Visual wall rings only. Every sample stays inside the original radial
+## envelope; the crown and bottom rings are returned without displacement.
+
+const LEVELS := [0.0, 0.055, 0.24, 0.27, 0.51, 0.56, 0.79, 0.83, 1.0]
+const RECESSES := [0.0, 0.06, 0.16, 0.02, 0.20, 0.03, 0.12, 0.01, 0.0]
+
+static func rings(top: Array[Vector3], upper: Array[Vector3], lower: Array[Vector3],
+		bottom: Array[Vector3], seed_value: int, config: Dictionary) -> Array:
+	var result: Array = []
+	var strength := clampf(float(config.get("recess_strength", 1.0)), 0.0, 1.0)
+	var warp := clampf(float(config.get("level_warp", 0.035)), 0.0, 0.08)
+	for level_index in LEVELS.size():
+		var ring: Array[Vector3] = []
+		for i in top.size():
+			if level_index == 0:
+				ring.append(top[i])
+				continue
+			if level_index == LEVELS.size() - 1:
+				ring.append(bottom[i])
+				continue
+			var angle := TAU * float(i) / float(top.size())
+			var t: float = LEVELS[level_index]
+			t += warp * sin(angle * 2.0 + seed_value * 0.71) * sin(PI * t)
+			var point := _sample(top[i], upper[i], lower[i], bottom[i], t)
+			# Broad buttresses vary around the perimeter; adjacent terrace pairs
+			# share their vertical warp, so even narrow lips cannot cross.
+			var sector := clampf(0.72 + 0.24 * sin(angle * 3.0 + seed_value * 0.43)
+				+ 0.18 * cos(angle * 5.0 - seed_value * 0.27 + t * 2.7), 0.2, 1.0)
+			var radial := 1.0 - float(RECESSES[level_index]) * strength * sector
+			point.x *= radial
+			point.z *= radial
+			ring.append(point)
+		result.append(ring)
+	return result
+
+static func _sample(a: Vector3, b: Vector3, c: Vector3, d: Vector3, t: float) -> Vector3:
+	if t <= 0.26:
+		return a.lerp(b, t / 0.26)
+	if t <= 0.65:
+		return b.lerp(c, (t - 0.26) / 0.39)
+	return c.lerp(d, (t - 0.65) / 0.35)

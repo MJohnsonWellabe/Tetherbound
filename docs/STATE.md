@@ -26,6 +26,12 @@ adds 69 matched native frames: Cloudreach candidate rejected, Tidewake material
 retained only as an intermediate improvement. Final cliff material and Bars A/B
 remain open; see `ralph/reports/VISUAL/CLIFF-FAMILY.md`. Claude owns merging.
 
+The subsequent native cliff-ownership trace found stretched installed boulders
+in front of the procedural walls. The retained #365 rock-section candidate
+improves all three Windscar lighting comparisons and passes 22 native imported
+geometry checks. Final form/material and device cost remain open; the second
+procedural wall candidate was rejected. Receipts are in the same cliff report.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.

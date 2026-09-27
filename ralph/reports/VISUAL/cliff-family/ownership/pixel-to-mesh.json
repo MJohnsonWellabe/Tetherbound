@@ -1,0 +1,254 @@
+[
+  {
+    "hits": [
+      {
+        "distance": 1217.04370117188,
+        "path": "/root/CloudreachCliffs/CliffRegions/HighRoostSkyShrine/SatelliteCrag0/Rock_Medium_22/Rock_Medium_2",
+        "triangles": 244,
+        "visibility_end": 1600.0,
+        "world_hit": [
+          928.584289550781,
+          655.317504882813,
+          2867.1845703125
+        ]
+      },
+      {
+        "distance": 1300.91015625,
+        "path": "/root/CloudreachCliffs/CliffRegions/HighRoostSkyShrine/BeddedSpur4/Rock_Medium_22/Rock_Medium_2",
+        "triangles": 244,
+        "visibility_end": 1600.0,
+        "world_hit": [
+          1010.74755859375,
+          665.81640625,
+          2880.32080078125
+        ]
+      },
+      {
+        "distance": 1303.98522949219,
+        "path": "/root/CloudreachCliffs/CliffRegions/HighRoostSkyShrine/CliffMass/StratifiedCliffBody",
+        "triangles": 6396,
+        "visibility_end": 2600.0,
+        "world_hit": [
+          1013.76013183594,
+          666.201416015625,
+          2880.80249023438
+        ]
+      },
+      {
+        "distance": 1364.22326660156,
+        "path": "/root/CloudreachCliffs/Landmarks/SkyShrineHeartstone/LandmarkLedge/StratifiedCliffBody",
+        "triangles": 9065,
+        "visibility_end": 2400.0,
+        "world_hit": [
+          1072.77478027344,
+          673.742248535156,
+          2890.23779296875
+        ]
+      },
+      {
+        "distance": 1475.8466796875,
+        "path": "/root/CloudreachCliffs/CliffRegions/HighRoostSkyShrine/BeddedSpur5/Rock_Medium_32/Rock_Medium_3",
+        "triangles": 522,
+        "visibility_end": 1600.0,
+        "world_hit": [
+          1182.13134765625,
+          687.715698242188,
+          2907.7216796875
+        ]
+      }
+    ],
+    "pixel": [
+      420.0,
+      250.0
+    ]
+  },
+  {
+    "hits": [
+      {
+        "distance": 1395.07409667969,
+        "path": "/root/CloudreachCliffs/CliffRegions/UpperCloudreach/BeddedSpur3/Rock_Medium_22/Rock_Medium_2",
+        "triangles": 244,
+        "visibility_end": 1600.0,
+        "world_hit": [
+          17.7072124481201,
+          736.505310058594,
+          4022.83764648438
+        ]
+      },
+      {
+        "distance": 1403.23120117188,
+        "path": "/root/CloudreachCliffs/CliffRegions/UpperCloudreach/CliffMass/StratifiedCliffBody",
+        "triangles": 7519,
+        "visibility_end": 2600.0,
+        "world_hit": [
+          19.3529205322266,
+          737.870910644531,
+          4030.70947265625
+        ]
+      },
+      {
+        "distance": 1481.95422363281,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder27/StratifiedCliffBody",
+        "triangles": 6292,
+        "visibility_end": 2600.0,
+        "world_hit": [
+          35.234977722168,
+          751.049621582031,
+          4106.67919921875
+        ]
+      },
+      {
+        "distance": 1542.98266601563,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003RockShoulder24/StratifiedCliffBody",
+        "triangles": 5929,
+        "visibility_end": 2600.0,
+        "world_hit": [
+          47.5472183227539,
+          761.26611328125,
+          4165.5732421875
+        ]
+      },
+      {
+        "distance": 1552.85229492188,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/UpperPlateauCircuitCliffShoulders/Ridge003",
+        "triangles": 52944,
+        "visibility_end": 1900.0,
+        "world_hit": [
+          49.5384216308594,
+          762.918334960938,
+          4175.09765625
+        ]
+      }
+    ],
+    "pixel": [
+      1550.0,
+      200.0
+    ]
+  },
+  {
+    "hits": [
+      {
+        "distance": 815.700561523438,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge002",
+        "triangles": 18940,
+        "visibility_end": 1900.0,
+        "world_hit": [
+          350.248596191406,
+          509.099304199219,
+          3213.53271484375
+        ]
+      },
+      {
+        "distance": 815.701232910156,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge003",
+        "triangles": 1580,
+        "visibility_end": 1900.0,
+        "world_hit": [
+          350.249084472656,
+          509.099304199219,
+          3213.533203125
+        ]
+      },
+      {
+        "distance": 857.888000488281,
+        "path": "/root/CloudreachCliffs/Landmarks/WindscarFlightAerie/LandmarkLedge/StratifiedCliffBody",
+        "triangles": 7392,
+        "visibility_end": 2400.0,
+        "world_hit": [
+          382.004089355469,
+          509.416717529297,
+          3241.30444335938
+        ]
+      },
+      {
+        "distance": 1378.80102539063,
+        "path": "/root/CloudreachCliffs/CloudDecks/CloudSeaUpper",
+        "triangles": 6992,
+        "visibility_end": 9000.0,
+        "world_hit": [
+          774.103698730469,
+          513.3359375,
+          3584.22265625
+        ]
+      },
+      {
+        "distance": 2750.63427734375,
+        "path": "/root/CloudreachCliffs/DistantLowerRelief/LowerRelief18/Rock_Medium_22/Rock_Medium_2",
+        "triangles": 244,
+        "visibility_end": 6500.0,
+        "world_hit": [
+          1806.70544433594,
+          523.657287597656,
+          4487.302734375
+        ]
+      }
+    ],
+    "pixel": [
+      940.0,
+      370.0
+    ]
+  },
+  {
+    "hits": [
+      {
+        "distance": 14.9926500320435,
+        "path": "/root/CloudreachCliffs/Landmarks/WindscarBeacon/OpenWindscarBeacon/GroundedOutcrop01/Rock_Medium_12/Rock_Medium_1",
+        "triangles": 342,
+        "visibility_end": 2400.0,
+        "world_hit": [
+          -260.104583740234,
+          500.170867919922,
+          2690.82983398438
+        ]
+      },
+      {
+        "distance": 15.2121200561523,
+        "path": "/root/CloudreachCliffs/Landmarks/WindscarBeacon/LandmarkLedge/StratifiedCliffBody",
+        "triangles": 8162,
+        "visibility_end": 2400.0,
+        "world_hit": [
+          -260.051452636719,
+          500.130004882813,
+          2691.03881835938
+        ]
+      },
+      {
+        "distance": 15.3195791244507,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge000",
+        "triangles": 33758,
+        "visibility_end": 1900.0,
+        "world_hit": [
+          -260.025329589844,
+          500.109985351563,
+          2691.14111328125
+        ]
+      },
+      {
+        "distance": 176.883392333984,
+        "path": "/root/CloudreachCliffs/CliffRegions/WindscarRavine/CliffMass/StratifiedCliffBody",
+        "triangles": 6673,
+        "visibility_end": 2600.0,
+        "world_hit": [
+          -220.820816040039,
+          470.029998779297,
+          2844.96264648438
+        ]
+      },
+      {
+        "distance": 474.24658203125,
+        "path": "/root/CloudreachCliffs/AuthoredRoutes/WindscarFloorLoopCliffShoulders/Ridge001RockShoulder10/StratifiedCliffBody",
+        "triangles": 5929,
+        "visibility_end": 2600.0,
+        "world_hit": [
+          -148.663604736328,
+          414.666900634766,
+          3128.07592773438
+        ]
+      }
+    ],
+    "pixel": [
+      1450.0,
+      550.0
+    ]
+  }
+]

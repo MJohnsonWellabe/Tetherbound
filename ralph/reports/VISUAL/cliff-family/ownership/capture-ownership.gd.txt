@@ -1,0 +1,49 @@
+extends "D:/tetherbound/visual-acceptance-local/capture_cliff_family.gd"
+
+func _build_rows(spec: Dictionary) -> Array:
+	var rows: Array = []
+	for row: Dictionary in super._build_rows(spec):
+		if str(row.id).contains("windscar_ravine_0"):
+			row.times = ["day"]
+			rows.append(row)
+	return rows
+
+func _shoot(label: String, info: Dictionary) -> void:
+	var samples: Array = []
+	for pixel: Vector2 in [Vector2(420,250), Vector2(1550,200), Vector2(940,370), Vector2(1450,550)]:
+		var origin := _rcam.project_ray_origin(pixel)
+		var direction := _rcam.project_ray_normal(pixel)
+		var hits: Array = []
+		for node: Node in _world.find_children("*", "MeshInstance3D", true, false):
+			var instance := node as MeshInstance3D
+			if instance.mesh == null or not instance.is_visible_in_tree():
+				continue
+			var inverse := instance.global_transform.affine_inverse()
+			var local_origin := inverse * origin
+			var local_direction := (inverse.basis * direction).normalized()
+			if instance.mesh.get_aabb().intersects_ray(local_origin, local_direction) == null:
+				continue
+			var closest := INF
+			var point := Vector3.ZERO
+			var faces := instance.mesh.get_faces()
+			for i in range(0, faces.size(), 3):
+				var hit: Variant = Geometry3D.ray_intersects_triangle(local_origin, local_direction, faces[i], faces[i+1], faces[i+2])
+				if hit is Vector3:
+					var world_point: Vector3 = instance.global_transform * hit
+					var distance := origin.distance_to(world_point)
+					if distance < closest:
+						closest = distance
+						point = world_point
+			if is_finite(closest):
+				hits.append({"path": str(instance.get_path()), "distance": closest,
+					"world_hit": [point.x, point.y, point.z], "triangles": faces.size()/3,
+					"visibility_end": instance.visibility_range_end})
+			hits.sort_custom(func(a: Dictionary,b: Dictionary): return float(a.distance)<float(b.distance))
+		if hits.size() > 5:
+			hits.resize(5)
+		samples.append({"pixel": [pixel.x,pixel.y], "hits":hits})
+	var file := FileAccess.open("D:/tetherbound/visual-acceptance-local/cliff-ownership.json",FileAccess.WRITE)
+	file.store_string(JSON.stringify(samples,"  "))
+	file.close()
+	print("CLIFF_OWNERSHIP ",JSON.stringify(samples))
+	await super._shoot(label,info)

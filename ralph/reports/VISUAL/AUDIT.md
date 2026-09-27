@@ -42,6 +42,15 @@ still fail; Shellwatch shaded-night information regresses slightly. Next work
 must change large/mid-scale cliff structure and shore transitions rather than
 repeat surface-grain tuning. [Comparison, verdicts and limits](CLIFF-FAMILY.md).
 
+**Cliff ownership follow-up:** native pixel-to-mesh tracing identifies the
+dominant Windscar masses as extremely stretched installed boulders in front of
+the procedural walls. Draft #365 now replaces extreme crag stretches with
+overlapping sections from the installed family. Independent review prefers
+all three Windscar lighting views; other nine comparisons tie. This is a modest
+intermediate form improvement, with final cliff form/material still failing
+and added mesh cost unverified on device. Another procedural terrace candidate
+was rejected. See the [trace, verdict and native bounds checks](CLIFF-FAMILY.md).
+
 
 ## Codex visual work queue (owner, 2026-09-26)
 
@@ -62,7 +71,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V7 | F04#6 | Defeat read is weak: raise DEFEAT_FOLD and re-run the defeated clips for the grunt, captain_a, captain_b and warden rigs | `tools/art_pipeline/blender/animate_humanoid.py` | open |
 | V8 | M1/M3 | Meadows landmarks unrecognisable. Hall never dominates: exterior massing, drained ground, banners, braziers, sightline | §C1 M1/M3 | open |
 | V9 | F08#3 | Cloudreach high perch: cloud sea and horizon, pale stone, pad primitives (arrival camera stays with the Cloudreach lane) | judge on #253 (5848745065) | open |
-| V10 | F08#4 | Cloudreach settlements and cliff identity; the cliff palette is a judge pick | Cloudreach work orders M1–M12 | #338 merged: scoped aviary architecture and trail-edge slice included; current broad review still fails cliff integration and architectural hierarchy. Night destination contrast remains open. |
+| V10 | F08#4 | Cloudreach settlements and cliff identity; the cliff palette is a judge pick | Cloudreach work orders M1–M12 | #338 merged: scoped aviary architecture and trail-edge slice included; current broad review still fails cliff integration and architectural hierarchy. Night destination contrast remains open. Draft #365 adds an independently preferred Windscar rock-section improvement; final cliff form/material and added rendering cost remain open (CLIFF-FAMILY.md). |
 | V11 | F10#4 | Stormwood forest, rod line and restored-sky views need a Bars A/B verdict | Stormwood capture tools | open |
 | V12 | F09#3 | Stormwood pocket lures not visible from the road: a light shaft over each pocket's reward, then re-judge (target ≥4 of 5) | `tools/capture_stormwood_pocket_walks.gd` | open |
 | V13 | M7 foliage | Crimson canopies at the Burrow Warrens ironwood stand (evidence: `_sheet_meadows_env_32bd3307.jpg` (local capture at main 32bd3307), 'Warrens day'). These are harvest nodes on `TwistedTree_1`/`_3`: band 2 orders 17, 19 and 20, and band 3 (River Lock) orders 3027, 3029 and 3030. No vegetation layer lists those models, so `harvest_node.gd::_material_fixups_for_model()` never swaps the pack's crimson leaf (RGB 167,23,23). `vegetation_presentation.json` alone cannot reach them. | Re-author those orders onto `TwistedTree_4`, as band 4's `_comment_red_leak_d4b` did, or add a harvest-node fallback to per-model presentation retint/retexture in `scripts/world/harvest_node.gd` | open |

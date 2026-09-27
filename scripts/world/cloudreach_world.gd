@@ -275,13 +275,15 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	root.position=base
 	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
 	parent.add_child(root)
-	var rock:=NATURE_ROCKS[posmod(seed_value,3)].instantiate() as Node3D
-	var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
-	rock.scale=size/bounds.size
-	rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
-	root.add_child(rock)
+	var section_config: Dictionary = _visual_config.get("geology", {}).get("rock_sections", {})
+	if not preload("res://scripts/world/cloudreach_rock_sections.gd").build(root, size, seed_value, NATURE_ROCKS, section_config):
+		var rock:=NATURE_ROCKS[posmod(seed_value,3)].instantiate() as Node3D
+		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
+		rock.scale=size/bounds.size
+		rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
+		root.add_child(rock)
 	var mass_material: Material = _materials.get(material_key, _materials["cliff"])
-	for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
+	for mesh: MeshInstance3D in root.find_children("*","MeshInstance3D",true,false):
 		mesh.material_override=mass_material
 	_set_geometry_visibility(root,visible_distance)
 	return root
