@@ -29,6 +29,7 @@ var _trail_flat := 3.0
 var _trail_feather := 15.0
 var _shore_preserve := 22.0
 var _shore_blend := 10.0
+var _pads: Array = []
 
 
 static func load_config(path: String = CONFIG_PATH) -> Dictionary:
@@ -57,6 +58,7 @@ func _init(config: Dictionary = {}) -> void:
 		if not parent.is_empty():
 			_compile_landform(spec, parent)
 	_compile_trails()
+	_compile_pads()
 
 
 func _compile_landform(spec: Dictionary, membership_id: String) -> void:
@@ -119,7 +121,7 @@ func height_at(x: float, z: float) -> float:
 		if absf(dx) > extent or absf(dz) > extent:
 			continue
 		best = maxf(best, _height_for(index, dx, dz))
-	return _grade_trails(x, z, best)
+	return _grade_pads(x, z, _grade_trails(x, z, best))
 
 
 func _compile_trails() -> void:
@@ -175,6 +177,27 @@ func _grade_trails(x: float, z: float, base: float) -> float:
 		total += contribution
 		strongest = maxf(strongest, weight)
 	return lerpf(base, sum / total, strongest * shore_weight) if total > 0.0 else base
+
+
+## Authored fight pads (`terrain.graded_pads`): a flat disc at a fixed height,
+## feathered into the surrounding terrain. COMBAT §5 treats a footprint that
+## cannot hold the fight and its camera as a level defect; a pad fixes the
+## terrain where the encounter is authored instead of moving the encounter.
+func _compile_pads() -> void:
+	for spec: Dictionary in _config.get("terrain", {}).get("graded_pads", []):
+		var centre: Array = spec.get("center_xz_m", [])
+		if centre.size() != 2 or not spec.has("height_m"):
+			continue
+		_pads.append([Vector2(float(centre[0]), float(centre[1])), float(spec.height_m),
+			maxf(0.0, float(spec.get("flat_radius_m", 16.0))), maxf(0.5, float(spec.get("feather_m", 12.0)))])
+
+
+func _grade_pads(x: float, z: float, base: float) -> float:
+	for pad: Array in _pads:
+		var distance := Vector2(x, z).distance_to(pad[0])
+		if distance < float(pad[2]) + float(pad[3]):
+			base = lerpf(base, float(pad[1]), 1.0 - smoothstep(float(pad[2]), float(pad[2]) + float(pad[3]), distance))
+	return base
 
 
 ## Island membership is dry land by default; callers may explicitly include
