@@ -729,7 +729,16 @@ func _walk_attempt(target: Vector3, tolerance: float, label: String, want: Strin
 	var route: Array = plan.points
 	if route.is_empty() and continuous:
 		var hub := _landing(want)
-		if hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+		# First choice: straight to the landing (the way the trainer usually
+		# came from a dock), then the baked-ground plan from the landing.
+		var onward: Array = []
+		if hub.is_finite() and attempt == 0 and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+			onward = (POCKET.plan_route(world, Vector2(hub.x, hub.z), Vector2(target.x, target.z)).points as Array)
+		if not onward.is_empty():
+			print("WALK %s DIRECT TO %s landing THEN PLANNED (attempt %d)" % [label, want, attempt + 1])
+			route = [Vector2(hub.x, hub.z)]
+			route.append_array(onward)
+		elif hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
 			var hub_plan: Dictionary = POCKET.plan_route(world, from, Vector2(hub.x, hub.z))
 			if not (hub_plan.points as Array).is_empty():
 				print("WALK %s VIA %s landing (attempt %d)" % [label, want, attempt + 1])

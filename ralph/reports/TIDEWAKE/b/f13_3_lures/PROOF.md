@@ -99,3 +99,20 @@ In the continuous run B log (`../f13_3_continuous/`), the route `reedhaven_to_gu
 The route row in `data/config/water_world.json` has `main_path: false` and `intended_traversal: "prepared_human_or_swim_mount"`. The design therefore marks this as an optional *prepared* crossing, not a level-0 one, and WORLD's lure line calls it a "safe optional crossing". WORLD/SYSTEMS own whether an unprepared level-0 swimmer should arrive at 0 % stamina with health damage. This lane did not change it.
 
 The same run's earlier 25 HP drop (100 → 75) happened on First Shore before any swim, during the stalled Lantern walks. It is unexplained here, possibly a wild creature.
+
+**What WORLD says:**
+- WORLD §Tidewake human swimming (line 240) sets the 20 % reserve bar with 15 % steering deviation only for "the first and every **mandatory** human-swim hop". Gull Rest is optional (WORLD line 228: "Optional researcher branch").
+- Line 252 says swim mounts "improve … marked optional routes".
+- The Gull chain row (line 427) says "reach researcher/satchel via **safe** optional crossing".
+
+**Reading:** this is not a violation of the mandatory-hop bar. It is in tension with the chain's own "safe optional crossing" wording, because an unprepared level-0 swimmer who starts at full stamina and steers straight, with no deviation, arrives at 0 % after 4 HP/s exhaustion damage. The finding is recorded as a **design question for WORLD/SYSTEMS**, not a defect.
+
+## Continuous-mode status (in progress)
+
+- **Run B** (`../f13_3_continuous/continuous_b_partial.log`, stopped by me mid-run):
+  - Lantern failed. The straight stick leg between Pell's dock and the Lantern departure stalled on a First Shore slope; it succeeded in one run and stalled in another. The swims out and back themselves passed (95 m each way, min stamina 29.1 / 33.7).
+  - Gull then ran by real swims: first_shore→reedhaven, reedhaven→brine_steps (Adair), brine_steps→reedhaven, and reedhaven→gull_rest. The satchel site and the Candy II were claimed by walk + Interact.
+- **Fix:** in continuous mode a stalled walk retries from where it stopped: re-plan, else via the island landing, else direct. Each retry prints `RETRY`. Run D (`continuous_d.log`, with `--save-dir` checkpoints) verifies it.
+- **Not done in this pass:**
+  - the earned swimmer and saddle for the Drowned Garden and Deep Watch legs, and the ride back after Tidecoil. The lane lead's research points to main's `tests/helpers/water_earned_swimmer_preparation_segment.gd` / `water_earned_swimmer_segment.gd` / `water_earned_late_segment.gd`. Until those are wired in, Garden and Deep Watch are attempted by human swim, and the post-Tidecoil stranding uses the disclosed landing write;
+  - a start from an earned Water-arrival save.
