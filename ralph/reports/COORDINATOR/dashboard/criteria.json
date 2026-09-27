@@ -109,8 +109,8 @@
     {
      "text": "Each transition, reward and recovery survives reload on that route",
      "status": "partial",
-     "evidence": "Per-leg production save/reload with agreeing state hashes in two-peer legs (main)",
-     "gap": "Reload checks on the continuous earned route",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Seed-15 local headless rerun with --reload-at-transitions at 0c07bcbe (rested-team-reload-seed15-rerun.txt, tournament_won, failures []), harness-driven fights and route; transitions from CI r21 at 108705ca. Independent re-check: MET.",
+     "gap": "Landing in batch 49; flips on the next green full CI.",
      "note": "Same run as F02#3, with reloads at each transition. Meadows route (#286)."
     },
     {
@@ -339,7 +339,7 @@
      "text": "One shared world healing/relic/key",
      "status": "partial",
      "evidence": "Two-peer handoff 32/0: key/gate flags on both after reload (main, fixture); blind verdict: healing has no visible payoff",
-     "gap": "Owner decision on healed look; visible payoff"
+     "gap": "Evidence passes (code-blind judge YES; two-peer PASS); held only for the open owner decision on the healed look."
     },
     {
      "text": "Physical gate opens exactly once and carries the same five into Cloudreach",
@@ -401,8 +401,8 @@
     {
      "text": "Save/reload keeps same five and closed gates",
      "status": "partial",
-     "evidence": "Same five UIDs every step; closed gate stop 1.85 m; foot save only",
-     "gap": "Save while mounted; reload mid-flight"
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Earned c1_flight_trained start; harness-timed autosave launch, restart_peer and direct title _load_slot (solo PASS 22 rows). Co-op two-peer PASS on loopback ENet with story_flag, party_grant, fly_setup, teleports, fly_launch position write and harness-triggered mid-flight saves. Independent re-check: MET.",
+     "gap": "Landing in batch 49; flips on the next green full CI."
     },
     {
      "text": "Two-peer rejoin keeps rider/party identity and gates",
@@ -578,8 +578,8 @@
     {
      "text": "All six selected chains satisfy §5 (lure/action/payoff/acknowledgement)",
      "status": "partial",
-     "evidence": "Crown Remembers, Pim's Parcels, Dark Arches, Raise a Road landed (batch 1); Deepwood Circuit historical; Glass for Bryn untouched",
-     "gap": "Bryn chain; ordinary-play and map-layer gaps",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: ralph/reports/STORMWOOD/b/f10_0/CLOSE.md: fixture upstream flags, explore_at travel, granted materials and Free Build arches, scripted circuit wins; TM smoke on a stub world, solo host; Dark Arches payoff shown by an edge-clamped minimap frame only. Independent re-check: MET.",
+     "gap": "Landing in batch 49; flips on the next green full CI.",
      "note": "Dark Arches map payoff and six-chain §5. Stormwood-B (#303)."
     },
     {
