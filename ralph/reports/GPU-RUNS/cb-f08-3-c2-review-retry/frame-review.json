@@ -1,0 +1,86 @@
+[
+  {
+    "file": "high-perches-court-high-oblique-day.png",
+    "shows": "Retry: Daylight: crown court, separated textured needles and the small trainer near the blue landing ring; cliff drop and clouds below.",
+    "pass": true,
+    "problem": "",
+    "sha256": "2cc8610ed56a5e4313f84afef22955a356eb6dd73cd743b096dcd8450706d10a"
+  },
+  {
+    "file": "high-perches-court-high-oblique-night.png",
+    "shows": "Retry: Dark but readable night: crown court, separated textured needles and the small trainer near the blue landing ring; cliff drop and clouds below.",
+    "pass": true,
+    "problem": "",
+    "sha256": "41b97ae4eac842744e35ad3cb60802064530580212dcdf98d6aaf21219450a47"
+  },
+  {
+    "file": "high-perches-glide-approach-day.png",
+    "shows": "Retry: Daylight: trainer visible beneath the arch at the south crown rim; raised needles and cliff face below the lip.",
+    "pass": true,
+    "problem": "",
+    "sha256": "19723c82fcdf0854cded51db9c1cb0d2fcea03405680d8fba0afc905ffe5c6e4"
+  },
+  {
+    "file": "high-perches-glide-approach-night.png",
+    "shows": "Retry: Dark but readable night: trainer visible beneath the arch at the south crown rim; raised needles and cliff face below the lip.",
+    "pass": true,
+    "problem": "",
+    "sha256": "a235238fa9339e2c57f73c952b2bbc0a8f4ea1b14f14687fc86099adb4995818"
+  },
+  {
+    "file": "high-perches-rig-fly-arrival-day.png",
+    "shows": "Retry: Daylight: unsupported trainer suspended before the crown cliff; upper crown ahead.",
+    "pass": false,
+    "problem": "Requested Galecrest carrier is absent; this is a suspended standing trainer, not visible Fly.",
+    "sha256": "d5f55e5c38739d0ec54e2455d7c59f0cb1bce37321bfe7cd3f79e063b4fb30e0"
+  },
+  {
+    "file": "high-perches-rig-fly-arrival-night.png",
+    "shows": "Retry: Dark but readable night: unsupported trainer suspended before the crown cliff; upper crown ahead.",
+    "pass": false,
+    "problem": "Requested Galecrest carrier is absent; this is a suspended standing trainer, not visible Fly.",
+    "sha256": "77615635fabe1aaa9ea7b0398ecb21c3410977fe3ada26fcff3c61b7ce746439"
+  },
+  {
+    "file": "high-perches-rig-fly-departure-day.png",
+    "shows": "Retry: Daylight: unsupported trainer facing distant cliffs and clouds.",
+    "pass": false,
+    "problem": "Requested Galecrest carrier is absent; the High Perches crown is outside the view except a left-edge rock sliver.",
+    "sha256": "73aa221f00d9c648cfc60abc0f392bdca6db0fed758ac6cc19bd2d125bc97fa6"
+  },
+  {
+    "file": "high-perches-rig-fly-departure-night.png",
+    "shows": "Retry: Dark but readable night: unsupported trainer facing distant cliffs and clouds.",
+    "pass": false,
+    "problem": "Requested Galecrest carrier is absent; the High Perches crown is outside the view except a left-edge rock sliver.",
+    "sha256": "0553e979758c9f373e322464e2e0eb2b576d69b88941f99143ce61796850998c"
+  },
+  {
+    "file": "high-perches-southeast-glide-approach-day.png",
+    "shows": "Retry: Daylight: crown rim, separated needles and cliff drop from the southeast.",
+    "pass": false,
+    "problem": "Trainer is obscured by the entrance arch and is not clearly identifiable.",
+    "sha256": "8ba5713085804014c462043037b10e58bcdeda14c876233349f60939e30a0c13"
+  },
+  {
+    "file": "high-perches-southeast-glide-approach-night.png",
+    "shows": "Retry: Dark but readable night: crown rim, separated needles and cliff drop from the southeast.",
+    "pass": false,
+    "problem": "Trainer is obscured by the entrance arch and is not clearly identifiable.",
+    "sha256": "6528c8ab6ccfd703a3449f1ec2c250dd398813070898eb6d1213a9da56fe8fc3"
+  },
+  {
+    "file": "high-perches-west-glide-high-day.png",
+    "shows": "Retry: Daylight: crown and raised needles above the cliff with clouds below; trainer partly visible in the court behind a timber frame.",
+    "pass": true,
+    "problem": "",
+    "sha256": "6542a4d03c850a42aeab7146d1d672f8be9ac9146cea1276ccaa488bc0c2df17"
+  },
+  {
+    "file": "high-perches-west-glide-high-night.png",
+    "shows": "Retry: Dark but readable night: crown and raised needles above the cliff with clouds below; trainer partly visible in the court behind a timber frame.",
+    "pass": true,
+    "problem": "",
+    "sha256": "37a79eb38f1646441e2a2f085b4222a8cd6abc1c67383d92c85aa779e1aa642e"
+  }
+]
