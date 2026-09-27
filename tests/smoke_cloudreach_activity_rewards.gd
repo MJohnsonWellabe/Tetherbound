@@ -36,7 +36,7 @@ func _run() -> void:
 	(_game.get("party") as RefCounted).call("add", SPECIES.spawn("terrapup"))
 	var flags: RefCounted = _game.get("progression")
 	for flag: String in ["realm_key_cloudreach", "cloudreach_chapter_started", "cloudreach_crisis_learned",
-			"causeway_survivors_reconnected", "side_courier_pack_recovered", "side_courier_medicine_delivered"]:
+			"causeway_survivors_reconnected", "side_courier_pack_recovered"]:
 		flags.call("set_flag", flag)
 	await _load_world()
 	# A character arriving in Cloudreach has saved before; the save is what
@@ -44,39 +44,29 @@ func _run() -> void:
 	# reward is delivered to.
 	_check(bool(_game.call("save_game", SLOT)), "the arriving character has a saved identity")
 	var physical := _physical()
-	_check(not _offered(physical), "the couriers' thanks is not offered before Neri hears the report")
-
-	_check(bool(physical.call("consume_dialogue_effect", REPORT_EFFECT)), "Neri's report line completes the chain through the dialogue guard")
-	_check(bool(flags.call("has", "side_stranded_couriers_complete")), "the chain's completion flag is set")
+	_check(not _offered(physical), "the couriers' thanks is not offered before the medicine reaches the shelter")
+	# Coordinator ruling (a), #356 13:20: the thanks waits at the Windscar
+	# ravine shelter once the medicine is delivered (fixture flag write for the
+	# delivery step, disclosed).
+	flags.call("set_flag", "side_courier_medicine_delivered")
 	await _frames(10)
 	var reward := physical.get_node_or_null(NodePath(REWARD_ID)) as Node3D
-	_check(reward != null and _offered(physical), "the couriers' thanks is offered once the chain completes")
+	_check(reward != null and _offered(physical), "the couriers' thanks is offered at the shelter once the medicine is delivered")
 	if reward == null:
 		_report()
 		return
-	var neri := Vector3(-296.0, 180.0, 534.0)
-	var d := Vector2(reward.global_position.x - neri.x, reward.global_position.z - neri.z).length()
+	var delivery := Vector3(-298.0, 460.0, 3103.0)
+	var d := Vector2(reward.global_position.x - delivery.x, reward.global_position.z - delivery.z).length()
 	var nearest := INF
-	for npc: Vector3 in [neri, Vector3(-295, 180, 536), Vector3(-292, 180, 536), Vector3(-290, 180, 526), Vector3(-275, 180, 520)]:
+	for npc: Vector3 in [Vector3(-297, 460, 3098), Vector3(-303, 460, 3100)]:
 		nearest = minf(nearest, Vector2(reward.global_position.x - npc.x, reward.global_position.z - npc.z).length())
-	_check(nearest >= 8.0 and d < 25.0, "it sits on the Galefoot plaza, clear of every Galefoot talk prompt (nearest person %.1f m, %s)" % [nearest, reward.global_position])
-
-	# Seen from the open Galefoot plaza a player crosses, not hidden in a
-	# house (the first placement at (-288, 529) was inside a terrace house).
-	# The hearth at (-284, 180.1, 519) is drawn without a collider, so a ray
-	# alone cannot see it: the eye (the capture stand, east of the bag) is
-	# chosen so the sight line also clears the hearth's 2.1 m footprint.
-	var eye := Vector3(-282.0, 181.6, 516.0)
+	_check(nearest >= 8.0 and d < 12.0, "it sits at the Windscar ravine shelter, clear of both couriers' talk prompts (nearest person %.1f m, delivery %.1f m, %s)" % [nearest, d, reward.global_position])
+	var eye := delivery + Vector3.UP * 1.6
 	var target := reward.global_position + Vector3.UP * 0.5
-	var sight := PhysicsRayQueryParameters3D.create(eye, target)
-	var blocker := _world.get_world_3d().direct_space_state.intersect_ray(sight)
-	var hearth := Vector2(-284.0, 519.0)
-	var a := Vector2(eye.x, eye.z)
-	var b := Vector2(target.x, target.z)
-	var t := clampf((hearth - a).dot(b - a) / (b - a).length_squared(), 0.0, 1.0)
-	var hearth_clear := hearth.distance_to(a + (b - a) * t)
-	_check(blocker.is_empty() and hearth_clear > 2.3,
-		"the thanks is in plain sight from the plaza stand: no collider and not behind the hearth (blocked by %s, hearth clearance %.1f m)" % [str((blocker["collider"] as Node).get_path()) if not blocker.is_empty() else "nothing", hearth_clear])
+	var blocker := _world.get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(eye, target))
+	_check(blocker.is_empty(), "the thanks is in plain sight from the delivery prompt (blocked by %s)" % [str((blocker["collider"] as Node).get_path()) if not blocker.is_empty() else "nothing"])
+	_check(bool(physical.call("consume_dialogue_effect", REPORT_EFFECT)), "Neri's report line completes the chain through the dialogue guard")
+	_check(bool(flags.call("has", "side_stranded_couriers_complete")), "the chain's completion flag is set")
 	var inventory: RefCounted = _game.get("inventory")
 	var before := int(inventory.call("count", "potion_small"))
 	var player := _world.get_node(^"Player") as CharacterBody3D

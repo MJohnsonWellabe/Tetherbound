@@ -1,0 +1,657 @@
+{
+  "run": "ralph/reports/CLOUDREACH/b/c1-card/run-10",
+  "a7": {
+    "intervals": 295,
+    "longest_s": 99.8,
+    "longest": {
+      "end_seconds": 2729.0,
+      "from": "input_interact",
+      "from_stage": "upper_anchor_east",
+      "gap_seconds": 99.8,
+      "start_seconds": 2629.2,
+      "to": "meaningful_offer",
+      "to_stage": "battle_officer_voss_summit_approach",
+      "in_fight": false
+    },
+    "over_120": [],
+    "pass": true
+  },
+  "fights": [
+    {
+      "id": "tether_lieutenant_senn",
+      "stage": "battle_tether_lieutenant_senn",
+      "t": 757.52,
+      "mode": "live_input_spacer_switch",
+      "rounds": 2,
+      "victory": true,
+      "coins": 80,
+      "team_before": [
+        [
+          "ripplet",
+          21,
+          576
+        ],
+        [
+          "bramblebun",
+          22,
+          884
+        ],
+        [
+          "mudsnout",
+          21,
+          262
+        ],
+        [
+          "mudsnout",
+          21,
+          622
+        ],
+        [
+          "veridian",
+          26,
+          1196
+        ]
+      ],
+      "team_after": [
+        [
+          "ripplet",
+          21,
+          974
+        ],
+        [
+          "bramblebun",
+          22,
+          1282
+        ],
+        [
+          "mudsnout",
+          21,
+          660
+        ],
+        [
+          "mudsnout",
+          22,
+          92
+        ],
+        [
+          "veridian",
+          26,
+          1594
+        ]
+      ]
+    },
+    {
+      "id": "keeper_maela_trial",
+      "stage": "battle_keeper_maela_trial",
+      "t": 1248.35,
+      "mode": "live_input_spacer_switch",
+      "rounds": 2,
+      "victory": true,
+      "coins": 75,
+      "team_before": [
+        [
+          "ripplet",
+          21,
+          974
+        ],
+        [
+          "bramblebun",
+          22,
+          1282
+        ],
+        [
+          "mudsnout",
+          21,
+          660
+        ],
+        [
+          "mudsnout",
+          22,
+          92
+        ],
+        [
+          "veridian",
+          26,
+          1594
+        ]
+      ],
+      "team_after": [
+        [
+          "ripplet",
+          22,
+          62
+        ],
+        [
+          "bramblebun",
+          23,
+          512
+        ],
+        [
+          "mudsnout",
+          21,
+          1074
+        ],
+        [
+          "mudsnout",
+          22,
+          490
+        ],
+        [
+          "veridian",
+          27,
+          313
+        ]
+      ]
+    },
+    {
+      "id": "officer_voss_summit_approach",
+      "stage": "battle_officer_voss_summit_approach",
+      "t": 2969.13,
+      "mode": "live_input_spacer_switch",
+      "rounds": 3,
+      "victory": true,
+      "coins": 120,
+      "team_before": [
+        [
+          "ripplet",
+          22,
+          67
+        ],
+        [
+          "bramblebun",
+          23,
+          517
+        ],
+        [
+          "mudsnout",
+          21,
+          1079
+        ],
+        [
+          "mudsnout",
+          22,
+          495
+        ],
+        [
+          "veridian",
+          27,
+          318
+        ]
+      ],
+      "team_after": [
+        [
+          "ripplet",
+          23,
+          1033
+        ],
+        [
+          "bramblebun",
+          23,
+          1011
+        ],
+        [
+          "mudsnout",
+          23,
+          1237
+        ],
+        [
+          "mudsnout",
+          23,
+          1461
+        ],
+        [
+          "veridian",
+          28,
+          913
+        ]
+      ]
+    },
+    {
+      "id": "captain_veyra_storm_anchor",
+      "stage": "battle_captain_veyra_storm_anchor",
+      "t": 3236.62,
+      "mode": "live_input_spacer_switch",
+      "rounds": 3,
+      "victory": true,
+      "coins": 150,
+      "team_before": [
+        [
+          "ripplet",
+          23,
+          1033
+        ],
+        [
+          "bramblebun",
+          23,
+          1016
+        ],
+        [
+          "mudsnout",
+          23,
+          1242
+        ],
+        [
+          "mudsnout",
+          23,
+          1461
+        ],
+        [
+          "veridian",
+          28,
+          913
+        ]
+      ],
+      "team_after": [
+        [
+          "ripplet",
+          24,
+          982
+        ],
+        [
+          "bramblebun",
+          24,
+          1523
+        ],
+        [
+          "mudsnout",
+          24,
+          1191
+        ],
+        [
+          "mudsnout",
+          24,
+          515
+        ],
+        [
+          "veridian",
+          29,
+          488
+        ]
+      ]
+    }
+  ],
+  "fights_won": 4,
+  "ledger": {
+    "start_team": [
+      {
+        "hp": 177.322864641988,
+        "label": "Bud",
+        "level": 21,
+        "species_id": "ripplet",
+        "xp": 576
+      },
+      {
+        "hp": 145.311437615929,
+        "label": "Bramblebun",
+        "level": 22,
+        "species_id": "bramblebun",
+        "xp": 884
+      },
+      {
+        "hp": 159.723350638177,
+        "label": "Mudsnout",
+        "level": 21,
+        "species_id": "mudsnout",
+        "xp": 262
+      },
+      {
+        "hp": 160.709808193421,
+        "label": "Mudsnout",
+        "level": 21,
+        "species_id": "mudsnout",
+        "xp": 622
+      },
+      {
+        "hp": 796.746109780671,
+        "label": "Veridian Stag",
+        "level": 26,
+        "species_id": "veridian",
+        "xp": 1196
+      }
+    ],
+    "end_team": [
+      {
+        "hp": 249.9,
+        "label": "Bud",
+        "level": 24,
+        "species_id": "ripplet",
+        "xp": 982
+      },
+      {
+        "hp": 168.358961881849,
+        "label": "Bramblebun",
+        "level": 24,
+        "species_id": "bramblebun",
+        "xp": 1523
+      },
+      {
+        "hp": 227.210262160301,
+        "label": "Mudsnout",
+        "level": 24,
+        "species_id": "mudsnout",
+        "xp": 1191
+      },
+      {
+        "hp": 0.0,
+        "label": "Mudsnout",
+        "level": 24,
+        "species_id": "mudsnout",
+        "xp": 515
+      },
+      {
+        "hp": 1125.6,
+        "label": "Veridian Stag",
+        "level": 29,
+        "species_id": "veridian",
+        "xp": 488
+      }
+    ],
+    "start_inventory": [
+      {
+        "slot": 0,
+        "stack": {
+          "id": "orb_basic",
+          "n": 20
+        }
+      },
+      {
+        "slot": 1,
+        "stack": {
+          "id": "orb_basic",
+          "n": 20
+        }
+      },
+      {
+        "slot": 2,
+        "stack": {
+          "id": "orb_basic",
+          "n": 11
+        }
+      },
+      {
+        "slot": 4,
+        "stack": {
+          "id": "berries",
+          "n": 5
+        }
+      },
+      {
+        "slot": 5,
+        "stack": {
+          "id": "revive",
+          "n": 10
+        }
+      },
+      {
+        "slot": 6,
+        "stack": {
+          "durability": 30,
+          "id": "axe",
+          "n": 1
+        }
+      },
+      {
+        "slot": 7,
+        "stack": {
+          "durability": 31,
+          "id": "pickaxe",
+          "n": 1
+        }
+      },
+      {
+        "slot": 8,
+        "stack": {
+          "id": "coin",
+          "n": 875
+        }
+      },
+      {
+        "slot": 9,
+        "stack": {
+          "durability": 24,
+          "id": "knife",
+          "n": 1
+        }
+      },
+      {
+        "slot": 10,
+        "stack": {
+          "id": "torch",
+          "n": 1
+        }
+      },
+      {
+        "slot": 11,
+        "stack": {
+          "id": "hammer",
+          "n": 1
+        }
+      },
+      {
+        "slot": 12,
+        "stack": {
+          "id": "wood",
+          "n": 1
+        }
+      },
+      {
+        "slot": 13,
+        "stack": {
+          "id": "rootstone",
+          "n": 17
+        }
+      },
+      {
+        "slot": 14,
+        "stack": {
+          "id": "orb_greater",
+          "n": 7
+        }
+      },
+      {
+        "slot": 16,
+        "stack": {
+          "id": "hide_vest",
+          "n": 1
+        }
+      },
+      {
+        "slot": 17,
+        "stack": {
+          "id": "elixir_vigour",
+          "n": 1
+        }
+      },
+      {
+        "slot": 20,
+        "stack": {
+          "id": "tm_earth_fist",
+          "n": 1
+        }
+      },
+      {
+        "slot": 21,
+        "stack": {
+          "id": "elixir_guard",
+          "n": 1
+        }
+      }
+    ],
+    "end_inventory": [
+      {
+        "slot": 0,
+        "stack": {
+          "id": "orb_basic",
+          "n": 20
+        }
+      },
+      {
+        "slot": 1,
+        "stack": {
+          "id": "orb_basic",
+          "n": 20
+        }
+      },
+      {
+        "slot": 2,
+        "stack": {
+          "id": "orb_basic",
+          "n": 11
+        }
+      },
+      {
+        "slot": 3,
+        "stack": {
+          "id": "cloudberry",
+          "n": 4
+        }
+      },
+      {
+        "slot": 4,
+        "stack": {
+          "id": "berries",
+          "n": 5
+        }
+      },
+      {
+        "slot": 5,
+        "stack": {
+          "id": "revive",
+          "n": 10
+        }
+      },
+      {
+        "slot": 6,
+        "stack": {
+          "durability": 30,
+          "id": "axe",
+          "n": 1
+        }
+      },
+      {
+        "slot": 7,
+        "stack": {
+          "durability": 31,
+          "id": "pickaxe",
+          "n": 1
+        }
+      },
+      {
+        "slot": 8,
+        "stack": {
+          "id": "coin",
+          "n": 999
+        }
+      },
+      {
+        "slot": 9,
+        "stack": {
+          "durability": 22,
+          "id": "knife",
+          "n": 1
+        }
+      },
+      {
+        "slot": 10,
+        "stack": {
+          "id": "torch",
+          "n": 1
+        }
+      },
+      {
+        "slot": 11,
+        "stack": {
+          "id": "hammer",
+          "n": 1
+        }
+      },
+      {
+        "slot": 12,
+        "stack": {
+          "id": "wood",
+          "n": 1
+        }
+      },
+      {
+        "slot": 13,
+        "stack": {
+          "id": "rootstone",
+          "n": 17
+        }
+      },
+      {
+        "slot": 14,
+        "stack": {
+          "id": "orb_greater",
+          "n": 7
+        }
+      },
+      {
+        "slot": 15,
+        "stack": {
+          "id": "gale_fiber",
+          "n": 2
+        }
+      },
+      {
+        "slot": 16,
+        "stack": {
+          "id": "hide_vest",
+          "n": 1
+        }
+      },
+      {
+        "slot": 17,
+        "stack": {
+          "id": "elixir_vigour",
+          "n": 1
+        }
+      },
+      {
+        "slot": 18,
+        "stack": {
+          "id": "good_candy",
+          "n": 1
+        }
+      },
+      {
+        "slot": 19,
+        "stack": {
+          "id": "potion_large",
+          "n": 2
+        }
+      },
+      {
+        "slot": 20,
+        "stack": {
+          "id": "tm_earth_fist",
+          "n": 1
+        }
+      },
+      {
+        "slot": 21,
+        "stack": {
+          "id": "elixir_guard",
+          "n": 1
+        }
+      },
+      {
+        "slot": 22,
+        "stack": {
+          "id": "coin",
+          "n": 301
+        }
+      },
+      {
+        "slot": 23,
+        "stack": {
+          "id": "revive",
+          "n": 3
+        }
+      }
+    ],
+    "same_five_no_new_catch": true
+  },
+  "legendary_offers": [],
+  "distance_m": 19101.349726604
+}

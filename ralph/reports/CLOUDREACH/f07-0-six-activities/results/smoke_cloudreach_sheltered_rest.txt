@@ -1,0 +1,7 @@
+PASS before the shelter, the Galefoot bed pays rest XP once ([5, 5])
+PASS the sheltered bed pays rest XP twice (10, rest_xp 5)
+PASS another camp's bed still pays once (5)
+PASS save right after the night
+PASS reload
+PASS the sheltered bonus survives quit-after-sleep and reload (xp 15/15)
+CLOUDREACH SHELTERED REST OK checks=6 failures=0 []

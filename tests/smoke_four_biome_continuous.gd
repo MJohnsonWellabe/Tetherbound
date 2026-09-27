@@ -48,6 +48,8 @@ const LOOK_ALIGNMENT_TOLERANCE_DEG := 0.75
 const LOOK_ALIGNMENT_STRENGTH := 0.65
 var coverage: RefCounted
 var route_ledger: RefCounted
+## `--fight-log` / `--aftermath-capture` (F04#4/#6) observer; null without them.
+var fight_log: Node
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
@@ -164,6 +166,13 @@ func _run() -> void:
 			failures.append("route ledger could not create its evidence file")
 			_finish(false)
 			return
+	# F04#4/#6: `--fight-log` logs hits/avoidance per trainer fight (captains,
+	# Warden); `--aftermath-capture` also saves one rendered frame after each
+	# captain/Warden fight. Observer only, loaded only with a flag.
+	if OS.get_cmdline_user_args().has("--fight-log") or OS.get_cmdline_user_args().has("--aftermath-capture"):
+		fight_log = (load("res://tests/helpers/meadows_earned_fight_log_segment.gd") as GDScript).new(
+			OS.get_cmdline_user_args().has("--aftermath-capture"))
+		root.add_child(fight_log)
 	if reload_resume:
 		var resume := str(checkpoint_args["resume_source"])
 		if not await _resume_checkpoint(game, resume):
@@ -324,7 +333,18 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 
 
 func _stage_warden_to_cloudreach(game: Node) -> bool:
-	if not _accepted(await WARDEN.new().run(self, live["world"], game), "passed"):
+	var warden_result: Dictionary
+	if OS.get_cmdline_user_args().has("--m4-finale"):
+		# Opt-in M4 finale piece (tests/helpers/meadows_earned_finale_segment.gd):
+		# Warden, the full-five Veridian refuse/let-go/accept branches with
+		# saves and title Loads, then the physical Rift. Loaded only here so the
+		# default path never parses it.
+		var finale: RefCounted = (load("res://tests/helpers/meadows_earned_finale_segment.gd") as GDScript).new()
+		finale.set("save_dir", scratch)
+		warden_result = await finale.call("run", self, live["world"], game)
+	else:
+		warden_result = await WARDEN.new().run(self, live["world"], game)
+	if not _accepted(warden_result, "passed"):
 		return false
 	live["world"] = current_scene
 	reached = "cloudreach_arrived"
@@ -1045,6 +1065,8 @@ func _finish(prefix_passed: bool) -> void:
 		print("FRESH COVERAGE OBSERVATIONS %s" % JSON.stringify(coverage_result))
 	if route_ledger != null:
 		print("ROUTE LEDGER SUMMARY %s" % JSON.stringify(route_ledger.stop()))
+	if fight_log != null:
+		print("FIGHT LOG SUMMARY %s" % JSON.stringify(fight_log.call("summary")))
 	_stop_meadows_road_camera_alignment()
 	print("FRESH CAMPAIGN RESULT %s" % JSON.stringify({
 		"requested_prefix_passed": prefix_passed,

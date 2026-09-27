@@ -1060,6 +1060,7 @@ func _build_platform_retrofit() -> void:
 		if bounds.size.y <= 0.001:
 			scene.queue_free()
 			continue
+		_add_camera_occluder(scene, bounds)
 		var target_top := float(spec.get("top_y", 9.12))
 		var desired_scale := (target_top - ground) / bounds.size.y
 		var scale_min := float(spec.get("scale_min", 0.72))
@@ -1075,6 +1076,28 @@ func _build_platform_retrofit() -> void:
 		else:
 			scene.rotation.y = atan2(-_u.y, _u.x) \
 				+ deg_to_rad(float(spec.get("yaw_offset_deg", 0.0)))
+
+
+## F04 (Captain Vance's relay fight): the retrofit frames are visual-only, so
+## the combat camera's arm and clear-orbit sweep saw straight through the
+## service frame's timbers and parked the lens behind them. One box over the
+## dressing's render bounds on the camera's occlusion-only layer stops the
+## lens without adding any traversal collision (mask 0; the player's mask is
+## layer 1) -- the same shape of fix burrow_warrens.gd gives its cave skin.
+const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
+
+func _add_camera_occluder(scene: Node3D, bounds: AABB) -> void:
+	var body := StaticBody3D.new()
+	body.name = "CameraOccluder"
+	body.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = bounds.size
+	shape.shape = box
+	shape.position = bounds.get_center()
+	body.add_child(shape)
+	scene.add_child(body)
 
 
 ## Combined render bounds in a dressing scene's own coordinates. The Hall

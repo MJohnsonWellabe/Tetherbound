@@ -1,0 +1,29 @@
+import json,glob,sys
+REP=["Chop","Gather","Pick up","Mine","Strip meadow grass","Gather deadwood","Prise loose stones","Prise loose stone","Prise out rootstone","Break out rootstone","Cut river fiber","Fell an ironwood","Pick berries","Open Door","Close Door","Rest a Creature","Get up"]
+CTRL=["Put ","Call out ","Change Creature"]; HF=["vegetation:","felled:","harvest_node:"]
+def strict(beats):
+    out=[];seen=set()
+    for b in beats:
+        k=b['kind'];d=b.get('detail','')
+        if k=='offer' and (d in REP or d.startswith('Engage ') or any(d.startswith(p) for p in CTRL)): continue
+        if k=='flag_set' and any(d.startswith(p) for p in HF): continue
+        if k=='wild_within_radius':
+            sp=d.split(' ')[1] if ' ' in d else d
+            if sp in seen: continue
+            seen.add(sp)
+        out.append(b)
+    return out
+def windows(path,thr):
+    rows=[json.loads(l) for l in open(path)]
+    b=[x['beat'] for x in rows if x.get('kind')=='beat']
+    s=strict(b); res=[]; a7=[]
+    for a,c in zip(s,s[1:]):
+        m=c['path_m']-a['path_m']; t=c['active_s']-a['active_s']
+        if m>thr: res.append((round(m),c['stage'],a['detail'][:30],c['detail'][:30],[round(a['pos'][0]),round(a['pos'][2])],[round(c['pos'][0]),round(c['pos'][2])],round(a['path_m'])))
+        if t>120: a7.append(round(t,1))
+    return res,a7,b
+if __name__=='__main__':
+    thr=float(sys.argv[1])
+    for p in sys.argv[2:]:
+        res,a7,_=windows(p,thr); print(p.split('/')[-2] if '/' in p else p,'windows>',thr,len(res),'over250',sum(1 for r in res if r[0]>250),'A7',a7)
+        for r in res: print('   ',r)

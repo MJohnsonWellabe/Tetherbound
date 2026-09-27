@@ -1,2 +1,4 @@
 # Earned --from-save witness runs write here; passing runs are copied into earned*/ with run.txt.
-*/latest-run/
+**/latest-run/
+# Resumed-from-checkpoint dry runs are debugging aids, never evidence.
+**/resume-dry-run/

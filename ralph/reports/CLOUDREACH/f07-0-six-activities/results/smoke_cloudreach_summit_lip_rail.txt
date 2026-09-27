@@ -1,0 +1,3 @@
+SUMMIT LIP RAIL {"end":"(100.351, 1160.131, 5349.635)","left_through_band":true,"lowest_after_lip_walks":1159.99,"rail_built":true,"rail_panels":17,"stayed_on_terrace":true}
+SUMMIT LIP RAIL PASS
+exit 0

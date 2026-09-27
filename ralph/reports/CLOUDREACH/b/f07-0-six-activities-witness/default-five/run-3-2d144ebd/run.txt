@@ -1,0 +1,7 @@
+F07#0 ACTIVITY waycamp_shelter PASS
+F07#0 ACTIVITY windscar_couriers PASS
+F07#0 ACTIVITY aeries PASS
+F07#0 ACTIVITY three_bells PASS
+F07#0 ACTIVITY cliff_circuit PASS
+F07#0 ACTIVITY observatory_latch PASS
+F07#0 SIX ACTIVITIES PASS
