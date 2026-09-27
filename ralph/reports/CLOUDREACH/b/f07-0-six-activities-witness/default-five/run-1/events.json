@@ -1,0 +1,3062 @@
+{
+  "accelerated": true,
+  "activity_intervals": [
+    {
+      "end_seconds": 1.75,
+      "from": "meaningful_offer",
+      "from_stage": "waycamp_shelter",
+      "gap_seconds": 0.75,
+      "start_seconds": 1.0,
+      "to": "physical_interaction",
+      "to_stage": "waycamp_canvas_bundle"
+    },
+    {
+      "end_seconds": 1.93,
+      "from": "physical_interaction",
+      "from_stage": "waycamp_canvas_bundle",
+      "gap_seconds": 0.18,
+      "start_seconds": 1.75,
+      "to": "input_interact",
+      "to_stage": "waycamp_canvas_bundle"
+    },
+    {
+      "end_seconds": 2.0,
+      "from": "input_interact",
+      "from_stage": "waycamp_canvas_bundle",
+      "gap_seconds": 0.07,
+      "start_seconds": 1.93,
+      "to": "meaningful_offer",
+      "to_stage": "waycamp_canvas_bundle"
+    },
+    {
+      "end_seconds": 3.08,
+      "from": "meaningful_offer",
+      "from_stage": "waycamp_canvas_bundle",
+      "gap_seconds": 1.08,
+      "start_seconds": 2.0,
+      "to": "physical_interaction",
+      "to_stage": "waycamp_shelter_supply"
+    },
+    {
+      "end_seconds": 3.27,
+      "from": "physical_interaction",
+      "from_stage": "waycamp_shelter_supply",
+      "gap_seconds": 0.19,
+      "start_seconds": 3.08,
+      "to": "input_interact",
+      "to_stage": "waycamp_shelter_supply"
+    },
+    {
+      "end_seconds": 3.5,
+      "from": "input_interact",
+      "from_stage": "waycamp_shelter_supply",
+      "gap_seconds": 0.23,
+      "start_seconds": 3.27,
+      "to": "meaningful_offer",
+      "to_stage": "waycamp_shelter_supply"
+    },
+    {
+      "end_seconds": 3.5,
+      "from": "meaningful_offer",
+      "from_stage": "waycamp_shelter_supply",
+      "gap_seconds": 0.0,
+      "start_seconds": 3.5,
+      "to": "meaningful_offer",
+      "to_stage": "waycamp_shelter_supply"
+    },
+    {
+      "end_seconds": 3.5,
+      "from": "meaningful_offer",
+      "from_stage": "waycamp_shelter_supply",
+      "gap_seconds": 0.0,
+      "start_seconds": 3.5,
+      "to": "meaningful_offer",
+      "to_stage": "waycamp_shelter_supply"
+    },
+    {
+      "end_seconds": 4.43,
+      "from": "meaningful_offer",
+      "from_stage": "waycamp_shelter_supply",
+      "gap_seconds": 0.93,
+      "start_seconds": 3.5,
+      "to": "input_interact",
+      "to_stage": "waycamp_shelter_supply"
+    },
+    {
+      "end_seconds": 6.57,
+      "from": "input_interact",
+      "from_stage": "waycamp_shelter_supply",
+      "gap_seconds": 2.14,
+      "start_seconds": 4.43,
+      "to": "physical_interaction",
+      "to_stage": "waycamp_shelter_rest"
+    },
+    {
+      "end_seconds": 6.77,
+      "from": "physical_interaction",
+      "from_stage": "waycamp_shelter_rest",
+      "gap_seconds": 0.2,
+      "start_seconds": 6.57,
+      "to": "input_interact",
+      "to_stage": "waycamp_shelter_rest"
+    },
+    {
+      "end_seconds": 7.0,
+      "from": "input_interact",
+      "from_stage": "waycamp_shelter_rest",
+      "gap_seconds": 0.23,
+      "start_seconds": 6.77,
+      "to": "meaningful_offer",
+      "to_stage": "waycamp_shelter_rest"
+    },
+    {
+      "end_seconds": 7.57,
+      "from": "meaningful_offer",
+      "from_stage": "waycamp_shelter_rest",
+      "gap_seconds": 0.57,
+      "start_seconds": 7.0,
+      "to": "input_interact",
+      "to_stage": "waycamp_shelter_rest"
+    },
+    {
+      "end_seconds": 9.5,
+      "from": "input_interact",
+      "from_stage": "waycamp_shelter_rest",
+      "gap_seconds": 1.93,
+      "start_seconds": 7.57,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_couriers"
+    },
+    {
+      "end_seconds": 10.15,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_couriers",
+      "gap_seconds": 0.65,
+      "start_seconds": 9.5,
+      "to": "physical_interaction",
+      "to_stage": "courier_pack"
+    },
+    {
+      "end_seconds": 10.33,
+      "from": "physical_interaction",
+      "from_stage": "courier_pack",
+      "gap_seconds": 0.18,
+      "start_seconds": 10.15,
+      "to": "input_interact",
+      "to_stage": "courier_pack"
+    },
+    {
+      "end_seconds": 10.5,
+      "from": "input_interact",
+      "from_stage": "courier_pack",
+      "gap_seconds": 0.17,
+      "start_seconds": 10.33,
+      "to": "meaningful_offer",
+      "to_stage": "courier_pack"
+    },
+    {
+      "end_seconds": 10.5,
+      "from": "meaningful_offer",
+      "from_stage": "courier_pack",
+      "gap_seconds": 0.0,
+      "start_seconds": 10.5,
+      "to": "meaningful_offer",
+      "to_stage": "courier_pack"
+    },
+    {
+      "end_seconds": 11.75,
+      "from": "meaningful_offer",
+      "from_stage": "courier_pack",
+      "gap_seconds": 1.25,
+      "start_seconds": 10.5,
+      "to": "physical_interaction",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 12.07,
+      "from": "physical_interaction",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 0.32,
+      "start_seconds": 11.75,
+      "to": "input_interact",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 12.5,
+      "from": "input_interact",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 0.43,
+      "start_seconds": 12.07,
+      "to": "meaningful_offer",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 13.57,
+      "from": "meaningful_offer",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 1.07,
+      "start_seconds": 12.5,
+      "to": "input_interact",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 15.5,
+      "from": "input_interact",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 1.93,
+      "start_seconds": 13.57,
+      "to": "meaningful_offer",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 17.33,
+      "from": "meaningful_offer",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 1.83,
+      "start_seconds": 15.5,
+      "to": "input_interact",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 18.82,
+      "from": "input_interact",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 1.49,
+      "start_seconds": 17.33,
+      "to": "input_interact",
+      "to_stage": "courier_delivery"
+    },
+    {
+      "end_seconds": 21.75,
+      "from": "input_interact",
+      "from_stage": "courier_delivery",
+      "gap_seconds": 2.93,
+      "start_seconds": 18.82,
+      "to": "flight_launch",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 24.07,
+      "from": "flight_launch",
+      "from_stage": "aeries",
+      "gap_seconds": 2.32,
+      "start_seconds": 21.75,
+      "to": "flight_waypoint",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 27.25,
+      "from": "flight_waypoint",
+      "from_stage": "aeries",
+      "gap_seconds": 3.18,
+      "start_seconds": 24.07,
+      "to": "flight_waypoint",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 34.7,
+      "from": "flight_waypoint",
+      "from_stage": "aeries",
+      "gap_seconds": 7.45,
+      "start_seconds": 27.25,
+      "to": "flight_launch",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 40.23,
+      "from": "flight_launch",
+      "from_stage": "aeries",
+      "gap_seconds": 5.53,
+      "start_seconds": 34.7,
+      "to": "flight_waypoint",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 56.08,
+      "from": "flight_waypoint",
+      "from_stage": "aeries",
+      "gap_seconds": 15.85,
+      "start_seconds": 40.23,
+      "to": "flight_launch",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 60.52,
+      "from": "flight_launch",
+      "from_stage": "aeries",
+      "gap_seconds": 4.44,
+      "start_seconds": 56.08,
+      "to": "flight_waypoint",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 64.02,
+      "from": "flight_waypoint",
+      "from_stage": "aeries",
+      "gap_seconds": 3.5,
+      "start_seconds": 60.52,
+      "to": "flight_waypoint",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 70.0,
+      "from": "flight_waypoint",
+      "from_stage": "aeries",
+      "gap_seconds": 5.98,
+      "start_seconds": 64.02,
+      "to": "meaningful_offer",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 70.6,
+      "from": "meaningful_offer",
+      "from_stage": "aeries",
+      "gap_seconds": 0.6,
+      "start_seconds": 70.0,
+      "to": "input_interact",
+      "to_stage": "aeries"
+    },
+    {
+      "end_seconds": 72.5,
+      "from": "input_interact",
+      "from_stage": "aeries",
+      "gap_seconds": 1.9,
+      "start_seconds": 70.6,
+      "to": "meaningful_offer",
+      "to_stage": "three_bells"
+    },
+    {
+      "end_seconds": 73.38,
+      "from": "meaningful_offer",
+      "from_stage": "three_bells",
+      "gap_seconds": 0.88,
+      "start_seconds": 72.5,
+      "to": "physical_interaction",
+      "to_stage": "side_lower_bell"
+    },
+    {
+      "end_seconds": 73.57,
+      "from": "physical_interaction",
+      "from_stage": "side_lower_bell",
+      "gap_seconds": 0.19,
+      "start_seconds": 73.38,
+      "to": "input_interact",
+      "to_stage": "side_lower_bell"
+    },
+    {
+      "end_seconds": 74.0,
+      "from": "input_interact",
+      "from_stage": "side_lower_bell",
+      "gap_seconds": 0.43,
+      "start_seconds": 73.57,
+      "to": "meaningful_offer",
+      "to_stage": "side_lower_bell"
+    },
+    {
+      "end_seconds": 75.08,
+      "from": "meaningful_offer",
+      "from_stage": "side_lower_bell",
+      "gap_seconds": 1.08,
+      "start_seconds": 74.0,
+      "to": "physical_interaction",
+      "to_stage": "side_windscar_bell"
+    },
+    {
+      "end_seconds": 75.27,
+      "from": "physical_interaction",
+      "from_stage": "side_windscar_bell",
+      "gap_seconds": 0.19,
+      "start_seconds": 75.08,
+      "to": "input_interact",
+      "to_stage": "side_windscar_bell"
+    },
+    {
+      "end_seconds": 75.5,
+      "from": "input_interact",
+      "from_stage": "side_windscar_bell",
+      "gap_seconds": 0.23,
+      "start_seconds": 75.27,
+      "to": "meaningful_offer",
+      "to_stage": "side_windscar_bell"
+    },
+    {
+      "end_seconds": 77.17,
+      "from": "meaningful_offer",
+      "from_stage": "side_windscar_bell",
+      "gap_seconds": 1.67,
+      "start_seconds": 75.5,
+      "to": "flight_launch",
+      "to_stage": "side_windscar_bell"
+    },
+    {
+      "end_seconds": 80.72,
+      "from": "flight_launch",
+      "from_stage": "side_windscar_bell",
+      "gap_seconds": 3.55,
+      "start_seconds": 77.17,
+      "to": "flight_waypoint",
+      "to_stage": "side_windscar_bell"
+    },
+    {
+      "end_seconds": 87.43,
+      "from": "flight_waypoint",
+      "from_stage": "side_windscar_bell",
+      "gap_seconds": 6.71,
+      "start_seconds": 80.72,
+      "to": "flight_waypoint",
+      "to_stage": "side_windscar_bell"
+    },
+    {
+      "end_seconds": 91.73,
+      "from": "flight_waypoint",
+      "from_stage": "side_windscar_bell",
+      "gap_seconds": 4.3,
+      "start_seconds": 87.43,
+      "to": "physical_interaction",
+      "to_stage": "side_high_bell"
+    },
+    {
+      "end_seconds": 91.92,
+      "from": "physical_interaction",
+      "from_stage": "side_high_bell",
+      "gap_seconds": 0.19,
+      "start_seconds": 91.73,
+      "to": "input_interact",
+      "to_stage": "side_high_bell"
+    },
+    {
+      "end_seconds": 92.5,
+      "from": "input_interact",
+      "from_stage": "side_high_bell",
+      "gap_seconds": 0.58,
+      "start_seconds": 91.92,
+      "to": "meaningful_offer",
+      "to_stage": "side_high_bell"
+    },
+    {
+      "end_seconds": 93.47,
+      "from": "meaningful_offer",
+      "from_stage": "side_high_bell",
+      "gap_seconds": 0.97,
+      "start_seconds": 92.5,
+      "to": "input_interact",
+      "to_stage": "side_high_bell"
+    },
+    {
+      "end_seconds": 95.0,
+      "from": "input_interact",
+      "from_stage": "side_high_bell",
+      "gap_seconds": 1.53,
+      "start_seconds": 93.47,
+      "to": "meaningful_offer",
+      "to_stage": "cliff_circuit"
+    },
+    {
+      "end_seconds": 102.5,
+      "from": "meaningful_offer",
+      "from_stage": "cliff_circuit",
+      "gap_seconds": 7.5,
+      "start_seconds": 95.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 103.42,
+      "from": "meaningful_offer",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 0.92,
+      "start_seconds": 102.5,
+      "to": "input_interact",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 112.0,
+      "from": "input_interact",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 8.58,
+      "start_seconds": 103.42,
+      "to": "meaningful_offer",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 113.75,
+      "from": "meaningful_offer",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 1.75,
+      "start_seconds": 112.0,
+      "to": "input_interact",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 115.5,
+      "from": "input_interact",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 1.75,
+      "start_seconds": 113.75,
+      "to": "meaningful_offer",
+      "to_stage": "observatory_latch"
+    },
+    {
+      "end_seconds": 116.42,
+      "from": "meaningful_offer",
+      "from_stage": "observatory_latch",
+      "gap_seconds": 0.92,
+      "start_seconds": 115.5,
+      "to": "physical_interaction",
+      "to_stage": "observatory_latch_sighting"
+    },
+    {
+      "end_seconds": 116.7,
+      "from": "physical_interaction",
+      "from_stage": "observatory_latch_sighting",
+      "gap_seconds": 0.28,
+      "start_seconds": 116.42,
+      "to": "input_interact",
+      "to_stage": "observatory_latch_sighting"
+    },
+    {
+      "end_seconds": 117.0,
+      "from": "input_interact",
+      "from_stage": "observatory_latch_sighting",
+      "gap_seconds": 0.3,
+      "start_seconds": 116.7,
+      "to": "meaningful_offer",
+      "to_stage": "observatory_latch_sighting"
+    },
+    {
+      "end_seconds": 117.92,
+      "from": "meaningful_offer",
+      "from_stage": "observatory_latch_sighting",
+      "gap_seconds": 0.92,
+      "start_seconds": 117.0,
+      "to": "physical_interaction",
+      "to_stage": "observatory_return_latch"
+    },
+    {
+      "end_seconds": 118.1,
+      "from": "physical_interaction",
+      "from_stage": "observatory_return_latch",
+      "gap_seconds": 0.18,
+      "start_seconds": 117.92,
+      "to": "input_interact",
+      "to_stage": "observatory_return_latch"
+    },
+    {
+      "end_seconds": 118.5,
+      "from": "input_interact",
+      "from_stage": "observatory_return_latch",
+      "gap_seconds": 0.4,
+      "start_seconds": 118.1,
+      "to": "meaningful_offer",
+      "to_stage": "observatory_return_latch"
+    },
+    {
+      "end_seconds": 118.5,
+      "from": "meaningful_offer",
+      "from_stage": "observatory_return_latch",
+      "gap_seconds": 0.0,
+      "start_seconds": 118.5,
+      "to": "meaningful_offer",
+      "to_stage": "observatory_return_latch"
+    },
+    {
+      "end_seconds": 119.75,
+      "from": "meaningful_offer",
+      "from_stage": "observatory_return_latch",
+      "gap_seconds": 1.25,
+      "start_seconds": 118.5,
+      "to": "input_interact",
+      "to_stage": "observatory_return_latch"
+    }
+  ],
+  "combat_mode": "test_only_lethal",
+  "distance_m": 28904.3456092291,
+  "events": [
+    {
+      "description": "Fixture start (disclosed): chapter flags through Act II, level-30 retained five, no owned flier",
+      "flags": 27,
+      "kind": "precondition",
+      "position": "(0.0, 105.0302, -260.0)",
+      "simulated_seconds": 0.5,
+      "stage": "boot",
+      "team": [
+        {
+          "hp": 241.12,
+          "label": "Sparkit",
+          "level": 30,
+          "species_id": "sparkit",
+          "xp": 0
+        },
+        {
+          "hp": 274.0,
+          "label": "Mudsnout",
+          "level": 30,
+          "species_id": "mudsnout",
+          "xp": 0
+        },
+        {
+          "hp": 260.3,
+          "label": "Bramblebun",
+          "level": 30,
+          "species_id": "bramblebun",
+          "xp": 0
+        },
+        {
+          "hp": 328.8,
+          "label": "Terrapup",
+          "level": 30,
+          "species_id": "terrapup",
+          "xp": 0
+        },
+        {
+          "hp": 252.08,
+          "label": "Brooktail",
+          "level": 30,
+          "species_id": "brooktail",
+          "xp": 0
+        }
+      ],
+      "wall_seconds": 180.143417
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.70002293586731,
+      "kind": "meaningful_offer",
+      "label": "Recover Neri's canvas bundle (marked for Galefoot)",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_canvas_bundle/Interactable",
+      "position": "(-300.0, 145.03, 198.5)",
+      "simulated_seconds": 1.0,
+      "stage": "waycamp_shelter",
+      "wall_seconds": 180.234335
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-300.0, 145.03, 198.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 1.68,
+      "stage": "waycamp_canvas_bundle",
+      "time_scale": 1.0,
+      "wall_seconds": 180.315571
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-300.0, 145.03, 198.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_canvas_bundle/Interactable",
+      "prompt_position": "(-300.0, 145.83, 200.0)",
+      "root_distance": 1.5,
+      "root_position": "(-300.0, 145.03, 200.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 1.73,
+      "stage": "waycamp_canvas_bundle",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 180.329667
+    },
+    {
+      "id": "waycamp_canvas_bundle",
+      "kind": "physical_interaction",
+      "position": "(-300.0, 145.03, 198.5)",
+      "simulated_seconds": 1.75,
+      "stage": "waycamp_canvas_bundle",
+      "wall_seconds": 180.33872
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-300.0, 145.03, 198.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_canvas_bundle/Interactable",
+      "simulated_seconds": 1.93,
+      "stage": "waycamp_canvas_bundle",
+      "wall_seconds": 180.52185
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_canvas_bundle/Interactable",
+      "position": "(-300.0, 145.03, 198.5)",
+      "simulated_seconds": 1.93,
+      "stage": "waycamp_canvas_bundle",
+      "wall_seconds": 180.522882
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_waycamp_bundle_found",
+      "position": "(-300.0, 145.03, 198.5)",
+      "simulated_seconds": 1.93,
+      "stage": "waycamp_canvas_bundle",
+      "wall_seconds": 180.523968
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-300.0, 145.03, 198.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 1.93,
+      "stage": "waycamp_canvas_bundle",
+      "time_scale": 8.0,
+      "wall_seconds": 180.526745
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.52423703670502,
+      "kind": "meaningful_offer",
+      "label": "Raise the Galefoot shelter (4 Gale Fiber)",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_supply/Interactable",
+      "position": "(-285.0, 181.0707, 512.5)",
+      "simulated_seconds": 2.0,
+      "stage": "waycamp_canvas_bundle",
+      "wall_seconds": 180.597553
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-285.0, 180.0306, 512.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 3.0,
+      "stage": "waycamp_shelter_supply",
+      "time_scale": 1.0,
+      "wall_seconds": 180.719661
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-285.0, 180.0306, 512.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_supply/Interactable",
+      "prompt_position": "(-285.0, 180.8, 514.0)",
+      "root_distance": 1.50031161308289,
+      "root_position": "(-285.0, 180.0, 514.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 3.07,
+      "stage": "waycamp_shelter_supply",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 180.735775
+    },
+    {
+      "id": "waycamp_shelter_supply",
+      "kind": "physical_interaction",
+      "position": "(-285.0, 180.0306, 512.5)",
+      "simulated_seconds": 3.08,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 180.744658
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-285.0, 180.0306, 512.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_supply/Interactable",
+      "simulated_seconds": 3.27,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 180.93112
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_supply/Interactable",
+      "position": "(-285.0, 180.0306, 512.5)",
+      "simulated_seconds": 3.27,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 180.932325
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_waycamp_shelter_supplied",
+      "position": "(-285.0, 180.0306, 512.5)",
+      "simulated_seconds": 3.27,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 180.933283
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-285.0, 180.0306, 512.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 3.27,
+      "stage": "waycamp_shelter_supply",
+      "time_scale": 8.0,
+      "wall_seconds": 180.936433
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.21694445610046,
+      "kind": "meaningful_offer",
+      "label": "Check the sheltered creature bed",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_rest/Interactable",
+      "position": "(-276.0985, 181.0382, 523.5734)",
+      "simulated_seconds": 3.5,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 181.014001
+    },
+    {
+      "chosen": false,
+      "distance_m": 0.438156127929688,
+      "kind": "meaningful_offer",
+      "label": "Rest a Creature",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/CampCreatureBed/Interactable",
+      "position": "(-276.0985, 181.0382, 523.5734)",
+      "simulated_seconds": 3.5,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 181.01623
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.73877143859863,
+      "kind": "meaningful_offer",
+      "label": "Greet Warden Aila",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Warden Aila/Interactable",
+      "position": "(-276.0985, 181.0382, 523.5734)",
+      "simulated_seconds": 3.5,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 181.091508
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-276.0985, 180.2749, 523.5734)",
+      "reason": "creature bed assignment",
+      "simulated_seconds": 4.15,
+      "stage": "waycamp_shelter_supply",
+      "time_scale": 1.0,
+      "wall_seconds": 181.201132
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-276.0985, 180.2749, 523.5734)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/CampCreatureBed/Interactable",
+      "prompt_position": "(-276.0985, 180.6, 523.5734)",
+      "root_distance": 0.752068221569061,
+      "root_position": "(-276.5, 180.0, 523.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 4.23,
+      "stage": "waycamp_shelter_supply",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 181.220946
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-276.0985, 180.2749, 523.5734)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/CampCreatureBed/Interactable",
+      "simulated_seconds": 4.43,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 181.405033
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/CampCreatureBed/Interactable",
+      "position": "(-276.0985, 180.2749, 523.5734)",
+      "simulated_seconds": 4.43,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 181.406566
+    },
+    {
+      "kind": "assertion",
+      "label": "Controller input assigned a companion to creature bed -21",
+      "position": "(-276.0985, 180.2749, 523.5734)",
+      "simulated_seconds": 4.77,
+      "stage": "waycamp_shelter_supply",
+      "wall_seconds": 181.748313
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-276.0985, 180.2749, 523.5734)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 5.1,
+      "stage": "waycamp_shelter_supply",
+      "time_scale": 8.0,
+      "wall_seconds": 182.090418
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-274.0, 180.0304, 524.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 6.4,
+      "stage": "waycamp_shelter_rest",
+      "time_scale": 1.0,
+      "wall_seconds": 182.514727
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-274.0, 180.0304, 524.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_rest/Interactable",
+      "prompt_position": "(-274.0, 180.8, 526.0)",
+      "root_distance": 1.50030851364136,
+      "root_position": "(-274.0, 180.0, 526.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 6.55,
+      "stage": "waycamp_shelter_rest",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 182.564766
+    },
+    {
+      "id": "waycamp_shelter_rest",
+      "kind": "physical_interaction",
+      "position": "(-274.0, 180.0304, 524.5)",
+      "simulated_seconds": 6.57,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 182.574886
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-274.0, 180.0304, 524.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_rest/Interactable",
+      "simulated_seconds": 6.77,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 182.750056
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/waycamp_shelter_rest/Interactable",
+      "position": "(-274.0, 180.0304, 524.5)",
+      "simulated_seconds": 6.77,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 182.751389
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_waycamp_shelter_complete",
+      "position": "(-274.0, 180.0304, 524.5)",
+      "simulated_seconds": 6.77,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 182.752566
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-274.0, 180.0304, 524.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 6.77,
+      "stage": "waycamp_shelter_rest",
+      "time_scale": 8.0,
+      "wall_seconds": 182.756831
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.70670080184937,
+      "kind": "meaningful_offer",
+      "label": "Greet Iven",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Iven/Interactable",
+      "position": "(-290.0, 180.0306, 523.5)",
+      "simulated_seconds": 7.0,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 182.810806
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-290.0, 180.0306, 523.5)",
+      "reason": "dialogue healer_iven",
+      "simulated_seconds": 7.3,
+      "stage": "waycamp_shelter_rest",
+      "time_scale": 1.0,
+      "wall_seconds": 182.863088
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-290.0, 180.0306, 523.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Iven/Interactable",
+      "prompt_position": "(-290.0, 181.068, 526.0)",
+      "root_distance": 2.50018692016602,
+      "root_position": "(-290.0, 180.0, 526.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 7.37,
+      "stage": "waycamp_shelter_rest",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 182.888476
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-290.0, 180.0306, 523.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Iven/Interactable",
+      "simulated_seconds": 7.57,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 183.069456
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Iven/Interactable",
+      "position": "(-290.0, 180.0306, 523.5)",
+      "simulated_seconds": 7.57,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 183.071437
+    },
+    {
+      "id": "cloudreach_iven_waycamp_shelter",
+      "kind": "dialogue_finished",
+      "position": "(-290.0, 180.0306, 523.5)",
+      "simulated_seconds": 8.45,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 183.949743
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-290.0, 180.0306, 523.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 8.88,
+      "stage": "waycamp_shelter_rest",
+      "time_scale": 8.0,
+      "wall_seconds": 184.403362
+    },
+    {
+      "id": "waycamp_shelter",
+      "kind": "activity",
+      "position": "(-290.0, 180.0306, 523.5)",
+      "row": {
+        "ack": "cloudreach_iven_waycamp_shelter",
+        "ack_expected": "cloudreach_iven_waycamp_shelter",
+        "bed_assigned": true,
+        "bundle": true,
+        "fiber_spent": 4,
+        "lure": true,
+        "pass": true,
+        "payoff_rain_cover": true,
+        "region": "gate_lower_cliffs",
+        "rest": true,
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_waycamp_bundle_found",
+          "side_waycamp_shelter_supplied",
+          "side_waycamp_shelter_complete"
+        ],
+        "supply": true
+      },
+      "simulated_seconds": 8.88,
+      "stage": "waycamp_shelter_rest",
+      "wall_seconds": 184.404829
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.69982194900513,
+      "kind": "meaningful_offer",
+      "label": "Recover Neri's medicine pack",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_pack/Interactable",
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "simulated_seconds": 9.5,
+      "stage": "windscar_couriers",
+      "wall_seconds": 184.509134
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 10.1,
+      "stage": "courier_pack",
+      "time_scale": 1.0,
+      "wall_seconds": 184.554249
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_pack/Interactable",
+      "prompt_position": "(-1195.0, 420.83, 1703.0)",
+      "root_distance": 1.50000011920929,
+      "root_position": "(-1195.0, 420.03, 1703.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 10.13,
+      "stage": "courier_pack",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 184.569584
+    },
+    {
+      "id": "courier_pack",
+      "kind": "physical_interaction",
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "simulated_seconds": 10.15,
+      "stage": "courier_pack",
+      "wall_seconds": 184.587094
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_pack/Interactable",
+      "simulated_seconds": 10.33,
+      "stage": "courier_pack",
+      "wall_seconds": 184.771508
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_pack/Interactable",
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "simulated_seconds": 10.33,
+      "stage": "courier_pack",
+      "wall_seconds": 184.773227
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_courier_pack_recovered",
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "simulated_seconds": 10.33,
+      "stage": "courier_pack",
+      "wall_seconds": 184.774742
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-1195.0, 420.0304, 1701.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 10.33,
+      "stage": "courier_pack",
+      "time_scale": 8.0,
+      "wall_seconds": 184.77722
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.52085149288177,
+      "kind": "meaningful_offer",
+      "label": "Deliver the sealed medicine",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_delivery/Interactable",
+      "position": "(-298.0, 460.579, 3101.5)",
+      "simulated_seconds": 10.5,
+      "stage": "courier_pack",
+      "wall_seconds": 185.017904
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.65993809700012,
+      "kind": "meaningful_offer",
+      "label": "Greet Shelter Courier",
+      "path": "/root/CloudreachCliffs/CloudreachWorldPayoffs/shelter_courier/Shelter Courier/Interactable",
+      "position": "(-298.0, 460.579, 3101.5)",
+      "simulated_seconds": 10.5,
+      "stage": "courier_pack",
+      "wall_seconds": 185.021488
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 11.4,
+      "stage": "courier_delivery",
+      "time_scale": 1.0,
+      "wall_seconds": 185.574572
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_delivery/Interactable",
+      "prompt_position": "(-298.0, 460.83, 3103.0)",
+      "root_distance": 1.50000011920929,
+      "root_position": "(-298.0, 460.03, 3103.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 11.73,
+      "stage": "courier_delivery",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 185.786515
+    },
+    {
+      "id": "courier_delivery",
+      "kind": "physical_interaction",
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "simulated_seconds": 11.75,
+      "stage": "courier_delivery",
+      "wall_seconds": 185.798426
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_delivery/Interactable",
+      "simulated_seconds": 12.07,
+      "stage": "courier_delivery",
+      "wall_seconds": 186.046952
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/courier_delivery/Interactable",
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "simulated_seconds": 12.07,
+      "stage": "courier_delivery",
+      "wall_seconds": 186.048931
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_courier_medicine_delivered",
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "simulated_seconds": 12.07,
+      "stage": "courier_delivery",
+      "wall_seconds": 186.050765
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-298.0, 460.0304, 3101.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 12.12,
+      "stage": "courier_delivery",
+      "time_scale": 8.0,
+      "wall_seconds": 186.093034
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.5039587020874,
+      "kind": "meaningful_offer",
+      "label": "Greet Neri",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "position": "(-296.0, 181.0707, 531.5)",
+      "simulated_seconds": 12.5,
+      "stage": "courier_delivery",
+      "wall_seconds": 186.401909
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-296.0, 180.0004, 531.5)",
+      "reason": "dialogue courier_neri",
+      "simulated_seconds": 13.18,
+      "stage": "courier_delivery",
+      "time_scale": 1.0,
+      "wall_seconds": 186.730807
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-296.0, 180.0004, 531.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "prompt_position": "(-296.0, 180.93, 534.0)",
+      "root_distance": 2.5,
+      "root_position": "(-296.0, 180.0, 534.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 13.37,
+      "stage": "courier_delivery",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 186.786096
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "simulated_seconds": 13.57,
+      "stage": "courier_delivery",
+      "wall_seconds": 186.927408
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "simulated_seconds": 13.57,
+      "stage": "courier_delivery",
+      "wall_seconds": 186.930308
+    },
+    {
+      "id": "cloudreach_neri_delivery_report",
+      "kind": "dialogue_finished",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "simulated_seconds": 14.98,
+      "stage": "courier_delivery",
+      "wall_seconds": 188.35061
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-296.0, 180.0004, 531.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 15.42,
+      "stage": "courier_delivery",
+      "time_scale": 8.0,
+      "wall_seconds": 188.792514
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.17650890350342,
+      "kind": "meaningful_offer",
+      "label": "Take the couriers' thanks",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_reward_couriers_potions/Interactable",
+      "position": "(-287.77, 181.0078, 514.9207)",
+      "simulated_seconds": 15.5,
+      "stage": "courier_delivery",
+      "wall_seconds": 188.815972
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-287.77, 180.0302, 514.9207)",
+      "reason": "physical interaction",
+      "simulated_seconds": 16.92,
+      "stage": "courier_delivery",
+      "time_scale": 1.0,
+      "wall_seconds": 189.284471
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-287.77, 180.0302, 514.9207)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_reward_couriers_potions/Interactable",
+      "prompt_position": "(-288.0, 180.6, 516.0)",
+      "root_distance": 1.10399460792542,
+      "root_position": "(-288.0, 180.0, 516.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 17.12,
+      "stage": "courier_delivery",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 189.365392
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-287.77, 180.0302, 514.9207)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_reward_couriers_potions/Interactable",
+      "simulated_seconds": 17.33,
+      "stage": "courier_delivery",
+      "wall_seconds": 189.600292
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_reward_couriers_potions/Interactable",
+      "position": "(-287.77, 180.0302, 514.9207)",
+      "simulated_seconds": 17.33,
+      "stage": "courier_delivery",
+      "wall_seconds": 189.602471
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-287.77, 180.0302, 514.9207)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 17.37,
+      "stage": "courier_delivery",
+      "time_scale": 8.0,
+      "wall_seconds": 189.620912
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-296.0, 180.0004, 531.5)",
+      "reason": "dialogue courier_neri",
+      "simulated_seconds": 18.43,
+      "stage": "courier_delivery",
+      "time_scale": 1.0,
+      "wall_seconds": 189.990125
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-296.0, 180.0004, 531.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "prompt_position": "(-296.0, 180.93, 534.0)",
+      "root_distance": 2.5,
+      "root_position": "(-296.0, 180.0, 534.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 18.62,
+      "stage": "courier_delivery",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 190.055633
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "simulated_seconds": 18.82,
+      "stage": "courier_delivery",
+      "wall_seconds": 190.208585
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Neri/Interactable",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "simulated_seconds": 18.82,
+      "stage": "courier_delivery",
+      "wall_seconds": 190.211442
+    },
+    {
+      "id": "cloudreach_neri_home",
+      "kind": "dialogue_finished",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "simulated_seconds": 19.7,
+      "stage": "courier_delivery",
+      "wall_seconds": 191.096802
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-296.0, 180.0004, 531.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 20.13,
+      "stage": "courier_delivery",
+      "time_scale": 8.0,
+      "wall_seconds": 191.533961
+    },
+    {
+      "id": "windscar_couriers",
+      "kind": "activity",
+      "position": "(-296.0, 180.0004, 531.5)",
+      "row": {
+        "ack": "cloudreach_neri_home",
+        "ack_expected": "cloudreach_neri_home",
+        "chain_complete": true,
+        "delivery": true,
+        "lure": true,
+        "pack": true,
+        "pass": true,
+        "payoff_potions": 2,
+        "payoff_reward_present": true,
+        "payoff_reward_taken": true,
+        "region": "windscar_ravine (from broken_causeways)",
+        "report": "cloudreach_neri_delivery_report",
+        "report_expected": "cloudreach_neri_delivery_report",
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_courier_pack_recovered",
+          "side_courier_medicine_delivered",
+          "side_stranded_couriers_complete",
+          "cloudreach_payout:couriers_thanks"
+        ]
+      },
+      "simulated_seconds": 20.13,
+      "stage": "courier_delivery",
+      "wall_seconds": 191.536413
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(909.0, 1020.13, 2700.0)",
+      "reason": "double-jump Fly deployment",
+      "simulated_seconds": 21.3,
+      "stage": "aeries",
+      "time_scale": 1.0,
+      "wall_seconds": 191.759017
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(909.0, 1022.072, 2700.0)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 21.75,
+      "stage": "aeries",
+      "time_scale": 8.0,
+      "wall_seconds": 192.16674
+    },
+    {
+      "kind": "assertion",
+      "label": "Double-jump input deployed Fly",
+      "position": "(909.0, 1022.072, 2700.0)",
+      "simulated_seconds": 21.75,
+      "stage": "aeries",
+      "wall_seconds": 192.191601
+    },
+    {
+      "kind": "assertion",
+      "label": "Maela loaner carries the unchanged five-non-Fly team without a sixth slot",
+      "position": "(909.0, 1022.072, 2700.0)",
+      "simulated_seconds": 21.75,
+      "stage": "aeries",
+      "wall_seconds": 192.268631
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_launch",
+      "loaner": true,
+      "party_size": 5,
+      "position": "(909.0, 1022.072, 2700.0)",
+      "simulated_seconds": 21.75,
+      "stage": "aeries",
+      "stamina": 183.76,
+      "wall_seconds": 192.271479
+    },
+    {
+      "flight_seconds": 2.5,
+      "kind": "flight_waypoint",
+      "position": "(920.2081, 1049.145, 2720.377)",
+      "simulated_seconds": 24.07,
+      "stage": "aeries",
+      "stamina": 180.079999999999,
+      "state": "climb",
+      "target": "(920.0, 1055.0, 2720.0)",
+      "wall_seconds": 192.706031
+    },
+    {
+      "flight_seconds": 5.68333333333332,
+      "kind": "flight_waypoint",
+      "position": "(900.6599, 1051.879, 2700.723)",
+      "simulated_seconds": 27.25,
+      "stage": "aeries",
+      "stamina": 176.676666666664,
+      "state": "glide",
+      "target": "(900.0, 1049.145, 2700.0)",
+      "wall_seconds": 193.301573
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_landed",
+      "landing_position": "(900.9996, 1020.13, 2701.099)",
+      "position": "(900.9996, 1020.13, 2701.099)",
+      "simulated_seconds": 31.6,
+      "stage": "aeries",
+      "wall_seconds": 194.265992
+    },
+    {
+      "floor_path": "/root/CloudreachCliffs/Landmarks/HighRoostPerches/LandmarkLedge/Collision",
+      "floor_position": "(900.9996, 1020.13, 2701.099)",
+      "kind": "landing_floor",
+      "on_floor": true,
+      "position": "(900.9996, 1020.13, 2701.099)",
+      "shrine_reached": true,
+      "simulated_seconds": 31.82,
+      "stage": "aeries",
+      "state": "grounded",
+      "target": "(900.0, 1020.0, 2700.0)",
+      "wall_seconds": 194.339534
+    },
+    {
+      "kind": "assertion",
+      "label": "Collision landing at (900.0, 1020.0, 2700.0)",
+      "position": "(900.9996, 1020.13, 2701.099)",
+      "simulated_seconds": 31.82,
+      "stage": "aeries",
+      "wall_seconds": 194.357586
+    },
+    {
+      "kind": "flight_preparation_recovery",
+      "method": "Standing on verified floor; ordinary stamina regeneration",
+      "position": "(441.0, 920.0305, 4500.0)",
+      "simulated_seconds": 34.03,
+      "stage": "aeries",
+      "stamina_after": 196.009999999994,
+      "stamina_before": 183.109999999994,
+      "wall_seconds": 194.840919
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(441.0, 920.0305, 4500.0)",
+      "reason": "double-jump Fly deployment",
+      "simulated_seconds": 34.27,
+      "stage": "aeries",
+      "time_scale": 1.0,
+      "wall_seconds": 194.866558
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(441.0, 921.9724, 4500.0)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 34.7,
+      "stage": "aeries",
+      "time_scale": 8.0,
+      "wall_seconds": 195.273248
+    },
+    {
+      "kind": "assertion",
+      "label": "Double-jump input deployed Fly",
+      "position": "(441.0, 921.9724, 4500.0)",
+      "simulated_seconds": 34.7,
+      "stage": "aeries",
+      "wall_seconds": 195.275812
+    },
+    {
+      "kind": "assertion",
+      "label": "Maela loaner carries the unchanged five-non-Fly team without a sixth slot",
+      "position": "(441.0, 921.9724, 4500.0)",
+      "simulated_seconds": 34.7,
+      "stage": "aeries",
+      "wall_seconds": 195.277943
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_launch",
+      "loaner": true,
+      "party_size": 5,
+      "position": "(441.0, 921.9724, 4500.0)",
+      "simulated_seconds": 34.7,
+      "stage": "aeries",
+      "stamina": 183.76,
+      "wall_seconds": 195.279854
+    },
+    {
+      "flight_seconds": 5.71666666666665,
+      "kind": "flight_waypoint",
+      "position": "(430.164, 994.0844, 4500.0)",
+      "simulated_seconds": 40.23,
+      "stage": "aeries",
+      "stamina": 174.933333333332,
+      "state": "climb",
+      "target": "(430.0, 1000.0, 4500.0)",
+      "wall_seconds": 196.488626
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_landed",
+      "landing_position": "(430.164, 920.0302, 4500.0)",
+      "position": "(430.164, 920.0302, 4500.0)",
+      "simulated_seconds": 52.53,
+      "stage": "aeries",
+      "wall_seconds": 199.236993
+    },
+    {
+      "floor_path": "/root/CloudreachCliffs/AuthoredRoutes/UpperPlateauCircuit_Ledge4/Collision",
+      "floor_position": "(430.164, 920.03, 4500.0)",
+      "kind": "landing_floor",
+      "on_floor": true,
+      "position": "(430.164, 920.0302, 4500.0)",
+      "shrine_reached": true,
+      "simulated_seconds": 52.75,
+      "stage": "aeries",
+      "state": "grounded",
+      "target": "(430.0, 920.0, 4500.0)",
+      "wall_seconds": 199.323957
+    },
+    {
+      "kind": "assertion",
+      "label": "Collision landing at (430.0, 920.0, 4500.0)",
+      "position": "(430.164, 920.0302, 4500.0)",
+      "simulated_seconds": 52.75,
+      "stage": "aeries",
+      "wall_seconds": 199.326448
+    },
+    {
+      "kind": "flight_preparation_recovery",
+      "method": "Standing on verified floor; ordinary stamina regeneration",
+      "position": "(-411.0, 1111.096, 5650.0)",
+      "simulated_seconds": 55.52,
+      "stage": "aeries",
+      "stamina_after": 196.096666666657,
+      "stamina_before": 173.296666666656,
+      "wall_seconds": 199.860933
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-411.0, 1111.096, 5650.0)",
+      "reason": "double-jump Fly deployment",
+      "simulated_seconds": 55.65,
+      "stage": "aeries",
+      "time_scale": 1.0,
+      "wall_seconds": 199.874521
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-411.0, 1113.038, 5650.0)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 56.08,
+      "stage": "aeries",
+      "time_scale": 8.0,
+      "wall_seconds": 200.294214
+    },
+    {
+      "kind": "assertion",
+      "label": "Double-jump input deployed Fly",
+      "position": "(-411.0, 1113.038, 5650.0)",
+      "simulated_seconds": 56.08,
+      "stage": "aeries",
+      "wall_seconds": 200.296981
+    },
+    {
+      "kind": "assertion",
+      "label": "Maela loaner carries the unchanged five-non-Fly team without a sixth slot",
+      "position": "(-411.0, 1113.038, 5650.0)",
+      "simulated_seconds": 56.08,
+      "stage": "aeries",
+      "wall_seconds": 200.299361
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_launch",
+      "loaner": true,
+      "party_size": 5,
+      "position": "(-411.0, 1113.038, 5650.0)",
+      "simulated_seconds": 56.08,
+      "stage": "aeries",
+      "stamina": 183.156666666657,
+      "wall_seconds": 200.301594
+    },
+    {
+      "flight_seconds": 4.61666666666666,
+      "kind": "flight_waypoint",
+      "position": "(-419.8774, 1150.943, 5605.612)",
+      "simulated_seconds": 60.52,
+      "stage": "aeries",
+      "stamina": 177.205833333322,
+      "state": "glide",
+      "target": "(-420.0, 1145.0, 5605.0)",
+      "wall_seconds": 200.846524
+    },
+    {
+      "flight_seconds": 8.11666666666665,
+      "kind": "flight_waypoint",
+      "position": "(-419.9933, 1149.198, 5647.593)",
+      "simulated_seconds": 64.02,
+      "stage": "aeries",
+      "stamina": 173.186433333321,
+      "state": "glide",
+      "target": "(-420.0, 1150.943, 5650.0)",
+      "wall_seconds": 201.293829
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_landed",
+      "landing_position": "(-419.9994, 1110.126, 5649.78)",
+      "position": "(-419.9994, 1110.126, 5649.78)",
+      "simulated_seconds": 69.12,
+      "stage": "aeries",
+      "wall_seconds": 201.932059
+    },
+    {
+      "floor_path": "/root/CloudreachCliffs/AuthoredRoutes/SummitOverlookLoopCliffShoulders/Ridge003/Collision",
+      "floor_position": "(-419.9994, 1110.109, 5649.78)",
+      "kind": "landing_floor",
+      "on_floor": true,
+      "position": "(-419.9994, 1110.123, 5649.78)",
+      "shrine_reached": true,
+      "simulated_seconds": 69.33,
+      "stage": "aeries",
+      "state": "grounded",
+      "target": "(-420.0, 1110.0, 5650.0)",
+      "wall_seconds": 201.964121
+    },
+    {
+      "kind": "assertion",
+      "label": "Collision landing at (-420.0, 1110.0, 5650.0)",
+      "position": "(-419.9994, 1110.123, 5649.78)",
+      "simulated_seconds": 69.33,
+      "stage": "aeries",
+      "wall_seconds": 201.966985
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.5155394077301,
+      "kind": "meaningful_offer",
+      "label": "Greet Sora",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Sora/Interactable",
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "simulated_seconds": 70.0,
+      "stage": "aeries",
+      "wall_seconds": 202.059469
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "reason": "dialogue naturalist_sora",
+      "simulated_seconds": 70.37,
+      "stage": "aeries",
+      "time_scale": 1.0,
+      "wall_seconds": 202.079747
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Sora/Interactable",
+      "prompt_position": "(1100.0, 1051.02, 2950.0)",
+      "root_distance": 2.81742882728577,
+      "root_position": "(1100.0, 1050.0, 2950.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 70.4,
+      "stage": "aeries",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 202.105658
+    },
+    {
+      "kind": "input_interact",
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Sora/Interactable",
+      "simulated_seconds": 70.6,
+      "stage": "aeries",
+      "wall_seconds": 202.309434
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Sora/Interactable",
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "simulated_seconds": 70.6,
+      "stage": "aeries",
+      "wall_seconds": 202.312374
+    },
+    {
+      "id": "cloudreach_sora_aeries_complete",
+      "kind": "dialogue_finished",
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "simulated_seconds": 71.48,
+      "stage": "aeries",
+      "wall_seconds": 203.193589
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 71.92,
+      "stage": "aeries",
+      "time_scale": 8.0,
+      "wall_seconds": 203.630259
+    },
+    {
+      "id": "aeries",
+      "kind": "activity",
+      "position": "(1100.0, 1051.299, 2947.5)",
+      "row": {
+        "ack": "cloudreach_sora_aeries_complete",
+        "ack_expected": "cloudreach_sora_aeries_complete",
+        "lure": true,
+        "pass": true,
+        "payoff_messages": [
+          "Landing recorded: survey high perches",
+          "Landing recorded: survey observatory",
+          "Landing recorded: survey waterward"
+        ],
+        "region": "high_roost_sky_shrine (+ upper_cloudreach, summit_final_stronghold)",
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_aerie_high_perches_surveyed",
+          "side_aerie_observatory_surveyed",
+          "side_aeries_complete"
+        ],
+        "surveys": {
+          "survey_high_perches": {
+            "flag": "side_aerie_high_perches_surveyed",
+            "flown_and_landed": true,
+            "lure_available": true,
+            "set": true
+          },
+          "survey_observatory": {
+            "flag": "side_aerie_observatory_surveyed",
+            "flown_and_landed": true,
+            "lure_available": true,
+            "set": true
+          },
+          "survey_waterward": {
+            "flag": "side_aeries_complete",
+            "flown_and_landed": true,
+            "lure_available": true,
+            "set": true
+          }
+        }
+      },
+      "simulated_seconds": 71.92,
+      "stage": "aeries",
+      "wall_seconds": 203.634303
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.64267659187317,
+      "kind": "meaningful_offer",
+      "label": "Inspect the lower route bell",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_lower_bell/Interactable",
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "simulated_seconds": 72.5,
+      "stage": "three_bells",
+      "wall_seconds": 203.799224
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 73.25,
+      "stage": "side_lower_bell",
+      "time_scale": 1.0,
+      "wall_seconds": 203.974259
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_lower_bell/Interactable",
+      "prompt_position": "(-485.0, 338.8, 1313.0)",
+      "root_distance": 1.50565493106842,
+      "root_position": "(-485.0, 338.0, 1313.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 73.37,
+      "stage": "side_lower_bell",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 204.00686
+    },
+    {
+      "id": "side_lower_bell",
+      "kind": "physical_interaction",
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "simulated_seconds": 73.38,
+      "stage": "side_lower_bell",
+      "wall_seconds": 204.019682
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_lower_bell/Interactable",
+      "simulated_seconds": 73.57,
+      "stage": "side_lower_bell",
+      "wall_seconds": 204.181509
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_lower_bell/Interactable",
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "simulated_seconds": 73.57,
+      "stage": "side_lower_bell",
+      "wall_seconds": 204.185863
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_bell_lower_found",
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "simulated_seconds": 73.57,
+      "stage": "side_lower_bell",
+      "wall_seconds": 204.189834
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-485.0, 338.1304, 1311.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 73.57,
+      "stage": "side_lower_bell",
+      "time_scale": 8.0,
+      "wall_seconds": 204.197869
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.64267659187317,
+      "kind": "meaningful_offer",
+      "label": "Ring the Windscar bell",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_windscar_bell/Interactable",
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "simulated_seconds": 74.0,
+      "stage": "side_lower_bell",
+      "wall_seconds": 204.28572
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 75.0,
+      "stage": "side_windscar_bell",
+      "time_scale": 1.0,
+      "wall_seconds": 204.412866
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_windscar_bell/Interactable",
+      "prompt_position": "(-255.0, 500.8, 2675.0)",
+      "root_distance": 1.50565493106842,
+      "root_position": "(-255.0, 500.0, 2675.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 75.07,
+      "stage": "side_windscar_bell",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 204.432514
+    },
+    {
+      "id": "side_windscar_bell",
+      "kind": "physical_interaction",
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "simulated_seconds": 75.08,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 204.44603
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_windscar_bell/Interactable",
+      "simulated_seconds": 75.27,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 204.641969
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_windscar_bell/Interactable",
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "simulated_seconds": 75.27,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 204.645463
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_bell_windscar_rung",
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "simulated_seconds": 75.27,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 204.650384
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-255.0, 500.1304, 2673.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 75.27,
+      "stage": "side_windscar_bell",
+      "time_scale": 8.0,
+      "wall_seconds": 204.654955
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.07382273674011,
+      "kind": "meaningful_offer",
+      "label": "Ring the High Perches bell",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_high_bell/Interactable",
+      "position": "(909.0, 1020.13, 2700.0)",
+      "simulated_seconds": 75.5,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 204.746503
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(909.0, 1020.13, 2700.0)",
+      "reason": "double-jump Fly deployment",
+      "simulated_seconds": 76.62,
+      "stage": "side_windscar_bell",
+      "time_scale": 1.0,
+      "wall_seconds": 205.109173
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(909.0, 1022.072, 2700.0)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 77.17,
+      "stage": "side_windscar_bell",
+      "time_scale": 8.0,
+      "wall_seconds": 205.516056
+    },
+    {
+      "kind": "assertion",
+      "label": "Double-jump input deployed Fly",
+      "position": "(909.0, 1022.072, 2700.0)",
+      "simulated_seconds": 77.17,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 205.521202
+    },
+    {
+      "kind": "assertion",
+      "label": "Maela loaner carries the unchanged five-non-Fly team without a sixth slot",
+      "position": "(909.0, 1022.072, 2700.0)",
+      "simulated_seconds": 77.17,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 205.525454
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_launch",
+      "loaner": true,
+      "party_size": 5,
+      "position": "(909.0, 1022.072, 2700.0)",
+      "simulated_seconds": 77.17,
+      "stage": "side_windscar_bell",
+      "stamina": 183.7624,
+      "wall_seconds": 205.528559
+    },
+    {
+      "flight_seconds": 3.73333333333332,
+      "kind": "flight_waypoint",
+      "position": "(935.3311, 1045.961, 2735.445)",
+      "simulated_seconds": 80.72,
+      "stage": "side_windscar_bell",
+      "stamina": 179.2843,
+      "state": "glide",
+      "target": "(935.0, 1040.0, 2735.0)",
+      "wall_seconds": 206.57971
+    },
+    {
+      "flight_seconds": 10.4500000000001,
+      "kind": "flight_waypoint",
+      "position": "(904.1188, 1046.183, 2697.679)",
+      "simulated_seconds": 87.43,
+      "stage": "side_windscar_bell",
+      "stamina": 172.001199999997,
+      "state": "glide",
+      "target": "(906.0, 1045.961, 2700.0)",
+      "wall_seconds": 208.373478
+    },
+    {
+      "carrier": "galecrest",
+      "kind": "flight_landed",
+      "landing_position": "(905.2536, 1020.13, 2699.079)",
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "simulated_seconds": 91.22,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 209.202681
+    },
+    {
+      "floor_path": "/root/CloudreachCliffs/Landmarks/HighRoostPerches/LandmarkLedge/Collision",
+      "floor_position": "(905.2536, 1020.13, 2699.078)",
+      "kind": "landing_floor",
+      "on_floor": true,
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "shrine_reached": true,
+      "simulated_seconds": 91.43,
+      "stage": "side_windscar_bell",
+      "state": "grounded",
+      "target": "(906.0, 1020.0, 2700.0)",
+      "wall_seconds": 209.231902
+    },
+    {
+      "kind": "assertion",
+      "label": "Collision landing at (906.0, 1020.0, 2700.0)",
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "simulated_seconds": 91.43,
+      "stage": "side_windscar_bell",
+      "wall_seconds": 209.235334
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "reason": "physical interaction",
+      "simulated_seconds": 91.62,
+      "stage": "side_high_bell",
+      "time_scale": 1.0,
+      "wall_seconds": 209.263612
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_high_bell/Interactable",
+      "prompt_position": "(906.0, 1020.8, 2700.0)",
+      "root_distance": 1.19289481639862,
+      "root_position": "(906.0, 1020.0, 2700.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 91.72,
+      "stage": "side_high_bell",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 209.291509
+    },
+    {
+      "id": "side_high_bell",
+      "kind": "physical_interaction",
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "simulated_seconds": 91.73,
+      "stage": "side_high_bell",
+      "wall_seconds": 209.303589
+    },
+    {
+      "kind": "input_interact",
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_high_bell/Interactable",
+      "simulated_seconds": 91.92,
+      "stage": "side_high_bell",
+      "wall_seconds": 209.479415
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/side_high_bell/Interactable",
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "simulated_seconds": 91.92,
+      "stage": "side_high_bell",
+      "wall_seconds": 209.483293
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_three_bells_complete",
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "simulated_seconds": 91.92,
+      "stage": "side_high_bell",
+      "wall_seconds": 209.486823
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(905.2536, 1020.13, 2699.079)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 91.92,
+      "stage": "side_high_bell",
+      "time_scale": 8.0,
+      "wall_seconds": 209.493507
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.50348973274231,
+      "kind": "meaningful_offer",
+      "label": "Greet Orrin",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Orrin/Interactable",
+      "position": "(-491.0, 338.9359, 1317.5)",
+      "simulated_seconds": 92.5,
+      "stage": "side_high_bell",
+      "wall_seconds": 209.677582
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "reason": "dialogue bridgekeeper_orrin",
+      "simulated_seconds": 93.17,
+      "stage": "side_high_bell",
+      "time_scale": 1.0,
+      "wall_seconds": 209.802652
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Orrin/Interactable",
+      "prompt_position": "(-491.0, 339.068, 1320.0)",
+      "root_distance": 2.50883197784424,
+      "root_position": "(-491.0, 338.0, 1320.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 93.27,
+      "stage": "side_high_bell",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 209.835434
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Orrin/Interactable",
+      "simulated_seconds": 93.47,
+      "stage": "side_high_bell",
+      "wall_seconds": 210.006457
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Orrin/Interactable",
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "simulated_seconds": 93.47,
+      "stage": "side_high_bell",
+      "wall_seconds": 210.010431
+    },
+    {
+      "id": "cloudreach_orrin_bells_complete",
+      "kind": "dialogue_finished",
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "simulated_seconds": 94.35,
+      "stage": "side_high_bell",
+      "wall_seconds": 210.890608
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 94.78,
+      "stage": "side_high_bell",
+      "time_scale": 8.0,
+      "wall_seconds": 211.345419
+    },
+    {
+      "id": "three_bells",
+      "kind": "activity",
+      "position": "(-491.0, 338.2103, 1317.5)",
+      "row": {
+        "ack": "cloudreach_orrin_bells_complete",
+        "ack_expected": "cloudreach_orrin_bells_complete",
+        "high_bell": true,
+        "high_bell_flight": true,
+        "lower_bell": true,
+        "lure": true,
+        "pass": true,
+        "payoff_travelers": [
+          "/root/CloudreachCliffs/CloudreachWorldPayoffs/bell_courier/Bridge Courier",
+          "/root/CloudreachCliffs/CloudreachWorldPayoffs/bell_traveler/Bridge Traveler"
+        ],
+        "region": "broken_causeways -> windscar_ravine -> high_roost_sky_shrine",
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_bell_lower_found",
+          "side_bell_windscar_rung",
+          "side_three_bells_complete"
+        ],
+        "windscar_bell": true
+      },
+      "simulated_seconds": 94.78,
+      "stage": "side_high_bell",
+      "wall_seconds": 211.351564
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.00485324859619,
+      "kind": "meaningful_offer",
+      "label": "Greet Tavi",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "position": "(-177.0, 851.0707, 4100.0)",
+      "simulated_seconds": 95.0,
+      "stage": "cliff_circuit",
+      "wall_seconds": 211.446226
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-177.0, 850.0305, 4100.0)",
+      "kind": "travel_start",
+      "position": "(-177.0, 850.0305, 4100.0)",
+      "simulated_seconds": 95.45,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 211.503088
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-172.9895, 850.0308, 4094.182)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 97.08,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 211.682643
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "simulated_seconds": 98.68,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 213.273471
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 98.68,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 213.278745
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-168.864, 850.0308, 4088.182)",
+      "kind": "travel_start",
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "simulated_seconds": 98.68,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 213.282434
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 98.83,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 213.301029
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "simulated_seconds": 99.05,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 213.519505
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 99.05,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 213.525997
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-168.864, 850.0308, 4088.182)",
+      "kind": "travel_start",
+      "position": "(-168.864, 850.0308, 4088.182)",
+      "simulated_seconds": 99.05,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-177.0, 850.0, 4100.0)",
+      "wall_seconds": 213.532
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-172.6408, 850.0308, 4093.666)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 100.43,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 213.683925
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "simulated_seconds": 102.05,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-177.0, 850.0, 4100.0)",
+      "wall_seconds": 215.303042
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 102.05,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 215.30967
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "reason": "button creature_recall",
+      "simulated_seconds": 102.28,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 215.339689
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.98812103271484,
+      "kind": "meaningful_offer",
+      "label": "Challenge Tavi",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "simulated_seconds": 102.5,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 215.538175
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 102.52,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 215.569586
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "reason": "physical interaction",
+      "simulated_seconds": 103.18,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 215.661175
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "prompt_position": "(-178.5, 851.05, 4100.0)",
+      "root_distance": 3.19691896438599,
+      "root_position": "(-180.0, 850.0, 4100.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 103.22,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 215.683439
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "simulated_seconds": 103.42,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 215.875246
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "simulated_seconds": 103.42,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 215.922553
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 103.42,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 215.931978
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input started young_trainer_tavi_upper_ring",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "simulated_seconds": 103.75,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 215.987015
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.98812103271484,
+      "kind": "meaningful_offer",
+      "label": "Challenge Tavi · Circuit Mastery",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/@Node3D@6380",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "simulated_seconds": 112.0,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 217.000474
+    },
+    {
+      "coins_gained": 90,
+      "damage_seam": "test-only lethal after actual production start",
+      "evidence_scope": "mechanics_only",
+      "id": "young_trainer_tavi_upper_ring",
+      "kind": "battle_resolved",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "rounds": 3,
+      "simulated_seconds": 112.08,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "team_after": [
+        {
+          "hp": 241.12,
+          "label": "Sparkit",
+          "level": 30,
+          "species_id": "sparkit",
+          "xp": 709
+        },
+        {
+          "hp": 274.0,
+          "label": "Mudsnout",
+          "level": 30,
+          "species_id": "mudsnout",
+          "xp": 1418
+        },
+        {
+          "hp": 260.3,
+          "label": "Bramblebun",
+          "level": 30,
+          "species_id": "bramblebun",
+          "xp": 709
+        },
+        {
+          "hp": 328.8,
+          "label": "Terrapup",
+          "level": 30,
+          "species_id": "terrapup",
+          "xp": 709
+        },
+        {
+          "hp": 252.08,
+          "label": "Brooktail",
+          "level": 30,
+          "species_id": "brooktail",
+          "xp": 709
+        }
+      ],
+      "team_before": [
+        {
+          "hp": 241.12,
+          "label": "Sparkit",
+          "level": 30,
+          "species_id": "sparkit",
+          "xp": 0
+        },
+        {
+          "hp": 274.0,
+          "label": "Mudsnout",
+          "level": 30,
+          "species_id": "mudsnout",
+          "xp": 0
+        },
+        {
+          "hp": 260.3,
+          "label": "Bramblebun",
+          "level": 30,
+          "species_id": "bramblebun",
+          "xp": 0
+        },
+        {
+          "hp": 328.8,
+          "label": "Terrapup",
+          "level": 30,
+          "species_id": "terrapup",
+          "xp": 0
+        },
+        {
+          "hp": 252.08,
+          "label": "Brooktail",
+          "level": 30,
+          "species_id": "brooktail",
+          "xp": 0
+        }
+      ],
+      "wall_seconds": 217.014453
+    },
+    {
+      "kind": "assertion",
+      "label": "Production round callbacks finished young_trainer_tavi_upper_ring",
+      "position": "(-176.8148, 850.0308, 4099.728)",
+      "simulated_seconds": 112.08,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 217.020261
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "reason": "dialogue young_trainer_tavi",
+      "simulated_seconds": 113.52,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 217.169936
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "prompt_position": "(-180.0, 850.9, 4100.0)",
+      "root_distance": 2.50018620491028,
+      "root_position": "(-180.0, 850.0, 4100.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 113.55,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 217.191475
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "simulated_seconds": 113.75,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 217.374627
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "simulated_seconds": 113.75,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 217.3812
+    },
+    {
+      "id": "cloudreach_tavi_defeated",
+      "kind": "dialogue_finished",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "simulated_seconds": 114.63,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 218.27581
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 115.07,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 218.699829
+    },
+    {
+      "id": "cliff_circuit",
+      "kind": "activity",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "row": {
+        "ack": "cloudreach_tavi_defeated",
+        "ack_expected": "cloudreach_tavi_defeated",
+        "battle": true,
+        "chain_complete": true,
+        "lure": true,
+        "other_prizes_refused": true,
+        "pairs_from_fixture": true,
+        "pass": false,
+        "payoff_tm": 0,
+        "payoff_tm_item": "",
+        "prize": false,
+        "prize_id": "",
+        "prizes_before": {
+          "circuit_prize_aerial_flash": {
+            "available": false,
+            "item": "tm_aerial_flash",
+            "refusal": "None of your companions can learn that TM."
+          },
+          "circuit_prize_heavenfall": {
+            "available": false,
+            "item": "tm_heavenfall",
+            "refusal": "None of your companions can learn that TM."
+          },
+          "circuit_prize_wind_blade": {
+            "available": false,
+            "item": "tm_wind_blade",
+            "refusal": "None of your companions can learn that TM."
+          }
+        },
+        "region": "upper_cloudreach",
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_cliff_circuit_lower",
+          "side_cliff_circuit_windscar",
+          "side_cliff_circuit_complete",
+          "side_cliff_circuit_tm_chosen"
+        ],
+        "trainer_id": "young_trainer_tavi_upper_ring",
+        "trainer_ids": [
+          "young_trainer_tavi_upper_ring",
+          "young_trainer_tavi_rematch"
+        ]
+      },
+      "simulated_seconds": 115.07,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 218.704929
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.69985067844391,
+      "kind": "meaningful_offer",
+      "label": "Study Rusk's survey notes: the far-side descent's latch",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_latch_sighting/Interactable",
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "simulated_seconds": 115.5,
+      "stage": "observatory_latch",
+      "wall_seconds": 218.808005
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 116.32,
+      "stage": "observatory_latch_sighting",
+      "time_scale": 1.0,
+      "wall_seconds": 218.936744
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_latch_sighting/Interactable",
+      "prompt_position": "(-176.5, 900.83, 4725.0)",
+      "root_distance": 1.5,
+      "root_position": "(-176.5, 900.03, 4725.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 116.4,
+      "stage": "observatory_latch_sighting",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 218.961948
+    },
+    {
+      "id": "observatory_latch_sighting",
+      "kind": "physical_interaction",
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "simulated_seconds": 116.42,
+      "stage": "observatory_latch_sighting",
+      "wall_seconds": 218.978313
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_latch_sighting/Interactable",
+      "simulated_seconds": 116.7,
+      "stage": "observatory_latch_sighting",
+      "wall_seconds": 219.250258
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_latch_sighting/Interactable",
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "simulated_seconds": 116.7,
+      "stage": "observatory_latch_sighting",
+      "wall_seconds": 219.256249
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_observatory_latch_sighted",
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "simulated_seconds": 116.7,
+      "stage": "observatory_latch_sighting",
+      "wall_seconds": 219.261182
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.5, 900.0303, 4723.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 116.7,
+      "stage": "observatory_latch_sighting",
+      "time_scale": 8.0,
+      "wall_seconds": 219.273422
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.68598759174347,
+      "kind": "meaningful_offer",
+      "label": "Throw the far-side descent latch",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_return_latch/Interactable",
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "simulated_seconds": 117.0,
+      "stage": "observatory_latch_sighting",
+      "wall_seconds": 219.411915
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "reason": "physical interaction",
+      "simulated_seconds": 117.77,
+      "stage": "observatory_return_latch",
+      "time_scale": 1.0,
+      "wall_seconds": 219.585154
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_return_latch/Interactable",
+      "prompt_position": "(-515.5, 1080.8, 5299.0)",
+      "root_distance": 1.50030541419983,
+      "root_position": "(-515.5, 1080.0, 5299.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 117.9,
+      "stage": "observatory_return_latch",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 219.629574
+    },
+    {
+      "id": "observatory_return_latch",
+      "kind": "physical_interaction",
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "simulated_seconds": 117.92,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 219.645199
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_return_latch/Interactable",
+      "simulated_seconds": 118.1,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 219.800024
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/observatory_return_latch/Interactable",
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "simulated_seconds": 118.1,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 219.805295
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_observatory_latch_complete",
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "simulated_seconds": 118.1,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 219.811474
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-515.5, 1080.03, 5297.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 118.1,
+      "stage": "observatory_return_latch",
+      "time_scale": 8.0,
+      "wall_seconds": 219.820153
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.50002813339233,
+      "kind": "meaningful_offer",
+      "label": "Greet Rusk",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Rusk/Interactable",
+      "position": "(420.0, 921.0082, 4487.5)",
+      "simulated_seconds": 118.5,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 219.927162
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.08760404586792,
+      "kind": "meaningful_offer",
+      "label": "Ask Rusk about the upper defenses",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/ConversationTopics/rusk_anchor_advice",
+      "position": "(420.0, 921.0082, 4487.5)",
+      "simulated_seconds": 118.5,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 219.935548
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(420.0, 920.0004, 4487.5)",
+      "reason": "dialogue defector_rusk",
+      "simulated_seconds": 119.32,
+      "stage": "observatory_return_latch",
+      "time_scale": 1.0,
+      "wall_seconds": 220.203754
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(420.0, 920.0004, 4487.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Rusk/Interactable",
+      "prompt_position": "(420.0, 921.02, 4490.0)",
+      "root_distance": 2.5,
+      "root_position": "(420.0, 920.0, 4490.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 119.53,
+      "stage": "observatory_return_latch",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 220.295092
+    },
+    {
+      "kind": "input_interact",
+      "position": "(420.0, 920.0004, 4487.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Rusk/Interactable",
+      "simulated_seconds": 119.75,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 220.430177
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Rusk/Interactable",
+      "position": "(420.0, 920.0004, 4487.5)",
+      "simulated_seconds": 119.75,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 220.434881
+    },
+    {
+      "id": "cloudreach_rusk_observatory_latch",
+      "kind": "dialogue_finished",
+      "position": "(420.0, 920.0004, 4487.5)",
+      "simulated_seconds": 120.63,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 221.32553
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(420.0, 920.0004, 4487.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 121.07,
+      "stage": "observatory_return_latch",
+      "time_scale": 8.0,
+      "wall_seconds": 221.759137
+    },
+    {
+      "id": "observatory_latch",
+      "kind": "activity",
+      "position": "(420.0, 920.0004, 4487.5)",
+      "row": {
+        "ack": "cloudreach_rusk_observatory_latch",
+        "ack_expected": "cloudreach_rusk_observatory_latch",
+        "latch": true,
+        "lure": true,
+        "pass": true,
+        "payoff_stair": true,
+        "region": "summit_final_stronghold",
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_observatory_latch_sighted",
+          "side_observatory_latch_complete"
+        ],
+        "sighting": true,
+        "stair_absent_before": true
+      },
+      "simulated_seconds": 121.07,
+      "stage": "observatory_return_latch",
+      "wall_seconds": 221.764204
+    },
+    {
+      "flags_equal": true,
+      "flags_set_before_save": [
+        "side_waycamp_bundle_found",
+        "side_waycamp_shelter_supplied",
+        "side_waycamp_shelter_complete",
+        "side_courier_pack_recovered",
+        "side_courier_medicine_delivered",
+        "side_stranded_couriers_complete",
+        "cloudreach_payout:couriers_thanks",
+        "side_aerie_high_perches_surveyed",
+        "side_aerie_observatory_surveyed",
+        "side_aeries_complete",
+        "side_bell_lower_found",
+        "side_bell_windscar_rung",
+        "side_three_bells_complete",
+        "side_cliff_circuit_lower",
+        "side_cliff_circuit_windscar",
+        "side_cliff_circuit_complete",
+        "side_observatory_latch_sighted",
+        "side_observatory_latch_complete"
+      ],
+      "inventory_after": {
+        "potion_small": 2,
+        "tm_aerial_flash": 0,
+        "tm_heavenfall": 0,
+        "tm_wind_blade": 0
+      },
+      "inventory_before": {
+        "potion_small": 2,
+        "tm_aerial_flash": 0,
+        "tm_heavenfall": 0,
+        "tm_wind_blade": 0
+      },
+      "kind": "persistence",
+      "load_ok": true,
+      "missing_flags": [],
+      "ok": true,
+      "party_size": 5,
+      "position": "(420.0, 920.0004, 4487.5)",
+      "save_ok": true,
+      "simulated_seconds": 122.23,
+      "stage": "save_reload",
+      "wall_seconds": 223.016013
+    }
+  ],
+  "evidence_scope": "mechanics_only_test_lethal",
+  "from_save": "",
+  "leg": "",
+  "leg_completed": false,
+  "longest_dead_travel_seconds": 15.8499999999991,
+  "mechanics_route_completed": false,
+  "passed": false,
+  "recovery_choices": [],
+  "stage": "save_reload"
+}
