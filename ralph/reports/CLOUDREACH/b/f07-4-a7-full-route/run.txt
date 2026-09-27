@@ -1,0 +1,14 @@
+F07#4 A7 re-measure: tests/smoke_cloudreach_foot_regions_witness.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival --live-combat --accelerated
+run code: tb/cloudreach-b 35fc4a3d (main + tb/cloudreach 01c861e6 camp move merged; bivouac exit at the band middle, now the granted harness edit c6bc3d62)
+result: F06#1 WITNESS PASS, CONTINUOUS PASS stage=complete distance_m=14838.3, EXIT 0
+activity intervals: 284  longest: 119.266666668185  over 120 s: 0
+top intervals:
+  119.27 battle_captain_veyra_storm_anchor -> battle_captain_veyra_storm_anchor input_interact -> battle_victory at 2698.78
+  95.0 battle_keeper_maela_trial -> battle_keeper_maela_trial meaningful_offer -> meaningful_offer at 885.5
+  88.45 battle_officer_voss_summit_approach -> battle_officer_voss_summit_approach input_interact -> battle_victory at 2475.17
+  79.5 upper_anchor_east -> upper_anchor_east meaningful_offer -> meaningful_offer at 2044.5
+  68.5 lower_east_anchor -> lower_east_anchor meaningful_offer -> meaningful_offer at 418.5
+  56.0 upper_anchor_east -> upper_anchor_east meaningful_offer -> meaningful_offer at 2161.0
+  52.87 creature_relay_phase -> aftermath_overlook input_interact -> meaningful_offer at 2856.63
+  49.1 battle_tether_lieutenant_senn -> battle_tether_lieutenant_senn input_interact -> battle_victory at 688.9
+baseline before the camp move (same witness, earned): bivouac->Veyra 152.8 s (f06-1-foot-regions/earned/)

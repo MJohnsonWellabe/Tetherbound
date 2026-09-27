@@ -374,8 +374,12 @@ func _input(action: String, strength: float) -> void:
 ## east wall) back to the arena threshold: south round the wall's end and in
 ## by the feed road's gap. Witnesses that rest there call this, not
 ## `_navigate`, whose nearest-route snap aims at the loop's east leg.
+## The camp reaches the threshold only through a ~4 m band (z 5330-5332)
+## between a wall at x~126 and an 8 m lip south of z~5328
+## (tests/probe_cloudreach_summit_camp_reach.gd --from-camp=132,5342); two
+## earned runs slid off or pinned at (132,5330), so walk the band's middle.
 func _leave_summit_bivouac() -> bool:
-	for waypoint: Vector3 in [Vector3(132,1160,5330), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
+	for waypoint: Vector3 in [Vector3(132,1160,5332), Vector3(116,1160,5333), Vector3(100,1160,5350)]:
 		if not await _walk(waypoint):
 			return false
 	return true
