@@ -144,3 +144,11 @@ above.
 - **Open:** the default `--through-opening` failed once, at "natural travel did not reach and engage the tutorial Bramblebun". Its one confirming rerun passed. The cause is unexplained and was reported to Meadows.
 
 - **Unified `--resume-from` (merge with main's F02):** `--resume-from=<name>:water_arrived` always names a chapter-boundary checkpoint. A `:<boundary>` suffix or a bare name never reaches main's Meadows reload-transition resume, which only takes a dir holding `checkpoint.json`. See `../four_biome_checkpoints/PROOF.md`. `--dry-run-water-fixture` is still refused with either kind of `--resume-from`.
+
+## DRY RUN 5 (with X05's host-Wind fix merged, `tb/x05` @ 7ff64a15) — does not count
+
+`dry_run_5_with_x05_wind.log`, 3067 s, exit 1. `--dry-run-water-fixture --with-local-chains`.
+- **Earned main path, all passed:** the opening lesson, Reedhaven (paid), the Brine trial (Tovin won), Shellwatch (liberated), Tidal (Aquaryn Alpha defeated, now past the B1 stall; Swim Stone and saddle recipe earned; the same five kept).
+- **Woven chains:** Lantern **PASS** (swum), Gull **PASS** (swum), Cradle **PASS** (Otto's lead, nest Reef Stone +4, return berries +3, thanks).
+- **Stopped in** `water_earned_swimmer_preparation_segment` (saddle supply): `water:tidal_cradle:harvest:004 residency walk failed: player=(709.06, 46.27, 1548.55) target=(556.0, 6.83, 1692.0)`. The walk starts from the Tidal plateau where the Tidal segment itself leaves the trainer; the Cradle visit returned the trainer to that same spot. Root-causing is in progress.
+- **Not reached:** the swimmer catch and craft, the late main path, Deep Watch, Garden, Lastlight, and saved completion.
