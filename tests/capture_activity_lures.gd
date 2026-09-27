@@ -656,6 +656,19 @@ func _walk() -> void:
 					"while_on_road": seen_on_road, "after_deliberate_look": looked}
 				_release()
 				await _capture("lure-first-seen")
+				if seen_on_road:
+					# Spotted from the road: look at it, as a player does, companion
+					# put away so it does not stand in the view.
+					var stowed_first := false
+					if _director != null and _director.call("ally_body") != null:
+						await _press("creature_recall")
+						for i in 60:
+							await physics_frame
+						stowed_first = _director.call("ally_body") == null
+					await _face_lure()
+					await _capture("road-glance-at-first-sighting")
+					if stowed_first:
+						await _ensure_companion_out("first-sighting glance; ")
 		if frame % 10 == 0 and seen and not readable:
 			var rvis := _lure_visible()
 			if not rvis.is_empty() and bool(rvis.get("readable", false)):

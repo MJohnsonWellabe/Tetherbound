@@ -82,6 +82,7 @@ func _run() -> void:
 	var ats: Array = []
 	var grids: Array = []
 	var six := false
+	var column_grids: Array = []
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--activity="):
 			only = a.trim_prefix("--activity=")
@@ -91,6 +92,8 @@ func _run() -> void:
 			grids.append(a.trim_prefix("--grid="))
 		elif a == "--six":
 			six = true
+		elif a.begins_with("--column-grid="):
+			column_grids.append(a.trim_prefix("--column-grid="))
 	_load_roads()
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
@@ -121,6 +124,11 @@ func _run() -> void:
 	_collect_canopies()
 	if six:
 		_six_lures()
+		quit(0)
+		return
+	if not column_grids.is_empty():
+		for spec: String in column_grids:
+			_column_scan(spec)
 		quit(0)
 		return
 	for id: String in ["bram", "herd", "doss"]:
@@ -525,3 +533,47 @@ func _ang(size_m: float, d: float) -> String:
 		return "-"
 	var deg := rad_to_deg(2.0 * atan(size_m * 0.5 / d))
 	return "%.1fdeg/%.0fpx" % [deg, deg / CAMERA_VFOV_DEG * FRAME_H_PX]
+
+
+## `--column-grid=cx,cz,half,step:ex,ez,r` -- candidate signal-fire sites: for
+## each ground point in the square, a 42 m column (COLUMN_SAMPLES_M) is tested
+## against the road samples within r m of the road point (ex,ez) a walk leaves
+## the road at. Canopy discs count as blocking (the strict column). Prints
+## sites whose column any such sample sees, best first.
+func _column_scan(spec: String) -> void:
+	var halves := spec.split(":")
+	var g := halves[0].split(",")
+	var e := halves[1].split(",")
+	var cx := float(g[0]); var cz := float(g[1]); var half := float(g[2]); var step := float(g[3])
+	var exit := Vector2(float(e[0]), float(e[1])); var r := float(e[2])
+	var near_nodes := PackedVector2Array()
+	for n: Vector2 in _nodes:
+		if n.distance_to(exit) <= r:
+			near_nodes.append(n)
+	var rows: Array = []
+	var x := cx - half
+	while x <= cx + half:
+		var z := cz - half
+		while z <= cz + half:
+			var base := _ground(x, z) - Vector3.UP * BODY_M
+			var seen := 0
+			var total := 0
+			for n: Vector2 in near_nodes:
+				total += 1
+				var eye := Vector3(n.x, float(_terrain_data.call("get_height", Vector3(n.x, 0, n.y))) + EYE_M, n.y)
+				var hits := 0
+				for h: float in COLUMN_SAMPLES_M:
+					var t := base + Vector3.UP * h
+					if _clear_terrain(eye, t) and _clear_physics(eye, t) and _clear_soft(eye, t) \
+							and (_canopies.is_empty() or _clear_canopy(eye, t)):
+						hits += 1
+				if hits >= 3:
+					seen += 1
+			if seen > 0:
+				rows.append([seen, total, x, z, snappedf(Vector2(x, z).distance_to(exit), 0.1)])
+			z += step
+		x += step
+	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0] or (a[0] == b[0] and a[4] > b[4]))
+	print("[lure-column] %s near_road_samples=%d candidates_seen=%d" % [spec, near_nodes.size(), rows.size()])
+	for row: Array in rows.slice(0, 15):
+		print("[lure-column]   site (%.0f,%.0f) seen_from=%d/%d dist_from_exit=%.0fm" % [row[2], row[3], row[0], row[1], row[4]])
