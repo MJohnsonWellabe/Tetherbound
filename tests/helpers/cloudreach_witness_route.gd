@@ -187,6 +187,7 @@ func _interact(prompt: Node3D, flag: String = "", approach: bool = true) -> bool
 
 
 func _arrival_gather(id: String, item: String) -> bool:
+	if _resume_skip("gather", ""): return true
 	if skipping_to_aerie:
 		# The seeded repair already consumed the fiber; satisfy the route's
 		# own ">= 3 gathered" precondition without a second repair.
@@ -209,6 +210,7 @@ func _physical_action(id: String, flag: String, navigate: bool = true) -> bool:
 
 func _pickup(id: String) -> bool:
 	if skipping_to_aerie: return _skip("pickup", id)
+	if _resume_skip("pickup", ""): return true
 	return await super._pickup(id)
 
 
@@ -221,6 +223,7 @@ func _battle(id: String) -> bool:
 
 ## The aerie camp rest is the first real step of an aerie start.
 func _rest(id: String) -> bool:
+	if _resume_skip("rest", ""): return true
 	if skipping_to_aerie and id == AERIE_CAMP:
 		skipping_to_aerie = false
 		for tick in 60:
@@ -230,6 +233,37 @@ func _rest(id: String) -> bool:
 	elif skipping_to_aerie:
 		return _skip("rest", id)
 	return await super._rest(id)
+
+
+## Resume mode: the flights before the first incomplete flagged step were
+## already flown in the loaded save.
+func _deploy() -> bool:
+	if _resume_skip("deploy", ""): return true
+	return await super._deploy()
+
+
+func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = Vector3.INF) -> bool:
+	if _resume_skip("fly_to", ""): return true
+	return await super._fly_to(target, radius, expected_landing)
+
+
+func _land(at: Vector3) -> bool:
+	if _resume_skip("land", ""): return true
+	return await super._land(at)
+
+
+func _trial() -> bool:
+	if _resume_skip("trial", "fly_traversal_unlocked"): return true
+	return await super._trial()
+
+
+## The base route checks "Gathered 3 Gale Fiber" inline; a resumed save that
+## already spent them on the aerie repair passes that historical check.
+func _require(condition: bool, label: String) -> bool:
+	if not condition and resume_mode and not resume_walks_done and label == "Gathered 3 Gale Fiber" and _has("windscar_aerie_prepared"):
+		skipped_steps.append("resume:require:" + label)
+		return true
+	return super._require(condition, label)
 
 
 ## The flight leg ends after the return-glide landing on the aerie deck.
