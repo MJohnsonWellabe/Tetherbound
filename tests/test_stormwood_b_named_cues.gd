@@ -185,8 +185,7 @@ func test_every_exit_from_a_tell_drops_the_cue_and_the_cone() -> void:
 
 ## F10#2 C2 (coordinator interim ruling 5860078626, option (a)): a masher must
 ## not stagger the body out of its route cue before a reader can use it. Hits
-## during the cue drain poise to one point at most and never break it; the
-## first hit in the tell proper can.
+## during the cue drain no poise; the tell proper staggers as before.
 func test_a_route_cue_cannot_be_staggered() -> void:
 	var wild := _wild({"route_cue_seconds": 1.1, "telegraph": 0.8, "lunge": 5.5, "lunge_travels": true})
 	var tells := _tells(wild)
@@ -195,11 +194,11 @@ func test_a_route_cue_cannot_be_staggered() -> void:
 	assert_false(bool(wild.call("apply_poise_damage", 999.0)), "a heavy hit mid-cue does not stagger")
 	assert_false(bool(wild.call("apply_poise_damage", 999.0, true)), "nor does a forced stagger")
 	assert_false(bool(wild.call("is_staggered")))
-	assert_almost_eq(float(wild.get("_poise")), 1.0, 0.0001, "poise drains to one point, never zero")
+	assert_almost_eq(float(wild.get("_poise")), float(wild.call("_poise_max")), 0.0001, "hits during the cue drain no poise")
 	assert_almost_eq(float(wild.call("route_cue_left")), 1.1, 0.0001, "the cue keeps running")
 	wild.call("_advance_route_cue", 1.2)
 	assert_eq(tells.size(), 1, "the tell proper is announced after the cue")
-	assert_true(bool(wild.call("apply_poise_damage", 5.0)), "the next hit in the tell proper breaks it")
+	assert_true(bool(wild.call("apply_poise_damage", 999.0)), "a breaking hit in the tell proper still staggers")
 	wild.free()
 
 
