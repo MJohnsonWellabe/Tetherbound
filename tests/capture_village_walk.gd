@@ -331,7 +331,13 @@ func _run() -> void:
 
 ## `--from-title`: the opening, played, in this process's own world.
 func _play_the_opening() -> bool:
-	var opening: Dictionary = await OPENING_DRIVE.new().run(self)
+	var drive = OPENING_DRIVE.new()
+	# Stop before the tutorial catch when the drive offers it: the walk needs
+	# the opening's world, not its harness-held first fight (SHARED-FILE
+	# REQUEST on #356 for gate_a_opening_drive.gd).
+	if "stop_after_doorway" in drive:
+		drive.set("stop_after_doorway", true)
+	var opening: Dictionary = await drive.run(self)
 	for line: Variant in (opening.get("transcript", []) as Array):
 		print("[village-walk] OPENING %s" % str(line))
 	if not bool(opening.get("passed", false)):
