@@ -1,4 +1,4 @@
-extends "res://tests/smoke_cloudreach_continuous.gd"
+extends "res://tests/helpers/cloudreach_witness_route.gd"
 
 ## F06#1 witness (ACCEPTANCE §6.1 F06: "ordinary foot, Fly and loaner paths
 ## traverse all six Cloudreach regions ... do not bypass a closed gate").

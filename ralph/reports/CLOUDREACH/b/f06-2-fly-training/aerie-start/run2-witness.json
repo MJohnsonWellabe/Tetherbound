@@ -6,8 +6,8 @@
       "directions_tried": [
         "(0.0, 0.0, -1.0)"
       ],
-      "end": "(425.2911, 641.3472, 3215.919)",
-      "from": "(417.2961, 627.1937, 3249.79)",
+      "end": "(425.143, 641.3781, 3215.784)",
+      "from": "(417.2396, 627.137, 3249.786)",
       "inside_trial": true,
       "refused": true,
       "still_flying": true,
@@ -18,37 +18,39 @@
   "criterion": "F06#2",
   "denials": [
     {
-      "position": "(425.2911, 641.3805, 3215.919)",
+      "position": "(425.143, 641.4114, 3215.784)",
       "reason": "Stay inside the marked flight trial.",
       "stage": "flight_trial_start"
     },
     {
-      "position": "(439.4683, 740.3919, 3599.129)",
+      "position": "(425.143, 641.2448, 3215.751)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(439.4745, 740.9586, 3599.065)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4767, 740.092, 3599.249)",
+      "position": "(439.4872, 740.592, 3599.248)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     }
   ],
   "exhausted_fall": {
-    "anchor": "(1110.24, 1050.131, 2950.534)",
-    "controller_safe_anchor": "(1110.24, 1050.131, 2950.534)",
+    "anchor": "(1110.239, 1050.131, 2950.534)",
     "drop_below_anchor_m": 99.9974365234375,
-    "end": "(1110.257, 1050.131, 2950.534)",
-    "end_distance_to_anchor_m": 0.0174714140594006,
+    "end": "(1110.256, 1050.131, 2950.534)",
+    "end_distance_to_anchor_m": 0.0174560546875,
     "exhausted_after_frames": 8392,
-    "exhausted_at": "(972.7687, 1085.992, 2974.869)",
-    "exhaustion_cause": "stamina",
-    "flight_seconds_at_exhaustion": 140.050000000004,
+    "exhausted_at": "(972.7607, 1085.992, 2974.87)",
     "floor_path": "/root/CloudreachCliffs/Landmarks/SkyShrineHeartstone/LandmarkLedge/Collision",
     "flying_after": false,
     "hover_frames": 8392,
     "landed_elsewhere": false,
     "launch_blocker_at_landing": {
-      "at": "(1110.24, 1050.131, 2950.534)",
+      "at": "(1110.239, 1050.131, 2950.534)",
       "clear": true,
       "overlapping": []
     },
@@ -60,8 +62,7 @@
     "recovery_reasons": [
       "The wind carried you back to your last safe landing."
     ],
-    "stamina_at_exhaustion": 0.0,
-    "state_before_recovery": "exhausted"
+    "stamina_at_exhaustion_logged": true
   },
   "failure": [],
   "landings": [
@@ -69,28 +70,28 @@
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(399.834, 610.1301, 3249.38)",
+      "position": "(399.7205, 610.1301, 3248.951)",
       "stage": "flight_trial_start"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(398.9392, 610.1303, 3250.548)",
+      "position": "(398.9034, 610.1294, 3250.447)",
       "stage": "witness_sealed_upper_attempt"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(1099.138, 1051.301, 2940.579)",
+      "position": "(1098.955, 1051.301, 2940.773)",
       "stage": "mandatory_high_roost_flight"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(400.9396, 610.1301, 3250.277)",
+      "position": "(400.813, 610.1305, 3250.19)",
       "stage": "return_glide_to_grounded_counterweight"
     }
   ],
@@ -106,22 +107,22 @@
   "passed": true,
   "recoveries": [
     {
-      "position": "(1110.24, 1050.21, 2950.534)",
+      "position": "(1110.239, 1050.21, 2950.534)",
       "reason": "The wind carried you back to your last safe landing.",
       "stage": "witness_exhausted_fall"
     }
   ],
   "sealed_attempt": {
     "climb_end_y": 770.28125,
-    "closest_gap_to_box_m": 0.7509765625,
+    "closest_gap_to_box_m": 0.75244140625,
     "denials": [
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper."
     ],
-    "end": "(439.4767, 724.0733, 3599.249)",
+    "end": "(439.4872, 724.5399, 3599.248)",
     "frames_inside_sealed_box": 0,
     "on_floor": false,
-    "refused_after_frames": 1412,
+    "refused_after_frames": 1415,
     "still_flying": true,
     "target": "(450.0, 700.0, 3750.0)"
   },
