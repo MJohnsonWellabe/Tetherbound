@@ -71,10 +71,10 @@
    "chapter": "Meadows",
    "pct": 62,
    "counts": {
-    "met": 5,
-    "partial": 2,
+    "met": 8,
+    "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -127,9 +127,10 @@
     },
     {
      "text": "WORLD §3.1 route spacing and A7 measured on the same route",
-     "status": "not_started",
-     "evidence": "No spacing/A7 measurement on the earned route found",
-     "gap": "Measure on continuous route"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS-PAYOFFS/earned-bridge/hall-seed15-r41-0336cf9f.txt, ledger-seed15-r41-0336cf9f.jsonl.txt, strict-recompute-r41.txt @ tb/meadows-route d9fce875 (batch 61): one continuous seed-15 run measures route spacing and A7 together; a7_violations [], every window at most 213 m except the Home-materials trip (308 m); independent re-check MET. Shortcuts disclosed: Home-materials out-and-back over 250 m (accepted skipped sub-part, owner 13:20); harness walker, one seed, one run per content version; caches count within 40 m without line of sight (A7 passes because of the 17 placed caches); unmapped vista not detected; run stops at warden_arena_entered.",
+     "gap": "",
+     "note": "Counted at merge of batch 61."
     }
    ]
   },
@@ -470,9 +471,9 @@
    "pct": 50,
    "counts": {
     "met": 3,
-    "partial": 2,
+    "partial": 1,
     "in_progress": 0,
-    "not_started": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 1
    },
@@ -509,10 +510,11 @@
      "gap": "Work orders M1–M12 plus art assets"
     },
     {
-     "text": "Cloudreach presents no legendary offer",
-     "status": "met",
-     "evidence": "Batch 13: test_cloudreach_finale / no-legendary-offer closure 36/208 green | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "—"
+     "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
+     "status": "not_started",
+     "evidence": "Previous criterion (\"Cloudreach presents no legendary offer\") was met; wild summit Solmane replaced by tempestwing in batch 62. The owner ruling 2026-09-27 replaces it with a Veridian-style freeing and per-participant offer, not yet implemented.",
+     "gap": "Implement the tether chamber after captain_veyra_defeated, the Solmane freeing and the per-participant ceremony (reuse Meadows Veridian flow); solo plus two-peer accept/refuse, capacity and reload evidence.",
+     "note": "Owner ruling 2026-09-27; owned by the full Cloudreach run."
     }
    ]
   },
@@ -619,7 +621,7 @@
      "text": "Device profile",
      "status": "not_started",
      "evidence": "No Ally GPU profile (lane report)",
-     "gap": "Ally capture"
+     "gap": "Computer capture per owner ruling 2026-09-27 (#356 5857144944): 1920x1080 opengl3, handheld profile if present, code-blind 7-inch readability verdict; no Ally hardware needed."
     }
    ]
   },
@@ -932,7 +934,8 @@
   {
    "id": "C3",
    "status": "partial",
-   "note": "Veyra per-participant payout landed; client writes Veyra flag locally; no host/guest flight/realm rejoin witness."
+   "note": "Batch 62 two-peer run predates the owner Solmane ruling (2026-09-27): C3 now also needs Solmane freed after Veyra with per-participant offers through disconnect/reload. The run must be redone with that; F08#3, F08#4 and F08#5 still open.",
+   "integrated_run": null
   },
   {
    "id": "S1",
