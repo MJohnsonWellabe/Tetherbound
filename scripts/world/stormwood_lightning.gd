@@ -20,7 +20,10 @@ var _rng := RandomNumberGenerator.new()
 
 var _road_zones_clear := true
 var _road_afterglow: Dictionary = {}
-const ROAD_AFTERGLOW_MS := 1200
+## Game seconds (process delta), never wall clock: a slow frame or a scaled
+## clock must not end the afterglow early.
+const ROAD_AFTERGLOW_S := 1.2
+var _road_clock := 0.0
 
 func _ready() -> void:
 	world = get_parent() as Node3D
@@ -33,6 +36,7 @@ func _ready() -> void:
 		_prewarm_telegraph()
 
 func _process(delta: float) -> void:
+	_road_clock += delta
 	_sync_road_warnings()
 	if not session.is_host():
 		return
@@ -96,15 +100,14 @@ func _sync_road_warnings() -> void:
 		if is_instance_valid(_visuals[id]) and _warning_centres.has(id):
 			var at: Vector3 = _warning_centres[id]
 			zones.append(Vector4(at.x, at.z, radius, 1.0))
-	var now := Time.get_ticks_msec()
 	for id: Variant in _road_afterglow.keys():
 		var glow: Dictionary = _road_afterglow[id]
-		var left := int(glow.until_ms) - now
+		var left := float(glow.until) - _road_clock
 		if left <= 0:
 			_road_afterglow.erase(id)
 		elif zones.size() < 4:
 			var at: Vector3 = glow.at
-			zones.append(Vector4(at.x, at.z, radius, clampf(float(left) / 400.0, 0.0, 1.0)))
+			zones.append(Vector4(at.x, at.z, radius, clampf(left / 0.4, 0.0, 1.0)))
 	if zones.is_empty() and _road_zones_clear:
 		return
 	_road_zones_clear = zones.is_empty()
@@ -214,7 +217,7 @@ func _receive(event: Dictionary) -> void:
 	var landed := bolt_centre(_warning_centres.get(id), event.at)
 	# The road stays dark over the struck zone a little past impact, so its
 	# cracks do not flare out of the zone as if the strike spread (judge r3).
-	_road_afterglow[id] = {"at": landed, "until_ms": Time.get_ticks_msec() + ROAD_AFTERGLOW_MS}
+	_road_afterglow[id] = {"at": landed, "until": _road_clock + ROAD_AFTERGLOW_S}
 	_warning_centres.erase(id)
 	var hits: Dictionary = event.get("hits", {})
 	if not hits.has(session.local_peer_id()):
