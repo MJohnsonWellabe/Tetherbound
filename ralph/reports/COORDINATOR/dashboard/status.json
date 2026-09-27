@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 17:40 UTC",
+ "updated": "2026-09-27 18:25 UTC",
  "headline": [
-  "Criteria met: 78 of 101. Owner ruling: Solmane is a Veridian-style freed legendary in Cloudreach, so F08#5 reopens and C3 needs a new two-peer run. Main CI hotfix #384 in flight.",
-  "PHASE 2, owner away: full runs for Meadows, Cloudreach, Stormwood and Tidewake, plus Meadows F04 readability, F01 walks and F03 lures; Codex on F10#3 and F08#4. Lanes render locally and hand mechanical work to lower-tier subagents."
+  "Criteria met: 78 of 101 (counted at merge). Main green at e59b0c97. Owner rulings today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary (F08#5 reopened).",
+  "Phase 2, owner away: 9 Claude lanes plus Codex. Full runs checkpoint after each step and post hourly; every READY needs the full unit suite with 0 failed; lanes render locally rather than wait on Codex."
  ],
  "batches": [
   {
@@ -248,76 +248,66 @@
   {
    "name": "Batch 61",
    "sha": "pending",
-   "state": "Merged; main green",
+   "state": "Merged; main green after hotfixes #382/#384",
    "contents": "Meadows route F02#7 route spacing + A7 on one continuous route; device-profile ruling in STATE"
   },
   {
    "name": "Batch 62",
    "sha": "pending",
-   "state": "Auto-merge",
+   "state": "Merged; main green after hotfixes #382/#384",
    "contents": "Cloudreach-B card C3 two-peer co-op/aftermath run; summit wild legendary removed"
   }
  ],
  "lanes": [
   {
-   "lane": "Meadows core (F01/F04) #314",
-   "now": "F01#0 overheads + judge; herd fix landing",
-   "next": "F01#2/#3 walks; F04#7 framing"
+   "lane": "Full Meadows run (M1–M4)",
+   "now": "Continuous run attempt 3 (harness race fixed 59eea245); fight log on",
+   "next": "Checkpointed resume; F04#6 aftermath captures; READY M2 (all F02 met)"
   },
   {
-   "lane": "Meadows route (F02/F05) #286",
-   "now": "Seed-15 Hall run",
-   "next": "READY F02#3/#4; then F02#5 ledger"
+   "lane": "Full Cloudreach run (C1–C3)",
+   "now": "Solmane freeing via the Veridian flow (shared files granted)",
+   "next": "Rerun C3 two-peer with Solmane; F08#3 high-perch camera; C1 run"
   },
   {
-   "lane": "Meadows activities (F03) #289",
-   "now": "r6 lure judge; Juno/Doss acts",
-   "next": "F03#0, F03#1"
+   "lane": "Full Stormwood run (S1–S3)",
+   "now": "Continuous run with checkpoints, in Deepwood",
+   "next": "F09#3 resubmit with Bars A/B + full suite; F10#3 on Codex shape fix"
   },
   {
-   "lane": "Cloudreach (F06–F08) #311",
-   "now": "Entry fix landing in #316",
-   "next": "lower_west_anchor route fix; F07#2 re-walk"
+   "lane": "Stormwood visuals (new 18:02)",
+   "now": "Starting F10#2 fights, F10#4 matrix, F10#6 device capture",
+   "next": "Judge loops at full bar"
   },
   {
-   "lane": "Cloudreach-B #294",
-   "now": "Blocked on lower_west_anchor",
-   "next": "F06#1/#2/#3, F08#0 witnesses"
+   "lane": "Full Tidewake run (T1–T3)",
+   "now": "T1 card 13/13; clean F15#2 head",
+   "next": "READY F15#2; T1 rerun with Garden/Deep Watch rest points; F13#2/#3"
   },
   {
-   "lane": "Stormwood (F09–F11) #305",
-   "now": "F11#3 rerun on main; F11#2 migration",
-   "next": "F11#0 Marrow smoke → continuous"
+   "lane": "Tidewake fights + visuals (new 18:02)",
+   "now": "Re-capturing Tess, Calder, Venn, Nerissa locally",
+   "next": "F14#0, F14#1, F13#5 judge loops"
   },
   {
-   "lane": "Stormwood-B #303",
-   "now": "F10#0 chains; F10#3 lightning read",
-   "next": "minimap arch glyph"
+   "lane": "Meadows F04 readability",
+   "now": "Fight glades + scatter re-bake (holds bake lock)",
+   "next": "F04#0–3, #7 renders and full-bar judge"
   },
   {
-   "lane": "Tidewake (F12–F15) #296",
-   "now": "F14#0 damage tunable",
-   "next": "terrain_height helper; Otto/Halen move; Aquaryn"
+   "lane": "Meadows F01 walks",
+   "now": "Day/night walks; told to render locally",
+   "next": "Judge; READY F01#2/#3"
   },
   {
-   "lane": "Tidewake-B #310",
-   "now": "4 criteria landing in #316",
-   "next": "F13#3 (after Otto/Halen)"
+   "lane": "Meadows F03 lures",
+   "now": "Doss sightline, Vault seam light, smoke flake fix",
+   "next": "Six-lure full-bar judge; READY F03#0"
   },
   {
-   "lane": "X05 co-op #292",
-   "now": "Camera + invite gaps landing in #316",
-   "next": "F14#3 participants; quit hook"
-  },
-  {
-   "lane": "VIS (judge-only) #304",
-   "now": "Judging Cloudreach/Stormwood/Tidewake",
-   "next": "Feed the Codex queue"
-  },
-  {
-   "lane": "Codex (visual)",
-   "now": "V1 dock lanterns landing in #316",
-   "next": "Next Codex queue row"
+   "lane": "Codex (desktop)",
+   "now": "F08#4 Cloudreach settlements/cliffs (clouds, grass iterating); Cloudfang colourway",
+   "next": "CODEX ASSET requests from lanes"
   }
  ],
  "decisions": [
