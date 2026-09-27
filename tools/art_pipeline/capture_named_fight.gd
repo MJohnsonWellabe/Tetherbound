@@ -26,6 +26,10 @@ var _container: Node = null
 var _resolve_won := false
 var _after_frames := 16
 var _face_trainer := false
+## `--attack`: tap the pad's combat_quick every in-fight interval, so the
+## frames can witness the player's own hits landing (F04#4). Without it the
+## capture only waits, and every frame shows the opponent's bar full.
+var _attack := false
 
 func _run() -> void:
 	var ids: PackedStringArray = []
@@ -42,6 +46,8 @@ func _run() -> void:
 			_resolve_won = true
 		elif arg == "--face-trainer":
 			_face_trainer = true
+		elif arg == "--attack":
+			_attack = true
 		elif arg.begins_with("--after-frames="):
 			_after_frames = maxi(1, int(arg.trim_prefix("--after-frames=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
@@ -108,6 +114,8 @@ func _capture_one() -> bool:
 		return false
 	print("fight live vs %s" % _tid)
 	for i in _frames:
+		if _attack and bool(_manager.call("is_fighting")):
+			await _pad_tap("combat_quick")
 		await _wait_interval()
 		await _save("%02d" % (i + 1))
 		if not bool(_manager.call("is_fighting")):
@@ -287,3 +295,36 @@ func _look_at_trainer() -> void:
 	if to.length() < 0.2:
 		return
 	_rig.set("yaw", atan2(-to.x, -to.z))
+
+
+## One pad tap of `action` through its own joypad binding. Each edge spans a
+## process frame so a slow renderer cannot flush press and release together.
+func _pad_tap(action: String) -> void:
+	var press: InputEvent = null
+	for configured in InputMap.action_get_events(action):
+		if configured is InputEventJoypadButton:
+			var b := InputEventJoypadButton.new()
+			b.button_index = (configured as InputEventJoypadButton).button_index
+			b.pressed = true
+			press = b
+			break
+		if configured is InputEventJoypadMotion:
+			var m := InputEventJoypadMotion.new()
+			m.axis = (configured as InputEventJoypadMotion).axis
+			m.axis_value = (configured as InputEventJoypadMotion).axis_value
+			press = m
+			break
+	if press == null:
+		print("NO PAD BINDING for %s" % action)
+		return
+	Input.parse_input_event(press)
+	await process_frame
+	for _i in 3:
+		await physics_frame
+	var release := press.duplicate() as InputEvent
+	if release is InputEventJoypadButton:
+		(release as InputEventJoypadButton).pressed = false
+	else:
+		(release as InputEventJoypadMotion).axis_value = 0.0
+	Input.parse_input_event(release)
+	await process_frame
