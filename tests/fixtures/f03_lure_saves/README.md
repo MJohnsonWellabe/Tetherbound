@@ -1,6 +1,6 @@
 # F03 lure-walk saves (gzip)
 
-These are copies of the real ordinary-play saves under `ralph/reports/`, gzipped so that `render.yml` (whose checkout leaves out `ralph/`) can load them. The walker's receipt sha256 is of the inflated JSON, so it matches the original.
+These are copies of the real ordinary-play saves under `ralph/reports/` (except where disclosed below as derived or seeded), gzipped so that `render.yml` (whose checkout leaves out `ralph/`) can load them. The walker's receipt sha256 is of the inflated JSON, so it matches the original.
 
 | file | source |
 |---|---|
