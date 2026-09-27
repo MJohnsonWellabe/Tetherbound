@@ -193,6 +193,16 @@ func _arrival_gather(id: String, item: String) -> bool:
 		# own ">= 3 gathered" precondition without a second repair.
 		if game.inventory.count("gale_fiber") < 3: game.inventory.add("gale_fiber", 3 - game.inventory.count("gale_fiber"))
 		return _skip("gather", id)
+	# The base route taps `hotbar_1` for the knife (the fixture's layout). An
+	# earned save binds its own bar (c1_arrival: axe, pickaxe, knife, ...), so
+	# press the slot that actually holds the knife, by real input, first.
+	if str(game.items.gathered_with(item)) == "knife" and str(game.equipped_tool) != "knife":
+		var slot: int = game.hotbar_slot_of("knife")
+		if slot >= 0:
+			var resource: Node3D = world.get_node("CloudreachResources/" + id)
+			var prompt: Node3D = resource.find_child("Interactable", true, false)
+			if prompt != null and not await _walk(prompt.global_position + Vector3(0, -0.8, -1.5), 0.35): return false
+			await _tap("hotbar_%d" % (slot + 1))
 	return await super._arrival_gather(id, item)
 
 
