@@ -1,0 +1,120 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_started
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_i_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_ii_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact captain_veyra_defeated
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_winds_restored
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_heart_cloudreach_earned
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_key_stormwood
+  PASS: chapter-entry fixture accepted completed Cloudreach fact stormward_route_revealed
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_complete
+  PASS: chapter-entry fixture carries sparkit in the completed Cloudreach party
+  PASS: chapter-entry fixture carries mudsnout in the completed Cloudreach party
+  PASS: chapter-entry fixture carries bramblebun in the completed Cloudreach party
+  PASS: chapter-entry fixture carries terrapup in the completed Cloudreach party
+  PASS: chapter-entry fixture carries brooktail in the completed Cloudreach party
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_started)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_i_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_ii_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (captain_veyra_defeated)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_winds_restored)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_heart_cloudreach_earned)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_key_stormwood)
+  PASS: chapter-entry fixture contains no Stormwood progress (stormward_route_revealed)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_complete)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:89)
+STORMWOOD BUILD shell=false elapsed_ms=218 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=496 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=745 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=750 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=752 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=753 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=753 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=753 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=755 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=755 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1027 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1050 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1050 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=94 reorder[7 layers]=31
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=149 mark_harvestable=16 group_by_model=34 register_mesh_assets=18 build_batches_total=874 (of which harvest_points[11099 nodes]=716, initial_collision_stream[11161 solid]=39) update_mmis=166
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: production router accepted the completed-Cloudreach Stormwood entry
+  PASS: production Stormwood scene became current
+  PASS: production router settled in Stormwood
+  PASS: authored Stormwood arrival settled its pending entry
+  PASS: wrote the chapter-entry save to disk at the Stormwood arrival
+ENTRY SAVE /tmp/claude-0/dryrun/xdg6/godot/app_userdata/Tetherbound/storm_run6_1f292b92/slot_0.json sha256=86bb6fdab65595c226881ca4175d3915213bcdb0d244276883cb94c2829dc552
+ENTRY SAVE /tmp/claude-0/dryrun/xdg6/godot/app_userdata/Tetherbound/storm_run6_1f292b92/worlds/slot-0/world.json sha256=27c6088bd4dad0f10af1d53eb30a2dcbb902214b78276a442ab89a8258aad0e6
+ENTRY SAVE /tmp/claude-0/dryrun/xdg6/godot/app_userdata/Tetherbound/storm_run6_1f292b92/characters/stormwood-continuous-solo/character.json sha256=b0ed9f604fda7797a59e7ba177759dc87672e9d0f55630107aac885f5731ef98
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot Waycamp arrival from=(-300.0, 32.27173, 180.0) target=(-350.0, 30.16094, 450.0) distance_m=274.6 budget_frames=21967
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot Waycamp arrival elapsed_ms=8924 walked_frames=3284 player=(-349.6704, 30.12791, 448.2468)
+STORMWOOD CONTINUOUS — CHECKPOINT: ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Hesk's Long Storm account stance from=(-349.6704, 30.12791, 448.2468) target=(-350.0, 30.18008, 447.5) distance_m=0.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Hesk's Long Storm account stance elapsed_ms=1089 walked_frames=363 player=(-349.9791, 30.23269, 446.809)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Tamsin's Break lesson stance from=(-350.0265, 30.16481, 448.5954) target=(-300.0, 26.42247, 347.5) distance_m=112.8 budget_frames=9023
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Tamsin's Break lesson stance elapsed_ms=3808 walked_frames=1424 player=(-300.2688, 26.41838, 348.0851)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot lightning shelter from=(-300.0491, 26.43713, 347.6073) target=(-325.0, 29.25002, 466.0) distance_m=121.0 budget_frames=9679
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot lightning shelter elapsed_ms=3536 walked_frames=1449 player=(-324.6986, 29.22726, 464.5499)
+STORMWOOD CONTINUOUS — CHECKPOINT: WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod clearing leg 1 from=(-325.0474, 29.27155, 466.2214) target=(-350.0, 30.16094, 450.0) distance_m=29.8 budget_frames=2380
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod clearing leg 1 elapsed_ms=1171 walked_frames=362 player=(-348.3225, 30.01927, 451.088)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod clearing leg 2 from=(-348.3225, 30.01927, 451.088) target=(-650.0, 20.82785, 830.0) distance_m=484.3 budget_frames=38747
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod clearing leg 2 elapsed_ms=16808 walked_frames=5817 player=(-648.801, 20.92098, 828.4827)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to first charged Stormglass node stance from=(-648.801, 20.92098, 828.4827) target=(-762.0, 27.28783, 893.0) distance_m=130.3 budget_frames=10423
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to first charged Stormglass node stance elapsed_ms=3634 walked_frames=1565 player=(-761.4167, 27.22254, 892.6706)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to second charged Stormglass node stance from=(-762.2369, 27.30167, 893.131) target=(-738.0, 25.38799, 877.0) distance_m=29.1 budget_frames=2329
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to second charged Stormglass node stance elapsed_ms=734 walked_frames=362 player=(-738.5164, 25.44347, 877.3414)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED the real six-Stormglass cost for both ends of pair A
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod road return from=(-738.1244, 25.40635, 877.0812) target=(-650.0, 20.82785, 830.0) distance_m=99.9 budget_frames=7993
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod road return elapsed_ms=2707 walked_frames=1194 player=(-651.7081, 20.77008, 830.9116)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_ashfoot relight stance from=(-651.7081, 20.77008, 830.9116) target=(-350.0, 28.76447, 503.0) distance_m=445.6 budget_frames=35647
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_ashfoot relight stance elapsed_ms=16860 walked_frames=5369 player=(-350.3542, 29.03016, 503.5099)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_ashfoot relight stance from=(-348.8734, 29.03016, 501.4486) target=(-350.0, 29.09796, 497.45) distance_m=4.2 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_ashfoot relight stance elapsed_ms=150 walked_frames=52 player=(-349.8205, 29.03018, 498.0864)
+ERROR: STORMWOOD CONTINUOUS SEGMENT: a_ashfoot relight press activated competing provider /root/Stormwood/Vegetation/@Node3D@4222/Interactable#446324288945
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/smoke_stormwood_continuous.gd:1631)
+       [1] _activate_node (res://tests/smoke_stormwood_continuous.gd:1334)
+       [2] _tap (res://tests/smoke_stormwood_continuous.gd:1600)
+STORMWOOD CONTINUOUS — ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — GATHERED the real six-Stormglass cost for both ends of pair A
+F11 WITNESS STEP FAIL prefix: arrival through Ondra's arch recipe wall=114.8s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+F11 WITNESS TOOLS after prefix: knife x1 axe x1 pickaxe x1 hotbar=["knife", "axe", "pickaxe", "", ""]
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=0 warnings=0 damage=0.0
+stormwood continuous FAIL: a_ashfoot relight press activated competing provider /root/Stormwood/Vegetation/@Node3D@4222/Interactable#446324288945
