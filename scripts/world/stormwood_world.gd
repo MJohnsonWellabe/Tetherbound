@@ -11,8 +11,6 @@ const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
-## The Outer Works approach causeway's foot (x, z); see `_build_landmark_masses`.
-const APPROACH_FOOT := Vector2(-86.0, 5350.0)
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
@@ -327,14 +325,7 @@ func _build_landmark_masses() -> void:
 	tree.simulation_only = simulation_only
 	add_child(tree)
 	tree.build()
-	# F09#1 relay blocker B2: the approach's foot sits 14 m east of the rod
-	# station so the raised causeway clears Officer Kestrel's NPC and trainer
-	# seats (-100, 5358 / 5390), which stood under the old line; it runs due
-	# north to the ring edge at the same 13.4% grade, never below the ground.
-	var approach_x := APPROACH_FOOT.x
-	var edge_x := approach_x - base.x
-	tree.add_approach(Vector3(approach_x,ground_height_at(approach_x,APPROACH_FOOT.y)+0.2,APPROACH_FOOT.y),
-		Vector3(edge_x,6,-sqrt(STORMHEART.OUTER_WORKS_OUTER_RADIUS*STORMHEART.OUTER_WORKS_OUTER_RADIUS-edge_x*edge_x)))
+	tree.add_approach(Vector3(-100,ground_height_at(-100,5350)+0.2,5350))
 	# The landmark/map seat and Ranger Pax intentionally stay on the road at
 	# (-320,240). The old 5x tree occupied that exact point, collapsing the
 	# production spring arm into its 30m-wide trunk/crown. Put the presentation

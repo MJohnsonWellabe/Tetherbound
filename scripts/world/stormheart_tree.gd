@@ -9,10 +9,6 @@ const RAMP_RADIUS := 26.0
 const RAMP_WIDTH := 8.0
 const RAMP_TURNS := 4.0
 const RAMP_SEGMENTS := 384
-const APPROACH_WIDTH := 10.0
-## Deeper than the approach's tallest clearance over the ground (6.2 m at the
-## deck edge), so the closed sides always meet the terrain.
-const APPROACH_SKIRT_DEPTH := 7.5
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 var simulation_only := false
 var _wood: StandardMaterial3D
@@ -52,24 +48,10 @@ func build() -> void:
 func core_anchor() -> Vector3:
 	return global_position+Vector3(0,CORE_HEIGHT+0.2,-25)
 
-func add_approach(start: Vector3, end: Vector3 = Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS)) -> void:
+func add_approach(start: Vector3) -> void:
 	# Meet the deck at its outer edge: ending farther inside leaves the
-	# rising ramp below the ring's vertical fascia at first contact. `end` is
-	# local and must lie on the ring's outer edge.
-	var from := to_local(start)
-	_ramp("OuterWorksApproach",from,end,APPROACH_WIDTH)
-	# F09#1 relay blocker B2: the deck stands 6 m up, so the straight ramp runs
-	# up to 6.2 m over the ground with an open underside a player walked into
-	# and wedged. Close it: both sides and the deck end drop past the deepest
-	# gap into the ground, so the approach is a raised causeway, not a bridge.
-	var side := Vector3(end.z-from.z,0,from.x-end.x).normalized()*APPROACH_WIDTH*0.5
-	var down := Vector3.DOWN*APPROACH_SKIRT_DEPTH
-	var vertices := PackedVector3Array()
-	var uv := PackedVector2Array()
-	for s in [side,-side]:
-		_quad(vertices,uv,from+s,end+s,end+s+down,from+s+down)
-	_quad(vertices,uv,end-side,end+side,end+side+down,end-side+down)
-	_surface("OuterWorksApproachSkirt",vertices,uv,true)
+	# rising ramp below the ring's vertical fascia at first contact.
+	_ramp("OuterWorksApproach",to_local(start),Vector3(0,6,-OUTER_WORKS_OUTER_RADIUS),10)
 
 func ascent_point(fraction: float) -> Vector3:
 	var t := clampf(fraction,0,1)
@@ -146,7 +128,7 @@ func _quad(vertices: PackedVector3Array,uv: PackedVector2Array,a: Vector3,b: Vec
 		vertices.append(p)
 		uv.append(Vector2(p.x,p.z))
 
-func _surface(id: String,vertices: PackedVector3Array,uv: PackedVector2Array,both_sides: bool = false) -> void:
+func _surface(id: String,vertices: PackedVector3Array,uv: PackedVector2Array) -> void:
 	var mesh := ArrayMesh.new()
 	var arrays: Array = []
 	arrays.resize(Mesh.ARRAY_MAX)
@@ -163,10 +145,7 @@ func _surface(id: String,vertices: PackedVector3Array,uv: PackedVector2Array,bot
 	body.name = id
 	add_child(body)
 	var collider := CollisionShape3D.new()
-	var shape := mesh.create_trimesh_shape()
-	# A wall must stop a body from either side.
-	shape.backface_collision = both_sides
-	collider.shape = shape
+	collider.shape = mesh.create_trimesh_shape()
 	body.add_child(collider)
 	if not simulation_only:
 		var visual := MeshInstance3D.new()
