@@ -88,5 +88,5 @@ func _arm_hit(length: float) -> String:
 		return "none"
 	var c := h.collider as CollisionObject3D
 	var layer := c.collision_layer if c != null else 0
-	return "%s@%.2fm layer=%d" % [str(_world.get_path_to(h.collider)) if h.collider is Node else "?",
-		from.distance_to(h.position), layer]
+	return "%s@%.2fm layer=%d at=%s pivot=%s trainer=%s" % [str(_world.get_path_to(h.collider)) if h.collider is Node else "?",
+		from.distance_to(h.position), layer, str(h.position), str(from), str(_trainer.global_position)]
