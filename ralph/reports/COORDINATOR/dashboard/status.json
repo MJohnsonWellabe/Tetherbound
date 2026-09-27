@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 17:00 UTC",
+ "updated": "2026-09-27 17:40 UTC",
  "headline": [
-  "Criteria met: 79 of 101; main green at 61ab468b after hotfixes #380/#382. Batch 62: Cloudreach card C3 two-peer integrated run.",
+  "Criteria met: 78 of 101. Owner ruling: Solmane is a Veridian-style freed legendary in Cloudreach, so F08#5 reopens and C3 needs a new two-peer run. Main CI hotfix #384 in flight.",
   "PHASE 2, owner away: full runs for Meadows, Cloudreach, Stormwood and Tidewake, plus Meadows F04 readability, F01 walks and F03 lures; Codex on F10#3 and F08#4. Lanes render locally and hand mechanical work to lower-tier subagents."
  ],
  "batches": [
