@@ -1,0 +1,64 @@
+MEADOWS_C2C3 warrens_guardian terrapup MASHER L9 runs=24 win=1.00 med_lead=0.642 lead_faint=0.00 wipe=0.00 max_hit=0.122 tell=[0.85,1.10] med_s=26.2 stalled=0
+MEADOWS_C2C3 warrens_guardian terrapup READER L9 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.10] med_s=33.0 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian terrapup PASS
+MEADOWS_C2C3 warrens_guardian ripplet MASHER L9 runs=24 win=1.00 med_lead=0.320 lead_faint=0.00 wipe=0.00 max_hit=0.122 tell=[0.85,1.10] med_s=13.8 stalled=0
+MEADOWS_C2C3 warrens_guardian ripplet READER L9 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.10] med_s=20.2 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian ripplet PASS
+MEADOWS_C2C3 warrens_guardian galewisp MASHER L9 runs=24 win=0.12 med_lead=1.000 lead_faint=0.88 wipe=0.00 max_hit=0.238 tell=[0.85,1.10] med_s=15.9 stalled=0
+MEADOWS_C2C3 warrens_guardian galewisp READER L9 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.10] med_s=33.1 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian galewisp PASS
+MEADOWS_C2C3 relay_captain terrapup MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=0.92 wipe=0.00 max_hit=0.105 tell=[0.80,0.90] med_s=47.7 stalled=0
+MEADOWS_C2C3 relay_captain terrapup READER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.145 tell=[0.80,0.90] med_s=100.1 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain terrapup FAIL -- masher lead faint 0.92 < 1.00; masher wipe 0.00 < 0.25
+MEADOWS_C2C3 relay_captain ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.169 tell=[0.80,0.90] med_s=42.2 stalled=0
+MEADOWS_C2C3 relay_captain ripplet READER L12 runs=24 win=1.00 med_lead=0.740 lead_faint=0.00 wipe=0.00 max_hit=0.103 tell=[0.80,0.90] med_s=85.4 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain ripplet FAIL -- masher wipe 0.00 < 0.25
+MEADOWS_C2C3 relay_captain galewisp MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.198 tell=[0.80,0.90] med_s=41.8 stalled=0
+MEADOWS_C2C3 relay_captain galewisp READER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.199 tell=[0.80,0.90] med_s=80.7 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain galewisp FAIL -- masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_riverwatch terrapup MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.140 tell=[0.80,0.90] med_s=71.5 stalled=0
+MEADOWS_C2C3 captain_riverwatch terrapup READER L12 runs=24 win=1.00 med_lead=0.058 lead_faint=0.00 wipe=0.00 max_hit=0.109 tell=[0.80,0.90] med_s=112.0 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch terrapup FAIL -- masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_riverwatch ripplet MASHER L12 runs=24 win=1.00 med_lead=0.839 lead_faint=0.00 wipe=0.00 max_hit=0.112 tell=[0.80,0.90] med_s=43.2 stalled=0
+MEADOWS_C2C3 captain_riverwatch ripplet READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.90] med_s=71.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch ripplet FAIL -- masher lead faint 0.00 < 1.00; masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_riverwatch galewisp MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=0.58 wipe=0.00 max_hit=0.190 tell=[0.80,0.90] med_s=43.0 stalled=0
+MEADOWS_C2C3 captain_riverwatch galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.90] med_s=65.8 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch galewisp FAIL -- masher lead faint 0.58 < 1.00; masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_field terrapup MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.094 tell=[0.80,0.90] med_s=62.1 stalled=0
+MEADOWS_C2C3 captain_field terrapup READER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.130 tell=[0.80,0.90] med_s=106.9 stalled=0
+MEADOWS_C2C3_VERDICT captain_field terrapup FAIL -- masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_field ripplet MASHER L15 runs=24 win=1.00 med_lead=0.655 lead_faint=0.00 wipe=0.00 max_hit=0.092 tell=[0.80,0.90] med_s=42.6 stalled=0
+MEADOWS_C2C3 captain_field ripplet READER L15 runs=24 win=1.00 med_lead=0.580 lead_faint=0.00 wipe=0.00 max_hit=0.092 tell=[0.80,0.90] med_s=73.1 stalled=0
+MEADOWS_C2C3_VERDICT captain_field ripplet FAIL -- masher lead faint 0.00 < 1.00; masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_field galewisp MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.177 tell=[0.80,0.90] med_s=53.3 stalled=0
+MEADOWS_C2C3 captain_field galewisp READER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.177 tell=[0.80,0.90] med_s=89.9 stalled=0
+MEADOWS_C2C3_VERDICT captain_field galewisp FAIL -- masher wipe 0.00 < 0.25
+MEADOWS_C2C3 captain_ridge terrapup MASHER L15 runs=24 win=1.00 med_lead=0.718 lead_faint=0.00 wipe=0.00 max_hit=0.087 tell=[0.40,0.90] med_s=51.0 stalled=0
+MEADOWS_C2C3 captain_ridge terrapup READER L15 runs=24 win=1.00 med_lead=0.945 lead_faint=0.21 wipe=0.00 max_hit=0.083 tell=[0.40,0.90] med_s=117.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge terrapup FAIL -- masher lead faint 0.00 < 1.00; masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 captain_ridge ripplet MASHER L15 runs=24 win=1.00 med_lead=0.714 lead_faint=0.00 wipe=0.00 max_hit=0.108 tell=[0.40,0.90] med_s=44.3 stalled=0
+MEADOWS_C2C3 captain_ridge ripplet READER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.108 tell=[0.40,0.90] med_s=89.2 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge ripplet FAIL -- masher lead faint 0.00 < 1.00; masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 captain_ridge galewisp MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=0.79 wipe=0.00 max_hit=0.166 tell=[0.40,0.90] med_s=44.3 stalled=0
+MEADOWS_C2C3 captain_ridge galewisp READER L15 runs=24 win=1.00 med_lead=0.871 lead_faint=0.04 wipe=0.00 max_hit=0.106 tell=[0.40,0.90] med_s=88.0 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge galewisp FAIL -- masher lead faint 0.79 < 1.00; masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 stronghold_elite terrapup MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.137 tell=[0.40,0.90] med_s=82.1 stalled=0
+MEADOWS_C2C3 stronghold_elite terrapup READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=0.67 wipe=0.00 max_hit=0.095 tell=[0.40,0.90] med_s=159.5 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite terrapup FAIL -- masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 stronghold_elite ripplet MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.137 tell=[0.40,0.90] med_s=64.6 stalled=0
+MEADOWS_C2C3 stronghold_elite ripplet READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.101 tell=[0.40,0.90] med_s=135.1 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite ripplet FAIL -- masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 stronghold_elite galewisp MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.148 tell=[0.40,0.90] med_s=79.8 stalled=0
+MEADOWS_C2C3 stronghold_elite galewisp READER L17 runs=24 win=1.00 med_lead=0.818 lead_faint=0.04 wipe=0.00 max_hit=0.099 tell=[0.40,0.90] med_s=99.0 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite galewisp FAIL -- masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 warden_aldis terrapup MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.194 tell=[0.40,1.10] med_s=110.5 stalled=0
+MEADOWS_C2C3 warden_aldis terrapup READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.086 tell=[0.40,1.10] med_s=187.1 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis terrapup FAIL -- masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 warden_aldis ripplet MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.193 tell=[0.40,1.10] med_s=74.9 stalled=0
+MEADOWS_C2C3 warden_aldis ripplet READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.116 tell=[0.40,1.10] med_s=158.6 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis ripplet FAIL -- masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 warden_aldis galewisp MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.335 tell=[0.40,1.10] med_s=110.8 stalled=0
+MEADOWS_C2C3 warden_aldis galewisp READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.159 tell=[0.40,1.10] med_s=148.5 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis galewisp FAIL -- masher wipe 0.00 < 0.25; C3 tell 0.40 < 0.80
+MEADOWS_C2C3 done: 21 rows, 18 failing rows, 1008 runs, 0 errors
