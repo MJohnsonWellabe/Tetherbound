@@ -30,6 +30,9 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V15 | shared look | Golden-hour fog density 0.0016 | `data/config/art.json` times.golden | open |
 | V16 | shared look | South Bridge gully slope rock: probe first, then re-apply 26b7216d (reverted in b864c1830) | `tools/probe_south_bridge_gully.gd` | open |
 | V17 | C2–C4 | Cloudreach, Stormwood and Tidewake region audits not yet judged; the VIS lane is judging them (read-only) and adds its findings here | §C2–C4 | open |
+| V18 | F10#2 | Stormwood named fights: every tell is the same non-directional magenta ring at the attacker's feet; no fight shows facing, a safe side or an exit, and a heavy tell looks like a normal one (code-blind judge, `ralph/reports/STORMWOOD/b/f10_2/JUDGE_ANSWERS.txt` (#332)). Lunge lanes for Hollows, Glass Field and the Hall Guardian are enabled by logic on #332; ring shape/colour, heavy-tell look and exit cues remain. | `scripts/creatures/wild_creature.gd` telegraph visuals, `combat.json` telegraph | open |
+| V19 | F10#2 | Named-fight identity: five fights read as one dark flower meadow; Crown glass, hall architecture, pool edge and glass field are not in frame at the fight camera; Hollows and Glass Field alphas share the Voltarach body and read as the same fight (code-blind judge, `ralph/reports/STORMWOOD/b/f10_2/JUDGE_ANSWERS.txt` (#332)) | named arenas in `data/config/stormwood_encounters.json` positions/clearings; creature identity via X04 | open |
+| V20 | F10#2 | Fight readability: the player creature (Sparkit) is small, low-contrast and often under the left TEAM panel or frame edge; one tan hit-burst is used for both sides so who hit whom is unclear (code-blind judge, `ralph/reports/STORMWOOD/b/f10_2/JUDGE_ANSWERS.txt` (#332)) | fight camera framing / HUD layout (X03), hit VFX | open |
 
 ## How to reproduce
 
