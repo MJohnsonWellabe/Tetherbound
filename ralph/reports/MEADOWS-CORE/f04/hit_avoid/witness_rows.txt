@@ -1,0 +1,49 @@
+trainer captain_riverwatch found under Trainers
+ground under captain_riverwatch after 11 frames at y=-1.90 (trainer y=-2.05)
+fight live vs captain_riverwatch
+row captain_riverwatch strike=1 move=quick tell=0.85s policy=stand outcome=hit damage=24.5 gap_tell=4.62 gap_strike=4.60 moved=0.00 reach=7.39 cone=90 action=1 arena_off=2.50
+row captain_riverwatch strike=2 move=quick tell=0.85s policy=dodge outcome=hit damage=26.4 gap_tell=5.72 gap_strike=6.87 moved=1.30 reach=7.39 cone=90 action=0 arena_off=2.72
+row captain_riverwatch strike=3 move=quick tell=0.85s policy=stand outcome=hit damage=23.1 gap_tell=6.89 gap_strike=6.73 moved=0.00 reach=7.39 cone=90 action=2 arena_off=5.35
+row captain_riverwatch strike=4 move=quick tell=0.85s policy=dodge_side outcome=hit damage=22.2 gap_tell=6.87 gap_strike=6.70 moved=0.16 reach=7.39 cone=90 action=0 arena_off=5.56
+row captain_riverwatch strike=5 move=quick tell=0.85s policy=stand outcome=hit damage=26.5 gap_tell=6.89 gap_strike=6.89 moved=0.00 reach=7.39 cone=90 action=2 arena_off=5.54
+row captain_riverwatch strike=6 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=6.87 gap_strike=9.59 moved=2.90 reach=7.39 cone=90 action=0 arena_off=5.74
+row captain_riverwatch strike=7 move=quick tell=0.85s policy=stand outcome=hit damage=25.2 gap_tell=6.88 gap_strike=6.71 moved=0.00 reach=7.39 cone=90 action=2 arena_off=10.42
+row captain_riverwatch strike=8 move=quick tell=0.85s policy=dodge_side outcome=hit damage=22.9 gap_tell=6.84 gap_strike=6.40 moved=2.81 reach=7.39 cone=90 action=0 arena_off=10.63
+trainer captain_field found under Trainers
+ground under captain_field after 9 frames at y=-1.65 (trainer y=-1.43)
+fight live vs captain_field
+row captain_field strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=10.9 gap_tell=4.60 gap_strike=4.58 moved=0.00 reach=6.76 cone=90 action=1 arena_off=2.50
+row captain_field strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=4.70 gap_strike=7.78 moved=3.14 reach=6.76 cone=90 action=0 arena_off=2.78
+row captain_field strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=11.4 gap_tell=6.26 gap_strike=5.81 moved=0.00 reach=6.76 cone=90 action=2 arena_off=7.84
+row captain_field strike=4 move=quick tell=0.90s policy=dodge_side outcome=hit damage=10.8 gap_tell=5.58 gap_strike=5.40 moved=0.25 reach=6.76 cone=90 action=0 arena_off=7.89
+row captain_field strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=12.9 gap_tell=5.09 gap_strike=5.04 moved=0.00 reach=6.76 cone=90 action=1 arena_off=7.81
+row captain_field strike=6 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=4.97 gap_strike=8.24 moved=3.39 reach=6.76 cone=90 action=0 arena_off=7.90
+row captain_field strike=7 move=quick tell=0.90s policy=stand outcome=hit damage=11.3 gap_tell=6.23 gap_strike=5.85 moved=0.00 reach=6.76 cone=90 action=1 arena_off=11.00
+row captain_field strike=8 move=quick tell=0.90s policy=dodge_side outcome=hit damage=11.5 gap_tell=6.22 gap_strike=5.73 moved=0.84 reach=6.76 cone=90 action=0 arena_off=11.00
+trainer captain_ridge found under Trainers
+ground under captain_ridge after 9 frames at y=4.84 (trainer y=4.87)
+fight live vs captain_ridge
+row captain_ridge strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=21.0 gap_tell=4.63 gap_strike=4.62 moved=0.00 reach=6.65 cone=90 action=1 arena_off=2.50
+row captain_ridge strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=5.53 gap_strike=8.53 moved=2.96 reach=6.65 cone=90 action=0 arena_off=2.64
+row captain_ridge strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=20.2 gap_tell=6.10 gap_strike=5.68 moved=0.00 reach=6.65 cone=90 action=1 arena_off=7.32
+row captain_ridge strike=4 move=quick tell=0.90s policy=dodge_side outcome=miss damage=0.0 gap_tell=6.10 gap_strike=6.83 moved=2.16 reach=6.65 cone=90 action=0 arena_off=7.47
+row captain_ridge strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=22.0 gap_tell=6.14 gap_strike=5.73 moved=0.00 reach=6.65 cone=90 action=2 arena_off=9.98
+row captain_ridge strike=6 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.13 gap_strike=6.76 moved=1.18 reach=6.65 cone=90 action=0 arena_off=10.16
+row captain_ridge strike=7 move=quick tell=0.90s policy=stand outcome=hit damage=22.6 gap_tell=6.10 gap_strike=5.69 moved=0.00 reach=6.65 cone=90 action=1 arena_off=11.00
+row captain_ridge strike=8 move=quick tell=0.90s policy=dodge_side outcome=hit damage=20.2 gap_tell=6.08 gap_strike=5.70 moved=3.19 reach=6.65 cone=90 action=0 arena_off=11.00
+trainer warden_aldis found under WardenTrainer
+ground under warden_aldis after 0 frames at y=6.17 (trainer y=6.17)
+fight live vs warden_aldis
+row warden_aldis strike=1 move=quick tell=0.85s policy=stand outcome=hit damage=23.9 gap_tell=4.61 gap_strike=4.60 moved=0.00 reach=7.47 cone=90 action=1 arena_off=2.50
+row warden_aldis strike=2 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=5.61 gap_strike=8.62 moved=2.95 reach=7.47 cone=90 action=0 arena_off=2.62
+row warden_aldis strike=3 move=quick tell=0.85s policy=stand outcome=hit damage=24.8 gap_tell=6.92 gap_strike=6.76 moved=0.00 reach=7.47 cone=90 action=2 arena_off=7.31
+row warden_aldis strike=4 move=quick tell=0.85s policy=dodge_side outcome=hit damage=26.9 gap_tell=6.94 gap_strike=6.95 moved=2.83 reach=7.47 cone=90 action=0 arena_off=7.44
+row warden_aldis strike=5 move=quick tell=0.85s policy=stand outcome=hit damage=24.1 gap_tell=6.95 gap_strike=6.78 moved=0.00 reach=7.47 cone=90 action=1 arena_off=6.65
+row warden_aldis strike=6 move=quick tell=0.85s policy=dodge outcome=miss damage=0.0 gap_tell=6.91 gap_strike=9.60 moved=2.85 reach=7.47 cone=90 action=0 arena_off=6.77
+row warden_aldis strike=7 move=quick tell=0.85s policy=stand outcome=hit damage=23.8 gap_tell=6.93 gap_strike=6.77 moved=0.00 reach=7.47 cone=90 action=1 arena_off=11.00
+row warden_aldis strike=8 move=quick tell=0.85s policy=dodge_side outcome=hit damage=26.6 gap_tell=6.95 gap_strike=6.79 moved=2.83 reach=7.47 cone=90 action=0 arena_off=11.00
+PASS captain_riverwatch: player_hits=13 stand_strikes_landed=4 dodges_avoided=1/4 strikes=8
+PASS captain_field: player_hits=10 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS captain_ridge: player_hits=11 stand_strikes_landed=4 dodges_avoided=3/4 strikes=8
+PASS warden_aldis: player_hits=9 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving
