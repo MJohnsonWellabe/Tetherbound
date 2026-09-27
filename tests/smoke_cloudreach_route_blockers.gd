@@ -99,17 +99,19 @@ func _run() -> void:
 		var wild_prefix := str(leg.get("wild_prefix", ""))
 		var named_present := wild_prefix.is_empty()
 		var absent_prefix := str(leg.get("absent_prefix", ""))
+		var absent_seen := false
 		for seen: String in _wilds_near.get(leg.id, []):
-			named_present = named_present or seen.begins_with(wild_prefix)
+			if not wild_prefix.is_empty() and seen.begins_with(wild_prefix):
+				named_present = true
 			# B3 (#340): roost_perches now lives on High Roost ground; its
 			# bodies must no longer stand on the Upper Summit road at all.
 			if not absent_prefix.is_empty() and seen.begins_with(absent_prefix):
-				named_present = false
-		var ok := reached and not failed and _nearest <= PASS_NEAR_M and _detours == 0 and named_present
+				absent_seen = true
+		var ok := reached and not failed and _nearest <= PASS_NEAR_M and _detours == 0 and named_present and not absent_seen
 		all_ok = all_ok and ok
 		results.append({"id": leg.id, "ok": ok, "reached_target": reached, "nearest_to_blocker_m": snappedf(_nearest, 0.1),
 			"walked_m": snappedf(distance_m - before, 0.1), "wild_bodies_within_15m": _wilds_near.get(leg.id, []),
-			"named_wilds_present": named_present, "mobile_obstacle_detours": _detours,
+			"named_wilds_present": named_present, "absent_wilds_seen": absent_seen, "mobile_obstacle_detours": _detours,
 			"player": str(player.global_position)})
 		await _frames(10)
 	var skipped: Variant = world.get("shelves_skipped_for_routes")

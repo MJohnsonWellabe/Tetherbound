@@ -3,6 +3,8 @@
   "activation_distance_m": 130.0,
   "trainer_prompt_radius_m": 4.2,
   "wild_respawn_seconds": 180.0,
+  "wild_site_max_resolution_m": 45.0,
+  "_why_wild_site_max_resolution_0926": "cloudreach_world_runtime.gd::resolve_wild_sites drops a ground wild site whose resolved home lies more than this far (XZ) from its authored point instead of binding it to the nearest route anywhere (#340).",
   "behavior_profiles": {
     "scout": {
       "telegraph": 0.8,
