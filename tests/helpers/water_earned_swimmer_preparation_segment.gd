@@ -120,9 +120,25 @@ func _run_live(outgoing: int) -> void:
 		if not await _care._recover_at_camp("before earned swimmer catch", "water_camp_tidal_cradle"):
 			_fail("Ordinary Tidal recovery failed: %s" % str(_care.failures))
 			return
-	var target := _nearest_dry_swimmer()
-	if target == null:
+	var candidates := _dry_swimmers_by_reach()
+	if candidates.is_empty():
 		_fail("No currently resident living dry ordinary compatible swimmer; no spawn or reroll permitted")
+		return
+	# DRY RUN 6: the nearest swimmer stood on a ledge ~10 m above the supply
+	# rows and the straight engage drive pressed into the cliff. Rank resident
+	# swimmers by horizontal distance plus climb, walk planned legs (real
+	# stick input), and move on to the next resident one if no dry route
+	# reaches it. Nothing is spawned or rerolled.
+	var target: Node3D
+	for candidate: Node3D in candidates.slice(0, 3):
+		if await planned_approach(_harvest, world, player, candidate.global_position, "swimmer " + candidate.name):
+			target = candidate
+			break
+		print("WATER SWIMMER unreachable resident %s: %s" % [candidate.name, str(_harvest.failures)])
+		_harvest._stop_stick()
+		_harvest.failures.clear()
+	if target == null:
+		_fail("No resident dry swimmer reachable by a planned walk")
 		return
 	swimmer = target.get("instance")
 	print("WATER SWIMMER chosen real body=%s species=%s level=%d position=%s" % [
@@ -235,9 +251,10 @@ static func planned_approach(harvest: RefCounted, actual_world: Node3D, body: No
 			return false
 	return true
 
-func _nearest_dry_swimmer() -> Node3D:
-	var selected: Node3D
-	var distance := INF
+## Resident dry compatible swimmers, nearest first by horizontal distance
+## plus a climb penalty (a ledge above the trainer is a detour, not a step).
+func _dry_swimmers_by_reach() -> Array:
+	var ranked: Array = []
 	for body: Node3D in director.wild_creatures():
 		if not is_instance_valid(body) or not body.is_visible_in_tree() or not body.is_alive() \
 				or not body.has_meta("water_site_id") or body.has_meta("water_named_encounter") \
@@ -245,11 +262,10 @@ func _nearest_dry_swimmer() -> Node3D:
 				or not SWIMMER.compatible_swimmer(str(body.species_id)) \
 				or float(world.water_depth_at(body.global_position)) > 0.0:
 			continue
-		var separation := player.global_position.distance_squared_to(body.global_position)
-		if separation < distance:
-			selected = body
-			distance = separation
-	return selected
+		var offset := body.global_position - player.global_position
+		ranked.append([Vector2(offset.x, offset.z).length() + 4.0 * absf(offset.y), body])
+	ranked.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+	return ranked.map(func(entry: Array) -> Node3D: return entry[1])
 
 func _mount_caught() -> bool:
 	for _slot in game.party.size():

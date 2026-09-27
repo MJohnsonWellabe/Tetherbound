@@ -7,7 +7,9 @@ extends SceneTree
 ## SWIMMER segment's own walk to harvest:004 residency is run, first as the
 ## unplanned straight residency walk (the DRY RUN 5 path), then with the
 ## segment's planned approach.
-##   godot --headless --path . --script tests/probe_tidewake_b_swimmer_supply_walk.gd [-- --planned-only]
+## --swimmer: DRY RUN 6 stall instead - posed where the supply walk ended,
+## ~10 m below the chosen mosshell's ledge; walks the planned legs to its spot.
+##   godot --headless --path . --script tests/probe_tidewake_b_swimmer_supply_walk.gd [-- --planned-only|--swimmer]
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const HARVEST := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const PREP := preload("res://tests/helpers/water_earned_swimmer_preparation_segment.gd")
@@ -50,6 +52,9 @@ func _run() -> void:
 			row = candidate
 	var target := Vector3(float(row.position[0]), 0.0, float(row.position[2]))
 	target.y = float(world.call("ground_height_at", target.x, target.z)) + 0.1
+	if OS.get_cmdline_user_args().has("--swimmer"):
+		await _swimmer_probe(world, player, camera)
+		return
 	var ok := true
 	for start: Vector3 in STARTS:
 		var plan: Dictionary = POCKET.plan_route(world, Vector2(start.x, start.z), Vector2(target.x, target.z))
@@ -77,6 +82,32 @@ func _run() -> void:
 			player.global_position, str(harvest.failures), Time.get_ticks_msec() - started])
 		if mode == "planned":
 			ok = arrived
+	print("PROBE RESULT %s" % ("PASS" if ok else "FAIL"))
+	quit(0 if ok else 1)
+
+
+## DRY RUN 6 poses: player end of the straight engage drive and the chosen
+## water_tidal_cradle_wild_009_0 residency (log dry_run_6_swimmer_walk_fix).
+func _swimmer_probe(world: Node3D, player: CharacterBody3D, camera: Node3D) -> void:
+	var start := Vector3(561.6458, 0.0, 1329.651)
+	var target := Vector3(567.7319, 12.76485, 1318.479)
+	start.y = float(world.call("ground_height_at", start.x, start.z)) + 0.3
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	print("POSE probe swimmer start -> %s target %s ground=%.2f" % [start, target,
+		float(world.call("ground_height_at", target.x, target.z))])
+	await _frames(30)
+	var harvest: RefCounted = HARVEST.new()
+	harvest.setup(self, world, player, camera)
+	var arrived: bool = await PREP.planned_approach(harvest, world, player, target, "swimmer")
+	var last := false
+	if arrived:
+		last = await harvest._walk_to(target, "swimmer last leg", 2.5)
+	harvest._stop_stick()
+	var dy := absf(player.global_position.y - target.y)
+	var ok := arrived and last and dy < 3.0
+	print("PROBE swimmer planned=%s last=%s player=%s dy=%.2f failures=%s" % [arrived, last,
+		player.global_position, dy, str(harvest.failures)])
 	print("PROBE RESULT %s" % ("PASS" if ok else "FAIL"))
 	quit(0 if ok else 1)
 
