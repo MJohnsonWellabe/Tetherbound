@@ -1,9 +1,8 @@
 {
- "updated": "2026-09-27 13:50 UTC",
+ "updated": "2026-09-27 14:30 UTC",
  "headline": [
-  "Criteria met: 75 of 101 (counted at merge). F14#2 landed in batch 57. Batches 54-55 confirmed by green full CI 5709.",
-  "Next: F10#5 (re-check MET) lands after that CI. Stormwood-B pushed the fight-camera fix (95664d01), which unblocks F10#2, F14#0, F14#1 and the F04 Meadows fights. Every lane is on a coding task; renders go to the owner's desktop GPU via Codex.",
-  "Rules: relaxed proofs with disclosed shortcuts; independent re-check per close; one render per lane; a green full CI on main flips a criterion."
+  "Criteria met: 76 of 101 (counted at merge). F09#0 lands in batch 58.",
+  "WIND-DOWN (owner, 14:07): lanes finish in-flight items only, post FINAL, then are archived. Archived: VIS, Stormwood, Stormwood-B."
  ],
  "batches": [
   {
@@ -227,6 +226,12 @@
    "sha": "",
    "state": "Merged",
    "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
+  },
+  {
+   "name": "Batch 58",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Stormwood F09#0 earned six-region traversal"
   }
  ],
  "lanes": [

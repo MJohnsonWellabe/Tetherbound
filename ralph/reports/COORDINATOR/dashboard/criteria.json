@@ -520,8 +520,8 @@
    "chapter": "Stormwood",
    "pct": 60,
    "counts": {
-    "met": 3,
-    "partial": 2,
+    "met": 4,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -530,9 +530,10 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "partial",
-     "evidence": "Earned rootgate/marrow/dynamo segment tests and smoke_stormwood_continuous (main); not from C3 save",
-     "gap": "Earned run from Cloudreach handoff"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f09_0/{README.md,run9-d3414e84.txt} @ tb/stormwood a7ea3647 (batch 58): continuous earned run across all six regions from the Cloudreach-boundary fixture, no Stormwood flag/position fixtures; independent re-check MET. Shortcuts disclosed: start is Cloudreach-boundary fixture (not an earned C3 save); party five fresh L44 spawns; knife/axe/pickaxe granted; accelerated clock 8x; harness-driven input and fights; helper routing B1-B8.",
+     "gap": "",
+     "note": "Counted at merge of batch 58 (count-at-merge rule)."
     },
     {
      "text": "Lawful Surge phases, grounded paths, rod safe radii",
