@@ -36,7 +36,8 @@
       "alpha": {
         "nickname": "Alpha Galecrest",
         "aura_light": {"energy": 1.6, "range": 9.0, "colour": "#ffd479", "y": 2.2},
-        "nameplate": {"y": 4.4, "font_size": 64, "pixel_size": 0.0009, "fixed_size": true, "colour": "#ffd479", "visible_to_m": 140.0},
+        "nameplate": {"y": 4.4, "font_size": 64, "pixel_size": 0.0009, "fixed_size": true, "colour": "#ffd479", "visible_to_m": 140.0, "no_depth_test": true},
+        "_why_nameplate_depth": "VERIFIER full-bar judge (#356 5859347449): from the road the label clipped into the canopy of the woods between the road and the pack (hall_03). Raising it to 9 m did not clear those trees (tried and reverted, #356 5859702428), so this one label draws over foliage (alpha_pins.gd `no_depth_test`, opt-in).",
         "_why_nameplate": "F03#0 re-walk: the fight plate named the leader, but walking up the road nothing in the world did -- a floating name over the leader (a constant on-screen size like the combat plate, warm like its aura) reads from the road on approach and is hidden past 140 m so the pack does not clutter the skyline.",
         "_why_presentation": "F03#0 lure (coordinator grant, 2026-09-26): the code-blind judge read the leader as a plain \"Galecrest Lv19\" that blended into its pack. alpha_pins.gd dresses the live body: nameplate/plate \"Alpha Galecrest\" (the species stays underneath) and a warm aura light, the Warrens Elder's treatment.",
         "level_bonus": 4,

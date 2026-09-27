@@ -689,7 +689,7 @@ func _walk() -> void:
 					"camera_to_lure_m": vis.distance_m, "screen_px": vis.screen,
 					"while_on_road": seen_on_road, "after_deliberate_look": looked}
 				_release()
-				await _capture("lure-first-seen")
+				await _capture_lure("lure-first-seen")
 				if seen_on_road:
 					# Spotted from the road: look at it, as a player does, companion
 					# put away so it does not stand in the view.
@@ -711,13 +711,17 @@ func _walk() -> void:
 					"camera_to_lure_m": rvis.distance_m, "height_px": rvis.height_px,
 					"while_on_road": cursor < _road_count() - 1, "after_deliberate_look": looked}
 				_release()
-				await _capture("lure-first-readable")
+				await _capture_lure("lure-first-readable")
 		if _prompt_offered():
 			_release()
 			_receipt["prompt"] = {"t_s": snappedf(_clock, 0.1), "walked_m": snappedf(_walked, 0.1),
 				"winner": str(_arbiter.call("winner"))}
 			await _face_lure()
-			await _capture("prompt-offered")
+			# An Engage prompt needs the companion out, so that frame keeps it.
+			if str(_arbiter.call("winner")).contains("\"Engage "):
+				await _capture("prompt-offered")
+			else:
+				await _capture_lure("prompt-offered")
 			if _act:
 				await _perform_action()
 			_finish("PASS", "lure seen and the activity's prompt was offered")
@@ -817,7 +821,7 @@ func _walk() -> void:
 			approach_saved = true
 			_release()
 			await _face_lure()
-			await _capture("approach-30m")
+			await _capture_lure("approach-30m")
 		if cursor >= _path.size() - 1 and lure_d <= 2.0:
 			_release()
 			await _face_lure()
@@ -1556,6 +1560,24 @@ func _release() -> void:
 
 
 ## --- receipts -------------------------------------------------------------------
+
+## A lure frame is about the place, not the companion at the player's
+## shoulder (judges read a big companion as the subject, e.g. over the herd).
+## Put it away with the ordinary key for the frame, and call it back out after,
+## as the road-exit glance does. The herd watch itself still needs it out, and
+## `_ensure_companion_out` restores it before anything is acted on.
+func _capture_lure(label: String) -> void:
+	var stowed := false
+	if _director != null and _director.call("ally_body") != null:
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+		stowed = _director.call("ally_body") == null
+	await _face_lure()
+	await _capture(label)
+	if stowed:
+		await _ensure_companion_out("%s frame; " % label)
+
 
 func _capture(label: String) -> void:
 	if _start_frame > 0:

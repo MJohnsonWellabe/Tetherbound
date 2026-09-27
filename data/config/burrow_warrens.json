@@ -48,7 +48,7 @@
     "skirt": 10.0,
     "rock": "#5b5147",
     "floor_colour": "#4a423a",
-    "vault_door_colour": "#6d5f4a",
+    "vault_door_colour": "#4d3f31",
     "_comment_vault_door_seam": "CONTENT-0828. The shut branch door was a grey slab the same value as the wall it sits in, so from the den floor it was a wall: the player fought the guardian in a room with no visible reason to be there and found the branch afterwards, if at all. `seam` is a thin emissive line down the door's own face and a warm spill on the VAULT side of it, so what the player can see across the den WHILE THE ALPHA IS STILL ALIVE is a shut way on with something lit behind it. That is the difference between a fight at the end of a corridor and a fight for what is through the door, and it is the `encounter context` lever CLAUDE.md names -- no new mesh, no new system. `open_seconds` is how long the slab takes to sink when the guardian falls; it animates ONLY on that transition, never on a returning player's build (burrow_warrens.gd::_sync_vault_door). Set `energy` to 0 to turn the whole treatment off. ALL TUNABLE.",
     "vault_door_seam": {
       "_comment_under": "CONTENT-0828B. The spill above is on the VAULT side and only a player already looking at the door sees it. tools/_probe_den_door_sightline.gd measured the sightline from the stands a player is actually at -- the den doorway and a ring at engage range around the guardian -- and the shut door is on screen at one of eight: it reads on the way in and then leaves the frame for the whole fight, because the guardian is in the middle of the room and the door is on a side wall. `under_*` is a low warm pool at the foot of the slab on the DEN side, which is in frame from every facing because it lights the floor the player is standing on. Scaled off the seam's own energy so retuning one retunes both; set `under_energy_scale` to 0 to remove it.",
@@ -59,10 +59,11 @@
       "lintel_energy_scale": 1.5,
       "lintel_range_m": 4.5,
       "lintel_offset_m": 0.7,
-      "colour": "#e8913a",
+      "_why_f03_0_verifier": "VERIFIER full-bar judge (#356 5859347449): up close the door read as 'a flat, pale, unlit rectangle'. The 0.28 m strip at emission 2.2 was most of what read pale, and the slab's #6d5f4a stone was the lightest surface in the den. The slab is darker cut stone (#4d3f31) and the seam is back to a thin (0.12 m) deep-amber (#dc6f24; #e8913a still read pale yellow) line at emission 1.6, so the fire-pots and floor pool carry the warmth and the slab reads as shaded stone.",
+      "colour": "#dc6f24",
       "energy": 2.0,
-      "emission": 2.2,
-      "width_m": 0.28,
+      "emission": 1.6,
+      "width_m": 0.12,
       "range_m": 6.0,
       "spill_offset_m": 0.9,
       "open_seconds": 1.4

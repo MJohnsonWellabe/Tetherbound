@@ -225,6 +225,10 @@ static func dress_alpha_body(body: Node3D, nickname: String, aura: Dictionary, p
 		# combat plate, rather than a world sign that fills the view up close.
 		label.fixed_size = bool(plate.get("fixed_size", false))
 		label.visibility_range_end = float(plate.get("visible_to_m", 140.0))
+		# `no_depth_test` (opt-in, default off): drawn over foliage, so a label
+		# whose alpha stands in woods reads whole instead of clipping into the
+		# canopy. Terrain no longer hides it either; `visible_to_m` still does.
+		label.no_depth_test = bool(plate.get("no_depth_test", false))
 		body.add_child(label)
 	body.set_meta("alpha_dressed", true)
 

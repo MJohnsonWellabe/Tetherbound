@@ -1192,6 +1192,20 @@
             4160.5
           ],
           "yaw_deg": 10.0
+        },
+        {
+          "model": "Banner_2",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "name": "DossRiverPennant",
+          "at": [
+            -31.0,
+            4171.0
+          ],
+          "yaw_deg": 105.0,
+          "sink_m": -3.57,
+          "scale": 2.9,
+          "retint": {"MI_Banner": {"color": "#2f7fa0", "profile": "dimensional_cloth"}},
+          "_why": "VERIFIER full-bar judge (#356 5859347449): from 60-148 m nothing marked Doss's camp as its own place; its black column is the same one Juno's and Bram's use, and the judge took it for the Relay's smoke. A tall river-blue pennant on the crest north-west of the perch (moved from (-25.5,4168) after a re-judge read the signal column in front of it from the loop: here it stands ~14 m across the loop's line of sight from the fire, so pennant and column separate) (the installed fantasy-prop family's Banner_2 -- Banner_1 is Team Tether's roadside standard, oxblood only, test_meadows_banner_standards_0912.gd -- in river blue, at 2.9 scale, seated by its own 1.23 m below-origin extent: sink -3.57) gives the ranger's camp a silhouette of its own against the sky from the river loop. Probe --camp-grid: the crest edge here is in the loop's sightline."
         }
       ]
     }
