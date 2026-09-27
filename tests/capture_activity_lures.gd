@@ -72,6 +72,9 @@ var _leg_shots := {}
 ## Doss's perch framed from its east side, where the river channel runs
 ## behind it (chosen from the diagnostic stand probe; offset from the perch).
 const PERCH_RIVER_STAND := Vector3(8.0, 0.0, 4.0)
+## Camera pitch for those perch shots (a disclosed camera write, like yaw):
+## at the rig's -12 degree start the bank rim hides the water; -24 shows it.
+const PERCH_PITCH_DEG := -24.0
 var _receipt_save_dir := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
@@ -1261,6 +1264,7 @@ func _capture_perch(perch: Node3D, label: String) -> void:
 ## channel is behind it, and frame the perch from there.
 func _perch_from_river(perch: Node3D, label: String) -> void:
 	await _walk_straight_to(perch.global_position + PERCH_RIVER_STAND, 1.2, null)
+	_rig.set("pitch", deg_to_rad(PERCH_PITCH_DEG))
 	await _capture_perch(perch, label)
 
 
@@ -1330,9 +1334,10 @@ func _run_stand_probe() -> void:
 	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D
 	if perch != null:
 		var p := perch.global_position
-		for off: Vector3 in [Vector3(0, 0, -7), Vector3(-6, 0, -6), Vector3(6, 0, -6), Vector3(0, 0, -11), Vector3(-8, 0, 4), Vector3(8, 0, 4)]:
-			stands.append({"label": "doss-%d-%d" % [int(off.x), int(off.z)], "at": p + off, "face": p})
-		stands.append({"label": "doss-rim-west", "at": p + Vector3(-10, 0, 12), "face": p + Vector3(6, 0, 20)})
+		for off: Vector3 in [Vector3(-8, 0, 4), Vector3(8, 0, 4), Vector3(0, 0, -8)]:
+			for pitch_deg: float in [-12.0, -24.0]:
+				stands.append({"label": "doss-%d-%d-p%d" % [int(off.x), int(off.z), int(-pitch_deg)],
+					"at": p + off, "face": p, "pitch": pitch_deg})
 	var warrens := _world.get_node_or_null(^"BurrowWarrens")
 	if warrens != null:
 		var den: Vector3 = warrens.call("marker", "den")
@@ -1350,6 +1355,8 @@ func _run_stand_probe() -> void:
 		_player.global_position = Vector3(at.x, (ground if not is_nan(ground) else at.y) + 0.5, at.z)
 		for i in 45:
 			await physics_frame
+		if st.has("pitch"):
+			_rig.set("pitch", deg_to_rad(float(st["pitch"])))
 		await _face_point(st["face"])
 		await _capture("probe-%s" % st["label"])
 	_finish("PROBE", "stand probe done")
