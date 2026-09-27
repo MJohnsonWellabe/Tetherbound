@@ -69,10 +69,10 @@
    "id": "F02",
    "title": "Earned Meadows spine and ledgers",
    "chapter": "Meadows",
-   "pct": 50,
+   "pct": 62,
    "counts": {
-    "met": 4,
-    "partial": 3,
+    "met": 5,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
@@ -101,9 +101,9 @@
     },
     {
      "text": "Continues through three Sigils and the Hall in order",
-     "status": "in_progress",
-     "evidence": "Fresh new game seed 15, one uninterrupted run to warden_arena_entered (639526f9, EXIT 0, 4638 s): three captains 3/3 with Sigils in order, gate spends all three, patrol/courtyard/elite then the arena; MEADOWS-PAYOFFS/earned-bridge/hall-seed15.txt. Independent strict re-check: MET.",
-     "gap": "On main via batch 45; flips on the next green full CI.",
+     "status": "met",
+     "evidence": "Fresh new game seed 15, one uninterrupted run to warden_arena_entered (639526f9, EXIT 0, 4638 s): three captains 3/3 with Sigils in order, gate spends all three, patrol/courtyard/elite then the arena; MEADOWS-PAYOFFS/earned-bridge/hall-seed15.txt. Independent strict re-check: MET.; green full CI 36290042517 on ce1a3c6e5",
+     "gap": "",
      "note": "Seed-15 continuous route through the Hall; opening flake fixed. Meadows route (#286)."
     },
     {
@@ -156,9 +156,9 @@
     },
     {
      "text": "Each is a distinct optional action",
-     "status": "partial",
-     "evidence": "Record lists actions; 4 complete on trainer defeats — 'distinct' left as judgement",
-     "gap": "Independent judgement on distinctness"
+     "status": "in_progress",
+     "evidence": "Six activities, each run uninterrupted from the earned seed4_hall checkpoint (receipts + BLOCKERS B1-B6 routing only); code-blind distinctness judge D 6/6; ralph/reports/MEADOWS-PAYOFFS/six-activities/earned/. Independent strict re-check: MET.",
+     "gap": "On main via batch 47; flips on the next green full CI."
     },
     {
      "text": "Useful once-only reward and acknowledgement",
