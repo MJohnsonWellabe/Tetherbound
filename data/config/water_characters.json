@@ -629,10 +629,11 @@
       "portrait": "res://assets/ui/portraits/officer_b.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
-        111.779,
+        129.779,
         0.0,
-        -245.567
+        -259.567
       ],
+      "_why_offset_0927": "Moved 23 m down the Veilfall climb onto terrain.graded_pads veilfall_venn_fight_pad (B4/V-TW-7).",
       "greeting": "water_venn_pre",
       "greeting_when": [
         {

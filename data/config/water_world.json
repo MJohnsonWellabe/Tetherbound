@@ -3686,6 +3686,16 @@
       "nature_family": "res://assets/environment/stylized_nature/",
       "placements": "layer_id -> [{model,position:Vector3,yaw,scale,normal?}]; stable island-qualified ids"
     },
+    "graded_pads": [
+      {
+        "id": "veilfall_venn_fight_pad",
+        "_why": "B4/V-TW-7: Venn's old stand sat in a V-trench (69 m rise within 16 m), so the fight camera ended up in the rock. The pad sits on the same climb, 23 m down-trench on the least-enclosed shelf, and gives a 16 m open disc (11 m arena + camera) feathered over 12 m. WORLD: Venn guards the climb.",
+        "center_xz_m": [329.8, 3880.4],
+        "height_m": 138.7,
+        "flat_radius_m": 16.0,
+        "feather_m": 12.0
+      }
+    ],
     "sea_level_m": 0.0,
     "seabed_depth_m": 65.0,
     "shore_apron_m": 32.0,
