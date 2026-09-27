@@ -1,0 +1,13 @@
+./README.txt
+./receipts/bridge.json
+./receipts/camp_tournament.json
+./receipts/hall.json
+./receipts/opening_team.json
+./receipts/relay.json
+./receipts/warden.json
+./receipts/warrens.json
+./save/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json
+./save/slot_0.json
+./save/slot_1.json
+./save/worlds/slot-0/world.json
+./save/worlds/slot-1/world.json
