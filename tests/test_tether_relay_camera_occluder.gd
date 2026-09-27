@@ -37,3 +37,15 @@ func test_the_occluder_rides_every_retrofit_dressing() -> void:
 	build = build.substr(0, build.find("\nfunc ", 10))
 	assert_true(build.contains("_add_camera_occluder(scene, bounds)"),
 		"_build_platform_retrofit adds the occluder to each placed dressing")
+	assert_true(build.contains("spec.get(\"camera_occluder\", true)"),
+		"a dressing opts out only by its own camera_occluder flag; the default is on")
+
+
+## F04#1: the yard-side frame beside Vance opts out, the apparatus frame keeps it.
+func test_only_the_yard_frame_opts_out() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tether_relay.json"))
+	var opted := {}
+	for spec: Dictionary in (cfg.get("platform_retrofit", {}) as Dictionary).get("list", []):
+		opted[str(spec.get("id", ""))] = bool(spec.get("camera_occluder", true))
+	assert_eq(opted.get("yard_service_frame", true), false, "the yard frame beside Vance has no camera occluder")
+	assert_eq(opted.get("apparatus_service_frame", false), true, "the apparatus frame keeps its occluder")
