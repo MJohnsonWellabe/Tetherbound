@@ -35,7 +35,7 @@ const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
-const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+const PROGRESSION_CONFIG := preload("res://scripts/creatures/progression.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
@@ -106,6 +106,7 @@ func configure(player: CharacterBody3D, fly: Node, event_adapter: Callable,
 	chapter = RULES.read(CHAPTER_PATH)
 	npc_runtime = RULES.read(NPC_PATH)
 	add_to_group("progression_restore")
+	add_to_group("creature_bed_rest_bonus")
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	if _fly != null:
 		_register_flight()
@@ -137,7 +138,6 @@ func _physics_process(delta: float) -> void:
 		return
 	if int(_flags.get("revision")) != _revision:
 		sync_progression()
-	_track_sheltered_rest()
 	var at := _player.global_position
 	var flying := _fly != null and bool(_fly.call("is_flying"))
 	if flying:
@@ -317,43 +317,26 @@ func _settle_interaction(id: String, spec: Dictionary) -> void:
 	sync_progression()
 
 
-## F07#0 Waycamp shelter payoff (ruling Q1 on #356: "a sheltered creature bed
-## plus a longer rested bonus"). Companions whose night in Galefoot's sheltered
-## bed completes (`game_state.complete_creature_bed_rests()`) stay rested
-## `rested_multiplier` times as long. Each peer's own party; the creature's
-## `rested_seconds_left` is its saved state.
-var _sheltered_sleepers := {}
+## F07#0 Waycamp shelter payoff (ruling (a), #356 14:00): a companion whose
+## night in Galefoot's sheltered bed completes is paid the bed's rest XP
+## (`PROGRESSION.rest_xp`) once more, times `rest_xp_multiplier`. Called by
+## `game_state.complete_creature_bed_rests()` through the
+## `creature_bed_rest_bonus` group, before the sleep autosave, on each peer
+## for its own party.
+func on_creature_bed_rest_completed(creature: RefCounted, bed_index: int) -> void:
+	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}))
 
 
-func _track_sheltered_rest() -> void:
-	var cfg: Dictionary = config.get("sheltered_rest", {})
-	var party: RefCounted = _game.get("party") if _game != null else null
-	if cfg.is_empty() or party == null:
-		return
-	for i in int(party.call("size")):
-		var creature: RefCounted = party.call("at", i)
-		if creature == null:
-			continue
-		var key := creature.get_instance_id()
-		if bool(creature.get("resting")) and int(creature.get("rest_bed_index")) == int(cfg.get("bed_index", 0)):
-			_sheltered_sleepers[key] = true
-		elif _sheltered_sleepers.has(key):
-			_sheltered_sleepers.erase(key)
-			apply_sheltered_rest_bonus(creature, _flags, cfg)
-
-
-## A rest that just completed leaves `rested_seconds_left` at the full
-## configured span; waking early or unassigning never does, so neither pays.
-static func apply_sheltered_rest_bonus(creature: RefCounted, flags: RefCounted, cfg: Dictionary) -> bool:
-	if creature == null or flags == null or not bool(flags.call("has", str(cfg.get("requires_flag", "")))):
-		return false
-	if not bool(creature.get("rested")):
-		return false
-	var full: float = CONDITION._rested_seconds(CONDITION.config())
-	if float(creature.get("rested_seconds_left")) < full - 1.0:
-		return false
-	creature.set("rested_seconds_left", full * float(cfg.get("rested_multiplier", 2.0)))
-	return true
+static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary) -> int:
+	if creature == null or flags == null or cfg.is_empty() or bed_index != int(cfg.get("bed_index", 0)):
+		return 0
+	if not bool(flags.call("has", str(cfg.get("requires_flag", "")))):
+		return 0
+	var progression_cfg := PROGRESSION_CONFIG.config()
+	var bonus := int(round(float(PROGRESSION_CONFIG.rest_xp(progression_cfg)) * float(cfg.get("rest_xp_multiplier", 1.0))))
+	if bonus > 0:
+		creature.call("gain_xp", bonus, progression_cfg)
+	return bonus
 
 
 ## F07#0 Cliff Circuit prize. The chosen TM is collected through its own

@@ -1328,6 +1328,7 @@ func complete_creature_bed_rests() -> int:
 		# The BED-specific state below stays here, because it is about the bed
 		# rather than about resting: which slot the creature was in, and that it
 		# is no longer occupying one.
+		var bed_index := int(creature.get("rest_bed_index"))
 		HOME_RECOVERY.rest(creature, cfg)
 		creature.set("rested", true)
 		creature.set("resting", false)
@@ -1340,6 +1341,8 @@ func complete_creature_bed_rests() -> int:
 		# RG19-spec/D68: the night in the bed is what "well rested" means, and
 		# it is worth a little mood on top. The bed does not carry the numbers.
 		CREATURE_CONDITION.note_rest_completed(creature, CREATURE_CONDITION.config())
+		# Realm bed bonuses (Cloudreach F07#0: Galefoot's sheltered bed).
+		get_tree().call_group("creature_bed_rest_bonus", "on_creature_bed_rest_completed", creature, bed_index)
 		completed += 1
 	if completed > 0:
 		party.set("revision", int(party.get("revision")) + 1)

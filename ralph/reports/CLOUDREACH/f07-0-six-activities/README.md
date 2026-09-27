@@ -6,7 +6,7 @@ acknowledgement + saved completion + normal-play route) with a
 retained-five-useful payoff.
 
 Coordinator rulings on #356: Waycamp (b) upgrades Galefoot with a sheltered bed
-and a longer rested bonus (Q1); the Tavi rematch stays (Q3); the Observatory
+that pays its rest XP once more (Q1, then (a) at 14:00); the Tavi rematch stays (Q3); the Observatory
 latch is (b), the drop between two existing pads made walkable; Windscar (a,
 13:20): the couriers' thanks moves to the ravine shelter, gated on the
 delivery; the Circuit TM co-op race is accepted as disclosed.
@@ -15,7 +15,7 @@ delivery; the Circuit TM co-op race is accepted as disclosed.
 
 | # | Region (principal) | WORLD §11 activity | Source IDs | Lure | Action | Useful payoff | Ack | Saved |
 |---|---|---|---|---|---|---|---|---|
-| 1 | Lower Cliffs (`gate_lower_cliffs`) | Waycamp shelter | chain `waycamp_shelter`; interactions `waycamp_canvas_bundle`, `waycamp_shelter_supply`, `waycamp_shelter_rest` | Neri (giver) + canvas bundle on the arrival road | find bundle → 4 Gale Fiber → settle a companion in Galefoot's creature bed | rain cover over Galefoot's fire/bed (installed camp tent), and a companion that sleeps in the sheltered bed stays rested 2× as long (`sheltered_rest`, `apply_sheltered_rest_bonus`) | Iven `cloudreach_iven_waycamp_shelter` (greeting + standing topic `iven_waycamp_shelter`) | world flags `side_waycamp_*` |
+| 1 | Lower Cliffs (`gate_lower_cliffs`) | Waycamp shelter | chain `waycamp_shelter`; interactions `waycamp_canvas_bundle`, `waycamp_shelter_supply`, `waycamp_shelter_rest` | Neri (giver) + canvas bundle on the arrival road | find bundle → 4 Gale Fiber → settle a companion in Galefoot's creature bed | rain cover over Galefoot's fire/bed (installed camp tent), and a companion whose night in the sheltered bed completes is paid the bed's rest XP once more (ruling (a), #356 14:00: `sheltered_rest`, `on_creature_bed_rest_completed` via the granted `game_state.complete_creature_bed_rests()` group hook, before the sleep autosave) | Iven `cloudreach_iven_waycamp_shelter` (greeting + standing topic `iven_waycamp_shelter`) | world flags `side_waycamp_*` |
 | 2 | Broken Causeways (`broken_causeways`) → High Roost | `three_bells_against_silence` | interactions `side_*_bell`; payoffs `cloudreach_world_payoffs.gd` | lower bell beside the first span | find, ring Windscar, Fly to High Perches bell | travelers + route signal audio; the three known safe landings on the map (`landing_map_markers`) | Orrin / map pins | `side_three_bells_complete` |
 | 3 | Windscar (`windscar_ravine`) | `packs_on_the_wrong_side` (Windscar step) | `courier_delivery`, `cr_reward_couriers_potions` (moved, ruling (a)) | Neri + the stranded pair at the ravine shelter | carry the recovered medicine to the shelter | the couriers' thanks at the shelter: personal potion_small ×2, once per character (`reward_grant`, `cloudreach_payout:couriers_thanks`) | the thanks acknowledgement; Neri's report; the pair relocates to Galefoot | world `side_courier_medicine_delivered` + personal receipt (reload-checked by `smoke_cloudreach_activity_rewards`) |
 | 4 | High Roost (`high_roost_sky_shrine`) | `aeries_of_cloudreach` (High Perches) + bells finale | `survey_high_perches` | High Perches seen from the Fly route | Fly landing survey | safe landing restores traversal stamina; map pin "(surveyed)" | world message | `side_aerie_high_perches_surveyed` |
@@ -44,7 +44,9 @@ delivery; the Circuit TM co-op race is accepted as disclosed.
   `smoke_cloudreach_foundation` (7 bridges), `smoke_cloudreach_physical_placements`
   (every new interaction stands on ground; the smoke still exits 1 on the unrelated
   `cr_candy_broken_route_good_07`, which fails on main too), `smoke_cloudreach_summit_lip_rail`,
-  `smoke_cloudreach_activity_rewards` (the Windscar thanks, claim and reload).
+  `smoke_cloudreach_activity_rewards` (the Windscar thanks, claim and reload),
+  `smoke_cloudreach_sheltered_rest` (rest XP twice at bed -21 with the shelter,
+  once elsewhere/before; survives a save at the night's instant + reload).
   Key result lines are in `results/`.
 
 ## Shortcuts (disclosed; owner ruling 06:58)
@@ -55,5 +57,5 @@ delivery; the Circuit TM co-op race is accepted as disclosed.
    here: the local software-GL capture stalled. The High Perches judge is separate (F08#3).
 4. Circuit TM co-op race: two peers choosing different TMs within one round trip can each be paid one (never the same TM twice); an atomic choice+claim needs a `world_ledger` op (follow-up). The claim now commits before the choice is spent, so a refused claim leaves the choice open. If all three TMs were already collected in the field, the prize has nothing left to offer (by design: WORLD pays one of the three placed TMs through its own receipt).
 5. The latch stair is new geometry (two 348 m stone spans + a mid landing pad with three regrowing cliffglass nodes), not an existing ledge; no render or code-blind judge of it yet.
-6. The Waycamp rested bonus and the Windscar thanks delivery step are proven by unit tests and the fixture-seeded reward smoke (the delivery flag is written), not by an earned walk.
+6. The Waycamp rest-XP bonus and the Windscar thanks are proven by unit tests and fixture-seeded smokes (flags and bed assignments written; the night is the production call), not by an earned walk.
 7. The earned full-route A7 witness (Cloudreach-B, F07#4) predates the latch stair; the stair is optional and its whole-return cadence is covered by the unit model above, not by an earned walk.

@@ -100,23 +100,18 @@ func test_the_bed_check_reads_this_peers_resting_companion() -> void:
 	game.free()
 
 
-func test_the_sheltered_bed_keeps_a_companion_rested_longer() -> void:
+func test_the_sheltered_bed_pays_its_rest_xp_once_more() -> void:
 	var cfg: Dictionary = RULES.read(RUNTIME.DATA_PATH)["sheltered_rest"]
 	assert_eq(int(cfg.bed_index), int(_specs()["waycamp_shelter_rest"].requires_resting_bed_index), "Galefoot's own bed")
-	var condition := preload("res://scripts/creatures/creature_condition.gd")
-	var full: float = condition._rested_seconds(condition.config())
+	var progression := preload("res://scripts/creatures/progression.gd")
+	var rest_xp: int = progression.rest_xp(progression.config())
+	assert_true(rest_xp > 0, "the bed pays rest XP")
 	var flags: RefCounted = FLAGS.new()
 	var member: RefCounted = SPECIES.spawn("sparkit")
-	member.set("rested", true)
-	member.set("rested_seconds_left", full)
-	assert_false(RUNTIME.apply_sheltered_rest_bonus(member, flags, cfg), "no bonus before the shelter is built")
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -21, flags, cfg), 0, "nothing before the shelter is built")
 	flags.set_flag("side_waycamp_shelter_complete")
-	assert_true(RUNTIME.apply_sheltered_rest_bonus(member, flags, cfg), "a completed night pays")
-	assert_almost_eq(float(member.get("rested_seconds_left")), full * float(cfg.rested_multiplier), 0.01)
-	var early: RefCounted = SPECIES.spawn("sparkit")
-	early.set("rested", true)
-	early.set("rested_seconds_left", full * 0.5)
-	assert_false(RUNTIME.apply_sheltered_rest_bonus(early, flags, cfg), "an old or interrupted rest does not pay")
-	var awake: RefCounted = SPECIES.spawn("sparkit")
-	awake.set("rested", false)
-	assert_false(RUNTIME.apply_sheltered_rest_bonus(awake, flags, cfg), "unassigning without sleeping does not pay")
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -25, flags, cfg), 0, "another camp's bed pays nothing extra")
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -1, flags, cfg), 0, "no bed pays nothing extra")
+	var before := int(member.get("xp"))
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -21, flags, cfg), int(round(rest_xp * float(cfg.rest_xp_multiplier))), "the sheltered bed pays rest XP again")
+	assert_eq(int(member.get("xp")), before + rest_xp, "the companion actually gains it")
