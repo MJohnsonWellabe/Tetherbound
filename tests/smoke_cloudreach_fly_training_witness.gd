@@ -18,20 +18,20 @@ extends "res://tests/helpers/cloudreach_witness_route.gd"
 ## `cloudreach_upper` wind wall, keeps pressing and tries to descend onto the
 ## sealed shelf: the wall must refuse it, it is never inside the sealed box,
 ## and it glides back to a verified landing on the aerie deck.
-## DISCLOSED LIMIT: the invalid attempt here is a REFUSED landing. Refusal
-## zeroes the inward velocity, so ordinary input never reaches the production
-## `recover_to_anchor` path. Fly anchor recovery is covered separately by
-## tests/smoke_cloudreach_closed_gate_seal.gd legs (i) (recovery to the
-## verified launch anchor) and (j) (carried out of sealed volumes with the
-## anchor cleared) and tests/test_fly_traversal.gd (trapped-flyer carry-out,
-## airborne save/load anchor, invalid airborne anchor). The exhausted-fall
-## recovery branch (fly_controller.gd, `state == "exhausted"`) has no test.
+## DISCLOSED LIMIT: the invalid attempts here are REFUSED landings. Refusal
+## zeroes the inward velocity, and the host arbiter's slope rule equals the
+## controller's floor angle (45 degrees), so ordinary input cannot touch down
+## on an invalid surface; the restriction branch of `recover_to_anchor` is
+## covered by tests/smoke_cloudreach_closed_gate_seal.gd legs (i)/(j) and
+## tests/test_fly_traversal.gd. The production exhausted-fall recovery
+## (fly_controller.gd `state == "exhausted"`) IS reached by input here:
+## `_exhausted_fall_attempt` (tests/helpers/cloudreach_witness_route.gd).
+## Climb and descent currently use the controller's held jump/fly_descend
+## (a hard-rule conflict raised on #356; the witness follows production).
 ##
-## `--start=aerie` runs from the declared aerie fixture instead (see
-## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
-## START STATE (disclosed): committed completed-Meadows fixture of
-## smoke_cloudreach_continuous (the earned c1_arrival save is F06#0 and does not
-## exist yet). `--from-save=<dir>` runs it from an earned save.
+## START STATE: `--from-save=res://tests/fixtures/earned_saves/c1_arrival`
+## runs from the earned C1 handoff save. `--start=aerie` runs from the declared
+## aerie fixture instead (DRY RUN, does not count; evidence in `aerie-start/`).
 const WITNESS_DIR := "res://ralph/reports/CLOUDREACH/b/f06-2-fly-training"
 const TRIAL_ESCAPE_FRAMES := 240
 

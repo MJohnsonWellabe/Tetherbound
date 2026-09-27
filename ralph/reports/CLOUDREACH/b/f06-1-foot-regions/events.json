@@ -2,11 +2,11 @@
   "accelerated": true,
   "activity_intervals": [
     {
-      "end_seconds": 31.9,
+      "end_seconds": 31.7,
       "from": "meaningful_offer",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 0.4,
-      "start_seconds": 31.5,
+      "gap_seconds": 0.7,
+      "start_seconds": 31.0,
       "to": "input_interact",
       "to_stage": "arrival_to_aila"
     },
@@ -14,8 +14,8 @@
       "end_seconds": 59.0,
       "from": "input_interact",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 27.1,
-      "start_seconds": 31.9,
+      "gap_seconds": 27.3,
+      "start_seconds": 31.7,
       "to": "meaningful_offer",
       "to_stage": "arrival_to_aila"
     },
@@ -29,101 +29,101 @@
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 87.62,
+      "end_seconds": 87.35,
       "from": "meaningful_offer",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 0.62,
+      "gap_seconds": 0.35,
       "start_seconds": 87.0,
       "to": "input_interact",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 89.28,
+      "end_seconds": 89.02,
       "from": "input_interact",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 1.66,
-      "start_seconds": 87.62,
+      "gap_seconds": 1.67,
+      "start_seconds": 87.35,
       "to": "optional_gather",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 98.0,
+      "end_seconds": 97.0,
       "from": "optional_gather",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 8.72,
-      "start_seconds": 89.28,
+      "gap_seconds": 7.98,
+      "start_seconds": 89.02,
       "to": "meaningful_offer",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 134.5,
+      "end_seconds": 133.5,
       "from": "meaningful_offer",
       "from_stage": "arrival_to_aila",
       "gap_seconds": 36.5,
-      "start_seconds": 98.0,
+      "start_seconds": 97.0,
       "to": "meaningful_offer",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 145.0,
+      "end_seconds": 144.5,
       "from": "meaningful_offer",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 10.5,
-      "start_seconds": 134.5,
+      "gap_seconds": 11.0,
+      "start_seconds": 133.5,
       "to": "meaningful_offer",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 145.88,
+      "end_seconds": 145.47,
       "from": "meaningful_offer",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 0.88,
-      "start_seconds": 145.0,
+      "gap_seconds": 0.97,
+      "start_seconds": 144.5,
       "to": "input_interact",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 147.55,
+      "end_seconds": 147.13,
       "from": "input_interact",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 1.67,
-      "start_seconds": 145.88,
+      "gap_seconds": 1.66,
+      "start_seconds": 145.47,
       "to": "optional_gather",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 173.5,
+      "end_seconds": 173.0,
       "from": "optional_gather",
       "from_stage": "arrival_to_aila",
-      "gap_seconds": 25.95,
-      "start_seconds": 147.55,
+      "gap_seconds": 25.87,
+      "start_seconds": 147.13,
       "to": "meaningful_offer",
       "to_stage": "arrival_to_aila"
     },
     {
-      "end_seconds": 187.0,
+      "end_seconds": 186.5,
       "from": "meaningful_offer",
       "from_stage": "arrival_to_aila",
       "gap_seconds": 13.5,
-      "start_seconds": 173.5,
+      "start_seconds": 173.0,
       "to": "meaningful_offer",
       "to_stage": "talk_warden_aila"
     },
     {
-      "end_seconds": 189.0,
+      "end_seconds": 188.5,
       "from": "meaningful_offer",
       "from_stage": "talk_warden_aila",
       "gap_seconds": 2.0,
-      "start_seconds": 187.0,
+      "start_seconds": 186.5,
       "to": "meaningful_offer",
       "to_stage": "talk_warden_aila"
     },
     {
-      "end_seconds": 189.0,
+      "end_seconds": 188.5,
       "from": "meaningful_offer",
       "from_stage": "talk_warden_aila",
       "gap_seconds": 0.0,
-      "start_seconds": 189.0,
+      "start_seconds": 188.5,
       "to": "meaningful_offer",
       "to_stage": "talk_warden_aila"
     },
@@ -131,26 +131,26 @@
       "end_seconds": 190.5,
       "from": "meaningful_offer",
       "from_stage": "talk_warden_aila",
-      "gap_seconds": 1.5,
-      "start_seconds": 189.0,
+      "gap_seconds": 2.0,
+      "start_seconds": 188.5,
       "to": "meaningful_offer",
       "to_stage": "talk_warden_aila"
     },
     {
-      "end_seconds": 191.4,
+      "end_seconds": 191.15,
       "from": "meaningful_offer",
       "from_stage": "talk_warden_aila",
-      "gap_seconds": 0.9,
+      "gap_seconds": 0.65,
       "start_seconds": 190.5,
       "to": "input_interact",
       "to_stage": "talk_warden_aila"
     },
     {
-      "end_seconds": 196.12,
+      "end_seconds": 195.9,
       "from": "input_interact",
       "from_stage": "talk_warden_aila",
-      "gap_seconds": 4.72,
-      "start_seconds": 191.4,
+      "gap_seconds": 4.75,
+      "start_seconds": 191.15,
       "to": "input_interact",
       "to_stage": "pickup_cr_pickup_lower_good_candy"
     },
@@ -158,67 +158,346 @@
       "end_seconds": 200.0,
       "from": "input_interact",
       "from_stage": "pickup_cr_pickup_lower_good_candy",
-      "gap_seconds": 3.88,
-      "start_seconds": 196.12,
+      "gap_seconds": 4.1,
+      "start_seconds": 195.9,
       "to": "meaningful_offer",
       "to_stage": "lower_west_anchor"
     },
     {
-      "end_seconds": 258.5,
+      "end_seconds": 249.0,
       "from": "meaningful_offer",
       "from_stage": "lower_west_anchor",
-      "gap_seconds": 58.5,
+      "gap_seconds": 49.0,
       "start_seconds": 200.0,
       "to": "meaningful_offer",
       "to_stage": "lower_west_anchor"
     },
     {
-      "end_seconds": 269.5,
+      "end_seconds": 275.5,
       "from": "meaningful_offer",
       "from_stage": "lower_west_anchor",
-      "gap_seconds": 11.0,
-      "start_seconds": 258.5,
+      "gap_seconds": 26.5,
+      "start_seconds": 249.0,
       "to": "meaningful_offer",
       "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 303.0,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 27.5,
+      "start_seconds": 275.5,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 312.5,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 9.5,
+      "start_seconds": 303.0,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 335.0,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 22.5,
+      "start_seconds": 312.5,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 363.0,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 28.0,
+      "start_seconds": 335.0,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 380.0,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 17.0,
+      "start_seconds": 363.0,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 397.5,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 17.5,
+      "start_seconds": 380.0,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 401.5,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 4.0,
+      "start_seconds": 397.5,
+      "to": "meaningful_offer",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 402.27,
+      "from": "meaningful_offer",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 0.77,
+      "start_seconds": 401.5,
+      "to": "input_interact",
+      "to_stage": "lower_west_anchor"
+    },
+    {
+      "end_seconds": 416.5,
+      "from": "input_interact",
+      "from_stage": "lower_west_anchor",
+      "gap_seconds": 14.23,
+      "start_seconds": 402.27,
+      "to": "meaningful_offer",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 485.0,
+      "from": "meaningful_offer",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 68.5,
+      "start_seconds": 416.5,
+      "to": "meaningful_offer",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 493.5,
+      "from": "meaningful_offer",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 8.5,
+      "start_seconds": 485.0,
+      "to": "meaningful_offer",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 494.85,
+      "from": "meaningful_offer",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 1.35,
+      "start_seconds": 493.5,
+      "to": "input_interact",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 496.52,
+      "from": "input_interact",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 1.67,
+      "start_seconds": 494.85,
+      "to": "optional_gather",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 543.5,
+      "from": "optional_gather",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 46.98,
+      "start_seconds": 496.52,
+      "to": "meaningful_offer",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 590.5,
+      "from": "meaningful_offer",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 47.0,
+      "start_seconds": 543.5,
+      "to": "meaningful_offer",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 591.47,
+      "from": "meaningful_offer",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 0.97,
+      "start_seconds": 590.5,
+      "to": "input_interact",
+      "to_stage": "lower_east_anchor"
+    },
+    {
+      "end_seconds": 609.5,
+      "from": "input_interact",
+      "from_stage": "lower_east_anchor",
+      "gap_seconds": 18.03,
+      "start_seconds": 591.47,
+      "to": "meaningful_offer",
+      "to_stage": "battle_tether_lieutenant_senn"
+    },
+    {
+      "end_seconds": 626.5,
+      "from": "meaningful_offer",
+      "from_stage": "battle_tether_lieutenant_senn",
+      "gap_seconds": 17.0,
+      "start_seconds": 609.5,
+      "to": "meaningful_offer",
+      "to_stage": "battle_tether_lieutenant_senn"
+    },
+    {
+      "end_seconds": 635.5,
+      "from": "meaningful_offer",
+      "from_stage": "battle_tether_lieutenant_senn",
+      "gap_seconds": 9.0,
+      "start_seconds": 626.5,
+      "to": "meaningful_offer",
+      "to_stage": "battle_tether_lieutenant_senn"
     }
   ],
-  "combat_mode": "test_only_lethal",
-  "distance_m": 1446.83630175386,
+  "combat_mode": "live_input_spacer_switch",
+  "distance_m": 3087.09447841186,
   "events": [
     {
       "kind": "witness_region_entered",
       "mode": "foot",
-      "position": "(0.0, 105.18, -260.0)",
+      "position": "(0.0, 105.0302, -260.0)",
       "region": "gate_lower_cliffs",
       "simulated_seconds": 0.02,
       "stage": "boot",
-      "wall_seconds": 348.746874
+      "wall_seconds": 122.330848
     },
     {
       "accelerated": true,
-      "combat_mode": "mechanics_only_test_lethal",
-      "description": "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused",
-      "flags": 5,
-      "from_save": "",
+      "combat_mode": "live_input",
+      "description": "EARNED Meadows handoff save loaded through the title Load list: res://tests/fixtures/earned_saves/c1_arrival",
+      "flags": 130,
+      "from_save": "res://tests/fixtures/earned_saves/c1_arrival",
       "inventory": [
         {
           "slot": 0,
           "stack": {
-            "id": "knife",
-            "n": 1
+            "id": "orb_basic",
+            "n": 20
           }
         },
         {
           "slot": 1,
           "stack": {
-            "id": "axe",
-            "n": 1
+            "id": "orb_basic",
+            "n": 20
           }
         },
         {
           "slot": 2,
           "stack": {
+            "id": "orb_basic",
+            "n": 11
+          }
+        },
+        {
+          "slot": 4,
+          "stack": {
+            "id": "berries",
+            "n": 5
+          }
+        },
+        {
+          "slot": 5,
+          "stack": {
+            "id": "revive",
+            "n": 10
+          }
+        },
+        {
+          "slot": 6,
+          "stack": {
+            "durability": 30,
+            "id": "axe",
+            "n": 1
+          }
+        },
+        {
+          "slot": 7,
+          "stack": {
+            "durability": 31,
             "id": "pickaxe",
+            "n": 1
+          }
+        },
+        {
+          "slot": 8,
+          "stack": {
+            "id": "coin",
+            "n": 875
+          }
+        },
+        {
+          "slot": 9,
+          "stack": {
+            "durability": 24,
+            "id": "knife",
+            "n": 1
+          }
+        },
+        {
+          "slot": 10,
+          "stack": {
+            "id": "torch",
+            "n": 1
+          }
+        },
+        {
+          "slot": 11,
+          "stack": {
+            "id": "hammer",
+            "n": 1
+          }
+        },
+        {
+          "slot": 12,
+          "stack": {
+            "id": "wood",
+            "n": 1
+          }
+        },
+        {
+          "slot": 13,
+          "stack": {
+            "id": "rootstone",
+            "n": 17
+          }
+        },
+        {
+          "slot": 14,
+          "stack": {
+            "id": "orb_greater",
+            "n": 7
+          }
+        },
+        {
+          "slot": 16,
+          "stack": {
+            "id": "hide_vest",
+            "n": 1
+          }
+        },
+        {
+          "slot": 17,
+          "stack": {
+            "id": "elixir_vigour",
+            "n": 1
+          }
+        },
+        {
+          "slot": 20,
+          "stack": {
+            "id": "tm_earth_fist",
+            "n": 1
+          }
+        },
+        {
+          "slot": 21,
+          "stack": {
+            "id": "elixir_guard",
             "n": 1
           }
         }
@@ -230,42 +509,42 @@
       "stage": "boot",
       "team": [
         {
-          "hp": 214.72,
-          "label": "Sparkit",
-          "level": 25,
-          "species_id": "sparkit",
-          "xp": 0
+          "hp": 177.322864641988,
+          "label": "Bud",
+          "level": 21,
+          "species_id": "ripplet",
+          "xp": 576
         },
         {
-          "hp": 244.0,
-          "label": "Mudsnout",
-          "level": 25,
-          "species_id": "mudsnout",
-          "xp": 0
-        },
-        {
-          "hp": 231.8,
+          "hp": 145.311437615929,
           "label": "Bramblebun",
-          "level": 25,
+          "level": 22,
           "species_id": "bramblebun",
-          "xp": 0
+          "xp": 884
         },
         {
-          "hp": 292.8,
-          "label": "Terrapup",
-          "level": 25,
-          "species_id": "terrapup",
-          "xp": 0
+          "hp": 159.723350638177,
+          "label": "Mudsnout",
+          "level": 21,
+          "species_id": "mudsnout",
+          "xp": 262
         },
         {
-          "hp": 224.48,
-          "label": "Brooktail",
-          "level": 25,
-          "species_id": "brooktail",
-          "xp": 0
+          "hp": 160.709808193421,
+          "label": "Mudsnout",
+          "level": 21,
+          "species_id": "mudsnout",
+          "xp": 622
+        },
+        {
+          "hp": 796.746109780671,
+          "label": "Veridian Stag",
+          "level": 26,
+          "species_id": "veridian",
+          "xp": 1196
         }
       ],
-      "wall_seconds": 348.916149
+      "wall_seconds": 122.389696
     },
     {
       "choice": "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining",
@@ -274,7 +553,7 @@
       "purpose": "Orient in Cloudreach and learn why the routes are broken",
       "simulated_seconds": 0.33,
       "stage": "boot",
-      "wall_seconds": 348.917194
+      "wall_seconds": 122.390274
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
@@ -284,56 +563,56 @@
       "simulated_seconds": 0.33,
       "stage": "arrival_to_aila",
       "target": "(-40.5, 117.5, -112.0)",
-      "wall_seconds": 348.929416
+      "wall_seconds": 122.3987
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-38.46848, 116.7325, -119.4258)",
+      "position": "(-39.10361, 116.9347, -117.1046)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 29.97,
+      "simulated_seconds": 30.25,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 352.651549
+      "wall_seconds": 126.305372
     },
     {
       "chosen": false,
-      "distance_m": 2.63908720016479,
+      "distance_m": 3.82185816764832,
       "kind": "meaningful_offer",
       "label": "Inspect the weathered route marker",
       "path": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
-      "position": "(-40.39838, 117.3472, -112.3718)",
-      "simulated_seconds": 31.5,
+      "position": "(-40.06716, 117.2417, -113.5827)",
+      "simulated_seconds": 31.0,
       "stage": "arrival_to_aila",
-      "wall_seconds": 354.127831
+      "wall_seconds": 126.979339
     },
     {
       "kind": "travel_arrived",
-      "position": "(-40.40012, 117.3477, -112.3654)",
-      "simulated_seconds": 31.58,
+      "position": "(-40.40014, 117.3477, -112.3654)",
+      "simulated_seconds": 31.38,
       "stage": "arrival_to_aila",
       "target": "(-40.5, 117.5, -112.0)",
-      "wall_seconds": 354.210603
+      "wall_seconds": 127.365679
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-40.40012, 117.3477, -112.3654)",
+      "position": "(-40.40014, 117.3477, -112.3654)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 31.58,
+      "simulated_seconds": 31.38,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 354.213917
+      "wall_seconds": 127.368691
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-40.40012, 117.3477, -112.3654)",
+      "position": "(-40.40014, 117.3477, -112.3654)",
       "reason": "physical interaction",
-      "simulated_seconds": 31.67,
+      "simulated_seconds": 31.47,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 354.233102
+      "wall_seconds": 127.384596
     },
     {
       "input_vector": "(0.0, 0.0)",
@@ -341,158 +620,158 @@
       "locomotion_enabled": true,
       "manager_state": 0,
       "on_floor": true,
-      "position": "(-40.40012, 117.3477, -112.3654)",
+      "position": "(-40.40014, 117.3477, -112.3654)",
       "prompt": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
       "prompt_position": "(-40.5, 118.5, -110.0)",
-      "root_distance": 2.40387916564941,
+      "root_distance": 2.4038507938385,
       "root_position": "(-40.0, 117.5, -110.0)",
       "senn_defeated": false,
-      "simulated_seconds": 31.7,
+      "simulated_seconds": 31.5,
       "stage": "arrival_to_aila",
       "velocity": "(0.0, 0.0, 0.0)",
-      "wall_seconds": 354.246458
+      "wall_seconds": 127.402904
     },
     {
       "kind": "offer_activated",
       "path": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
-      "position": "(-40.40012, 117.3477, -112.3654)",
-      "simulated_seconds": 31.72,
+      "position": "(-40.40014, 117.3477, -112.3654)",
+      "simulated_seconds": 31.52,
       "stage": "arrival_to_aila",
-      "wall_seconds": 354.266574
+      "wall_seconds": 127.417711
     },
     {
       "kind": "input_interact",
-      "position": "(-40.40012, 117.3477, -112.3654)",
+      "position": "(-40.40014, 117.3477, -112.3654)",
       "prompt": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
-      "simulated_seconds": 31.9,
+      "simulated_seconds": 31.7,
       "stage": "arrival_to_aila",
-      "wall_seconds": 354.466228
+      "wall_seconds": 127.610265
     },
     {
       "kind": "assertion",
       "label": "Real input activated expected offer /root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
-      "position": "(-40.40012, 117.3477, -112.3654)",
-      "simulated_seconds": 31.9,
+      "position": "(-40.40014, 117.3477, -112.3654)",
+      "simulated_seconds": 31.7,
       "stage": "arrival_to_aila",
-      "wall_seconds": 354.466988
+      "wall_seconds": 127.610941
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-40.40012, 117.3477, -112.3654)",
+      "position": "(-40.40014, 117.3477, -112.3654)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 31.9,
+      "simulated_seconds": 31.7,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 354.469843
+      "wall_seconds": 127.614111
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-40.40012, 117.3477, -112.3654)",
+      "body_position": "(-40.40014, 117.3477, -112.3654)",
       "kind": "travel_start",
-      "position": "(-40.40012, 117.3477, -112.3654)",
-      "simulated_seconds": 31.9,
+      "position": "(-40.40014, 117.3477, -112.3654)",
+      "simulated_seconds": 31.7,
       "stage": "arrival_to_aila",
       "target": "(-80.0, 130.0, 40.0)",
-      "wall_seconds": 354.470353
+      "wall_seconds": 127.614647
     },
     {
       "chosen": false,
-      "distance_m": 2.19749402999878,
+      "distance_m": 2.04049062728882,
       "kind": "meaningful_offer",
       "label": "Take Small Potion",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_gate_route_potion_small_01/Interactable",
-      "position": "(-74.19417, 128.6408, 17.65159)",
+      "position": "(-74.44424, 128.7244, 18.61361)",
       "simulated_seconds": 59.0,
       "stage": "arrival_to_aila",
-      "wall_seconds": 358.20705
+      "wall_seconds": 132.085753
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-78.26163, 130.0172, 33.30801)",
+      "position": "(-78.55338, 130.0309, 34.43394)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 62.23,
+      "simulated_seconds": 62.27,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 358.6518
+      "wall_seconds": 132.603788
     },
     {
       "kind": "travel_arrived",
-      "position": "(-79.90511, 130.0308, 39.63478)",
-      "simulated_seconds": 63.68,
+      "position": "(-79.92538, 130.0309, 39.71301)",
+      "simulated_seconds": 63.5,
       "stage": "arrival_to_aila",
       "target": "(-80.0, 130.0, 40.0)",
-      "wall_seconds": 360.040523
+      "wall_seconds": 133.772886
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-79.90511, 130.0308, 39.63478)",
+      "position": "(-79.92538, 130.0309, 39.71301)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 63.68,
+      "simulated_seconds": 63.5,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 360.044376
+      "wall_seconds": 133.777395
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-79.90511, 130.0308, 39.63478)",
+      "body_position": "(-79.92538, 130.0309, 39.71301)",
       "kind": "travel_start",
-      "position": "(-79.90511, 130.0308, 39.63478)",
-      "simulated_seconds": 63.68,
+      "position": "(-79.92538, 130.0309, 39.71301)",
+      "simulated_seconds": 63.5,
       "stage": "arrival_to_aila",
       "target": "(-175.0, 136.2714, 107.5)",
-      "wall_seconds": 360.045388
+      "wall_seconds": 133.778149
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-169.5307, 135.9967, 103.5968)",
+      "position": "(-169.6438, 136.0049, 103.6789)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 85.8,
+      "simulated_seconds": 85.63,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 363.156404
+      "wall_seconds": 137.179316
     },
     {
       "chosen": false,
-      "distance_m": 2.20656085014343,
+      "distance_m": 1.65382587909698,
       "kind": "meaningful_offer",
       "label": "Gather Cloudberries",
       "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
-      "position": "(-174.3362, 136.3421, 107.0261)",
+      "position": "(-174.9909, 136.3892, 107.4935)",
       "simulated_seconds": 87.0,
       "stage": "arrival_to_aila",
-      "wall_seconds": 364.283449
+      "wall_seconds": 138.500861
     },
     {
       "kind": "travel_arrived",
-      "position": "(-175.0323, 136.3921, 107.523)",
-      "simulated_seconds": 87.3,
+      "position": "(-175.0116, 136.3895, 107.5082)",
+      "simulated_seconds": 87.1,
       "stage": "arrival_to_aila",
       "target": "(-175.0, 136.2714, 107.5)",
-      "wall_seconds": 364.586989
+      "wall_seconds": 138.584057
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-175.0323, 136.3921, 107.523)",
+      "position": "(-175.0116, 136.3895, 107.5082)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 87.3,
+      "simulated_seconds": 87.1,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 364.590834
+      "wall_seconds": 138.587586
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-175.0323, 136.3921, 107.523)",
+      "position": "(-175.0116, 136.3895, 107.5082)",
       "reason": "physical interaction",
-      "simulated_seconds": 87.38,
+      "simulated_seconds": 87.12,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 364.608695
+      "wall_seconds": 138.595716
     },
     {
       "input_vector": "(0.0, 0.0)",
@@ -500,215 +779,245 @@
       "locomotion_enabled": true,
       "manager_state": 0,
       "on_floor": true,
-      "position": "(-175.0323, 136.3921, 107.523)",
+      "position": "(-175.0116, 136.3895, 107.5082)",
       "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
       "prompt_position": "(-175.0, 137.0714, 109.0)",
-      "root_distance": 1.47949755191803,
+      "root_distance": 1.49406111240387,
       "root_position": "(-175.0, 136.4714, 109.0)",
       "senn_defeated": false,
-      "simulated_seconds": 87.42,
+      "simulated_seconds": 87.15,
       "stage": "arrival_to_aila",
       "velocity": "(0.0, 0.0, 0.0)",
-      "wall_seconds": 364.624763
+      "wall_seconds": 138.621179
     },
     {
       "kind": "offer_activated",
       "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
-      "position": "(-175.0323, 136.3921, 107.523)",
-      "simulated_seconds": 87.43,
+      "position": "(-175.0116, 136.3895, 107.5082)",
+      "simulated_seconds": 87.17,
       "stage": "arrival_to_aila",
-      "wall_seconds": 364.640802
+      "wall_seconds": 138.642415
     },
     {
       "kind": "input_interact",
-      "position": "(-175.0323, 136.3921, 107.523)",
+      "position": "(-175.0116, 136.3895, 107.5082)",
       "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
-      "simulated_seconds": 87.62,
+      "simulated_seconds": 87.35,
       "stage": "arrival_to_aila",
-      "wall_seconds": 364.824808
+      "wall_seconds": 138.820427
     },
     {
       "kind": "assertion",
       "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
-      "position": "(-175.0323, 136.3921, 107.523)",
-      "simulated_seconds": 87.62,
+      "position": "(-175.0116, 136.3895, 107.5082)",
+      "simulated_seconds": 87.35,
       "stage": "arrival_to_aila",
-      "wall_seconds": 364.826291
+      "wall_seconds": 138.821316
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-175.0323, 136.3921, 107.523)",
+      "position": "(-175.0116, 136.3895, 107.5082)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 87.62,
+      "simulated_seconds": 87.35,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 364.829936
+      "wall_seconds": 138.824454
     },
     {
       "gained": 4,
       "id": "cr_node_cloudberry_waycamp",
       "item": "cloudberry",
       "kind": "optional_gather",
-      "position": "(-175.0323, 136.3921, 107.523)",
-      "simulated_seconds": 89.28,
+      "position": "(-175.0116, 136.3895, 107.5082)",
+      "simulated_seconds": 89.02,
       "stage": "arrival_to_aila",
-      "wall_seconds": 365.1394
+      "wall_seconds": 139.097304
     },
     {
       "kind": "assertion",
       "label": "Optional arrival gather produced cloudberry",
-      "position": "(-175.0323, 136.3921, 107.523)",
-      "simulated_seconds": 89.28,
+      "position": "(-175.0116, 136.3895, 107.5082)",
+      "simulated_seconds": 89.02,
       "stage": "arrival_to_aila",
-      "wall_seconds": 365.140476
+      "wall_seconds": 139.098249
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-175.0323, 136.3921, 107.523)",
+      "body_position": "(-175.0116, 136.3895, 107.5082)",
       "kind": "travel_start",
-      "position": "(-175.0323, 136.3921, 107.523)",
-      "simulated_seconds": 89.28,
+      "position": "(-175.0116, 136.3895, 107.5082)",
+      "simulated_seconds": 89.02,
       "stage": "arrival_to_aila",
       "target": "(-300.0, 145.0, 200.0)",
-      "wall_seconds": 365.141302
+      "wall_seconds": 139.098955
     },
     {
       "chosen": false,
-      "distance_m": 1.08090758323669,
+      "distance_m": 2.37119674682617,
       "kind": "meaningful_offer",
       "label": "Take Revive",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_gate_route_revive_01/Interactable",
-      "position": "(-208.1103, 138.8008, 132.0014)",
-      "simulated_seconds": 98.0,
+      "position": "(-206.4872, 138.6827, 130.802)",
+      "simulated_seconds": 97.0,
       "stage": "arrival_to_aila",
-      "wall_seconds": 366.536622
+      "wall_seconds": 140.634361
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-294.6743, 145.0309, 196.0583)",
+      "position": "(-294.7905, 145.0309, 196.1451)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 119.57,
+      "simulated_seconds": 119.0,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 369.887362
+      "wall_seconds": 143.902307
     },
     {
       "kind": "travel_arrived",
-      "position": "(-299.7286, 145.0309, 199.7991)",
-      "simulated_seconds": 120.97,
+      "position": "(-299.7108, 145.0309, 199.7861)",
+      "simulated_seconds": 120.37,
       "stage": "arrival_to_aila",
       "target": "(-300.0, 145.0, 200.0)",
-      "wall_seconds": 371.196535
+      "wall_seconds": 145.200428
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-299.7286, 145.0309, 199.7991)",
+      "position": "(-299.7108, 145.0309, 199.7861)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 120.97,
+      "simulated_seconds": 120.37,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 371.202385
+      "wall_seconds": 145.204317
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-299.7286, 145.0309, 199.7991)",
+      "body_position": "(-299.7108, 145.0309, 199.7861)",
       "kind": "travel_start",
-      "position": "(-299.7286, 145.0309, 199.7991)",
-      "simulated_seconds": 120.97,
+      "position": "(-299.7108, 145.0309, 199.7861)",
+      "simulated_seconds": 120.37,
       "stage": "arrival_to_aila",
       "target": "(-292.0, 159.2031, 318.5)",
-      "wall_seconds": 371.20417
+      "wall_seconds": 145.205143
     },
     {
       "chosen": false,
-      "distance_m": 2.07012724876404,
+      "distance_m": 2.3594114780426,
       "kind": "meaningful_offer",
       "label": "Take Good Candy",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_candy_gate_route_good_02/Interactable",
-      "position": "(-295.3862, 152.6207, 266.4341)",
-      "simulated_seconds": 134.5,
+      "position": "(-295.5086, 152.3696, 264.4442)",
+      "simulated_seconds": 133.5,
       "stage": "arrival_to_aila",
-      "wall_seconds": 373.311732
+      "wall_seconds": 147.178592
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-292.3788, 158.4539, 312.676)",
+      "position": "(-292.464, 158.2862, 311.3463)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 143.83,
+      "simulated_seconds": 142.97,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 374.87929
+      "wall_seconds": 148.645063
     },
     {
       "chosen": false,
-      "distance_m": 1.84993433952332,
+      "distance_m": 1.68376576900482,
       "kind": "meaningful_offer",
       "label": "Gather Gale Fiber",
       "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_gate/DailyHarvest/Interactable",
-      "position": "(-292.0098, 159.1694, 318.3486)",
-      "simulated_seconds": 145.0,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 144.5,
       "stage": "arrival_to_aila",
-      "wall_seconds": 375.984473
+      "wall_seconds": 150.124907
     },
     {
       "kind": "travel_arrived",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 145.17,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 144.57,
       "stage": "arrival_to_aila",
       "target": "(-292.0, 159.2031, 318.5)",
-      "wall_seconds": 376.150003
+      "wall_seconds": 150.186941
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-291.9976, 159.1929, 318.5352)",
+      "position": "(-291.9984, 159.1916, 318.5247)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 145.17,
+      "simulated_seconds": 144.57,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 376.153732
+      "wall_seconds": 150.190854
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "reason": "button hotbar_1",
-      "simulated_seconds": 145.28,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "reason": "button hotbar_3",
+      "simulated_seconds": 144.63,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 376.178194
+      "wall_seconds": 150.206085
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-291.9976, 159.1929, 318.5352)",
+      "position": "(-291.9984, 159.1916, 318.5247)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 145.5,
+      "simulated_seconds": 144.85,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 376.388678
+      "wall_seconds": 150.414949
     },
     {
-      "kind": "assertion",
-      "label": "Real hotbar input equipped gathering knife",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 145.5,
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-291.9984, 159.1916, 318.5247)",
+      "kind": "travel_start",
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 144.85,
       "stage": "arrival_to_aila",
-      "wall_seconds": 376.390762
+      "target": "(-292.0, 159.2031, 318.5)",
+      "wall_seconds": 150.416082
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-291.9976, 159.1929, 318.5352)",
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 144.92,
+      "stage": "arrival_to_aila",
+      "time_scale": 1.0,
+      "wall_seconds": 150.430951
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 145.13,
+      "stage": "arrival_to_aila",
+      "target": "(-292.0, 159.2031, 318.5)",
+      "wall_seconds": 150.642442
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 145.13,
+      "stage": "arrival_to_aila",
+      "time_scale": 8.0,
+      "wall_seconds": 150.646007
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-291.9984, 159.1916, 318.5247)",
       "reason": "physical interaction",
-      "simulated_seconds": 145.65,
+      "simulated_seconds": 145.23,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 376.428459
+      "wall_seconds": 150.663752
     },
     {
       "input_vector": "(0.0, 0.0)",
@@ -716,361 +1025,361 @@
       "locomotion_enabled": true,
       "manager_state": 0,
       "on_floor": true,
-      "position": "(-291.9976, 159.1929, 318.5352)",
+      "position": "(-291.9984, 159.1916, 318.5247)",
       "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_gate/DailyHarvest/Interactable",
       "prompt_position": "(-292.0, 160.0031, 320.0)",
-      "root_distance": 1.47975599765778,
+      "root_distance": 1.49039351940155,
       "root_position": "(-292.0, 159.4031, 320.0)",
       "senn_defeated": false,
-      "simulated_seconds": 145.68,
+      "simulated_seconds": 145.27,
       "stage": "arrival_to_aila",
       "velocity": "(0.0, 0.0, 0.0)",
-      "wall_seconds": 376.441183
+      "wall_seconds": 150.677885
     },
     {
       "kind": "offer_activated",
       "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_gate/DailyHarvest/Interactable",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 145.7,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 145.28,
       "stage": "arrival_to_aila",
-      "wall_seconds": 376.454034
+      "wall_seconds": 150.69295
     },
     {
       "kind": "input_interact",
-      "position": "(-291.9976, 159.1929, 318.5352)",
+      "position": "(-291.9984, 159.1916, 318.5247)",
       "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_gate/DailyHarvest/Interactable",
-      "simulated_seconds": 145.88,
+      "simulated_seconds": 145.47,
       "stage": "arrival_to_aila",
-      "wall_seconds": 376.632201
+      "wall_seconds": 150.889938
     },
     {
       "kind": "assertion",
       "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_gate/DailyHarvest/Interactable",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 145.88,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 145.47,
       "stage": "arrival_to_aila",
-      "wall_seconds": 376.633203
+      "wall_seconds": 150.891125
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-291.9976, 159.1929, 318.5352)",
+      "position": "(-291.9984, 159.1916, 318.5247)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 145.88,
+      "simulated_seconds": 145.47,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 376.636377
+      "wall_seconds": 150.895406
     },
     {
       "gained": 3,
       "id": "cr_node_gale_fiber_gate",
       "item": "gale_fiber",
       "kind": "optional_gather",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 147.55,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 147.13,
       "stage": "arrival_to_aila",
-      "wall_seconds": 376.891612
+      "wall_seconds": 151.138879
     },
     {
       "kind": "assertion",
       "label": "Optional arrival gather produced gale_fiber",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 147.55,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 147.13,
       "stage": "arrival_to_aila",
-      "wall_seconds": 376.892938
+      "wall_seconds": 151.140057
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-291.9976, 159.1929, 318.5352)",
+      "body_position": "(-291.9984, 159.1916, 318.5247)",
       "kind": "travel_start",
-      "position": "(-291.9976, 159.1929, 318.5352)",
-      "simulated_seconds": 147.55,
+      "position": "(-291.9984, 159.1916, 318.5247)",
+      "simulated_seconds": 147.13,
       "stage": "arrival_to_aila",
       "target": "(-280.0, 180.0, 490.0)",
-      "wall_seconds": 376.893942
+      "wall_seconds": 151.141354
     },
     {
       "chosen": false,
-      "distance_m": 1.90835559368134,
+      "distance_m": 1.98142576217651,
       "kind": "meaningful_offer",
       "label": "Take Small Potion",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_gate_route_potion_small_02/Interactable",
-      "position": "(-283.1103, 175.2083, 445.4479)",
-      "simulated_seconds": 173.5,
+      "position": "(-283.1508, 175.1349, 444.8665)",
+      "simulated_seconds": 173.0,
       "stage": "arrival_to_aila",
-      "wall_seconds": 380.673286
+      "wall_seconds": 155.211574
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.4562, 180.0309, 483.4317)",
+      "position": "(-280.4621, 180.031, 483.3442)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 181.17,
+      "simulated_seconds": 180.77,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 381.814241
+      "wall_seconds": 156.90572
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.0262, 180.0309, 489.623)",
-      "simulated_seconds": 182.55,
+      "position": "(-280.0207, 180.0309, 489.7019)",
+      "simulated_seconds": 182.18,
       "stage": "arrival_to_aila",
       "target": "(-280.0, 180.0, 490.0)",
-      "wall_seconds": 383.05117
+      "wall_seconds": 158.190672
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.0262, 180.0309, 489.623)",
+      "position": "(-280.0207, 180.0309, 489.7019)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 182.55,
+      "simulated_seconds": 182.18,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 383.055787
+      "wall_seconds": 158.196345
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.0262, 180.0309, 489.623)",
+      "body_position": "(-280.0207, 180.0309, 489.7019)",
       "kind": "travel_start",
-      "position": "(-280.0262, 180.0309, 489.623)",
-      "simulated_seconds": 182.55,
+      "position": "(-280.0207, 180.0309, 489.7019)",
+      "simulated_seconds": 182.18,
       "stage": "arrival_to_aila",
       "target": "(-280.0, 180.0, 508.0)",
-      "wall_seconds": 383.056893
+      "wall_seconds": 158.197459
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.01, 180.0309, 500.6177)",
+      "position": "(-280.0067, 180.0309, 502.4468)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 184.8,
+      "simulated_seconds": 184.78,
       "stage": "arrival_to_aila",
       "time_scale": 1.0,
-      "wall_seconds": 383.651042
+      "wall_seconds": 158.902982
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.0005, 180.0308, 507.6501)",
-      "simulated_seconds": 186.35,
+      "position": "(-280.0005, 180.0308, 507.6479)",
+      "simulated_seconds": 185.97,
       "stage": "arrival_to_aila",
       "target": "(-280.0, 180.0, 508.0)",
-      "wall_seconds": 385.08705
+      "wall_seconds": 159.957748
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.0005, 180.0308, 507.6501)",
+      "position": "(-280.0005, 180.0308, 507.6479)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 186.35,
+      "simulated_seconds": 185.97,
       "stage": "arrival_to_aila",
       "time_scale": 8.0,
-      "wall_seconds": 385.091579
+      "wall_seconds": 159.963247
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.0005, 180.0308, 507.6501)",
+      "body_position": "(-280.0005, 180.0308, 507.6479)",
       "kind": "travel_start",
-      "position": "(-280.0005, 180.0308, 507.6501)",
-      "simulated_seconds": 186.35,
+      "position": "(-280.0005, 180.0308, 507.6479)",
+      "simulated_seconds": 185.97,
       "stage": "talk_warden_aila",
-      "target": "(-280.0, 180.0, 507.6501)",
-      "wall_seconds": 385.093213
+      "target": "(-280.0, 180.0, 507.6479)",
+      "wall_seconds": 159.964881
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.0005, 180.0308, 507.6501)",
+      "position": "(-280.0005, 180.0308, 507.6479)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 186.48,
+      "simulated_seconds": 186.12,
       "stage": "talk_warden_aila",
       "time_scale": 1.0,
-      "wall_seconds": 385.129175
+      "wall_seconds": 160.007953
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.0005, 180.0308, 507.6501)",
-      "simulated_seconds": 186.72,
+      "position": "(-280.0005, 180.0308, 507.6479)",
+      "simulated_seconds": 186.37,
       "stage": "talk_warden_aila",
-      "target": "(-280.0, 180.0, 507.6501)",
-      "wall_seconds": 385.325611
+      "target": "(-280.0, 180.0, 507.6479)",
+      "wall_seconds": 160.219824
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.0005, 180.0308, 507.6501)",
+      "position": "(-280.0005, 180.0308, 507.6479)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 186.72,
+      "simulated_seconds": 186.37,
       "stage": "talk_warden_aila",
       "time_scale": 8.0,
-      "wall_seconds": 385.330308
+      "wall_seconds": 160.225015
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.0005, 180.0308, 507.6501)",
+      "body_position": "(-280.0005, 180.0308, 507.6479)",
       "kind": "travel_start",
-      "position": "(-280.0005, 180.0308, 507.6501)",
-      "simulated_seconds": 186.72,
+      "position": "(-280.0005, 180.0308, 507.6479)",
+      "simulated_seconds": 186.37,
       "stage": "talk_warden_aila",
       "target": "(-280.0, 180.0, 520.0)",
-      "wall_seconds": 385.331526
+      "wall_seconds": 160.226237
     },
     {
       "chosen": false,
-      "distance_m": 1.78046846389771,
+      "distance_m": 2.21343731880188,
       "kind": "meaningful_offer",
       "label": "Take Good Candy",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_good_candy/Interactable",
-      "position": "(-280.0005, 180.0309, 508.7268)",
-      "simulated_seconds": 187.0,
+      "position": "(-280.0005, 180.0308, 507.9746)",
+      "simulated_seconds": 186.5,
       "stage": "talk_warden_aila",
-      "wall_seconds": 385.40081
+      "wall_seconds": 160.275317
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.0005, 180.0309, 514.3933)",
+      "position": "(-280.0005, 180.0309, 514.3912)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 188.12,
+      "simulated_seconds": 187.77,
       "stage": "talk_warden_aila",
       "time_scale": 1.0,
-      "wall_seconds": 385.728017
+      "wall_seconds": 160.604624
     },
     {
       "chosen": false,
-      "distance_m": 1.39569413661957,
+      "distance_m": 2.10470056533813,
       "kind": "meaningful_offer",
       "label": "Rest at galefoot waycamp",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/Interactable",
-      "position": "(-280.0002, 180.0309, 518.7256)",
-      "simulated_seconds": 189.0,
+      "position": "(-280.0004, 180.0309, 517.9737)",
+      "simulated_seconds": 188.5,
       "stage": "talk_warden_aila",
-      "wall_seconds": 386.471243
+      "wall_seconds": 161.2195
     },
     {
       "chosen": false,
-      "distance_m": 2.12338471412659,
+      "distance_m": 2.6440601348877,
       "kind": "meaningful_offer",
       "label": "Craft",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/CraftInteractable",
-      "position": "(-280.0002, 180.0309, 518.7256)",
-      "simulated_seconds": 189.0,
+      "position": "(-280.0004, 180.0309, 517.9737)",
+      "simulated_seconds": 188.5,
       "stage": "talk_warden_aila",
-      "wall_seconds": 386.473119
+      "wall_seconds": 161.220919
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.0001, 180.0298, 519.6799)",
-      "simulated_seconds": 189.32,
+      "position": "(-280.0001, 180.0309, 519.6779)",
+      "simulated_seconds": 188.97,
       "stage": "talk_warden_aila",
       "target": "(-280.0, 180.0, 520.0)",
-      "wall_seconds": 386.78578
+      "wall_seconds": 161.690386
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.0001, 180.0298, 519.6799)",
+      "position": "(-280.0001, 180.0309, 519.6779)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 189.32,
+      "simulated_seconds": 188.97,
       "stage": "talk_warden_aila",
       "time_scale": 8.0,
-      "wall_seconds": 386.79124
+      "wall_seconds": 161.696018
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.0001, 180.0298, 519.6799)",
+      "body_position": "(-280.0001, 180.0309, 519.6779)",
       "kind": "travel_start",
-      "position": "(-280.0001, 180.0298, 519.6799)",
-      "simulated_seconds": 189.32,
+      "position": "(-280.0001, 180.0309, 519.6779)",
+      "simulated_seconds": 188.97,
       "stage": "talk_warden_aila",
       "target": "(-280.0, 180.0, 518.0)",
-      "wall_seconds": 386.792439
+      "wall_seconds": 161.697486
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.0001, 180.0298, 519.6799)",
+      "position": "(-280.0001, 180.0309, 519.6779)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 189.38,
+      "simulated_seconds": 189.08,
       "stage": "talk_warden_aila",
       "time_scale": 1.0,
-      "wall_seconds": 386.814756
+      "wall_seconds": 161.729886
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.0001, 180.0309, 518.3156)",
-      "simulated_seconds": 189.85,
+      "position": "(-280.0001, 180.0309, 518.3137)",
+      "simulated_seconds": 189.55,
       "stage": "talk_warden_aila",
       "target": "(-280.0, 180.0, 518.0)",
-      "wall_seconds": 387.261663
+      "wall_seconds": 162.177771
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.0001, 180.0309, 518.3156)",
+      "position": "(-280.0001, 180.0309, 518.3137)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 189.85,
+      "simulated_seconds": 189.55,
       "stage": "talk_warden_aila",
       "time_scale": 8.0,
-      "wall_seconds": 387.268528
+      "wall_seconds": 162.184438
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.0001, 180.0309, 518.3156)",
+      "body_position": "(-280.0001, 180.0309, 518.3137)",
       "kind": "travel_start",
-      "position": "(-280.0001, 180.0309, 518.3156)",
-      "simulated_seconds": 189.85,
+      "position": "(-280.0001, 180.0309, 518.3137)",
+      "simulated_seconds": 189.55,
       "stage": "talk_warden_aila",
       "target": "(-275.0, 180.0, 518.0)",
-      "wall_seconds": 387.270119
+      "wall_seconds": 162.185955
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.0001, 180.0309, 518.3156)",
+      "position": "(-280.0001, 180.0309, 518.3137)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 189.95,
+      "simulated_seconds": 189.73,
       "stage": "talk_warden_aila",
       "time_scale": 1.0,
-      "wall_seconds": 387.307774
+      "wall_seconds": 162.245883
     },
     {
       "chosen": false,
-      "distance_m": 3.31998562812805,
+      "distance_m": 2.61494851112366,
       "kind": "meaningful_offer",
       "label": "Greet Warden Aila",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Warden Aila/Interactable",
-      "position": "(-277.5944, 180.0309, 518.1639)",
+      "position": "(-276.513, 180.0309, 518.095)",
       "simulated_seconds": 190.5,
       "stage": "talk_warden_aila",
-      "wall_seconds": 387.832695
+      "wall_seconds": 162.963808
     },
     {
       "kind": "travel_arrived",
-      "position": "(-275.3106, 180.0309, 518.0197)",
-      "simulated_seconds": 191.08,
+      "position": "(-275.3107, 180.0309, 518.0196)",
+      "simulated_seconds": 190.87,
       "stage": "talk_warden_aila",
       "target": "(-275.0, 180.0, 518.0)",
-      "wall_seconds": 388.410585
+      "wall_seconds": 163.321652
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-275.3106, 180.0309, 518.0197)",
+      "position": "(-275.3107, 180.0309, 518.0196)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 191.08,
+      "simulated_seconds": 190.87,
       "stage": "talk_warden_aila",
       "time_scale": 8.0,
-      "wall_seconds": 388.415491
+      "wall_seconds": 163.327533
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-275.3106, 180.0309, 518.0197)",
+      "position": "(-275.3107, 180.0309, 518.0196)",
       "reason": "dialogue warden_aila",
-      "simulated_seconds": 191.17,
+      "simulated_seconds": 190.92,
       "stage": "talk_warden_aila",
       "time_scale": 1.0,
-      "wall_seconds": 388.437056
+      "wall_seconds": 163.346242
     },
     {
       "input_vector": "(0.0, 0.0)",
@@ -1078,94 +1387,94 @@
       "locomotion_enabled": true,
       "manager_state": 0,
       "on_floor": true,
-      "position": "(-275.3106, 180.0309, 518.0197)",
+      "position": "(-275.3107, 180.0309, 518.0196)",
       "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Warden Aila/Interactable",
       "prompt_position": "(-275.0, 180.99, 520.0)",
-      "root_distance": 2.00473928451538,
+      "root_distance": 2.00486445426941,
       "root_position": "(-275.0, 180.0, 520.0)",
       "senn_defeated": false,
-      "simulated_seconds": 191.2,
+      "simulated_seconds": 190.95,
       "stage": "talk_warden_aila",
       "velocity": "(0.0, 0.0, 0.0)",
-      "wall_seconds": 388.455796
+      "wall_seconds": 163.367145
     },
     {
       "kind": "offer_activated",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Warden Aila/Interactable",
-      "position": "(-275.3106, 180.0309, 518.0197)",
-      "simulated_seconds": 191.22,
+      "position": "(-275.3107, 180.0309, 518.0196)",
+      "simulated_seconds": 190.97,
       "stage": "talk_warden_aila",
-      "wall_seconds": 388.509416
+      "wall_seconds": 163.417127
     },
     {
       "kind": "input_interact",
-      "position": "(-275.3106, 180.0309, 518.0197)",
+      "position": "(-275.3107, 180.0309, 518.0196)",
       "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Warden Aila/Interactable",
-      "simulated_seconds": 191.4,
+      "simulated_seconds": 191.15,
       "stage": "talk_warden_aila",
-      "wall_seconds": 388.665288
+      "wall_seconds": 163.563942
     },
     {
       "kind": "assertion",
       "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Warden Aila/Interactable",
-      "position": "(-275.3106, 180.0309, 518.0197)",
-      "simulated_seconds": 191.4,
+      "position": "(-275.3107, 180.0309, 518.0196)",
+      "simulated_seconds": 191.15,
       "stage": "talk_warden_aila",
-      "wall_seconds": 388.667825
+      "wall_seconds": 163.56586
     },
     {
       "id": "cloudreach_aila_arrival",
       "kind": "dialogue_finished",
-      "position": "(-275.3106, 180.0309, 518.0197)",
-      "simulated_seconds": 192.82,
+      "position": "(-275.3107, 180.0309, 518.0196)",
+      "simulated_seconds": 192.57,
       "stage": "talk_warden_aila",
-      "wall_seconds": 390.077408
+      "wall_seconds": 164.989483
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-275.3106, 180.0309, 518.0197)",
+      "position": "(-275.3107, 180.0309, 518.0196)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 193.25,
+      "simulated_seconds": 193.0,
       "stage": "talk_warden_aila",
       "time_scale": 8.0,
-      "wall_seconds": 390.507765
+      "wall_seconds": 165.420886
     },
     {
       "kind": "assertion",
       "label": "Dialogue completed cloudreach_crisis_learned",
-      "position": "(-275.3106, 180.0309, 518.0197)",
-      "simulated_seconds": 193.25,
+      "position": "(-275.3107, 180.0309, 518.0196)",
+      "simulated_seconds": 193.0,
       "stage": "talk_warden_aila",
-      "wall_seconds": 390.509301
+      "wall_seconds": 165.422539
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-275.3106, 180.0309, 518.0197)",
+      "position": "(-275.3107, 180.0309, 518.0196)",
       "reason": "physical interaction",
-      "simulated_seconds": 193.32,
+      "simulated_seconds": 193.1,
       "stage": "pickup_cr_pickup_lower_good_candy",
       "time_scale": 1.0,
-      "wall_seconds": 390.528582
+      "wall_seconds": 165.450573
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-275.3106, 180.0309, 518.0197)",
+      "body_position": "(-275.3107, 180.0309, 518.0196)",
       "kind": "travel_start",
-      "position": "(-275.3106, 180.0309, 518.0197)",
-      "simulated_seconds": 193.32,
+      "position": "(-275.3107, 180.0309, 518.0196)",
+      "simulated_seconds": 193.1,
       "stage": "pickup_cr_pickup_lower_good_candy",
       "target": "(-281.5, 179.8, 508.0)",
-      "wall_seconds": 390.53
+      "wall_seconds": 165.452368
     },
     {
       "kind": "travel_arrived",
-      "position": "(-281.545, 180.0296, 507.9272)",
-      "simulated_seconds": 195.88,
+      "position": "(-281.5451, 180.0296, 507.927)",
+      "simulated_seconds": 195.67,
       "stage": "pickup_cr_pickup_lower_good_candy",
       "target": "(-281.5, 179.8, 508.0)",
-      "wall_seconds": 393.075292
+      "wall_seconds": 167.993898
     },
     {
       "input_vector": "(0.0, 0.0)",
@@ -1173,397 +1482,1376 @@
       "locomotion_enabled": true,
       "manager_state": 0,
       "on_floor": true,
-      "position": "(-281.545, 180.0296, 507.9272)",
+      "position": "(-281.5451, 180.0296, 507.927)",
       "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_good_candy/Interactable",
       "prompt_position": "(-281.5, 180.6, 509.5)",
-      "root_distance": 1.57370603084564,
+      "root_distance": 1.57392382621765,
       "root_position": "(-281.5, 180.0, 509.5)",
       "senn_defeated": false,
-      "simulated_seconds": 195.92,
+      "simulated_seconds": 195.7,
       "stage": "pickup_cr_pickup_lower_good_candy",
       "velocity": "(0.0, 0.0, 0.0)",
-      "wall_seconds": 393.114565
+      "wall_seconds": 168.035702
     },
     {
       "kind": "offer_activated",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_good_candy/Interactable",
-      "position": "(-281.545, 180.0296, 507.9272)",
-      "simulated_seconds": 195.93,
+      "position": "(-281.5451, 180.0296, 507.927)",
+      "simulated_seconds": 195.72,
       "stage": "pickup_cr_pickup_lower_good_candy",
-      "wall_seconds": 393.125577
+      "wall_seconds": 168.056227
     },
     {
       "kind": "input_interact",
-      "position": "(-281.545, 180.0296, 507.9272)",
+      "position": "(-281.5451, 180.0296, 507.927)",
       "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_good_candy/Interactable",
-      "simulated_seconds": 196.12,
+      "simulated_seconds": 195.9,
       "stage": "pickup_cr_pickup_lower_good_candy",
-      "wall_seconds": 393.305622
+      "wall_seconds": 168.223261
     },
     {
       "kind": "assertion",
       "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_good_candy/Interactable",
-      "position": "(-281.545, 180.0296, 507.9272)",
-      "simulated_seconds": 196.12,
+      "position": "(-281.5451, 180.0296, 507.927)",
+      "simulated_seconds": 195.9,
       "stage": "pickup_cr_pickup_lower_good_candy",
-      "wall_seconds": 393.307881
+      "wall_seconds": 168.22581
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-281.545, 180.0296, 507.9272)",
+      "position": "(-281.5451, 180.0296, 507.927)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 196.12,
+      "simulated_seconds": 195.9,
       "stage": "pickup_cr_pickup_lower_good_candy",
       "time_scale": 8.0,
-      "wall_seconds": 393.320079
+      "wall_seconds": 168.23237
     },
     {
       "choice": "Use the grounded bridge network and accept required encounters; optional trainers remain optional",
       "kind": "player_purpose",
-      "position": "(-281.545, 180.0296, 507.9272)",
+      "position": "(-281.5451, 180.0296, 507.927)",
       "purpose": "Map the lower storm anchors and reconnect the stranded causeway",
-      "simulated_seconds": 196.12,
+      "simulated_seconds": 195.9,
       "stage": "lower_west_anchor",
-      "wall_seconds": 393.322478
+      "wall_seconds": 168.233923
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-281.545, 180.0296, 507.9272)",
+      "body_position": "(-281.5451, 180.0296, 507.927)",
       "kind": "travel_start",
-      "position": "(-281.545, 180.0296, 507.9272)",
-      "simulated_seconds": 196.12,
+      "position": "(-281.5451, 180.0296, 507.927)",
+      "simulated_seconds": 195.9,
       "stage": "lower_west_anchor",
-      "target": "(-280.0, 180.0, 507.9272)",
-      "wall_seconds": 393.325912
+      "target": "(-280.0, 180.0, 507.927)",
+      "wall_seconds": 168.235935
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-281.545, 180.0296, 507.9272)",
+      "position": "(-281.5451, 180.0296, 507.927)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 196.28,
+      "simulated_seconds": 196.0,
       "stage": "lower_west_anchor",
       "time_scale": 1.0,
-      "wall_seconds": 393.401151
+      "wall_seconds": 168.272183
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.3471, 180.0309, 507.9272)",
-      "simulated_seconds": 196.72,
+      "position": "(-280.3472, 180.0309, 507.927)",
+      "simulated_seconds": 196.43,
       "stage": "lower_west_anchor",
-      "target": "(-280.0, 180.0, 507.9272)",
-      "wall_seconds": 393.77488
+      "target": "(-280.0, 180.0, 507.927)",
+      "wall_seconds": 168.679628
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.3471, 180.0309, 507.9272)",
+      "position": "(-280.3472, 180.0309, 507.927)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 196.72,
+      "simulated_seconds": 196.43,
       "stage": "lower_west_anchor",
       "time_scale": 8.0,
-      "wall_seconds": 393.781286
+      "wall_seconds": 168.685973
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.3471, 180.0309, 507.9272)",
+      "body_position": "(-280.3472, 180.0309, 507.927)",
       "kind": "travel_start",
-      "position": "(-280.3471, 180.0309, 507.9272)",
-      "simulated_seconds": 196.72,
+      "position": "(-280.3472, 180.0309, 507.927)",
+      "simulated_seconds": 196.43,
       "stage": "lower_west_anchor",
       "target": "(-280.0, 180.0, 520.0)",
-      "wall_seconds": 393.782772
+      "wall_seconds": 168.68759
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-280.199, 180.0308, 513.0851)",
+      "position": "(-280.2033, 180.0309, 512.9184)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 197.8,
+      "simulated_seconds": 197.48,
       "stage": "lower_west_anchor",
       "time_scale": 1.0,
-      "wall_seconds": 394.123697
+      "wall_seconds": 168.989127
     },
     {
       "kind": "travel_arrived",
-      "position": "(-280.0087, 180.0309, 519.7)",
-      "simulated_seconds": 199.27,
+      "position": "(-280.0087, 180.0309, 519.6996)",
+      "simulated_seconds": 198.98,
       "stage": "lower_west_anchor",
       "target": "(-280.0, 180.0, 520.0)",
-      "wall_seconds": 395.415775
+      "wall_seconds": 170.344463
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-280.0087, 180.0309, 519.7)",
+      "position": "(-280.0087, 180.0309, 519.6996)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 199.27,
+      "simulated_seconds": 198.98,
       "stage": "lower_west_anchor",
       "time_scale": 8.0,
-      "wall_seconds": 395.422316
+      "wall_seconds": 170.350451
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-280.0087, 180.0309, 519.7)",
+      "body_position": "(-280.0087, 180.0309, 519.6996)",
       "kind": "travel_start",
-      "position": "(-280.0087, 180.0309, 519.7)",
-      "simulated_seconds": 199.27,
+      "position": "(-280.0087, 180.0309, 519.6996)",
+      "simulated_seconds": 198.98,
       "stage": "lower_west_anchor",
       "target": "(-120.0, 205.0, 700.0)",
-      "wall_seconds": 395.424105
+      "wall_seconds": 170.352007
     },
     {
       "chosen": false,
-      "distance_m": 2.30547618865967,
+      "distance_m": 0.979340255260468,
       "kind": "meaningful_offer",
       "label": "Rest a Creature",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/galefoot_waycamp/CampCreatureBed/Interactable",
-      "position": "(-277.8598, 180.2781, 522.121)",
+      "position": "(-276.9293, 180.2753, 523.1692)",
       "simulated_seconds": 200.0,
       "stage": "lower_west_anchor",
-      "wall_seconds": 395.623425
-    },
-    {
-      "attempt": 1,
-      "blocker": "/root/CloudreachCliffs/lower_cliff_foragers_0",
-      "blocker_displacement_m": 3.52379703521729,
-      "blocker_home": "(-188.2378, 194.3439, 620.5447)",
-      "blocker_position": "(-186.6602, 194.6689, 623.6788)",
-      "blocker_radius_m": 1.08332752684913,
-      "clearance_m": 2.2,
-      "kind": "mobile_obstacle_detour",
-      "method": "three-point real-stick tangent arc; mirrored retry; no position write",
-      "position": "(-187.4372, 194.5009, 622.4124)",
-      "side_try": 1,
-      "simulated_seconds": 235.27,
-      "stage": "lower_west_anchor",
-      "wall_seconds": 403.692846,
-      "waypoints": [
-        "(-186.5312, 194.5009, 621.4826)",
-        "(-184.9997, 194.5009, 622.2356)",
-        "(-184.4959, 194.5009, 624.0739)"
-      ]
-    },
-    {
-      "attempt": 1,
-      "blocker": "/root/CloudreachCliffs/lower_cliff_foragers_0",
-      "kind": "mobile_obstacle_cleared",
-      "passed_plane_m": 1.6419163942337,
-      "position": "(-184.3873, 194.8483, 623.8787)",
-      "side_try": 1,
-      "simulated_seconds": 237.15,
-      "stage": "lower_west_anchor",
-      "wall_seconds": 404.203809
+      "wall_seconds": 170.607609
     },
     {
       "kind": "clock_mode",
       "physics_hz": 60,
-      "position": "(-124.0948, 205.0309, 695.2466)",
+      "position": "(-123.5247, 205.0309, 696.0337)",
       "reason": "grounded precision approach",
-      "simulated_seconds": 256.02,
+      "simulated_seconds": 246.57,
       "stage": "lower_west_anchor",
       "time_scale": 1.0,
-      "wall_seconds": 408.393545
+      "wall_seconds": 181.991732
     },
     {
       "kind": "travel_arrived",
-      "position": "(-120.2094, 205.0309, 699.7566)",
-      "simulated_seconds": 257.35,
+      "position": "(-120.2332, 205.0309, 699.7376)",
+      "simulated_seconds": 247.7,
       "stage": "lower_west_anchor",
       "target": "(-120.0, 205.0, 700.0)",
-      "wall_seconds": 409.637423
+      "wall_seconds": 183.02455
     },
     {
       "kind": "clock_mode",
       "physics_hz": 480,
-      "position": "(-120.2094, 205.0309, 699.7566)",
+      "position": "(-120.2332, 205.0309, 699.7376)",
       "reason": "resume route diagnosis",
-      "simulated_seconds": 257.35,
+      "simulated_seconds": 247.7,
       "stage": "lower_west_anchor",
       "time_scale": 8.0,
-      "wall_seconds": 409.643376
+      "wall_seconds": 183.029988
     },
     {
       "body_path": "/root/CloudreachCliffs/Player",
-      "body_position": "(-120.2094, 205.0309, 699.7566)",
+      "body_position": "(-120.2332, 205.0309, 699.7376)",
       "kind": "travel_start",
-      "position": "(-120.2094, 205.0309, 699.7566)",
-      "simulated_seconds": 257.35,
+      "position": "(-120.2332, 205.0309, 699.7376)",
+      "simulated_seconds": 247.7,
       "stage": "lower_west_anchor",
       "target": "(-260.0, 235.0, 790.0)",
-      "wall_seconds": 409.645241
+      "wall_seconds": 183.031728
     },
     {
       "chosen": false,
-      "distance_m": 1.61623203754425,
+      "distance_m": 1.76659023761749,
       "kind": "meaningful_offer",
       "label": "Take Small Potion",
       "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_potion/Interactable",
-      "position": "(-124.7547, 205.0309, 702.689)",
-      "simulated_seconds": 258.5,
+      "position": "(-125.4064, 205.0569, 703.0791)",
+      "simulated_seconds": 249.0,
       "stage": "lower_west_anchor",
-      "wall_seconds": 409.868629
+      "wall_seconds": 183.287875
     },
     {
       "chosen": false,
-      "distance_m": 0.781006217002869,
+      "distance_m": 1.978360414505,
       "kind": "meaningful_offer",
-      "label": "Open Satchel",
-      "path": "/root/CloudreachCliffs/DeathSatchel_1/Interactable",
-      "position": "(-129.1836, 205.5981, 704.3939)",
-      "simulated_seconds": 269.5,
+      "label": "Take Good Candy",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_candy_gate_route_good_03/Interactable",
+      "position": "(-234.4229, 230.5027, 773.5143)",
+      "simulated_seconds": 275.5,
       "stage": "lower_west_anchor",
-      "wall_seconds": 411.716605
+      "wall_seconds": 188.106873
     },
     {
-      "expected": "(-146.1106, 210.5837, 716.4774)",
-      "from": "(-120.2094, 205.0309, 699.7566)",
-      "kind": "segment_fall",
-      "position": "(-278.0, 181.0, 522.0)",
-      "recent_wall_contacts": [
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-129.1836, 205.5981, 704.3939)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-278.0, 181.0, 522.0)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-278.0, 181.0, 522.0)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-278.0, 181.0, 522.0)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-278.0, 181.0, 522.0)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-278.0, 181.0, 522.0)"
-        },
-        {
-          "body": "/root/CloudreachCliffs/AuthoredRoutes/LowerOverlookLoopCliffShoulders/Ridge002RockShoulder38/VegetatedGeologicalShelf2/Collision",
-          "normal": "(0.089821, -0.237754, -0.967164)",
-          "position": "(-278.0, 181.0, 522.0)"
-        }
-      ],
-      "simulated_seconds": 270.4,
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-253.4789, 234.9857, 785.7896)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 280.12,
+      "stage": "lower_west_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 188.914628
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-259.7394, 235.0309, 789.8316)",
+      "simulated_seconds": 281.75,
       "stage": "lower_west_anchor",
       "target": "(-260.0, 235.0, 790.0)",
-      "wall_seconds": 411.860103
+      "wall_seconds": 190.444444
     },
     {
-      "kind": "FAIL",
-      "message": "Fell below authored segment toward (-260.0, 235.0, 790.0)",
-      "position": "(-278.0, 181.0, 522.0)",
-      "simulated_seconds": 270.4,
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-259.7394, 235.0309, 789.8316)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 281.75,
       "stage": "lower_west_anchor",
-      "wall_seconds": 411.862448
+      "time_scale": 8.0,
+      "wall_seconds": 190.449122
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-259.7394, 235.0309, 789.8316)",
+      "kind": "travel_start",
+      "position": "(-259.7394, 235.0309, 789.8316)",
+      "simulated_seconds": 281.75,
+      "stage": "lower_west_anchor",
+      "target": "(-320.0, 300.0, 1040.0)",
+      "wall_seconds": 190.450795
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.02937877178192,
+      "kind": "meaningful_offer",
+      "label": "Gather Gale Fiber",
+      "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_bridge/DailyHarvest/Interactable",
+      "position": "(-283.7242, 260.5257, 889.3983)",
+      "simulated_seconds": 303.0,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 194.242284
+    },
+    {
+      "kind": "witness_region_entered",
+      "mode": "foot",
+      "position": "(-290.9911, 268.785, 919.5529)",
+      "region": "broken_causeways",
+      "simulated_seconds": 309.43,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 195.219003
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.27977538108826,
+      "kind": "meaningful_offer",
+      "label": "Take Small Potion",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_gate_route_potion_small_03/Interactable",
+      "position": "(-294.4549, 272.7227, 933.9292)",
+      "simulated_seconds": 312.5,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 195.978254
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-318.693, 300.0309, 1034.571)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 333.95,
+      "stage": "lower_west_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 204.038656
+    },
+    {
+      "chosen": false,
+      "distance_m": 0.767098128795624,
+      "kind": "meaningful_offer",
+      "label": "Take Revive",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_pickup_lower_revive/Interactable",
+      "position": "(-319.8878, 300.0309, 1039.534)",
+      "simulated_seconds": 335.0,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 204.961733
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-319.9115, 300.0309, 1039.633)",
+      "simulated_seconds": 335.13,
+      "stage": "lower_west_anchor",
+      "target": "(-320.0, 300.0, 1040.0)",
+      "wall_seconds": 205.075679
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-319.9115, 300.0309, 1039.633)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 335.13,
+      "stage": "lower_west_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 205.085776
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-319.9115, 300.0309, 1039.633)",
+      "kind": "travel_start",
+      "position": "(-319.9115, 300.0309, 1039.633)",
+      "simulated_seconds": 335.13,
+      "stage": "lower_west_anchor",
+      "target": "(-540.0, 330.0, 1280.0)",
+      "wall_seconds": 205.087765
+    },
+    {
+      "chosen": false,
+      "distance_m": 0.570135235786438,
+      "kind": "meaningful_offer",
+      "label": "Take Small Potion",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_broken_route_potion_small_01/Interactable",
+      "position": "(-413.3118, 312.6201, 1141.667)",
+      "simulated_seconds": 363.0,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 213.839111
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.54153692722321,
+      "kind": "meaningful_offer",
+      "label": "Take Ridge Tonic",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_broken_route_potion_large_01/Interactable",
+      "position": "(-470.4166, 320.8503, 1204.049)",
+      "simulated_seconds": 380.0,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 216.376526
+    },
+    {
+      "chosen": false,
+      "distance_m": 0.733875513076782,
+      "kind": "meaningful_offer",
+      "label": "Take Revive",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_broken_route_revive_01/Interactable",
+      "position": "(-529.2186, 329.3097, 1268.219)",
+      "simulated_seconds": 397.5,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 219.653143
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-536.3922, 330.0309, 1276.053)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 399.62,
+      "stage": "lower_west_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 220.546978
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-539.7908, 330.0309, 1279.771)",
+      "simulated_seconds": 400.77,
+      "stage": "lower_west_anchor",
+      "target": "(-540.0, 330.0, 1280.0)",
+      "wall_seconds": 221.447191
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-539.7908, 330.0309, 1279.771)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 400.77,
+      "stage": "lower_west_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 221.457284
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-539.7908, 330.0309, 1279.771)",
+      "kind": "travel_start",
+      "position": "(-539.7908, 330.0309, 1279.771)",
+      "simulated_seconds": 400.77,
+      "stage": "lower_west_anchor",
+      "target": "(-544.0, 330.03, 1280.0)",
+      "wall_seconds": 221.459261
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-539.7908, 330.0309, 1279.771)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 400.95,
+      "stage": "lower_west_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 221.55258
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.43817234039307,
+      "kind": "meaningful_offer",
+      "label": "Inspect the west Storm Anchor",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/lower_west/Interactable",
+      "position": "(-542.1967, 330.0307, 1279.902)",
+      "simulated_seconds": 401.5,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 222.012356
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "simulated_seconds": 401.92,
+      "stage": "lower_west_anchor",
+      "target": "(-544.0, 330.03, 1280.0)",
+      "wall_seconds": 222.434615
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 401.92,
+      "stage": "lower_west_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 222.440826
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "reason": "physical interaction",
+      "simulated_seconds": 402.03,
+      "stage": "lower_west_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 222.473663
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/lower_west/Interactable",
+      "prompt_position": "(-544.0, 331.03, 1278.6)",
+      "root_distance": 0.351909518241882,
+      "root_position": "(-544.0, 330.03, 1280.0)",
+      "senn_defeated": false,
+      "simulated_seconds": 402.07,
+      "stage": "lower_west_anchor",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 222.489953
+    },
+    {
+      "kind": "offer_activated",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/lower_west/Interactable",
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "simulated_seconds": 402.08,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 222.502319
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/lower_west/Interactable",
+      "simulated_seconds": 402.27,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 222.678942
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/lower_west/Interactable",
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "simulated_seconds": 402.27,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 222.681093
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed storm_anchor_lower_west_mapped",
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "simulated_seconds": 402.27,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 222.685001
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 402.27,
+      "stage": "lower_west_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 222.692312
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-543.6486, 330.0309, 1279.981)",
+      "kind": "travel_start",
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "simulated_seconds": 402.27,
+      "stage": "lower_east_anchor",
+      "target": "(-540.0, 330.0, 1280.0)",
+      "wall_seconds": 222.694614
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-543.6486, 330.0309, 1279.981)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 402.42,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 222.748681
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "simulated_seconds": 403.32,
+      "stage": "lower_east_anchor",
+      "target": "(-540.0, 330.0, 1280.0)",
+      "wall_seconds": 223.592176
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 403.32,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 223.601592
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-540.3749, 330.0309, 1279.998)",
+      "kind": "travel_start",
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "simulated_seconds": 403.32,
+      "stage": "lower_east_anchor",
+      "target": "(-540.0, 330.0, 1280.0)",
+      "wall_seconds": 223.603703
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 403.4,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 223.645227
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "simulated_seconds": 403.65,
+      "stage": "lower_east_anchor",
+      "target": "(-540.0, 330.0, 1280.0)",
+      "wall_seconds": 223.852526
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 403.65,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 223.861104
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-540.3749, 330.0309, 1279.998)",
+      "kind": "travel_start",
+      "position": "(-540.3749, 330.0309, 1279.998)",
+      "simulated_seconds": 403.65,
+      "stage": "lower_east_anchor",
+      "target": "(-511.2, 338.25, 1305.6)",
+      "wall_seconds": 223.863164
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-516.0053, 336.5103, 1301.396)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 410.37,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 226.604067
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-511.5009, 338.1552, 1305.339)",
+      "simulated_seconds": 411.77,
+      "stage": "lower_east_anchor",
+      "target": "(-511.2, 338.25, 1305.6)",
+      "wall_seconds": 227.874388
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-511.5009, 338.1552, 1305.339)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 411.77,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 227.883214
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-511.5009, 338.1552, 1305.339)",
+      "kind": "travel_start",
+      "position": "(-511.5009, 338.1552, 1305.339)",
+      "simulated_seconds": 411.77,
+      "stage": "lower_east_anchor",
+      "target": "(-468.0, 338.25, 1344.0)",
+      "wall_seconds": 227.885659
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.28446841239929,
+      "kind": "meaningful_offer",
+      "label": "Greet Orrin",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Orrin/Interactable",
+      "position": "(-494.084, 338.2809, 1320.811)",
+      "simulated_seconds": 416.5,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 230.144504
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-473.4688, 338.2508, 1339.138)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 422.0,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 232.948138
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-468.2709, 338.2508, 1343.759)",
+      "simulated_seconds": 423.53,
+      "stage": "lower_east_anchor",
+      "target": "(-468.0, 338.25, 1344.0)",
+      "wall_seconds": 234.297775
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-468.2709, 338.2508, 1343.759)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 423.53,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 234.304958
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-468.2709, 338.2508, 1343.759)",
+      "kind": "travel_start",
+      "position": "(-468.2709, 338.2508, 1343.759)",
+      "simulated_seconds": 423.53,
+      "stage": "lower_east_anchor",
+      "target": "(-450.0, 342.0, 1360.0)",
+      "wall_seconds": 234.30714
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-455.8144, 342.0309, 1354.842)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 427.02,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 235.957588
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-450.2377, 342.0309, 1359.789)",
+      "simulated_seconds": 428.65,
+      "stage": "lower_east_anchor",
+      "target": "(-450.0, 342.0, 1360.0)",
+      "wall_seconds": 237.37841
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-450.2377, 342.0309, 1359.789)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 428.65,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 237.38699
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-450.2377, 342.0309, 1359.789)",
+      "kind": "travel_start",
+      "position": "(-450.2377, 342.0309, 1359.789)",
+      "simulated_seconds": 428.65,
+      "stage": "lower_east_anchor",
+      "target": "(-260.0, 390.0, 1560.0)",
+      "wall_seconds": 237.389848
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-265.0359, 390.0309, 1554.695)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 484.53,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 256.231115
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.2108941078186,
+      "kind": "meaningful_offer",
+      "label": "Take Revive",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_broken_route_revive_02/Interactable",
+      "position": "(-263.4868, 390.0309, 1556.326)",
+      "simulated_seconds": 485.0,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 256.459274
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-260.2487, 390.0309, 1559.737)",
+      "simulated_seconds": 486.07,
+      "stage": "lower_east_anchor",
+      "target": "(-260.0, 390.0, 1560.0)",
+      "wall_seconds": 257.484402
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-260.2487, 390.0309, 1559.737)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 486.07,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 257.494296
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-260.2487, 390.0309, 1559.737)",
+      "kind": "travel_start",
+      "position": "(-260.2487, 390.0309, 1559.737)",
+      "simulated_seconds": 486.07,
+      "stage": "lower_east_anchor",
+      "target": "(-239.2, 390.0, 1570.4)",
+      "wall_seconds": 257.496848
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-246.203, 390.0309, 1566.861)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 489.27,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 258.781663
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-239.4754, 390.0309, 1570.261)",
+      "simulated_seconds": 490.92,
+      "stage": "lower_east_anchor",
+      "target": "(-239.2, 390.0, 1570.4)",
+      "wall_seconds": 260.272115
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-239.4754, 390.0309, 1570.261)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 490.92,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 260.279387
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-239.4754, 390.0309, 1570.261)",
+      "kind": "travel_start",
+      "position": "(-239.4754, 390.0309, 1570.261)",
+      "simulated_seconds": 490.92,
+      "stage": "lower_east_anchor",
+      "target": "(-245.0, 390.06, 1582.0)",
+      "wall_seconds": 260.281779
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-242.7378, 390.0309, 1577.196)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 492.5,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 261.071305
+    },
+    {
+      "chosen": false,
+      "distance_m": 0.777149140834808,
+      "kind": "meaningful_offer",
+      "label": "Gather Gale Fiber",
+      "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_causeway/DailyHarvest/Interactable",
+      "position": "(-244.8057, 390.0308, 1581.587)",
+      "simulated_seconds": 493.5,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 261.788793
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-244.8488, 390.0309, 1581.679)",
+      "simulated_seconds": 493.63,
+      "stage": "lower_east_anchor",
+      "target": "(-245.0, 390.06, 1582.0)",
+      "wall_seconds": 261.932735
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-244.8488, 390.0309, 1581.679)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 493.63,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 261.945359
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-244.8488, 390.0309, 1581.679)",
+      "kind": "travel_start",
+      "position": "(-244.8488, 390.0309, 1581.679)",
+      "simulated_seconds": 493.63,
+      "stage": "lower_east_anchor",
+      "target": "(-245.0, 389.86, 1580.5)",
+      "wall_seconds": 261.949393
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-244.8488, 390.0309, 1581.679)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 493.92,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 262.0552
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "simulated_seconds": 494.37,
+      "stage": "lower_east_anchor",
+      "target": "(-245.0, 389.86, 1580.5)",
+      "wall_seconds": 262.414687
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 494.37,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 262.424239
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "reason": "physical interaction",
+      "simulated_seconds": 494.55,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 262.508669
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_causeway/DailyHarvest/Interactable",
+      "prompt_position": "(-245.0, 390.66, 1582.0)",
+      "root_distance": 1.59223008155823,
+      "root_position": "(-245.0, 390.06, 1582.0)",
+      "senn_defeated": false,
+      "simulated_seconds": 494.63,
+      "stage": "lower_east_anchor",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 262.549133
+    },
+    {
+      "kind": "offer_activated",
+      "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_causeway/DailyHarvest/Interactable",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "simulated_seconds": 494.65,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 262.559564
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_causeway/DailyHarvest/Interactable",
+      "simulated_seconds": 494.85,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 262.73145
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_causeway/DailyHarvest/Interactable",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "simulated_seconds": 494.85,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 262.734046
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 494.85,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 262.744416
+    },
+    {
+      "gained": 2,
+      "id": "cr_node_gale_fiber_causeway",
+      "item": "gale_fiber",
+      "kind": "optional_gather",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "simulated_seconds": 496.52,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 263.640803
+    },
+    {
+      "kind": "assertion",
+      "label": "Optional arrival gather produced gale_fiber",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "simulated_seconds": 496.52,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 263.643732
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-245.0118, 390.0308, 1580.408)",
+      "kind": "travel_start",
+      "position": "(-245.0118, 390.0308, 1580.408)",
+      "simulated_seconds": 496.52,
+      "stage": "lower_east_anchor",
+      "target": "(-239.8462, 390.0, 1570.077)",
+      "wall_seconds": 263.646712
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-242.7412, 390.0309, 1575.866)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 497.68,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 264.074356
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-240.0021, 390.0309, 1570.388)",
+      "simulated_seconds": 499.05,
+      "stage": "lower_east_anchor",
+      "target": "(-239.8462, 390.0, 1570.077)",
+      "wall_seconds": 265.256211
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-240.0021, 390.0309, 1570.388)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 499.05,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 265.264983
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-240.0021, 390.0309, 1570.388)",
+      "kind": "travel_start",
+      "position": "(-240.0021, 390.0309, 1570.388)",
+      "simulated_seconds": 499.05,
+      "stage": "lower_east_anchor",
+      "target": "(-230.0, 390.0, 1575.0)",
+      "wall_seconds": 265.267815
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-235.4674, 390.0309, 1572.48)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 500.1,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 265.756282
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-230.2862, 390.0309, 1574.868)",
+      "simulated_seconds": 501.38,
+      "stage": "lower_east_anchor",
+      "target": "(-230.0, 390.0, 1575.0)",
+      "wall_seconds": 266.77612
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-230.2862, 390.0309, 1574.868)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 501.38,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 266.78369
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-230.2862, 390.0309, 1574.868)",
+      "kind": "travel_start",
+      "position": "(-230.2862, 390.0309, 1574.868)",
+      "simulated_seconds": 501.38,
+      "stage": "lower_east_anchor",
+      "target": "(110.0, 420.0, 1815.0)",
+      "wall_seconds": 266.786346
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.28449082374573,
+      "kind": "meaningful_offer",
+      "label": "Take Good Candy",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_candy_broken_route_good_04/Interactable",
+      "position": "(-61.04621, 405.1141, 1694.435)",
+      "simulated_seconds": 543.5,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 278.284827
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(103.8842, 420.2121, 1810.713)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 584.73,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 283.893094
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(109.7069, 420.0309, 1814.795)",
+      "simulated_seconds": 586.3,
+      "stage": "lower_east_anchor",
+      "target": "(110.0, 420.0, 1815.0)",
+      "wall_seconds": 285.3637
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(109.7069, 420.0309, 1814.795)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 586.3,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 285.369226
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(109.7069, 420.0309, 1814.795)",
+      "kind": "travel_start",
+      "position": "(109.7069, 420.0309, 1814.795)",
+      "simulated_seconds": 586.3,
+      "stage": "lower_east_anchor",
+      "target": "(120.0, 420.0, 1830.0)",
+      "wall_seconds": 285.371745
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(116.4767, 420.0309, 1824.798)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 588.77,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 285.78922
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(119.8153, 420.0309, 1829.727)",
+      "simulated_seconds": 590.1,
+      "stage": "lower_east_anchor",
+      "target": "(120.0, 420.0, 1830.0)",
+      "wall_seconds": 287.045047
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(119.8153, 420.0309, 1829.727)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 590.1,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 287.051247
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(119.8153, 420.0309, 1829.727)",
+      "kind": "travel_start",
+      "position": "(119.8153, 420.0309, 1829.727)",
+      "simulated_seconds": 590.1,
+      "stage": "lower_east_anchor",
+      "target": "(124.0, 420.03, 1830.0)",
+      "wall_seconds": 287.053899
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(119.8153, 420.0309, 1829.727)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 590.2,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 287.077618
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.40689325332642,
+      "kind": "meaningful_offer",
+      "label": "Inspect the east Storm Anchor",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/lower_east/Interactable",
+      "position": "(120.9728, 420.0309, 1829.802)",
+      "simulated_seconds": 590.5,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 287.35693
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "simulated_seconds": 591.17,
+      "stage": "lower_east_anchor",
+      "target": "(124.0, 420.03, 1830.0)",
+      "wall_seconds": 288.011786
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 591.17,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 288.023009
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "reason": "physical interaction",
+      "simulated_seconds": 591.23,
+      "stage": "lower_east_anchor",
+      "time_scale": 1.0,
+      "wall_seconds": 288.042292
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/lower_east/Interactable",
+      "prompt_position": "(124.0, 421.03, 1828.6)",
+      "root_distance": 0.329331189393997,
+      "root_position": "(124.0, 420.03, 1830.0)",
+      "senn_defeated": false,
+      "simulated_seconds": 591.27,
+      "stage": "lower_east_anchor",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 288.062287
+    },
+    {
+      "kind": "offer_activated",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/lower_east/Interactable",
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "simulated_seconds": 591.28,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 288.074323
+    },
+    {
+      "kind": "input_interact",
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/lower_east/Interactable",
+      "simulated_seconds": 591.47,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 288.251954
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/lower_east/Interactable",
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "simulated_seconds": 591.47,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 288.254846
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed cloudreach_lower_anchors_investigated",
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "simulated_seconds": 591.47,
+      "stage": "lower_east_anchor",
+      "wall_seconds": 288.257381
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 591.47,
+      "stage": "lower_east_anchor",
+      "time_scale": 8.0,
+      "wall_seconds": 288.262477
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(123.6714, 420.0309, 1829.979)",
+      "kind": "travel_start",
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "simulated_seconds": 591.47,
+      "stage": "battle_tether_lieutenant_senn",
+      "target": "(120.0, 420.0, 1830.0)",
+      "wall_seconds": 288.265525
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(123.6714, 420.0309, 1829.979)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 591.52,
+      "stage": "battle_tether_lieutenant_senn",
+      "time_scale": 1.0,
+      "wall_seconds": 288.280917
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "simulated_seconds": 592.38,
+      "stage": "battle_tether_lieutenant_senn",
+      "target": "(120.0, 420.0, 1830.0)",
+      "wall_seconds": 289.137732
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 592.38,
+      "stage": "battle_tether_lieutenant_senn",
+      "time_scale": 8.0,
+      "wall_seconds": 289.14418
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(120.3069, 420.0309, 1829.998)",
+      "kind": "travel_start",
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "simulated_seconds": 592.38,
+      "stage": "battle_tether_lieutenant_senn",
+      "target": "(120.0, 420.0, 1830.0)",
+      "wall_seconds": 289.147299
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 592.47,
+      "stage": "battle_tether_lieutenant_senn",
+      "time_scale": 1.0,
+      "wall_seconds": 289.169536
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "simulated_seconds": 592.7,
+      "stage": "battle_tether_lieutenant_senn",
+      "target": "(120.0, 420.0, 1830.0)",
+      "wall_seconds": 289.386826
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 592.7,
+      "stage": "battle_tether_lieutenant_senn",
+      "time_scale": 8.0,
+      "wall_seconds": 289.392913
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(120.3069, 420.0309, 1829.998)",
+      "kind": "travel_start",
+      "position": "(120.3069, 420.0309, 1829.998)",
+      "simulated_seconds": 592.7,
+      "stage": "battle_tether_lieutenant_senn",
+      "target": "(-60.0, 450.0, 2220.0)",
+      "wall_seconds": 289.395742
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.22217011451721,
+      "kind": "meaningful_offer",
+      "label": "Take Good Candy",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_candy_broken_route_good_03/Interactable",
+      "position": "(85.30222, 425.543, 1905.755)",
+      "simulated_seconds": 609.5,
+      "stage": "battle_tether_lieutenant_senn",
+      "wall_seconds": 292.146643
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.93244314193726,
+      "kind": "meaningful_offer",
+      "label": "Take Small Potion",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_broken_route_potion_small_03/Interactable",
+      "position": "(49.74415, 431.6626, 1982.711)",
+      "simulated_seconds": 626.5,
+      "stage": "battle_tether_lieutenant_senn",
+      "wall_seconds": 295.283778
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.94778311252594,
+      "kind": "meaningful_offer",
+      "label": "Gather Gale Fiber",
+      "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_anchor_picket/DailyHarvest/Interactable",
+      "position": "(30.91331, 434.9028, 2023.455)",
+      "simulated_seconds": 635.5,
+      "stage": "battle_tether_lieutenant_senn",
+      "wall_seconds": 296.821252
     }
   ],
-  "evidence_scope": "mechanics_only_test_lethal",
-  "from_save": "",
+  "evidence_scope": "live_combat_acceptance",
+  "from_save": "res://tests/fixtures/earned_saves/c1_arrival",
   "leg": "",
   "leg_completed": false,
-  "longest_dead_travel_seconds": 58.5000000000423,
+  "longest_dead_travel_seconds": 68.4999999999377,
   "mechanics_route_completed": false,
   "passed": false,
   "recovery_choices": [],
-  "stage": "lower_west_anchor"
+  "stage": "battle_tether_lieutenant_senn"
 }

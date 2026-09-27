@@ -2,3 +2,4 @@ F06#3 WITNESS PASS launches=4 loaner_frames=12859 violations=0
 CLOUDREACH CONTINUOUS LEG PASS leg=flight live from_save=res://tests/fixtures/earned_saves/c1_arrival stage=leg_complete_flight distance_m=8830.9 dead_travel_max_s=69.0
 EXIT 0
 timeout 10800 /tmp/claude-0/godot_slot.sh $HOME/godot-bin/godot --headless --path . --script tests/smoke_cloudreach_loaner_witness.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival --leg=flight --live-combat --accelerated > /tmp/claude-0/runs/e_loaner/log.txt 2>&1
+run code: tb/cloudreach-b 0883848dea932e45d207a83057758dd5751b826f (+ 7eb680aa evidence-only); full logs kept locally, trimmed here
