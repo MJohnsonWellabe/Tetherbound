@@ -26,6 +26,25 @@ var _container: Node = null
 var _resolve_won := false
 var _after_frames := 16
 var _face_trainer := false
+## `--attack`: tap the pad's combat_quick every in-fight interval, so the
+## frames can witness the player's own hits landing (F04#4). Without it the
+## capture only waits, and every frame shows the opponent's bar full.
+var _attack := false
+## `--dodge`: when the opponent's tell starts (wild_creature.gd
+## `telegraph_started`), push the pad's left stick sideways for the tell plus
+## DODGE_TAIL_S -- a real input avoidance attempt, so the frames can witness a
+## strike that misses (F04#4). Direction alternates each tell.
+var _dodge := false
+const DODGE_TAIL_S := 0.35
+var _dodge_left := 0.0
+var _dodge_sign := 1.0
+var _tell_source: Node = null
+## `--keep-alive` (DISCLOSED harness help): tops the player's active creature
+## back up when it falls below KEEP_ALIVE_FRACTION, so a level-3 capture
+## creature survives a level 11-19 captain long enough to reach the
+## aftermath. Without it Oreth's and the Warden's captures ended in a loss.
+var _keep_alive := false
+const KEEP_ALIVE_FRACTION := 0.4
 
 func _run() -> void:
 	var ids: PackedStringArray = []
@@ -42,6 +61,12 @@ func _run() -> void:
 			_resolve_won = true
 		elif arg == "--face-trainer":
 			_face_trainer = true
+		elif arg == "--attack":
+			_attack = true
+		elif arg == "--dodge":
+			_dodge = true
+		elif arg == "--keep-alive":
+			_keep_alive = true
 		elif arg.begins_with("--after-frames="):
 			_after_frames = maxi(1, int(arg.trim_prefix("--after-frames=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
@@ -79,9 +104,44 @@ func _save(tag: String) -> void:
 
 func _wait_interval() -> void:
 	var t := 0.0
+	var step := 1.0 / Engine.physics_ticks_per_second
 	while t < _interval:
+		if _dodge:
+			_watch_tells()
+			if _dodge_left > 0.0:
+				_dodge_left -= step
+				_left_stick_x(_dodge_sign if _dodge_left > 0.0 else 0.0)
 		await physics_frame
-		t += 1.0 / Engine.physics_ticks_per_second
+		t += step
+	if _keep_alive and _manager != null and bool(_manager.call("is_fighting")):
+		var own: RefCounted = _manager.call("active_creature")
+		if own != null and float(own.get("hp")) < float(own.get("max_hp")) * KEEP_ALIVE_FRACTION:
+			own.call("heal_fully")
+			print("keep-alive: topped up the active creature (disclosed harness help)")
+
+
+## Follows the trainer's current creature body; a trainer sends a new body
+## per creature, so the tell signal is re-connected when it changes.
+func _watch_tells() -> void:
+	var body: Node = _director.get("_trainer_body") as Node if _director != null else null
+	if body == _tell_source or body == null or not is_instance_valid(body):
+		return
+	_tell_source = body
+	if body.has_signal("telegraph_started"):
+		body.connect("telegraph_started", _on_tell)
+
+
+func _on_tell(seconds: float) -> void:
+	_dodge_left = seconds + DODGE_TAIL_S
+	_dodge_sign = -_dodge_sign
+	print("dodge: tell %.2fs, stick %s" % [seconds, "left" if _dodge_sign < 0.0 else "right"])
+
+
+func _left_stick_x(value: float) -> void:
+	var m := InputEventJoypadMotion.new()
+	m.axis = JOY_AXIS_LEFT_X
+	m.axis_value = value
+	Input.parse_input_event(m)
 
 
 func _capture_one() -> bool:
@@ -108,6 +168,8 @@ func _capture_one() -> bool:
 		return false
 	print("fight live vs %s" % _tid)
 	for i in _frames:
+		if _attack and bool(_manager.call("is_fighting")):
+			await _pad_tap("combat_quick")
 		await _wait_interval()
 		await _save("%02d" % (i + 1))
 		if not bool(_manager.call("is_fighting")):
@@ -235,22 +297,40 @@ func _diagnose_and_activate() -> void:
 ## A far trainer's terrain collision streams in after the teleport; a player
 ## dropped there first falls through and `world_perimeter_corridor` returns
 ## them to spawn -- the fight then runs somewhere the camera is not. Wait for
-## a downward ray at the stand spot to hit, and stand on what it hit.
+## a downward ray at the stand spot to hit, and stand on what it hit. Of every
+## surface under the spot, stand on the one nearest the TRAINER's own level:
+## under a roof (Keeper Hald's hall) the first hit from above was the ceiling
+## slab 7.5 m over the floor, so every Hald frame was shot from on top of the
+## hall with the lens inside its roof mesh (F04#6 "tunnel").
+const GROUND_PROBE_MAX_SURFACES := 8
+
 func _settle_on_ground() -> bool:
 	var spot := _player.global_position
 	var space := _player.get_world_3d().direct_space_state
+	var level := _trainer.global_position.y
 	for i in 1800:
 		_player.global_position = spot + Vector3.UP * 0.5
 		_player.velocity = Vector3.ZERO
-		var query := PhysicsRayQueryParameters3D.create(spot + Vector3.UP * 40.0,
-			spot + Vector3.DOWN * 40.0)
-		query.exclude = [_player.get_rid()]
-		var hit := space.intersect_ray(query)
-		if not hit.is_empty():
-			_player.global_position = (hit.position as Vector3) + Vector3.UP * 0.2
+		var best: Dictionary = {}
+		# Each next ray starts just under the last surface (a ray starting
+		# inside a solid does not report it), so a floor that shares a body
+		# with the ceiling above it is still found.
+		var from := spot + Vector3.UP * 40.0
+		for n in GROUND_PROBE_MAX_SURFACES:
+			var query := PhysicsRayQueryParameters3D.create(from, spot + Vector3.DOWN * 40.0)
+			query.exclude = [_player.get_rid()]
+			var hit := space.intersect_ray(query)
+			if hit.is_empty():
+				break
+			if best.is_empty() or absf((hit.position as Vector3).y - level) \
+					< absf((best.position as Vector3).y - level):
+				best = hit
+			from = (hit.position as Vector3) + Vector3.DOWN * 0.05
+		if not best.is_empty():
+			_player.global_position = (best.position as Vector3) + Vector3.UP * 0.2
 			_player.velocity = Vector3.ZERO
 			print("ground under %s after %d frames at y=%.2f (trainer y=%.2f)" % [
-				_tid, i, (hit.position as Vector3).y, _trainer.global_position.y])
+				_tid, i, (best.position as Vector3).y, level])
 			return true
 		await physics_frame
 	print("NO GROUND under the stand spot for %s" % _tid)
@@ -269,3 +349,36 @@ func _look_at_trainer() -> void:
 	if to.length() < 0.2:
 		return
 	_rig.set("yaw", atan2(-to.x, -to.z))
+
+
+## One pad tap of `action` through its own joypad binding. Each edge spans a
+## process frame so a slow renderer cannot flush press and release together.
+func _pad_tap(action: String) -> void:
+	var press: InputEvent = null
+	for configured in InputMap.action_get_events(action):
+		if configured is InputEventJoypadButton:
+			var b := InputEventJoypadButton.new()
+			b.button_index = (configured as InputEventJoypadButton).button_index
+			b.pressed = true
+			press = b
+			break
+		if configured is InputEventJoypadMotion:
+			var m := InputEventJoypadMotion.new()
+			m.axis = (configured as InputEventJoypadMotion).axis
+			m.axis_value = (configured as InputEventJoypadMotion).axis_value
+			press = m
+			break
+	if press == null:
+		print("NO PAD BINDING for %s" % action)
+		return
+	Input.parse_input_event(press)
+	await process_frame
+	for _i in 3:
+		await physics_frame
+	var release := press.duplicate() as InputEvent
+	if release is InputEventJoypadButton:
+		(release as InputEventJoypadButton).pressed = false
+	else:
+		(release as InputEventJoypadMotion).axis_value = 0.0
+	Input.parse_input_event(release)
+	await process_frame

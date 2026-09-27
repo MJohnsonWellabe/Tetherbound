@@ -1,0 +1,28 @@
+[village-walk] OPENING played: starter=terrapup at (-16.05986, 1.200843, -15.93375)
+[village-walk] OPENING companion put away: true
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.22 prompt="Talk to Grandpa"
+[village-walk] VISIT Bram kind=villager dist_m=1.79 prompt="Greet Bram"
+[village-walk] VISIT Tam kind=villager dist_m=1.32 prompt="Greet Tam"
+[village-walk] VISIT Mira kind=villager dist_m=2.06 prompt="Greet Mira"
+[village-walk] VISIT Oskar kind=villager dist_m=1.20 prompt="Greet Oskar"
+[village-walk] VISIT Halda kind=villager dist_m=1.66 prompt="Greet Halda"
+[village-walk] VISIT the old key kind=key dist_m=1.31 prompt="Take the old key"
+[village-walk] VISIT gate RoadGate kind=gate dist_m=0.49 prompt="Try the gate"
+[village-walk] VISIT Practice Meadow camp kind=camp dist_m=2.58 prompt="-"
+[village-walk] VISIT gate TrailGate kind=gate dist_m=0.12 prompt="-"
+[village-walk] VISIT gate PondGate kind=gate dist_m=0.16 prompt="-"
+[village-walk] PASS route=visits time=day captures=98 max_off_road_m=0.00 visited=11
+[village-walk] OPENING played: starter=terrapup at (-16.05986, 1.200843, -15.93375)
+[village-walk] OPENING companion put away: true
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.21 prompt="Talk to Grandpa"
+[village-walk] VISIT Bram kind=villager dist_m=1.75 prompt="Greet Bram"
+[village-walk] VISIT Tam kind=villager dist_m=1.12 prompt="Greet Tam"
+[village-walk] VISIT Mira kind=villager dist_m=2.16 prompt="Greet Mira"
+[village-walk] VISIT Oskar kind=villager dist_m=1.22 prompt="Greet Oskar"
+[village-walk] VISIT Halda kind=villager dist_m=1.25 prompt="Greet Halda"
+[village-walk] VISIT the old key kind=key dist_m=1.24 prompt="Take the old key"
+[village-walk] VISIT gate RoadGate kind=gate dist_m=0.50 prompt="Try the gate"
+[village-walk] VISIT Practice Meadow camp kind=camp dist_m=2.28 prompt="-"
+[village-walk] VISIT gate TrailGate kind=gate dist_m=0.13 prompt="-"
+[village-walk] VISIT gate PondGate kind=gate dist_m=0.10 prompt="-"
+[village-walk] PASS route=visits time=night captures=96 max_off_road_m=0.00 visited=11

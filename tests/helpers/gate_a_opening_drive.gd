@@ -110,6 +110,11 @@ var _combat: Node = null
 var _arbiter: Node = null
 var _dialogue: CanvasLayer = null
 var _name_prompt: CanvasLayer = null
+## Stop once the player has walked out of the house, before the tutorial
+## catch: a caller that needs the opening's world but not its first fight
+## (tests/capture_village_walk.gd --from-title) inherits no held fight, revive
+## or orb drain from `_fight_until_catchable()` and the catch loop.
+var stop_after_doorway := false
 var _starter_picker: CanvasLayer = null
 var _wild: Node3D = null
 var _catch_results: Array[bool] = []
@@ -199,11 +204,15 @@ func run(tree: SceneTree) -> Dictionary:
 				continue
 		if answered_character_choice and not answered_player_name:
 			for candidate: Node in _tree.current_scene.find_children("*", "CanvasLayer", true, false):
-				if candidate.has_method("is_open") and candidate.has_method("_confirm") \
+				if candidate.has_method("is_open") and candidate.has_method("entry") \
 						and bool(candidate.call("is_open")):
 					answered_player_name = true
+					# The prefill is accepted the way a pad player accepts it:
+					# the grid cursor to Done, then confirm (was a direct
+					# `_confirm()` call -- a method, not a button).
+					if not await _accept_name_prefill_with_pad(candidate as CanvasLayer):
+						return _result()
 					_checkpoint("confirmed the configured trainer-name prefill")
-					candidate.call("_confirm")
 					break
 			if answered_player_name:
 				continue
@@ -305,6 +314,8 @@ func run(tree: SceneTree) -> Dictionary:
 	if not _failures.is_empty():
 		return _result()
 	_checkpoint("usable house/front doorway exited")
+	if stop_after_doorway:
+		return _result()
 
 	_wild = _encounter.call("wild_creature") as Node3D
 	if _wild == null:
@@ -404,6 +415,26 @@ func _type_name_with_pad(chosen: String) -> void:
 			return
 		await _tree.physics_frame
 	_fail("controller Done did not close naming")
+
+
+func _accept_name_prefill_with_pad(prompt: CanvasLayer) -> bool:
+	for _i in 20:
+		if bool(prompt.get("_using_gamepad")):
+			break
+		await _tree.physics_frame
+	if not bool(prompt.get("_using_gamepad")):
+		_fail("trainer-name prompt was not in gamepad mode after real pad input")
+		return false
+	if not await _select_name_cell(prompt.call("entry"), NAME_ENTRY.DONE):
+		return false
+	await _tap_action("menu_confirm")
+	for _i in 120:
+		# Confirming leaves the title for the world, which frees the prompt.
+		if not is_instance_valid(prompt) or not bool(prompt.call("is_open")):
+			return true
+		await _tree.physics_frame
+	_fail("controller Done did not close the trainer-name prompt")
+	return false
 
 
 func _select_name_cell(entry: RefCounted, cell: String) -> bool:
@@ -1206,6 +1237,13 @@ func _tap_action(action: StringName) -> void:
 		_fail("'%s' has no physical joypad binding" % action)
 		return
 	Input.parse_input_event(event)
+	# Parsed events are flushed once per PROCESS frame. Under a slow renderer
+	# several physics ticks run inside one frame, so counting physics frames
+	# alone let a release and the next press land in the same flush: a
+	# polled grid (name_prompt.gd::_tick_cursor) never saw the gap between
+	# taps, read them as one hold and never moved (xvfb: "controller stopped
+	# on 'A' instead of 'B'"). Each edge now spans a process frame.
+	await _tree.process_frame
 	for _i in 3:
 		await _tree.physics_frame
 	var released := event.duplicate() as InputEvent
@@ -1214,6 +1252,7 @@ func _tap_action(action: StringName) -> void:
 	elif released is InputEventJoypadMotion:
 		(released as InputEventJoypadMotion).axis_value = 0.0
 	Input.parse_input_event(released)
+	await _tree.process_frame
 	for _i in 5:
 		await _tree.physics_frame
 
