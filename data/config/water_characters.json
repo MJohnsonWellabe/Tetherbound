@@ -1298,10 +1298,11 @@
       "npc_entity_id": "water_trainer_tess",
       "island_id": "deep_watch",
       "island_local_offset": [
-        6.0,
+        16.0,
         0.0,
-        -20.0
+        -12.0
       ],
+      "_why_offset_0927": "F14#0 C3 (tb/tidewake-full): 13 m east onto the open crown of Deep Watch (1.8 m arena deviation, 0.9 m max rise). The old stand dropped 7.5 m inside the 11 m arena and in-world captures showed the fight sliding off the shoulder, the camera facing the cliff and the READER pilot wiping.",
       "critical": false,
       "ace_level": 54,
       "rank": "local",
@@ -1391,7 +1392,13 @@
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 53
+          "level": 53,
+          "combat": {
+            "preferred_range": 4.5,
+            "lunge": 7.0,
+            "lunge_travels": true
+          },
+          "_why_lunge_travels_f14": "BOSSES 4.10: Venn's Riptusk is a CHARGER lane. The existing F04 CHARGER lane (combat.json charger_lunge, wild_creature.gd) draws its 7 m lunge on the ground while it winds up."
         },
         {
           "trainer_owned": true,
@@ -1521,8 +1528,12 @@
           "level": 55,
           "combat": {
             "telegraph": 1.1,
-            "recovery": 0.9
+            "recovery": 0.9,
+            "preferred_range": 4.5,
+            "lunge": 7.0,
+            "lunge_travels": true
           },
+          "_why_lunge_travels_f14": "BOSSES 4.11 Break Tether's marked lane (tb/tidewake-full C3 judge: the heavy tell read the same as ordinary tells). The existing F04 CHARGER lane (combat.json charger_lunge, wild_creature.gd): the body runs its 7 m lunge down the heading it locked mid-tell, drawn on the ground while it winds up.",
           "_why_combat": "BOSSES 4.11 Break Tether: the final Riptusk uses a 1.1 s heavy tell and 0.9 s recovery. Before this, the in-world F14#1 run measured every Nerissa tell at the 0.8 s floor. The marked lane is presentation and goes to the Codex queue."
         }
       ],
