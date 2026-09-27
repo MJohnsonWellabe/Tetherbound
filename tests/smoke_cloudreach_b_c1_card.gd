@@ -54,6 +54,24 @@ func _fail(message: String) -> bool:
 	return super._fail(message)
 
 
+## Diagnostic: when a walk stalls, record every character body near the
+## trainer (wild creatures, the companion, NPCs), so a blocker the slide
+## contacts never reported is named instead of being called a flake.
+func _log(kind: String, details: Dictionary = {}) -> void:
+	if kind == "collision_block" and is_instance_valid(world) and is_instance_valid(player):
+		var near: Array[Dictionary] = []
+		for node: Node in world.find_children("*", "CharacterBody3D", true, false):
+			var body := node as CharacterBody3D
+			if body == player: continue
+			var d := body.global_position.distance_to(player.global_position)
+			if d < 8.0:
+				near.append({"path": str(body.get_path()), "position": str(body.global_position), "distance_m": snappedf(d, 0.01),
+					"layer": body.collision_layer, "velocity": str(body.velocity)})
+		details["nearby_bodies"] = near
+		details["player_mask"] = player.collision_mask
+	super._log(kind, details)
+
+
 func _record_frame() -> void:
 	if _crossed or not is_instance_valid(world) or not is_instance_valid(player):
 		simulated_seconds += 1.0 / 60.0
