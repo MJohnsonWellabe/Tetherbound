@@ -33,3 +33,27 @@ func _refresh_prompts(progression: RefCounted) -> void:
 		var prompt := body.call("prompt_node") as Node3D
 		if prompt != null:
 			prompt.set("label", prompt_for(authored_specs[id], progression))
+			prompt.set("priority", stormwood_prompt_priority(authored_specs[id], progression))
+
+
+## The base rule (a beaten trainer drops below ordinary prompts), plus an
+## unbeaten trainer's authored `challenge_prompt_priority`: a trainer who is
+## the same person as a talking NPC on one seat (Captain Marrow) wins the
+## press while its challenge is open, and the NPC's own lines return after.
+static func stormwood_prompt_priority(spec: Dictionary, progression: RefCounted) -> int:
+	if already_beaten(spec, progression):
+		return prompt_priority_for(spec, progression)
+	return int(_challenge_priorities().get(str(spec.get("id", "")), 0))
+
+
+static var _challenge_priority_cache: Dictionary = {}
+
+static func _challenge_priorities() -> Dictionary:
+	if _challenge_priority_cache.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_trainers.json"))
+		_challenge_priority_cache["_loaded"] = true
+		if parsed is Dictionary:
+			for row: Variant in (parsed as Dictionary).get("trainers", []):
+				if row is Dictionary and (row as Dictionary).has("challenge_prompt_priority"):
+					_challenge_priority_cache[str((row as Dictionary).get("id", ""))] = int((row as Dictionary).challenge_prompt_priority)
+	return _challenge_priority_cache

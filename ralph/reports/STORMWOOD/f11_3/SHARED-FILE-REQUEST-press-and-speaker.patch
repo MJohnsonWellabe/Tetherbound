@@ -1,0 +1,27 @@
+diff --git a/scripts/player/conversation_camera.gd b/scripts/player/conversation_camera.gd
+index 13a252b3..8d5eb53b 100644
+--- a/scripts/player/conversation_camera.gd
++++ b/scripts/player/conversation_camera.gd
+@@ -175,7 +175,7 @@ func current_speaker() -> Node3D:
+ 		# The arbiter can still name a provider a residency rebuild just freed;
+ 		# a freed Object cannot be cast to Node3D (SCRIPT ERROR), so validate first.
+ 		var winner: Variant = _arbiter.call("winning_provider")
+-		if winner is Node3D and is_instance_valid(winner):
++		if is_instance_valid(winner) and winner is Node3D:
+ 			var live := resolve_speaker(winner as Node3D)
+ 			if live != null:
+ 				return live
+diff --git a/tools/net/peer_runner.gd b/tools/net/peer_runner.gd
+index 6012a234..035e4d74 100644
+--- a/tools/net/peer_runner.gd
++++ b/tools/net/peer_runner.gd
+@@ -1529,6 +1529,9 @@ func _inject(action: String, frames: int) -> Dictionary:
+ 	var down := _press_edge(action, true)
+ 	if not bool(down.get("ok", false)):
+ 		return down
++	# The physical event is buffered until the next process frame; let it land
++	# while action_press still holds, or a release first makes it a second edge.
++	await process_frame
+ 	for i in maxi(1, frames):
+ 		await physics_frame
+ 	var up := _press_edge(action, false)

@@ -66,6 +66,13 @@ func _continue_from_arch(arch: Node3D) -> void:
 		if not str(_game.get("pending_build")).is_empty():
 			_fail("ordinary Build Cancel did not return input after paid construction")
 			return
+	# A player does not cross to a named guardian with a fainted creature: the
+	# paid arch's footing is the Still Grove road point, about 40 m from Still
+	# Grove Shelter, so rest there first. Dry run bdec4948 crossed with
+	# Bramblebun fainted and the lead at 44 hp, and lost the guardian.
+	if _party_worn(0.75):
+		if not await _rest_party_at_camp("still_grove_shelter"):
+			return
 	var outside := arch.to_global(Vector3(0, 0, -5))
 	if not await _walk_xz(Vector2(outside.x, outside.z), "outside paid Crown passage"):
 		return
@@ -127,8 +134,13 @@ func _continue_from_arch(arch: Node3D) -> void:
 	_complete = true
 	_note("EARNED guardian clearance, Wen truth and physically open Rootgate / Act II")
 
+## Engage always offers the nearest body. Dry run bdec4948: after a lost
+## first fight an ordinary wild Staticub stood 1.1 m from the guardian stance,
+## so every Engage offer named it and three approaches pressed nothing. As in
+## `_clear_capacitor_alpha`, the nearer wild is fought first (up to six
+## approaches, since those fights spend attempts).
 func _clear_guardian() -> bool:
-	for _attempt in 4:
+	for _attempt in 6:
 		if _manager.is_fighting() and not await _fight_current("Crown guardian arrival"):
 			return false
 		if _has(GUARDIAN_CLEAR):
@@ -149,6 +161,18 @@ func _clear_guardian() -> bool:
 			if _has(GUARDIAN_CLEAR):
 				return true
 			if _manager.is_fighting():
+				break
+			var nearer := _director.call("_engageable") as Node3D
+			if is_instance_valid(nearer) and nearer != body and _named_engage_ready(nearer):
+				_note("ENGAGING %s first beside the Crown guardian (Engage offers the nearest body)" % str(nearer.get_path()))
+				if await _tap_named_engage(nearer):
+					for _settle in 60:
+						if _manager.is_fighting():
+							break
+						await _tree.physics_frame
+					if _manager.is_fighting() and _manager.enemy_body() != body \
+							and not await _fight_current("wild beside the Crown guardian"):
+						return false
 				break
 			if _named_engage_ready(body) and await _tap_named_engage(body):
 				if _manager.is_fighting() and _manager.enemy_body() != body:

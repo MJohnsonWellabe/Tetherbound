@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-27 04:13 UTC",
+ "updated": "2026-09-27 08:47 UTC",
  "headline": [
-  "Criteria met: 55 of 101. F02#3 (fresh-game run through three Sigils and the Hall, one uninterrupted run) flipped on green full CI 36290042517, which also confirms the batch-36 Stormwood regression hotfix (#364).",
-  "Next to flip: F03#1 (six distinct activities from the earned seed4_hall checkpoint; strict re-check MET; batch 47) → 56. Top blocker: held-button flight (hard-rule defect) blocks F06#2/#3/#5 until Cloudreach lands the SYSTEMS tap-pulse.",
-  "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
+  "Criteria met: 61 of 101. Batch 48 (PR #367) flipped F06#1, F06#2, F06#3, F11#3 and F15#3 on green full CI 36304146998, under the owner's relaxed-proof ruling (shortcuts disclosed per criterion).",
+  "Next: F08#0 (one passing rerun of the tightened Veyra witness), F02#4 (one passing recovery rerun), F01#2/#3 (code-blind judge of the reframed village walks), F03#0 (Bram and Hall sightlines).",
+  "Rules in force: owner ruling 2026-09-27 — fixtures, teleports, state writes, harness fights and skipped sub-parts allowed if disclosed; held Fly input lawful. Still required: code-blind judge for visual rows, two-peer evidence for co-op rows, green full CI on main."
  ],
  "batches": [
   {

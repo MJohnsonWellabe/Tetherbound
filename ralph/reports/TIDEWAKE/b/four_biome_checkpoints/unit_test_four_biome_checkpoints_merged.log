@@ -1,0 +1,17 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_four_biome_checkpoints: 1 of 589 test files
+  ok    test_four_biome_checkpoints.gd :: test_boundary_order_and_next_segment
+  ok    test_four_biome_checkpoints.gd :: test_commit_sha_prefers_env_then_git
+  ok    test_four_biome_checkpoints.gd :: test_existing_seed4_hall_checkpoint_is_resumable
+  ok    test_four_biome_checkpoints.gd :: test_export_layout_matches_earned_saves
+  ok    test_four_biome_checkpoints.gd :: test_parse_args_default_is_unrequested
+  ok    test_four_biome_checkpoints.gd :: test_parse_args_name_without_boundary_and_uri_source
+  ok    test_four_biome_checkpoints.gd :: test_parse_args_reads_all_three_flags
+  ok    test_four_biome_checkpoints.gd :: test_parse_args_refuses_bad_values
+  ok    test_four_biome_checkpoints.gd :: test_receipt_round_trip_and_validation
+  ok    test_four_biome_checkpoints.gd :: test_resume_kind_is_detected_from_the_directory
+  ok    test_four_biome_checkpoints.gd :: test_validation_refuses_mismatches
+
+11 tests, 78 assertions, 0 failed
+exit=0
