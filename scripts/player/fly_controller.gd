@@ -27,6 +27,16 @@ var restrictions: Array[Dictionary] = []
 var safe_anchor := Vector3.INF
 var safe_realm := ""
 var flight_seconds := 0.0
+## No-hold flight (SYSTEMS Fly, hard rule: no held-button gameplay). A fresh
+## A tap refreshes this to `climb_pulse_seconds` (never stacks); while it runs
+## the flyer climbs at `climb_pulse_mps`. Holding A never repeats it.
+var climb_pulse_left := 0.0
+## A tap inside a valid authored updraft rides that current to its ceiling (a
+## tap-started channel that continues while the flyer stays in the current).
+var riding_updraft := false
+## `fly_descend` is a tap toggle (interim ruling, #356): descend until landing
+## or the next tap. A climb tap also ends it.
+var descend_toggled := false
 var _player: CharacterBody3D
 var _rig: Node3D
 var _model: Node3D
@@ -123,6 +133,56 @@ func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
 
 func is_flying() -> bool:
 	return state in ["glide", "climb", "descent", "exhausted"]
+
+
+## This frame's fresh presses, edges only: holding a button never repeats.
+## The launch press itself is not also a climb tap.
+func no_hold_taps(input_owned: bool, launched_now: bool) -> Dictionary:
+	if input_owned:
+		return {"climb": false, "descend": false}
+	return {"climb": not launched_now and Input.is_action_just_pressed("jump"),
+		"descend": Input.is_action_just_pressed("fly_descend")}
+
+
+## Applies one frame's taps (SYSTEMS Fly no-hold climb; `fly_descend` toggle).
+## A climb tap refreshes the pulse to `pulse_seconds` (never adds to what is
+## left), catches the current when inside a valid updraft, and ends a toggled
+## descent. A descend tap flips the descent toggle and ends climbing.
+func apply_taps(tap: Dictionary, in_updraft: bool, pulse_seconds: float) -> void:
+	if bool(tap.get("descend", false)):
+		descend_toggled = not descend_toggled
+		if descend_toggled:
+			climb_pulse_left = 0.0
+			riding_updraft = false
+	if bool(tap.get("climb", false)):
+		descend_toggled = false
+		climb_pulse_left = pulse_seconds
+		riding_updraft = in_updraft
+
+
+## Inside a valid authored updraft's bounds but at or over its roof.
+func _at_updraft_roof() -> bool:
+	for draft: Dictionary in updrafts:
+		var bounds: AABB = draft["bounds"]
+		var ceiling := minf(float(draft["ceiling"]), bounds.end.y) - 2.0
+		var at := _player.global_position
+		if at.x >= bounds.position.x and at.x <= bounds.end.x and at.z >= bounds.position.z \
+				and at.z <= bounds.end.z and at.y >= ceiling and _has_flag(str(draft["requires_flag"])):
+			return true
+	return false
+
+
+## The authored updraft the flyer is inside and below the roof of, with its
+## effective ceiling, or {}.
+func _in_valid_updraft() -> Dictionary:
+	for draft: Dictionary in updrafts:
+		var bounds: AABB = draft["bounds"]
+		var ceiling := minf(float(draft["ceiling"]), bounds.end.y) - 2.0
+		if bounds.has_point(_player.global_position) and _player.global_position.y < ceiling and _has_flag(str(draft["requires_flag"])):
+			var found := draft.duplicate()
+			found["ceiling_y"] = ceiling
+			return found
+	return {}
 
 
 ## X03 (`input_owner.gd::TRAVERSAL_GROUP`): while flying or carried, LT is
@@ -288,11 +348,13 @@ func launch_blockers() -> String:
 func physics_step(delta: float, input_owned: bool) -> bool:
 	if _anchor_pending:
 		_anchor_pending_for += delta
+	var launched_now := false
 	if not is_flying():
 		if not input_owned and Input.is_action_just_pressed("jump") and not _player.is_on_floor():
 			var reason := can_launch()
 			if reason.is_empty():
 				_launch()
+				launched_now = true
 			else:
 				_deny(reason)
 		if not is_flying():
@@ -309,28 +371,49 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	var direction := view_basis * Vector3(stick.x, 0.0, stick.y)
 	var horizontal := Vector3(_player.velocity.x, 0.0, _player.velocity.z)
 	horizontal = horizontal.move_toward(direction * float(config.get("speed_mps", 16.0)), float(config.get("acceleration_mps2", 12.0)) * delta)
+	var pulsing := false
+	var at_roof := false
+	var tap := no_hold_taps(input_owned, launched_now)
+	apply_taps(tap, state != "exhausted" and _in_valid_updraft() != {}, float(config.get("climb_pulse_seconds", 0.5)))
+	climb_pulse_left = maxf(0.0, climb_pulse_left - delta)
 	var vertical := -float(config.get("sink_mps", 2.0))
 	if state == "exhausted":
 		vertical = -float(config.get("exhausted_sink_mps", 9.0))
-	elif not input_owned and Input.is_action_pressed("fly_descend"):
+		climb_pulse_left = 0.0
+		riding_updraft = false
+		descend_toggled = false
+	elif descend_toggled:
 		_set_state("descent")
 		vertical = -float(config.get("descent_mps", 8.0))
 	else:
 		_set_state("glide")
-		if not input_owned and Input.is_action_pressed("jump"):
-			for draft: Dictionary in updrafts:
-				var bounds: AABB = draft["bounds"]
-				var ceiling := minf(float(draft["ceiling"]), bounds.end.y) - 2.0
-				if bounds.has_point(_player.global_position) and _player.global_position.y < ceiling and _has_flag(str(draft["requires_flag"])):
-					vertical = minf(float(draft["speed"]), float(config.get("maximum_updraft_mps", 18.0)))
-					vertical = minf(vertical, maxf(0.0, (ceiling - _player.global_position.y) / maxf(delta, 0.001)))
-					_set_state("climb")
-					break
+		var draft := _in_valid_updraft()
+		if riding_updraft and not draft.is_empty():
+			var ceiling := float(draft["ceiling_y"])
+			vertical = minf(float(draft["speed"]), float(config.get("maximum_updraft_mps", 18.0)))
+			vertical = minf(vertical, maxf(0.0, (ceiling - _player.global_position.y) / maxf(delta, 0.001)))
+			_set_state("climb")
+		else:
+			# Out of the current (or at its roof) the ride ends; a fresh tap
+			# is needed to catch another. Ending AT the roof stops the rise
+			# there, rather than coasting over the authored ceiling.
+			at_roof = riding_updraft and _at_updraft_roof()
+			riding_updraft = false
+			if climb_pulse_left > 0.0:
+				vertical = float(config.get("climb_pulse_mps", 8.0))
+				pulsing = true
+				_set_state("climb")
 	_player.velocity = Vector3(horizontal.x, move_toward(_player.velocity.y, vertical, float(config.get("vertical_acceleration_mps2", 12.0)) * delta), horizontal.z)
 	# A ceiling is enforced on actual velocity too, so inertia cannot drift over
-	# the current's authored roof when the climb input remains held.
+	# the current's authored roof while the flyer rides it.
 	if state == "climb":
 		_player.velocity.y = minf(_player.velocity.y, vertical)
+	# The pulse climbs AT its speed for its whole 0.5 s (SYSTEMS Fly), rather
+	# than easing toward it and ending before it gets there.
+	if pulsing:
+		_player.velocity.y = vertical
+	elif at_roof:
+		_player.velocity.y = minf(_player.velocity.y, 0.0)
 	var restriction := _restricted_reason(_player.global_position, _player.global_position + _player.velocity * delta)
 	# What a refused flyer may still do: nothing, unless it is already inside a
 	# sealed volume with no verified anchor to recover to (below).
@@ -720,6 +803,9 @@ func _launch() -> void:
 
 
 func _finish(next: String) -> void:
+	climb_pulse_left = 0.0
+	riding_updraft = false
+	descend_toggled = false
 	_player.floor_snap_length = _saved_snap
 	var collider := _player.get_node_or_null(^"Collision") as CollisionShape3D
 	if collider != null and _saved_shape != null:

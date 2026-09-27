@@ -1,5 +1,5 @@
 {
-  "_comment": "Cloudreach Fly. Installed Galecrest is the replaceable traversal presentation. An owned healthy active carrier is preferred; Maela's story loaner guarantees the chapter cannot deadlock a valid full five-creature Meadows team and never becomes owned or consumes a party slot. Second Jump (A) airborne deploys; hold A in marked updrafts to climb; hold LT/C to descend. Outside authored currents flight only descends.",
+  "_comment": "Cloudreach Fly. Installed Galecrest is the replaceable traversal presentation. An owned healthy active carrier is preferred; Maela's story loaner guarantees the chapter cannot deadlock a valid full five-creature Meadows team and never becomes owned or consumes a party slot. Second Jump (A) airborne deploys; no held buttons (hard rule): tap A for a 0.5 s climb pulse at climb_pulse_mps (a fresh tap refreshes it, never stacks; holding A does not repeat); a tap inside a marked updraft rides that current to its ceiling; tap LT/C to toggle descent until landing or the next tap (interim ruling, #356).",
   "unlock_flag": "fly_traversal_unlocked",
   "speed_mps": 16.0,
   "acceleration_mps2": 12.0,
@@ -12,6 +12,8 @@
   "minimum_launch_stamina": 18.0,
   "stamina_per_second": 1.0,
   "climb_stamina_per_second": 1.6,
+  "climb_pulse_seconds": 0.5,
+  "climb_pulse_mps": 8.0,
   "maximum_flight_seconds": 180.0,
   "recovery_drop_m": 100.0,
   "body_clearance_m": 0.75,
