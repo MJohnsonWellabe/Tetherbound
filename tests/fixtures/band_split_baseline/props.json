@@ -148,6 +148,25 @@
           "yaw_deg": 80.0,
           "scale": 1.0,
           "_why": "EV7-clusters-fix: touching the crate's side (0.83m centre-to-centre, matching the two footprints' combined radius) so the pair reads as one pile someone set down together, not a scatter -- distinct spacing from the pack 1.9m away, breaking the old even 3-way spacing the critic named as 'placed by script.' Still the plain supply barrel, not the farmhouse's apple-branded one."
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [26.8, -26.6],
+          "yaw_deg": 0.0,
+          "scale": 0.3,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "F01#3 code-blind judge (visits_night_072): the practice-meadow trainer camp read as 'an open flower meadow' at night -- a pack, crate and barrel carry no light, so nothing in the frame said camp. A one-person firepit, same Bonfire_Fire+ignite()+campfire_glow recipe and 0.3 scale as pond_fisher_camp, 1.5-2.3m from the pack/crate/barrel so the four read as one stop, and ~5.5m off route 2's centreline ([18,-24]->[30,-40]), clear of the painted road. TUNABLE."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [26.8, -26.6],
+          "yaw_deg": 0.0,
+          "scale": 0.65,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "The fire's stone ring, as pond_fisher_camp pairs them."
         }
       ]
     },
