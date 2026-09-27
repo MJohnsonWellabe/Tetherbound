@@ -46,6 +46,39 @@ func test_state_ring_clears_body_footprint_and_follows_sloped_ground() -> void:
 	assert_true(follows_slope, "a flat ring disappears into the uphill terrain")
 	parent.free()
 
+class SeabedBody extends Node3D:
+	func body_radius() -> float: return 2.0
+	func _ground_height(_x: float, _z: float) -> float: return -3.0
+	func active() -> bool: return true
+
+class SeaWorld extends RefCounted:
+	func water_depth_at(at: Vector3) -> float: return maxf(0.0, 0.0 - at.y)
+
+
+## F14#0 (Tidecoil): over water the ring sits on the surface, not on the
+## seabed the opaque surface hides. A world without water keeps it on ground.
+func test_state_ring_rides_the_water_surface_over_a_seabed() -> void:
+	for with_water in [true, false]:
+		var parent := Node3D.new()
+		var body := SeabedBody.new()
+		parent.add_child(body)
+		var glow := TELEGRAPH_GLOW.begin(parent, Vector3(0, -3, 0), Color.CYAN, 1.1, 0.6)
+		if with_water:
+			glow.set("water_depth_source", SeaWorld.new())
+		glow.call("_ready")
+		glow.call("follow_state", body, body.active)
+		glow.call("_physics_process", 0.01)
+		var mesh: ImmediateMesh = glow.get("_ring_mesh")
+		var points: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		var want := (0.0 if with_water else -3.0) + 0.08
+		var on_level := points.size() > 0
+		for point in points:
+			if absf((glow.position + point).y - want) > 0.001: on_level = false
+		assert_true(on_level, "ring at %.2f m (%s)" % [want, "water surface over a 3 m seabed" if with_water else "dry ground"])
+		var aabb: AABB = (glow.get("_ring") as MeshInstance3D).custom_aabb
+		assert_true(aabb.end.y >= 3.1, "the ring's bounds reach a surface 3 m above the creature's feet")
+		parent.free()
+
 const PALETTE_PATH := "res://data/config/palette.json"
 ## The two oxblood values the world actually paints (road_gate.gd's gate and
 ## the stronghold banner in building_prefabs.json) plus palette.json's own
