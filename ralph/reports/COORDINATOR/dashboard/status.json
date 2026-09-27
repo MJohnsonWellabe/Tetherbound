@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27T22:05Z",
+ "updated": "2026-09-27T23:00Z",
  "headline": [
-  "Criteria met: 80 of 101. Batch 65 merged (#388, CI green): Cloudreach card C1 complete, F13#2 Tidewake pockets. Next: T3 (logs pending), Solmane F08#5, F04 captain/Warden/aftermath, F01 gates, F03 lures.",
-  "Owner rules today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary; build the game, not proof machinery (every round player-visible, two-strike harness rule, hourly Balance line). 9 Claude lanes plus Codex."
+  "Criteria met: 80 of 101 on main (batch 66 merged). WIND-DOWN (owner, 22:30): lanes finish, push everything including work in progress, and post FINAL; the coordinator consolidates into one branch, runs the unit tests once and CI once.",
+  "Pending in the consolidation (credited only after tests are green): cards T3 and T1, F08#5 Solmane (solo 6th case pending), C3 Solmane rerun, F04#0 Warrens guardian, F04#4 witness, and F01#2/#3 (conflicting claims to check). Work in progress lands switched off or unwired."
  ],
  "batches": [
   {
@@ -280,58 +280,84 @@
    "sha": "pending",
    "state": "PR open with auto-merge",
    "contents": "Owner ruling: return route exempt from A7; interim Capacitor Alpha ruling; heightfield cost test robust under parallel load"
+  },
+  {
+   "name": "Batch 67 (consolidation)",
+   "sha": "pending",
+   "state": "Collecting FINALs; consolidation at 23:12, then one unit run and one CI run",
+   "contents": "Every lane head, including work in progress (switched off or unwired)"
   }
  ],
  "lanes": [
   {
-   "lane": "Full Meadows run (M1–M4)",
-   "now": "Attempt 3 past Captain Riverwatch; checkpointing; Warden aftermath render attempt 3",
-   "next": "READY M2 at end of route; F04#6 aftermath frames to judge"
+   "lane": "Full Tidewake run",
+   "now": "FINAL b6b148c0, archived",
+   "next": "T3 and T1 cards; F13#2 logs; WIP: F13#3 chains and lures, Tess C3"
   },
   {
-   "lane": "Full Cloudreach run (C1–C3)",
-   "now": "C1 run 8 past upper anchors (run 7 finished the chapter); F08#3 frames 9/12",
-   "next": "READY C1; F08#3 judge; Solmane held on an owner permission in its session"
+   "lane": "Cloudreach-B (full Cloudreach run)",
+   "now": "FINAL 45ef17fd, archived",
+   "next": "F08#5 Solmane; C3 Solmane rerun; open: F08#3 environment art, owned-carrier Fly debt"
   },
   {
-   "lane": "Full Stormwood run (S1–S3)",
-   "now": "Whole chapter passes continuously (prefix to Marrow and aftermath)",
-   "next": "Repost S3 READY with full unit suite; resubmit F09#3 with Bars A/B"
+   "lane": "Meadows core (F04 readability)",
+   "now": "FINAL 229f70d4, archived",
+   "next": "F04#0; camera and HEAVY-tell fixes, fight glades; WIP: Vance camera (flag off); F04#7 needs a trainer-difficulty ruling"
   },
   {
-   "lane": "Stormwood visuals (new 18:02)",
-   "now": "F10#4 round 1: Bar A no / Bar B no (no giant trunk subject, no sky lightning, rod line hidden)",
-   "next": "Round 2 fixes; CODEX ASSET Stormheart hero tree requested"
+   "lane": "Meadows run (M1–M4)",
+   "now": "FINAL 9434e1e2, archived",
+   "next": "Harness and evidence only; M2 needs a ruling on the 326 m Hall-exit window"
   },
   {
-   "lane": "Full Tidewake run (T1–T3)",
-   "now": "Interrupted 19:02 for about 25 cloud renders; render.yml access withdrawn",
-   "next": "Status post; clean F15#2 READY; T1 rerun; F13#2/#3"
+   "lane": "F01 walks",
+   "now": "FINAL f62aa5bd, archived",
+   "next": "Fingerposts land; WIP: camp firepit (unwired); F01#2/#3 need render plus judge"
   },
   {
-   "lane": "Tidewake fights + visuals (new 18:02)",
-   "now": "Tess and Calder reader captures running locally",
-   "next": "F14#0/#1 and F13#5 judge loops"
+   "lane": "Tidewake visuals",
+   "now": "FINAL 5c04a594, archived",
+   "next": "Send-out hold, tunnel guard, telegraph over water, ally seating, Veilfall dressing; WIP: Pump Hall kitbash (flag off)"
   },
   {
-   "lane": "Meadows F04 readability",
-   "now": "Fight glades + scatter re-bake (holds bake lock)",
-   "next": "F04#0–3, #7 renders and full-bar judge"
+   "lane": "Stormwood visuals",
+   "now": "FINAL 7cddbc95, archived",
+   "next": "HUD compact roster, Deepwood forest, surge tuning, rod line, route-cue ruling; WIP: scorched Glass Field (flag off)"
   },
   {
-   "lane": "Meadows F01 walks",
-   "now": "Day/night walks; told to render locally",
-   "next": "Judge; READY F01#2/#3"
+   "lane": "VERIFIER 2",
+   "now": "FINAL, archived",
+   "next": "-"
   },
   {
-   "lane": "Meadows F03 lures",
-   "now": "Doss sightline, Vault seam light, smoke flake fix",
-   "next": "Six-lure full-bar judge; READY F03#0"
+   "lane": "Full Stormwood run",
+   "now": "Winding down; FINAL due 23:10",
+   "next": "-"
   },
   {
-   "lane": "Codex (desktop)",
-   "now": "F08#4 cloud volume candidate still Bars A/B no (white stone merges with cloud); Galecrest neck fixed",
-   "next": "Cliff/stone materials; Stormheart hero tree asset"
+   "lane": "F03 lures",
+   "now": "Winding down; FINAL due 23:10",
+   "next": "Its head must re-apply the lure work reverted by 6dafb23f3"
+  },
+  {
+   "lane": "Meadows F04 bosses",
+   "now": "Winding down; FINAL due 23:10",
+   "next": "Captain victory conversations, objective beam hidden in fights"
+  },
+  {
+   "lane": "Cloudreach aerie art",
+   "now": "Winding down; FINAL due 23:10",
+   "next": "Aerie dressing lands switched off"
+  },
+  {
+   "lane": "VERIFIER 1",
+   "now": "Solmane solo rerun; then one full suite on the consolidated branch",
+   "next": "-"
+  },
+  {
+   "lane": "Codex",
+   "now": "Pump and banner assets pass (37336cb9); Stormheart, waterfall and sluice being reworked",
+   "next": "Cherry-pick atomic deliveries only"
   }
  ],
  "decisions": [
