@@ -19,6 +19,22 @@ Claude continues to own gameplay and merges; Codex owns the visual fixes and
 independent visual evidence. Start with relay/strike readability, then complete
 the remaining listed failures. The family ranking below remains diagnostic.
 
+**Current relay witness:** main `4ee9f4157` is now integrated. The native
+Vance/Tuskroot review still fails F04#1: camera/foreground obstruction hides
+the path, and the sampled charge reads as a shove. A separate instrumented
+run measures actual travel of **1.333 / 0.000 / 0.267 m**, despite a configured
+7 m maximum; the second tell starts inside the 3.304 m contact reach. This is
+a spacing/contact problem as well as a framing problem. The combat lanes own
+the shared camera/collision repair; no parallel camera edit is made here.
+[Original frames, independent verdict and measurement](CRITERION-READABILITY.md).
+
+**F10#3 experiment:** fresh 114-frame baseline confirms the sampled central
+brush obstruction is resolved, but electrical identity/bolt finish remain
+weak. The additional 114-frame ground-fork candidate is rejected by independent
+review: it reads as repeated runes and weakens the filled hazard. Removed from
+production; retain the baseline and change approach. The same report archives
+the pairs, verdicts and passing mechanics/cleanup checks. No F10 criterion closes.
+
 | Criterion | Required visual result | Completion evidence still required |
 |---|---|---|
 | F04#1 — Meadows relay officers | Visible lunge travel and a readable ground-path tell conveying the tactical question | Current normal-camera tell/travel/recovery sequence and independent verdict; preserve combat timing and collision ownership |

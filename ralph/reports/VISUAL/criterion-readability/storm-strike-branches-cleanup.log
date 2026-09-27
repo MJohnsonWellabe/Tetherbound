@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+LIGHTNING CLEANUP impact_freed=true expiry_freed=true registry_empty=true strike_freed=true bolt=1 light=1
+LIGHTNING TELEGRAPH rim_m=3.00 seconds=1.20 build_us=183 height_calls=0
+LIGHTNING SKY GATE break=0.18 far_calm=0.00 near_calm=0.17 far_break=0.18 bolt_local=true
+LIGHTNING REDUCED MOTION ring=true bolt=true sky_flash=0.03 strike_light=0.45
+RAIN ROOF roofed=true near_under_roof=0.00 near_in_open=1.00
+RAIN ROOF SUBJECT piloting_open=false framing_trainer=true camera_under_roof=true
+LIGHTNING CLEANUP RESULT PASS

@@ -1,0 +1,46 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+CATALOGUE BOOT stormwood load begin t=3530
+CATALOGUE BOOT stormwood instantiate begin t=10240
+CATALOGUE BOOT stormwood attach begin t=10350
+CATALOGUE BOOT stormwood attached t=10793
+STORMWOOD BUILD shell=false elapsed_ms=538 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=930 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=1302 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=1381 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=1451 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=1543 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=1577 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=1605 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=1639 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=1668 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=2056 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=2107 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=2131 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=146 reorder[7 layers]=22
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=212 mark_harvestable=34 group_by_model=28 register_mesh_assets=28 build_batches_total=1082 (of which harvest_points[11099 nodes]=912, initial_collision_stream[11161 solid]=34) update_mmis=392
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(8864812499031) region_map=1024 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+STORMWOOD ENCOUNTERS READY wild=808
+TIMED_STRIKE outside reduced=false frames=19 impact=true
+TIMED_STRIKE outside reduced=true frames=19 impact=true
+TIMED_STRIKE inside reduced=false frames=19 impact=true
+TIMED_STRIKE inside reduced=true frames=19 impact=true
+TIMED_STRIKE brush_inside reduced=false frames=19 impact=true
+TIMED_STRIKE brush_inside reduced=true frames=19 impact=true
+STRIKE_CAPTURE_COMPLETE failures=[]

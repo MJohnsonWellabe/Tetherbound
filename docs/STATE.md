@@ -18,6 +18,13 @@ main; Claude continues gameplay work and owns PR merges. PR288 is the first boun
 X04 slice (Tidewake lantern materials); evidence and remaining defects are in
 `ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
 
+The current F04#1 native relay witness still fails visible travel/path readability.
+After integrating main `4ee9f4157`, measured Vance/Tuskroot travel is
+1.333 / 0.000 / 0.267 m (7 m is only the configured maximum). Contact spacing
+and obstructed framing both contribute. Existing combat lanes own shared
+camera/collision changes; Codex's packet is in
+`ralph/reports/VISUAL/CRITERION-READABILITY.md`. No criterion closes from this run.
+
 The current Codex visual queue is `ralph/reports/VISUAL/AUDIT.md`: its whole-game
 ranking uses 508 native frames across four regions, 57 creatures and 41 cast
 entries, plus the 89-item icon census. Draft PR365 owns the shared visual work
