@@ -101,6 +101,10 @@ func _run() -> void:
 		return
 	var peers := int(s.get("peers", 2))
 	_host_peer = int(s.get("host_peer", 0))
+	# The harness would reset a production join's deferral to its own 90 s
+	# inside step(); a Cloudreach build from the title outlasts that on a
+	# 4-vCPU box (F06#5 r2: ~110 s). Proofs grant their own figure instead.
+	world_build_allowance_floor_s["production_join"] = PROOF_BUILD_ALLOWANCE_S
 	if not await launch(peers, str(s.get("scene", "world"))):
 		await _end(s, path)
 		return
@@ -252,6 +256,12 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 			_ids.clear()
 			if action in ["load_save", "boot"]:
 				_characters.erase(peer)
+			# Learn every live peer's character now, while its session is up.
+			# `$characterN` was learned only when first used, so a scenario that
+			# first names a guest after its host restarted (the guest is back at
+			# the title with no session to ask) could never resolve it (F06#5).
+			for i in _peers.size():
+				await _learn_identity(i)
 	var verdict := str(result.get("verdict", ""))
 	var ok := want == "any" or verdict == want
 	var data_ok := expected.is_empty() or _subset(expected, result.get("data", {}))

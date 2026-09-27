@@ -301,6 +301,20 @@ func is_full() -> bool:
 		and int(session.call("peer_count")) >= LOBBY_CAPACITY
 
 
+## True when connected players plus seats held for reconnecting players fill
+## the lobby. Deliberately NOT part of `is_full()`: the lobby stays joinable so
+## the player the seat is held for can come back through it; only fresh
+## invitations stop.
+func seats_held_full() -> bool:
+	if not _hosting:
+		return false
+	var session := _session()
+	if session == null or not bool(session.call("is_active")) \
+			or not session.has_method("held_seat_count"):
+		return false
+	return int(session.call("peer_count")) + int(session.call("held_seat_count")) >= LOBBY_CAPACITY
+
+
 ## Mirrors the session's free seats onto Steam's joinable flag. Called on host
 ## ready and on every admitted/departed peer.
 func _refresh_joinable() -> void:
@@ -355,6 +369,9 @@ func invite_friends() -> bool:
 	if is_full():
 		_set_error("This world is full (%d/%d). A friend can be invited when a seat opens." \
 			% [LOBBY_CAPACITY, LOBBY_CAPACITY])
+		return false
+	if seats_held_full():
+		_set_error("Every free seat is being held for a player who is reconnecting. Invite again once they return or their seat is released.")
 		return false
 	if not _steam.has_method("isOverlayEnabled") or not bool(_steam.call("isOverlayEnabled")):
 		_set_error("The Steam invite overlay is unavailable. Check that the Steam overlay is enabled.")
@@ -865,7 +882,9 @@ static func connect_lobby_from_args(args: Array) -> int:
 static func _join_response_text(response: int) -> String:
 	match response:
 		2:
-			return "That Steam lobby no longer exists."
+			# The usual cause is the host quitting or re-hosting: a new lobby
+			# gets a new id, so every earlier invitation points at nothing.
+			return "That invitation has expired: your friend closed or reopened their world. Ask them to invite you again."
 		3:
 			return "Steam did not allow this account into the lobby."
 		4:

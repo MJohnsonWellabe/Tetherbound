@@ -7,6 +7,7 @@ const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const PIMS_PARCELS := preload("res://scripts/world/stormwood_pims_parcels.gd")
 const GLASS_FOR_BRYN := preload("res://scripts/world/stormwood_glass_for_bryn.gd")
+const ROOK_REWARD := preload("res://scripts/world/stormwood_rook_circuit_reward.gd")
 const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
 const WEN_RECORDS_RETURN_CONVERSATION := "stormwood_wen_crown_records_return"
@@ -19,6 +20,7 @@ var people: Node3D
 var chapter: Dictionary
 var _panel: Node
 var _parcels: Node3D
+var _rook_reward: Node
 var _glass_for_bryn: Node3D
 var _local := false
 var _arrival_check_left := 0.0
@@ -69,6 +71,10 @@ func mount(owner_world: Node3D) -> void:
 	_parcels.name = "PimsParcels"
 	world.add_child(_parcels)
 	_parcels.call("mount", world)
+	_rook_reward = ROOK_REWARD.new()
+	_rook_reward.name = "RookCircuitReward"
+	add_child(_rook_reward)
+	_rook_reward.call("mount", world)
 	_glass_for_bryn = GLASS_FOR_BRYN.new()
 	_glass_for_bryn.name = "GlassForBryn"
 	world.add_child(_glass_for_bryn)
@@ -112,8 +118,9 @@ func _dialogue_finished(id: String) -> void:
 		events.emit_event("side:stormwood_deepwood_circuit:step_1")
 		_replay_circuit_wins_after_progression_change(true)
 		return
-	if id == "stormwood_rook_circuit_return":
-		events.emit_event("side:stormwood_deepwood_circuit:step_3")
+	# Rook's return completes the circuit and pays this character's TM; his
+	# thanks pays any character still owed (stormwood_rook_circuit_reward.gd).
+	if _rook_reward != null and bool(_rook_reward.call("dialogue_finished", id, self)):
 		return
 	if id == WEN_RECORDS_RETURN_CONVERSATION:
 		events.emit_event("side:stormwood_crown_remembers:step_3")
@@ -185,6 +192,7 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	]
 	var chain_branches: Array = PIMS_PARCELS.branches_for(actor_id)
 	chain_branches.append_array(GLASS_FOR_BRYN.branches_for(actor_id))
+	chain_branches.append_array(ROOK_REWARD.branches_for(actor_id))
 	if actor_id == "rodkeeper_hesk":
 		# Hesk's report outranks his ordinary and post-storm lines while owed.
 		branches.push_front({"if_flag": "stormwood:side_dark_arches_2",

@@ -237,10 +237,11 @@
       "model": "res://assets/characters/trader/trader_lod0.glb",
       "portrait": "res://assets/ui/portraits/corin.png",
       "portrait_mode": "installed_body_render",
+      "_why_offset": "F15#2 (A7 on the measured return, tests/test_tidewake_return_cadence.gd): moved from 9.6 m off the Reedhaven spine to 2.5 m beside it at the same point (world -13.34, 468.56; about 2 degrees, dry), so his post-restoration line sits inside the 3.8 m greet prompt on the walk home. Without him the Brine Steps camp -> Stormwood gate stretch had no live offer for 151 s; with him it splits into 78 s + 85 s.",
       "island_local_offset": [
-        -9.0,
+        -13.34,
         0.0,
-        23.0
+        28.56
       ],
       "greeting": "water_rowan_pre",
       "greeting_when": [
