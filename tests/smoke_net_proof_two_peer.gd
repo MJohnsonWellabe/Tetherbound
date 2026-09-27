@@ -250,9 +250,11 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
 		if action in IDENTITY_ACTIONS:
 			# A peer id can change (rejoin mints a new one); a character id is the
-			# identity that survives, so it is kept for `$characterN` and only
-			# replaced when that peer's session reports a new one -- except after
-			# load_save/boot, which can put a different character on that peer.
+			# identity that survives, so `$characterN` is PINNED to the first one
+			# learned and only reset after load_save/boot, which deliberately put
+			# a different character on that peer. Re-learning it from the
+			# rejoined session made every post-rejoin `$characterN` check compare
+			# the character with itself (wipe_character + production_join).
 			_ids.clear()
 			if action in ["load_save", "boot"]:
 				_characters.erase(peer)
@@ -449,7 +451,16 @@ func _learn_identity(i: int) -> void:
 	_ids[i] = int(d.get("peer_id", 0))
 	for row: Variant in (d.get("rows", []) as Array):
 		if row is Dictionary and int((row as Dictionary).get("peer_id", 0)) == _ids[i]:
-			_characters[i] = str((row as Dictionary).get("character_id", ""))
+			var live := str((row as Dictionary).get("character_id", ""))
+			if live.is_empty():
+				continue
+			if not _characters.has(i) or str(_characters[i]).is_empty():
+				_characters[i] = live
+			elif str(_characters[i]) != live:
+				# Kept pinned: a check naming `$characterN` then fails against the
+				# character this peer came back as, which is what it must catch.
+				print("coordinator: peer %d now reports character '%s', not its pinned '%s'"
+					% [i, live, str(_characters[i])])
 
 
 static func _subset(expected: Dictionary, actual: Variant) -> bool:
