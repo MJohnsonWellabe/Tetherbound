@@ -1,0 +1,189 @@
+{
+  "disclosures": [],
+  "failures": [],
+  "flags_gained": [
+    "captive_rescued",
+    "mill_crossing_restored",
+    "relay_captain_defeated",
+    "relay_disabled"
+  ],
+  "flags_total": 109.0,
+  "free_build": false,
+  "game_clock_seconds": 770.614845777774,
+  "game_day": 6.0,
+  "helper_receipts": [
+    {
+      "passed": true,
+      "receipts": [
+        {
+          "beat": "relay_captain_defeated",
+          "expected_xp": {
+            "-9223371908458739695": 754.0,
+            "-9223371908475516912": 437.0,
+            "-9223371908492294129": 437.0,
+            "-9223371908509071346": 437.0,
+            "-9223371908525848563": 437.0
+          },
+          "gear": 0.0,
+          "hits": 45.0,
+          "items_after": {
+            "coin": 290.0,
+            "orb_greater": 5.0,
+            "revive": 12.0
+          },
+          "items_before": {
+            "coin": 230.0,
+            "orb_greater": 2.0,
+            "revive": 11.0
+          },
+          "rounds": 3.0,
+          "wins": 3.0,
+          "xp_after": {
+            "-9223371908458739695": 1988.0,
+            "-9223371908475516912": 1963.0,
+            "-9223371908492294129": 2698.0,
+            "-9223371908509071346": 2500.0,
+            "-9223371908525848563": 3004.0
+          },
+          "xp_before": {
+            "-9223371908458739695": 1234.0,
+            "-9223371908475516912": 1526.0,
+            "-9223371908492294129": 2261.0,
+            "-9223371908509071346": 2063.0,
+            "-9223371908525848563": 2567.0
+          }
+        },
+        {
+          "beat": "captive_rescued",
+          "conversation": "relay_captive_freed",
+          "gear": 1.0
+        },
+        {
+          "beat": "relay_disabled",
+          "lit_after": 0.0,
+          "lit_before": 18.0,
+          "player": "(342.4986, 10.00082, 3751.482)"
+        },
+        {
+          "beat": "mill_crossing_restored",
+          "depth": 9.43603515625,
+          "gear_after": 0.0,
+          "gear_before": 1.0,
+          "party_ids": [
+            -9223371908525848600.0,
+            -9223371908509071400.0,
+            -9223371908492294100.0,
+            -9223371908475516900.0,
+            -9223371908458739700.0
+          ]
+        }
+      ],
+      "segment": "relay"
+    }
+  ],
+  "inventory": {
+    "axe": 1.0,
+    "berries": 5.0,
+    "coin": 290.0,
+    "hammer": 1.0,
+    "hide_vest": 1.0,
+    "knife": 1.0,
+    "orb_basic": 48.0,
+    "orb_greater": 5.0,
+    "pickaxe": 1.0,
+    "potion_small": 3.0,
+    "revive": 12.0,
+    "rootstone": 17.0,
+    "torch": 1.0,
+    "wood": 1.0
+  },
+  "key_items": {},
+  "location": {
+    "player": [
+      -151.999877929688,
+      -1.98773491382599,
+      4212.43603515625
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party_after": [
+    {
+      "hp": 117.0,
+      "level": 11.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 22.0,
+      "level": 10.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 36.0,
+      "level": 10.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 96.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 78.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "party_before": [
+    {
+      "hp": 112.0,
+      "level": 10.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 21.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 34.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 92.0,
+      "level": 8.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 90.0,
+      "level": 7.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "passed": true,
+  "saved_world_seed": 1393508821.0,
+  "segment": "relay",
+  "wall_seconds": 805.601,
+  "world_seed_env": "4"
+}

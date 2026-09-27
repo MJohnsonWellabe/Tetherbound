@@ -1,0 +1,636 @@
+{
+  "disclosures": [
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)"
+  ],
+  "failures": [],
+  "flags_gained": [
+    "defeated_captain_field",
+    "defeated_captain_ridge",
+    "defeated_captain_riverwatch",
+    "defeated_stronghold_courtyard",
+    "defeated_stronghold_elite",
+    "defeated_stronghold_patrol",
+    "hall_approach_open",
+    "wild_once_3103",
+    "wild_once_4001"
+  ],
+  "flags_total": 118.0,
+  "free_build": false,
+  "game_clock_seconds": 1893.17685677775,
+  "game_day": 9.0,
+  "helper_receipts": [
+    {
+      "passed": true,
+      "receipts": [
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 22.5106900444973,
+          "hp_after": 72.5106900444973,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 154.277654689312,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 36.1856556678788,
+          "hp_after": 86.1856556678788,
+          "index": 2.0,
+          "item": "potion_small",
+          "max_hp": 147.018404927254,
+          "species": "mudsnout"
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371165983029200.0,
+          "frames": 902.0,
+          "guardian": false,
+          "hits": 12.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371164372417500.0,
+          "frames": 769.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 61.2005395013731,
+          "hp_after": 111.200539501373,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 160.28847240448,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 461.0,
+            "-9223371906193815530": 596.0,
+            "-9223371906210592747": 461.0,
+            "-9223371906227369964": 707.0,
+            "-9223371906244147181": 0.0
+          },
+          "frames": 5167.0,
+          "hits": 56.0,
+          "id": "captain_riverwatch",
+          "items_after": {
+            "coin": 340.0,
+            "elixir_vigour": 1.0,
+            "orb_greater": 7.0,
+            "river_sigil": 1.0
+          },
+          "items_before": {
+            "coin": 290.0,
+            "elixir_vigour": 0.0,
+            "orb_greater": 5.0,
+            "river_sigil": 0.0
+          },
+          "rounds": 3.0,
+          "wins": 3.0,
+          "xp_after": {
+            "-9223371906177038313": 2663.0,
+            "-9223371906193815530": 2773.0,
+            "-9223371906210592747": 3373.0,
+            "-9223371906227369964": 3635.0,
+            "-9223371906244147181": 3218.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 2202.0,
+            "-9223371906193815530": 2177.0,
+            "-9223371906210592747": 2912.0,
+            "-9223371906227369964": 2928.0,
+            "-9223371906244147181": 3218.0
+          }
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": true,
+          "hp": 0.0,
+          "hp_after": 84.0,
+          "index": 0.0,
+          "item": "revive",
+          "max_hp": 168.0,
+          "species": "ripplet"
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371099964683300.0,
+          "frames": 697.0,
+          "guardian": false,
+          "hits": 10.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371101407523800.0,
+          "frames": 978.0,
+          "guardian": false,
+          "hits": 13.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370830220599300.0,
+          "frames": 881.0,
+          "guardian": false,
+          "hits": 12.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371081778181100.0,
+          "frames": 916.0,
+          "guardian": false,
+          "hits": 12.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370826227620900.0,
+          "frames": 881.0,
+          "guardian": false,
+          "hits": 13.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370825422314500.0,
+          "frames": 809.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 441.0,
+            "-9223371906193815530": 441.0,
+            "-9223371906210592747": 441.0,
+            "-9223371906227369964": 492.0,
+            "-9223371906244147181": 576.0
+          },
+          "frames": 4183.0,
+          "hits": 59.0,
+          "id": "captain_field",
+          "items_after": {
+            "coin": 380.0,
+            "field_sigil": 1.0,
+            "potion_small": 2.0,
+            "tm_earth_fist": 1.0
+          },
+          "items_before": {
+            "coin": 340.0,
+            "field_sigil": 0.0,
+            "potion_small": 0.0,
+            "tm_earth_fist": 0.0
+          },
+          "rounds": 3.0,
+          "wins": 3.0,
+          "xp_after": {
+            "-9223371906177038313": 3834.0,
+            "-9223371906193815530": 4674.0,
+            "-9223371906210592747": 4544.0,
+            "-9223371906227369964": 4857.0,
+            "-9223371906244147181": 4524.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 3393.0,
+            "-9223371906193815530": 4233.0,
+            "-9223371906210592747": 4103.0,
+            "-9223371906227369964": 4365.0,
+            "-9223371906244147181": 3948.0
+          }
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": true,
+          "hp": 0.0,
+          "hp_after": 86.155053917408,
+          "index": 1.0,
+          "item": "revive",
+          "max_hp": 172.310107834816,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 38.5453544694326,
+          "hp_after": 88.5453544694326,
+          "index": 3.0,
+          "item": "potion_small",
+          "max_hp": 163.536598043442,
+          "species": "mudsnout"
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370966334155800.0,
+          "frames": 806.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370965528848400.0,
+          "frames": 897.0,
+          "guardian": false,
+          "hits": 12.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370958985734100.0,
+          "frames": 747.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 58.828570985607,
+          "hp_after": 108.828570985607,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 178.320925549984,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370871609991200.0,
+          "frames": 844.0,
+          "guardian": false,
+          "hits": 12.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370823828479000.0,
+          "frames": 867.0,
+          "guardian": false,
+          "hits": 12.0
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 475.0,
+            "-9223371906193815530": 475.0,
+            "-9223371906210592747": 475.0,
+            "-9223371906227369964": 880.0,
+            "-9223371906244147181": 475.0
+          },
+          "frames": 3399.0,
+          "hits": 46.0,
+          "id": "captain_ridge",
+          "items_after": {
+            "coin": 425.0,
+            "elixir_guard": 1.0,
+            "revive": 11.0,
+            "ridge_sigil": 1.0
+          },
+          "items_before": {
+            "coin": 380.0,
+            "elixir_guard": 0.0,
+            "revive": 10.0,
+            "ridge_sigil": 0.0
+          },
+          "rounds": 3.0,
+          "wins": 3.0,
+          "xp_after": {
+            "-9223371906177038313": 4920.0,
+            "-9223371906193815530": 5760.0,
+            "-9223371906210592747": 5630.0,
+            "-9223371906227369964": 6959.0,
+            "-9223371906244147181": 5610.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 4445.0,
+            "-9223371906193815530": 5285.0,
+            "-9223371906210592747": 5155.0,
+            "-9223371906227369964": 6079.0,
+            "-9223371906244147181": 5135.0
+          }
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370820607253500.0,
+          "frames": 607.0,
+          "guardian": false,
+          "hits": 9.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370819818723300.0,
+          "frames": 931.0,
+          "guardian": false,
+          "hits": 14.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370819013418000.0,
+          "frames": 764.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370815020440600.0,
+          "frames": 712.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370802756295700.0,
+          "frames": 808.0,
+          "guardian": false,
+          "hits": 11.0
+        },
+        {
+          "beat": "hall_approach_open",
+          "depth": 5.44648694992065,
+          "sigils_after": {
+            "field_sigil": 0.0,
+            "ridge_sigil": 0.0,
+            "river_sigil": 0.0
+          },
+          "sigils_before": {
+            "field_sigil": 1.0,
+            "ridge_sigil": 1.0,
+            "river_sigil": 1.0
+          }
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 0.0,
+            "-9223371906193815530": 278.0,
+            "-9223371906210592747": 278.0,
+            "-9223371906227369964": 278.0,
+            "-9223371906244147181": 556.0
+          },
+          "frames": 2264.0,
+          "hits": 29.0,
+          "id": "stronghold_patrol",
+          "items_after": {
+            "coin": 485.0,
+            "potion_small": 2.0
+          },
+          "items_before": {
+            "coin": 425.0,
+            "potion_small": 0.0
+          },
+          "rounds": 2.0,
+          "wins": 2.0,
+          "xp_after": {
+            "-9223371906177038313": 5547.0,
+            "-9223371906193815530": 6665.0,
+            "-9223371906210592747": 6535.0,
+            "-9223371906227369964": 8491.0,
+            "-9223371906244147181": 6793.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 5547.0,
+            "-9223371906193815530": 6387.0,
+            "-9223371906210592747": 6257.0,
+            "-9223371906227369964": 8213.0,
+            "-9223371906244147181": 6237.0
+          }
+        },
+        {
+          "beat": "hall_passage_crossed",
+          "flag": "defeated_stronghold_patrol",
+          "from": "outer_works",
+          "player": "(8.000072, 6.172785, 7591.474)",
+          "to": "courtyard",
+          "trainer": "stronghold_patrol"
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 445.0,
+            "-9223371906193815530": 890.0,
+            "-9223371906210592747": 445.0,
+            "-9223371906227369964": 445.0,
+            "-9223371906244147181": 0.0
+          },
+          "frames": 5927.0,
+          "hits": 52.0,
+          "id": "stronghold_courtyard",
+          "items_after": {
+            "coin": 575.0,
+            "orb_basic": 51.0,
+            "potion_small": 4.0
+          },
+          "items_before": {
+            "coin": 485.0,
+            "orb_basic": 48.0,
+            "potion_small": 2.0
+          },
+          "rounds": 3.0,
+          "wins": 3.0,
+          "xp_after": {
+            "-9223371906177038313": 5992.0,
+            "-9223371906193815530": 7555.0,
+            "-9223371906210592747": 6980.0,
+            "-9223371906227369964": 8936.0,
+            "-9223371906244147181": 6793.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 5547.0,
+            "-9223371906193815530": 6665.0,
+            "-9223371906210592747": 6535.0,
+            "-9223371906227369964": 8491.0,
+            "-9223371906244147181": 6793.0
+          }
+        },
+        {
+          "beat": "hall_passage_crossed",
+          "flag": "defeated_stronghold_courtyard",
+          "from": "courtyard",
+          "player": "(8.000082, 6.172785, 7623.415)",
+          "to": "tether_approach",
+          "trainer": "stronghold_courtyard"
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 493.0,
+            "-9223371906193815530": 318.0,
+            "-9223371906210592747": 660.0,
+            "-9223371906227369964": 493.0,
+            "-9223371906244147181": 493.0
+          },
+          "frames": 3841.0,
+          "hits": 65.0,
+          "id": "stronghold_elite",
+          "items_after": {
+            "coin": 725.0,
+            "potion_small": 7.0,
+            "revive": 10.0
+          },
+          "items_before": {
+            "coin": 575.0,
+            "potion_small": 4.0,
+            "revive": 9.0
+          },
+          "rounds": 3.0,
+          "wins": 3.0,
+          "xp_after": {
+            "-9223371906177038313": 6485.0,
+            "-9223371906193815530": 7873.0,
+            "-9223371906210592747": 7640.0,
+            "-9223371906227369964": 9429.0,
+            "-9223371906244147181": 7286.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 5992.0,
+            "-9223371906193815530": 7555.0,
+            "-9223371906210592747": 6980.0,
+            "-9223371906227369964": 8936.0,
+            "-9223371906244147181": 6793.0
+          }
+        },
+        {
+          "beat": "hall_passage_crossed",
+          "flag": "defeated_stronghold_elite",
+          "from": "tether_approach",
+          "player": "(7.999907, 6.172785, 7649.672)",
+          "to": "warden_arena",
+          "trainer": "stronghold_elite"
+        },
+        {
+          "beat": "warden_arena_entered",
+          "marker": "(8.0, 6.171943, 7650.2)",
+          "party_ids": [
+            -9223371906244147200.0,
+            -9223371906227370000.0,
+            -9223371906210592800.0,
+            -9223371906193815600.0,
+            -9223371906177038300.0
+          ],
+          "player": "(7.999907, 6.172785, 7649.672)",
+          "trainers": [
+            "captain_riverwatch",
+            "captain_field",
+            "captain_ridge",
+            "stronghold_patrol",
+            "stronghold_courtyard",
+            "stronghold_elite"
+          ],
+          "travel": "on_foot"
+        }
+      ],
+      "segment": "hall"
+    }
+  ],
+  "inventory": {
+    "axe": 1.0,
+    "berries": 5.0,
+    "coin": 725.0,
+    "elixir_guard": 1.0,
+    "elixir_vigour": 1.0,
+    "hammer": 1.0,
+    "hide_vest": 1.0,
+    "knife": 1.0,
+    "orb_basic": 51.0,
+    "orb_greater": 7.0,
+    "pickaxe": 1.0,
+    "potion_small": 7.0,
+    "revive": 10.0,
+    "rootstone": 17.0,
+    "tm_earth_fist": 1.0,
+    "torch": 1.0,
+    "wood": 1.0
+  },
+  "key_items": {},
+  "location": {
+    "player": [
+      7.99990653991699,
+      6.17278528213501,
+      7649.671875
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party_after": [
+    {
+      "hp": 0.0,
+      "level": 16.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 8.0,
+      "level": 18.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 87.0,
+      "level": 16.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 0.0,
+      "level": 17.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 37.0,
+      "level": 15.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "party_before": [
+    {
+      "hp": 117.0,
+      "level": 11.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 22.0,
+      "level": 10.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 36.0,
+      "level": 10.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 96.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 78.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "passed": true,
+  "saved_world_seed": 1393508821.0,
+  "segment": "hall",
+  "wall_seconds": 2141.761,
+  "world_seed_env": "4"
+}

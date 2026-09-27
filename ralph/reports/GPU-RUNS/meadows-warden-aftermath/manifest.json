@@ -1,0 +1,403 @@
+{
+  "script": "tests/smoke_four_biome_continuous.gd",
+  "comment_id": 5859286071,
+  "mode": "render",
+  "args": [
+    "--world-seed=4",
+    "--resume-from=seed4_hall",
+    "--m4-finale",
+    "--through-meadows",
+    "--fight-log",
+    "--aftermath-capture"
+  ],
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/meadows-warden-aftermath",
+  "label": "meadows-warden-aftermath",
+  "sha": "212e036edca60d03ee7febcc5471fe8e4c05d944",
+  "stage": "ready_to_publish",
+  "runner_pid": 4460,
+  "started_utc": "2026-09-27T20:09:37.890655+00:00",
+  "engine_pid": 13600,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\meadows-warden-aftermath",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tests/smoke_four_biome_continuous.gd",
+    "--",
+    "--world-seed=4",
+    "--resume-from=seed4_hall",
+    "--m4-finale",
+    "--through-meadows",
+    "--fight-log",
+    "--aftermath-capture"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T20:38:41.660218+00:00",
+  "output_worktree_files": [],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 551,
+      "sha256": "bdec6b2c3ca69abd1e9fe7864a1844d8451d71585866fd62796453e4cf80de44"
+    },
+    {
+      "path": "frame-review.json",
+      "bytes": 1167,
+      "sha256": "ba02247c6fd8ce4d25d909c8a3c07f70fa1e0d97f21a0d0a24074adcc6f4ec1a"
+    },
+    {
+      "path": "import.log",
+      "bytes": 12315,
+      "sha256": "03193a765f083e353cb1a187228743ef482069d6da25b71028f30c0f4f013091"
+    },
+    {
+      "path": "map-cache-inspection.txt",
+      "bytes": 254,
+      "sha256": "c7ebc632e19fa4f9a11a0602ec88ba479c50fbcf19efabac98e853616f95320c"
+    },
+    {
+      "path": "requested-result-lines.txt",
+      "bytes": 26820,
+      "sha256": "293841f3cdac34987e73dc748c573caddf2f26d8a53b80c83d324e0bbc7b031d"
+    },
+    {
+      "path": "run-last20.txt",
+      "bytes": 17149,
+      "sha256": "5ca6b8d94110c7cc8dbc283ed3e103dbb7d62648ec2bab1e3885100896d5ff98"
+    },
+    {
+      "path": "run.log",
+      "bytes": 140988,
+      "sha256": "aaad8a70fcf2c707880555a5ca51b27c57ac23bd96b6ebde083a951dcf025b09"
+    },
+    {
+      "path": "user/aftermath/warden_aldis-a1.json",
+      "bytes": 664,
+      "sha256": "82591816fb104fe399f06b6ad9c93e10b2922a7692868408a2a73bcde60ec0bf"
+    },
+    {
+      "path": "user/aftermath/warden_aldis-a1.png",
+      "bytes": 2338324,
+      "sha256": "56deb10825bfe15cb547580b349caf8e7cf62ef3c2a986290a02226f95768a13"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 17372,
+      "sha256": "0a81374cbe346a1d9b56af9eac1dab0aea4ed4b76be9934ce83329cbe1fb6521"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 916214,
+      "sha256": "c713ec481bec294e9567e211946035fc890a70dbf161a6ea7530725da006fd0f"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/README.txt",
+      "bytes": 1166,
+      "sha256": "ea6da6e9f8b3223e892303608fcc12802ddb24bce826031ef1e5541d2001642f"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/bridge.json",
+      "bytes": 3964,
+      "sha256": "61416f6523852fabd0ee4c36d5068ce828401e8dc66b48df5dbe1126887cf759"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/c1_arrival.json",
+      "bytes": 6631,
+      "sha256": "b827920b585975195e305e3f0d4017b433e98d12897fb49035d9d5acdbcd2df9"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/camp_tournament.json",
+      "bytes": 8821,
+      "sha256": "15792e095d8b05da6d795a2d99154eb6518f34ed024677323f093b18cbfc6cee"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/hall.json",
+      "bytes": 18312,
+      "sha256": "4aa245555d3bb2f05ac6cdcbc3cd5e7a13063148c9abf18ccad10187e2dfb7ea"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/opening_team.json",
+      "bytes": 64633,
+      "sha256": "9bf6bcbce7bc775fc93fa3a2b124f901533418c2633d24fa7dc61c9b8b8883fb"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/relay.json",
+      "bytes": 4524,
+      "sha256": "91f7935b22b31513a12e875dd81367d8097f692b18648323c0eff49a288300a3"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/warden.json",
+      "bytes": 15179,
+      "sha256": "b4fd5c6fe9583c52488ad86b37bff3b11d9b949ecd9d2a6dc1f0201653d923cd"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/receipts/warrens.json",
+      "bytes": 8737,
+      "sha256": "6165887f9771e3f327e6fc23697175697302ab01c4298893c334e48d7b28329b"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json",
+      "bytes": 2788222,
+      "sha256": "7da214cf825d2c9ec34f24ec5b5110cfe1c5f3e4b448a48d73dcbcccbc4e92ff"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/slot_0.json",
+      "bytes": 3243900,
+      "sha256": "674134e440542ce31b73afa631ee4be0b8032e6558b4a79d490cef70651ed685"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/slot_1.json",
+      "bytes": 3243931,
+      "sha256": "88269e12663c9549d5c3e6218f81b059b2dc3b76fb2d68c82391b8614100ff4a"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/slot_2.json",
+      "bytes": 4215491,
+      "sha256": "e771a9c47080538aab72c47c4e5b16c3429bf737a51cba74e75f7cb5e6577fe8"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/slot_3.json",
+      "bytes": 4215607,
+      "sha256": "ae6eff3846e4d239b26d4b5d646444562a1d63f8d917507b18f3caab1c4093c8"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/worlds/slot-0/world.json",
+      "bytes": 22143,
+      "sha256": "727ea09468ea965f1ad43d2f813db6c29d7556b65df73249d9db5f63748f8c73"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/worlds/slot-1/world.json",
+      "bytes": 22143,
+      "sha256": "ac0a62193c5cb07c12d5aace475e81c313d4755c24d597e335c1bf045eb24dd7"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/worlds/slot-2/world.json",
+      "bytes": 21971,
+      "sha256": "a492a60ae59e0f6e1a04db184bb1da87c194a3fc5b724b2392d0ba031f19dbd2"
+    },
+    {
+      "path": "user/four_biome_checkpoints_13600_15114/c1_arrival/save/worlds/slot-3/world.json",
+      "bytes": 22105,
+      "sha256": "e7da3078b805525b9a428c53c95e8b62e974460b3135f712e6dbd9db7206b1af"
+    },
+    {
+      "path": "user/four_biome_coverage_13600_15114.jsonl",
+      "bytes": 20839678,
+      "sha256": "f2bf47333f96387e7cd63b873a3b5fc44648aa9e7ebaa013019120a1f188068b"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json",
+      "bytes": 2788222,
+      "sha256": "7da214cf825d2c9ec34f24ec5b5110cfe1c5f3e4b448a48d73dcbcccbc4e92ff"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/slot_0.json",
+      "bytes": 3243900,
+      "sha256": "674134e440542ce31b73afa631ee4be0b8032e6558b4a79d490cef70651ed685"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/slot_1.json",
+      "bytes": 3243931,
+      "sha256": "88269e12663c9549d5c3e6218f81b059b2dc3b76fb2d68c82391b8614100ff4a"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/slot_2.json",
+      "bytes": 4215491,
+      "sha256": "e771a9c47080538aab72c47c4e5b16c3429bf737a51cba74e75f7cb5e6577fe8"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/slot_3.json",
+      "bytes": 4215607,
+      "sha256": "ae6eff3846e4d239b26d4b5d646444562a1d63f8d917507b18f3caab1c4093c8"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/worlds/slot-0/world.json",
+      "bytes": 22143,
+      "sha256": "727ea09468ea965f1ad43d2f813db6c29d7556b65df73249d9db5f63748f8c73"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/worlds/slot-1/world.json",
+      "bytes": 22143,
+      "sha256": "ac0a62193c5cb07c12d5aace475e81c313d4755c24d597e335c1bf045eb24dd7"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/worlds/slot-2/world.json",
+      "bytes": 21971,
+      "sha256": "a492a60ae59e0f6e1a04db184bb1da87c194a3fc5b724b2392d0ba031f19dbd2"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114/worlds/slot-3/world.json",
+      "bytes": 22105,
+      "sha256": "e7da3078b805525b9a428c53c95e8b62e974460b3135f712e6dbd9db7206b1af"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json",
+      "bytes": 2788371,
+      "sha256": "5f4bc0a1eb33e1c8c0860209284dd400009d529ca0bc26a91ebd275886b42266"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/slot_0.json",
+      "bytes": 4215280,
+      "sha256": "06b0a67e0c1a06c28ff9ebfbbcd8d67b34ae62bf6f140a328e4a2231fe1b13b3"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/slot_1.json",
+      "bytes": 4215393,
+      "sha256": "c05f81d123391f51af6eca937120144b2e90ba32cc760000a8ab2efdefc7e1a3"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/slot_2.json",
+      "bytes": 4215491,
+      "sha256": "e771a9c47080538aab72c47c4e5b16c3429bf737a51cba74e75f7cb5e6577fe8"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/worlds/slot-0/world.json",
+      "bytes": 21793,
+      "sha256": "f3b47d3c5e35d436345e6bb293121410ce6a21217224979194f7a5c722e7c862"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/worlds/slot-1/world.json",
+      "bytes": 21861,
+      "sha256": "39feb6f098da34a71350aed61217156365ba22e9c34c5a182a8ebe4c23cabd33"
+    },
+    {
+      "path": "user/four_biome_fresh_13600_15114_m4_offer_open/worlds/slot-2/world.json",
+      "bytes": 21971,
+      "sha256": "a492a60ae59e0f6e1a04db184bb1da87c194a3fc5b724b2392d0ba031f19dbd2"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 139715,
+      "sha256": "2d8d0e1f00a9e6506c9ce6595b5946adf0203df6cee2369e8cc6ab526cfd22fe"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/0143f5ea411f3d8a6a366c3d137112d572298aa5.cache",
+      "bytes": 4008624,
+      "sha256": "ebf33dafea68e57edec6cd31071d107744e8087c342fe1fcc91fb05a8086a639"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/1c391b2d44274649404846aed0752d6dc54823a3.cache",
+      "bytes": 4940842,
+      "sha256": "10d2c4209397308bc8aafc8612d0998a31c6261507a07f49801d2ad68a4952fb"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/2115c615c01c3a0177be29c6ddcef01907dcf654.cache",
+      "bytes": 1981990,
+      "sha256": "4c9928a08a4697b5c8c8099ce145b85b6b2f2f4dd7181df35022a5097f61a55d"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/312ad42a7fd06585fad3eca6bb0eef83490b1da7.cache",
+      "bytes": 6208521,
+      "sha256": "200ef700182fe3ffc80c47336b2ae0cc5759cfdebf0dc1884b6452203c679914"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/422a1b88b7c247bcfc19ff943a54f18b4cbd3ed3.cache",
+      "bytes": 3144360,
+      "sha256": "de7fb0ececd2f6dfbbc86f707a9b0385586748d52ea9ccd030c029e0aa02866b"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/435dbe1cde22e3e49fd517c472846f3136aae0d8.cache",
+      "bytes": 5956809,
+      "sha256": "b7acd7a882566ab882ca5b0cafe800dce1e3f0354385346665743fc4e77cde9c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/4c6032b10f8581cd505329f06211a2f4a6460c1d.cache",
+      "bytes": 1317961,
+      "sha256": "2c64d7a641a7e6ce855a4c0116af382af1dafbaa6fae03757d2e4ab393d96e08"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/5befbb8eab804d0505b4d1d4157a265e3e29b694.cache",
+      "bytes": 4383781,
+      "sha256": "c213c52a491d6417a4af46a435161b616bd5f795b8e1d596d0ea92b7e59dcd36"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/5c5334c9c95b17699742bcd1410751903885fc93.cache",
+      "bytes": 1954711,
+      "sha256": "c18c168c243f26ecdbf085610e8ade1e763a5df3146d717659387fcaea521b6e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/5c713fc8d058958121c19e372afe99b4a4024856.cache",
+      "bytes": 2486101,
+      "sha256": "ab013e0a97127b437cb86d0e5f2a024c4b37940b9a1e5b0abf60cb033f7000c6"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/65ee8a64bce8864ce9523e0c7cae479097880bb2.cache",
+      "bytes": 2957527,
+      "sha256": "b7e9408f7da3df567df995d2e12456afee7d145f87533e1677381df73ebe7487"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/7ef334d65fa65790fe4ba9a537dff0b6721ef8ca.cache",
+      "bytes": 7112200,
+      "sha256": "ec03280ab95417d19f3d0b4e12dc11ce3b17de66b04e671c879c54b777f827b5"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a2ddf2302bafb2503e1359bb4116cfc29d9c7985.cache",
+      "bytes": 2015202,
+      "sha256": "a77a99bc5354fac4182a476f1d97fe550a061865037cdd747375bfbad7918b12"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a337fd395264406b70bc21432ea1a85b0fce4b96.cache",
+      "bytes": 5592340,
+      "sha256": "5ad6cec4341e867603e1f369381bb937b19f91a01c7d5da70bec1b1db2de1960"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a8777be15f781463e27cb3b841a738f050b8c925.cache",
+      "bytes": 5856060,
+      "sha256": "9e7da671397f589c04c4d25fd7d67f3359dc592c107662816baa58173f6ee0d9"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/b041643a643abf05307e9fac0e55811db7c17d4f.cache",
+      "bytes": 4496015,
+      "sha256": "f20f39216a281efa08ca839bd6dd1f44679821b0760a4ca68cac3bc9d0070c74"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/b61efec25d2dc3c3b42d6aa018c561d5ee2ec3bd.cache",
+      "bytes": 3072644,
+      "sha256": "339ccce43cc16d4f6a7e9ff87987f74d1f0da8806cff78f3361a24525d7ec198"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/b779d6f0f5f8eef0fef3bceaea79feb8d79b51da.cache",
+      "bytes": 2855503,
+      "sha256": "d6e76907a89e937dce9e1228762d25a81ac921784be4bfa3e583884c9f6d6b92"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3898120a1b86c86cb0b128ae6a563c539a13e3f.cache",
+      "bytes": 6286472,
+      "sha256": "4519aae582c6baabe8a99d58e9e8464448acc77bf44a59844fc6610e7c074314"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3d38ef465c59bc9091bfc25876abd6e62e9b744.cache",
+      "bytes": 5430912,
+      "sha256": "d31056aa5be5cea6849b30f4660c643a75a151f65eef5080d60b150742a59bc5"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f8ab93aeebbe5f7232a9778ed024a542819aa220.cache",
+      "bytes": 6335195,
+      "sha256": "58f96cb34d851dc849a923610a519b0d745a7b67968bf3f9fd24ba71d1f615f6"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/ff9c6151af09a0e5763aff254f80ae7482be7004.cache",
+      "bytes": 1975786,
+      "sha256": "f440e06b2c6535355e466a5f9d73acd4ab9e457222e4c7397399473a85dc7460"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 77,
+      "sha256": "7ecc087f8efb81112e06f56b31b1e15a639370357645a7146b9c0ec766a7f5c7"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}
