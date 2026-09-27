@@ -5825,7 +5825,8 @@
       "placeholder_species": "mosshock",
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
+      "_why_guard_stance_f10": "F10#2 C3 code-blind judge (fight B): the only ground mark was the manager's small ring at the elder's feet, half under its body, and a strike landed on a pilot outside it. guard_stance draws the frontal cone the manager's hit test uses (its own range and cone) for the tell, as the Crown Guardian does; presentation only, no block or damage change. Its BOSSES numbers are unchanged.",
+      "combat": {"guard_stance": true, "telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
       "completion_reward": {"title": "Blackwater Elder", "items": [{"id": "glowmoss_tonic", "count": 1}], "acknowledgement": "The Blackwater Elder slips back into the pool. A Glowmoss Tonic for each trainer who stood in the fight."},
       "once_only": true
     },

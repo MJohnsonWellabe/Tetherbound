@@ -46,6 +46,8 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const OCCLUSION := preload("res://scripts/combat/ally_occlusion_fade.gd")
 const TEST_SAVE_DIR := "user://f10_2_named_footage"
 const ALL_IDS := ["hollows_alpha", "capacitor_alpha", "crown_guardian",
 	"old_rodfolk_hall_guardian", "blackwater_elder", "glass_field_alpha"]
@@ -199,6 +201,28 @@ func _save(tag: String) -> void:
 	_note("frame %s t=%.2f fighting=%s sep=%.2f enemy_on_screen=%s intent=%s" % [
 		path.get_file(), _t(), str(_manager.call("is_fighting")), sep, str(enemy_on),
 		str(enemy.get("_intent")) if enemy != null else "-"])
+	if cam != null and enemy != null and ally != null:
+		_note_camera(cam, enemy, ally)
+
+
+## Camera state beside each saved frame, and how many of the ally's three
+## sample heights the foe's inscribed render ellipsoid hides from the lens.
+func _note_camera(cam: Camera3D, enemy: Node3D, ally: Node3D) -> void:
+	var foe_model := enemy.call("model_pivot") as Node3D if enemy.has_method("model_pivot") else null
+	var ally_model := ally.call("model_pivot") as Node3D if ally.has_method("model_pivot") else null
+	var hides := -1
+	if foe_model != null and ally_model != null:
+		var foe_bounds: AABB = RENDER_BOUNDS.measure(foe_model)
+		var ally_world: AABB = ally_model.global_transform * RENDER_BOUNDS.measure(ally_model)
+		var base := Vector3(ally.global_position.x, ally_world.position.y, ally.global_position.z)
+		hides = OCCLUSION.hidden_points(cam.global_position, base, ally_world.size.y,
+			foe_model.global_transform, foe_bounds)
+	var to_foe := enemy.global_position - ally.global_position
+	var axis := rad_to_deg(atan2(-to_foe.x, -to_foe.z))
+	_note("  cam yaw=%.0f axis=%.0f comp_extra=%.0f clear_extra=%.0f shoulder=%.2f arm=%.2f foe_hides_ally=%d ally_px=%s" % [
+		rad_to_deg(float(_rig.get("yaw"))), axis, float(_rig.call("composition_extra")),
+		float(_rig.call("clearance_extra")), float(_rig.get("_shoulder")),
+		float(_rig.get("spring_length")), hides, str(cam.unproject_position(ally.global_position + Vector3.UP * 0.5).round())])
 
 
 func _on_telegraph(seconds: float) -> void:
