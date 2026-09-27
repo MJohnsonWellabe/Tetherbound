@@ -1,0 +1,37 @@
+Having reviewed all 12 frames individually (the `_sheet.png` file appears to be a rendering glitch showing the keyart board a second time, not the gameplay grid — I ignored it and worked from the individual frame files, which are correct gameplay screenshots).
+
+**frame_01: NOTICEABLE** — A thin gray smoke plume rises dead-center against the blue sky, with a small dark-blue banner-on-a-post at its base, framed between two sloped gorge walls that funnel the eye straight to it. The vertical smoke line is the strongest cue; the banner itself is small and low-contrast but the smoke carries the read. Would benefit from a brighter/warmer banner color to hold up once the smoke thins.
+
+**frame_02: WEAK** — Same banner+smoke landmark is visible far in the distance, but it's tiny, hazy, and competing with a wide, busy vista (sea, hills, trees) and with the player's own foreground action (crouching, holding a blue/white creature). The destination reads as "somewhere out there" rather than a clear pull. A stronger silhouette, glow, or particle effect on the banner would help it survive the wide shot.
+
+**frame_03: NOTICEABLE** — Near-identical composition to frame_01 (sand + gorge funnel) but the banner and smoke are now bigger and clearer, plus a tiny dark figure/bird on the right ridge adds a secondary point of interest. Reads well as "keep going that way."
+
+**frame_04: NOTICEABLE** — Banner+smoke chimney now sits clearly on a green hillside at right-of-center, good color contrast against the grass; a distinctive spiky mountain peak in the far background adds scenic pull too (though it may compete slightly with the intended target). Overall a legible destination.
+
+**frame_05: WEAK** — A small camp (tent, a standing NPC-shaped figure, a bench/table near a tree) sits mid-frame, but everything is small-scale and low-contrast against uniform green grass — easy to miss unless the player is already scanning that area. No smoke/banner visible in this shot. Brighter camp accents (fire glow, flag) or bigger silhouettes would make it read faster.
+
+**frame_06: NOTICEABLE** — The banner/smoke landmark is now close and clear mid-frame, gorge walls again funnel the view, and two round bush/creature shapes sit on the path ahead as secondary interest. Strong, legible destination.
+
+**frame_07: NOTICEABLE** — Banner+post visible at left-mid distance against the grass edge, with the smoke plume clear against sky; slightly off-center placement is less ideal than dead-center but still easily read as a target.
+
+**frame_08: NOTICEABLE** — The smoke plume is very tall and bold, cutting the sky right at center, with the banner visible at the grass horizon on the right, all set against an open sea vista. The plume alone is a strong "go here" signal.
+
+**frame_09: NOTICEABLE** — The camp is now close and legible: campfire (orange flame, good contrast), a tent, and the lantern-topped banner post are all clearly readable shapes against the grass. Reads as an arrived-at destination.
+
+**frame_10: NOTICEABLE** — Player is right at the banner/lantern post with a crate beneath it — this is effectively arrival, and it reads clearly as the point of interest, though at this range there's nothing further to "want to go to" since you're already there.
+
+**frame_11: NOTICEABLE** — A colorful blue-and-pink aquatic creature (fin/tail sticking out of the sand) sits in the foreground-left, strongly contrasting against the tan beach, with the camp and banner visible beyond. The creature is a genuinely eye-catching, novel lure.
+
+**frame_12: NOTICEABLE** — A large gray creature with a bright pink frilled appendage lies in the shallow water dead ahead — big, unusually colored, and the clear focal point of the frame; a light-blue swirl/trail on the water also draws the eye toward it. The strongest single lure of the whole set.
+
+**PLACE 1 (frames 01+02): WEAK** — Promising opening frame (smoke plume + funnel framing) loses clarity in the second frame, where the same landmark shrinks into a busy wide vista and competes with foreground player action.
+
+**PLACE 2 (frames 03+04): YES** — Landmark reads clearly and grows more legible as you approach; good funnel composition and color contrast.
+
+**PLACE 3 (frames 05+06): WEAK** — First frame's camp is too small/low-contrast to hook attention; only the second frame (closer, with banner+smoke back in view) fully reads as a destination.
+
+**PLACE 4 (frames 07+08): YES** — Banner and especially the tall smoke plume are consistently legible in both frames.
+
+**PLACE 5 (frames 09+10): YES** — Camp elements (fire, tent, lantern post) are clear and well-contrasted at this closer range in both frames.
+
+**PLACE 6 (frames 11+12): YES** — Both frames feature strong, colorful, novel creature silhouettes that are the clearest lures in the entire sequence.

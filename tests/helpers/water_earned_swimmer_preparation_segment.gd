@@ -131,21 +131,27 @@ func _run_live(outgoing: int) -> void:
 	# reaches it. Nothing is spawned or rerolled.
 	var target: Node3D
 	for candidate: Node3D in candidates.slice(0, 3):
-		if await planned_approach(_harvest, world, player, candidate.global_position, "swimmer " + candidate.name):
+		if not is_instance_valid(candidate) or not candidate.is_alive():
+			continue
+		if not await planned_approach(_harvest, world, player, candidate.global_position, "swimmer " + candidate.name):
+			print("WATER SWIMMER unreachable resident %s: %s" % [candidate.name, str(_harvest.failures)])
+			_harvest._stop_stick()
+			_harvest.failures.clear()
+			continue
+		swimmer = candidate.get("instance")
+		print("WATER SWIMMER chosen real body=%s species=%s level=%d position=%s" % [
+			candidate.name, swimmer.species_id, swimmer.level, candidate.global_position])
+		# The existing fresh catch approach's original first-target ceiling.
+		if await _capture._walk_to_and_engage_wild(candidate, 2600):
 			target = candidate
 			break
-		print("WATER SWIMMER unreachable resident %s: %s" % [candidate.name, str(_harvest.failures)])
-		_harvest._stop_stick()
-		_harvest.failures.clear()
+		# DRY RUN 10: a planned walk can still end below a ledge the engage
+		# drive cannot climb; move on to the next resident swimmer.
+		print("WATER SWIMMER engage failed for resident %s: %s" % [candidate.name, str(_capture._failures)])
+		_capture._failures.clear()
+		swimmer = null
 	if target == null:
-		_fail("No resident dry swimmer reachable by a planned walk")
-		return
-	swimmer = target.get("instance")
-	print("WATER SWIMMER chosen real body=%s species=%s level=%d position=%s" % [
-		target.name, swimmer.species_id, swimmer.level, target.global_position])
-	# The existing fresh catch approach's original first-target ceiling.
-	if not await _capture._walk_to_and_engage_wild(target, 2600):
-		_fail("Exact live swimmer Engage failed: %s" % str(_capture._failures))
+		_fail("No resident dry swimmer reachable and engaged by an ordinary walk")
 		return
 	var caught: Dictionary = await _capture.replace_swimmer(_tree, world, game, player, camera, target, outgoing)
 	if not bool(caught.get("passed", false)):
@@ -240,7 +246,10 @@ func _gather_costs() -> bool:
 static func planned_approach(harvest: RefCounted, actual_world: Node3D, body: Node3D,
 		target: Vector3, label: String) -> bool:
 	var from := Vector2(body.global_position.x, body.global_position.z)
-	if from.distance_to(Vector2(target.x, target.z)) <= 12.0:
+	# Close in plan AND height: DRY RUN 10 stood 10 m out but 13 m below a
+	# ledge swimmer and skipped planning.
+	if from.distance_to(Vector2(target.x, target.z)) <= 12.0 \
+			and absf(body.global_position.y - target.y) <= 3.0:
 		return true
 	var route: Array = POCKET.plan_route(actual_world, from, Vector2(target.x, target.z)).points
 	# The last A* point is the row itself; the residency walk owns that leg.
