@@ -1,0 +1,74 @@
+{
+  "ally": {
+    "camera_m": 14.1,
+    "in_frustum": false,
+    "pos": [
+      -2.1,
+      6.2,
+      7647.0
+    ]
+  },
+  "camera": [
+    -15.8,
+    8.3,
+    7649.9
+  ],
+  "fight": "warden_aldis",
+  "game_frame": 7667,
+  "hud_text": [
+    "30/40",
+    "31/40",
+    "24/40",
+    "40/40",
+    "x5",
+    "Map        Satchel        Build        Change Creature",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 17",
+    "KO",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 19",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 18",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 18",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15",
+    "KO",
+    "FOOD",
+    "98%",
+    "100 / 100",
+    "M A I N   S T O R Y",
+    "Settle who walks with you.",
+    "Day 9  ·  08:49"
+  ],
+  "meta": {
+    "after_s": 8.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 2.6,
+    "in_frustum": true,
+    "pos": [
+      -17.1,
+      6.2,
+      7650.5
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden/warden_aldis-after-08s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 25.3,
+    "in_frustum": false,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

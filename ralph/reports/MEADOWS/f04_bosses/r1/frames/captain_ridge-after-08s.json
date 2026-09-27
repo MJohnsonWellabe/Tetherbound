@@ -1,0 +1,73 @@
+{
+  "ally": {
+    "camera_m": 7.6,
+    "in_frustum": true,
+    "pos": [
+      -284.4,
+      4.6,
+      6462.6
+    ]
+  },
+  "camera": [
+    -278.6,
+    7.9,
+    6458.8
+  ],
+  "fight": "captain_ridge",
+  "game_frame": 67668,
+  "hud_text": [
+    "30/40",
+    "30/40",
+    "36/40",
+    "40/40",
+    "x2",
+    "Map        Satchel        Build        Put Away        Change Creature",
+    "Greet Captain Vess",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "FOOD",
+    "85%",
+    "100 / 100",
+    "M A I N   S T O R Y",
+    "Defeat the Upper Meadows captains. 3/3",
+    "Day 9  ·  08:16"
+  ],
+  "meta": {
+    "after_s": 8.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 5.9,
+    "in_frustum": true,
+    "pos": [
+      -279.3,
+      4.9,
+      6463.9
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_ridge-after-08s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 3.5,
+    "in_frustum": false,
+    "pos": [
+      -280.0,
+      4.9,
+      6460.0
+    ]
+  }
+}

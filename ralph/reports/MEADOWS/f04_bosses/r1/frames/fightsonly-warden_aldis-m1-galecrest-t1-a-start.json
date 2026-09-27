@@ -1,0 +1,85 @@
+{
+  "ally": {
+    "camera_m": 9.6,
+    "in_frustum": true,
+    "pos": [
+      8.0,
+      6.2,
+      7657.2
+    ]
+  },
+  "camera": [
+    2.4,
+    12.0,
+    7651.9
+  ],
+  "enemy": {
+    "camera_m": 12.4,
+    "in_frustum": true,
+    "pos": [
+      7.8,
+      6.2,
+      7661.5
+    ]
+  },
+  "fight": "warden_aldis",
+  "game_frame": 2987,
+  "hud_text": [
+    "Warden Aldis · LEVEL 18",
+    "Galecrest",
+    "AIR  ▲",
+    "!  incoming — move",
+    "Bramblebun",
+    "Lv 18",
+    "WIND",
+    "Energy",
+    "GO, Bramblebun!",
+    "Orbs  58",
+    "Bramble Whip",
+    "Warren Charge\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 16",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 18",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15",
+    "KO"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "DIVER",
+    "tell_s": 0.4
+  },
+  "player": {
+    "camera_m": 11.2,
+    "in_frustum": true,
+    "pos": [
+      9.3,
+      6.2,
+      7658.5
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden/warden_aldis-m1-galecrest-t1-a-start.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 10.2,
+    "in_frustum": true,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

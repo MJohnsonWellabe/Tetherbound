@@ -42,6 +42,9 @@ var _last_realm := ""
 ## Whether a target is resolved; the beam draws only when this is true and no
 ## story payoff holds the screen (`presentation_hold.gd`).
 var _has_target := false
+## The world's CombatManager, when handed in (tests); otherwise the current
+## scene's `CombatManager` is read each frame (`_fight_on_screen`).
+var combat_manager: Node = null
 
 
 func _ready() -> void:
@@ -186,7 +189,22 @@ func _set_active(active: bool) -> void:
 ## untouched; the beam returns the frame the hold ends.
 func _apply_visibility() -> void:
 	if _visual != null:
-		_visual.visible = _has_target and not (is_inside_tree() and PRESENTATION_HOLD.active(get_tree()))
+		_visual.visible = _has_target and not (is_inside_tree() and PRESENTATION_HOLD.active(get_tree())) \
+			and not _fight_on_screen()
+
+
+## F04: a live fight owns the screen. The beam (whose target is often that very
+## trainer) stands down until the fight ends, as it does for a story payoff.
+func _fight_on_screen() -> bool:
+	var manager := combat_manager
+	if manager == null and is_inside_tree() and get_tree().current_scene != null:
+		manager = get_tree().current_scene.get_node_or_null(^"CombatManager")
+	return fight_holds_beam(manager)
+
+
+static func fight_holds_beam(manager: Object) -> bool:
+	return manager != null and is_instance_valid(manager) and manager.has_method("is_fighting") \
+		and bool(manager.call("is_fighting"))
 
 
 func beam_visible() -> bool:

@@ -1,0 +1,83 @@
+{
+  "ally": {
+    "camera_m": 9.5,
+    "in_frustum": true,
+    "pos": [
+      166.0,
+      -3.1,
+      5586.7
+    ]
+  },
+  "camera": [
+    173.5,
+    2.7,
+    5586.2
+  ],
+  "enemy": {
+    "camera_m": 12.2,
+    "in_frustum": true,
+    "pos": [
+      163.5,
+      -3.9,
+      5584.0
+    ]
+  },
+  "fight": "captain_field",
+  "game_frame": 40141,
+  "hud_text": [
+    "Captain Halder · LEVEL 15",
+    "Meadowhart",
+    "GROUND",
+    "!  incoming — move",
+    "Bramblebun",
+    "Lv 14",
+    "WIND",
+    "Energy",
+    "Orbs  54",
+    "Bramble Whip",
+    "Warren Charge\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "CURRENT",
+    "tell_s": 0.8
+  },
+  "player": {
+    "camera_m": 6.9,
+    "in_frustum": true,
+    "pos": [
+      169.2,
+      -1.7,
+      5589.4
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_field-m2-meadowhart-t1-b-mid.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 6.6,
+    "in_frustum": false,
+    "pos": [
+      170.0,
+      -1.4,
+      5590.0
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "ally": {
+    "camera_m": 9.6,
+    "in_frustum": true,
+    "pos": [
+      165.1,
+      -3.4,
+      5585.8
+    ]
+  },
+  "camera": [
+    172.8,
+    2.5,
+    5585.3
+  ],
+  "enemy": {
+    "camera_m": 12.5,
+    "in_frustum": true,
+    "pos": [
+      162.2,
+      -4.2,
+      5583.9
+    ]
+  },
+  "fight": "captain_field",
+  "game_frame": 38565,
+  "hud_text": [
+    "Captain Halder · LEVEL 14",
+    "Tuskroot",
+    "GROUND",
+    "Bramblebun",
+    "Lv 14",
+    "WIND",
+    "Energy",
+    "Orbs  54",
+    "Bramble Whip",
+    "Warren Charge\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 12",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "CHARGER",
+    "tell_s": 0.8
+  },
+  "player": {
+    "camera_m": 13.5,
+    "in_frustum": true,
+    "pos": [
+      162.4,
+      -3.4,
+      5591.7
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_field-m1-tuskroot-t1-d-recovery.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 6.7,
+    "in_frustum": false,
+    "pos": [
+      170.0,
+      -1.4,
+      5590.0
+    ]
+  }
+}
