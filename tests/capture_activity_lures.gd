@@ -414,6 +414,19 @@ func _stronghold_exit_path() -> Array[Vector3]:
 ## Dense road graph from every authored band, loop and shortcut. Returns the
 ## path (road points, then a cross-country leg to `goal`) that minimises road
 ## metres + OFF_ROAD_COST x off-road metres.
+## Road-graph points a walk must not route through: the Old Quarry's sealed
+## gate (old_quarry.json `at` [397,1805]; render.yml 36282593108 stood at its
+## barrier). A player takes the open road around it.
+const BLOCKED_ROAD_POINTS := [Vector2(397.0, 1805.0)]
+const BLOCKED_RADIUS_M := 15.0
+
+func _blocked(p: Vector2) -> bool:
+	for b: Vector2 in BLOCKED_ROAD_POINTS:
+		if p.distance_to(b) < BLOCKED_RADIUS_M:
+			return true
+	return false
+
+
 func _plan_route(start: Vector2, goal: Vector2) -> void:
 	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
 	var trail := terrain.get("trail", {}) as Dictionary
@@ -436,8 +449,9 @@ func _plan_route(start: Vector2, goal: Vector2) -> void:
 			var a := Vector2(float(pts[j - 1][0]), float(pts[j - 1][1]))
 			var steps := maxi(1, int(ceil(a.distance_to(p) / DENSIFY_M)))
 			for s in range(1, steps + 1):
-				var k := _node_at(a.lerp(p, float(s) / float(steps)))
-				if k != prev:
+				var q := a.lerp(p, float(s) / float(steps))
+				var k := _node_at(q)
+				if k != prev and not _blocked(q) and not _blocked(_nodes[prev]):
 					_adj[prev].append(k)
 					_adj[k].append(prev)
 				prev = k
