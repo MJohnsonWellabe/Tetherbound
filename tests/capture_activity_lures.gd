@@ -681,6 +681,32 @@ func _walk() -> void:
 				_pending_shot = _leg_shots[cursor]
 				_leg_shots.erase(cursor)
 			cursor += 1
+			if cursor == _road_count() and not seen and not looked:
+				# At the point the route leaves the road. Glance at the activity,
+				# as a player would at a named place, and record that it took a look.
+				looked = true
+				_release()
+				await _capture("left-road-lure-not-yet-on-screen")
+				await _face_lure()
+			if cursor == _road_count() and not glanced:
+				# Always frame the glance from the road exit, companion put away
+				# with the ordinary key: the view a player has of the place from
+				# the road, whether or not the lure was already detected.
+				glanced = true
+				_release()
+				var stowed := false
+				if _director != null and _director.call("ally_body") != null:
+					await _press("creature_recall")
+					for i in 60:
+						await physics_frame
+					stowed = _director.call("ally_body") == null
+				await _face_lure()
+				_receipt["road_exit_glance"] = {"t_s": snappedf(_clock, 0.1),
+					"camera_to_lure_m": snappedf(here.distance_to(_xz3(_lure.global_position)), 0.1)}
+				await _capture("road-exit-glance-toward-lure")
+				if stowed:
+					await _ensure_companion_out("road-exit glance; ")
+				continue
 		# A leg shot is taken only while walking: a fight that starts on the
 		# same step would turn it into a combat close-up, so it waits for the
 		# walk to resume after the fight.
@@ -705,33 +731,6 @@ func _walk() -> void:
 				if stowed:
 					await _ensure_companion_out("leg shot; ")
 			continue
-			if cursor == _road_count() and not seen and not looked:
-				# At the point the route leaves the road. Glance at the activity,
-				# as a player would at a named place, and record that it took a look.
-				looked = true
-				_release()
-				await _capture("left-road-lure-not-yet-on-screen")
-				await _face_lure()
-				continue
-			if cursor == _road_count() and not glanced:
-				# Always frame the glance from the road exit, companion put away
-				# with the ordinary key: the view a player has of the place from
-				# the road, whether or not the lure was already detected.
-				glanced = true
-				_release()
-				var stowed := false
-				if _director != null and _director.call("ally_body") != null:
-					await _press("creature_recall")
-					for i in 60:
-						await physics_frame
-					stowed = _director.call("ally_body") == null
-				await _face_lure()
-				_receipt["road_exit_glance"] = {"t_s": snappedf(_clock, 0.1),
-					"camera_to_lure_m": snappedf(here.distance_to(_xz3(_lure.global_position)), 0.1)}
-				await _capture("road-exit-glance-toward-lure")
-				if stowed:
-					await _ensure_companion_out("road-exit glance; ")
-				continue
 		var lure_d := here.distance_to(_xz3(_lure.global_position))
 		if not near_checked and lure_d <= APPROACH_FRAME_M:
 			# Whatever happened on the road (stowed to get unstuck, a toggle that
