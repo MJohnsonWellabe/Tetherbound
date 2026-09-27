@@ -26,6 +26,44 @@ func _config() -> Dictionary:
 	return (parsed as Dictionary).get("ground_cover", {}) if parsed is Dictionary else {}
 
 
+func test_settlement_yard_discards_roots_beyond_its_supporting_floor() -> void:
+	var floor_centre := Vector3(-340, 830, 3970)
+	var floor_bounds := Rect2(Vector2(-364, 3946), Vector2(48, 48))
+	var clip := floor_bounds.grow(-0.2)
+	var cfg := _config()
+	var removed := 0
+	var retained := 0
+	# Exercise the real MultiMesh upload with both partially/fully unsupported
+	# ellipses and a wholly supported patch. Compare complete transforms, not
+	# just the new sampler's boundary predicate.
+	for offset: Vector3 in [Vector3(20, 0.14, 4), Vector3(25, 0.14, 10),
+			Vector3(30, 0.14, 16), Vector3(-9, 0.14, -26), Vector3(8, 0.14, 8)]:
+		var patch := {"kind":"ellipse", "centre":floor_centre + offset,
+			"half":Vector2(6.8, 9.0) if offset.z == -26 else Vector2(4.5, 5.0),
+			"seed":842, "height_scale":0.68}
+		var bounded := patch.duplicate()
+		bounded["clip_rect"] = clip
+		var original := RecordingCover.new()
+		var candidate := RecordingCover.new()
+		await original.build([patch], cfg, [])
+		await candidate.build([bounded], cfg, [])
+		for key: String in original.recorded:
+			var expected: Array = []
+			for transform: Transform3D in original.recorded[key]:
+				var world_at: Vector3 = transform.origin + (patch.centre as Vector3)
+				if clip.has_point(Vector2(world_at.x, world_at.z)):
+					expected.append(transform)
+					retained += 1
+				else:
+					removed += 1
+			assert_eq(candidate.recorded.get(key, []), expected,
+				"all supported transforms retained exactly; no replacement plants at the boundary")
+		original.free()
+		candidate.free()
+	assert_true(removed > 0, "legacy placement reproduces unsupported roots")
+	assert_true(retained > 0, "supported vegetation remains")
+
+
 func test_world_field_has_low_led_hierarchy_and_one_metre_coherent_clumps() -> void:
 	var cfg: Dictionary = _config()
 	var counts: Array[int] = [0, 0, 0]

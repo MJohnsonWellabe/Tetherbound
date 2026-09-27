@@ -1,0 +1,81 @@
+diff --git a/data/config/cloudreach_visual.json b/data/config/cloudreach_visual.json
+index fbccc1ebf..53c5c1d5e 100644
+--- a/data/config/cloudreach_visual.json
++++ b/data/config/cloudreach_visual.json
+@@ -297,6 +297,13 @@
+   },
+   "settlement": {
+     "visibility_range_m": 850.0,
++    "retaining_arcade": {
++      "_comment": "Cliffhold northwest visual skirt only. Masonry below the existing floor; no new platform, route, house transform or collision.",
++      "enabled": true,
++      "edge_m": 24.1,
++      "height_m": 16.0,
++      "bays": 3
++    },
+     "windwatch": {
+       "_comment": "Installed Quaternius castle lookout on a lower stone base. Gallery floor is seated above the existing crown; houses, paths and gameplay remain authored in their existing locations.",
+       "upper_stone_height_m": 12.0,
+diff --git a/scripts/world/cloudreach_world.gd b/scripts/world/cloudreach_world.gd
+index e1541834b..d17f1dd5b 100644
+--- a/scripts/world/cloudreach_world.gd
++++ b/scripts/world/cloudreach_world.gd
+@@ -77,6 +77,7 @@ const GROUND_ROOST_LOG := preload("res://assets/props/kenney_survival/tree-log-s
+ const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
+ const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
+ const AVIARY_TOWERS := preload("res://scripts/world/cloudreach_aviary_towers.gd")
++const SETTLEMENT_TERRACE := preload("res://scripts/world/cloudreach_settlement_terrace.gd")
+ const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
+ const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
+ const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
+@@ -3671,6 +3672,9 @@ func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
+ 	# Appearance only: the unchanged 48m square collision terrace remains the
+ 	# authoritative floor. A flat inner crown covers that square completely;
+ 	# inset sloping turf and overlapping rock shoulders replace the rounded stack.
++	var terrace_cfg: Dictionary = _visual_config.get("settlement", {}).get("retaining_arcade", {})
++	var retaining := dry and bool(terrace_cfg.get("enabled", false))
++	var retaining_height := float(terrace_cfg.get("height_m", 16.0))
+ 	var crown:=SurfaceTool.new()
+ 	crown.begin(Mesh.PRIMITIVE_TRIANGLES)
+ 	crown.set_material(_materials["upland_dry"] if dry else _materials["upland"])
+@@ -3686,6 +3690,11 @@ func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
+ 		var q:=Vector3(cos(b)*rb,0.11,sin(b)*rb)
+ 		var outer_a:=Vector3(cos(a)*(ra+9.0+3.0*sin(a*3)), -10.0-7.0*sin(a*2+1),sin(a)*(ra+9.0+3.0*sin(a*3)))
+ 		var outer_b:=Vector3(cos(b)*(rb+9.0+3.0*sin(b*3)), -10.0-7.0*sin(b*2+1),sin(b)*(rb+9.0+3.0*sin(b*3)))
++		if retaining:
++			# Retract only the visual northwest skirt behind its masonry skin.
++			# The full inner square, route shoulder and floor collider are intact.
++			outer_a = outer_a.lerp(Vector3(p.x * 0.94, -retaining_height, p.z * 0.94), SETTLEMENT_TERRACE.sector_weight(a))
++			outer_b = outer_b.lerp(Vector3(q.x * 0.94, -retaining_height, q.z * 0.94), SETTLEMENT_TERRACE.sector_weight(b))
+ 		_add_surface_triangle(crown,Vector3(0,0.11,0),q,p)
+ 		_add_surface_triangle(crown,p,q,outer_a)
+ 		_add_surface_triangle(crown,q,outer_b,outer_a)
+@@ -3709,8 +3718,9 @@ func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
+ 		var angle:=TAU*i/12.0+0.12
+ 		var radius:=30.0+4.0*sin(angle*3)
+ 		var height:=86.0+9.0*sin(angle*2+0.7)
++		var foot_drop := retaining_height * SETTLEMENT_TERRACE.sector_weight(angle) if retaining else 0.0
+ 		_visual_rock_mass(root,"SettlementRootedButtress%02d"%i,
+-			Vector3(cos(angle)*radius,-height-4.0,sin(angle)*radius),
++			Vector3(cos(angle)*radius,-height-4.0-foot_drop,sin(angle)*radius),
+ 			Vector3(29.0+5.0*(i%3),height,28.0),1043+i*17,1800.0)
+ 		if i%2==0:
+ 			var contact:=Vector3(cos(angle)*21.5,0.12,sin(angle)*21.5)
+@@ -3720,6 +3730,8 @@ func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
+ 	# real recess shadows down the settlement face.
+ 	for i in 10:
+ 		var angle:=TAU*float(i)/10.0+0.31
++		if retaining and SETTLEMENT_TERRACE.sector_weight(angle) > 0.5:
++			continue
+ 		var width:=18.0+float(i%3)*4.0
+ 		var height:=17.0+float((i+1)%4)*3.0
+ 		var radius:=28.0+3.5*sin(angle*3.0)
+@@ -3744,6 +3756,8 @@ func _build_articulated_settlement_skirt(root: Node3D,dry: bool) -> void:
+ 	]:
+ 		_visual_rock_mass(root,"SettlementSouthFaceShelf",
+ 			shelf["at"] as Vector3,shelf["size"] as Vector3,int(shelf["seed"]),1700.0)
++	if retaining:
++		SETTLEMENT_TERRACE.build(root, terrace_cfg, _materials["masonry"], _materials["masonry_trim"])
+ 
+ 
+ func _build_return_gate() -> void:

@@ -3762,6 +3762,7 @@ func _build_return_gate() -> void:
 
 
 func _build_cliff_settlement(root: Node3D) -> void:
+	var first_yard_patch := _cover_patches.size()
 	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -10),
 		"half": Vector2(7, 7), "rotation": 0.0})
 	# A tall windwatch anchors the cluster at route-view distance; the houses
@@ -3840,6 +3841,13 @@ func _build_cliff_settlement(root: Node3D) -> void:
 	_build_settlement_precinct(root,watch)
 	_path_ribbon(root,"WornArrivalToSharedYard",Vector3(0,0.18,-24),Vector3(0,0.18,-1),4.1,991)
 	_exclude_local_wear_segment(root,Vector3(0,0.18,-24),Vector3(0,0.18,-1),1.85)
+	# Yard patches are flat. Their old ellipses extended past the flat crown
+	# onto its falling sides, leaving whole clumps suspended above the cliff.
+	# Route shoulders provide their own planted surfaces outside this floor.
+	var yard_bounds := Rect2(Vector2(root.global_position.x, root.global_position.z)
+		- Vector2.ONE * 23.8, Vector2.ONE * 47.6)
+	for index in range(first_yard_patch, _cover_patches.size()):
+		_cover_patches[index]["clip_rect"] = yard_bounds
 
 
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
@@ -3989,7 +3997,7 @@ func _build_settlement_yard(parent: Node3D) -> void:
 			_cover_patches.append({"kind": "ellipse", "centre": parent.global_position + Vector3(20.0 + i * 5.0, 0.14, 4.0 + i * 6.0),
 				"half": Vector2(4.5, 5.0), "seed": 842 + i * 13,
 				"dry":dry,"height_scale":0.68})
-		_place_local_prop(parent, "flowers", Vector3(26, 0.14, 10), 0.75, 32)
+		_place_local_prop(parent, "flowers", Vector3(22.5, 0.14, 10), 0.75, 32)
 		_place_local_prop(parent, "rock_low", Vector3(24, 0.04, 8), 0.8, 71)
 
 

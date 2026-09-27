@@ -55,6 +55,15 @@ occlusion/edge fixes; four environment tests/31 assertions pass. Evidence is
 `cloudreach-c2-candidate/cloud-volume`; V-CX-10 records overlapping flyers and
 rectangular shadows. Next: coherent near/far cliff material/form and settlement
 integration, not further subtle palette tuning. No F08#4 READY.
+Settlement retaining-arcade trial was rendered, blind-judged and reverted:
+architecture tied all three pairs, baseline narrowly preferred, Bars A/B NO.
+Do not repeat below-floor decoration; the occupied settlement layout needs
+to express height. Separately, yard planting now clips to its supporting
+floor without redistributing supported tufts (six tests/587assertions pass).
+Ten paired native settlement frames still show a separate floating clump;
+V-CX-11 remains open. Evidence: `cloudreach-c2-candidate/settlement-terrace`
+and `cloudreach-c2-candidate/yard-bounds`. Next: identify that clump's actual
+patch/surface, then return to occupied terraces and cliff identity.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

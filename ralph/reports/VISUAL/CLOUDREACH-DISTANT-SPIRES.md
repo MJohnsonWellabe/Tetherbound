@@ -226,3 +226,42 @@ the running world/camera but creatures animate. Shortcuts disclosed: staged
 flags and party, teleported registered stands, clock pinned, HUD hidden, no
 played journey/combat; subset stills do not prove full C2 or motion acceptance.
 No READY FOR INTEGRATION and no criterion closure.
+## Settlement structure trial and unsupported yard planting
+
+At baseline5c886d80f, ten native day/night diagnostic views of Cliffhold and
+Galefoot confirmed the same-level cottages and unsupported vegetation. An
+original project-authored northwest retaining arcade interpreted the inspected
+Sky Aviary board using installed masonry materials. Three matched production
+C2 views21/25/32 were rendered before/after. Independent source review found
+no collision/route change;168-solid geometry smoke passed. Blind review tied
+architecture in every pair and narrowly preferred the baseline: the close
+lookout foundation looked less integrated. Bars A/B NO. The entire game
+candidate was reverted; sources and evidence remain only under
+`cloudreach-c2-candidate/settlement-terrace`. No generation, purchased asset or
+reference pixels were involved. Further below-floor decoration is not the
+next structural approach; occupied terraces must read in the actual layout.
+
+The retained bug repair tags only each settlement's flat yard/precinct planting
+patches with its supporting floor bounds. Unsupported roots are discarded
+after the original random draws and count toward the requested total, keeping
+every supported tuft's transform rather than resampling extra edge density.
+An outboard flower prop moves onto the crown. Untagged patches, route surfaces,
+house transforms and collision remain unchanged. Six focused tests pass with
+587assertions; independent revised source review finds no blocker.
+
+Ten native after frames and their ten before counterparts were individually
+opened. Some edge planting disappears, but the floating clump at the left of
+Cliffhold court003/004 remains. Blind review narrowly preferred the repair in
+four views and tied six; grounding FAIL and Bars A/B NO for both versions.
+V-CX-11 is open. The next diagnosis must locate
+that actual MultiMesh instance and its supporting surface; the route patch
+sampler uses linearly interpolated centre-line heights while the generated
+shoulder is clamped to nearby walkable surfaces, a lead rather than a proved
+attribution. Evidence: `cloudreach-c2-candidate/yard-bounds`.
+
+Shortcuts disclosed: stationary production rig, scripted progression, hidden
+HUD, fixed60fps. The settlement diagnostic parks the companion behind camera
+and uses its existing upward pitches (recorded in manifests); it is not full
+C2 or motion proof. The arcade's C2 comparisons keep the native companion;
+wild/follower poses differ. All renders used native Windows NVIDIA1920x1080
+Compatibility. No full unit suite, Ally telemetry, F08#4 closure or READY.

@@ -1,0 +1,57 @@
+extends SceneTree
+
+const TERRACE := preload("res://scripts/world/cloudreach_settlement_terrace.gd")
+var failures: Array[String] = []
+
+func _init() -> void:
+	_run.call_deferred()
+
+func _run() -> void:
+	var spec: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/cloudreach_visual.json")) as Dictionary).settlement.retaining_arcade
+	var parent := Node3D.new()
+	root.add_child(parent)
+	var material := StandardMaterial3D.new()
+	var terrace := TERRACE.build(parent, spec, material, material)
+	var meshes := terrace.find_children("*", "MeshInstance3D", true, false)
+	_check(not meshes.is_empty(), "retaining structure must contain geometry")
+	_check(terrace.find_children("*", "CollisionObject3D", true, false).is_empty(), "visual addition must not change collision")
+	var highest := -INF
+	var bad_triangles := 0
+	var open_edges := 0
+	var bad_normals := 0
+	for mesh: MeshInstance3D in meshes:
+		var faces := mesh.mesh.get_faces()
+		var edges := {}
+		for i in range(0, faces.size(), 3):
+			if (faces[i + 1] - faces[i]).cross(faces[i + 2] - faces[i]).length_squared() < 0.000000001:
+				bad_triangles += 1
+			for j in 3:
+				var a := str(faces[i + j].snapped(Vector3.ONE * 0.0001))
+				var b := str(faces[i + (j + 1) % 3].snapped(Vector3.ONE * 0.0001))
+				var key := a + "|" + b if a < b else b + "|" + a
+				edges[key] = int(edges.get(key, 0)) + 1
+		for count: int in edges.values():
+			if count != 2:
+				open_edges += 1
+		for vertex: Vector3 in faces:
+			highest = maxf(highest, (mesh.global_transform * vertex).y)
+		for surface in mesh.mesh.get_surface_count():
+			for normal: Vector3 in mesh.mesh.surface_get_arrays(surface)[Mesh.ARRAY_NORMAL]:
+				if not normal.is_finite() or absf(normal.length() - 1.0) > 0.01:
+					bad_normals += 1
+	_check(bad_triangles == 0, "no collapsed triangles")
+	_check(open_edges == 0, "every individual masonry solid is closed")
+	_check(bad_normals == 0, "finite unit normals")
+	_check(highest <= 0.0001, "all masonry remains at or below the unchanged floor")
+	_check(TERRACE.sector_weight(PI * 0.25) == 0.0, "northeast arrival sector remains unchanged")
+	_check(TERRACE.sector_weight(PI * 1.25) == 0.0, "southwest route sector remains unchanged")
+	parent.free()
+	print("SETTLEMENT_TERRACE_SMOKE meshes=", meshes.size(), " highest=", highest, " failures=", failures.size())
+	for failure: String in failures:
+		push_error(failure)
+	quit(0 if failures.is_empty() else 1)
+
+func _check(ok: bool, message: String) -> void:
+	if not ok:
+		failures.append(message)

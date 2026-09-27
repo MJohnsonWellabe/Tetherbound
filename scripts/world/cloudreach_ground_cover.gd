@@ -111,8 +111,9 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value + int(patch.get("seed", 0)) * 1009
 	var attempts := 0
+	var unsupported := 0
 	var max_attempts := maxi(requested * 7, 32)
-	while transforms.size() < requested and attempts < max_attempts:
+	while transforms.size() + unsupported < requested and attempts < max_attempts:
 		attempts += 1
 		if attempts % 2048 == 0:
 			await _breathe(build_budget)
@@ -159,6 +160,12 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 			width_scale = role_scales.x
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 			Vector3(width_scale, scale_value, width_scale))
+		# Discard unsupported roots only after consuming the same placement and
+		# appearance draws. Count them toward the requested total: retrying them
+		# would pack extra grass against the terrace edge and move valid tufts.
+		if patch.has("clip_rect") and not (patch["clip_rect"] as Rect2).has_point(Vector2(at.x, at.z)):
+			unsupported += 1
+			continue
 		transforms.append(Transform3D(basis, at - origin))
 	if transforms.is_empty():
 		return 0

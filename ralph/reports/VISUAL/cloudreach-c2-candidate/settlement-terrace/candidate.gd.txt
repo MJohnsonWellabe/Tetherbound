@@ -1,0 +1,89 @@
+extends RefCounted
+
+## Cliffhold's occupied crown retains its existing floor and house positions.
+## These blind masonry arches support its northwest rim; they are not doors,
+## platforms or a new traversal route. Original project geometry, using the
+## inspected Sky Aviary board's cliff-seated masonry and installed materials.
+const PARTS := preload("res://scripts/world/cloudreach_aviary.gd")
+const ARCHES := preload("res://scripts/world/cloudreach_aviary_towers.gd")
+
+
+static func sector_weight(angle: float) -> float:
+	return smoothstep(0.0, 0.22, minf(-cos(angle), sin(angle)))
+
+
+static func build(parent: Node3D, spec: Dictionary, stone: Material, trim: Material) -> Node3D:
+	var root := Node3D.new()
+	root.name = "CliffholdRetainingArcade"
+	parent.add_child(root)
+	var edge := float(spec.get("edge_m", 24.1))
+	var height := float(spec.get("height_m", 16.0))
+	var bays := int(spec.get("bays", 3))
+	var width := edge / float(bays)
+	for side: int in 2:
+		var face := Node3D.new()
+		face.name = "NorthFace" if side == 0 else "WestFace"
+		face.position = Vector3(-edge, 0, edge) if side == 0 else Vector3(-edge, 0, 0)
+		face.rotation.y = 0.0 if side == 0 else -PI * 0.5
+		root.add_child(face)
+		_build_face(face, bays, width, height, stone, trim)
+	return root
+
+
+static func _build_face(parent: Node3D, bays: int, width: float, height: float,
+		stone: Material, trim: Material) -> void:
+	var length := bays * width
+	var pier := width * 0.20
+	var inner := (width - pier) * 0.5
+	var outer := width * 0.5
+	var spring := -outer - 2.0
+	# Recessed solid back: a retaining wall, not a false passage into the cliff.
+	PARTS._detail_box(parent, "RecessedMasonry", Vector3(length * 0.5, -height * 0.5, -1.2),
+		Vector3(length, height, 0.5), stone)
+	PARTS._detail_box(parent, "CrownCourse", Vector3(length * 0.5, -0.35, -0.2),
+		Vector3(length + 0.3, 0.5, 2.0), trim)
+	PARTS._detail_box(parent, "UpperWall", Vector3(length * 0.5, -1.2, -0.2),
+		Vector3(length, 1.3, 1.6), stone)
+	PARTS._detail_box(parent, "BedrockPlinth", Vector3(length * 0.5, -height + 0.5, -0.2),
+		Vector3(length + 0.4, 1.0, 2.3), stone)
+	for i in bays + 1:
+		PARTS._detail_box(parent, "LoadBearingPier", Vector3(i * width, (-height + spring) * 0.5, -0.2),
+			Vector3(pier, height + spring, 1.6), stone)
+		PARTS._detail_box(parent, "SpringCourse", Vector3(i * width, spring - 0.15, -0.2),
+			Vector3(pier + 0.25, 0.3, 1.9), trim)
+	for bay in bays:
+		var centre := (bay + 0.5) * width
+		for i in 12:
+			var a := PI * float(i) / 12.0
+			var b := PI * float(i + 1) / 12.0
+			var voussoir := MeshInstance3D.new()
+			voussoir.name = "ArchVoussoir"
+			voussoir.mesh = ARCHES._arch_stone(a, b, inner, outer, 1.6, spring, -0.2)
+			voussoir.position.x = centre
+			voussoir.material_override = trim
+			parent.add_child(voussoir)
+			# Close the area above the extrados with real masonry. No alpha
+			# arch graphic, open shell or doubled flat face hides the gap.
+			var p := Vector2(centre + cos(a) * outer, spring + sin(a) * outer)
+			var q := Vector2(centre + cos(b) * outer, spring + sin(b) * outer)
+			var fill := MeshInstance3D.new()
+			fill.name = "ArchSpandrel"
+			fill.mesh = _prism([p, q, Vector2(q.x, -1.8), Vector2(p.x, -1.8)], -1.0, 0.6)
+			fill.material_override = stone
+			parent.add_child(fill)
+
+
+static func _prism(outline: Array[Vector2], rear: float, front: float) -> ArrayMesh:
+	var points: Array[Vector3] = []
+	for z: float in [rear, front]:
+		for point: Vector2 in outline:
+			points.append(Vector3(point.x, point.y, z))
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# Clockwise winding as viewed from outside (Godot front faces).
+	for face: Array in [[0, 3, 2, 1], [4, 5, 6, 7], [0, 1, 5, 4],
+			[1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]:
+		ARCHES._triangle(tool, points[face[0]], points[face[1]], points[face[2]])
+		ARCHES._triangle(tool, points[face[0]], points[face[2]], points[face[3]])
+	tool.generate_normals()
+	return tool.commit()
