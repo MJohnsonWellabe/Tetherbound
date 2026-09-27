@@ -62,3 +62,18 @@ These are the ACCEPTANCE C2/C3 bars, applied per fight × starter:
 
 - **Footage slice:** production fight-camera frames and a code-blind judge per fight, for C3 framing and readability.
 - **Optional:** re-run from an earned Stormwood save's party once F09#0 produces one.
+
+## Co-op findings (hosted shared fights)
+
+These were found by reading the hosted path. They are not yet two-peer evidence.
+
+1. **The host ignores the lane outcome.**
+   - Where: `SharedWildHostFight` (through `stormwood_authoritative_fight.gd::_on_enemy_strike`) never reads `take_lunge_outcome()`.
+   - Effect on a `lunge_travels` body: after the charge, the host adds a second impulse and judges the blow with the ordinary cone from where the charge stopped. A co-op player who stepped off the lane can still be hit.
+   - Status: a fix is parked pending a SHARED-FILE REQUEST on #356 (comment 5851571019). `tests/test_stormwood_b_hosted_lunge_outcome.gd` fails 2/3 without the fix and passes 3/3 with it.
+2. **Guests see none of the cues.**
+   - Cause: `SharedOpponentProxy` receives only `present_telegraph`, which draws a ring and plays the anticipation.
+   - Effect: a guest sees no lane, no Capacitor route line (its tell arrives only after the 1.1 s cue) and no Crown guard cone.
+   - Status: a presentation-only fix is proposed as a question on #356 (comment 5851577069).
+
+F10#2 cannot close on two-peer evidence until both are fixed.
