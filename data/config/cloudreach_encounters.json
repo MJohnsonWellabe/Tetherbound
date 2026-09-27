@@ -1522,7 +1522,7 @@
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "summit_overlook_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
-      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by cloudreach_winds_restored, so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by captain_veyra_defeated (was cloudreach_winds_restored, which opens only at the overlook itself), so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
     },
     {
       "id": "road_visibility_summit_overlook_loop_03",
@@ -1538,7 +1538,7 @@
       "purpose": "roadside creature sightline pair",
       "cadence_route_id": "summit_overlook_loop",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
-      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by cloudreach_winds_restored, so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by captain_veyra_defeated (was cloudreach_winds_restored, which opens only at the overlook itself), so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
     },
     {
       "id": "road_visibility_windscar_floor_loop_return_05",

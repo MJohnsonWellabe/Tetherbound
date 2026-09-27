@@ -326,12 +326,14 @@ func _run() -> void:
 		"before":saved_party_exact,"after":loaded_party_exact})
 	_require(party_differences.is_empty(),"Disk reload preserved every persisted field of all five members")
 	_require(_flag_snapshot() == saved_flags,"Disk reload preserved the exact progression-flag set")
+	# Compared at the reload instant: over the next frames a `rested` member
+	# below max HP regenerates, which is play, not a persistence change.
+	_require(_team_snapshot() == saved_team,"Reload preserved all five species, levels, XP and HP")
 	await _frames(30)
 	for flag: String in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 		_require(_has(flag), "Reload preserved " + flag)
 	_require(game.inventory.count("coin") == coins, "Reload did not duplicate payouts")
 	_require(_inventory_snapshot() == saved_inventory,"Reload preserved every occupied inventory slot")
-	_require(_team_snapshot() == saved_team,"Reload preserved all five species, levels, XP and HP")
 	_require(not game.can_enter_realm("water"), "Water realm remains non-enterable")
 	_log("persistence_snapshot", {"inventory":_inventory_snapshot(),"team":_team_snapshot(),"party_exact":_party_persistence_snapshot(),"flags":_flag_snapshot(),"day":game.day,"water_enterable":game.can_enter_realm("water")})
 	_log("complete", {"optional_trainers": "not attempted", "optional_detours": "opening candy; required fiber and camp preparation", "recovery_choices":recovery_choices, "combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal"})
