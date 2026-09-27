@@ -45,6 +45,8 @@ func test_the_live_body_honours_the_key() -> void:
 	assert_true(WILD._COMBAT_OVERRIDE_KEYS.has("lunge_travels"))
 	var body: Node = WILD.new()
 	body.combat_override = CATALOGUE.named_combat(_named().hollows_alpha)
+	# The live config is re-read only for an engaged body (a fight in progress).
+	body.engaged = true
 	body.refresh_combat_profile()
 	assert_true(body.lunge_travels(), "A Hollows Alpha body reports a travelling lunge")
 	body.free()
