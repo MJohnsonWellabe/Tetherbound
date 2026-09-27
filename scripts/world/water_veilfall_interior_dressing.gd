@@ -23,6 +23,9 @@ const STRUCTURE := preload("res://scripts/world/interior_structure.gd")
 
 var receipt: Dictionary = {}
 var _textures: Dictionary = {}
+## Named materials a prop entry may wear (`skin`): the installed arches and
+## railings are white plaster, which read as a picket fence on dark stone.
+var _skins_by_name: Dictionary = {}
 
 
 func build(interior: Node3D, rules: Dictionary) -> void:
@@ -43,6 +46,10 @@ func build(interior: Node3D, rules: Dictionary) -> void:
 	receipt["lanterns"] = _lanterns(interior, rules, cfg.get("lanterns", {}))
 	receipt["fall_wall"] = _fall_wall(interior, cfg.get("fall_wall", {}))
 	receipt["ledges"] = _ledges(interior, cfg.get("ledges", []), _masonry(cfg.get("stone", {})))
+	_skins_by_name = {
+		"stone": _masonry(cfg.get("structure", {}).get("trim", cfg.get("stone", {}))),
+		"metal": _masonry(cfg.get("metal", {})) if cfg.has("metal") else null,
+	}
 	receipt["props"] = _props(interior, cfg.get("props", []))
 	_room_light(interior, cfg.get("room_light", {}))
 
@@ -319,6 +326,10 @@ func _props(interior: Node3D, entries: Array) -> int:
 			node.rotation = Vector3(deg_to_rad(float(entry.get("pitch_deg", 0.0))),
 				deg_to_rad(float(entry.get("yaw_deg", 0.0))), deg_to_rad(float(entry.get("roll_deg", 0.0))))
 			node.scale = Vector3.ONE * float(entry.get("scale", 1.0))
+			var skin: Variant = _skins_by_name.get(str(entry.get("skin", "")))
+			if skin is Material:
+				for found: Node in node.find_children("*", "MeshInstance3D", true, false) + ([node] if node is MeshInstance3D else []):
+					(found as MeshInstance3D).material_override = skin
 			placed += 1
 	return placed
 
