@@ -202,9 +202,16 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		if _fight_t >= next_periodic:
 			next_periodic += _interval
 			saved += await _save(dir, "t", _fight_t, enemy, ally, {})
+		# A save waits for a render, and the opponent can be swapped out (and
+		# freed) meanwhile: re-read both bodies before piloting.
+		enemy = manager.enemy_body()
+		ally = director.ally_body()
+		if not (is_instance_valid(enemy) and is_instance_valid(ally)):
+			enemy = null
+			ally = null
 		if _reader != null:
 			_reader.bind(manager, ally as CharacterBody3D, enemy as CharacterBody3D)
-			if manager.is_fighting():
+			if manager.is_fighting() and enemy != null:
 				_reader.step(_policy)
 		else:
 			_pilot(world, manager, enemy, ally, tick)
