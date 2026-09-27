@@ -79,26 +79,25 @@ func _run() -> void:
 
 func _matrix_stands() -> Array:
 	var ground := func(x: float, z: float) -> float: return float(_world.call("ground_height_at", x, z))
-	var rod_node := _world.get_node_or_null(^"StormwoodRodStations/verge_rod_station") as Node3D
-	var station := rod_node.global_position if rod_node != null else Vector3(-650.0, ground.call(-650.0, 830.0), 830.0)
-	var gh := deg_to_rad(92.3)
-	var giant := Vector2(-240.0, 4463.6)
+	# Round 2 stands (round 1's judge: forest read as parkland, no giant trunk
+	# was the subject, the one pylon hid behind the trainer's head).
+	var rod_at := Vector2(-442.2, 567.5)
 	var all := [
-		{"id": "forest", "at": Vector2(-470.0, 3905.0),
-			"focus": Vector3(-430.0, ground.call(-430.0, 3990.0) + 6.0, 3990.0), "pitch": 4.0,
-			"text": "Deepwood forest near Lantern Hollow"},
-		{"id": "giant", "at": giant,
-			"focus": Vector3(giant.x + sin(gh) * 80.0, ground.call(-160.0, 4460.0) + 14.0, giant.y + cos(gh) * 80.0), "pitch": 6.0,
-			"text": "Fallen Giant stand (Deepwood giant trunks)"},
+		{"id": "forest", "at": Vector2(-350.0, 4330.0),
+			"focus": Vector3(-300.0, ground.call(-300.0, 4420.0) + 6.0, 4420.0), "pitch": -2.0,
+			"text": "Deepwood forest heart"},
+		{"id": "giant", "at": Vector2(-215.0, 4420.0),
+			"focus": Vector3(-150.0, ground.call(-150.0, 4460.0) + 14.0, 4460.0), "pitch": 8.0,
+			"text": "Fallen Giant grove (Deepwood giant trunks)"},
 		{"id": "glass", "at": Vector2(-310.0, 5050.0),
 			"focus": Vector3(-100.0, ground.call(-310.0, 5050.0) + 20.0, 5470.0), "pitch": 2.0,
 			"text": "Glass Field glass scars toward the Stormheart"},
-		{"id": "rod_line", "at": Vector2(station.x, station.z) + Vector2(46.0, -58.0).normalized() * 30.0,
-			"focus": station + Vector3.UP * 5.0, "pitch": 6.0,
-			"text": "Verge Rod Station pylon (rod line), 30 m"},
-		{"id": "stormheart", "at": Vector2(-100.0, 5390.0),
-			"focus": Vector3(-100.0, ground.call(-100.0, 5390.0) + 45.0, 5470.0), "pitch": 14.0,
-			"text": "Stormheart giant trunk from the southern approach road, 80 m"},
+		{"id": "rod_line", "at": rod_at,
+			"focus": Vector3(-532.4, ground.call(-532.4, 667.8) + 4.0, 667.8), "pitch": 2.0,
+			"text": "Ash Road rod line toward the Verge Rod Station"},
+		{"id": "stormheart", "at": Vector2(-110.0, 5170.0),
+			"focus": Vector3(-100.0, ground.call(-100.0, 5470.0) + 70.0, 5470.0), "pitch": 8.0,
+			"text": "Stormheart from the southern approach, 300 m"},
 	]
 	for spec: String in _custom:
 		var part := spec.split("@")
@@ -167,7 +166,7 @@ func _await_sky_bolt() -> void:
 		return
 	_fine(2)
 	var waited := 0
-	while waited < 600 and float(_surge.call("bolt_level")) < 0.3:
+	while waited < 400 and float(_surge.call("bolt_level")) < 0.3:
 		await process_frame
 		waited += 1
 	_coarse()
