@@ -292,7 +292,8 @@ func _relay_windbreak_detour(target: Vector3, body: CharacterBody3D) -> Vector3:
 ## A relay leg that passes within 1.6 m of a standing person (Captain Veyra's
 ## own body stands in the arena during break_the_eye) snags the piloted
 ## creature on that capsule (C1 run at cde65499, 3183 s: the ally against
-## "Captain Veyra/Body"). Stick-walk round the person on the side away from the
+## "Captain Veyra/Body"), and the trainer's own capsule does the same while it
+## stands piloting. Stick-walk round the person on the side away from the
 ## leg first, 3.5 m clear, then finish the leg.
 func _relay_leg(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
 	var mover: Node3D = body if body != null else runtime.controlled_body()
@@ -300,7 +301,12 @@ func _relay_leg(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
 	if mover != null and people != null:
 		var from := Vector2(mover.global_position.x, mover.global_position.z)
 		var to := Vector2(target.x, target.z)
-		for person: Node in people.get_children():
+		var obstacles: Array[Node] = people.get_children()
+		# The trainer stands still while it pilots the creature; its own capsule
+		# on the leg snags the ally the same way (dry run 3f..., 471 s).
+		if mover != player and is_instance_valid(player):
+			obstacles.append(player)
+		for person: Node in obstacles:
 			var person_body := person as Node3D
 			if person_body == null or not person_body.is_visible_in_tree(): continue
 			var at := Vector2(person_body.global_position.x, person_body.global_position.z)
