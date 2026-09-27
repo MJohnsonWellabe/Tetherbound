@@ -9,6 +9,8 @@ const RULES := preload("res://scripts/world/water_local_chain_rules.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const INTERACT := preload("res://scripts/world/interactable.gd")
 const NPCS := preload("res://scripts/world/water_scene_npcs.gd")
+const FIRE := preload("res://scripts/build/campfire.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const INTENT := "water_dock_action"
 var _world: Node3D
 var _game: Node
@@ -32,6 +34,9 @@ func build(world: Node3D) -> void:
 	for lamp: Variant in data.get("landmark_lamps", []):
 		if lamp is Dictionary:
 			_build_landmark_lamp(lamp)
+	for lure: Variant in data.get("wayfinding_lures", []):
+		if lure is Dictionary:
+			_build_wayfinding_lure(lure)
 	for row: Variant in data.get("steps", []):
 		if row is Dictionary and str(row.get("kind", "")) == "site":
 			_build_site(row, float(data.get("site_prompt_radius_m", 3.6)))
@@ -75,14 +80,20 @@ func _build_landmark_lamp(lamp: Dictionary) -> void:
 	if not is_finite(ground) or ground < 0.0:
 		push_error("Water landmark lamp has no dry terrain: " + landmark_id)
 		return
-	var width := float(lamp.get("post_width_m", 0.36))
-	var height := float(lamp.get("post_height_m", 4.0))
 	var root := StaticBody3D.new()
 	root.name = "Landmark_" + landmark_id
 	add_child(root)
 	root.position = Vector3(xz.x, ground, xz.y)
 	var facing_raw: Array = lamp.get("facing_xz", [0.0, 1.0])
 	root.rotation.y = atan2(float(facing_raw[0]), float(facing_raw[1]))
+	_dress_lamp_post(root, lamp)
+
+
+## The lamp post's collider and art on `root` (a StaticBody3D at the post's
+## foot, already yawed so its lantern faces local +Z).
+func _dress_lamp_post(root: StaticBody3D, lamp: Dictionary) -> void:
+	var width := float(lamp.get("post_width_m", 0.36))
+	var height := float(lamp.get("post_height_m", 4.0))
 	var collision := CollisionShape3D.new()
 	collision.name = "PostCollider"
 	var shape := BoxShape3D.new()
@@ -142,6 +153,92 @@ func _build_landmark_lamp(lamp: Dictionary) -> void:
 	light.shadow_enabled = false
 	light.position = cage
 	root.add_child(light)
+
+
+func lure_root(lure_id: String) -> Node3D:
+	return get_node_or_null("Lure_" + lure_id) as Node3D
+
+
+## Wayfinding lure (water_local_chains.json `wayfinding_lures`; F13#3 chain
+## lures and F13#2 reward-pocket lures): a standing, always-visible group that
+## makes a destination (or the next rise of the walked way to it) read from the
+## island's landing or approach. Built on every peer from the first frame,
+## whatever the chain state, like the Lastlight lamp. Only lamp posts collide
+## (a post-width box, on every peer); banners and the signal fire (its log
+## pile, flame and smoke) are art only, so a simulation-only host and a
+## rendering client agree on collision. Pieces use the
+## installed Water set: the Lastlight bark lamp post + Quaternius wall lantern,
+## the Quaternius standing banner (teal/white cloth, never Team Tether red) and
+## the Water camps' own campfire with its smoke column raised as a signal.
+func _build_wayfinding_lure(lure: Dictionary) -> void:
+	var lure_id := str(lure.get("id", ""))
+	var raw: Array = lure.get("at_xz", [])
+	var xz := Vector2(float(raw[0]), float(raw[1])) if raw.size() == 2 else Vector2.INF
+	var ground := float(_world.ground_height_at(xz.x, xz.y)) if xz.is_finite() else NAN
+	if not is_finite(ground) or ground < 0.0:
+		push_error("Water wayfinding lure has no dry terrain: " + lure_id)
+		return
+	var root := Node3D.new()
+	root.name = "Lure_" + lure_id
+	add_child(root)
+	root.position = Vector3(xz.x, ground, xz.y)
+	for index in (lure.get("pieces", []) as Array).size():
+		var piece: Dictionary = lure.pieces[index]
+		var offset_raw: Array = piece.get("offset_xz", [0.0, 0.0])
+		var spot := xz + Vector2(float(offset_raw[0]), float(offset_raw[1]))
+		var local := Vector3(spot.x - xz.x, float(_world.ground_height_at(spot.x, spot.y)) - ground, spot.y - xz.y)
+		var yaw := deg_to_rad(float(piece.get("yaw_deg", 0.0)))
+		var kind := str(piece.get("kind", ""))
+		if kind == "lamp_post":
+			var post := StaticBody3D.new()
+			post.name = "LampPost%d" % index
+			root.add_child(post)
+			post.position = local
+			post.rotation.y = yaw
+			_dress_lamp_post(post, piece)
+		elif _world.simulation_only:
+			continue
+		elif kind == "banner":
+			var banner := _fit_height(str(piece.get("model", "")), float(piece.get("height_m", 4.0)))
+			if banner != null:
+				banner.name = "Banner%d" % index
+				banner.position += local + Vector3(0.0, float(piece.get("sink_m", 0.2)) * -1.0, 0.0)
+				banner.rotation.y = yaw
+				root.add_child(banner)
+		elif kind == "signal_fire":
+			var fire := FIRE.new()
+			fire.name = "SignalFire%d" % index
+			root.add_child(fire)
+			fire.position = local
+			fire.build_real()
+			var craft := fire.get_node_or_null("CraftInteractable")
+			if craft != null:
+				craft.free()
+			for body: Node in fire.find_children("*", "CollisionObject3D", true, false):
+				if is_instance_valid(body):
+					body.free()
+			for glow: Node in fire.find_children("CampfireGlow", "", true, false):
+				glow.call("configure_smoke", float(piece.get("smoke_top_m", 4.6)),
+					float(piece.get("smoke_alpha", 0.3)), float(piece.get("smoke_top_size_m", -1.0)),
+					Color(0, 0, 0, 0), float(piece.get("smoke_fade", 0.85)), float(piece.get("smoke_base_size_m", -1.0)))
+		else:
+			push_error("Water wayfinding lure %s: unknown piece kind %s" % [lure_id, kind])
+
+
+func _fit_height(path: String, height: float) -> Node3D:
+	var scene: Variant = load(path) if ResourceLoader.exists(path) else null
+	if not scene is PackedScene:
+		push_error("Water wayfinding lure model missing: " + path)
+		return null
+	var node := (scene as PackedScene).instantiate() as Node3D
+	var bounds := RENDER_BOUNDS.measure(node)
+	if bounds.size.y <= 0.001:
+		node.free()
+		return null
+	var factor := height / bounds.size.y
+	node.scale = Vector3.ONE * factor
+	node.position.y = -bounds.position.y * factor
+	return node
 
 
 func _build_site(row: Dictionary, prompt_radius: float) -> void:
