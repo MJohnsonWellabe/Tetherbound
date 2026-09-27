@@ -116,3 +116,22 @@ func _seat(path: String, key: String, id: String) -> Vector2:
 			return Vector2(float(row.position[0]), float(row.position[2]))
 	assert_true(false, "%s seat %s missing" % [path, id])
 	return Vector2.ZERO
+
+
+## Relay run ec5febd1 left the approach slab during two ascent fights and ran
+## out its climb budget on the ground 6 m beneath the slab's top.
+func test_walking_under_the_approach_slab_is_detected() -> void:
+	# Foot at ground + 0.2 (stormwood_world.gd add_approach), top 6 m over the tree base.
+	var foot := Vector3(-100, 107.77, 5350)
+	var top := Vector3(-100, 118.1, 5470 - 44)
+	assert_true(SEGMENT.under_approach_slab(Vector3(-99.79, 111.95, 5429.64), foot, top),
+		"run ec5febd1's stall: on the ground under the deck ring's rim, past the slab's top")
+	assert_false(SEGMENT.under_approach_slab(Vector3(-100, 118.3, 5429.64), foot, top),
+		"on the deck ring at the approach point")
+	assert_true(SEGMENT.under_approach_slab(Vector3(-99.79, 111.95, 5420.0), foot, top),
+		"run ec5febd1's line: on the ground well below the slab")
+	assert_true(SEGMENT.under_approach_slab(Vector3(-96.1, 109.36, 5374.6), foot, top),
+		"run 44adfbe4's wedge point is under the slab")
+	var on := lerpf(foot.y, top.y, (5400.0 - foot.z) / (top.z - foot.z))
+	assert_false(SEGMENT.under_approach_slab(Vector3(-100, on + 0.9, 5400), foot, top), "standing on the slab")
+	assert_false(SEGMENT.under_approach_slab(Vector3(-108, 100, 5400), foot, top), "west of the footprint")

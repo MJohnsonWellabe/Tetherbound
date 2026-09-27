@@ -13,6 +13,7 @@ const CORE_TOLERANCE := 3.5
 ## The Outer Works approach slab's foot (the rod station) and a lane 3 m west
 ## of its west edge (x -105; 10 m wide on x -100), clear of Kestrel's NPC seat.
 const APPROACH_FOOT := Vector2(-100, 5350)
+const STORMHEART_TREE := preload("res://scripts/world/stormheart_tree.gd")
 const APPROACH_WEST_LANE_X := -108.0
 const APPROACH_SOUTH_Z := 5345.0
 const TRAINERS := ["officer_nysa_deepwood_rod", "outerworks_lieutenant_sera",
@@ -342,6 +343,17 @@ func _climb_core() -> bool:
 	Engine.physics_ticks_per_second = hz_before
 	return passed
 
+## True inside the approach slab's footprint (10 m wide, foot to deck edge)
+## and more than 1 m below its surface: walking the ground underneath it.
+static func under_approach_slab(at: Vector3, foot: Vector3, top: Vector3) -> bool:
+	# Also the 6 m past its top edge, under the deck ring's rim, where run
+	# ec5febd1 stalled (the approach point is on the ring at local z -40).
+	if at.z <= foot.z or at.z >= top.z + 6.0 or absf(at.x - foot.x) > 5.0:
+		return false
+	var surface := lerpf(foot.y, top.y, clampf((at.z - foot.z) / (top.z - foot.z), 0.0, 1.0))
+	return at.y < surface - 1.0
+
+
 ## From north of the foot (Kestrel's fight is under the slab): out sideways
 ## to the west lane, south past the foot, then onto it. From the south (Ember
 ## Bivouac after a rest) the slab is never underfoot: straight to the foot.
@@ -362,6 +374,9 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 	var mouth := trunk.to_global(Vector3(-4, 6, -26))
 	var ramp_start := trunk.to_global(trunk.call("ascent_point", 0.0))
 	var stage := 0
+	var remounts := 0
+	var slab_foot := _grounded(APPROACH_FOOT) + Vector3(0, 0.2, 0)
+	var slab_top := trunk.to_global(Vector3(0, 6, -STORMHEART_TREE.OUTER_WORKS_OUTER_RADIUS))
 	var last_progress := 0.0
 	var furthest := 0.0
 	_navigator.reset()
@@ -376,6 +391,23 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 			if not await _fight_ascent_wild():
 				return false
 			started += Engine.get_physics_frames() - fight_started
+			_navigator.reset()
+			continue
+		# Relay run ec5febd1 left the slab during two ascent fights and walked
+		# the terrain beneath it to the approach point's footprint, 6 m under the
+		# slab's top. Under the slab, go back out and up at its foot.
+		if stage == 0 and under_approach_slab(_player.global_position, slab_foot, slab_top):
+			remounts += 1
+			if remounts > 3:
+				return _fail("left the Outer Works approach slab %d times during the ascent" % remounts)
+			_note("REMOUNT the approach slab at its foot (%d): the player was under it at %s" % [
+				remounts, str(_player.global_position)])
+			var here := Vector2(_player.global_position.x, _player.global_position.z)
+			var legs_started := Engine.get_physics_frames()
+			for point: Vector2 in approach_foot_route(here):
+				if not await _walk_xz(point, "Stormheart approach foot (remount)"):
+					return false
+			started += Engine.get_physics_frames() - legs_started
 			_navigator.reset()
 			continue
 		if stage == 0 and _player.global_position.distance_to(approach) < CORE_TOLERANCE:
