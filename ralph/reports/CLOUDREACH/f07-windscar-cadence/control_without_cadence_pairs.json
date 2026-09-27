@@ -1,0 +1,527 @@
+{
+  "a7_limit_seconds": 120.0,
+  "ally_deployed": true,
+  "ignore_wilds": false,
+  "ignored_cadence_sites": 13,
+  "intervals": [
+    {
+      "end_seconds": 5.0,
+      "from": "flight_waypoint",
+      "from_stage": "aerie_dais",
+      "gap_seconds": 2.73,
+      "start_seconds": 2.27,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 5.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 0.5,
+      "start_seconds": 5.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 5.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 0.0,
+      "start_seconds": 5.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 22.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 16.5,
+      "start_seconds": 5.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 23.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 22.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 27.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 4.0,
+      "start_seconds": 23.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 34.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 7.0,
+      "start_seconds": 27.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 36.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 34.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 43.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 7.0,
+      "start_seconds": 36.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 44.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 43.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 48.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 4.0,
+      "start_seconds": 44.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 52.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 3.5,
+      "start_seconds": 48.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 53.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 52.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 56.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 3.0,
+      "start_seconds": 53.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 58.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 56.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 63.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.0,
+      "start_seconds": 58.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 65.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 63.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 70.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.0,
+      "start_seconds": 65.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 75.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.5,
+      "start_seconds": 70.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 78.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 3.0,
+      "start_seconds": 75.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 80.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 78.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 82.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 80.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 84.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 82.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 85.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 84.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 90.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.0,
+      "start_seconds": 85.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 96.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.5,
+      "start_seconds": 90.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 98.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 96.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 99.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 98.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 104.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 4.5,
+      "start_seconds": 99.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 106.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 104.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 118.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 12.0,
+      "start_seconds": 106.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 119.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 118.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 126.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 7.0,
+      "start_seconds": 119.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 128.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 126.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 138.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 10.5,
+      "start_seconds": 128.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 140.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 138.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 148.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 8.5,
+      "start_seconds": 140.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 150.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 148.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 152.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.5,
+      "start_seconds": 150.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 168.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 15.5,
+      "start_seconds": 152.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 169.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 168.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 170.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 0.5,
+      "start_seconds": 169.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 170.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 0.0,
+      "start_seconds": 170.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 226.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 56.0,
+      "start_seconds": 170.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 228.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 226.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 241.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 13.0,
+      "start_seconds": 228.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 242.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 241.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 264.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 22.0,
+      "start_seconds": 242.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 266.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 264.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 288.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 22.5,
+      "start_seconds": 266.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 290.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 2.0,
+      "start_seconds": 288.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 318.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 28.0,
+      "start_seconds": 290.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 319.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.0,
+      "start_seconds": 318.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 345.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 26.0,
+      "start_seconds": 319.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 347.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 1.5,
+      "start_seconds": 345.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 354.1,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 7.1,
+      "start_seconds": 347.0,
+      "to": "physical_interaction",
+      "to_stage": "windscar_return_to_counterweight"
+    }
+  ],
+  "longest_interval": {
+    "end_seconds": 226.0,
+    "from": "meaningful_offer",
+    "from_stage": "windscar_return_to_counterweight",
+    "gap_seconds": 56.0,
+    "start_seconds": 170.0,
+    "to": "meaningful_offer",
+    "to_stage": "windscar_return_to_counterweight"
+  },
+  "over_limit": [],
+  "reached": true,
+  "simulated_seconds": 354.1,
+  "verdict": "PASS",
+  "walked_m": 1740.9,
+  "wild_engage_offers": 44
+}

@@ -122,6 +122,13 @@ func _dialogue_finished(id: String) -> void:
 	# thanks pays any character still owed (stormwood_rook_circuit_reward.gd).
 	if _rook_reward != null and bool(_rook_reward.call("dialogue_finished", id, self)):
 		return
+	# An unmounted chapter (no reward node) still completes the circuit.
+	if _rook_reward == null:
+		var rook: Dictionary = ROOK_REWARD.outcome_for(id)
+		for event: String in rook.get("events", []):
+			events.emit_event(event)
+		if not rook.is_empty():
+			return
 	if id == WEN_RECORDS_RETURN_CONVERSATION:
 		events.emit_event("side:stormwood_crown_remembers:step_3")
 		return

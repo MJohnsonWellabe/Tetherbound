@@ -204,7 +204,7 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort :
 
 func _fight_captain() -> bool:
 	var body := _trainers.call("body_for", CAPTAIN) as Node3D
-	if not is_instance_valid(body) or not await _prepare():
+	if not is_instance_valid(body) or not await _prepare_for_trainer():
 		return _fail("The living captain or earned preparation is unavailable")
 	# Walking can encounter ordinary wilds. Open the exact reward window only
 	# after arriving at the real trainer's actionable prompt.

@@ -1,0 +1,207 @@
+{
+  "accelerated": true,
+  "combat_mode": "live_input",
+  "criterion": "F06#1",
+  "distance_m": 15955.8756971505,
+  "failure": [],
+  "locked_region_entries": [],
+  "passed": true,
+  "region_sequence": [
+    {
+      "mode": "foot",
+      "region": "gate_lower_cliffs",
+      "simulated_seconds": 0.02,
+      "stage": "boot"
+    },
+    {
+      "mode": "foot",
+      "region": "broken_causeways",
+      "simulated_seconds": 309.77,
+      "stage": "lower_west_anchor"
+    },
+    {
+      "mode": "foot",
+      "region": "windscar_ravine",
+      "simulated_seconds": 677.92,
+      "stage": "battle_tether_lieutenant_senn"
+    },
+    {
+      "mode": "foot",
+      "region": "broken_causeways",
+      "simulated_seconds": 712.48,
+      "stage": "battle_tether_lieutenant_senn"
+    },
+    {
+      "mode": "creature_pilot",
+      "region": "windscar_ravine",
+      "simulated_seconds": 714.07,
+      "stage": "battle_tether_lieutenant_senn"
+    },
+    {
+      "mode": "foot",
+      "region": "broken_causeways",
+      "simulated_seconds": 740.45,
+      "stage": "battle_tether_lieutenant_senn"
+    },
+    {
+      "mode": "foot",
+      "region": "windscar_ravine",
+      "simulated_seconds": 742.13,
+      "stage": "causeway_signal"
+    },
+    {
+      "mode": "fly",
+      "region": "",
+      "simulated_seconds": 1298.82,
+      "stage": "mandatory_high_roost_flight"
+    },
+    {
+      "mode": "fly",
+      "region": "high_roost_sky_shrine",
+      "simulated_seconds": 1304.85,
+      "stage": "mandatory_high_roost_flight"
+    },
+    {
+      "mode": "fly",
+      "region": "",
+      "simulated_seconds": 1383.27,
+      "stage": "return_glide_to_grounded_counterweight"
+    },
+    {
+      "mode": "fly",
+      "region": "windscar_ravine",
+      "simulated_seconds": 1391.95,
+      "stage": "return_glide_to_grounded_counterweight"
+    },
+    {
+      "mode": "foot",
+      "region": "upper_cloudreach",
+      "simulated_seconds": 1740.98,
+      "stage": "return_glide_to_grounded_counterweight"
+    },
+    {
+      "mode": "foot",
+      "region": "summit_final_stronghold",
+      "simulated_seconds": 2394.68,
+      "stage": "battle_officer_voss_summit_approach"
+    },
+    {
+      "mode": "creature_pilot",
+      "region": "",
+      "simulated_seconds": 2507.7,
+      "stage": "battle_officer_voss_summit_approach"
+    },
+    {
+      "mode": "foot",
+      "region": "summit_final_stronghold",
+      "simulated_seconds": 2510.35,
+      "stage": "battle_officer_voss_summit_approach"
+    },
+    {
+      "mode": "creature_pilot",
+      "region": "",
+      "simulated_seconds": 2531.0,
+      "stage": "battle_officer_voss_summit_approach"
+    },
+    {
+      "mode": "foot",
+      "region": "summit_final_stronghold",
+      "simulated_seconds": 2542.58,
+      "stage": "battle_officer_voss_summit_approach"
+    }
+  ],
+  "regions": [
+    {
+      "access_mode": "ground",
+      "first_entry": {
+        "mode": "foot",
+        "position": "(0.0, 105.0302, -260.0)",
+        "simulated_seconds": 0.02,
+        "stage": "boot"
+      },
+      "frames": {
+        "foot": 18585
+      },
+      "passed": true,
+      "region": "gate_lower_cliffs"
+    },
+    {
+      "access_mode": "ground",
+      "first_entry": {
+        "mode": "foot",
+        "position": "(-290.9911, 268.7863, 919.5571)",
+        "simulated_seconds": 309.77,
+        "stage": "lower_west_anchor"
+      },
+      "frames": {
+        "foot": 22285
+      },
+      "passed": true,
+      "region": "broken_causeways"
+    },
+    {
+      "access_mode": "ground",
+      "first_entry": {
+        "mode": "foot",
+        "position": "(-55.55969, 449.7734, 2210.423)",
+        "simulated_seconds": 677.92,
+        "stage": "battle_tether_lieutenant_senn"
+      },
+      "frames": {
+        "creature_pilot": 5902,
+        "fly": 4068,
+        "foot": 48030
+      },
+      "passed": true,
+      "region": "windscar_ravine"
+    },
+    {
+      "access_mode": "fly_only",
+      "first_entry": {
+        "mode": "fly",
+        "position": "(700.1833, 928.7586, 3062.428)",
+        "simulated_seconds": 1304.85,
+        "stage": "mandatory_high_roost_flight"
+      },
+      "frames": {
+        "fly": 3503,
+        "foot": 1202
+      },
+      "passed": true,
+      "region": "high_roost_sky_shrine"
+    },
+    {
+      "access_mode": "ground_after_unlock",
+      "first_entry": {
+        "mode": "foot",
+        "position": "(-781.6359, 650.0076, 3556.398)",
+        "simulated_seconds": 1740.98,
+        "stage": "return_glide_to_grounded_counterweight"
+      },
+      "frames": {
+        "foot": 39222
+      },
+      "passed": true,
+      "region": "upper_cloudreach"
+    },
+    {
+      "access_mode": "ground_after_unlock",
+      "first_entry": {
+        "mode": "foot",
+        "position": "(496.6925, 954.2559, 4800.016)",
+        "simulated_seconds": 2394.68,
+        "stage": "battle_officer_voss_summit_approach"
+      },
+      "frames": {
+        "creature_pilot": 13041,
+        "foot": 41731
+      },
+      "passed": true,
+      "region": "summit_final_stronghold"
+    }
+  ],
+  "sealed_violations": [],
+  "stage": "talk_warden_aila",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival",
+  "witness_frames": 199306
+}

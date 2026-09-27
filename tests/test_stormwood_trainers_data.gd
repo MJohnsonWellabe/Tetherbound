@@ -142,7 +142,10 @@ func test_anchors_are_unique_grounded_and_near_authored_routes() -> void:
 			continue
 		var ground_y := heightfield.height_at(float(position[0]), float(position[2])) + 0.15
 		if str(trainer.get("surface_id", "")) == "dynamo_core":
-			assert_almost_eq(float(position[1]), ground_y + 150.0, 0.01, "core captain uses the elevated Dynamo surface")
+			# The deck is the Stormheart Tree's: its base (the terrain at the tree
+			# centre) plus CORE_HEIGHT, wherever on it the captain stands.
+			var deck_y := heightfield.height_at(-100.0, 5470.0) + 150.0 + 0.15
+			assert_almost_eq(float(position[1]), deck_y, 0.01, "core captain uses the elevated Dynamo surface")
 		else:
 			assert_true(str(trainer.get("surface_id", "")).is_empty(), "%s may not silently opt out of terrain grounding" % str(trainer.get("id", "")))
 			assert_almost_eq(float(position[1]), ground_y, 0.01, "%s is terrain-grounded" % str(trainer.get("id", "")))

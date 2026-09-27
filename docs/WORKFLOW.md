@@ -365,14 +365,13 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Attach an independent strict re-check.** Before READY, a read-only
     subagent re-scores the claim against ACCEPTANCE §6.1 using the board's
     strict rules, and its verdict is attached to the READY post.
-    - **Fixtures count as partial.** A fixture or declared start save,
-      position/teleport writes, flag or ledger fixtures, harness-simulated
-      fights and granted parties all make a claim partial, unless the
-      criterion itself allows them.
+    - **Fixtures and shortcuts are allowed (owner, 2026-09-27).** Fixture or
+      declared start saves, position/teleport writes, flag/ledger/inventory/
+      party writes, harness-driven fights and skipped sub-parts no longer make
+      a claim partial (ACCEPTANCE §6.1). The READY post and the re-check list
+      each one; the board carries the disclosure.
     - **Visual criteria** need a passing code-blind judge verdict.
     - **Co-op criteria** need two-peer evidence.
-  - **Fixtures only in labelled dry runs.** Fixture-start runs are allowed only
-    as labelled blocker-finding dry runs (`DRY RUN — does not count`).
   - **Earned checkpoints are allowed starts (coordinator, 2026-09-27).** A save
     written by a recorded run that itself used no fixtures, position writes,
     flag/ledger sets or granted parties is an earned checkpoint, not a

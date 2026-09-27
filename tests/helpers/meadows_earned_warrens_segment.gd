@@ -222,7 +222,8 @@ func _travel() -> bool:
 		# HarvestNode's production prompt is configured at 2.4m. Requiring a
 		# 1.5m centre approach first adds a stricter, non-gameplay collision
 		# gate; 2.2m gets the real prompt/arbiter check its intended turn.
-		if not await _around_station(_v2p(), at) or not await _walk_ground(at, 2.2):
+		if not await _via_haul_apron(at) or not await _around_station(_v2p(), at) \
+				or not await _walk_ground(at, 2.2):
 			return false
 		var node := gather._authored_node_at(at, "rootstone")
 		if node == null:
@@ -323,6 +324,33 @@ const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
 
 
 const BANK_RISE_M := 1.5
+## The Old Quarry's worked faces stand as one 4-6 m wall along z 1789-1794
+## (data/config/old_quarry.json worked_cut, x 375-396); nodes on the upper
+## bench behind it are reached up the haul apron on the east side
+## (HaulApronUpper, ConduitApronInner, the 12 m upper apron at (400,1799.5)).
+## Walking straight from the road below met the face three times (seed 15:
+## CI r15, r17 and a resume dry run, stuck near (360-371,1752-1772)).
+const QUARRY_CUT_Z := 1789.0
+const QUARRY_HAUL_VIA: Array[Vector2] = [Vector2(398.0, 1783.0), Vector2(400.0, 1794.0)]
+
+
+func _via_haul_apron(target: Vector2) -> bool:
+	if not needs_haul_apron(_v2p(), target):
+		return true
+	_receipt("quarry_haul_apron", {"from": _v2p(), "to": target})
+	for via: Vector2 in QUARRY_HAUL_VIA:
+		if not await _walk_ground(via, 2.0):
+			return false
+	return true
+
+
+static func needs_haul_apron(from: Vector2, to: Vector2) -> bool:
+	return from.y < QUARRY_CUT_Z and to.y > QUARRY_CUT_Z and to.x > 370.0 and to.x < 420.0 \
+		and from.x > 330.0 and from.x < 420.0
+const GO_AROUND_M := 10.0
+var _going_around := false
+const MAX_WILD_LOSSES := 3
+var _wild_losses := 0
 
 
 ## One leg between authored chamber markers. A wild fight inside the cave can
@@ -398,6 +426,35 @@ func _prepare() -> bool:
 			return true
 		await _tree.physics_frame
 	return _fail("Actual care, party selection and deployment left no usable ally")
+
+
+## Before a named trainer (relay captain, Sigil captains, Hall gauntlet) a
+## player tops the whole team up, not only the lead: seed 15 (5152b44a) lost
+## stronghold_elite with two fainted and the rest at 23-48 HP while carrying
+## seven small potions. Revive and pilot as `_prepare` does, then carried
+## potions on every member under TOP_UP_BELOW while the stock lasts.
+const TOP_UP_BELOW := 0.6
+
+
+func _prepare_for_trainer() -> bool:
+	if not await _prepare():
+		return false
+	var care := CARE.new()
+	care._tree = _tree
+	care._world = _world
+	care._game = _game
+	care._menu = _game.call("menu")
+	var party := _game.get("party") as RefCounted
+	var inventory := _game.get("inventory") as RefCounted
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		while member != null and not bool(member.get("fainted")) \
+				and float(member.get("hp")) < float(member.get("max_hp")) * TOP_UP_BELOW \
+				and int(inventory.call("count", "potion_small")) > 0:
+			if not await care._use_remedy("potion_small", index):
+				return _fail("Pre-trainer Satchel top-up failed: " + str(care.result().failures))
+	_receipt("trainer_top_up", {"party": _party_hp(), "potions_left": int(inventory.call("count", "potion_small"))})
+	return true
 
 
 ## Wild fights on a long walk wear the five down; with no care between them
@@ -481,6 +538,30 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort :
 	_stick(0.0, 0.0)
 	if _sidestepping or best_effort:
 		return false  # Best effort; the leg or stand search it serves resumes.
+	# A route leg that ran out of budget gets one go-around before it fails:
+	# ten metres to either side of the heading, then the target again, as a
+	# player walks round whatever the straight line keeps meeting (CI r14/r15:
+	# the quarry approach near (394,1797) and the relay exit toward (-152,4170)).
+	if not _going_around:
+		_going_around = true
+		var at := _player.global_position
+		var heading := target - at
+		heading.y = 0.0
+		var side := Vector3(-heading.z, 0.0, heading.x).normalized() * GO_AROUND_M
+		for sign: float in [1.0, -1.0]:
+			var aside := Vector2(at.x + side.x * sign, at.z + side.z * sign)
+			_receipt("leg_go_around", {"player": at, "target": target, "aside": aside})
+			await _walk(Vector3(aside.x, float(_world.call("ground_height_at", aside.x, aside.y)), aside.y), 1.5, SIDESTEP_FRAMES, true)
+			if not _failures.is_empty():
+				_going_around = false
+				return false
+			if await _walk(target, radius, -1, true):
+				_going_around = false
+				return true
+			if not _failures.is_empty():
+				_going_around = false
+				return false
+		_going_around = false
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
 
 
@@ -528,6 +609,20 @@ func _fight() -> bool:
 		else:
 			await _tree.physics_frame
 	pilot._move_toward(Vector3.ZERO)
+	# A lost ordinary wild fight on a long leg is a setback a player recovers
+	# from (the lead faints, exploration resumes; the Satchel revives), not the
+	# end of the route. Seed 15 resume dry run (680d1eea) lost one on the Hall
+	# approach with the party worn down. The guardian and trainers stay exact.
+	if not guardian_fight and not _fighting() and str(_combat.call("outcome")) == "lost" \
+			and _wild_losses < MAX_WILD_LOSSES:
+		_wild_losses += 1
+		_receipt("wild_loss_recovered", {"number": _wild_losses, "hits": _fight_hits,
+			"frames": Engine.get_physics_frames() - _fight_started, "party": _party_hp()})
+		for _frame in 180:
+			if INPUT_OWNER.current(_tree) == null:
+				break
+			await _tree.physics_frame
+		return await _prepare()
 	if not within_battle_deadline(Engine.get_physics_frames() - _fight_started) \
 			or _fighting() or str(_combat.call("outcome")) != "won" or _fight_hits <= 0:
 		var party_hp := []
