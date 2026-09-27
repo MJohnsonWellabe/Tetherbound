@@ -21,7 +21,10 @@ extends "res://tests/smoke_water_hop_walked.gd"
 ##                input along a ~15% commanded zigzag from the arrival point, level-0
 ##                swim efficiency, no position write, no stamina write; island
 ##                walks between routes by left stick (same method as
-##                smoke_water_hop_walked.gd, whose helpers this reuses).
+##                smoke_water_hop_walked.gd, whose helpers this reuses); then the
+##                optional Garden and Deep Watch sheltered crossings (human_level_0
+##                rest points, owner 13:33) swum out and back from Salt Crown and
+##                Sluice Isle the same way.
 ##   D  fight     mid-swim wild fight with the original five: Engage by the
 ##                interact press, stamina frozen through the fight (COMBAT_PAUSED),
 ##                won through production combat, drain resumes at the configured rate.
@@ -48,7 +51,14 @@ extends "res://tests/smoke_water_hop_walked.gd"
 ##
 ##   godot --headless --path . --script tests/card_t1_tidewake_retained_five.gd
 ##       [-- --skip-chain]   (phases A,B,D,E,F only; for iteration, not a card pass)
+##       [-- --side-trips-only] (C swims only the Garden/Deep Watch side trips after one
+##                               position write; for iteration, not a card pass)
 const FIXTURE := preload("res://tests/helpers/tidewake_b_water_arrival_dry_fixture.gd")
+## Optional side trips swum out and back after the edge that reaches their hub.
+const SIDE_TRIPS := {
+	"tidal_cradle_to_salt_crown": "salt_crown_to_drowned_garden_sheltered",
+	"salt_crown_to_sluice_isle": "sluice_isle_to_deep_watch_sheltered",
+}
 const SITE_ID := "road_visibility_tidal_cradle_to_salt_crown_sheltered_04"
 const FIGHT_ANCHOR := "tidal_cradle_to_salt_crown_rest_03"
 const ENEMY_HP_CEILING := 12.0
@@ -137,7 +147,15 @@ func _run() -> void:
 	var holds_stone := bool(game.local.flags.has("water_swim_stone_earned"))
 	_item("B3 optional mounted routes labelled", "every mount-only route: main_path=false, intended_traversal=swim_mount, needs swim_saddle + water_swim_stone_earned (player holds neither)",
 		"labelled=%d %s unlabelled=%s holds_saddle=%s holds_stone=%s" % [labelled.size(), labelled, unlabelled, holds_saddle, holds_stone],
-		labelled.size() >= 7 and unlabelled.is_empty() and not holds_saddle and not holds_stone)
+		labelled.size() >= 5 and unlabelled.is_empty() and not holds_saddle and not holds_stone)
+	var garden_deep: Array[String] = []
+	for side_id: Variant in SIDE_TRIPS.values():
+		var side := _route(str(side_id))
+		garden_deep.append("%s=%s/main_path=%s/mount=%s" % [side_id, side.get("intended_traversal", ""), side.get("main_path", ""),
+			side.get("requires_compatible_active_swim_mount", "")])
+	_item("B4 Garden/Deep Watch sheltered routes are human_level_0", "salt_crown_to_drowned_garden_sheltered and sluice_isle_to_deep_watch_sheltered: human_level_0, no swim mount, optional (owner 13:33 rest points)",
+		" ".join(garden_deep), garden_deep.size() == 2 and garden_deep.all(func(line: String) -> bool:
+			return line.contains("=human_level_0/main_path=false/mount=false")))
 	await director.dismiss_active_creature()
 	await _frames(30)
 
@@ -352,19 +370,47 @@ func _bind(scene: Node3D) -> bool:
 ## arrival instead of a position write.
 func _chain() -> bool:
 	var routes: Array[Dictionary] = []
+	var side_only := OS.get_cmdline_user_args().has("--side-trips-only")
+	var flag_routes: Array[Dictionary] = []
+	var mandatory_hops := 0
+	var side_hops := 0
 	for edge: String in EDGES:
 		var route := _route("%s_sheltered" % edge)
 		if not _expect(bool(route.get("main_path", false)) and str(route.get("intended_traversal", "")) == "human_level_0"
 			and not bool(route.get("requires_compatible_active_swim_mount", true)), "%s is not mandatory level-0" % edge):
 			return false
-		routes.append(route)
+		mandatory_hops += (route.get("rest_anchor_ids", []) as Array).size() + 1
+		flag_routes.append(route)
+		if not side_only:
+			routes.append(route)
+		# Owner 13:33: the Garden and Deep Watch rest points (optional islands,
+		# human_level_0 since 29dc85e9) are swum out and back from their hub.
+		if SIDE_TRIPS.has(edge):
+			var side := _route(str(SIDE_TRIPS[edge]))
+			if not _expect(not side.is_empty() and not bool(side.get("main_path", true))
+				and str(side.get("intended_traversal", "")) == "human_level_0"
+				and not bool(side.get("requires_compatible_active_swim_mount", true))
+				and (side.get("required_equipment", []) as Array).is_empty(),
+				"%s is not an optional level-0 human crossing" % SIDE_TRIPS[edge]):
+				return false
+			routes.append(side)
+			routes.append(_reversed(side))
+			side_hops += 2 * ((side.get("rest_anchor_ids", []) as Array).size() + 1)
+	if side_only:
+		# Iteration aid only (never a card pass): one disclosed position write to the Garden hub.
+		var hub := _anchor(str(routes[0].from_anchor))
+		hub.y = float(world.call("ground_height_at", hub.x, hub.z)) + 0.15
+		player.global_position = hub
+		player.velocity = Vector3.ZERO
+		position_writes += 1
+		await _frames(30)
 	var mandatory: Array[String] = []
 	for raw: Variant in config.water_routes:
 		if bool((raw as Dictionary).get("main_path", false)):
 			mandatory.append(str((raw as Dictionary).id))
 	print("CARD mandatory main_path routes=%d %s" % [mandatory.size(), mandatory])
 	var flags: Array[String] = []
-	for route: Dictionary in routes:
+	for route: Dictionary in flag_routes:
 		var flag := str(route.get("required_departure_flag", ""))
 		if not flag.is_empty():
 			game.world.flags.call("set_flag", flag, true)
@@ -464,9 +510,11 @@ func _chain() -> bool:
 	tracking = false
 	for line: String in summary:
 		print("ROUTE " + line)
-	_item("C1 every mandatory sheltered hop", "7 sheltered main-path routes (24 hops) from the arrival, 15%% zigzag, level-0, original five unmounted: every hop min stamina >=20%%, ends on the authored safe landing, no position/stamina write",
+	var expected_hops := (0 if side_only else mandatory_hops) + side_hops
+	_item("C1 every mandatory sheltered hop + Garden/Deep Watch rest-point side trips",
+		"7 sheltered main-path routes (%d hops) plus Salt Crown<->Drowned Garden and Sluice Isle<->Deep Watch sheltered out and back (%d hops) from the arrival, 15%% zigzag, level-0, original five unmounted: every hop min stamina >=20%%, ends on the authored safe landing, no position/stamina write" % [mandatory_hops, side_hops],
 		"hops=%d worst=%.2f%% (%s) position_writes=%d island_walk_m=%.1f max_gain_per_frame=%.4f" % [hops, worst * 100.0, worst_label,
-			position_writes, walk_total, max_gain_per_frame], hops == 24 and worst >= 0.20 and position_writes == 0)
+			position_writes, walk_total, max_gain_per_frame], hops == expected_hops and worst >= 0.20 and position_writes == 0 and not side_only)
 	return true
 
 
@@ -569,3 +617,18 @@ func _fail(message: String) -> bool:
 	_item("ABORT", "run completes", message, false)
 	_finish()
 	return false
+
+
+## The same authored crossing swum back: anchors swapped, rest shoals and polyline reversed.
+func _reversed(route: Dictionary) -> Dictionary:
+	var back := route.duplicate(true)
+	back.id = "%s_return" % route.id
+	back.from_anchor = route.to_anchor
+	back.to_anchor = route.from_anchor
+	var rests: Array = (route.get("rest_anchor_ids", []) as Array).duplicate()
+	rests.reverse()
+	back.rest_anchor_ids = rests
+	var line: Array = (route.get("polyline", []) as Array).duplicate(true)
+	line.reverse()
+	back.polyline = line
+	return back
