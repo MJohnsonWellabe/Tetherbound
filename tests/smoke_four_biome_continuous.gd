@@ -435,6 +435,8 @@ func _reload_transition(game: Node, label: String) -> bool:
 	var flags_before: Array = (progression.call("all_set") as Array).duplicate()
 	flags_before.sort()
 	var uids_before := _party_uids(party)
+	var inventory: RefCounted = game.get("inventory")
+	var items_before := _inventory_totals(inventory)
 	var scene_path := str(current_scene.scene_file_path)
 	if not bool(game.call("save_game", 0)):
 		failures.append("RELOAD %s: save_game(0) refused" % label)
@@ -446,6 +448,9 @@ func _reload_transition(game: Node, label: String) -> bool:
 		await process_frame
 	progression.call("load_data", {})
 	party.call("clear")
+	# F02#4: rewards must come back from the save, not survive in memory.
+	for i in int(inventory.call("slot_count")):
+		inventory.call("set_slot", i, null)
 	if not bool(game.call("load_game", 0)):
 		failures.append("RELOAD %s: load_game(0) failed" % label)
 		return false
@@ -460,6 +465,7 @@ func _reload_transition(game: Node, label: String) -> bool:
 	var flags_after: Array = (progression.call("all_set") as Array).duplicate()
 	flags_after.sort()
 	var uids_after := _party_uids(party)
+	var items_after := _inventory_totals(inventory)
 	var lost: Array = []
 	for flag: Variant in flags_before:
 		if not flags_after.has(flag):
@@ -474,11 +480,25 @@ func _reload_transition(game: Node, label: String) -> bool:
 		str(player.global_position) if player != null else "NONE"])
 	if not lost.is_empty():
 		failures.append("RELOAD %s: flags lost across the reload: %s" % [label, str(lost)])
+	print("RELOAD %s: inventory %s -> %s" % [label, JSON.stringify(items_before), JSON.stringify(items_after)])
+	if items_after != items_before:
+		failures.append("RELOAD %s: the carried inventory changed across the reload (%s -> %s)" % [label,
+			JSON.stringify(items_before), JSON.stringify(items_after)])
 	if uids_after != uids_before:
 		failures.append("RELOAD %s: the party changed across the reload (%s -> %s)" % [label, str(uids_before), str(uids_after)])
 	if player == null:
 		failures.append("RELOAD %s: the rebuilt world has no Player" % label)
 	return failures.is_empty()
+
+
+func _inventory_totals(inventory: RefCounted) -> Dictionary:
+	var totals := {}
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if not stack.is_empty():
+			var id := str(stack.get("id", ""))
+			totals[id] = int(totals.get(id, 0)) + int(stack.get("n", 0))
+	return totals
 
 
 func _party_uids(party: RefCounted) -> Array:

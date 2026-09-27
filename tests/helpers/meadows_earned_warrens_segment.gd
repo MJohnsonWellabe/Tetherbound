@@ -323,6 +323,8 @@ const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
 
 
 const BANK_RISE_M := 1.5
+const MAX_WILD_LOSSES := 3
+var _wild_losses := 0
 
 
 ## One leg between authored chamber markers. A wild fight inside the cave can
@@ -528,6 +530,20 @@ func _fight() -> bool:
 		else:
 			await _tree.physics_frame
 	pilot._move_toward(Vector3.ZERO)
+	# A lost ordinary wild fight on a long leg is a setback a player recovers
+	# from (the lead faints, exploration resumes; the Satchel revives), not the
+	# end of the route. Seed 15 resume dry run (680d1eea) lost one on the Hall
+	# approach with the party worn down. The guardian and trainers stay exact.
+	if not guardian_fight and not _fighting() and str(_combat.call("outcome")) == "lost" \
+			and _wild_losses < MAX_WILD_LOSSES:
+		_wild_losses += 1
+		_receipt("wild_loss_recovered", {"number": _wild_losses, "hits": _fight_hits,
+			"frames": Engine.get_physics_frames() - _fight_started, "party": _party_hp()})
+		for _frame in 180:
+			if INPUT_OWNER.current(_tree) == null:
+				break
+			await _tree.physics_frame
+		return await _prepare()
 	if not within_battle_deadline(Engine.get_physics_frames() - _fight_started) \
 			or _fighting() or str(_combat.call("outcome")) != "won" or _fight_hits <= 0:
 		var party_hp := []
