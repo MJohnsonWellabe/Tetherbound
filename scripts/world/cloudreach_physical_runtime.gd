@@ -611,6 +611,7 @@ func _sync_pickups_and_camps() -> void:
 		# world-coordinate `at` would be applied twice. The decorative trainer
 		# bed remains a local camp prop, deliberately separate from this pad.
 		_place_camp_creature_bed(rest, spec, at)
+		_build_camp_lip_rail(rest, spec)
 		var bed_path := "res://assets/props/quaternius_fantasy/Bed_Twin1.gltf"
 		if ResourceLoader.exists(bed_path):
 			var bed_scene := load(bed_path) as PackedScene
@@ -661,6 +662,62 @@ func _place_camp_creature_bed(rest: Node3D, camp: Dictionary, resolved: Vector3)
 	var bed := rest.get_node_or_null(^"CampCreatureBed") as Node3D
 	if bed != null:
 		bed.global_position = bed_world
+
+
+const LIP_RAIL_PANEL := "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf"
+## Prop_WoodenFence_Single's raw length along its local X (stronghold.gd and
+## water_return_ramps.gd measure the same module).
+const LIP_RAIL_PANEL_LENGTH_M := 2.0641
+
+
+## Optional `lip_rail` on a camp: {"points": [[x, z], ...], "height_m", "scale"}.
+## Installed camp-family timber fence panels along a dangerous terrace lip, with
+## one thin static collider per leg so a trainer or piloted creature cannot
+## walk or slide off it (the summit bivouac's south lip, #356 11:20). Placement
+## only: no terrain changes.
+func _build_camp_lip_rail(rest: Node3D, camp: Dictionary) -> void:
+	var raw: Variant = camp.get("lip_rail", {})
+	if not raw is Dictionary or not ResourceLoader.exists(LIP_RAIL_PANEL):
+		return
+	var spec := raw as Dictionary
+	var points: Array = spec.get("points", [])
+	if points.size() < 2:
+		return
+	var scene := load(LIP_RAIL_PANEL) as PackedScene
+	var panel_scale := float(spec.get("scale", 1.2))
+	var height := float(spec.get("height_m", 1.3))
+	var rail := Node3D.new()
+	rail.name = "CampLipRail"
+	rest.add_child(rail)
+	var y := rest.global_position.y
+	for i in points.size() - 1:
+		var a := Vector3(float(points[i][0]), y, float(points[i][1]))
+		var b := Vector3(float(points[i + 1][0]), y, float(points[i + 1][1]))
+		var length := a.distance_to(b)
+		if length < 0.5:
+			continue
+		var direction := (b - a) / length
+		var yaw := atan2(-direction.z, direction.x)
+		var count := maxi(1, int(ceilf(length / (LIP_RAIL_PANEL_LENGTH_M * panel_scale))))
+		for k in count:
+			var centre := a.lerp(b, (float(k) + 0.5) / float(count))
+			var grounded: Vector3 = _ground.call(centre) if _ground.is_valid() else centre
+			var panel := scene.instantiate() as Node3D
+			panel.name = "RailPanel%d_%d" % [i, k]
+			rail.add_child(panel)
+			panel.global_position = grounded if grounded.is_finite() else centre
+			panel.global_rotation = Vector3(0.0, yaw, 0.0)
+			panel.scale = Vector3(length / float(count) / LIP_RAIL_PANEL_LENGTH_M, panel_scale, panel_scale)
+		var body := StaticBody3D.new()
+		body.name = "RailCollider%d" % i
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(length, height, 0.3)
+		shape.shape = box
+		body.add_child(shape)
+		rail.add_child(body)
+		body.global_position = a.lerp(b, 0.5) + Vector3.UP * height * 0.5
+		body.global_rotation = Vector3(0.0, yaw, 0.0)
 
 
 func _sync_npcs() -> void:

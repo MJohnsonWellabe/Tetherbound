@@ -49,6 +49,12 @@ func _init() -> void:
 func _run() -> void:
 	var game := root.get_node(^"Game")
 	game.current_realm = "cloudreach"
+	# F07#0: latch-built decks (bridges with `built_by_flag`) collide only once
+	# their flag holds. Hold every such flag so the deck's collider is checked
+	# against its drawn paving like any other bridge.
+	for spec: Dictionary in _read_json("res://data/config/cloudreach_world.json").get("bridges", []):
+		if not str(spec.get("built_by_flag", "")).is_empty():
+			game.progression.set_flag(str(spec["built_by_flag"]))
 	world = SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world

@@ -142,6 +142,11 @@ var shoulder_audit_vertices: Array[Dictionary] = []
 ## over an overpass road/deck (`_overpass_ceiling`), recorded with the above.
 var shoulder_audit_arches: Array[Dictionary] = []
 var _all_pad_points: Array[Dictionary] = []
+## F07#0 Observatory latch: bridges whose deck exists only while a world flag
+## holds (`built_by_flag`). Each record: {flag, sections, shapes}. The flag's
+## current state gates the deck's visibility, collision and ground surfaces.
+var _flag_built_bridges: Array[Dictionary] = []
+var _open_bridge_flags := {}
 var _all_crown_reference_lines: Array[Dictionary] = []
 var _built_pad_keys: Dictionary = {}
 const SURFACE_CELL_M := 128.0
@@ -507,6 +512,8 @@ func ground_height_at(x: float, z: float, preferred_y: float = NAN) -> float:
 		_rebuild_surface_index()
 	var best := -INF
 	for surface: Dictionary in _surface_cells.get(Vector2i(floori(x/SURFACE_CELL_M),floori(z/SURFACE_CELL_M)), []):
+		if surface.has("built_by_flag") and not bool(_open_bridge_flags.get(surface["built_by_flag"], false)):
+			continue
 		var kind := str(surface.get("kind", "rect"))
 		if kind == "rect":
 			var centre: Vector2 = surface.get("centre", Vector2.ZERO)
@@ -1556,7 +1563,9 @@ func _collect_all_route_lines() -> void:
 			continue
 		var bridge := raw as Dictionary
 		var profile: Array = bridge.get("deck_profile", bridge.get("endpoints", []))
-		if profile.size() < 2:
+		# A latch-built deck is not part of the ground-truth road network the
+		# crowns and shoulders conform to: it is absent until its flag holds.
+		if profile.size() < 2 or not str(bridge.get("built_by_flag", "")).is_empty():
 			continue
 		var cap_half := float(landmass.get("landing_size_m", 16.0)) * 0.41
 		var deck_half_width := float(bridge.get("width_m", 3.2)) * 0.5
@@ -2438,7 +2447,7 @@ func _resource_position(authored: Vector3) -> Vector3:
 	var best := Vector3.ZERO
 	var best_distance := INF
 	for surface: Dictionary in _surfaces:
-		if str(surface.get("kind", "")) != "segment":
+		if str(surface.get("kind", "")) != "segment" or surface.has("built_by_flag"):
 			continue
 		var a: Vector3 = surface["a"]
 		var b: Vector3 = surface["b"]
@@ -3144,10 +3153,13 @@ func _build_bridges() -> void:
 		var bridge:=Node3D.new()
 		bridge.name=_safe_name(str(spec.get("id","Bridge")))
 		root.add_child(bridge)
+		var built_by := str(spec.get("built_by_flag",""))
+		var sections: Array[Node3D] = []
 		for i in points.size()-1:
 			var section:=Node3D.new()
 			section.name="DeckSection%d"%i
 			bridge.add_child(section)
+			sections.append(section)
 			var a:=_vec3(points[i])
 			var b:=_vec3(points[i+1])
 			var cap_half:=float(_visual_config.get("landmass",{}).get("landing_size_m",16.0))*0.41
@@ -3155,7 +3167,17 @@ func _build_bridges() -> void:
 				a=_landing_join(a,b,cap_half,0.75)
 			if i==points.size()-2:
 				b=_landing_join(b,a,cap_half,0.75)
+			var surface_count := _surfaces.size()
 			_build_bridge_section(section,spec,a,b)
+			if not built_by.is_empty():
+				for surface_index in range(surface_count, _surfaces.size()):
+					_surfaces[surface_index]["built_by_flag"] = built_by
+		if not built_by.is_empty():
+			var shapes: Array[CollisionShape3D] = []
+			for section: Node3D in sections:
+				for node: Node in section.find_children("*", "CollisionShape3D", true, false):
+					shapes.append(node as CollisionShape3D)
+			_flag_built_bridges.append({"flag": built_by, "sections": sections, "shapes": shapes})
 		for end_index in [0,points.size()-1]:
 			var endpoint:=_vec3(points[end_index])
 			var neighbor:=_vec3(points[1] if end_index==0 else points[points.size()-2])
@@ -3383,6 +3405,15 @@ func _sync_progression_gates(game: Node) -> void:
 			shape.set_deferred("disabled", opened)
 		if veil != null:
 			veil.visible = not opened
+	for record: Dictionary in _flag_built_bridges:
+		var flag := str(record["flag"])
+		var built := progression is RefCounted and bool((progression as RefCounted).call("has", flag))
+		# ground_height_at() reads this per query; the surface index is unchanged.
+		_open_bridge_flags[flag] = built
+		for section: Node3D in record["sections"]:
+			section.visible = built
+		for shape: CollisionShape3D in record["shapes"]:
+			shape.set_deferred("disabled", not built)
 
 
 func _build_landmarks() -> void:

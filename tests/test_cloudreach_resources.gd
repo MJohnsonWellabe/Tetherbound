@@ -130,7 +130,8 @@ func test_gather_sources_have_persistent_day_scoped_identity_and_existing_art() 
 	var seen := {}
 	var progression: RefCounted = PROGRESSION.new()
 	var nodes: Array[Dictionary] = PATCH.gatherable_nodes()
-	assert_eq(nodes.size(), 12, "two skyplume encounter sources remain deferred")
+	# 12 authored + the F07#0 latch stair head/landing/foot cliffglass nodes.
+	assert_eq(nodes.size(), 15, "two skyplume encounter sources remain deferred")
 	for node: Dictionary in nodes:
 		assert_ne(str(node.resource_id), "skyplume")
 		var spec: Dictionary = PATCH.harvest_spec(node, 4)

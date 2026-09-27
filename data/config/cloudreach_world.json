@@ -430,6 +430,16 @@
       "polyline": [[430.0, 920.0, 4500.0], [450.0, 900.0, 4660.0]],
       "purpose": "Short saddle from the Old Wind Observatory pad to the summit road's first bend, closing the plateau/summit-road fork into a triangle.",
       "_why_f07_route_edit": "F07#2 (WORLD 2.1). The plateau circuit and the summit road both leave the (-180,900,4720) fork and end 161 m apart; after the east anchor at the observatory the required route walked 649 m west to the fork and 633 m back east on the summit road. Both ends are existing pads; no landmark, region or gate changes."
+    },
+    {
+      "id": "observatory_latch_descent",
+      "from_region_id": "summit_final_stronghold",
+      "to_region_id": "upper_cloudreach",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "side_observatory_latch_complete",
+      "polyline": [[-520.0, 1080.0, 5300.0], [-350.0, 990.0, 5010.0], [-180.0, 900.0, 4720.0]],
+      "purpose": "F07#0 Observatory return latch (WORLD 11, ruling (b) on #356): the Fly-only drop from the summit loop's west pad to the plateau fork, walkable only once the far-side latch is thrown. Two latch-built stone spans meet at a mid landing pad (a Fly-only perch before the latch) that carries a cliffglass node, so the 696 m descent has no A7-empty stretch; no ground ribbon or shoulder is added."
     }
   ],
   "bridges": [
@@ -488,7 +498,9 @@
       "width_m": 8.0,
       "length_m": 499.0,
       "requires_unlock": "cloudreach_upper_route_unlocked"
-    }
+    },
+    {"id": "observatory_latch_stair_upper", "route_id": "observatory_latch_descent", "position": [-435.0, 1035.0, 5155.0], "endpoints": [[-520.0, 1080.0, 5300.0], [-350.0, 990.0, 5010.0]], "deck_profile": [[-520.0, 1080.0, 5300.0], [-435.0, 1035.0, 5155.0], [-350.0, 990.0, 5010.0]], "length_m": 348.0, "region_id": "upper_cloudreach", "type": "ancient_stone", "width_m": 6.0, "requires_unlock": "side_observatory_latch_complete", "built_by_flag": "side_observatory_latch_complete", "_why_built_by_flag": "Deck visibility, collision and ground surfaces follow this world flag (cloudreach_world.gd _sync_progression_gates); the pads stay as the visible reverse side before the latch."},
+    {"id": "observatory_latch_stair_lower", "route_id": "observatory_latch_descent", "position": [-265.0, 945.0, 4865.0], "endpoints": [[-350.0, 990.0, 5010.0], [-180.0, 900.0, 4720.0]], "deck_profile": [[-350.0, 990.0, 5010.0], [-265.0, 945.0, 4865.0], [-180.0, 900.0, 4720.0]], "length_m": 348.0, "region_id": "upper_cloudreach", "type": "ancient_stone", "width_m": 6.0, "requires_unlock": "side_observatory_latch_complete", "built_by_flag": "side_observatory_latch_complete", "_why_built_by_flag": "Deck visibility, collision and ground surfaces follow this world flag (cloudreach_world.gd _sync_progression_gates); the pads stay as the visible reverse side before the latch."}
   ],
   "gates": [
     {
