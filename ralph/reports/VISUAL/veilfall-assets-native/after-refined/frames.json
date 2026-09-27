@@ -1,0 +1,62 @@
+[
+  {
+    "pitch_deg": -8.0,
+    "player": [
+      1800.0,
+      40.2000007629395,
+      4146.0
+    ],
+    "stand": "intake_gallery",
+    "yaw_deg": 180.0
+  },
+  {
+    "pitch_deg": -10.0,
+    "player": [
+      1794.0,
+      40.2000007629395,
+      4176.0
+    ],
+    "stand": "pump_hall",
+    "yaw_deg": 200.0
+  },
+  {
+    "pitch_deg": -12.0,
+    "player": [
+      1800.0,
+      40.2000007629395,
+      4203.0
+    ],
+    "stand": "sluice_crossing",
+    "yaw_deg": 180.0
+  },
+  {
+    "pitch_deg": -8.0,
+    "player": [
+      1800.0,
+      40.2000007629395,
+      4226.0
+    ],
+    "stand": "heart_chamber_entry",
+    "yaw_deg": 180.0
+  },
+  {
+    "pitch_deg": -6.0,
+    "player": [
+      1806.0,
+      40.2000007629395,
+      4240.0
+    ],
+    "stand": "heart_chamber_crystal",
+    "yaw_deg": 165.0
+  },
+  {
+    "pitch_deg": -8.0,
+    "player": [
+      1792.0,
+      40.2000007629395,
+      4238.0
+    ],
+    "stand": "heart_chamber_banner",
+    "yaw_deg": 110.0
+  }
+]

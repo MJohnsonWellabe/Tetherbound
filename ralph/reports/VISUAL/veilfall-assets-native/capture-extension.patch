@@ -1,0 +1,39 @@
+diff --git a/tools/capture_veilfall_interior.gd b/tools/capture_veilfall_interior.gd
+index 18c3e0f5b..f68bbc946 100644
+--- a/tools/capture_veilfall_interior.gd
++++ b/tools/capture_veilfall_interior.gd
+@@ -78,6 +78,34 @@ func _run() -> void:
+ 		root.get_viewport().get_texture().get_image().save_png(path)
+ 		log.append({"stand": stand[0], "player": [at.x, at.y, at.z], "yaw_deg": stand[2], "pitch_deg": stand[3]})
+ 		print("VEILFALL INTERIOR %s" % path)
++	# Detached asset trial: additional same-camera motion and real release-state
++	# evidence. The six standard stands above remain unchanged.
++	player.global_position = veilfall.interior.global_position + Vector3(6, 0.2, 100)
++	rig.set("yaw", deg_to_rad(165.0))
++	rig.set("pitch", deg_to_rad(-6.0))
++	for sample in 3:
++		await _frames(30)
++		await RenderingServer.frame_post_draw
++		root.get_viewport().get_texture().get_image().save_png(out.path_join("motion_%d.png" % sample))
++	var crystal: Node3D = veilfall.get("_crystal")
++	var visual: Node3D = crystal.get_child(0)
++	var mesh: MeshInstance3D = visual.get_node("Geometry/HeartCrystal")
++	var visible_before := mesh.is_visible_in_tree()
++	game.world.flags.set_flag("water_guardian_freed")
++	veilfall.call("_refresh")
++	var receipt := {
++		"crystal_parent_position": str(crystal.position),
++		"crystal_visual_position": str(visual.position),
++		"aabb": str(mesh.get_aabb()),
++		"shader_assigned": mesh.material_override is ShaderMaterial,
++		"visible_before_release": visible_before,
++		"hidden_after_release": not crystal.visible and not mesh.is_visible_in_tree(),
++		"waterfall_children": veilfall.interior.get_node("HeartChamberFallWall").get_child_count(),
++		"viewport": str(root.get_viewport().get_visible_rect().size),
++	}
++	var asset_file := FileAccess.open(out.path_join("integration-check.json"), FileAccess.WRITE)
++	asset_file.store_string(JSON.stringify(receipt, "  "))
++	assert(receipt.shader_assigned and receipt.visible_before_release and receipt.hidden_after_release)
+ 	var file := FileAccess.open(out.path_join("frames.json"), FileAccess.WRITE)
+ 	file.store_string(JSON.stringify(log, "  "))
+ 	quit(0)

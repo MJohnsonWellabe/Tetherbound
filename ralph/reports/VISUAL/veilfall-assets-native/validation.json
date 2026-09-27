@@ -1,0 +1,32 @@
+{
+  "baseline_commit": "e79791ac0",
+  "checkout": "D:/tetherbound/asset-validation",
+  "renderer": "Godot 4.7 Windows native OpenGL 3.3 Compatibility, NVIDIA GeForce GTX 1060 3GB",
+  "resolution": [1920, 1080],
+  "capture_script": "tools/capture_veilfall_interior.gd; original six production CameraRig stands; detached extension adds three same-camera samples and a release-state assertion",
+  "fixture": "Original capture fixture: player teleported to each authored stand, five L43 companions, Ripplet summoned, two pump flags opened, HUD live. No production position/config/collision changes. TIME and simulation clock are not frozen.",
+  "runs": {
+    "before": {"exit": 0, "frames_inspected": 6, "result": "Flat translucent cyan pyramid and blurred rectangular waterfall reproduce the reported defects."},
+    "after": {"exit": 0, "frames_inspected": 6, "result": "Crystal silhouette is dimensional and recognizably mineral; first palette too cobalt and waterfall too thin/dark. Retained as first candidate evidence."},
+    "after-refined": {"exit": 0, "frames_inspected": 9, "result": "Pale blue-white crystal internal falloff, readable separate facets and unequal spires. Wider pale falling sheets retain physical gaps and low impact foam. Three motion samples show changing flow/impact patterns without a detached particle box."}
+  },
+  "stand_inspection": {
+    "intake_gallery": "Distant crystal/falls remain visible on the same hall axis. Existing corridor and companion unchanged in scope.",
+    "pump_hall": "Multi-tip crystal silhouette replaces the single pyramid; sheet gaps and blue-white destination read from the room entrance.",
+    "sluice_crossing": "Hero subject remains centered on the bridge approach. Existing flat channel surface and submerged companion presentation remain outside this asset change.",
+    "heart_chamber_entry": "Crystal facets and pale centre are clear; waterfall has uneven widths and impact crowns instead of a blurry backing rectangle.",
+    "heart_chamber_crystal": "All visible crystal surfaces are closed with no missing front faces; shader override confirmed. Existing central control box occludes the low termination. Falls touch the existing pool and stay behind the crystal.",
+    "heart_chamber_banner": "Assets outside frame; existing banner/lamps/walls retain presentation. No new visual intrusion."
+  },
+  "integration_check": "after-refined/integration-check.json: original parent remains (0,5,113), visual child offset (0,-5,0), AABB 5x10x2.884579m, ShaderMaterial assigned, visible before release and hidden after real water_guardian_freed flag plus production _refresh.",
+  "test": "geometry-test.log: test_water_veilfall_geometry.gd passed; 1 runner test / 5 assertions / 0 failures, including isolated child geometry and authority fixture with >300 assertions.",
+  "log_scan": "No SCRIPT ERROR, ERROR or shader compile failure. Existing physics interpolation deprecation warning remains in both baseline and candidate.",
+  "proposed_integration": "Apply integration.patch to the Tidewake lane's current construction functions after reconciling lane ownership. Add both asset folders. Keep crystal gameplay parent, freed-state visibility, existing light, waterfall centre/config, plunge pool and fall light. No collider or gameplay logic change.",
+  "limitations": [
+    "This is an author inspection, not an independent code-blind acceptance verdict.",
+    "Waterfall still has a repeated vertical-ribbon rhythm; independent judge must decide the scoped asset bar.",
+    "Existing low flat ceiling, plain control blocks, generic masonry and banner placeholder remain broader chamber identity/finish defects.",
+    "Three sampled frames demonstrate animation changes but do not establish continuous-motion polish or hardware performance.",
+    "No ROG Ally performance or full-chapter Bars A/B claim is made."
+  ]
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "file": "fall_ribbons.obj",
+    "vertices": 9180,
+    "triangles": 16128,
+    "bounds_min": [
+      -7.9657,
+      -6.0,
+      -1.0778
+    ],
+    "bounds_max": [
+      7.974,
+      6.0,
+      0.169
+    ],
+    "minimum_triangle_area_m2": 0.004797797920834208,
+    "unit_normals": true,
+    "sha256": "9d93774830c3b9d51c1ca6abb6d9ac14748b573ea5acf3151f3be9ed207fdb62"
+  },
+  {
+    "file": "fall_threads.obj",
+    "vertices": 8925,
+    "triangles": 14112,
+    "bounds_min": [
+      -7.8117,
+      -6.0,
+      -1.2496
+    ],
+    "bounds_max": [
+      7.4934,
+      6.0,
+      -0.17
+    ],
+    "minimum_triangle_area_m2": 0.0011564906800910425,
+    "unit_normals": true,
+    "sha256": "249302a026c226a1f637a111ae926c65fc781a42943fc82c5b59c04716cd9b66"
+  },
+  {
+    "file": "plunge_crowns.obj",
+    "vertices": 2604,
+    "triangles": 4320,
+    "bounds_min": [
+      -7.7511,
+      -5.96,
+      -1.4866
+    ],
+    "bounds_max": [
+      7.8154,
+      -5.3251,
+      -0.6063
+    ],
+    "minimum_triangle_area_m2": 0.0006629302553401405,
+    "unit_normals": true,
+    "sha256": "49f1872984a332e0b84449623125faf1b735a5dd4080febaca20c85b26800363"
+  },
+  {
+    "file": "splash_arcs.obj",
+    "vertices": 1404,
+    "triangles": 1728,
+    "bounds_min": [
+      -7.552,
+      -5.92,
+      -1.5097
+    ],
+    "bounds_max": [
+      7.7742,
+      -5.25,
+      -0.76
+    ],
+    "minimum_triangle_area_m2": 0.00010919950350904817,
+    "unit_normals": true,
+    "sha256": "179dd2684ebce87f49976a5b6801f409e1ae098ef4728531081bf4a50f5691ef"
+  },
+  {
+    "file": "plunge_mist.obj",
+    "vertices": 1053,
+    "triangles": 1728,
+    "bounds_min": [
+      -7.7,
+      -5.935,
+      -1.59
+    ],
+    "bounds_max": [
+      7.6651,
+      -4.665,
+      -1.27
+    ],
+    "minimum_triangle_area_m2": 0.006828885380502526,
+    "unit_normals": true,
+    "sha256": "57e4030c2b5d921a6c8c1e022f688c0cb90bcb2029a39b72042f22c9b4c5e939"
+  }
+]

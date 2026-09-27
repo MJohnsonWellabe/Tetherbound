@@ -1,0 +1,108 @@
+{
+  "generator": "Blender 4.2.9 / original project-authored mesh",
+  "vertices_welded": 186,
+  "polygon_faces": 215,
+  "triangles": 344,
+  "closed_components": [
+    {
+      "vertices": 34,
+      "faces": 40,
+      "signed_volume_m3": 22.160048
+    },
+    {
+      "vertices": 26,
+      "faces": 30,
+      "signed_volume_m3": 3.433311
+    },
+    {
+      "vertices": 30,
+      "faces": 35,
+      "signed_volume_m3": 4.388724
+    },
+    {
+      "vertices": 26,
+      "faces": 30,
+      "signed_volume_m3": 3.005374
+    },
+    {
+      "vertices": 26,
+      "faces": 30,
+      "signed_volume_m3": 2.116407
+    },
+    {
+      "vertices": 22,
+      "faces": 25,
+      "signed_volume_m3": 0.475004
+    },
+    {
+      "vertices": 22,
+      "faces": 25,
+      "signed_volume_m3": 0.638117
+    }
+  ],
+  "nonmanifold_edges": 0,
+  "degenerate_faces": 0,
+  "normals": "flat per facet; consistently outward; positive signed volume on each component",
+  "blender_bounds_xyz": [
+    [
+      -2.5,
+      -1.3796539306640625,
+      0.0
+    ],
+    [
+      2.5,
+      1.5049247741699219,
+      10.0
+    ]
+  ],
+  "godot_bounds_xyz": [
+    [
+      -2.5,
+      0.0,
+      -1.5049247741699219
+    ],
+    [
+      2.5,
+      10.0,
+      1.3796539306640625
+    ]
+  ],
+  "sha256": "354110f24a3dd57117ad8643d89602f22b82d306ed979f07539076b89eda4bdb",
+  "components": [
+    {
+      "name": "Heart",
+      "first_vertex": 0,
+      "vertex_count": 34
+    },
+    {
+      "name": "LeftCrown",
+      "first_vertex": 34,
+      "vertex_count": 26
+    },
+    {
+      "name": "RightCrown",
+      "first_vertex": 60,
+      "vertex_count": 30
+    },
+    {
+      "name": "RearSpire",
+      "first_vertex": 90,
+      "vertex_count": 26
+    },
+    {
+      "name": "FrontBlade",
+      "first_vertex": 116,
+      "vertex_count": 26
+    },
+    {
+      "name": "LeftSplinter",
+      "first_vertex": 142,
+      "vertex_count": 22
+    },
+    {
+      "name": "RightSplinter",
+      "first_vertex": 164,
+      "vertex_count": 22
+    }
+  ]
+}

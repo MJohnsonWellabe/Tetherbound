@@ -82,6 +82,15 @@ Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.
 
+**Owner asset requests:** Veilfall crystal new mesh/shader has native before/after,
+exact 5×10 m bounds, release-state visibility check and independent scoped
+crystal PASS (`ralph/reports/VISUAL/veilfall-assets-native/visual-judge.md`).
+Asset-only handoff; Tidewake lane retains its construction function. Full
+chamber Bars A/B remain NO. Waterfall lip/plunge/mist still fail scoped review
+and are being revised. Stormheart new reference-backed tree is in native
+validation. Owner additionally orders complete Galecrest replacement: new
+Meshy candidate and measured bird rig exist; motion/world review is pending.
+
 **Owner PR cleanup:** Codex closed #329, #342, #352, #355, #363 and #365
 under the explicit instruction to merge or close its PRs. All six published
 heads were draft/conflicting; no complete current engine/export validation was

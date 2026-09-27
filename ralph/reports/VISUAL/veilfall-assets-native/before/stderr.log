@@ -1,0 +1,5 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:63)
+       [1] _run (res://tools/capture_veilfall_interior.gd:54)
