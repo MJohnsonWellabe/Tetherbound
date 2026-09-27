@@ -32,7 +32,26 @@ func test_deck_route_avoids_the_core_hole_and_the_ascent_band() -> void:
 		var w: Vector2 = SEGMENT.deck_waypoint(pair[0], pair[1])
 		assert_true(w != pair[1] and SEGMENT.deck_leg_clear(pair[0], w) and SEGMENT.deck_leg_clear(w, pair[1]),
 			"a clear one-waypoint detour exists")
-	assert_eq(SEGMENT.deck_waypoint(b3, b0), b0, "a clear leg is walked directly")
+	assert_eq(SEGMENT.deck_waypoint(Vector2(20, 20), Vector2(25, 25)), Vector2(25, 25), "a clear leg is walked directly")
+	var b1_side: Vector2 = rules.bank_position(1) + Vector2(1.2, 0.0)
+	assert_false(SEGMENT.deck_leg_clear(Vector2(0, 15), b1_side), "the sealed Waterward gate stands before conduit 1")
+	var w1: Vector2 = SEGMENT.deck_waypoint(Vector2(0, 15), b1_side)
+	assert_true(w1 != b1_side and SEGMENT.deck_leg_clear(Vector2(0, 15), w1), "conduit 1 is reached around the gate")
+	var b0_side: Vector2 = rules.bank_position(0) + Vector2(0.0, -1.2)
+	assert_false(SEGMENT.deck_leg_clear(Vector2(20, 4), b0_side), "the Crown stair's low foot stands inside conduit 0")
+	var w0: Vector2 = SEGMENT.deck_waypoint(Vector2(20, 4), b0_side)
+	assert_true(w0 != b0_side and SEGMENT.deck_leg_clear(w0, b0_side), "conduit 0 is reached around the stair")
+
+
+func test_a_break_lap_visits_every_unstruck_conduit_once_round_the_rim() -> void:
+	var rules := RULES.new()
+	var lap: Array[int] = SEGMENT.conduit_lap(rules, rules.bank_position(3) * 0.8)
+	assert_eq(lap.size(), 4)
+	assert_eq(lap[0], 3, "the nearest conduit first")
+	for i in 3:
+		assert_eq(absi(posmod(lap[i + 1] - lap[i], 4)) in [1, 3], true, "then round the rim, never across")
+	rules.conduits = [3, 2]
+	assert_eq(SEGMENT.conduit_lap(rules, rules.bank_position(2)).size(), 2, "struck conduits are skipped")
 
 
 func test_conservative_travel_bound_accounts_for_actual_start_speed_and_remaining_banks() -> void:

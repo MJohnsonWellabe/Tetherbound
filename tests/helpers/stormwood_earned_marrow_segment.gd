@@ -40,18 +40,31 @@ static func next_bank(rules: RefCounted, local: Vector2, avoid := -1) -> int:
 ## Whether a straight deck leg from `a` to `b` (Dynamo-local x/z) stays on
 ## solid deck: out of the 9 m core hole and out of the ascent's own band in
 ## the ring gap (`stormwood_dynamo.gd` DeckInfill leaves that band open).
+## The sealed Waterward gate's barrier (`stormwood_world.json`
+## stormwood_departure_to_water at (-100, 5501): Dynamo-local (0, 31), 3.15 m
+## wide) stands 4 m in front of conduit 1; its reach is walked around.
+const WATER_GATE_LOCAL := Vector2(0.0, 31.0)
+const WATER_GATE_CLEAR_M := 2.6
+## The Crown stair (`stormheart_tree.gd` CrownStair, 6 m wide, from (34, deck)
+## rising west to (-16, deck + 24)) is too low to walk under near its foot,
+## beside conduit 0; that strip is walked around.
+const CROWN_STAIR_FOOT := Rect2(Vector2(26.0, -4.0), Vector2(8.3, 8.0))
+
 static func deck_leg_clear(a: Vector2, b: Vector2) -> bool:
 	var gap_from := float(DYNAMO.DECK_GAP_SEGMENTS.x) * 360.0 / 64.0
 	var gap_to := float(DYNAMO.DECK_GAP_SEGMENTS.y) * 360.0 / 64.0
-	var band_in := 26.0 - 4.0 - DYNAMO.DECK_GAP_CLEARANCE_M - 0.8
-	var band_out := 26.0 + 4.0 + DYNAMO.DECK_GAP_CLEARANCE_M + 0.8
+	# The band is fenced (stormwood_dynamo.gd GapGuard rails); keep the body's
+	# steering lag well clear of the fences.
+	var band_in := 26.0 - 4.0 - DYNAMO.DECK_GAP_CLEARANCE_M - 1.5
+	var band_out := 26.0 + 4.0 + DYNAMO.DECK_GAP_CLEARANCE_M + 1.5
 	for i in 41:
 		var p := a.lerp(b, float(i) / 40.0)
 		var r := p.length()
 		var deg := fposmod(rad_to_deg(p.angle()), 360.0)
-		if r < DYNAMO.DECK_INNER_RADIUS_M + 1.0:
+		if r < DYNAMO.DECK_INNER_RADIUS_M + 1.0 or p.distance_to(WATER_GATE_LOCAL) < WATER_GATE_CLEAR_M \
+				or CROWN_STAIR_FOOT.has_point(p):
 			return false
-		if deg >= gap_from - 2.0 and deg <= gap_to + 2.0 and r > band_in and r < band_out:
+		if deg >= gap_from - 4.0 and deg <= gap_to + 4.0 and r > band_in and r < band_out:
 			return false
 	return true
 
@@ -70,6 +83,45 @@ static func deck_waypoint(from: Vector2, to: Vector2) -> Vector2:
 			if length < best_length:
 				best_length = length
 				best = w
+	return best
+
+
+## Where the piloted creature stands to strike conduit `index`: beside it,
+## off its axis (the deck ring's trimesh seams lie on the bank axes).
+static func strike_stand(rules: RefCounted, index: int) -> Vector2:
+	var centre: Vector2 = rules.bank_position(index)
+	return centre + centre.normalized().orthogonal() * 1.2
+
+
+## Deck route length from `from` to `to`, through `deck_waypoint`'s detour.
+static func deck_route_length(from: Vector2, to: Vector2) -> float:
+	var w := deck_waypoint(from, to)
+	return from.distance_to(w) + w.distance_to(to)
+
+
+## One lap of the unstruck conduits: the nearest first, then round the rim in
+## whichever direction makes the shorter deck route.
+static func conduit_lap(rules: RefCounted, local: Vector2) -> Array[int]:
+	var count := int(rules.config.bank_count)
+	var first := next_bank(rules, local)
+	var best: Array[int] = []
+	if first < 0:
+		return best
+	var best_length := INF
+	for direction in [1, -1]:
+		var order: Array[int] = []
+		var at := local
+		var length := 0.0
+		for step in count:
+			var index := posmod(first + direction * step, count)
+			if (rules.conduits as Array).has(index):
+				continue
+			length += deck_route_length(at, strike_stand(rules, index))
+			at = strike_stand(rules, index)
+			order.append(index)
+		if length < best_length:
+			best_length = length
+			best = order
 	return best
 
 
@@ -174,6 +226,7 @@ func _attempt_marrow(dynamo: Node) -> void:
 	var break_target := -1
 	var break_active := -1
 	var break_leg := Vector2.ZERO
+	var lap: Array[int] = []
 	var rules: RefCounted = dynamo.rules
 	var control := dynamo.get_node_or_null("FieldControl")
 	if control == null:
@@ -238,6 +291,7 @@ func _attempt_marrow(dynamo: Node) -> void:
 					break_windows - 1, accepted_before, break_windows])
 				_fired_banks.clear()
 				_waiting_bank = -1
+				lap.clear()
 				if break_windows > MAX_BREAK_WINDOWS:
 					_fail("four conduits not struck within %d Break windows" % MAX_BREAK_WINDOWS)
 					return
@@ -260,39 +314,38 @@ func _attempt_marrow(dynamo: Node) -> void:
 					_waiting_bank, str(_fired_banks), str(rules.conduits), float(rules.window_left()),
 					str(_manager.is_fighting()), break_target, break_active, str(state.get("state", "")), break_leg,
 					next_quick - Time.get_ticks_msec(), release_tick])
-				var body_ally := ally as CharacterBody3D
-				if body_ally != null:
-					var hits: Array[String] = []
-					for c in body_ally.get_slide_collision_count():
-						var collider: Object = body_ally.get_slide_collision(c).get_collider()
-						hits.append(str((collider as Node).get_path()) if collider is Node else str(collider))
-					_note("BREAK body velocity=%s on_floor=%s on_wall=%s hits=%s arbiter_enabled=%s input_owner=%s" % [
-						body_ally.velocity, body_ally.is_on_floor(), body_ally.is_on_wall(), str(hits),
-						str(_world.get_node("InteractionArbiter").call("enabled")),
-						str(preload("res://scripts/ui/input_owner.gd").current(_tree))])
 			if control.get("_body") == ally:
 				var local: Vector3 = dynamo.to_local(ally.global_position)
 				var active := int(state.bank) if str(state.state) != "recovery" else -1
-				var index := next_bank(rules, Vector2(local.x, local.z), active)
+				# One planned lap per window: a discharge costs health, a detour
+				# the window (BOSSES §3's route budget).
+				if lap.is_empty() or (rules.conduits as Array).has(lap[0]):
+					lap = conduit_lap(rules, Vector2(local.x, local.z))
+					if not lap.is_empty():
+						_note("BREAK lap %s from %s" % [str(lap), Vector2(local.x, local.z)])
+				var index: int = lap[0] if not lap.is_empty() else -1
 				break_target = index
 				break_active = active
 				if _waiting_bank >= 0 and (rules.conduits as Array).has(_waiting_bank):
 					_note("ACCEPTED ordinary conduit %d" % _waiting_bank)
 					_waiting_bank = -1
 				if index >= 0 and _waiting_bank < 0:
-					var bank: Vector2 = rules.bank_position(index)
-					var toward := Vector3(bank.x - local.x, 0, bank.y - local.z)
+					# Stand beside the conduit, off its axis: the deck ring's trimesh
+					# seams lie on the bank axes and snag a body walking along one.
+					var bank_centre: Vector2 = rules.bank_position(index)
+					var bank: Vector2 = strike_stand(rules, index)
+					var toward := Vector3(bank_centre.x - local.x, 0, bank_centre.y - local.z)
+					var approach := Vector3(bank.x - local.x, 0, bank.y - local.z)
 					# Walk the deck around the core hole and the ascent's band.
 					var leg := deck_waypoint(Vector2(local.x, local.z), bank)
 					var toward_leg := Vector3(leg.x - local.x, 0, leg.y - local.z)
 					break_leg = leg
 					var reach := float(rules.config.conduit_reach_m)
-					if index == active and toward.length() < 12.0:
-						pass # the last conduit is the live bank: hold off its lane until it fires
-					elif leg != bank:
+					if leg != bank:
 						_drive_toward(toward_leg)
-					elif toward.length() > reach * 0.8 \
-							or not DYNAMO.facing_conduit(ally.call("facing"), toward):
+					elif approach.length() > 0.6 and toward.length() > reach * 0.8:
+						_drive_toward(approach)
+					elif not DYNAMO.facing_conduit(ally.call("facing"), toward):
 						_drive_toward(toward)
 					elif Time.get_ticks_msec() >= next_quick and release_tick < 0:
 						if _fired_banks.has(index):

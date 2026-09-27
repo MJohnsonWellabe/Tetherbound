@@ -43,6 +43,9 @@ const DECK_GAP_CLEARANCE_M := 0.3
 ## once threw the piloted ally over the edge and it fell 150 m (focused smoke).
 const CORE_RAIL_SEGMENTS := 32
 const CORE_RAIL_SIZE := Vector3(0.22, 1.4, 0.0)
+## Where the ascent's own rails rise above deck level in the gap (their tops
+## are ramp + 1.4 m, the ramp climbing 0.1 m per degree to the landing at 270).
+const GAP_GUARD_TO_DEG := 257.0
 
 var world: Node3D
 var hub: Node
@@ -181,43 +184,63 @@ func _build_deck_infill(simulation_only: bool) -> void:
 	shape.backface_collision = true
 	collider.shape = shape
 	body.add_child(collider)
+	var material: StandardMaterial3D = null
+	if not simulation_only:
+		material = StandardMaterial3D.new()
+		material.albedo_color = Color("3d4752")
+		material.metallic = 0.65
+		material.roughness = 0.55
+		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		var visual := MeshInstance3D.new()
+		visual.mesh = mesh
+		visual.material_override = material
+		body.add_child(visual)
+	var core: Array[Vector3] = []
+	for i in CORE_RAIL_SEGMENTS + 1:
+		var a := float(i) * TAU / CORE_RAIL_SEGMENTS
+		var r := DECK_INNER_RADIUS_M + CORE_RAIL_SIZE.x
+		core.append(Vector3(cos(a) * r, y, sin(a) * r))
+	_rail("CoreRail", core, material)
+	# The ascent's open band in the gap is a 2-3 m drop from the deck until
+	# its own rails rise above deck level (~257 deg); guard both edges and
+	# the band's radial end so the deck is not stepped off into it.
+	var from := float(DECK_GAP_SEGMENTS.x) * TAU / 64.0
+	var guarded_to := deg_to_rad(GAP_GUARD_TO_DEG)
+	for r: float in [ramp_inner, ramp_outer]:
+		var arc: Array[Vector3] = []
+		for i in 9:
+			var a := lerpf(from, guarded_to, float(i) / 8.0)
+			arc.append(Vector3(cos(a) * r, y, sin(a) * r))
+		_rail("GapGuard%d" % int(r), arc, material)
+	_rail("GapGuardEnd", [Vector3(cos(from) * ramp_inner, y, sin(from) * ramp_inner),
+		Vector3(cos(from) * ramp_outer, y, sin(from) * ramp_outer)] as Array[Vector3], material)
+
+
+## A deck-level rail of box colliders (and bars when `material` is set) along
+## `points`, the ascent rails' size.
+func _rail(id: String, points: Array[Vector3], material: StandardMaterial3D) -> void:
 	var rail := StaticBody3D.new()
-	rail.name = "CoreRail"
+	rail.name = id
 	add_child(rail)
-	var radius := DECK_INNER_RADIUS_M + CORE_RAIL_SIZE.x
-	var segment_length := TAU * radius / CORE_RAIL_SEGMENTS + 0.1
-	var poses: Array[Transform3D] = []
-	for i in CORE_RAIL_SEGMENTS:
-		var a := (float(i) + 0.5) * TAU / CORE_RAIL_SEGMENTS
-		var at := Vector3(cos(a) * radius, y + CORE_RAIL_SIZE.y * 0.5, sin(a) * radius)
-		var tangent := Vector3(-sin(a), 0.0, cos(a))
-		var pose := Transform3D(Basis.looking_at(tangent), at)
+	for i in points.size() - 1:
+		var p := points[i]
+		var q := points[i + 1]
+		var length := p.distance_to(q) + 0.1
+		var pose := Transform3D(Basis.looking_at((q - p).normalized()), (p + q) * 0.5 + Vector3.UP * CORE_RAIL_SIZE.y * 0.5)
 		var box := BoxShape3D.new()
-		box.size = Vector3(CORE_RAIL_SIZE.x, CORE_RAIL_SIZE.y, segment_length)
+		box.size = Vector3(CORE_RAIL_SIZE.x, CORE_RAIL_SIZE.y, length)
 		var piece := CollisionShape3D.new()
 		piece.shape = box
 		piece.transform = pose
 		rail.add_child(piece)
-		poses.append(pose)
-	if simulation_only:
-		return
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color("3d4752")
-	material.metallic = 0.65
-	material.roughness = 0.55
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	var visual := MeshInstance3D.new()
-	visual.mesh = mesh
-	visual.material_override = material
-	body.add_child(visual)
-	var bar := BoxMesh.new()
-	bar.size = Vector3(CORE_RAIL_SIZE.x, 0.18, segment_length)
-	for pose: Transform3D in poses:
-		var piece := MeshInstance3D.new()
-		piece.mesh = bar
-		piece.material_override = material
-		piece.transform = Transform3D(pose.basis, pose.origin + Vector3.UP * (CORE_RAIL_SIZE.y * 0.5 - 0.09))
-		rail.add_child(piece)
+		if material != null:
+			var bar := BoxMesh.new()
+			bar.size = Vector3(CORE_RAIL_SIZE.x, 0.18, length)
+			var visual := MeshInstance3D.new()
+			visual.mesh = bar
+			visual.material_override = material
+			visual.transform = Transform3D(pose.basis, pose.origin + Vector3.UP * (CORE_RAIL_SIZE.y * 0.5 - 0.09))
+			rail.add_child(visual)
 
 
 func deck_height() -> float:

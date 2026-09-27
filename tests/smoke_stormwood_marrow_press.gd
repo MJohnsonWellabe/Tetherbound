@@ -20,8 +20,10 @@ const TEST_SAVE_DIR := "user://stormwood_marrow_press_smoke"
 const CHAPTER_CONFIG := "res://data/config/stormwood_chapter.json"
 const STOP_AT := "stormwood:marrow_defeated"
 ## Facts an earned run also holds at the core that the chapter's main list
-## names only in aggregate (each rod, each Dynamo approach trainer).
-const EARNED_EXTRA: Array[String] = ["stormwood:rod_verge_disabled", "stormwood:rod_hollows_disabled",
+## does not name: the realm key and act gates (act entry flags) and, in
+## aggregate there, each rod and each Dynamo approach trainer.
+const EARNED_EXTRA: Array[String] = ["realm_key_stormwood", "stormwood:act_i_complete",
+	"stormwood:act_ii_complete", "stormwood:rod_verge_disabled", "stormwood:rod_hollows_disabled",
 	"stormwood:rod_deepwood_disabled", "stormwood:trainer:officer_nysa_deepwood_rod:defeated",
 	"stormwood:trainer:outerworks_lieutenant_sera:defeated", "stormwood:trainer:officer_kestrel_outer_works:defeated"]
 
