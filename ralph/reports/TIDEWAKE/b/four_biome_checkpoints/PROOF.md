@@ -189,3 +189,9 @@ Verification on the merge:
   (`run9_merged_default_through_opening.log`).
 - Main's closed F02 proof command, `--through-hall --reload-at-transitions
   --world-seed=15 --route-ledger` (about 77 min), was not re-run in this merge.
+
+## Merge review follow-ups (independent review of 64c738ad)
+
+- **Fixed:** a checkpoint's `save_game(1)` renamed the live world to `slot-1` (`save_game.gd:_world_id_for`), and nothing renamed it back. A default full run would then have carried the wrong `world_id` into satchel escrow, reward provenance and capture claims. `_checkpoint_boundary` now restores the live `world_id` after the checkpoint save. Run 10 (resume seed4_hall, stop at `hall`) exits 0; unit tests: 11 tests, 0 failed.
+- **Fixed:** the run7–run10 logs are now committed. They were gitignored as `*.log`.
+- **Confirmed unchanged:** main's F02 command (`--through-hall --reload-at-transitions --world-seed=15 --route-ledger`). The one difference is a non-strict `hall` export after the Hall reload, which can only warn and never changes the exit code.

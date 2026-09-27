@@ -565,7 +565,15 @@ func _checkpoint_boundary(game: Node, boundary: String) -> bool:
 	var problem := ""
 	var out := ""
 	var receipt := {}
-	if not bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT)):
+	# save_game(slot) re-labels the live world as "slot-<n>" (save_game.gd
+	# _world_id_for). The checkpoint copy must not change the running world's
+	# identity, which satchel escrow, reward provenance and capture claims read.
+	var live_world: Variant = game.get("world")
+	var world_id_before := str((live_world as RefCounted).get("world_id")) if live_world != null else ""
+	var checkpoint_saved := bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT))
+	if live_world != null and not world_id_before.is_empty():
+		(live_world as RefCounted).set("world_id", world_id_before)
+	if not checkpoint_saved:
 		problem = "Game.save_game(%d) refused at boundary %s" % [CHECKPOINTS.CHECKPOINT_SLOT, boundary]
 	else:
 		var elapsed := (Time.get_ticks_msec() - started_ms) / 1000.0
