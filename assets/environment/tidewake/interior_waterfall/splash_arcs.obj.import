@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cniu1cn55mxg1"
+path="res://.godot/imported/splash_arcs.obj-4116537fdf3b4de0729020c054e03a77.mesh"
+
+[deps]
+
+files=["res://.godot/imported/splash_arcs.obj-4116537fdf3b4de0729020c054e03a77.mesh"]
+
+source_file="res://assets/environment/tidewake/interior_waterfall/splash_arcs.obj"
+dest_files=["res://.godot/imported/splash_arcs.obj-4116537fdf3b4de0729020c054e03a77.mesh", "res://.godot/imported/splash_arcs.obj-4116537fdf3b4de0729020c054e03a77.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

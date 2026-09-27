@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://durnaap6xcaj2"
+path="res://.godot/imported/plunge_mist.obj-ea3931d045870f9d64d93d935c95a406.mesh"
+
+[deps]
+
+files=["res://.godot/imported/plunge_mist.obj-ea3931d045870f9d64d93d935c95a406.mesh"]
+
+source_file="res://assets/environment/tidewake/interior_waterfall/plunge_mist.obj"
+dest_files=["res://.godot/imported/plunge_mist.obj-ea3931d045870f9d64d93d935c95a406.mesh", "res://.godot/imported/plunge_mist.obj-ea3931d045870f9d64d93d935c95a406.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://6587elt574v"
+path="res://.godot/imported/source_and_basin_stone.obj-e336d4532dffe1fca6193fbfd549414c.mesh"
+
+[deps]
+
+files=["res://.godot/imported/source_and_basin_stone.obj-e336d4532dffe1fca6193fbfd549414c.mesh"]
+
+source_file="res://assets/environment/tidewake/interior_waterfall/source_and_basin_stone.obj"
+dest_files=["res://.godot/imported/source_and_basin_stone.obj-e336d4532dffe1fca6193fbfd549414c.mesh", "res://.godot/imported/source_and_basin_stone.obj-e336d4532dffe1fca6193fbfd549414c.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
