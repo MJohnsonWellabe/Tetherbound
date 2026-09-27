@@ -97,12 +97,11 @@ const NO_ARBITER := "<no arbiter readable>"
 ## (real move axes, camera-relative), because a fixed stick direction depends
 ## on where the guest's camera happened to face.
 ## Every point lies ON the road's own centreline, `cloudreach_world.json`
-## `arrival_gate_road` from (0, 105, -260) toward (-80, 130, 40). When these
-## points were chosen a LIVE crossing did not build the solo geological
-## shoulders and stood only the 7 m collision ribbon (`path_collision_width_m`)
-## along that line; since the 2026-09-26 owner ruling it builds them as solo
-## does (`tests/smoke_cloudreach_coop_shoulders.gd`), and the centreline stays
-## the ride that is valid either way. The draft's points were measured
+## `arrival_gate_road` from (0, 105, -260) toward (-80, 130, 40), because a
+## LIVE crossing does not build the solo geological shoulders
+## (`cloudreach_world.gd`: `routes:*:geological_shoulders:deferred` while the
+## shell build is slicing) and stands only the 7 m collision ribbon
+## (`path_collision_width_m`) along that line. The draft's points were measured
 ## by a SOLO ride on the shoulders, 7-8 m east of the line: in the two-peer run
 ## the mount rode off the ribbon at (1.3, -236) and dropped into the
 ## mounted-fall recovery (reproduced solo with the shoulders removed; the same

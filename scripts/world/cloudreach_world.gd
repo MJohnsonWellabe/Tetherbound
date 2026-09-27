@@ -1224,7 +1224,7 @@ const CROWN_RIM_DEPTH_M := 60.0
 ## under the crown carves it down to the road (`_crown_cut_limits`' carve); a
 ## road standing over it fills it up to the road (the fill), so the road's
 ## 7 m hidden collision ribbon never stands a wall above walkable crown --
-## a crown the route's shoulders do not reach has nothing else to hide it. Empty when the region
+## the co-op build has no route shoulders to hide it. Empty when the region
 ## has no `crown_cut` or no road runs under it. Regions build before routes,
 ## so the shared ground-truth line set is gathered here first;
 ## `_build_routes` re-gathers the same set.
@@ -2034,18 +2034,14 @@ func _build_routes() -> void:
 		var collision_width := minf(width, float(landmass.get("path_collision_width_m", 7.0)))
 		var visible_width := minf(collision_width - 0.8,
 			float(landmass.get("path_visible_width_m", 4.2)))
-		# Owner ruling 2026-09-26: co-op matches single player, so a live
-		# (time-sliced) crossing builds the same geological shoulders solo does.
-		# They used to be deferred there because each section awaited the
-		# RefCounted `_shell_build.breathe()`, and Godot 4.7 can lose such a
-		# deeply nested continuation; the sections and each ridge's stations now
-		# yield through this Node's own `_build_breathe()` like every other loop
-		# here. A host SHELL still defers them: nobody sees it, and what the host
-		# simulates in it (wilds, trainers) stands on the analytic surfaces the
-		# shoulders never register, while ~20 s of ridge work would otherwise run
-		# on a host who is playing in another realm.
-		if simulation_only:
-			_shell_build.call("mark", "routes:%s:geological_shoulders:deferred_in_shell" % str(spec.get("id", "Route")))
+		# The full geological shoulder generator is the only part of Cloudreach
+		# that needs thousands of deep coroutine resumptions. Godot 4.7 can lose
+		# one of those continuations while the process and network remain alive.
+		# Solo—the playable-first bar—keeps the complete authored shoulders.
+		# A live multiplayer build uses the already-authored visible/colliding
+		# route ribbons below as its explicit route placeholder.
+		if bool(_shell_build.call("is_slicing")):
+			_shell_build.call("mark", "routes:%s:geological_shoulders:deferred" % str(spec.get("id", "Route")))
 		else:
 			await _build_route_shoulders(root, spec, points, width)
 		var route_name_lower := str(spec.get("id", "")).to_lower()
@@ -2237,13 +2233,13 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			original_a, original_b)
 		for section: Dictionary in sections:
 			var a: Vector3 = section["a"]
-			await _build_breathe()
+			await _shell_build.call("breathe")
 			var b: Vector3 = section["b"]
 			# Every shoulder collides (see `_route_ridge`): its walkable top
 			# is clamped per vertex onto any road ribbon, bridge deck or
 			# pad/landmark crown within reach (`_walkable_height`), rather than
 			# an entire segment near a detected "hub" going collision-free.
-			await _route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
 				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
 				route_id, overpass_lines)
@@ -2499,9 +2495,6 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var arch_clearance := float(config.get("shoulder_overpass_clearance_m", INF))
 	var arch_ceilings: Array[float] = []
 	for i in station_count:
-		# ~30 ms per station; a whole ridge (up to 48 stations, 1.6 s) held one
-		# frame and cost a live crossing a heartbeat payback each time.
-		await _build_breathe()
 		var t := float(i) / float(station_count - 1)
 		var centre := a.lerp(b, t)
 		# The crest follows this route's OWN ribbon/cap surface (flat inside the

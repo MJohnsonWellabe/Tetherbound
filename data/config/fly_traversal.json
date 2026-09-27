@@ -24,7 +24,9 @@
     "species_id": "galecrest",
     "realm_id": "cloudreach",
     "available_during_trial": true,
-    "available_after_unlock": true
+    "available_after_unlock": true,
+    "ends_at_flag": "cloudreach_chapter_complete",
+    "_why_ends_at_flag": "Coordinator ruling on #356 (Question A; spec conformance): CREATURES calls the loaner a temporary trial and authored routed-transport carrier, and SYSTEMS Fly says it is not permanent free traversal inventory. Once the chapter is complete it is no longer offered; an owned carrier still flies."
   },
   "landing_anchor": {
     "_comment": "Stage B lane 6.C. Where a CLIENT is allowed to put its feet down, as MP_ENCOUNTER_PROTOCOL.md Sec2 requires: the host holds the authoritative position, so a client proposes an anchor and the host answers with one off its own ground. scripts/net/fly_anchor_arbiter.gd holds the rule; these are its tolerances. Solo and the host are untouched -- there is no second process with an opinion to reconcile. All TUNABLE.",
