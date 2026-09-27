@@ -25,6 +25,8 @@ extends SceneTree
 ##
 ## Common flags: `--only=a,b` limits subjects/rows by id; `--fast` shortens
 ## settles (iteration only, never evidence); `--out=res://...` output root.
+## Region only: `--flags=a,b` sets extra story flags before the scene loads;
+## `--times=a,b` replaces every row's times (Stormwood: Surge phases).
 ##
 ## STAGES. Roster and cast use the calibrated neutral stage from
 ## tools/_capture_creature_roster.gd (floor albedo renders at its own value, a
@@ -58,6 +60,8 @@ var _only := {}
 var _fast := false
 var _kind := ""  # region rows: "", "env" or "places"
 var _variant := ""  # region: "aftermath" for post-finale state
+var _extra_flags: Array = []  # region: --flags=a,b story flags set before the scene loads
+var _times: Array = []  # region: --times=a,b overrides every row's times/phases
 
 var _dir := ""
 var _manifest: FileAccess = null
@@ -89,6 +93,12 @@ func _parse_args() -> void:
 			_kind = arg.substr(7)
 		elif arg.begins_with("--variant="):
 			_variant = arg.substr(10)
+		elif arg.begins_with("--flags="):
+			for part: String in arg.substr(8).split(",", false):
+				_extra_flags.append(part.strip_edges())
+		elif arg.begins_with("--times="):
+			for part: String in arg.substr(8).split(",", false):
+				_times.append(part.strip_edges())
 		elif arg == "--fast":
 			_fast = true
 		elif arg.begins_with("--out="):
@@ -477,6 +487,9 @@ func _run_region() -> bool:
 		return false
 	if _variant == "aftermath":
 		spec["flags"] = (spec.get("flags", []) as Array) + (spec.get("aftermath_flags", []) as Array)
+	if not _extra_flags.is_empty():
+		spec["flags"] = (spec.get("flags", []) as Array) + _extra_flags
+	_log_line({"kind": "note", "text": "flags set: %s" % [spec.get("flags", [])]})
 	if not await _boot_region(spec):
 		return false
 	var rows: Array = _build_rows(spec)
@@ -485,7 +498,7 @@ func _run_region() -> bool:
 		var id := str(row["id"])
 		if not _only.is_empty() and not _only.has(id):
 			continue
-		for t: String in row["times"]:
+		for t: String in (_times if not _times.is_empty() else row["times"]):
 			await _capture_region_row(spec, row, t)
 	_write_sheet("_sheet_%s_env" % _region, "_env_")
 	_write_sheet("_sheet_%s_places" % _region, "_place_")
