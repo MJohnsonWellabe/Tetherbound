@@ -321,11 +321,13 @@
   "Stormwood strikes spare a trainer during a creature fight (interim; owner to confirm).",
   "Terrapup kept at field_emission 0.6 (owner: pick what looks better).",
   "F03 lure cue option (a); Juno escort kept; X03 beacon kept under the presentation hold; Xbox B glyph neutral.",
-  "2026-09-26 owner Q&A: tournament grant is a non-starter; a legacy Stormheart receipt is undecided (re-offered once); cliff palette by blind judge; Tether palette as is; Guardian C2/C3 = Nerissa; Meshy and all art go to Codex; one PR per lane."
+  "2026-09-26 owner Q&A: tournament grant is a non-starter; a legacy Stormheart receipt is undecided (re-offered once); cliff palette by blind judge; Tether palette as is; Guardian C2/C3 = Nerissa; Meshy and all art go to Codex; one PR per lane.",
+  "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
   "CI queue: allow draft PRs to skip CI (ci.yml/process.yml edit was blocked by the auto-mode classifier). Otherwise lane-PR runs starve the runners.",
   "Branch cleanup: after #316 merges, a list of deletable branches will be posted.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
- ]
+ ],
+ "four_chapter_run": null
 }
