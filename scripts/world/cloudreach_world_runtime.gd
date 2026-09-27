@@ -198,10 +198,36 @@ func resolved_encounter_data(bodies: Dictionary) -> Dictionary:
 		if yards.has(str(spec.id)):
 			at=yards[str(spec.id)]
 		spec["position"] = [at.x, at.y, at.z]
-	for site: Dictionary in data.wild_sites:
-		var at: Vector3 = world.call("_resource_position", FINALE.vec(site.position))
-		site["position"] = [at.x, at.y, at.z]
+	data["wild_sites"] = resolve_wild_sites(data.wild_sites, Callable(world, "_resource_position"),
+		float(data.get("wild_site_max_resolution_m", WILD_SITE_MAX_RESOLUTION_M)))
 	return data
+
+
+## Route blocker B3 (#340): `_resource_position` falls back to the nearest
+## route surface anywhere in the realm, which once bound `roost_perches` 1.5 km
+## away onto the Voss summit road. A wild site whose resolved home lands more
+## than `max_m` (XZ) from its authored point fails closed: it is left out,
+## visibly, rather than placed somewhere nobody authored.
+const WILD_SITE_MAX_RESOLUTION_M := 45.0
+
+static func resolve_wild_sites(sites: Array, resolver: Callable, max_m: float) -> Array:
+	var out: Array = []
+	for site: Dictionary in sites:
+		# An Air patrol is authored in the air, 8 m over its ground stratum
+		# (`ground_reference_y`); re-grounding it pinned the Windscar pairs on
+		# the chain-bridge deck. It keeps its authored position.
+		if str(site.get("placement_mode", "ground")) == "air_patrol":
+			out.append(site)
+			continue
+		var authored := FINALE.vec(site.position)
+		var at: Vector3 = resolver.call(authored)
+		if not at.is_finite() or Vector2(at.x - authored.x, at.z - authored.z).length() > max_m:
+			push_warning("Cloudreach wild site %s resolves %s from its authored %s; left out (fail closed)"
+				% [str(site.get("id", "")), at, authored])
+			continue
+		site["position"] = [at.x, at.y, at.z]
+		out.append(site)
+	return out
 
 
 func controlled_body() -> CharacterBody3D:
