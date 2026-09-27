@@ -46,6 +46,7 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 - Team Tether palette stays as built. This is an explicit owner exception to the oxblood hard-rule wording; audit findings H2/H3 and the red parts of M7 are closed as "owner: leave as is".
 - "Guardian C2/C3" in Tidewake BOSSES means the Nerissa fight.
 - Meshy/Bramblebun work is handled by Codex, not the Claude lanes.
+- Rook's Deepwood Circuit reward (F10#0) is `tm_thunder_break`, paid once per character through the `reward_grant` delivery receipt (STORMWOOD-B, `stormwood_rook_circuit_reward.gd`).
 - Branch prefix is `tb/` (CLAUDE/AGENTS/WORKFLOW §8 updated).
 - `steam_api64.dll` redistribution is approved. Deferred owner resources: Steam AppID and partner access, four Steam accounts, a ROG Ally run (F10#6).
 

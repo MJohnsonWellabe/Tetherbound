@@ -101,6 +101,10 @@ func _run() -> void:
 		return
 	var peers := int(s.get("peers", 2))
 	_host_peer = int(s.get("host_peer", 0))
+	# The harness would reset a production join's deferral to its own 90 s
+	# inside step(); a Cloudreach build from the title outlasts that on a
+	# 4-vCPU box (F06#5 r2: ~110 s). Proofs grant their own figure instead.
+	world_build_allowance_floor_s["production_join"] = PROOF_BUILD_ALLOWANCE_S
 	if not await launch(peers, str(s.get("scene", "world"))):
 		await _end(s, path)
 		return
