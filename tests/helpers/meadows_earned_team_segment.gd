@@ -138,8 +138,13 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 				return result()
 			continue
 		var before := _party_snapshot()
-		if not await _engage(wild, true) or not await _win_live_fight():
+		if not await _engage(wild, true):
 			return result()
+		if not await _win_live_fight(true):
+			if not _failures.is_empty():
+				return result()
+			_avoid.append(wild)
+			continue
 		wins += 1
 		var after := _party_snapshot()
 		if not earned_training_progress(before, after):
@@ -167,7 +172,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_receipt("team_ready", {"required_size": TOURNAMENT.required_party_size(),
 		"required_level": TOURNAMENT.required_level(), "party": _party_snapshot(),
 		"world_seed": int(_director.call("world_seed")), "training_wins": wins,
-		"respawn_waits": _respawn_waits, "fought": _fought.duplicate(),
+		"respawn_waits": _respawn_waits, "training_losses": _training_losses, "fought": _fought.duplicate(),
 		"repeated_wilds": repeated_names(_fought),
 		"unused_eligible": _unused_eligible_names()})
 	return result()
@@ -181,7 +186,7 @@ func _choose_wild() -> Node3D:
 		if not is_instance_valid(body) or not body.is_visible_in_tree() \
 				or not bool(body.call("is_alive")) or bool(body.get("engaged")):
 			continue
-		if not _training_eligible(body, owned):
+		if not _training_eligible(body, owned) or _avoid.has(body):
 			continue
 		candidates.append(body)
 		distances.append(_player.global_position.distance_to(body.global_position))
@@ -641,12 +646,31 @@ func _unused_eligible_names() -> Array[String]:
 	return names
 
 
-func _win_live_fight() -> bool:
+## A lost practice fight is a setback, not the end of the journey: the wild
+## lead faints (`combat_manager._handle_active_faint` resolves "lost" for a wild
+## fight), exploration resumes where the player stands, and the Satchel revive
+## in `_prepare_pilot` brings the lead back. Seed 15 (CI r5, bade6d57) lost one
+## such fight with an L5 lead at 84% HP and ended the whole route on it.
+const MAX_TRAINING_LOSSES := 3
+var _training_losses := 0
+var _avoid: Array[Node3D] = []
+
+
+func _win_live_fight(allow_loss := false) -> bool:
 	var pilot := CLOUDREACH.CampaignPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
 	var observed: Dictionary = await pilot.fight_to_the_end()
 	pilot._move_toward(Vector3.ZERO)
+	var lost := not bool(observed.get("timed_out", true)) and str(observed.get("outcome", "")) == "lost"
+	if lost and allow_loss and _training_losses < MAX_TRAINING_LOSSES:
+		_training_losses += 1
+		_receipt("training_loss", {"number": _training_losses, "observed": observed, "party": _party_snapshot()})
+		for _frame in 180:
+			if not _fighting() and INPUT_OWNER.current(_tree) == null:
+				return false
+			await _tree.physics_frame
+		return _fail("Lost practice fight did not return world input")
 	if bool(observed.get("timed_out", true)) or str(observed.get("outcome", "")) != "won":
 		return _fail("Ordinary wild training did not win: " + str(observed))
 	for _frame in 120:
