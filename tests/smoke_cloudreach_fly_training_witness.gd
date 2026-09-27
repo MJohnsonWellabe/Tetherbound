@@ -49,6 +49,7 @@ func _run() -> void:
 	var physical_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_physical_runtime.json"))
 	var trial: Dictionary = physical_config.trial
 	trial_box = AABB(_vec(trial.bounds_position), _vec(trial.bounds_size))
+	want_exhausted_fall = true
 	for spec: Dictionary in physical_config.restrictions:
 		if str(spec.id) == "cloudreach_upper": upper_box = AABB(_vec(spec.position), _vec(spec.size))
 	await super._run()
@@ -82,6 +83,7 @@ func _on_landed(at: Vector3, carrier: String) -> void:
 
 
 func _trial() -> bool:
+	if _resume_skip("trial", "fly_traversal_unlocked"): return true
 	stage = "authored_flight_trial"
 	if not await _physical_action("flight_trial_start", "", false): return false
 	if not _require(physical.trial_active, "Marked trial input started"): return false
@@ -139,12 +141,13 @@ func _finish() -> void:
 		_require(upper_violations == 0, "F06#2 no frame inside sealed Upper Cloudreach before unlock (%d)" % upper_violations)
 		_require(landings.size() >= 4 and landings.all(func(l: Dictionary) -> bool: return bool(l.on_floor)), "F06#2 trial, refused-attempt return, shrine and aerie-return landings all on verified floor (%d)" % landings.size())
 		_require(game.party.members().size() == expected_party_size, "F06#2 party size unchanged after training")
+		_require(not exhausted_fall.is_empty() and int(exhausted_fall.recovered_after_frames) >= 0, "F06#2 exhausted-fall recovery reached by ordinary input")
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#2", "passed": completed_route and not failed,
 		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
-		"stage": stage, "attempts": attempts, "sealed_attempt": sealed_attempt, "landings": landings, "recoveries": recoveries,
+		"stage": stage, "attempts": attempts, "sealed_attempt": sealed_attempt, "exhausted_fall": exhausted_fall, "landings": landings, "recoveries": recoveries,
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,
 		"upper_violations": upper_violations,
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))

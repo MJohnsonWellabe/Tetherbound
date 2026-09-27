@@ -6,56 +6,86 @@
       "directions_tried": [
         "(0.0, 0.0, -1.0)"
       ],
-      "end": "(425.2911, 641.3472, 3215.919)",
-      "from": "(417.2961, 627.1937, 3249.79)",
+      "end": "(419.0111, 637.016, 3215.837)",
+      "from": "(422.3474, 627.8487, 3250.184)",
       "inside_trial": true,
       "refused": true,
       "still_flying": true,
       "trial_active": true
     }
   ],
-  "combat_mode": "mechanics_only_test_lethal",
+  "combat_mode": "live_input",
   "criterion": "F06#2",
   "denials": [
     {
-      "position": "(425.2911, 641.3805, 3215.919)",
+      "position": "(419.0111, 637.0493, 3215.837)",
       "reason": "Stay inside the marked flight trial.",
       "stage": "flight_trial_start"
     },
     {
-      "position": "(439.4683, 740.3919, 3599.129)",
+      "position": "(419.0111, 636.816, 3215.767)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(419.0111, 636.7161, 3215.757)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(419.0111, 636.6494, 3215.753)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(419.0111, 636.5828, 3215.75)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(439.4574, 740.0587, 3598.991)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4767, 740.092, 3599.249)",
+      "position": "(439.4727, 739.6588, 3599.21)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.475, 739.4921, 3599.244)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4753, 739.4255, 3599.247)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     }
   ],
   "exhausted_fall": {
-    "anchor": "(1110.24, 1050.131, 2950.534)",
-    "controller_safe_anchor": "(1110.24, 1050.131, 2950.534)",
-    "drop_below_anchor_m": 99.9974365234375,
-    "end": "(1110.257, 1050.131, 2950.534)",
-    "end_distance_to_anchor_m": 0.0174714140594006,
-    "exhausted_after_frames": 8392,
-    "exhausted_at": "(972.7687, 1085.992, 2974.869)",
+    "anchor": "(1110.239, 1050.131, 2950.533)",
+    "controller_safe_anchor": "(1110.239, 1050.131, 2950.533)",
+    "drop_below_anchor_m": 99.9150390625,
+    "end": "(1110.356, 1050.131, 2950.526)",
+    "end_distance_to_anchor_m": 0.116457127034664,
+    "exhausted_after_frames": 3853,
+    "exhausted_at": "(1047.26, 1086.0, 2961.812)",
     "exhaustion_cause": "stamina",
-    "flight_seconds_at_exhaustion": 140.050000000004,
+    "flight_seconds_at_exhaustion": 64.3999999999976,
     "floor_path": "/root/CloudreachCliffs/Landmarks/SkyShrineHeartstone/LandmarkLedge/Collision",
     "flying_after": false,
-    "hover_frames": 8392,
+    "hover_frames": 3853,
     "landed_elsewhere": false,
     "launch_blocker_at_landing": {
-      "at": "(1110.24, 1050.131, 2950.534)",
+      "at": "(1110.239, 1050.131, 2950.533)",
       "clear": true,
       "overlapping": []
     },
-    "lowest_y_before_recovery": 950.13330078125,
+    "lowest_y_before_recovery": 950.215698242188,
     "on_floor": true,
     "party_size": 5,
-    "recovered_after_frames": 927,
+    "recovered_after_frames": 928,
     "recovery_drop_m": 100.0,
     "recovery_reasons": [
       "The wind carried you back to your last safe landing."
@@ -69,28 +99,28 @@
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(399.834, 610.1301, 3249.38)",
+      "position": "(399.7631, 610.1304, 3248.805)",
       "stage": "flight_trial_start"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(398.9392, 610.1303, 3250.548)",
+      "position": "(398.874, 610.1302, 3250.446)",
       "stage": "witness_sealed_upper_attempt"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(1099.138, 1051.301, 2940.579)",
+      "position": "(1098.748, 1051.301, 2941.129)",
       "stage": "mandatory_high_roost_flight"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(400.9396, 610.1301, 3250.277)",
+      "position": "(400.5097, 610.1303, 3250.069)",
       "stage": "return_glide_to_grounded_counterweight"
     }
   ],
@@ -106,28 +136,30 @@
   "passed": true,
   "recoveries": [
     {
-      "position": "(1110.24, 1050.21, 2950.534)",
+      "position": "(1110.239, 1050.21, 2950.533)",
       "reason": "The wind carried you back to your last safe landing.",
       "stage": "witness_exhausted_fall"
     }
   ],
   "sealed_attempt": {
-    "climb_end_y": 770.28125,
-    "closest_gap_to_box_m": 0.7509765625,
+    "climb_end_y": 770.281311035156,
+    "closest_gap_to_box_m": 0.7529296875,
     "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper."
     ],
-    "end": "(439.4767, 724.0733, 3599.249)",
+    "end": "(439.4753, 723.54, 3599.247)",
     "frames_inside_sealed_box": 0,
     "on_floor": false,
     "refused_after_frames": 1412,
     "still_flying": true,
     "target": "(450.0, 700.0, 3750.0)"
   },
-  "skipped_steps": 21,
+  "skipped_steps": 0,
   "stage": "return_glide_to_grounded_counterweight",
-  "start_state": "DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival",
   "trial_escape_violations": 0,
   "upper_violations": 0
 }

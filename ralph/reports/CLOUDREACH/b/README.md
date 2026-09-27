@@ -1,3 +1,5 @@
+> **DRY RUN — does not count.** Owner rule 2026-09-27 (WORKFLOW §8): every `--start=aerie` / `--leg=flight` result in this folder comes from a declared fixture start. These runs are blocker-finding dry runs and are not acceptance evidence. F06#2 and F06#3 close only from the earned route.
+
 # Cloudreach-B witness evidence
 
 Lane: Cloudreach-B. PR: #294. Branch: `tb/cloudreach-b-f06-1-foot-regions`.
