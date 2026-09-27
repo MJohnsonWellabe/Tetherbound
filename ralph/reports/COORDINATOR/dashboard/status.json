@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 18:25 UTC",
+ "updated": "2026-09-27 19:05 UTC",
  "headline": [
-  "Criteria met: 78 of 101 (counted at merge). Main green at e59b0c97. Owner rulings today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary (F08#5 reopened).",
-  "Phase 2, owner away: 9 Claude lanes plus Codex. Full runs checkpoint after each step and post hourly; every READY needs the full unit suite with 0 failed; lanes render locally rather than wait on Codex."
+  "Criteria met: 78 of 101 (counted at merge). Main green at e59b0c97. Next likely closes: Stormwood card S3 (evidence passed; needs full unit-suite line), Cloudreach C1 run 8, F08#3 perch camera, F15#2.",
+  "Owner rules today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary; build the game, not proof machinery (every round player-visible, two-strike harness rule, hourly Balance line). 9 Claude lanes plus Codex."
  ],
  "batches": [
   {
@@ -261,33 +261,33 @@
  "lanes": [
   {
    "lane": "Full Meadows run (M1–M4)",
-   "now": "Continuous run attempt 3 (harness race fixed 59eea245); fight log on",
-   "next": "Checkpointed resume; F04#6 aftermath captures; READY M2 (all F02 met)"
+   "now": "Attempt 3 past Captain Riverwatch; checkpointing; Warden aftermath render attempt 3",
+   "next": "READY M2 at end of route; F04#6 aftermath frames to judge"
   },
   {
    "lane": "Full Cloudreach run (C1–C3)",
-   "now": "Solmane freeing via the Veridian flow (shared files granted)",
-   "next": "Rerun C3 two-peer with Solmane; F08#3 high-perch camera; C1 run"
+   "now": "C1 run 8 past upper anchors (run 7 finished the chapter); F08#3 frames 9/12",
+   "next": "READY C1; F08#3 judge; Solmane held on an owner permission in its session"
   },
   {
    "lane": "Full Stormwood run (S1–S3)",
-   "now": "Continuous run with checkpoints, in Deepwood",
-   "next": "F09#3 resubmit with Bars A/B + full suite; F10#3 on Codex shape fix"
+   "now": "Whole chapter passes continuously (prefix to Marrow and aftermath)",
+   "next": "Repost S3 READY with full unit suite; resubmit F09#3 with Bars A/B"
   },
   {
    "lane": "Stormwood visuals (new 18:02)",
-   "now": "Starting F10#2 fights, F10#4 matrix, F10#6 device capture",
-   "next": "Judge loops at full bar"
+   "now": "F10#4 round 1: Bar A no / Bar B no (no giant trunk subject, no sky lightning, rod line hidden)",
+   "next": "Round 2 fixes; CODEX ASSET Stormheart hero tree requested"
   },
   {
    "lane": "Full Tidewake run (T1–T3)",
-   "now": "T1 card 13/13; clean F15#2 head",
-   "next": "READY F15#2; T1 rerun with Garden/Deep Watch rest points; F13#2/#3"
+   "now": "Interrupted 19:02 for about 25 cloud renders; render.yml access withdrawn",
+   "next": "Status post; clean F15#2 READY; T1 rerun; F13#2/#3"
   },
   {
    "lane": "Tidewake fights + visuals (new 18:02)",
-   "now": "Re-capturing Tess, Calder, Venn, Nerissa locally",
-   "next": "F14#0, F14#1, F13#5 judge loops"
+   "now": "Tess and Calder reader captures running locally",
+   "next": "F14#0/#1 and F13#5 judge loops"
   },
   {
    "lane": "Meadows F04 readability",
@@ -306,8 +306,8 @@
   },
   {
    "lane": "Codex (desktop)",
-   "now": "F08#4 Cloudreach settlements/cliffs (clouds, grass iterating); Cloudfang colourway",
-   "next": "CODEX ASSET requests from lanes"
+   "now": "F08#4 cloud volume candidate still Bars A/B no (white stone merges with cloud); Galecrest neck fixed",
+   "next": "Cliff/stone materials; Stormheart hero tree asset"
   }
  ],
  "decisions": [
