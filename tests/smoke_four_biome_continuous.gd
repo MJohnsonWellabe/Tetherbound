@@ -35,6 +35,12 @@ const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.g
 const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
+const LOCAL_CHAINS := preload("res://tests/helpers/tidewake_b_local_chains.gd")
+const WATER_DRY_FIXTURE := preload("res://tests/helpers/tidewake_b_water_arrival_dry_fixture.gd")
+## Veilfall interior walk (relative to the interior origin), the same points
+## the late segment walked from the entrance to Nerissa's chamber.
+const VEILFALL_INTERIOR_PATH := [Vector3(0, 0, 4), Vector3(-5, 0, 18.9), Vector3(0, 0, 34),
+	Vector3(9, 0, 45.9), Vector3(0, 0, 56), Vector3(0, 0, 70), Vector3(0, 0, 87)]
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const RESUME_SETTLE_FRAMES := 300
 const LOOK_ALIGNMENT_TOLERANCE_DEG := 0.75
@@ -60,6 +66,12 @@ var resume_source_abs := ""
 var carried_receipts: Dictionary = {}
 var prior_elapsed_seconds := 0.0
 var checkpoints_written: Array = []
+## F13#3 (`--with-local-chains`): the six Tidewake local chains woven into the
+## earned Water stage (tests/helpers/tidewake_b_local_chains.gd).
+var local_chains: RefCounted = null
+var chain_results: Array[String] = []
+## `--dry-run-water-fixture`: DRY RUN start at a declared Water arrival.
+var dry_run := false
 
 
 func _init() -> void:
@@ -84,6 +96,14 @@ func _run() -> void:
 		_finish(false)
 		return
 	var resuming := not str(checkpoint_args["resume_source"]).is_empty()
+	if OS.get_cmdline_user_args().has("--with-local-chains"):
+		local_chains = LOCAL_CHAINS.new()
+		local_chains.earned = true
+	dry_run = OS.get_cmdline_user_args().has("--dry-run-water-fixture")
+	if dry_run and resuming:
+		failures.append("--dry-run-water-fixture cannot be combined with --resume-from")
+		_finish(false)
+		return
 	# A resumed piece copies the checkpoint's save into its own scratch BEFORE
 	# the save system is installed, so the checkpoint itself is never written.
 	if resuming and not _stage_resume_files():
@@ -99,7 +119,17 @@ func _run() -> void:
 	print("FRESH CAMPAIGN scratch=%s slot=%s checkpoints=%s" % [ProjectSettings.globalize_path(scratch),
 		game.get("save_system").call("slot_path", 0), ProjectSettings.globalize_path(checkpoint_dir)])
 	var from := -1
-	if resuming:
+	if dry_run:
+		print("DRY RUN — does not count: declared Water-arrival fixture (%s), not an earned water_arrived save" %
+			"tests/helpers/tidewake_b_water_arrival_dry_fixture.gd")
+		live = await WATER_DRY_FIXTURE.new().start(self, game)
+		if live.is_empty():
+			failures.append("DRY RUN fixture: the Water world never became ready")
+			_finish(false)
+			return
+		reached = "water_arrived (DRY RUN fixture)"
+		from = CHECKPOINTS.boundary_index("water_arrived")
+	elif resuming:
 		if not await _resume_from_checkpoint(game):
 			_finish(false)
 			return
@@ -319,6 +349,9 @@ func _stage_water_to_ending(game: Node) -> void:
 	live["player"] = water_opening.player
 	live["rig"] = water_opening.camera
 	reached = "water_pell_lesson_earned"
+	# F13#3: Lantern (Pell, First Shore) right after the earned lesson.
+	if not await _visit_local_chains(game, ["lantern"]):
+		return
 	for entry: Array in [[REEDHAVEN.new(), "water_reedhaven_paid"],
 			[BRINE.new(), "water_brine_trial_won"],
 			[SHELLWATCH.new(), "water_shellwatch_liberated"],
@@ -335,6 +368,12 @@ func _stage_water_to_ending(game: Node) -> void:
 			_finish(false)
 			return
 		reached = str(entry[1])
+		# F13#3: Gull (Adair, Brine Steps) after the Brine trial; Cradle (Otto,
+		# Tidal Cradle) after Tidal, before the swimmer preparation.
+		if reached == "water_brine_trial_won" and not await _visit_local_chains(game, ["gull"]):
+			return
+		if reached == "water_swim_stone_and_recipe_earned" and not await _visit_local_chains(game, ["cradle"]):
+			return
 	var preparation := SWIMMER.new()
 	if not _accepted(await preparation.run(self, live["world"], game), "passed"):
 		return
@@ -348,11 +387,150 @@ func _stage_water_to_ending(game: Node) -> void:
 		_abort_late("Late Water returned false despite its accepted result")
 		return
 	reached = "water_nerissa_defeated_and_guardian_freed"
+	# F13#3: Deep Watch (Orsen, Sluice; Tidecoil), Garden (Edda, Salt Crown)
+	# and Lastlight (Halen, Veilfall) after Nerissa and the tether, before the
+	# Guardian invitation (Edda/Orsen/Halen stop offering leads once the
+	# ending restores the currents): leave the Veilfall interior by its own
+	# prompt, ride the earned saddled swimmer between islands, walk back in.
+	if local_chains != null and not await _veilfall_out_and_back(game, preparation.swimmer):
+		return
 	if not _accepted(await WATER_ENDING.new().run_earned(self, live["world"], game), "ok"):
 		return
 	reached = "tidewake_ending_earned"
+	if local_chains != null and not await _saved_chain_completion(game):
+		return
 	campaign_complete = true
 	_finish(true)
+
+
+## F13#3 hook: plays `names` from wherever the earned segment left the
+## trainer, then (return_home) walks/swims/rides back by input to that island
+## and position so the next earned segment's own entry conditions are
+## unchanged. A no-op without `--with-local-chains`.
+func _visit_local_chains(game: Node, names: Array, return_home: bool = true) -> bool:
+	if local_chains == null:
+		return true
+	var world := live["world"] as Node3D
+	if local_chains.world != world and not local_chains.bind(self, world, true):
+		return _chain_failed()
+	var player := local_chains.player as Node3D
+	var home: Vector3 = player.global_position
+	var home_island: String = local_chains._here()
+	print("F13#3 VISIT %s from %s on %s (party=%s)" % [names, home, home_island, JSON.stringify(_party_rows(game.get("party")))])
+	for chain: String in names:
+		var line: String = await local_chains.run_chain(chain)
+		chain_results.append(line)
+		print("F13#3 " + line)
+		if not LOCAL_CHAINS.passed(line):
+			return _chain_failed()
+	if return_home:
+		if not await local_chains._go(home, 1.5, "return after " + ",".join(names)):
+			return _chain_failed()
+		if local_chains._here() != home_island:
+			local_chains._check(false, "returned to island %s, not %s" % [local_chains._here(), home_island])
+			return _chain_failed()
+		print("F13#3 returned to %s on %s after %s" % [player.global_position, home_island, names])
+	local_chains._stick(0.0, 0.0)
+	await local_chains._frames(30)
+	return true
+
+
+func _chain_failed() -> bool:
+	for line: String in local_chains.failures:
+		failures.append("F13#3 " + line)
+	if local_chains.failures.is_empty():
+		failures.append("F13#3 chain visit failed")
+	for line: String in chain_results:
+		print("F13#3 " + line)
+	local_chains.print_travel_log()
+	_finish(false)
+	return false
+
+
+## After the late segment: the same five, the swimmer deployed, inside the
+## Veilfall interior. Walk the interior back to its exit prompt, Interact, play
+## the three late chains riding the earned swimmer, walk to the entrance
+## prompt, Interact, and walk the interior to Nerissa's chamber again.
+func _veilfall_out_and_back(game: Node, swimmer: RefCounted) -> bool:
+	var world := live["world"] as Node3D
+	if local_chains.world != world and not local_chains.bind(self, world, true):
+		return _chain_failed()
+	local_chains.mount = swimmer
+	local_chains.last_island = "veilfall"
+	var cave := world.get_node_or_null("WaterVeilfall")
+	var player := local_chains.player as CharacterBody3D
+	if cave == null or not bool(cave.call("contains_interior", player.global_position)):
+		local_chains._check(false, "late Water did not end inside the Veilfall interior")
+		return _chain_failed()
+	var origin: Vector3 = (cave.get("interior") as Node3D).global_position
+	var inside: Array = VEILFALL_INTERIOR_PATH.duplicate()
+	inside.reverse()
+	for point: Vector3 in inside:
+		if not await local_chains.navigator.walk_to(origin + point, 2400, 1.5):
+			local_chains._check(false, "Veilfall interior walk out stalled at %s toward %s" % [player.global_position, origin + point])
+			return _chain_failed()
+	var exit_prompt: Node3D = cave.get("_exit_prompt")
+	if not local_chains._check(await local_chains._approach_prompt(exit_prompt, exit_prompt.global_position),
+			"Veilfall exit prompt offered (winner=%s)" % local_chains.arbiter.call("prompt")):
+		return _chain_failed()
+	await local_chains._press_interact()
+	await local_chains._frames(30)
+	if not local_chains._check(not bool(cave.call("contains_interior", player.global_position)),
+			"Interact on the exit prompt left the Veilfall interior"):
+		return _chain_failed()
+	print("F13#3 left the Veilfall interior at %s island=%s" % [player.global_position, local_chains._here()])
+	if not await _visit_local_chains(game, ["deep", "garden", "lastlight"], false):
+		return false
+	var entry_prompt: Node3D = cave.get("_entry_prompt")
+	if not await local_chains._go(entry_prompt.global_position, 2.5, "Veilfall entrance"):
+		return _chain_failed()
+	if not local_chains._check(await local_chains._approach_prompt(entry_prompt, entry_prompt.global_position),
+			"Veilfall entrance prompt offered (winner=%s)" % local_chains.arbiter.call("prompt")):
+		return _chain_failed()
+	await local_chains._press_interact()
+	await local_chains._frames(30)
+	if not local_chains._check(bool(cave.call("contains_interior", player.global_position)),
+			"Interact on the entrance prompt entered the Veilfall interior"):
+		return _chain_failed()
+	for point: Vector3 in VEILFALL_INTERIOR_PATH:
+		if not await local_chains.navigator.walk_to(origin + point, 2400, 1.5):
+			local_chains._check(false, "Veilfall interior walk in stalled at %s toward %s" % [player.global_position, origin + point])
+			return _chain_failed()
+	local_chains._stick(0.0, 0.0)
+	await local_chains._frames(30)
+	return true
+
+
+## F13#3 saved completion: after the ending, one production save -> reset ->
+## load -> rebuilt Water world (tests/helpers/water_chain_reload.gd); every
+## chain's records, receipts, quest-log `done` and carried rewards are
+## re-asserted and each requester greeted again by walk + Interact.
+func _saved_chain_completion(game: Node) -> bool:
+	var reload: GDScript = load("res://tests/helpers/water_chain_reload.gd")
+	var items := {}
+	for item: String in ["skill_candy_i", "skill_candy_ii", "skill_candy_iii", "berries", "reef_stone"]:
+		items[item] = game.inventory.count(item)
+	var reloaded: Dictionary = await reload.save_and_reload(self, game, live["world"],
+		"water_claim:local:lantern_return:complete", "")
+	for pair: Array in reloaded.checks:
+		local_chains._check(pair[0], "Reload: " + str(pair[1]))
+	if reloaded.world == null:
+		return _chain_failed()
+	live["world"] = reloaded.world
+	if not local_chains.bind(self, reloaded.world, true):
+		return _chain_failed()
+	live["player"] = local_chains.player
+	live["rig"] = local_chains.camera
+	await local_chains._frames(60)
+	chain_results.append_array(await local_chains.verify_saved(PackedStringArray(LOCAL_CHAINS.CHAINS), items))
+	for line: String in chain_results:
+		print("F13#3 " + line)
+	local_chains.print_travel_log()
+	print("F13#3 %s: %d checks, %d failures" % ["DRY RUN — does not count" if dry_run else "local chains",
+		local_chains.checks, local_chains.failures.size()])
+	if not local_chains.failures.is_empty():
+		return _chain_failed()
+	return true
 
 
 ## Checkpoint boundary: a production save (`Game.save_game`, the menu Save
@@ -635,6 +813,8 @@ func _finish(prefix_passed: bool) -> void:
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"cumulative_elapsed_seconds": prior_elapsed_seconds + (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"resumed_from": resume_info,
+		"dry_run": dry_run,
+		"local_chains": chain_results,
 		"checkpoints": checkpoints_written,
 		"failures": failures,
 	}))
