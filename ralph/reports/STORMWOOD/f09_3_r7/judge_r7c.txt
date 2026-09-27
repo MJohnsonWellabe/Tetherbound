@@ -1,0 +1,8 @@
+Code-blind judge r7c (subagent; saw only /tmp/sw/judge_r7c/view_P..T.jpg; key blind_key_r7c.json)
+Overall: "It is a strong landmark in every frame." The beam top is cut by the frame edge in all five.
+P (conductor_ridge_cleft): AMBIGUOUS - impossible to miss, but reads as where the road goes; road streaks run straight into it; nothing branches; boulder/crystal compete weakly.
+Q (hollows_moss_nook): YES - lanterns + green beam upper right under a bare tree; weak thin pale lead strip; green beam washed out, cut by top.
+R (dynamo_scorch_pen): PROBABLY - warm lantern glow + short beam upper right near horizon; low line of stones leads to post; small and far, near top edge; ridge wall and crystals compete.
+S (deepwood_ridge_shelter): YES - bright warm beam + lanterns against big tree; strip of pale stones from road edge to tree base; trunk partly blocks beam.
+T (verge_ash_hollow): YES, clearest read - lanterns + warm beam left of centre; clear cobblestone walkway leaves the road; white house on horizon competes.
+Tally: 3 of 5 YES (Q, S, T).
