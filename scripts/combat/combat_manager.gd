@@ -476,6 +476,16 @@ func arena() -> Node3D:
 	return _arena
 
 
+## F04#6: who a fight's aftermath is about. A trainer battle names its trainer
+## here before each round's `begin()` (`encounter_director.gd`), and the
+## released camera looks past the player at them -- the defeated person and
+## their line -- instead of at the spot their creature fell, which left the
+## trainer standing between lens and player (Riverwatch a01-a16). Consumed by
+## `_finish()`, so it never outlives the round it was set for; unset, or an
+## opponent nobody owns, falls back to the creature's spot as before.
+var aftermath_focus: Node3D = null
+
+
 ## Begin a fight. `ally_body` is the player's deployed creature, `camera_rig` is the
 ## exploration camera that will be re-pointed at it. `best_creature` is R4.7's
 ## Best Creature flag (`autoload/party.gd::best()`); optional and defaulting
@@ -509,6 +519,8 @@ func begin(
 	_party = party
 	_active_index = 0
 	_enemy_owned = opponent_owned
+	if not opponent_owned:
+		aftermath_focus = null
 	_realm_owned_opponent = realm_owned_opponent
 	_enemy = wild.get("instance")
 	if _enemy == null:
@@ -3623,6 +3635,10 @@ func _finish() -> void:
 		_arena = null
 	var fought_at: Variant = _wild.global_position if _wild != null and is_instance_valid(_wild) \
 		and (_wild as Node3D).is_inside_tree() else null
+	if _enemy_owned and aftermath_focus != null and is_instance_valid(aftermath_focus) \
+			and aftermath_focus.is_inside_tree():
+		fought_at = aftermath_focus.global_position
+	aftermath_focus = null
 	_release_camera(fought_at)
 
 	exited.emit(_outcome)
