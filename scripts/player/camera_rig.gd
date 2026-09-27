@@ -606,8 +606,23 @@ static func _world_point(node: Node3D) -> Vector3:
 	return node.global_position if node.is_inside_tree() else node.position
 
 
+## F04 (Keeper Hald's room): the pivot rises `_height` straight up from the
+## target, and nothing swept that leg -- a combat `height_follow` lift toward
+## 6 m under a 6.5 m ceiling put the pivot into the slab, and `cast_motion`
+## ignores overlaps it starts inside, so the lens then shot through the roof.
+## The leg above VERTICAL_SWEEP_FROM_M is swept like the shoulder leg below.
+const VERTICAL_SWEEP_FROM_M := 1.0
+
+func _pivot_anchor() -> Vector3:
+	var base_up := minf(_height, VERTICAL_SWEEP_FROM_M)
+	var anchor := _world_point(_target) + Vector3.UP * base_up
+	if _height > base_up:
+		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, _height - base_up)
+	return anchor
+
+
 func _follow(delta: float) -> void:
-	var anchor := _target.global_position + Vector3.UP * _height
+	var anchor := _pivot_anchor()
 	var desired := anchor
 	if not is_zero_approx(_shoulder):
 		# Sideways relative to where the camera is looking, so the offset stays
