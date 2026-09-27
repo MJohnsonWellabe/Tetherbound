@@ -49,6 +49,19 @@ extends SceneTree
 ## rewards and quest-log `done` are re-asserted and each requester is greeted
 ## again by a real walk + Interact to hear the acknowledgement, not a re-offer.
 ## Solo host only.
+## `--continuous` (DRY RUN until it starts from an earned save): inter-island
+## legs are SWUM with real move_forward along the authored water_routes (no
+## position write), Lastlight's materials are gathered from production harvest
+## rows (hand reed, axe driftwood) by walk + Interact, the bed rest goes through
+## the bed's Rest prompt and rest panel (ui_accept / menu_cancel), and Tidecoil
+## is fought for real (tests/helpers/tidewake_b_tidecoil_fight.gd). Remaining
+## fixtures in that mode: the retained five at L43, a carried pickaxe + axe,
+## the upstream flags above plus the Shellwatch and Sluice departure facts, and
+## one landing write after the Tidecoil win if stranded under Deep Watch's
+## cliff (no owned swimmer yet). `--save-dir=user://<dir>` writes a production
+## checkpoint save after each chain (slot 20 + chain index);
+## `--resume-from=<chain>` loads the previous chain's checkpoint (DRY RUN);
+## `--start-slot=<n>` starts from a save in --save-dir through Game.load_game.
 ## `-- --only=lantern,gull,cradle,garden,deep,lastlight` selects chains; the
 ## PROOF run used one process per chain (each: own world, own save/reload).
 ##   godot --headless --path . --script tests/smoke_tidewake_b_chain_route.gd [-- --only=<chain>]
@@ -157,6 +170,21 @@ func _run() -> void:
 	pickups_data = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	reader = QUEST_LOG.new()
 	reader.set_realm("water")
+	var start_slot := -1
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--start-slot="):
+			start_slot = int(argument.trim_prefix("--start-slot="))
+	if start_slot >= 0:
+		# Start from a declared save through the normal load path (to be
+		# re-pointed at an EARNED Water-arrival save once one exists). Loading
+		# replaces the fixture state set above.
+		var started := bool(game.load_game(start_slot))
+		print("START from save slot %d in %s loaded=%s realm=%s party=%d" % [start_slot, save_dir, started, game.current_realm, game.local.party.size()])
+		if not _check(started and str(game.current_realm) == "water", "start save loads into Water"):
+			_finish()
+			return
+	else:
+		print("DRY RUN - does not count: declared fixture start (see header)")
 	if resume_from != "":
 		var index := CHAINS.find(resume_from)
 		if not _check(index > 0 and save_dir != "", "--resume-from needs a later chain and --save-dir"):
@@ -734,10 +762,10 @@ func _walk_attempt(target: Vector3, tolerance: float, label: String, want: Strin
 		var onward: Array = []
 		if hub.is_finite() and attempt == 0 and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
 			onward = (POCKET.plan_route(world, Vector2(hub.x, hub.z), Vector2(target.x, target.z)).points as Array)
-		if not onward.is_empty():
-			print("WALK %s DIRECT TO %s landing THEN PLANNED (attempt %d)" % [label, want, attempt + 1])
+		if hub.is_finite() and attempt == 0 and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+			print("WALK %s DIRECT TO %s landing THEN %s (attempt %d)" % [label, want, "PLANNED" if not onward.is_empty() else "DIRECT", attempt + 1])
 			route = [Vector2(hub.x, hub.z)]
-			route.append_array(onward)
+			route.append_array(onward if not onward.is_empty() else [Vector2(target.x, target.z)])
 		elif hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
 			var hub_plan: Dictionary = POCKET.plan_route(world, from, Vector2(hub.x, hub.z))
 			if not (hub_plan.points as Array).is_empty():
