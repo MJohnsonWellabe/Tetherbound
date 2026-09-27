@@ -30,6 +30,21 @@ var _face_trainer := false
 ## frames can witness the player's own hits landing (F04#4). Without it the
 ## capture only waits, and every frame shows the opponent's bar full.
 var _attack := false
+## `--dodge`: when the opponent's tell starts (wild_creature.gd
+## `telegraph_started`), push the pad's left stick sideways for the tell plus
+## DODGE_TAIL_S -- a real input avoidance attempt, so the frames can witness a
+## strike that misses (F04#4). Direction alternates each tell.
+var _dodge := false
+const DODGE_TAIL_S := 0.35
+var _dodge_left := 0.0
+var _dodge_sign := 1.0
+var _tell_source: Node = null
+## `--keep-alive` (DISCLOSED harness help): tops the player's active creature
+## back up when it falls below KEEP_ALIVE_FRACTION, so a level-3 capture
+## creature survives a level 11-19 captain long enough to reach the
+## aftermath. Without it Oreth's and the Warden's captures ended in a loss.
+var _keep_alive := false
+const KEEP_ALIVE_FRACTION := 0.4
 
 func _run() -> void:
 	var ids: PackedStringArray = []
@@ -48,6 +63,10 @@ func _run() -> void:
 			_face_trainer = true
 		elif arg == "--attack":
 			_attack = true
+		elif arg == "--dodge":
+			_dodge = true
+		elif arg == "--keep-alive":
+			_keep_alive = true
 		elif arg.begins_with("--after-frames="):
 			_after_frames = maxi(1, int(arg.trim_prefix("--after-frames=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
@@ -85,9 +104,44 @@ func _save(tag: String) -> void:
 
 func _wait_interval() -> void:
 	var t := 0.0
+	var step := 1.0 / Engine.physics_ticks_per_second
 	while t < _interval:
+		if _dodge:
+			_watch_tells()
+			if _dodge_left > 0.0:
+				_dodge_left -= step
+				_left_stick_x(_dodge_sign if _dodge_left > 0.0 else 0.0)
 		await physics_frame
-		t += 1.0 / Engine.physics_ticks_per_second
+		t += step
+	if _keep_alive and _manager != null and bool(_manager.call("is_fighting")):
+		var own: RefCounted = _manager.call("active_creature")
+		if own != null and float(own.get("hp")) < float(own.get("max_hp")) * KEEP_ALIVE_FRACTION:
+			own.call("heal_fully")
+			print("keep-alive: topped up the active creature (disclosed harness help)")
+
+
+## Follows the trainer's current creature body; a trainer sends a new body
+## per creature, so the tell signal is re-connected when it changes.
+func _watch_tells() -> void:
+	var body: Node = _director.get("_trainer_body") as Node if _director != null else null
+	if body == _tell_source or body == null or not is_instance_valid(body):
+		return
+	_tell_source = body
+	if body.has_signal("telegraph_started"):
+		body.connect("telegraph_started", _on_tell)
+
+
+func _on_tell(seconds: float) -> void:
+	_dodge_left = seconds + DODGE_TAIL_S
+	_dodge_sign = -_dodge_sign
+	print("dodge: tell %.2fs, stick %s" % [seconds, "left" if _dodge_sign < 0.0 else "right"])
+
+
+func _left_stick_x(value: float) -> void:
+	var m := InputEventJoypadMotion.new()
+	m.axis = JOY_AXIS_LEFT_X
+	m.axis_value = value
+	Input.parse_input_event(m)
 
 
 func _capture_one() -> bool:
