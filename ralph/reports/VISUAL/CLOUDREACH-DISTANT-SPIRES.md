@@ -3,7 +3,7 @@
 V10/V20/V28, F08#4. The Cloudreach handoff `b764a197a` was merged at
 `86c7ea68f`; main `43e6949f2` at `53514232a`. The current candidate replaces
 distant haze meshes with authored limestone spires, gives them lit geology,
-and tests a lit cloud deck with original generated cloud cards. Existing
+and now tests bounded density clouds in place of the rejected cloud cards. Existing
 gameplay collision, routes and fall-recovery datum are retained.
 
 The eight-view native candidate failed both Bars A/B. The judge found
@@ -184,3 +184,45 @@ idle sought at1.2s, old settings explicitly reconstructed, HUD hidden, fixed60fp
 pinned day/night. No changed model/scale or Meshy generation. Feather breakup,
 face and night colour remain art work; the separate authored idle-axis suspicion
 is not treated as the proven cause of the live head-look defect.
+
+
+## Bounded cloud volumes and cliff/cloud palette
+
+V10/V20/V28 continues from e02080ecf, with current main e59b0c97d already
+integrated. Rejected camera-facing cards are replaced by 110 deterministic
+bounded cloud volumes. This is an original project shader, guided by the
+inspected Sky Aviary board; no new Meshy task or external purchase. Proxy tops
+stay under sampled cloud safety heights. Recovery CloudSea, routes and collision
+are unchanged. The shader integrates soft density with opaque-depth truncation
+and an interior edge fade; independent review found and verified both repairs.
+A native plane/pillar diagnostic shows cloud in front of intersecting geometry
+and foreground occlusion. Five-point terrain clearance is not full-footprint
+proof; Ally cost remains unmeasured.
+
+Six native production-camera frames (01/12/17/25/30/32), all individually
+inspected, remain blind **A NO / B NO**. Gate altitude reads, especially at
+night; far chalk-white stone, flat cloud expanses, bare settlement integration,
+material scale and ground-cover boundaries still fail. Frame32 also shows
+interpenetrating wild flyers and rectangular road shadows: appended V-CX-10.
+The existing four environment tests pass 31 assertions; the detached-node
+warning from the old cliff-wall test remains in the raw log.
+
+A same-camera three-frame diagnostic rules out absent imported texture and fog
+as the main explanation for white distant stone: it remains pale with both fog
+and material aerial blend disabled. Nine additional frames compare R/S/T
+palettes at arrival day, Windscar day and arrival night. The independent judge
+narrowly prefers S's cooler rock/cloud separation, explicitly **not** an accepted
+pass; both bars remain NO. S now uses normal config material construction, verified by three additional
+native normal-script frames (01/12/30), individually inspected, exit0/zero
+skips. The comparison fixture is not needed for the selected treatment.
+Near tan rock versus distant pale rock and settlement/cliff composition are the
+next substantial work; another subtle palette iteration is insufficient.
+
+Evidence: `cloudreach-c2-candidate/cloud-volume/` includes before cards, six
+volume frames, diagnostic captures, all nine palette frames, failed verdicts,
+source review, provenance, fixtures and raw logs. Before-card backgrounds use
+matching prior turf views; creature gaze/motion differ. Palette variants share
+the running world/camera but creatures animate. Shortcuts disclosed: staged
+flags and party, teleported registered stands, clock pinned, HUD hidden, no
+played journey/combat; subset stills do not prove full C2 or motion acceptance.
+No READY FOR INTEGRATION and no criterion closure.

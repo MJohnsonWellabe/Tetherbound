@@ -1,0 +1,60 @@
+extends SceneTree
+func _init():
+	run.call_deferred()
+func run():
+	await process_frame
+	root.size=Vector2i(1920,1080)
+	var world=Node3D.new()
+	root.add_child(world)
+	var env=WorldEnvironment.new()
+	env.environment=Environment.new()
+	env.environment.background_mode=Environment.BG_COLOR
+	env.environment.background_color=Color(0.3,0.52,0.70)
+	env.environment.ambient_light_source=Environment.AMBIENT_SOURCE_COLOR
+	env.environment.ambient_light_color=Color(0.7,0.8,0.9)
+	env.environment.ambient_light_energy=0.7
+	world.add_child(env)
+	var key=DirectionalLight3D.new()
+	key.rotation_degrees=Vector3(-40,-30,0)
+	key.light_energy=1.0
+	world.add_child(key)
+	var box=BoxMesh.new()
+	box.size=Vector3(2,2,2)
+	var mat=ShaderMaterial.new()
+	mat.shader=load("res://shaders/cloudreach_cloud_volume.gdshader")
+	box.material=mat
+	for at in [Vector3(-2,0,0),Vector3(3,-0.5,-2),Vector3(0,-1,-5)]:
+		var bank=MeshInstance3D.new()
+		bank.mesh=box
+		bank.position=at
+		bank.scale=Vector3(3,1.8,2.6)
+		bank.rotation.y=at.x
+		bank.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		world.add_child(bank)
+	var floor_mesh=BoxMesh.new()
+	floor_mesh.size=Vector3(20,0.2,20)
+	var solid=StandardMaterial3D.new()
+	solid.albedo_color=Color(0.23,0.19,0.12)
+	floor_mesh.material=solid
+	var floor_node=MeshInstance3D.new()
+	floor_node.mesh=floor_mesh
+	floor_node.position=Vector3(0,-0.8,-1)
+	world.add_child(floor_node)
+	var occluder=MeshInstance3D.new()
+	occluder.mesh=BoxMesh.new()
+	occluder.mesh.size=Vector3(1.2,4,1.2)
+	occluder.mesh.material=solid
+	occluder.position=Vector3(1,0,3)
+	world.add_child(occluder)
+	var cam=Camera3D.new()
+	world.add_child(cam)
+	var out="D:/tetherbound/visual-acceptance-local/cloud-volume-depth-preview"
+	DirAccess.make_dir_recursive_absolute(out)
+	for view in ["low","above"]:
+		cam.position=Vector3(8,2 if view=="low" else 9,12)
+		cam.look_at(Vector3(0,0,-1))
+		cam.make_current()
+		for i in 10: await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png(out+"/"+view+".png")
+	quit()

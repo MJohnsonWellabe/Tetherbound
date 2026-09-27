@@ -47,6 +47,14 @@ Eight native day/night comparisons and 32 tests/183 assertions are in
 `cloudreach-c2-candidate/galecrest-gaze`; independent source review clean.
 Blind scoped head/neck PASS (old variant FAIL); texture/whole-motion and full
 C2 remain open, overall Bars A/B NO.
+Cloud volume checkpoint: six native subset frames and a nine-frame palette
+comparison remain Bars A/B NO. The judge narrowly prefers palette S; bounded
+cloud volumes fix rejected card silhouettes but do not close cliff/cloud
+identity. Native depth diagnostic and independent source review cover proxy
+occlusion/edge fixes; four environment tests/31 assertions pass. Evidence is
+`cloudreach-c2-candidate/cloud-volume`; V-CX-10 records overlapping flyers and
+rectangular shadows. Next: coherent near/far cliff material/form and settlement
+integration, not further subtle palette tuning. No F08#4 READY.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

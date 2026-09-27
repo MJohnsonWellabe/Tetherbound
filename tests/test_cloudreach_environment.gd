@@ -38,24 +38,36 @@ func test_cliff_walls_face_outward() -> void:
 	world.free()
 
 
-func test_cloud_sea_uses_clustered_banks_instead_of_independent_white_ovals() -> void:
+func test_cloud_banks_are_deterministic_and_below_registered_ground() -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
-	var cloud: Dictionary = config.get("cloud_sea", {})
-	assert_between(int(cloud.get("billow_bank_count", 0)), 80, 120,
-		"Cloud sea uses the reviewed 80-120 coherent bank range")
-	assert_false(cloud.has("billow_count"),
-		"The exhausted independent-billow mechanism is no longer configured")
-	var lobes: Array = cloud.get("billow_lobes_per_bank", [])
-	assert_eq([int(lobes[0]), int(lobes[1])], [4, 7],
-		"Each bank is made from several related lobes")
-	assert_true(Color(str(cloud.get("billow_base_colour", "#ffffff"))).get_luminance()
-		< Color(str(cloud.get("billow_colour", "#ffffff"))).get_luminance(),
-		"Cloud banks have a darker base instead of one flat white value")
-	var source := FileAccess.get_file_as_string("res://scripts/world/cloudreach_world.gd")
-	assert_true(source.contains("var tier := lobe_index % 3"),
-		"Bank lobes occupy three height tiers")
-	assert_true(source.contains("The low body crosses the sheet"),
-		"Every bank includes a broad body intersecting its deck")
+	var cloud: Dictionary = config["cloud_sea"].duplicate(true)
+	cloud["billow_bank_count"] = 8
+	config["cloud_sea"] = cloud
+	var world := WORLD.new()
+	world.set("_visual_config", config)
+	world.set("_config", {"regions": [{"position": [0, 300, 0]}]})
+	world.register_runtime_surface({"kind": "rect", "centre": Vector2.ZERO,
+		"half": Vector2(10000, 10000), "height": 200.0})
+	world.call("_build_materials")
+	var first := Node3D.new()
+	var second := Node3D.new()
+	var heights: Array[float] = [500.0, 500.0, 500.0, 500.0]
+	for parent in [first, second]:
+		world.call("_add_cloud_billows", parent, cloud, 0.0, 0.0, 110.0, 2, 2, heights, 9000.0)
+	var a := (first.get_node("CloudBillows") as MultiMeshInstance3D).multimesh
+	var b := (second.get_node("CloudBillows") as MultiMeshInstance3D).multimesh
+	assert_eq(a.instance_count, 8)
+	var box := a.mesh.get_aabb()
+	var ceiling := 200.0 - float(cloud["min_clearance_m"])
+	for i in a.instance_count:
+		var transform := a.get_instance_transform(i)
+		assert_true(transform.is_equal_approx(b.get_instance_transform(i)), "stable bank placement after rebuild")
+		assert_true(transform.basis.determinant() > 0.0, "finite positive cloud volume")
+		var bounds := transform * box
+		assert_true(bounds.end.y <= ceiling + 0.001, "whole bank proxy below registered ground clearance")
+	first.free()
+	second.free()
+	world.free()
 
 
 func test_route_joints_do_not_restart_fades() -> void:

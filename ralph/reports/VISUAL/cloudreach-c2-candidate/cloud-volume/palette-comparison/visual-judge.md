@@ -1,0 +1,29 @@
+# Cloudreach palette comparison — R / S / T
+
+**Relative selection: S, narrowly. Acceptance: no candidate passes.** S is the preferred direction for another visual iteration, not an accepted palette or a closure of either reference bar.
+
+This is a code-blind visual judgement of the nine supplied native frames only. I inspected the visual-judge rubric, relevant art-direction text, Cloudreach Sky Aviary board, Meadows key art and `palworld-04-plateau-landmark.jpg`. No source, logs or history were inspected. Creature pose differences between captures are not evidence of palette quality. Still images cannot establish motion quality or performance.
+
+## Palette and altitude comparison
+
+| Stand | R | S | T |
+|---|---|---|---|
+| `01_gate_lower_cliffs_approach_day` | Cloud bank reads as a very bright, nearly flat white field. Pale right-hand rock disappears into it, weakening the drop beyond the grassy edge. | Cooler cloud body and visible soft internal modelling give slightly more separation from the pale rock. This is the most useful day result, though the white rock still suggests snow or ice beside the tan cliffs. | Softer cloud modelling is present, but the near-white mass remains close in value to the pale outcrops. Its advantage over R is small, and its cliff/cloud distinction is weaker than S. |
+| `12_windscar_ravine_route_day` | The large pale mass behind the left cliffs and the white bank below the right spires flatten into one bright distance band. | The cool cloud band reads a little more clearly as atmosphere beneath the rock. The right-hand spire silhouette and the drop remain legible. | Similar to S at this distance, but the paler bank gives less colour separation. There is no convincing cliff-colour advantage over S. |
+| `30_gate_lower_cliffs_approach_night` | The cloud layer is conspicuously luminous compared with the near cliffs and gate. Distant outcrops remain readable but look spotlighted against the dark foreground. | The cool blue cloud layer sits more comfortably within the night palette while leaving the rocks readable. This carries the preference for S across both times of day. | Very close to S visually. I do not see enough night improvement to overturn S's small day advantage. |
+
+The cliff hues themselves look substantially alike across the candidates; I cannot justify claiming a meaningful near-cliff improvement from these images. The visible preference is principally the cloud-to-rock relationship. Altitude is understandable in all three: the grassy brink, isolated spires and cloud bank below it communicate elevation. None gives the layered vertical country, deep gaps and grounded distant landforms of the Cloudreach board. The bank often reads as a smooth horizontal surface with rocks poking out rather than cloud volumes wrapping different depths.
+
+The night view preserves the trainer's legs and the route, which is a useful strength. It also compresses the gate and its enormous neighbouring brown rock into a dark mass while granting much more light to the remote cloud field. That hierarchy draws attention away from the intended destination.
+
+## Three largest remaining gaps, ranked
+
+1. **Cliff and cloud materials do not form one landscape.** In every `01_*_day` and `12_*_day` frame, foreground/near cliffs are broad tan-brown slabs, whereas distant outcrops are almost white with a snowy or icy read. The Cloudreach board ties pale weathered stone together through warm lit faces, cool shaded faces and distance layering. These captures make the distant rocks feel like a different material family. Scene-side colour, light and atmospheric value relationships can address this; selecting S alone does not.
+2. **Landform shape and framing undersell the vertical world.** Every `01_*` frame is dominated by a bulky, rounded, tiered rock beside a cropped gate. Every `12_*` frame has a large comparatively blank cliff wall on the left and a broad, low grassy route. The board uses broken vertical buttresses, deep fissures, descending ledges and intervening cloud to reveal height; Palworld's plateau reference also gives rock masses convincing subdivisions and layered scale. Camera and staging can improve the composition, but the rounded tiered silhouette and broad unbroken faces need geometry/landform work, not another tint. These images cannot establish whether suitable replacement art already exists.
+3. **Surface and subject finish remain inconsistent.** In all three stands, the thin isolated grass blades, dense rectangular-looking grass patches, abrupt path edge and broad repeating turf compete with highly mottled creature feathers and a simpler trainer. The companion has a readable face in most captures, but its dense patchwork surface lacks the clean large colour blocks of the Palworld subjects. The reference frames integrate ground cover, path wear, shadows and subjects into a more unified view. Ground transitions, grass placement and lighting are scene/material work. Creature surface simplification and any silhouette repairs require subject-specific art work; palette selection cannot certify them.
+
+## Reference bars for this subset
+
+**Bar A — No.** The natural grass, warm path, blue creature accents and cool night atmosphere point toward the Meadows identity, and the clouds signal Cloudreach. The incompatible near/distant rock treatment and weak vertical landform language still prevent these frames from belonging convincingly to the settled Cloudreach/Meadows visual world. S is only a relative improvement.
+
+**Bar B — No.** The trainer-and-companion route composition clearly signals the same broad genre, but the combined cliff shape, ground treatment and subject/environment finish do not yet meet the intended polished creature-adventure register beside the inspected Palworld plateau frame. This is a subset verdict, not a judgement of unseen locations or gameplay.

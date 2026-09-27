@@ -299,6 +299,7 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			var source_material := part.get_active_material(0) as StandardMaterial3D
 			var stone := ShaderMaterial.new()
 			stone.shader = preload("res://shaders/cloudreach_buttress.gdshader")
+			stone.set_shader_parameter("stone_tint", Color(str(section_config.get("limestone_buttress_tint", "#ffffff"))))
 			if source_material != null:
 				stone.set_shader_parameter("stone_colour", source_material.albedo_texture)
 			var relief: Dictionary = _visual_config.get("distant_relief", {})
@@ -774,15 +775,11 @@ func _build_materials() -> void:
 	var cloud_deck_far := cloud_deck.duplicate() as ShaderMaterial
 	cloud_deck_far.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("deck_colour", "#93aec4"))))
 	_materials["cloud_deck_far"] = cloud_deck_far
-	var cloud_bank := StandardMaterial3D.new()
-	cloud_bank.albedo_texture = load("res://assets/environment/cloudreach/cloud_bank_v1.png")
-	cloud_bank.albedo_color = Color(str(cloud_cfg.get("card_tint", "#a6b4bc")))
-	cloud_bank.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
-	cloud_bank.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-	cloud_bank.billboard_keep_scale = true
-	cloud_bank.cull_mode = BaseMaterial3D.CULL_DISABLED
-	cloud_bank.roughness = 1.0
-	cloud_bank.disable_receive_shadows = true
+	var cloud_bank := ShaderMaterial.new()
+	cloud_bank.shader = preload("res://shaders/cloudreach_cloud_volume.gdshader")
+	cloud_bank.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
+	cloud_bank.set_shader_parameter("cloud_base", Color(str(cloud_cfg.get("billow_base_colour", "#8095a8"))))
+	cloud_bank.set_shader_parameter("extinction", float(cloud_cfg.get("bank_extinction", 10.0)))
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
 	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
@@ -1033,63 +1030,39 @@ func _add_cloud_sheet(parent: Node3D, label: String, min_x: float, min_z: float,
 	parent.add_child(mesh)
 
 
-## Deterministic clustered banks riding the upper sheet, in ONE MultiMesh.
-## Each bank has a broad deck-intersecting body and several offset lobes across
-## three height tiers. The former 760 independent flattened spheres projected
-## as detached white ovals; random size could not turn unrelated stamps into a
-## cloud body.
+## Each instance encloses one soft density bank. The proxy never appears as
+## geometry: the shader integrates bounded density, with no billboard rotation.
 func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: float,
 		spacing: float, columns: int, rows: int, heights: Array[float],
 		visible_distance: float) -> void:
-	var bank_count := maxi(0, int(cfg.get("billow_bank_count", cfg.get("billow_count", 96))))
+	var bank_count := maxi(0, int(cfg.get("billow_bank_count", 110)))
 	if bank_count == 0:
 		return
-	var lobe_range: Array = cfg.get("billow_lobes_per_bank", [4, 7])
-	var min_lobes := maxi(3, int(lobe_range[0]) if lobe_range.size() > 0 else 4)
-	var max_lobes := maxi(min_lobes, int(lobe_range[1]) if lobe_range.size() > 1 else 7)
-	var radii: Array = cfg.get("billow_radius_m", [46.0, 132.0])
-	var min_r := float(radii[0]) if radii.size() > 0 else 46.0
-	var max_r := float(radii[1]) if radii.size() > 1 else 132.0
-	var flatten := float(cfg.get("billow_flatten", 0.42))
-	var card := QuadMesh.new()
-	card.size = Vector2(2.0, 1.0)
-	# Original transparent cloud asset, lit by the production day/night cycle.
-	card.material = _materials["cloud_billow"]
+	var radii: Array = cfg.get("billow_radius_m", [150.0, 420.0])
+	var proxy := BoxMesh.new()
+	proxy.size = Vector3(2.0, 2.0, 2.0)
+	proxy.material = _materials["cloud_billow"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = card
+	multi.mesh = proxy
+	multi.instance_count = bank_count
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 20260906))
-	var transforms: Array[Transform3D] = []
-	for bank_index in bank_count:
+	for i in bank_count:
 		var column := rng.randi_range(0, columns - 1)
 		var row := rng.randi_range(0, rows - 1)
-		var centre := Vector3(
-			min_x + float(column) * spacing + rng.randf_range(-spacing, spacing) * 0.5,
-			heights[row * columns + column],
-			min_z + float(row) * spacing + rng.randf_range(-spacing, spacing) * 0.5)
-		var bank_r := rng.randf_range(min_r, max_r)
-		var yaw := rng.randf() * TAU
-		# The low body crosses the sheet, eliminating the detached-oval gap.
-		var body_basis := Basis.IDENTITY.rotated(Vector3.UP, yaw)
-		body_basis = body_basis.scaled(Vector3(bank_r * 1.35, minf(bank_r * 0.8, 100.0), 1.0))
-		transforms.append(Transform3D(body_basis,
-			centre + Vector3.UP * bank_r * flatten * 0.12))
-		var lobes := rng.randi_range(min_lobes, max_lobes)
-		for lobe_index in lobes:
-			var tier := lobe_index % 3
-			var angle := yaw + float(lobe_index) * TAU / float(lobes) + rng.randf_range(-0.28, 0.28)
-			var offset_r := bank_r * rng.randf_range(0.28, 0.78)
-			var lobe_r := bank_r * rng.randf_range(0.38, 0.72)
-			var squash := flatten * rng.randf_range(0.72, 1.18)
-			var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
-			basis = basis.scaled(Vector3(lobe_r, minf(lobe_r * 0.9, 90.0), 1.0))
-			var at := centre + Vector3(cos(angle) * offset_r,
-				lobe_r * squash * (0.32 + float(tier) * 0.34), sin(angle) * offset_r)
-			transforms.append(Transform3D(basis, at))
-	multi.instance_count = transforms.size()
-	for i in transforms.size():
-		multi.set_instance_transform(i, transforms[i])
+		var x := min_x + (float(column) + rng.randf_range(-0.5, 0.5)) * spacing
+		var z := min_z + (float(row) + rng.randf_range(-0.5, 0.5)) * spacing
+		var radius := rng.randf_range(float(radii[0]), float(radii[1]))
+		var half_height := minf(radius * float(cfg.get("bank_height_ratio", 0.34)),
+			float(cfg.get("bank_half_height_max_m", 90.0)))
+		# Clamp the entire upper proxy below the local safety height. Include
+		# neighbouring terrain at the bank radius, not just its grid cell.
+		var safe_top := minf(heights[row * columns + column], cloud_sheet_height_at(x, z, radius))
+		var at := Vector3(x, safe_top - half_height, z)
+		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
+		basis = basis.scaled(Vector3(radius, half_height, radius * rng.randf_range(0.7, 1.0)))
+		multi.set_instance_transform(i, Transform3D(basis, at))
 	var node := MultiMeshInstance3D.new()
 	node.name = "CloudBillows"
 	node.multimesh = multi
