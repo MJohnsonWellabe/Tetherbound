@@ -222,7 +222,8 @@ func _travel() -> bool:
 		# HarvestNode's production prompt is configured at 2.4m. Requiring a
 		# 1.5m centre approach first adds a stricter, non-gameplay collision
 		# gate; 2.2m gets the real prompt/arbiter check its intended turn.
-		if not await _around_station(_v2p(), at) or not await _walk_ground(at, 2.2):
+		if not await _via_haul_apron(at) or not await _around_station(_v2p(), at) \
+				or not await _walk_ground(at, 2.2):
 			return false
 		var node := gather._authored_node_at(at, "rootstone")
 		if node == null:
@@ -323,6 +324,29 @@ const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
 
 
 const BANK_RISE_M := 1.5
+## The Old Quarry's worked faces stand as one 4-6 m wall along z 1789-1794
+## (data/config/old_quarry.json worked_cut, x 375-396); nodes on the upper
+## bench behind it are reached up the haul apron on the east side
+## (HaulApronUpper, ConduitApronInner, the 12 m upper apron at (400,1799.5)).
+## Walking straight from the road below met the face three times (seed 15:
+## CI r15, r17 and a resume dry run, stuck near (360-371,1752-1772)).
+const QUARRY_CUT_Z := 1789.0
+const QUARRY_HAUL_VIA: Array[Vector2] = [Vector2(398.0, 1783.0), Vector2(400.0, 1794.0)]
+
+
+func _via_haul_apron(target: Vector2) -> bool:
+	if not needs_haul_apron(_v2p(), target):
+		return true
+	_receipt("quarry_haul_apron", {"from": _v2p(), "to": target})
+	for via: Vector2 in QUARRY_HAUL_VIA:
+		if not await _walk_ground(via, 2.0):
+			return false
+	return true
+
+
+static func needs_haul_apron(from: Vector2, to: Vector2) -> bool:
+	return from.y < QUARRY_CUT_Z and to.y > QUARRY_CUT_Z and to.x > 370.0 and to.x < 420.0 \
+		and from.x > 330.0 and from.x < 420.0
 const GO_AROUND_M := 10.0
 var _going_around := false
 const MAX_WILD_LOSSES := 3
