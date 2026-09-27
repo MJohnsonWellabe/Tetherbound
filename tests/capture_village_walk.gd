@@ -153,6 +153,7 @@ const SIDESTEP_FRAMES := 48
 const INSIDE_START := Vector2(-19.5, -16.0)
 const DOORWAY := Vector2(-17.0, -16.0)
 
+const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const OPENING_FLAGS := [
 	"opening:beat:wake", "opening:beat:house", "opening:beat:choose",
 	"opening:starter_granted", "opening:beat:name", "opening:beat:return_starter",
@@ -163,6 +164,12 @@ var _time := "day"
 var _route_name := "through"
 var _capture_dir := ""
 var _hide_hud := false
+## `--from-title`: play the opening first (tests/helpers/gate_a_opening_drive.gd:
+## the title's Start New Game, wake, house, choice, naming, walk-out and the
+## natural first catch, every action a parsed joypad event) and carry on in that
+## SAME world. No opening flags are written, no starter is granted and the
+## player is never placed: the walk starts wherever the opening left them.
+var _from_title := false
 var _plan_only := false
 var _headless := false
 
@@ -206,6 +213,8 @@ func _parse_args() -> bool:
 			_hide_hud = true
 		elif a == "--plan-only":
 			_plan_only = true
+		elif a == "--from-title":
+			_from_title = true
 	if not _time in ["day", "night"]:
 		print("[village-walk] FAIL bad --time=%s (day|night)" % _time)
 		return false
@@ -240,29 +249,34 @@ func _run() -> void:
 		return
 
 	await process_frame
-	_game = root.get_node_or_null(^"Game")
-	if _game == null:
-		print("[village-walk] FAIL no Game autoload")
-		quit(1)
-		return
-	var progression: RefCounted = _game.get("progression")
-	for flag: String in OPENING_FLAGS:
-		progression.call("set_flag", flag)
-	var party: RefCounted = _game.get("party")
-	if party != null and (party.call("members") as Array).is_empty():
-		var starter: RefCounted = _game.call("make_creature", "terrapup")
-		if starter != null:
-			party.call("add", starter)
+	if _from_title:
+		if not await _play_the_opening():
+			quit(1)
+			return
+	else:
+		_game = root.get_node_or_null(^"Game")
+		if _game == null:
+			print("[village-walk] FAIL no Game autoload")
+			quit(1)
+			return
+		var progression: RefCounted = _game.get("progression")
+		for flag: String in OPENING_FLAGS:
+			progression.call("set_flag", flag)
+		var party: RefCounted = _game.get("party")
+		if party != null and (party.call("members") as Array).is_empty():
+			var starter: RefCounted = _game.call("make_creature", "terrapup")
+			if starter != null:
+				party.call("add", starter)
 
-	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
-	root.add_child(_world)
-	current_scene = _world
+		_world = (load(SCENE) as PackedScene).instantiate() as Node3D
+		root.add_child(_world)
+		current_scene = _world
+		for i in SETTLE_FRAMES:
+			await physics_frame
+		_player = _world.get_node_or_null(^"Player") as CharacterBody3D
+		_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	if not _headless:
 		root.get_viewport().disable_3d = true  # photo mode, see _capture
-	for i in SETTLE_FRAMES:
-		await physics_frame
-	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
-	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	_manager = _world.get_node_or_null(^"CombatManager")
 	if _player == null or _rig == null:
 		print("[village-walk] FAIL no Player/CameraRig in %s" % SCENE)
@@ -284,17 +298,19 @@ func _run() -> void:
 	_events.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.arc) < float(b.arc))
 
 	# Stand inside the farmhouse, facing the door. Everything after this is input.
-	var ground := _ground_at(INSIDE_START)
-	_player.global_position = Vector3(INSIDE_START.x, ground + 1.0, INSIDE_START.y)
-	_player.velocity = Vector3.ZERO
-	_rig.set("yaw", _yaw_toward(INSIDE_START, DOORWAY))
+	# A played opening already left the player in the world: nothing is placed.
+	if not _from_title:
+		var ground := _ground_at(INSIDE_START)
+		_player.global_position = Vector3(INSIDE_START.x, ground + 1.0, INSIDE_START.y)
+		_player.velocity = Vector3.ZERO
+		_rig.set("yaw", _yaw_toward(INSIDE_START, DOORWAY))
 	for i in 30:
 		await physics_frame
 
 	print("[village-walk] START route=%s time=%s capture_dir=%s headless=%s path_m=%.1f road_arcs=[%.1f,%.1f] events=%d" % [
 		_route_name, _time, _capture_dir, str(_headless), _arcs[_arcs.size() - 1],
 		_road_from_arc, minf(_road_until_arc, _arcs[_arcs.size() - 1]), _events.size()])
-	await _capture("start-inside-house")
+	await _capture("start-after-opening" if _from_title else "start-inside-house")
 	if _route_name == "visits":
 		await _visit_all()
 	elif _route_name == "through":
@@ -311,6 +327,24 @@ func _run() -> void:
 		await _capture("failure")
 		print("[village-walk] FAIL route=%s time=%s: %s (captures=%d)" % [_route_name, _time, _failed, _captures])
 		quit(1)
+
+
+## `--from-title`: the opening, played, in this process's own world.
+func _play_the_opening() -> bool:
+	var opening: Dictionary = await OPENING_DRIVE.new().run(self)
+	for line: Variant in (opening.get("transcript", []) as Array):
+		print("[village-walk] OPENING %s" % str(line))
+	if not bool(opening.get("passed", false)):
+		for line: Variant in (opening.get("failures", []) as Array):
+			print("[village-walk] FAIL opening: %s" % str(line))
+		return false
+	_world = opening.get("world") as Node3D
+	_game = opening.get("game") as Node
+	_player = opening.get("player") as CharacterBody3D
+	_rig = opening.get("rig") as Node3D
+	print("[village-walk] OPENING played: starter=%s at %s" % [
+		str(opening.get("starter_species", "")), str(_player.global_position if _player != null else "?")])
+	return _world != null and _game != null
 
 
 ## --- route data --------------------------------------------------------------
@@ -788,21 +822,23 @@ func _visit_all() -> void:
 		return
 	print("[village-walk] VISITS %s" % ", ".join(targets.map(func(t: Dictionary) -> String: return str(t.label))))
 	var graph := _road_graph()
-	# Grandpa first, from the start pose inside the house: no road indoors.
-	for t: Dictionary in targets:
-		if str(t.kind) == "grandpa":
-			await _visit(t, PackedVector2Array())
-			targets.erase(t)
-			break
+	# Grandpa first, from the start pose inside the house: no road indoors. A
+	# played opening ends outdoors, so Grandpa is then one more road target.
+	if not _from_title:
+		for t: Dictionary in targets:
+			if str(t.kind) == "grandpa":
+				await _visit(t, PackedVector2Array())
+				targets.erase(t)
+				break
+			if not _failed.is_empty():
+				return
 		if not _failed.is_empty():
 			return
-	if not _failed.is_empty():
-		return
-	# Out through the real door before the first road leg.
-	_set_leg(PackedVector2Array([_xz(), DOORWAY]), -1, -1)
-	await _walk()
-	if not _failed.is_empty():
-		return
+		# Out through the real door before the first road leg.
+		_set_leg(PackedVector2Array([_xz(), DOORWAY]), -1, -1)
+		await _walk()
+		if not _failed.is_empty():
+			return
 	while not targets.is_empty():
 		var here := _xz()
 		# Nearest first, but nothing past the boundary before the key is in the
@@ -813,7 +849,7 @@ func _visit_all() -> void:
 		var have_key := _has_key() or bool((_game.get("progression") as RefCounted).call("has", "road_gate_open"))
 		var next: Dictionary = {}
 		for t: Dictionary in targets:
-			if not have_key and not str(t.kind) in ["villager", "key"]:
+			if not have_key and not str(t.kind) in ["villager", "grandpa", "key"]:
 				continue
 			if next.is_empty() or here.distance_to(t.at) < here.distance_to(next.at):
 				next = t
