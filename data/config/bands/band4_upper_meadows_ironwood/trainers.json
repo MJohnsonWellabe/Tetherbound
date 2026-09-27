@@ -22,6 +22,8 @@
       "_why_here": "The high pasture west of the Rise, on the trainer road up-country (spec Band 4's 'high pasture' and 'trainer road'). MEASURED, not guessed: `tools/_probe_upper_meadows.gd` reads h=0.59m, 0.64m of height spread and a worst local slope of 6.0 degrees over an 8m pad -- a real arena, on the flattest ground in the upper Meadows. 28.6m clear of the Burrow Warrens' mouth at [70,-140] so the dungeon's own prompt never contests the challenge, 133m from the origin and well inside world_perimeter.gd's 235m ring. `facing_deg` is the yaw that looks back down the road toward the village, the same atan2(dx, dz) convention every other entry in this file uses. STALE after OW5D's move -- see `_comment_ow5d` above; ground here was not re-probed either.",
       "challenge": "captain_field_challenge",
       "defeated": "captain_field_defeated",
+      "victory_conversation": "captain_field_defeated",
+      "_why_victory_conversation_f04_6": "F04#6 (ACCEPTANCE 6.1, BOSSES 4.3 Change): the win used to end with the player already walking away and nothing in frame (earned-run aftermath capture, meadows-f04-bosses r1). encounter_director.gd::_present_trainer_victory plays this conversation the moment the fight resolves -- the captain's own Sigil handover, the same lines the defeated greeting says -- while the aftermath camera faces this trainer and the defeat slump plays. Data only; no new lines.",
       "team": [
         {
           "species": "duskhush",
@@ -108,6 +110,8 @@
       "_why_here": "The shoulder under the Rise's south-west face, where the wind ridge starts and the walkable ground ends -- everything east of here measures 43 to 76 degrees of rock in the same probe, so this is literally the last place on the ridge a fight can happen. MEASURED: h=-1.51m, 2.79m spread, worst slope 12.8 degrees over a 9m pad, 168m out. 36m from the Field Captain and 46m from the Riverwatch Captain: three distinct places, none of them in sight-and-prompt range of another. STALE after OW5D's move -- ground not re-probed at the new site.",
       "challenge": "captain_ridge_challenge",
       "defeated": "captain_ridge_defeated",
+      "victory_conversation": "captain_ridge_defeated",
+      "_why_victory_conversation_f04_6": "F04#6 (ACCEPTANCE 6.1, BOSSES 4.3 Change): the win used to end with the player already walking away and nothing in frame (earned-run aftermath capture, meadows-f04-bosses r1). encounter_director.gd::_present_trainer_victory plays this conversation the moment the fight resolves -- the captain's own Sigil handover, the same lines the defeated greeting says -- while the aftermath camera faces this trainer and the defeat slump plays. Data only; no new lines.",
       "team": [
         {
           "species": "trailpup",
