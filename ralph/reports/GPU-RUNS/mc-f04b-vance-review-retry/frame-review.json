@@ -1,0 +1,308 @@
+[
+  {
+    "file": "relay_captain-00-before.png",
+    "shows": "Shows trainer, captain and companion outside the Relay with Challenge Captain Vance prompt.",
+    "pass": true,
+    "problem": "Tutorial overlay covers companion lower body; scene readable, no exposure failure or obvious placeholder subject."
+  },
+  {
+    "file": "relay_captain-01.png",
+    "shows": "Shows crouched companion left and Galecrest right with incoming and weakness cues and full combat HUD.",
+    "pass": true,
+    "problem": "Companion face partly behind health panel; both creatures identifiable and framed."
+  },
+  {
+    "file": "relay_captain-02.png",
+    "shows": "Shows companion under translucent white wind VFX opposite Galecrest; open cue and defensive feedback.",
+    "pass": true,
+    "problem": "Localized VFX softens companion details; no scene-wide blowout."
+  },
+  {
+    "file": "relay_captain-03.png",
+    "shows": "Shows companion left and Galecrest right with weakness feedback and boss health reduced.",
+    "pass": true,
+    "problem": "Foreground building edge intrudes left but creatures remain readable."
+  },
+  {
+    "file": "relay_captain-04.png",
+    "shows": "Shows companion head behind broad diagonal roof beam, Galecrest fully visible and incoming cue.",
+    "pass": false,
+    "problem": "Roof/beam hides most companion body and central action area."
+  },
+  {
+    "file": "relay_captain-05.png",
+    "shows": "Shows extreme close-up of companion eye and muzzle with stagger/open cues overlaid.",
+    "pass": false,
+    "problem": "Camera clips companion at top/left/bottom and Galecrest is almost entirely hidden; combat unreadable."
+  },
+  {
+    "file": "relay_captain-06.png",
+    "shows": "Shows companion face and Galecrest wings behind horizontal foreground beam, incoming cue and combat HUD.",
+    "pass": false,
+    "problem": "Beam masks companion face and the central combat area."
+  },
+  {
+    "file": "relay_captain-07.png",
+    "shows": "Shows companion head left and Galecrest upper body right above horizontal beam.",
+    "pass": false,
+    "problem": "Beam bisects both subjects and conceals their body/action area."
+  },
+  {
+    "file": "relay_captain-08.png",
+    "shows": "Shows companion legs beneath rail and Galecrest wingtips above rail with open cue.",
+    "pass": false,
+    "problem": "Stone post and broad rail obscure nearly all heads/central bodies."
+  },
+  {
+    "file": "relay_captain-09.png",
+    "shows": "Shows Galecrest flashing under impact VFX, companion behind post and rail, weakness feedback.",
+    "pass": false,
+    "problem": "Post and rail hide most companion body and combat contact."
+  },
+  {
+    "file": "relay_captain-10.png",
+    "shows": "Shows Galecrest recoiling under pale ring VFX and companion head behind rail, incoming cue.",
+    "pass": false,
+    "problem": "Rail conceals companion face and central action."
+  },
+  {
+    "file": "relay_captain-11.png",
+    "shows": "Shows companion upper body and rearing Galecrest above diagonal rail, open cue and defensive feedback.",
+    "pass": false,
+    "problem": "Broad rail conceals companion lower body and combat contact area."
+  },
+  {
+    "file": "relay_captain-12.png",
+    "shows": "Shows Galecrest with raised wing and circular hit effect, weakness cue, companion rear behind diagonal rail.",
+    "pass": false,
+    "problem": "Rail and post conceal companion midsection and action area."
+  },
+  {
+    "file": "relay_captain-13.png",
+    "shows": "Shows Galecrest rearing with stagger/open cues, companion rear behind rail and post.",
+    "pass": false,
+    "problem": "Foreground structures cut through companion torso and hide feet/action area."
+  },
+  {
+    "file": "relay_captain-14.png",
+    "shows": "Shows Galecrest under pale impact ring, companion rear squeezed between roof and post.",
+    "pass": false,
+    "problem": "Post, roof edge and rail hide substantial companion silhouette and action."
+  },
+  {
+    "file": "relay_captain-15.png",
+    "shows": "Shows Galecrest rearing with incoming cue and hit VFX, companion face and paw in narrow gap between roof and post.",
+    "pass": false,
+    "problem": "Roof and post conceal most companion body; combat framing remains obstructed."
+  },
+  {
+    "file": "relay_captain-16.png",
+    "shows": "Shows companion face and back with Galecrest bent forward, defensive feedback and open cue.",
+    "pass": false,
+    "problem": "Broad diagonal rail conceals lower combat area and companion body."
+  },
+  {
+    "file": "relay_captain-17.png",
+    "shows": "Shows companion rear and Galecrest under impact ring with weakness feedback.",
+    "pass": false,
+    "problem": "Diagonal rail/post continue to conceal companion midsection and combat contact."
+  },
+  {
+    "file": "relay_captain-18.png",
+    "shows": "Shows Galecrest rearing under hit ring and incoming cue, companion rear behind rail.",
+    "pass": false,
+    "problem": "Rail bisects companion body and central action."
+  },
+  {
+    "file": "relay_captain-19.png",
+    "shows": "Shows Galecrest rearing with defensive feedback and companion rear behind very close roof/post.",
+    "pass": false,
+    "problem": "Roof hides companion head and post blocks central combat area."
+  },
+  {
+    "file": "relay_captain-20.png",
+    "shows": "Shows Galecrest in pale hit flash with weakness cue and only parts of companion beyond roof.",
+    "pass": false,
+    "problem": "Foreground roof hides most companion and reduces fight to narrow gap."
+  },
+  {
+    "file": "relay_captain-21.png",
+    "shows": "Shows Galecrest under circular VFX and incoming cue, companion face behind stone post.",
+    "pass": false,
+    "problem": "Post/rail/roof obscure companion face and body."
+  },
+  {
+    "file": "relay_captain-22.png",
+    "shows": "Shows stagger/open cues and rearing Galecrest; companion head above rail and paws beneath it.",
+    "pass": false,
+    "problem": "Rail bisects companion and masks central action."
+  },
+  {
+    "file": "relay_captain-23.png",
+    "shows": "Shows low-health Galecrest with circular hit effect and companion rear behind broad rail.",
+    "pass": false,
+    "problem": "Rail hides central body/contact area of both combatants."
+  },
+  {
+    "file": "relay_captain-24.png",
+    "shows": "Shows low-health Galecrest rearing with impact ring and incoming cue above rail, companion rear cut by rail.",
+    "pass": false,
+    "problem": "Broad rail masks companion torso and central fight area."
+  },
+  {
+    "file": "relay_captain-99-after.png",
+    "shows": "Shows trainer, upright captain behind and companion right with Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Captain partly overlaps trainer; quickbar covers companion lower body, but aftermath state readable."
+  },
+  {
+    "file": "relay_captain-a01.png",
+    "shows": "Shows Captain Vance defeated reward toast, bowed captain behind trainer and companion facing away at right.",
+    "pass": true,
+    "problem": "Trainer partly overlaps captain; reward and bow are visible. Quickbar covers companion rear."
+  },
+  {
+    "file": "relay_captain-a02.png",
+    "shows": "Shows Captain Vance defeated reward toast, bowed captain behind trainer, companion face at right and greet prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a03.png",
+    "shows": "Shows Captain Vance defeated reward toast, bowed captain behind trainer, companion face at right and greet prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a04.png",
+    "shows": "Shows Captain Vance defeated reward toast, bowed captain behind trainer, companion face at right and greet prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a05.png",
+    "shows": "Shows Captain Vance defeated reward toast, bowed captain behind trainer, companion face at right and greet prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a06.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a07.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a08.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a09.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a10.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a11.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a12.png",
+    "shows": "Shows bowed Captain Vance behind trainer, companion face at right and Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a13.png",
+    "shows": "Shows Captain Vance raising his head behind trainer, companion face at right and Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a14.png",
+    "shows": "Shows Captain Vance raising his head behind trainer, companion face at right and Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a15.png",
+    "shows": "Shows Captain Vance raising his head behind trainer, companion face at right and Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-a16.png",
+    "shows": "Shows Captain Vance upright behind trainer, companion face at right and Greet Captain Vance prompt.",
+    "pass": true,
+    "problem": "Trainer partially overlaps captain and quickbar covers companion lower body; aftermath remains readable."
+  },
+  {
+    "file": "relay_captain-r01.png",
+    "shows": "Shows low-health Galecrest with raised wings behind companion and foreground rail; combat HUD visible.",
+    "pass": false,
+    "problem": "Broad rail bisects both creatures and conceals central body/contact area."
+  },
+  {
+    "file": "relay_captain-r02.png",
+    "shows": "Shows low-health Galecrest with raised head and wings behind companion and foreground rail.",
+    "pass": false,
+    "problem": "Broad rail bisects both creatures and conceals central body/contact area."
+  },
+  {
+    "file": "relay_captain-r03.png",
+    "shows": "Shows trainer and captain in world view with Galecrest filling lower-right foreground.",
+    "pass": false,
+    "problem": "Galecrest is largely cut off by right and bottom edges; transition aftermath subject is poorly framed."
+  },
+  {
+    "file": "relay_captain-r04.png",
+    "shows": "Shows companion face at very close range and Duskhush head at lower right with full boss HUD.",
+    "pass": false,
+    "problem": "Companion lower body and most Duskhush body are cropped off bottom; HUD masks remaining owl body."
+  },
+  {
+    "file": "relay_captain-r05.png",
+    "shows": "Shows fully framed companion left and Duskhush right with full boss health and combat controls.",
+    "pass": true,
+    "problem": "Both creatures readable. Cyan untextured cube-like prop at right looks placeholder-like; no placeholder subject mesh or exposure failure."
+  },
+  {
+    "file": "relay_captain-r06.png",
+    "shows": "Shows defeated Duskhush collapsed right, trainer and captain midground, normal exploration HUD.",
+    "pass": true,
+    "problem": "Defeated creature and surrounding characters clearly visible; shaded architecture remains readable."
+  },
+  {
+    "file": "relay_captain-r07.png",
+    "shows": "Shows trainer and captain midground, with defeated Duskhush filling lower-right edge.",
+    "pass": false,
+    "problem": "Defeated owl is largely offscreen at right/bottom and covered by quickbar and close foreground object."
+  },
+  {
+    "file": "relay_captain-r08.png",
+    "shows": "Shows companion left and Tuskroot right, boss health and combat controls.",
+    "pass": true,
+    "problem": "Both creatures framed and readable; some natural overlap. Cyan cube-like prop at right looks placeholder-like."
+  },
+  {
+    "file": "relay_captain-r09.png",
+    "shows": "Shows companion left and Tuskroot right with boss health and combat controls, roof entering lower left.",
+    "pass": true,
+    "problem": "Roof overlaps companion paws slightly, but silhouettes and faces readable; cyan cube-like prop looks placeholder-like."
+  }
+]

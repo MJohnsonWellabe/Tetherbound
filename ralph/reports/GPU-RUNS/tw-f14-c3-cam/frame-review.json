@@ -1,0 +1,131 @@
+{
+  "request_id": "tw-f14-c3-cam",
+  "commit": "5084826c9",
+  "scope": "Independent image-only capture correctness, not feature acceptance or implementation review",
+  "inspection_method": "Opened every individual capture PNG through view_image; 16 of 16 inspected. Read only AGENTS.md and capture inventory metadata; no game implementation inspection or modification.",
+  "overall_pass": false,
+  "frames_inspected": 16,
+  "frames_pass": 2,
+  "frames_fail": 14,
+  "expected_fights": [
+    "Tess",
+    "Calder",
+    "Venn",
+    "Nerissa"
+  ],
+  "captured_fights": [
+    "Tess"
+  ],
+  "missing_fights": [
+    "Calder",
+    "Venn",
+    "Nerissa"
+  ],
+  "identity_note": "All images identify Tess / level 54 / Mirejaw via HUD. No human trainer can be independently named from image alone. Frame pass evaluates readable active/opponent creatures for the named HUD encounter.",
+  "summary": [
+    "Camera starts inside/against geometry, briefly obtains useful framing, then loses the opponent and repeatedly becomes obstructed by terrain or creature close-ups.",
+    "Only the Tess/Mirejaw first opponent has images; no evidence for other requested named fights or additional opponents.",
+    "All six explicitly tagged tell stills have framing or world-tell occlusion problems. Incoming text is legible, but world telegraph footprint/direction is not reliably visible.",
+    "Primary opponent/player HUD text is generally readable; the team list is very faint in several images. Ability prompts visibly show mouse icons and F/C keys, so controller-specific prompt presentation is not evidenced.",
+    "Visible creatures and humans have detailed textured meshes; no obvious primitive placeholder creature is seen. Obstructed frames cannot verify hidden assets. Magenta strips appear as effects; their asset provenance cannot be determined from stills.",
+    "Lighting is adequate in unobstructed images. Wall-facing later frames lose world readability from framing rather than a demonstrated overall exposure issue."
+  ],
+  "frames": [
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-000.00.png",
+      "shows": "Tess / Mirejaw title and Ripplet HUD over extreme cyan/gray mesh close-up.",
+      "pass": false,
+      "problem": "Camera is inside or immediately against creature geometry; neither combatant is readable, arena and tells hidden."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-008.02.png",
+      "shows": "Ripplet and dark coral-adorned Mirejaw both visible on steep channel wall; Tess / Mirejaw HUD.",
+      "pass": true,
+      "problem": "No decisive camera clipping in this still. Team list very faint; human Tess not independently identifiable. No active tell to judge."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-016.00.png",
+      "shows": "Ripplet and Mirejaw visible in channel with stagger VFX and recovering text.",
+      "pass": true,
+      "problem": "Both creatures fit, though overlap and VFX reduce silhouette separation. Human Tess not independently identifiable; this is impact/recovery, not a readable tell sample."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-024.02.png",
+      "shows": "Bramblebun antlers/back cut off along bottom, channel fills scene, incoming HUD.",
+      "pass": false,
+      "problem": "Camera crops active creature and hides almost all opponent. Incoming text is readable but attack source and ground tell are not."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-032.02.png",
+      "shows": "Extreme Mudsnout close-up fills left; terrain fills right; Tess / Mirejaw recovery HUD.",
+      "pass": false,
+      "problem": "Severe close framing/camera obstruction; Mirejaw absent and active body cropped. Switch toast overlaps player level area."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-040.02.png",
+      "shows": "Terrain wall fills world view with tall magenta strip and incoming HUD.",
+      "pass": false,
+      "problem": "Neither creature is visible. Camera obstructed by terrain; magenta effect cannot be read as a spatial attack tell."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-048.02.png",
+      "shows": "Terrain texture fills nearly all world view; Pipwing active HUD.",
+      "pass": false,
+      "problem": "Neither opponent nor readable active creature in frame; camera pressed against/occluded by terrain."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-056.02.png",
+      "shows": "Pipwing head/body extreme close-up, gray geometry along left edge, stagger VFX.",
+      "pass": false,
+      "problem": "Active creature cropped, opponent not readable, and nearby geometry obscures arena. Attack direction and space unavailable."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-064.02.png",
+      "shows": "Trailpup back fills center-left, fragments of other geometry at top, magenta vertical strips.",
+      "pass": false,
+      "problem": "Very close camera crops Trailpup and opponent; spatial tell unreadable, with terrain dominating background."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/t-072.02.png",
+      "shows": "Trailpup cropped at left against wall; stagger and opponent opening HUD.",
+      "pass": false,
+      "problem": "Opponent absent, active creature cropped, arena unreadable. HUD cannot replace missing fight view."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/tell-start-000.63.png",
+      "shows": "Mirejaw huge in foreground overlapping Ripplet, grassy arena, partial human at bottom-left; incoming HUD.",
+      "pass": false,
+      "problem": "Opponent and active creature heavily overlap and are cropped by frame. Ground tell largely outside/behind bodies; camera too close for tell reading."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/tell-late-001.23.png",
+      "shows": "Ripplet foreground, Mirejaw behind/right, human at bottom, visible magenta fragments and incoming HUD.",
+      "pass": false,
+      "problem": "Mirejaw tail/right body cropped and overlaps active silhouette; magenta ground effect mostly occluded. Tell footprint/direction cannot be reliably read."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/tell-start-002.85.png",
+      "shows": "Ripplet and Mirejaw fit in grassy arena, human central and another partially visible bottom; incoming HUD.",
+      "pass": false,
+      "problem": "Good creature framing and lighting, but ground tell is almost wholly occluded by bodies/terrain with only a small magenta sliver. Human identity is not independently readable."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/tell-late-003.45.png",
+      "shows": "Ripplet and Mirejaw fit in grassy arena, same overlapping composition; incoming HUD.",
+      "pass": false,
+      "problem": "Ground tell remains nearly entirely hidden by creature/terrain overlap; little visible change from start still, so body wind-up is not established by this pair."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/tell-start-006.40.png",
+      "shows": "Ripplet alone from behind at edge of steep channel; incoming HUD.",
+      "pass": false,
+      "problem": "Mirejaw entirely absent. Attack source and ground tell cannot be read despite readable incoming text."
+    },
+    {
+      "file": "artifacts/worktree/shots/tidewake/f14_c3_cam/tess/tell-late-007.02.png",
+      "shows": "Ripplet cropped at lower-right against channel wall; incoming HUD.",
+      "pass": false,
+      "problem": "Mirejaw absent and active creature heavily cropped; no readable world tell."
+    }
+  ]
+}
