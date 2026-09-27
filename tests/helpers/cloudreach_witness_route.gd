@@ -211,7 +211,44 @@ func _skip(kind: String, id: String) -> bool:
 func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) -> bool:
 	if skipping_to_aerie: return _skip("walk", str(target))
 	if _resume_skip("walk", ""): return true
+	if stage == "creature_relay_phase" and not _relay_detouring and runtime != null and runtime.finale != null:
+		var via := _relay_windbreak_detour(target, body)
+		if via.is_finite():
+			_relay_detouring = true
+			_log("witness_relay_windbreak_detour", {"to": str(target), "via": str(via),
+				"reason": "the straight relay leg grazes a lee-pocket windbreak (summit presentation box); stick-walked through the open arena centre"})
+			var ok: bool = await super._walk(via, 1.5, body)
+			_relay_detouring = false
+			if not ok: return false
 	return await super._walk(target, radius, body)
+
+
+var _relay_detouring := false
+
+
+## Break the Eye: the three lee pockets each carry a 6 m x 1.2 m windbreak wall
+## 4.4 m on their +z side (cloudreach_summit_presentation.gd). A straight relay
+## leg that passes within 1.5 m of one snags the piloted creature on its end
+## (F08#0 run at cea25b3a: (83.0,1160.2,5443.8) against west_leeWindbreak).
+## Returns the arena centre as a waypoint when the leg would graze one, else INF.
+func _relay_windbreak_detour(target: Vector3, body: CharacterBody3D) -> Vector3:
+	var mover: Node3D = body if body != null else runtime.controlled_body()
+	if mover == null: return Vector3.INF
+	var finale: Node = runtime.finale
+	var origin: Vector3 = finale.global_position
+	var from := Vector2(mover.global_position.x, mover.global_position.z)
+	var to := Vector2(target.x, target.z)
+	var length := from.distance_to(to)
+	if length < 1.0: return Vector3.INF
+	for lee: Dictionary in finale.config.lee_pockets:
+		var offset: Vector3 = _vec(lee.offset)
+		var centre := Vector2(origin.x + offset.x, origin.z + offset.z + 4.4)
+		var steps := int(ceil(length / 0.5))
+		for i in steps + 1:
+			var p := from.lerp(to, float(i) / float(steps))
+			if absf(p.x - centre.x) <= 3.0 + 1.5 and absf(p.y - centre.y) <= 0.6 + 1.5:
+				return Vector3(origin.x, target.y, origin.z)
+	return Vector3.INF
 
 
 func _navigate(target: Vector3) -> bool:

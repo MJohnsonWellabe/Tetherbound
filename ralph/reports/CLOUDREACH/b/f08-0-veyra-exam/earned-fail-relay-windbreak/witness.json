@@ -1,0 +1,278 @@
+{
+  "accelerated_route_clock": true,
+  "battle_losses": [
+    "captain_veyra_storm_anchor"
+  ],
+  "battle_wins": [
+    "tether_lieutenant_senn",
+    "keeper_maela_trial",
+    "officer_voss_summit_approach",
+    "captain_veyra_storm_anchor"
+  ],
+  "combat_mode": "live_input",
+  "criterion": "F08#0",
+  "fail_exam_first": true,
+  "failed_exam": {
+    "distance_to_bivouac_m": 2.8,
+    "failed": false,
+    "loss_callback": true,
+    "party_size": 5,
+    "party_uids_same": true,
+    "phase_after": "dormant",
+    "player": "(-518.0, 1080.209, 5302.0)",
+    "threshold_kept": true,
+    "veyra_defeated": false
+  },
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Walking stalled toward (100.0, 1160.2, 5423.0)",
+      "position": "(83.40095, 1160.151, 5441.843)",
+      "simulated_seconds": 3485.4,
+      "stage": "creature_relay_phase",
+      "wall_seconds": 1618.605619
+    }
+  ],
+  "hazard_frames": {
+    "anchor_overload": {
+      "arc_field_frames": 682,
+      "arc_frames": 56,
+      "arc_pushed_frames": 55,
+      "frames": 2269,
+      "max_drift_mps": 7.00000095367432,
+      "pushed_frames": 722,
+      "sheltered_frames": 0,
+      "wind_frames": 621
+    },
+    "break_the_eye": {
+      "arc_frames": 232,
+      "arc_pushed_frames": 230,
+      "frames": 1817,
+      "max_drift_mps": 10.0000009536743,
+      "pushed_frames": 744,
+      "sheltered_frames": 437,
+      "wind_frames": 481
+    },
+    "crosswind_command": {
+      "arc_frames": 0,
+      "frames": 18298,
+      "max_drift_mps": 7.00000095367432,
+      "pushed_frames": 2919,
+      "sheltered_frames": 0,
+      "wind_frames": 2592
+    }
+  },
+  "lee_cycle_check": {
+    "cycle_seconds": 128.57,
+    "samples": 1545,
+    "unsheltered_samples": 0
+  },
+  "lee_hold": {
+    "drift_after_hold_mps": 0.0,
+    "drift_on_entry_mps": 0.0,
+    "frames_held": 240,
+    "frames_sheltered": 240,
+    "phase": "break_the_eye",
+    "pocket": "west_lee",
+    "pushed_frames_inside": 0
+  },
+  "leg": "",
+  "leg_persistence": {},
+  "passed": false,
+  "phase_sequence": [
+    {
+      "opposition_remaining": -1,
+      "phase": "crosswind_command",
+      "simulated_seconds": 2921.62,
+      "stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "opposition_remaining": 3,
+      "phase": "dormant",
+      "simulated_seconds": 3158.07,
+      "stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "opposition_remaining": 3,
+      "phase": "crosswind_command",
+      "simulated_seconds": 3348.78,
+      "stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "opposition_remaining": 2,
+      "phase": "anchor_overload",
+      "simulated_seconds": 3417.3,
+      "stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "opposition_remaining": 0,
+      "phase": "break_the_eye",
+      "simulated_seconds": 3455.12,
+      "stage": "battle_captain_veyra_storm_anchor"
+    }
+  ],
+  "relay_state": {
+    "cloudreach_summit_relay_crown_disabled": false,
+    "cloudreach_summit_relay_east_disabled": false,
+    "cloudreach_summit_relay_west_disabled": true
+  },
+  "relay_strikes": [
+    {
+      "prompt": "/root/CloudreachCliffs/CloudreachFinaleController/Relay_west"
+    }
+  ],
+  "skipped_steps": 0,
+  "stage": "creature_relay_phase",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival",
+  "veyra_battle": {
+    "charged_inputs": 13,
+    "coins_gained": 150,
+    "damage_dealt": 866.397196841557,
+    "damage_taken": 245.499991937169,
+    "hits_dealt": 67,
+    "hits_taken": 5,
+    "id": "captain_veyra_storm_anchor",
+    "kind": "battle_resolved",
+    "loss_callback": false,
+    "mode": "live_input_spacer_switch",
+    "position": "(88.95981, 1160.151, 5444.109)",
+    "quick_inputs": 59,
+    "rounds": [
+      {
+        "ally_at_start": "ripplet",
+        "final_gap": 13.5076704025269,
+        "frames": 2046,
+        "opponent": "aeriex",
+        "outcome": "won",
+        "seconds": 34.1,
+        "timed_out": false
+      },
+      {
+        "ally_at_start": "bramblebun",
+        "final_gap": 10.1413154602051,
+        "frames": 1838,
+        "opponent": "cloudfang",
+        "outcome": "won",
+        "seconds": 30.6333333333333,
+        "timed_out": false
+      },
+      {
+        "ally_at_start": "bramblebun",
+        "final_gap": 8.25967884063721,
+        "frames": 2124,
+        "opponent": "galecrest",
+        "outcome": "won",
+        "seconds": 35.4,
+        "timed_out": false
+      }
+    ],
+    "simulated_seconds": 3455.47,
+    "stage": "battle_captain_veyra_storm_anchor",
+    "started_callback": true,
+    "switches": 2,
+    "team_after": [
+      {
+        "hp": 249.9,
+        "label": "Bud",
+        "level": 24,
+        "species_id": "ripplet",
+        "xp": 987
+      },
+      {
+        "hp": 0.0,
+        "label": "Bramblebun",
+        "level": 24,
+        "species_id": "bramblebun",
+        "xp": 1103
+      },
+      {
+        "hp": 227.210262160301,
+        "label": "Mudsnout",
+        "level": 24,
+        "species_id": "mudsnout",
+        "xp": 1438
+      },
+      {
+        "hp": 226.289013571739,
+        "label": "Mudsnout",
+        "level": 24,
+        "species_id": "mudsnout",
+        "xp": 603
+      },
+      {
+        "hp": 1125.6,
+        "label": "Veridian Stag",
+        "level": 29,
+        "species_id": "veridian",
+        "xp": 493
+      }
+    ],
+    "team_before": [
+      {
+        "hp": 243.6,
+        "label": "Bud",
+        "level": 23,
+        "species_id": "ripplet",
+        "xp": 1038
+      },
+      {
+        "hp": 238.429102701664,
+        "label": "Bramblebun",
+        "level": 24,
+        "species_id": "bramblebun",
+        "xp": 35
+      },
+      {
+        "hp": 221.482272357941,
+        "label": "Mudsnout",
+        "level": 23,
+        "species_id": "mudsnout",
+        "xp": 1202
+      },
+      {
+        "hp": 220.584248523712,
+        "label": "Mudsnout",
+        "level": 23,
+        "species_id": "mudsnout",
+        "xp": 654
+      },
+      {
+        "hp": 1100.4,
+        "label": "Veridian Stag",
+        "level": 28,
+        "species_id": "veridian",
+        "xp": 918
+      }
+    ],
+    "timed_out": false,
+    "victory_callback": true,
+    "wall_seconds": 1601.125708
+  },
+  "veyra_opposition": [
+    {
+      "id": "captain_veyra_storm_anchor",
+      "remaining": 3,
+      "total": 3
+    },
+    {
+      "id": "captain_veyra_storm_anchor",
+      "remaining": 3,
+      "total": 3
+    },
+    {
+      "id": "captain_veyra_storm_anchor",
+      "remaining": 2,
+      "total": 3
+    },
+    {
+      "id": "captain_veyra_storm_anchor",
+      "remaining": 1,
+      "total": 3
+    },
+    {
+      "id": "captain_veyra_storm_anchor",
+      "remaining": 0,
+      "total": 3
+    }
+  ]
+}
