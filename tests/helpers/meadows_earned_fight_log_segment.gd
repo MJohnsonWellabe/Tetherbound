@@ -391,6 +391,8 @@ func _capture(due: Dictionary) -> void:
 	var context := _frame_context(str(due["id"]))
 	context["png"] = path
 	context["saved"] = err == OK
+	if image != null:
+		context["image_size"] = [image.get_width(), image.get_height()]
 	var file := FileAccess.open("%s/%s.json" % [AFTERMATH_DIR, fight], FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(context, "  "))
