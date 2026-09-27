@@ -105,6 +105,36 @@ def li(items):
 batches = "".join(
     f'<tr><td>{E(b["name"])}</td><td><code>{E(b.get("sha", ""))}</code></td><td>{E(b.get("state", ""))}</td><td>{E(b.get("contents", ""))}</td></tr>'
     for b in status.get("batches", []))
+# Shortcut debt (owner, 2026-09-27): every criterion closed under the relaxed-proof
+# rule, with what its proof skipped, so the chapter-exit and release playthroughs
+# exercise each item. Kinds are classified from the disclosure text.
+CHAPTER_OF = {**{f"F0{n}": "Meadows" for n in range(1, 6)},
+              **{f"F0{n}": "Cloudreach" for n in range(6, 9)},
+              **{f"F{n:02d}": "Stormwood" for n in range(9, 12)},
+              **{f"F{n:02d}": "Tidewake" for n in range(12, 16)}}
+DEBT_KINDS = [
+    ("Skipped part", "high", ("skipped", "skips", "no single run", "not proven", "excluded", "not exercised", "missing", "not covered", "no two-peer", "static computation", "not a four-peer", "open")),
+    ("Flag or ledger written", "medium", ("flag", "ledger fixture", "set directly", "guardian_fixture", "defeat by ledger")),
+    ("Fixture state", "medium", ("party", "L25", "L44", "L46", "granted", "fixture start", "declared start")),
+    ("Start, position or checkpoint", "low", ("teleport", "position", "start save", "checkpoint", "placed", "joins", "resume")),
+    ("Harness input", "low", ("harness", "pilot", "scripted", "accelerated", "signal")),
+]
+debt_rows = []
+for r in crit["rows"]:
+    for i, c in enumerate(r["criteria"]):
+        ev = c.get("evidence", "")
+        if c["status"] != "met" or "Shortcuts disclosed" not in ev:
+            continue
+        disc = ev.split("Shortcuts disclosed:", 1)[1].split("Independent re-check", 1)[0].strip()
+        low = disc.lower()
+        kinds = [k for k, _sev, words in DEBT_KINDS if any(w.lower() in low for w in words)]
+        sev = next((sv for k, sv, _w in DEBT_KINDS if k in kinds), "low")
+        debt_rows.append((sev, r["id"], i, c["text"], kinds, disc))
+SEV_ORDER = {"high": 0, "medium": 1, "low": 2}
+debt_rows.sort(key=lambda t: (SEV_ORDER[t[0]], t[1], t[2]))
+debt_tbl = "".join(
+    f'<tr><td>{E(sev)}</td><td>{E(rid)}#{i}</td><td>{E(CHAPTER_OF.get(rid, ""))}</td><td>{E(text)}</td><td>{E(", ".join(kinds))}</td><td>{E(disc)}</td></tr>'
+    for sev, rid, i, text, kinds, disc in debt_rows)
 lanes = "".join(
     f'<tr><td>{E(l["lane"])}</td><td>{E(l.get("now", ""))}</td><td>{E(l.get("next", ""))}</td></tr>'
     for l in status.get("lanes", []))
@@ -204,6 +234,8 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
     <div class="tbl"><table><thead><tr><th>Card</th><th>Status</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
   <section class="panel"><h2>Release-wide requirements</h2>
     <div class="tbl"><table><thead><tr><th>Requirement</th><th>Status</th><th>Note</th></tr></thead><tbody>{cc}</tbody></table></div></section>
+  <section class="panel"><h2>Shortcut debt</h2><p class="note">Criteria closed under the relaxed-proof rule, and what each proof skipped. The chapter-exit and release playthroughs must exercise every row; a failure there points at the row. High = a sub-part not proven anywhere else.</p>
+    <div class="tbl"><table><thead><tr><th>Risk</th><th>Criterion</th><th>Chapter exit</th><th>Criterion text</th><th>Debt kind</th><th>Disclosed shortcuts</th></tr></thead><tbody>{debt_tbl}</tbody></table></div></section>
   <section class="panel"><h2>Integration batches</h2>
     <div class="tbl"><table><thead><tr><th>Batch</th><th>SHA</th><th>State</th><th>Contents</th></tr></thead><tbody>{batches}</tbody></table></div></section>
   <section class="panel"><h2>Lanes</h2>
