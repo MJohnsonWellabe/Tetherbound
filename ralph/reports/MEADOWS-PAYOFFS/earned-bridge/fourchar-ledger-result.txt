@@ -1,0 +1,12 @@
+F02#6 four-character ledger (PROGRESSION §81/§84), Meadows earned route to the tournament camp (stage rested_team), seed-15 path.
+Supply inputs: fourchar-ledger-seed15.json.txt (fourchar-ledger.py.txt). Harvest nodes never respawn; shared structures counted once.
+Demand (SYSTEMS piece costs): solo 30 wood / 8 stone / 34 fiber. Four characters, reading A (bedroll + 3 beds personal, tent + fire shared): 96 / 8 / 124.
+  150% targets: solo 45 / 12 / 51; four (A) 144 / 12 / 186; four (A) + 2 reserve potions per character (8 fiber): 198 fiber.
+Supply (authored + scatter), 40 m corridor: wood 887, stone 242, fiber 110.   20 m corridor: 413 / 100 / 88.
+Wood and stone pass every case. Fiber alone fell short (110 < 186).
+Fix (per-character guaranteed bundle, §84): Mira's first visit gives each character give:fiber:25 (data/dialogue/village.json), and the
+first visit is now per character (data/config/village_npcs.json unless_flag opening:mira_visited, player scope) -- before this it was gated
+on the world-scope mira_shop_open, so only the first character in a co-op world received it.
+Four characters: +100 fiber.  40 m: 210 >= 186 (camps) and >= 198 (camps + reserve potions).  20 m: 188 >= 186 (camps); 188 < 198 with potions.
+Solo: 110 + 25 = 135 >= 51.
+Coins: each character's own first visit gives 140 (trade.json starting_coins), which covers each character's reserve and two-loss restock (see ledger-seed15-r35/r36).

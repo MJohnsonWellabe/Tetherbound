@@ -70,9 +70,16 @@ func test_whole_ascent_matches_existing_smoke_clock_and_budget() -> void:
 	assert_eq(SEGMENT.ASCENT_HZ, 60)
 	assert_true(smoke.contains("const CORE_TOLERANCE := %.1f" % SEGMENT.CORE_TOLERANCE))
 	var source := FileAccess.get_file_as_string("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
-	var ascent := source.substr(source.find("func _walk_actual_ascent"))
+	var from := source.find("func _walk_actual_ascent")
+	var ascent := source.substr(from, source.find("\nfunc ", from + 1) - from)
 	assert_true(ascent.contains("Engine.get_physics_frames() - started < ASCENT_FRAMES"))
-	assert_false(ascent.contains("await _fight_current"))
+	# The budget measures climbing only. A wild that engages on the approach
+	# (relay DRY RUN a9b6da46) is fought outside it, and its frames are given
+	# back; a trainer battle mid-ascent still fails.
+	assert_false(ascent.contains("await _fight_current"), "the ascent body never fights inline")
+	assert_true(ascent.contains("await _fight_ascent_wild()"))
+	assert_true(ascent.contains("started += Engine.get_physics_frames() - fight_started"))
+	assert_true(ascent.contains("trainer_battle_active()") and ascent.contains("unexpected trainer combat blocks"))
 
 
 ## Relay DRY RUN 44adfbe4 wedged the player under the Outer Works approach

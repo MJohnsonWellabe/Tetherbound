@@ -103,6 +103,7 @@ func _collect_and_stage() -> bool:
 	# (greeting_when's second entry) without re-proving the shop-intro line,
 	# which smoke_save_persistence.gd and the village_npcs tests already cover.
 	(_game.get("progression") as RefCounted).call("set_flag", MIRA_FLAG)
+	(_game.get("progression") as RefCounted).call("set_flag", "opening:mira_visited")
 	return true
 
 

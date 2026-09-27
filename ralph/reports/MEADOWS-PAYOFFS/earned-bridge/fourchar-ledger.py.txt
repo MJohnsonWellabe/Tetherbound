@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""Four-character basic-material ledger for ACCEPTANCE F02 (read-only).
+Supply = authored harvest nodes (data/config/bands/*/harvest.json), Warrens deposits,
+and baked scatter (data/scatter/playground/*.bin; trees->wood x3, rocks->stone x2,
+bushes->fiber x2 on every 5th kept placement, per data/config/vegetation.json +
+scripts/world/vegetation.gd::_mark_harvestable). Distances are to the route polyline
+built from beat positions in the earned-route ledger."""
+import json, glob, math, struct, os, sys
+from collections import defaultdict
+R = '/home/user/tb-route'
+ROUTE = R + '/ralph/reports/MEADOWS-PAYOFFS/earned-bridge/hall-seed15-reload-route-ledger.jsonl.txt'
+CAMP_STAGES = ['title','opening','road_gate','village','earned_team','paid_camp','rested_team']
+CORRIDORS = [20.0, 40.0, 80.0]
+
+# ---- route
+pts_all, pts_camp = [], []
+for line in open(ROUTE):
+    r = json.loads(line)
+    if r.get('kind') != 'beat': continue
+    b = r['beat']; p = (b['pos'][0], b['pos'][2])
+    pts_all.append(p)
+    if b['stage'] in CAMP_STAGES: pts_camp.append(p)
+
+def seg_d2(px, pz, a, b):
+    ax, az = a; bx, bz = b; dx, dz = bx-ax, bz-az
+    L = dx*dx+dz*dz
+    t = 0 if L == 0 else max(0, min(1, ((px-ax)*dx+(pz-az)*dz)/L))
+    qx, qz = ax+t*dx-px, az+t*dz-pz
+    return qx*qx+qz*qz
+
+def make_index(pts, cell=100.0):
+    grid = defaultdict(list)
+    for i in range(len(pts)-1):
+        a, b = pts[i], pts[i+1]
+        x0, x1 = sorted((a[0], b[0])); z0, z1 = sorted((a[1], b[1]))
+        for gx in range(int(math.floor(x0/cell)), int(math.floor(x1/cell))+1):
+            for gz in range(int(math.floor(z0/cell)), int(math.floor(z1/cell))+1):
+                grid[(gx, gz)].append(i)
+    return grid, cell
+
+def dist(pts, idx, x, z, maxd=80.0):
+    grid, cell = idx
+    gx, gz = int(math.floor(x/cell)), int(math.floor(z/cell))
+    best = 1e18
+    for ox in (-1, 0, 1):
+        for oz in (-1, 0, 1):
+            for i in grid.get((gx+ox, gz+oz), ()):
+                d = seg_d2(x, z, pts[i], pts[i+1])
+                if d < best: best = d
+    return math.sqrt(best)
+
+IDX_ALL, IDX_CAMP = make_index(pts_all), make_index(pts_camp)
+
+# ---- supply rows: (source, item, amount, x, z)
+rows = []
+for f in sorted(glob.glob(R + '/data/config/bands/*/harvest.json')):
+    for n in json.load(open(f))['nodes']:
+        rows.append(('authored:' + f.split('/')[-2], n['item'], n['amount'], n['at'][0], n['at'][1]))
+bw = json.load(open(R + '/data/config/burrow_warrens.json'))
+sx, sz = bw['site']['at']
+for n in bw['deposits']:  # inside Warrens: count only as on-route when route clears Warrens
+    rows.append(('warrens', n['item'], n.get('amount', 1), sx, sz))
+
+veg = json.load(open(R + '/data/config/vegetation.json'))['layers']
+HL = {k: (v['harvest_item'], v.get('harvest_amount', 2), max(1, round(1/v['harvest_fraction'])))
+      for k, v in veg.items() if v.get('harvest_item') and v.get('harvest_fraction', 0) > 0}
+
+def pstr(b, o):
+    n = struct.unpack_from('<I', b, o)[0]; o += 4
+    return b[o:o+n].decode(), o+n
+scatter_total = defaultdict(int)
+for f in sorted(glob.glob(R + '/data/scatter/playground/region_*.bin')):
+    b = open(f, 'rb').read(); o = 0
+    magic, ver, mc = struct.unpack_from('<III', b, o); o += 12
+    assert magic == 0x53434154 and ver == 1, f
+    for _ in range(mc): _, o = pstr(b, o)
+    lc = struct.unpack_from('<I', b, o)[0]; o += 4
+    for _ in range(lc):
+        name, o = pstr(b, o)
+        kept, drained = struct.unpack_from('<II', b, o); o += 8
+        for k in range(kept + drained):
+            order, mi = struct.unpack_from('<IH', b, o)
+            x, y, z = struct.unpack_from('<fff', b, o+6)
+            o += 4+2+12+8+8
+            hasn = b[o]; o += 1
+            if hasn == 1: o += 12
+            if k < kept and name in HL:
+                item, amt, stride = HL[name]
+                if order % stride == 0:
+                    rows.append(('scatter:' + name, item, amt, x, z)); scatter_total[item] += amt
+
+# ---- tally
+ITEMS = ['wood', 'stone', 'fiber', 'berries']
+out = {'route_points_all': len(pts_all), 'route_points_camp': len(pts_camp), 'scatter_world_total': dict(scatter_total)}
+tab = {}
+for label, pts, idx, warrens_ok in (('to_rested_team', pts_camp, IDX_CAMP, False), ('whole_route', pts_all, IDX_ALL, True)):
+    for c in CORRIDORS:
+        for kind in ('authored', 'scatter'):
+            t = defaultdict(int)
+            for src, item, amt, x, z in rows:
+                if item not in ITEMS: continue
+                if kind == 'authored' and not (src.startswith('authored') or src == 'warrens'): continue
+                if kind == 'scatter' and not src.startswith('scatter'): continue
+                if src == 'warrens':
+                    if warrens_ok: t[item] += amt
+                    continue
+                if dist(pts, idx, x, z) <= c: t[item] += amt
+            tab[f'{label}|{int(c)}m|{kind}'] = {i: t[i] for i in ITEMS}
+out['supply'] = tab
+
+# ---- demand (SYSTEMS.md sec 3 table; PROGRESSION sec 6)
+P = {'tent': (6,0,4), 'campfire': (2,8,0), 'bedroll': (4,0,6), 'creature_bed': (6,0,8)}
+def s(*parts):
+    return tuple(sum(P[p][i]*n for p, n in parts) for i in range(3))
+solo = s(('tent',1),('campfire',1),('bedroll',1),('creature_bed',3))
+shared_A = s(('tent',1),('campfire',1))
+personal_A = s(('bedroll',1),('creature_bed',3))
+four_A = tuple(shared_A[i] + 4*personal_A[i] for i in range(3))
+shared_B = s(('tent',1),('campfire',1),('bedroll',1))
+personal_B = s(('creature_bed',3))
+four_B = tuple(shared_B[i] + 4*personal_B[i] for i in range(3))
+out['demand'] = {'solo': solo, 'four_A_bedroll_personal': four_A, 'four_B_bedroll_shared': four_B,
+                 'potions_2_per_char_berries_fiber': {'solo': (8, 2), 'four': (32, 8)}}
+print(json.dumps(out, indent=1))

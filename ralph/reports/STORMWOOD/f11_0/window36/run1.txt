@@ -1,0 +1,115 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:89)
+         [1] _run (res://tests/smoke_stormwood_marrow_press.gd:70)
+STORMWOOD BUILD shell=false elapsed_ms=43838 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=44127 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=44376 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=44381 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=44382 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=44384 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=44384 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=44384 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=44385 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=44385 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=44659 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=44681 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=44681 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=91 reorder[7 layers]=31
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=147 mark_harvestable=16 group_by_model=34 register_mesh_assets=15 build_batches_total=900 (of which harvest_points[11099 nodes]=731, initial_collision_stream[11161 solid]=38) update_mmis=169
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=807
+MARROW PRESS standing at (-100.0, 262.0594, 5445.0) (core seat y 262.21)
+STORMWOOD CROWN BUILD — PARTY before captain_marrow_dynamo_core: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 340/340
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 7 physics frames): active bramblebun -> terrapup
+MARROW PRESS activation /root/Stormwood/StormwoodTrainers/Captain Marrow/Interactable player=(-90.39272, 262.0599, 5447.881)
+STORMWOOD CROWN BUILD — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 1 at 67.3 s: { "species": "tanglevolt", "level": 42 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 2 at 54.6 s: { "species": "stormraven", "level": 43 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 3 at 111.1 s: { "species": "stormbrush", "level": 43 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 4 at 166.7 s: { "species": "sparkit", "level": 44 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 5 at 212.2 s: { "species": "voltarach", "level": 44 }
+STORMWOOD CROWN BUILD — ENTERED first actual conduit cycle 0
+STORMWOOD CROWN BUILD — CONDUIT feasibility start_world=(-94.86826, 262.0601, 5443.75) local=(5.131744, -0.149933, -26.25) base_speed=5.600 remaining_cycle_s=27.993 conservative_travel_s=24.328 ally={ "species": "terrapup", "level": 47, "hp": 451.2, "max_hp": 451.2, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — BREAK lap [3, 0, 1, 2] from (5.131744, -26.25)
+STORMWOOD CROWN BUILD — BREAK t=312.1s ally_local=(3.331528, -0.149933, -30.03711) piloted=true waiting=-1 fired=[] struck=[] window_left=35.2 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2726 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [0, 1, 2] from (1.118263, -32.82568)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 3
+STORMWOOD CROWN BUILD — BREAK t=314.1s ally_local=(4.550568, -0.15097, -28.48535) piloted=true waiting=-1 fired=[3] struck=[3] window_left=33.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-917 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=316.1s ally_local=(13.33293, -0.150024, -21.67139) piloted=true waiting=-1 fired=[3] struck=[3] window_left=31.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2909 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=318.1s ally_local=(22.29826, -0.150177, -14.95996) piloted=true waiting=-1 fired=[3] struck=[3] window_left=29.2 fighting=false target=0 active=0 bank_state=fire leg=(37.8554, -3.311911) next_quick_in=-4905 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=320.1s ally_local=(31.26357, -0.150055, -8.246582) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.2 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6916 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [1, 2] from (34.75004, -2.400391)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 0
+STORMWOOD CROWN BUILD — BREAK t=322.1s ally_local=(37.82192, -0.149963, -0.118652) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=25.2 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-254 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=324.1s ally_local=(31.09946, -0.150085, 7.365234) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=23.2 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2250 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=326.1s ally_local=(22.87458, -0.150116, 14.9668) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=21.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4250 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=328.1s ally_local=(14.65, -0.150024, 22.56641) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6258 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=330.1s ally_local=(6.425697, -0.150269, 30.16699) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8252 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [2] from (2.252174, 34.02637)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 1
+STORMWOOD CROWN BUILD — BREAK t=332.1s ally_local=(-1.964973, -0.150024, 33.45557) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=15.2 fighting=false target=2 active=2 bank_state=fire leg=(-35.0, 1.199997) next_quick_in=-530 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=334.1s ally_local=(-9.978485, -0.150024, 25.63184) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=13.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-2530 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=336.1s ally_local=(-17.99171, -0.150024, 17.80713) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=11.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-4536 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=338.1s ally_local=(-26.00603, -0.150055, 9.979492) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-6539 release_tick=-1
+STORMWOOD CROWN BUILD — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+MARROW PRESS hub last_start_refusal={  } outcomes={ "captain_marrow_dynamo_core": true }
+MARROW PRESS — PARTY before captain_marrow_dynamo_core: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 340/340
+MARROW PRESS — LB press 1 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+MARROW PRESS — LB press 2 (joypad button, 7 physics frames): active bramblebun -> terrapup
+MARROW PRESS — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+MARROW PRESS — OBSERVED Marrow round 1 at 67.3 s: { "species": "tanglevolt", "level": 42 }
+MARROW PRESS — OBSERVED Marrow round 2 at 54.6 s: { "species": "stormraven", "level": 43 }
+MARROW PRESS — OBSERVED Marrow round 3 at 111.1 s: { "species": "stormbrush", "level": 43 }
+MARROW PRESS — OBSERVED Marrow round 4 at 166.7 s: { "species": "sparkit", "level": 44 }
+MARROW PRESS — OBSERVED Marrow round 5 at 212.2 s: { "species": "voltarach", "level": 44 }
+MARROW PRESS — ENTERED first actual conduit cycle 0
+MARROW PRESS — CONDUIT feasibility start_world=(-94.86826, 262.0601, 5443.75) local=(5.131744, -0.149933, -26.25) base_speed=5.600 remaining_cycle_s=27.993 conservative_travel_s=24.328 ally={ "species": "terrapup", "level": 47, "hp": 451.2, "max_hp": 451.2, "fainted": false, "resting": false }
+MARROW PRESS — BREAK lap [3, 0, 1, 2] from (5.131744, -26.25)
+MARROW PRESS — BREAK t=312.1s ally_local=(3.331528, -0.149933, -30.03711) piloted=true waiting=-1 fired=[] struck=[] window_left=35.2 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2726 release_tick=-1
+MARROW PRESS — BREAK lap [0, 1, 2] from (1.118263, -32.82568)
+MARROW PRESS — ACCEPTED ordinary conduit 3
+MARROW PRESS — BREAK t=314.1s ally_local=(4.550568, -0.15097, -28.48535) piloted=true waiting=-1 fired=[3] struck=[3] window_left=33.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-917 release_tick=-1
+MARROW PRESS — BREAK t=316.1s ally_local=(13.33293, -0.150024, -21.67139) piloted=true waiting=-1 fired=[3] struck=[3] window_left=31.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2909 release_tick=-1
+MARROW PRESS — BREAK t=318.1s ally_local=(22.29826, -0.150177, -14.95996) piloted=true waiting=-1 fired=[3] struck=[3] window_left=29.2 fighting=false target=0 active=0 bank_state=fire leg=(37.8554, -3.311911) next_quick_in=-4905 release_tick=-1
+MARROW PRESS — BREAK t=320.1s ally_local=(31.26357, -0.150055, -8.246582) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.2 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6916 release_tick=-1
+MARROW PRESS — BREAK lap [1, 2] from (34.75004, -2.400391)
+MARROW PRESS — ACCEPTED ordinary conduit 0
+MARROW PRESS — BREAK t=322.1s ally_local=(37.82192, -0.149963, -0.118652) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=25.2 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-254 release_tick=-1
+MARROW PRESS — BREAK t=324.1s ally_local=(31.09946, -0.150085, 7.365234) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=23.2 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2250 release_tick=-1
+MARROW PRESS — BREAK t=326.1s ally_local=(22.87458, -0.150116, 14.9668) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=21.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4250 release_tick=-1
+MARROW PRESS — BREAK t=328.1s ally_local=(14.65, -0.150024, 22.56641) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6258 release_tick=-1
+MARROW PRESS — BREAK t=330.1s ally_local=(6.425697, -0.150269, 30.16699) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8252 release_tick=-1
+MARROW PRESS — BREAK lap [2] from (2.252174, 34.02637)
+MARROW PRESS — ACCEPTED ordinary conduit 1
+MARROW PRESS — BREAK t=332.1s ally_local=(-1.964973, -0.150024, 33.45557) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=15.2 fighting=false target=2 active=2 bank_state=fire leg=(-35.0, 1.199997) next_quick_in=-530 release_tick=-1
+MARROW PRESS — BREAK t=334.1s ally_local=(-9.978485, -0.150024, 25.63184) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=13.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-2530 release_tick=-1
+MARROW PRESS — BREAK t=336.1s ally_local=(-17.99171, -0.150024, 17.80713) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=11.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-4536 release_tick=-1
+MARROW PRESS — BREAK t=338.1s ally_local=(-26.00603, -0.150055, 9.979492) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-6539 release_tick=-1
+MARROW PRESS — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+STORMWOOD MARROW PRESS OK

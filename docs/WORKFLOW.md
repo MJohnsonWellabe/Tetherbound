@@ -422,6 +422,12 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   every file the run wrote, `user://` and `run.log`. Several may run at once.
   `tools/cloud_setup.sh` installs the pinned Godot, xvfb and a warm import
   cache in a fresh container (also usable as the environment setup script).
+- **GPU runs through Codex (owner, 2026-09-27).** Codex runs on the owner's
+  GPU machine and serves heavy visual renders after its art queue. A lane
+  posts on #356 `GPU RUN <label>: sha=<commit> script=<tests/ or tools/ .gd>
+  args=<...> mode=<render|headless>`; Codex answers `GPU DONE <label>` with
+  the output under `ralph/reports/GPU-RUNS/<label>/` on `tb/gpu-runs`. Lanes
+  fetch it from there. Headless logic runs stay on GitHub runners.
 - **A CI run under five minutes is not a verification.** CI skips every code
   job when the diff against the base is documentation-only — check the run
   duration **and** that code jobs actually ran.

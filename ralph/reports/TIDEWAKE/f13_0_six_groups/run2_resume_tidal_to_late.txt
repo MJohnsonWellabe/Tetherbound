@@ -1,0 +1,35 @@
+TIDEWAKE DRY RUN: DRY RUN — fixture start, does not count
+TIDEWAKE DRY RUN RESUMED from tidal (user://tidewake_dry_run/run_6884597/cp_tidal)
+EARNED LATE WATER 245.794: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 267.937: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 290.011: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 312.160: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 339.627: Human sheltered crossing completed tidal_cradle_to_salt_crown_sheltered (4 rest shoals)
+EARNED LATE WATER 503.850: Earned water_dock_salt_crown_landing_charted
+EARNED LATE WATER 530.095: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 550.506: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 570.858: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 591.298: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 617.051: Human sheltered crossing completed salt_crown_to_sluice_isle_sheltered (4 rest shoals)
+EARNED LATE WATER 745.332: Hosted victory water_trainer_bex opponents=["water_cragclaw", "water_cannonback"] hp=207.2/325.6
+EARNED LATE WATER 747.734: Earned water_sluice_west_disabled
+EARNED LATE WATER 756.446: Shellwatch camp recovered active creature after Bex
+EARNED LATE WATER 1076.078: Hosted victory water_trainer_calder opponents=["water_riptusk", "water_torrentoad", "water_riverdrake"] hp=236.3/330.9
+EARNED LATE WATER 1080.372: Earned water_sluice_east_disabled
+EARNED LATE WATER 1080.373: Bex/Calder defeated; both controls and final crossing barrier opened
+EARNED LATE WATER 1114.334: sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1138.958: sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1163.547: sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1188.091: sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1212.787: sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1237.399: sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1267.545: Human sheltered crossing completed sluice_isle_to_veilfall_sheltered (6 rest shoals)
+EARNED LATE WATER 1276.787: Shellwatch camp recovered active creature before Venn
+EARNED LATE WATER 1836.533: Hosted victory water_trainer_venn opponents=["water_cannonback", "water_riptusk", "water_riverdrake"] hp=197.6/330.9
+EARNED LATE WATER 2222.028: Shellwatch camp recovered active creature after Venn
+EARNED LATE WATER 2872.713: Hosted victory water_trainer_nerissa opponents=["water_cannonback", "water_mirejaw", "water_riverdrake", "water_riptusk"] hp=336.2/336.2
+EARNED LATE WATER 2878.469: Nerissa defeated, tether released by human swimming; STOP before Guardian invitation, same five retained
+TIDEWAKE DRY RUN SEGMENT late {"failures":[],"name":"late","passed":true,"player":[1802.61,40.0,4251.36],"seconds":2866.4,"transcript_tail":["Human sheltered crossing completed sluice_isle_to_veilfall_sheltered (6 rest shoals)","Shellwatch camp recovered active creature before Venn","Hosted victory water_trainer_venn opponents=[\"water_cannonback\", \"water_riptusk\", \"water_riverdrake\"] hp=197.6/330.9","Shellwatch camp recovered active creature after Venn","Hosted victory water_trainer_nerissa opponents=[\"water_cannonback\", \"water_mirejaw\", \"water_riverdrake\", \"water_riptusk\"] hp=336.2/336.2","Nerissa defeated, tether released by human swimming; STOP before Guardian invitation, same five retained"]}
+TIDEWAKE DRY RUN CHECKPOINT late saved at [1802.61, 40.0, 4251.36]
+TIDEWAKE DRY RUN RELOADED late: pose drift 0.00 m, party same=true
+TIDEWAKE DRY RUN {"blocker":"","final_pose":[1802.61,40.0,4251.36],"fixture":"declared start only: gate flags [\"realm_gate_water_unlocked\", \"stormwood:waterward_revealed\"], key consumed, belt [\"sparkit\", \"mudsnout\", \"bramblebun\", \"terrapup\", \"brooktail\"] at L44, knife/axe","label":"DRY RUN — fixture start, does not count","minutes":48.0,"passed":true,"reached":"late","segments":[{"failures":[],"name":"late","passed":true,"player":[1802.61,40.0,4251.36],"seconds":2866.4,"transcript_tail":["Human sheltered crossing completed sluice_isle_to_veilfall_sheltered (6 rest shoals)","Shellwatch camp recovered active creature before Venn","Hosted victory water_trainer_venn opponents=[\"water_cannonback\", \"water_riptusk\", \"water_riverdrake\"] hp=197.6/330.9","Shellwatch camp recovered active creature after Venn","Hosted victory water_trainer_nerissa opponents=[\"water_cannonback\", \"water_mirejaw\", \"water_riverdrake\", \"water_riptusk\"] hp=336.2/336.2","Nerissa defeated, tether released by human swimming; STOP before Guardian invitation, same five retained"]}]}
