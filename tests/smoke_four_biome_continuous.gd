@@ -90,6 +90,16 @@ func _run() -> void:
 			failures.append("route ledger could not create its evidence file")
 			_finish(false)
 			return
+	var resume := _arg_value("--resume-from=")
+	if not resume.is_empty():
+		if not await _resume_checkpoint(game, resume):
+			_finish(false)
+			return
+		_start_meadows_road_camera_alignment()
+		if await _meadows_after_bridge(game):
+			failures.append("--resume-from stops after the Hall; the Warden onward runs only from a new game")
+			_finish(false)
+		return
 	print("FRESH CAMPAIGN scratch=%s slot=%s" % [ProjectSettings.globalize_path(scratch),
 		game.get("save_system").call("slot_path", 0)])
 	var opening := OPENING.new()
@@ -190,47 +200,7 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-bridge"):
 		_finish(true)
 		return
-	if not await _reload_transition(game, "south_bridge_crossed"):
-		_finish(false)
-		return
-	var warrens_result: Dictionary = await WARRENS.new().run(self, live["world"], game)
-	for line: Variant in warrens_result.get("failures", []):
-		failures.append(str(line))
-	if not bool(warrens_result.get("passed", false)) or not failures.is_empty():
-		_finish(false)
-		return
-	reached = "warrens_cleared_and_exited"
-	if OS.get_cmdline_user_args().has("--through-warrens"):
-		_finish(true)
-		return
-	if not await _reload_transition(game, "warrens_cleared_and_exited"):
-		_finish(false)
-		return
-	var relay_result: Dictionary = await RELAY.new().run(self, live["world"], game)
-	for line: Variant in relay_result.get("failures", []):
-		failures.append(str(line))
-	if not bool(relay_result.get("passed", false)) or not failures.is_empty():
-		_finish(false)
-		return
-	reached = "relay_disabled_and_mill_crossed"
-	if OS.get_cmdline_user_args().has("--through-relay"):
-		_finish(true)
-		return
-	if not await _reload_transition(game, "relay_disabled_and_mill_crossed"):
-		_finish(false)
-		return
-	var hall_result: Dictionary = await HALL.new().run(self, live["world"], game)
-	for line: Variant in hall_result.get("failures", []):
-		failures.append(str(line))
-	if not bool(hall_result.get("passed", false)) or not failures.is_empty():
-		_finish(false)
-		return
-	reached = "warden_arena_entered"
-	if OS.get_cmdline_user_args().has("--through-hall"):
-		_finish(true)
-		return
-	if not await _reload_transition(game, "warden_arena_entered"):
-		_finish(false)
+	if not await _meadows_after_bridge(game):
 		return
 	if not _accepted(await WARDEN.new().run(self, live["world"], game), "passed"):
 		return
@@ -312,6 +282,114 @@ func _run() -> void:
 	_finish(true)
 
 
+## Bridge -> Warrens -> Relay/Mill -> Hall, each followed by the production
+## save/reload. A `--resume-from` run skips the stages its earned checkpoint is
+## already past. Returns false when the run has finished (pass or fail).
+func _meadows_after_bridge(game: Node) -> bool:
+	if not _resumed_past("south_bridge_crossed") \
+			and not await _reload_transition(game, "south_bridge_crossed"):
+		_finish(false)
+		return false
+	var stages := [
+		[WARRENS, "warrens_cleared_and_exited", "--through-warrens"],
+		[RELAY, "relay_disabled_and_mill_crossed", "--through-relay"],
+		[HALL, "warden_arena_entered", "--through-hall"],
+	]
+	for stage: Array in stages:
+		var label := str(stage[1])
+		if _resumed_past(label):
+			continue
+		var result: Dictionary = await (stage[0] as GDScript).new().run(self, live["world"], game)
+		for line: Variant in result.get("failures", []):
+			failures.append(str(line))
+		if not bool(result.get("passed", false)) or not failures.is_empty():
+			_finish(false)
+			return false
+		reached = label
+		if OS.get_cmdline_user_args().has(str(stage[2])):
+			_finish(true)
+			return false
+		if not await _reload_transition(game, label):
+			_finish(false)
+			return false
+	return true
+
+
+## Earned checkpoints (coordinator speed rule, 2026-09-27). Every reload
+## transition copies the production save it just wrote to
+## `user://four_biome_checkpoints/<label>_<pid>/`; `--resume-from=<that dir>`
+## continues from it for debugging. A resumed run is never `closes` proof: that
+## stays one uninterrupted run from a new game, which is why its result says so.
+const CHECKPOINT_ROOT := "user://four_biome_checkpoints"
+const STAGE_ORDER := ["south_bridge_crossed", "warrens_cleared_and_exited",
+	"relay_disabled_and_mill_crossed", "warden_arena_entered"]
+var resumed_from := ""
+
+
+func _resumed_past(label: String) -> bool:
+	if resumed_from.is_empty():
+		return false
+	return STAGE_ORDER.find(label) <= STAGE_ORDER.find(resumed_from)
+
+
+func _arg_value(prefix: String) -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with(prefix):
+			return arg.trim_prefix(prefix)
+	return ""
+
+
+static func copy_tree(from: String, to: String) -> bool:
+	if DirAccess.make_dir_recursive_absolute(to) != OK:
+		return false
+	var dir := DirAccess.open(from)
+	if dir == null:
+		return false
+	for file: String in dir.get_files():
+		if dir.copy(from.path_join(file), to.path_join(file)) != OK:
+			return false
+	for sub: String in dir.get_directories():
+		if not copy_tree(from.path_join(sub), to.path_join(sub)):
+			return false
+	return true
+
+
+func _write_checkpoint(label: String, scene_path: String) -> void:
+	var to := ProjectSettings.globalize_path("%s/%s_%d" % [CHECKPOINT_ROOT, label, OS.get_process_id()])
+	if not copy_tree(ProjectSettings.globalize_path(scratch), to.path_join("save")):
+		print("CHECKPOINT %s: copy failed" % label)
+		return
+	var meta := FileAccess.open(to.path_join("checkpoint.json"), FileAccess.WRITE)
+	meta.store_string(JSON.stringify({"label": label, "scene": scene_path,
+		"world_seed": OS.get_environment("TB_WORLD_SEED"), "elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0}))
+	meta.close()
+	print("CHECKPOINT %s -> %s" % [label, to])
+
+
+func _resume_checkpoint(game: Node, from: String) -> bool:
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(from.path_join("checkpoint.json")))
+	if not meta is Dictionary or not STAGE_ORDER.has(str((meta as Dictionary).get("label", ""))):
+		failures.append("--resume-from has no readable earned checkpoint: " + from)
+		return false
+	if not copy_tree(from.path_join("save"), ProjectSettings.globalize_path(scratch)):
+		failures.append("could not copy the checkpoint save into this run's scratch")
+		return false
+	if not bool(game.call("load_game", 0)):
+		failures.append("load_game(0) refused the earned checkpoint")
+		return false
+	var world: Node = (load(str(meta["scene"])) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in 240:
+		await physics_frame
+	live["world"] = world
+	live["player"] = world.get_node_or_null(^"Player")
+	live["rig"] = get_first_node_in_group("camera_rig")
+	resumed_from = str(meta["label"])
+	reached = resumed_from
+	print("RESUMED FROM EARNED CHECKPOINT %s (%s) — debug only, not closes proof" % [resumed_from, from])
+	return live["player"] != null
+
 func _abort_late(reason: String) -> void:
 	failures.append(reason)
 	_finish(false)
@@ -345,6 +423,7 @@ func _reload_transition(game: Node, label: String) -> bool:
 	if not bool(game.call("save_game", 0)):
 		failures.append("RELOAD %s: save_game(0) refused" % label)
 		return false
+	_write_checkpoint(label, scene_path)
 	var old := current_scene
 	old.queue_free()
 	for i in 4:
@@ -410,6 +489,7 @@ func _finish(prefix_passed: bool) -> void:
 		"requested_prefix_passed": prefix_passed,
 		"reached": reached,
 		"campaign_complete": campaign_complete and failures.is_empty(),
+		"resumed_from": resumed_from,
 		"scratch": scratch,
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"failures": failures,
