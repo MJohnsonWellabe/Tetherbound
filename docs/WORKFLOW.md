@@ -344,9 +344,11 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Lanes:** each lane works on one long-lived `tb/<lane>` branch
     (`tb/meadows-core`, `tb/meadows-activities`, `tb/meadows-route`,
     `tb/cloudreach`, `tb/cloudreach-b`, `tb/stormwood`, `tb/stormwood-b`,
-    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`), with one standing
-    draft PR. The lane merges `origin/main` into it after each landing and
-    keeps going. It never opens a new branch per task.
+    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`). The lane opens no
+    PR: READY posts, SHARED-FILE REQUESTs and questions go on the single
+    Lane channel issue #356 (owner, 2026-09-27), with the READY SHA pushed to
+    origin first. The lane merges `origin/main` into its branch after each
+    landing and keeps going. It never opens a new branch per task.
   - **Batches:** the coordinator reuses one `tb/integration` branch, reset to
     `main` for each batch.
   - **No scratch branches:** dispatch `render.yml` with `checkout_ref` set to a
@@ -373,6 +375,13 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
     - **Co-op criteria** need two-peer evidence.
   - **Fixtures only in labelled dry runs.** Fixture-start runs are allowed only
     as labelled blocker-finding dry runs (`DRY RUN — does not count`).
+  - **Earned checkpoints are allowed starts (coordinator, 2026-09-27).** A save
+    written by a recorded run that itself used no fixtures, position writes,
+    flag/ledger sets or granted parties is an earned checkpoint, not a
+    fixture. A `closes` proof may start from one through the normal load path
+    if it cites the producing run (commit SHA plus run ID or log). While
+    debugging, iterate from the earned save just before a failure; the
+    `closes` proof is one uninterrupted run from its earned start.
   - **One criterion at a time.** A lane carries one criterion to closed before
     starting the next.
   - **Codex-queue IDs carry a lane prefix and are append-only**

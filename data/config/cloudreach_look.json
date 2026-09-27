@@ -89,6 +89,16 @@
     "stone_embed_m": [0.24, 0.48]
   },
   "trees_stones": {
+    "architectural_clearings": [
+      {
+        "landmark_id": "summit_eyrie_stronghold",
+        "radius_m": 35.0,
+        "height_tolerance_m": 30.0,
+        "approach_offset": [111.3, 12.9, 45.05],
+        "approach_half_width_m": 12.0,
+        "_why": "Keep decorative trunks out of the inhabited aviary footprint and the elevated eastern road's view toward its entrance. The exposed summit's trees remain outside this corridor."
+      }
+    ],
     "_comment": "Per region top and per landmark: 3-5 tree clusters (CommonTree_1-5 in the open, TwistedTree_* past radius_frac 0.72 of the site's own footprint -- an exposed rim -- DeadTree_* at/after the summit) and 4-8 stone clusters of 2-3 Rock_Medium_* embedded stone_embed_min..max of their own height.",
     "clusters_min": 3,
     "clusters_max": 5,
