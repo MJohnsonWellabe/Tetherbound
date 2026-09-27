@@ -933,7 +933,8 @@
   {
    "id": "C3",
    "status": "partial",
-   "note": "Veyra per-participant payout landed; client writes Veyra flag locally; no host/guest flight/realm rejoin witness."
+   "note": "Integrated run passed review in batch 62. Card completes when feeders F08#3 (perch camera) and F08#4 (settlements, Codex) are met.",
+   "integrated_run": "ralph/reports/CLOUDREACH/b/c3-coop/run-8/PROOF.md @ tb/cloudreach-b 65c6888a (batch 62): two real Godot peers (loopback ENet) cross flight and realm boundaries, drop and rejoin mid-flight, host kill/restart/title Load with hash equality, no relic/key duplication, Veyra/shrine/wind roads persist, no legendary (solmane replaced by tempestwing in summit wild tables per ruling 5857058456); 99 PASS plus 2 negative controls failing as designed; independent re-check MET. Shortcuts disclosed: story_flag world flags stand in for the completed chapter; heart via ledger; L30 party grant plus owned galecrest carrier; teleport to the Sky Shrine pad; loopback, not internet."
   },
   {
    "id": "S1",
