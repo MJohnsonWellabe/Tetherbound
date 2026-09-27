@@ -9,14 +9,15 @@ extends "res://tests/smoke_four_biome_continuous.gd"
 ##     and production-camera frames with a display); it never acts;
 ##   - the Stormwood stage runs the earned segments the chapter already uses
 ##     (arrival prefix -> Capacitor Alpha and the paid Crown arch -> Crown
-##     guardian and Rootgate -> Deepwood and the core ascent), then detours to
+##     guardian and Rootgate), then detours to
 ##     each named wild the route did not fight (`stormwood_b_named_detour_segment.gd`:
 ##     rest at a camp, walk the road, one Engage press, ordinary fight), then
 ##     stops. Marrow and later chapters are not needed for F10#2.
 ## It also writes three ordinary production saves (`--named-saves=<dir>`,
 ## default `<checkpoint-dir>/named`): `named_pre_capacitor` after the arrival
 ## prefix, `named_pre_crown` beside the paid Crown arch, `named_pre_detours`
-## after the core ascent. `capture_stormwood_b_named_from_save.gd` loads one
+## after the Rootgate release (Hollows renders from the earned `stormwood_arrived`
+## checkpoint itself). `capture_stormwood_b_named_from_save.gd` loads one
 ## through the production title Load and renders that fight: a whole route is
 ## too slow to render in one process, a fight from its save is not.
 ## No teleport, flag, item, party, level or weather fixture is added by this
@@ -61,8 +62,7 @@ func _stage_stormwood_to_water(game: Node) -> bool:
 	reached = "stormwood_arch_recipe_earned"
 	_named_save(game, "named_pre_capacitor")
 	for entry: Array in [[CROWN, "stormwood_paid_crown", "named_pre_crown"],
-			[ROOTGATE, "stormwood_rootgate_released", ""],
-			[DYNAMO, "stormwood_dynamo_core_reached", "named_pre_detours"]]:
+			[ROOTGATE, "stormwood_rootgate_released", "named_pre_detours"]]:
 		if not _accepted(await (entry[0] as GDScript).new().run(self, live["world"], game), "passed"):
 			return _named_stop(false)
 		reached = str(entry[1])

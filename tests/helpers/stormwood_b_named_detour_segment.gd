@@ -21,13 +21,19 @@ const PLAN := {
 		"road": [Vector2(-630.0, 2930.0), Vector2(-1080.0, 3020.0)]},
 	"hollows_alpha": {"camp": "lantern_pools_camp",
 		"road": [Vector2(-430.0, 1500.0), Vector2(-480.0, 1600.0)]},
+	# Deepwood legs follow the earned Dynamo segment's own walk from Lantern
+	# Hollow (Deepwood station, then east along the Deepwood road).
 	"blackwater_elder": {"camp": "lantern_hollow_waycamp",
-		"road": [Vector2(-330.0, 4100.0), Vector2(-200.0, 4350.0)]},
+		"road": [Vector2(-890.0, 4490.0), Vector2(-150.0, 4460.0)]},
 	"old_rodfolk_hall_guardian": {"camp": "lantern_hollow_waycamp",
-		"road": [Vector2(-800.0, 4050.0), Vector2(-1200.0, 4250.0), Vector2(-1500.0, 4350.0)]},
+		"road": [Vector2(-890.0, 4490.0), Vector2(-1250.0, 4440.0), Vector2(-1500.0, 4400.0)]},
 	"glass_field_alpha": {"camp": "lantern_hollow_waycamp",
-		"road": [Vector2(-330.0, 4300.0), Vector2(-250.0, 4800.0), Vector2(-250.0, 5000.0)]},
+		"road": [Vector2(-890.0, 4490.0), Vector2(-150.0, 4460.0), Vector2(-310.0, 5050.0)]},
 }
+## Named wilds whose plans start in Deepwood: reached through the released
+## Rootgate road (the earned Dynamo segment's walk) when the player stands on
+## the Crown island.
+const DEEPWOOD := ["blackwater_elder", "old_rodfolk_hall_guardian", "glass_field_alpha"]
 
 var outcomes: Dictionary = {}
 ## The detour fights a named wild as a READER: the same approach-and-quick
@@ -58,6 +64,9 @@ func run_named(tree: SceneTree, world: Node3D, game: Node, ids: Array) -> Dictio
 	if not _manager.exited.is_connected(_on_combat_exited):
 		_manager.exited.connect(_on_combat_exited)
 	for id: String in ids:
+		if DEEPWOOD.has(id) and not await _leave_crown_if_there():
+			outcomes[id] = "crown_return_failed"
+			continue
 		outcomes[id] = await _detour(id)
 		_note("DETOUR %s -> %s" % [id, str(outcomes[id])])
 	if _manager.exited.is_connected(_on_combat_exited):
@@ -192,6 +201,48 @@ func _fight_named_as_reader(label: String, enemy: Node3D) -> bool:
 		Time.get_ticks_msec() - started])
 	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
+	return true
+
+
+## On the Crown island after the Rootgate: walk back through the actual paid
+## arch and down the released Rootgate road to Lantern Hollow, as the earned
+## Dynamo segment does (`_return_paid_arch` + its first two road points).
+func _leave_crown_if_there() -> bool:
+	if not _has(CROWN_REACHED) or _player.global_position.x < 400.0 or _player.global_position.z > 2950.0:
+		return true
+	var arches := _world.get_node_or_null("StormglassArches")
+	var rows: Dictionary = arches.get("_arches") if arches != null else {}
+	var record := paid_crown_record(_game.get("placed_buildings"))
+	var origin: Node3D = (rows.get("e_crown", {}) as Dictionary).get("node")
+	var destination: Node3D = (rows.get(str(record.get("uid", "")), {}) as Dictionary).get("node")
+	if not is_instance_valid(origin) or not is_instance_valid(destination):
+		return _fail("Crown return requires both actual paid passage bodies")
+	for point in [Vector2(805, 2545), Vector2(590, 2540)]:
+		if not await _walk_xz(point, "Crown return ring"):
+			return false
+	var outside := origin.to_global(Vector3(0, 0, -5))
+	if not await _walk_xz(Vector2(outside.x, outside.z), "outside Crown return passage"):
+		return false
+	_navigator.reset()
+	var through := false
+	for _frame in 1800:
+		if _player.global_position.distance_to(destination.global_position) < 12.0:
+			through = true
+			break
+		if _manager.is_fighting():
+			if not await _fight_current("Crown return passage"):
+				return false
+		elif _navigator.can_walk():
+			await _navigator.step(origin.to_global(Vector3(0, 0, 3.5)))
+		else:
+			await _tree.physics_frame
+	_drive_stick(0, 0)
+	if not through:
+		return _fail("ordinary Crown passage did not return to the actual paid twin")
+	for point in [Vector2(-650, 3550), Vector2(-450, 3960)]:
+		if not await _walk_xz(point, "released Rootgate road to Lantern Hollow"):
+			return false
+	_note("RETURNED from the Crown through the paid arch and the released Rootgate road")
 	return true
 
 
