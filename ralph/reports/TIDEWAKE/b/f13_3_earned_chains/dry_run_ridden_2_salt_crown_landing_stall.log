@@ -1,0 +1,61 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DRY RUN mount fixture: water_mosshell
+DRY RUN - does not count: declared fixture start (see header)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _build_world (res://tests/smoke_tidewake_b_chain_route.gd:228)
+         [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:197)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+RIDE first_shore_to_reedhaven_sheltered ridden=116m dry=true elapsed_s=24
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=444m legs=61
+RIDE reedhaven_to_brine_steps_sheltered ridden=145m dry=true elapsed_s=120
+RETRY start of brine_steps_to_shellwatch_sheltered: stalled at leg 14/70 player=(319.4168, 25.96053, 636.1323) goal=(319.5476, 0.0, 640.0)
+WALK start of brine_steps_to_shellwatch_sheltered island=brine_steps walked=356m legs=57
+RIDE brine_steps_to_shellwatch_sheltered ridden=131m dry=true elapsed_s=137
+WALK start of shellwatch_to_tidal_cradle_sheltered island=shellwatch walked=466m legs=61
+RIDE shellwatch_to_tidal_cradle_sheltered ridden=150m dry=true elapsed_s=127
+WALK start of tidal_cradle_to_salt_crown_sheltered island=tidal_cradle walked=711m legs=105
+FAIL: water_edda tidal_cradle_to_salt_crown_sheltered vertex 7/8: mounted leg exhausted 4251 frames at (319.0374, -0.045826, 2027.866) target (299.831, 0.0, 2097.513)
+FAIL: Garden: Edda gives the lead ()
+FAIL: Garden: lead recorded
+FAIL: garden_records_wall visible and offered after the lead

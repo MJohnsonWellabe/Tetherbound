@@ -245,7 +245,10 @@ func _deep_watch() -> String:
 		# Without one (standalone witness): DISCLOSED POSITION WRITE.
 		var up: Dictionary = POCKET.plan_route(world, Vector2(player.global_position.x, player.global_position.z),
 			Vector2(_landing("deep_watch").x, _landing("deep_watch").z))
-		if (up.points as Array).is_empty() or (swimming != null and swimming.is_swimming()):
+		# With a mount, always ride back: a non-empty baked-ground plan from the
+		# cliff-foot shallows still stalls on foot (ridden DRY RUN: every walk
+		# from (1487, -0.2, 3439) stalled at leg 1).
+		if mount != null or (up.points as Array).is_empty() or (swimming != null and swimming.is_swimming()):
 			if mount != null:
 				_check(await _ride_to_point(_landing("deep_watch"), "Tidecoil return to the Deep Watch landing"),
 					"Deep Watch: rode the owned swimmer from the fight back to the landing")
