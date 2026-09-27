@@ -13,7 +13,7 @@ const FLAGS: Array[String] = ["realm_key_cloudreach", "fly_traversal_unlocked", 
 	"cloudreach_act_ii_complete", "storm_anchor_upper_west_disabled", "storm_anchor_upper_east_disabled",
 	"cloudreach_upper_anchors_disabled", "storm_anchor_summit_feed_disabled"]
 ## Straight lines from the camp over the lip, down the ~8 m bank to the road.
-const OVER_THE_LIP: Array[Vector3] = [Vector3(133.0, 1152.0, 5322.0), Vector3(138.0, 1152.0, 5318.0), Vector3(143.0, 1150.0, 5314.0)]
+const OVER_THE_LIP: Array[Vector3] = [Vector3(133.0, 1152.0, 5322.0), Vector3(138.0, 1152.0, 5318.0), Vector3(143.0, 1150.0, 5314.0), Vector3(152.0, 1146.0, 5304.0)]
 
 
 func _run() -> void:
