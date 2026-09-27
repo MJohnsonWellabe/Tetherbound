@@ -1,0 +1,35 @@
+You are a code-blind visual judge. You see ONLY the images in this folder,
+sheet-fight-M.jpg and sheet-fight-N.jpg (labelled contact sheets; each tile is a
+1280x720 production frame downscaled). Full-size tiles, if you need detail, are
+in ../frames/<letter>/ with the same neutral names. Do not read any other file.
+
+Each sheet is one real-time creature fight in a game, from the game's normal
+fight camera. The player pilots a small companion creature (the one with the
+pilot card in the HUD) against a larger wild opponent. The HUD is the real game
+HUD (a TEAM list and pilot card at the left, an action panel at the right, the
+opponent's card at the top). Frame labels:
+  - iNN : one-second interval frames
+  - tellN-a-start / b-mid / c-late : the opponent's attack warning has just
+    begun / is halfway / is about to release
+  - tellN-d-strike / e-impact / f-recovery : release / ~0.2 s after / recovery
+  - 00-before / 99-after : before engaging / after the fight
+
+The bar (combat readability, per fight): "All meaningful tells >= 0.8 s,
+heavy >= 1.1 s. Framing/readability passes at actual creature scale." Each
+fight must show, at the normal fight camera, a distinct readable tell and a
+real hit or avoidance.
+
+For EACH fight M-N answer, citing frame names, PASS or FAIL plus one or two
+concrete sentences:
+ (a) Is the opponent's attack warning clearly visible and distinguishable
+     before it lands?
+ (b) Can you see where it will hit and where to move to avoid it?
+ (c) Are BOTH creatures readable at their actual scale in the normal frames:
+     not hidden under the HUD panels, not cropped, not with the camera inside
+     either body? (Brief occlusion in one frame is a note, not a FAIL; a
+     creature repeatedly hidden under the HUD, or a frame of camera-inside-
+     body geometry at a tell or strike, is a FAIL.)
+ (d) Is there a visible hit or a visible avoidance?
+Then an overall line per fight: C3 PASS or C3 FAIL. Then list up to three
+remaining LOOK defects across both, each naming a frame. Score nothing else
+(scenery, creature identity and art style are out of scope).

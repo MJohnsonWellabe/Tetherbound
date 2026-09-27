@@ -490,6 +490,8 @@
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
+            "lunge_travels": true,
+            "_why_lunge_travels_diver_f04": "F04 (owner yes, #356 5859072534): BOSSES gives the DIVER a .4 s tell only with a long positional cue. Its 5.5 m dive now really travels, drawing the same ground lane and arrow as the CHARGER while it winds up, and lands only if the body reaches its target (combat.json charger_lunge; wild_creature.gd). Before this the dive was an in-place strike and the code-blind judge saw no direction. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "reposition_distance": 7.0,
             "reposition_time": 1.6,
             "attack_cooldown": 0.9,
@@ -665,6 +667,8 @@
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
+            "lunge_travels": true,
+            "_why_lunge_travels_diver_f04": "F04 (owner yes, #356 5859072534): BOSSES gives the DIVER a .4 s tell only with a long positional cue. Its 5.5 m dive now really travels, drawing the same ground lane and arrow as the CHARGER while it winds up, and lands only if the body reaches its target (combat.json charger_lunge; wild_creature.gd). Before this the dive was an in-place strike and the code-blind judge saw no direction. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "reposition_distance": 7.0,
             "reposition_time": 1.6,
             "attack_cooldown": 0.9,
@@ -830,6 +834,8 @@
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
+            "lunge_travels": true,
+            "_why_lunge_travels_diver_f04": "F04 (owner yes, #356 5859072534): BOSSES gives the DIVER a .4 s tell only with a long positional cue. Its 5.5 m dive now really travels, drawing the same ground lane and arrow as the CHARGER while it winds up, and lands only if the body reaches its target (combat.json charger_lunge; wild_creature.gd). Before this the dive was an in-place strike and the code-blind judge saw no direction. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "reposition_distance": 7.0,
             "reposition_time": 1.6,
             "attack_cooldown": 0.9,
