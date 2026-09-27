@@ -1,0 +1,8 @@
+F10#3 motion frame sets. Frames: frames/<seq>_t<NNN>.png, NNN = hundredths of a second after the warning begins. Contact sheets: sheet_<seq>.jpg.
+Resolution 1920x1080. Camera: player camera, HUD hidden. Build A for all sequences.
+
+seqA: lighting = storm, world clock 12:00 (day); reduced motion = OFF; build A
+seqB: lighting = storm, world clock 00:00 (night); reduced motion = OFF; build A
+seqC: lighting = storm, world clock 00:00 (night); reduced motion = ON; build A
+
+Time offsets in every sequence (s after warning start): 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.25, 1.3, 1.4, 1.5, 1.6, 1.7

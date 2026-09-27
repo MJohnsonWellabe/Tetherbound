@@ -407,9 +407,12 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   manual dispatch, and on a PR labelled `full-ci`. Label `full-ci` when a
   change touches net/authority, save/migration or a harness that fast CI does
   not run (adding the label starts a run; the two known-red jobs show red there
-  by design and do not fail the gate). A criterion counts as MET only on a SHA a green FULL run covered. A
-  red scheduled full run is the coordinator's first job: bisect the batches
-  merged since the last green full run and hand the fix to the owning lane.
+  by design and do not fail the gate). A criterion counts as MET when its batch merges to `main` with a passing
+  independent re-check (owner, 2026-09-27). The coordinator still dispatches
+  a FULL run after each batch as a safety net: if it goes red, that batch's
+  criteria return to landing until the fix lands. A red full run is the
+  coordinator's first job: bisect the batches merged since the last green
+  full run and hand the fix to the owning lane.
 - **Offload long runs, never wait idle (coordinator, 2026-09-26).** Lane
   containers have 4 CPUs and no GPU; renders are software-rasterised. Start
   runs over ~2 minutes in the background and keep working; iterate captures
