@@ -404,6 +404,106 @@ func _acknowledge_and_cross() -> bool:
 		_leg_target = points[index]
 		if not await _walk_road_entry(road[index]):
 			return false
+	_save_village_checkpoint()
+	return await _kell_to_rift(terrain, road, points, kell, kell_spec)
+
+
+## `kell_rift` segment: resume the acknowledgement tail from the
+## `village_pre_kell` checkpoint (an ordinary earned save written by the
+## `warden` segment at the village road start). Binds the same live nodes as
+## `_bind_ending` without its Hall-state preconditions (the settled climax
+## machine is not a saved node state), and requires instead the durable
+## ending flags the Warden segment earned. No flag, party, position or
+## inventory write.
+func run_from_village(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
+	_tree = tree
+	_world = world
+	_game = game
+	if tree == null or not is_instance_valid(world) or not is_instance_valid(game) \
+			or str(game.get("current_realm")) != "meadows" or INPUT_OWNER.current(tree) != null:
+		_fail("kell_rift needs the retained Meadows with ordinary input")
+		return result()
+	for flag: String in ["defeated_warden", "legendary_freed", "legendary_settled", "realm_key_cloudreach", "realm_heart_meadows_earned"]:
+		if not _has(flag):
+			_fail("kell_rift needs the earned ending flag " + flag)
+			return result()
+	if _has("meadows_acknowledged"):
+		_fail("kell_rift starts before the acknowledgement")
+		return result()
+	_source_world_id = world.get_instance_id()
+	_player = world.get_node_or_null("Player") as CharacterBody3D
+	_rig = world.get_node_or_null("CameraRig") as Node3D
+	_hold = world.get_node_or_null("Stronghold") as Node3D
+	_climax = world.get_node_or_null("StrongholdClimax") as Node3D
+	_rift = world.get_node_or_null("RiftCrossing") as Node3D
+	_panel = world.get_node_or_null("DialoguePanel")
+	_director = world.get_node_or_null("EncounterDirector")
+	_combat = world.get_node_or_null("CombatManager")
+	_arbiter = tree.get_first_node_in_group("interaction_arbiter")
+	if _player == null or _rig == null or _rift == null or _panel == null or _director == null or _combat == null or _arbiter == null:
+		_fail("kell_rift: the live village, Rift or input dependencies are missing")
+		return result()
+	_initial_ids = _party_ids()
+	_hall_config = _read(HALL_CONFIG)
+	_ending_config = _read(CLIMAX_CONFIG)
+	if _hold != null and bool(_hold.call("has_marker", "warden_arena")):
+		_supported_y = (_hold.call("marker", "warden_arena") as Vector3).y
+	_input = INPUTS.new()
+	_input._tree = tree
+	_gui = CEREMONY.new()
+	_gui._tree = tree
+	_nav = NAV.new(tree, _player, _rig, _stick)
+	_watch(_combat, "entered", _on_entered)
+	_watch(_combat, "hit_landed", _on_hit)
+	_watch(_combat, "exited", _on_exit)
+	_watch(_panel, "finished", _on_dialogue_finished)
+	_watch(_arbiter, "activated", _on_activated)
+	_watch(tree, "process_frame", _observe_retained_party)
+	_ending_settled = true
+	_arm_death_watch()
+	var terrain := _read(TERRAIN)
+	var gates := _open_crossings(terrain)
+	var road := forward_return_road(aftermath_road(terrain, gates), trail_points(terrain, "loops", "warren_undertrail"))
+	var kell := _world.get_node_or_null("VillageNPCs/Kell") as Node3D
+	var kell_spec := acknowledgement_spec(_read(NPC_CONFIG), _read(FREED_DIALOGUE))
+	if gates.size() != 3 or road.is_empty() or kell == null or kell_spec.is_empty():
+		_fail("kell_rift: the actual acknowledgement actor or return route is unavailable")
+		return result()
+	_receipt("kell_rift_resumed", {"player": _player.global_position, "party": _initial_ids.size()})
+	if await _prepare():
+		_completed = await _kell_to_rift(terrain, road, road_points(road), kell, kell_spec)
+	_stick(0.0, 0.0)
+	_disconnect_watches()
+	return result()
+
+
+## Speed mode (coordinator 2026-09-27): after the 11.4 km return reaches the
+## village road start, write an ordinary game save of that moment (the game's
+## own Game.save_game, slot 1) to $TB_CHAIN_CHECKPOINT_DIR/village_pre_kell/save/
+## so the Kell / storm road / Rift tail can be iterated with the `kell_rift`
+## segment instead of replaying the Warden and the whole return road. Written
+## only when the variable is set; the running segment is unaffected.
+func _save_village_checkpoint() -> void:
+	var root_dir := OS.get_environment("TB_CHAIN_CHECKPOINT_DIR")
+	if root_dir.is_empty():
+		return
+	var dir := root_dir.path_join("village_pre_kell/save/")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var previous: Variant = _game.get("save_system")
+	_game.set("save_system", CHECKPOINT_SAVE.new(dir))
+	var ok := bool(_game.call("save_game", 1))
+	_game.set("save_system", previous)
+	_receipt("checkpoint_village_pre_kell", {"dir": dir, "saved": ok, "player": _player.global_position,
+		"party": _party_ids().size()})
+
+
+const CHECKPOINT_SAVE := preload("res://scripts/save/save_game.gd")
+
+
+## The acknowledgement tail from the village road start: Kell, the storm road
+## and the physical Rift crossing. Shared by the full `warden` segment and the
+## `kell_rift` resume segment.
+func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[Vector2], kell: Node3D, kell_spec: Dictionary) -> bool:
 	# B12 attempt 1 reached the village road start and then spent the
 	# helper's 1800-frame prompt approach on the ~180 m from (8,90) to Kell,
 	# stopping at (143,-7,62). Walk there first as on every other leg (fights,
