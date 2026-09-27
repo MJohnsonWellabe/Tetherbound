@@ -1,0 +1,21 @@
+PASS the arriving character has a saved identity
+PASS the couriers' thanks is not offered before the medicine reaches the shelter
+PASS the couriers' thanks is offered at the shelter once the medicine is delivered
+PASS it sits at the Windscar ravine shelter, clear of both couriers' talk prompts (nearest person 11.2 m, delivery 7.8 m, (-292.0, 460.4241, 3108.0))
+PASS the thanks is in plain sight from the delivery prompt (blocked by nothing)
+PASS Neri's report line completes the chain through the dialogue guard
+PASS the chain's completion flag is set
+PASS the prompt beside it is the couriers' thanks, not a talk prompt ('[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take the couriers' thanks')
+PASS the interact press gives two small potions (0 -> 2)
+PASS this character's own player-scoped receipt records the claim
+PASS no first-come world cache flag was written; another character's thanks is untouched
+PASS the thanks is no longer offered to this character
+PASS pressing again pays nothing more
+PASS save after collection
+PASS load the saved game
+PASS chain completion survives reload
+PASS the character's receipt survives reload
+PASS the collected thanks is not offered again after reload
+PASS the potions survive reload exactly once
+CLOUDREACH ACTIVITY REWARDS OK checks=19 failures=0
+exit 0

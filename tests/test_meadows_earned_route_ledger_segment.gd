@@ -80,3 +80,12 @@ func test_strict_beats_keep_map_reveals() -> void:
 		{"kind": "offer", "detail": "Chop"}])
 	assert_eq(strict.size(), 1)
 	assert_eq(str(strict[0]["detail"]), "region:the_old_quarry")
+
+
+func test_strict_beats_drop_harvest_flags_and_resource_verbs() -> void:
+	var strict: Array = LEDGER.strict_beats([{"kind": "flag_set", "detail": "felled:meadows:bushes#12"},
+		{"kind": "flag_set", "detail": "vegetation:meadows:rocks#4"}, {"kind": "flag_set", "detail": "harvest_node:order:2021.0"},
+		{"kind": "offer", "detail": "Prise loose stone"}, {"kind": "offer", "detail": "Cut river fiber"},
+		{"kind": "flag_set", "detail": "warrens_cleared"}])
+	assert_eq(strict.size(), 1)
+	assert_eq(str(strict[0]["detail"]), "warrens_cleared")

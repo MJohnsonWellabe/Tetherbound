@@ -146,7 +146,7 @@ This is the mandatory kit check before the Warden. Galecrest teaches movement, t
 
 **Stage C — Break the Eye.** Begins after Veyra's team falls. The player pilots a creature through the same readable wind language and disables west, crown and east relays within 3.8 m. This is movement interaction, not another HP bar. Recovery currents inside 53 m prevent an invisible instant-death fall; a full failure returns to Summit Bivouac.
 
-**Change/reward.** The extraction network stops, winds restore, settlements reconnect and Aila grants Wings, the Stormwood key and overlook. Host snapshots own lanes/relays; each relay flag and final reward are idempotent.
+**Change/reward.** `captain_veyra_defeated` opens the summit engine's tether chamber: the players disable the tether and free Solmane, the legendary sky guardian, then resolve the same voluntary per-participant ceremony as Meadows' Veridian (owner, 2026-09-27). The extraction network stops, winds restore, settlements reconnect and Aila grants Wings, the Stormwood key and overlook. Host snapshots own lanes/relays; each relay flag and final reward are idempotent.
 
 ### 4.7 Captain Marrow and the Dynamo — Stormwood, 42/43/43/44/44
 

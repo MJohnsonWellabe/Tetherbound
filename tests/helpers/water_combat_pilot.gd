@@ -16,7 +16,8 @@ extends "res://tests/helpers/combat_depth_pilot.gd"
 ## barely scratched. Here: charged whenever ready and paid; a Wind-short
 ## charged only while the foe is recovering, repositioning or staggered (its
 ## x2 windup then finishes before the next tell); a paid quick only from
-## surplus Wind that still leaves the next charged paid.
+## surplus Wind that still leaves the next charged paid, or any paid quick
+## while the charged is Energy-gated (quicks are what build that Energy).
 ##
 ## The shared pilot is not modified: other lanes' callers keep its behaviour.
 
@@ -76,7 +77,13 @@ func _act_water() -> void:
 	if distance > reach - 0.25:
 		_walk(toward)
 		return
-	if _manager.quick_ready() and wind >= quick_cost + charged_cost:
+	# A charged hit also spends the creature's Energy, which only landed quicks
+	# build. When Energy is what gates the charged, keeping the charged's Wind in
+	# reserve deadlocks the pilot (it never attacks): press paid quicks to build
+	# Energy. Low nourishment lowers the Wind cap, so this happens on a long
+	# unfed route (Tidewake dry run: Aquaryn at a ~30 Wind cap).
+	var energy_gated: bool = not creature.can_use_charged()
+	if _manager.quick_ready() and (wind >= quick_cost + charged_cost or (energy_gated and wind >= quick_cost)):
 		_press("combat_quick")
 
 

@@ -1,0 +1,8 @@
+frame_01 01_lantern_hidden_cache
+frame_02 02_reed_root_hollow
+frame_03 03_brine_upper_shelf
+frame_04 04_gull_research_satchel
+frame_05 05_cradle_shell_nest
+frame_06 06_salt_bell_terrace
+frame_07 07_garden_exposed_vault
+frame_08 08_deep_watch_tidecoil_cache
