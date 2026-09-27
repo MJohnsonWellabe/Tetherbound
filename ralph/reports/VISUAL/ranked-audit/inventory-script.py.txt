@@ -1,0 +1,29 @@
+from pathlib import Path
+from PIL import Image,ImageDraw,ImageFont
+import json,hashlib,collections,textwrap
+root=Path('D:/tetherbound/visual-acceptance')
+out=root/'shots/ranked-audit-current'; out.mkdir(exist_ok=True)
+items=json.loads((root/'data/items/items.json').read_text())['items']
+species=json.loads((root/'data/creatures/species.json').read_text())['species']
+rows=[]
+sheet=Image.new('RGB',(1600,120*((len(items)+9)//10)),'#18232b'); draw=ImageDraw.Draw(sheet)
+for i,(key,value) in enumerate(sorted(items.items(),key=lambda kv:(kv[1].get('kind',''),kv[0]))):
+    icon=value.get('icon',''); path=root/icon.removeprefix('res://')
+    row={'id':key,'name':value.get('name'),'kind':value.get('kind'),'icon':icon,'icon_exists':bool(icon and path.is_file()),'world_model_explicit':value.get('world_model')}
+    x=(i%10)*160;y=(i//10)*120
+    if row['icon_exists']:
+        row['icon_sha256']=hashlib.sha256(path.read_bytes()).hexdigest()
+        try:
+            with Image.open(path) as im:
+                row['icon_size']=im.size
+                im=im.convert('RGBA');im.thumbnail((64,64),Image.Resampling.LANCZOS)
+                sheet.paste(im,(x+48,y+6),im)
+        except Exception as e: row['image_read_error']=str(e)
+    else: draw.text((x+30,y+20),'NO ICON',(255,140,100))
+    for j,line in enumerate(textwrap.wrap(key,23)):draw.text((x+5,y+77+j*12),line,(238,238,238))
+    draw.text((x+5,y+107),value.get('kind','?'),(150,185,190))
+    rows.append(row)
+sheet.save(out/'_sheet_inventory_icons.jpg',quality=95)
+stats={'item_definitions':len(items),'item_kinds':dict(collections.Counter(x['kind'] for x in rows)),'unique_icon_paths':len({x['icon'] for x in rows}),'missing_icons':[x['id'] for x in rows if not x['icon_exists']],'explicit_world_models':sum(bool(x['world_model_explicit']) for x in rows),'species_definitions':len(species),'items':rows,'limits':'Icon contact sheet, not UI playback. Missing explicit world_model does not imply missing world art: production loaders have fallbacks. Stage/scene captures determine visible quality.'}
+(out/'source_inventory.json').write_text(json.dumps(stats,indent=2)+'\n')
+print(json.dumps({k:v for k,v in stats.items() if k not in ('items','limits')}))

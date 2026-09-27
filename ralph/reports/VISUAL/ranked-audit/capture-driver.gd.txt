@@ -1,0 +1,20 @@
+extends "res://tools/capture_visual_audit.gd"
+## DRY RUN: complete region environment stands plus selected major place approaches.
+const MAJOR_PLACES := {
+	"meadows":["place_south_bridge","place_tether_relay","place_stronghold_approach","place_meadows_hall"],
+	"cloudreach":["place_three_bells_bridge","place_sky_shrine_heartstone","place_cliffhold_settlement","place_summit_eyrie_stronghold"],
+	"stormwood":["place_crown_heartstone","place_old_rodfolk_hall","place_glass_field","place_dynamo_core"],
+	"tidewake":["place_shellwatch_rescue_jetty","place_veilfall_white_cascade","place_drowned_garden_terraces","place_reedhaven_woven_hall"]
+}
+func _run() -> void:
+	await process_frame
+	root.size = Vector2i(1920,1080)
+	await super._run()
+
+func _build_rows(spec: Dictionary) -> Array:
+	var rows := super._build_rows(spec)
+	var selected: Array = []
+	for row: Dictionary in rows:
+		if str(row.id).begins_with("env_") or str(row.id) in MAJOR_PLACES.get(_region,[]):
+			selected.append(row)
+	return selected
