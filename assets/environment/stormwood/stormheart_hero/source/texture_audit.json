@@ -1,0 +1,23 @@
+{
+  "source_images": [
+    {
+      "size": [
+        2048,
+        2048
+      ],
+      "encoded_sha256": "ff4a7b538bd075edd635d88a27914ac3002228ae838e4cdfa4a26dfdaf08a3ef",
+      "pixels_sha256": "cd633f97cc017cd64e2a75cb240b6050c3470d8271ceeb35089608e27cdf542e"
+    }
+  ],
+  "prepared_images": [
+    {
+      "size": [
+        2048,
+        2048
+      ],
+      "encoded_sha256": "ff4a7b538bd075edd635d88a27914ac3002228ae838e4cdfa4a26dfdaf08a3ef",
+      "pixels_sha256": "cd633f97cc017cd64e2a75cb240b6050c3470d8271ceeb35089608e27cdf542e"
+    }
+  ],
+  "pixel_identical": true
+}

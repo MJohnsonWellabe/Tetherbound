@@ -1,0 +1,199 @@
+{
+  "baseline_commit": "f122f5b0d6f01f645cfed25d3d0bfe332142f971",
+  "scope": "Six matched before/after production-camera frames. Visual asset replacement only; no gameplay acceptance or performance claim.",
+  "renderer": "gl_compatibility",
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "source_asset_sha256": "b9fdc6cdc588ddaa869391c81f17b271dc9197196760f81e1990a7f257df8890",
+  "fixed_fps": 60,
+  "seed": 44719,
+  "tree_gameplay_contract_unchanged": true,
+  "tree_gameplay_contract": {
+    "collision_shape_count": 775,
+    "outer_deck_radius_m": 44.0,
+    "outer_deck_radius_source": "stormheart_tree.gd::OUTER_WORKS_OUTER_RADIUS",
+    "path": "/root/Stormwood/StormheartTree",
+    "position": [
+      -100.0,
+      112.059112548828,
+      5470.0
+    ],
+    "static_body_count": 9
+  },
+  "frames": [
+    {
+      "frame": "stormheart_road_320m",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_320m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "8b693e764125ef0fb60554207b6588c96abae2370ed7acdf139ca6f7950d3e60"
+        },
+        {
+          "variant": "after1080",
+          "file": "after1080\\stormheart_road_320m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "809a34542413912d765fede24269cb3d11bcacde63a31855ec22586a564d6343"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_road_220m",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_220m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "b9ca5b4aeda5897f6c067dc52cb19b66a8ff2e8f2df1d77bc2c71a386efb2cc0"
+        },
+        {
+          "variant": "after1080",
+          "file": "after1080\\stormheart_road_220m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "efb316063f5ada8011bb5a4dc7b35cb022df5bb23497fb4dd3333c6775ec72e1"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_road_120m",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_120m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "691bea9c1b29681d7fec85ed232bac9601b9c06b37325cc88cb81bb8331b6b3c"
+        },
+        {
+          "variant": "after1080",
+          "file": "after1080\\stormheart_road_120m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "2516ec798697b560cf7c1d7409e22d1a72e042e48105c4ff185072f9235bb864"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_road_120m_verge",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_120m_verge.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "8d3ba31dab37c6592f444f1a01816a88deceb11f399919a63240f9aa4d5259c8"
+        },
+        {
+          "variant": "after1080",
+          "file": "after1080\\stormheart_road_120m_verge.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "0ed20bffdf2d78d947b322001a887fc046c7be9ef1f2d54807735c8462270490"
+        }
+      ]
+    },
+    {
+      "frame": "stormwood__dynamo__11__the_glass_field__day",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormwood__dynamo__11__the_glass_field__day.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "f75031ff4c456f6cde9b4d2b4353b1be53bd55e7b060b2547a14c58961a866c8"
+        },
+        {
+          "variant": "after1080",
+          "file": "after1080\\stormwood__dynamo__11__the_glass_field__day.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "3c4cd161639a6e9b2c397926a659e6e975bf11a1a96952c534358b7c066510e4"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_glass_field_look",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_glass_field_look.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "b91d55f16dbd45c25ae8c54cea61f866d4583ac8fade555ef1c48264452094cc"
+        },
+        {
+          "variant": "after1080",
+          "file": "after1080\\stormheart_glass_field_look.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "96661ad50095cc1af5a89c34b2fc38c97bf334a3f025e1260d4cb1877817975b"
+        }
+      ]
+    }
+  ],
+  "operator_inspection": "All12 full-resolution frames inspected. Candidate improves natural split-tree silhouette and bark form at320m,220m andGlassField. At120m the existing pylon blocks centerline; retained that view and an ordinary12m lateral road-verge view. Close bark is soft and angular; exposed inner cut edges and subdued canopy remain visual limitations. Current grass/flowers, HUD, lightning seam and spiral platforms remain unchanged.",
+  "capture_correction": "Initial1920x1061 windowed baseline retained separately as diagnostic. Matched accepted-raster pair uses native fullscreen1920x1080; no image resizing.",
+  "blind_visual_verdict": "Not yet performed by this preparation agent."
+}

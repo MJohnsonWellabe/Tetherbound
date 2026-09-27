@@ -1,0 +1,71 @@
+{
+  "source_glb_sha256": "aa9d96d5b32db95a92bf906720567f48cc228e6ec1e608c4d29a980360c69718",
+  "source_task_id": "01a0e4a2-5b8b-77c4-bf72-2b340d0a8f00",
+  "vertices": 28328,
+  "triangles": 55945,
+  "source_triangles_touched_by_clearance": 3870,
+  "bounds_godot_min": [
+    -166.35829162597656,
+    0.0,
+    -130.08660888671875
+  ],
+  "bounds_godot_max": [
+    166.35829162597656,
+    300.0,
+    97.66456604003906
+  ],
+  "low_root_radius_max": 92.1906322574908,
+  "sections": [
+    {
+      "height": 6,
+      "min_radius": 47.071479257370996,
+      "vertices_in_section": 815
+    },
+    {
+      "height": 20,
+      "min_radius": 46.97429923378503,
+      "vertices_in_section": 308
+    },
+    {
+      "height": 50,
+      "min_radius": 48.460431947010115,
+      "vertices_in_section": 146
+    },
+    {
+      "height": 90,
+      "min_radius": 48.32866394814821,
+      "vertices_in_section": 109
+    },
+    {
+      "height": 130,
+      "min_radius": 46.98440453636755,
+      "vertices_in_section": 138
+    },
+    {
+      "height": 150,
+      "min_radius": 47.73407620600119,
+      "vertices_in_section": 99
+    },
+    {
+      "height": 174,
+      "min_radius": 48.19107804032212,
+      "vertices_in_section": 226
+    },
+    {
+      "height": 184,
+      "min_radius": 46.31037401256561,
+      "vertices_in_section": 424
+    }
+  ],
+  "treatment": "18m lateral and24m depth coherent cleft opening; root-only horizontal taper0.55to1 acrossY0to65; surface clipping for irregular cavity and organic south/east arches; original UVs/textures preserved; no cylindrical projection or Boolean classification",
+  "visual_acceptance": "Candidate only. Newly exposed clipping boundaries are open; native appearance and integration require visual inspection.",
+  "vertices_inside_required_hollow": 0,
+  "sampled_triangles_inside_required_hollow": 0,
+  "exact_projected_triangle_clearance_radius_m": 46.95380318378098,
+  "south_east_portal_triangle_hits_10m_width_10m_headroom_from_Y6": {
+    "south": 0,
+    "east": 0
+  },
+  "minimum_triangle_area_m2": 7.99196145433704e-05,
+  "normals_finite_and_unit": true
+}

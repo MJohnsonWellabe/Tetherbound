@@ -1,0 +1,36 @@
+# Stormheart hero tree — independent visual verdict
+
+Reviewed all six PNGs in `after1080` individually and together at 30% size in `judge-contact-sheet.png`. References: both Stormheart boards, Meadows key art, and all five Palworld screenshots. Read only the visual-judge skill and imagery; no source, history, author notes, manifests, or prior verdicts. Judgments concern visible appearance, not performance or animation.
+
+## Scoped hero-tree verdict: NO
+
+The tree succeeds at monumental scale and a recognizable split-trunk silhouette. `stormheart_road_320m.png`, `stormheart_glass_field_look.png`, and `stormwood__dynamo__11__the_glass_field__day.png` clearly establish a destination that towers above ordinary trees. The boards' more specific identity—a living ancient tree split around a brilliant electrical heart and inhabited by wooden platforms—is not established.
+
+- **Identity and crown:** `stormheart_road_320m.png` and `stormheart_road_220m.png` show a pale gray-brown, largely dead-looking tree with shredded angular crown clusters. Both boards use broad green living crowns and robust lateral branch masses to balance the enormous trunk. The small dark fragments in these frames read as broken debris more readily than a living canopy. The green ordinary trees make the hero tree's dead appearance more conspicuous.
+- **Silhouette:** The paired uprights and root arch survive reduction well in the 320m and both glass-field views. The upper branching, however, becomes a ragged thicket of similarly thin spikes, rather than a few memorable boughs supporting substantial leaf masses. Keep the clear split, but resolve branch hierarchy and crown masses at distant viewing size.
+- **Material:** In `stormheart_road_120m_verge.png` and the unobscured tree portions of `stormheart_road_120m.png`, the immense root and trunk expose broad stretched-looking, blurry color bands and large planar changes. Those forms read partly as draped rock or clay. The boards distinguish bark ridges, inner living wood, moss, and foliage. Here the hero shares neither the ordinary tree's dark bark language nor a convincing distinct ancient-bark treatment.
+- **Hollow and interior structure:** The open central void is visible in `stormheart_road_220m.png` and `stormheart_road_120m_verge.png`. It does not yet read as a convincing inhabited hollow. Large dark circular plates and rings dominate it, with weak visible attachment and little readable wood, bracing, warm light, or railing detail. The boards make the ascent legible through bridges and platforms attached to trunk walls. The opening here exposes abstract discs.
+- **Electrical heart:** In the 320m, 220m, and glass-field views, a pale cyan segmented line marks the middle. It reads as a dashed graphic suspended in the opening rather than energetic light passing through the tree. Both boards give the electrical core a continuous, branching visual rhythm and enough contrast to explain why this landmark matters. The foreground glowing ground line is more conspicuous than the distant heart in `stormwood__dynamo__11__the_glass_field__day.png`.
+- **Near approach evidence:** `stormheart_road_120m.png` is dominated by a foreground tower that hides the trainer and much of the entrance. The verge view exposes more hollow, but giant foreground flower shapes and the diagonal cable still cross the subject. These shots do not establish a clear base doorway, usable threshold, or composed arrival comparable with either board's entrance view.
+
+## Full-frame findings
+
+The trainer's backpack, clothing, and body silhouette are legible in the 320m and glass-field shots. The small yellow companion in `stormheart_road_320m.png` has a readable face and ears, though this set does not show enough creature coverage to establish consistency of the broader cast. Nothing in these images justifies a creature-scale failure relative to an assigned role.
+
+Ground foliage is plentiful, but extreme differences in finish undermine coherence: smooth flat flower bowls and stems in `stormheart_road_120m_verge.png`, pale simple mushrooms in `stormheart_road_220m.png`, textured dark towers, blurry path texture, bright narrow grass blades, and the pale giant trunk do not feel authored to one material standard. The purple sky and near-black foliage also leave broad areas without useful light modeling. Rain communicates weather, but the mostly empty sky and weak distant landscape produce limited regional depth in both glass-field views. The low cameras and foreground obstructions magnify these issues.
+
+## Three largest gaps, ranked
+
+1. **Living landmark identity.** Both Stormheart boards organize green crown masses and broad boughs around a split, warm wooden trunk. `stormheart_road_320m.png` and `stormheart_road_220m.png` instead present gray dead-looking towers and fragmented crowns. Scale alone does not supply the intended identity.
+2. **A materially convincing hollow stronghold.** The boards show attached wooden platforms, bridges, bracing, lit thresholds, and an electrical core. `stormheart_road_120m_verge.png` and `stormheart_road_220m.png` expose dark discs within blurry, faceted trunk surfaces, with a weak dashed cyan centerline.
+3. **A coherent finished environment around the landmark.** Palworld's plateau view supports its landmark with believable terrain depth, shaded foliage, and clear routes; its meadow views keep characters and terrain within a consistent material language. Both glass-field frames and the 220m shot mix flat foreground plants, dark vegetation, an indistinct path surface, and an almost featureless purple backdrop.
+
+## The two bars
+
+**A — Do these frames belong to the world of the Meadows key art? NO.** Monumental natural forms, a visible adventure route, and a readable trainer fit the intended language. The dead gray hero crown, incompatible material treatments, and weak natural depth do not. Both Stormheart boards support a stormier biome, but preserve living foliage, warm wood, readable architecture, and a luminous central event; their specificity is missing here.
+
+**B — Beside the Palworld references, do these read as the same kind of game at the stated visual bar? NO.** They communicate an exploration and creature-adventure premise, but the hero trunk's exposed material quality, skeletal crown, abstract interior plates, and inconsistent surrounding foliage prevent a shipping-quality comparison. The successful large silhouette is not enough to carry the whole frame.
+
+**Scene changes:** Improve arrival cameras and sight lines, avoid tower/flower occlusion of the entrance, establish depth behind the landmark, rebalance sky and foliage values, and give the central power event stronger visual priority than the foreground route effect.
+
+**Art work required:** Resolved hero bark and inner-wood surfaces suitable for close approach; a living canopy with deliberate bough hierarchy; attached, readable stronghold architecture; a convincing electrical-core visual; and foliage assets with a consistent level of finish. These qualities are not evidenced in the submitted frames. Camera placement and color grading cannot correct the exposed trunk surfaces, fragmented crown, or abstract platform forms by themselves.
