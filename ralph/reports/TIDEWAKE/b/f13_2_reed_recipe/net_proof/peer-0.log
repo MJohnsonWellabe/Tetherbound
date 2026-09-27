@@ -1,0 +1,31 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+peer[0/host]: starting scene=water control_port=37137 enet_port=27841 xdg_data_home=/tmp/claude-0/-home-user-Tetherbound/d8bada2c-a58e-5610-90d4-afb3e7b2f9c8/scratchpad/proof2/net/net-proof_two_peer-20260927T100807Z/home-0 user_data_dir=/tmp/claude-0/-home-user-Tetherbound/d8bada2c-a58e-5610-90d4-afb3e7b2f9c8/scratchpad/proof2/net/net-proof_two_peer-20260927T100807Z/home-0/godot/app_userdata/Tetherbound
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _boot_scene (res://tools/net/peer_runner.gd:374)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27841 (cap 4, channels 2); local peer id 1
+[session] transport: peer 249631760 connected
+[session] peer 249631760 joined as 'Trainer' (character-94c537ad0f8fa932ee425cb2f3417572) in water
+[trainers] spawning a body for peer 1 at (0.0, 162.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[trainers] spawning a body for peer 249631760 at (0.0, 162.0)
+[trainers] built Trainer_249631760 for peer 249631760, authority 249631760 (this peer is 1)
+[trainers] Trainer_249631760 stands up: authority 249631760, this peer is 1 (another player)
+[fly] peer 249631760 claimed a landing at (0.0, 1.931024, 162.0) -- granted (ok)
+[fly] peer 249631760 claimed a landing at (-98.0, 18.30572, 460.1) -- refused (too_far)
+[fly] peer 249631760 claimed a landing at (-98.0, 18.30572, 460.1) -- refused (too_far)
+[fly] peer 249631760 claimed a landing at (-98.0, 18.30572, 460.1) -- granted (ok)
+[fly] peer 249631760 claimed a landing at (-406.668, 15.89942, 210.98) -- refused (too_far)
+[fly] peer 249631760 claimed a landing at (-406.668, 15.89942, 210.98) -- refused (too_far)
+[fly] peer 249631760 claimed a landing at (-406.668, 15.89942, 210.98) -- granted (ok)

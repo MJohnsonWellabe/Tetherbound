@@ -441,16 +441,16 @@
     },
     {
      "text": "Measured 885-second no-action stretch removed",
-     "status": "in_progress",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
-     "gap": "Merged in batch 51 (#370); flips on the full CI dispatched 10:10.",
+     "gap": "Green full CI 36311628285 on main 4ee9f4157 (batches 50-51).",
      "note": "Verifier rejected the batch 26 claim: data only, with no engine re-walk or committed A7 re-measure. Cloudreach lane (#311)."
     },
     {
      "text": "Every A7 empty interval gone",
-     "status": "not_started",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
-     "gap": "Merged in batch 51 (#370); flips on the full CI dispatched 10:10."
+     "gap": "Green full CI 36311628285 on main 4ee9f4157 (batches 50-51)."
     },
     {
      "text": "Earned route resource/XP ledger needs no new catch",
@@ -477,9 +477,9 @@
    "criteria": [
     {
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/b/f08-0-veyra-exam/earned-tightened/ (WITNESS PASS, EXIT 0, run at d01c0e7b with the tightened assertions). Shortcuts disclosed: earned c1_arrival checkpoint start; accelerated clock (fights at 1x); live-combat pilot writes camera yaw; --fail-exam-first idle pilot for the planned loss; Title Load by signal emit and reload by direct save/load; held Fly input; 3 relay legs stick-walked around lee windbreaks; arc active in the arena only during Overload. Independent re-check: MET.",
-     "gap": "Merged in batch 50 (#369); flips on the full CI dispatched 10:10.",
+     "gap": "Green full CI 36311628285 on main 4ee9f4157 (batches 50-51).",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
@@ -773,8 +773,8 @@
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
      "status": "partial",
-     "evidence": "Cradle payout world-once (first gatherer only); Garden/Deep Watch need swim saddle",
-     "gap": "Data-only four-character ledger; no route depletion run; Garden/Deep Watch chains need an owned swimmer; Cradle pays first gatherer only. (strict re-score 23:40)"
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/b/f13_4_route_depletion/route_depletion.log at a7648529: 598 checks, 0 failures, fights 0, catches 0, same five per character. Shortcuts disclosed: one process swapping Game.local for four characters, position writes near nodes, fixture party, encounter director off, flag writes, direct Game.craft, Cradle seam forced to A, Garden/Deep Watch excluded (swimmer question open with the owner). Independent re-check: MET.",
+     "gap": "Landing in batch 53."
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",

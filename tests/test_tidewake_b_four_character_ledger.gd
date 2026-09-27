@@ -10,7 +10,9 @@ extends "res://tests/test_case.gd"
 ## Pure data. Every figure is read from shipping Tidewake data:
 ##   water_world.json      island gate order (docks), saddle-gated islands
 ##   water_pickups.json    harvest yields (world-once, first gatherer keeps
-##                         them: harvest_node:order:<id>) and pickups
+##                         them: harvest_node:order:<id>; the one
+##                         character_once pocket patch, reed_root_hollow, is
+##                         still counted once -- conservative) and pickups
 ##                         (existing_world_pickup_policy = world-once;
 ##                         character_once = per character)
 ##   water_dock_actions.json / water_local_chains.json   material debits
