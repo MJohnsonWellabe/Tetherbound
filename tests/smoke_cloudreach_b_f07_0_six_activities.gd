@@ -254,10 +254,10 @@ func _cliff_circuit() -> void:
 	# One TM of the three; a TM none of the retained five can learn is refused.
 	var prizes := {}
 	var chosen := ""
-	for id: String in ["circuit_prize_wind_blade", "circuit_prize_heavenfall", "circuit_prize_aerial_flash"]:
-		var spec: Dictionary = {}
-		for entry: Dictionary in physical.config.interactions:
-			if entry.id == id: spec = entry
+	for entry: Dictionary in physical.config.interactions:
+		var id := str(entry.id)
+		if not id.begins_with("circuit_prize_"): continue
+		var spec: Dictionary = entry
 		prizes[id] = {"item": str(spec.get("item_id", "")), "available": _available(id), "refusal": physical.tm_prize_refusal(spec)}
 		if chosen.is_empty() and bool(prizes[id].available):
 			chosen = id
@@ -343,7 +343,7 @@ func _save_and_reload() -> Dictionary:
 
 func _reward_counts() -> Dictionary:
 	var counts := {}
-	for item: String in ["potion_small", "tm_wind_blade", "tm_heavenfall", "tm_aerial_flash"]:
+	for item: String in ["potion_small", "tm_wind_blade", "tm_heavenfall", "tm_aerial_flash", "tm_rock_throw"]:
 		counts[item] = int(game.inventory.count(item))
 	return counts
 

@@ -12,9 +12,10 @@ Script: `tests/smoke_cloudreach_b_f07_0_six_activities.gd` (headless). For each 
 |---|---|
 | `default-five/run-1/` (sparkit, mudsnout, bramblebun, terrapup, brooktail) | **5/6 PASS**; Cliff Circuit FAIL. Every set completion flag survives reload. |
 | `default-five/run-2-679ea575/` (Cloudreach head 679ea575 merged: couriers' thanks at the ravine shelter, sheltered-bed rest XP) | **5/6 PASS**; Cliff Circuit FAIL (same refusal). The Waycamp payoff now checks one real camp-rest night: the bedded companion gains 10 XP = 2 × rest XP 5. |
+| **`default-five/run-3-2d144ebd/`** (Cloudreach head 2d144ebd merged: ruling (a), one pad offers the ground TM Rock Throw) | **6/6 PASS.** Circuit: Rock Throw claimed (+1), Wind Blade and Heavenfall refused as unlearnable; Waycamp night +10 XP (2 × 5); every set flag and the TM/potions survive reload. |
 | `with-air-cliff_circuit/run-1/` (`--with-air --only=cliff_circuit`, pipwing in place of brooktail) | Cliff Circuit PASS: Tavi → prize TM Wind Blade +1, the other two refused, ack `cloudreach_tavi_defeated`, reload kept. |
 
-## Finding: the Cliff Circuit prize is not useful to the retained five
+## Finding (resolved at 2d144ebd by ruling (a)): the Cliff Circuit prize was not useful to the retained five
 
 All three circuit TMs are air-only (`data/moves/tms.json`: `tm_wind_blade`, `tm_heavenfall` and `tm_aerial_flash` list `compatible_types: ["air"]`). With a team that has no air creature, `tm_prize_refusal` returns "None of your companions can learn that TM." for every pad, so the circuit pays nothing. That includes the earned C1 five (ripplet water, bramblebun/mudsnout×2/veridian ground). This breaks the F07#0 "retained-five-useful payoff" rule for activity 5. The fix belongs to the Cloudreach lane (prize design/data), not the witness.
 
