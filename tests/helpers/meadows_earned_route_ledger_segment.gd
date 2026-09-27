@@ -316,7 +316,7 @@ func _observe() -> void:
 	if arbiter != null and bool(arbiter.call("enabled")):
 		var prompt := str(arbiter.call("prompt")).strip_edges()
 		var provider: Variant = arbiter.call("winning_provider")
-		if not prompt.is_empty() and provider is Node:
+		if not prompt.is_empty() and is_instance_valid(provider) and provider is Node:
 			# Glyph markup varies with the device; the words are the offer.
 			var words := prompt.substr(prompt.rfind("]") + 1).strip_edges()
 			var key := "%s|%s" % [str((provider as Node).get_path()), words]

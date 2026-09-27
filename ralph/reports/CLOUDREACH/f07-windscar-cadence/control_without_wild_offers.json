@@ -1,0 +1,150 @@
+{
+  "a7_limit_seconds": 120.0,
+  "ally_deployed": true,
+  "ignore_wilds": true,
+  "ignored_cadence_sites": 0,
+  "intervals": [
+    {
+      "end_seconds": 5.0,
+      "from": "flight_waypoint",
+      "from_stage": "aerie_dais",
+      "gap_seconds": 2.83,
+      "start_seconds": 2.17,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 5.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 0.0,
+      "start_seconds": 5.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 27.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 22.0,
+      "start_seconds": 5.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 48.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 21.0,
+      "start_seconds": 27.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 69.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 21.5,
+      "start_seconds": 48.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 75.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.5,
+      "start_seconds": 69.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 85.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 10.0,
+      "start_seconds": 75.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 90.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.0,
+      "start_seconds": 85.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 95.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 5.5,
+      "start_seconds": 90.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 151.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 56.0,
+      "start_seconds": 95.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 169.0,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 17.5,
+      "start_seconds": 151.5,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 169.5,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 0.5,
+      "start_seconds": 169.0,
+      "to": "meaningful_offer",
+      "to_stage": "windscar_return_to_counterweight"
+    },
+    {
+      "end_seconds": 353.47,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 183.97,
+      "start_seconds": 169.5,
+      "to": "physical_interaction",
+      "to_stage": "windscar_return_to_counterweight"
+    }
+  ],
+  "longest_interval": {
+    "end_seconds": 353.47,
+    "from": "meaningful_offer",
+    "from_stage": "windscar_return_to_counterweight",
+    "gap_seconds": 183.97,
+    "start_seconds": 169.5,
+    "to": "physical_interaction",
+    "to_stage": "windscar_return_to_counterweight"
+  },
+  "over_limit": [
+    {
+      "end_seconds": 353.47,
+      "from": "meaningful_offer",
+      "from_stage": "windscar_return_to_counterweight",
+      "gap_seconds": 183.97,
+      "start_seconds": 169.5,
+      "to": "physical_interaction",
+      "to_stage": "windscar_return_to_counterweight"
+    }
+  ],
+  "reached": true,
+  "simulated_seconds": 353.5,
+  "verdict": "FAIL",
+  "walked_m": 1740.9,
+  "wild_engage_offers": 0
+}

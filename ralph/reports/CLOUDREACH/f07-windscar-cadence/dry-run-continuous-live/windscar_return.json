@@ -1,0 +1,343 @@
+{
+    "a7_limit_seconds": 120.0,
+    "a7_pass": true,
+    "intervals": [
+        {
+            "end_seconds": 1390.0,
+            "from": "flight_waypoint",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 36.92,
+            "start_seconds": 1353.08,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1391.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.0,
+            "start_seconds": 1390.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1407.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 16.0,
+            "start_seconds": 1391.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1408.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1407.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1418.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 10.0,
+            "start_seconds": 1408.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1420.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 2.0,
+            "start_seconds": 1418.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1431.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 10.5,
+            "start_seconds": 1420.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1434.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 3.0,
+            "start_seconds": 1431.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1435.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1434.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1441.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 5.5,
+            "start_seconds": 1435.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1451.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 10.0,
+            "start_seconds": 1441.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1454.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 3.0,
+            "start_seconds": 1451.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1455.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1454.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1473.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 18.0,
+            "start_seconds": 1455.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1475.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 2.0,
+            "start_seconds": 1473.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1493.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 18.0,
+            "start_seconds": 1475.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1495.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1493.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1517.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 22.0,
+            "start_seconds": 1495.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1518.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1517.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1526.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 7.5,
+            "start_seconds": 1518.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1536.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 10.0,
+            "start_seconds": 1526.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1537.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1536.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1551.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 13.5,
+            "start_seconds": 1537.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1552.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1551.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1566.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 13.5,
+            "start_seconds": 1552.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1567.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1566.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1581.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 13.5,
+            "start_seconds": 1567.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1583.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 2.0,
+            "start_seconds": 1581.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1596.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 13.5,
+            "start_seconds": 1583.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1598.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1596.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1620.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 22.0,
+            "start_seconds": 1598.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1621.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.0,
+            "start_seconds": 1620.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1644.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 23.0,
+            "start_seconds": 1621.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1645.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1644.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1674.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 29.0,
+            "start_seconds": 1645.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1701.0,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 26.5,
+            "start_seconds": 1674.5,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        },
+        {
+            "end_seconds": 1702.5,
+            "from": "meaningful_offer",
+            "from_stage": "return_glide_to_grounded_counterweight",
+            "gap_seconds": 1.5,
+            "start_seconds": 1701.0,
+            "to": "meaningful_offer",
+            "to_stage": "return_glide_to_grounded_counterweight"
+        }
+    ],
+    "leg_seconds": 352.22,
+    "longest_seconds": 36.92,
+    "open_tail_seconds": 7.03,
+    "over_limit": []
+}

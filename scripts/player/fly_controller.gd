@@ -6,6 +6,7 @@ extends Node
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const CONFIG_PATH := "res://data/config/fly_traversal.json"
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SESSION_PATH := ^"/root/Game/Session"
 
 signal state_changed(state: String)
@@ -102,6 +103,7 @@ var _touched_down := false
 
 
 func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
+	add_to_group(INPUT_OWNER.TRAVERSAL_GROUP)
 	_player = player
 	_rig = rig
 	_model = model
@@ -121,6 +123,12 @@ func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
 
 func is_flying() -> bool:
 	return state in ["glide", "climb", "descent", "exhausted"]
+
+
+## X03 (`input_owner.gd::TRAVERSAL_GROUP`): while flying or carried, LT is
+## `fly_descend`, not a world verb.
+func owns_traversal_input() -> bool:
+	return is_flying() or (_player != null and is_instance_valid(_player) and bool(_player.call("is_carried")))
 
 
 static func _new_anchor_request_id() -> int:
@@ -213,9 +221,9 @@ func eligible_creature() -> RefCounted:
 			if bool(capability.get("can_carry", false)):
 				return active
 	var loaner: Dictionary = config.get("mentor_loaner", {})
-	var loaner_available := (_trial_enabled and bool(loaner.get("available_during_trial", false))) \
-		or (_unlocked() and bool(loaner.get("available_after_unlock", false)))
-	if not loaner_available or _realm() != str(loaner.get("realm_id", "cloudreach")):
+	var ends_at := str(loaner.get("ends_at_flag", ""))
+	if not mentor_loaner_available(loaner, _trial_enabled, _unlocked(), not ends_at.is_empty() and _has_flag(ends_at)) \
+			or _realm() != str(loaner.get("realm_id", "cloudreach")):
 		return null
 	var species_id := str(loaner.get("species_id", ""))
 	if species_id.is_empty() or not bool(SPECIES.fly_capability(species_id).get("can_carry", false)):
@@ -223,6 +231,17 @@ func eligible_creature() -> RefCounted:
 	if _mentor_loaner == null or str(_mentor_loaner.get("species_id")) != species_id:
 		_mentor_loaner = SPECIES.spawn(species_id)
 	return _mentor_loaner
+
+
+## Maela's Galecrest is a temporary trial and routed-transport carrier
+## (CREATURES; SYSTEMS Fly: "not ... permanent free traversal inventory"). It
+## serves the trial and, once Fly is unlocked, the chapter's routes -- and no
+## longer once `mentor_loaner.ends_at_flag` (cloudreach_chapter_complete) holds.
+static func mentor_loaner_available(loaner: Dictionary, trial_enabled: bool, unlocked: bool, ended: bool) -> bool:
+	if ended:
+		return false
+	return (trial_enabled and bool(loaner.get("available_during_trial", false))) \
+		or (unlocked and bool(loaner.get("available_after_unlock", false)))
 
 
 func last_flight_used_mentor_loaner() -> bool:
@@ -850,7 +869,10 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 	var first := true
 	for mesh: Node in art.find_children("*", "MeshInstance3D", true, false):
 		var instance := mesh as MeshInstance3D
-		var box := art.global_transform.affine_inverse() * instance.global_transform * instance.get_aabb()
+		# The art is not in the tree yet (it is built before `add_child`), so
+		# `global_transform` is unavailable and logged `!is_inside_tree()` on
+		# every launch; compose the local transforms up to the art root instead.
+		var box := _transform_to(instance, art) * instance.get_aabb()
 		bounds = box if first else bounds.merge(box)
 		first = false
 	if bounds.size.y > 0.001:
@@ -869,6 +891,18 @@ static func make_carrier_art(capability: Dictionary) -> Node3D:
 			player.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
 			player.play(clip)
 	return visual
+
+
+## `node`'s transform in `ancestor`'s space, from local transforms only, so it
+## is valid before either is in the scene tree.
+static func _transform_to(node: Node3D, ancestor: Node3D) -> Transform3D:
+	var result := Transform3D.IDENTITY
+	var cursor: Node = node
+	while cursor != null and cursor != ancestor:
+		if cursor is Node3D:
+			result = (cursor as Node3D).transform * result
+		cursor = cursor.get_parent()
+	return result
 
 
 ## The skeleton inside a node `make_carrier_art()` built, or null. Shared for

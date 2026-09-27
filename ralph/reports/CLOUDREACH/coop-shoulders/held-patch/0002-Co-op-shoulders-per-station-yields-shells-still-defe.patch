@@ -1,0 +1,338 @@
+From db6e96de0a00ac94cf224811440ac87d4b6cfa83 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 26 Sep 2026 22:13:30 +0000
+Subject: [PATCH 2/3] Co-op shoulders: per-station yields, shells still defer,
+ geometry-hash proof
+
+Review (REQUEST CHANGES): whole ridges held 250-1630 ms slices, each costing
+a live crossing a 65-frame heartbeat payback (95.8 s build), and host shells
+would have run ~20 s of unseen ridge work. Each ridge station now yields via
+the world's own _build_breathe() (live build 60.6 s, worst slice 343 ms, no
+extra paybacks); host shells keep deferring shoulders. The smoke now hashes
+every ridge's transform and collision faces: live == solo, solo byte-
+identical to main, and it checks the shell path.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AbnCQbYpP3f5KQ9hTrct95
+---
+ .../CLOUDREACH/coop-shoulders/PROOF.md        | 80 +++++++++++++------
+ .../CLOUDREACH/coop-shoulders/branch.txt      |  6 +-
+ .../coop-shoulders/main_32bd33079.txt         |  7 +-
+ .../coop-shoulders/ridge_profile_solo.txt     | 43 ++++++++++
+ scripts/world/cloudreach_world.gd             | 24 ++++--
+ tests/smoke_cloudreach_coop_shoulders.gd      | 37 +++++++--
+ 6 files changed, 150 insertions(+), 47 deletions(-)
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/ridge_profile_solo.txt
+
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md b/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+index 5b0e3817..700dd5e6 100644
+--- a/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+@@ -1,28 +1,56 @@
+ # Co-op keeps Cloudreach route shoulders (owner ruling 2026-09-26: co-op matches single player)
+ 
+-Before: `cloudreach_world.gd::_build_routes` skipped `_build_route_shoulders` whenever the shell
+-build was slicing (every live multi-peer crossing and every host shell), because each shoulder
+-section awaited the RefCounted `_shell_build.breathe()` and Godot 4.7 could lose that deeply nested
+-continuation. Co-op players therefore walked a different Cloudreach: 7 m road ribbons with no
+-geological shoulders (no walkable ground beside the road, different silhouettes).
+-
+-After: shoulders always build; each section yields through the world Node's own `_build_breathe()`
+-(the same world-owned suspension every other Cloudreach build loop uses to avoid that bug).
+-Solo is unchanged (`_build_breathe()` releases no frames when not slicing).
+-
+-Proof: `tests/smoke_cloudreach_coop_shoulders.gd` builds the production world solo, then as a live
+-crossing (Game.session stand-in reporting multi-peer host -> `shell_build_budget.gd` slices at the
+-crossing budget) and compares every `*CliffShoulders/Ridge*` node and its walkable Collision.
+-
+-| | solo | live on main 32bd33079 | live on branch |
+-|---|---|---|---|
+-| shoulder ridge nodes | 720 | **0** | **720** (same per-route counts) |
+-| walkable shoulder collisions | 218 | 0 | 218 |
+-| build completed | yes | yes (270 yields, 22.9 s) | yes (2760 yields, 95.8 s) |
+-| worst held slice | – | 356 ms | 1461 ms (37 indivisible slices, each given a heartbeat window) |
+-| smoke verdict | – | FAIL (exit 1) | PASS (exit 0, 0 SCRIPT ERROR) |
+-
+-Cost, stated plainly: the sliced crossing build is ~73 s longer (routes step 0.7 s -> 56.1 s) and its
+-worst single held frame rises to 1.46 s; both measured on main's look pass (the grid fix in PR #311
+-removes ~140 s from the look). Unit: 258 `test_cloudreach*` tests, 0 failed.
+-Raw: `main_32bd33079.txt`, `branch.txt`.
++**Before.** `cloudreach_world.gd::_build_routes` skipped `_build_route_shoulders` whenever the shell
++build was slicing: every live multi-peer crossing and every host shell. The reason was that each
++shoulder section awaited the RefCounted `_shell_build.breathe()`, and Godot 4.7 could lose that
++deeply nested continuation. As a result, co-op players walked a different Cloudreach: 7 m road
++ribbons, with no geological shoulders beside the road and different silhouettes.
++
++**After.**
++- A live crossing builds the shoulders exactly as solo does.
++- The sections, and now each ridge's stations, yield through the world Node's own
++  `_build_breathe()`. Every other Cloudreach build loop already uses this world-owned suspension to
++  avoid the bug.
++- A host shell (`simulation_only`) still defers the shoulders, because nobody sees it. What the host
++  simulates in it (wilds and trainers) stands on the analytic surfaces the shoulders never register.
++  Building them there would run about 20 s of ridge work on a host who is playing in another realm.
++- Solo is unchanged: `_build_breathe()` releases no frames when the build is not slicing.
++
++**Why per-station yields.** `ridge_profile_solo.txt` covers 43 ridge sections:
++- the station loop takes 20.2 s of the 23 s;
++- each ridge holds 250–1,630 ms;
++- the mesh and trimesh tail takes 210 ms or less.
++
++In a live crossing, every slice of 250 ms or more costs a 65-frame heartbeat payback. The first
++version of this change, which yielded per section only, took 95.8 s with 37 paybacks. Yielding per
++station (about 30 ms each) removes all of them.
++
++## Proof: `tests/smoke_cloudreach_coop_shoulders.gd`
++The smoke builds the production world three ways:
++1. **solo**;
++2. **live**: a `Game.session` stand-in that reports a multi-peer host, so `shell_build_budget.gd`
++   slices at the 100 ms crossing budget;
++3. **host shell**: `simulation_only`, 8 ms budget.
++
++It compares every `*CliffShoulders/Ridge*` node per route. It also takes a sha256 over each ridge's
++name, global transform and trimesh collision faces.
++
++| | solo | live, main 32bd33079 | live, branch | shell, main | shell, branch |
++|---|---|---|---|---|---|
++| ridge nodes / walkable collisions | 720 / 218 | **0 / 0** | **720 / 218** | 0 / 0 | 0 / 0 |
++| faces sha256 | `54fc5dea…` on both main and branch (solo is byte-identical) | empty | `54fc5dea…` = solo | empty | empty |
++| wall time / yields | – | 24.1 s / 272 | 60.6 s / 600 | 2.7 s / 128 | 2.6 s / 128 |
++| worst held slice (step) | – | 289 ms (materials) | 343 ms (materials) | 275 ms | 258 ms |
++| heartbeat paybacks | – | 1 | 1 | 1 | 1 |
++| verdict | | **FAIL** | **PASS** (0 SCRIPT ERROR) | | |
++
++**Cost, stated plainly.** A co-op crossing into Cloudreach builds for about 36 s longer
++(24.1 s → 60.6 s), with no longer held frame. This was measured with main's look pass; the grid fix
++in #311 removes about 140 s of look time.
++
++`realm_transition.gd` `TIMEOUT_MS` is 120 s, so 60.6 s leaves about 59 s of margin on this box.
++The two-peer net smokes (`smoke_net_cloudreach_riding`, `smoke_net_split_realms`) are the
++integration check; they run in the full tier.
++
++**Unit tests:** 258 `test_cloudreach*` tests, 0 failed.
++Raw files: `main_32bd33079.txt`, `branch.txt`, `ridge_profile_solo.txt`.
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt b/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt
+index 6a168607..6f70c46d 100644
+--- a/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt
+@@ -1,6 +1,6 @@
+-[cloudreach] shell build 95.8 s wall, 2760 yields at 100 ms/frame, 37 indivisible slices given a heartbeat window each, worst held slice 1461 ms (in the step following 'ledges'); steps (ms wall, yields included): materials=3 regions=1536 ledges=29 routes=56144 gates=0 bridges=28 landmarks=1 return_gate=49 route_details=8 resource_patches=11 environment=135 mount=37680
+-COOP SHOULDERS solo {"collisions":218,"complete":true,"frames":0,"live":false,"ms":57,"ridges":720,"sliced":false}
+-COOP SHOULDERS live {"collisions":218,"complete":true,"frames":2760,"live":true,"ms":95766,"ridges":720,"sliced":true}
++COOP SHOULDERS solo {"build_summary":"","collisions":218,"complete":true,"faces_sha256":"54fc5dea07da01dc0a7ccee001fab6064dd7d20e3c01cf192a917e4b17fbced7","frames":0,"live":false,"ms":56,"ridges":720,"shell":false,"sliced":false}
++COOP SHOULDERS live {"build_summary":"60.6 s wall, 600 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 343 ms (in the step following 'materials')","collisions":218,"complete":true,"faces_sha256":"54fc5dea07da01dc0a7ccee001fab6064dd7d20e3c01cf192a917e4b17fbced7","frames":600,"live":true,"ms":60506,"ridges":720,"shell":false,"sliced":true}
++COOP SHOULDERS shell {"build_summary":"2.6 s wall, 128 yields at 8 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 258 ms (in the step following 'materials')","collisions":0,"complete":true,"faces_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","frames":128,"live":true,"ms":2627,"ridges":0,"shell":true,"sliced":true}
+ COOP SHOULDERS routes {"ArrivalGateRoadCliffShoulders":25,"BrokenCausewayMainCliffShoulders":55,"CausewayWestLoopCliffShoulders":100,"LowerCliffRoadCliffShoulders":26,"LowerOverlookLoopCliffShoulders":73,"ObservatorySummitLinkCliffShoulders":1,"SummitOverlookLoopCliffShoulders":102,"UpperPlateauCircuitCliffShoulders":112,"UpperSummitRoadCliffShoulders":72,"WindscarCounterweightPassCliffShoulders":72,"WindscarCounterweightReturnCliffShoulders":25,"WindscarFloorLoopCliffShoulders":57}
+ COOP SHOULDERS PASS
+ exit 0
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt b/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt
+index a1eaf244..bdddd1de 100644
+--- a/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt
+@@ -1,9 +1,10 @@
+-[cloudreach] shell build 22.9 s wall, 270 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 356 ms (in the step following 'materials'); steps (ms wall, yields included): materials=2 regions=1465 ledges=35 routes=687 gates=1 bridges=21 landmarks=1 return_gate=64 route_details=5 resource_patches=15 environment=66 mount=20456
+-COOP SHOULDERS solo {"collisions":218,"complete":true,"frames":0,"live":false,"ms":56,"ridges":720,"sliced":false}
+-COOP SHOULDERS live {"collisions":0,"complete":true,"frames":270,"live":true,"ms":22944,"ridges":0,"sliced":true}
++COOP SHOULDERS solo {"build_summary":"","collisions":218,"complete":true,"faces_sha256":"54fc5dea07da01dc0a7ccee001fab6064dd7d20e3c01cf192a917e4b17fbced7","frames":0,"live":false,"ms":54,"ridges":720,"shell":false,"sliced":false}
++COOP SHOULDERS live {"build_summary":"24.1 s wall, 272 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 289 ms (in the step following 'materials')","collisions":0,"complete":true,"faces_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","frames":272,"live":true,"ms":24054,"ridges":0,"shell":false,"sliced":true}
++COOP SHOULDERS shell {"build_summary":"2.7 s wall, 128 yields at 8 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 275 ms (in the step following 'materials')","collisions":0,"complete":true,"faces_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","frames":128,"live":true,"ms":2697,"ridges":0,"shell":true,"sliced":true}
+ COOP SHOULDERS routes {}
+ ERROR: COOP SHOULDERS: live built 0 shoulder ridges, solo 720
+ ERROR: COOP SHOULDERS: live has 0 walkable shoulder collisions, solo 218
+ ERROR: COOP SHOULDERS: shoulder sets differ by route: live {  } solo { "ArrivalGateRoadCliffShoulders": 25, "LowerCliffRoadCliffShoulders": 26, "LowerOverlookLoopCliffShoulders": 73, "BrokenCausewayMainCliffShoulders": 55, "CausewayWestLoopCliffShoulders": 100, "WindscarFloorLoopCliffShoulders": 57, "WindscarCounterweightPassCliffShoulders": 72, "UpperPlateauCircuitCliffShoulders": 112, "UpperSummitRoadCliffShoulders": 72, "SummitOverlookLoopCliffShoulders": 102, "WindscarCounterweightReturnCliffShoulders": 25, "ObservatorySummitLinkCliffShoulders": 1 }
++ERROR: COOP SHOULDERS: live shoulder collision faces differ from solo
+ COOP SHOULDERS FAIL
+ exit 1
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/ridge_profile_solo.txt b/ralph/reports/CLOUDREACH/coop-shoulders/ridge_profile_solo.txt
+new file mode 100644
+index 00000000..ca88169e
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/ridge_profile_solo.txt
+@@ -0,0 +1,43 @@
++[ridge_prof] stations_ms=34.8 rows_ms=3.5 rest_ms=24.8
++[ridge_prof] stations_ms=301.9 rows_ms=2.6 rest_ms=23.2
++[ridge_prof] stations_ms=193.1 rows_ms=4.5 rest_ms=29.2
++[ridge_prof] stations_ms=0.2 rows_ms=1.0 rest_ms=2.7
++[ridge_prof] stations_ms=134.3 rows_ms=4.2 rest_ms=19.1
++[ridge_prof] stations_ms=211.9 rows_ms=3.0 rest_ms=13.7
++[ridge_prof] stations_ms=350.8 rows_ms=4.1 rest_ms=26.8
++[ridge_prof] stations_ms=743.0 rows_ms=4.7 rest_ms=37.2
++[ridge_prof] stations_ms=400.5 rows_ms=3.7 rest_ms=25.6
++[ridge_prof] stations_ms=949.8 rows_ms=11.0 rest_ms=81.9
++[ridge_prof] stations_ms=292.6 rows_ms=5.4 rest_ms=33.9
++[ridge_prof] stations_ms=244.7 rows_ms=3.9 rest_ms=25.2
++[ridge_prof] stations_ms=0.2 rows_ms=0.7 rest_ms=4.1
++[ridge_prof] stations_ms=36.6 rows_ms=0.6 rest_ms=2.2
++[ridge_prof] stations_ms=531.2 rows_ms=5.3 rest_ms=38.3
++[ridge_prof] stations_ms=411.1 rows_ms=5.3 rest_ms=26.9
++[ridge_prof] stations_ms=1439.9 rows_ms=11.0 rest_ms=65.7
++[ridge_prof] stations_ms=442.8 rows_ms=4.2 rest_ms=33.5
++[ridge_prof] stations_ms=811.9 rows_ms=6.3 rest_ms=59.7
++[ridge_prof] stations_ms=373.2 rows_ms=6.4 rest_ms=49.1
++[ridge_prof] stations_ms=918.1 rows_ms=5.5 rest_ms=44.8
++[ridge_prof] stations_ms=310.1 rows_ms=6.5 rest_ms=51.5
++[ridge_prof] stations_ms=0.5 rows_ms=1.6 rest_ms=4.9
++[ridge_prof] stations_ms=328.2 rows_ms=7.4 rest_ms=63.2
++[ridge_prof] stations_ms=404.1 rows_ms=8.1 rest_ms=49.9
++[ridge_prof] stations_ms=291.7 rows_ms=2.5 rest_ms=17.6
++[ridge_prof] stations_ms=136.0 rows_ms=2.6 rest_ms=18.9
++[ridge_prof] stations_ms=462.1 rows_ms=4.2 rest_ms=32.6
++[ridge_prof] stations_ms=661.0 rows_ms=6.2 rest_ms=60.7
++[ridge_prof] stations_ms=1396.4 rows_ms=7.1 rest_ms=175.6
++[ridge_prof] stations_ms=974.5 rows_ms=8.8 rest_ms=147.7
++[ridge_prof] stations_ms=597.9 rows_ms=11.6 rest_ms=356.1
++[ridge_prof] stations_ms=991.5 rows_ms=7.0 rest_ms=186.7
++[ridge_prof] stations_ms=227.1 rows_ms=3.1 rest_ms=15.9
++[ridge_prof] stations_ms=383.3 rows_ms=3.5 rest_ms=55.6
++[ridge_prof] stations_ms=262.9 rows_ms=7.1 rest_ms=107.4
++[ridge_prof] stations_ms=637.6 rows_ms=4.8 rest_ms=125.7
++[ridge_prof] stations_ms=535.0 rows_ms=4.0 rest_ms=89.2
++[ridge_prof] stations_ms=587.8 rows_ms=5.9 rest_ms=140.0
++[ridge_prof] stations_ms=331.3 rows_ms=3.9 rest_ms=74.0
++[ridge_prof] stations_ms=958.2 rows_ms=9.7 rest_ms=209.2
++[ridge_prof] stations_ms=870.7 rows_ms=7.1 rest_ms=142.5
++[ridge_prof] stations_ms=0.4 rows_ms=3.1 rest_ms=14.9
+diff --git a/scripts/world/cloudreach_world.gd b/scripts/world/cloudreach_world.gd
+index 0bdcb979..7eb4c119 100644
+--- a/scripts/world/cloudreach_world.gd
++++ b/scripts/world/cloudreach_world.gd
+@@ -2035,12 +2035,19 @@ func _build_routes() -> void:
+ 		var visible_width := minf(collision_width - 0.8,
+ 			float(landmass.get("path_visible_width_m", 4.2)))
+ 		# Owner ruling 2026-09-26: co-op matches single player, so a live
+-		# (time-sliced) crossing and a host shell build the same geological
+-		# shoulders solo does. They used to be deferred there because each
+-		# section awaited the RefCounted `_shell_build.breathe()`, and Godot 4.7
+-		# can lose such a deeply nested continuation; the sections now yield
+-		# through this Node's own `_build_breathe()` like every other loop here.
+-		await _build_route_shoulders(root, spec, points, width)
++		# (time-sliced) crossing builds the same geological shoulders solo does.
++		# They used to be deferred there because each section awaited the
++		# RefCounted `_shell_build.breathe()`, and Godot 4.7 can lose such a
++		# deeply nested continuation; the sections and each ridge's stations now
++		# yield through this Node's own `_build_breathe()` like every other loop
++		# here. A host SHELL still defers them: nobody sees it, and what the host
++		# simulates in it (wilds, trainers) stands on the analytic surfaces the
++		# shoulders never register, while ~20 s of ridge work would otherwise run
++		# on a host who is playing in another realm.
++		if simulation_only:
++			_shell_build.call("mark", "routes:%s:geological_shoulders:deferred_in_shell" % str(spec.get("id", "Route")))
++		else:
++			await _build_route_shoulders(root, spec, points, width)
+ 		var route_name_lower := str(spec.get("id", "")).to_lower()
+ 		var landing_top: Material = _materials["upland_dry"] if (
+ 			route_name_lower.contains("upper") or route_name_lower.contains("summit")
+@@ -2236,7 +2243,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
+ 			# is clamped per vertex onto any road ribbon, bridge deck or
+ 			# pad/landmark crown within reach (`_walkable_height`), rather than
+ 			# an entire segment near a detected "hub" going collision-free.
+-			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
++			await _route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+ 				segment_index + int(spec.get("order", 0)) * 17 + serial,
+ 				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
+ 				route_id, overpass_lines)
+@@ -2492,6 +2499,9 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
+ 	var arch_clearance := float(config.get("shoulder_overpass_clearance_m", INF))
+ 	var arch_ceilings: Array[float] = []
+ 	for i in station_count:
++		# ~30 ms per station; a whole ridge (up to 48 stations, 1.6 s) held one
++		# frame and cost a live crossing a heartbeat payback each time.
++		await _build_breathe()
+ 		var t := float(i) / float(station_count - 1)
+ 		var centre := a.lerp(b, t)
+ 		# The crest follows this route's OWN ribbon/cap surface (flat inside the
+diff --git a/tests/smoke_cloudreach_coop_shoulders.gd b/tests/smoke_cloudreach_coop_shoulders.gd
+index d46fad38..56a7709a 100644
+--- a/tests/smoke_cloudreach_coop_shoulders.gd
++++ b/tests/smoke_cloudreach_coop_shoulders.gd
+@@ -5,7 +5,10 @@ extends SceneTree
+ ## (unsliced, every await resumes in the same frame) and once as a LIVE
+ ## crossing (Game.is_multi_peer() true, so `shell_build_budget.gd` slices the
+ ## build with the crossing budget) -- and requires the live build to finish and
+-## to stand exactly the same shoulder ridges, each with its walkable collision.
++## to stand exactly the same shoulder ridges, each with its walkable collision:
++## the same nodes per route and the same collision faces (a sha256 over every
++## ridge's name, transform and trimesh faces). A third build as a host SHELL
++## (simulation_only) must defer the shoulders, as it did before the ruling.
+ ##
+ ##   godot --headless --path . --script tests/smoke_cloudreach_coop_shoulders.gd
+ ##
+@@ -39,6 +42,7 @@ func _run() -> void:
+ 	game.set("session", session)
+ 	_expect(bool(game.call("is_multi_peer")), "the stand-in session did not make the game multi-peer")
+ 	var live := await _build(true)
++	var shell := await _build(true, true)
+ 	game.set("session", null)
+ 	session.free()
+ 	_expect(bool(live.sliced), "the live build did not slice; the crossing path was not exercised")
+@@ -48,8 +52,13 @@ func _run() -> void:
+ 	_expect(live.collisions == solo.collisions,
+ 		"live has %d walkable shoulder collisions, solo %d" % [live.collisions, solo.collisions])
+ 	_expect(live.routes == solo.routes, "shoulder sets differ by route: live %s solo %s" % [live.routes, solo.routes])
+-	for key in ["solo", "live"]:
+-		var shown: Dictionary = (solo if key == "solo" else live).duplicate()
++	_expect(str(live.faces_sha256) == str(solo.faces_sha256),
++		"live shoulder collision faces differ from solo")
++	_expect(bool(shell.complete) and int(shell.ridges) == 0,
++		"a host shell built %d shoulder ridges; shells defer them" % int(shell.ridges))
++	var builds := {"solo": solo, "live": live, "shell": shell}
++	for key in ["solo", "live", "shell"]:
++		var shown: Dictionary = (builds[key] as Dictionary).duplicate()
+ 		shown.erase("routes")
+ 		print("COOP SHOULDERS %s %s" % [key, JSON.stringify(shown)])
+ 	print("COOP SHOULDERS routes " + JSON.stringify(live.routes))
+@@ -59,8 +68,9 @@ func _run() -> void:
+ 	quit(0 if _failures.is_empty() else 1)
+ 
+ 
+-func _build(live: bool) -> Dictionary:
++func _build(live: bool, shell: bool = false) -> Dictionary:
+ 	var world := SCENE.instantiate()
++	world.set("simulation_only", shell)
+ 	root.add_child(world)
+ 	current_scene = world
+ 	var started := Time.get_ticks_msec()
+@@ -72,16 +82,21 @@ func _build(live: bool) -> Dictionary:
+ 		frames += 1
+ 	for _frame in 4:
+ 		await physics_frame
+-	var result := {"live": live, "sliced": sliced, "complete": bool(world.call("shell_build_complete")),
++	var result := {"live": live, "shell": shell, "sliced": sliced, "complete": bool(world.call("shell_build_complete")),
+ 		"frames": frames, "ms": Time.get_ticks_msec() - started, "ridges": 0, "collisions": 0, "routes": {}}
+-	_count(world, result)
++	var ctx := HashingContext.new()
++	ctx.start(HashingContext.HASH_SHA256)
++	_count(world, result, ctx)
++	result["faces_sha256"] = ctx.finish().hex_encode()
++	var budget_summary := "" if budget == null else str(budget.call("summary"))
++	result["build_summary"] = budget_summary.get_slice(";", 0)
+ 	world.queue_free()
+ 	await process_frame
+ 	await process_frame
+ 	return result
+ 
+ 
+-func _count(node: Node, result: Dictionary) -> void:
++func _count(node: Node, result: Dictionary, ctx: HashingContext) -> void:
+ 	var parent := node.get_parent()
+ 	if parent != null and str(parent.name).ends_with("CliffShoulders") and str(node.name).begins_with("Ridge"):
+ 		result.ridges += 1
+@@ -90,8 +105,14 @@ func _count(node: Node, result: Dictionary) -> void:
+ 		var body := node.get_node_or_null("Collision")
+ 		if body is StaticBody3D and (body as StaticBody3D).get_child_count() > 0:
+ 			result.collisions += 1
++		ctx.update(("%s/%s %s\n" % [parent.name, node.name, (node as Node3D).global_transform]).to_utf8_buffer())
++		if body != null:
++			for shape_node in body.get_children():
++				if shape_node is CollisionShape3D and (shape_node as CollisionShape3D).shape is ConcavePolygonShape3D:
++					var faces: PackedVector3Array = ((shape_node as CollisionShape3D).shape as ConcavePolygonShape3D).get_faces()
++					ctx.update(faces.to_byte_array())
+ 	for child in node.get_children():
+-		_count(child, result)
++		_count(child, result, ctx)
+ 
+ 
+ func _expect(ok: bool, message: String) -> void:
+-- 
+2.43.0
+

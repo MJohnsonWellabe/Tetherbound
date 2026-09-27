@@ -205,7 +205,7 @@ func _walk_marker(id: String, budget: int) -> bool:
 func _fight_named(body: Node3D, id: String) -> bool:
 	_captain_spec = TRAINERS.trainer(id)
 	var flag := str(_captain_spec.get("defeat_flag", ""))
-	if _captain_spec.is_empty() or flag.is_empty() or _has(flag) or not await _prepare():
+	if _captain_spec.is_empty() or flag.is_empty() or _has(flag) or not await _prepare_for_trainer():
 		return _fail("The exact unbeaten trainer or actual carried preparation is unavailable: " + id)
 	var prompt := body.get_node_or_null("Interactable") as Node3D
 	if not await _approach_prompt(prompt):

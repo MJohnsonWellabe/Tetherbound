@@ -27,9 +27,12 @@ func _run() -> void:
 	var water := float((terrain.get("water", {}) as Dictionary).get("level", -1000.0))
 	var space := world.get_world_3d().direct_space_state
 	var player := world.get_node_or_null("Player") as CollisionObject3D
-	var exclude: Array[RID] = [] if player == null else [player.get_rid()]
+	var exclude: Array[RID] = []
+	if player != null:
+		exclude.append(player.get_rid())
 	print("KELL PROBE water=%.1f rows z from -80 to 140, cols x from -20 to 240 step %.0f" % [water, STEP])
 	var z := -80.0
+	var heights: Array = []
 	while z <= 140.0:
 		var line := ""
 		var x := -20.0
@@ -55,7 +58,9 @@ func _run() -> void:
 			elif Vector2(x, z).distance_to(Vector2(74, -41)) < 3.0:
 				c = "R"
 			line += c
+			heights.append([x, z, snappedf(h, 0.1), c])
 			x += STEP
 		print("KELL PROBE z=%6.1f %s" % [z, line])
 		z += STEP
+	print("KELL PROBE HEIGHTS " + JSON.stringify(heights))
 	quit(0)

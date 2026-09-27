@@ -1,0 +1,56 @@
+F10#2 round-3 code-blind judge (fixture captures: teleport placement, granted L42 party, storm pinned Calm; see capture tool header).
+Packet: judge_packet_r3/ (prompt + sheets), tiles frames_r3/X, frames_r3/Y. Captured at 1827d0fa59708f0bb907ee60e7add4e8c46c03e1
+(render runs 36285033832 crown, 36285032489 capacitor). The judge read only the prompt, sheets and tiles.
+KEY (not shown to the judge): X = crown_guardian (guard_stance cone), Y = capacitor_alpha (1.1 s route cue + 0.8 s tell).
+
+Scores: X (a) PASS (b) PASS (c) FAIL (d) PASS (e) FAIL | Y (a) PASS (b) PASS (c) PASS (d) PASS (e) PASS
+
+--- judge answers, verbatim ---
+Code-blind visual judgment, round r3. I read only JUDGE_PROMPT.txt, the two contact sheets, and full-size tiles in frames_r3/X and frames_r3/Y.
+
+FIGHT X (opponent "Staticub", a brown cub bear with purple electric streaks)
+
+(a) Tell visible and distinguishable before it lands: PASS. In fight-X-tell1-a-start, tell1-b-mid, tell1-c-late and tell2-a-start through tell2-c-late, a magenta ring appears under the bear, with a magenta wedge on the ground in front of it and "! incoming — move" under the name bar. The wedge is gone at the strike frames (tell1-d-strike, tell2-d-strike), so start and release are clearly different. The bear's body barely changes between a-start and c-late, so the tell depends almost entirely on the ground decal and the text. In fight-X-tell4-c-late the bear is washed ghost-white by a hit flash during the late tell.
+
+(b) Where it will hit and where to go: PASS. The wedge shows the covered area clearly (fight-X-tell2-c-late, tell3-c-late, i15), and everything outside it is visibly safe. In fight-X-tell2-c-late the pilot is standing just outside the wedge's left edge and is missed.
+
+(c) Both creatures readable at actual scale: FAIL. The bear reads well at a good size. The piloted Sparkit is repeatedly pushed into the bottom-left corner under the TEAM list and the pilot card:
+- fight-X-i15: Sparkit is almost completely hidden behind the TEAM panel as a tell starts.
+- fight-X-tell3-c-late and tell3-e-impact: its head and front half are behind the TEAM panel.
+- fight-X-tell1-c-late: it is squeezed under the bear's snout with its tail under the card.
+
+(d) Visible hit or avoidance: PASS.
+- Avoidance: fight-X-tell2-d-strike and tell2-e-impact show "it missed you", with Sparkit clear of where the zone was.
+- Hit: fight-X-tell1-d-strike and tell3-d-strike show a large yellow burst on Sparkit. Its HP bar drops slightly from tell3-c-late to tell3-e-impact.
+
+(e) Identity: this fight matches the crown guardian line. It shows a frontal zone during the wind-up, and the bear stays roughly in place (tell2-a-start to tell2-c-late). FAIL on the evidence, for three reasons:
+- No crown glass is visible in any frame (fight-X-00-before, tell2-a-start, i15). The only candidate is a tiny pale shard on its back in i15 and tell1-e-impact, which does not read as a crown.
+- The stance is an ordinary quadruped walk pose, not a guard stance.
+- It is a "cub" that looks identical to the herd of bears in the background (fight-X-00-before, tell2-a-start), so it does not read as a guardian.
+
+FIGHT Y (opponent "Voltarach", a large dark-blue spider with cyan eyes)
+
+(a) Tell visible and distinguishable before it lands: PASS. In fight-Y-tell1-a-start through tell1-c-late, tell2-a-start through tell2-c-late and tell3-a-start through tell3-c-late, a magenta ring, a magenta outlined lane with chevrons and "! incoming — move" are all present. The text is gone at release (tell1-d-strike, tell3-d-strike). At fight-Y-tell1-a-start the spider is ghost-white from a hit flash, which muddies the start of the tell.
+
+(b) Where it will hit and where to go: PASS. The lane shows the exact direction of the attack, and stepping sideways out of it is obviously safe. In fight-Y-tell3-c-late and tell3-d-strike Sparkit is at the lane's left edge, the spider passes beside it, and "it missed you" appears in tell3-f-recovery. The near end of the lane runs off the bottom of the screen and under the Sparkit card (tell1-a-start, tell2-c-late), so its full length is never visible.
+
+(c) Both creatures readable at actual scale: PASS, narrowly. The spider is large and clear. Sparkit is small but visible in most frames (i09, tell2-c-late, tell3-e-impact). Exceptions:
+- fight-Y-tell1-e-impact: Sparkit is hidden behind a spider leg and the burst.
+- fight-Y-tell2-d-strike: a leg cuts across Sparkit.
+- fight-Y-i15: Sparkit's head crowds the TEAM panel.
+
+(d) Visible hit or avoidance: PASS.
+- Hit: fight-Y-tell2-e-impact shows Sparkit flashing white with dust around it, and its HP bar drops compared with tell2-c-late.
+- Avoidance: fight-Y-tell3-e-impact and tell3-f-recovery show the spider diving past Sparkit, then "it missed you".
+
+(e) Identity: this fight matches the diving alpha line. PASS.
+- Route before the warning: fight-Y-i08, i09 and i14 show the lane with no "incoming" text. The text appears one second later in i15, so the route leads the warning by at least about one second.
+- Dive along the route: from fight-Y-tell3-c-late to tell3-e-impact the spider moves from centre frame down the lane to the lower right. Caveat: no frame shows the spider in mid-dive; the movement is only visible as a change of position between frames.
+
+THREE MOST IMPORTANT LOOK DEFECTS
+
+1. Fight X does not show its identity. Nothing on the bear reads as crown glass or a guard stance, and the opponent is a plain cub identical to the background herd (fight-X-00-before, fight-X-tell2-a-start, fight-X-i15).
+
+2. The piloted creature is framed under the HUD. The camera keeps Sparkit in the bottom-left corner, exactly where the TEAM list and pilot card sit. It is almost fully hidden at a tell start in fight-X-i15, and half hidden in fight-X-tell3-c-late and tell3-e-impact. In fight-Y-tell1-a-start the lane runs under the pilot card.
+
+3. Hit-flash whitening hides the tell. The opponent turns translucent white during wind-ups, which washes out its silhouette and pose at the moment the player needs to read it (fight-X-tell4-c-late, fight-X-i14, fight-Y-tell1-a-start). A related problem: at impact Sparkit is lost behind the spider's legs and the burst (fight-Y-tell1-e-impact).
