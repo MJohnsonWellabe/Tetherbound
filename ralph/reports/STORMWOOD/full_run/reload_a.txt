@@ -1,0 +1,73 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  PASS: the witness expectation file is on disk
+RELOAD SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_a/f11_witness_expect.json sha256=c249a26c2440f1600c91684977e46e764e295857ecd600bfc5dc2c2203ce2b73
+RELOAD SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_a/slot_0.json sha256=990cf875deddf091c021fe700c60a48ed0e4c9df4398bf8f56a2e6590e32f4d9
+RELOAD SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_a/worlds/slot-0/world.json sha256=0b382b20d760cd31a05aa6b9cba4f35422226b157e89d9d65778787093c95617
+RELOAD SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_a/characters/stormwood-continuous-solo/character.json sha256=46f34f6482d0db87126c0afa20080535aef659c97b96efda4d610088d7ca21aa
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:89)
+STORMWOOD BUILD shell=false elapsed_ms=338 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=761 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=1075 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=1087 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=1089 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=1090 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=1090 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=1090 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=1092 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=1092 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1392 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1417 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1417 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=150 reorder[7 layers]=53
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=249 mark_harvestable=27 group_by_model=60 register_mesh_assets=32 build_batches_total=1507 (of which harvest_points[11099 nodes]=1222, initial_collision_stream[11161 solid]=71) update_mmis=301
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+  PASS: title Load reopened the saved Stormwood from disk
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=806
+  PASS: the same stable character returns (stormwood-continuous-solo)
+  PASS: the kept Stormheart and the other four return exactly ([{"species":"sparkit","uid":"creature-195bfaba24563594e73adf1612fc41c9"},{"species":"mudsnout","uid":"creature-885e0cb40fa8c8e420e206304d426d06"},{"species":"bramblebun","uid":"creature-e7101603d47c1497c34258d8a068677f"},{"species":"terrapup","uid":"creature-70562b2721e9d4f250a4c769cae2d3e1"},{"species":"fulgocobra","uid":"creature-50a30ccfabe80abeceefe824acef98c2"}])
+  PASS: the Stormheart receipt persists: ["stormwood:legendary_answer:creature-50a30ccfabe80abeceefe824acef98c2:accepted"]
+  PASS: the aftermath, Spark and resolution world facts persist: {"realm_gate_water_unlocked":false,"realm_heart_stormwood_earned":true,"realm_heart_stormwood_placed":false,"realm_key_water":true,"stormwood:chapter_complete":true,"stormwood:legendary_freed":true,"stormwood:legendary_offer_made":true,"stormwood:legendary_resolution:accepted:stormwood-continuous-solo":true,"stormwood:long_storm_ended":true,"stormwood:marrow_defeated":true,"stormwood:waterward_revealed":true,"waterward_route_revealed":true}
+  PASS: persisted stormwood:long_storm_ended
+  PASS: persisted realm_heart_stormwood_earned
+  PASS: persisted stormwood:waterward_revealed
+  PASS: persisted stormwood:chapter_complete
+  PASS: persisted stormwood:legendary_offer_made
+  PASS: the Spark of the Stormwood is earned after reload
+  PASS: no re-offer after reload (offers=0)
+  PASS: the Long Storm aftermath presentation is restored: containment gone, Waterward sea shown
+  PASS: the Dynamo reloads resolved (phase released)
+F11 WITNESS RELOAD {"answers":["stormwood:legendary_answer:creature-50a30ccfabe80abeceefe824acef98c2:accepted"],"dynamo_phase":"released","flags":{"realm_gate_water_unlocked":false,"realm_heart_stormwood_earned":true,"realm_heart_stormwood_placed":false,"realm_key_water":true,"stormwood:chapter_complete":true,"stormwood:legendary_freed":true,"stormwood:legendary_offer_made":true,"stormwood:legendary_resolution:accepted:stormwood-continuous-solo":true,"stormwood:long_storm_ended":true,"stormwood:marrow_defeated":true,"stormwood:waterward_revealed":true,"waterward_route_revealed":true},"offers":0,"party":[{"species":"sparkit","uid":"creature-195bfaba24563594e73adf1612fc41c9"},{"species":"mudsnout","uid":"creature-885e0cb40fa8c8e420e206304d426d06"},{"species":"bramblebun","uid":"creature-e7101603d47c1497c34258d8a068677f"},{"species":"terrapup","uid":"creature-70562b2721e9d4f250a4c769cae2d3e1"},{"species":"fulgocobra","uid":"creature-50a30ccfabe80abeceefe824acef98c2"}]}
+stormwood continuous: OK — chapter-entry through the reloaded witness save passed without Stormwood flag or position fixtures

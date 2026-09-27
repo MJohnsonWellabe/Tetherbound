@@ -1,5 +1,18 @@
 # F15#2: the measured physical return, and A7 on it
 
+**Update (cf80ad62): Verdict MET, data-level.** The last two Meadows gaps (quarry haul road, 138 s and 132 s) are closed by two owner-approved roadside pairs, band1 order 1924 and band2 order 2923, 5.5 m off `quarry_haul_road`. The Cloudreach gaps were closed earlier on main by the Cloudreach lane. `KNOWN_OPEN` is now empty, so any interval over 120 s fails the test. `RUN.txt` (refreshed at cf80ad62): 5 tests, 0 failed; live-respawn return `over_a7: []` with arches off (114.2 min), on (100.0 min) and without the haul road (118.0 min); the worst Water gap is 114 s.
+
+**Disclosures:**
+- Data-level: shortest path over authored polylines at constant walk 5.0 m/s and swim 3.8 m/s. No physical walk, terrain, combat, detours or co-op. Realm loads are excluded from the clock.
+- The Stormheart deck ramps are a straight line; Stormwood arches are excluded from the gating run; Cloudreach uses ground routes only.
+- A wild within engage range counts as an offer and is assumed present. Night-, rain-, alpha- and once-only sources never count (daytime, clear weather). The two new sites were not probed in engine.
+- Meadows pacing on the return depends on respawned wilds (encounter_director 300 s respawn). The strict no-respawn variant is a report only and shows large gaps (Meadows 2034 s).
+
+The section below is the earlier PARTIAL report, kept for history.
+
+---
+
+
 **Criterion** (Acceptance Board F15#2; ACCEPTANCE §6.1 F15 and T3): "follow the measured physical return without an A7 empty interval". WORLD §6.5 fixes the route:
 - First Shore's Stormwood passage;
 - Stormwood's Cloudreach return gate;

@@ -225,7 +225,82 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 	var bed_prompt := _camp_bed_prompt_for(target) if body == null and str(stage).begins_with("rest_") else null
 	if bed_prompt != null:
 		return await _approach_bed_offer(bed_prompt, target, radius)
-	return await super._walk(target, radius, body)
+	# Start each foot leg from the authored waypoint it follows, not from
+	# anywhere inside that waypoint's 0.75 m arrival radius: a leg that runs close
+	# to a cliff shoulder (the lower-east causeway leg past
+	# BrokenCausewayMainCliffShoulders/Ridge000) clips it from a start 0.4 m off
+	# (C1 run at 4d8dd8f0, 428 s) and clears it from the waypoint (runs 3 and 4).
+	var mover: Node3D = body if body != null else player
+	if body == null and _last_walk_target.is_finite() and mover != null:
+		var off := Vector2(mover.global_position.x - _last_walk_target.x, mover.global_position.z - _last_walk_target.z).length()
+		if off > 0.3 and off < 1.0 and absf(mover.global_position.y - _last_walk_target.y) < 3.0:
+			_log("witness_waypoint_recentre", {"waypoint": str(_last_walk_target), "off_m": snappedf(off, 0.01), "next": str(target)})
+			if not await super._walk(_last_walk_target, 0.3, body): return false
+	var walked: bool = await _walk_with_static_sidestep(target, radius, body)
+	if body == null:
+		_last_walk_target = target if walked else Vector3.INF
+	return walked
+
+
+## A player whose stick walk stops dead against STATIC geometry on open ground
+## (the cliff-shoulder ridge colliders: Windscar Ridge003, lower causeway
+## Ridge000, summit road Ridge001 across C1 runs 1, 5 and 6, each at velocity 0
+## with only that ridge in contact) backs off and steers round it. The base
+## walker reports that as "Walking stalled"; here, at most twice per walk, the
+## stall is withdrawn, logged as a disclosed recovery, the stick pulls back and
+## to the side for a moment, and the same walk is retried. A stall against a
+## moving body keeps the base walker's own handling.
+const STATIC_SIDESTEP_ATTEMPTS := 2
+var static_sidesteps: Array[Dictionary] = []
+
+func _walk_with_static_sidestep(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
+	for attempt in STATIC_SIDESTEP_ATTEMPTS + 1:
+		var rows_before := rows.size()
+		var ok: bool = await super._walk(target, radius, body)
+		if ok or attempt == STATIC_SIDESTEP_ATTEMPTS or rows.size() <= rows_before:
+			return ok
+		var fail_row: Dictionary = rows[rows.size() - 1]
+		if str(fail_row.get("kind", "")) != "FAIL" or not str(fail_row.get("message", "")).begins_with("Walking stalled"):
+			return false
+		var block: Dictionary = {}
+		for index in range(rows.size() - 1, rows_before - 1, -1):
+			if str(rows[index].get("kind", "")) == "collision_block":
+				block = rows[index]
+				break
+		var collisions: Array = block.get("collisions", [])
+		if collisions.is_empty() or collisions.any(func(c: Dictionary) -> bool:
+				var node := get_root().get_node_or_null(NodePath(str(c.get("body", ""))))
+				return node == null or node is CharacterBody3D):
+			return false
+		_unfail()
+		var mover: Node3D = body if body != null else player
+		var ahead := target - mover.global_position
+		ahead.y = 0.0
+		ahead = ahead.normalized() if ahead.length() > 0.01 else Vector3.FORWARD
+		var side := ahead.cross(Vector3.UP) * (1.0 if attempt == 0 else -1.0)
+		var record := {"at": str(mover.global_position), "target": str(target), "attempt": attempt + 1,
+			"blocker": str(collisions[0].get("body", "")), "normal": str(collisions[0].get("normal", ""))}
+		static_sidesteps.append(record)
+		_log("witness_static_stall_sidestep", record)
+		var previous_clock := await _normal_input_clock("static stall sidestep")
+		for vector: Vector3 in [-ahead * 3.0, side * 3.0]:
+			for frame in 45:
+				_steer(vector, 1.0)
+				await _frames(1)
+		_release()
+		await _frames(10)
+		await _restore_route_clock(previous_clock)
+	return false
+
+
+## Withdraw the stall just reported (see `_walk_with_static_sidestep`).
+func _unfail() -> void:
+	failed = false
+	if not rows.is_empty() and str(rows[rows.size() - 1].get("kind", "")) == "FAIL":
+		rows.remove_at(rows.size() - 1)
+
+
+var _last_walk_target := Vector3.INF
 
 
 ## The base camp-recovery step walks to a fixed point 1.2 m -z of a creature
@@ -292,7 +367,8 @@ func _relay_windbreak_detour(target: Vector3, body: CharacterBody3D) -> Vector3:
 ## A relay leg that passes within 1.6 m of a standing person (Captain Veyra's
 ## own body stands in the arena during break_the_eye) snags the piloted
 ## creature on that capsule (C1 run at cde65499, 3183 s: the ally against
-## "Captain Veyra/Body"). Stick-walk round the person on the side away from the
+## "Captain Veyra/Body"), and the trainer's own capsule does the same while it
+## stands piloting. Stick-walk round the person on the side away from the
 ## leg first, 3.5 m clear, then finish the leg.
 func _relay_leg(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
 	var mover: Node3D = body if body != null else runtime.controlled_body()
@@ -300,16 +376,23 @@ func _relay_leg(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
 	if mover != null and people != null:
 		var from := Vector2(mover.global_position.x, mover.global_position.z)
 		var to := Vector2(target.x, target.z)
-		for person: Node in people.get_children():
+		var obstacles: Array[Node] = people.get_children()
+		# The trainer stands still while it pilots the creature; its own capsule
+		# on the leg snags the ally the same way (dry run 3f..., 471 s).
+		if mover != player and is_instance_valid(player):
+			obstacles.append(player)
+		for person: Node in obstacles:
 			var person_body := person as Node3D
 			if person_body == null or not person_body.is_visible_in_tree(): continue
 			var at := Vector2(person_body.global_position.x, person_body.global_position.z)
 			var closest := Geometry2D.get_closest_point_to_segment(at, from, to)
-			if closest.distance_to(at) < 1.6 and closest.distance_to(to) > 0.5:
+			# 3 m: the piloted creature's own capsule is wide, and on contact it
+			# shoves the standing trainer ahead along the leg (C1 run 8, 3224 s).
+			if closest.distance_to(at) < 3.0 and closest.distance_to(to) > 0.5:
 				var side := (closest - at)
 				if side.length() < 0.05:
 					side = (to - from).orthogonal()
-				var around := at + side.normalized() * 3.5
+				var around := at + side.normalized() * 4.5
 				var waypoint := Vector3(around.x, target.y, around.y)
 				_log("witness_relay_person_detour", {"person": str(person_body.get_path()), "via": str(waypoint), "to": str(target)})
 				if not await super._walk(waypoint, 1.0, body): return false
@@ -550,7 +633,13 @@ func _exhausted_fall_attempt() -> bool:
 	if not await _deploy(): return false
 	exhausted_window = true
 	var reasons: Array[String] = []
-	var on_recovered := func(reason: String) -> void: reasons.append(reason)
+	# Where production recover_to_anchor put the trainer, read in its own
+	# signal: a later frame can already carry a companion's nudge (C1 run 9
+	# measured 1.06 m after 928 frames; the recovery itself was exact).
+	var recovered_at := [Vector3.INF]
+	var on_recovered := func(reason: String) -> void:
+		reasons.append(reason)
+		if recovered_at[0] == Vector3.INF: recovered_at[0] = player.global_position
 	fly.recovered.connect(on_recovered)
 	var lift_centre := Vector3(972, 0, 2975)
 	var exhausted_frame := -1
@@ -607,7 +696,8 @@ func _exhausted_fall_attempt() -> bool:
 	var drop := anchor.y - lowest_y
 	if not _require(drop >= drop_m - 1.0 and drop <= drop_m + 1.0, "Recovery fired at the configured drop below the anchor (%.3f m vs %.1f m)" % [drop, drop_m]): return false
 	if not _require(controller_anchor.is_finite() and controller_anchor.distance_to(anchor) < 0.5, "The recorded anchor is the controller's own safe anchor"): return false
-	if not _require(player.global_position.distance_to(controller_anchor) < 0.5 and player.is_on_floor() and not fly.is_flying() and str(exhausted_fall.get("floor_path", "")).contains("SkyShrineHeartstone"), "Recovered onto the verified shrine anchor floor"): return false
+	exhausted_fall["recovered_at"] = str(recovered_at[0])
+	if not _require((recovered_at[0] as Vector3).distance_to(controller_anchor) < 0.5 and player.is_on_floor() and not fly.is_flying() and str(exhausted_fall.get("floor_path", "")).contains("SkyShrineHeartstone"), "Recovered onto the verified shrine anchor floor"): return false
 	if not _require(_flag_snapshot() == flags_before and game.party.members().size() == expected_party_size, "Exhausted fall changed no flag and lost no creature"): return false
 	# Ordinary standing rest before the route's next flight (as the base _deploy does).
 	for tick in 60 * 120:
