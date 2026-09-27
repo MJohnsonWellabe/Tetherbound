@@ -3393,9 +3393,14 @@ static func _trainer_foe_numbers(tree: SceneTree, args: Dictionary) -> Dictionar
 	# What the host's record says this peer is fighting (the row every guest
 	# receives), so a guest's local view can be compared with the real foe.
 	var enc_id := str(manager.get("_encounter_id")) if manager.get("_encounter_id") != null else ""
+	# The live record (`_encounter`, refreshed by every host broadcast) first;
+	# the join-time announcement only when no live one is held.
+	var live_rec: Variant = director.get("_encounter")
 	var joinable: Variant = director.get("_joinable_encounters")
 	var host_row: Dictionary = {}
-	if joinable is Dictionary and (joinable as Dictionary).has(enc_id):
+	if live_rec is Dictionary and str((live_rec as Dictionary).get("encounter_id", "")) == enc_id:
+		host_row = (live_rec as Dictionary).get("opponent", {}) as Dictionary
+	elif joinable is Dictionary and (joinable as Dictionary).has(enc_id):
 		host_row = ((joinable as Dictionary)[enc_id] as Dictionary).get("opponent", {}) as Dictionary
 	var solo := _solo_member(director, trainer_id, species, level)
 	if solo.is_empty() and not host_row.is_empty():
