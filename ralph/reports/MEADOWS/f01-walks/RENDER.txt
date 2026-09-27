@@ -1,0 +1,26 @@
+F01#2 (day) / F01#3 (night) normal-controller walks -- tests/capture_village_walk.gd --route=visits --from-title
+Branch tb/meadows-walks = origin/main 9850b3be + the seven walk-harness commits from tb/meadows-core
+(fdc01945 8e55cd4c 185488e2 2b94fb8a 88137a81 c392e73d af34e9b4), head 99fc83f3. No game code changed.
+The walk plays the production title's Start New Game and the opening with parsed joypad events, then walks
+to all 11 targets (Grandpa, Bram, Tam, Mira, Oskar, Halda, old key, RoadGate, Practice Meadow camp,
+TrailGate, PondGate) with move/look-stick input; interact presses open doors, take the key and open the gate.
+
+Renderer: render.yml = xvfb-run + godot 4.7-stable --rendering-driver opengl3 (Compatibility, llvmpipe), 1280x720.
+
+DAY, 99fc83f3: render.yml run 36336434998 (timeout_minutes 120).
+  VISIT lines for 10/11 targets; the 11th leg (PondGate, at (-21,21)) ended with capture 097 "end" at
+  (-20.52,20.80), 0.53 m from the gate, then the runner's 120-minute cap stopped the process before the
+  VISIT/PASS lines printed. So: NO PASS LINE in this run. Rerun with the 150-minute cap: run mw-f01-day-r2.
+  Frames: day_99fc83f3/ (key frames only; JPG q85), VISIT lines: day_99fc83f3/run_village_walk_lines.txt
+
+NIGHT, 7fe6e703 (tb/meadows-core; walk harness byte-identical to 99fc83f3, game code 86 files older):
+  render.yml run 36315682666: PASS route=visits time=night captures=96 max_off_road_m=0.00 visited=11
+  Frames: night_7fe6e703/, VISIT lines: night_7fe6e703/run_village_walk_lines.txt
+  A local night render at 99fc83f3 (1920x1080, xvfb + opengl3) is running in this container; llvmpipe on
+  4 CPUs needs ~70 min for the opening and ~1.5 min per frame, so it was not done by the deadline.
+
+Local attempts (disclosed): 4 concurrent Godot processes on 4 CPUs timed every run out; a lone local day
+render reached 20/96 frames in 90 min. Not evidence.
+
+Shared-helper checks at 99fc83f3 (headless, local): smoke_gate_a_opening_segment OK, smoke_gate_b_continuous
+(CORE) OK; full unit suite 5143 tests / 0 failed (files alongside).
