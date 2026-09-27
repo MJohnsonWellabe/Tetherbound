@@ -4,10 +4,14 @@
   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
   "prefabs": {
     "river_bank_perch": {
-      "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 16.0},
+      "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 24.0, "_why_broken_roll_deg": "F03#1 round-5 judge: at 16 degrees the buckled boards read as one pale slab changing shape. 24 degrees, with the timber rails below tilting the same way, reads as a collapsed frame before and a braced one after."},
       "modules": [
         {"module": "Floor_WoodDark", "at": [-1.0, 0.12, 0.0]},
         {"module": "Floor_WoodDark", "at": [1.0, 0.12, 0.0]},
+        {"module": "Prop_WoodenFence_Single", "dir": "res://assets/buildings/quaternius_medieval", "at": [-1.0, 0.12, -1.0], "_why": "F03#1 round-5 judge: the floor tiles alone read as an untextured white plane in daylight. A dark timber rail along the back and ends (the medieval kit's own fence, the building family's wood) gives the perch a frame; river_nest_clear.gd rolls every perch child, so the rails lean alternately while buckled and stand upright once repaired. The river side stays open."},
+        {"module": "Prop_WoodenFence_Single", "dir": "res://assets/buildings/quaternius_medieval", "at": [1.0, 0.12, -1.0]},
+        {"module": "Prop_WoodenFence_Single", "dir": "res://assets/buildings/quaternius_medieval", "at": [-2.0, 0.12, 0.0], "yaw_deg": 90.0},
+        {"module": "Prop_WoodenFence_Single", "dir": "res://assets/buildings/quaternius_medieval", "at": [2.0, 0.12, 0.0], "yaw_deg": 90.0},
         {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [-1.6, 0.2, 0.7], "scale": 0.6},
         {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [1.6, 0.2, 0.7], "scale": 0.6}
       ],
