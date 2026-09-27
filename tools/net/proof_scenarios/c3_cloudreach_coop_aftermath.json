@@ -752,5 +752,6 @@
       },
       "label": "no legendary in this character's saved party"
     }
-  ]
+  ],
+  "build_allowance_s": 600
 }

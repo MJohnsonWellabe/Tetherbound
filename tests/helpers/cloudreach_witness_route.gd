@@ -220,7 +220,43 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 			var ok: bool = await super._walk(via, 1.5, body)
 			_relay_detouring = false
 			if not ok: return false
+	var bed_prompt := _camp_bed_prompt_for(target) if body == null and str(stage).begins_with("rest_") else null
+	if bed_prompt != null:
+		return await _approach_bed_offer(bed_prompt, target, radius)
 	return await super._walk(target, radius, body)
+
+
+## The base camp-recovery step walks to a fixed point 1.2 m -z of a creature
+## bed's prompt. The summit bivouac bed (yaw 65 deg, moved to the threshold
+## terrace in 86195ab0) puts that point against the bed's own sloped collider,
+## so the walker grinds on it while the production arbiter is already offering
+## "Rest a Creature" (C1 run at 9072147d, 2951 s). Stop where the offer is won;
+## the next step is still the real Interact press on that exact prompt.
+func _camp_bed_prompt_for(target: Vector3) -> Node3D:
+	if physical == null: return null
+	for node: Node in physical.find_children("CampCreatureBed", "", true, false):
+		var prompt := (node as Node).get_node_or_null("Interactable") as Node3D
+		if prompt != null and prompt.global_position.distance_to(target + Vector3(0.0, 0.8, 1.2)) < 0.5:
+			return prompt
+	return null
+
+
+func _approach_bed_offer(prompt: Node3D, target: Vector3, radius: float) -> bool:
+	var arbiter: Node = world.get_node("InteractionArbiter")
+	arbiter.call("_recompute")
+	if arbiter.get("_winning_provider") == prompt:
+		_log("witness_bed_offer_already_won", {"prompt": str(prompt.get_path()), "at": str(player.global_position)})
+		return true
+	# Walk at the prompt itself and stop inside ordinary interaction range.
+	if await super._walk(prompt.global_position - Vector3.UP * 0.8, 1.6):
+		_release()
+		await _frames(4)
+		arbiter.call("_recompute")
+		if arbiter.get("_winning_provider") == prompt:
+			_log("witness_bed_offer_won", {"prompt": str(prompt.get_path()), "at": str(player.global_position),
+				"reason": "bed approach point lies against the rotated bed collider; stopped where the production offer is won"})
+			return true
+	return await super._walk(target, radius)
 
 
 var _relay_detouring := false
