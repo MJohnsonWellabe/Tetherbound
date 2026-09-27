@@ -1,0 +1,1 @@
+CLOUDREACH WILD SITE RESOLUTION {"authored":104,"failures":[],"known_unresolved_left_out":["road_visibility_broken_causeway_main_03","road_visibility_windscar_floor_loop_15"],"limit_m":45.0,"resolved":102,"verdict":"PASS","worst":{"id":"lower_cliff_foragers","m":15.74}}

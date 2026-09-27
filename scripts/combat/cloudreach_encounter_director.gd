@@ -240,6 +240,14 @@ static func site_needs_spawn(spawned: Dictionary, failures: Dictionary, id: Stri
 	return not spawned.has(id) and not failures.has(id)
 
 
+## Whether a wild site's bodies are exempt from colliding with the trainer.
+## An explicit data field, `trainer_corridor_clear`, not the presence of a
+## `_why_*` comment key: every ROAD CP-2 pair and each authored pair that
+## stands on a walking lane (e.g. `ravine_wind`) sets it (#340).
+static func site_keeps_trainer_corridor_clear(site: Dictionary) -> bool:
+	return bool(site.get("trainer_corridor_clear", false))
+
+
 static func keep_trainer_corridor_clear(wild: CollisionObject3D,
 		trainer: CollisionObject3D) -> void:
 	if wild == null or trainer == null:
@@ -399,7 +407,7 @@ func _spawn_available_sites() -> void:
 					"level": selected["level"], "aggressive": false, "wander_radius": float(site.get("radius_m", 4.0)),
 					"combat": encounter_config.get("behavior_profiles", {}).get("scout", {})})
 			if wild != null:
-				if not str(site.get("_why_road_visibility_0907", "")).is_empty() \
+				if site_keeps_trainer_corridor_clear(site) \
 						and wild is CollisionObject3D and _player is CollisionObject3D:
 					keep_trainer_corridor_clear(wild as CollisionObject3D,
 						_player as CollisionObject3D)
