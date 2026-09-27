@@ -442,15 +442,15 @@
     {
      "text": "Measured 885-second no-action stretch removed",
      "status": "in_progress",
-     "evidence": "Baseline measured (Windscar return 1,609 m / 322 s); route edits drafted",
-     "gap": "Coordinator ruling (a): restore the XP on the shortened legs, then the ledger test and an A7 re-measure",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
+     "gap": "Landing in batch 51.",
      "note": "Verifier rejected the batch 26 claim: data only, with no engine re-walk or committed A7 re-measure. Cloudreach lane (#311)."
     },
     {
      "text": "Every A7 empty interval gone",
      "status": "not_started",
-     "evidence": "Listed open",
-     "gap": "Route A7 measurement"
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
+     "gap": "Landing in batch 51."
     },
     {
      "text": "Earned route resource/XP ledger needs no new catch",
