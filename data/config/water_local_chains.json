@@ -121,8 +121,8 @@
       ]
     },
     {
-      "id": "deep_watch_chart", "chain": "side_water_deep_watch_chart", "at_xz": [1270.7, 3413.7],
-      "_why_at": "Chart-station lamp 2.4 m beyond the Deep Watch chart control (1268.3, 3413.1; WaterDocks deep_watch_chart) from the landing 13 m away, so the low table reads as a station.",
+      "id": "deep_watch_chart", "chain": "side_water_deep_watch_chart", "at_xz": [1266.3, 3414.7],
+      "_why_at": "Chart-station lamp 2.5 m beside the Deep Watch chart control (1268.3, 3413.1; WaterDocks deep_watch_chart), on the left of the walk up from the landing 13 m away, so the low table reads as a station. It stood 2.4 m beyond the chart until tb/tidewake-full: its colliding post sat on the walked line from the landing and every walk inland stalled against it.",
       "pieces": [
         {"kind": "lamp_post", "offset_xz": [0, 0], "yaw_deg": 215, "post_height_m": 4.8, "post_width_m": 0.36, "post_colour": "#927448", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.7, "lantern_mount_height_m": 2.9, "flame_radius_m": 0.28, "flame_emission": "#ffb347", "flame_emission_energy": 6.0, "light_colour": "#ffb15c", "light_energy": 1.8, "light_range_m": 12.0},
         {"kind": "banner", "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf", "offset_xz": [1.2, 1.0], "yaw_deg": 215, "height_m": 4.5, "sink_m": 0.3}
