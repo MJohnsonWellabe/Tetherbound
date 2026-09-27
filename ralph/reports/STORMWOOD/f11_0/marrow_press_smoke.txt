@@ -1,0 +1,56 @@
+# tests/smoke_stormwood_marrow_press.gd transcript (local, Godot 4.7-stable, full asset checkout)
+MARROW PRESS standing at (-100.0, 262.0594, 5445.0) (core seat y 262.21)
+MARROW PRESS activation /root/Stormwood/StormwoodTrainers/Captain Marrow/Interactable player=(-90.39272, 262.0599, 5447.881)
+MARROW PRESS hub last_start_refusal={  } outcomes={ "captain_marrow_dynamo_core": true }
+MARROW PRESS — PARTY before captain_marrow_dynamo_core: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 340/340
+MARROW PRESS — LB press 1 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+MARROW PRESS — LB press 2 (joypad button, 7 physics frames): active bramblebun -> terrapup
+MARROW PRESS — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+MARROW PRESS — OBSERVED Marrow round 1 at 65.9 s: { "species": "tanglevolt", "level": 42 }
+MARROW PRESS — OBSERVED Marrow round 2 at 54.7 s: { "species": "stormraven", "level": 43 }
+MARROW PRESS — OBSERVED Marrow round 3 at 110.3 s: { "species": "stormbrush", "level": 43 }
+MARROW PRESS — OBSERVED Marrow round 4 at 166.8 s: { "species": "sparkit", "level": 44 }
+MARROW PRESS — OBSERVED Marrow round 5 at 213.2 s: { "species": "voltarach", "level": 44 }
+MARROW PRESS — ENTERED first actual conduit cycle 0
+MARROW PRESS — CONDUIT feasibility start_world=(-94.86826, 262.0601, 5443.75) local=(5.131744, -0.149933, -26.25) base_speed=5.600 remaining_cycle_s=27.986 conservative_travel_s=24.328 ally={ "species": "terrapup", "level": 47, "hp": 451.2, "max_hp": 451.2, "fainted": false, "resting": false }
+MARROW PRESS — BREAK lap [3, 0, 1, 2] from (5.131744, -26.25)
+MARROW PRESS — BREAK lap [0, 1, 2] from (1.11834, -32.82471)
+MARROW PRESS — ACCEPTED ordinary conduit 3
+MARROW PRESS — BREAK lap [1, 2] from (34.7513, -2.398926)
+MARROW PRESS — ACCEPTED ordinary conduit 0
+MARROW PRESS — BREAK lap [2] from (2.245956, 34.03174)
+MARROW PRESS — ACCEPTED ordinary conduit 1
+MARROW PRESS — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+STORMWOOD MARROW PRESS OK
+
+## Break trace (2 s)
+STORMWOOD CROWN BUILD — BREAK t=312.0s ally_local=(3.835815, -0.149933, -28.83447) piloted=true waiting=-1 fired=[] struck=[] window_left=29.5 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2507 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=314.0s ally_local=(3.796516, -0.149933, -29.43115) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.5 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-680 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=316.0s ally_local=(12.28805, -0.150085, -22.4502) piloted=true waiting=-1 fired=[3] struck=[3] window_left=25.5 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2679 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=318.0s ally_local=(21.25462, -0.150238, -15.73682) piloted=true waiting=-1 fired=[3] struck=[3] window_left=23.5 fighting=false target=0 active=0 bank_state=fire leg=(37.8554, -3.311911) next_quick_in=-4674 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=320.0s ally_local=(30.22091, -0.150024, -9.027832) piloted=true waiting=-1 fired=[3] struck=[3] window_left=21.5 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6678 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=322.0s ally_local=(36.73684, -0.150024, -0.844727) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.5 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-20 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=324.0s ally_local=(32.05376, -0.150055, 6.481445) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.5 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2021 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=326.0s ally_local=(23.82905, -0.150269, 14.08545) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=15.5 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4017 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=328.0s ally_local=(15.6044, -0.150055, 21.68506) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=13.5 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6028 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=330.0s ally_local=(7.379791, -0.150238, 29.28711) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=11.5 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8025 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=332.0s ally_local=(-1.035934, -0.150024, 34.37158) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.5 fighting=false target=2 active=2 bank_state=fire leg=(-35.0, 1.199997) next_quick_in=-312 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=334.0s ally_local=(-9.048859, -0.150024, 26.54297) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=7.5 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-2308 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=336.0s ally_local=(-17.0617, -0.150116, 18.71924) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=5.5 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-4308 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=338.0s ally_local=(-25.07412, -0.150238, 10.89502) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=3.5 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-6300 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=340.0s ally_local=(-33.08698, -0.150085, 3.066895) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=1.5 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-8313 release_tick=-1
+MARROW PRESS — BREAK t=312.0s ally_local=(3.835815, -0.149933, -28.83447) piloted=true waiting=-1 fired=[] struck=[] window_left=29.5 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2507 release_tick=-1
+MARROW PRESS — BREAK t=314.0s ally_local=(3.796516, -0.149933, -29.43115) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.5 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-680 release_tick=-1
+MARROW PRESS — BREAK t=316.0s ally_local=(12.28805, -0.150085, -22.4502) piloted=true waiting=-1 fired=[3] struck=[3] window_left=25.5 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2679 release_tick=-1
+MARROW PRESS — BREAK t=318.0s ally_local=(21.25462, -0.150238, -15.73682) piloted=true waiting=-1 fired=[3] struck=[3] window_left=23.5 fighting=false target=0 active=0 bank_state=fire leg=(37.8554, -3.311911) next_quick_in=-4674 release_tick=-1
+MARROW PRESS — BREAK t=320.0s ally_local=(30.22091, -0.150024, -9.027832) piloted=true waiting=-1 fired=[3] struck=[3] window_left=21.5 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6678 release_tick=-1
+MARROW PRESS — BREAK t=322.0s ally_local=(36.73684, -0.150024, -0.844727) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.5 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-20 release_tick=-1
+MARROW PRESS — BREAK t=324.0s ally_local=(32.05376, -0.150055, 6.481445) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.5 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2021 release_tick=-1
+MARROW PRESS — BREAK t=326.0s ally_local=(23.82905, -0.150269, 14.08545) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=15.5 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4017 release_tick=-1
+MARROW PRESS — BREAK t=328.0s ally_local=(15.6044, -0.150055, 21.68506) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=13.5 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6028 release_tick=-1
+MARROW PRESS — BREAK t=330.0s ally_local=(7.379791, -0.150238, 29.28711) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=11.5 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8025 release_tick=-1
+MARROW PRESS — BREAK t=332.0s ally_local=(-1.035934, -0.150024, 34.37158) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.5 fighting=false target=2 active=2 bank_state=fire leg=(-35.0, 1.199997) next_quick_in=-312 release_tick=-1
+MARROW PRESS — BREAK t=334.0s ally_local=(-9.048859, -0.150024, 26.54297) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=7.5 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-2308 release_tick=-1
+MARROW PRESS — BREAK t=336.0s ally_local=(-17.0617, -0.150116, 18.71924) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=5.5 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-4308 release_tick=-1
+MARROW PRESS — BREAK t=338.0s ally_local=(-25.07412, -0.150238, 10.89502) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=3.5 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-6300 release_tick=-1
+MARROW PRESS — BREAK t=340.0s ally_local=(-33.08698, -0.150085, 3.066895) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=1.5 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-8313 release_tick=-1
