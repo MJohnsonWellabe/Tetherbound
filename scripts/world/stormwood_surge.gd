@@ -1098,9 +1098,9 @@ func _advance_flash(delta: float) -> void:
 		if _flash_next <= 0.0 and not decorative_onset_allowed():
 			_flash_next = 0.1
 		elif _flash_next <= 0.0:
-			# Distant, telegraph-less flashes are deliberately weaker than a
-			# real strike's (1.0) and on their own slower cadence, so a flash
-			# with no ring never reads as a missed warning.
+			# Decorative sky flashes have their own slower cadence. Ground
+			# impacts are identified by the hazard disc, local forked bolt and
+			# light; their whole-scene wash is capped separately.
 			_flash_next = _flash_rng.randf_range(float(cfg.get("distant_interval_min", 9.0)), float(cfg.get("distant_interval_max", 16.0)))
 			flash(_flash_rng.randf_range(float(cfg.get("distant_strength_min", 0.2)), float(cfg.get("distant_strength_max", 0.35))))
 			if _flash_rng.randf() < float(cfg.get("double_chance", 0.5)):
