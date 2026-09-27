@@ -1043,7 +1043,7 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
 			return
 	_visited.append(str(t.label))
-	await _frame_for_photo(at, kind in ["grandpa", "villager"])
+	await _frame_for_photo(at, kind in ["grandpa", "villager"], INDOOR_APPROACH.has(str(t.label)))
 	await _capture("reached %s" % t.label)
 	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
 
@@ -1054,12 +1054,16 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 ## judge failed frames shot through the inn's railing and walls. Only the
 ## look stick moves; the player stays where the walk stopped.
 const PHOTO_ORBITS_DEG := [40.0, -40.0, 70.0, -70.0, 100.0, -100.0, 20.0, -20.0, 140.0, -140.0]
+## Indoors the orbit stays near the approach bearing: interior partitions and
+## booth walls are visual-only, so the collider check cannot see them, and a
+## wide orbit put Bram's frame behind a booth wall (judge, night 015).
+const PHOTO_ORBITS_INDOOR_DEG := [15.0, -15.0, 0.0]
 const PHOTO_SETTLE_ARM_FRAMES := 12
 
-func _frame_for_photo(at: Vector2, person: bool) -> void:
+func _frame_for_photo(at: Vector2, person: bool, indoor: bool = false) -> void:
 	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
 	var bearing := _yaw_toward(_xz(), at)
-	for offset: float in PHOTO_ORBITS_DEG:
+	for offset: float in (PHOTO_ORBITS_INDOOR_DEG if indoor else PHOTO_ORBITS_DEG):
 		await _look_stick_to(bearing + deg_to_rad(offset))
 		for _f in PHOTO_SETTLE_ARM_FRAMES:
 			await physics_frame
