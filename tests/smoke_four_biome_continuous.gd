@@ -33,13 +33,21 @@ const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_preparation_s
 const LATE_WATER := preload("res://tests/helpers/water_earned_late_segment.gd")
 const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
 const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
+const ROUTE_LEDGER := preload("res://tests/helpers/meadows_earned_route_ledger_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
+const LOCAL_CHAINS := preload("res://tests/helpers/tidewake_b_local_chains.gd")
+const WATER_DRY_FIXTURE := preload("res://tests/helpers/tidewake_b_water_arrival_dry_fixture.gd")
+## Veilfall interior walk (relative to the interior origin), the same points
+## the late segment walked from the entrance to Nerissa's chamber.
+const VEILFALL_INTERIOR_PATH := [Vector3(0, 0, 4), Vector3(-5, 0, 18.9), Vector3(0, 0, 34),
+	Vector3(9, 0, 45.9), Vector3(0, 0, 56), Vector3(0, 0, 70), Vector3(0, 0, 87)]
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const RESUME_SETTLE_FRAMES := 300
 const LOOK_ALIGNMENT_TOLERANCE_DEG := 0.75
 const LOOK_ALIGNMENT_STRENGTH := 0.65
 var coverage: RefCounted
+var route_ledger: RefCounted
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
@@ -60,6 +68,12 @@ var resume_source_abs := ""
 var carried_receipts: Dictionary = {}
 var prior_elapsed_seconds := 0.0
 var checkpoints_written: Array = []
+## F13#3 (`--with-local-chains`): the six Tidewake local chains woven into the
+## earned Water stage (tests/helpers/tidewake_b_local_chains.gd).
+var local_chains: RefCounted = null
+var chain_results: Array[String] = []
+## `--dry-run-water-fixture`: DRY RUN start at a declared Water arrival.
+var dry_run := false
 
 
 func _init() -> void:
@@ -68,6 +82,17 @@ func _init() -> void:
 
 func _run() -> void:
 	started_ms = Time.get_ticks_msec()
+	# `--world-seed=N` pins the rolled world for this process, the same override
+	# `TB_WORLD_SEED` gives, for runners that cannot set the environment.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--world-seed="):
+			var raw := arg.trim_prefix("--world-seed=")
+			if not raw.is_valid_int():
+				failures.append("--world-seed must be an integer: %s" % raw)
+				_finish(false)
+				return
+			OS.set_environment("TB_WORLD_SEED", raw)
+			print("FRESH CAMPAIGN world_seed override=", raw)
 	var game := root.get_node("Game")
 	checkpoint_args = CHECKPOINTS.parse_args(OS.get_cmdline_user_args())
 	for line: Variant in checkpoint_args["errors"]:
@@ -75,6 +100,31 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish(false)
 		return
+	# One `--resume-from` serves two checkpoint kinds, told apart by what the
+	# directory holds (CHECKPOINTS.classify_resume):
+	# - `checkpoint.json` + `save/` (a Meadows reload-transition checkpoint that
+	#   `_reload_transition` wrote under user://four_biome_checkpoints/<label>_<pid>/)
+	#   -> `_resume_checkpoint`: slot 0 load, `_meadows_after_bridge`, stops
+	#   after the Hall, `counts_as_proof: false`;
+	# - `receipts/` + `save/` (a chapter-boundary checkpoint, also as a bare name
+	#   under --checkpoint-dir or tests/fixtures/earned_saves/checkpoints/)
+	#   -> `_stage_resume_files`/`_resume_from_checkpoint`: title Load of slot 1,
+	#   receipt verification, the next stage.
+	# A `:<boundary>` suffix always means the chapter-boundary kind; a directory
+	# holding both markers without that suffix is refused as ambiguous.
+	var resume_kind := ""
+	if not str(checkpoint_args["resume_source"]).is_empty():
+		var classified := CHECKPOINTS.classify_resume(str(checkpoint_args["resume_source"]),
+			str(checkpoint_args["resume_boundary"]))
+		if not str(classified["error"]).is_empty():
+			failures.append("RESUME: " + str(classified["error"]))
+			_finish(false)
+			return
+		resume_kind = str(classified["kind"])
+		if resume_kind == CHECKPOINTS.RESUME_RELOAD_TRANSITION:
+			# Only explicit --stop-at/--checkpoint-dir make boundary exports strict here.
+			checkpoint_args["requested"] = not str(checkpoint_args["stop_at"]).is_empty() \
+				or not str(checkpoint_args["checkpoint_dir"]).is_empty()
 	checkpoint_dir = str(checkpoint_args["checkpoint_dir"])
 	if checkpoint_dir.is_empty():
 		checkpoint_dir = "user://four_biome_checkpoints_%d_%d" % [OS.get_process_id(), started_ms]
@@ -83,7 +133,16 @@ func _run() -> void:
 		failures.append("fresh scratch save already exists")
 		_finish(false)
 		return
-	var resuming := not str(checkpoint_args["resume_source"]).is_empty()
+	var resuming := resume_kind == CHECKPOINTS.RESUME_BOUNDARY
+	var reload_resume := resume_kind == CHECKPOINTS.RESUME_RELOAD_TRANSITION
+	if OS.get_cmdline_user_args().has("--with-local-chains"):
+		local_chains = LOCAL_CHAINS.new()
+		local_chains.earned = true
+	dry_run = OS.get_cmdline_user_args().has("--dry-run-water-fixture")
+	if dry_run and (resuming or reload_resume):
+		failures.append("--dry-run-water-fixture cannot be combined with --resume-from")
+		_finish(false)
+		return
 	# A resumed piece copies the checkpoint's save into its own scratch BEFORE
 	# the save system is installed, so the checkpoint itself is never written.
 	if resuming and not _stage_resume_files():
@@ -96,10 +155,40 @@ func _run() -> void:
 		failures.append_array(coverage.failures)
 		_finish(false)
 		return
+	# F02#5/#7: `--route-ledger` measures supplies, beat spacing and A7 on this
+	# same walk. Observer only; without the flag the run is unchanged.
+	if OS.get_cmdline_user_args().has("--route-ledger"):
+		route_ledger = ROUTE_LEDGER.new()
+		if not route_ledger.start(self, func() -> String: return reached,
+				"user://route_ledger_%d_%d.jsonl" % [OS.get_process_id(), started_ms]):
+			failures.append("route ledger could not create its evidence file")
+			_finish(false)
+			return
+	if reload_resume:
+		var resume := str(checkpoint_args["resume_source"])
+		if not await _resume_checkpoint(game, resume):
+			_finish(false)
+			return
+		resume_info = {"source": resume, "boundary": resumed_from, "source_kind": CHECKPOINTS.RESUME_RELOAD_TRANSITION}
+		_start_meadows_road_camera_alignment()
+		if await _meadows_after_bridge(game):
+			failures.append("--resume-from stops after the Hall; the Warden onward runs only from a new game")
+			_finish(false)
+		return
 	print("FRESH CAMPAIGN scratch=%s slot=%s checkpoints=%s" % [ProjectSettings.globalize_path(scratch),
 		game.get("save_system").call("slot_path", 0), ProjectSettings.globalize_path(checkpoint_dir)])
 	var from := -1
-	if resuming:
+	if dry_run:
+		print("DRY RUN — does not count: declared Water-arrival fixture (%s), not an earned water_arrived save" %
+			"tests/helpers/tidewake_b_water_arrival_dry_fixture.gd")
+		live = await WATER_DRY_FIXTURE.new().start(self, game)
+		if live.is_empty():
+			failures.append("DRY RUN fixture: the Water world never became ready")
+			_finish(false)
+			return
+		reached = "water_arrived (DRY RUN fixture)"
+		from = CHECKPOINTS.boundary_index("water_arrived")
+	elif resuming:
 		if not await _resume_from_checkpoint(game):
 			_finish(false)
 			return
@@ -191,7 +280,10 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 	if OS.get_cmdline_user_args().has("--through-rest"):
 		_finish(true)
 		return false
-	var tournament_result: Dictionary = await TOURNAMENT.new().run(self,
+	var tournament := TOURNAMENT.new()
+	tournament.recover = func() -> Dictionary:
+		return await REST.new().recover(self, live["world"], game, camp._beds, camp._bedroll)
+	var tournament_result: Dictionary = await tournament.run(self,
 		live["world"], game, live["player"], live["rig"])
 	for line: Variant in tournament_result.get("failures", []):
 		failures.append(str(line))
@@ -213,51 +305,7 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 	if OS.get_cmdline_user_args().has("--through-bridge"):
 		_finish(true)
 		return false
-	if not await _reload_transition(game, "south_bridge_crossed"):
-		_finish(false)
-		return false
-	var warrens_result: Dictionary = await WARRENS.new().run(self, live["world"], game)
-	for line: Variant in warrens_result.get("failures", []):
-		failures.append(str(line))
-	if not bool(warrens_result.get("passed", false)) or not failures.is_empty():
-		_finish(false)
-		return false
-	reached = "warrens_cleared_and_exited"
-	if OS.get_cmdline_user_args().has("--through-warrens"):
-		_finish(true)
-		return false
-	if not await _reload_transition(game, "warrens_cleared_and_exited"):
-		_finish(false)
-		return false
-	var relay_result: Dictionary = await RELAY.new().run(self, live["world"], game)
-	for line: Variant in relay_result.get("failures", []):
-		failures.append(str(line))
-	if not bool(relay_result.get("passed", false)) or not failures.is_empty():
-		_finish(false)
-		return false
-	reached = "relay_disabled_and_mill_crossed"
-	if OS.get_cmdline_user_args().has("--through-relay"):
-		_finish(true)
-		return false
-	if not await _reload_transition(game, "relay_disabled_and_mill_crossed"):
-		_finish(false)
-		return false
-	var hall_result: Dictionary = await HALL.new().run(self, live["world"], game)
-	for line: Variant in hall_result.get("failures", []):
-		failures.append(str(line))
-	if not bool(hall_result.get("passed", false)) or not failures.is_empty():
-		_finish(false)
-		return false
-	reached = "warden_arena_entered"
-	if not await _checkpoint_boundary(game, "hall"):
-		return false
-	if OS.get_cmdline_user_args().has("--through-hall"):
-		_finish(true)
-		return false
-	if not await _reload_transition(game, "warden_arena_entered"):
-		_finish(false)
-		return false
-	return true
+	return await _meadows_after_bridge(game)
 
 
 func _stage_warden_to_cloudreach(game: Node) -> bool:
@@ -319,6 +367,9 @@ func _stage_water_to_ending(game: Node) -> void:
 	live["player"] = water_opening.player
 	live["rig"] = water_opening.camera
 	reached = "water_pell_lesson_earned"
+	# F13#3: Lantern (Pell, First Shore) right after the earned lesson.
+	if not await _visit_local_chains(game, ["lantern"]):
+		return
 	for entry: Array in [[REEDHAVEN.new(), "water_reedhaven_paid"],
 			[BRINE.new(), "water_brine_trial_won"],
 			[SHELLWATCH.new(), "water_shellwatch_liberated"],
@@ -335,6 +386,12 @@ func _stage_water_to_ending(game: Node) -> void:
 			_finish(false)
 			return
 		reached = str(entry[1])
+		# F13#3: Gull (Adair, Brine Steps) after the Brine trial; Cradle (Otto,
+		# Tidal Cradle) after Tidal, before the swimmer preparation.
+		if reached == "water_brine_trial_won" and not await _visit_local_chains(game, ["gull"]):
+			return
+		if reached == "water_swim_stone_and_recipe_earned" and not await _visit_local_chains(game, ["cradle"]):
+			return
 	var preparation := SWIMMER.new()
 	if not _accepted(await preparation.run(self, live["world"], game), "passed"):
 		return
@@ -348,11 +405,151 @@ func _stage_water_to_ending(game: Node) -> void:
 		_abort_late("Late Water returned false despite its accepted result")
 		return
 	reached = "water_nerissa_defeated_and_guardian_freed"
+	# F13#3: Deep Watch (Orsen, Sluice; Tidecoil), Garden (Edda, Salt Crown)
+	# and Lastlight (Halen, Veilfall) after Nerissa and the tether, before the
+	# Guardian invitation (Edda/Orsen/Halen stop offering leads once the
+	# ending restores the currents): leave the Veilfall interior by its own
+	# prompt, ride the earned saddled swimmer between islands, walk back in.
+	if local_chains != null and not await _veilfall_out_and_back(game, preparation.swimmer):
+		return
 	if not _accepted(await WATER_ENDING.new().run_earned(self, live["world"], game), "ok"):
 		return
 	reached = "tidewake_ending_earned"
-	campaign_complete = true
+	if local_chains != null and not await _saved_chain_completion(game):
+		return
+	# A DRY RUN (declared Water fixture) never counts as a completed campaign.
+	campaign_complete = not dry_run
 	_finish(true)
+
+
+## F13#3 hook: plays `names` from wherever the earned segment left the
+## trainer, then (return_home) walks/swims/rides back by input to that island
+## and position so the next earned segment's own entry conditions are
+## unchanged. A no-op without `--with-local-chains`.
+func _visit_local_chains(game: Node, names: Array, return_home: bool = true) -> bool:
+	if local_chains == null:
+		return true
+	var world := live["world"] as Node3D
+	if local_chains.world != world and not local_chains.bind(self, world, true):
+		return _chain_failed()
+	var player := local_chains.player as Node3D
+	var home: Vector3 = player.global_position
+	var home_island: String = local_chains._here()
+	print("F13#3 VISIT %s from %s on %s (party=%s)" % [names, home, home_island, JSON.stringify(_party_rows(game.get("party")))])
+	for chain: String in names:
+		var line: String = await local_chains.run_chain(chain)
+		chain_results.append(line)
+		print("F13#3 " + line)
+		if not LOCAL_CHAINS.passed(line):
+			return _chain_failed()
+	if return_home:
+		if not await local_chains._go(home, 1.5, "return after " + ",".join(names)):
+			return _chain_failed()
+		if local_chains._here() != home_island:
+			local_chains._check(false, "returned to island %s, not %s" % [local_chains._here(), home_island])
+			return _chain_failed()
+		print("F13#3 returned to %s on %s after %s" % [player.global_position, home_island, names])
+	local_chains._stick(0.0, 0.0)
+	await local_chains._frames(30)
+	return true
+
+
+func _chain_failed() -> bool:
+	for line: String in local_chains.failures:
+		failures.append("F13#3 " + line)
+	if local_chains.failures.is_empty():
+		failures.append("F13#3 chain visit failed")
+	for line: String in chain_results:
+		print("F13#3 " + line)
+	local_chains.print_travel_log()
+	_finish(false)
+	return false
+
+
+## After the late segment: the same five, the swimmer deployed, inside the
+## Veilfall interior. Walk the interior back to its exit prompt, Interact, play
+## the three late chains riding the earned swimmer, walk to the entrance
+## prompt, Interact, and walk the interior to Nerissa's chamber again.
+func _veilfall_out_and_back(game: Node, swimmer: RefCounted) -> bool:
+	var world := live["world"] as Node3D
+	if local_chains.world != world and not local_chains.bind(self, world, true):
+		return _chain_failed()
+	local_chains.mount = swimmer
+	local_chains.last_island = "veilfall"
+	var cave := world.get_node_or_null("WaterVeilfall")
+	var player := local_chains.player as CharacterBody3D
+	if cave == null or not bool(cave.call("contains_interior", player.global_position)):
+		local_chains._check(false, "late Water did not end inside the Veilfall interior")
+		return _chain_failed()
+	var origin: Vector3 = (cave.get("interior") as Node3D).global_position
+	var inside: Array = VEILFALL_INTERIOR_PATH.duplicate()
+	inside.reverse()
+	for point: Vector3 in inside:
+		if not await local_chains.navigator.walk_to(origin + point, 2400, 1.5):
+			local_chains._check(false, "Veilfall interior walk out stalled at %s toward %s" % [player.global_position, origin + point])
+			return _chain_failed()
+	var exit_prompt: Node3D = cave.get("_exit_prompt")
+	if not local_chains._check(await local_chains._approach_prompt(exit_prompt, exit_prompt.global_position),
+			"Veilfall exit prompt offered (winner=%s)" % local_chains.arbiter.call("prompt")):
+		return _chain_failed()
+	await local_chains._press_interact()
+	await local_chains._frames(30)
+	if not local_chains._check(not bool(cave.call("contains_interior", player.global_position)),
+			"Interact on the exit prompt left the Veilfall interior"):
+		return _chain_failed()
+	print("F13#3 left the Veilfall interior at %s island=%s" % [player.global_position, local_chains._here()])
+	if not await _visit_local_chains(game, ["deep", "garden", "lastlight"], false):
+		return false
+	var entry_prompt: Node3D = cave.get("_entry_prompt")
+	if not await local_chains._go(entry_prompt.global_position, 2.5, "Veilfall entrance"):
+		return _chain_failed()
+	if not local_chains._check(await local_chains._approach_prompt(entry_prompt, entry_prompt.global_position),
+			"Veilfall entrance prompt offered (winner=%s)" % local_chains.arbiter.call("prompt")):
+		return _chain_failed()
+	await local_chains._press_interact()
+	await local_chains._frames(30)
+	if not local_chains._check(bool(cave.call("contains_interior", player.global_position)),
+			"Interact on the entrance prompt entered the Veilfall interior"):
+		return _chain_failed()
+	for point: Vector3 in VEILFALL_INTERIOR_PATH:
+		if not await local_chains.navigator.walk_to(origin + point, 2400, 1.5):
+			local_chains._check(false, "Veilfall interior walk in stalled at %s toward %s" % [player.global_position, origin + point])
+			return _chain_failed()
+	local_chains._stick(0.0, 0.0)
+	await local_chains._frames(30)
+	return true
+
+
+## F13#3 saved completion: after the ending, one production save -> reset ->
+## load -> rebuilt Water world (tests/helpers/water_chain_reload.gd); every
+## chain's records, receipts, quest-log `done` and carried rewards are
+## re-asserted and each requester greeted again by walk + Interact.
+func _saved_chain_completion(game: Node) -> bool:
+	var reload: GDScript = load("res://tests/helpers/water_chain_reload.gd")
+	var items := {}
+	for item: String in ["skill_candy_i", "skill_candy_ii", "skill_candy_iii", "berries", "reef_stone"]:
+		items[item] = game.inventory.count(item)
+	var reloaded: Dictionary = await reload.save_and_reload(self, game, live["world"],
+		"water_claim:local:lantern_return:complete", "")
+	for pair: Array in reloaded.checks:
+		local_chains._check(pair[0], "Reload: " + str(pair[1]))
+	if reloaded.world == null:
+		return _chain_failed()
+	live["world"] = reloaded.world
+	if not local_chains.bind(self, reloaded.world, true):
+		return _chain_failed()
+	live["player"] = local_chains.player
+	live["rig"] = local_chains.camera
+	await local_chains._frames(60)
+	chain_results.append_array(await local_chains.verify_saved(PackedStringArray(LOCAL_CHAINS.CHAINS), items))
+	for line: String in chain_results:
+		print("F13#3 " + line)
+	local_chains.print_travel_log()
+	print("F13#3 %s: %d checks, %d failures" % ["DRY RUN — does not count" if dry_run else "local chains",
+		local_chains.checks, local_chains.failures.size()])
+	if not local_chains.failures.is_empty():
+		return _chain_failed()
+	return true
 
 
 ## Checkpoint boundary: a production save (`Game.save_game`, the menu Save
@@ -368,7 +565,15 @@ func _checkpoint_boundary(game: Node, boundary: String) -> bool:
 	var problem := ""
 	var out := ""
 	var receipt := {}
-	if not bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT)):
+	# save_game(slot) re-labels the live world as "slot-<n>" (save_game.gd
+	# _world_id_for). The checkpoint copy must not change the running world's
+	# identity, which satchel escrow, reward provenance and capture claims read.
+	var live_world: Variant = game.get("world")
+	var world_id_before := str((live_world as RefCounted).get("world_id")) if live_world != null else ""
+	var checkpoint_saved := bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT))
+	if live_world != null and not world_id_before.is_empty():
+		(live_world as RefCounted).set("world_id", world_id_before)
+	if not checkpoint_saved:
 		problem = "Game.save_game(%d) refused at boundary %s" % [CHECKPOINTS.CHECKPOINT_SLOT, boundary]
 	else:
 		var elapsed := (Time.get_ticks_msec() - started_ms) / 1000.0
@@ -523,6 +728,135 @@ func _resume_from_checkpoint(game: Node) -> bool:
 	return true
 
 
+## Bridge -> Warrens -> Relay/Mill -> Hall, each followed by the production
+## save/reload. A `--resume-from` run skips the stages its earned checkpoint is
+## already past. Returns false when the run has finished (pass or fail).
+func _meadows_after_bridge(game: Node) -> bool:
+	if not _resumed_past("south_bridge_crossed") \
+			and not await _reload_transition(game, "south_bridge_crossed"):
+		_finish(false)
+		return false
+	var stages := [
+		[WARRENS, "warrens_cleared_and_exited", "--through-warrens"],
+		[RELAY, "relay_disabled_and_mill_crossed", "--through-relay"],
+		[HALL, "warden_arena_entered", "--through-hall"],
+	]
+	for stage: Array in stages:
+		var label := str(stage[1])
+		if _resumed_past(label):
+			continue
+		var result: Dictionary = await (stage[0] as GDScript).new().run(self, live["world"], game)
+		for line: Variant in result.get("failures", []):
+			failures.append(str(line))
+		if not bool(result.get("passed", false)) or not failures.is_empty():
+			_finish(false)
+			return false
+		reached = label
+		# F02#4: the stage's own save/reload happens before a `--through-*`
+		# stop, so the last transition of a prefix run is reload-checked too.
+		if not await _reload_transition(game, label):
+			_finish(false)
+			return false
+		# Chapter-boundary checkpoint `hall` (tests/helpers/four_biome_checkpoints.gd)
+		# after the Hall and its reload, before a `--through-hall` stop.
+		if label == "warden_arena_entered" and not await _checkpoint_boundary(game, "hall"):
+			return false
+		if OS.get_cmdline_user_args().has(str(stage[2])):
+			_finish(true)
+			return false
+	return true
+
+
+## Earned checkpoints (coordinator speed rule, 2026-09-27). Every reload
+## transition copies the production save it just wrote to
+## `user://four_biome_checkpoints/<label>_<pid>/`; `--resume-from=<that dir>`
+## continues from it for debugging. A resumed run is never `closes` proof: that
+## stays one uninterrupted run from a new game, which is why its result says so.
+const CHECKPOINT_ROOT := "user://four_biome_checkpoints"
+const STAGE_ORDER := ["south_bridge_crossed", "warrens_cleared_and_exited",
+	"relay_disabled_and_mill_crossed", "warden_arena_entered"]
+var resumed_from := ""
+
+
+func _resumed_past(label: String) -> bool:
+	if resumed_from.is_empty():
+		return false
+	return STAGE_ORDER.find(label) <= STAGE_ORDER.find(resumed_from)
+
+
+func _arg_value(prefix: String) -> String:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with(prefix):
+			return arg.trim_prefix(prefix)
+	return ""
+
+
+static func copy_tree(from: String, to: String) -> bool:
+	if DirAccess.make_dir_recursive_absolute(to) != OK:
+		return false
+	var dir := DirAccess.open(from)
+	if dir == null:
+		return false
+	for file: String in dir.get_files():
+		if dir.copy(from.path_join(file), to.path_join(file)) != OK:
+			return false
+	for sub: String in dir.get_directories():
+		if not copy_tree(from.path_join(sub), to.path_join(sub)):
+			return false
+	return true
+
+
+func _write_checkpoint(label: String, scene_path: String) -> void:
+	var to := ProjectSettings.globalize_path("%s/%s_%d" % [CHECKPOINT_ROOT, label, OS.get_process_id()])
+	if not copy_tree(ProjectSettings.globalize_path(scratch), to.path_join("save")):
+		print("CHECKPOINT %s: copy failed" % label)
+		return
+	var meta := FileAccess.open(to.path_join("checkpoint.json"), FileAccess.WRITE)
+	if meta == null:
+		print("CHECKPOINT %s: checkpoint.json could not be written" % label)
+		return
+	meta.store_string(JSON.stringify({"label": label, "scene": scene_path,
+		"world_seed": OS.get_environment("TB_WORLD_SEED"), "elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0}))
+	meta.close()
+	print("CHECKPOINT %s -> %s" % [label, to])
+
+
+func _resume_checkpoint(game: Node, from: String) -> bool:
+	var meta: Variant = JSON.parse_string(FileAccess.get_file_as_string(from.path_join("checkpoint.json")))
+	if not meta is Dictionary or not STAGE_ORDER.has(str((meta as Dictionary).get("label", ""))):
+		failures.append("--resume-from has no readable earned checkpoint: " + from)
+		return false
+	# The checkpoint's rolled world, unless the command line pinned the same one.
+	var seed := str((meta as Dictionary).get("world_seed", ""))
+	if not seed.is_empty():
+		if OS.has_environment("TB_WORLD_SEED") and OS.get_environment("TB_WORLD_SEED") != seed:
+			failures.append("--world-seed %s conflicts with the checkpoint's seed %s" % [OS.get_environment("TB_WORLD_SEED"), seed])
+			return false
+		OS.set_environment("TB_WORLD_SEED", seed)
+	if not copy_tree(from.path_join("save"), ProjectSettings.globalize_path(scratch)):
+		failures.append("could not copy the checkpoint save into this run's scratch")
+		return false
+	if not bool(game.call("load_game", 0)):
+		failures.append("load_game(0) refused the earned checkpoint")
+		return false
+	var packed := load(str(meta.get("scene", ""))) as PackedScene if not str(meta.get("scene", "")).is_empty() else null
+	if packed == null:
+		failures.append("the earned checkpoint names no loadable scene")
+		return false
+	var world: Node = packed.instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in 240:
+		await physics_frame
+	live["world"] = world
+	live["player"] = world.get_node_or_null(^"Player")
+	live["rig"] = get_first_node_in_group("camera_rig")
+	resumed_from = str(meta["label"])
+	reached = resumed_from
+	print("RESUMED FROM EARNED CHECKPOINT %s (%s) — debug only, not closes proof" % [resumed_from, from])
+	return live["player"] != null
+
+
 func _abort_late(reason: String) -> void:
 	failures.append(reason)
 	_finish(false)
@@ -556,6 +890,7 @@ func _reload_transition(game: Node, label: String) -> bool:
 	if not bool(game.call("save_game", 0)):
 		failures.append("RELOAD %s: save_game(0) refused" % label)
 		return false
+	_write_checkpoint(label, scene_path)
 	var old := current_scene
 	old.queue_free()
 	for i in 4:
@@ -626,15 +961,24 @@ func _finish(prefix_passed: bool) -> void:
 		var coverage_result: Dictionary = coverage.stop()
 		failures.append_array(coverage.failures)
 		print("FRESH COVERAGE OBSERVATIONS %s" % JSON.stringify(coverage_result))
+	if route_ledger != null:
+		print("ROUTE LEDGER SUMMARY %s" % JSON.stringify(route_ledger.stop()))
 	_stop_meadows_road_camera_alignment()
 	print("FRESH CAMPAIGN RESULT %s" % JSON.stringify({
 		"requested_prefix_passed": prefix_passed,
 		"reached": reached,
 		"campaign_complete": campaign_complete and failures.is_empty(),
+		# `resumed_from`: the reload-transition label or chapter boundary this run
+		# resumed at ("" for a new game); `resume` carries the details. Any resume
+		# or DRY RUN is debug/piecewise evidence, never an uninterrupted closes run.
+		"resumed_from": resumed_from if not resumed_from.is_empty() else resume_boundary,
+		"counts_as_proof": resumed_from.is_empty() and resume_boundary.is_empty() and not dry_run,
 		"scratch": scratch,
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"cumulative_elapsed_seconds": prior_elapsed_seconds + (Time.get_ticks_msec() - started_ms) / 1000.0,
-		"resumed_from": resume_info,
+		"resume": resume_info,
+		"dry_run": dry_run,
+		"local_chains": chain_results,
 		"checkpoints": checkpoints_written,
 		"failures": failures,
 	}))

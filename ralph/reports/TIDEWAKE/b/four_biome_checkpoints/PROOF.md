@@ -141,3 +141,57 @@ Dispatch render.yml with `checkout_ref=<sha>`,
   - The no-fixture statement does not point to seed4_hall's own B5 "helper Satchel care" disclosures.
   - Runs 1, 2 and 4 have no explicit `exit=` line; read their result JSON.
 - **Unchanged blocker:** `c1_arrival` and later boundaries cannot be demonstrated from seed4_hall until the Meadows owner fixes B8 (the Warden helper waits 120 frames while the dialogue panel owns input).
+
+## Merge with main's F02 resume: one `--resume-from`, two checkpoint kinds
+
+Main (Meadows F02) added its own `--resume-from=<dir>`. It resumes a Meadows
+reload-transition checkpoint that `_reload_transition` writes under
+`user://four_biome_checkpoints/<label>_<pid>/` (`checkpoint.json` + `save/`).
+The merge keeps one flag. `CHECKPOINTS.classify_resume` looks at the directory
+to decide which kind it is:
+
+- `checkpoint.json` without `receipts/`, and no `:<boundary>` suffix, is a
+  reload-transition checkpoint. It follows main's `_resume_checkpoint` path
+  unchanged: slot 0 load, then `_meadows_after_bridge`, stop after the Hall,
+  `counts_as_proof: false`.
+- A `:<boundary>` suffix, a bare name (resolved under `--checkpoint-dir` or
+  `tests/fixtures/earned_saves/checkpoints/`), or a dir without
+  `checkpoint.json` is a chapter-boundary checkpoint. It follows this lane's
+  path: title Load of slot 1, receipt verification, then the next stage.
+- A dir that holds both markers, with no suffix, is refused as ambiguous.
+
+Main's Meadows restructure (`_meadows_after_bridge`, reload transitions with
+their checkpoints, tournament `recover`, `--route-ledger`, `--world-seed`) now
+sits inside `_stage_fresh_through_hall`. The `hall` boundary checkpoint runs
+after the Hall's own reload transition and before a `--through-hall` stop.
+Main's F02#4 order is unchanged: the reload comes before the `--through-*` stop.
+In the result JSON, `resumed_from` is now a string: the reload label or the
+chapter boundary. `counts_as_proof` is false for any resume or DRY RUN.
+This lane's resume details moved to `resume`.
+
+Verification on the merge:
+
+- The unit tests give 11 tests, 78 assertions, 0 failed
+  (`unit_test_four_biome_checkpoints_merged.log`). The new
+  `test_resume_kind_is_detected_from_the_directory` covers both kinds, the
+  suffix, bare names and the ambiguous dir.
+- `--only=four_biome,earned,route_ledger` gives 169 tests, 4218 assertions,
+  0 failed (`unit_filter_four_biome_earned_route_ledger_merged.log`).
+- Run 7: a reload-transition checkpoint was built from `seed4_hall`'s save
+  (slot 1 copied to slot 0, `checkpoint.json` label `warden_arena_entered`).
+  The run printed `RESUMED FROM EARNED CHECKPOINT`, which is main's path. It
+  exited 1 with main's own "stops after the Hall" failure, as designed, and
+  `counts_as_proof: false` (`run7_unified_resume_reload_transition_kind.log`).
+- Run 8: `TB_WORLD_SEED=4 --resume-from=seed4_hall --stop-at=hall` exited 0
+  with `RESUME VERIFIED` and the hall checkpoint re-exported
+  (`run8_unified_resume_boundary_kind_seed4_hall.log`).
+- Run 9: the default `--through-opening` exited 0
+  (`run9_merged_default_through_opening.log`).
+- Main's closed F02 proof command, `--through-hall --reload-at-transitions
+  --world-seed=15 --route-ledger` (about 77 min), was not re-run in this merge.
+
+## Merge review follow-ups (independent review of 64c738ad)
+
+- **Fixed:** a checkpoint's `save_game(1)` renamed the live world to `slot-1` (`save_game.gd:_world_id_for`), and nothing renamed it back. A default full run would then have carried the wrong `world_id` into satchel escrow, reward provenance and capture claims. `_checkpoint_boundary` now restores the live `world_id` after the checkpoint save. Run 10 (resume seed4_hall, stop at `hall`) exits 0; unit tests: 11 tests, 0 failed.
+- **Fixed:** the run7–run10 logs are now committed. They were gitignored as `*.log`.
+- **Confirmed unchanged:** main's F02 command (`--through-hall --reload-at-transitions --world-seed=15 --route-ledger`). The one difference is a non-strict `hall` export after the Hall reload, which can only warn and never changes the exit code.

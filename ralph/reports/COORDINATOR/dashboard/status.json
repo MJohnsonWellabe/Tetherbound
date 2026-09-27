@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 00:30 UTC",
+ "updated": "2026-09-27 02:46 UTC",
  "headline": [
-  "Criteria met: 54 of 101. Full CI 36280097924 on main (7a6b45ee0) is fully green, including the formerly known-red continuous-core job; F01#0 flipped.",
-  "Nothing else is queued to flip: the batch 30–34 claims re-scored partial. Lanes now post READY only for a full close (WORKFLOW §8, owner 2026-09-27); Cloudreach B1–B3 route fixes are the top unblocker (five criteria waiting).",
+  "Criteria met: 54 of 101. Full CI 36285209146 (batches 36–44) is RED: verify-cloudreach-midride-rejoin and verify-regions-shard regressed since batch 35. A bisect is running and Cloudreach/X05 are checking; the fix lands with the next close.",
+  "F02#3 is on main (batch 45, strict re-check MET) and flips to met (55) on the first green full CI after the regression fix. Next closes expected: F11#3 (after the X05 harness press fix) and F01#2/#3 (day/night walks rendering).",
   "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
  ],
  "batches": [

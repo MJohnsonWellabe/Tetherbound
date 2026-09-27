@@ -1,0 +1,64 @@
+import json,statistics as st
+F='/home/user/tb-route/ralph/reports/MEADOWS-PAYOFFS/earned-bridge/hall-seed15-route-ledger.jsonl.txt'
+B=[];L=[]
+for l in open(F):
+    d=json.loads(l)
+    if d['kind']=='beat':B.append(d['beat'])
+    elif d['kind']=='ledger':L.append(d)
+RV=["Chop","Gather","Pick up","Mine","Strip meadow grass","Gather deadwood","Prise loose stones","Prise out rootstone","Pick berries","Open Door","Close Door"]
+CP=["Put ","Call out ","Change Creature"]
+def strict(bl):
+    out=[];seen=set()
+    for b in bl:
+        k,d=b['kind'],b['detail']
+        if k=='offer':
+            if d in RV or d.startswith('Engage ') or any(d.startswith(p) for p in CP):continue
+        elif k=='wild_within_radius':
+            sp=d.split(' ')[1] if ' ' in d else ''
+            if sp in seen:continue
+            seen.add(sp)
+        out.append(b)
+    return out
+S=strict(B)
+tw=[r for r in L if r['stage']=='tournament_won'][0]['t']
+# upper bound on active: sum of loose sub-intervals where path grew
+idx={id(b):i for i,b in enumerate(B)}
+vs=[(B[i+1]['path_m']-B[i]['path_m'])/(B[i+1]['t']-B[i]['t']) for i in range(len(B)-1) if B[i+1]['t']-B[i]['t']>=3 and B[i+1]['path_m']>B[i]['path_m']]
+vs.sort(); vmax=vs[int(len(vs)*.95)]
+def gaps(sl,lab):
+    g=[]
+    for a,b in zip(sl,sl[1:]):
+        ia,ib=idx[id(a)],idx[id(b)]
+        up=sum(B[j+1]['t']-B[j]['t'] for j in range(ia,ib) if B[j+1]['path_m']>B[j]['path_m'])
+        nf=sum(1 for j in range(ia,ib) if B[j]['kind']=='fight_started')
+        g.append(dict(m=round(b['path_m']-a['path_m'],1),dt=round(b['t']-a['t'],1),up=round(up,1),lo=round((b['path_m']-a['path_m'])/vmax,1),fights=nf,stage=b['stage'],a=(a['kind'],a['detail'],a['pos']),b=(b['kind'],b['detail'],b['pos']),t=a['t']))
+    ms=sorted(x['m'] for x in g)
+    print(f"== {lab}: beats {len(sl)} gaps {len(g)} median {ms[len(ms)//2]} mean {round(st.mean(ms),1)} max {ms[-1]}")
+    over=[x for x in g if x['m']>250]; print(' >250m:',len(over))
+    for x in over:print('  ',x)
+    print(' 150-250:',sum(1 for x in g if 150<=x['m']<=250), ' >150:',sum(1 for x in g if x['m']>150))
+    for key in('dt','up','lo'):
+        w=max(g,key=lambda x:x[key]);print(f' max {key}:',w)
+        print(f'  #{key}>120:',[ (x[key],x['stage'],x['a'][1],x['b'][1],x['t']) for x in g if x[key]>120])
+    return g
+print('vmax(p95 loose) m/s',round(vmax,2))
+for lab,bl in [('LOOSE whole',B),('LOOSE post-tournament',[b for b in B if b['t']>=tw])]:
+    gaps(bl,lab)
+for lab,sl in [('STRICT whole',S),('STRICT post-tournament',[b for b in S if b['t']>=tw])]:
+    gaps(sl,lab)
+# solvency
+P,R=28,80
+RS=["rested_team","tournament_won","south_bridge_crossed","warrens_cleared_and_exited","relay_disabled_and_mill_crossed","warden_arena_entered","stop"]
+for r in L:
+    if r['stage'] not in RS:continue
+    it=r['items'];c=it.get('coin',0);p=it.get('potion_small',0);v=it.get('revive',0)
+    h=p+c//P;rest=P*max(0,4-p)+R*max(0,2-v)
+    print(r['stage'],'coin',c,'pot',p,'rev',v,'heals',h,h>=2,'restock',rest,'margin',c-rest, 'fainted',sum(1 for m in r['party'] if m['hp']==0))
+f=[b['detail'] for b in B if b['kind']=='fight_started']
+w=[x for x in f if x.startswith('Wild_')]
+from collections import Counter
+print('fights',len(f),'wild',len(w),'distinct',len(set(w)),'repeated',[k for k,n in Counter(w).items() if n>1])
+print('non-wild fight names',Counter(x for x in f if not x.startswith('Wild_')))
+sp=[(B[i+1]['path_m']-B[i]['path_m'])/(B[i+1]['t']-B[i]['t']) for i in range(len(B)-1) if B[i+1]['t']-B[i]['t']>=2]
+sp.sort();print('speed max',round(sp[-1],2),'p99',round(sp[int(len(sp)*.99)],2))
+print('total path post-tw', B[-1]['path_m']-[b for b in B if b['t']>=tw][0]['path_m'], 'last beat t',B[-1]['t'])

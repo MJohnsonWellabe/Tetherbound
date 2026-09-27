@@ -161,6 +161,47 @@ func test_existing_seed4_hall_checkpoint_is_resumable() -> void:
 	assert_false(CP.validate(receipt, "hall", ids.slice(1), CP.receipt_flags(receipt)).is_empty())
 
 
+func _write(path: String, text: String) -> void:
+	var full := ProjectSettings.globalize_path(path)
+	DirAccess.make_dir_recursive_absolute(full.get_base_dir())
+	var f := FileAccess.open(full, FileAccess.WRITE)
+	f.store_string(text)
+	f.close()
+
+
+func test_resume_kind_is_detected_from_the_directory() -> void:
+	# Meadows reload-transition checkpoint: checkpoint.json + save/.
+	var reload := _tmp.path_join("four_biome_checkpoints/south_bridge_crossed_123")
+	_fake_save(reload.path_join("save"))
+	_write(reload.path_join(CP.RELOAD_CHECKPOINT_META), JSON.stringify({"label": "south_bridge_crossed",
+		"scene": "res://scenes/world/meadows.tscn", "world_seed": "15"}))
+	assert_eq(CP.classify_resume(reload, ""), {"kind": CP.RESUME_RELOAD_TRANSITION, "error": ""})
+	assert_eq(CP.classify_resume(ProjectSettings.globalize_path(reload), ""),
+		{"kind": CP.RESUME_RELOAD_TRANSITION, "error": ""}, "absolute path too")
+	# Chapter-boundary checkpoint: receipts/ + save/, as a dir and as a name.
+	var save := _tmp.path_join("scratch")
+	_fake_save(save)
+	var boundary := CP.export_checkpoint(save, _tmp.path_join("cps"), "hall", "hall", _receipt("hall"), {})
+	assert_eq(CP.classify_resume(boundary, ""), {"kind": CP.RESUME_BOUNDARY, "error": ""})
+	assert_eq(CP.classify_resume(boundary, "hall"), {"kind": CP.RESUME_BOUNDARY, "error": ""})
+	assert_eq(CP.classify_resume("seed4_hall", "")["kind"], CP.RESUME_BOUNDARY, "bare fixture name")
+	assert_eq(CP.classify_resume("no_such_checkpoint", "")["kind"], CP.RESUME_BOUNDARY,
+		"unknown names fall to the boundary resolver, which refuses them")
+	# parse_args + classify agree for the command-line forms.
+	var args := CP.parse_args(PackedStringArray(["--resume-from=" + reload]))
+	assert_eq(args["errors"], [])
+	assert_eq(CP.classify_resume(args["resume_source"], args["resume_boundary"])["kind"], CP.RESUME_RELOAD_TRANSITION)
+	args = CP.parse_args(PackedStringArray(["--resume-from=" + boundary + ":hall"]))
+	assert_eq(CP.classify_resume(args["resume_source"], args["resume_boundary"])["kind"], CP.RESUME_BOUNDARY)
+	# Both markers: only an explicit :<boundary> resolves it.
+	_write(boundary.path_join(CP.RELOAD_CHECKPOINT_META), "{}")
+	var both := CP.classify_resume(boundary, "")
+	assert_eq(both["kind"], "")
+	assert_false(str(both["error"]).is_empty(), "ambiguous dir refused")
+	assert_eq(CP.classify_resume(boundary, "hall")["kind"], CP.RESUME_BOUNDARY)
+	assert_false(str(CP.classify_resume("", "")["error"]).is_empty())
+
+
 func test_commit_sha_prefers_env_then_git() -> void:
 	var sha := CP.commit_sha()
 	assert_false(sha.is_empty())
