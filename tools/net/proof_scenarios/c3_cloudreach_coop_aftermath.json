@@ -1,0 +1,827 @@
+{
+  "name": "C3: Cloudreach co-op and aftermath -- host and guest cross flight and realm boundaries, drop/rejoin and reload without duplicating relic/key or losing rider/party identity",
+  "claim": "ACCEPTANCE card C3. Fixtures (disclosed): story_flag world flags stand in for the completed Cloudreach chapter (the earned play is card C1); heart_earn submits the Wings heart through the ledger; party_grant gives each peer four L30 creatures and fly_setup adds an owned galecrest carrier as the fifth (the mentor loaner ends at cloudreach_chapter_complete). Launch, landing, drop, rejoin, realm crossings, host restart/title Load, saves and hashes are the game's own code. The heart and key are world flags (entitlements), so 'not duplicated' is checked as: each read once from the host world, unchanged hash across restart+rejoin, and the saved world keeps them. Loopback ENet: local evidence, not internet/Steam acceptance.",
+  "peers": 2,
+  "scene": "title",
+  "budget_s": 4800,
+  "steps": [
+    {
+      "peer": "all",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "budget_frames": 20000,
+      "label": "each peer boots its own fresh Meadows world"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "realm_key_cloudreach",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds realm_key_cloudreach (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "fly_traversal_unlocked",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds fly_traversal_unlocked (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "sky_shrine_reached",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds sky_shrine_reached (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds cloudreach_upper_route_unlocked (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "captain_veyra_defeated",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds captain_veyra_defeated (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "storm_anchor_network_disabled",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds storm_anchor_network_disabled (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_winds_restored",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds cloudreach_winds_restored (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_chapter_complete",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds cloudreach_chapter_complete (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "realm_key_stormwood",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds realm_key_stormwood (stands in for the earned chapter; C1 is the earned play)"
+    },
+    {
+      "peer": 0,
+      "action": "heart_earn",
+      "args": {
+        "heart": "cloudreach",
+        "realm": "cloudreach"
+      },
+      "label": "SETUP: the Wings of Cloudreach heart earned through the ledger"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "captain_veyra_defeated",
+        "budget_frames": 1800
+      },
+      "label": "both peers read captain_veyra_defeated from the host world"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "sky_shrine_reached",
+        "budget_frames": 1800
+      },
+      "label": "both peers read sky_shrine_reached from the host world"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach_winds_restored",
+        "budget_frames": 1800
+      },
+      "label": "both peers read cloudreach_winds_restored from the host world"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_heart_cloudreach_earned",
+        "budget_frames": 1800
+      },
+      "label": "both peers read realm_heart_cloudreach_earned from the host world"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_key_stormwood",
+        "budget_frames": 1800
+      },
+      "label": "both peers read realm_key_stormwood from the host world"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 30
+      },
+      "label": "SETUP: party_grant bramblebun"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 30
+      },
+      "label": "SETUP: party_grant terrapup"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "level": 30
+      },
+      "label": "SETUP: party_grant mudsnout"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "brooktail",
+        "level": 30
+      },
+      "label": "SETUP: party_grant brooktail"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 30
+      },
+      "label": "SETUP: party_grant bramblebun"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 30
+      },
+      "label": "SETUP: party_grant terrapup"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "level": 30
+      },
+      "label": "SETUP: party_grant mudsnout"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "brooktail",
+        "level": 30
+      },
+      "label": "SETUP: party_grant brooktail"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000,
+      "label": "host crosses into Cloudreach"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000,
+      "label": "guest crosses into Cloudreach"
+    },
+    {
+      "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          1110.0,
+          1052.0,
+          2940.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      },
+      "label": "standing on the shrine pad before the carrier setup"
+    },
+    {
+      "peer": 0,
+      "action": "fly_setup",
+      "args": {
+        "species": "galecrest"
+      },
+      "label": "SETUP (disclosed): an owned galecrest carrier as the fifth (the loaner ends at chapter completion; galecrest is catchable in Meadows band 1)"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          1110.0,
+          2940.0
+        ],
+        "within": 25.0
+      },
+      "label": "the launch search kept the trainer on the shrine pad"
+    },
+    {
+      "peer": 0,
+      "action": "party_uids",
+      "args": {
+        "remember": "uids0"
+      },
+      "label": "remember this peer's five owned UIDs"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      }
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          1106.0,
+          1052.0,
+          2944.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      },
+      "label": "standing on the shrine pad before the carrier setup"
+    },
+    {
+      "peer": 1,
+      "action": "fly_setup",
+      "args": {
+        "species": "galecrest"
+      },
+      "label": "SETUP (disclosed): an owned galecrest carrier as the fifth (the loaner ends at chapter completion; galecrest is catchable in Meadows band 1)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          1106.0,
+          2944.0
+        ],
+        "within": 25.0
+      },
+      "label": "the launch search kept the trainer on the shrine pad"
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "remember": "uids1"
+      },
+      "label": "remember this peer's five owned UIDs"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      }
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "remember": "cloudreach_arrival",
+        "budget_frames": 900
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "before"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "fly_launch",
+      "label": "host launches Fly by double jump (production input)"
+    },
+    {
+      "peer": 0,
+      "action": "fly_land",
+      "label": "host holds descend to a floor landing"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "fly_launch",
+      "label": "guest launches Fly by double jump"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "args": {
+        "settle_frames": 60
+      },
+      "label": "MID-FLIGHT DROP: the guest's link dies while flying"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1,
+        "budget_frames": 3600
+      }
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 20000,
+        "character": {
+          "character_id": "$character1"
+        },
+        "returning_route": true
+      },
+      "budget_frames": 20000,
+      "label": "REJOIN from the title as the same character"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000,
+      "expect": "any",
+      "label": "guest back into Cloudreach (ANY: the rejoin may already stand there)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      },
+      "expect": "any"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      },
+      "label": "rider sane after the mid-flight drop: grounded, not flying, not carried"
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "equals": "uids1"
+      },
+      "label": "the guest's five are the same owned creatures after the drop"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "captain_veyra_defeated",
+        "budget_frames": 1800
+      },
+      "label": "after rejoin the guest still reads captain_veyra_defeated"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "sky_shrine_reached",
+        "budget_frames": 1800
+      },
+      "label": "after rejoin the guest still reads sky_shrine_reached"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach_winds_restored",
+        "budget_frames": 1800
+      },
+      "label": "after rejoin the guest still reads cloudreach_winds_restored"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_heart_cloudreach_earned",
+        "budget_frames": 1800
+      },
+      "label": "after rejoin the guest still reads realm_heart_cloudreach_earned"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_key_stormwood",
+        "budget_frames": 1800
+      },
+      "label": "after rejoin the guest still reads realm_key_stormwood"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "label": "host crosses into Stormwood"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "label": "guest crosses into Stormwood"
+    },
+    {
+      "peer": "all",
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      }
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "remember": "pre_restart",
+        "budget_frames": 900
+      }
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "equals": "cloudreach_arrival",
+        "budget_frames": 300
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the hash check can fail (Stormwood is not the Cloudreach arrival world)"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "pre_restart"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "restart_peer",
+      "args": {
+        "scene": "title"
+      },
+      "label": "RESTART: the host process ends; a fresh one boots the title on the same user data"
+    },
+    {
+      "peer": 0,
+      "action": "title_load",
+      "label": "RELOAD: the restarted host presses Load on its autosave, which hosts"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 20000,
+        "character": {
+          "character_id": "$character1"
+        },
+        "returning_route": true
+      },
+      "budget_frames": 20000,
+      "label": "REJOIN the restarted host as the same character"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "expect": "any"
+    },
+    {
+      "peer": "all",
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      },
+      "expect": "any"
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "equals": "pre_restart",
+        "budget_frames": 1800
+      },
+      "label": "AFTER RESTART + REJOIN: world hashes agree and equal the pre-restart world"
+    },
+    {
+      "peer": 0,
+      "action": "party_uids",
+      "args": {
+        "remember": "uids0_after_restart"
+      },
+      "label": "host's five owned UIDs after the restart (the remember store is process memory; compared against the pre-restart row by the card)"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "exactly five: no sixth, no legendary added"
+    },
+    {
+      "peer": 0,
+      "action": "wait_flag",
+      "args": {
+        "flag": "captain_veyra_defeated",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: captain_veyra_defeated"
+    },
+    {
+      "peer": 0,
+      "action": "wait_flag",
+      "args": {
+        "flag": "sky_shrine_reached",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: sky_shrine_reached"
+    },
+    {
+      "peer": 0,
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach_winds_restored",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: cloudreach_winds_restored"
+    },
+    {
+      "peer": 0,
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_heart_cloudreach_earned",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: realm_heart_cloudreach_earned"
+    },
+    {
+      "peer": 0,
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_key_stormwood",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: realm_key_stormwood"
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "equals": "uids1"
+      },
+      "label": "same five owned UIDs after the realm crossing, restart and rejoin"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "exactly five: no sixth, no legendary added"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "captain_veyra_defeated",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: captain_veyra_defeated"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "sky_shrine_reached",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: sky_shrine_reached"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach_winds_restored",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: cloudreach_winds_restored"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_heart_cloudreach_earned",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: realm_heart_cloudreach_earned"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_key_stormwood",
+        "budget_frames": 1800
+      },
+      "label": "persisted after reload: realm_key_stormwood"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "captain_veyra_defeated",
+          "sky_shrine_reached",
+          "cloudreach_winds_restored",
+          "realm_heart_cloudreach_earned",
+          "realm_key_stormwood"
+        ]
+      },
+      "label": "the host's saved world keeps Veyra, the shrine, restored winds, the heart and the key"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "lacks": [
+          "captain_veyra_defeated"
+        ]
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the saved-world check reads real content (a 'lacks Veyra' claim fails)"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "lacks": [
+          "solmane"
+        ]
+      },
+      "label": "no legendary in this character's saved party"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "lacks": [
+          "solmane"
+        ]
+      },
+      "label": "no legendary in this character's saved party"
+    }
+  ],
+  "build_allowance_s": 600
+}

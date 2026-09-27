@@ -140,8 +140,8 @@
    "chapter": "Meadows",
    "pct": 81,
    "counts": {
-    "met": 6,
-    "partial": 2,
+    "met": 7,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -281,8 +281,8 @@
    "chapter": "Meadows",
    "pct": 89,
    "counts": {
-    "met": 8,
-    "partial": 1,
+    "met": 9,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -358,10 +358,10 @@
    "chapter": "Cloudreach",
    "pct": 36,
    "counts": {
-    "met": 2,
-    "partial": 4,
+    "met": 7,
+    "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -471,9 +471,9 @@
    "pct": 50,
    "counts": {
     "met": 3,
-    "partial": 2,
+    "partial": 1,
     "in_progress": 0,
-    "not_started": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 1
    },
@@ -510,10 +510,11 @@
      "gap": "Work orders M1–M12 plus art assets"
     },
     {
-     "text": "Cloudreach presents no legendary offer",
-     "status": "met",
-     "evidence": "Batch 13: test_cloudreach_finale / no-legendary-offer closure 36/208 green | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "—"
+     "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
+     "status": "not_started",
+     "evidence": "Previous criterion (\"Cloudreach presents no legendary offer\") was met; wild summit Solmane replaced by tempestwing in batch 62. The owner ruling 2026-09-27 replaces it with a Veridian-style freeing and per-participant offer, not yet implemented.",
+     "gap": "Implement the tether chamber after captain_veyra_defeated, the Solmane freeing and the per-participant ceremony (reuse Meadows Veridian flow); solo plus two-peer accept/refuse, capacity and reload evidence.",
+     "note": "Owner ruling 2026-09-27; owned by the full Cloudreach run."
     }
    ]
   },
@@ -571,10 +572,10 @@
    "chapter": "Stormwood",
    "pct": 36,
    "counts": {
-    "met": 1,
-    "partial": 4,
+    "met": 3,
+    "partial": 3,
     "in_progress": 0,
-    "not_started": 2,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -630,8 +631,8 @@
    "chapter": "Stormwood",
    "pct": 60,
    "counts": {
-    "met": 3,
-    "partial": 2,
+    "met": 5,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -643,7 +644,7 @@
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/STORMWOOD/f11_0/head-1c977611/marrow_press.txt MARROW PRESS OK (36 s window, four conduits, release) plus window36/run1-3; offer from the F11#3 two-peer proof on main. Shortcuts disclosed: fixture flags and L46 party, placed at the core anchor, harness-driven fight and Break, no single run from fight to offer. Independent re-check: MET.",
      "gap": "Green full CI 36314695987 on main 4d55fddfd (batch 52).",
-     "note": "Verifier rejected the claim: Marrow, the Break and Stormheart never ran (stops at core_reached). Stormwood lane (#305)."
+     "note": "Earlier caveat superseded: counted met at merge on the evidence above (coordinator, 2026-09-27 19:00)."
     },
     {
      "text": "Eligible peers accept/refuse independently at space and capacity",
@@ -656,14 +657,14 @@
      "status": "met",
      "evidence": "INVITE-COOP x05-proof-f11-drop-at-ack + refuse-at-ack PROOF.md; legacy-receipt tests in tests/test_stormwood_ending.gd @ 9d97dc547 (#305 via #327); green full CI 36276939256",
      "gap": "",
-     "note": "Owner ruling: a legacy receipt is UNDECIDED and is re-offered once. Migration in progress, Stormwood lane (#305)."
+     "note": "Earlier caveat superseded: counted met at merge on the evidence above (coordinator, 2026-09-27 19:00)."
     },
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Two-peer PASS 97/0 (ralph/reports/STORMWOOD/f11_3/tb-stormwood-close/); Marrow/Dynamo defeat by ledger fixture, declared start save, 2 teleports, stance set at the Spark socket, injected presses. Independent re-check: MET.",
      "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
-     "note": "Needs a re-run on main from committed code. Stormwood lane (#305)."
+     "note": "Earlier caveat superseded: counted met at merge on the evidence above (coordinator, 2026-09-27 19:00)."
     },
     {
      "text": "Once-opened physical Tidewake gate persists",
@@ -737,10 +738,10 @@
    "id": "F13",
    "title": "Tidewake islands, chains and look",
    "chapter": "Tidewake",
-   "pct": 17,
+   "pct": 67,
    "counts": {
-    "met": 1,
-    "partial": 4,
+    "met": 4,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -762,10 +763,10 @@
     },
     {
      "text": "Eight reward pockets reachable and paid",
-     "status": "partial",
-     "evidence": "Six candy pockets walked and claimed in engine (smoke_water_pocket_walk_claim, disclosed arrival fixture) + Cradle nest payout (main fe07d0d2)",
-     "gap": "Reed hollow recipe half unpaid; no long-range lure; Deep Watch opened by flag fixture; islands reached by position writes; no co-op per-character claim. (strict re-score 23:40)",
-     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/full/f13_2_pockets/SUMMARY.md at dd9f504a: all eight pockets walked and paid in one production run with the real Tidecoil fight (53 checks, 0 failures); two-peer per-character claims, including the reed recipe, green in 4 of 5 runs. Shortcuts disclosed: arrival landing per island (swims proven in T1), post-Tidecoil pose, granted L43 five and tools, teleported stand-offs in the two-peer run. VERIFIER 1: 5159 tests, 0 failed. Independent re-check: MET.",
+     "gap": "",
+     "note": "Open bug for Tidewake full: in 1 of 5 two-peer runs, the host's reed gather press was dropped with the knife held. Root-cause it; it does not reopen the row."
     },
     {
      "text": "Six local chains, one per group, satisfy §5",
@@ -795,8 +796,8 @@
    "chapter": "Tidewake",
    "pct": 50,
    "counts": {
-    "met": 3,
-    "partial": 3,
+    "met": 4,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -850,8 +851,8 @@
    "chapter": "Tidewake",
    "pct": 67,
    "counts": {
-    "met": 4,
-    "partial": 2,
+    "met": 6,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -872,9 +873,10 @@
     },
     {
      "text": "Measured physical return without A7 empty interval",
-     "status": "partial",
-     "evidence": "~19 km return; pacing open (STATE)",
-     "gap": "Four A7 gaps remain (two Cloudreach, two Meadows haul road); measurement is data-level, not a walk. (strict re-score 23:40)"
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/f15_return_cadence/ @ tb/tidewake-full 56259a5e (batch 63): test_tidewake_return_cadence 5 tests 29 assertions 0 failed; over_a7 [] for no_haul_road, arches off and arches on; no Stormwood-B commits on the head; independent re-check MET; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: data-level shortest path over authored polylines at constant walk/swim speeds; realm loads excluded; simplified geometry; engage-range offers assumed present; daytime clear weather only; relies on the 300 s respawn.",
+     "gap": "",
+     "note": "Counted at merge of batch 63."
     },
     {
      "text": "Grandpa acknowledges each current team incl. releases",
@@ -922,8 +924,9 @@
   },
   {
    "id": "C1",
-   "status": "partial",
-   "note": "Remount 66/0 with fixtures; no earned M4 save; two-peer riding and loaner witnesses missing."
+   "status": "met",
+   "note": "Integrated run passed review in batch 65; all F06 feeders met, so C1 is complete.",
+   "integrated_run": "ralph/reports/CLOUDREACH/b/c1-card/run-10/ @ tb/cloudreach-b c0ed8229 (batch 65): one uninterrupted earned run from c1_arrival through all six regions, 6 Fly launches, refused trial escape and sealed wall, exhausted-fall recovery 0.0098 m, no gate bypass, Stormwood entered by the earned key with the same five; longest A7 gap 99.8 s; no legendary offers. All 7 F06 feeders met. Shortcuts disclosed: accelerated clock, live-combat pilot with written camera yaw, Title Load via signal, logged harness aids, every flight on Maela's loaner (owned-carrier Fly is open debt)."
   },
   {
    "id": "C2",
@@ -933,12 +936,14 @@
   {
    "id": "C3",
    "status": "partial",
-   "note": "Veyra per-participant payout landed; client writes Veyra flag locally; no host/guest flight/realm rejoin witness."
+   "note": "Batch 62 two-peer run predates the owner Solmane ruling (2026-09-27): C3 now also needs Solmane freed after Veyra with per-participant offers through disconnect/reload. The run must be redone with that; F08#3, F08#4 and F08#5 still open.",
+   "integrated_run": null
   },
   {
    "id": "S1",
    "status": "partial",
-   "note": "Walkable roads, second Dynamo road and five walled pockets on main fe07d0d2; pocket lure not visible from road; earned segments historical; not from C3 save."
+   "note": "Integrated run passed review in batch 64; card completes when F09#3 (pocket lures, full art bar) closes.",
+   "integrated_run": "ralph/reports/STORMWOOD/full_run/run_a.txt + s1/ @ tb/stormwood 9dc96424 (batch 64): one continuous chapter run passes prefix, Crown arch, Rootgate, core, Marrow and aftermath with live fights; route unit tests 101/0; closed-arch bypass 15/0; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: Cloudreach-boundary fixture start (no earned C3 save), fresh L44 party with granted tools, 8x clock, harness input and fights, helper routing B1-B8, one teleport per pocket for the walk witness."
   },
   {
    "id": "S2",
@@ -948,12 +953,14 @@
   {
    "id": "S3",
    "status": "partial",
-   "note": "Per-participant Stormheart single-process smokes; no two-process disconnect witness; legacy receipt ruling pending."
+   "note": "Integrated run passed review in batch 63; all F11 feeders met.",
+   "integrated_run": "ralph/reports/STORMWOOD/s3_two_peer/ @ tb/stormwood 924ac4c5 (batch 63): two real processes, 131 rows PASS, host kill/restart and title Load, guest drop/rejoin with equal world hashes, negative controls fail as designed. Shortcuts disclosed: named host start save, Stormglass grants, placement teleports, Marrow defeat via ledger in this run (live fight proven in the full run), headless loopback."
   },
   {
    "id": "T1",
    "status": "partial",
-   "note": "One final hop at 15.3% deviation/33.75% stamina; forced dismount may cross a seal; no earned S3 start."
+   "note": "Integrated run passed review in batch 63.",
+   "integrated_run": "ralph/reports/TIDEWAKE/full/card_t1/ @ tb/tidewake-full 56259a5e (batch 63): CARD T1 PASS 13/13, 982 assertions, 48-hop chain including Garden and Deep Watch rest-point hops; two-peer proofs on loopback. Shortcuts disclosed: dry Water-arrival fixture (no earned S3 save), original five granted, route flags pre-set, level-0 swim pin, one post-chain teleport, stamina fixture, loopback ENet."
   },
   {
    "id": "T2",

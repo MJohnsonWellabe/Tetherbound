@@ -13,6 +13,11 @@ const CLOUDREACH_NEW: Array[String] = [
 	"pebbik", "craghorn", "stormcapra", "skyrill", "aeriex", "ribbonray",
 	"breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane",
 ]
+## Installed but deliberately unplaced: the coordinator ruling on #356
+## (5857058456, 2026-09-27) removed the catchable wild legendary `solmane` from
+## both Cloudreach summit tables, because freed legendaries volunteer and are
+## never caught in the wild (hard rule; card C3 "No legendary offer appears").
+const UNPLACED_BY_RULING: Array[String] = ["solmane"]
 const STORMWOOD_NEW: Array[String] = [
 	"voltwig", "glimmermoth", "stormbrush", "mosshock", "staticub",
 	"tanglevolt", "stormraven", "thundertunnel", "voltarach", "fulgocobra",
@@ -47,6 +52,10 @@ func test_every_installed_new_species_is_placed_in_its_biome() -> void:
 	for biome: String in expected:
 		for species_id: String in expected[biome]:
 			assert_true(species.has(species_id), "%s is not installed" % species_id)
+			if UNPLACED_BY_RULING.has(species_id):
+				assert_false((placed[biome] as Dictionary).has(species_id),
+					"%s must not be placed in %s (ruling #356 5857058456)" % [species_id, biome])
+				continue
 			assert_true((placed[biome] as Dictionary).has(species_id),
 				"%s is not placed in %s" % [species_id, biome])
 
@@ -76,8 +85,9 @@ func test_alpha_and_legendary_identities_match_the_authoritative_roster() -> voi
 			cloud_roles[str(entry.get("role", ""))] = entry
 	assert_eq(str(cloud_roles.get("rare_glider", {}).get("placeholder_species", "")), "tempestwing")
 	assert_eq(str(cloud_roles.get("rare_glider", {}).get("roster_identity", "")), "alpha_catch")
-	assert_eq(str(cloud_roles.get("summit_sentinel", {}).get("placeholder_species", "")), "solmane")
-	assert_eq(str(cloud_roles.get("summit_sentinel", {}).get("roster_identity", "")), "legendary")
+	# Ruling #356 5857058456: the summit sentinel is the non-legendary tempestwing.
+	assert_eq(str(cloud_roles.get("summit_sentinel", {}).get("placeholder_species", "")), "tempestwing")
+	assert_ne(str(cloud_roles.get("summit_sentinel", {}).get("roster_identity", "")), "legendary")
 
 	var stormwood := _read(STORMWOOD_PATH)
 	var alpha_count := 0

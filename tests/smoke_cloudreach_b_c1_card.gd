@@ -49,16 +49,30 @@ func _party_ids() -> Array[int]:
 
 
 func _fail(message: String) -> bool:
-	if not failed:
+	# Recorded only when it actually fails the run: the helper withdraws the
+	# exhausted-fall / pre-Voss overfly's expected recovery (not a failure).
+	var was_failed := failed
+	var result: bool = super._fail(message)
+	if not was_failed and failed:
 		failures.append(message)
-	return super._fail(message)
+	return result
 
 
 ## Diagnostic: when a walk stalls, record every character body near the
 ## trainer (wild creatures, the companion, NPCs), so a blocker the slide
 ## contacts never reported is named instead of being called a flake.
 func _log(kind: String, details: Dictionary = {}) -> void:
-	if kind == "collision_block" and is_instance_valid(world) and is_instance_valid(player):
+	if kind in ["collision_block", "precision_timeout"] and is_instance_valid(world) and is_instance_valid(player):
+		var owner_node: Node = INPUT_OWNER.current(self)
+		details["control"] = {"locomotion_enabled": player.locomotion_enabled(), "carried": player.is_carried(),
+			"on_floor": player.is_on_floor(), "flying": fly != null and fly.is_flying(),
+			"controlled_body": str(runtime.controlled_body().get_path()) if runtime != null else "",
+			"dialogue_open": world.get_node("DialoguePanel").is_open(),
+			"input_owner": str(owner_node.get_path()) if owner_node != null else "",
+			"finale_phase": str(runtime.finale.phase) if runtime != null and runtime.finale != null else "",
+			"manager_state": int(manager.state) if manager != null else -1,
+			"wanted_dir": str(player.get("_wanted_dir")), "deflect": str(player.get("_deflect")),
+			"time_scale": Engine.time_scale}
 		var near: Array[Dictionary] = []
 		for node: Node in world.find_children("*", "CharacterBody3D", true, false):
 			var body := node as CharacterBody3D
@@ -70,6 +84,12 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 		details["nearby_bodies"] = near
 		details["player_mask"] = player.collision_mask
 	super._log(kind, details)
+
+
+func _unfail() -> void:
+	super._unfail()
+	if not failures.is_empty():
+		failures.remove_at(failures.size() - 1)
 
 
 func _record_frame() -> void:
@@ -151,7 +171,7 @@ func _write_c1() -> void:
 		"exhausted_fall": exhausted_fall, "sealed_attempt": sealed_attempt, "trial_escape": trial_escape,
 		"pre_voss_overfly_recoveries": overfly_recoveries, "post_chapter_probe": post_chapter_probe,
 		"loaner_violations": violations, "stormwood": stormwood,
-		"exhausted_rows": recoveries.size(),
+		"exhausted_rows": recoveries.size(), "static_stall_sidesteps": static_sidesteps,
 		"owned_carrier_fly": "OPEN DEBT: no starter path gives a flier (opening.json starters terrapup/ripplet/galewisp; only galecrest has a fly_traversal carry capability, and galewisp has none). The earned five (ripplet, bramblebun, mudsnout x2, veridian) have no carrier, so every flight is Maela's loaner. A wild galecrest is catchable in Meadows band 1; an earned save that caught one would close this.",
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}
 	DirAccess.make_dir_recursive_absolute(_witness_dir(C1_DIR))
