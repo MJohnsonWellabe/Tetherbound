@@ -1,0 +1,5 @@
+F10#6 device profile, computer capture, no Ally hardware. No handheld/Ally settings profile exists in config (hud_scale.gd authors at the Ally's 1920x1080; defaults used).
+explore/: tools/capture_stormwood_f10_matrix.gd --hud --stands=rod_line,glass,forest --phases=calm,break --no-aftermath at a7344fba, xvfb-run 1920x1080x24, --rendering-driver opengl3 --resolution 1920x1080.
+fight/: ralph/reports/STORMWOOD/b/f10_2/capture_named_fights.gd --ids=hollows_alpha,crown_guardian --seconds=10 --fixed-fps 10 at 1920x1080 opengl3 (main e59b0c97 game code; fight camera without the Stormwood-B camera commits), PNG -> JPG q88.
+_sheet_7inch.jpg: each cell 586x330 = a 7.0" 16:9 panel (155 mm wide) at 96 dpi.
+Adapter: llvmpipe (LLVM 20.1.2, 256 bits); Godot 4.7-stable Compatibility.
