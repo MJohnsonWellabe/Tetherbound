@@ -87,7 +87,12 @@ func _run() -> void:
 	await _settle(180)
 	print("markers before: %s" % str(_arch_markers(map)))
 	await _save("before_minimap")
-	await _save_map_tab("before_map")
+	# One map-tab open per run: a second open after close hung the rendered
+	# run (render.yml 36285209958 stopped after after_minimap). `--before-map`
+	# takes the before frame instead of the after one.
+	var before_map := OS.get_cmdline_user_args().has("--before-map")
+	if before_map:
+		await _save_map_tab("before_map")
 	for id: String in ["c_rodline", "c_lantern"]:
 		flags.call("set_flag", RULES.lit_flag(id))
 	await _settle(180)
@@ -95,8 +100,9 @@ func _run() -> void:
 	print("markers after: %s" % str(markers))
 	if markers.size() != 2:
 		push_error("expected two road markers after relighting pair C, got %d" % markers.size())
+	if not before_map:
+		await _save_map_tab("after_map")
 	await _save("after_minimap")
-	await _save_map_tab("after_map")
 	quit(0 if markers.size() == 2 else 1)
 
 
