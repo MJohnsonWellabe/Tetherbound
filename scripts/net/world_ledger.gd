@@ -130,6 +130,10 @@ const OWNED_FLAG_PREFIXES := [
 	"stormwood:legendary_resolution:refused:",
 	"tidewake:legendary_resolution:accepted:",
 	"tidewake:legendary_resolution:refused:",
+	# Solmane (owner ruling 2026-09-27, #356 5858140459): Cloudreach's freed
+	# legendary reuses stronghold_climax.gd with these receipts.
+	"cloudreach:legendary_resolution:accepted:",
+	"cloudreach:legendary_resolution:refused:",
 ]
 const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
 ## Configured prefixes must name a legendary resolution receipt, so a broad
@@ -146,6 +150,8 @@ const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
 const HOST_ONLY_GRANT_SOURCE_PREFIXES := [
 	"trainer:water_trainer_nerissa:",
 	"trainer:warden_aldis:",
+	# Solmane's participant journal: Captain Veyra's per-participant payout.
+	"trainer:captain_veyra_storm_anchor:",
 ]
 ## World flags only host code may write or clear. The Tidewake Guardian's
 ## claim markers, its claimed/settled/freed facts and its settlement flags
@@ -163,6 +169,7 @@ const HOST_ONLY_FLAG_PREFIXES := [
 	"realm_relic_water_earned",
 	"reward:trainer:water_trainer_nerissa:",
 	"reward:trainer:warden_aldis:",
+	"reward:trainer:captain_veyra_storm_anchor:",
 ]
 
 static var _owned_prefixes: Array = []
