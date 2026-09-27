@@ -305,7 +305,7 @@ func _sleep_the_team_into_condition() -> bool:
 			var member := _entrants[ordinal]
 			if bool(member.get("resting")):
 				return _fail("An entrant was already assigned before this night's bed-panel input")
-			if not await _driver._assign_to_bed(_indices[ordinal]):
+			if not await _assign_with_retry(_indices[ordinal], member):
 				return _fail("Live bed assignment failed: " + str(_driver.failures))
 			if int(member.get("rest_bed_index")) != int(_beds[ordinal].call("build_index")) \
 					or int(_beds[ordinal].call("occupant_index")) != _indices[ordinal]:
@@ -333,6 +333,37 @@ func _sleep_the_team_into_condition() -> bool:
 				return _fail("Tournament did not observe the actually fed entrants")
 			return true
 	return _fail("Three real nights did not satisfy the tournament's actual condition: " + str(TOURNAMENT.readiness_report(_party)))
+
+
+## A bed press can lose to a wild that wandered into camp ("Engage Mudsnout"
+## took bed 2's prompt, seed 15 CI r9) or the walk can stop short against the
+## camp props (3.4 m short of bed 1, CI r10). A player waits a moment, steps
+## back to the bedroll and tries the bed again. Bounded; the last failure
+## stands with every attempt's reason recorded.
+const BED_ATTEMPTS := 3
+
+
+func _assign_with_retry(party_index: int, member: RefCounted) -> bool:
+	var reasons: Array = []
+	for attempt in BED_ATTEMPTS:
+		if await _driver._assign_to_bed(party_index):
+			return true
+		if bool(member.get("resting")):
+			return true
+		reasons.append(_driver.failures.duplicate())
+		_receipt("bed_retry", {"attempt": attempt + 1, "party_index": party_index,
+			"reasons": _driver.failures.duplicate(), "player": _player.global_position})
+		if attempt == BED_ATTEMPTS - 1:
+			break
+		_driver.failures.clear()
+		for _frame in 180:
+			await _tree.physics_frame
+		var roll := _bedroll.get_node_or_null("Interactable") as Node3D
+		if roll != null:
+			await _driver._walk_to_prompt(roll, "paid bedroll (bed retry)")
+			_driver.failures.clear()
+	_driver.failures.assign(reasons.back() if not reasons.is_empty() else [])
+	return false
 
 
 func _sleep_once() -> bool:
