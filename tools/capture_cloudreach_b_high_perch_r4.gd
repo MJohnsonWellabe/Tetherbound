@@ -33,7 +33,6 @@ const STANDS := [
 	# the crown, rig behind looking at the crown. Departure: the same off the
 	# north side looking out. On-crown: standing on the rim looking out over it.
 	{"id": "rig-fly-arrival", "rig": true, "position": Vector2(900.0, 2642.0), "air_y": 1030.0, "target": Vector3(900.0, 1022.0, 2700.0)},
-	{"id": "rig-on-crown-rim", "rig": true, "position": Vector2(906.0, 2690.0), "target": Vector3(960.0, 990.0, 2640.0)},
 	{"id": "rig-fly-departure", "rig": true, "position": Vector2(900.0, 2752.0), "air_y": 1028.0, "target": Vector3(900.0, 990.0, 2820.0)},
 ]
 
