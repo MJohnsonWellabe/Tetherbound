@@ -208,21 +208,37 @@ func _receive(event: Dictionary) -> void:
 ## stormwood_surge.json presentation.flash.strike_*.
 static var _bolt_mesh: ArrayMesh
 static var _bolt_material: StandardMaterial3D
+static var _bolt_glow_mesh: ArrayMesh
+static var _bolt_glow_material: ShaderMaterial
 static var _telegraph_shader: Shader
 
 func _strike_flash(at: Vector3) -> void:
 	var cfg: Dictionary = rules.config.get("presentation", {}).get("flash", {})
-	var colour := Color(str(cfg.get("colour", "#e6dcff")))
+	var colour := Color(str(cfg.get("strike_colour", "#dc7aff")))
 	var seconds := float(cfg.get("strike_bolt_seconds", 0.18))
 	if _bolt_mesh == null:
 		_bolt_mesh = _build_strike_bolt(cfg)
 		_bolt_material = StandardMaterial3D.new()
 		_bolt_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		_bolt_material.albedo_color = colour
+		_bolt_material.albedo_color = colour.lerp(Color.WHITE, 0.62)
 		_bolt_material.emission_enabled = true
 		_bolt_material.emission = colour
 		_bolt_material.emission_energy_multiplier = float(cfg.get("strike_bolt_emission", 6.0))
 		_bolt_material.disable_fog = true
+		_bolt_glow_mesh = _build_strike_bolt(cfg, float(cfg.get("strike_glow_radius_scale", 4.0)))
+		var glow_shader := Shader.new()
+		glow_shader.code = """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
+uniform vec4 tint : source_color;
+void fragment() {
+	ALBEDO = tint.rgb;
+	ALPHA = pow(abs(dot(normalize(NORMAL), normalize(VIEW))), 2.0) * tint.a;
+}
+"""
+		_bolt_glow_material = ShaderMaterial.new()
+		_bolt_glow_material.shader = glow_shader
+		_bolt_glow_material.set_shader_parameter("tint", Color(colour, float(cfg.get("strike_glow_opacity", 0.32))))
 	var bolt := MeshInstance3D.new()
 	bolt.name = "StrikeBolt"
 	bolt.mesh = _bolt_mesh
@@ -230,6 +246,12 @@ func _strike_flash(at: Vector3) -> void:
 	bolt.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(bolt)
 	bolt.global_position = at
+	var glow := MeshInstance3D.new()
+	glow.name = "StrikeGlow"
+	glow.mesh = _bolt_glow_mesh
+	glow.material_override = _bolt_glow_material
+	glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	bolt.add_child(glow)
 	var light := OmniLight3D.new()
 	light.name = "StrikeLight"
 	light.light_color = colour
@@ -256,13 +278,13 @@ func _strike_flash(at: Vector3) -> void:
 ## Cached tapered forks. Deterministic visual geometry never consumes the RNG
 ## that schedules host strikes or chooses their targets. Every branch joins
 ## the main discharge; only its bottom point touches the impact position.
-func _build_strike_bolt(cfg: Dictionary) -> ArrayMesh:
+func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh:
 	var height := float(cfg.get("strike_bolt_height_m", 45.0))
 	var width := float(cfg.get("strike_bolt_bottom_radius_m", 0.08))
 	var tip := float(cfg.get("strike_bolt_top_radius_m", 0.025))
 	var jitter := float(cfg.get("strike_bolt_jitter_m", 0.9))
 	var spine := PackedVector3Array()
-	var heights := PackedFloat32Array([0.0, 0.022, 0.054, 0.077, 0.12, 0.15, 0.205, 0.25, 0.31, 0.38, 0.44, 0.53, 0.61, 0.69, 0.78, 0.89, 1.0])
+	var heights := PackedFloat32Array([0.0, 0.012, 0.027, 0.036, 0.052, 0.065, 0.080, 0.105, 0.125, 0.150, 0.177, 0.21, 0.25, 0.31, 0.38, 0.44, 0.53, 0.61, 0.69, 0.78, 0.89, 1.0])
 	for k in heights.size():
 		var fraction := heights[k]
 		spine.append(Vector3(sin(k * 2.37) * jitter * minf(fraction * 8.0, 1.0),
@@ -271,17 +293,39 @@ func _build_strike_bolt(cfg: Dictionary) -> ArrayMesh:
 	var normals := PackedVector3Array()
 	var indices := PackedInt32Array()
 	var paths: Array[PackedVector3Array] = [spine]
-	for joint in [4, 8]:
+	var widths: Array[float] = [1.0]
+	for joint in [7, 11, 15]:
 		var start: Vector3 = spine[joint]
-		var side := -1.0 if joint == 4 else 1.0
-		paths.append(PackedVector3Array([start, start + Vector3(side * 0.9, -1.0, 0.35),
-			start + Vector3(side * 0.65, -1.8, 0.5), start + Vector3(side * 2.1, -3.6, 0.7),
-			start + Vector3(side * 2.5, -4.8, 1.0)]))
+		var away := Vector3(start.x, 0.0, start.z).normalized()
+		var across := Vector3(-away.z, 0.0, away.x)
+		# Side leaders diverge out of the main channel's envelope. They
+		# never double back through it to draw closed diamond-shaped loops.
+		paths.append(PackedVector3Array([start,
+			start + away * 1.1 + Vector3.DOWN * 0.65,
+			start + away * 1.55 + across * 0.20 + Vector3.DOWN * 1.2,
+			start + away * 1.75 - across * 0.13 + Vector3.DOWN * 1.6,
+			start + away * 2.55 + across * 0.16 + Vector3.DOWN * 2.8,
+			start + away * 2.95 + Vector3.DOWN * 3.9]))
+		widths.append(0.48)
+	# A second scale of hairline leaders supplies the irregular branching
+	# hierarchy of the inspected electrical-channel reference. This visual
+	# generator owns its seed and never touches encounter or weather RNG.
+	for joint in [3, 5, 8, 10, 13]:
+		var start: Vector3 = spine[joint]
+		var side := -1.0 if joint % 2 == 0 else 1.0
+		paths.append(PackedVector3Array([start,
+			start + Vector3(side * 0.34, -0.19, 0.12),
+			start + Vector3(side * 0.65, -0.55, 0.25),
+			start + Vector3(side * 0.88, -0.91, 0.3)]))
+		widths.append(0.22)
 	for path_index in paths.size():
-		var points := paths[path_index]
+		var points := _fracture_channel(paths[path_index], 7139 + path_index * 277)
 		var base := vertices.size()
 		for k in points.size():
-			var radius := lerpf(width, tip, float(k) / float(points.size() - 1)) if path_index == 0 else lerpf(width * 0.55, 0.002, float(k) / float(points.size() - 1))
+			# The discharge narrows into one ground contact, rather than a
+			# broad pole base. Side leaders taper away from their junctions.
+			var radius := lerpf(tip, width, float(k) / float(points.size() - 1)) if path_index == 0 else lerpf(width * widths[path_index], 0.001, float(k) / float(points.size() - 1))
+			radius *= radius_scale
 			for side in 4:
 				var normal := Vector3(cos(side * TAU / 4.0), 0.0, sin(side * TAU / 4.0))
 				vertices.append(points[k] + normal * radius)
@@ -305,15 +349,37 @@ func _build_strike_bolt(cfg: Dictionary) -> ArrayMesh:
 	return mesh
 
 
+## Refine each coarse bend at three spatial scales. Midpoint displacement
+## keeps all authored junctions/contact points while removing long straight
+## spans. Core and halo receive identical paths from the same local seed.
+func _fracture_channel(control: PackedVector3Array, visual_seed: int) -> PackedVector3Array:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = visual_seed
+	var points := control
+	for depth in 3:
+		var refined := PackedVector3Array()
+		for k in points.size() - 1:
+			var a := points[k]
+			var b := points[k + 1]
+			var amount := minf(a.distance_to(b) * 0.18, 0.24)
+			var offset := Vector3(rng.randf_range(-amount, amount),
+				0.0, rng.randf_range(-amount, amount))
+			refined.append(a)
+			refined.append((a + b) * 0.5 + offset)
+		refined.append(points[points.size() - 1])
+		points = refined
+	return points
+
+
 ## The 1.2 s warning: a hazard, not a selection circle or a reward. A flat
 ## ring on the ground whose rim and glow are the game's one hazard colour,
 ## combat.json telegraph.colour (magenta; white-violet read as a heal circle
 ## and amber as reward gold, the same findings combat.json records), exactly
 ## at strike.radius_m (the 3 m damage contract), a glow past it
-## (`edge_falloff_m`), a hatched translucent hazard fill and an inner ring
-## that closes over the actual warning time. An accumulating perimeter arc
-## keeps late progress visible when the centre is covered. Reduced motion
-## keeps both countdown cues while removing the faint rim modulation.
+## (`edge_falloff_m`). Jagged ground leaders charge inward over the real
+## warning time; fine broken perimeter marks retain the exact damage radius.
+## Reduced motion keeps the inward countdown and final charge while removing
+## faint rim modulation. No opaque disc competes with the strike point.
 ##
 ## Cost (review R2-1): one cached, indexed unit mesh is shared by every
 ## warning. Per strike only the centre plus `height_samples` rim points are
@@ -334,10 +400,10 @@ uniform vec3 fill_colour : source_color = vec3(0.06, 0.05, 0.05);
 uniform float rim_fraction = 0.87;
 uniform float rim_width = 0.05;
 uniform float intensity = 2.2;
-uniform float fill_opacity = 0.38;
-uniform float hatch_spacing = 0.75;
-uniform float countdown_width = 0.08;
-uniform float perimeter_clock_width = 0.36;
+uniform float leader_count = 6.0;
+uniform float leader_width = 0.055;
+uniform float leader_kink = 0.18;
+uniform float leader_head_width = 0.32;
 uniform float pulse_hz_start = 2.0;
 uniform float pulse_hz_end = 7.0;
 uniform float telegraph_seconds = 1.2;
@@ -389,26 +455,43 @@ void fragment() {
 	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
 	float distance_m = length(ground_xz);
 	float inside = 1.0 - smoothstep(rim_radius - 0.06, rim_radius, distance_m);
-	float stripes = smoothstep(0.32, 0.43, abs(fract((ground_xz.x + ground_xz.y) / hatch_spacing) - 0.5));
-	float fill = inside * (fill_opacity + 0.12 * progress + stripes * 0.18);
-	// The fixed outer boundary is the damage radius. The inner ring closes
-	// continuously over the real warning duration, including reduced motion.
-	float countdown = (1.0 - smoothstep(countdown_width, countdown_width + 0.045,
-		abs(distance_m - rim_radius * (1.0 - progress)))) * inside;
-	// A second progress cue accumulates around the fixed perimeter so the
-	// last moments do not vanish underneath the trainer at the centre.
-	float bearing = distance_m < 0.001 ? 0.0 : fract(atan(ground_xz.y, ground_xz.x) / 6.2831853 + 0.25);
-	float arc = 1.0 - smoothstep(progress - 0.015, progress + 0.015, bearing);
-	float clock_band = smoothstep(rim_radius - perimeter_clock_width - 0.05, rim_radius - perimeter_clock_width, distance_m) * inside;
-	float clock = clock_band * arc * 0.9;
-	float a_rim = rim * mix(pulse, 1.0, strike);
-	float a_edge = outer * 0.6 * pulse;
-	vec3 hot = mix(rim_colour, vec3(1.0), strike);
-	vec3 colour = (hot * intensity * mix(1.0, 1.25, strike) * (a_rim + countdown * 0.85) + edge_colour * a_edge
-		+ mix(fill_colour, rim_colour, 0.7 + stripes * 0.3) * fill
-		+ mix(rim_colour, vec3(1.0), 0.4) * intensity * clock) / max(a_rim + a_edge + fill + countdown * 0.85 + clock, 0.001);
+	// Six irregular ground leaders converge on a single strike point.
+	// Their bright tips travel inward over the actual warning duration;
+	// the continuous timing cue is identical in reduced-motion mode.
+	float angle = distance_m < 0.001 ? 0.0 : atan(ground_xz.y, ground_xz.x);
+	float sector = floor(angle * leader_count / 6.2831853 + 0.5);
+	float lateral = sin(angle - sector * 6.2831853 / leader_count) * distance_m;
+	float noise_sector = mod(sector + leader_count, leader_count);
+	float step_m = distance_m / 0.38;
+	float joint = floor(step_m);
+	float a = sin(joint * 2.31 + noise_sector * 1.7);
+	float b = sin((joint + 1.0) * 2.31 + noise_sector * 1.7);
+	float kink = mix(a, b, fract(step_m)) * leader_kink * min(distance_m, 1.0);
+	float tapered_width = leader_width * (0.45 + 0.55 * min(distance_m / rim_radius, 1.0));
+	float leader = (1.0 - smoothstep(tapered_width, tapered_width + 0.022, abs(lateral - kink))) * inside;
+	float charge_radius = rim_radius * (1.0 - progress);
+	float head = 1.0 - smoothstep(leader_head_width * 0.25, leader_head_width, abs(distance_m - charge_radius));
+	float charged = smoothstep(charge_radius - 0.08, charge_radius + 0.08, distance_m);
+	float urgency = smoothstep(0.75, 1.0, progress);
+	float leaders = leader * (charged * 0.70 + head * 0.9 + urgency * 0.16);
+	// A compact lightning-shaped contact mark distinguishes the intended
+	// impact point from a persistent electrical floor. It stays readable
+	// while the six surrounding leaders visibly grow toward it.
+	vec2 mark = ground_xz / 0.45;
+	float mark_x = -0.27 * sign(mark.y) + mark.y * 0.45;
+	float contact = (1.0 - smoothstep(0.08, 0.13, abs(mark.x - mark_x)))
+		* (1.0 - smoothstep(0.75, 1.0, abs(mark.y)));
+	leaders += contact * (0.65 + urgency * 0.25);
+	// Fine broken perimeter marks preserve the exact 3 m hazard boundary
+	// without making a second broad disc compete with the impact point.
+	float dash = step(0.35, fract((angle / 6.2831853 + 0.5) * 24.0));
+	float a_rim = rim * dash * (0.32 + urgency * 0.45) * mix(pulse, 1.0, strike);
+	float a_edge = outer * dash * 0.10;
+	vec3 hot = mix(rim_colour, vec3(0.92, 0.72, 1.0), strike);
+	vec3 colour = (hot * intensity * (a_rim + leaders) + edge_colour * a_edge)
+		/ max(a_rim + a_edge + leaders, 0.001);
 	ALBEDO = colour;
-	ALPHA = clamp(a_rim + a_edge + fill + countdown * 0.85 + clock, 0.0, 1.0) * fade;
+	ALPHA = clamp(a_rim + a_edge + leaders, 0.0, 1.0) * fade;
 }
 """
 static var _telegraph_mesh: ArrayMesh
@@ -479,10 +562,10 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("rim_fraction", rim_r / outer_r)
 	material.set_shader_parameter("rim_width", float(cfg.get("rim_width_m", 0.16)) / outer_r)
 	material.set_shader_parameter("intensity", float(cfg.get("rim_intensity", 2.4)))
-	material.set_shader_parameter("fill_opacity", float(cfg.get("fill_opacity", 0.38)))
-	material.set_shader_parameter("hatch_spacing", float(cfg.get("hatch_spacing_m", 0.75)))
-	material.set_shader_parameter("countdown_width", float(cfg.get("countdown_width_m", 0.08)))
-	material.set_shader_parameter("perimeter_clock_width", float(cfg.get("perimeter_clock_width_m", 0.36)))
+	material.set_shader_parameter("leader_count", float(cfg.get("leader_count", 6.0)))
+	material.set_shader_parameter("leader_width", float(cfg.get("leader_width_m", 0.055)))
+	material.set_shader_parameter("leader_kink", float(cfg.get("leader_kink_m", 0.18)))
+	material.set_shader_parameter("leader_head_width", float(cfg.get("leader_head_width_m", 0.32)))
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
