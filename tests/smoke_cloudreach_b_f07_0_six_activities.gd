@@ -141,11 +141,14 @@ func _waycamp_shelter() -> void:
 	row["payoff_rain_cover"] = decor != null and decor.is_visible_in_tree()
 	row["bed_assigned"] = await _assign_bed(-21)
 	row["rest"] = await _act("waycamp_shelter_rest", "side_waycamp_shelter_complete")
+	# Payoff (ruling (a), #356 14:00): a completed night in the sheltered bed
+	# pays that companion the bed's rest XP once more. A real camp-rest press.
+	row["payoff_night"] = await _sheltered_night(-21)
 	row["ack"] = await _talk_to("healer_iven")
 	row["ack_expected"] = "cloudreach_iven_waycamp_shelter"
 	row["saved_flags"] = ["side_waycamp_bundle_found", "side_waycamp_shelter_supplied", "side_waycamp_shelter_complete"]
 	row["pass"] = row.lure and row.bundle and row.supply and int(row.fiber_spent) == 4 and row.payoff_rain_cover \
-		and row.bed_assigned and row.rest and row.ack == row.ack_expected
+		and row.bed_assigned and row.rest and bool(row.payoff_night.get("ok", false)) and row.ack == row.ack_expected
 	_record("waycamp_shelter", row)
 
 
@@ -438,6 +441,34 @@ func _assign_bed(index: int) -> bool:
 		await _frames(8)
 	await _restore_route_clock(previous_clock)
 	return ok
+
+
+## One ordinary night at the camp that owns bed `index`: press its rest prompt
+## and require the bedded companion to gain twice the configured rest XP.
+func _sheltered_night(index: int) -> Dictionary:
+	failed = false
+	var bed: Node3D = null
+	for node: Node in world.find_children("CampCreatureBed", "", true, false):
+		if node.has_method("build_index") and int(node.call("build_index")) == index:
+			bed = node
+	var camp: Node3D = bed.get_parent() if bed != null else null
+	var prompt: Node3D = camp.get_node_or_null("Interactable") if camp != null else null
+	var member: RefCounted = game.party.at(0)
+	var result := {"camp": str(camp.get_path()) if camp != null else "", "bedded": bool(member.get("resting")) and int(member.get("rest_bed_index")) == index}
+	if prompt == null:
+		result["ok"] = false
+		return result
+	var rest_xp: int = PROGRESSION.rest_xp(PROGRESSION.config())
+	var before := int(member.get("level")) * 100000 + int(member.get("xp"))
+	var day_before := int(game.day)
+	var pressed := await _act_prompt(prompt)
+	var previous_clock := await _normal_input_clock("camp rest night")
+	await _frames(160)
+	await _restore_route_clock(previous_clock)
+	var gained := int(member.get("level")) * 100000 + int(member.get("xp")) - before
+	result.merge({"pressed": pressed, "day_before": day_before, "day_after": int(game.day), "rest_xp": rest_xp, "xp_gained": gained})
+	result["ok"] = pressed and bool(result.bedded) and int(game.day) == day_before + 1 and gained == rest_xp * 2
+	return result
 
 
 ## Stand on `from`, deploy Fly by double jump, pass `via` (if any) and land on

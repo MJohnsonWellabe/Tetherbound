@@ -1,0 +1,3 @@
+PLACEMENT: cr_candy_broken_route_good_07 at (-88.9, 465.4, 2335.0) has ground nan
+CLOUDREACH PHYSICAL PLACEMENTS: 223 checked, 1 failures
+exit 1
