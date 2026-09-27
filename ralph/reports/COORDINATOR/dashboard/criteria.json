@@ -109,8 +109,8 @@
     {
      "text": "Each transition, reward and recovery survives reload on that route",
      "status": "partial",
-     "evidence": "Per-leg production save/reload with agreeing state hashes in two-peer legs (main)",
-     "gap": "Reload checks on the continuous earned route",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Seed-15 local headless rerun with --reload-at-transitions at 0c07bcbe (rested-team-reload-seed15-rerun.txt, tournament_won, failures []), harness-driven fights and route; transitions from CI r21 at 108705ca. Independent re-check: MET.",
+     "gap": "Landing in batch 49; flips on the next green full CI.",
      "note": "Same run as F02#3, with reloads at each transition. Meadows route (#286)."
     },
     {
@@ -339,7 +339,7 @@
      "text": "One shared world healing/relic/key",
      "status": "partial",
      "evidence": "Two-peer handoff 32/0: key/gate flags on both after reload (main, fixture); blind verdict: healing has no visible payoff",
-     "gap": "Owner decision on healed look; visible payoff"
+     "gap": "Evidence passes (code-blind judge YES; two-peer PASS); held only for the open owner decision on the healed look."
     },
     {
      "text": "Physical gate opens exactly once and carries the same five into Cloudreach",
@@ -372,23 +372,23 @@
     },
     {
      "text": "Ordinary foot path traverses all six regions",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Earned c1_arrival start (checkpoint joins, B13-B16 detours), accelerated clock, live-combat pilot, signal-pressed Load, held Fly; owned-carrier Fly path skipped. Evidence ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/ (PASS, EXIT 0). Independent re-check: MET.",
-     "gap": "Landing in batch 48; flips on the next green full CI.",
+     "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Fly training, landing and invalid-landing recovery",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Same start and harness; --leg=flight skips the grounded remainder; invalid landing covered by refusals, exhausted-fall recovery and the arbiter unit test. Evidence .../f06-2-fly-training/earned/ (PASS, EXIT 0). Independent re-check: MET.",
-     "gap": "Landing in batch 48; flips on the next green full CI.",
+     "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Loaner path does not bypass gates or lose creatures",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Same start and harness; post-chapter loaner end skipped; Voss approach held by altitude/recovery. Evidence .../f06-3-loaner/earned-full-v2/ (PASS, 5 launches, 0 violations). Independent re-check: MET.",
-     "gap": "Landing in batch 48; flips on the next green full CI.",
+     "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
@@ -401,8 +401,8 @@
     {
      "text": "Save/reload keeps same five and closed gates",
      "status": "partial",
-     "evidence": "Same five UIDs every step; closed gate stop 1.85 m; foot save only",
-     "gap": "Save while mounted; reload mid-flight"
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Earned c1_flight_trained start; harness-timed autosave launch, restart_peer and direct title _load_slot (solo PASS 22 rows). Co-op two-peer PASS on loopback ENet with story_flag, party_grant, fly_setup, teleports, fly_launch position write and harness-triggered mid-flight saves. Independent re-check: MET.",
+     "gap": "Landing in batch 49; flips on the next green full CI."
     },
     {
      "text": "Two-peer rejoin keeps rider/party identity and gates",
@@ -478,8 +478,8 @@
     {
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
      "status": "partial",
-     "evidence": "Finale pending/restore fixes and test_cloudreach_finale on main fe07d0d2; smoke_cloudreach_finale not in CI, fails in lane container",
-     "gap": "Normal-input finale witness passing",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/b/f08-0-veyra-exam/earned-tightened/ (WITNESS PASS, EXIT 0, run at d01c0e7b with the tightened assertions). Shortcuts disclosed: earned c1_arrival checkpoint start; accelerated clock (fights at 1x); live-combat pilot writes camera yaw; --fail-exam-first idle pilot for the planned loss; Title Load by signal emit and reload by direct save/load; held Fly input; 3 relay legs stick-walked around lee windbreaks; arc active in the arena only during Overload. Independent re-check: MET.",
+     "gap": "Landing in batch 50; flips on the next green full CI.",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
@@ -578,8 +578,8 @@
     {
      "text": "All six selected chains satisfy §5 (lure/action/payoff/acknowledgement)",
      "status": "partial",
-     "evidence": "Crown Remembers, Pim's Parcels, Dark Arches, Raise a Road landed (batch 1); Deepwood Circuit historical; Glass for Bryn untouched",
-     "gap": "Bryn chain; ordinary-play and map-layer gaps",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: ralph/reports/STORMWOOD/b/f10_0/CLOSE.md: fixture upstream flags, explore_at travel, granted materials and Free Build arches, scripted circuit wins; TM smoke on a stub world, solo host; Dark Arches payoff shown by an edge-clamped minimap frame only. Independent re-check: MET.",
+     "gap": "Landing in batch 49; flips on the next green full CI.",
      "note": "Dark Arches map payoff and six-chain §5. Stormwood-B (#303)."
     },
     {
@@ -656,9 +656,9 @@
     },
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Two-peer PASS 97/0 (ralph/reports/STORMWOOD/f11_3/tb-stormwood-close/); Marrow/Dynamo defeat by ledger fixture, declared start save, 2 teleports, stance set at the Spark socket, injected presses. Independent re-check: MET.",
-     "gap": "Landing in batch 48; flips on the next green full CI.",
+     "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
      "note": "Needs a re-run on main from committed code. Stormwood lane (#305)."
     },
     {
@@ -874,9 +874,9 @@
     },
     {
      "text": "Grandpa acknowledges each current team incl. releases",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Two-peer PASS (ralph/reports/TIDEWAKE/b/f15_3_grandpa_real_release/, on main f73b0d15); real release menu; party_grant, story_flag defeated_warden, guardian_fixture, enter_realm, teleport beside Grandpa; headless. Independent re-check: MET.",
-     "gap": "Landing in batch 48; flips on the next green full CI.",
+     "gap": "Green full CI 36304146998 on main 94c63b1f2 (batch 48).",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {

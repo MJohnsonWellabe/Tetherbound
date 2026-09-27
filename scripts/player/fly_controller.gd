@@ -221,9 +221,9 @@ func eligible_creature() -> RefCounted:
 			if bool(capability.get("can_carry", false)):
 				return active
 	var loaner: Dictionary = config.get("mentor_loaner", {})
-	var loaner_available := (_trial_enabled and bool(loaner.get("available_during_trial", false))) \
-		or (_unlocked() and bool(loaner.get("available_after_unlock", false)))
-	if not loaner_available or _realm() != str(loaner.get("realm_id", "cloudreach")):
+	var ends_at := str(loaner.get("ends_at_flag", ""))
+	if not mentor_loaner_available(loaner, _trial_enabled, _unlocked(), not ends_at.is_empty() and _has_flag(ends_at)) \
+			or _realm() != str(loaner.get("realm_id", "cloudreach")):
 		return null
 	var species_id := str(loaner.get("species_id", ""))
 	if species_id.is_empty() or not bool(SPECIES.fly_capability(species_id).get("can_carry", false)):
@@ -231,6 +231,17 @@ func eligible_creature() -> RefCounted:
 	if _mentor_loaner == null or str(_mentor_loaner.get("species_id")) != species_id:
 		_mentor_loaner = SPECIES.spawn(species_id)
 	return _mentor_loaner
+
+
+## Maela's Galecrest is a temporary trial and routed-transport carrier
+## (CREATURES; SYSTEMS Fly: "not ... permanent free traversal inventory"). It
+## serves the trial and, once Fly is unlocked, the chapter's routes -- and no
+## longer once `mentor_loaner.ends_at_flag` (cloudreach_chapter_complete) holds.
+static func mentor_loaner_available(loaner: Dictionary, trial_enabled: bool, unlocked: bool, ended: bool) -> bool:
+	if ended:
+		return false
+	return (trial_enabled and bool(loaner.get("available_during_trial", false))) \
+		or (unlocked and bool(loaner.get("available_after_unlock", false)))
 
 
 func last_flight_used_mentor_loaner() -> bool:
