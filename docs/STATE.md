@@ -97,9 +97,12 @@ Galecrest complete replacement is delivered at 4dea7705c; scoped anatomy/readabi
 PASS and remaining feather/night polish are recorded above.
 V-CX-12/13: new pump and folded crested banner pass independent native asset
 review on Tidewake e993b8977; pump connections/scene integration remain with
-Claude. Sluice construction/materials and open-state housing fail, revision in
-progress. Evidence: `ralph/reports/VISUAL/veilfall-props-native/visual-judge-r2.md`.
-All 18 before/after/open frames inspected; insertion preserves 167 collision
+Claude. Revised sluice now passes scoped construction, housing and closed/open
+read; nine native frames inspected,167/167 collision shapes unchanged. Static
+receiving drum and instantaneous hide disclosed; full scene A/B remain NO.
+V-CX-14 records hydraulic connections and bridge rail assembly as scene work. Evidence: `ralph/reports/VISUAL/veilfall-props-native/visual-judge-r2.md`.
+`visual-judge-sluice-r3.md` records the gate verdict.
+All 18 original before/after/open frames inspected; insertion preserves 167 collision
 shapes. Full interior A/B NO; no regional criterion closed.
 
 **Owner PR cleanup:** Codex closed #329, #342, #352, #355, #363 and #365

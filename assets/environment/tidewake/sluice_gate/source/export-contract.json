@@ -1,0 +1,170 @@
+{
+  "sluice_frame_18.glb": {
+    "sha256": "80551a3a2caaaba3573ee355e188dfa56345aa393dbe8c629dab85325a41c30a",
+    "finite_vertices": true,
+    "vertex_wear_exported": true,
+    "authored_material_factors": {
+      "Installed_Quaternius_WoodTrim": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "Weathered_bronze": [
+        0.24,
+        0.155,
+        0.078,
+        1
+      ],
+      "Dark_wet_iron": [
+        0.065,
+        0.095,
+        0.099,
+        1
+      ],
+      "Worn_bronze_edges": [
+        0.29,
+        0.245,
+        0.16,
+        1
+      ]
+    },
+    "low_fixed_vertices_inside_original_aperture": 0,
+    "bounds_min": [
+      -10.555000305175781,
+      0.0,
+      -2.200000047683716
+    ],
+    "bounds_max": [
+      10.555000305175781,
+      11.25,
+      1.9709999561309814
+    ]
+  },
+  "sluice_frame_30.glb": {
+    "sha256": "9d91634dfbeef4fc93abcf145fe642167e15ab356dddf2406bbe4f167d205a4e",
+    "finite_vertices": true,
+    "vertex_wear_exported": true,
+    "authored_material_factors": {
+      "Installed_Quaternius_WoodTrim": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "Weathered_bronze": [
+        0.24,
+        0.155,
+        0.078,
+        1
+      ],
+      "Dark_wet_iron": [
+        0.065,
+        0.095,
+        0.099,
+        1
+      ],
+      "Worn_bronze_edges": [
+        0.29,
+        0.245,
+        0.16,
+        1
+      ]
+    },
+    "low_fixed_vertices_inside_original_aperture": 0,
+    "bounds_min": [
+      -16.55500030517578,
+      0.0,
+      -2.200000047683716
+    ],
+    "bounds_max": [
+      16.55500030517578,
+      11.25,
+      1.9709999561309814
+    ]
+  },
+  "sluice_leaf_18.glb": {
+    "sha256": "6cc6467e868748c3469be26cbbe987b9ea9e75c8a7cdefb9adf9c2a4042067be",
+    "finite_vertices": true,
+    "vertex_wear_exported": true,
+    "authored_material_factors": {
+      "Installed_Quaternius_WoodTrim": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "Dark_wet_iron": [
+        0.065,
+        0.095,
+        0.099,
+        1
+      ],
+      "Weathered_bronze": [
+        0.24,
+        0.155,
+        0.078,
+        1
+      ],
+      "Worn_bronze_edges": [
+        0.29,
+        0.245,
+        0.16,
+        1
+      ]
+    },
+    "low_fixed_vertices_inside_original_aperture": 0,
+    "bounds_min": [
+      -9.0,
+      -5.960464477539063e-08,
+      -0.6048000454902649
+    ],
+    "bounds_max": [
+      9.0,
+      7.0,
+      0.6048000454902649
+    ]
+  },
+  "sluice_leaf_30.glb": {
+    "sha256": "bef44183aea036463cbf456fc37b449ef57744b712a1450c507a733055db994a",
+    "finite_vertices": true,
+    "vertex_wear_exported": true,
+    "authored_material_factors": {
+      "Installed_Quaternius_WoodTrim": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "Dark_wet_iron": [
+        0.065,
+        0.095,
+        0.099,
+        1
+      ],
+      "Weathered_bronze": [
+        0.24,
+        0.155,
+        0.078,
+        1
+      ],
+      "Worn_bronze_edges": [
+        0.29,
+        0.245,
+        0.16,
+        1
+      ]
+    },
+    "low_fixed_vertices_inside_original_aperture": 0,
+    "bounds_min": [
+      -15.0,
+      -5.960464477539063e-08,
+      -0.6048000454902649
+    ],
+    "bounds_max": [
+      15.0,
+      7.0,
+      0.6048000454902649
+    ]
+  }
+}
