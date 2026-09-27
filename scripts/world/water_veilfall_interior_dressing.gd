@@ -34,6 +34,8 @@ func build(interior: Node3D, rules: Dictionary) -> void:
 		Color(str(colours.get("stone", "#4c5857"))).to_html(false): _masonry(cfg.get("stone", {})),
 		Color(str(colours.get("floor", "#77817a"))).to_html(false): _masonry(cfg.get("floor", {})),
 	}
+	if cfg.has("channel_water"):
+		skins[Color(str(colours.get("channel", "#347c89"))).to_html(false)] = _water(cfg.channel_water)
 	receipt["reskinned"] = _reskin(interior, skins)
 	receipt["members"] = _structure(interior, rules, cfg.get("structure", {}))
 	receipt["lanterns"] = _lanterns(interior, rules, cfg.get("lanterns", {}))
@@ -74,6 +76,20 @@ func _masonry(cfg: Dictionary) -> StandardMaterial3D:
 	material.uv1_triplanar_sharpness = 6.0
 	material.uv1_scale = Vector3.ONE * float(cfg.get("uv_scale", 0.35))
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	return material
+
+
+## The pump troughs' water: dark, glossy and faintly lit from below, instead
+## of a flat opaque cyan slab.
+func _water(cfg: Dictionary) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(str(cfg.get("colour", "#1d4a55")))
+	material.roughness = float(cfg.get("roughness", 0.04))
+	material.metallic = float(cfg.get("metallic", 0.2))
+	material.metallic_specular = 1.0
+	material.emission_enabled = true
+	material.emission = Color(str(cfg.get("glow", "#123a44")))
+	material.emission_energy_multiplier = float(cfg.get("glow_energy", 0.35))
 	return material
 
 

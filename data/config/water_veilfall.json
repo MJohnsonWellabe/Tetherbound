@@ -115,7 +115,8 @@
     },
     "lanterns": {"enabled": true, "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "spacing_m": 9.0, "height_m": 3.4, "scale": 2.2, "housing_colour": "#4d4032", "glass_colour": "#ffbc66", "glow_colour": "#ff9e36", "glow_energy": 1.2, "light_colour": "#ffb870", "light_energy": 1.6, "light_range_m": 8.0},
     "fall_wall": {"enabled": true, "width_m": 16.0, "height_m": 12.0, "centre": [0.0, 6.0, 122.9], "colour": "#e6f6f8", "opacity_min": 0.55, "opacity_max": 0.9, "flow_speed": 0.45, "edge_feather": 0.12, "ground_feather_m": 1.0, "albedo_min": 0.7, "albedo_max": 0.96, "channel_depth_m": 2.2, "channel_colour": "#2f7d8c", "channel_glow": "#1d5866", "light_colour": "#9fd6e6", "light_energy": 1.4, "light_range_m": 16.0},
-    "room_light": {"colour": "#9fb4c4", "energy": 1.1}
+    "room_light": {"colour": "#9fb4c4", "energy": 1.1},
+    "channel_water": {"colour": "#1d4a55", "roughness": 0.04, "metallic": 0.2, "glow": "#123a44", "glow_energy": 0.35}
   },
   "_comment_scope": "Two physical world-authority controls open real grilles. The captain and Guardian ceremony are required integration; this geometry/config alone does not complete either. No boats, diving, oxygen or new humanoids."
 }
