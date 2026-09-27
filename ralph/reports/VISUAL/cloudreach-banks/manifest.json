@@ -1,0 +1,774 @@
+{
+  "baseline_commit": "1c7b50f18a75815300330dd3a6373ccebd0d6de3",
+  "capture_integrated_main": "4ee9f4157",
+  "post_capture_integrated_main": "4d55fddfd",
+  "post_capture_merge_commit": "f8df14db3a0fcc430b4662d5bbdf06ac90f5d222",
+  "renderer": "Godot 4.7 stable / gl_compatibility / GTX 1060 3GB / 1920x1080 borderless",
+  "capture_exit_codes": {
+    "baseline": 0,
+    "initial_candidate": 0,
+    "final_candidate": 0
+  },
+  "native_frames": 72,
+  "image_review_map": {
+    "A": "candidate",
+    "B": "baseline"
+  },
+  "notes": [
+    "Unaltered native frames. Sheets are downscaled navigation only.",
+    "Final material is captured as an uncommitted patch on baseline; production source hashes below identify it.",
+    "No Cloudreach world, shader, config, or camera files changed in intervening main update.",
+    "Disclosed fixture starts, party/flags, teleports, frozen clock and forced companion placement. See archived capture header.",
+    "Inherited unscoped fly_tutorial_completed error and placement warnings remain in both captures.",
+    "Camera/seating failures remain visible despite zero capture skips; this is not chapter acceptance."
+  ],
+  "source_sha256": {
+    "data/config/cloudreach_visual.json": "1e4242d8c011b4ec7f2cbdd4fae30e88ac9fa335ae58212fb94f0f31d21656d2",
+    "scripts/world/cloudreach_environment_materials.gd": "2a4a41a9ee36e18f6e03bbb40fd960937ffb8d72b7b3f73c9eb7953ee4482c2d",
+    "scripts/world/cloudreach_world.gd": "ac928e55a6807faeab59a8d00e610bf052e4934862fc814e6b8352e1e17dc366",
+    "shaders/cloudreach_cliff.gdshader": "a4f7e3a227a789284e3b16a6d05eb87a92ad24173e43f34b480e0621661908f6",
+    "shaders/cloudreach_rock.gdshaderinc": "657fcb54e9c1e60562eb91df6828b9a90ca79ac07e3648c6fd0408c66f2f6ad0",
+    "shaders/cloudreach_surface.gdshader": "8da830aa817f668641072d8a810ab91678fd0ae1d3acac10ebd6200fb98f8c51"
+  },
+  "images": [
+    {
+      "path": "baseline/01_gate_lower_cliffs_approach_day.png",
+      "bytes": 3044801,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "0b56eb28af2343d6b3cf04768a310e7f3e875c53d319ec2833fee036ca38c17e"
+    },
+    {
+      "path": "baseline/02_gate_lower_cliffs_route_day.png",
+      "bytes": 3344798,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "fd4826c436eb7d74fedaa1a443e54a5584af1bb4a624522bcf911fbdb31ea520"
+    },
+    {
+      "path": "baseline/03_gate_lower_cliffs_reverse_day.png",
+      "bytes": 3102385,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "dff9640e4968f9350ebd8d040f0f89cf0dcbf84adae55f5a474e498cd6c46b03"
+    },
+    {
+      "path": "baseline/04_gate_lower_cliffs_detail-crag_day.png",
+      "bytes": 3046211,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "0bcdc1690909af67a0976a3e49d84332c6bee98d47c5b7c6b914e58c57de8ed9"
+    },
+    {
+      "path": "baseline/05_gate_lower_cliffs_settlement-galefoot_day.png",
+      "bytes": 2893169,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "273795a6dbea036beccf9af42468d555eb7f58ebe3b14ee26585ca3e0d21d69a"
+    },
+    {
+      "path": "baseline/06_broken_causeways_approach_day.png",
+      "bytes": 3510248,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "f374b5f70dfad3e6bc7fd0c805d6a3b82b9d894882e57dfc0e8f102b64a83707"
+    },
+    {
+      "path": "baseline/07_broken_causeways_route_day.png",
+      "bytes": 3617249,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "28a7c7a06069a78faa260ed900cd3bb554ce49bde8501771a9e40517426ed15b"
+    },
+    {
+      "path": "baseline/08_broken_causeways_reverse_day.png",
+      "bytes": 2636026,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "d2b285689ae083b6f86202abd7a86fc984bf74c96841c5f7424af32d56680698"
+    },
+    {
+      "path": "baseline/09_broken_causeways_detail-ropebridge_day.png",
+      "bytes": 2796410,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "d579c7be8daf60ee94878cbfe2f1fc1f54af0540afb5d12c13c0cbb22732e138"
+    },
+    {
+      "path": "baseline/10_broken_causeways_lure-bells_day.png",
+      "bytes": 2410640,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "9bc6faee43653e8265b38f7cb0bd9bd8cd018b9da0134f38ef59e039915a9565"
+    },
+    {
+      "path": "baseline/11_windscar_ravine_approach_day.png",
+      "bytes": 3041633,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "fa93f1412d40f1e030afb1626537ec2de4e21a8a369b7b12b3e8bd19a424b4ef"
+    },
+    {
+      "path": "baseline/12_windscar_ravine_route_day.png",
+      "bytes": 2772941,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "a09762a0dcd9b848a9ba259a44716619a05d3df94eb047c603164cb48b593560"
+    },
+    {
+      "path": "baseline/13_windscar_ravine_reverse_day.png",
+      "bytes": 2986031,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "f0e5674f44d18d491383d5aa8e16c06306a50722db7acbb33105f63f0bc23938"
+    },
+    {
+      "path": "baseline/14_windscar_ravine_detail-beacon_day.png",
+      "bytes": 2720701,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c6845974fb5c22c7677e133af6464abefc4facd3202a6378a009448834c1a689"
+    },
+    {
+      "path": "baseline/15_high_roost_sky_shrine_approach_day.png",
+      "bytes": 2529219,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "071527e5fdc02c5b2e9629e33939826b2b9c6debd532f5d7093fb1e3c5f004b4"
+    },
+    {
+      "path": "baseline/16_high_roost_sky_shrine_route_day.png",
+      "bytes": 2194831,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "6b532e1d7f0901d37daa538d6f602b1b639c35d292c0f09cd5dcb093dacecd26"
+    },
+    {
+      "path": "baseline/17_high_roost_sky_shrine_reverse_day.png",
+      "bytes": 2922247,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "61b7ffab7f1ba69436510a9db7107ef0a97eeea4438c218fe613604ee35013ab"
+    },
+    {
+      "path": "baseline/18_high_roost_sky_shrine_detail-shrine_day.png",
+      "bytes": 2771603,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "de930055abd429e8f0ea91dbd87034c0953f4a09816ac6ff862e44bcd6ccabf0"
+    },
+    {
+      "path": "baseline/19_high_roost_sky_shrine_perch-landing_day.png",
+      "bytes": 3181216,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "e9c33a52ba4b9ccf41880f89ed7a8468e122fbb921f6e3982574ad42a4e67ed8"
+    },
+    {
+      "path": "baseline/20_high_roost_sky_shrine_perch-vista_day.png",
+      "bytes": 2215872,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "0c40298225fda165bae224c7a16b3532dccf13e64bafa730376dd5f6087134e5"
+    },
+    {
+      "path": "baseline/21_upper_cloudreach_approach_day.png",
+      "bytes": 3788775,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "24d3ac4c8a31d537a7d10279c7088bc8a1e485997984574bd12f58ac1ade09f7"
+    },
+    {
+      "path": "baseline/22_upper_cloudreach_route_day.png",
+      "bytes": 3192900,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "51066309fc3fca88550b2327d2fcc8ca2a8e1c261d7caf8570a70cebec8d87f7"
+    },
+    {
+      "path": "baseline/23_upper_cloudreach_reverse_day.png",
+      "bytes": 3163598,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "807fe6090103cc645c82cd154ca73a94bfc385643401d748506c2cd7dcaa8c5a"
+    },
+    {
+      "path": "baseline/24_upper_cloudreach_detail-observatory_day.png",
+      "bytes": 2667730,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "cd8e3f57e55ded3798f9cc0a4a0f101da20e79ccdf532174b064d488d848e9c5"
+    },
+    {
+      "path": "baseline/25_upper_cloudreach_settlement-cliffhold_day.png",
+      "bytes": 2830470,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "af8cdf2c03269c506f44e28dbf40a503c91240fb3499f39ebf8310854a4d5ced"
+    },
+    {
+      "path": "baseline/26_summit_final_stronghold_approach_day.png",
+      "bytes": 3379255,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "617732eeca871f8c7f1ead719f54114c88f3769fc96a9a0336892c28ad84e4d9"
+    },
+    {
+      "path": "baseline/27_summit_final_stronghold_route_day.png",
+      "bytes": 3770320,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "b21a2d1a61c395c14c0da2cd475df9712ff1436e6a91250888a3965f44f780f9"
+    },
+    {
+      "path": "baseline/28_summit_final_stronghold_reverse_day.png",
+      "bytes": 2541388,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "98715880a283227d61309014bfe2bad7e6f9544317f5a3e28c97f84aa77dcf2e"
+    },
+    {
+      "path": "baseline/29_summit_final_stronghold_detail-aviary_day.png",
+      "bytes": 2464331,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "a5c34eee9c6d0e18585ede41c1ad2cbdc0d5cb5b4b30879c2ddd543d2d297b5f"
+    },
+    {
+      "path": "baseline/30_gate_lower_cliffs_approach_night.png",
+      "bytes": 2591392,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "b124805ee6f94340c75e97a457c6143fb564325fc130ec77018bb9f0020ae2df"
+    },
+    {
+      "path": "baseline/31_broken_causeways_route_night.png",
+      "bytes": 2936912,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "f96ee20bda475c91eda1d7c046f8f145386c516f1c0b47edb25040f260a8656e"
+    },
+    {
+      "path": "baseline/32_upper_cloudreach_approach_night.png",
+      "bytes": 3430111,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "1be995a230818b4e4bc3f23a1dcb85a488be339c32696ee96e434b9035add36b"
+    },
+    {
+      "path": "baseline/33_summit_final_stronghold_finale400_day.png",
+      "bytes": 3481461,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "e4cc2da2e6f8c05b9f7c9cbf83b6fbe696aacd579a4c9f773b8616622f18df2f"
+    },
+    {
+      "path": "baseline/34_summit_final_stronghold_finale100_day.png",
+      "bytes": 3428880,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "ed7cacecef3537abe45621c8fab6f69b17da1b189a4b6721f222b0d323622e3d"
+    },
+    {
+      "path": "baseline/35_summit_final_stronghold_postfinale_day.png",
+      "bytes": 3425956,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "5481b4316aab587ba5ebb7b9ccbb34a15fce01949540ccf822d0134956688974"
+    },
+    {
+      "path": "baseline/36_gate_lower_cliffs_postfinale-galefoot_day.png",
+      "bytes": 2914508,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "74392af253a055d95ff04402995078783fc6b548b537bffdef7ef9dc8eaabc35"
+    },
+    {
+      "path": "baseline/_sheet_frame_matrix.png",
+      "bytes": 8272720,
+      "dimensions": [
+        1950,
+        2490
+      ],
+      "sha256": "16d04d743dafc9b2b9d9d782bacf1a0b2909d4c0b0de7a9b129989152909d572"
+    },
+    {
+      "path": "baseline/_sheet_frame_matrix_day_night.png",
+      "bytes": 2525012,
+      "dimensions": [
+        1298,
+        1104
+      ],
+      "sha256": "2c4e1ab95976c0f6ed01293662225169a58c0dd261badf6be230adf3ee4d1fd3"
+    },
+    {
+      "path": "baseline/_sheet_frame_matrix_finale.png",
+      "bytes": 1914892,
+      "dimensions": [
+        1944,
+        738
+      ],
+      "sha256": "f6203667d497bf9c343b808e691173e6cc10eda7576ac184a5dc914c67db3952"
+    },
+    {
+      "path": "baseline/_sheet_frame_matrix_hero.png",
+      "bytes": 1893777,
+      "dimensions": [
+        1944,
+        738
+      ],
+      "sha256": "35fe1a379d98b0916f2cbdaf2668b77fa2f322842fcb33421d6db136ebd6e68b"
+    },
+    {
+      "path": "baseline/_sheet_frame_matrix_regions.png",
+      "bytes": 5570501,
+      "dimensions": [
+        1950,
+        1662
+      ],
+      "sha256": "1b17c3ea163ce23697ad47e5bbccf2591a1308017b6ebb93d27dc9761473a03b"
+    },
+    {
+      "path": "candidate/01_gate_lower_cliffs_approach_day.png",
+      "bytes": 3044904,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "8c93003614fa3e77c9b24919e596385e05fcc4e91301c5736f5490fe0d6454d2"
+    },
+    {
+      "path": "candidate/02_gate_lower_cliffs_route_day.png",
+      "bytes": 3345073,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "59246036b8c1adeb2e916e47557d52d63f90476c0b5028c88d13a451968bfa57"
+    },
+    {
+      "path": "candidate/03_gate_lower_cliffs_reverse_day.png",
+      "bytes": 3100506,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "63ec32d7f4a42db395a2da92be8f4471a5f2000082dcd24d6af4382e2f5207f3"
+    },
+    {
+      "path": "candidate/04_gate_lower_cliffs_detail-crag_day.png",
+      "bytes": 3046480,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "93ef8e59f0d0f84a7f8bb69d355cd7659085944cdabebbfa3971a52acd84f5d6"
+    },
+    {
+      "path": "candidate/05_gate_lower_cliffs_settlement-galefoot_day.png",
+      "bytes": 2893191,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "54cba3c18c784294be21f4419f522ee48754c95e340398abd85667a65b2f11b9"
+    },
+    {
+      "path": "candidate/06_broken_causeways_approach_day.png",
+      "bytes": 3532315,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "4b8232097972f50f957f7e3310f610f7d0e4dba38a0a2858570443a101cbd0c0"
+    },
+    {
+      "path": "candidate/07_broken_causeways_route_day.png",
+      "bytes": 3686311,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "f1b09de5f41b09281b2e1bcda8ad4d3c5d308761531e0d2a218437047528452a"
+    },
+    {
+      "path": "candidate/08_broken_causeways_reverse_day.png",
+      "bytes": 2867167,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "653fbb8a53b5998b786daabec3d39e733ced51f430dd9180ebd46f1ee066db1c"
+    },
+    {
+      "path": "candidate/09_broken_causeways_detail-ropebridge_day.png",
+      "bytes": 2796866,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "1ab233e312465cc433477b1b559ffdb03da1b3be13f97389789a2a807d1bb950"
+    },
+    {
+      "path": "candidate/10_broken_causeways_lure-bells_day.png",
+      "bytes": 2334895,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "9e14be4f8041949ec2f315fc4d47825cb0045a6bcfb7ecf6e8c6fc5aa9148c0d"
+    },
+    {
+      "path": "candidate/11_windscar_ravine_approach_day.png",
+      "bytes": 3043188,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c699464184a37c91bc7aa45687fa37d6666795354e76c00a2f2d453ac0e0f84d"
+    },
+    {
+      "path": "candidate/12_windscar_ravine_route_day.png",
+      "bytes": 2772655,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "070c6289d16013149fb75633767f1e350132cdd93f349d58dd20c93ed49b2d8e"
+    },
+    {
+      "path": "candidate/13_windscar_ravine_reverse_day.png",
+      "bytes": 2993429,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "e6ebf754a714fef6df7a73cfa1caab556bef643d1a7ff8f1c8b91219552ad071"
+    },
+    {
+      "path": "candidate/14_windscar_ravine_detail-beacon_day.png",
+      "bytes": 2723873,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "5eef99feb37f1012f560b50af407b31b113acf4d6c939c24f4ad8eaa2fa5269b"
+    },
+    {
+      "path": "candidate/15_high_roost_sky_shrine_approach_day.png",
+      "bytes": 2529452,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "04246049f34889d9a70622276ff1016561858faadc67b65a9fa855799541030f"
+    },
+    {
+      "path": "candidate/16_high_roost_sky_shrine_route_day.png",
+      "bytes": 2194657,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "14b1ee0cd5f1314957c4a454730fb0957db0327216655de9d0297110bdc744ce"
+    },
+    {
+      "path": "candidate/17_high_roost_sky_shrine_reverse_day.png",
+      "bytes": 2922247,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "61b7ffab7f1ba69436510a9db7107ef0a97eeea4438c218fe613604ee35013ab"
+    },
+    {
+      "path": "candidate/18_high_roost_sky_shrine_detail-shrine_day.png",
+      "bytes": 2771603,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "de930055abd429e8f0ea91dbd87034c0953f4a09816ac6ff862e44bcd6ccabf0"
+    },
+    {
+      "path": "candidate/19_high_roost_sky_shrine_perch-landing_day.png",
+      "bytes": 3181157,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "8f52226568a9f573172ed1a9e84c386ad91f5f58f27dfa1328ac9c6ea3aab688"
+    },
+    {
+      "path": "candidate/20_high_roost_sky_shrine_perch-vista_day.png",
+      "bytes": 2217051,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "ef9781dae7e2203562aacb54d9be175821e87858234ac0578ce49b80bd59689a"
+    },
+    {
+      "path": "candidate/21_upper_cloudreach_approach_day.png",
+      "bytes": 3767324,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "6fea2301855908be463903e3b2587e0264deac607ff68bc85f4a3983adaed764"
+    },
+    {
+      "path": "candidate/22_upper_cloudreach_route_day.png",
+      "bytes": 3191694,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "85670374f970aa02fca1e3da3bbd290c4e1c7a5c2a314b5853fe22bf7553dc2e"
+    },
+    {
+      "path": "candidate/23_upper_cloudreach_reverse_day.png",
+      "bytes": 3162824,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "2b4a0c1d5906be27bcc11f127eb235c38f2d0e2e16f8918df37840ae64e34a0d"
+    },
+    {
+      "path": "candidate/24_upper_cloudreach_detail-observatory_day.png",
+      "bytes": 2667783,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "59d5857ed546af709787410ae88523443127e3c9a413feda29b8eba543f71b9e"
+    },
+    {
+      "path": "candidate/25_upper_cloudreach_settlement-cliffhold_day.png",
+      "bytes": 2834370,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c092db9284e27470481c8541b44f1cfe6e28440c71408c82c964b36da43df813"
+    },
+    {
+      "path": "candidate/26_summit_final_stronghold_approach_day.png",
+      "bytes": 3377399,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "4256e1ad57b7347df5edfa7bc899bbe08ef1882b40328baab971339d56467c31"
+    },
+    {
+      "path": "candidate/27_summit_final_stronghold_route_day.png",
+      "bytes": 3771271,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "8cd910dfbe7697a2ab8b3d639b432dec2d011a91ad9e5e31bc42c0c59b067727"
+    },
+    {
+      "path": "candidate/28_summit_final_stronghold_reverse_day.png",
+      "bytes": 2546212,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "a019efc6ba34322d9cc6b0ea7e83240a7bd26c6727bf3fbd8d1c9fd370754ccd"
+    },
+    {
+      "path": "candidate/29_summit_final_stronghold_detail-aviary_day.png",
+      "bytes": 2481615,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "2ad6678e4da0ade878b7653311428725ff48d73527bf5f453c9b7359fd22c7e7"
+    },
+    {
+      "path": "candidate/30_gate_lower_cliffs_approach_night.png",
+      "bytes": 2591409,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "eb8fc431464d005d74f559f2ef3dc291b6cfbe831eec4c679a7647df7f3418ee"
+    },
+    {
+      "path": "candidate/31_broken_causeways_route_night.png",
+      "bytes": 3021288,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "2f934a824963dd5ede44aba8d1939f77a130cbd5027e5abd22935c750ef34504"
+    },
+    {
+      "path": "candidate/32_upper_cloudreach_approach_night.png",
+      "bytes": 3416742,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "5c4968bba69e1e3f962de610dfd1df5e716d6901c96d9c11c14d1899748dbd2f"
+    },
+    {
+      "path": "candidate/33_summit_final_stronghold_finale400_day.png",
+      "bytes": 3488338,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "513deac1c82afaa1a3e63c5a1f9b3b44246980082f5a00f75d3830a45f2d88b8"
+    },
+    {
+      "path": "candidate/34_summit_final_stronghold_finale100_day.png",
+      "bytes": 3430907,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "c9565ee6cedb82e6e648cfb6f42769684e3e2ebff9666f9d94247bdf601bf6cd"
+    },
+    {
+      "path": "candidate/35_summit_final_stronghold_postfinale_day.png",
+      "bytes": 3428731,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "46282c4082f08838f7592223a146e986cd3a74d2c1cd0682fbc55da8873cb53b"
+    },
+    {
+      "path": "candidate/36_gate_lower_cliffs_postfinale-galefoot_day.png",
+      "bytes": 2914517,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "sha256": "551d9b0cfbf2b09e7dc0819f57df0f083bf266875daacb3784d378f431c058c1"
+    },
+    {
+      "path": "candidate/_sheet_frame_matrix.png",
+      "bytes": 8285967,
+      "dimensions": [
+        1950,
+        2490
+      ],
+      "sha256": "bd9bd559b8f06ac72580c3f8b81f5c555a53d4e7b30328a60fa84c8ff8435bf6"
+    },
+    {
+      "path": "candidate/_sheet_frame_matrix_day_night.png",
+      "bytes": 2543215,
+      "dimensions": [
+        1298,
+        1104
+      ],
+      "sha256": "10f6e8f0d488f5aa111b50e09ec8ff86c75776ce3947838f0d6d5fe29ed42a60"
+    },
+    {
+      "path": "candidate/_sheet_frame_matrix_finale.png",
+      "bytes": 1917114,
+      "dimensions": [
+        1944,
+        738
+      ],
+      "sha256": "ab73275db44f880673fafac5f76dd2363ce737524075713cdb7924a3a3b62fe4"
+    },
+    {
+      "path": "candidate/_sheet_frame_matrix_hero.png",
+      "bytes": 1879801,
+      "dimensions": [
+        1944,
+        738
+      ],
+      "sha256": "5b488b50ff15030d6a8ed3b6db7fe0acd41a25ad33323c8515874e978f515bdf"
+    },
+    {
+      "path": "candidate/_sheet_frame_matrix_regions.png",
+      "bytes": 5584314,
+      "dimensions": [
+        1950,
+        1662
+      ],
+      "sha256": "21c21980347d9dc701e5f50f874ab75c53891237b371fdba5675ced30dc7aa7c"
+    }
+  ],
+  "source_hash_normalization": "UTF-8 with LF line endings"
+}

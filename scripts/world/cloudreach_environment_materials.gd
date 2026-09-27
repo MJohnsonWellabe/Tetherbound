@@ -60,10 +60,21 @@ static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
 	material.set_shader_parameter("grass_tint",Color("#a2ad78") if dry else Color("#8ca867"))
 	material.set_shader_parameter("grass_scale",0.65)
 
-static func ground(dry: bool) -> ShaderMaterial:
+static func ground(dry: bool, geology: ShaderMaterial = null, bank: Dictionary = {}) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_surface.gdshader")
 	turf_parameters(material,dry)
+	# Copy the built realm's actual geology parameters, including its installed
+	# textures. Crown banks and cliff walls must remain one material family.
+	if geology != null:
+		for uniform: Dictionary in geology.shader.get_shader_uniform_list():
+			var key := str(uniform.name)
+			var value: Variant = geology.get_shader_parameter(key)
+			if value != null:
+				material.set_shader_parameter(key, value)
+	material.set_shader_parameter("grass_slope_cos", cos(deg_to_rad(float(bank.get("grass_slope_degrees", 34.0)))))
+	material.set_shader_parameter("rock_slope_cos", cos(deg_to_rad(float(bank.get("rock_slope_degrees", 56.0)))))
+	material.set_shader_parameter("edge_breakup", float(bank.get("edge_breakup", 0.055)))
 	return material
 
 static func worn_ground(centre: Vector3,radius: float) -> ShaderMaterial:

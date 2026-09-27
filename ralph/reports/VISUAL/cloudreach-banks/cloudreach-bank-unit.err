@@ -1,0 +1,6 @@
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _mesa (res://scripts/world/cloudreach_world.gd:5308)
+       [1] test_cliff_walls_face_outward (res://tests/test_cloudreach_environment.gd:25)
+       [2] _init (res://tests/run_tests.gd:120)

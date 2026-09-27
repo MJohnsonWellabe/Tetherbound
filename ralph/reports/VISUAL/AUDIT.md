@@ -39,12 +39,21 @@ the pairs, verdicts and passing mechanics/cleanup checks. No F10 criterion close
 |---|---|---|
 | F04#1 — Meadows relay officers | Visible lunge travel and a readable ground-path tell conveying the tactical question | Current normal-camera tell/travel/recovery sequence and independent verdict; preserve combat timing and collision ownership |
 | F04#6 — Meadows fight aftermaths | Each required named fight leaves a visible, distinct aftermath | Matched before/after views and played aftermath sequence for each fight; flags alone do not qualify |
-| F08#4 — Cloudreach settlements/cliffs | Settlement and cliff identity pass the full C2 matrix, including remaining M1–M12 work | Locate original work orders, reconcile merged assets and rerun matrix; Windscar's limited improvement is not a pass |
+| F08#4 — Cloudreach settlements/cliffs | Settlement and cliff identity pass the full C2 matrix, including remaining M1–M12 work | Current 36-frame matrix still fails both bars. Retain exposed-bank material repair: 10 paired preferences, 6 ties, no clear environmental regression. M1-M12 remain open; fixture seating/companion placement limits camera diagnosis. See CLOUDREACH-BANKS.md |
 | F09#3 — Stormwood reward pockets | All five pocket lures visible from their road approaches while routes remain traversable | Current five-road native review recognizes 5/5 lures; all five ordinary-input pocket walks/claims pass, 117 checks. Reported visibility defect resolved for these stands. Whole F09 route criterion and room identity/finish remain open; see POCKET-READABILITY.md |
 | F10#3 — Stormwood lightning | A recognizable strike tell, readable at night, correct 1.2 s/3 m cue and reduced-motion presentation | Current day/night phase/tell/impact sequences, reduced-motion comparison and independent judgment; PR365 warning-ring slice alone does not close it |
 | F10#4 — Stormwood forest/rod line/restored sky | These views pass both identity and finish bars | Full matching regional matrix including restored state; flower grouping is only a small component |
 | F13#5 — Tidewake currents/docks/Veilfall | Readable currents, inhabited docks and convincing far/mid/near Veilfall | T2 matrix and current motion, reconciling merged cascades/lanterns and pending current/fence work |
 | F14#2 — Tidewake water network | Current-network changes are visible and persist | Identical-view before/after/reload captures plus motion and independent change recognition; state assertions are insufficient |
+
+**Current Cloudreach matrix:** 36 native baseline and 36 final frames now
+reconcile the old M1-M12 findings. The geometric slope material removes
+stretched grass from steep banks using the existing cliff family; independent
+comparison prefers it in 10/16 pairs with six ties. Retain the bounded repair;
+whole Cloudreach Bars A/B still fail. Remaining priorities are valid shrine/perch
+views, terrain form and route joins, inhabited settlements, landmark approaches
+and visible aftermath. Main `4d55fddfd` is integrated after capture without
+Cloudreach/camera changes. [Evidence and capture limitations](CLOUDREACH-BANKS.md).
 
 ## Cross-game diagnostic ranking
 

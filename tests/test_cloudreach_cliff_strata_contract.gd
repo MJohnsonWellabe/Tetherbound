@@ -1,10 +1,11 @@
 extends "res://tests/test_case.gd"
 
 const SHADER_PATH := "res://shaders/cloudreach_cliff.gdshader"
+const ROCK_PATH := "res://shaders/cloudreach_rock.gdshaderinc"
 
 
 func test_cloudreach_strata_are_warped_and_spatially_intermittent() -> void:
-	var source := FileAccess.get_file_as_string(SHADER_PATH)
+	var source := FileAccess.get_file_as_string(SHADER_PATH) + FileAccess.get_file_as_string(ROCK_PATH)
 	assert_true(source.contains("strata_phase_warp"))
 	assert_true(source.contains("strata_presence"))
 	assert_true(source.contains("ochre_patch"))
@@ -17,9 +18,9 @@ func test_cloudreach_strata_are_warped_and_spatially_intermittent() -> void:
 
 
 func test_cloudreach_strata_preserve_ledge_and_crevice_material_roles() -> void:
-	var source := FileAccess.get_file_as_string(SHADER_PATH)
+	var source := FileAccess.get_file_as_string(SHADER_PATH) + FileAccess.get_file_as_string(ROCK_PATH)
 	assert_true(source.contains("ledge_normal_threshold"))
 	assert_true(source.contains("ledge_moss_strength"))
 	assert_true(source.contains("crevice_strength"))
 	assert_true(source.contains("rock_normal"))
-	assert_true(source.contains("NORMAL=normalize"))
+	assert_true(source.replace(" ", "").contains("NORMAL=normalize"))

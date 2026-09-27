@@ -799,8 +799,8 @@ func _build_materials() -> void:
 	var trail_dry:=trail.duplicate() as ShaderMaterial
 	ENVIRONMENT_MATERIALS.turf_parameters(trail_dry,true)
 	_materials["trail_dry"]=trail_dry
-	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false)
-	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true)
+	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false, geology, _visual_config.get("ground_rock_transition", {}))
+	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true, geology, _visual_config.get("ground_rock_transition", {}))
 
 
 func _build_cloud_sea() -> void:

@@ -32,6 +32,15 @@ reported pocket-visibility defect for the captured approaches; whole F09 route
 coverage and repeated-room art finish remain open. See
 `ralph/reports/VISUAL/POCKET-READABILITY.md` and V12 in the existing audit.
 
+Cloudreach's current 36-frame matrix still fails both bars. A slope-based
+material repair exposes the existing cliff rock on steep turf banks; blind
+comparison prefers it in 10 pairs and ties in six, with no clear environmental
+regression. Retained in draft PR365; 9 focused tests/149 assertions pass.
+M1-M12 and complete F08#4 remain open, including invalid/obstructed shrine
+stands and fixture-forced companion overlaps. Main `4d55fddfd` is integrated
+in `f8df14db3` after the captures; its changes do not touch their Cloudreach
+render path. See `ralph/reports/VISUAL/CLOUDREACH-BANKS.md`.
+
 The current Codex visual queue is `ralph/reports/VISUAL/AUDIT.md`: its whole-game
 ranking uses 508 native frames across four regions, 57 creatures and 41 cast
 entries, plus the 89-item icon census. Draft PR365 owns the shared visual work

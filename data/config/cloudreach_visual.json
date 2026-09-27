@@ -155,6 +155,12 @@
       "tint": "#9b805f"
     }
   },
+  "ground_rock_transition": {
+    "_comment": "Expose the existing triplanar cliff material on steep crown and route banks; retain turf on walkable gentle slopes. Geometry and collision are unchanged.",
+    "grass_slope_degrees": 34.0,
+    "rock_slope_degrees": 56.0,
+    "edge_breakup": 0.055
+  },
   "geology": {
     "rock_sections": {
       "_comment": "Reuse overlapping installed boulders for extreme visual crag stretches. Overall placement, height and material preserved; no crown, route or collision changes. Pending visual acceptance.",
