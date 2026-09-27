@@ -8,6 +8,8 @@ const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
 const ROOM_FRAMES := 600  # smoke_stronghold's existing chamber-hop budget.
+## A player reading a victory line before pressing on (F04#6 Sigil handover).
+const VICTORY_READ_FRAMES := 120
 const ENTRANCE_FRAMES := 950  # Its separate authored 40m ramp budget.
 var _hold: Node3D
 var _sigil_gate: Node3D
@@ -302,8 +304,18 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	_receipt("trainer_defeated", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
 		"xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "frames": Engine.get_physics_frames() - _captain_start})
-	for _frame in 120:
-		if INPUT_OWNER.current(_tree) == null:
+	# A row's `victory_conversation` (the captains' Sigil handover, F04#6) opens
+	# a deferred frame after the win; it is read through with Interact at a
+	# reader's pace (one line per VICTORY_READ_FRAMES) before world input is
+	# expected back.
+	var victory := not str(_captain_spec.get("victory_conversation", "")).is_empty()
+	var read := not victory
+	for frame in 120 + (VICTORY_READ_FRAMES * 8 if victory else 0):
+		if bool(_panel.call("is_open")):
+			read = true
+			if frame % VICTORY_READ_FRAMES == VICTORY_READ_FRAMES - 1:
+				await _input._tap("interact")
+		elif INPUT_OWNER.current(_tree) == null and (read or frame >= 30):
 			return true
 		await _tree.physics_frame
 	return _fail("The actual trainer victory did not return ordinary world input: " + id)

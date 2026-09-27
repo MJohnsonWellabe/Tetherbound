@@ -1,0 +1,85 @@
+{
+  "ally": {
+    "camera_m": 10.8,
+    "in_frustum": true,
+    "pos": [
+      6.8,
+      6.2,
+      7656.8
+    ]
+  },
+  "camera": [
+    1.2,
+    12.5,
+    7650.1
+  ],
+  "creatures_near_camera": [],
+  "enemy": {
+    "camera_m": 15.1,
+    "in_frustum": true,
+    "pos": [
+      8.1,
+      6.2,
+      7661.9
+    ]
+  },
+  "fight": "warden_aldis",
+  "game_frame": 6416,
+  "hud_text": [
+    "Warden Aldis · LEVEL 20",
+    "Tuskroot",
+    "GROUND  ▲",
+    "!!  HEAVY — get clear",
+    "Bud",
+    "Lv 17",
+    "WIND",
+    "Energy",
+    "Orbs  58",
+    "Ripple Jab",
+    "Undertow\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 17",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 19",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15",
+    "KO"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "ACE",
+    "tell_s": 1.1
+  },
+  "player": {
+    "camera_m": 11.9,
+    "in_frustum": true,
+    "pos": [
+      6.7,
+      6.2,
+      7658.5
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden2/warden_aldis-m4-tuskroot-t1-b-mid.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 12.3,
+    "in_frustum": true,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

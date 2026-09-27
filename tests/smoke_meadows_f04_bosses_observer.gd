@@ -35,6 +35,8 @@ const TELLS_PER_MEMBER := 2
 const ENTRY_S := 1.5
 const AFTERMATH_S := [2.5, 5.0, 8.0, 12.0]
 const RECOVERY_S := 0.45
+const VICTORY_DIALOGUE_S := 0.25
+const NEAR_M := 25.0
 
 var out_dir := "user://f04_bosses"
 var render_fights_only := false
@@ -52,6 +54,9 @@ var _tells_by_member := {}
 var _pending: Array = []
 var _render_until := -1
 var _capturing := false
+## Target fight whose victory dialogue is awaited, and until which frame.
+var _victory_id := ""
+var _victory_until := -1
 
 
 func _init(dir: String = "", fights_only: bool = false, captures_only: bool = false) -> void:
@@ -84,6 +89,7 @@ func _physics_process(_delta: float) -> void:
 	if render_fights_only and not _capturing:
 		RenderingServer.render_loop_enabled = _phys < _render_until \
 			or (not render_captures_only and not _id.is_empty())
+	_watch_victory_dialogue(scene)
 	if _id.is_empty():
 		return
 	_manager = manager
@@ -130,7 +136,28 @@ func _end_fight() -> void:
 			_queue("%s-after-%02ds" % [_id, int(round(s))], s, {"kind": "aftermath", "after_s": s})
 		if not render_captures_only:
 			_render_until = _phys + int((float(AFTERMATH_S.back()) + 1.0) * _hz())
+		_victory_id = _id
+		_victory_until = _phys + 3 * _hz()
 	_id = ""
+
+
+## The row's victory conversation (captains' Sigil handover, the Warden's key):
+## one frame VICTORY_DIALOGUE_S after the panel opens, before any read-through.
+func _watch_victory_dialogue(scene: Node) -> void:
+	if _victory_id.is_empty():
+		return
+	if _phys > _victory_until:
+		_victory_id = ""
+		return
+	var panel := scene.get_node_or_null(^"DialoguePanel") if scene != null else null
+	if panel != null and panel.has_method("is_open") and bool(panel.call("is_open")):
+		var id := _victory_id
+		_victory_id = ""
+		var saved := _id
+		_id = id
+		_queue("%s-after-dialogue" % id, VICTORY_DIALOGUE_S, {"kind": "aftermath", "after": "victory_dialogue"})
+		_id = saved
+		_render_until = maxi(_render_until, _phys + int((VICTORY_DIALOGUE_S + 0.3) * _hz()))
 
 
 func _bind_enemy(enemy: Node3D) -> void:
@@ -250,6 +277,28 @@ func _context(id: String) -> Dictionary:
 		var c := camera.global_position
 		out["camera"] = [snappedf(c.x, 0.1), snappedf(c.y, 0.1), snappedf(c.z, 0.1)]
 	out["hud_text"] = _visible_text()
+	out["creatures_near_camera"] = _creatures_near(scene, camera, bodies)
+	return out
+
+
+## Every creature body within NEAR_M of the camera that is not the fight's ally
+## or enemy: what else is standing in the frame, and in what state.
+func _creatures_near(scene: Node, camera: Camera3D, bodies: Dictionary) -> Array:
+	var out: Array = []
+	if scene == null or camera == null:
+		return out
+	for node: Node in scene.find_children("*", "CharacterBody3D", true, false):
+		var body := node as Node3D
+		if body == null or not body.is_visible_in_tree() or body.get("species_id") == null:
+			continue
+		if body == bodies.get("ally") or body == bodies.get("enemy"):
+			continue
+		var d := camera.global_position.distance_to(body.global_position)
+		if d > NEAR_M:
+			continue
+		out.append({"species": str(body.get("species_id")), "path": str(body.get_path()).get_file(),
+			"camera_m": snappedf(d, 0.1), "in_frustum": camera.is_position_in_frustum(body.global_position + Vector3.UP),
+			"fainted": bool(body.get("fainted")) if body.get("fainted") != null else null})
 	return out
 
 

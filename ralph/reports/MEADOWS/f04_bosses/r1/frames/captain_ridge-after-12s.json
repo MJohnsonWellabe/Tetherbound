@@ -1,0 +1,73 @@
+{
+  "ally": {
+    "camera_m": 7.9,
+    "in_frustum": true,
+    "pos": [
+      -273.6,
+      6.5,
+      6483.9
+    ]
+  },
+  "camera": [
+    -272.0,
+    9.1,
+    6476.6
+  ],
+  "fight": "captain_ridge",
+  "game_frame": 67907,
+  "hud_text": [
+    "30/40",
+    "30/40",
+    "36/40",
+    "40/40",
+    "x2",
+    "Map        Satchel        Build        Change Creature",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "FOOD",
+    "85%",
+    "100 / 100",
+    "M A I N   S T O R Y",
+    "Defeat the Upper Meadows captains. 3/3",
+    "Day 9  ·  08:26",
+    "Put Bramblebun away"
+  ],
+  "meta": {
+    "after_s": 12.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 6.0,
+    "in_frustum": true,
+    "pos": [
+      -270.9,
+      6.1,
+      6481.7
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_ridge-after-12s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 18.9,
+    "in_frustum": false,
+    "pos": [
+      -280.0,
+      4.9,
+      6460.0
+    ]
+  }
+}

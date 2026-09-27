@@ -1,0 +1,83 @@
+{
+  "ally": {
+    "camera_m": 9.5,
+    "in_frustum": true,
+    "pos": [
+      -276.2,
+      4.4,
+      6456.3
+    ]
+  },
+  "camera": [
+    -276.6,
+    10.2,
+    6463.8
+  ],
+  "enemy": {
+    "camera_m": 12.0,
+    "in_frustum": true,
+    "pos": [
+      -274.3,
+      3.9,
+      6453.9
+    ]
+  },
+  "fight": "captain_ridge",
+  "game_frame": 66222,
+  "hud_text": [
+    "Captain Vess · LEVEL 16",
+    "Galecrest",
+    "AIR  ▲",
+    "!  incoming — move",
+    "Bramblebun",
+    "Lv 15",
+    "WIND",
+    "Energy",
+    "Orbs  54",
+    "Bramble Whip",
+    "Warren Charge\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "DIVER",
+    "tell_s": 0.4
+  },
+  "player": {
+    "camera_m": 7.5,
+    "in_frustum": true,
+    "pos": [
+      -279.3,
+      4.8,
+      6459.3
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_ridge-m2-galecrest-t1-b-mid.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 7.4,
+    "in_frustum": false,
+    "pos": [
+      -280.0,
+      4.9,
+      6460.0
+    ]
+  }
+}
