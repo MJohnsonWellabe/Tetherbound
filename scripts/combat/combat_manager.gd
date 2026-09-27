@@ -472,6 +472,37 @@ func is_fighting() -> bool:
 	return state != State.INACTIVE
 
 
+## F14 C3 (tb/tidewake-visuals, #356 grant 5859072534): a trainer's send-out
+## beat. Set by the director before a trainer round's `begin()` while that
+## trainer still has creatures to send. A round won under it keeps the fight
+## camera on the player's creature and that creature on the field instead of
+## handing both back to exploration for `send_out_seconds`, so the HUD no
+## longer flashes the exploration layer (quest tracker, hotbar) mid-battle and
+## the next round does not snap in from the exploration arm. Wild fights and
+## a trainer's last creature never set it.
+var hold_round: bool = false
+var _holding_round: bool = false
+
+
+## True through a fight AND a held send-out beat: what the HUD shows, never
+## what gameplay asks. `is_fighting()` stays the state machine's answer.
+func presenting_fight() -> bool:
+	return state != State.INACTIVE or _holding_round
+
+
+## End a held beat without a next round (the trainer had nobody left to send,
+## or the battle was torn down): the camera goes back to the player now.
+func end_round_hold() -> void:
+	hold_round = false
+	if not _holding_round:
+		return
+	_holding_round = false
+	if _ally_body != null and is_instance_valid(_ally_body):
+		_ally_body.visible = false
+	_release_camera(null)
+	state_changed.emit()
+
+
 func arena() -> Node3D:
 	return _arena
 
@@ -506,6 +537,7 @@ func begin(
 		push_error("cannot begin combat without a player, a wild creature, a deployed body and a party")
 		return false
 
+	_holding_round = false
 	_player = player
 	_wild = wild
 	_ally_body = ally_body
@@ -3786,8 +3818,12 @@ func _finish() -> void:
 	_encounter_seq = 0
 
 	_throw.call("disarm")
+	var hold := hold_round and _enemy_owned and _outcome == "won" and not _realm_owned_opponent
+	hold_round = false
+	_holding_round = hold
 	if _ally_body != null:
-		_ally_body.visible = false
+		if not hold:
+			_ally_body.visible = false
 		_ally_body.set("arena", null)
 	# Freed with the arena it was parented to; only the stale reference needs
 	# clearing here.
@@ -3801,7 +3837,12 @@ func _finish() -> void:
 			and aftermath_focus.is_inside_tree():
 		fought_at = aftermath_focus.global_position
 	aftermath_focus = null
-	_release_camera(fought_at)
+	if hold:
+		# The fallen body is freed during the beat; stop tracking it.
+		if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_tracking_target"):
+			_camera_rig.call("set_tracking_target", null, {})
+	else:
+		_release_camera(fought_at)
 
 	exited.emit(_outcome)
 	_realm_owned_opponent = false

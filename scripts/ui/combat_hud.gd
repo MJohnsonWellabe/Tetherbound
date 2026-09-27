@@ -495,6 +495,11 @@ func _process(delta: float) -> void:
 	_draw_prompt()
 
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	if not fighting and _manager != null and _manager.has_method("presenting_fight") \
+			and bool(_manager.call("presenting_fight")):
+		# F14 C3: a trainer's held send-out beat. The fight panels stay as the
+		# last round left them until the next creature is out; nothing redraws.
+		return
 	if not fighting:
 		_show_fight(false, _was_fighting)
 		_was_fighting = false

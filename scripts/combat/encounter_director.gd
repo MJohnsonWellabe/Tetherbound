@@ -5319,6 +5319,11 @@ func _send_out_next_creature() -> bool:
 			(_player as CharacterBody3D).velocity = Vector3.ZERO
 
 	var creature: RefCounted = _trainer_queue.pop_front()
+	# F14 C3: while this trainer has another creature to send, a won round
+	# holds the fight camera and HUD through the send-out beat
+	# (`combat_manager.hold_round`); the last creature never sets it.
+	if _manager != null and "hold_round" in _manager:
+		_manager.set("hold_round", not _trainer_queue.is_empty())
 	# §10's multiplier is deliberately NOT applied here. It is read off the
 	# encounter record, and the record is not opened or resumed until
 	# `_start_fight()` below -- so a call at this point reads an identity row and
@@ -5634,6 +5639,8 @@ func _finish_trainer_battle(won: bool) -> void:
 	_tournament_entry_condition.clear()
 	if not tournament_encounter_id.is_empty():
 		_release_tournament_roster(tournament_encounter_id)
+	if _manager != null and _manager.has_method("end_round_hold"):
+		_manager.call("end_round_hold")
 	_trainer_spec = {}
 	_trainer_node = null
 	_trainer_queue.clear()
