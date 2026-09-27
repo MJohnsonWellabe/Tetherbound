@@ -53,3 +53,22 @@ func test_solvency_counts_repeated_wild_fights_only() -> void:
 	assert_eq(int(out["wilds_fought"]), 2)
 	assert_eq(out["repeated_wilds"], ["Wild_bramblebun_0_2"])
 	assert_false(bool(out["reserve_ok"]), "no scored stage is not a pass")
+
+
+func test_strict_beats_drop_repeated_verbs_controls_and_seen_species() -> void:
+	var list := [{"kind": "offer", "detail": "Chop"}, {"kind": "offer", "detail": "Put Bud away"},
+		{"kind": "offer", "detail": "Greet Mira"}, {"kind": "wild_within_radius", "detail": "Wild_a_1 bramblebun"},
+		{"kind": "wild_within_radius", "detail": "Wild_a_2 bramblebun"}, {"kind": "fight_started", "detail": "Wild_a_1"},
+		{"kind": "flag_set", "detail": "road_gate_open"}, {"kind": "offer", "detail": "Engage Bramblebun"}]
+	var strict: Array = LEDGER.strict_beats(list)
+	var kept: Array = []
+	for beat: Dictionary in strict:
+		kept.append(str(beat["detail"]))
+	assert_eq(kept, ["Greet Mira", "Wild_a_1 bramblebun", "Wild_a_1", "road_gate_open"])
+
+
+func test_strict_a7_reads_active_travel_between_beats() -> void:
+	var strict := [{"detail": "a", "active_s": 10.0}, {"detail": "b", "active_s": 50.0}, {"detail": "c", "active_s": 200.0}]
+	var out: Dictionary = LEDGER.strict_a7(strict, 120.0)
+	assert_almost_eq(float(out["longest"]["seconds"]), 150.0)
+	assert_eq((out["violations"] as Array).size(), 1)

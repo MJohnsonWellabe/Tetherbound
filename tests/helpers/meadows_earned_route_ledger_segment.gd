@@ -41,6 +41,9 @@ var _last_pos := Vector3.INF
 var _stage := ""
 var _fighting := false
 var _active_gap_s := 0.0
+## Total active-travel seconds so far, stamped on every beat so the strict
+## A7 gap between any two beats can be computed after the run.
+var _active_total_s := 0.0
 var _active_gap_start := {}
 var _worst_gap := {"seconds": 0.0}
 var _a7_violations: Array = []
@@ -147,6 +150,61 @@ static func solvency(rows: Array, beat_list: Array, potion_price: int, revive_pr
 		"four_character": "not computed: needs route harvest totals or a four-peer run"}
 
 
+## Strict beat reading for WORLD §3.1 and A7 ("repeated scenery does not reset
+## the clock"). A resource verb repeated along the road (every tree offers
+## Chop), a door and the creature controls are not a meaningful sight,
+## encounter or decision; a wild body counts only as the first of its species
+## seen. Fights, story flags and every other offer (a person, a trainer, a
+## TM, a craft or rest spot, a gate) count. Reported beside the loose reading.
+const REPEATED_VERBS := ["Chop", "Gather", "Pick up", "Mine", "Strip meadow grass",
+	"Gather deadwood", "Prise loose stones", "Prise out rootstone", "Pick berries",
+	"Open Door", "Close Door"]
+const CONTROL_PREFIXES := ["Put ", "Call out ", "Change Creature"]
+
+
+static func strict_beats(beat_list: Array) -> Array:
+	var out: Array = []
+	var species_seen := {}
+	for raw: Variant in beat_list:
+		var beat := raw as Dictionary
+		var kind := str(beat.get("kind", ""))
+		var detail := str(beat.get("detail", ""))
+		if kind == "offer":
+			if REPEATED_VERBS.has(detail) or detail.begins_with("Engage "):
+				continue
+			var control := false
+			for prefix: String in CONTROL_PREFIXES:
+				control = control or detail.begins_with(prefix)
+			if control:
+				continue
+		elif kind == "wild_within_radius":
+			var species := detail.get_slice(" ", 1)
+			if species_seen.has(species):
+				continue
+			species_seen[species] = true
+		out.append(beat)
+	return out
+
+
+## A7 over strict beats: the active-travel seconds between consecutive strict
+## beats (each beat carries the running active-travel total).
+static func strict_a7(strict: Array, limit_s: float) -> Dictionary:
+	var worst := {"seconds": 0.0}
+	var violations: Array = []
+	for i in range(1, strict.size()):
+		var a: Dictionary = strict[i - 1]
+		var b: Dictionary = strict[i]
+		var gap := float(b.get("active_s", 0.0)) - float(a.get("active_s", 0.0))
+		var row := {"seconds": snappedf(gap, 0.1), "from": a.get("detail", a.get("kind")),
+			"to": b.get("detail", b.get("kind")), "stage": b.get("stage", ""),
+			"from_pos": a.get("pos"), "to_pos": b.get("pos")}
+		if gap > float(worst["seconds"]):
+			worst = row
+		if gap > limit_s:
+			violations.append(row)
+	return {"longest": worst, "violations": violations}
+
+
 func summary() -> Dictionary:
 	var gaps := spacing_gaps(beats)
 	var over: Array = []
@@ -161,7 +219,23 @@ func summary() -> Dictionary:
 		"a7_longest_active_gap": _worst_gap, "a7_violations": _a7_violations,
 		"spacing_median_m": snappedf(float(lengths[lengths.size() / 2]), 0.1) if not lengths.is_empty() else -1.0,
 		"spacing_over_window": over, "stages": ledger.size(),
-		"solvency": solvency(ledger, beats, _price("potion_small"), _price("revive"))}
+		"solvency": solvency(ledger, beats, _price("potion_small"), _price("revive")),
+		"strict": _strict_summary()}
+
+
+func _strict_summary() -> Dictionary:
+	var strict := strict_beats(beats)
+	var gaps := spacing_gaps(strict)
+	var over: Array = []
+	var lengths: Array = []
+	for gap: Dictionary in gaps:
+		lengths.append(float(gap["metres"]))
+		if float(gap["metres"]) > WINDOW_M:
+			over.append(gap)
+	lengths.sort()
+	return {"beats": strict.size(),
+		"spacing_median_m": snappedf(float(lengths[lengths.size() / 2]), 0.1) if not lengths.is_empty() else -1.0,
+		"spacing_over_window": over, "a7": strict_a7(strict, A7_LIMIT_S)}
 
 
 static func _price(item_id: String) -> int:
@@ -261,12 +335,14 @@ func _observe() -> void:
 		if _active_gap_s == 0.0:
 			_active_gap_start = {"t": snappedf(_t, 0.1), "path_m": snappedf(_path_m, 0.1), "pos": _v(pos), "stage": _stage}
 		_active_gap_s += step
+		_active_total_s += step
 
 
 func _beat(kind: String, detail: String, pos: Vector3) -> void:
 	_close_gap()
 	beats.append({"kind": kind, "detail": detail, "t": snappedf(_t, 0.1),
-		"path_m": snappedf(_path_m, 0.1), "pos": _v(pos), "stage": _stage})
+		"path_m": snappedf(_path_m, 0.1), "active_s": snappedf(_active_total_s, 0.1),
+		"pos": _v(pos), "stage": _stage})
 	_write({"kind": "beat", "beat": beats.back()})
 
 
