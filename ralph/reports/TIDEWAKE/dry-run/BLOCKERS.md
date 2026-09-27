@@ -29,3 +29,10 @@ Driver: `tests/smoke_tidewake_dry_run.gd`. The only fixture is the declared star
 | B6 | Walked return | No harness walks Stormwood → Cloudreach → Meadows. F15#2 is data-level and PARTIAL: 2 A7 gaps each in Cloudreach and Meadows | other lanes' data; SHARED-FILE REQUESTs posted on #330 | open |
 
 Known from earlier reports, still to be met in this run: the Deep Watch strand after Tidecoil (no wading path back without a swimmer; Tidewake-B `f13_3_lures/PROOF.md`), and the Calder 180 s timeout (`../f13_earned_continuous/REPORT.md`).
+
+## Update 2026-09-27 10:20: full run from the declared start (tb/tidewake 193e08f4 + X05 host-Wind fix)
+One run with a reload after every segment: start → Pell → Reedhaven → Brine → Shellwatch → **Tidal PASS** (Aquaryn beaten in about 47 s; B1 is fixed by X05's `encounter_host.advance_wind`, merged from `tb/x05` 7ff64a15) → **late**:
+- **Human sheltered crossings PASS**, same five: Tidal → Salt Crown (461.7 m, 4 rest shoals), Salt Crown chart, Salt Crown → Sluice (430.7 m, 4 rest shoals). Stamina never dropped below 100% at a shoal, so the rests are effectively unneeded at level 0 on these routes.
+- **Bex beaten**; the west control and the Sluice camp recovery pass.
+- **B7: the Calder fight exceeded the late segment's 180 s bound.** That is a harness bound, not a game fault: reader medians against Calder are 214–329 s (`../f14_confirm_main/TABLE.md`). Fixed in 5b67ea91: the fight bound and watchdog are overridable, and the human segment uses 600 s and 120 min.
+- Island groups reached in this run: first_shores, marsh_channels, tidal_cradle, outer_reaches (Salt Crown), tether_current (Sluice). Veilfall is pending the resumed run (`--from=tidal --through=late`).
