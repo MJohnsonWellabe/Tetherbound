@@ -163,8 +163,8 @@ func pending_inviter_name(lobby_id: int = 0) -> String:
 		return ""
 	if lobby_id > 0 and lobby_id != _pending_invite:
 		return ""
-	var name := str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
-	return "" if name == "[unknown]" else name
+	var persona := str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
+	return "" if persona == "[unknown]" else persona
 
 
 ## Native lobby requests have no request token.  After a timeout the old
@@ -618,6 +618,12 @@ func _publish_metadata(lobby_id: int) -> bool:
 	var world_id := _host_world_id()
 	if not world_id.is_empty():
 		_steam.call("setLobbyData", lobby_id, "world_id", world_id)
+	# The host's trainer name, for the Join Friend screen (MULTIPLAYER §1.1:
+	# show the host/session identity before joining). Informational like
+	# world_id: never a reason to fail hosting.
+	var host_name := _host_character_name()
+	if not host_name.is_empty():
+		_steam.call("setLobbyData", lobby_id, "host_name", host_name)
 	return product_ok and protocol_ok and build_ok and host_ok and ready_ok
 
 
@@ -627,6 +633,27 @@ func _host_world_id() -> String:
 	if world is Object and is_instance_valid(world):
 		return str((world as Object).get("world_id"))
 	return ""
+
+
+const HOST_NAME_MAX_CHARS := 32
+
+
+func _host_character_name() -> String:
+	var game := get_parent()
+	var local: Variant = game.get("local") if game != null else null
+	if not (local is Object) or not is_instance_valid(local):
+		return ""
+	var trainer_name := str((local as Object).get("display_name")).strip_edges()
+	return trainer_name.left(HOST_NAME_MAX_CHARS)
+
+
+## The host trainer name a lobby published; empty when unknown. Read on the
+## joiner after `lobby_ready`, beside `pending_inviter_name()`'s Steam name.
+func lobby_host_name(lobby_id: int = 0) -> String:
+	var id := lobby_id if lobby_id > 0 else _current_lobby
+	if _steam == null or id <= 0:
+		return ""
+	return str(_steam.call("getLobbyData", id, "host_name")).strip_edges().left(HOST_NAME_MAX_CHARS)
 
 
 ## The world id a lobby's host published; empty when unknown.
