@@ -28,6 +28,27 @@ const FAINT_HIDE_S := 1.0
 ## The faint prompt is a transient toast (`playground_hud.gd` shows one for
 ## 2.2 s). Still choosing this long after it, the player sees it once more.
 const FAINT_PROMPT_RESHOW_S := 4.0
+const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
+## The DynamoCore deck's outer radius (`stormheart_tree.gd` `_ring("DynamoCore", 9, 44, ...)`).
+const DECK_OUTER_RADIUS_M := 44.0
+const DECK_INNER_RADIUS_M := 9.0
+## How near the deck this peer's trainer must stand for the deck floor claim
+## (the ascent's last turn runs 3-5.7 m under solid deck from ~214 to 242 deg).
+const DECK_CLAIM_VERTICAL_M := 3.0
+## `_ring("DynamoCore")` leaves segments 43-47 of 64 open for the ascent's
+## final turn. The ascent needs headroom only over its own band (radius
+## RAMP_RADIUS +- RAMP_WIDTH/2, rails included); the rest of that wedge is
+## infilled so the conduit route from bank 3 to bank 2 does not drop a
+## creature 36 m to the turn below (focused Marrow smoke, Break window 1).
+const DECK_GAP_SEGMENTS := Vector2i(43, 48)
+const DECK_GAP_CLEARANCE_M := 0.3
+## A rail around the 9 m core hole, the ascent rails' size: a Break discharge
+## once threw the piloted ally over the edge and it fell 150 m (focused smoke).
+const CORE_RAIL_SEGMENTS := 32
+const CORE_RAIL_SIZE := Vector3(0.22, 1.4, 0.0)
+## Where the ascent's own rails rise above deck level in the gap (their tops
+## are ramp + 1.4 m, the ramp climbing 0.1 m per degree to the landing at 270).
+const GAP_GUARD_TO_DEG := 257.0
 
 var world: Node3D
 var hub: Node
@@ -87,6 +108,7 @@ func mount(owner_world: Node3D) -> void:
 	arena.name = "DynamoArena"
 	add_child(arena)
 	arena.build(rules, bool(world.get("simulation_only")))
+	_build_deck_infill(bool(world.get("simulation_only")))
 	if not bool(world.get("simulation_only")):
 		var control := FIELD_CONTROL.new()
 		control.name = "FieldControl"
@@ -106,6 +128,152 @@ func arena_ready() -> bool:
 	# The same prompt admits a second peer to the live captain fight and lets a
 	# reconnecting peer rejoin a persisted conduit phase. Neither is a new win.
 	return flags.has(CORE_FLAG) and flags.has(KESTREL_FLAG) and not flags.has(MARROW_FLAG)
+
+
+## `built_floor.gd` claim: while the core fight is live, a fight placement
+## over the deck (the ally, Marrow's creatures, the player) stands on the
+## Dynamo deck, not on the Terrain3D floor 150 m below it, which is where
+## every placement resolved before (focused smoke
+## `tests/smoke_stormwood_marrow_press.gd`: the ally struck conduits from the
+## terrain under the tree). Outside the fight nothing is claimed, so a body on
+## the ascent ramp inside the same footprint keeps its own ground.
+func built_floor_height_at(x: float, z: float) -> float:
+	if _deck_tree() == null or not core_fight_live():
+		return NAN
+	# The claim carries no height of its own, and the ascent (a helix inside
+	# the same footprint) and the Outer Works ring lie below it: it holds only
+	# while this peer's trainer is up on the deck, where the fight is.
+	var player := world.get_node_or_null("Player") as Node3D
+	if player == null or absf(player.global_position.y - deck_height()) > DECK_CLAIM_VERTICAL_M:
+		return NAN
+	if not deck_solid_at(Vector2(x - global_position.x, z - global_position.z)):
+		return NAN
+	return deck_height()
+
+
+## Solid deck at Dynamo-local `local` x/z: the ring outside the core hole,
+## minus the ascent's open band in the ring gap (the infill covers the rest).
+static func deck_solid_at(local: Vector2) -> bool:
+	var r := local.length()
+	if r < DECK_INNER_RADIUS_M or r > DECK_OUTER_RADIUS_M:
+		return false
+	var deg := fposmod(rad_to_deg(local.angle()), 360.0)
+	var in_gap := deg >= float(DECK_GAP_SEGMENTS.x) * 360.0 / 64.0 and deg < float(DECK_GAP_SEGMENTS.y) * 360.0 / 64.0
+	var band_in := STORMHEART.RAMP_RADIUS - STORMHEART.RAMP_WIDTH * 0.5 - DECK_GAP_CLEARANCE_M
+	var band_out := STORMHEART.RAMP_RADIUS + STORMHEART.RAMP_WIDTH * 0.5 + DECK_GAP_CLEARANCE_M
+	return not (in_gap and r > band_in and r < band_out)
+
+
+## Marrow's hosted rounds, the Overload and the conduit Break.
+func core_fight_live() -> bool:
+	if phase == "overload" or phase == "break_core":
+		return true
+	if is_instance_valid(fight) and not bool(fight.get("finished")):
+		return true
+	# A client's own hosted round (the host's `fight` lives only on the host).
+	var director := _director()
+	return director != null and str(director.get("_hosted_trainer")) == TRAINER_ID
+
+
+## Static deck over the parts of the ring gap the ascent does not rise through.
+func _build_deck_infill(simulation_only: bool) -> void:
+	var y := deck_height() - global_position.y
+	var ramp_inner := STORMHEART.RAMP_RADIUS - STORMHEART.RAMP_WIDTH * 0.5 - DECK_GAP_CLEARANCE_M
+	var ramp_outer := STORMHEART.RAMP_RADIUS + STORMHEART.RAMP_WIDTH * 0.5 + DECK_GAP_CLEARANCE_M
+	var vertices := PackedVector3Array()
+	for band: Vector2 in [Vector2(DECK_INNER_RADIUS_M, ramp_inner), Vector2(ramp_outer, DECK_OUTER_RADIUS_M)]:
+		var from := float(DECK_GAP_SEGMENTS.x) * TAU / 64.0
+		var to := float(DECK_GAP_SEGMENTS.y) * TAU / 64.0
+		var steps := 12
+		for i in steps:
+			var a := lerpf(from, to, float(i) / steps)
+			var b := lerpf(from, to, float(i + 1) / steps)
+			var p0 := Vector3(cos(a) * band.x, y, sin(a) * band.x)
+			var p1 := Vector3(cos(a) * band.y, y, sin(a) * band.y)
+			var p2 := Vector3(cos(b) * band.y, y, sin(b) * band.y)
+			var p3 := Vector3(cos(b) * band.x, y, sin(b) * band.x)
+			vertices.append_array([p0, p1, p2, p0, p2, p3])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var body := StaticBody3D.new()
+	body.name = "DeckInfill"
+	add_child(body)
+	var collider := CollisionShape3D.new()
+	var shape := mesh.create_trimesh_shape()
+	shape.backface_collision = true
+	collider.shape = shape
+	body.add_child(collider)
+	var material: StandardMaterial3D = null
+	if not simulation_only:
+		material = StandardMaterial3D.new()
+		material.albedo_color = Color("3d4752")
+		material.metallic = 0.65
+		material.roughness = 0.55
+		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		var visual := MeshInstance3D.new()
+		visual.mesh = mesh
+		visual.material_override = material
+		body.add_child(visual)
+	var core: Array[Vector3] = []
+	for i in CORE_RAIL_SEGMENTS + 1:
+		var a := float(i) * TAU / CORE_RAIL_SEGMENTS
+		var r := DECK_INNER_RADIUS_M + CORE_RAIL_SIZE.x
+		core.append(Vector3(cos(a) * r, y, sin(a) * r))
+	_rail("CoreRail", core, material)
+	# The ascent's open band in the gap is a 2-3 m drop from the deck until
+	# its own rails rise above deck level (~257 deg); guard both edges and
+	# the band's radial end so the deck is not stepped off into it.
+	var from := float(DECK_GAP_SEGMENTS.x) * TAU / 64.0
+	var guarded_to := deg_to_rad(GAP_GUARD_TO_DEG)
+	for r: float in [ramp_inner, ramp_outer]:
+		var arc: Array[Vector3] = []
+		for i in 9:
+			var a := lerpf(from, guarded_to, float(i) / 8.0)
+			arc.append(Vector3(cos(a) * r, y, sin(a) * r))
+		_rail("GapGuard%d" % int(r), arc, material)
+	_rail("GapGuardEnd", [Vector3(cos(from) * ramp_inner, y, sin(from) * ramp_inner),
+		Vector3(cos(from) * ramp_outer, y, sin(from) * ramp_outer)] as Array[Vector3], material)
+
+
+## A deck-level rail of box colliders (and bars when `material` is set) along
+## `points`, the ascent rails' size.
+func _rail(id: String, points: Array[Vector3], material: StandardMaterial3D) -> void:
+	var rail := StaticBody3D.new()
+	rail.name = id
+	add_child(rail)
+	for i in points.size() - 1:
+		var p := points[i]
+		var q := points[i + 1]
+		var length := p.distance_to(q) + 0.1
+		var pose := Transform3D(Basis.looking_at((q - p).normalized()), (p + q) * 0.5 + Vector3.UP * CORE_RAIL_SIZE.y * 0.5)
+		var box := BoxShape3D.new()
+		box.size = Vector3(CORE_RAIL_SIZE.x, CORE_RAIL_SIZE.y, length)
+		var piece := CollisionShape3D.new()
+		piece.shape = box
+		piece.transform = pose
+		rail.add_child(piece)
+		if material != null:
+			var bar := BoxMesh.new()
+			bar.size = Vector3(CORE_RAIL_SIZE.x, 0.18, length)
+			var visual := MeshInstance3D.new()
+			visual.mesh = bar
+			visual.material_override = material
+			visual.transform = Transform3D(pose.basis, pose.origin + Vector3.UP * (CORE_RAIL_SIZE.y * 0.5 - 0.09))
+			rail.add_child(visual)
+
+
+## The Stormheart Tree's deck height, or this node's own height where no tree
+## was built (a fixture world, which then claims no floor at all).
+func deck_height() -> float:
+	var tree := _deck_tree()
+	return tree.global_position.y + STORMHEART.CORE_HEIGHT if tree != null else global_position.y
+
+
+func _deck_tree() -> Node3D:
+	return world.get_node_or_null("StormheartTree") as Node3D if is_instance_valid(world) else null
 
 
 func begin_for_peer(peer: int) -> void:

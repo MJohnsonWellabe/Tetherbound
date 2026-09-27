@@ -14,7 +14,8 @@
   "strike_max_health_fraction": 0.25,
   "static_seconds": 8.0,
   "conduit_reach_m": 3.2,
-  "break_window_seconds": 30.0,
+  "break_window_seconds": 36.0,
+  "_why_break_window_seconds": "Coordinator-approved tune (Lane channel #356, 2026-09-27; BOSSES §3). On the built deck one solo lap of the four conduits is ~140 m, not the 120 m BOSSES assumed: it walks round the sealed Waterward gate 4 m in front of conduit 1, the Crown stair foot beside conduit 0 and the fenced ascent band. At 5.6 m/s the live piloted lap (tests/smoke_stormwood_marrow_press.gd) finished inside 30 s on about half the runs, 0.3-3 s either side. 36 s restores the spec's ~7 s margin on the real geometry.",
   "captain_trainer_id": "captain_marrow_dynamo_core",
   "replacement_point": "stormwood_dynamo.captive.placeholder_species",
   "captive": {"placeholder_species": "sparkit", "level": 44, "scale": 1.8, "nickname": "the Stormheart"}

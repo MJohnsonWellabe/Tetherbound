@@ -103,6 +103,8 @@ Test Meadows, Stormwood and Tidewake accepting and refusing their legendary, at 
 
 ### 6.1 Feature-request acceptance (ROADMAP F01–F15)
 
+**Owner ruling (2026-09-27): relaxed proof starts.** Fixture or declared start saves, teleport/position writes, flag/ledger/inventory/party writes, harness-driven fights and skipped sub-parts no longer make a claim partial, including where a row below says "fresh", "no teleport" or "no state injection". Each one must be disclosed in the READY post and on the board. Visual rows still need a code-blind judge; co-op rows still need two-peer evidence; a green full CI on main is still required.
+
 Each F row below is a separate feature PRD exit. The chapter cards above are the integrated stop conditions and remain required even when every F row has passed its local proof. For each F row, record the named ordinary-play witness or deterministic test, starting save, commit/package, expected and observed result, and an independent agent verdict in its PR/evidence lane. A source count, isolated screenshot or staged late save cannot close the continuous-path part. An unmet or unavailable witness stays open; do not check off a whole F row because one child task merged.
 
 | ID | Separate pass/fail result required before this feature is accepted |

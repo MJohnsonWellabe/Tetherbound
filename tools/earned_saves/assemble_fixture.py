@@ -6,6 +6,18 @@
 Reads each segment's receipt.json under <chain_root>/<segment>/, refuses unless
 all seven passed, copies <chain_root>/warden/save/ to
 tests/fixtures/earned_saves/c1_arrival/save/ and refuses above 20 MB.
+
+Checkpoint-joined mode (owner speed rule: iterate from the save just before a
+failure):
+
+    assemble_fixture.py <chain_root> <seed> "<cmd>" --prefix=<receipts_dir> \
+        --legs=warden@village_pre_kell,kell_rift2@storm_road_join,storm2
+
+<receipts_dir> holds passed receipts for the segments before `warden` (the
+committed seed4_hall checkpoint). Each leg is a dir under <chain_root>; a leg
+with @<checkpoint> may have failed later but must carry the passed
+`checkpoint_<checkpoint>` receipt, and the next leg must have been started from
+that checkpoint's save. The last leg must pass; its save becomes the fixture.
 """
 import json
 import os
@@ -23,8 +35,49 @@ def size_of(path):
     return sum(os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(path) for f in fs)
 
 
+def beats(receipt):
+    out = []
+    for block in receipt.get("helper_receipts", []):
+        out.extend(block.get("receipts", []) if isinstance(block, dict) else [])
+    return out
+
+
+def joined(root, prefix, legs):
+    segments, disclosures = [], []
+    for name in SEGMENTS[:-1]:
+        with open(os.path.join(prefix, name + ".json")) as fh:
+            receipt = json.load(fh)
+        if not receipt.get("passed"):
+            sys.exit("prefix segment %s did not pass" % name)
+        segments.append(receipt)
+    specs = [leg.split("@") for leg in legs.split(",")]
+    for index, spec in enumerate(specs):
+        with open(os.path.join(root, spec[0], "receipt.json")) as fh:
+            receipt = json.load(fh)
+        receipt["segment"] = "%s (%s)" % (receipt.get("segment"), spec[0])
+        if len(spec) == 2:
+            mark = [b for b in beats(receipt) if b.get("beat") == "checkpoint_" + spec[1]]
+            if not mark or not mark[0].get("saved"):
+                sys.exit("leg %s has no saved checkpoint_%s receipt" % (spec[0], spec[1]))
+            disclosures.append("Leg %s was cut at its earned checkpoint %s (saved at %s); its later failure %s is "
+                               "discarded and leg %s started from that checkpoint save." % (
+                                   spec[0], spec[1], mark[0].get("player"), receipt.get("failures"), specs[index + 1][0]))
+        elif index != len(specs) - 1 or not receipt.get("passed"):
+            sys.exit("final leg %s did not pass" % spec[0])
+        segments.append(receipt)
+    disclosures.append("Kell-to-Rift helper routing is disclosed in BLOCKERS.md B13-B16 with receipts: the ordinary "
+                       "Kell walk (B13), the stick-walked quarry_northbound_detour (B14), storm_road_via_sigil_gate "
+                       "(B15), and cloudreach_arrived readiness evaluated on the deadline frame as production does (B16). "
+                       "None writes a flag, item, party member or position.")
+    return segments, os.path.join(root, specs[-1][0], "save"), disclosures
+
+
 def main():
     root, seed, command = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+    options = dict(arg[2:].split("=", 1) for arg in sys.argv[4:] if arg.startswith("--") and "=" in arg)
+    if "legs" in options:
+        segments, source, join_notes = joined(root, options["prefix"], options["legs"])
+        return write(root, seed, command, segments, source, join_notes)
     segments = []
     for name in SEGMENTS:
         with open(os.path.join(root, name, "receipt.json")) as fh:
@@ -32,7 +85,10 @@ def main():
         if not receipt.get("passed"):
             sys.exit("segment %s did not pass" % name)
         segments.append(receipt)
-    source = os.path.join(root, "warden", "save")
+    write(root, seed, command, segments, os.path.join(root, "warden", "save"), [])
+
+
+def write(root, seed, command, segments, source, join_notes):
     total = size_of(source)
     if total > LIMIT:
         sys.exit("final save is %d bytes (> 20 MB); not copying" % total)
@@ -63,7 +119,7 @@ def main():
             "bench/road/pre-Warden Satchel care (between_fight_care, pre_warden_bench_care), delayed-dialogue prompt "
             "presses, the Warden reward read-out, the F05 spatial accept prompt, and the acknowledgement walk on the "
             "forward roads reversed (warren_undertrail and the B3 mound detour). None writes a flag, item, party member or position.",
-        ] + [d for s in segments for d in s.get("disclosures", [])],
+        ] + join_notes + [d for s in segments for d in s.get("disclosures", [])],
         "segments": [{k: s[k] for k in (
             "segment", "passed", "wall_seconds", "game_day", "game_clock_seconds", "location",
             "flags_gained", "flags_total", "party_before", "party_after", "key_items", "free_build",

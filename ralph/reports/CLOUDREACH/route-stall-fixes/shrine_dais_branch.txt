@@ -1,0 +1,1 @@
+CLOUDREACH SHRINE DAIS {"end":"(1120.667, 1051.301, 2938.542)","failures":[],"launch_room_hits":[],"pillar_shapes":["CylinderShape3D r=1.10","CylinderShape3D r=1.10"],"verdict":"PASS","walked_to_target":true}
