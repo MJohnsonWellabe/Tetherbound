@@ -83,6 +83,7 @@ func test_route_cue_shows_the_route_first_then_the_ordinary_tell() -> void:
 	assert_almost_eq(float(wild.get("_beat_left")), 1.9, 0.0001, "1.1 s cue + 0.8 s tell")
 	assert_almost_eq(float(wild.call("route_cue_left")), 1.1, 0.0001)
 	assert_false(bool(wild.call("is_winding_up")), "the cue comes before the wind-up (no interrupt or HUD warning yet)")
+	assert_false(bool(wild.call("is_rooted")), "and the HUD never calls the body open while its route is drawn")
 	assert_false(bool(wild.call("_lunge_heading_is_locked")), "the route still tracks during the cue")
 	# The lock clock measures the 0.8 s tell only: still unlocked just before the
 	# tell starts, locked inside it (lane lock at half the tell).

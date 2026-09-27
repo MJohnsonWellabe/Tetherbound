@@ -1159,8 +1159,10 @@ func stagger_seconds_left() -> float:
 
 func is_rooted() -> bool:
 	# A charging body is committed, not open: the HUD's "it's open" waits for
-	# the charge to stop.
-	return engaged and AI.is_rooted(_intent) and not _lunge_active
+	# the charge to stop. Nor is a body showing its route cue (F10#2): the drawn
+	# lane is the cue there, so the HUD says nothing until the tell.
+	return engaged and AI.is_rooted(_intent) and not _lunge_active \
+		and not (_intent == AI.Intent.TELEGRAPH and _route_cue_left > 0.0)
 
 
 func intent() -> int:
