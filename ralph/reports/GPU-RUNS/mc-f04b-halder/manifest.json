@@ -1,0 +1,401 @@
+{
+  "label": "mc-f04b-halder",
+  "sha": "7fe6e7037a37d5e68d4c6833dcc554fafadc1625",
+  "script": "tools/art_pipeline/capture_named_fight.gd",
+  "args": [
+    "--trainer=captain_field",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16"
+  ],
+  "mode": "render",
+  "comment_id": 5855249816,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/mc-f04b-halder",
+  "stage": "ready_to_publish",
+  "runner_pid": 16716,
+  "started_utc": "2026-09-27T13:39:21.757682+00:00",
+  "engine_pid": 6676,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\mc-f04b-halder",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tools/art_pipeline/capture_named_fight.gd",
+    "--",
+    "--trainer=captain_field",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T13:46:10.675630+00:00",
+  "output_worktree_files": [
+    "shots\\f04\\captain_field-00-before.png",
+    "shots\\f04\\captain_field-01.png",
+    "shots\\f04\\captain_field-02.png",
+    "shots\\f04\\captain_field-03.png",
+    "shots\\f04\\captain_field-04.png",
+    "shots\\f04\\captain_field-05.png",
+    "shots\\f04\\captain_field-06.png",
+    "shots\\f04\\captain_field-07.png",
+    "shots\\f04\\captain_field-08.png",
+    "shots\\f04\\captain_field-09.png",
+    "shots\\f04\\captain_field-10.png",
+    "shots\\f04\\captain_field-11.png",
+    "shots\\f04\\captain_field-12.png",
+    "shots\\f04\\captain_field-13.png",
+    "shots\\f04\\captain_field-14.png",
+    "shots\\f04\\captain_field-15.png",
+    "shots\\f04\\captain_field-16.png",
+    "shots\\f04\\captain_field-17.png",
+    "shots\\f04\\captain_field-18.png",
+    "shots\\f04\\captain_field-19.png",
+    "shots\\f04\\captain_field-20.png",
+    "shots\\f04\\captain_field-21.png",
+    "shots\\f04\\captain_field-22.png",
+    "shots\\f04\\captain_field-23.png",
+    "shots\\f04\\captain_field-24.png",
+    "shots\\f04\\captain_field-99-after.png",
+    "shots\\f04\\captain_field-a01.png",
+    "shots\\f04\\captain_field-a02.png",
+    "shots\\f04\\captain_field-a03.png",
+    "shots\\f04\\captain_field-a04.png",
+    "shots\\f04\\captain_field-a05.png",
+    "shots\\f04\\captain_field-a06.png",
+    "shots\\f04\\captain_field-a07.png",
+    "shots\\f04\\captain_field-a08.png",
+    "shots\\f04\\captain_field-a09.png",
+    "shots\\f04\\captain_field-a10.png",
+    "shots\\f04\\captain_field-a11.png",
+    "shots\\f04\\captain_field-a12.png",
+    "shots\\f04\\captain_field-a13.png",
+    "shots\\f04\\captain_field-a14.png",
+    "shots\\f04\\captain_field-a15.png",
+    "shots\\f04\\captain_field-a16.png",
+    "shots\\f04\\captain_field-r01.png",
+    "shots\\f04\\captain_field-r02.png",
+    "shots\\f04\\captain_field-r03.png",
+    "shots\\f04\\captain_field-r04.png",
+    "shots\\f04\\captain_field-r05.png",
+    "shots\\f04\\captain_field-r06.png",
+    "shots\\f04\\captain_field-r07.png",
+    "shots\\f04\\captain_field-r08.png",
+    "shots\\f04\\captain_field-r09.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "c6aad046b1b05c105d0ed2c8727e2c7b5535ffbf1b5d215552e2b88ecb355dc9"
+    },
+    {
+      "path": "import.log",
+      "bytes": 2814,
+      "sha256": "67e2a1e5982b02ad0157c4cc5c51f6859106e3a42d08e9f2c6a328d4d5efbd2a"
+    },
+    {
+      "path": "run.log",
+      "bytes": 15291,
+      "sha256": "52f0d4db0947ae98166cbc91313a30fd61d29223fd5f1931ac633f6fcb1c7e61"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 2677,
+      "sha256": "e51bf0007e5243ec038872e3b5da2bbd07dd4a35971539e288d1b8e06d8b8629"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 916214,
+      "sha256": "c713ec481bec294e9567e211946035fc890a70dbf161a6ea7530725da006fd0f"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 15069,
+      "sha256": "0d0567f60945c4adbf47386d9d79df4318d09867282861aa7bc183e03c5a08c1"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 76,
+      "sha256": "08fd619763fc4042a5f37118b5409e1e816ca37f0eebf432da0fd3b20fbb6434"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-00-before.png",
+      "bytes": 3704583,
+      "sha256": "eac7091902f70bff72716d522539440e982239aeb1521ce447825c7f3407dddf"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-01.png",
+      "bytes": 4176286,
+      "sha256": "9c46a974153cb409972c82749374bb15639df0179ff7dcd9e69ac6d2de1ecfdc"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-02.png",
+      "bytes": 4206039,
+      "sha256": "66577e91ac5fac22ff3527dc512ffe438bc8e9cbf0736cefd3e093bf8720db39"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-03.png",
+      "bytes": 4434883,
+      "sha256": "cb46829c588271890282caf268822a18b5a75c359b3c95c1f22911762cd6db90"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-04.png",
+      "bytes": 4473207,
+      "sha256": "2943a505994c29bf628d72ec50b0601433db00785df49f8fa4b058eb7fea0f91"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-05.png",
+      "bytes": 4453169,
+      "sha256": "5ce809c7e4f5a540cb987efbda900e214be72a0fe9b5c87d8fea0d3614835b64"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-06.png",
+      "bytes": 4330622,
+      "sha256": "9c2a7c2060c2842ec3ec8638c824e85160bfb2e6eb1804e2d6d2cbbd8be2a05c"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-07.png",
+      "bytes": 4317271,
+      "sha256": "5d9d789a61268bfaf93373a894664392f2cec82ce0b78236fd43e68cfd787bb6"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-08.png",
+      "bytes": 4359131,
+      "sha256": "6bbdd122b147d53b9fb3e498804cdee954ad9dd1d630b2f3109d362fbc130ef5"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-09.png",
+      "bytes": 4347575,
+      "sha256": "b74a32d28ffcf693b77115305e6a2a2fa7fa6462d117a3836ef33caaba7c1a0a"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-10.png",
+      "bytes": 4521808,
+      "sha256": "7a8c92a83cdab83124edb3a3749ee117bcd981489ad7dbd1b880f18b15fd93de"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-11.png",
+      "bytes": 4406640,
+      "sha256": "fecaec01c6db415bb9b12d460eb5d9ccbd130f28445b9db05a9dc06f79acac73"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-12.png",
+      "bytes": 4415456,
+      "sha256": "5e8b1fa248df2a954901c6e2603e6332228743459148abdbc528257273f6120e"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-13.png",
+      "bytes": 4326935,
+      "sha256": "2ca436d147a7cd424484f09f626db1aefb0ad61fef63dddf42d162846542ce57"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-14.png",
+      "bytes": 4321223,
+      "sha256": "a81206bacd044877fb94c4020ffde4166f2aa002b14f96bc3501ea5c66055b56"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-15.png",
+      "bytes": 4283795,
+      "sha256": "bf99565277a405ecb076eefdf1f3dfae473031882d45f26f8496a2c78d23be05"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-16.png",
+      "bytes": 4328494,
+      "sha256": "feec64142746c400efc8513399d0b01d04b9dfee5523c18a959dc306e1500866"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-17.png",
+      "bytes": 4412374,
+      "sha256": "c9b0f55a7a5d80bcd21ca2fc248526beef7f451c1e30c7af7b771f7cb0e4f7cc"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-18.png",
+      "bytes": 4426147,
+      "sha256": "67a150545e059731656453720ab75b9592e94dce1c543d07a20e6b8f2309f633"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-19.png",
+      "bytes": 4415026,
+      "sha256": "1dd0e22022f6bee564e5cfb7685a6b4255d59d017e3a41eb9550d085c589f1c3"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-20.png",
+      "bytes": 4421430,
+      "sha256": "7c949b5c44e7b159be8658e27c2f645ff8739054db52241dcf8d649bdb533c29"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-21.png",
+      "bytes": 4406310,
+      "sha256": "3ba4defc9cb8648bd157b2a63564540771943915ae4567018ad05103ea58888d"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-22.png",
+      "bytes": 4411109,
+      "sha256": "612e9a4a2b69e6aa4ed392494b37c7cf26190b2a424b52c2fb7bc9029659e94e"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-23.png",
+      "bytes": 4430355,
+      "sha256": "bf9d94b50d42d15c29779c932519e486cd8fff11386b36a7e6d3632631ef149b"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-24.png",
+      "bytes": 4387595,
+      "sha256": "71dcdc8144c6637810013e14c5f6043f2a5ad2083cab39e3b07983a65a1e6be1"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-99-after.png",
+      "bytes": 3969221,
+      "sha256": "dad454af2a0d2753745ba353decbafc33f9d0fc7742d46beabce9487fdb5d947"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a01.png",
+      "bytes": 4007590,
+      "sha256": "1303081216987e1058abc96a98be01dcc3262e1f6faa14fb74bba1fd0091b3ae"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a02.png",
+      "bytes": 4005202,
+      "sha256": "8b2cb759401d87ebff2f209f49fc447377b9a1081c9161667069fe547be49b51"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a03.png",
+      "bytes": 4002919,
+      "sha256": "ab0c15d832bd09765033f5bb733ac167d208ff447b6c88bd804243e07504ef3c"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a04.png",
+      "bytes": 3974207,
+      "sha256": "afee273410717a8e1f2b3f37de8f1dd85d23e1a4cdffd15f092d2ac831ecb286"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a05.png",
+      "bytes": 3977175,
+      "sha256": "94363c581c5b3c38fc4ba085dc4fd2a85aed2d413770cd90a8d91714d3309ade"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a06.png",
+      "bytes": 3977149,
+      "sha256": "4340e5132c5fd90b9d06d08c6aa16185acd14b02d594961101a648e281b71a72"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a07.png",
+      "bytes": 3973918,
+      "sha256": "d7e2f39809c270a2ffbb1847b48f59ab6d5b39353a6c0f5590fa351e1f2acf2c"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a08.png",
+      "bytes": 3977059,
+      "sha256": "5840ff562c16d324bcd8bf9ee27936fd9ab4d57925ac995c41d1c4fbe27dd81e"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a09.png",
+      "bytes": 3973472,
+      "sha256": "41ac92afa53967d074c5aae8c0cad7e0cbb6027fd3af3c819c20188982a5b7bf"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a10.png",
+      "bytes": 3971903,
+      "sha256": "57153fe7ca6d5524a876b2c899fe75bdc444b2fa9c5a957d50aca3d94a91a134"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a11.png",
+      "bytes": 3972197,
+      "sha256": "cfcb56ba5cb4f419e895464461aff34a7bcfb9bd64ffd7086e6a1f0e62b47e43"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a12.png",
+      "bytes": 3972543,
+      "sha256": "b3d27c812bad51c966b160e1e507b2f3d8f2e7d8ca01e48c5ca2a7e16010b372"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a13.png",
+      "bytes": 3971258,
+      "sha256": "50351545e629eb6a5bf499c0cd822bc415ae212bdbde484add3bd58ec15efd2b"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a14.png",
+      "bytes": 3975501,
+      "sha256": "d6dc633a5168127dfd23677bd6c141549831cf13f209052fb05853543ad7c52c"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a15.png",
+      "bytes": 3977486,
+      "sha256": "beb09146c47f7f117930e9dc57e1e46199c119546e208608dd3ef68c4bd2e35a"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-a16.png",
+      "bytes": 3974629,
+      "sha256": "668312837b79921521edd9679233aa364e45d135a5583f6be55f054489b9020f"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r01.png",
+      "bytes": 4382317,
+      "sha256": "ed0813269667a4a6b5f7fa0f9cab4e91089a385e0070406864535407b496c08f"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r02.png",
+      "bytes": 4387760,
+      "sha256": "a3ea93621f5129faedd63dfaa3a52984a8cef67a2143875df61c674cf8871fb0"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r03.png",
+      "bytes": 4094652,
+      "sha256": "ea7dc27be9a67e17489cfcc8367e73e8193835b8692247e4882e4398124f7909"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r04.png",
+      "bytes": 3863537,
+      "sha256": "4793816332d458e174b20daa96f33bbac92f4e161566f19e5f5840bc0629096d"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r05.png",
+      "bytes": 4404644,
+      "sha256": "197612ca85887ce2205550384ed6de315d92189789e290e1131ea3c9feaca6ba"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r06.png",
+      "bytes": 2654761,
+      "sha256": "679301b0b10e1dfb126250f5975a738a7f5ee8b5fe0c1cf92dc0733c17f5af41"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r07.png",
+      "bytes": 4213091,
+      "sha256": "b33ed62e3a05828c7544364cf062ce3ca705ff97a827923638515ea452328ef5"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r08.png",
+      "bytes": 4362638,
+      "sha256": "59ddcfb8245aed657c2a7d1c81da9452934eccdbbee17333b90ad141d7fa4f0e"
+    },
+    {
+      "path": "worktree/shots/f04/captain_field-r09.png",
+      "bytes": 4004252,
+      "sha256": "66527bfe5077600cfc3f616a0a264221dc262290078f46ab414994f192ba6062"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}
