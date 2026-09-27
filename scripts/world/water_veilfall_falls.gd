@@ -95,6 +95,10 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 	var colour := Color(lateral.x * 0.5 + 0.5, clampf(opacity, 0.0, 1.0) * 0.5, lateral.z * 0.5 + 0.5, width / 100.0)
 	var travelled := 0.0
 	var rows: Array = []
+	# A 96 m cascade cannot conform to a carved face with only its two edges.
+	# Sample across it as well as down it; otherwise each pair of rows bridges
+	# the terrain with a single large diagonal triangle.
+	var cross_segments := clampi(ceili(width / 6.0), 2, 32)
 	for index in path.size():
 		var centre: Vector3 = path[index]
 		if index > 0:
@@ -103,25 +107,38 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 		# Falls widen as they drop: narrow lip, full width at the foot.
 		var half := width * 0.5 * lerpf(taper, 1.0, t)
 		var row: Array = []
-		for side: float in [-1.0, 1.0]:
-			var at := centre + lateral * side * half
+		for across in cross_segments + 1:
+			var u := float(across) / float(cross_segments)
+			var side := u * 2.0 - 1.0
+			var at := centre + lateral * side * half + outward * standoff
 			var ground := float(_world.call("ground_height_at", at.x, at.z))
 			var y := maxf(centre.y, ground if is_finite(ground) else centre.y) + standoff
-			row.append({"at": Vector3(at.x, y, at.z) + outward * standoff,
-				"uv": Vector2(0.0 if side < 0.0 else 1.0, travelled)})
+			row.append({"at": Vector3(at.x, y, at.z),
+				"uv": Vector2(u, travelled)})
 		rows.append(row)
+	# Shared vertex normals keep changes of slope continuous instead of
+	# switching the lighting abruptly at every terrain sampling row.
+	for index in rows.size():
+		for across in cross_segments + 1:
+			var down: Vector3 = rows[mini(index + 1, rows.size() - 1)][across].at \
+				- rows[maxi(index - 1, 0)][across].at
+			var right: Vector3 = rows[index][mini(across + 1, cross_segments)].at \
+				- rows[index][maxi(across - 1, 0)].at
+			var normal := down.cross(right).normalized()
+			if normal.dot(outward + Vector3.UP * 0.2) < 0.0:
+				normal = -normal
+			rows[index][across]["normal"] = normal
 	for index in range(1, rows.size()):
 		var a: Array = rows[index - 1]
 		var b: Array = rows[index]
-		var a0: Vector3 = a[0].at
-		var normal: Vector3 = (b[0].at - a0).cross(a[1].at - a0).normalized()
-		if normal.dot(outward + Vector3.UP * 0.2) < 0.0:
-			normal = -normal
-		for corner: Dictionary in [a[0], a[1], b[1], a[0], b[1], b[0]]:
-			surface.set_color(colour)
-			surface.set_normal(normal)
-			surface.set_uv(corner.uv)
-			surface.add_vertex(corner.at)
+		for across in cross_segments:
+			for corner: Dictionary in [a[across], a[across + 1], b[across + 1],
+					a[across], b[across + 1], b[across]]:
+				surface.set_color(colour)
+				surface.set_normal(corner.normal)
+				surface.set_uv(corner.uv)
+				surface.set_uv2(Vector2(0.0, travelled - corner.uv.y))
+				surface.add_vertex(corner.at)
 
 
 func _spray_mesh(puffs: Array[Dictionary]) -> ArrayMesh:

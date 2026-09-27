@@ -1,10 +1,9 @@
 {
- "updated": "2026-09-26 21:25 UTC",
+ "updated": "2026-09-27 00:30 UTC",
  "headline": [
-  "Criteria met: 44 of 107. The official count moves only when full CI on main is green, and main's full run (32bd33079) is red in verify-combat-shard (point-blank quick attack does no damage, a batch 26 regression). A bisect-and-fix is running.",
-  "Queued to flip on the next green full run: 6 verified (F01#1/#4/#5, F02#1/#2, F13#1) and 5 landing in batch 30 (F09#1, F12#0, F13#2, F14#2, F15#3). That makes 55 of 107 when both land green.",
-  "Batch 30 (#316): 12 lane heads, review pass, auto-merge on fast tier. Batch 28 (#287) is merged (tb/ prefix + owner rulings); batch 29 (docs, Codex queue) rides in batch 30.",
-  "Rules now in force: one open PR per lane; all art goes to Codex (queue at the top of ralph/reports/VISUAL/AUDIT.md); READY work lands every 30 minutes."
+  "Criteria met: 54 of 101. Full CI 36280097924 on main (7a6b45ee0) is fully green, including the formerly known-red continuous-core job; F01#0 flipped.",
+  "Nothing else is queued to flip: the batch 30–34 claims re-scored partial. Lanes now post READY only for a full close (WORKFLOW §8, owner 2026-09-27); Cloudreach B1–B3 route fixes are the top unblocker (five criteria waiting).",
+  "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
  ],
  "batches": [
   {
@@ -204,6 +203,30 @@
    "sha": "7af7bfcf",
    "state": "Auto-merge on, fast-tier CI",
    "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
+  },
+  {
+   "name": "Batch 31 (PR #327)",
+   "sha": "",
+   "state": "Merged",
+   "contents": "Hitstop attack-buffer combat fix; CI lightened (no pre-merge CI, bake jobs folded); Stormwood legacy receipt; board data"
+  },
+  {
+   "name": "Batch 32 (PR #333)",
+   "sha": "51d6dc44e",
+   "state": "Merged",
+   "contents": "Continuous-core test fix (campsite segment, fence gate crossing); F01 road evidence; Tidewake F15 return cadence"
+  },
+  {
+   "name": "Batch 33 (PR #334)",
+   "sha": "901e80f76",
+   "state": "Merged",
+   "contents": "Cloudreach-B F06#2/#3 aerie-fixture witnesses"
+  },
+  {
+   "name": "Batch 34 (PR #336)",
+   "sha": "",
+   "state": "Merged",
+   "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
   }
  ],
  "lanes": [

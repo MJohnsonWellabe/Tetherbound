@@ -1,0 +1,42 @@
+{
+  "species": "meadowhart",
+  "purpose": "bare anatomical replacement candidate",
+  "reference": "assets\\creatures\\tetherbound\\meadowhart_bare\\reference\\three_quarter.png",
+  "reference_sha256": "09fb818bc4109cc1f9f1a64bc295bee302127d2a38bb1b1311a0fa8dc3585328",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 18000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Stylized golden brown fantasy deer, cream muzzle chest and belly, dark teal eyes, olive leaf-shaped shoulder mane, restrained white spots on flanks, dark brown antlers and cloven hooves. Clean broad color regions, matte fur, no saddle, no straps, no equipment, no painted black outlines."
+  },
+  "submitted_utc": "2026-09-26T20:38:52Z",
+  "task_id": "01a0df71-2390-70c4-88e6-3f19f0b9c573",
+  "consumed_credits": 30,
+  "reference_origin": "Agent-drafted imagegen edit of assets/creatures/tetherbound/meadowhart/reference/three_quarter.png, inspected before the single Meshy submission.",
+  "authorization": "Owner 2026-09-26 current-roster visual improvements through the existing Meshy license; AGENTS.md reference-backed art rule.",
+  "license": "Generated through the owner-provided Meshy account/API key under its existing license; no purchased third-party asset.",
+  "raw_glb_sha256": "58586eb9fbfdeba6d9ca212a84fb999bb2bb81bc7c94905d276e87b0f53b9ed4",
+  "build_script": "tools/art_pipeline/blender/build_meadowhart_bare.py",
+  "build_environment": "Blender 4.2.9 LTS; Godot 4.7 Compatibility",
+  "gameplay_invariants": {
+    "height_m": 3.45,
+    "mount_offset": [
+      0.0,
+      2.187805,
+      -0.252439
+    ],
+    "saddle": "Crafted and fitted by RidingController only"
+  },
+  "installed_glb_sha256": "d02c229bc9c33b8e2717bb7524027ece0ec7e81cba71f013eae183eeb84405f8",
+  "reference_edit_prompt": "Use case: precise-object-edit. Edit target: the supplied Meadowhart creature concept. Produce one clean full-body three-quarter studio concept of EXACTLY this same stylized fantasy deer creature standing naturally, now completely bare with no saddle or equipment. Remove every saddle, blanket, pouch, strap, chest harness, buckle and stirrup. Reconstruct continuous natural golden-brown deer anatomy underneath: narrow elegant connected torso, chest, belly, four intact long legs with dark cloven hooves. Preserve the existing appealing large dark teal eyes, facial identity, cream muzzle and chest, brown branching antlers, leaf-shaped olive mane around shoulders, golden fur with restrained white flank spots, ears, and short natural tail. Maintain original silhouette and mature rideable deer proportions. Four separate complete legs visible and connected, symmetric anatomy, neutral relaxed pose suitable for 3D rigging. Crisp refined stylized game asset concept with broad clean color regions and restrained fur details, no noisy black contour patches. Single creature only, centered on plain light neutral background, no text, no props, no platform, no extra views. Entire antlers and hooves inside frame."
+}

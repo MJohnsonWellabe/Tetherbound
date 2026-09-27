@@ -41,6 +41,7 @@
   "kael": {
     "_comment": "Main-character choice, board docs/art/reference/24_Kael_Character_Board.png. Rigged via Meshy's humanoid auto-rig, clips authored by the same animate_humanoid.py pass as the trainer -- identical clip names and identical frame counts/timing, so tool_swing and gait_reference_speeds are carried over unchanged rather than re-measured.",
     "model": "res://assets/characters/kael/kael_lod0.glb",
+    "body_emission_enabled": false,
     "night_rim": {"strength": 0.55, "tint": 0.15},
     "height": 1.9,
     "model_yaw": 0.0,
@@ -65,6 +66,7 @@
   "sera": {
     "_comment": "Main-character choice, board docs/art/reference/25_Sera_Character_Board.png. Same rig/clip pipeline as kael above.",
     "model": "res://assets/characters/sera/sera_lod0.glb",
+    "body_emission_enabled": false,
     "night_rim": {"strength": 0.55, "tint": 0.15},
     "height": 1.75,
     "model_yaw": 0.0,
@@ -89,6 +91,7 @@
   "lyra": {
     "_comment": "Main-character choice, board docs/art/reference/23_Lyra_Character_Board.png. Her first two generations both failed Meshy's humanoid auto-rig outright ('Pose estimation failed') because the reference art's arms sat close enough to the torso that the pose estimator could not read the shoulder/elbow joints -- confirmed by rendering the regenerated model and visually checking the pose, not assumed. Fixed on the 3rd generation with a new owner-supplied reference board whose turnaround actually draws the arms away from the torso (a real pose change in the source art, not a prompt reword -- text alone did not move a baked-in pose on the 2nd attempt). Rigged via Meshy's humanoid auto-rig at the default 1.7m, clips authored by the same animate_humanoid.py pass as kael/sera/the trainer -- identical clip names and identical frame counts/timing, so tool_swing and gait_reference_speeds are carried over unchanged rather than re-measured.",
     "model": "res://assets/characters/lyra/lyra_lod0.glb",
+    "body_emission_enabled": false,
     "night_rim": {"strength": 0.55, "tint": 0.15},
     "height": 1.7,
     "model_yaw": 0.0,
@@ -677,6 +680,7 @@
   "grunt_a": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.7,
     "model_yaw": 0.0,
     "clips": {
@@ -695,6 +699,7 @@
   "grunt_b": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.7,
     "model_yaw": 0.0,
     "clips": {
@@ -713,6 +718,7 @@
   "grunt_c": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.7,
     "model_yaw": 0.0,
     "clips": {
@@ -731,6 +737,7 @@
   "officer_a": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.8,
     "model_yaw": 0.0,
     "clips": {
@@ -749,6 +756,7 @@
   "officer_b": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.8,
     "model_yaw": 0.0,
     "clips": {
@@ -805,6 +813,7 @@
   "innkeeper": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.78,
     "model_yaw": 0.0,
     "clips": {
@@ -823,6 +832,7 @@
   "inn_helper": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/inn_helper/inn_helper_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.5,
     "model_yaw": 0.0,
     "clips": {
@@ -841,6 +851,7 @@
   "trader": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/trader/trader_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.75,
     "model_yaw": 0.0,
     "clips": {
@@ -880,6 +891,7 @@
   "creature_caretaker": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/creature_caretaker/creature_caretaker_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.72,
     "model_yaw": 0.0,
     "clips": {
@@ -898,6 +910,7 @@
   "farmer": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/farmer/farmer_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.75,
     "model_yaw": 0.0,
     "clips": {
@@ -916,6 +929,7 @@
   "local_historian": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/local_historian/local_historian_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.65,
     "model_yaw": 0.0,
     "clips": {
@@ -934,6 +948,7 @@
   "young_trainer": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.5,
     "model_yaw": 0.0,
     "clips": {
@@ -952,6 +967,7 @@
   "rival_trainer": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/rival_trainer/rival_trainer_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.6,
     "model_yaw": 0.0,
     "clips": {
@@ -970,6 +986,7 @@
   "field_researcher": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.7,
     "model_yaw": 0.0,
     "clips": {
@@ -988,6 +1005,7 @@
   "wandering_trainer": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.78,
     "model_yaw": 0.0,
     "clips": {
@@ -1006,6 +1024,7 @@
   "lost_traveler": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/lost_traveler/lost_traveler_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.72,
     "model_yaw": 0.0,
     "clips": {
@@ -1024,6 +1043,7 @@
   "alpha_tracker": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/alpha_tracker/alpha_tracker_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.78,
     "model_yaw": 0.0,
     "clips": {
@@ -1042,6 +1062,7 @@
   "courier": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/courier/courier_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.55,
     "model_yaw": 0.0,
     "clips": {
@@ -1060,6 +1081,7 @@
   "former_tether_member": {
     "_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
     "model": "res://assets/characters/former_tether_member/former_tether_member_lod0.glb",
+    "body_emission_enabled": false,
     "height": 1.7,
     "model_yaw": 0.0,
     "clips": {
