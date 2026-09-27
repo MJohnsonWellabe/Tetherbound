@@ -27,7 +27,9 @@ func _run() -> void:
 	var water := float((terrain.get("water", {}) as Dictionary).get("level", -1000.0))
 	var space := world.get_world_3d().direct_space_state
 	var player := world.get_node_or_null("Player") as CollisionObject3D
-	var exclude: Array[RID] = [] if player == null else [player.get_rid()]
+	var exclude: Array[RID] = []
+	if player != null:
+		exclude.append(player.get_rid())
 	print("KELL PROBE water=%.1f rows z from -80 to 140, cols x from -20 to 240 step %.0f" % [water, STEP])
 	var z := -80.0
 	while z <= 140.0:
