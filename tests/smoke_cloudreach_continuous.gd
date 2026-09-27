@@ -365,16 +365,6 @@ func _input(action: String, strength: float) -> void:
 	event.strength = strength
 	Input.parse_input_event(event)
 
-## No-hold flight (SYSTEMS Fly, #356): A taps a climb pulse (or catches a
-## current) and LT toggles descent, so the harness taps toward the state it
-## wants instead of holding. A pressed action is released on the next call,
-## which makes every press a fresh edge.
-func _fly_intent(climb: bool, descend: bool) -> void:
-	var tap_descend: bool = descend != bool(fly.descend_toggled)
-	_input("fly_descend", 1.0 if tap_descend and float(input_values.get("fly_descend", 0.0)) == 0.0 else 0.0)
-	var tap_climb: bool = climb and not descend and str(fly.state) != "climb"
-	_input("jump", 1.0 if tap_climb and float(input_values.get("jump", 0.0)) == 0.0 else 0.0)
-
 
 func _release() -> void:
 	for action: String in ["move_left", "move_right", "move_forward", "move_back", "jump", "fly_descend", "interact"]:
@@ -1075,7 +1065,8 @@ func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = V
 			return _fail("Flight ended before "+str(target))
 		var horizontal:=Vector2(offset.x,offset.z).length()
 		_steer(offset,clampf(horizontal/12,0,1))
-		_fly_intent(offset.y > 2, offset.y < -8)
+		_input("jump",1 if offset.y>2 else 0)
+		_input("fly_descend",1 if offset.y < -8 else 0)
 		await _frames(1)
 		if failed:return false
 	return _fail("Flight timeout toward "+str(target))
@@ -1094,7 +1085,7 @@ func _land(at: Vector3) -> bool:
 		if not fly.is_flying():
 			return await _verify_landing(at)
 		_steer(at-player.global_position,clampf(Vector2(at.x-player.global_position.x,at.z-player.global_position.z).length()/8,0,1))
-		_fly_intent(false, true)
+		_input("jump",0); _input("fly_descend",1)
 		await _frames(1)
 		if failed:return false
 	return _fail("Landing timed out "+str(at))
