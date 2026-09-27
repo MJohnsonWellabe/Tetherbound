@@ -78,7 +78,7 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
    - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7).
    - **Galewisp and ripplet are tuned to match terrapup in skill and strength**, so starter C2 difficulty is even (F10#2, CREATURES).
    - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
-   - **Codex does the Cloudreach aerie art** (F08#3).
+   - **Codex does the Cloudreach aerie art** (F08#3). The Codex lane is shut down; the owner assigns this when the next round of work starts.
    - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
 
 **Owner, 2026-09-26 (still in force):**
