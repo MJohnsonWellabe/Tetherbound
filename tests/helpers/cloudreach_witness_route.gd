@@ -530,4 +530,5 @@ func _start_state_label() -> String:
 
 ## Aerie-start evidence never overwrites a full-route run's evidence.
 func _witness_dir(base: String) -> String:
+	if resume_mode: return base + "/resume-dry-run"
 	return base + ("/aerie-start" if start_point == "aerie" else "")
