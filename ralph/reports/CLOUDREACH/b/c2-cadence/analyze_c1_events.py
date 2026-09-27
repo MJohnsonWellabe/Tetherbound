@@ -23,8 +23,16 @@ def main() -> int:
     events = json.load(open(run + "/events.json"))
     rows = events["events"]
     intervals = events.get("activity_intervals", [])
-    over = [i for i in intervals if float(i.get("gap_seconds", 0)) > 120.0]
-    longest = max(intervals, key=lambda i: float(i.get("gap_seconds", 0))) if intervals else {}
+    # An interval that starts and ends inside one named fight (challenge press ->
+    # victory) is fight time, not an empty travel interval; A7 measures travel.
+    def in_fight(i: dict) -> bool:
+        return str(i.get("from_stage", "")).startswith("battle_") and i.get("from_stage") == i.get("to_stage") \
+            and i.get("to") in ("battle_victory", "battle_started")
+    for i in intervals:
+        i["in_fight"] = in_fight(i)
+    over = [i for i in intervals if float(i.get("gap_seconds", 0)) > 120.0 and not i["in_fight"]]
+    travel = [i for i in intervals if not i["in_fight"]]
+    longest = max(travel, key=lambda i: float(i.get("gap_seconds", 0))) if travel else {}
     fights = []
     for r in rows:
         if r.get("kind") != "battle_resolved":
