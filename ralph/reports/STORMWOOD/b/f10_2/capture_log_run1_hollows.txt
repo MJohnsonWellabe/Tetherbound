@@ -1,0 +1,50 @@
+F10_2 world built in 65462 ms
+F10_2 population_ready=true wild=808 arbiter=InteractionArbiter:<Node#261741348786>
+F10_2 hollows_alpha body at (-520.0, 29.76707, 1660.0), hid 1 neighbours (nearest 23.4 m)
+F10_2 frame hollows_alpha-00-before.png t=1.07 fighting=false sep=-1.00 enemy_on_screen=false intent=-
+F10_2 hollows_alpha Engage offer 'Engage Voltarach' -> pressing interact
+F10_2 hollows_alpha fight live (Engage press) enemy=Named_hollows_alpha:<CharacterBody3D#2445379983472> named=true
+F10_2 frame hollows_alpha-i00.png t=0.02 fighting=true sep=5.01 enemy_on_screen=true intent=0
+F10_2 TELL 1 start t=0.87 authored_beat=0.80
+F10_2 frame hollows_alpha-tell1-a-start.png t=0.87 fighting=true sep=4.69 enemy_on_screen=true intent=1
+F10_2 frame hollows_alpha-i01.png t=1.02 fighting=true sep=4.48 enemy_on_screen=true intent=1
+F10_2 HIT ally->enemy t=1.05 amount=8.4
+F10_2 frame hollows_alpha-tell1-b-mid.png t=1.27 fighting=true sep=4.51 enemy_on_screen=true intent=1
+F10_2 frame hollows_alpha-tell1-c-late.png t=1.57 fighting=true sep=4.56 enemy_on_screen=true intent=1
+F10_2 HIT enemy->ally t=1.72 amount=22.9
+F10_2 TELL 1 strike_ready at t=1.72 measured_tell=0.850 s
+F10_2 frame hollows_alpha-tell1-d-strike.png t=1.72 fighting=true sep=4.46 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-tell1-e-impact.png t=1.92 fighting=true sep=4.04 enemy_on_screen=true intent=2
+F10_2 HIT ally->enemy t=1.95 amount=9.5
+F10_2 frame hollows_alpha-i02.png t=2.02 fighting=true sep=4.02 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-tell1-f-recovery.png t=2.27 fighting=true sep=4.04 enemy_on_screen=true intent=2
+F10_2 HIT ally->enemy t=2.85 amount=8.5
+F10_2 frame hollows_alpha-i03.png t=3.02 fighting=true sep=4.36 enemy_on_screen=true intent=3
+F10_2 TELL 2 start t=3.47 authored_beat=0.80
+F10_2 frame hollows_alpha-tell2-a-start.png t=3.47 fighting=true sep=5.23 enemy_on_screen=true intent=1
+F10_2 HIT ally->enemy t=3.75 amount=10.0
+F10_2 frame hollows_alpha-tell2-b-mid.png t=3.87 fighting=true sep=4.77 enemy_on_screen=true intent=1
+F10_2 frame hollows_alpha-i04.png t=4.02 fighting=true sep=4.82 enemy_on_screen=true intent=1
+F10_2 frame hollows_alpha-tell2-c-late.png t=4.17 fighting=true sep=4.93 enemy_on_screen=true intent=1
+F10_2 HIT enemy->ally t=4.32 amount=21.4
+F10_2 TELL 2 strike_ready at t=4.32 measured_tell=0.850 s
+F10_2 frame hollows_alpha-tell2-d-strike.png t=4.32 fighting=true sep=5.02 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-tell2-e-impact.png t=4.52 fighting=true sep=5.16 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-tell2-f-recovery.png t=4.87 fighting=true sep=6.10 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-i05.png t=5.02 fighting=true sep=5.82 enemy_on_screen=true intent=2
+F10_2 HIT ally->enemy t=5.30 amount=9.5
+F10_2 frame hollows_alpha-i06.png t=6.02 fighting=true sep=4.52 enemy_on_screen=true intent=3
+F10_2 HIT ally->enemy t=6.20 amount=8.6
+F10_2 TELL 3 start t=6.70 authored_beat=0.80
+F10_2 frame hollows_alpha-tell3-a-start.png t=6.72 fighting=true sep=4.97 enemy_on_screen=true intent=1
+F10_2 frame hollows_alpha-i07.png t=7.02 fighting=true sep=4.80 enemy_on_screen=true intent=1
+F10_2 HIT ally->enemy t=7.10 amount=9.9
+F10_2 frame hollows_alpha-tell3-b-mid.png t=7.12 fighting=true sep=4.70 enemy_on_screen=true intent=1
+F10_2 frame hollows_alpha-tell3-c-late.png t=7.37 fighting=true sep=4.73 enemy_on_screen=true intent=1
+F10_2 HIT enemy->ally t=7.55 amount=25.1
+F10_2 TELL 3 strike_ready at t=7.55 measured_tell=0.850 s
+F10_2 frame hollows_alpha-tell3-d-strike.png t=7.57 fighting=true sep=4.76 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-tell3-e-impact.png t=7.77 fighting=true sep=4.80 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-i08.png t=8.02 fighting=true sep=5.42 enemy_on_screen=true intent=2
+F10_2 frame hollows_alpha-tell3-f-recovery.png t=8.12 fighting=true sep=5.57 enemy_on_screen=true intent=2
+F10_2 HIT ally->enemy t=8.45 amount=9.0

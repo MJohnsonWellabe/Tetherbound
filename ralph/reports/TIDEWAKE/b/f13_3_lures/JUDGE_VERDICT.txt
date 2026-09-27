@@ -1,0 +1,40 @@
+# Per-frame judgments
+
+**frame_01: WEAK** — The only landmark is a single tree centered on the grassy hill crest ahead; there are two or three faint green sparkle blips and one orange blur low in the grass (likely resource glimmers), but they're small, low-contrast, and easy to miss against the grass. Nothing here reads as a clear "go there" beacon — it's a mild directional anchor at best.
+
+**frame_02: NOT NOTICEABLE** — The one eye-catching object (a pale, spiky-shelled creature) is already directly behind/beside the player, not a distant thing pulling you forward. The horizon ahead is flat grass and sky with only a few small distant trees at the far left — nothing new invites travel from here.
+
+**frame_03: WEAK** — A narrow sand corridor between two large grey slopes funnels the eye forward, and there's a faint mountain silhouette at the far right horizon, but nothing distinct or lit catches attention; a tiny dark speck near the top-right skyline is too small/ambiguous to register as a target.
+
+**frame_04: NOTICEABLE** — A pale, pointed rock spire on the horizon (center-right) stands out sharply against the sky — distinctive silhouette, the kind of "visible from a distance" landmark that reads as a destination. The lake to the left adds scenic interest too.
+
+**frame_05: NOTICEABLE** — A small campsite (tent, campfire with a visible flame, a bench/table, and a tiny NPC figure) sits center-left on the grassy knoll ahead — warm color contrast plus man-made silhouettes against green grass make this a clear pull.
+
+**frame_06: NOTICEABLE (weak-side)** — Dark canyon walls funnel the view straight down a lit grass corridor to a small pink creature standing center on the path. It's small in frame, but the composition (tight canyon frame, centered subject, odd color against green) does the work of directing the eye to it.
+
+**frame_07: NOT NOTICEABLE** — Open sand and grass slope with a couple of small dark bushes and a gap between two peaks ahead; nothing distinct, colored, or glowing anchors attention. Reads as empty transition space.
+
+**frame_08: WEAK** — A dramatic ocean vista opens up below the ridge — visually pleasant, but it's a scenic backdrop, not a pointed destination. No structure, creature, or marker gives the player something specific to walk toward.
+
+**frame_09: WEAK** — A pale wooden beam and crate are faintly visible in the grass ahead (center), plus small red flowers at the far left edge; the crate reads as a possible small cache/ruin but is low-contrast and easy to overlook at this distance.
+
+**frame_10: NOTICEABLE** — Now closer, the same wooden beam-and-crate structure is clearly a small built object sitting in the grass dead ahead, center-frame — reads as "something to interact with," a believable discovery cue.
+
+**frame_11: NOTICEABLE** — A beach camp cluster: a lit campfire (visible flame, left), a hanging lantern on a post, a tent, and a standing NPC figure, all grouped together ahead — strong, multi-element pull (light, silhouette, character).
+
+**frame_12: NOTICEABLE** — Approaching by water, a large sleeping rock/shell creature sits center on the beach flanked by distinct blue and pink coral-like flora, with the camp (lantern, tent, NPC) still visible behind it — a striking, colorful focal subject that's hard to miss.
+
+# Per-place summary
+
+PLACE 1 (frames 01+02): overall **NO** — tree/glimmers too faint at arrival, and the one salient object is already adjacent rather than a distant draw.
+
+PLACE 2 (frames 03+04): overall **WEAK** — nothing hooks the player on arrival (03); the rock spire lure only appears once already partway along (04).
+
+PLACE 3 (frames 05+06): overall **YES** — campsite with fire/NPC pulls immediately, and the canyon-framed creature sustains the pull further in.
+
+PLACE 4 (frames 07+08): overall **WEAK** — arrival view is empty, and the payoff is a pretty but undirected vista rather than a concrete destination.
+
+PLACE 5 (frames 09+10): overall **WEAK** — the crate/beam structure is a legitimate discovery cue but too subtle at first sight, only reading clearly once closer.
+
+PLACE 6 (frames 11+12): overall **YES** — strong, consistent pull both times: firelight/lantern/NPC camp, then a large distinctive creature plus colorful flora on approach.
+EXIT 0
