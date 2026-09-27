@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 19:05 UTC",
+ "updated": "2026-09-27 20:30 UTC",
  "headline": [
-  "Criteria met: 78 of 101 (counted at merge). Main green at e59b0c97. Next likely closes: Stormwood card S3 (evidence passed; needs full unit-suite line), Cloudreach C1 run 8, F08#3 perch camera, F15#2.",
+  "Criteria met: 79 of 101 (counted at merge). Batch 63: F15#2 Tidewake return cadence; chapter cards T1 and S3 integrated runs. VERIFIER full suite 5159 tests, 0 failed.",
   "Owner rules today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary; build the game, not proof machinery (every round player-visible, two-strike harness rule, hourly Balance line). 9 Claude lanes plus Codex."
  ],
  "batches": [
@@ -256,6 +256,12 @@
    "sha": "pending",
    "state": "Merged; main green after hotfixes #382/#384",
    "contents": "Cloudreach-B card C3 two-peer co-op/aftermath run; summit wild legendary removed"
+  },
+  {
+   "name": "Batch 63",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Tidewake F15#2 + card T1 run; Stormwood card S3 two-peer run (F03#0 reverted out after Bars A/B fail)"
   }
  ],
  "lanes": [

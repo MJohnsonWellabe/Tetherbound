@@ -851,8 +851,8 @@
    "chapter": "Tidewake",
    "pct": 67,
    "counts": {
-    "met": 5,
-    "partial": 1,
+    "met": 6,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -873,9 +873,10 @@
     },
     {
      "text": "Measured physical return without A7 empty interval",
-     "status": "partial",
-     "evidence": "~19 km return; pacing open (STATE)",
-     "gap": "Four A7 gaps remain (two Cloudreach, two Meadows haul road); measurement is data-level, not a walk. (strict re-score 23:40)"
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/f15_return_cadence/ @ tb/tidewake-full 56259a5e (batch 63): test_tidewake_return_cadence 5 tests 29 assertions 0 failed; over_a7 [] for no_haul_road, arches off and arches on; no Stormwood-B commits on the head; independent re-check MET; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: data-level shortest path over authored polylines at constant walk/swim speeds; realm loads excluded; simplified geometry; engage-range offers assumed present; daytime clear weather only; relies on the 300 s respawn.",
+     "gap": "",
+     "note": "Counted at merge of batch 63."
     },
     {
      "text": "Grandpa acknowledges each current team incl. releases",
@@ -950,12 +951,14 @@
   {
    "id": "S3",
    "status": "partial",
-   "note": "Per-participant Stormheart single-process smokes; no two-process disconnect witness; legacy receipt ruling pending."
+   "note": "Integrated run passed review in batch 63; all F11 feeders met.",
+   "integrated_run": "ralph/reports/STORMWOOD/s3_two_peer/ @ tb/stormwood 924ac4c5 (batch 63): two real processes, 131 rows PASS, host kill/restart and title Load, guest drop/rejoin with equal world hashes, negative controls fail as designed. Shortcuts disclosed: named host start save, Stormglass grants, placement teleports, Marrow defeat via ledger in this run (live fight proven in the full run), headless loopback."
   },
   {
    "id": "T1",
    "status": "partial",
-   "note": "One final hop at 15.3% deviation/33.75% stamina; forced dismount may cross a seal; no earned S3 start."
+   "note": "Integrated run passed review in batch 63.",
+   "integrated_run": "ralph/reports/TIDEWAKE/full/card_t1/ @ tb/tidewake-full 56259a5e (batch 63): CARD T1 PASS 13/13, 982 assertions, 48-hop chain including Garden and Deep Watch rest-point hops; two-peer proofs on loopback. Shortcuts disclosed: dry Water-arrival fixture (no earned S3 save), original five granted, route flags pre-set, level-0 swim pin, one post-chain teleport, stamina fixture, loopback ENet."
   },
   {
    "id": "T2",
