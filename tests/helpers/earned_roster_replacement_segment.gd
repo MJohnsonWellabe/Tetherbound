@@ -124,6 +124,11 @@ func replace_existing(tree: SceneTree, world: Node, game: Node,
 	if bool(_combat.call("is_fighting")) or str(_combat.call("outcome")) != CAUGHT_OUTCOME \
 			or game.get("pending_catch") != newcomer or roster_ids(party) != before \
 			or not bool(menu.call("is_open")) or str(tab.get("_release_stage")) != "choose":
+		# Diagnostic: which of the ceremony conditions failed (DRY RUN 12).
+		print("CEREMONY STATE fighting=%s outcome=%s pending_is_newcomer=%s pending=%s belt_same=%s menu_open=%s stage=%s" % [
+			bool(_combat.call("is_fighting")), str(_combat.call("outcome")),
+			game.get("pending_catch") == newcomer, str(game.get("pending_catch")),
+			roster_ids(party) == before, bool(menu.call("is_open")), str(tab.get("_release_stage"))])
 		_fail("physical catch did not open its actual pending-choice ceremony with the belt unchanged")
 		return _result()
 	if tree.root.gui_get_focus_owner() != tab.get("_pending_button"):

@@ -1,0 +1,66 @@
+== net_water_mounted_swimming: tools/net/run_net_smoke.sh water_mounted_swimming --out=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming
+run id:  net-20260927T143527Z-14091
+run dir: /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z
+smoke:   tests/smoke_net_water_mounted_swimming.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14119 control_port=35889 home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/home-0 log=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/peer-0.log
+coordinator: launched peer 1 (client) pid=14120 control_port=37619 home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/home-1 log=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":30782.0,"godot_version":"4.7-stable (official)","main_sha":"b514938e4696","peer":1.0,"pid":14120.0,"role":"client","type":"hello","user_data_dir":"/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":30781.0,"godot_version":"4.7-stable (official)","main_sha":"b514938e4696","peer":0.0,"pid":14119.0,"role":"host","type":"hello","user_data_dir":"/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: host Water: hosting udp/30781 as peer 1
+PASS: join Water: joined 127.0.0.1:30781 as peer 1907010042 after 7 frames; snapshot applied; 2 peer(s) in registry
+PASS: both peer registries ready: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: both peer registries ready: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: SETUP host dry shore: SETUP: Water island fixture at (0.0, 1.931176, 162.0); catching level 0
+PASS: SETUP client Stone, saddle and owned Aquaryn: SETUP: water_aquaryn standing as AllyCreature, swim_saddle in the satchel
+PASS: production mount: riding AllyCreature
+PASS: positive combat energy fixture
+PASS: isolated peer user data
+PASS: start actual mounted input: Started real mounted input from lesson shore to deep offshore point
+PASS: host applied owned mount MOUNTED swimming state
+PASS: host applied matching trainer MOUNTED swimming state
+PASS: host observed spent nonzero creature swim resource
+PASS: mount authority and aquatic owner match client
+PASS: actual input completed Water mounted leg: { "completed": true, "distance_m": 35.884572327137, "failure": "", "running": false }
+PASS: actual mounted Water displacement at least30m
+PASS: swimming preserves positive combat energy
+PASS: human stamina not spent while mounted
+PASS: host rider stays on actual transformed mount seat
+PASS: host presents seated rider and installed saddle
+PASS: remote resource tracks owned creature
+PASS: SETUP exhausted owned swim resource: SETUP owned creature swim stamina zero; pose unchanged
+PASS: host observes mount drowning
+PASS: production deepwater dismount: dismounted; trainer visible=true on_floor=false
+PASS: host clears rider mounting state
+PASS: host reconstructs dismounted HUMAN swimmer: host net={ "drowning": false, "has_safe_landing": true, "mode": 1.0, "owner_peer_id": 1907010042.0, "resume_mode": 0.0, "revision": 485.0, "safe_landing": [57.3681221008301, 1.9284942150116, 151.502136230469], "stamina_fraction": 0.97, "surface_y": 0.0, "version": 1.0 } applied={ "drowning": false, "has_safe_landing": true, "mode": 1.0, "owner_peer_id": 1907010042.0, "resume_mode": 0.0, "revision": 485.0, "safe_landing": [57.3681221008301, 1.9284942150116, 151.502136230469], "stamina_fraction": 0.97, "surface_y": 0.0, "version": 1.0 } host_position=[99.9918823242188, -0.69999140501022, 168.897521972656] owner={ "aquatic": { "drowning": false, "has_safe_landing": true, "mode": 1.0, "owner_peer_id": 1907010042.0, "resume_mode": 0.0, "revision": 506.0, "safe_landing": [57.3681221008301, 1.9284942150116, 151.502136230469], "stamina_fraction": 0.96506533333333, "surface_y": 0.0, "version": 1.0 }, "health": 100.0, "lesson": { "completed": false, "distance_m": 0.0, "failure": "", "running": false }, "on_floor": false, "position": [99.9918975830078, -0.69999998807907, 168.897491455078], "stamina": 96.5065333333329, "user_data_dir": "/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/home-1/godot/app_userdata/Tetherbound" } outbound={ "net_aquatic": { "drowning": false, "has_safe_landing": true, "mode": 1.0, "owner_peer_id": 1907010042.0, "resume_mode": 0.0, "revision": 485.0, "safe_landing": [57.3681221008301, 1.9284942150116, 151.502136230469], "stamina_fraction": 0.97, "surface_y": 0.0, "version": 1.0 }, "net_position": [99.9918975830078, -0.69999998807907, 168.897491455078], "net_riding": false, "position": [99.9918975830078, -0.69999998807907, 168.897491455078], "sync_interval": 0.0 } riding={ "above": 0.34851461648941, "carried": false, "gap": 2.22669339179993, "mount": "AllyCreature_1907010042", "mount_saddle_worn": true, "mount_species": "water_aquaryn", "pos": [99.9918823242188, -0.69999140501022, 168.897521972656], "riding": false, "saddled": true, "seated": false, "visible": true }
+PASS: actual nearby remount without fixture teleport: Water actual remount; no position or resource writes
+PASS: host restores mounted rider
+PASS: remount does not refill exhausted resource
+PASS: host restores mounted aquatic state
+Water mounted network scope: real two-peer input, rider/mount identity and seat, owned resources, drowning and dismount/remount; fixtures do not prove Alpha, crafting, save or reconnect
+ALL CHECKS PASSED
+# Net smoke run net-20260927T143527Z-14091
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14119 exited=true unexpected_exit=false
+- peer 1 (client) pid=14120 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+=== /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/net/water_mounted_swimming/net-water_mounted_swimming-20260927T143527Z/SUMMARY.md ===
+# Net smoke run net-20260927T143527Z-14091
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14119 exited=true unexpected_exit=false
+- peer 1 (client) pid=14120 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+== net_water_mounted_swimming exit=0

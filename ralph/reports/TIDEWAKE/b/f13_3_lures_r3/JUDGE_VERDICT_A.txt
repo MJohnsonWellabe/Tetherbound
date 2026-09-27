@@ -1,0 +1,39 @@
+# Per-frame assessments
+
+**frame_01: WEAK** — A small blue banner on a wooden frame sits far upper-left against grey rock; it's grey-on-grey with only the banner's blue for contrast, and it's pushed to the edge rather than ahead of the player. Nothing centered draws the eye. Would read better centered in view or lit to pop against the drab slope.
+
+**frame_02: NOTICEABLE** — A large armored turtle creature stands right in front of the player at close range, and an odd black beam of light shoots into the sky in the background. Two strong, close pulls in one frame.
+
+**frame_03: NOT NOTICEABLE** — The banner is tiny and dim, squeezed between canyon walls in the center background; a faint smoke wisp and a barely-visible distant figure (upper right) won't register during normal play. Needs a bigger silhouette or brighter accent.
+
+**frame_04: WEAK** — A blue banner with a rising smoke column on the right has some color contrast against the grey rock, and a white rocky spire sits center-background, but neither is emphasized over the other or made to feel closer — it reads as scenery, not a clear "go here."
+
+**frame_05: NOTICEABLE** — A small camp cluster (tent, campfire, table, standing NPC figure) plus banner and tree sits ahead, with the same dark light-beam rising above it. Warm campfire glow plus the object cluster reads as a point of interest even at distance.
+
+**frame_06: WEAK** — The dark light-beam dominates the sky and grabs attention, but the ground-level target (banner + creature at the far ridge) is small and washed out against bright sky, so the beam doesn't clearly point to a walkable destination.
+
+**frame_07: WEAK** — Two blue banners on the left ridge are the only colored objects in an otherwise grey/tan frame, but they sit off to frame-left rather than ahead, so a player looking straight forward could miss them.
+
+**frame_08: NOTICEABLE** — The banner and post structure now sit centered on the hilltop skyline directly ahead, silhouetted with the beam rising behind it. Strong, clean "go there" composition.
+
+**frame_09: NOTICEABLE** — Banner/gate structure ahead center with a lantern and a raised altar-like block, plus scattered glowing motes to the right. Clear, colorful, mid-distance target.
+
+**frame_10: NOTICEABLE** — Same banner/lantern/altar, now close and centered directly in the walking path — unambiguous destination.
+
+**frame_11: NOTICEABLE** — A campsite (tent, fire, lamp post) with a standing NPC on the right, and a distinct blue finned/dragon-like creature lying in the sand on the left. Multiple separate points of interest in one frame.
+
+**frame_12: NOTICEABLE** — A glowing blue seal/dragon-like creature stands in the water directly ahead, with a targeting-arc reticle beside it. The single clearest, most immediate lure in the set.
+
+# Pairs
+
+PLACE 1 (frames 01+02): WEAK — arrival shot undersells the destination (small, muted banner), but partway along, the creature and light beam make the goal obvious; the hook is backloaded.
+
+PLACE 2 (frames 03+04): NO — both views keep the banner small, distant, and low-contrast against grey rock; nothing gets bigger or brighter as a clear draw.
+
+PLACE 3 (frames 05+06): WEAK — the camp cluster in frame_05 has decent visual interest, but frame_06's distant, sky-washed target undercuts it.
+
+PLACE 4 (frames 07+08): YES — the banner/beam becomes a strong, centered skyline silhouette by frame_08, even though frame_07 alone is muted.
+
+PLACE 5 (frames 09+10): YES — banner, lantern, and altar read clearly and consistently in both frames.
+
+PLACE 6 (frames 11+12): YES — the campsite/NPC/creature cluster and then the glowing water creature with a reticle are the strongest, most legible draws of the whole set.

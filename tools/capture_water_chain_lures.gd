@@ -13,6 +13,9 @@ extends SceneTree
 ##     --resolution 1280x720 --script tools/capture_water_chain_lures.gd -- --out=<dir> [--only=lantern,...]
 
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
+## The chain walk's own baked-ground planner, so each frame's log can say how
+## far each lure stands from the walked route (tests/smoke_tidewake_b_chain_route.gd).
+const POCKET := preload("res://tests/smoke_water_pocket_walk_claim.gd")
 
 var world: Node3D
 var game: Node
@@ -118,6 +121,14 @@ func _approach(key: String, island: String, lure: Vector3, what: String, mid: fl
 	await _settle(60)
 	await _grab("%s_1_landing.jpg" % key, "%s from %s arrival landing (%.0f m)" % [what, island,
 		Vector2(lure.x - landing.x, lure.z - landing.z).length()])
+	var route: Array = POCKET.plan_route(world, Vector2(landing.x, landing.z), Vector2(lure.x, lure.z)).points
+	route.push_front(Vector2(landing.x, landing.z))
+	print("route %s: %s" % [key, " ".join(route.map(func(p: Vector2) -> String: return "(%.1f,%.1f)" % [p.x, p.y]))])
+	for node: Node in world.get_node("WaterLocalChains").get_children():
+		if str(node.name).begins_with("Lure_"):
+			var at := Vector2((node as Node3D).global_position.x, (node as Node3D).global_position.z)
+			if at.distance_to(Vector2(landing.x, landing.z)) < 400.0:
+				print("  route %s %s aside=%.1f m" % [key, node.name, _aside(route, at)])
 	var step := landing.lerp(lure, mid) if not stand.is_finite() else stand
 	step.y = 0.0
 	_pose(step, lure)
@@ -126,6 +137,14 @@ func _approach(key: String, island: String, lure: Vector3, what: String, mid: fl
 	await _settle(60)
 	await _grab("%s_2_approach.jpg" % key, "%s mid-approach (%.0f m)" % [what,
 		Vector2(lure.x - step.x, lure.z - step.z).length()])
+
+
+## Shortest distance from `at` to the polyline `route`.
+func _aside(route: Array, at: Vector2) -> float:
+	var best := INF
+	for index in range(1, route.size()):
+		best = minf(best, at.distance_to(Geometry2D.get_closest_point_to_segment(at, route[index - 1], route[index])))
+	return best
 
 
 func _run() -> void:

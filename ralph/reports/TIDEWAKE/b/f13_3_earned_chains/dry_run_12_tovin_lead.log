@@ -1,0 +1,139 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+FRESH CAMPAIGN scratch=/tmp/tmp.Xw3JrrvWD1/godot/app_userdata/Tetherbound/four_biome_fresh_18140_7505 slot=user://four_biome_fresh_18140_7505/slot_0.json checkpoints=/tmp/tmp.Xw3JrrvWD1/godot/app_userdata/Tetherbound/four_biome_checkpoints_18140_7505
+DRY RUN — does not count: declared Water-arrival fixture (tests/helpers/tidewake_b_water_arrival_dry_fixture.gd), not an earned water_arrived save
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+DRY RUN fixture ready: realm=water player=(0.0, 1.931024, 162.0) party=5
+WATER EARNED OPENING ARRIVED: actual First Shore pose=(0.0, 1.931024, 162.0)
+WATER OPENING BRIEFED through Pell's production dialogue
+WATER EARNED OPENING: Pell and physical lesson complete; swimming=64.674m
+F13#3 VISIT ["lantern"] from (102.6174, 1.915684, 125.547) on first_shore (party=[{"level":55,"nickname":"","species":"terrapup","uid":"creature-6de1551ac8e18093efa3c1ef79d7ac35"},{"level":55,"nickname":"","species":"bramblebun","uid":"creature-1f4d7a76424cc36c6bbd7889333bd5ab"},{"level":55,"nickname":"","species":"mudsnout","uid":"creature-26217dd46a708e95ad5104d706c6ae6a"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-e0eea49af69e1a7e6a43f2a688610b44"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-ffcbf1178c9db56e1247ce8393390502"}])
+WALK water_pell DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK water_pell island=first_shore walked=159m legs=2
+TALK water_pell conversation=water_pell_lantern_lead hud='Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore.'
+WALK start of first_shore_to_lantern_cove_sheltered DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK start of first_shore_to_lantern_cove_sheltered island=first_shore walked=225m legs=2
+SWIM first_shore_to_lantern_cove_sheltered swum=95m min_stamina=30.6 rest_frames=280 health 100->100 dry=true elapsed_s=39
+WALK water:lantern_cove:pickup:002 island=lantern_cove walked=204m legs=34
+CLAIM water:lantern_cove:pickup:002 skill_candy_i 0->1
+WALK start of first_shore_to_lantern_cove_sheltered (reversed) island=lantern_cove walked=200m legs=33
+SWIM first_shore_to_lantern_cove_sheltered (reversed) swum=95m min_stamina=34.9 rest_frames=266 health 100->100 dry=true elapsed_s=38
+WALK water_pell DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK water_pell island=first_shore walked=226m legs=2
+TALK water_pell conversation=water_pell_lantern_return hud='Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse.'
+WALK water_pell island=first_shore walked=0m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+F13#3 CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+WALK return after lantern DIRECT TO first_shore landing THEN PLANNED (attempt 1)
+WALK return after lantern island=first_shore walked=227m legs=26
+F13#3 returned to (102.1333, 2.026967, 124.6011) on first_shore after ["lantern"]
+WATER REEDHAVEN: ordinary human crossing reached Reedhaven
+WATER REEDHAVEN: water:reedhaven:harvest:019 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:017 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:003 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:001 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift
+FRESH WATER SEGMENT water_reedhaven_paid {"failures":[],"ok":true,"transcript":["ordinary human crossing reached Reedhaven","water:reedhaven:harvest:019 +3 reed_fiber through controller interaction","water:reedhaven:harvest:017 +3 driftwood through controller interaction","water:reedhaven:harvest:003 +3 driftwood through controller interaction","water:reedhaven:harvest:001 +3 reed_fiber through controller interaction","four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift"]}
+WATER BRINE: ordinary 107.088m human crossing reached Brine Steps
+WATER BRINE: before Tovin matchup lead sparkit (3 party_cycle presses)
+WATER BRINE: Tovin production combat reached two opponents; ally_hp=308.8/373.1
+WATER BRINE: Tovin durable victory and Brine Steps trial completion earned
+FRESH WATER SEGMENT water_brine_trial_won {"failures":[],"ok":true,"transcript":["ordinary 107.088m human crossing reached Brine Steps","before Tovin matchup lead sparkit (3 party_cycle presses)","Tovin production combat reached two opponents; ally_hp=308.8/373.1","Tovin durable victory and Brine Steps trial completion earned"]}
+F13#3 VISIT ["gull"] from (398.4327, 8.623981, 808.8861) on brine_steps (party=[{"level":55,"nickname":"","species":"terrapup","uid":"creature-6de1551ac8e18093efa3c1ef79d7ac35"},{"level":55,"nickname":"","species":"bramblebun","uid":"creature-1f4d7a76424cc36c6bbd7889333bd5ab"},{"level":55,"nickname":"","species":"mudsnout","uid":"creature-26217dd46a708e95ad5104d706c6ae6a"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-e0eea49af69e1a7e6a43f2a688610b44"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-ffcbf1178c9db56e1247ce8393390502"}])
+WALK water_adair island=brine_steps walked=230m legs=31
+TALK water_adair conversation=water_adair_gull_lead hud='Adair's request: recover the survey satchel left at Gull Rest, off Reedhaven's sheltered line.'
+WALK start of reedhaven_to_brine_steps_sheltered (reversed) island=brine_steps walked=453m legs=69
+SWIM reedhaven_to_brine_steps_sheltered (reversed) swum=55m min_stamina=82.0 rest_frames=108 health 100->100 dry=true elapsed_s=35
+WALK start of reedhaven_to_gull_rest_sheltered island=reedhaven walked=277m legs=42
+SWIM reedhaven_to_gull_rest_sheltered swum=151m min_stamina=0.0 rest_frames=383 health 100->98 dry=true elapsed_s=56
+WALK gull_research_satchel island=gull_rest walked=125m legs=21
+SITE gull_research_satchel hud='Survey satchel recovered: Adair's current observations. Carry them back on your next Brine Steps passage.'
+WALK water:gull_rest:pickup:002 island=gull_rest walked=4m legs=1
+CLAIM water:gull_rest:pickup:002 skill_candy_ii 0->1
+WALK start of reedhaven_to_gull_rest_sheltered (reversed) island=gull_rest walked=129m legs=21
+SWIM reedhaven_to_gull_rest_sheltered (reversed) swum=151m min_stamina=5.0 rest_frames=366 health 98->98 dry=true elapsed_s=54
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=277m legs=42
+SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=82.4 rest_frames=107 health 98->98 dry=true elapsed_s=35
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_return hud='Adair charts the safe Gull Rest crossing from the recovered observations.'
+WALK water_adair island=brine_steps walked=0m legs=1
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+F13#3 CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+WALK return after gull island=brine_steps walked=227m legs=31
+F13#3 returned to (399.119, 8.983912, 808.086) on brine_steps after ["gull"]
+WATER SHELLWATCH: ordinary 93.320m human crossing reached Shellwatch
+[rest] rested; day 4
+WATER SHELLWATCH: Shellwatch camp recovered active creature before Solm
+WATER SHELLWATCH: water_trainer_solm victory opponents=["water_mirejaw", "water_mangrove_monitor"] ally_hp=373.1/373.1
+WATER SHELLWATCH: Shellwatch dock action earned water_shellwatch_residents_freed
+WATER SHELLWATCH: before Irva matchup lead sparkit (0 party_cycle presses)
+[rest] rested; day 5
+WATER SHELLWATCH: Shellwatch camp recovered active creature between Solm and Irva
+WATER SHELLWATCH: water_trainer_irva victory opponents=["water_riptusk", "water_cannonback"] ally_hp=357.8/378.4
+WATER SHELLWATCH: Shellwatch dock action earned water_shellwatch_pump_disabled
+WATER SHELLWATCH: Solm, resident release, Irva, pump and departure barrier all resolved
+FRESH WATER SEGMENT water_shellwatch_liberated {"failures":[],"ok":true,"transcript":["ordinary 93.320m human crossing reached Shellwatch","Shellwatch camp recovered active creature before Solm","water_trainer_solm victory opponents=[\"water_mirejaw\", \"water_mangrove_monitor\"] ally_hp=373.1/373.1","Shellwatch dock action earned water_shellwatch_residents_freed","before Irva matchup lead sparkit (0 party_cycle presses)","Shellwatch camp recovered active creature between Solm and Irva","water_trainer_irva victory opponents=[\"water_riptusk\", \"water_cannonback\"] ally_hp=357.8/378.4","Shellwatch dock action earned water_shellwatch_pump_disabled","Solm, resident release, Irva, pump and departure barrier all resolved"]}
+WATER TIDAL: 112.113m authored sheltered human crossing completed
+[rest] rested; day 6
+WATER TIDAL: Shellwatch camp recovered active creature Tidal before Aquaryn
+WATER TIDAL: Aquaryn challenge activated outside both physical capsules
+WATER TIDAL: Aquaryn defeat earned world completion and personal Swim Stone
+WATER TIDAL: Alpha defeated, personal Stone and recipe earned; same five retained. STOP before paid saddle/capture ceremony.
+FRESH WATER SEGMENT water_swim_stone_and_recipe_earned {"failures":[],"ok":true,"transcript":["112.113m authored sheltered human crossing completed","Shellwatch camp recovered active creature Tidal before Aquaryn","Aquaryn challenge activated outside both physical capsules","Aquaryn defeat earned world completion and personal Swim Stone","Alpha defeated, personal Stone and recipe earned; same five retained. STOP before paid saddle/capture ceremony."]}
+F13#3 VISIT ["cradle"] from (713.6141, 46.32691, 1549.571) on tidal_cradle (party=[{"level":55,"nickname":"","species":"terrapup","uid":"creature-6de1551ac8e18093efa3c1ef79d7ac35"},{"level":55,"nickname":"","species":"bramblebun","uid":"creature-1f4d7a76424cc36c6bbd7889333bd5ab"},{"level":55,"nickname":"","species":"mudsnout","uid":"creature-26217dd46a708e95ad5104d706c6ae6a"},{"level":56,"nickname":"","species":"sparkit","uid":"creature-e0eea49af69e1a7e6a43f2a688610b44"},{"level":55,"nickname":"","species":"sparkit","uid":"creature-ffcbf1178c9db56e1247ce8393390502"}])
+WALK water_otto island=tidal_cradle walked=323m legs=47
+TALK water_otto conversation=water_otto_nest_lead hud='Otto's lead: the dry shell nest on Tidal Cradle's upper slope, with exposed Reef Stone.'
+WALK water:tidal_cradle:harvest:007 island=tidal_cradle walked=485m legs=69
+MINE water:tidal_cradle:harvest:007 reef_stone 0->4
+WALK water_otto island=tidal_cradle walked=485m legs=69
+TALK water_otto conversation=water_otto_nest_return hud='Otto shares 3 berries and marks where Mosshell, Riverdrake and Sirenseal swim.'
+WALK water_otto island=tidal_cradle walked=0m legs=1
+TALK water_otto conversation=water_otto_nest_thanks hud=''
+F13#3 CHAIN side_water_cradle_care PASS reward=berries +3 reef_stone +4 ack=water_otto_nest_thanks
+WALK return after cradle island=tidal_cradle walked=322m legs=47
+F13#3 returned to (713.4528, 46.26862, 1548.561) on tidal_cradle after ["cradle"]
+WATER SWIMMER farewell policy: slot=4 species=sparkit level=55 identity=-9223371748169217518
+WATER REEDHAVEN: water:tidal_cradle:harvest:013 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: water:tidal_cradle:harvest:014 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:tidal_cradle:harvest:004 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:tidal_cradle:harvest:002 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: water:tidal_cradle:harvest:010 +3 reed_fiber through controller interaction
+[rest] rested; day 8
+WATER SHELLWATCH: Shellwatch camp recovered active creature before earned swimmer catch
+WATER SWIMMER chosen real body=water_tidal_cradle_wild_009_0 species=water_riverdrake level=49 position=(566.3832, 12.56443, 1317.97)
+live wild approach: exact offered target water_tidal_cradle_wild_009_0
+GATE A OPENING +3197.76s — engaged exact live target water_tidal_cradle_wild_009_0 (water_riverdrake)
+GATE A OPENING +0.00s — engaged exact live target water_tidal_cradle_wild_009_0 (water_riverdrake)
+GATE A OPENING +23.62s — water_riverdrake naturally weakened to 130/483 HP
+GATE A OPENING +23.62s — live catch begins with 8 earned orbs; no HP or inventory fixture
+AIM READINESS convergence camera=(550.5094, 10.26463, 1319.048) forward=(0.708846, -0.422684, -0.564691) player=(571.9916, 12.64418, 1315.185) target=(563.7402, 3.112509, 1307.706) current={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.07969546318054, "reticle_radius": 2.34962016976744, "inside_body": true } preview={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.08099913597107, "reticle_radius": 2.34962016976744, "inside_body": true, "trajectory_hits_target": false, "trajectory_offset": inf, "trajectory_blocked": true, "trajectory_blocker": "Terrain" }
+AIM READINESS post-settle camera=(581.8115, 23.01678, 1323.656) forward=(-0.606988, -0.573636, -0.550007) player=(571.9916, 12.64418, 1315.185) target=(563.7318, 3.122076, 1307.72) current={ "eligible": false, "first_hit": &"Terrain", "line_of_sight": false, "reason": "reticle_outside_body", "in_front": true, "reticle_offset": 2.49443483352661, "reticle_radius": 2.34962016976744, "inside_body": false } preview={ "eligible": false, "first_hit": &"Terrain", "line_of_sight": false, "reason": "reticle_outside_body", "in_front": true, "reticle_offset": 2.49545955657959, "reticle_radius": 2.34962016976744, "inside_body": false, "trajectory_hits_target": false, "trajectory_offset": inf, "trajectory_blocked": true, "trajectory_blocker": "Terrain" }
+aim convergence stopped 9.09° off the body after 12s (camera pitch -35.0°, target 16.84m away and 13.86m below the lens; one sample = 0.03° in 50ms at deflection 1.00)
+aim: 16.8m is past the orb's reach; closing in
+AIM READINESS convergence camera=(567.6566, 7.737647, 1308.878) forward=(-0.761575, -0.573638, -0.301569) player=(564.3188, 2.972458, 1309.035) target=(562.9289, 2.515143, 1307.931) current={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.77821052074432, "reticle_radius": 2.34962016976744, "inside_body": true } preview={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.7780989408493, "reticle_radius": 2.34962016976744, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.03764229267836, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(567.5621, 7.233939, 1308.709) forward=(-0.770508, -0.573638, -0.277952) player=(564.3188, 2.972458, 1309.035) target=(562.9289, 2.515143, 1307.931) current={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.47621500492096, "reticle_radius": 2.34962016976744, "inside_body": true } preview={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.47621500492096, "reticle_radius": 2.34962016976744, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.03771840408444, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS convergence camera=(567.5621, 7.233939, 1308.709) forward=(-0.770508, -0.573638, -0.277952) player=(564.3188, 2.972458, 1309.035) target=(562.9289, 2.515143, 1307.931) current={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.47621500492096, "reticle_radius": 2.34962016976744, "inside_body": true } preview={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.47621500492096, "reticle_radius": 2.34962016976744, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.03771840408444, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(567.5052, 7.00432, 1308.669) forward=(-0.770508, -0.573638, -0.277952) player=(564.3188, 2.972458, 1309.035) target=(562.9289, 2.515143, 1307.931) current={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.36736941337585, "reticle_radius": 2.34962016976744, "inside_body": true } preview={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.36736941337585, "reticle_radius": 2.34962016976744, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.03771840408444, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS input-commit camera=(567.5052, 7.00432, 1308.669) forward=(-0.770508, -0.573638, -0.277952) player=(564.3188, 2.972458, 1309.035) target=(562.9289, 2.515143, 1307.931) current={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.36736941337585, "reticle_radius": 2.34962016976744, "inside_body": true } preview={ "eligible": true, "first_hit": &"water_tidal_cradle_wild_009_0", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.36736941337585, "reticle_radius": 2.34962016976744, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.03771840408444, "trajectory_blocked": false, "trajectory_blocker": "" }
+catch launch: commit eligible=true reticle=1.300/2.350 first_hit=water_tidal_cradle_wild_009_0 los=true reason=eligible
+catch launch: release assist=true predicted=(562.93, 2.52, 1307.93) range=2.04 from=(563.99, 4.04, 1308.77) dir=(-0.55, -0.71, -0.44)
+catch launch: placement closest=0.089 clamped=0.089 body_radius=1.382 orb_radius=0.60
+catch launch: strike assist=true predicted=(562.93, 2.52, 1307.93) offset=0.089
+ERROR: physical catch did not open its actual pending-choice ceremony with the belt unchanged
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_opening_drive.gd:1314)
+       [1] replace_existing (res://tests/helpers/earned_roster_replacement_segment.gd:127)
+WATER SWIMMER PREPARATION FAILED: Actual swimmer catch/farewell failed: ["physical catch did not open its actual pending-choice ceremony with the belt unchanged"]
+FRESH COVERAGE OBSERVATIONS {"below_two_samples":80,"camera_below_two_samples":946,"caveat":"below_two_samples grades only aligned <=5m road samples; camera_below_two_samples retains all observed-camera telemetry; unvisited routes and rendered silhouette readability remain unproved","complete_coverage":false,"failures":[],"graded_road_samples":114,"kind":"summary","observed_travel_m":12285.6520120706,"off_route_samples":525,"samples":1215,"unaligned_road_samples":572,"undersampled_intervals":0,"unusable_heading_samples":4}
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":[],"counts_as_proof":false,"cumulative_elapsed_seconds":3234.85,"dry_run":true,"elapsed_seconds":3234.85,"failures":["Actual swimmer catch/farewell failed: [\"physical catch did not open its actual pending-choice ceremony with the belt unchanged\"]"],"local_chains":["CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks","CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks","CHAIN side_water_cradle_care PASS reward=berries +3 reef_stone +4 ack=water_otto_nest_thanks"],"reached":"water_swim_stone_and_recipe_earned","requested_prefix_passed":false,"resume":{},"resumed_from":"","scratch":"user://four_biome_fresh_18140_7505"}
+exit=1
