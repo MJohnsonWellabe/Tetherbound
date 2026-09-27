@@ -270,7 +270,8 @@ func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell
 			enemy.global_position.z - ally.global_position.z).length()
 	_log.append({"file": dir.path_join(name), "tag": tag, "fight_s": snappedf(t, 0.01),
 		"opponent": str(enemy.instance.species_id) if is_instance_valid(enemy) and enemy.get("instance") != null else "",
-		"tell_s": float(tell.get("seconds", 0.0)), "gap_m": snappedf(gap, 0.01)})
+		"tell_s": float(tell.get("seconds", 0.0)), "gap_m": snappedf(gap, 0.01),
+		"camera": _pose(root.get_viewport().get_camera_3d()), "ally": _pose(ally), "enemy": _pose(enemy)})
 	return 1
 
 
@@ -299,3 +300,13 @@ func _release() -> void:
 func _frames(count: int) -> void:
 	for frame in count:
 		await physics_frame
+
+
+## Position plus the world's ground height under it, so a frame whose camera
+## is below or inside terrain is visible in frames.json without the image.
+func _pose(node: Node3D) -> Array:
+	if not is_instance_valid(node):
+		return []
+	var at := node.global_position
+	var ground := float(current_scene.call("ground_height_at", at.x, at.z)) if current_scene != null and current_scene.has_method("ground_height_at") else NAN
+	return [snappedf(at.x, 0.01), snappedf(at.y, 0.01), snappedf(at.z, 0.01), snappedf(ground, 0.01)]
