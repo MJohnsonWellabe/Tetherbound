@@ -364,3 +364,15 @@ func test_repeated_wild_receipt_names_each_slot_fought_more_than_once() -> void:
 		"Wild_mudsnout_1_1", "Wild_mudsnout_1_1", "Wild_bramblebun_0_2"]
 	assert_eq(SEGMENT.repeated_names(again),
 		["Wild_mudsnout_1_1", "Wild_bramblebun_0_2"] as Array[String])
+
+
+func test_level_matched_keeps_wilds_at_or_below_the_pilot() -> void:
+	var levels: Array[int] = [5, 3, 2, 4]
+	assert_eq(SEGMENT.level_matched(levels, 3), [1, 2] as Array[int])
+	assert_eq(SEGMENT.level_matched(levels, 5), [0, 1, 2, 3] as Array[int])
+
+
+func test_level_matched_never_empties_the_pool() -> void:
+	var levels: Array[int] = [5, 4]
+	assert_eq(SEGMENT.level_matched(levels, 2), [0, 1] as Array[int])
+	assert_eq(SEGMENT.level_matched([] as Array[int], 3).size(), 0)

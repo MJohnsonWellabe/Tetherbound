@@ -25,8 +25,13 @@ class QuarryInput extends "res://tests/helpers/gate_a_material_route.gd":
 		# the same real pickaxe/hotbar/visible-held-prop input path as stone.
 		return await super._equip("stone" if item_id == "rootstone" else item_id)
 
+	# The gather helper's own walks are best effort: `_stand_where_it_wins`
+	# tries up to ten stand points round a node and moves on from any it
+	# cannot reach. Seed 15 (run 36268640030) failed the whole route because
+	# its first point, behind a choppable tree 1 m from the rootstone, timed
+	# out through the segment's fatal `_walk`. A player tries another side.
 	func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
-		return await walk.call(target, close_enough, budget)
+		return await walk.call(target, close_enough, budget, true)
 
 
 class WalkSession extends RefCounted:
@@ -263,23 +268,34 @@ func _travel() -> bool:
 	# wider tolerance applies only to the non-interactive preparation checkpoint.
 	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
 		return false
+	# The staging radius is flat; a fight on the approach can leave the player
+	# up on the earth bank over the mouth, inside that radius but 3 m above the
+	# apron (seed 15, bade6d57: stuck at y 7.4 over an entrance at y 4.1). Step
+	# back out along the approach onto the apron before walking in.
+	if not await _off_the_bank(entrance, mouth, outside):
+		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
 	# the room, and projecting a chamber back to that surface would walk the roof.
 	if not await _walk(entrance):
 		return false
+	var previous: Vector3 = entrance
 	for chamber: String in chambers:
-		if not await _walk(_warrens.call("marker", chamber)):
+		var marker: Vector3 = _warrens.call("marker", chamber)
+		if not await _chamber_leg(previous, marker):
 			return false
+		previous = marker
 	if _guardian_wins == 0:
 		if not await _engage_guardian() or not await _fight():
 			return false
 	if not _guardian_verified:
 		return _fail("The guardian victory never produced a complete immediate reward receipt")
 	for index in range(chambers.size() - 2, -1, -1):
-		if not await _walk(_warrens.call("marker", chambers[index])):
+		var marker: Vector3 = _warrens.call("marker", chambers[index])
+		if not await _chamber_leg(previous, marker):
 			return false
-	if not await _walk(entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
+		previous = marker
+	if not await _chamber_leg(previous, entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
 		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting():
@@ -304,6 +320,44 @@ const STATION_BYPASS: Array[Vector2] = [Vector2(405.0, 1796.8), Vector2(409.5, 1
 const SPIKE_KNOT := Vector2(-400.0, 2500.0)
 const SPIKE_CLEAR_M := 6.0
 const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
+
+
+const BANK_RISE_M := 1.5
+
+
+## One leg between authored chamber markers. A wild fight inside the cave can
+## leave the player off the passage line, where the straight leg is confined
+## by the walls (seed 15 resume dry run, 21420e92: 14.5 m short of the next
+## marker after a fight). A player backs up to the last room they stood in
+## and goes on from there; so does this, once, before the leg fails.
+func _chamber_leg(from: Vector3, to: Vector3) -> bool:
+	if await _walk(to, 1.5, -1, true):
+		return true
+	if not _failures.is_empty():
+		return false
+	_receipt("chamber_leg_retrace", {"player": _player.global_position, "back_to": from, "target": to})
+	if not await _walk(from, 1.5, -1, true) and not _failures.is_empty():
+		return false
+	return await _walk(to)
+
+
+func _off_the_bank(entrance: Vector3, mouth: Vector3, outside: Vector3) -> bool:
+	var apron_y := float(_world.call("ground_height_at", outside.x, outside.z))
+	if not on_the_bank(_player.global_position.y, apron_y):
+		return true
+	var apron := float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0))
+	var further := outside_approach(entrance, mouth, apron * 2.0)
+	_receipt("off_the_bank", {"player": _player.global_position, "apron_y": apron_y, "via": further})
+	if further == Vector3.INF or not await _walk_ground(Vector2(further.x, further.z)) \
+			or not await _walk_ground(Vector2(outside.x, outside.z)):
+		return false
+	if on_the_bank(_player.global_position.y, apron_y):
+		return _fail("Still above the Warrens apron after stepping back out: player=%s apron_y=%.2f" % [_player.global_position, apron_y])
+	return true
+
+
+static func on_the_bank(player_y: float, apron_y: float) -> bool:
+	return player_y - apron_y > BANK_RISE_M
 
 
 func _around_station(from: Vector2, to: Vector2) -> bool:
@@ -375,7 +429,7 @@ func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await _walk(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y), radius)
 
 
-func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
+func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
 	if budget < 0:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
@@ -425,8 +479,8 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 			last_recovery = at
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
-	if _sidestepping:
-		return false  # A sidestep is best effort; the leg it serves resumes.
+	if _sidestepping or best_effort:
+		return false  # Best effort; the leg or stand search it serves resumes.
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
 
 
