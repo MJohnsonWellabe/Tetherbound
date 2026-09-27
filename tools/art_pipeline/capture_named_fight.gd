@@ -30,14 +30,23 @@ var _face_trainer := false
 ## frames can witness the player's own hits landing (F04#4). Without it the
 ## capture only waits, and every frame shows the opponent's bar full.
 var _attack := false
-## `--dodge`: when the opponent's tell starts (wild_creature.gd
-## `telegraph_started`), push the pad's left stick sideways for the tell plus
-## DODGE_TAIL_S -- a real input avoidance attempt, so the frames can witness a
-## strike that misses (F04#4). Direction alternates each tell.
+## `--dodge`: on every other opponent tell (wild_creature.gd
+## `telegraph_started`), after a CAP_REACTION_S reaction, drive the pad's left
+## stick straight away from the opponent until CAP_DODGE_TAIL_S after the tell
+## -- a real input avoidance attempt, so the frames can witness a strike that
+## misses (F04#4). Ordinary quicks track the target live, so only reach
+## escapes them (tests/smoke_named_fight_hit_avoid.gd measured sideways at
+## 1/8). No attack is thrown ahead of a dodged tell: a quick roots the
+## creature through its wind-up and recovery.
 var _dodge := false
-const DODGE_TAIL_S := 0.35
-var _dodge_left := 0.0
-var _dodge_sign := 1.0
+const CAP_REACTION_S := 0.2
+const CAP_DODGE_TAIL_S := 0.25
+## `--tell-frames`: for the first CAP_TELL_FRAME_LIMIT tells, save frames at
+## the tell's start, its midpoint and just after the strike (`tNN-start`,
+## `tNN-mid`, `tNN-strike`), and log each strike's policy and outcome.
+var _tell_frames := false
+const CAP_TELL_FRAME_LIMIT := 4
+var _cap_tells: Array[Dictionary] = []
 var _tell_source: Node = null
 ## `--keep-alive` (DISCLOSED harness help): tops the player's active creature
 ## back up when it falls below KEEP_ALIVE_FRACTION, so a level-3 capture
@@ -65,6 +74,8 @@ func _run() -> void:
 			_attack = true
 		elif arg == "--dodge":
 			_dodge = true
+		elif arg == "--tell-frames":
+			_tell_frames = true
 		elif arg == "--keep-alive":
 			_keep_alive = true
 		elif arg.begins_with("--after-frames="):
@@ -106,11 +117,10 @@ func _wait_interval() -> void:
 	var t := 0.0
 	var step := 1.0 / Engine.physics_ticks_per_second
 	while t < _interval:
-		if _dodge:
+		if _dodge or _tell_frames:
 			_watch_tells()
-			if _dodge_left > 0.0:
-				_dodge_left -= step
-				_left_stick_x(_dodge_sign if _dodge_left > 0.0 else 0.0)
+			_left_stick(_cap_dodge_stick())
+			await _cap_tell_frames()
 		await physics_frame
 		t += step
 	if _keep_alive and _manager != null and bool(_manager.call("is_fighting")):
@@ -132,16 +142,73 @@ func _watch_tells() -> void:
 
 
 func _on_tell(seconds: float) -> void:
-	_dodge_left = seconds + DODGE_TAIL_S
-	_dodge_sign = -_dodge_sign
-	print("dodge: tell %.2fs, stick %s" % [seconds, "left" if _dodge_sign < 0.0 else "right"])
+	var dodge := _dodge and _cap_tells.size() % 2 == 1
+	_cap_tells.append({"n": _cap_tells.size() + 1, "seconds": seconds,
+		"frame": Engine.get_physics_frames(), "dodge": dodge, "saved": {}})
+	print("tell %d: %.2fs, policy %s" % [_cap_tells.size(), seconds, "dodge" if dodge else "stand"])
 
 
-func _left_stick_x(value: float) -> void:
-	var m := InputEventJoypadMotion.new()
-	m.axis = JOY_AXIS_LEFT_X
-	m.axis_value = value
-	Input.parse_input_event(m)
+func _cap_since(tell: Dictionary) -> float:
+	return float(Engine.get_physics_frames() - int(tell.frame)) / float(Engine.physics_ticks_per_second)
+
+
+func _next_tell_is_dodged() -> bool:
+	return _dodge and _cap_tells.size() % 2 == 1
+
+
+func _cap_dodge_stick() -> Vector2:
+	if _cap_tells.is_empty():
+		return Vector2.ZERO
+	var tell: Dictionary = _cap_tells.back()
+	var since := _cap_since(tell)
+	if not bool(tell.dodge) or since < CAP_REACTION_S or since > float(tell.seconds) + CAP_DODGE_TAIL_S:
+		return Vector2.ZERO
+	var ally := _director.call("ally_body") as Node3D
+	var foe := _tell_source as Node3D
+	if ally == null or foe == null or not is_instance_valid(foe) or _camera == null:
+		return Vector2.ZERO
+	var away := ally.global_position - foe.global_position
+	away.y = 0.0
+	if away.length() < 0.01:
+		return Vector2.ZERO
+	away = away.normalized()
+	var right := _camera.global_transform.basis.x
+	right.y = 0.0
+	var forward := -_camera.global_transform.basis.z
+	forward.y = 0.0
+	return Vector2(away.dot(right.normalized()), -away.dot(forward.normalized())).normalized()
+
+
+func _cap_tell_frames() -> void:
+	if not _tell_frames or _cap_tells.is_empty():
+		return
+	var tell: Dictionary = _cap_tells.back()
+	if int(tell.n) > CAP_TELL_FRAME_LIMIT:
+		return
+	var since := _cap_since(tell)
+	var seconds := float(tell.seconds)
+	var saved: Dictionary = tell.saved
+	for pair: Array in [["start", 0.1], ["mid", seconds * 0.5], ["strike", seconds + 0.1]]:
+		if not saved.has(pair[0]) and since >= float(pair[1]):
+			saved[pair[0]] = true
+			await _save("t%02d-%s-%s" % [int(tell.n), "dodge" if bool(tell.dodge) else "stand", pair[0]])
+
+
+func _cap_on_outcome(outcome: String) -> void:
+	for i in range(_cap_tells.size() - 1, -1, -1):
+		var tell: Dictionary = _cap_tells[i]
+		if not tell.has("outcome"):
+			tell["outcome"] = outcome
+			print("strike %d policy=%s outcome=%s" % [int(tell.n), "dodge" if bool(tell.dodge) else "stand", outcome])
+		break
+
+
+func _left_stick(v: Vector2) -> void:
+	for axis_value in [[JOY_AXIS_LEFT_X, v.x], [JOY_AXIS_LEFT_Y, v.y]]:
+		var m := InputEventJoypadMotion.new()
+		m.axis = axis_value[0]
+		m.axis_value = axis_value[1]
+		Input.parse_input_event(m)
 
 
 func _capture_one() -> bool:
@@ -167,13 +234,26 @@ func _capture_one() -> bool:
 		print("FIGHT DID NOT START vs %s" % _tid)
 		return false
 	print("fight live vs %s" % _tid)
+	_cap_tells.clear()
+	_tell_source = null
+	var on_hit := func(on_enemy: bool, amount: float) -> void:
+		if not on_enemy:
+			_cap_on_outcome("hit %.1f" % amount)
+	var on_miss := func(by_player: bool) -> void:
+		if not by_player:
+			_cap_on_outcome("miss")
+	_manager.connect("hit_landed", on_hit)
+	_manager.connect("attack_missed", on_miss)
 	for i in _frames:
-		if _attack and bool(_manager.call("is_fighting")):
+		if _attack and bool(_manager.call("is_fighting")) and not _next_tell_is_dodged():
 			await _pad_tap("combat_quick")
 		await _wait_interval()
 		await _save("%02d" % (i + 1))
 		if not bool(_manager.call("is_fighting")):
 			break
+	_left_stick(Vector2.ZERO)
+	_manager.disconnect("hit_landed", on_hit)
+	_manager.disconnect("attack_missed", on_miss)
 	if _resolve_won and bool(_manager.call("is_fighting")):
 		# Evidence for the AFTERMATH, not the fight: the capture cannot pilot
 		# a level-3 starter through a captain, so the fight is resolved as won
