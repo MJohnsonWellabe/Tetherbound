@@ -622,9 +622,60 @@ func _xz() -> Vector2:
 	return Vector2(_player.global_position.x, _player.global_position.z)
 
 
+## Every walk input is a parsed joypad event built from the action's own
+## InputMap pad binding -- the same event a controller sends, through the
+## same deadzones -- not `Input.action_press` (strict F01#2 re-check). An
+## action with no pad binding fails the walk rather than being faked.
+func _pad_event(action: String, strength: float) -> InputEvent:
+	for configured in InputMap.action_get_events(action):
+		if configured is InputEventJoypadButton:
+			var button := InputEventJoypadButton.new()
+			button.button_index = (configured as InputEventJoypadButton).button_index
+			button.pressed = strength > 0.0
+			return button
+		if configured is InputEventJoypadMotion:
+			var motion := InputEventJoypadMotion.new()
+			motion.axis = (configured as InputEventJoypadMotion).axis
+			motion.axis_value = signf((configured as InputEventJoypadMotion).axis_value) \
+				* clampf(strength, 0.0, 1.0)
+			return motion
+	return null
+
+
+func _pad_press(action: String, strength: float = 1.0) -> void:
+	var event := _pad_event(action, strength)
+	if event == null:
+		if _failed.is_empty():
+			_failed = "'%s' has no joypad binding; the walk only presses what a pad can" % action
+		return
+	Input.parse_input_event(event)
+
+
+func _pad_release(action: String) -> void:
+	var event := _pad_event(action, 0.0)
+	if event != null:
+		Input.parse_input_event(event)
+
+
+## Orbit the camera with the look stick until it faces `wanted` (the NPC
+## photo angle), instead of writing the rig's yaw.
+func _look_stick_to(wanted: float) -> void:
+	for _f in 240:
+		var err := rad_to_deg(angle_difference(float(_rig.get("yaw")), wanted))
+		_pad_release("look_left")
+		_pad_release("look_right")
+		if absf(err) < 3.0:
+			break
+		_pad_press("look_left" if err > 0.0 else "look_right",
+			clampf(absf(err) / STEER_FULL_DEG, 0.35, 1.0))
+		await physics_frame
+	_pad_release("look_left")
+	_pad_release("look_right")
+
+
 func _release_all() -> void:
 	for action: String in ["move_forward", "look_left", "look_right"]:
-		Input.action_release(action)
+		_pad_release(action)
 
 
 func _walk() -> void:
@@ -703,18 +754,18 @@ func _walk() -> void:
 			var turn_to := float(_rig.get("yaw")) + deg_to_rad(SIDESTEP_DEG) * side
 			for _f in 40:
 				var err := rad_to_deg(angle_difference(float(_rig.get("yaw")), turn_to))
-				Input.action_release("look_left")
-				Input.action_release("look_right")
+				_pad_release("look_left")
+				_pad_release("look_right")
 				if absf(err) < 4.0:
 					break
-				Input.action_press("look_left" if err > 0.0 else "look_right", 1.0)
+				_pad_press("look_left" if err > 0.0 else "look_right", 1.0)
 				await physics_frame
-			Input.action_release("look_left")
-			Input.action_release("look_right")
-			Input.action_press("move_forward", 1.0)
+			_pad_release("look_left")
+			_pad_release("look_right")
+			_pad_press("move_forward", 1.0)
 			for _f in SIDESTEP_FRAMES:
 				await physics_frame
-			Input.action_release("move_forward")
+			_pad_release("move_forward")
 			best_at_s = clock
 			continue
 		elif clock - best_at_s > STUCK_S:
@@ -741,16 +792,16 @@ func _walk() -> void:
 		var target := _point_at(progress + LOOKAHEAD_M)
 		var wanted := _yaw_toward(here, target)
 		var diff := rad_to_deg(angle_difference(float(_rig.get("yaw")), wanted))
-		Input.action_release("look_left")
-		Input.action_release("look_right")
+		_pad_release("look_left")
+		_pad_release("look_right")
 		if absf(diff) > STEER_DEADBAND_DEG:
 			var strength := clampf(absf(diff) / STEER_FULL_DEG, 0.25, 1.0)
-			Input.action_press("look_left" if diff > 0.0 else "look_right", strength)
+			_pad_press("look_left" if diff > 0.0 else "look_right", strength)
 		if absf(diff) < TURN_IN_PLACE_DEG:
-			Input.action_press("move_forward", 1.0)
+			_pad_press("move_forward", 1.0)
 			travel_since_capture += dt
 		else:
-			Input.action_release("move_forward")
+			_pad_release("move_forward")
 		if travel_since_capture >= _capture_every:
 			travel_since_capture = 0.0
 			await _capture("travel")
@@ -758,10 +809,10 @@ func _walk() -> void:
 
 
 func _press(action: String) -> void:
-	Input.action_press(action)
+	_pad_press(action, 1.0)
 	for i in 2:
 		await physics_frame
-	Input.action_release(action)
+	_pad_release(action)
 	for i in 30:
 		await physics_frame
 
@@ -974,7 +1025,7 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 			return
 	_visited.append(str(t.label))
 	if kind in ["grandpa", "villager"]:
-		_rig.set("yaw", _yaw_toward(_xz(), at) + deg_to_rad(NPC_VIEW_ORBIT_DEG))
+		await _look_stick_to(_yaw_toward(_xz(), at) + deg_to_rad(NPC_VIEW_ORBIT_DEG))
 	await _capture("reached %s" % t.label)
 	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
 
@@ -1185,7 +1236,7 @@ func _through_to_bridge() -> void:
 	await _walk()
 	if not _failed.is_empty():
 		return
-	_rig.set("yaw", _yaw_toward(_xz(), BRIDGE_CENTRE))
+	await _look_stick_to(_yaw_toward(_xz(), BRIDGE_CENTRE))
 	await _capture("arrive South Bridge")
 	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
 		_failed = "reached the bridge but road_gate_open was never earned"
