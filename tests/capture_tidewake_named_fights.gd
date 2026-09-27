@@ -194,14 +194,14 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		if not _tell.is_empty():
 			if not bool(_tell.start_saved) and _fight_t >= float(_tell.start) + TELL_START_LAG_S:
 				_tell.start_saved = true
-				saved += _save(dir, "tell-start", _fight_t, enemy, ally, _tell)
+				saved += await _save(dir, "tell-start", _fight_t, enemy, ally, _tell)
 			elif not bool(_tell.late_saved) and _fight_t >= float(_tell.start) + float(_tell.seconds) - 0.1:
 				_tell.late_saved = true
-				saved += _save(dir, "tell-late", _fight_t, enemy, ally, _tell)
+				saved += await _save(dir, "tell-late", _fight_t, enemy, ally, _tell)
 				_tell = {}
 		if _fight_t >= next_periodic:
 			next_periodic += _interval
-			saved += _save(dir, "t", _fight_t, enemy, ally, {})
+			saved += await _save(dir, "t", _fight_t, enemy, ally, {})
 		if _reader != null:
 			_reader.bind(manager, ally as CharacterBody3D, enemy as CharacterBody3D)
 			if manager.is_fighting():
@@ -223,7 +223,12 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 	return saved > 0
 
 
+## Grabs a frame rendered AFTER the requested moment. The viewport texture is
+## the last completed render, and under software GL one rendered frame can
+## span several physics ticks, so a same-tick grab can show a frame from
+## before the telegraph began (both F14 judges read "no cue at tell start").
 func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell: Dictionary) -> int:
+	await RenderingServer.frame_post_draw
 	var name := "%s-%06.2f.png" % [tag, t]
 	var image := root.get_viewport().get_texture().get_image()
 	if image == null or image.save_png(dir.path_join(name)) != OK:
