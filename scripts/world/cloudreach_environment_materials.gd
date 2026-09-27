@@ -21,6 +21,18 @@ static func masonry(trim: bool=false) -> ShaderMaterial:
 	material.set_shader_parameter("damp_strength",0.0)
 	return material
 
+## Same installed stone family, with exposed highland stone separated from
+## the darker occupied route wings. Config owns the visual tuning.
+static func aviary_masonry(trim: bool, surface: Dictionary) -> ShaderMaterial:
+	var material := masonry(trim)
+	var tint_key := "trim_tint" if trim else "stone_tint"
+	material.set_shader_parameter("tint", Color(str(surface.get(tint_key, "#b9b8aa"))))
+	for key: String in ["moss_amount", "up_moss", "streak_strength", "macro_strength", "tile"]:
+		if surface.has(key):
+			material.set_shader_parameter(key, float(surface[key]))
+	return material
+
+
 static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=CLOTH

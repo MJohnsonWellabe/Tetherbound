@@ -4325,9 +4325,11 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	var aviary_veil := _wind_veil_material()
 	aviary_veil.albedo_color.a = 0.13
 	aviary_veil.emission_energy_multiplier = 0.3
+	var aviary_spec := _read_json(AVIARY_CONFIG_PATH)
+	var aviary_surface: Dictionary = aviary_spec.get("surface", {})
 	var aviary_materials := {
-		"masonry": _materials["masonry_trim"],
-		"stone": _materials["masonry"],
+		"masonry": ENVIRONMENT_MATERIALS.aviary_masonry(true, aviary_surface),
+		"stone": ENVIRONMENT_MATERIALS.aviary_masonry(false, aviary_surface),
 		"timber": _materials["wood"],
 		"iron": _material(Color("#4a4d52"), 0.55),
 		"rope": _materials["rope"],
@@ -4340,11 +4342,11 @@ func _build_summit_stronghold(root: Node3D) -> void:
 		# keeper's floor matches the world rather than introducing a material;
 		# `cloth` is the existing banner shader with the device switched off,
 		# because plain wind cloth hanging in an aviary is not a faction banner.
-		"membrane": _aviary_membrane_material(),
+		"membrane": _aviary_membrane_material(aviary_surface),
 		"floor": ENVIRONMENT_MATERIALS.worn_ground(root.global_position, 26.0),
 		"cloth": _aviary_cloth_material(),
 	}
-	var aviary: Dictionary = AVIARY.build(root, aviary_materials, _read_json(AVIARY_CONFIG_PATH))
+	var aviary: Dictionary = AVIARY.build(root, aviary_materials, aviary_spec)
 	_seat_aviary_on_summit_carve(root, aviary)
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
 	# on the ground at the four corners outside the drum, flanking the wings.
@@ -4648,20 +4650,12 @@ func _recut_aviary_floor(floor_node: MeshInstance3D) -> void:
 ## glass. Depth WRITE is off so the panels around the far side of the drum do
 ## not stack into an opaque wall where the eye grazes the curve; depth TEST
 ## stays on so the drum's own masonry still occludes it.
-func _aviary_membrane_material() -> StandardMaterial3D:
+func _aviary_membrane_material(surface: Dictionary = {}) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	# Round 1 of this round skinned the dome at alpha 0.34 with a strong rim,
-	# and it read as GLASS -- the frame turned from an unbuilt planetarium into
-	# a greenhouse, which is a different wrong object. This is stretched hide
-	# and canvas over ribs instead: a warm parchment tone, more opaque, fully
-	# rough, and no rim term. That is what a working aviary's wind-skin is, and
-	# it cannot be mistaken for glazing.
-	# Alpha raised from 0.62 after a blind verdict sampled the dome at two
-	# points and got flat sky colour (134,155,156) back -- i.e. the skin was
-	# not reading as a surface at all, and the object was still "an open
-	# lattice of wooden ribs". At 0.82 it is stretched hide that light comes
-	# through, not a tint over the sky.
-	material.albedo_color = Color(0.86, 0.81, 0.68, 0.82)
+	# Subordinate weathered panes to the structural ribs. The old near-opaque
+	# cream shell became a white tent at night and hid the inhabited interior.
+	material.albedo_color = Color(str(surface.get("pane_tint", "#6e8f96")))
+	material.albedo_color.a = float(surface.get("pane_opacity", 0.28))
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL

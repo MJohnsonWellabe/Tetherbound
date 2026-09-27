@@ -1,0 +1,24 @@
+Cloudreach PLACE frames. Each named landmark seen from a road point ~90 m away (or an off-road ring stand where noted). Times: day 10:00, night 23:00.
+P001 001_cloudreach_place_realm_gate_crag_day.png | place: Realm Gate Crag | stand: road approach 108 m, clear sightline (candidate 5)
+P002 002_cloudreach_place_realm_gate_crag_night.png | place: Realm Gate Crag | stand: road approach 108 m, clear sightline (candidate 5)
+P003 003_cloudreach_place_lower_cliffs_waycamp_day.png | place: Galefoot Waycamp | stand: road approach 86 m, clear sightline (candidate 1)
+P004 004_cloudreach_place_three_bells_bridge_day.png | place: Three Bells Bridge | stand: road approach 86 m, clear sightline (candidate 1)
+P005 005_cloudreach_place_three_bells_bridge_night.png | place: Three Bells Bridge | stand: road approach 86 m, clear sightline (candidate 1)
+SKIPPED cloudreach_place_broken_skyroad_arch_day: stand unreachable, no frame
+SKIPPED cloudreach_place_broken_skyroad_arch_night: stand unreachable, no frame
+P006 006_cloudreach_place_windscar_beacon_day.png | place: Windscar Beacon | stand: road approach 91 m, clear sightline (candidate 1)
+P007 007_cloudreach_place_windscar_beacon_night.png | place: Windscar Beacon | stand: road approach 91 m, clear sightline (candidate 1)
+P008 008_cloudreach_place_windscar_flight_aerie_day.png | place: Windscar Flight Aerie | stand: road approach 46 m, clear sightline (candidate 8)
+P009 009_cloudreach_place_windscar_flight_aerie_night.png | place: Windscar Flight Aerie | stand: road approach 46 m, clear sightline (candidate 8)
+P010 010_cloudreach_place_sky_shrine_heartstone_day.png | place: Sky Shrine | stand: OFF-ROAD ring stand (no clear road approach) 110 m, clear sightline (candidate 22)
+P011 011_cloudreach_place_sky_shrine_heartstone_night.png | place: Sky Shrine | stand: OFF-ROAD ring stand (no clear road approach) 110 m, clear sightline (candidate 22)
+SKIPPED cloudreach_place_high_roost_perches_day: stand unreachable, no frame
+SKIPPED cloudreach_place_high_roost_perches_night: stand unreachable, no frame
+P012 012_cloudreach_place_cliffhold_settlement_day.png | place: Cliffhold | stand: road approach 89 m, clear sightline (candidate 1)
+P013 013_cloudreach_place_cliffhold_settlement_night.png | place: Cliffhold | stand: road approach 89 m, clear sightline (candidate 1)
+P014 014_cloudreach_place_old_wind_observatory_day.png | place: Old Wind Observatory | stand: road approach 88 m, clear sightline (candidate 1)
+P015 015_cloudreach_place_old_wind_observatory_night.png | place: Old Wind Observatory | stand: road approach 88 m, clear sightline (candidate 1)
+P016 016_cloudreach_place_summit_eyrie_stronghold_day.png | place: Summit Eyrie | stand: road approach 89 m, clear sightline (candidate 1)
+P017 017_cloudreach_place_summit_eyrie_stronghold_night.png | place: Summit Eyrie | stand: road approach 89 m, clear sightline (candidate 1)
+P018 018_cloudreach_place_waterward_overlook_day.png | place: Stormward Overlook | stand: road approach 89 m, clear sightline (candidate 1)
+P019 019_cloudreach_place_waterward_overlook_night.png | place: Stormward Overlook | stand: road approach 89 m, clear sightline (candidate 1)
