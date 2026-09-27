@@ -5826,8 +5826,7 @@
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
       "catchable": true,
       "_why_guard_stance_f10": "F10#2 C3 code-blind judge (fight B): the only ground mark was the manager's small ring at the elder's feet, half under its body, and a strike landed on a pilot outside it. guard_stance draws the frontal cone the manager's hit test uses (its own range and cone) for the tell, as the Crown Guardian does; presentation only, no block or damage change. Its BOSSES numbers are unchanged.",
-      "_why_face_lock_f10": "F10#2 C3 re-judge (fight G): an ordinary strike tracks its target through the whole tell, so the drawn cone followed the pilot and a sidestep could never leave it. COMBAT section 5: facing tracks for the first half of the wind-up, then locks, and the shown shape is the locked strike shape. 0.5 of the 0.8 s tell leaves 0.4 s to step out of the cone (wild_creature.gd face_lock_fraction).",
-      "combat": {"guard_stance": true, "face_lock_fraction": 0.5, "telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
+      "combat": {"guard_stance": true, "telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
       "completion_reward": {"title": "Blackwater Elder", "items": [{"id": "glowmoss_tonic", "count": 1}], "acknowledgement": "The Blackwater Elder slips back into the pool. A Glowmoss Tonic for each trainer who stood in the fight."},
       "once_only": true
     },
