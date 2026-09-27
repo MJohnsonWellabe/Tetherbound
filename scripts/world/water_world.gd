@@ -334,6 +334,9 @@ func _build_materials() -> void:
 	material.set("show_checkered", false)
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
+	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	preload("res://scripts/world/coastal_rock_material.gd").install(terrain,
+		_visual.terrain.get("cliff_material", {}), veilfall.get("rock_material", {}))
 
 
 func _stand_up_ground_cover() -> void:

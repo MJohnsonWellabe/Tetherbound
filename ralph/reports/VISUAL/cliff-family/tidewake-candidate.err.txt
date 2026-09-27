@@ -1,0 +1,9 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:63)
+       [1] _boot_region (res://tools/capture_visual_audit.gd:743)
+       [2] _boot_region (D:/tetherbound/visual-acceptance-local/capture_cliff_family.gd:31)
+       [3] _run_region (res://tools/capture_visual_audit.gd:480)
+       [4] _run (res://tools/capture_visual_audit.gd:115)
+       [5] _run (D:/tetherbound/visual-acceptance-local/capture_cliff_family.gd:10)

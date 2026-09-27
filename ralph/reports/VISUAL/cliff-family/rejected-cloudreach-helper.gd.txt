@@ -1,0 +1,46 @@
+extends RefCounted
+## Deterministic visual rock bedding. Crown/route/collision vertices are not
+## passed through this helper. Band endpoints receive a zero envelope.
+
+var enabled := true
+var rows := 48
+var column_step_m := 6.0
+var max_columns := 8
+var bed_height_m := 24.0
+var joint_spacing_m := 28.0
+var strength := 1.0
+
+func configure(config: Dictionary) -> void:
+	enabled = bool(config.get("enabled", true))
+	rows = clampi(int(config.get("rows", 48)), 20, 80)
+	column_step_m = maxf(3.0, float(config.get("column_step_m", 6.0)))
+	max_columns = clampi(int(config.get("max_columns", 8)), 1, 12)
+	bed_height_m = maxf(12.0, float(config.get("bed_height_m", 24.0)))
+	joint_spacing_m = maxf(12.0, float(config.get("joint_spacing_m", 28.0)))
+	strength = clampf(float(config.get("strength", 1.0)), 0.0, 1.0)
+
+func point_at(point: Vector3, outward: Vector3, envelope: float) -> Vector3:
+	if not enabled:
+		return original_point(point, outward, envelope)
+	# A broad bedding rhythm with a soft returning lip, instead of a sawtooth
+	# sampled more coarsely than its period. Both ends of each bed meet at zero.
+	var along := point.x * 0.74 + point.z * 0.67
+	var across := point.x * -0.67 + point.z * 0.74
+	var warp := sin(along / 63.0) * 2.6 + sin(across / 38.0) * 1.3
+	var phase := fposmod((point.y + warp) / bed_height_m, 1.0)
+	var ledge := smoothstep(0.03, 0.18, phase) * (1.0 - smoothstep(0.48, 0.96, phase))
+	# Separate vertical joints divide the broad beds into buttresses. Slow
+	# variation keeps the horizontal shelves from forming identical rings.
+	var joint := sin(along * TAU / joint_spacing_m + sin(across / 51.0) * 0.6)
+	var recess := smoothstep(0.40, 0.92, joint)
+	var exposure := 0.78 + 0.22 * sin(across / 43.0 + point.y / 91.0)
+	var displacement := (-0.48 + 0.76 * ledge * exposure - 0.32 * recess) * envelope
+	var candidate := point + outward * displacement
+	return original_point(point, outward, envelope).lerp(candidate, strength)
+
+static func original_point(point: Vector3, outward: Vector3, envelope: float) -> Vector3:
+	var bend := sin(point.x * 0.023 + point.z * 0.017) * 1.4
+	var bed := fposmod((point.y + bend * 3.5) / 13.0, 1.0)
+	var shelf := 0.55 - smoothstep(0.15, 0.72, bed)
+	var fracture := sin(point.x * 0.071 - point.z * 0.059 + point.y * 0.033)
+	return point + outward * (shelf * 0.9 + fracture * 0.6) * envelope

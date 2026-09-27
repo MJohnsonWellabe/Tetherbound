@@ -1,0 +1,57 @@
+extends "res://tools/capture_visual_audit.gd"
+## Production scenes/CameraRig with disclosed stand, party and clock fixtures.
+const SELECTED := {
+	"cloudreach": ["env_gate_lower_cliffs_1", "env_windscar_ravine_0", "env_high_roost_sky_shrine_1", "place_cliffhold_settlement"],
+	"tidewake": ["env_first_shore_0", "env_brine_steps_1", "env_shellwatch_0", "env_deep_watch_0", "env_veilfall_1"]
+}
+func _run() -> void:
+	await process_frame
+	root.size = Vector2i(1920, 1080)
+	await super._run()
+
+func _region_spec(region: String) -> Dictionary:
+	var spec := super._region_spec(region)
+	if region == "cloudreach":
+		(spec["flags"] as Array).erase("fly_tutorial_completed")
+	return spec
+
+func _build_rows(spec: Dictionary) -> Array:
+	var selected: Array = []
+	for source: Dictionary in super._build_rows(spec):
+		if str(source.id) not in SELECTED.get(_region, []):
+			continue
+		var row := source.duplicate(true)
+		# Parent parks the staged companion away from landmark/material views.
+		row.id = "place_cliff_review_" + str(source.id)
+		row.times = ["day", "dusk", "night"]
+		selected.append(row)
+	return selected
+
+func _boot_region(spec: Dictionary) -> bool:
+	var ok := await super._boot_region(spec)
+	if ok and _region == "tidewake":
+		var active_material: Object = _world.get_node("Terrain").get("material")
+		var active_shader: Shader = active_material.call("get_shader_override")
+		print("CLIFF_COMPOSITION ", JSON.stringify({"coastal_marker": active_shader.code.contains("// COASTAL-ROCK"), "strength": active_material.call("get_shader_param", "coast_strength"), "scale": active_material.call("get_shader_param", "coast_scale"), "albedo_bound": active_material.call("get_shader_param", "coast_albedo") != null}))
+	if ok and _region == "tidewake" and OS.get_cmdline_user_args().has("--dump-stock"):
+		var material: Object = _world.get_node("Terrain").get("material")
+		var was_override := bool(material.call("is_shader_override_enabled"))
+		if not was_override:
+			material.call("enable_shader_override", true)
+		var stock: Shader = material.call("get_shader_override")
+		var file := FileAccess.open("D:/tetherbound/visual-acceptance-local/tidewake-stock.gdshader", FileAccess.WRITE)
+		file.store_string(stock.code)
+		file.close()
+		if not was_override:
+			material.call("enable_shader_override", false)
+		print("CLIFF_REVIEW dumped active terrain shader; existing Veilfall layer retained")
+	return ok
+
+func _shoot(label: String, info: Dictionary) -> void:
+	var pivot := _player.global_position + Vector3.UP * float(_rig.get("_height"))
+	info["camera_arm_m"] = _rcam.global_position.distance_to(pivot)
+	info["fixture"] = "staged location/party/flags/clock; HUD hidden; companion parked"
+	if float(info.camera_arm_m) < 2.0:
+		_skip(label, "camera spring collapsed; invalid material view")
+		return
+	await super._shoot(label, info)

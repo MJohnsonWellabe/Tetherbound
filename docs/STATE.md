@@ -18,6 +18,14 @@ main; Claude continues gameplay work and owns PR merges. PR288 is the first boun
 X04 slice (Tidewake lantern materials); evidence and remaining defects are in
 `ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
 
+The current Codex visual queue is `ralph/reports/VISUAL/AUDIT.md`: its whole-game
+ranking uses 508 native frames across four regions, 57 creatures and 41 cast
+entries, plus the 89-item icon census. Draft PR365 owns the shared visual work
+and audit. Its first ranked cliff experiment integrates main `94c63b1f2` and
+adds 69 matched native frames: Cloudreach candidate rejected, Tidewake material
+retained only as an intermediate improvement. Final cliff material and Bars A/B
+remain open; see `ralph/reports/VISUAL/CLIFF-FAMILY.md`. Claude owns merging.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
