@@ -23,6 +23,8 @@ extends SceneTree
 ##   hall             three Sigils, Hall gauntlet, Warden arena boundary
 ##   warden           Warden, Veridian offer ACCEPTED (see warden_accept.gd),
 ##                    acknowledgement, physical Rift crossing -> Cloudreach
+##   kell_rift        (resume only) from the warden segment's village_pre_kell
+##                    checkpoint: Kell, storm road, Rift -> Cloudreach
 ##
 ## USAGE
 ##   TB_WORLD_SEED=<seed> godot --headless --path . \
@@ -51,7 +53,7 @@ const HALL := preload("res://tools/earned_saves/hall_route.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden"]
+const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden", "kell_rift"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -197,6 +199,11 @@ func _resumed_segment() -> void:
 			_take(await RELAY.new().run(self, world, game), "passed", "relay")
 		"hall":
 			_take(await HALL.new().run(self, world, game), "passed", "hall")
+		"kell_rift":
+			# Resume from the warden segment's village_pre_kell checkpoint.
+			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run_from_village(self, world, game), "passed", "kell_rift")
+			for _i in 120:
+				await physics_frame
 		"warden":
 			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run(self, world, game), "passed", "warden_accept")
 			# The helper follows the production Rift callback into Cloudreach.

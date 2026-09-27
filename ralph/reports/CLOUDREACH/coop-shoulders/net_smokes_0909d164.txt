@@ -1,0 +1,5 @@
+smoke_net_cloudreach_riding: 137 assertions, 0 failures
+ALL CHECKS PASSED
+ALL CHECKS PASSED
+ALL CHECKS PASSED
+ALL CHECKS PASSED

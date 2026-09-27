@@ -14,6 +14,8 @@ extends SceneTree
 ## skips the fixture party/flags entirely and loads that directory's `save/`
 ## (slot 1, copied to a scratch user:// dir) through the production title's
 ## Load list. The earned belt then is the permanent party for every identity
+## check. `--leg=windscar_return` stops after the F07#2 Windscar return
+## (aerie landing to the grounded counterweight) with its A7 interval report.
 ## check. `--leg=opening` stops with a LEG PASS after the arrival leg
 ## (arrival road, Aila, the lower-west anchor of the first region). Without
 ## `--from-save` the default fixture behaviour is unchanged.
@@ -250,8 +252,25 @@ func _run() -> void:
 	stage = "return_glide_to_grounded_counterweight"
 	_purpose("Turn the Fly-only shrine discovery into a grounded road for the upper chapter", "Return by controlled flight, then take the newly unlocked counterweight route")
 	if not await _return_to_aerie(): return _finish()
+	# F07#2: after the return glide the team is back on foot. A player sends a
+	# companion out with the ordinary recall button (as before every fight
+	# here); the director offers wild Engage only to a deployed ally body.
+	if director.ally_body()==null:
+		await _tap("creature_recall")
+		await _frames(20)
+		_log("companion_sent_out", {"ally":director.ally_body()!=null,"input":"creature_recall"})
+	var windscar_from := simulated_seconds
 	if not await _navigate(Vector3(-720,700,3680)): return _finish()
 	if not _require(_has("cloudreach_act_ii_complete"), "Grounded counterweight route entered"): return _finish()
+	if leg == "windscar_return":
+		var report := _windscar_return_report(windscar_from)
+		_log("leg_complete", {"leg":leg,"windscar_return":report,"team":_team_snapshot(),"flags":_flag_snapshot().size()})
+		print("F07 WINDSCAR RETURN " + JSON.stringify(report))
+		if not bool(report.a7_pass):
+			_fail("Windscar return has an A7 no-action interval over 120 s: " + JSON.stringify(report.over_limit))
+			return _finish()
+		completed_route = true
+		return _finish()
 	if not await _physical_action("upper_anchor_west", "storm_anchor_upper_west_disabled"): return _finish()
 	if not await _physical_action("upper_anchor_east", "storm_anchor_upper_east_disabled"): return _finish()
 	if not await _battle("officer_voss_summit_approach"): return _finish()
@@ -307,12 +326,15 @@ func _run() -> void:
 		"before":saved_party_exact,"after":loaded_party_exact})
 	_require(party_differences.is_empty(),"Disk reload preserved every persisted field of all five members")
 	_require(_flag_snapshot() == saved_flags,"Disk reload preserved the exact progression-flag set")
+	# Compared as JSON, the production disk form, like the exact field check
+	# above: a damage-derived HP (e.g. 50.739446608544) can differ in binary
+	# tail bits after the JSON round trip while serializing identically.
+	_require(JSON.stringify(_team_snapshot()) == JSON.stringify(saved_team),"Reload preserved all five species, levels, XP and HP")
 	await _frames(30)
 	for flag: String in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 		_require(_has(flag), "Reload preserved " + flag)
 	_require(game.inventory.count("coin") == coins, "Reload did not duplicate payouts")
 	_require(_inventory_snapshot() == saved_inventory,"Reload preserved every occupied inventory slot")
-	_require(_team_snapshot() == saved_team,"Reload preserved all five species, levels, XP and HP")
 	_require(not game.can_enter_realm("water"), "Water realm remains non-enterable")
 	_log("persistence_snapshot", {"inventory":_inventory_snapshot(),"team":_team_snapshot(),"party_exact":_party_persistence_snapshot(),"flags":_flag_snapshot(),"day":game.day,"water_enterable":game.can_enter_realm("water")})
 	_log("complete", {"optional_trainers": "not attempted", "optional_detours": "opening candy; required fiber and camp preparation", "recovery_choices":recovery_choices, "combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal"})
@@ -1138,6 +1160,28 @@ func _capture(label: String) -> void:
 	checkpoint+=1
 	root.get_texture().get_image().save_png(output_dir+"/%02d-%s.png"%[checkpoint,label])
 	_log("capture",{"label":label,"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME),"primitives":Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),"fps":Performance.get_monitor(Performance.TIME_FPS),"performance_valid":not accelerated})
+
+
+## F07#2 (ACCEPTANCE C2 "885-second no-action stretch"): every activity
+## interval that ends inside the Windscar return leg, plus the open tail from
+## the last activity to arrival, against the A7 120 s limit.
+func _windscar_return_report(from_seconds: float) -> Dictionary:
+	var longest := 0.0
+	var over: Array = []
+	var inside: Array = []
+	for interval: Dictionary in activity_intervals:
+		if float(interval.end_seconds) < from_seconds:
+			continue
+		inside.append(interval)
+		longest = maxf(longest, float(interval.gap_seconds))
+		if float(interval.gap_seconds) > 120.0:
+			over.append(interval)
+	var tail := snappedf(simulated_seconds - last_activity, 0.01)
+	longest = maxf(longest, tail)
+	if tail > 120.0:
+		over.append({"from":"last activity","to":"counterweight arrival","gap_seconds":tail})
+	return {"leg_seconds":snappedf(simulated_seconds-from_seconds,0.01),"intervals":inside,"open_tail_seconds":tail,
+		"longest_seconds":snappedf(longest,0.01),"a7_limit_seconds":120.0,"over_limit":over,"a7_pass":over.is_empty()}
 
 
 func _finish() -> void:

@@ -156,9 +156,9 @@
     },
     {
      "text": "Each is a distinct optional action",
-     "status": "in_progress",
+     "status": "met",
      "evidence": "Six activities, each run uninterrupted from the earned seed4_hall checkpoint (receipts + BLOCKERS B1-B6 routing only); code-blind distinctness judge D 6/6; ralph/reports/MEADOWS-PAYOFFS/six-activities/earned/. Independent strict re-check: MET.",
-     "gap": "On main via batch 47; flips on the next green full CI."
+     "gap": "Green full CI 36296863144 on main 1ba253eb0."
     },
     {
      "text": "Useful once-only reward and acknowledgement",
@@ -373,22 +373,22 @@
     {
      "text": "Ordinary foot path traverses all six regions",
      "status": "partial",
-     "evidence": "Historical smoke_cloudreach_continuous / arrival walk (CI); not from earned save",
-     "gap": "Current earned foot traversal witness",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Earned c1_arrival start (checkpoint joins, B13-B16 detours), accelerated clock, live-combat pilot, signal-pressed Load, held Fly; owned-carrier Fly path skipped. Evidence ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/ (PASS, EXIT 0). Independent re-check: MET.",
+     "gap": "Landing in batch 48; flips on the next green full CI.",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Fly training, landing and invalid-landing recovery",
      "status": "partial",
-     "evidence": "smoke_fly_traversal 30/0, smoke_cloudreach_fall_recovery pass; Fly anchor follows ride (batch 3)",
-     "gap": "Aerie fixture start (--start=aerie, 21 steps skipped), not the earned route; anchor recovery not reached by input; exhausted-fall branch untested. (strict re-score 23:40)",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Same start and harness; --leg=flight skips the grounded remainder; invalid landing covered by refusals, exhausted-fall recovery and the arbiter unit test. Evidence .../f06-2-fly-training/earned/ (PASS, EXIT 0). Independent re-check: MET.",
+     "gap": "Landing in batch 48; flips on the next green full CI.",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Loaner path does not bypass gates or lose creatures",
      "status": "partial",
-     "evidence": "Finale exam-pilot release/restore fixes + test_cloudreach_finale one-frame-later release (main fe07d0d2)",
-     "gap": "Aerie fixture start; grounded remainder not run; one run stalled on the shrine dais (root cause open); route blockers B1–B3. (strict re-score 23:40)",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Same start and harness; post-chapter loaner end skipped; Voss approach held by altitude/recovery. Evidence .../f06-3-loaner/earned-full-v2/ (PASS, 5 launches, 0 violations). Independent re-check: MET.",
+     "gap": "Landing in batch 48; flips on the next green full CI.",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
@@ -657,8 +657,8 @@
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
      "status": "partial",
-     "evidence": "Consumers mounted (STATE); aftermath blue-sky presentation (main fe07d0d2)",
-     "gap": "Earned persistence witness",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Two-peer PASS 97/0 (ralph/reports/STORMWOOD/f11_3/tb-stormwood-close/); Marrow/Dynamo defeat by ledger fixture, declared start save, 2 teleports, stance set at the Spark socket, injected presses. Independent re-check: MET.",
+     "gap": "Landing in batch 48; flips on the next green full CI.",
      "note": "Needs a re-run on main from committed code. Stormwood lane (#305)."
     },
     {
@@ -875,8 +875,8 @@
     {
      "text": "Grandpa acknowledges each current team incl. releases",
      "status": "partial",
-     "evidence": "Fixture disk witness; test_homecoming_ending_invariants never names released companion (main)",
-     "gap": "Two-peer PASS, but parties granted by fixture and the Veilfall/Nerissa step is ledger-set; guest has no release. (strict re-score 23:40)",
+     "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Two-peer PASS (ralph/reports/TIDEWAKE/b/f15_3_grandpa_real_release/, on main f73b0d15); real release menu; party_grant, story_flag defeated_warden, guardian_fixture, enter_realm, teleport beside Grandpa; headless. Independent re-check: MET.",
+     "gap": "Landing in batch 48; flips on the next green full CI.",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {

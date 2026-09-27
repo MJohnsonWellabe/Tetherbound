@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-27 04:13 UTC",
+ "updated": "2026-09-27 06:20 UTC",
  "headline": [
-  "Criteria met: 55 of 101. F02#3 (fresh-game run through three Sigils and the Hall, one uninterrupted run) flipped on green full CI 36290042517, which also confirms the batch-36 Stormwood regression hotfix (#364).",
-  "Next to flip: F03#1 (six distinct activities from the earned seed4_hall checkpoint; strict re-check MET; batch 47) → 56. Top blocker: held-button flight (hard-rule defect) blocks F06#2/#3/#5 until Cloudreach lands the SYSTEMS tap-pulse.",
-  "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
+  "Criteria met: 56 of 101. F03#1 (six distinct optional activities from the earned seed4_hall checkpoint) flipped on green full CI 36296863144.",
+  "Top blocker: held-button flight (hard-rule defect) blocks F06#2/#3/#5 and F08#0 until Cloudreach lands the SYSTEMS tap-pulse. F08#0 strict re-check came back partial (Stage B, wind pushes, lee pockets, failed-exam return not asserted).",
+  "Rules in force: finish, then land; main moves only when a criterion closes; lanes post READY on issue #356; nothing counts until an independent strict re-check and a green full CI."
  ],
  "batches": [
   {

@@ -18,20 +18,20 @@ extends "res://tests/helpers/cloudreach_witness_route.gd"
 ## `cloudreach_upper` wind wall, keeps pressing and tries to descend onto the
 ## sealed shelf: the wall must refuse it, it is never inside the sealed box,
 ## and it glides back to a verified landing on the aerie deck.
-## DISCLOSED LIMIT: the invalid attempt here is a REFUSED landing. Refusal
-## zeroes the inward velocity, so ordinary input never reaches the production
-## `recover_to_anchor` path. Fly anchor recovery is covered separately by
-## tests/smoke_cloudreach_closed_gate_seal.gd legs (i) (recovery to the
-## verified launch anchor) and (j) (carried out of sealed volumes with the
-## anchor cleared) and tests/test_fly_traversal.gd (trapped-flyer carry-out,
-## airborne save/load anchor, invalid airborne anchor). The exhausted-fall
-## recovery branch (fly_controller.gd, `state == "exhausted"`) has no test.
+## DISCLOSED LIMIT: the invalid attempts here are REFUSED landings. Refusal
+## zeroes the inward velocity, and the host arbiter's slope rule equals the
+## controller's floor angle (45 degrees), so ordinary input cannot touch down
+## on an invalid surface; the restriction branch of `recover_to_anchor` is
+## covered by tests/smoke_cloudreach_closed_gate_seal.gd legs (i)/(j) and
+## tests/test_fly_traversal.gd. The production exhausted-fall recovery
+## (fly_controller.gd `state == "exhausted"`) IS reached by input here:
+## `_exhausted_fall_attempt` (tests/helpers/cloudreach_witness_route.gd).
+## Climb and descent currently use the controller's held jump/fly_descend
+## (a hard-rule conflict raised on #356; the witness follows production).
 ##
-## `--start=aerie` runs from the declared aerie fixture instead (see
-## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
-## START STATE (disclosed): committed completed-Meadows fixture of
-## smoke_cloudreach_continuous (the earned c1_arrival save is F06#0 and does not
-## exist yet). `--from-save=<dir>` runs it from an earned save.
+## START STATE: `--from-save=res://tests/fixtures/earned_saves/c1_arrival`
+## runs from the earned C1 handoff save. `--start=aerie` runs from the declared
+## aerie fixture instead (DRY RUN, does not count; evidence in `aerie-start/`).
 const WITNESS_DIR := "res://ralph/reports/CLOUDREACH/b/f06-2-fly-training"
 const TRIAL_ESCAPE_FRAMES := 240
 
@@ -49,6 +49,7 @@ func _run() -> void:
 	var physical_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_physical_runtime.json"))
 	var trial: Dictionary = physical_config.trial
 	trial_box = AABB(_vec(trial.bounds_position), _vec(trial.bounds_size))
+	want_exhausted_fall = true
 	for spec: Dictionary in physical_config.restrictions:
 		if str(spec.id) == "cloudreach_upper": upper_box = AABB(_vec(spec.position), _vec(spec.size))
 	await super._run()
@@ -82,6 +83,7 @@ func _on_landed(at: Vector3, carrier: String) -> void:
 
 
 func _trial() -> bool:
+	if _resume_skip("trial", "fly_traversal_unlocked"): return true
 	stage = "authored_flight_trial"
 	if not await _physical_action("flight_trial_start", "", false): return false
 	if not _require(physical.trial_active, "Marked trial input started"): return false
@@ -139,12 +141,13 @@ func _finish() -> void:
 		_require(upper_violations == 0, "F06#2 no frame inside sealed Upper Cloudreach before unlock (%d)" % upper_violations)
 		_require(landings.size() >= 4 and landings.all(func(l: Dictionary) -> bool: return bool(l.on_floor)), "F06#2 trial, refused-attempt return, shrine and aerie-return landings all on verified floor (%d)" % landings.size())
 		_require(game.party.members().size() == expected_party_size, "F06#2 party size unchanged after training")
+		_require(not exhausted_fall.is_empty() and int(exhausted_fall.recovered_after_frames) >= 0, "F06#2 exhausted-fall recovery reached by ordinary input")
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#2", "passed": completed_route and not failed,
 		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
-		"stage": stage, "attempts": attempts, "sealed_attempt": sealed_attempt, "landings": landings, "recoveries": recoveries,
+		"stage": stage, "attempts": attempts, "sealed_attempt": sealed_attempt, "exhausted_fall": exhausted_fall, "landings": landings, "recoveries": recoveries,
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,
 		"upper_violations": upper_violations,
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))

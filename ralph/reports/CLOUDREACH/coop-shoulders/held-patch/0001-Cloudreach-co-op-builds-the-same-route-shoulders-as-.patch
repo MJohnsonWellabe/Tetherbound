@@ -1,0 +1,277 @@
+From a9f7b73baa99afbadda89772ea755a0647d1a070 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 26 Sep 2026 21:47:20 +0000
+Subject: [PATCH 1/3] Cloudreach co-op builds the same route shoulders as
+ single player
+
+Owner ruling 2026-09-26: co-op matches single player. A live (sliced)
+crossing and host shells skipped the geological shoulders because their
+per-section RefCounted breathe could lose a nested continuation; the sections
+now yield through the world's own _build_breathe(), and shoulders always
+build. Solo unchanged.
+
+Proof: tests/smoke_cloudreach_coop_shoulders.gd -- live build 0 -> 720
+ridges / 218 walkable collisions, identical to solo; FAIL on main, PASS here.
+Evidence: ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AbnCQbYpP3f5KQ9hTrct95
+---
+ .../CLOUDREACH/coop-shoulders/PROOF.md        | 28 ++++++
+ .../CLOUDREACH/coop-shoulders/branch.txt      |  6 ++
+ .../coop-shoulders/main_32bd33079.txt         |  9 ++
+ scripts/world/cloudreach_world.gd             | 21 ++--
+ tests/smoke_cloudreach_coop_shoulders.gd      | 99 +++++++++++++++++++
+ tests/smoke_cloudreach_coop_shoulders.gd.uid  |  1 +
+ tests/smoke_net_cloudreach_riding.gd          | 11 ++-
+ 7 files changed, 158 insertions(+), 17 deletions(-)
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/branch.txt
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt
+ create mode 100644 tests/smoke_cloudreach_coop_shoulders.gd
+ create mode 100644 tests/smoke_cloudreach_coop_shoulders.gd.uid
+
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md b/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+new file mode 100644
+index 00000000..5b0e3817
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+@@ -0,0 +1,28 @@
++# Co-op keeps Cloudreach route shoulders (owner ruling 2026-09-26: co-op matches single player)
++
++Before: `cloudreach_world.gd::_build_routes` skipped `_build_route_shoulders` whenever the shell
++build was slicing (every live multi-peer crossing and every host shell), because each shoulder
++section awaited the RefCounted `_shell_build.breathe()` and Godot 4.7 could lose that deeply nested
++continuation. Co-op players therefore walked a different Cloudreach: 7 m road ribbons with no
++geological shoulders (no walkable ground beside the road, different silhouettes).
++
++After: shoulders always build; each section yields through the world Node's own `_build_breathe()`
++(the same world-owned suspension every other Cloudreach build loop uses to avoid that bug).
++Solo is unchanged (`_build_breathe()` releases no frames when not slicing).
++
++Proof: `tests/smoke_cloudreach_coop_shoulders.gd` builds the production world solo, then as a live
++crossing (Game.session stand-in reporting multi-peer host -> `shell_build_budget.gd` slices at the
++crossing budget) and compares every `*CliffShoulders/Ridge*` node and its walkable Collision.
++
++| | solo | live on main 32bd33079 | live on branch |
++|---|---|---|---|
++| shoulder ridge nodes | 720 | **0** | **720** (same per-route counts) |
++| walkable shoulder collisions | 218 | 0 | 218 |
++| build completed | yes | yes (270 yields, 22.9 s) | yes (2760 yields, 95.8 s) |
++| worst held slice | – | 356 ms | 1461 ms (37 indivisible slices, each given a heartbeat window) |
++| smoke verdict | – | FAIL (exit 1) | PASS (exit 0, 0 SCRIPT ERROR) |
++
++Cost, stated plainly: the sliced crossing build is ~73 s longer (routes step 0.7 s -> 56.1 s) and its
++worst single held frame rises to 1.46 s; both measured on main's look pass (the grid fix in PR #311
++removes ~140 s from the look). Unit: 258 `test_cloudreach*` tests, 0 failed.
++Raw: `main_32bd33079.txt`, `branch.txt`.
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt b/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt
+new file mode 100644
+index 00000000..6a168607
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/branch.txt
+@@ -0,0 +1,6 @@
++[cloudreach] shell build 95.8 s wall, 2760 yields at 100 ms/frame, 37 indivisible slices given a heartbeat window each, worst held slice 1461 ms (in the step following 'ledges'); steps (ms wall, yields included): materials=3 regions=1536 ledges=29 routes=56144 gates=0 bridges=28 landmarks=1 return_gate=49 route_details=8 resource_patches=11 environment=135 mount=37680
++COOP SHOULDERS solo {"collisions":218,"complete":true,"frames":0,"live":false,"ms":57,"ridges":720,"sliced":false}
++COOP SHOULDERS live {"collisions":218,"complete":true,"frames":2760,"live":true,"ms":95766,"ridges":720,"sliced":true}
++COOP SHOULDERS routes {"ArrivalGateRoadCliffShoulders":25,"BrokenCausewayMainCliffShoulders":55,"CausewayWestLoopCliffShoulders":100,"LowerCliffRoadCliffShoulders":26,"LowerOverlookLoopCliffShoulders":73,"ObservatorySummitLinkCliffShoulders":1,"SummitOverlookLoopCliffShoulders":102,"UpperPlateauCircuitCliffShoulders":112,"UpperSummitRoadCliffShoulders":72,"WindscarCounterweightPassCliffShoulders":72,"WindscarCounterweightReturnCliffShoulders":25,"WindscarFloorLoopCliffShoulders":57}
++COOP SHOULDERS PASS
++exit 0
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt b/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt
+new file mode 100644
+index 00000000..a1eaf244
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/main_32bd33079.txt
+@@ -0,0 +1,9 @@
++[cloudreach] shell build 22.9 s wall, 270 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 356 ms (in the step following 'materials'); steps (ms wall, yields included): materials=2 regions=1465 ledges=35 routes=687 gates=1 bridges=21 landmarks=1 return_gate=64 route_details=5 resource_patches=15 environment=66 mount=20456
++COOP SHOULDERS solo {"collisions":218,"complete":true,"frames":0,"live":false,"ms":56,"ridges":720,"sliced":false}
++COOP SHOULDERS live {"collisions":0,"complete":true,"frames":270,"live":true,"ms":22944,"ridges":0,"sliced":true}
++COOP SHOULDERS routes {}
++ERROR: COOP SHOULDERS: live built 0 shoulder ridges, solo 720
++ERROR: COOP SHOULDERS: live has 0 walkable shoulder collisions, solo 218
++ERROR: COOP SHOULDERS: shoulder sets differ by route: live {  } solo { "ArrivalGateRoadCliffShoulders": 25, "LowerCliffRoadCliffShoulders": 26, "LowerOverlookLoopCliffShoulders": 73, "BrokenCausewayMainCliffShoulders": 55, "CausewayWestLoopCliffShoulders": 100, "WindscarFloorLoopCliffShoulders": 57, "WindscarCounterweightPassCliffShoulders": 72, "UpperPlateauCircuitCliffShoulders": 112, "UpperSummitRoadCliffShoulders": 72, "SummitOverlookLoopCliffShoulders": 102, "WindscarCounterweightReturnCliffShoulders": 25, "ObservatorySummitLinkCliffShoulders": 1 }
++COOP SHOULDERS FAIL
++exit 1
+diff --git a/scripts/world/cloudreach_world.gd b/scripts/world/cloudreach_world.gd
+index bc0a7e57..0bdcb979 100644
+--- a/scripts/world/cloudreach_world.gd
++++ b/scripts/world/cloudreach_world.gd
+@@ -1224,7 +1224,7 @@ const CROWN_RIM_DEPTH_M := 60.0
+ ## under the crown carves it down to the road (`_crown_cut_limits`' carve); a
+ ## road standing over it fills it up to the road (the fill), so the road's
+ ## 7 m hidden collision ribbon never stands a wall above walkable crown --
+-## the co-op build has no route shoulders to hide it. Empty when the region
++## a crown the route's shoulders do not reach has nothing else to hide it. Empty when the region
+ ## has no `crown_cut` or no road runs under it. Regions build before routes,
+ ## so the shared ground-truth line set is gathered here first;
+ ## `_build_routes` re-gathers the same set.
+@@ -2034,16 +2034,13 @@ func _build_routes() -> void:
+ 		var collision_width := minf(width, float(landmass.get("path_collision_width_m", 7.0)))
+ 		var visible_width := minf(collision_width - 0.8,
+ 			float(landmass.get("path_visible_width_m", 4.2)))
+-		# The full geological shoulder generator is the only part of Cloudreach
+-		# that needs thousands of deep coroutine resumptions. Godot 4.7 can lose
+-		# one of those continuations while the process and network remain alive.
+-		# Solo—the playable-first bar—keeps the complete authored shoulders.
+-		# A live multiplayer build uses the already-authored visible/colliding
+-		# route ribbons below as its explicit route placeholder.
+-		if bool(_shell_build.call("is_slicing")):
+-			_shell_build.call("mark", "routes:%s:geological_shoulders:deferred" % str(spec.get("id", "Route")))
+-		else:
+-			await _build_route_shoulders(root, spec, points, width)
++		# Owner ruling 2026-09-26: co-op matches single player, so a live
++		# (time-sliced) crossing and a host shell build the same geological
++		# shoulders solo does. They used to be deferred there because each
++		# section awaited the RefCounted `_shell_build.breathe()`, and Godot 4.7
++		# can lose such a deeply nested continuation; the sections now yield
++		# through this Node's own `_build_breathe()` like every other loop here.
++		await _build_route_shoulders(root, spec, points, width)
+ 		var route_name_lower := str(spec.get("id", "")).to_lower()
+ 		var landing_top: Material = _materials["upland_dry"] if (
+ 			route_name_lower.contains("upper") or route_name_lower.contains("summit")
+@@ -2233,7 +2230,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
+ 			original_a, original_b)
+ 		for section: Dictionary in sections:
+ 			var a: Vector3 = section["a"]
+-			await _shell_build.call("breathe")
++			await _build_breathe()
+ 			var b: Vector3 = section["b"]
+ 			# Every shoulder collides (see `_route_ridge`): its walkable top
+ 			# is clamped per vertex onto any road ribbon, bridge deck or
+diff --git a/tests/smoke_cloudreach_coop_shoulders.gd b/tests/smoke_cloudreach_coop_shoulders.gd
+new file mode 100644
+index 00000000..d46fad38
+--- /dev/null
++++ b/tests/smoke_cloudreach_coop_shoulders.gd
+@@ -0,0 +1,99 @@
++extends SceneTree
++
++## Owner ruling 2026-09-26: co-op keeps the route shoulders single player has.
++## Builds the production Cloudreach world twice in one process -- once solo
++## (unsliced, every await resumes in the same frame) and once as a LIVE
++## crossing (Game.is_multi_peer() true, so `shell_build_budget.gd` slices the
++## build with the crossing budget) -- and requires the live build to finish and
++## to stand exactly the same shoulder ridges, each with its walkable collision.
++##
++##   godot --headless --path . --script tests/smoke_cloudreach_coop_shoulders.gd
++##
++## Prints `COOP SHOULDERS {...}` and `COOP SHOULDERS PASS` / `FAIL`.
++
++const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
++const LIVE_BUILD_FRAME_LIMIT := 60000
++
++## Stands in for the network session of the host of a two-peer game: the
++## build asks whether more than one peer is present, the world whether this
++## peer is the host.
++class LiveSession extends Node:
++	func is_multi_peer() -> bool:
++		return true
++
++	func is_host() -> bool:
++		return true
++
++var _failures: Array[String] = []
++
++
++func _init() -> void:
++	_run.call_deferred()
++
++
++func _run() -> void:
++	var game := root.get_node("Game")
++	game.call("reset_for_new_game")
++	var solo := await _build(false)
++	var session := LiveSession.new()
++	game.set("session", session)
++	_expect(bool(game.call("is_multi_peer")), "the stand-in session did not make the game multi-peer")
++	var live := await _build(true)
++	game.set("session", null)
++	session.free()
++	_expect(bool(live.sliced), "the live build did not slice; the crossing path was not exercised")
++	_expect(bool(live.complete), "the live build never completed within %d frames" % LIVE_BUILD_FRAME_LIMIT)
++	_expect(int(solo.ridges) > 0, "solo built no shoulder ridges")
++	_expect(live.ridges == solo.ridges, "live built %d shoulder ridges, solo %d" % [live.ridges, solo.ridges])
++	_expect(live.collisions == solo.collisions,
++		"live has %d walkable shoulder collisions, solo %d" % [live.collisions, solo.collisions])
++	_expect(live.routes == solo.routes, "shoulder sets differ by route: live %s solo %s" % [live.routes, solo.routes])
++	for key in ["solo", "live"]:
++		var shown: Dictionary = (solo if key == "solo" else live).duplicate()
++		shown.erase("routes")
++		print("COOP SHOULDERS %s %s" % [key, JSON.stringify(shown)])
++	print("COOP SHOULDERS routes " + JSON.stringify(live.routes))
++	for failure in _failures:
++		push_error("COOP SHOULDERS: " + failure)
++	print("COOP SHOULDERS %s" % ("PASS" if _failures.is_empty() else "FAIL"))
++	quit(0 if _failures.is_empty() else 1)
++
++
++func _build(live: bool) -> Dictionary:
++	var world := SCENE.instantiate()
++	root.add_child(world)
++	current_scene = world
++	var started := Time.get_ticks_msec()
++	var frames := 0
++	var budget: RefCounted = world.get("_shell_build")
++	var sliced := budget != null and bool(budget.call("is_slicing"))
++	while not bool(world.call("shell_build_complete")) and frames < LIVE_BUILD_FRAME_LIMIT:
++		await physics_frame
++		frames += 1
++	for _frame in 4:
++		await physics_frame
++	var result := {"live": live, "sliced": sliced, "complete": bool(world.call("shell_build_complete")),
++		"frames": frames, "ms": Time.get_ticks_msec() - started, "ridges": 0, "collisions": 0, "routes": {}}
++	_count(world, result)
++	world.queue_free()
++	await process_frame
++	await process_frame
++	return result
++
++
++func _count(node: Node, result: Dictionary) -> void:
++	var parent := node.get_parent()
++	if parent != null and str(parent.name).ends_with("CliffShoulders") and str(node.name).begins_with("Ridge"):
++		result.ridges += 1
++		var routes: Dictionary = result.routes
++		routes[str(parent.name)] = int(routes.get(str(parent.name), 0)) + 1
++		var body := node.get_node_or_null("Collision")
++		if body is StaticBody3D and (body as StaticBody3D).get_child_count() > 0:
++			result.collisions += 1
++	for child in node.get_children():
++		_count(child, result)
++
++
++func _expect(ok: bool, message: String) -> void:
++	if not ok:
++		_failures.append(message)
+diff --git a/tests/smoke_cloudreach_coop_shoulders.gd.uid b/tests/smoke_cloudreach_coop_shoulders.gd.uid
+new file mode 100644
+index 00000000..8f4bcc24
+--- /dev/null
++++ b/tests/smoke_cloudreach_coop_shoulders.gd.uid
+@@ -0,0 +1 @@
++uid://bxai4vit8vd66
+diff --git a/tests/smoke_net_cloudreach_riding.gd b/tests/smoke_net_cloudreach_riding.gd
+index 4addc787..4d434fb3 100644
+--- a/tests/smoke_net_cloudreach_riding.gd
++++ b/tests/smoke_net_cloudreach_riding.gd
+@@ -97,11 +97,12 @@ const NO_ARBITER := "<no arbiter readable>"
+ ## (real move axes, camera-relative), because a fixed stick direction depends
+ ## on where the guest's camera happened to face.
+ ## Every point lies ON the road's own centreline, `cloudreach_world.json`
+-## `arrival_gate_road` from (0, 105, -260) toward (-80, 130, 40), because a
+-## LIVE crossing does not build the solo geological shoulders
+-## (`cloudreach_world.gd`: `routes:*:geological_shoulders:deferred` while the
+-## shell build is slicing) and stands only the 7 m collision ribbon
+-## (`path_collision_width_m`) along that line. The draft's points were measured
++## `arrival_gate_road` from (0, 105, -260) toward (-80, 130, 40). When these
++## points were chosen a LIVE crossing did not build the solo geological
++## shoulders and stood only the 7 m collision ribbon (`path_collision_width_m`)
++## along that line; since the 2026-09-26 owner ruling it builds them as solo
++## does (`tests/smoke_cloudreach_coop_shoulders.gd`), and the centreline stays
++## the ride that is valid either way. The draft's points were measured
+ ## by a SOLO ride on the shoulders, 7-8 m east of the line: in the two-peer run
+ ## the mount rode off the ribbon at (1.3, -236) and dropped into the
+ ## mounted-fall recovery (reproduced solo with the shoulders removed; the same
+-- 
+2.43.0
+
