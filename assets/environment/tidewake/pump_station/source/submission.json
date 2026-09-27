@@ -1,0 +1,26 @@
+{
+  "task_id": "01a0e4f2-00c1-71d4-bd87-8405c6b8763c",
+  "prompt": "Reconstruct this inspected water pump prop: twin vertical bronze piston barrels, connecting pipes with flanges, large open six-spoke front flywheel, crank linkage, wood skid. Preserve open wheel spokes and space between pipes. Aged bronze, brass edges, weathered oak. Entire standalone prop, no background or floor.",
+  "settings": {
+    "mode": "refine",
+    "should_remesh": true,
+    "should_texture": true,
+    "topology": "triangle",
+    "target_polycount": 40000,
+    "symmetry_mode": "off"
+  },
+  "reference": "assets\\environment\\tidewake\\pump_station\\reference\\pump.png",
+  "reference_sha256": "66d5c904d7368ef66619083697a73dc698a0b9fc93bc77187e5a631f6e896df1",
+  "reference_inspected": true,
+  "reference_review": "Twin barrels, flywheel and crank visible. Whole prop framed; natural bronze/wood and no red. Inspected before submission.",
+  "reference_origin": "OpenAI imagegen exec-02799b54-d409-4d17-9f3e-1bda69988166",
+  "balance_before": {
+    "balance": 13575
+  },
+  "status": "SUCCEEDED",
+  "created_at": 1790547461303,
+  "finished_at": 1790547571268,
+  "balance_after": {
+    "balance": 13545
+  }
+}

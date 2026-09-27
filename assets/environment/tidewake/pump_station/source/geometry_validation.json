@@ -1,0 +1,21 @@
+{
+  "source_sha256": "7b8813524cc8b5d036a0f8789187212763c09c1147abb0ded5144e8d85c7d00a",
+  "triangles": 40187,
+  "vertices": 56038,
+  "materials": 1,
+  "height_m": 3.2,
+  "blender_bounds": [
+    [
+      -2.351986885070801,
+      -0.9741551280021667,
+      0.0
+    ],
+    [
+      2.351986885070801,
+      0.9741551280021667,
+      3.200000047683716
+    ]
+  ],
+  "source_uv_preserved": true,
+  "colliders": 0
+}

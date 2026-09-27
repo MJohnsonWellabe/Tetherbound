@@ -1,0 +1,20 @@
+{
+  "triangles": 12132,
+  "mesh_count": 5,
+  "degenerate_polygons": 0,
+  "godot_bounds_min": [
+    -1.9279999732971191,
+    -2.7009544372558594,
+    -0.4514744281768799
+  ],
+  "godot_bounds_max": [
+    1.9279999732971191,
+    2.9800000190734863,
+    0.31800001859664917
+  ],
+  "front": "-Z",
+  "root": "Cloth centre; pole at local Y 2.76; rearmost wall plate reaches local Z +0.318.",
+  "collision": false,
+  "animation": "Static authored folds; no pretend wind motion.",
+  "glb_sha256": "81e3760ba63b75423e24b5fee54111e51f85f2bee119bc05f1efbd83b82fd9e9"
+}

@@ -1,0 +1,172 @@
+{
+  "baseline": "e993b8977",
+  "colliders_after": 167,
+  "colliders_before": 146,
+  "colliders_post_install": 167,
+  "colliders_pre_install": 167,
+  "fixture": "Declared stand placements, granted five-member party; no summoned companion; closed gate baseline/after then genuine existing flag refresh for open state. No fight or route-completion claim.",
+  "frames": [
+    {
+      "camera": "[X: (-1.0, -0.0, -0.0), Y: (-0.0, 0.984808, 0.173648), Z: (0.0, 0.173648, -0.984808), O: (1794.961, 42.65361, 4150.789)]",
+      "file": "res://shots/veilfall-new-props-r2/before/pump_intake.png",
+      "player": "(1795.0, 40.00015, 4156.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, -0.0, -0.0), Y: (-0.0, 0.984808, 0.173648), Z: (0.0, 0.173648, -0.984808), O: (1809.0, 42.65404, 4177.878)]",
+      "file": "res://shots/veilfall-new-props-r2/before/pump_return.png",
+      "player": "(1809.0, 40.00104, 4183.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, -0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00895, 4155.956)]",
+      "file": "res://shots/veilfall-new-props-r2/before/gate_intake.png",
+      "player": "(1800.0, 40.00104, 4161.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, -0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00776, 4201.954)]",
+      "file": "res://shots/veilfall-new-props-r2/before/gate_return.png",
+      "player": "(1800.0, 39.99984, 4207.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-0.34202, 0.0, -0.939693), Y: (-0.13078, 0.990268, 0.0476), Z: (0.930548, 0.139173, -0.338691), O: (1796.839, 42.47473, 4236.238)]",
+      "file": "res://shots/veilfall-new-props-r2/before/banner_west.png",
+      "player": "(1792.0, 40.00104, 4238.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-0.34202, 0.0, 0.939693), Y: (0.13078, 0.990268, 0.0476), Z: (-0.930548, 0.139173, -0.338692), O: (1803.161, 42.47367, 4236.238)]",
+      "file": "res://shots/veilfall-new-props-r2/before/banner_east.png",
+      "player": "(1808.0, 39.99994, 4238.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (0.0, 0.990268, 0.139173), Z: (0.0, 0.139173, -0.990268), O: (1800.0, 42.47476, 4220.852)]",
+      "file": "res://shots/veilfall-new-props-r2/before/heart_entry.png",
+      "player": "(1800.0, 40.00104, 4226.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (0.0, 0.990268, 0.139173), Z: (0.0, 0.139173, -0.990268), O: (1800.0, 42.41682, 4141.266)]",
+      "file": "res://shots/veilfall-new-props-r2/before/intake_gallery.png",
+      "player": "(1800.0, 40.00104, 4146.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (0.0, 0.984808, 0.173648), Z: (0.0, 0.173648, -0.984808), O: (1795.0, 42.65399, 4150.878)]",
+      "file": "res://shots/veilfall-new-props-r2/after/pump_intake.png",
+      "player": "(1795.0, 40.00104, 4156.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (0.0, 0.984808, 0.173648), Z: (0.0, 0.173648, -0.984808), O: (1809.0, 42.65403, 4177.878)]",
+      "file": "res://shots/veilfall-new-props-r2/after/pump_return.png",
+      "player": "(1809.0, 40.00104, 4183.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00907, 4155.956)]",
+      "file": "res://shots/veilfall-new-props-r2/after/gate_intake.png",
+      "player": "(1800.0, 40.00104, 4161.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00776, 4201.954)]",
+      "file": "res://shots/veilfall-new-props-r2/after/gate_return.png",
+      "player": "(1800.0, 39.99984, 4207.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-0.34202, -0.0, -0.939693), Y: (-0.13078, 0.990268, 0.0476), Z: (0.930548, 0.139173, -0.338691), O: (1796.839, 42.47471, 4236.238)]",
+      "file": "res://shots/veilfall-new-props-r2/after/banner_west.png",
+      "player": "(1792.0, 40.00104, 4238.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-0.342021, 0.0, 0.939692), Y: (0.13078, 0.990268, 0.0476), Z: (-0.930547, 0.139173, -0.338693), O: (1803.161, 42.4736, 4236.238)]",
+      "file": "res://shots/veilfall-new-props-r2/after/banner_east.png",
+      "player": "(1808.0, 39.99994, 4238.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.000001), Y: (0.0, 0.990268, 0.139173), Z: (0.000001, 0.139173, -0.990268), O: (1800.0, 42.47476, 4220.852)]",
+      "file": "res://shots/veilfall-new-props-r2/after/heart_entry.png",
+      "player": "(1800.0, 40.00104, 4226.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.000001), Y: (0.0, 0.990268, 0.139173), Z: (0.000001, 0.139173, -0.990268), O: (1800.0, 42.41682, 4141.266)]",
+      "file": "res://shots/veilfall-new-props-r2/after/intake_gallery.png",
+      "player": "(1800.0, 40.00104, 4146.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.000001), Y: (0.0, 0.970296, 0.241922), Z: (0.000001, 0.241922, -0.970296), O: (1800.0, 43.00907, 4155.954)]",
+      "file": "res://shots/veilfall-new-props-r2/after-open/gate_intake.png",
+      "player": "(1800.0, 40.00104, 4161.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.000001), Y: (0.0, 0.970296, 0.241922), Z: (0.000001, 0.241922, -0.970296), O: (1800.0, 43.00776, 4201.954)]",
+      "file": "res://shots/veilfall-new-props-r2/after-open/gate_return.png",
+      "player": "(1800.0, 39.99984, 4207.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

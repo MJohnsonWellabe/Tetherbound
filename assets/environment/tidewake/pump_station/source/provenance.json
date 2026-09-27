@@ -1,0 +1,15 @@
+{
+  "asset": "Veilfall twin-piston water pump station",
+  "request": "V-CX-12, issue356 comment5859968183, owner asset-creation authorization",
+  "reference": "../reference/pump.png",
+  "reference_origin": "OpenAI imagegen exec-02799b54-d409-4d17-9f3e-1bda69988166",
+  "reference_review": "Inspected complete visible twin barrels, crank, flywheel openings, intake/discharge pipes and timber skid before Meshy submission. Design uses the inspected Veilfall board's aged metal/wood material family; no reference-board pixels shipped.",
+  "meshy_task_id": "01a0e4f2-00c1-71d4-bd87-8405c6b8763c",
+  "license": "Existing owner Meshy license; one image-backed task, no purchase or batch",
+  "source": "Unmodified downloaded model.glb and submission.json in this folder",
+  "preparation": "prepare_pump.py preserves source mesh/UV/atlas, grounds and centres it at 3.2m height, adjusts roughness and metalness for the scene. No collider or gameplay script.",
+  "placement": "Parent intake_pump / sluice_wheel at original positions. Geometry child Y=-1, yaw=180deg. Front flywheel faces approach. Static visual replacement; preserve original collider/interaction.",
+  "validation": "geometry_validation.json; native paired before/after and independent visual review required. No acceptance inferred from source or thumbnail.",
+  "native_evidence": "ralph/reports/VISUAL/veilfall-props-native/r2",
+  "native_validation": "18 individually inspected production-camera frames, 1920x1080 Windows Compatibility; synchronous collision count 167 before/167 after, gate-open state captured; see evidence inspection.json. Independent verdict archived separately."
+}

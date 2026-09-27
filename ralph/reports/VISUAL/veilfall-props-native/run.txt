@@ -1,0 +1,84 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:63)
+       [1] _run (res://tools/capture_veilfall_new_props.gd:34)
+[water vegetation] 10439 instances in 1346 model batches; layers={"groundcover":6211,"rocks":656,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":537,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PROP FRAME res://shots/veilfall-new-props-r2/before/pump_intake.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/pump_return.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/gate_intake.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/gate_return.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/banner_west.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/banner_east.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/heart_entry.png
+PROP FRAME res://shots/veilfall-new-props-r2/before/intake_gallery.png
+WARNING: 'res://assets/environment/tidewake/pump_station/pump_station.glb': In external resource #0, invalid UID: 'uid://ctx1y3uob8r1c' - using text path instead: 'res://assets/environment/tidewake/pump_station/pump_station_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install (res://tools/capture_veilfall_new_props.gd:74)
+       [1] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [2] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/pump_station/pump_station.glb': In external resource #0, invalid UID: 'uid://ctx1y3uob8r1c' - using text path instead: 'res://assets/environment/tidewake/pump_station/pump_station_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install (res://tools/capture_veilfall_new_props.gd:74)
+       [1] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [2] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/heart_banner/heart_banner.glb': In external resource #0, invalid UID: 'uid://14r02tn0idoq' - using text path instead: 'res://assets/environment/tidewake/heart_banner/heart_banner_heart_banner_albedo.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install (res://tools/capture_veilfall_new_props.gd:81)
+       [1] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [2] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/heart_banner/heart_banner.glb': In external resource #0, invalid UID: 'uid://14r02tn0idoq' - using text path instead: 'res://assets/environment/tidewake/heart_banner/heart_banner_heart_banner_albedo.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install (res://tools/capture_veilfall_new_props.gd:81)
+       [1] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [2] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/sluice_gate/sluice_frame_18.glb': In external resource #0, invalid UID: 'uid://b0ko7soovlkch' - using text path instead: 'res://assets/environment/tidewake/sluice_gate/sluice_frame_18_T_WoodTrim_BaseColor.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install_gates (res://tools/capture_veilfall_new_props.gd:90)
+       [1] _install (res://tools/capture_veilfall_new_props.gd:85)
+       [2] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [3] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/sluice_gate/sluice_leaf_18.glb': In external resource #0, invalid UID: 'uid://d1upklid5arxt' - using text path instead: 'res://assets/environment/tidewake/sluice_gate/sluice_leaf_18_T_WoodTrim_BaseColor.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install_gates (res://tools/capture_veilfall_new_props.gd:90)
+       [1] _install (res://tools/capture_veilfall_new_props.gd:85)
+       [2] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [3] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/sluice_gate/sluice_frame_30.glb': In external resource #0, invalid UID: 'uid://cv6lndlg0jhyx' - using text path instead: 'res://assets/environment/tidewake/sluice_gate/sluice_frame_30_T_WoodTrim_BaseColor.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install_gates (res://tools/capture_veilfall_new_props.gd:90)
+       [1] _install (res://tools/capture_veilfall_new_props.gd:85)
+       [2] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [3] _capture (res://tools/capture_veilfall_new_props.gd:65)
+WARNING: 'res://assets/environment/tidewake/sluice_gate/sluice_leaf_30.glb': In external resource #0, invalid UID: 'uid://du301gjj82kfr' - using text path instead: 'res://assets/environment/tidewake/sluice_gate/sluice_leaf_30_T_WoodTrim_BaseColor.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _install_gates (res://tools/capture_veilfall_new_props.gd:90)
+       [1] _install (res://tools/capture_veilfall_new_props.gd:85)
+       [2] _run (res://tools/capture_veilfall_new_props.gd:41)
+       [3] _capture (res://tools/capture_veilfall_new_props.gd:65)
+PROP FRAME res://shots/veilfall-new-props-r2/after/pump_intake.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/pump_return.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/gate_intake.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/gate_return.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/banner_west.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/banner_east.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/heart_entry.png
+PROP FRAME res://shots/veilfall-new-props-r2/after/intake_gallery.png
+PROP FRAME res://shots/veilfall-new-props-r2/after-open/gate_intake.png
+PROP FRAME res://shots/veilfall-new-props-r2/after-open/gate_return.png

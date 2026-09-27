@@ -1,0 +1,9 @@
+{
+  "source": "assets/props/quaternius_fantasy/T_Trim_Cloth_BaseColor.png",
+  "source_sha256": "c4d0e14506e05cc56e7ca62ebeeb2d45de055296a55e5a8e9c1330ff8ff1833a",
+  "method": "Plain teal fabric field crop [.27,.018,.58,.225], luminance retained, blue/cream recolour plus restrained original weave. New vector crest interprets inspected Veilfall banner and title mark. Reference pixels not copied.",
+  "texture_size": [
+    1024,
+    2048
+  ]
+}

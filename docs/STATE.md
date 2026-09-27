@@ -90,10 +90,17 @@ missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.
 exact 5×10 m bounds, release-state visibility check and independent scoped
 crystal PASS (`ralph/reports/VISUAL/veilfall-assets-native/visual-judge.md`).
 Asset-only handoff; Tidewake lane retains its construction function. Full
-chamber Bars A/B remain NO. Waterfall lip/plunge/mist still fail scoped review
-and are being revised. Stormheart new reference-backed tree is in native
-validation. Owner additionally orders complete Galecrest replacement: new
-Meshy candidate and measured bird rig exist; motion/world review is pending.
+chamber Bars A/B remain NO. Waterfall r3 and Stormheart living-crown candidates
+failed independent scoped review and are preserved without integration (7e50eabc9,
+290f70334); both require geometry/material changes, not another tint-only pass.
+Galecrest complete replacement is delivered at 4dea7705c; scoped anatomy/readability
+PASS and remaining feather/night polish are recorded above.
+V-CX-12/13: new pump and folded crested banner pass independent native asset
+review on Tidewake e993b8977; pump connections/scene integration remain with
+Claude. Sluice construction/materials and open-state housing fail, revision in
+progress. Evidence: `ralph/reports/VISUAL/veilfall-props-native/visual-judge-r2.md`.
+All 18 before/after/open frames inspected; insertion preserves 167 collision
+shapes. Full interior A/B NO; no regional criterion closed.
 
 **Owner PR cleanup:** Codex closed #329, #342, #352, #355, #363 and #365
 under the explicit instruction to merge or close its PRs. All six published
