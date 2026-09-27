@@ -569,6 +569,8 @@ func _column_scan(spec: String) -> void:
 						hits += 1
 				if hits >= 3:
 					seen += 1
+					if half <= 0.0:
+						print("[lure-column]     clear from road sample (%.1f,%.1f) at %.0fm" % [n.x, n.y, n.distance_to(Vector2(x, z))])
 			if seen > 0:
 				rows.append([seen, total, x, z, snappedf(Vector2(x, z).distance_to(exit), 0.1)])
 			z += step

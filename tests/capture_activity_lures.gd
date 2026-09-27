@@ -70,6 +70,8 @@ var _probe_stands := false
 ## Path index -> {label, face}: frames taken on reaching a named leg.
 var _leg_shots := {}
 var _pending_shot := {}
+## `--via=x,z`: the road point the route leaves the road at (disclosed).
+var _via := Vector2(INF, INF)
 ## Doss's perch framed from its east side, where the river channel runs
 ## behind it (chosen from the diagnostic stand probe; offset from the perch).
 const PERCH_RIVER_STAND := Vector3(8.0, 0.0, 4.0)
@@ -127,6 +129,9 @@ func _run() -> void:
 			_save_path = _save_dir + "/slot_%d.json" % SLOT
 		elif a.begins_with("--budget-s="):
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
+		elif a.begins_with("--via="):
+			var v := a.trim_prefix("--via=").split(",")
+			_via = Vector2(float(v[0]), float(v[1]))
 		elif a.begins_with("--off-road-cost="):
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a == "--act":
@@ -546,6 +551,14 @@ func _plan_route(start: Vector2, goal: Vector2) -> void:
 		if c < best_cost:
 			best_cost = c
 			best = i
+	if _via.x < INF:
+		# `--via`: leave the road at the node nearest a named road point (the
+		# road a player walks past the place), not at the cheapest exit.
+		best = 0
+		for i in nodes.size():
+			if nodes[i].distance_to(_via) < nodes[best].distance_to(_via):
+				best = i
+		_receipt["via_road_point"] = [snappedf(nodes[best].x, 0.1), snappedf(nodes[best].y, 0.1)]
 	var chain: Array[int] = []
 	var at := best
 	while at >= 0:
