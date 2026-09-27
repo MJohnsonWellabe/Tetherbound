@@ -420,7 +420,7 @@ func _finish_already_done() -> bool:
 
 func _start_state_label() -> String:
 	if start_point == "aerie":
-		return "DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward"
+		return "DRY RUN — does not count (owner rule 2026-09-27, WORKFLOW §8): DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward"
 	if not from_save.is_empty():
 		return "earned save " + from_save
 	return "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)"
