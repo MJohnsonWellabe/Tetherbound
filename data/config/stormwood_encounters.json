@@ -5752,7 +5752,8 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown.",
+      "combat": {"lunge_travels": true, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "completion_reward": {"title": "Hollows Alpha", "items": [{"id": "great_candy", "count": 1}], "acknowledgement": "The Hollows Alpha yields the glowmoss lanes. Great Candy for each trainer who stood in the fight."},
       "once_only": true
     },
@@ -5803,7 +5804,8 @@
       "placeholder_species": "tanglevolt",
       "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
+      "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown.",
+      "combat": {"lunge_travels": true, "telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
       "completion_reward": {"title": "Old Rodfolk Hall Guardian", "items": [{"id": "rare_candy", "count": 1}], "acknowledgement": "The Hall's guardian stands down. Rare Candy for each trainer who stood in the fight."},
       "once_only": true
     },
@@ -5838,7 +5840,8 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.glass_field_alpha_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown.",
+      "combat": {"lunge_travels": true, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "completion_reward": {"title": "Glass Field Alpha", "items": [{"id": "stormglass", "count": 2}], "acknowledgement": "The Glass Field lane goes quiet. Two Stormglass for each trainer who stood in the fight."},
       "once_only": true
     }
