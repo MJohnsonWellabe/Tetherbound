@@ -38,6 +38,9 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 	var dry_grass_material := _cover_material(
 		Color(str(config.get("dry_grass_base", "#4b4919"))),
 		Color(str(config.get("dry_grass_tip", "#a89b42"))), 0.14, 0.50, false)
+	var surface_family := preload("res://scripts/world/cloudreach_environment_materials.gd")
+	surface_family.ground_cover_parameters(grass_material, false, config)
+	surface_family.ground_cover_parameters(dry_grass_material, true, config)
 	grass_material.set_shader_parameter("grass_curve", 0.30)
 	dry_grass_material.set_shader_parameter("grass_curve", 0.30)
 	grass_material.set_shader_parameter("camera_clearance", true)

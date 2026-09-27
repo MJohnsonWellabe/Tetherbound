@@ -245,6 +245,9 @@
   },
   "ground_cover": {
     "grass_density_per_m2": 4.8,
+    "turf_match": 0.85,
+    "turf_root_gain": 0.8,
+    "turf_tip_gain": 1.5,
     "region_grass_patch_cap": 135000,
     "route_grass_patch_cap": 38000,
     "grass_scale_min": 0.30,

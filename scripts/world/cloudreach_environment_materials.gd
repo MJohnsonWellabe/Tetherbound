@@ -60,6 +60,12 @@ static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
 	material.set_shader_parameter("grass_tint",Color("#a2ad78") if dry else Color("#8ca867"))
 	material.set_shader_parameter("grass_scale",0.65)
 
+static func ground_cover_parameters(material: ShaderMaterial, dry: bool, config: Dictionary) -> void:
+	turf_parameters(material, dry)
+	material.set_shader_parameter("turf_match", float(config.get("turf_match", 0.85)))
+	material.set_shader_parameter("turf_root_gain", float(config.get("turf_root_gain", 0.8)))
+	material.set_shader_parameter("turf_tip_gain", float(config.get("turf_tip_gain", 1.5)))
+
 static func ground(dry: bool, geology: ShaderMaterial = null, bank: Dictionary = {}) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_surface.gdshader")

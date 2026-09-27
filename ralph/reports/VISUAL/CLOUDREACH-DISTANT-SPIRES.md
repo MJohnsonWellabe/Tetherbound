@@ -108,3 +108,33 @@ these night views gives **A: No, B: Yes** (genre/readability only, not quality
 parity). The full visual gate remains failed. See `buttress/visual-judge.md`.
 The next work remains coherent foliage/ground response, cliff-cloud integration,
 inhabited vertical architecture and actor readability. No READY is claimed.
+
+
+## Turf-linked ground cover and owner creature findings
+
+Grass now samples the same wet/dry turf colour field as its supporting ground,
+with tunable root/tip gains. Opaque blades use the opaque material path; bush
+leaf cutouts remain. Independent review caught and corrected wet material use
+on dry far fill. Existing sliced-cover smoke passes; eight native 1920x1080
+Windows NVIDIA Compatibility frames completed with zero skips and were each
+opened. Evidence: `cloudreach-c2-candidate/turf/`.
+
+Blind comparison used X=current, Y=previous buttress native frames; mapping was
+withheld. X is preferred modestly by day and clearly at night. Bars A NO/B NO;
+full C2 remains open. The judge still flags noisy creature surfaces, creature
+overlap, plain cliffs, planting boundaries and weak inhabited depth. The new
+verdict is retained without replacing the earlier verdict. Different wild
+spawns prevent a clean whole-frame actor comparison.
+
+Owner then identified Galecrest's broken-neck appearance and the solid-pink
+Cloudfang. Seven native diagnostic frames reproduce the shiny fallback and
+compare Galecrest rest with idle samples. Cloudfang lacks its authored shiny
+texture and falls into the legacy magenta multiply. Galecrest's unanimated
+neck is intact; motion/weights need inspection before a Meshy rebuild decision.
+Neither creature finding is fixed. V30 expanded; V-CX-9 appended.
+
+Shortcuts disclosed: eight stationary production-camera stands, scripted
+progression, hidden HUD, fixed60fps; seven separate studio diagnostic frames.
+No complete C2 matrix, motion pass, creature PASS, full unit suite or READY.
+Native log retains the existing unscoped fly_tutorial_completed flag warning
+and absent placement warnings; no shader compilation failure found.

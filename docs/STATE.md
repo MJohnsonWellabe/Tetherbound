@@ -35,6 +35,11 @@ Owner-rejected lime roadside grass is muted; native day/night views inspected.
 Closed geometry and four baked-texture turntable views inspected. Two summit
 bank-cut trials failed geometry/support checks and were reverted; restored
 crown smoke passes with zero failures. Details: CLOUDREACH-DISTANT-SPIRES.md.
+Turf-linked grass has eight native subset frames and independent comparison:
+preferred over prior grass, but Bars A NO/B NO, full C2 still open. Owner
+creature defects diagnosed: Cloudfang shiny invokes a hot-pink placeholder
+(missing authored shiny texture); Galecrest rest/idle requires motion/weight
+review before deciding on Meshy replacement. Neither creature issue fixed.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

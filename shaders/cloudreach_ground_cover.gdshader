@@ -5,7 +5,12 @@ shader_type spatial;
 // each XZ coordinate. Instances are therefore authored onto each plate/ribbon
 // by cloudreach_ground_cover.gd and this lightweight shader supplies the same
 // base-to-tip colour, softened normals and travelling wind response.
-render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabled;
+render_mode cull_disabled, diffuse_burley, specular_disabled;
+
+#include "res://shaders/cloudreach_turf.gdshaderinc"
+uniform float turf_match : hint_range(0.0, 1.0) = 0.0;
+uniform float turf_root_gain = 0.8;
+uniform float turf_tip_gain = 1.5;
 
 uniform vec3 tint_base : source_color = vec3(0.18, 0.25, 0.08);
 uniform vec3 tint_tip : source_color = vec3(0.48, 0.56, 0.18);
@@ -27,6 +32,7 @@ varying float v_t;
 varying float v_shade;
 varying vec2 v_leaf_uv;
 varying float v_wood;
+varying vec3 v_ground_at;
 
 float hash12(vec2 p) {
 	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -36,6 +42,7 @@ float hash12(vec2 p) {
 
 void vertex() {
 	vec3 origin = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+	v_ground_at = origin;
 	vec2 direction = normalize(wind_dir);
 	float front = dot(origin.xz, direction) / max(gust_length, 0.01) - TIME * gust_speed / max(gust_length, 0.01);
 	float ambient = sin(TIME * 1.7 + dot(origin.xz, vec2(0.041, 0.057)));
@@ -60,6 +67,12 @@ void vertex() {
 
 void fragment() {
 	vec3 colour = mix(tint_base, tint_tip, smoothstep(0.0, 1.0, v_t));
+	// Match the same world-space turf used by crowns and path edges. A modest
+	// tip lift keeps blades readable without a separate fluorescent palette.
+	if (turf_match > 0.0) {
+		vec3 grounded = cloudreach_turf(v_ground_at) * mix(turf_root_gain, turf_tip_gain, smoothstep(0.0, 1.0, v_t));
+		colour = mix(colour, grounded, turf_match);
+	}
 	float leaf_root_light = mix(1.0 - leaf_root_darken, 1.0,
 		smoothstep(0.0, 1.0, v_leaf_uv.y));
 	float root_light = mix(1.0, leaf_root_light, leaf_cut * (1.0 - v_wood));
@@ -68,6 +81,7 @@ void fragment() {
 	float rounded_leaf = sin(clamp(v_leaf_uv.y, 0.0, 1.0) * 3.14159265);
 	float leaf_mask = 1.0 - smoothstep(rounded_leaf * 0.52, rounded_leaf * 0.52 + 0.08,
 		abs(v_leaf_uv.x - 0.5));
-	ALPHA = mix(1.0, leaf_mask, leaf_cut * (1.0 - v_wood));
-	ALPHA_SCISSOR_THRESHOLD = 0.45;
+	// Blades are opaque geometry. Only bush leaves need the shaped cutout;
+	// avoid sending every grass blade through alpha blending.
+	if (mix(1.0, leaf_mask, leaf_cut * (1.0 - v_wood)) < 0.45) { discard; }
 }

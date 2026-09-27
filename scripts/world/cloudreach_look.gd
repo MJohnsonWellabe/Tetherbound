@@ -856,8 +856,9 @@ func _dress_ground_cover_finish() -> void:
 	var dry_base := Color(str(cfg.get("dry_tint_base", "#4b4919")))
 	var dry_tip := Color(str(cfg.get("dry_tint_tip", "#a89b42")))
 	var main_material := _tuft_material(tint_base, tint_tip)
-	var main_material_dry := _tuft_material(dry_base, dry_tip)
+	var main_material_dry := _tuft_material(dry_base, dry_tip, true)
 	var far_material := _tuft_material(tint_base.lerp(Color.BLACK, 0.08), tint_tip.lerp(Color.WHITE, 0.05))
+	var far_material_dry := _tuft_material(dry_base.lerp(Color.BLACK, 0.08), dry_tip.lerp(Color.WHITE, 0.05), true)
 
 	for patch_index in ellipse_patches.size():
 		var patch: Dictionary = ellipse_patches[patch_index]
@@ -872,7 +873,7 @@ func _dress_ground_cover_finish() -> void:
 			requested_main, seed_value, tuft_mesh, main_material_dry if dry else main_material,
 			0.52, 0.95, extra_clear, 360.0, 1.0)
 		var placed_far := _plant_tufts(root, "CoverFinishFar%03d" % patch_index, centre, half, inner_clear,
-			requested_far, seed_value + 5000, tuft_mesh, far_material,
+			requested_far, seed_value + 5000, tuft_mesh, far_material_dry if dry else far_material,
 			far_scale * 0.85, far_scale * 1.2, extra_clear, far_visibility, 1.0)
 		_cover_main_count += placed_main
 		_cover_far_count += placed_far
@@ -880,7 +881,7 @@ func _dress_ground_cover_finish() -> void:
 		_cover_counts_by_index.append(placed_main + placed_far)
 
 	_dress_turf_fill(root, ellipse_patches, cfg, budget, tuft_mesh,
-		main_material, main_material_dry, far_material, extra_clear)
+		main_material, main_material_dry, far_material, far_material_dry, extra_clear)
 	_dress_alpine_rim(ellipse_patches, cfg, budget)
 
 
@@ -907,7 +908,7 @@ func _dress_ground_cover_finish() -> void:
 ## "the grass gets sparser out there" and "the grass stops".
 func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, budget: int,
 		tuft_mesh: ArrayMesh, main_material: Material, main_material_dry: Material,
-		far_material: Material, extra_clear: float) -> void:
+		far_material: Material, far_material_dry: Material, extra_clear: float) -> void:
 	var fill: Dictionary = cfg.get("turf_fill", {})
 	if not bool(fill.get("enabled", true)) or ellipse_patches.is_empty() or tuft_mesh == null:
 		return
@@ -990,6 +991,7 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	var near_transforms: Array[Transform3D] = []
 	var dry_transforms: Array[Transform3D] = []
 	var far_transforms: Array[Transform3D] = []
+	var far_dry_transforms: Array[Transform3D] = []
 	for raw: Variant in cells:
 		var tri: Dictionary = raw
 		var a: Vector3 = tri["a"]
@@ -1019,7 +1021,10 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 				else:
 					near_transforms.append(xform)
 			else:
-				far_transforms.append(xform)
+				if dry_tri:
+					far_dry_transforms.append(xform)
+				else:
+					far_transforms.append(xform)
 
 	_cover_fill_grid = {"turf_triangles": cells.size(), "surfaces": _cover_fill_surfaces,
 		"turf_area_m2": int(_cover_fill_area), "density_scale": scale_factor}
@@ -1029,6 +1034,8 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 		main_material_dry, near_visibility)
 	_cover_fill_count += _commit_tufts(root, "CoverFillFar", far_transforms, tuft_mesh,
 		far_material, far_visibility)
+	_cover_fill_count += _commit_tufts(root, "CoverFillFarDry", far_dry_transforms, tuft_mesh,
+		far_material_dry, far_visibility)
 	_cover_fill_msec = int((Time.get_ticks_usec() - started_usec) / 1000)
 	_cover_fill_probes = probe_casts
 
@@ -1203,7 +1210,7 @@ func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerato
 	return Transform3D(basis, point + Vector3.UP * 0.02)
 
 
-func _tuft_material(base: Color, tip: Color) -> ShaderMaterial:
+func _tuft_material(base: Color, tip: Color, dry: bool = false) -> ShaderMaterial:
 	var material := ShaderMaterial.new()
 	material.shader = COVER_SHADER
 	material.set_shader_parameter("tint_base", base)
@@ -1212,6 +1219,7 @@ func _tuft_material(base: Color, tip: Color) -> ShaderMaterial:
 	material.set_shader_parameter("normal_soften", 0.5)
 	material.set_shader_parameter("grass_curve", 0.3)
 	material.set_shader_parameter("camera_clearance", true)
+	preload("res://scripts/world/cloudreach_environment_materials.gd").ground_cover_parameters(material, dry, _grass_role_config())
 	return material
 
 
