@@ -16,7 +16,9 @@ const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
 const HOST := 1
 const GUEST := 771240190
 const OTHER := 55012
-const COURIER_BAG := Vector3(-288.0, 180.0, 516.0)
+## F07#0 ruling (a): the couriers' thanks waits at the Windscar ravine shelter,
+## unlocked by the medicine delivery.
+const COURIER_BAG := Vector3(-292.0, 460.0, 3108.0)
 
 var world: RefCounted
 var ledger: RefCounted
@@ -64,7 +66,7 @@ func test_guest_cannot_invent_a_reward_source() -> void:
 
 
 func test_guest_cannot_change_an_authored_payout() -> void:
-	world.flags.set_flag("side_stranded_couriers_complete")
+	world.flags.set_flag("side_courier_medicine_delivered")
 	_refused(ledger.commit(_grant("cloudreach_couriers_thanks", "potion_small", 20,
 		"cloudreach_payout:couriers_thanks", _at_bag()), GUEST), "not_authored", "a raised count")
 	_refused(ledger.commit(_grant("cloudreach_couriers_thanks", "potion_large", 2,
@@ -85,7 +87,7 @@ func test_guest_cannot_claim_before_the_host_world_completes_the_activity() -> v
 
 
 func test_guest_must_stand_at_a_placed_reward() -> void:
-	world.flags.set_flag("side_stranded_couriers_complete")
+	world.flags.set_flag("side_courier_medicine_delivered")
 	_refused(ledger.commit(_couriers({}), GUEST), "too_far", "no host view of the guest")
 	_refused(ledger.commit(_couriers({"peer": GUEST, "realm": "cloudreach",
 		"position": COURIER_BAG + Vector3(40.0, 0.0, 0.0)}), GUEST), "too_far", "40 m away")
@@ -138,7 +140,7 @@ func test_guest_trainer_sources_carry_only_authored_once_rewards() -> void:
 
 
 func test_guest_authored_claims_still_pay() -> void:
-	world.flags.set_flag("side_stranded_couriers_complete")
+	world.flags.set_flag("side_courier_medicine_delivered")
 	assert_true(bool(ledger.commit(_couriers(_at_bag()), GUEST).get("ok")), "the couriers' thanks")
 	world.flags.set_flag("band1_broken_cart_repaired")
 	assert_true(bool(ledger.commit(_grant("broken_cart_coll:repair", "coin", 25), GUEST).get("ok")),

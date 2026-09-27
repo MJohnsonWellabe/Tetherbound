@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-27 15:15 UTC",
  "headline": [
-  "Criteria met: 77 of 101 (counted at merge). Batch 59: F04#4 hit/avoid witness; Meadows card M4 integrated run passed.",
+  "Criteria met: 78 of 101 (counted at merge). Batch 59 merged (F04#4, card M4); batch 60: F07#0 six Cloudreach activities.",
   "PHASE 2 (owner): finish every Meadows and Cloudreach criterion. Six lanes: full Meadows run, full Cloudreach run, F04 readability, Cloudreach F07/F08#4, F01 walks, F03 lures. Lanes render locally (xvfb + opengl3)."
  ],
  "batches": [
@@ -236,8 +236,14 @@
   {
    "name": "Batch 59",
    "sha": "pending",
-   "state": "Auto-merge",
+   "state": "Merged",
    "contents": "Meadows core F04#4 hit/avoid witness + fight-camera headroom; Meadows route M4 integrated run"
+  },
+  {
+   "name": "Batch 60",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Cloudreach F07#0 six activities (Waycamp bed rest, Circuit ground TM)"
   }
  ],
  "lanes": [

@@ -1,0 +1,2 @@
+OBSERVATORY LATCH {"climb_seconds":142.3,"deck_colliding_after":true,"deck_colliding_before":false,"deck_visible_after":true,"deck_visible_before":false,"end":"(-180.8018, 900.0308, 4721.396)","mid_ground_after":1035.0,"mid_ground_before":null,"observatory_latch_sighting":true,"observatory_return_latch":true,"stair_built":true,"walk_seconds":137.3,"walked_down":true,"walked_up":true}
+OBSERVATORY LATCH PASS
