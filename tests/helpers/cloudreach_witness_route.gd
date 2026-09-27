@@ -386,11 +386,13 @@ func _relay_leg(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
 			if person_body == null or not person_body.is_visible_in_tree(): continue
 			var at := Vector2(person_body.global_position.x, person_body.global_position.z)
 			var closest := Geometry2D.get_closest_point_to_segment(at, from, to)
-			if closest.distance_to(at) < 1.6 and closest.distance_to(to) > 0.5:
+			# 3 m: the piloted creature's own capsule is wide, and on contact it
+			# shoves the standing trainer ahead along the leg (C1 run 8, 3224 s).
+			if closest.distance_to(at) < 3.0 and closest.distance_to(to) > 0.5:
 				var side := (closest - at)
 				if side.length() < 0.05:
 					side = (to - from).orthogonal()
-				var around := at + side.normalized() * 3.5
+				var around := at + side.normalized() * 4.5
 				var waypoint := Vector3(around.x, target.y, around.y)
 				_log("witness_relay_person_detour", {"person": str(person_body.get_path()), "via": str(waypoint), "to": str(target)})
 				if not await super._walk(waypoint, 1.0, body): return false
