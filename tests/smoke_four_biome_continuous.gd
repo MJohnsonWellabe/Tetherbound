@@ -324,7 +324,18 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 
 
 func _stage_warden_to_cloudreach(game: Node) -> bool:
-	if not _accepted(await WARDEN.new().run(self, live["world"], game), "passed"):
+	var warden_result: Dictionary
+	if OS.get_cmdline_user_args().has("--m4-finale"):
+		# Opt-in M4 finale piece (tests/helpers/meadows_earned_finale_segment.gd):
+		# Warden, the full-five Veridian refuse/let-go/accept branches with
+		# saves and title Loads, then the physical Rift. Loaded only here so the
+		# default path never parses it.
+		var finale: RefCounted = (load("res://tests/helpers/meadows_earned_finale_segment.gd") as GDScript).new()
+		finale.set("save_dir", scratch)
+		warden_result = await finale.call("run", self, live["world"], game)
+	else:
+		warden_result = await WARDEN.new().run(self, live["world"], game)
+	if not _accepted(warden_result, "passed"):
 		return false
 	live["world"] = current_scene
 	reached = "cloudreach_arrived"
