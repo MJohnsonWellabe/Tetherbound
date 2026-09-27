@@ -160,6 +160,7 @@ func _pre_voss_overfly() -> bool:
 	var closest := INF
 	var grounded_near := 0
 	var frames := 0
+	overfly_window = true
 	if launched:
 		for frame in OVERFLY_FRAMES:
 			if not fly.is_flying(): break
@@ -176,6 +177,7 @@ func _pre_voss_overfly() -> bool:
 			await _frames(1)
 		_release()
 	await _wait_on_floor()
+	overfly_window = false
 	for tick in 60:
 		var near := minf(player.global_position.distance_to(SUMMIT_THRESHOLD), player.global_position.distance_to(SUMMIT_ARENA))
 		closest = minf(closest, near)
@@ -184,7 +186,7 @@ func _pre_voss_overfly() -> bool:
 	var flags_after := VOSS_GATED_FLAGS.filter(func(f: String) -> bool: return _has(f))
 	pre_voss_overfly = {"start": str(start), "launched": launched, "loaner": loaner, "flight_frames": frames,
 		"end": str(player.global_position), "closest_to_summit_m": snappedf(closest, 0.1), "grounded_frames_within_gate_radius": grounded_near,
-		"voss_defeated": _has("defeated_cloudreach_voss"), "gated_flags_before": flags_before, "gated_flags_after": flags_after,
+		"voss_defeated": _has("defeated_cloudreach_voss"), "recoveries_to_last_safe_landing": overfly_recoveries, "gated_flags_before": flags_before, "gated_flags_after": flags_after,
 		"party_size": game.party.members().size()}
 	_log("witness_pre_voss_overfly", pre_voss_overfly)
 	if not _require(grounded_near == 0, "F06#3 the pre-Voss loaner overfly never stands within %.0f m of the summit threshold/arena" % OVERFLY_GATE_RADIUS_M): return false

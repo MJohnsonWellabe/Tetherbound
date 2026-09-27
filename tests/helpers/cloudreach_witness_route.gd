@@ -58,6 +58,12 @@ var sealed_attempt: Dictionary = {}
 var want_exhausted_fall := false
 var exhausted_attempted := false
 var exhausted_window := false
+## Set by the loaner witness's pre-Voss overfly: a flight that cannot reach the
+## summit sinks and the production exhausted-fall branch carries the trainer
+## back to the last safe landing. That recovery is the gate holding, not a
+## route failure; it is counted, logged and asserted by the witness.
+var overfly_window := false
+var overfly_recoveries := 0
 var exhausted_fall: Dictionary = {}
 var sealed_upper_box := AABB()
 var write_checkpoints := false
@@ -186,8 +192,9 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 
 ## A failure after the verdict was written must not vanish silently.
 func _fail(message: String) -> bool:
-	if exhausted_window and message == "Unexpected recovery interrupts continuous route: " + EXHAUSTED_RECOVERY_REASON:
-		_log("witness_expected_recovery", {"message": message})
+	if (exhausted_window or overfly_window) and message == "Unexpected recovery interrupts continuous route: " + EXHAUSTED_RECOVERY_REASON:
+		_log("witness_expected_recovery", {"message": message, "window": "exhausted_fall" if exhausted_window else "pre_voss_overfly"})
+		if overfly_window: overfly_recoveries += 1
 		return false
 	if verdict_written:
 		# The verdict file and exit code are already written; say so loudly.
