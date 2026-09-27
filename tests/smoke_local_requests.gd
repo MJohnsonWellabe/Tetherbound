@@ -380,7 +380,10 @@ func _lost_creature() -> void:
 		await _press("interact")
 		acknowledgement_guard += 1
 	if not bool(_panel.call("is_open")) or not _panel_awaiting_confirmation():
-		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice")
+		var ack_runner: RefCounted = _panel.call("runner") as RefCounted
+		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice (open=%s conversation=%s presses=%d ally_blocker=%s)" % [
+			str(_panel.call("is_open")), str(ack_runner.call("conversation_id")) if ack_runner != null else "?",
+			acknowledgement_guard, str(_director.call("usable_ally_blocker"))])
 		return
 	await _capture_activity("juno")
 	await _press("menu_cancel")
@@ -420,6 +423,27 @@ func _start_escort(reunion: Node, prompt: Node, rescued: Node3D) -> bool:
 	return false
 
 
+## Back off, then strafe to one side with forward held, using the ordinary
+## movement actions; forward stays pressed afterwards for the walk to resume.
+func _sidestep(side: String, frames: int) -> void:
+	Input.action_release("move_forward")
+	_send("move_forward", false)
+	Input.action_press("move_back")
+	_send("move_back", true)
+	for _i in 24:
+		await physics_frame
+	Input.action_release("move_back")
+	_send("move_back", false)
+	Input.action_press(side)
+	_send(side, true)
+	Input.action_press("move_forward")
+	_send("move_forward", true)
+	for _i in frames:
+		await physics_frame
+	Input.action_release(side)
+	_send(side, false)
+
+
 ## Walk to Juno with ordinary forward input, steering the camera toward her.
 ## No completion may land before the Meadowhart is within the arrival radius.
 func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
@@ -429,6 +453,13 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 	var moving := true
 	var arrived := false
 	var started := Engine.get_physics_frames()
+	# A wild body or trunk on the straight line to Juno wedged one run 46 m
+	# short; a player steps back and sidesteps, so after STUCK frames without
+	# 0.3 m of progress this backs off and strafes (alternating sides) with the
+	# ordinary movement actions, as tests/capture_activity_lures.gd does.
+	var best := INF
+	var best_frame := 0
+	var unsticks := 0
 	Input.action_press("move_forward")
 	_send("move_forward", true)
 	for frame in 12000:
@@ -440,6 +471,15 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 			Input.action_release("move_forward")
 			_send("move_forward", false)
 			moving = false
+		if moving and to.length() < best - 0.3:
+			best = to.length()
+			best_frame = frame
+		elif moving and frame - best_frame > 240 and unsticks < 8:
+			unsticks += 1
+			print("lost_creature walk: no progress at %s; sidestep %d" % [str(_player.global_position), unsticks])
+			await _sidestep("move_left" if unsticks % 2 == 1 else "move_right", 30 + 15 * unsticks)
+			best = INF
+			best_frame = frame
 		await physics_frame
 		await process_frame
 		var gap := Vector2(rescued.global_position.x - owner_body.global_position.x,
@@ -461,6 +501,8 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 				frame, str(_player.global_position), gap])
 	Input.action_release("move_forward")
 	_send("move_forward", false)
+	if unsticks > 0:
+		print("lost_creature walk: %d sidestep(s) on the way" % unsticks)
 	print("lost_creature walk: %s after %d physics frames" % [
 		"arrived" if arrived else "did not arrive", Engine.get_physics_frames() - started])
 	if not arrived:
