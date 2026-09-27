@@ -40,6 +40,9 @@ const PROOF_PEER_SCRIPT := "res://tools/net/proof_peer_runner.gd"
 ## allowance covers `enter_realm`; this runner grants the same figure to the
 ## proof's other world-building steps itself, so the shared harness is unchanged.
 const PROOF_BUILD_ALLOWANCE_S := 150.0
+## A scenario may raise it (`build_allowance_s`, capped here): a rendered peer's
+## software-GL Meadows load outlasted 150 s on a runner (x05-guest-lane-r1).
+const PROOF_BUILD_ALLOWANCE_MAX_S := 600.0
 ## Rendered peers open a display and GL context before their first hello.
 const RENDER_HELLO_BUDGET_S := 900.0
 ## The harness's world-build figure, for a rendered step's in-step forced draw.
@@ -67,11 +70,12 @@ const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot
 ##                           `equals` FAILS unless it is the one stored under that
 ##                           name. `peer` is ignored (use 0).
 const COORDINATOR_ACTIONS := ["restart_peer", "hashes_agree"]
-const SCENARIO_KEYS := ["name", "claim", "peers", "scene", "host_peer", "budget_s", "steps"]
+const SCENARIO_KEYS := ["name", "claim", "peers", "scene", "host_peer", "budget_s", "build_allowance_s", "steps"]
 const STEP_KEYS := ["peer", "action", "probe", "args", "budget_frames", "expect", "expect_data",
 	"label", "continue_on_fail", "_comment"]
 
 var _proof_out := ""
+var _build_allowance_s := PROOF_BUILD_ALLOWANCE_S
 var _rows: Array = []
 var _ids: Dictionary = {}
 var _characters: Dictionary = {}
@@ -104,7 +108,10 @@ func _run() -> void:
 	# The harness would reset a production join's deferral to its own 90 s
 	# inside step(); a Cloudreach build from the title outlasts that on a
 	# 4-vCPU box (F06#5 r2: ~110 s). Proofs grant their own figure instead.
-	world_build_allowance_floor_s["production_join"] = PROOF_BUILD_ALLOWANCE_S
+	_build_allowance_s = clampf(float(s.get("build_allowance_s", PROOF_BUILD_ALLOWANCE_S)),
+		PROOF_BUILD_ALLOWANCE_S, PROOF_BUILD_ALLOWANCE_MAX_S)
+	world_build_allowance_floor_s["production_join"] = _build_allowance_s
+	world_build_allowance_floor_s["enter_realm"] = _build_allowance_s
 	if not await launch(peers, str(s.get("scene", "world"))):
 		await _end(s, path)
 		return
@@ -242,7 +249,7 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		var draws := OS.get_environment("TB_NET_PROOF_RENDER") == "1" and args.has("screenshot")
 		var builds := action in WORLD_BUILD_ACTIONS
 		if builds:
-			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + PROOF_BUILD_ALLOWANCE_S
+			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + _build_allowance_s
 		elif draws:
 			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + RENDERED_DRAW_ALLOWANCE_S
 		result = await step(peer, action, args, budget)
@@ -326,7 +333,7 @@ func _restart_peer(i: int, scene: String) -> Dictionary:
 		"pid": pid, "home": old.home, "log_path": old.log_path, "control_port": int(controls.ports[0]),
 		"hashes": [], "hello": null, "exited": false, "unexpected_exit": false,
 		"quit_sent": false, "last_heartbeat_t": 0.0, "last_heartbeat": null,
-		"heartbeat_deferred_until_s": now_s + PROOF_BUILD_ALLOWANCE_S,
+		"heartbeat_deferred_until_s": now_s + _build_allowance_s,
 		"last_verdict": null, "last_value": null,
 	}
 	_ids.clear()

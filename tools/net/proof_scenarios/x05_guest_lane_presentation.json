@@ -3,14 +3,16 @@
   "claim": "Presentation evidence for the guest-side lane/cue change (#356 01:40 ruling; not a criterion close). The host engages the Hollows Alpha (a Stormwood named CHARGER, lunge_travels) through the production engage press; the guest joins through the production joinable list. Each peer then waits until ITS OWN view draws the lane: the host's real wild body, and the guest's SharedOpponentProxy drawing it from the host's optional cue shape. Setup, disclosed: the host save has the Stormwood route open and both peers use explore_at to stand at the Hollows Alpha instead of walking there.",
   "peers": 2,
   "scene": "title",
-  "budget_s": 1500,
+  "budget_s": 2400,
+  "build_allowance_s": 480,
   "steps": [
     {
       "peer": 0,
       "action": "load_save",
       "args": {
         "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
-      }
+      },
+      "budget_frames": 30000
     },
     {
       "peer": 1,
@@ -18,7 +20,7 @@
       "args": {
         "scene": "world"
       },
-      "budget_frames": 10000,
+      "budget_frames": 30000,
       "label": "guest: a fresh trainer in the Meadows"
     },
     {
@@ -49,7 +51,7 @@
       "args": {
         "realm": "stormwood"
       },
-      "budget_frames": 10000
+      "budget_frames": 30000
     },
     {
       "peer": 1,
@@ -57,7 +59,7 @@
       "args": {
         "realm": "stormwood"
       },
-      "budget_frames": 10000
+      "budget_frames": 30000
     },
     {
       "peer": 0,
