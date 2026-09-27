@@ -1,0 +1,93 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+ERROR: unscoped chapter flag: fly_tutorial_completed
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _write_flag (res://scripts/world/realm_chapter_events.gd:135)
+       [1] _set_flag (res://scripts/world/realm_chapter_progression.gd:171)
+       [2] _complete (res://scripts/world/realm_chapter_progression.gd:145)
+       [3] reconcile (res://scripts/world/realm_chapter_progression.gd:110)
+       [4] restore_progression_from_game (res://scripts/world/realm_chapter_events.gd:83)
+       [5] _ready (res://scripts/world/realm_chapter_events.gd:44)
+       [6] _ready (res://scripts/world/cloudreach_chapter.gd:73)
+       [7] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [8] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [9] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [6] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [7] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:431)
+       [4] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [5] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:431)
+       [4] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [5] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+frame matrix: world booted after 20 frames
+# Cloudreach frame matrix -- tools/capture_cloudreach_frame_matrix.gd (production CameraRig; fixture in the tool header)
+# name | row | trainer feet | yaw/pitch deg | target | hour | stand (candidate) | camera | trainer on screen | companion | flags
+CAPTURE wrote res://shots/cloudreach-c2-towers-v1/26_summit_final_stronghold_approach_day.png
+MANIFEST 26_summit_final_stronghold_approach_day | approach | trainer (339.2, 917.18, 4534.9) | yaw 163.6 pitch -11.3 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (339.2, 917.00, 4534.9) (1/2) | camera (340.6, 919.95, 4530.0) | trainer on screen (50%, 60%) | companion native follower (341.9, 917.18, 4540.7); trainer gap 6.43 m | flags boot | upper_plateau_circuit near the observatory (t=0.85), ~850 m from the domed aviary on the summit.
+CAPTURE wrote res://shots/cloudreach-c2-towers-v1/29_summit_final_stronghold_detail-aviary_day.png
+MANIFEST 29_summit_final_stronghold_detail-aviary_day | detail-aviary | trainer (100.0, 1160.15, 5395.0) | yaw -0.0 pitch 3.0 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (100.0, 1160.15, 5395.0) (1/3) | camera (100.0, 1161.63, 5400.2) | trainer on screen (50%, 60%) | companion native follower (104.5, 1160.15, 5390.3); trainer gap 6.47 m | flags boot | Aviary drum, arches and lattice dome from the collision-bearing SummitArenaApproach (cloudreach_summit_presentation.gd).
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] restore_progression_from_game (res://scripts/world/cloudreach_physical_runtime.gd:620)
+       [4] _apply_row_flags (res://tools/capture_cloudreach_frame_matrix.gd:468)
+       [5] _run_matrix (res://tools/capture_cloudreach_frame_matrix.gd:447)
+       [6] _capture_row (res://tools/capture_cloudreach_frame_matrix.gd:511)
+[village_npcs] placed 11 of 11
+frame matrix: fixture flags now pre_finale (storm_anchor_upper_west_disabled, storm_anchor_upper_east_disabled, storm_anchor_summit_feed_disabled, cloudreach_upper_anchors_disabled, summit_extraction_engine_reached)
+CAPTURE wrote res://shots/cloudreach-c2-towers-v1/33_summit_final_stronghold_finale400_day.png
+MANIFEST 33_summit_final_stronghold_finale400_day | finale400 | trainer (353.9, 1056.36, 5040.8) | yaw 140.6 pitch -10.8 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (353.9, 1054.90, 5040.8) (1/2) | camera (357.1, 1059.08, 5036.9) | trainer on screen (50%, 60%) | companion native follower (352.8, 1056.41, 5039.8); trainer gap 1.49 m | flags pre_finale | upper_summit_road segment 3, 400 m (straight line) from the aviary at (100,1160,5350), Officer Voss's approach.
+CAPTURE wrote res://shots/cloudreach-c2-towers-v1/34_summit_final_stronghold_finale100_day.png
+MANIFEST 34_summit_final_stronghold_finale100_day | finale100 | trainer (162.5, 1135.85, 5271.9) | yaw 141.3 pitch -1.4 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (162.5, 1135.00, 5271.9) (1/3) | camera (165.7, 1137.73, 5267.8) | trainer on screen (50%, 60%) | companion native follower (167.6, 1135.98, 5276.5); trainer gap 6.87 m | flags pre_finale | 100 m from the aviary: first the final road (under the drawn summit crown on main -- rejected there by the drawn-surface check), then summit_overlook_loop at 100 m, then the arena deck (90 m).
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] restore_progression_from_game (res://scripts/world/cloudreach_physical_runtime.gd:620)
+       [4] _apply_row_flags (res://tools/capture_cloudreach_frame_matrix.gd:468)
+       [5] _run_matrix (res://tools/capture_cloudreach_frame_matrix.gd:447)
+       [6] _capture_row (res://tools/capture_cloudreach_frame_matrix.gd:511)
+[village_npcs] placed 11 of 11
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+frame matrix: fixture flags now post_finale (storm_anchor_upper_west_disabled, storm_anchor_upper_east_disabled, storm_anchor_summit_feed_disabled, cloudreach_upper_anchors_disabled, summit_extraction_engine_reached, captain_veyra_defeated, cloudreach_summit_relay_west_disabled, cloudreach_summit_relay_crown_disabled, cloudreach_summit_relay_east_disabled, storm_anchor_network_disabled, cloudreach_winds_restored, stormward_route_revealed)
+CAPTURE wrote res://shots/cloudreach-c2-towers-v1/35_summit_final_stronghold_postfinale_day.png
+MANIFEST 35_summit_final_stronghold_postfinale_day | postfinale | trainer (162.5, 1135.85, 5271.9) | yaw 141.3 pitch -1.4 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (162.5, 1135.00, 5271.9) (1/3) | camera (165.7, 1137.73, 5267.8) | trainer on screen (50%, 60%) | companion native follower (167.6, 1135.98, 5276.5); trainer gap 6.85 m | flags post_finale | Post-finale change at the row-34 stand: cloudreach_winds_restored (anchors freed, relays off, drone gone).
+CAPTURE sheet res://shots/cloudreach-c2-towers-v1/_sheet_frame_matrix.png (5 frames)
+CAPTURE sheet res://shots/cloudreach-c2-towers-v1/_sheet_frame_matrix_regions.png (2 frames)
+CAPTURE sheet res://shots/cloudreach-c2-towers-v1/_sheet_frame_matrix_finale.png (3 frames)
+# frame matrix: 5 frames written, 0 rows skipped

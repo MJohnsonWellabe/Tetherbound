@@ -21,7 +21,15 @@ Only then post `READY FOR INTEGRATION: <tb/ branch> <sha> — closes F08#4`,
 with evidence and `Shortcuts disclosed:`. The former asset-only Cloudreach
 split below is superseded for this criterion. HANDOFF 5857179877 is `tb/cloudreach@b764a197a`: M1–M12 not started,
 except the capture output-folder option; r0 has 13 software baseline frames.
-Merge that work before the remaining Cloudreach changes. Native high-perch
+Merged at `86c7ea68f`; native36-frame baseline captured on `53514232a`.
+Current M3/M5 eight-frame cloud/cliff candidate FAILS Bars A/B: see
+`ralph/reports/VISUAL/CLOUDREACH-DISTANT-SPIRES.md`. Original cloud sprite
+is retained as rejected candidate art; F08#4 stays open. M10 uses native
+companion formation instead of forcing its position. Aviary belvedere/gold-rib
+candidate has native evidence and corrected source review; 10 tests/202
+assertions pass, but its separate blind Bars A/B verdict is NO/NO. Approach
+composition, cliff integration and material coherence remain open.
+Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.
 

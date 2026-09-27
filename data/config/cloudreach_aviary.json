@@ -1,6 +1,8 @@
 {
   "_why": "D111 -- OP-0906-05: a domed aviary with rustic stone remaining. cloudreach_aviary.gd builds the architecture; cloudreach_world.gd reads its surface palette and seats the original ground boxes on the summit cutting. The X04 refinement changes visual arches, pier profiles and lattice hierarchy while retaining all original route, collision and pylon dimensions.",
   "surface": {
+    "rib_tint": "#b39a5b",
+    "roof_tint": "#354451",
     "stone_tint": "#b9b8aa",
     "trim_tint": "#d3cbb7",
     "moss_amount": 0.1,
@@ -10,6 +12,17 @@
     "tile": 0.28,
     "pane_tint": "#6e8f96",
     "pane_opacity": 0.28
+  },
+  "towers": {
+    "_why": "Original board-backed belvederes extend the four existing drum piers above the walking routes. Open masonry arches, slate hip roofs and finials add the missing architectural silhouette; routes, gates and gameplay collision retain their dimensions.",
+    "enabled": true,
+    "shaft_height_m": 15.0,
+    "shaft_width_m": 2.2,
+    "shaft_depth_m": 3.0,
+    "gallery_width_m": 4.4,
+    "gallery_height_m": 4.2,
+    "post_width_m": 0.5,
+    "roof_height_m": 4.0
   },
   "footprint": {
     "half_width_x_m": 27.8,

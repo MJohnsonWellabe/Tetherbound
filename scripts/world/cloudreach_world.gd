@@ -63,7 +63,7 @@ const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd"
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
 const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
-const CLOUD_BANK_SHADER := preload("res://shaders/cloudreach_cloud_bank.gdshader")
+const CLOUD_DECK_SHADER := preload("res://shaders/cloudreach_cloud_deck.gdshader")
 const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
@@ -75,6 +75,7 @@ const SUMMIT_CANDLE_STAND := preload("res://assets/props/quaternius_fantasy/Cand
 const GROUND_ROOST_LOG := preload("res://assets/props/kenney_survival/tree-log-small.glb")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
+const AVIARY_TOWERS := preload("res://scripts/world/cloudreach_aviary_towers.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
@@ -285,7 +286,15 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
 	parent.add_child(root)
 	var section_config: Dictionary = _visual_config.get("geology", {}).get("rock_sections", {})
-	if not preload("res://scripts/world/cloudreach_rock_sections.gd").build(root, size, seed_value, NATURE_ROCKS, section_config):
+	if material_key in ["haze_near", "haze_far"]:
+		# Purpose-built distant limestone: its normalized proportions preserve
+		# the authored range envelope without stretching a ground boulder.
+		var spire := MeshInstance3D.new()
+		spire.name = "LimestoneSpire"
+		spire.mesh = load("res://assets/environment/cloudreach/limestone_spire_%d.obj" % (posmod(seed_value, 3) + 1)) as Mesh
+		spire.scale = size
+		root.add_child(spire)
+	elif not preload("res://scripts/world/cloudreach_rock_sections.gd").build(root, size, seed_value, NATURE_ROCKS, section_config):
 		var rock:=NATURE_ROCKS[posmod(seed_value,3)].instantiate() as Node3D
 		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
 		rock.scale=size/bounds.size
@@ -735,39 +744,32 @@ func _build_materials() -> void:
 	_materials["key_glow"] = _emissive_material(Color("#4fd0b4"), 0.42)
 	_materials["wind_veil"] = _wind_veil_material()
 	_materials["cloud"] = _cloud_material()
-	_materials["cloud_bank"] = _emissive_material(Color("#d4e2e5"), 0.12)
-	# CLOUDREACH-ATMOS-0906 (C4/C5). The cloud sheets are UNSHADED: they are
-	# read at 1-4 km and any directional shading on a kilometre-wide plane
-	# reads as a tilted floor, not as cloud. The billows and the island mist
-	# are lit on purpose -- a bright top and a shaded base is the whole of what
-	# makes a puff read as cumulus rather than as a white blob -- with a small
-	# emission so the shaded side never falls into the ACES toe the way the
-	# Hall's torches did (archive/docs/handoffs/HANDOFF_2026-09-06.md trap 2).
+	# Lit cloud deck and transparent billow cards follow the realm clock.
 	var cloud_cfg: Dictionary = _visual_config.get("cloud_sea", {})
-	_materials["cloud_deck"] = _unshaded_material(Color(str(cloud_cfg.get("deck_colour", "#c4d5e0"))))
-	_materials["cloud_deck_far"] = _unshaded_material(Color(str(cloud_cfg.get("deck_far_colour", "#94abbd"))))
-	var cloud_bank := ShaderMaterial.new()
-	cloud_bank.shader = CLOUD_BANK_SHADER
-	cloud_bank.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
-	cloud_bank.set_shader_parameter("cloud_base", Color(str(cloud_cfg.get("billow_base_colour", "#8095a8"))))
+	var cloud_deck := ShaderMaterial.new()
+	cloud_deck.shader = CLOUD_DECK_SHADER
+	cloud_deck.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
+	cloud_deck.set_shader_parameter("cloud_base", Color(str(cloud_cfg.get("deck_far_colour", "#6e88a0"))))
+	_materials["cloud_deck"] = cloud_deck
+	var cloud_deck_far := cloud_deck.duplicate() as ShaderMaterial
+	cloud_deck_far.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("deck_colour", "#93aec4"))))
+	_materials["cloud_deck_far"] = cloud_deck_far
+	var cloud_bank := StandardMaterial3D.new()
+	cloud_bank.albedo_texture = load("res://assets/environment/cloudreach/cloud_bank_v1.png")
+	cloud_bank.albedo_color = Color(str(cloud_cfg.get("card_tint", "#a6b4bc")))
+	cloud_bank.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	cloud_bank.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	cloud_bank.billboard_keep_scale = true
+	cloud_bank.cull_mode = BaseMaterial3D.CULL_DISABLED
+	cloud_bank.roughness = 1.0
+	cloud_bank.disable_receive_shadows = true
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
 	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
 		float(island_cfg.get("mist_emission", 0.16)))
 	_materials["island_mist"].roughness = 1.0
-	# Aerial perspective, as a material rather than as more fog: the fog
-	# density this realm runs is deliberately scaled DOWN (see
-	# cloudreach_atmosphere.json's distant_fog, which exists to stop the
-	# floating islands washing to flat grey), so distance has to be carried by
-	# what the far masses are painted with instead. Two tiers, both hazed
-	# toward the sky's own blue-grey and lifted by emission so a far ridge
-	# never reads as a black silhouette the way stand 04's did.
+	# Far stone uses the geology material below, with two cooler palettes.
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
-	var haze_energy := float(relief_cfg.get("haze_emission", 0.22))
-	_materials["haze_near"] = _emissive_material(Color(str(relief_cfg.get("haze_near_colour", "#8098a6"))), haze_energy)
-	_materials["haze_near"].roughness = 1.0
-	_materials["haze_far"] = _emissive_material(Color(str(relief_cfg.get("haze_far_colour", "#9fb4c1"))), haze_energy * 1.25)
-	_materials["haze_far"].roughness = 1.0
 	for material_key: String in ["masonry", "masonry_trim"]:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
 		_materials[material_key] = masonry
@@ -799,6 +801,16 @@ func _build_materials() -> void:
 			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
 	for key: String in ["cliff", "cliff_high", "cliff_mid", "cliff_deep"]:
 		_materials[key] = geology
+	# The distant cliff family receives the same rock response as near cliffs.
+	# Its previous emissive flat colour became white sheets by day and glowing
+	# blue blocks at night. Scene fog supplies aerial perspective naturally.
+	for key: String in ["haze_near", "haze_far"]:
+		var distant_stone := geology.duplicate() as ShaderMaterial
+		var pale := Color(str(relief_cfg.get(key + "_colour", "#8098a6")))
+		distant_stone.set_shader_parameter("stone_light", Vector3(pale.r, pale.g, pale.b))
+		distant_stone.set_shader_parameter("stone_dark", Vector3(pale.r, pale.g, pale.b) * 0.57)
+		distant_stone.set_shader_parameter("normal_scale", 0.0)
+		_materials[key] = distant_stone
 	var trail := ShaderMaterial.new()
 	trail.shader = TRAIL_SHADER
 	trail.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
@@ -881,7 +893,8 @@ func _build_cloud_decks() -> void:
 			heights[row * columns + column] = cloud_sheet_height_at(
 				min_x + float(column) * spacing, z, spacing * 0.5)
 
-	_add_cloud_sheet(root, "CloudSeaUpper", min_x, min_z, spacing, columns, rows, heights, 0.0,
+	_add_cloud_sheet(root, "CloudSeaUpper", min_x, min_z, spacing, columns, rows, heights,
+		-float(cfg.get("upper_deck_offset_m", 100.0)),
 		_materials["cloud_deck"], visible)
 	var lower_offset := float(cfg.get("lower_deck_offset_m", 320.0))
 	if lower_offset > 0.0:
@@ -1018,19 +1031,13 @@ func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: fl
 	var min_r := float(radii[0]) if radii.size() > 0 else 46.0
 	var max_r := float(radii[1]) if radii.size() > 1 else 132.0
 	var flatten := float(cfg.get("billow_flatten", 0.42))
-	var sphere := SphereMesh.new()
-	sphere.radius = 1.0
-	sphere.height = 2.0
-	# 12x6 flattened to a single squash factor gave every billow the same
-	# scalloped crescent silhouette, and the judge counted "the same crescent
-	# silhouette repeats about six times in a row". More segments, and a
-	# per-instance squash below, is what breaks that up.
-	sphere.radial_segments = 14
-	sphere.rings = 7
-	sphere.material = _materials["cloud_billow"]
+	var card := QuadMesh.new()
+	card.size = Vector2(2.0, 1.0)
+	# Original transparent cloud asset, lit by the production day/night cycle.
+	card.material = _materials["cloud_billow"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = sphere
+	multi.mesh = card
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 20260906))
 	var transforms: Array[Transform3D] = []
@@ -1045,7 +1052,7 @@ func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: fl
 		var yaw := rng.randf() * TAU
 		# The low body crosses the sheet, eliminating the detached-oval gap.
 		var body_basis := Basis.IDENTITY.rotated(Vector3.UP, yaw)
-		body_basis = body_basis.scaled(Vector3(bank_r * 1.35, bank_r * flatten * 0.48, bank_r))
+		body_basis = body_basis.scaled(Vector3(bank_r * 1.35, minf(bank_r * 0.8, 100.0), 1.0))
 		transforms.append(Transform3D(body_basis,
 			centre + Vector3.UP * bank_r * flatten * 0.12))
 		var lobes := rng.randi_range(min_lobes, max_lobes)
@@ -1056,8 +1063,7 @@ func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: fl
 			var lobe_r := bank_r * rng.randf_range(0.38, 0.72)
 			var squash := flatten * rng.randf_range(0.72, 1.18)
 			var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
-			basis = basis.scaled(Vector3(lobe_r, lobe_r * squash,
-				lobe_r * rng.randf_range(0.72, 1.08)))
+			basis = basis.scaled(Vector3(lobe_r, minf(lobe_r * 0.9, 90.0), 1.0))
 			var at := centre + Vector3(cos(angle) * offset_r,
 				lobe_r * squash * (0.32 + float(tier) * 0.34), sin(angle) * offset_r)
 			transforms.append(Transform3D(basis, at))
@@ -4386,10 +4392,13 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	aviary_veil.emission_energy_multiplier = 0.3
 	var aviary_spec := _read_json(AVIARY_CONFIG_PATH)
 	var aviary_surface: Dictionary = aviary_spec.get("surface", {})
+	var aviary_gold := _material(Color(str(aviary_surface.get("rib_tint", "#a88a48"))), 0.42)
+	aviary_gold.metallic = 0.55
 	var aviary_materials := {
 		"masonry": ENVIRONMENT_MATERIALS.aviary_masonry(true, aviary_surface),
 		"stone": ENVIRONMENT_MATERIALS.aviary_masonry(false, aviary_surface),
 		"timber": _materials["wood"],
+		"dome_rib": aviary_gold,
 		"iron": _material(Color("#4a4d52"), 0.55),
 		"rope": _materials["rope"],
 		"veil": aviary_veil,
@@ -4407,6 +4416,9 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, aviary_spec)
 	_seat_aviary_on_summit_carve(root, aviary)
+	AVIARY_TOWERS.build(root, aviary_spec.get("towers", {}), aviary_spec.get("drum", {}),
+		aviary_materials["stone"], aviary_materials["masonry"],
+		_material(Color(str(aviary_surface.get("roof_tint", "#354451"))), 0.9), aviary_gold)
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
 	# on the ground at the four corners outside the drum, flanking the wings.
 	for corner in [Vector3(-24.0, 0.0, -20.5), Vector3(24.0, 0.0, -20.5), Vector3(-24.0, 0.0, 20.5), Vector3(24.0, 0.0, 20.5)]:
