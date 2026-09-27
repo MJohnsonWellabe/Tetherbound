@@ -48,6 +48,11 @@ var _sparse := false
 ## ordinary interact prompt beside its Deep Watch reef shore, the stand
 ## tidewake_b_tidecoil_fight.gd walks to. Fixture (disclosed): placement.
 var _wilds: PackedStringArray = []
+## --hits-per-opponent=N: also save a frame HIT_LAG_S after a landed hit (each
+## way), so impact VFX and hit reactions are on record, not only wind-ups.
+var _hits_per_opponent := 2
+const HIT_LAG_S := 0.08
+var _hit_at := -1.0
 const TIDECOIL_SHORE := Vector3(1465.6, 0.0, 3437.4)
 const SPARSE_WARM_FRAMES := 3
 
@@ -82,6 +87,7 @@ func _run() -> void:
 		elif arg.begins_with("--cap-s="): _fight_cap_s = maxf(30.0, float(arg.trim_prefix("--cap-s=")))
 		elif arg.begins_with("--flags="): _extra_flags = arg.trim_prefix("--flags=").split(",", false)
 		elif arg == "--render-only-saves": _sparse = true
+		elif arg.begins_with("--hits-per-opponent="): _hits_per_opponent = maxi(0, int(arg.trim_prefix("--hits-per-opponent=")))
 		elif arg.begins_with("--wild="): _wilds = arg.trim_prefix("--wild=").split(",", false)
 	if (ids.is_empty() and _wilds.is_empty()) or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
@@ -200,6 +206,15 @@ func _record(world: Node3D, game: Node, dir: String, label: String, active: Call
 			_reader._entry_maxima[member.get_instance_id()] = float(member.max_hp)
 		manager.hit_landed.connect(_reader._on_hit)
 		manager.state_changed.connect(_reader._on_state_changed)
+	var hits_seen: Dictionary = {}
+	var on_hit := func(_on_enemy: bool, _amount: float) -> void:
+		var foe: Node3D = manager.enemy_body()
+		var key := foe.get_instance_id() if is_instance_valid(foe) else 0
+		if int(hits_seen.get(key, 0)) < _hits_per_opponent and _hit_at < 0.0:
+			hits_seen[key] = int(hits_seen.get(key, 0)) + 1
+			_hit_at = _fight_t + HIT_LAG_S
+	manager.hit_landed.connect(on_hit)
+	_hit_at = -1.0
 	if _sparse:
 		RenderingServer.render_loop_enabled = false
 	while bool(active.call()) and _fight_t < _fight_cap_s and saved < _max_frames:
@@ -230,6 +245,9 @@ func _record(world: Node3D, game: Node, dir: String, label: String, active: Call
 				_tell.late_saved = true
 				saved += await _save(dir, "tell-late" if _winding_up(enemy) else "tell-ended", _fight_t, enemy, ally, _tell)
 				_tell = {}
+		if _hit_at >= 0.0 and _fight_t >= _hit_at:
+			_hit_at = -1.0
+			saved += await _save(dir, "hit", _fight_t, enemy, ally, {})
 		if _fight_t >= next_periodic:
 			next_periodic += _interval
 			saved += await _save(dir, "t", _fight_t, enemy, ally, {})
@@ -250,6 +268,7 @@ func _record(world: Node3D, game: Node, dir: String, label: String, active: Call
 		await physics_frame
 		_fight_t += 1.0 / Engine.physics_ticks_per_second
 	RenderingServer.render_loop_enabled = true
+	manager.hit_landed.disconnect(on_hit)
 	_release()
 	if _reader != null:
 		_reader._release_attack()
