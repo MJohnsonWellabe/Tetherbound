@@ -10,6 +10,13 @@ extends "res://tests/smoke_stormwood_continuous.gd"
 ##
 ##   godot --headless --path . --script res://tests/smoke_stormwood_b_named_detour_dryrun.gd \
 ##     -- --ids=hollows_alpha --named-out=user://sw_b_detour_dryrun
+##
+## `--write-save=<dir>`: instead of playing the detours, write an ordinary save
+## at the arrival (label `named_dry_arrival`, receipt marked as a DRY RUN seam)
+## and stop, so `capture_stormwood_b_named_from_save.gd --dry-run` can be
+## exercised before an earned save exists.
+
+const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 
 const NAMED_RECORDER := preload("res://tests/helpers/stormwood_b_named_fight_recorder.gd")
 const NAMED_DETOURS := preload("res://tests/helpers/stormwood_b_named_detour_segment.gd")
@@ -31,7 +38,8 @@ func _run() -> void:
 		game = GAME.new()
 		game.name = "Game"
 		root.add_child(game)
-	game.set("save_system", SAVE_GAME.new("%s_%d" % [TEST_SAVE_DIR_PREFIX, OS.get_process_id()]))
+	var save_dir := "%s_%d" % [TEST_SAVE_DIR_PREFIX, OS.get_process_id()]
+	game.set("save_system", SAVE_GAME.new(save_dir))
 	await process_frame
 	game.call("reset_for_new_game")
 	game.get("local").set("character_id", "stormwood-b-detour-dryrun")
@@ -59,6 +67,34 @@ func _run() -> void:
 	if world == null or str(game.get("current_realm")) != "stormwood":
 		print("NAMED_DETOUR FAIL: Stormwood never became current")
 		quit(1)
+		return
+	var write_to := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--write-save="):
+			write_to = arg.trim_prefix("--write-save=")
+	if not write_to.is_empty():
+		for _frame in 600:
+			await physics_frame
+		var saved := bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT))
+		var uids: Array = []
+		var party := game.get("party") as RefCounted
+		var rows: Array = []
+		for i in int(party.call("size")):
+			var member := party.call("at", i) as RefCounted
+			rows.append({"uid": str(member.get("uid")), "species": str(member.get("species_id")),
+				"level": int(member.get("level"))})
+		var receipt := CHECKPOINTS.build_receipt("named_dry_arrival", {"commit": CHECKPOINTS.commit_sha(),
+			"realm": str(game.get("current_realm")), "party": rows,
+			"flags": (game.get("progression").call("all_set") as Array).duplicate()})
+		receipt["passed"] = true
+		receipt["fixtures_used_in_run_path"] = true
+		receipt["no_fixture_statement"] = "DRY RUN seam: in-memory completed-Cloudreach party (smoke_stormwood_continuous chapter entry). Does not count."
+		var out_dir := CHECKPOINTS.export_checkpoint(save_dir, write_to, "named_dry_arrival", "named_dry_arrival", receipt, {})
+		print("NAMED_DETOUR wrote DRY RUN save %s saved=%s -> %s" % ["named_dry_arrival", str(saved),
+			ProjectSettings.globalize_path(out_dir)])
+		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		quit(0 if saved and not out_dir.is_empty() else 1)
 		return
 	var detours := NAMED_DETOURS.new()
 	var result: Dictionary = await detours.run_named(self, world, game, ids)

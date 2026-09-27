@@ -13,6 +13,12 @@ extends "res://tests/smoke_four_biome_continuous.gd"
 ##     each named wild the route did not fight (`stormwood_b_named_detour_segment.gd`:
 ##     rest at a camp, walk the road, one Engage press, ordinary fight), then
 ##     stops. Marrow and later chapters are not needed for F10#2.
+## It also writes three ordinary production saves (`--named-saves=<dir>`,
+## default `<checkpoint-dir>/named`): `named_pre_capacitor` after the arrival
+## prefix, `named_pre_crown` beside the paid Crown arch, `named_pre_detours`
+## after the core ascent. `capture_stormwood_b_named_from_save.gd` loads one
+## through the production title Load and renders that fight: a whole route is
+## too slow to render in one process, a fight from its save is not.
 ## No teleport, flag, item, party, level or weather fixture is added by this
 ## file. A run started without `--resume-from` begins the fresh campaign
 ## (seed4-style) exactly like the base run.
@@ -28,6 +34,7 @@ const NAMED_IDS := ["hollows_alpha", "capacitor_alpha", "crown_guardian",
 	"old_rodfolk_hall_guardian", "blackwater_elder", "glass_field_alpha"]
 
 var _named_recorder: Node = null
+var _named_saves_dir := ""
 
 
 func _init() -> void:
@@ -39,6 +46,8 @@ func _init() -> void:
 			out = arg.trim_prefix("--named-out=")
 		elif arg.begins_with("--named-interval="):
 			interval = float(arg.trim_prefix("--named-interval="))
+		elif arg.begins_with("--named-saves="):
+			_named_saves_dir = arg.trim_prefix("--named-saves=")
 	_named_recorder = NAMED_RECORDER.new(out, interval, gate)
 	root.add_child.call_deferred(_named_recorder)
 	super()
@@ -50,11 +59,15 @@ func _stage_stormwood_to_water(game: Node) -> bool:
 	if not _accepted(await stormwood.run(self, live["world"], game), "passed"):
 		return _named_stop(false)
 	reached = "stormwood_arch_recipe_earned"
-	for entry: Array in [[CROWN, "stormwood_paid_crown"], [ROOTGATE, "stormwood_rootgate_released"],
-			[DYNAMO, "stormwood_dynamo_core_reached"]]:
+	_named_save(game, "named_pre_capacitor")
+	for entry: Array in [[CROWN, "stormwood_paid_crown", "named_pre_crown"],
+			[ROOTGATE, "stormwood_rootgate_released", ""],
+			[DYNAMO, "stormwood_dynamo_core_reached", "named_pre_detours"]]:
 		if not _accepted(await (entry[0] as GDScript).new().run(self, live["world"], game), "passed"):
 			return _named_stop(false)
 		reached = str(entry[1])
+		if not str(entry[2]).is_empty():
+			_named_save(game, str(entry[2]))
 	var seen := {}
 	for row: Dictionary in _named_recorder.get("rows"):
 		seen[str(row.id)] = true
@@ -73,6 +86,33 @@ func _stage_stormwood_to_water(game: Node) -> bool:
 			print("NAMED_ROUTE detour note (not a route failure): %s" % str(line))
 	reached = "stormwood_named_fights_recorded"
 	return _named_stop(true)
+
+
+## An ordinary production save at a quiet moment on the earned route,
+## exported with the four-biome receipt format (commit, party uids, every flag,
+## the earned checkpoint it descends from). A refused save is reported, never
+## papered over.
+func _named_save(game: Node, label: String) -> void:
+	if bool(_named_recorder.call("is_recording")):
+		print("NAMED_ROUTE SAVE %s skipped: a fight is in progress" % label)
+		return
+	if not bool(game.call("save_game", CHECKPOINTS.CHECKPOINT_SLOT)):
+		print("NAMED_ROUTE SAVE %s REFUSED by Game.save_game" % label)
+		return
+	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
+	var elapsed := (Time.get_ticks_msec() - started_ms) / 1000.0
+	var receipt := CHECKPOINTS.build_receipt(label, {
+		"commit": CHECKPOINTS.commit_sha(), "world_seed": int(game.get("world_seed")),
+		"elapsed_seconds": elapsed, "cumulative_elapsed_seconds": prior_elapsed_seconds + elapsed,
+		"realm": str(game.get("current_realm")),
+		"player": [player.global_position.x, player.global_position.y, player.global_position.z] if player != null else [],
+		"party": _party_rows(game.get("party")),
+		"flags": (game.get("progression").call("all_set") as Array).duplicate(),
+		"resumed_from": resume_info,
+	})
+	var dir := _named_saves_dir if not _named_saves_dir.is_empty() else checkpoint_dir.path_join("named")
+	var out := CHECKPOINTS.export_checkpoint(scratch, dir, label, label, receipt, carried_receipts)
+	print("NAMED_ROUTE SAVE %s %s" % [label, "-> " + ProjectSettings.globalize_path(out) if not out.is_empty() else "EXPORT FAILED"])
 
 
 func _named_stop(passed: bool) -> bool:

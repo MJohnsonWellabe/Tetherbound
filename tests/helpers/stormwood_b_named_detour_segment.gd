@@ -16,6 +16,9 @@ const ATTEMPTS := 2
 ## Per named wild: the camp to rest at before setting out and the road points
 ## from that camp to the fight (the last leg is the engage stance itself).
 const PLAN := {
+	# The earned Crown segment's own conductor road (stormwood_crown_build_segment.gd).
+	"capacitor_alpha": {"camp": "still_grove_shelter",
+		"road": [Vector2(-630.0, 2930.0), Vector2(-1080.0, 3020.0)]},
 	"hollows_alpha": {"camp": "lantern_pools_camp",
 		"road": [Vector2(-430.0, 1500.0), Vector2(-480.0, 1600.0)]},
 	"blackwater_elder": {"camp": "lantern_hollow_waycamp",

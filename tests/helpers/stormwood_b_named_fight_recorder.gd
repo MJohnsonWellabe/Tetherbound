@@ -269,3 +269,7 @@ func _flush() -> void:
 func _exit_tree() -> void:
 	if gate_rendering:
 		RenderingServer.render_loop_enabled = true
+
+
+func is_recording() -> bool:
+	return not _row.is_empty()
