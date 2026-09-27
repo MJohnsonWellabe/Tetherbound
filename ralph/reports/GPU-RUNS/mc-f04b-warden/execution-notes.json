@@ -1,0 +1,17 @@
+{
+  "runner": "desktop Windows",
+  "requested_window": "1920x1080 borderless Compatibility",
+  "renderer": [
+    "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "output_png_dimensions": {
+    "1920x1080": 58
+  },
+  "pinned_script_unchanged": true,
+  "prewarmed_shader_cache_files": 179,
+  "cache_collection": "Only untouched preexisting shader cache binaries are excluded; all files written by this run are retained.",
+  "all_artifact_png_dimensions": {
+    "512x2048": 1,
+    "1920x1080": 58
+  }
+}
