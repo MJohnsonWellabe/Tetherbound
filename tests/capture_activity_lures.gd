@@ -200,7 +200,15 @@ func _run() -> void:
 	var legs: Array = []
 	if _activity == "vault":
 		var warrens := _world.get_node_or_null(^"BurrowWarrens")
-		legs.append(warrens.call("marker", "entrance"))
+		# Line up on the doorway first: a point 12 m out along the mouth's
+		# outward axis, so a walk arriving from the side of the mound does not
+		# press into its wall short of the entrance.
+		var entrance: Vector3 = warrens.call("marker", "entrance")
+		var mouth: Vector3 = warrens.call("marker", "mouth")
+		var outward := Vector3(entrance.x - mouth.x, 0.0, entrance.z - mouth.z)
+		if outward.length() > 0.1:
+			legs.append(entrance + outward.normalized() * 12.0)
+		legs.append(entrance)
 		for leg: String in ["mouth", "hall", "den", "vault"]:
 			legs.append(warrens.call("marker", leg))
 	# A save taken inside the Hall (an earned checkpoint before the Warden)
