@@ -18,6 +18,16 @@ uniform float streak_length_m = 9.0;
 uniform float min_speed_m_s = 0.35;
 uniform float speed_scale = 1.4;
 uniform float calm_scale = 1.0;
+// Per-restoration-state look (water_veilfall.json current_flow.state_shader,
+// applied by water_current_flow_view.gd from `water_currents_restored`).
+// streak_density: fraction of foam lanes that carry dashes at all.
+// dash_fill: how much of a carrying lane is foam (longer, joined dashes).
+// fleck_amount: broken whitecap chop between the lanes.
+// brightness: foam and lane colour gain.
+uniform float streak_density = 1.0;
+uniform float dash_fill = 0.5;
+uniform float fleck_amount = 0.5;
+uniform float brightness = 1.0;
 uniform float fade_start_m = 180.0;
 uniform float fade_end_m = 520.0;
 uniform float depth_pull_fraction = 0.003;
@@ -57,9 +67,13 @@ void fragment() {
 	float lane = across_m / streak_width_m + noise(vec2(along / 30.0, across_m / 20.0)) * 1.5;
 	float girth = noise(vec2(floor(lane) * 1.7, along / 18.0));
 	float line = smoothstep(0.78 - girth * 0.22, 0.97, 1.0 - abs(fract(lane) * 2.0 - 1.0));
-	float dash = smoothstep(0.4, 0.8, noise(vec2(floor(lane) * 3.1, (along - TIME * speed) / streak_length_m)));
-	float fleck = smoothstep(0.8, 0.95, noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35)));
-	float streak = max(line * dash, fleck * 0.5);
+	float carried = step(hash(vec2(floor(lane), 7.31)), streak_density);
+	float dash = smoothstep(0.65 - 0.35 * dash_fill, 0.9 - 0.2 * dash_fill,
+		noise(vec2(floor(lane) * 3.1, (along - TIME * speed) / streak_length_m)));
+	float fleck_cut = 0.97 - 0.22 * fleck_amount;
+	float fleck = smoothstep(fleck_cut, fleck_cut + 0.08,
+		noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35))) * min(1.0, fleck_amount * 1.5);
+	float streak = max(line * dash * carried, fleck * 0.6);
 	float across = abs(UV.x - 0.5) * 2.0;
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
 	float ends = smoothstep(0.0, 0.12, UV2.x) * (1.0 - smoothstep(0.88, 1.0, UV2.x));
@@ -69,7 +83,7 @@ void fragment() {
 	float band = lane_opacity * mix(0.5, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
 	float alpha = foam + band * (1.0 - foam);
-	ALBEDO = (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
+	ALBEDO = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
 	ROUGHNESS = 0.7;
 	ALPHA = alpha * mask;
 }

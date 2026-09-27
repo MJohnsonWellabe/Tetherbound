@@ -16,7 +16,8 @@ extends SceneTree
 ## Proves, in the production Water scene:
 ##  1. the flag is written by that real path and journaled to the world file;
 ##  2. visible change: WaterCurrentFlow shader `calm_scale` 1.0 ->
-##     current_flow.restored_calm_scale, and physics water_world.current_at()
+##     current_flow.restored_calm_scale plus every per-state look uniform
+##     (current_flow.state_shader live -> restored), and physics water_world.current_at()
 ##     at a fixed sample point drops by the authored post-liberation multiplier;
 ##  3. persistence: production Game.save_game / reset / Game.load_game and a
 ##     rebuilt Water scene keep the flag, the calm view and the calmer physics.
@@ -92,6 +93,25 @@ func _calm(world: Node3D) -> float:
 	return float((flow.material_override as ShaderMaterial).get_shader_parameter("calm_scale"))
 
 
+## F14#2 look: every per-state uniform the view applied matches the state's
+## configured set (water_veilfall.json current_flow.state_shader).
+func _look_matches(world: Node3D, restored: bool, label: String) -> void:
+	var flow := world.get_node_or_null("WaterVeilfall/WaterCurrentFlow") as MeshInstance3D
+	if not check(flow != null and flow.material_override is ShaderMaterial, label + ": current foam view present"):
+		return
+	var material := flow.material_override as ShaderMaterial
+	var want: Dictionary = flow.call("state_parameters", restored)
+	var other: Dictionary = flow.call("state_parameters", not restored)
+	var applied := {}
+	for key: String in want:
+		applied[key] = material.get_shader_parameter(key)
+		check(is_equal_approx(float(applied[key]), float(want[key])),
+			"%s: uniform %s = %.3f (%s set)" % [label, key, float(applied[key]), "restored" if restored else "live"])
+		check(not is_equal_approx(float(want[key]), float(other.get(key, want[key]))),
+			"%s: %s differs between live and restored" % [label, key])
+	print("%s LOOK %s" % [label.to_upper(), applied])
+
+
 func _speed(world: Node3D) -> float:
 	return (world.current_at(SAMPLE) as Vector3).length()
 
@@ -159,6 +179,7 @@ func _run() -> void:
 	print("BEFORE calm_scale=%.3f current_speed_m_s=%.4f at %s" % [calm_before, speed_before, SAMPLE])
 	check(is_equal_approx(calm_before, 1.0), "Unrestored current foam runs at calm_scale 1.0")
 	check(speed_before > 1.0, "Unrestored Tidal Cradle -> Salt Crown current pushes at authored strength")
+	_look_matches(world, false, "before")
 	await _capture(world, "before")
 
 	# Real settlement path: the Veilfall chamber's Decline, confirmed.
@@ -189,6 +210,7 @@ func _run() -> void:
 	print("AFTER calm_scale=%.3f current_speed_m_s=%.4f at %s" % [calm_after, speed_after, SAMPLE])
 	check(is_equal_approx(calm_after, restored_calm), "Restored foam switches calm_scale to %.2f" % restored_calm)
 	check(speed_after < speed_before * 0.5 and speed_after > 0.0, "Restored physics current is calmer at the same point")
+	_look_matches(world, true, "after")
 
 	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, FLAG, "")
 	for pair: Array in reloaded.checks:
@@ -204,6 +226,7 @@ func _run() -> void:
 	check(game.world.flags.has(FLAG), "Reloaded world keeps " + FLAG)
 	check(is_equal_approx(calm_reload, restored_calm), "Rebuilt current foam starts calm after reload")
 	check(is_equal_approx(speed_reload, speed_after), "Rebuilt physics current stays calm after reload")
+	_look_matches(fresh, true, "reload")
 	# The "after" frames come from the reloaded world: restored state read back
 	# from the save, same camera pose and frozen clock as the "before" frames.
 	await _capture(fresh, "after_reload")
