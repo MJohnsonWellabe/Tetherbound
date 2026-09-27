@@ -1,0 +1,22 @@
+offroad.log:[site_offroad] causeway_watch best=(-230.9843, 390.0, 1559.269) from_authored=11.2 road_clear_m=10.1 candidates=2379
+offroad.log:[site_offroad] lower_cliff_foragers best=(-203.2378, 187.239, 569.5447) from_authored=52.7 road_clear_m=21.0 candidates=982
+offroad.log:[site_offroad] ravine_wind none candidates=0 tested=0
+offroad.log:[site_offroad] roost_perches none candidates=0 tested=0
+offroad.log:[site_offroad] summit_watch none candidates=0 tested=0
+offroad.log:[site_offroad] upper_scouts none candidates=0 tested=0
+offroad.log:[site_support] causeway_watch ok=true centre=(-235.9843, 390.06, 1569.269) road_clear_m=-1.0 detail=
+offroad.log:[site_support] lower_cliff_foragers ok=true centre=(-188.2378, 194.23, 619.5447) road_clear_m=-1.1 detail=
+offroad.log:[site_support] ravine_wind ok=true centre=(220.0, 555.218, 3333.0) road_clear_m=-3.0 detail=
+offroad.log:[site_support] roost_perches ok=true centre=(503.2007, 986.06, 4891.107) road_clear_m=-1.1 detail=
+offroad.log:[site_support] summit_watch ok=true centre=(-460.1908, 1087.081, 5302.365) road_clear_m=-1.1 detail=
+offroad.log:[site_support] upper_scouts ok=true centre=(314.8469, 907.2949, 4423.713) road_clear_m=-1.1 detail=
+offroad2.log:[site_offroad] ravine_wind best=(-80.0, 470.0, 2850.0) from_authored=0.0 road_clear_m=326.5 candidates=2610
+offroad2.log:[site_offroad] roost_perches best=(900.0, 1020.0, 2700.0) from_authored=5.0 road_clear_m=inf candidates=966
+offroad2.log:[site_offroad] summit_watch none candidates=0 tested=0
+offroad2.log:[site_offroad] upper_scouts best=(-100.0, 850.0, 4200.0) from_authored=0.0 road_clear_m=49.9 candidates=2523
+offroad2.log:[site_support] causeway_watch ok=true centre=(-235.9843, 390.06, 1569.269) road_clear_m=-1.0 detail=
+offroad2.log:[site_support] lower_cliff_foragers ok=true centre=(-188.2378, 194.23, 619.5447) road_clear_m=-1.1 detail=
+offroad2.log:[site_support] ravine_wind ok=true centre=(220.0, 555.218, 3333.0) road_clear_m=-3.0 detail=
+offroad2.log:[site_support] roost_perches ok=true centre=(503.2007, 986.06, 4891.107) road_clear_m=-1.1 detail=
+offroad2.log:[site_support] summit_watch ok=true centre=(-460.1908, 1087.081, 5302.365) road_clear_m=-1.1 detail=
+offroad2.log:[site_support] upper_scouts ok=true centre=(314.8469, 907.2949, 4423.713) road_clear_m=-1.1 detail=

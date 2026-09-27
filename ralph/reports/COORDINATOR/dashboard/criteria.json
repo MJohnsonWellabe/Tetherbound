@@ -7,11 +7,11 @@
    "id": "F01",
    "title": "Village road topology and opening",
    "chapter": "Meadows",
-   "pct": 57,
+   "pct": 71,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
-    "in_progress": 3,
+    "in_progress": 2,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -19,9 +19,9 @@
    "criteria": [
     {
      "text": "Overhead road graph is no longer the old compact circle; one continuous home-to-bridge through-road",
-     "status": "in_progress",
-     "evidence": "test_village_road_topology.gd, plan_old_new.png, terrain/scatter re-bake on branch ralph/f01-village-road-plan",
-     "gap": "On main (#333). Not yet engine-verified by a green full CI; flips on the next one. (strict re-score 23:40)"
+     "status": "met",
+     "evidence": "test_village_road_topology.gd, plan_old_new.png, terrain/scatter re-bake on branch ralph/f01-village-road-plan; green full CI 36280097924 on 7a6b45ee0",
+     "gap": ""
     },
     {
      "text": "Usable side lane serves road-facing houses, berry field, grove and stone work",
@@ -101,9 +101,9 @@
     },
     {
      "text": "Continues through three Sigils and the Hall in order",
-     "status": "partial",
-     "evidence": "test_meadows_earned_hall_segment.gd; two-peer --hall leg 46/0 (entrance seat fixture)",
-     "gap": "Continuous fresh-save pass through Hall",
+     "status": "in_progress",
+     "evidence": "Fresh new game seed 15, one uninterrupted run to warden_arena_entered (639526f9, EXIT 0, 4638 s): three captains 3/3 with Sigils in order, gate spends all three, patrol/courtyard/elite then the arena; MEADOWS-PAYOFFS/earned-bridge/hall-seed15.txt. Independent strict re-check: MET.",
+     "gap": "On main via batch 45; flips on the next green full CI.",
      "note": "Seed-15 continuous route through the Hall; opening flake fixed. Meadows route (#286)."
     },
     {

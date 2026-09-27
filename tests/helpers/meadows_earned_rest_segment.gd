@@ -12,6 +12,12 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const MAX_NIGHTS := 3
 const MAX_BITES := 12
 const FOOD := "berries"
+## Nourishment points fed above the tournament's `fed_at` line. Nourishment
+## drains in real time (creature_condition.json `drain_per_minute` 1.1), so a
+## creature fed exactly to the line slipped under it on the walk from camp to
+## Halda (seed 15, r4: "Bramblebun needs feeding" before the final). A player
+## fills the bowl; 15 points is roughly thirteen minutes of walking and a round.
+const FEED_MARGIN := 15.0
 
 
 class BedInput extends TAIL:
@@ -62,8 +68,31 @@ var _completed := false
 var _lesson_mode := false
 
 
+## Mid-bracket recovery, as a player does it. Fainting clears `rested`
+## (`creature_condition.gd` note_faint), so an entrant who faints in one round
+## cannot enter the next until revived and given another creature-bed night.
+## Revive through the actual Satchel, then the same beds/bedroll/feeding flow as
+## `run`, keeping the three Halda already holds (no re-registration).
+func recover(tree: SceneTree, world: Node3D, game: Node,
+		creature_beds: Array, bedroll: Node3D) -> Dictionary:
+	var party: RefCounted = game.get("party") if is_instance_valid(game) else null
+	if party == null or (party.call("tournament_selection") as Array).size() != 3:
+		_fail("Mid-bracket recovery needs the three entrants Halda already holds")
+		return result()
+	for index: int in entrant_indices(party):
+		var member: RefCounted = party.call("at", index)
+		if member != null and bool(member.get("fainted")):
+			var care: Dictionary = await CARE.new().care_existing(tree, world, game, "revive", index)
+			if not bool(care.get("passed", false)):
+				_fail("Satchel revive before the bed night failed: " + str(care.get("failures", [])))
+				return result()
+			_receipt("entrant_revived", {"party_index": index, "hp": member.get("hp")})
+	return await run(tree, world, game, creature_beds, bedroll, false, true)
+
+
 func run(tree: SceneTree, world: Node3D, game: Node,
-		creature_beds: Array, bedroll: Node3D, lesson_mode: bool = false) -> Dictionary:
+		creature_beds: Array, bedroll: Node3D, lesson_mode: bool = false,
+		keep_registration: bool = false) -> Dictionary:
 	_lesson_mode = lesson_mode
 	_tree = tree
 	_world = world
@@ -98,7 +127,7 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 	if not _driver.failures.is_empty() or bool(_driver._manager.call("is_fighting")):
 		_fail("The paid camp is not available for ordinary bed input")
 		return result()
-	if not await _register_three_through_halda():
+	if not keep_registration and not await _register_three_through_halda():
 		return result()
 	_initial_ids = party_ids(_party)
 	_indices = entrant_indices(_party)
@@ -269,14 +298,14 @@ func _sleep_the_team_into_condition() -> bool:
 			return false
 		var wanted := 0
 		for member: RefCounted in _entrants:
-			wanted += berries_needed(member, food, CONDITION.config())
+			wanted += berries_needed(member, food, CONDITION.config(), FEED_MARGIN)
 		if not await _gather_food_to(wanted):
 			return false
 		for ordinal in _indices.size():
 			var member := _entrants[ordinal]
 			if bool(member.get("resting")):
 				return _fail("An entrant was already assigned before this night's bed-panel input")
-			if not await _driver._assign_to_bed(_indices[ordinal]):
+			if not await _assign_with_retry(_indices[ordinal], member):
 				return _fail("Live bed assignment failed: " + str(_driver.failures))
 			if int(member.get("rest_bed_index")) != int(_beds[ordinal].call("build_index")) \
 					or int(_beds[ordinal].call("occupant_index")) != _indices[ordinal]:
@@ -306,6 +335,37 @@ func _sleep_the_team_into_condition() -> bool:
 	return _fail("Three real nights did not satisfy the tournament's actual condition: " + str(TOURNAMENT.readiness_report(_party)))
 
 
+## A bed press can lose to a wild that wandered into camp ("Engage Mudsnout"
+## took bed 2's prompt, seed 15 CI r9) or the walk can stop short against the
+## camp props (3.4 m short of bed 1, CI r10). A player waits a moment, steps
+## back to the bedroll and tries the bed again. Bounded; the last failure
+## stands with every attempt's reason recorded.
+const BED_ATTEMPTS := 3
+
+
+func _assign_with_retry(party_index: int, member: RefCounted) -> bool:
+	var reasons: Array = []
+	for attempt in BED_ATTEMPTS:
+		if await _driver._assign_to_bed(party_index):
+			return true
+		if bool(member.get("resting")):
+			return true
+		reasons.append(_driver.failures.duplicate())
+		_receipt("bed_retry", {"attempt": attempt + 1, "party_index": party_index,
+			"reasons": _driver.failures.duplicate(), "player": _player.global_position})
+		if attempt == BED_ATTEMPTS - 1:
+			break
+		_driver.failures.clear()
+		for _frame in 180:
+			await _tree.physics_frame
+		var roll := _bedroll.get_node_or_null("Interactable") as Node3D
+		if roll != null:
+			await _driver._walk_to_prompt(roll, "paid bedroll (bed retry)")
+			_driver.failures.clear()
+	_driver.failures.assign(reasons.back() if not reasons.is_empty() else [])
+	return false
+
+
 func _sleep_once() -> bool:
 	var prompt := _bedroll.get_node_or_null("Interactable") as Node3D
 	if prompt == null or not await _driver._walk_to_prompt(prompt, "paid bedroll"):
@@ -333,7 +393,7 @@ func _feed_with_satchel() -> bool:
 			# Food solves hunger. A fed but unhappy entrant can spend another
 			# real night in its bed; do not keep feeding until the Satchel's
 			# full-creature refusal turns that valid care route into a failure.
-			if CONDITION.is_fed(member, CONDITION.config()):
+			if float(member.get("nourishment")) >= feed_target(CONDITION.config(), FEED_MARGIN):
 				break
 			if not await _gather_food_to(1):
 				return false
@@ -415,9 +475,14 @@ static func entrant_indices(party: RefCounted) -> Array[int]:
 	return indices
 
 
-static func berries_needed(member: RefCounted, food: Dictionary, cfg: Dictionary) -> int:
+static func feed_target(cfg: Dictionary, margin: float = 0.0) -> float:
 	var nourishment: Dictionary = cfg.get("nourishment", {})
-	var missing_food := maxf(0.0, float(nourishment.get("max", 100)) * float(nourishment.get("fed_at", 0.55)) - float(member.get("nourishment")))
+	var top := float(nourishment.get("max", 100))
+	return minf(top, top * float(nourishment.get("fed_at", 0.55)) + margin)
+
+
+static func berries_needed(member: RefCounted, food: Dictionary, cfg: Dictionary, margin: float = 0.0) -> int:
+	var missing_food := maxf(0.0, feed_target(cfg, margin) - float(member.get("nourishment")))
 	return ceili(missing_food / maxf(float(food.get("nourishment", 0)), 0.001))
 
 

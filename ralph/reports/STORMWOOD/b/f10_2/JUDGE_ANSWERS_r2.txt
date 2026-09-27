@@ -1,0 +1,34 @@
+CODE-BLIND JUDGE, F10#2 named-fight footage ROUND 2 (after the travelling-lunge lane fix)
+Footage: render.yml runs 36282605621 (hollows), 36282607421 (glass field), 36282609214 (hall) at de95e12c8.
+Judge: separate subagent that read ONLY judge_packet_r2/JUDGE_PROMPT.txt and sheet-fight-P/Q/R.jpg.
+Key (withheld from the judge): P=glass_field_alpha, Q=old_rodfolk_hall_guardian, R=hollows_alpha.
+Summary: (a) PASS 3/3, (b) PASS 3/3 (baseline FAIL 6/6), (c) FAIL 3/3, (d) PASS 3/3, (e) FAIL P and R, PASS Q.
+Answers recorded verbatim below.
+--------------------------------------------------------------------------------
+Code-blind visual judge — STORMWOOD f10_2, packet r2 (I read only JUDGE_PROMPT.txt and the three contact sheets sheet-fight-P.jpg, sheet-fight-Q.jpg, sheet-fight-R.jpg; all observations are from the downscaled tiles; tell duration cannot be timed from stills, so the 0.8 s / 1.1 s bar is not verifiable here)
+
+FIGHT P (Voltarach — blue spider, dark grass, blue crystal spikes in background)
+(a) PASS — A saturated magenta lane plus ring around the spider appears at tell1-a-start and persists through tell1-b-mid/tell1-c-late (same pattern tell2–tell4); however the spider's own pose is essentially unchanged from tell1-a-start to tell1-c-late, so the warning is carried entirely by the ground decal, not a body wind-up.
+(b) PASS — The lane clearly shows the strike path and the open ground to its right reads as the escape (tell2-b-mid, tell3-b-mid), but the lane runs toward the camera and off-frame under the left HUD column (tell3-c-late, tell4-c-late), so its far end is never visible.
+(c) FAIL — The spider is fully readable, but the small companion is repeatedly pushed against or under the left team/HUD column at the key moments (tell1-e-impact burst half-overlaps the HUD; tell2-e-impact and tell3-e-impact the companion sits on the HUD edge), and the spider's white/translucent "ghosted" state (i01, i07, tell4-b-mid, tell4-f-recovery) further degrades readability.
+(d) PASS — tell1-e-impact and tell4-e-impact show a burst on the companion (hit); tell2-f-recovery and tell3-f-recovery show "It missed you" with the companion clear of the spider (avoidance).
+(e) FAIL — Nearly identical to R: same Voltarach model, same magenta lane/ring, same dark grass with small white flowers and the same HUD layout (compare P tell1-a-start vs R tell1-a-start); only background props differ, and no hall architecture, glass field or glowmoss is visible.
+
+FIGHT Q (Tanglevolt — blue lightning-veined wolf, meadow with ferns, grey rock, faint green arena ring)
+(a) PASS — Magenta lane plus ring is clear at tell1-a-start, tell2-a-start, tell3-a-start and persists through b-mid/c-late; the wolf does lower/lean forward somewhat by tell3-c-late, the only fight of the three with some body wind-up.
+(b) PASS — The diagonal lane from the wolf toward the lower-left clearly leaves open ground to the right (tell3-b-mid, tell3-c-late); as in P, the lane exits the frame under the left HUD.
+(c) FAIL — The wolf reads well, but the companion is squeezed to the far left edge and largely hidden behind the HUD column in tell3-b-mid, tell3-c-late and tell4-b-mid, and is very small relative to the wolf in i06/tell2-e-impact; the wolf's white-translucent body in i03, i04, i17 and tell4-b-mid makes it look like it's vanishing mid-tell.
+(d) PASS — tell3-d-strike/tell3-e-impact show the wolf lunging along the lane with the companion off to the side, confirmed by "It missed you" in tell3-f-recovery (and tell2-f-recovery); no visible hit on the companion, and the tell4 sequence stops at tell4-c-late (teal ring under the wolf) with no strike/impact captured.
+(e) PASS (distinctness) — Different creature, arena ring, ferns and rock make it clearly distinguishable from P and R; however it does not show the glass field or glowmoss identity cues listed — the ground is an ordinary flower meadow.
+
+FIGHT R (Voltarach again — 00-before labels the area "Glowmoss Hollows"; grass with a bright red bloom in the background)
+(a) PASS — Magenta lane plus ring is clear at tell1-a-start through tell1-c-late and tell3-a-start through tell3-c-late; again the spider's pose barely changes across the warning, so the decal does all the work.
+(b) PASS — The lane shows the path and open ground to the right of it reads as the exit (tell3-b-mid, tell4-b-mid); the lane again runs off-frame toward the camera.
+(c) FAIL — The spider reads, but the companion is at the left HUD edge in tell2-e-impact and tell3-e-impact and the burst overlaps the HUD in tell1-e-impact; in tell2-b-mid through tell2-d-strike the companion faces the camera standing in the lane at the bottom of the frame, partly lost against the magenta decal; the white "ghost" body (i01, tell2-f-recovery, tell4-f-recovery) hurts readability.
+(d) PASS — tell1-e-impact and tell4-e-impact show bursts on the companion (hits); tell2-f-recovery, tell3-f-recovery and i17 show "It missed you" (avoidances).
+(e) FAIL — A near-duplicate of P (same creature, lane, ground and camera); despite the "Glowmoss Hollows" label in 00-before, no glowing moss is visible in any frame, and the red bloom in the background (tell1-a-start, tell2-c-late, tell4-c-late) is the only standout element — a distraction, not an identity.
+
+THREE MOST IMPORTANT LOOK DEFECTS ACROSS ALL THREE
+1. The intended fight identities are not delivered and P and R are the same fight: P tell1-a-start vs R tell1-a-start show the same Voltarach, same magenta lane, same grass; no hall architecture, glass field or visible glowmoss appears in any frame, and R 00-before says "Glowmoss Hollows" while showing plain grass.
+2. Hit feedback is ambiguous and the opponent's hit flash obscures it: the same golden radial burst marks both the companion hitting the opponent (P i02, Q i07, R i03) and the opponent hitting the companion (P tell1-e-impact, R tell4-e-impact), so the player can't tell who took damage, and the opponent's full-body white translucent flash (Q tell4-b-mid, P tell4-b-mid, R tell2-f-recovery) sometimes lands during a tell and reads as the creature disappearing.
+3. The tell is only a flat magenta decal and it (and the companion) vanishes under the HUD: the lane points toward the camera and runs off-frame beneath the left HUD column (Q tell3-b-mid, P tell3-c-late), taking the companion and the lane's end out of view at the decisive moment, while the opponents show little or no body wind-up (P/R tell1-a-start through c-late are effectively the same pose) and nothing distinguishes a heavy tell from a normal one.
