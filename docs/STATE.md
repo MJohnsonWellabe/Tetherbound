@@ -38,6 +38,8 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
+**Owner ruling (2026-09-27): one reused `tb/<lane>` branch per lane, one `tb/integration` batch branch, no scratch branches (WORKFLOW §8).** **Owner ruling (2026-09-27): finish, then land.** READY means a criterion fully closes (or unblocks another lane), with an attached independent strict re-check; fixture starts only as labelled dry runs; one criterion at a time per lane; lane-prefixed append-only Codex-queue IDs; the coordinator batches about every 2 hours and runs full CI after each batch. Details are in WORKFLOW §8. Owner-approved: Stormwood and Tidewake run whole-chapter blocker-finding dry runs from disclosed handoff fixtures.
+
 **Owner rulings (2026-09-26, coordinator Q&A):**
 - **All art/visual changes are ceded to the Codex lane.** Claude lanes record visual defects in the Codex queue at the top of `ralph/reports/VISUAL/AUDIT.md` and do not edit art, materials, shaders, lighting or meshes.
 - The tournament creature grant must be a non-starter species (starters stay player-exclusive). Meadows core owns the change.

@@ -11,6 +11,8 @@ Renderer: Compatibility/opengl3, 1280×720 (`xvfb-run`), the production path. So
 
 Codex marks an item "in progress" with its PR number when it starts. When the work lands, the row moves to "done" with the merge SHA. Owner exceptions: the Team Tether palette stays as built, so H2, H3 and the Tether/civilian red parts of M7 are closed. The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION.
 
+**New rows (owner, 2026-09-27):** append at the bottom of the table with a lane-prefixed ID (`V-MC-n` Meadows core, `V-MA-n` Meadows activities, `V-MR-n` Meadows route, `V-CR-n` Cloudreach, `V-SW-n` Stormwood, `V-TW-n` Tidewake, `V-VIS-n` VIS, `V-X05-n` X05, `V-CX-n` Codex). Never renumber a row; existing V1–V35 keep their IDs.
+
 | # | Criterion | Defect (source) | Where to start | Status |
 |---|---|---|---|---|
 | V1 | F13#5 | Tidewake dock lanterns and wet timber, then shore and landmark hierarchy (judge on `docks_after_v5`) | `scripts/world/water_dock_dressing.gd`, `data/config/water_dock_dressing.json` | Lantern slice #288 merged via integration-30; broader shore/material criterion open |
