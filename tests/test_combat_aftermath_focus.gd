@@ -166,6 +166,7 @@ func test_only_the_meadows_director_names_an_aftermath_focus() -> void:
 		"res://scripts/combat/cloudreach_encounter_director.gd": false,
 		"res://scripts/combat/water_encounter_director.gd": false,
 		"res://scripts/combat/stormwood_encounter_director.gd": false,
+		"res://scripts/combat/water_alpha.gd": false,
 	}
 	for path: String in expected:
 		var director: Node = (load(path) as Script).new()
