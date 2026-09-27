@@ -116,8 +116,8 @@
     {
      "text": "Solo, two-loss and four-character ledgers solvent",
      "status": "partial",
-     "evidence": "test_meadows_economy_solvency.gd 4/13 pass (required 1,005 vs 272 two-loss); data ledger, not route-measured",
-     "gap": "Ledger measured on the actual earned route"
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/MEADOWS-PAYOFFS/earned-bridge/ledger-seed15-r35|r36-679329ac: reserve_ok and two_loss_ok at all 5 stages, no repeated wilds; fourchar-ledger-result.txt solvent. Shortcuts disclosed: four-character ledger is a static computation over the seed-15 path, harness fights, seed fixture, assumed two-loss basket. Independent re-check: MET.",
+     "gap": "Landing in batch 55."
     },
     {
      "text": "No repeated wilds required",
@@ -746,8 +746,8 @@
     {
      "text": "Earned route reaches all six island groups",
      "status": "partial",
-     "evidence": "smoke_water_continuous / earned opening/late segments exist; not from S3 save",
-     "gap": "Continuous earned witness"
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/f13_0_six_groups/: all six groups reached, same five, no mount, reload drift 0. Shortcuts disclosed: declared start (gate flags, key consumed, L44 five), run 2 is a checkpoint resume, harness-driven fights and walking, rest shoals not exercised. Independent re-check: MET.",
+     "gap": "Landing in batch 55."
     },
     {
      "text": "Four land loops and three shortcuts",

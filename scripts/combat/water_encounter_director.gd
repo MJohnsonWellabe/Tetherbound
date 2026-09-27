@@ -9,6 +9,9 @@ const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const INTERACTION := preload("res://scripts/world/interactable.gd")
 var _wanted_sites: Dictionary = {}
 var _restoring_surface_position := Vector3.INF
+## Reused NPC bodies whose Greet prompt this director switched off for their
+## own trainer fight, so only those are switched back on afterwards.
+var _muted_greetings: Dictionary = {}
 
 
 ## Surface sites are explicit open-water ecology, never land bodies with their Y
@@ -375,6 +378,25 @@ func _process(delta: float) -> void:
 		prompt.global_position = trainer_nodes[id].global_position + Vector3(1.5, 1.05, 0)
 		if bool(realm_world.get("simulation_only")):
 			prompt.enabled = false
+	_mute_greeting_during_own_fight()
+
+## A reused story NPC keeps its Greet prompt beside the separate challenge.
+## During that trainer's own fight, F14#1's fight-camera capture showed
+## "Greet Officer Venn" drawn over the fight. Switch it off for the fight
+## and restore it when the fight ends.
+func _mute_greeting_during_own_fight() -> void:
+	var fighting := trainer_battle_active() and trainer_nodes.has(trainer_battle_id())
+	var body: Node3D = trainer_nodes.get(trainer_battle_id()) if fighting else null
+	var greeting: Node3D = body.call("prompt_node") if body != null and body.has_method("prompt_node") else null
+	if greeting != null and bool(greeting.get("enabled")) and not _muted_greetings.has(greeting):
+		greeting.set("enabled", false)
+		_muted_greetings[greeting] = true
+	for muted: Variant in _muted_greetings.keys():
+		if not is_instance_valid(muted):
+			_muted_greetings.erase(muted)
+		elif muted != greeting:
+			(muted as Node).set("enabled", true)
+			_muted_greetings.erase(muted)
 
 # Terrain3D owns its RID directly; retain all footprint rays and slope checks.
 func _wild_support_impl(at: Vector3, radius: float, wild: Node3D, query_proxy: Object = null) -> Vector3:

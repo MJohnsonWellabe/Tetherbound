@@ -58,6 +58,8 @@
      "why": "the last easy find on the road before South Bridge itself -- the anticipation beat BAND1_ROUTE_CONTRACT.md's place 5 asks for, paid in the same currency as the rest of the critical path. Nudged 2m from the first-authored spot, which `_probe_band_density.gd` found inside a rock's own solid-scatter margin."},
     {"id": "b1_revive_bridge_approach", "item": "revive", "pos": [-38.3, 1306.4], "tier": "critical",
      "why": "53m short of south_bridge_grunt and clear of the bridge carve itself ([8,1330]): band 2's own convention -- the revive is met before Team Tether closes the road behind the player, never after."},
-    {"id": "b1_road_mushroom_home_track", "item": "wild_mushroom", "pos": [-76.5, 14.2], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1, A7): the walk back from the home materials to the village crafting spot ran 314 m with no beat on the earned seed-15 route; a food find halfway, not a candy."}
+    {"id": "b1_road_mushroom_home_track", "item": "wild_mushroom", "pos": [-76.5, 14.2], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1, A7): the walk back from the home materials to the village crafting spot ran 314 m with no beat on the earned seed-15 route; a food find halfway, not a candy."},
+    {"id": "b1_road_mushroom_794", "item": "wild_mushroom", "pos": [151.3, 794.1], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1): the earned seed-15 route (CI r35) walked 253 m here with no beat within 40 m; a food find halfway, not a candy."},
+    {"id": "b1_road_mushroom_home_lane", "item": "wild_mushroom", "pos": [-50.7, 18.2], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1): the earned seed-15 route (CI r36) walked 275 m back from the home materials to the village with no beat within 40 m; a food find on that lane, not a candy."}
   ]
 }
