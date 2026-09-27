@@ -367,9 +367,13 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 		await _frames(12)
 		alpha.call("request_engage")
 	elif wild == "tidecoil":
-		var stand := TIDECOIL_SHORE
-		stand.y = float(world.ground_height_at(stand.x, stand.z)) + 0.2
-		player.global_position = stand
+		# Two-strike rule (owner, 18:46): the walked approach failed twice in
+		# this harness, so the disclosed shortcut is a placement on the first
+		# dry ground (>1 m) between the body and the island centre, and the
+		# director's own fight start once the lead is out.
+		var shore := TIDECOIL_SHORE
+		shore.y = float(world.ground_height_at(shore.x, shore.z)) + 0.2
+		player.global_position = shore
 		for _frame in 600:
 			await physics_frame
 			for candidate: Variant in director.get("_wild_creatures"):
@@ -380,24 +384,23 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 		if body == null:
 			push_error("named Tidecoil body never resident")
 			return false
-		if not await director.summon_active_creature():
-			push_error("summon failed before Tidecoil")
-			return false
-		var arbiter: Node = get_first_node_in_group("interaction_arbiter")
-		for frame in 3600:
-			if manager.is_fighting():
+		var inland := Vector3(1350.0, 0.0, 3500.0) - body.global_position
+		inland.y = 0.0
+		inland = inland.normalized()
+		var stand := body.global_position
+		for step in 80:
+			stand = body.global_position + inland * (4.0 + step)
+			stand.y = float(world.ground_height_at(stand.x, stand.z))
+			if stand.y > 1.0:
 				break
-			var winner: Dictionary = arbiter.call("winner") if arbiter != null else {}
-			if arbiter != null and arbiter.call("winning_provider") == director and bool(winner.get("actionable", false)):
-				Input.action_press("interact")
-				await physics_frame
-				Input.action_release("interact")
-				continue
-			var flat := Vector3(body.global_position.x - player.global_position.x, 0.0, body.global_position.z - player.global_position.z)
-			if flat.length() > 1.5:
-				player.velocity = flat.normalized() * 4.0
-				player.global_position += flat.normalized() * (4.0 / Engine.physics_ticks_per_second)
-			await physics_frame
+		player.global_position = stand + Vector3.UP * 0.2
+		player.velocity = Vector3.ZERO
+		await _frames(30)
+		if not await director.summon_active_creature():
+			push_error("summon failed before Tidecoil at %s" % stand)
+			return false
+		await _frames(12)
+		director.call("_start_fight", body)
 	else:
 		push_error("unknown --wild=%s" % wild)
 		return false
