@@ -233,8 +233,14 @@ func summary() -> Dictionary:
 		var entry: Dictionary = per.get(id, {})
 		if entry.is_empty() or str(entry["outcome"]) != "won" or not bool(entry["witness"]):
 			missing.append(id)
-	return {"targets": targets, "fights": rows.size(), "per_fight": per,
+	var out := {"targets": targets, "fights": rows.size(), "per_fight": per,
 		"f04_4_witnessed": missing.is_empty(), "missing_or_unwitnessed": missing}
+	# A fight still running when the run stopped (a failed stage): its counts
+	# so far, so an abort still shows what the fight did.
+	if not _row.is_empty():
+		out["open_fight"] = {"id": _id, "seconds_so_far": _t(), "rounds": _row["rounds"],
+			"totals": totals(_row)}
+	return out
 
 
 ## --- signal binding ------------------------------------------------------------------
