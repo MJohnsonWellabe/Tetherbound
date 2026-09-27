@@ -155,6 +155,12 @@ scoped regression verdict rather than treating the initial packet as accepted.
 
 ## Codex visual work queue (owner, 2026-09-26)
 
+Consolidation disposition: Aviary towers and Cliffhold occupied terrace now
+have their existing `enabled` flags off; their mixed/failed candidate evidence
+is retained. Waterfall r3 and Stormheart living-crown assets remain unwired,
+with asset-folder README notes. Pump/banner/sluices have scoped native PASS
+but are also unwired pending Tidewake placement. No full criterion closes.
+
 **All art and visual changes belong to the Codex lane for now.** Claude lanes do not edit art, materials, shaders, lighting, meshes or colour. They add each visual defect they find to this table instead. Codex takes items from the top, works on isolated branches, and leaves merging to the Claude coordinator, who lands the work in `tb/integration-N` batches once its before/after capture and code-blind judge verdict are recorded.
 
 Codex marks an item "in progress" with its PR number when it starts. When the work lands, the row moves to "done" with the merge SHA. Owner exceptions: the Team Tether palette stays as built, so H2, H3 and the Tether/civilian red parts of M7 are closed. The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION.

@@ -38,7 +38,10 @@ func test_extensions_stay_above_ground_portals_without_new_collision() -> void:
 	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_aviary.json"))
 	var root := Node3D.new()
 	var material := StandardMaterial3D.new()
-	var result := TOWERS.build(root, spec.towers, spec.drum, material, material, material, material)
+	# Exercise the retained candidate explicitly; production activation defaults off.
+	var towers: Dictionary = spec.towers.duplicate(true)
+	towers.enabled = true
+	var result := TOWERS.build(root, towers, spec.drum, material, material, material, material)
 	assert_eq(result.get_child_count(), 4)
 	assert_eq(result.find_children("*", "CollisionObject3D", true, false).size(), 0)
 	for tower: Node3D in result.get_children():

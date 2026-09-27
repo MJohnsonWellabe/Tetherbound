@@ -12,6 +12,19 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
+**Codex consolidation:** main `84b0f4797` merged in `b133781b2`; no regional
+criterion closes. Aviary `towers.enabled` and Cliffhold
+`settlement.occupied_terrace.enabled` now default false in their Cloudreach
+configs; candidate source/evidence remain. Previously judged bounded
+cloud/grass/grounding/material improvements remain active with the failures
+below disclosed. Rejected Stormheart/waterfall assets remain unwired with
+asset-folder READMEs. Scoped-PASS pump/banner/sluices await Tidewake placement.
+Galecrest `4dea7705c` includes asset-related species/colourway/companion config,
+not only asset files; no gameplay scripts changed in that commit. Next owners:
+Codex for Cloudreach/rejected models, Tidewake for prop connections, coordinator
+for the consolidated suite/CI. Wind-down focused belvedere check: 2 tests,
+38 assertions pass. No new renders or full suite run.
+
 **Newest F08#4 ownership:** owner explicitly assigns Codex the complete
 Cloudreach settlements/cliff-identity C2 matrix pass, including new assets,
 placement and tint (#356 5857157478). After F04 fight renders and F10#3, read

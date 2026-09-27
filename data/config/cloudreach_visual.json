@@ -298,7 +298,8 @@
   },
   "settlement": {
     "occupied_terrace": {
-      "enabled": true,
+      "enabled": false,
+      "_disposition": "Mixed native comparison; full Bars A/B NO. Candidate retained disabled for consolidation. Evidence: VISUAL/cloudreach-c2-candidate/occupied-street.",
       "height_m": 4.2,
       "front_z": 16.0,
       "back_z": 29.5,

@@ -15,7 +15,8 @@
   },
   "towers": {
     "_why": "Original board-backed belvederes extend the four existing drum piers above the walking routes. Open masonry arches, slate hip roofs and finials add the missing architectural silhouette; routes, gates and gameplay collision retain their dimensions.",
-    "enabled": true,
+    "enabled": false,
+    "_disposition": "Unaccepted C2 belvedere candidate retained disabled for consolidation; see ralph/reports/VISUAL/cloudreach-c2-candidate/towers-v2.",
     "shaft_height_m": 15.0,
     "shaft_width_m": 2.2,
     "shaft_depth_m": 3.0,
