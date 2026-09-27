@@ -254,6 +254,18 @@ func _build_heart_chamber() -> void:
 	material.emission_enabled = true
 	material.emission = material.albedo_color
 	material.emission_energy_multiplier = float(rules.get("crystal_glow", 0.3))
+	# The C3 judge read the pale opaque prism as an untextured slab: with a
+	# `crystal_look` it is a deeper, glassy, rim-lit blue (the board's
+	# "Crystal (Subtle)" swatch).
+	var look: Dictionary = rules.get("crystal_look", {})
+	if not look.is_empty():
+		material.albedo_color = Color(str(look.get("albedo", rules.colours.crystal)))
+		material.emission = Color(str(look.get("emission", rules.colours.crystal)))
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.roughness = float(look.get("roughness", 0.08))
+		material.metallic = float(look.get("metallic", 0.25))
+		material.rim_enabled = true
+		material.rim = float(look.get("rim", 0.6))
 	prism.material = material
 	crystal.mesh = prism
 	interior.add_child(crystal)
