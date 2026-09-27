@@ -43,14 +43,18 @@ func test_every_npc_has_an_actual_surface_contact_and_key_anchors_hold() -> void
 			continue
 		var terrain_y := heightfield.height_at(float(position[0]), float(position[2])) + 0.15
 		if str(npc.get("surface_id", "")) == "dynamo_core":
-			assert_almost_eq(float(position[1]), terrain_y + 150.0, 0.01, "Marrow is on the elevated Dynamo core")
+			# The deck is the Stormheart Tree's: its base (the terrain at the
+			# tree centre, stormwood_world.gd) plus CORE_HEIGHT, wherever on it
+			# the NPC stands.
+			var deck_y := heightfield.height_at(-100.0, 5470.0) + 150.0 + 0.15
+			assert_almost_eq(float(position[1]), deck_y, 0.01, "Marrow is on the elevated Dynamo core")
 		else:
 			assert_true(str(npc.get("surface_id", "")).is_empty(), "%s may not fall back from an implicit elevated surface" % str(npc.get("id", "")))
 			assert_almost_eq(float(position[1]), terrain_y, 0.01, "%s is terrain-grounded" % str(npc.get("id", "")))
 	for expected: Dictionary in [
 		{"id": "rodkeeper_hesk", "at": [-350, 450]}, {"id": "defector_sable", "at": [-450, 3948]},
 		{"id": "trader_oswin", "at": [-680, 2310]}, {"id": "keeper_ondra", "at": [-160, 2700]},
-		{"id": "officer_kestrel", "at": [-100, 5358]}, {"id": "captain_marrow", "at": [-100, 5470]},
+		{"id": "officer_kestrel", "at": [-100, 5358]}, {"id": "captain_marrow", "at": [-90, 5450]},
 	]:
 		var npc: Dictionary = by_id.get(str(expected.id), {})
 		var position: Array = npc.get("position", [])

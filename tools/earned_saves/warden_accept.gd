@@ -326,14 +326,14 @@ func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await super._walk_ground(at, radius)
 
 
-func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
+func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
 	if _ending_settled and not _road_care and not _fighting() and INPUT_OWNER.current(_tree) == null:
 		_road_care = true
 		var ok := await _road_bench_care()
 		_road_care = false
 		if not ok:
 			return false
-	return await super._walk(target, radius, budget)
+	return await super._walk(target, radius, budget, best_effort)
 
 
 func _road_bench_care() -> bool:
@@ -427,32 +427,187 @@ func _acknowledge_and_cross() -> bool:
 		_leg_target = points[index]
 		if not await _walk_road_entry(road[index]):
 			return false
+	_save_village_checkpoint()
+	return await _kell_to_rift(terrain, road, points, kell, kell_spec)
+
+
+## `kell_rift` segment: resume the acknowledgement tail from the
+## `village_pre_kell` checkpoint (an ordinary earned save written by the
+## `warden` segment at the village road start). Binds the same live nodes as
+## `_bind_ending` without its Hall-state preconditions (the settled climax
+## machine is not a saved node state), and requires instead the durable
+## ending flags the Warden segment earned. No flag, party, position or
+## inventory write.
+func run_from_village(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
+	_tree = tree
+	_world = world
+	_game = game
+	if tree == null or not is_instance_valid(world) or not is_instance_valid(game) \
+			or str(game.get("current_realm")) != "meadows" or INPUT_OWNER.current(tree) != null:
+		_fail("kell_rift needs the retained Meadows with ordinary input")
+		return result()
+	for flag: String in ["defeated_warden", "legendary_freed", "legendary_settled", "realm_key_cloudreach", "realm_heart_meadows_earned"]:
+		if not _has(flag):
+			_fail("kell_rift needs the earned ending flag " + flag)
+			return result()
+	# Resumes either from `village_pre_kell` (before Kell) or from
+	# `storm_road_join` (after the acknowledgement, on the forward road).
+	_source_world_id = world.get_instance_id()
+	_player = world.get_node_or_null("Player") as CharacterBody3D
+	_rig = world.get_node_or_null("CameraRig") as Node3D
+	_hold = world.get_node_or_null("Stronghold") as Node3D
+	_climax = world.get_node_or_null("StrongholdClimax") as Node3D
+	_rift = world.get_node_or_null("RiftCrossing") as Node3D
+	_panel = world.get_node_or_null("DialoguePanel")
+	_director = world.get_node_or_null("EncounterDirector")
+	_combat = world.get_node_or_null("CombatManager")
+	_arbiter = tree.get_first_node_in_group("interaction_arbiter")
+	if _player == null or _rig == null or _rift == null or _panel == null or _director == null or _combat == null or _arbiter == null:
+		_fail("kell_rift: the live village, Rift or input dependencies are missing")
+		return result()
+	_initial_ids = _party_ids()
+	_hall_config = _read(HALL_CONFIG)
+	_ending_config = _read(CLIMAX_CONFIG)
+	# The resume starts on village ground: the Hall's supported-deck watch was
+	# cleared by the full run's ramp descent and must stay off here.
+	_supported_y = NAN
+	_input = INPUTS.new()
+	_input._tree = tree
+	_gui = CEREMONY.new()
+	_gui._tree = tree
+	_nav = NAV.new(tree, _player, _rig, _stick)
+	_watch(_combat, "entered", _on_entered)
+	_watch(_combat, "hit_landed", _on_hit)
+	_watch(_combat, "exited", _on_exit)
+	_watch(_panel, "finished", _on_dialogue_finished)
+	_watch(_arbiter, "activated", _on_activated)
+	_watch(tree, "process_frame", _observe_retained_party)
+	_ending_settled = true
+	_arm_death_watch()
+	var terrain := _read(TERRAIN)
+	var gates := _open_crossings(terrain)
+	var road := forward_return_road(aftermath_road(terrain, gates), trail_points(terrain, "loops", "warren_undertrail"))
+	var kell := _world.get_node_or_null("VillageNPCs/Kell") as Node3D
+	var kell_spec := acknowledgement_spec(_read(NPC_CONFIG), _read(FREED_DIALOGUE))
+	if gates.size() != 3 or road.is_empty() or kell == null or kell_spec.is_empty():
+		_fail("kell_rift: the actual acknowledgement actor or return route is unavailable")
+		return result()
+	_receipt("kell_rift_resumed", {"player": _player.global_position, "party": _initial_ids.size()})
+	if await _prepare():
+		_completed = await _kell_to_rift(terrain, road, road_points(road), kell, kell_spec)
+	_stick(0.0, 0.0)
+	_disconnect_watches()
+	return result()
+
+
+## Speed mode (coordinator 2026-09-27): after the 11.4 km return reaches the
+## village road start, write an ordinary game save of that moment (the game's
+## own Game.save_game, slot 1) to $TB_CHAIN_CHECKPOINT_DIR/village_pre_kell/save/
+## so the Kell / storm road / Rift tail can be iterated with the `kell_rift`
+## segment instead of replaying the Warden and the whole return road. Written
+## only when the variable is set; the running segment is unaffected.
+func _save_village_checkpoint() -> void:
+	_save_checkpoint("village_pre_kell")
+
+
+func _save_checkpoint(name: String) -> void:
+	var root_dir := OS.get_environment("TB_CHAIN_CHECKPOINT_DIR")
+	if root_dir.is_empty():
+		return
+	var dir := root_dir.path_join(name + "/save/")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var previous: Variant = _game.get("save_system")
+	_game.set("save_system", CHECKPOINT_SAVE.new(dir))
+	var ok := bool(_game.call("save_game", 1))
+	_game.set("save_system", previous)
+	_receipt("checkpoint_" + name, {"dir": dir, "saved": ok, "player": _player.global_position,
+		"party": _party_ids().size()})
+
+
+const CHECKPOINT_SAVE := preload("res://scripts/save/save_game.gd")
+
+
+## The acknowledgement tail from the village road start: Kell, the storm road
+## and the physical Rift crossing. Shared by the full `warden` segment and the
+## `kell_rift` resume segment.
+func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[Vector2], kell: Node3D, kell_spec: Dictionary) -> bool:
 	# B12 attempt 1 reached the village road start and then spent the
 	# helper's 1800-frame prompt approach on the ~180 m from (8,90) to Kell,
 	# stopping at (143,-7,62). Walk there first as on every other leg (fights,
 	# confined recovery), then let `_talk` do its unchanged exact approach.
-	var kell_at := Vector2(kell.global_position.x, kell.global_position.z)
-	_leg_target = kell_at
-	_receipt("acknowledgement_approach_walk", {"from": _player.global_position, "to": kell.global_position})
-	if not await _walk_ground(kell_at, 3.0):
-		return false
-	if not await _talk(kell.get_node_or_null("Interactable") as Node3D, str(kell_spec.greeting)) \
-			or not _has("meadows_acknowledged") or not retained_five(_initial_ids, _party_ids()):
-		return _fail("The actual return greeting did not earn Meadows acknowledgement with the retained five")
-	_receipt("meadows_acknowledged", {"actor": kell.name, "conversation": _dialogue_finished, "player": _player.global_position})
+	var first := 0
+	if _has("meadows_acknowledged"):
+		# `storm_road_join` resume: the acknowledgement is already earned.
+		first = nearest_index(points, Vector2(_player.global_position.x, _player.global_position.z))
+		_receipt("storm_road_resumed", {"player": _player.global_position, "road_index": first})
+	else:
+		var kell_at := Vector2(kell.global_position.x, kell.global_position.z)
+		_leg_target = kell_at
+		_receipt("acknowledgement_approach_walk", {"from": _player.global_position, "to": kell.global_position})
+		if not await _walk_ground(kell_at, 3.0):
+			return false
+		if not await _talk(kell.get_node_or_null("Interactable") as Node3D, str(kell_spec.greeting)) \
+				or not _has("meadows_acknowledged") or not retained_five(_initial_ids, _party_ids()):
+			return _fail("The actual return greeting did not earn Meadows acknowledgement with the retained five")
+		_receipt("meadows_acknowledged", {"actor": kell.name, "conversation": _dialogue_finished, "player": _player.global_position})
 	var storm := storm_road(terrain)
 	if storm.is_empty():
 		return _fail("The actual rebuilt storm-road approach is missing")
 	var storm_join := nearest_index(points, storm[0])
-	for index in range(storm_join + 1):
+	# B15: the storm spoke's authored road crosses the Sigil Gate gorge
+	# (`sigil_gate_gorge_west`, full depth at z~7350) with no crossing; the
+	# only way over is the Sigil Gate on the spine (band points (-20,7250) ->
+	# (80,7370) -> (20,7480)). Keep walking the forward road through the gate,
+	# then take the storm points north of the gorge.
+	var through := nearest_index(points, SIGIL_NORTH)
+	if through < storm_join or points[through].distance_to(SIGIL_NORTH) > 2.0:
+		return _fail("The forward road no longer passes the Sigil Gate north point")
+	for index in range(first, through + 1):
+		if index > 0 and points[index - 1].distance_to(B14_QUARRY_ROAD_POINT) < 2.0:
+			if not await _quarry_northbound_detour():
+				return false
 		_leg_target = points[index]
 		if not await _walk_road_entry(road[index]):
 			return false
+		if index == storm_join and first < storm_join:
+			_save_checkpoint("storm_road_join")
+	var north: Array[Vector2] = []
 	for point: Vector2 in storm.slice(1):
+		if point.y > GORGE_NORTH_Z:
+			north.append(point)
+	_receipt("storm_road_via_sigil_gate", {"from": _player.global_position, "storm_points": str(north),
+		"reason": "B15 storm spoke road severed by sigil_gate_gorge_west; crossed at the Sigil Gate on the forward road"})
+	for point: Vector2 in north:
 		_leg_target = point
 		if not await _walk_ground(point):
 			return false
 	return await _cross_the_live_rift()
+
+
+## B14: northbound from the quarry road point (400,1800) the straight line
+## to (330,1950) runs into the quarry foundation (about (397,1805), the '#'
+## block at x 368-395, z 1794-1821 in area_probe.gd), and confined recovery
+## leaves the trainer in the pocket between the foundation and the pylon at
+## (404,1804). The southbound return had dropped off a ledge there. Walk round
+## the foundation's east side by ordinary stick input and rejoin the road;
+## disclosed as a helper-routing detour in the receipts.
+## (tb/cloudreach's QUARRY_REVERSE_DETOUR in `_walk_ground` covers the same
+## pocket; this one runs first and ends outside its 14 m trigger.)
+const B14_QUARRY_ROAD_POINT := Vector2(400.0, 1800.0)
+const SIGIL_NORTH := Vector2(20.0, 7480.0)
+const GORGE_NORTH_Z := 7400.0
+const QUARRY_NORTHBOUND_DETOUR: Array[Vector2] = [Vector2(408.5, 1803.5), Vector2(406.5, 1809.5),
+	Vector2(401.0, 1818.0), Vector2(398.0, 1828.0)]
+
+
+func _quarry_northbound_detour() -> bool:
+	_receipt("quarry_northbound_detour", {"from": _player.global_position, "waypoints": str(QUARRY_NORTHBOUND_DETOUR),
+		"reason": "B14 quarry foundation pocket; stick-walked round its east side"})
+	for point: Vector2 in QUARRY_NORTHBOUND_DETOUR:
+		_leg_target = point
+		if not await _walk_ground(point, 2.0):
+			return false
+	return true
 
 
 ## Death watch (B12 root cause): every drop in the trainer's health is logged
@@ -507,3 +662,37 @@ func _on_player_died() -> void:
 	print("EARNED DEATHWATCH DIED cause=%s at=%s last_floor_y=%s last_landing=%s fighting=%s leg=%s frame=%d" % [
 		cause, _player.global_position, _last_floor_y, _last_landing, _fighting(), _leg_target, Engine.get_physics_frames()])
 	_fail("The trainer died on the acknowledgement road (cause %s at %s); see EARNED DEATHWATCH" % [cause, _player.global_position])
+
+
+## Arrival diagnosis (B16): name which production-readiness condition of the
+## inherited arrival wait did not hold when it times out.
+func _fail(message: String) -> bool:
+	if message.contains("did not complete production arrival"):
+		var scene := _tree.current_scene
+		var owner := INPUT_OWNER.current(_tree)
+		print("EARNED ARRIVAL DIAG ", JSON.stringify({"realm": str(_game.get("current_realm")),
+			"scene": str(scene.name) if scene != null else "", "new_scene": scene != null and scene.get_instance_id() != _source_world_id,
+			"pending_entry": str(_game.get("pending_realm_entry")),
+			"scene_ready": bool(_game.call("_realm_scene_ready", scene, "cloudreach")),
+			"shell_build_complete": bool(scene.call("shell_build_complete")) if scene != null and scene.has_method("shell_build_complete") else null,
+			"input_owner": str(owner.get_path()) if owner != null else "",
+			"input_owner_script": str(owner.get_script().resource_path) if owner != null and owner.get_script() != null else ""}))
+		# B16: the inherited wait tests its 120 s wall deadline BEFORE readiness,
+		# and the headless Cloudreach build is one indivisible call longer than
+		# that, so the first frame after the build fails on time alone. The
+		# production wait (`GameState._realm_scene_wait_state`) lets readiness
+		# win on the frame that crosses the deadline; apply that same rule once.
+		if scene != null and scene.get_instance_id() != _source_world_id and str(_game.get("current_realm")) == "cloudreach" \
+				and str(_game.get("pending_realm_entry")).is_empty() and owner == null \
+				and bool(_game.call("_realm_scene_ready", scene, "cloudreach")):
+			_world = scene as Node3D
+			_player = scene.get_node_or_null("Player") as CharacterBody3D
+			_rig = scene.get_node_or_null("CameraRig") as Node3D
+			if _player == null or _rig == null or not retained_five(_initial_ids, _party_ids()) \
+					or not _has("realm_gate_cloudreach_unlocked") or not _ending_ready():
+				return super._fail("Production Cloudreach arrival lost an earned identity or handoff fact")
+			_receipt("cloudreach_arrived", {"party_ids": _party_ids(), "player": _player.global_position,
+				"trigger_entries": _rift_crossings, "travel": "production Rift collision callback",
+				"readiness": "evaluated on the deadline frame (B16): the headless scene build exceeded the helper's 120 s wall wait"})
+			return true
+	return super._fail(message)

@@ -1,0 +1,4530 @@
+{
+ "disclosures": [
+  "TB_WORLD_SEED pins the world roll for every segment; the fresh save stores the same seed.",
+  "Segments are separate processes joined by Game.save_game(1) and the production title Load list.",
+  "Veridian accepted through the full-belt farewell ceremony: the lowest-level earned member was let go (tools/earned_saves/warden_accept.gd). The inherited helper receipt 'meadows_ending_settled' keeps its hard-coded 'release_pending_legendary_keep_earned_five' label; 'veridian_accepted' is the actual choice.",
+  "Every helper workaround is disclosed in tools/earned_saves/BLOCKERS.md (B1-B12) with per-beat receipts: bench/road/pre-Warden Satchel care (between_fight_care, pre_warden_bench_care), delayed-dialogue prompt presses, the Warden reward read-out, the F05 spatial accept prompt, and the acknowledgement walk on the forward roads reversed (warren_undertrail and the B3 mound detour). None writes a flag, item, party member or position.",
+  "Leg warden was cut at its earned checkpoint village_pre_kell (saved at (7.303545, -3.457305, 91.29684)); its later failure ['warden_accept: Ordinary quarry/Warrens movement did not reach (330.0, -1.101889, 1950.0); player=(400.7617, -0.499157, 1800.537)'] is discarded and leg kell_rift2 started from that checkpoint save.",
+  "Leg kell_rift2 was cut at its earned checkpoint storm_road_join (saved at (0.703018, -1.549866, 6998.764)); its later failure ['kell_rift: The actual Cloudreach scene did not complete production arrival within its existing timeout'] is discarded and leg storm2 started from that checkpoint save.",
+  "Kell-to-Rift helper routing is disclosed in BLOCKERS.md B13-B16 with receipts: the ordinary Kell walk (B13), the stick-walked quarry_northbound_detour (B14), storm_road_via_sigil_gate (B15), and cloudreach_arrived readiness evaluated on the deadline frame as production does (B16). None writes a flag, item, party member or position.",
+  "bridge: the Meadows helper's 'gate must own the interact prompt' assertion was bypassed because ordinary play had already opened the South Bridge (south_bridge_open set, key spent); the stale 'south_bridge_grunt' battle offer ('offered a battle that could not start') remains an open Meadows defect",
+  "warrens: harvest order 16 rootstone (393,1802) skipped as physically unreachable (BLOCKERS.md B2, open Meadows defect); nothing later consumes rootstone, so no replacement gathering was needed",
+  "warrens: added an ordinary controller-walk detour east of the quarry pylon before the fourth rootstone (helper's direct leg stalls; BLOCKERS.md B2)",
+  "warrens: added an ordinary controller-walk detour west of the Warrens mound on the undertrail approach (BLOCKERS.md B3)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "hall: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "warden: Veridian offer ACCEPTED with a full belt through the production farewell ceremony; released lowest-level earned member {\"index\":4,\"level\":15,\"species\":\"bramblebun\",\"uid\":\"creature-3fd010116aee4ec96d669fb5d4ecca74\"}",
+  "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+  "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)"
+ ],
+ "final_location": {
+  "player": [
+   0.0,
+   105.030204772949,
+   -260.0
+  ],
+  "realm": "cloudreach",
+  "scene": "CloudreachCliffs"
+ },
+ "final_party": [
+  {
+   "hp": 177,
+   "level": 21,
+   "nickname": "Bud",
+   "species": "ripplet",
+   "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+  },
+  {
+   "hp": 145,
+   "level": 22,
+   "nickname": "",
+   "species": "bramblebun",
+   "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+  },
+  {
+   "hp": 159,
+   "level": 21,
+   "nickname": "",
+   "species": "mudsnout",
+   "uid": "creature-c785f517af159966b72ca0f49f61d386"
+  },
+  {
+   "hp": 160,
+   "level": 21,
+   "nickname": "",
+   "species": "mudsnout",
+   "uid": "creature-8e12dace31044e591f02b96391ca2372"
+  },
+  {
+   "hp": 796,
+   "level": 26,
+   "nickname": "",
+   "species": "veridian",
+   "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+  }
+ ],
+ "fixture": "earned C1 handoff: trainer at the Cloudreach arrival after the physical Rift crossing",
+ "injections": 0,
+ "legendary_species": "veridian",
+ "runner_command": "tools/earned_saves/run_chain.sh 4 <root> warden (from tests/fixtures/earned_saves/checkpoints/seed4_hall); earned_chain_runner.gd --segment=kell_rift from checkpoints village_pre_kell then storm_road_join (TB_WORLD_SEED=4)",
+ "save_bytes": 9320356,
+ "segments": [
+  {
+   "flags_gained": [
+    "camp_hammer_given",
+    "harvest_node:order:1026.0",
+    "harvest_node:order:3.0",
+    "harvest_node:order:6.0",
+    "mira_shop_open",
+    "opening:beat:choose",
+    "opening:beat:encounter",
+    "opening:beat:house",
+    "opening:beat:name",
+    "opening:beat:return_starter",
+    "opening:beat:road",
+    "opening:beat:wake",
+    "opening:beat:walk_out",
+    "opening:mira_visited",
+    "opening:starter_granted",
+    "oskar_trade_open",
+    "pickup:castle_gate_key",
+    "recipe_orb_basic",
+    "road_gate_open",
+    "tam_tools_given",
+    "tournament_team_ready",
+    "tournament_training_ready"
+   ],
+   "flags_total": 22,
+   "free_build": false,
+   "game_clock_seconds": 518.104892666665,
+   "game_day": 1,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      "title interactive",
+      "answered the character-choice step",
+      "confirmed the configured trainer-name prefill",
+      "new game world entered",
+      "wake/Get Up complete",
+      "Grandpa briefing and pack complete",
+      "starter selected and named",
+      "Grandpa's first-catch supplies received (50 Basic Orbs)",
+      "usable house/front doorway exited",
+      "engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+      "tutorial Bramblebun combat entered",
+      "Bramblebun naturally weakened to 22/106 HP",
+      "live catch begins with 50 earned orbs; no HP or inventory fixture",
+      "catch complete; exploration resumed with two-creature party"
+     ],
+     "segment": "opening"
+    },
+    {
+     "passed": true,
+     "receipts": [
+      "title interactive",
+      "answered the character-choice step",
+      "confirmed the configured trainer-name prefill",
+      "new game world entered",
+      "wake/Get Up complete",
+      "Grandpa briefing and pack complete",
+      "starter selected and named",
+      "Grandpa's first-catch supplies received (50 Basic Orbs)",
+      "usable house/front doorway exited",
+      "engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+      "tutorial Bramblebun combat entered",
+      "Bramblebun naturally weakened to 22/106 HP",
+      "live catch begins with 50 earned orbs; no HP or inventory fixture",
+      "catch complete; exploration resumed with two-creature party",
+      "village key earned and consumed by the real gate"
+     ],
+     "segment": "road_gate"
+    },
+    {
+     "passed": true,
+     "segment": "village"
+    },
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "beat": "world_seed",
+       "world_seed": 4.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Village/doorstep_16/Collision",
+         "normal": "(0.0, 1.0, 0.0)",
+         "position": "(-1.499443, 0.95, -9.07024)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Village/doorstep_16/Collision",
+         "normal": "(0.0, 1.0, 0.0)",
+         "position": "(-1.499446, 0.95, -9.07184)"
+        }
+       ],
+       "distance": 36.3681907653809,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 2.25472712516785,
+        "label": "Close Door",
+        "priority": 0.0
+       },
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-1.499546, 0.950819, -9.130761)",
+       "slide_colliders": [
+        "Collision",
+        "Collision"
+       ],
+       "target": "Wild_mudsnout_1070_1",
+       "target_position": "(20.90288, 1.016723, -37.77988)",
+       "velocity": "(-0.006315, 0.0, -3.733328)",
+       "winning_provider": "Prompt"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.001345, 0.999524, 0.030831)",
+         "position": "(17.9121, 0.923889, -33.8155)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.001345, 0.999524, 0.030831)",
+         "position": "(17.96383, 0.925743, -33.87787)"
+        }
+       ],
+       "distance": 5.58634090423584,
+       "input_owner": "<null>",
+       "input_vector": "(-0.083842, -0.996479)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.78634090423584,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1070_1",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(17.96437, 0.926389, -33.86551)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1070_1",
+       "target_position": "(21.53046, 0.996914, -38.16496)",
+       "velocity": "(3.192121, 0.0, -3.848424)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "caught",
+       "party": [
+        {
+         "hp": 84.7901178808128,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        }
+       ]
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.047243, 0.995514, 0.081973)",
+         "position": "(16.03717, 1.511616, -41.07402)"
+        }
+       ],
+       "distance": 14.3143014907837,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(16.05602, 1.509948, -41.04131)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1070_2",
+       "target_position": "(25.57976, 0.37732, -30.41517)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.081867, 0.996285, 0.026723)",
+         "position": "(23.67871, 0.586895, -32.5118)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.081867, 0.996285, 0.026723)",
+         "position": "(23.73231, 0.580886, -32.45196)"
+        }
+       ],
+       "distance": 2.72746753692627,
+       "input_owner": "<null>",
+       "input_vector": "(0.549864, -0.835254)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 1.92746753692627,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1070_2",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(23.76513, 0.580239, -32.44125)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1070_2",
+       "target_position": "(25.57976, 0.37732, -30.41517)",
+       "velocity": "(3.336093, 0.0, 3.724309)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "caught",
+       "party": [
+        {
+         "hp": 60.3848677747359,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        }
+       ]
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.01916, 0.999408, -0.028584)",
+         "position": "(22.12408, 0.863726, -25.18513)"
+        }
+       ],
+       "distance": 17.1046772003174,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(22.13173, 0.863501, -25.19654)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_0_3",
+       "target_position": "(33.76353, -0.732679, -37.63533)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.201995, 0.976022, 0.08111)",
+         "position": "(30.10274, -0.227934, -34.29309)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.201995, 0.976022, 0.08111)",
+         "position": "(30.16092, -0.235417, -34.34793)"
+        }
+       ],
+       "distance": 4.86439418792725,
+       "input_owner": "<null>",
+       "input_vector": "(-0.539731, -0.841838)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.19814418792725,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_0_3",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(30.24189, -0.244187, -34.31542)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_0_3",
+       "target_position": "(33.76353, -0.732679, -37.63533)",
+       "velocity": "(3.638937, 0.0, -3.429013)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "caught",
+       "party": [
+        {
+         "hp": 39.1419857648448,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        },
+        {
+         "hp": 23.4062806228095,
+         "id": -9.22337171295384e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 0.0
+        }
+       ]
+      },
+      {
+       "beat": "care",
+       "creature_id": -9.223326049280757e+18,
+       "food_after": 67.4596299801849,
+       "food_before": 67.4670592946294,
+       "hp_after": 89.1419857648448,
+       "hp_before": 39.1419857648448,
+       "item": "potion_small",
+       "mood_after": 54.6535859063891,
+       "mood_before": 54.6545989947224,
+       "remaining": 2.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.201995, 0.976022, 0.08111)",
+         "position": "(30.45834, -0.273798, -34.62677)"
+        }
+       ],
+       "distance": 17.5548114776611,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": false,
+        "distance": 0.0,
+        "label": "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Bud away",
+        "priority": -2.0
+       },
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(30.53913, -0.282519, -34.59433)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_0_1",
+       "target_position": "(38.83237, -0.831484, -50.05693)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.167006, 0.983688, 0.066842)",
+         "position": "(37.81801, -1.196967, -45.59245)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.167006, 0.983688, 0.066842)",
+         "position": "(37.86551, -1.200618, -45.65741)"
+        }
+       ],
+       "distance": 5.94604396820068,
+       "input_owner": "<null>",
+       "input_vector": "(-0.256391, -0.966573)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 5.27979396820068,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_0_1",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(37.93246, -1.206322, -45.63062)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_0_1",
+       "target_position": "(41.44263, -1.175865, -50.42991)",
+       "velocity": "(2.952198, 0.0, -4.03541)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 89.1419857648448,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 62.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 31.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 31.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 31.0
+        },
+        {
+         "hp": 23.4062806228095,
+         "id": -9.22337171295384e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 31.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 89.1419857648448,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 0.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 0.0
+        },
+        {
+         "hp": 23.4062806228095,
+         "id": -9.22337171295384e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 0.0
+        }
+       ],
+       "number": 1.0
+      },
+      {
+       "beat": "wild_boundary_route",
+       "gate": "TrailGate",
+       "points": [
+        "(14.08042, 19.01243)",
+        "(13.79, 22.4)",
+        "(13.49958, 25.78757)"
+       ],
+       "target": "Wild_mudsnout_1006_1"
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.000739, 0.99978, -0.020971)",
+         "position": "(45.30933, -1.563212, -45.45931)"
+        }
+       ],
+       "distance": 120.229774475098,
+       "input_owner": "<null>",
+       "input_vector": "(0.63395, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(45.30903, -1.563713, -45.46767)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1006_1",
+       "target_position": "(2.992747, -0.11063, 67.05974)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "approach_frames": 950.0,
+       "beat": "wild_boundary_crossed",
+       "gate": "TrailGate",
+       "player": "(13.58975, 0.792495, 24.83361)",
+       "target": "Wild_mudsnout_1006_1"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.003864, 0.998123, -0.061114)",
+         "position": "(3.08726, -0.264368, 61.33968)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.003864, 0.998123, -0.061114)",
+         "position": "(3.047174, -0.260216, 61.41001)"
+        }
+       ],
+       "distance": 5.72226047515869,
+       "input_owner": "<null>",
+       "input_vector": "(-0.712192, 0.701984)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.92226047515869,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1006_1",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(3.045625, -0.260139, 61.38551)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1006_1",
+       "target_position": "(0.21224, -0.305769, 66.35684)",
+       "velocity": "(-2.475988, 0.0, 4.343902)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 89.1419857648448,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 124.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 62.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 62.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 62.0
+        },
+        {
+         "hp": 23.4062806228095,
+         "id": -9.22337171295384e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 62.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 89.1419857648448,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 62.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 31.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 31.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 31.0
+        },
+        {
+         "hp": 23.4062806228095,
+         "id": -9.22337171295384e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 31.0
+        }
+       ],
+       "number": 2.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.003864, 0.998123, -0.061114)",
+         "position": "(2.805936, -0.235263, 61.8328)"
+        }
+       ],
+       "distance": 8.98610401153564,
+       "input_owner": "<null>",
+       "input_vector": "(0.633895, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(2.804391, -0.235167, 61.80837)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1006_3",
+       "target_position": "(-6.002916, -0.768668, 63.51036)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.115738, 0.992295, -0.044222)",
+         "position": "(-0.159249, -0.365782, 62.43978)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.115738, 0.992295, -0.044222)",
+         "position": "(-0.235098, -0.373993, 62.45403)"
+        }
+       ],
+       "distance": 5.8345832824707,
+       "input_owner": "<null>",
+       "input_vector": "(0.983693, 0.179855)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 5.0345832824707,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1006_3",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-0.28148, -0.37633, 62.4363)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1006_3",
+       "target_position": "(-6.002916, -0.768668, 63.51036)",
+       "velocity": "(-4.914218, 0.0, 0.922206)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 93.9174492879615,
+         "id": -9.223326049280757e+18,
+         "level": 4.0,
+         "species": "ripplet",
+         "xp": 77.0
+        },
+        {
+         "hp": 23.5132542490545,
+         "id": -9.223371713708814e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 21.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 109.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 109.0
+        },
+        {
+         "hp": 24.7311644316477,
+         "id": -9.22337171295384e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 21.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 89.1419857648448,
+         "id": -9.223326049280757e+18,
+         "level": 3.0,
+         "species": "ripplet",
+         "xp": 124.0
+        },
+        {
+         "hp": 22.2536156285695,
+         "id": -9.223371713708814e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 62.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 62.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 62.0
+        },
+        {
+         "hp": 23.4062806228095,
+         "id": -9.22337171295384e+18,
+         "level": 2.0,
+         "species": "bramblebun",
+         "xp": 62.0
+        }
+       ],
+       "number": 3.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.115738, 0.992295, -0.044222)",
+         "position": "(-0.798768, -0.435047, 62.5593)"
+        }
+       ],
+       "distance": 8.87340831756592,
+       "input_owner": "<null>",
+       "input_vector": "(0.413515, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-0.845033, -0.437282, 62.54161)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1006_2",
+       "target_position": "(0.644774, -0.950245, 71.27401)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.078452, 0.99421, 0.073422)",
+         "position": "(-1.517766, -0.426778, 66.0)"
+        }
+       ],
+       "distance": 5.62968587875366,
+       "input_owner": "<null>",
+       "input_vector": "(-0.885534, -0.464575)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.82968587875366,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1006_2",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-1.518619, -0.43115, 66.10258)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1006_2",
+       "target_position": "(0.644774, -0.950245, 71.27401)",
+       "velocity": "(1.929328, 0.0, 4.612775)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 93.9174492879615,
+         "id": -9.223326049280757e+18,
+         "level": 4.0,
+         "species": "ripplet",
+         "xp": 155.0
+        },
+        {
+         "hp": 23.5132542490545,
+         "id": -9.223371713708814e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 60.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 148.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 148.0
+        },
+        {
+         "hp": 24.7311644316477,
+         "id": -9.22337171295384e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 60.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 93.9174492879615,
+         "id": -9.223326049280757e+18,
+         "level": 4.0,
+         "species": "ripplet",
+         "xp": 77.0
+        },
+        {
+         "hp": 23.5132542490545,
+         "id": -9.223371713708814e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 21.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 109.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 109.0
+        },
+        {
+         "hp": 24.7311644316477,
+         "id": -9.22337171295384e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 21.0
+        }
+       ],
+       "number": 4.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.07833, 0.99266, 0.092145)",
+         "position": "(-1.266475, -0.462229, 66.59553)"
+        }
+       ],
+       "distance": 51.6577491760254,
+       "input_owner": "<null>",
+       "input_vector": "(0.633916, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-1.297793, -0.464335, 66.63237)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_2",
+       "target_position": "(32.52487, -4.991418, 105.4145)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.065205, 0.989853, -0.126252)",
+         "position": "(27.77007, -4.903194, 98.73094)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.065205, 0.989853, -0.126252)",
+         "position": "(27.82803, -4.899753, 98.78786)"
+        }
+       ],
+       "distance": 5.65957450866699,
+       "input_owner": "<null>",
+       "input_vector": "(-0.252938, -0.967482)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.99332450866699,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_1007_2",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(27.85417, -4.902974, 98.73725)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_2",
+       "target_position": "(31.89195, -4.860231, 102.7028)",
+       "velocity": "(3.567966, 0.0, 3.502802)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 53.0
+        },
+        {
+         "hp": 23.5132542490545,
+         "id": -9.223371713708814e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 107.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 195.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 195.0
+        },
+        {
+         "hp": 24.7311644316477,
+         "id": -9.22337171295384e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 107.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 93.9174492879615,
+         "id": -9.223326049280757e+18,
+         "level": 4.0,
+         "species": "ripplet",
+         "xp": 155.0
+        },
+        {
+         "hp": 23.5132542490545,
+         "id": -9.223371713708814e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 60.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 148.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 148.0
+        },
+        {
+         "hp": 24.7311644316477,
+         "id": -9.22337171295384e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 60.0
+        }
+       ],
+       "number": 5.0
+      },
+      {
+       "beat": "care",
+       "creature_id": -9.22337171295384e+18,
+       "food_after": 68.7369554618513,
+       "food_before": 68.746570655555,
+       "hp_after": 74.7311644316477,
+       "hp_before": 24.7311644316477,
+       "item": "potion_small",
+       "mood_after": 85.8277666538888,
+       "mood_before": 85.8290778166666,
+       "remaining": 1.0
+      },
+      {
+       "after": 1.0,
+       "beat": "party_cycle",
+       "before": 0.0,
+       "wanted": 4.0
+      },
+      {
+       "after": 2.0,
+       "beat": "party_cycle",
+       "before": 1.0,
+       "wanted": 4.0
+      },
+      {
+       "after": 3.0,
+       "beat": "party_cycle",
+       "before": 2.0,
+       "wanted": 4.0
+      },
+      {
+       "after": 4.0,
+       "beat": "party_cycle",
+       "before": 3.0,
+       "wanted": 4.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.007374, 0.998367, 0.056644)",
+         "position": "(35.08561, -4.999619, 98.28026)"
+        }
+       ],
+       "distance": 5.22163772583008,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.55538772583008,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_1007_1",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(35.08266, -4.999436, 98.30292)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_1",
+       "target_position": "(38.8378, -5.236051, 101.9235)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.007374, 0.998367, 0.056644)",
+         "position": "(35.08561, -4.999619, 98.28026)"
+        }
+       ],
+       "distance": 5.22163772583008,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.55538772583008,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_1007_1",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(35.08266, -4.999436, 98.30292)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_1",
+       "target_position": "(38.8378, -5.236051, 101.9235)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 92.0
+        },
+        {
+         "hp": 24.7728928695396,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 5.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 38.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 234.0
+        },
+        {
+         "hp": 78.7346196690574,
+         "id": -9.22337171295384e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 44.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 53.0
+        },
+        {
+         "hp": 23.5132542490545,
+         "id": -9.223371713708814e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 107.0
+        },
+        {
+         "hp": 22.2137621799201,
+         "id": -9.223371526273752e+18,
+         "level": 4.0,
+         "species": "mudsnout",
+         "xp": 195.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 195.0
+        },
+        {
+         "hp": 74.7311644316477,
+         "id": -9.22337171295384e+18,
+         "level": 3.0,
+         "species": "bramblebun",
+         "xp": 107.0
+        }
+       ],
+       "number": 6.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.124886, 0.991047, 0.047215)",
+         "position": "(33.64112, -5.181395, 105.3463)"
+        }
+       ],
+       "distance": 11.9771146774292,
+       "input_owner": "<null>",
+       "input_vector": "(0.278248, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(33.69098, -5.184895, 105.3652)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_4",
+       "target_position": "(27.05619, -4.872252, 115.3318)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.179199, 0.982051, 0.058846)",
+         "position": "(30.26534, -4.934704, 110.5588)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.179199, 0.982051, 0.058846)",
+         "position": "(30.21919, -4.930286, 110.6256)"
+        }
+       ],
+       "distance": 5.69166374206543,
+       "input_owner": "<null>",
+       "input_vector": "(0.922067, 0.387029)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 5.02541374206543,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_1007_4",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(30.29102, -4.936637, 110.6492)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_4",
+       "target_position": "(27.05619, -4.872252, 115.3318)",
+       "velocity": "(-2.840915, 0.0, 4.114511)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 131.0
+        },
+        {
+         "hp": 24.7728928695396,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 44.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 77.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 19.0
+        },
+        {
+         "hp": 78.7346196690574,
+         "id": -9.22337171295384e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 122.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 92.0
+        },
+        {
+         "hp": 24.7728928695396,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 5.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 38.0
+        },
+        {
+         "hp": 32.9961861511495,
+         "id": -9.223371525502001e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 234.0
+        },
+        {
+         "hp": 78.7346196690574,
+         "id": -9.22337171295384e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 44.0
+        }
+       ],
+       "number": 7.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.021696, 0.998442, 0.051411)",
+         "position": "(32.62351, -5.734608, 117.8845)"
+        }
+       ],
+       "distance": 13.2609901428223,
+       "input_owner": "<null>",
+       "input_vector": "(0.278272, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {},
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(32.63218, -5.735145, 117.905)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_3",
+       "target_position": "(42.00206, -4.988752, 108.5507)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.072803, 0.995888, 0.053909)",
+         "position": "(37.3854, -5.557825, 113.4525)"
+        }
+       ],
+       "distance": 5.81351566314697,
+       "input_owner": "<null>",
+       "input_vector": "(-0.956215, -0.292664)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 5.14726566314697,
+        "label": "Engage Bramblebun",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_bramblebun_1007_3",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(37.41596, -5.551276, 113.4191)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_bramblebun_1007_3",
+       "target_position": "(41.6768, -5.058761, 109.4949)",
+       "velocity": "(3.677794, 0.0, -3.387305)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 186.0
+        },
+        {
+         "hp": 24.7728928695396,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 99.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 132.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 74.0
+        },
+        {
+         "hp": 82.7380749064671,
+         "id": -9.22337171295384e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 36.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 131.0
+        },
+        {
+         "hp": 24.7728928695396,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 44.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 77.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 19.0
+        },
+        {
+         "hp": 78.7346196690574,
+         "id": -9.22337171295384e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 122.0
+        }
+       ],
+       "number": 8.0
+      },
+      {
+       "beat": "care",
+       "creature_id": -9.223371713708814e+18,
+       "food_after": 65.8872296044437,
+       "food_before": 65.8951498570363,
+       "hp_after": 74.7728928695396,
+       "hp_before": 24.7728928695396,
+       "item": "potion_small",
+       "mood_after": 99.9947904338889,
+       "mood_before": 99.9958704683334,
+       "remaining": 0.0
+      },
+      {
+       "after": 0.0,
+       "beat": "party_cycle",
+       "before": 4.0,
+       "wanted": 1.0
+      },
+      {
+       "after": 1.0,
+       "beat": "party_cycle",
+       "before": 0.0,
+       "wanted": 1.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.229252, 0.966479, -0.115594)",
+         "position": "(44.84491, -4.52284, 114.7642)"
+        }
+       ],
+       "distance": 134.163970947266,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": false,
+        "distance": 0.0,
+        "label": "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Bramblebun away",
+        "priority": -2.0
+       },
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(44.75322, -4.535378, 114.7179)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1_2",
+       "target_position": "(-56.23963, 5.821351, 27.0073)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.189969, 0.981743, -0.009565)",
+         "position": "(-51.23948, 5.22882, 31.02982)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.189969, 0.981743, -0.009565)",
+         "position": "(-51.29795, 5.23959, 30.97397)"
+        }
+       ],
+       "distance": 5.69710302352905,
+       "input_owner": "<null>",
+       "input_vector": "(0.893524, -0.449016)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 4.89710302352905,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1_2",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-51.2218, 5.233113, 30.97013)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1_2",
+       "target_position": "(-55.32734, 5.694262, 27.04727)",
+       "velocity": "(-3.614572, 0.0, -3.454688)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 233.0
+        },
+        {
+         "hp": 60.2559187141003,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 193.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 179.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 121.0
+        },
+        {
+         "hp": 82.7380749064671,
+         "id": -9.22337171295384e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 83.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 186.0
+        },
+        {
+         "hp": 74.7728928695396,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 99.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 132.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 74.0
+        },
+        {
+         "hp": 82.7380749064671,
+         "id": -9.22337171295384e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 36.0
+        }
+       ],
+       "number": 9.0
+      },
+      {
+       "beat": "depleted_stock_pilot_selected",
+       "creature_id": -9.223326049280757e+18,
+       "hp": 98.6929128110782,
+       "hp_fraction": 0.758010083034395,
+       "max_hp": 130.2,
+       "maximum_eligible_fraction": 0.758010083034395,
+       "stock": 0.0
+      },
+      {
+       "after": 2.0,
+       "beat": "party_cycle",
+       "before": 1.0,
+       "wanted": 0.0
+      },
+      {
+       "after": 3.0,
+       "beat": "party_cycle",
+       "before": 2.0,
+       "wanted": 0.0
+      },
+      {
+       "after": 4.0,
+       "beat": "party_cycle",
+       "before": 3.0,
+       "wanted": 0.0
+      },
+      {
+       "after": 0.0,
+       "beat": "party_cycle",
+       "before": 4.0,
+       "wanted": 0.0
+      },
+      {
+       "beat": "wild_approach",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(0.007677, 0.997687, 0.067539)",
+         "position": "(-50.21879, 5.311645, 23.5324)"
+        }
+       ],
+       "distance": 15.8895931243896,
+       "input_owner": "<null>",
+       "input_vector": "(0.0, 0.0)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": false,
+        "distance": 0.0,
+        "label": "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Bud away",
+        "priority": -2.0
+       },
+       "offered_target": "<none>",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-50.21572, 5.310866, 23.55937)",
+       "slide_colliders": [
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1_1",
+       "target_position": "(-64.06058, 5.918758, 15.78573)",
+       "velocity": "(0.0, 0.0, 0.0)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "beat": "wild_interact",
+       "can_walk": true,
+       "contacts": [
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.000185, 0.999459, 0.032882)",
+         "position": "(-61.52584, 5.947594, 18.53952)"
+        },
+        {
+         "collider": "/root/MeadowsPlayground/Terrain",
+         "normal": "(-0.000185, 0.999459, 0.032882)",
+         "position": "(-61.60196, 5.948497, 18.51166)"
+        }
+       ],
+       "distance": 5.84628248214722,
+       "input_owner": "<null>",
+       "input_vector": "(0.785434, -0.618946)",
+       "nav_detour": "(0.0, 0.0, 0.0)",
+       "nav_detour_left": 0.0,
+       "nav_side": 0.0,
+       "offer": {
+        "actionable": true,
+        "distance": 5.04628248214722,
+        "label": "Engage Mudsnout",
+        "priority": 0.0
+       },
+       "offered_target": "Wild_mudsnout_1_1",
+       "on_floor": true,
+       "on_wall": false,
+       "player_position": "(-61.60203, 5.94912, 18.52484)",
+       "slide_colliders": [
+        "Terrain",
+        "Terrain"
+       ],
+       "target": "Wild_mudsnout_1_1",
+       "target_position": "(-67.08038, 5.56614, 16.51983)",
+       "velocity": "(-4.695436, 0.0, -1.718394)",
+       "winning_provider": "EncounterDirector"
+      },
+      {
+       "after": [
+        {
+         "hp": 103.468376334195,
+         "id": -9.223326049280757e+18,
+         "level": 6.0,
+         "species": "ripplet",
+         "xp": 41.0
+        },
+        {
+         "hp": 63.3197789876986,
+         "id": -9.223371713708814e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 28.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 210.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 152.0
+        },
+        {
+         "hp": 82.7380749064671,
+         "id": -9.22337171295384e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 114.0
+        }
+       ],
+       "beat": "wild_training_win",
+       "before": [
+        {
+         "hp": 98.6929128110782,
+         "id": -9.223326049280757e+18,
+         "level": 5.0,
+         "species": "ripplet",
+         "xp": 233.0
+        },
+        {
+         "hp": 60.2559187141003,
+         "id": -9.223371713708814e+18,
+         "level": 4.0,
+         "species": "bramblebun",
+         "xp": 193.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 179.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 121.0
+        },
+        {
+         "hp": 82.7380749064671,
+         "id": -9.22337171295384e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 83.0
+        }
+       ],
+       "number": 10.0
+      },
+      {
+       "beat": "team_ready",
+       "party": [
+        {
+         "hp": 103.468376334195,
+         "id": -9.223326049280757e+18,
+         "level": 6.0,
+         "species": "ripplet",
+         "xp": 41.0
+        },
+        {
+         "hp": 63.3197789876986,
+         "id": -9.223371713708814e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 28.0
+        },
+        {
+         "hp": 23.3432755111025,
+         "id": -9.223371526273752e+18,
+         "level": 5.0,
+         "species": "mudsnout",
+         "xp": 210.0
+        },
+        {
+         "hp": 34.5927758036244,
+         "id": -9.223371525502001e+18,
+         "level": 6.0,
+         "species": "mudsnout",
+         "xp": 152.0
+        },
+        {
+         "hp": 82.7380749064671,
+         "id": -9.22337171295384e+18,
+         "level": 5.0,
+         "species": "bramblebun",
+         "xp": 114.0
+        }
+       ],
+       "required_level": 5.0,
+       "required_size": 5.0
+      }
+     ],
+     "segment": "team"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     -67.8031997680664,
+     5.38368320465088,
+     22.6977996826172
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 103,
+     "level": 6,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 63,
+     "level": 5,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 23,
+     "level": 5,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 34,
+     "level": 6,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 82,
+     "level": 5,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "party_before": [],
+   "passed": true,
+   "segment": "opening_team",
+   "wall_seconds": 601.119
+  },
+  {
+   "flags_gained": [
+    "creature_bed_built",
+    "creature_bed_built_2",
+    "creature_bed_built_3",
+    "felled:meadows:bushes#295",
+    "felled:meadows:bushes#300",
+    "felled:meadows:bushes#305",
+    "felled:meadows:bushes#340",
+    "felled:meadows:bushes#345",
+    "felled:meadows:bushes#350",
+    "felled:meadows:bushes#39905",
+    "felled:meadows:bushes#39910",
+    "felled:meadows:bushes#675",
+    "felled:meadows:bushes#735",
+    "felled:meadows:bushes#750",
+    "felled:meadows:bushes#760",
+    "felled:meadows:bushes#780",
+    "felled:meadows:bushes#860",
+    "felled:meadows:bushes#865",
+    "felled:meadows:rocks#412",
+    "felled:meadows:rocks#437",
+    "felled:meadows:trees#1161",
+    "felled:meadows:trees#1162",
+    "felled:meadows:trees#1164",
+    "felled:meadows:trees#1165",
+    "felled:meadows:trees#42453",
+    "felled:meadows:trees#808",
+    "felled:meadows:trees#820",
+    "felled:meadows:trees#839",
+    "felled:meadows:trees#874",
+    "home_built",
+    "home_materials_gathered",
+    "opening:tournament_registered",
+    "player_slept_at_home",
+    "recipe_saddle",
+    "tournament_condition_ready",
+    "tournament_entered",
+    "tournament_final_at_ring",
+    "tournament_quarter_at_ring",
+    "tournament_quarter_won",
+    "tournament_semi_at_ring",
+    "tournament_semi_won",
+    "tournament_team_fed",
+    "tournament_won",
+    "vegetation:meadows:bushes#295",
+    "vegetation:meadows:bushes#300",
+    "vegetation:meadows:bushes#305",
+    "vegetation:meadows:bushes#340",
+    "vegetation:meadows:bushes#345",
+    "vegetation:meadows:bushes#350",
+    "vegetation:meadows:bushes#39905",
+    "vegetation:meadows:bushes#39910",
+    "vegetation:meadows:bushes#675",
+    "vegetation:meadows:bushes#735",
+    "vegetation:meadows:bushes#750",
+    "vegetation:meadows:bushes#760",
+    "vegetation:meadows:bushes#780",
+    "vegetation:meadows:bushes#860",
+    "vegetation:meadows:bushes#865",
+    "vegetation:meadows:rocks#412",
+    "vegetation:meadows:rocks#437",
+    "vegetation:meadows:trees#1161",
+    "vegetation:meadows:trees#1162",
+    "vegetation:meadows:trees#1164",
+    "vegetation:meadows:trees#1165",
+    "vegetation:meadows:trees#42453",
+    "vegetation:meadows:trees#808",
+    "vegetation:meadows:trees#820",
+    "vegetation:meadows:trees#839",
+    "vegetation:meadows:trees#874"
+   ],
+   "flags_total": 91,
+   "free_build": false,
+   "game_clock_seconds": 319.454727666665,
+   "game_day": 3,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      "earned wood +3 at (-94.38512, 6.644517, 18.68945), stock 7/30",
+      "earned wood +3 at (-92.16788, 5.849254, 39.79097), stock 10/30",
+      "earned wood +3 at (-59.97069, 2.905008, 48.45068), stock 13/30",
+      "earned wood +3 at (-21.01572, -1.574625, 46.06799), stock 16/30",
+      "earned wood +3 at (-9.392857, -1.582176, 53.54223), stock 19/30",
+      "earned wood +3 at (-7.08717, -1.594046, 54.08352), stock 22/30",
+      "earned wood +3 at (-5.961525, -1.570425, 55.16893), stock 25/30",
+      "earned wood +3 at (-5.544525, -1.545063, 56.05118), stock 28/30",
+      "earned wood +3 at (-4.424194, -1.479986, 55.47349), stock 31/30",
+      "earned fiber +2 at (-44.9081, -0.957542, 63.36813), stock 6/34",
+      "earned fiber +2 at (-53.72557, 3.666274, 44.16061), stock 8/34",
+      "earned fiber +2 at (-94.5173, 5.866902, 37.39824), stock 10/34",
+      "earned fiber +2 at (-97.03854, 5.632456, 36.82703), stock 12/34",
+      "earned fiber +2 at (-98.215, 5.435546, 40.93051), stock 14/34",
+      "earned fiber +2 at (-116.8088, 6.500592, 55.22485), stock 16/34",
+      "earned fiber +2 at (-146.5694, 3.902054, 56.394), stock 18/34",
+      "earned fiber +2 at (-148.8492, 4.250312, 58.29173), stock 20/34",
+      "earned fiber +2 at (-147.5465, -0.649597, 90.61118), stock 22/34",
+      "earned fiber +2 at (-149.5428, -1.42974, 94.71887), stock 24/34",
+      "earned fiber +2 at (-172.8534, -4.105021, 105.9764), stock 26/34",
+      "earned fiber +2 at (-177.1449, -5.057506, 99.28882), stock 28/34",
+      "earned fiber +2 at (-179.0727, -4.681254, 93.82108), stock 30/34",
+      "earned fiber +2 at (-185.115, -6.545401, 96.55848), stock 32/34",
+      "earned fiber +2 at (-181.909, -5.085687, 118.604), stock 34/34",
+      "earned stone +2 at (-183.0755, -5.957492, 127.8478), stock 6/8",
+      "earned stone +2 at (-199.9684, -6.382744, 130.6994), stock 8/8",
+      "actual campsite catalogue cost funded: { \"wood\": 30, \"fiber\": 34, \"stone\": 8 }",
+      "carried actual materials back to the campsite build patch"
+     ],
+     "segment": "materials"
+    },
+    {
+     "passed": true,
+     "receipts": [
+      "interact is spoken for by { \"label\": \"Pick berries\", \"distance\": 2.00496315956116, \"priority\": 0, \"actionable\": true }; stepping clear",
+      "interact is spoken for by { \"label\": \"Pick berries\", \"distance\": 2.23858714103699, \"priority\": 0, \"actionable\": true }; stepping clear",
+      "placed paid bedroll through a live green ghost inside the tent",
+      "placed 3 creature beds through the build menu, one per entrant; wood 1 / stone 0 / fiber 0 left",
+      "paid campsite and 3 beds placed; care and tournament remain"
+     ],
+     "segment": "camp"
+    },
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "beat": "bed_assigned",
+       "bed_index": 3.0,
+       "creature": -9.223371908861393e+18,
+       "party_index": 0.0
+      },
+      {
+       "beat": "bed_assigned",
+       "bed_index": 4.0,
+       "creature": -9.223371908844616e+18,
+       "party_index": 1.0
+      },
+      {
+       "beat": "bed_assigned",
+       "bed_index": 5.0,
+       "creature": -9.223371908827838e+18,
+       "party_index": 2.0
+      },
+      {
+       "beat": "night_completed",
+       "day": 3.0,
+       "night": 1.0,
+       "readiness": []
+      }
+     ],
+     "segment": "rest"
+    },
+    {
+     "passed": true,
+     "receipts": [
+      "selected three and entered through Halda's controller flow",
+      "called out Bud for the bracket",
+      "tournament_quarter_mira won through 2 real opponent defeats and 15 landed attacks",
+      "tournament_semi_tam won through 2 real opponent defeats and 21 landed attacks",
+      "tournament_final_oskar won through 3 real opponent defeats and 40 landed attacks",
+      "objective handed off: 'Reach South Bridge -- Team Tether holds the crossing.'"
+     ],
+     "segment": "tournament"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     23.3922424316406,
+     0.899807393550873,
+     10.4593896865845
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 58,
+     "level": 9,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 136,
+     "level": 7,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 129,
+     "level": 7,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 34,
+     "level": 6,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 82,
+     "level": 5,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 103,
+     "level": 6,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 63,
+     "level": 5,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 23,
+     "level": 5,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 34,
+     "level": 6,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 82,
+     "level": 5,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "passed": true,
+   "segment": "camp_tournament",
+   "wall_seconds": 620.503
+  },
+  {
+   "flags_gained": [
+    "alpha_pin_intro_seen",
+    "defeated_south_bridge_grunt",
+    "south_bridge_open"
+   ],
+   "flags_total": 97,
+   "free_build": false,
+   "game_clock_seconds": 850.806029333323,
+   "game_day": 4,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "beat": "guardian_admitted",
+       "depth": -11.5703125,
+       "trainer": "south_bridge_grunt"
+      },
+      {
+       "beat": "gate_prompt_assertion_bypassed",
+       "key_remaining": 0.0,
+       "reason": "south_bridge_open already set by ordinary play after the guardian win; the helper's 'gate must own the interact prompt' assertion is not applied",
+       "stale_offer_defect": "'south_bridge_grunt' offered a battle that could not start (Meadows defect, open)",
+       "winning_provider": "<null>"
+      },
+      {
+       "beat": "south_bridge_crossed",
+       "depth_after": 9.4345703125,
+       "depth_before": -11.5703125,
+       "hits": 40.0,
+       "key_remaining": 0.0,
+       "key_reward": 1.0,
+       "party_ids": [
+        -9.22337190887817e+18,
+        -9.223371908861393e+18,
+        -9.223371908844616e+18,
+        -9.223371908827838e+18,
+        -9.223371908811061e+18
+       ],
+       "trainer": "south_bridge_grunt",
+       "wins": 2.0
+      }
+     ],
+     "segment": "bridge"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     8.00162124633789,
+     -2.85544729232788,
+     1339.4345703125
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 108,
+     "level": 9,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 20,
+     "level": 8,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 135,
+     "level": 8,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 88,
+     "level": 7,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 86,
+     "level": 6,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 58,
+     "level": 9,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 136,
+     "level": 7,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 129,
+     "level": 7,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 34,
+     "level": 6,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 82,
+     "level": 5,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "passed": true,
+   "segment": "bridge",
+   "wall_seconds": 790.647
+  },
+  {
+   "flags_gained": [
+    "harvest_node:order:12.0",
+    "harvest_node:order:13.0",
+    "harvest_node:order:14.0",
+    "harvest_node:order:15.0",
+    "harvest_node:order:2020.0",
+    "harvest_node:order:2021.0",
+    "reward:trainer:warrens_cleared:xp:1",
+    "warrens_cleared"
+   ],
+   "flags_total": 105,
+   "free_build": false,
+   "game_clock_seconds": 756.04674844444,
+   "game_day": 5,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "amount": 2.0,
+       "at": "(393.0, 1802.0)",
+       "beat": "unreachable_node_skipped",
+       "evidence": "5 ordinary-walk attempts (north, west, south) never within the 2.2 m prompt; BLOCKERS.md B2 (open Meadows defect)",
+       "item": "rootstone",
+       "later_need": "none: no later chain step consumes rootstone",
+       "order": 16.0,
+       "replacement_nodes": "none needed; remaining reachable stops still harvested"
+      },
+      {
+       "after": 2.0,
+       "at": "(394.0, 1797.0)",
+       "beat": "quarry_rootstone",
+       "before": 0.0,
+       "node_id": 60747027807094.0,
+       "yield": 2.0
+      },
+      {
+       "after": 4.0,
+       "at": "(399.0, 1792.0)",
+       "beat": "quarry_rootstone",
+       "before": 2.0,
+       "node_id": 60747162024828.0,
+       "yield": 2.0
+      },
+      {
+       "after": 6.0,
+       "at": "(406.0, 1800.0)",
+       "beat": "quarry_rootstone",
+       "before": 4.0,
+       "node_id": 60747296242562.0,
+       "yield": 2.0
+      },
+      {
+       "beat": "quarry_east_detour",
+       "from": "(404.4255, -0.500659, 1798.522)",
+       "reason": "helper's direct leg (406,1800)->(401,1809) stalls west of the foundation; ordinary walk around the pylon's east side",
+       "waypoints": "[(408.5, 1803.5), (406.5, 1809.5)]"
+      },
+      {
+       "after": 8.0,
+       "at": "(401.0, 1809.0)",
+       "beat": "quarry_rootstone",
+       "before": 6.0,
+       "node_id": 60747430460296.0,
+       "yield": 2.0
+      },
+      {
+       "after": 10.0,
+       "at": "(381.0, 1824.0)",
+       "beat": "quarry_rootstone",
+       "before": 8.0,
+       "node_id": 60761640762604.0,
+       "yield": 2.0
+      },
+      {
+       "after": 12.0,
+       "at": "(413.0, 1820.0)",
+       "beat": "quarry_rootstone",
+       "before": 10.0,
+       "node_id": 60761774980338.0,
+       "yield": 2.0
+      },
+      {
+       "beat": "undertrail_mound_detour",
+       "from": "(-419.1268, -3.890269, 2468.813)",
+       "reason": "helper's undertrail leg stalls against the Warrens mound at about (-406,2488); ordinary walk west of it",
+       "waypoints": "[(-432.0, 2492.0), (-418.0, 2528.0)]"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223303447921324e+18,
+       "frames": 875.0,
+       "guardian": false,
+       "hits": 14.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223303447132794e+18,
+       "frames": 1242.0,
+       "guardian": false,
+       "hits": 21.0
+      },
+      {
+       "beat": "guardian_admitted",
+       "before": {
+        "items": {
+         "coin": 140.0,
+         "hide_vest": 0.0,
+         "orb_greater": 0.0,
+         "revive": 10.0,
+         "rootstone": 12.0
+        },
+        "xp": {
+         "-9223371908676843504": 967.0,
+         "-9223371908693620721": 1259.0,
+         "-9223371908710397938": 1867.0,
+         "-9223371908727175155": 1796.0,
+         "-9223371908743952372": 2300.0
+        }
+       },
+       "body_id": 68591617807095.0,
+       "creature_id": -9.223303444549104e+18
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223303444549104e+18,
+       "frames": 1343.0,
+       "guardian": true,
+       "hits": 20.0
+      },
+      {
+       "beat": "warrens_cleared",
+       "hits": 20.0,
+       "items_after": {
+        "coin": 230.0,
+        "hide_vest": 1.0,
+        "orb_greater": 2.0,
+        "revive": 11.0,
+        "rootstone": 17.0
+       },
+       "items_before": {
+        "coin": 140.0,
+        "hide_vest": 0.0,
+        "orb_greater": 0.0,
+        "revive": 10.0,
+        "rootstone": 12.0
+       },
+       "kill_active": -9.223371908710398e+18,
+       "party_ids": [
+        -9.223371908743952e+18,
+        -9.223371908727175e+18,
+        -9.223371908710398e+18,
+        -9.223371908693621e+18,
+        -9.223371908676844e+18
+       ],
+       "survivors": [
+        -9.223371908743952e+18,
+        -9.223371908727175e+18,
+        -9.223371908710398e+18,
+        -9.223371908693621e+18,
+        -9.223371908676844e+18
+       ],
+       "wins": 1.0,
+       "xp_after": {
+        "-9223371908676843504": 1234.0,
+        "-9223371908693620721": 1526.0,
+        "-9223371908710397938": 2261.0,
+        "-9223371908727175155": 2063.0,
+        "-9223371908743952372": 2567.0
+       },
+       "xp_before": {
+        "-9223371908676843504": 967.0,
+        "-9223371908693620721": 1259.0,
+        "-9223371908710397938": 1867.0,
+        "-9223371908727175155": 1796.0,
+        "-9223371908743952372": 2300.0
+       }
+      },
+      {
+       "beat": "warrens_exited",
+       "entrance": "(-355.5858, 4.1484, 2608.586)",
+       "outside": "(-349.929, 4.1484, 2602.929)",
+       "party_ids": [
+        -9.223371908743952e+18,
+        -9.223371908727175e+18,
+        -9.223371908710398e+18,
+        -9.223371908693621e+18,
+        -9.223371908676844e+18
+       ],
+       "player": "(-353.0858, 4.561159, 2606.082)"
+      }
+     ],
+     "segment": "warrens"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     -353.085754394531,
+     4.56115865707397,
+     2606.08227539062
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 112,
+     "level": 10,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 21,
+     "level": 9,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 34,
+     "level": 9,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 92,
+     "level": 8,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 90,
+     "level": 7,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 108,
+     "level": 9,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 20,
+     "level": 8,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 135,
+     "level": 8,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 88,
+     "level": 7,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 86,
+     "level": 6,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "passed": true,
+   "segment": "warrens",
+   "wall_seconds": 755.582
+  },
+  {
+   "flags_gained": [
+    "captive_rescued",
+    "mill_crossing_restored",
+    "relay_captain_defeated",
+    "relay_disabled"
+   ],
+   "flags_total": 109,
+   "free_build": false,
+   "game_clock_seconds": 770.614845777774,
+   "game_day": 6,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "beat": "relay_captain_defeated",
+       "expected_xp": {
+        "-9223371908458739695": 754.0,
+        "-9223371908475516912": 437.0,
+        "-9223371908492294129": 437.0,
+        "-9223371908509071346": 437.0,
+        "-9223371908525848563": 437.0
+       },
+       "gear": 0.0,
+       "hits": 45.0,
+       "items_after": {
+        "coin": 290.0,
+        "orb_greater": 5.0,
+        "revive": 12.0
+       },
+       "items_before": {
+        "coin": 230.0,
+        "orb_greater": 2.0,
+        "revive": 11.0
+       },
+       "rounds": 3.0,
+       "wins": 3.0,
+       "xp_after": {
+        "-9223371908458739695": 1988.0,
+        "-9223371908475516912": 1963.0,
+        "-9223371908492294129": 2698.0,
+        "-9223371908509071346": 2500.0,
+        "-9223371908525848563": 3004.0
+       },
+       "xp_before": {
+        "-9223371908458739695": 1234.0,
+        "-9223371908475516912": 1526.0,
+        "-9223371908492294129": 2261.0,
+        "-9223371908509071346": 2063.0,
+        "-9223371908525848563": 2567.0
+       }
+      },
+      {
+       "beat": "captive_rescued",
+       "conversation": "relay_captive_freed",
+       "gear": 1.0
+      },
+      {
+       "beat": "relay_disabled",
+       "lit_after": 0.0,
+       "lit_before": 18.0,
+       "player": "(342.4986, 10.00082, 3751.482)"
+      },
+      {
+       "beat": "mill_crossing_restored",
+       "depth": 9.43603515625,
+       "gear_after": 0.0,
+       "gear_before": 1.0,
+       "party_ids": [
+        -9.223371908525849e+18,
+        -9.223371908509071e+18,
+        -9.223371908492294e+18,
+        -9.223371908475517e+18,
+        -9.22337190845874e+18
+       ]
+      }
+     ],
+     "segment": "relay"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     -151.999877929688,
+     -1.98773491382599,
+     4212.43603515625
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 117,
+     "level": 11,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 22,
+     "level": 10,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 36,
+     "level": 10,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 96,
+     "level": 9,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 78,
+     "level": 9,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 112,
+     "level": 10,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 21,
+     "level": 9,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 34,
+     "level": 9,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 92,
+     "level": 8,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 90,
+     "level": 7,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "passed": true,
+   "segment": "relay",
+   "wall_seconds": 805.601
+  },
+  {
+   "flags_gained": [
+    "defeated_captain_field",
+    "defeated_captain_ridge",
+    "defeated_captain_riverwatch",
+    "defeated_stronghold_courtyard",
+    "defeated_stronghold_elite",
+    "defeated_stronghold_patrol",
+    "hall_approach_open",
+    "wild_once_3103",
+    "wild_once_4001"
+   ],
+   "flags_total": 118,
+   "free_build": false,
+   "game_clock_seconds": 1893.17685677775,
+   "game_day": 9,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 22.5106900444973,
+       "hp_after": 72.5106900444973,
+       "index": 1.0,
+       "item": "potion_small",
+       "max_hp": 154.277654689312,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 36.1856556678788,
+       "hp_after": 86.1856556678788,
+       "index": 2.0,
+       "item": "potion_small",
+       "max_hp": 147.018404927254,
+       "species": "mudsnout"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371165983029e+18,
+       "frames": 902.0,
+       "guardian": false,
+       "hits": 12.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371164372418e+18,
+       "frames": 769.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 61.2005395013731,
+       "hp_after": 111.200539501373,
+       "index": 1.0,
+       "item": "potion_small",
+       "max_hp": 160.28847240448,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371906177038313": 461.0,
+        "-9223371906193815530": 596.0,
+        "-9223371906210592747": 461.0,
+        "-9223371906227369964": 707.0,
+        "-9223371906244147181": 0.0
+       },
+       "frames": 5167.0,
+       "hits": 56.0,
+       "id": "captain_riverwatch",
+       "items_after": {
+        "coin": 340.0,
+        "elixir_vigour": 1.0,
+        "orb_greater": 7.0,
+        "river_sigil": 1.0
+       },
+       "items_before": {
+        "coin": 290.0,
+        "elixir_vigour": 0.0,
+        "orb_greater": 5.0,
+        "river_sigil": 0.0
+       },
+       "rounds": 3.0,
+       "wins": 3.0,
+       "xp_after": {
+        "-9223371906177038313": 2663.0,
+        "-9223371906193815530": 2773.0,
+        "-9223371906210592747": 3373.0,
+        "-9223371906227369964": 3635.0,
+        "-9223371906244147181": 3218.0
+       },
+       "xp_before": {
+        "-9223371906177038313": 2202.0,
+        "-9223371906193815530": 2177.0,
+        "-9223371906210592747": 2912.0,
+        "-9223371906227369964": 2928.0,
+        "-9223371906244147181": 3218.0
+       }
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": true,
+       "hp": 0.0,
+       "hp_after": 84.0,
+       "index": 0.0,
+       "item": "revive",
+       "max_hp": 168.0,
+       "species": "ripplet"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371099964683e+18,
+       "frames": 697.0,
+       "guardian": false,
+       "hits": 10.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371101407524e+18,
+       "frames": 978.0,
+       "guardian": false,
+       "hits": 13.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370830220599e+18,
+       "frames": 881.0,
+       "guardian": false,
+       "hits": 12.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371081778181e+18,
+       "frames": 916.0,
+       "guardian": false,
+       "hits": 12.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370826227621e+18,
+       "frames": 881.0,
+       "guardian": false,
+       "hits": 13.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370825422314e+18,
+       "frames": 809.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371906177038313": 441.0,
+        "-9223371906193815530": 441.0,
+        "-9223371906210592747": 441.0,
+        "-9223371906227369964": 492.0,
+        "-9223371906244147181": 576.0
+       },
+       "frames": 4183.0,
+       "hits": 59.0,
+       "id": "captain_field",
+       "items_after": {
+        "coin": 380.0,
+        "field_sigil": 1.0,
+        "potion_small": 2.0,
+        "tm_earth_fist": 1.0
+       },
+       "items_before": {
+        "coin": 340.0,
+        "field_sigil": 0.0,
+        "potion_small": 0.0,
+        "tm_earth_fist": 0.0
+       },
+       "rounds": 3.0,
+       "wins": 3.0,
+       "xp_after": {
+        "-9223371906177038313": 3834.0,
+        "-9223371906193815530": 4674.0,
+        "-9223371906210592747": 4544.0,
+        "-9223371906227369964": 4857.0,
+        "-9223371906244147181": 4524.0
+       },
+       "xp_before": {
+        "-9223371906177038313": 3393.0,
+        "-9223371906193815530": 4233.0,
+        "-9223371906210592747": 4103.0,
+        "-9223371906227369964": 4365.0,
+        "-9223371906244147181": 3948.0
+       }
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": true,
+       "hp": 0.0,
+       "hp_after": 86.155053917408,
+       "index": 1.0,
+       "item": "revive",
+       "max_hp": 172.310107834816,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 38.5453544694326,
+       "hp_after": 88.5453544694326,
+       "index": 3.0,
+       "item": "potion_small",
+       "max_hp": 163.536598043442,
+       "species": "mudsnout"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370966334156e+18,
+       "frames": 806.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370965528848e+18,
+       "frames": 897.0,
+       "guardian": false,
+       "hits": 12.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370958985734e+18,
+       "frames": 747.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 58.828570985607,
+       "hp_after": 108.828570985607,
+       "index": 1.0,
+       "item": "potion_small",
+       "max_hp": 178.320925549984,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370871609991e+18,
+       "frames": 844.0,
+       "guardian": false,
+       "hits": 12.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370823828479e+18,
+       "frames": 867.0,
+       "guardian": false,
+       "hits": 12.0
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371906177038313": 475.0,
+        "-9223371906193815530": 475.0,
+        "-9223371906210592747": 475.0,
+        "-9223371906227369964": 880.0,
+        "-9223371906244147181": 475.0
+       },
+       "frames": 3399.0,
+       "hits": 46.0,
+       "id": "captain_ridge",
+       "items_after": {
+        "coin": 425.0,
+        "elixir_guard": 1.0,
+        "revive": 11.0,
+        "ridge_sigil": 1.0
+       },
+       "items_before": {
+        "coin": 380.0,
+        "elixir_guard": 0.0,
+        "revive": 10.0,
+        "ridge_sigil": 0.0
+       },
+       "rounds": 3.0,
+       "wins": 3.0,
+       "xp_after": {
+        "-9223371906177038313": 4920.0,
+        "-9223371906193815530": 5760.0,
+        "-9223371906210592747": 5630.0,
+        "-9223371906227369964": 6959.0,
+        "-9223371906244147181": 5610.0
+       },
+       "xp_before": {
+        "-9223371906177038313": 4445.0,
+        "-9223371906193815530": 5285.0,
+        "-9223371906210592747": 5155.0,
+        "-9223371906227369964": 6079.0,
+        "-9223371906244147181": 5135.0
+       }
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370820607254e+18,
+       "frames": 607.0,
+       "guardian": false,
+       "hits": 9.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370819818723e+18,
+       "frames": 931.0,
+       "guardian": false,
+       "hits": 14.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370819013418e+18,
+       "frames": 764.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370815020441e+18,
+       "frames": 712.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370802756296e+18,
+       "frames": 808.0,
+       "guardian": false,
+       "hits": 11.0
+      },
+      {
+       "beat": "hall_approach_open",
+       "depth": 5.44648694992065,
+       "sigils_after": {
+        "field_sigil": 0.0,
+        "ridge_sigil": 0.0,
+        "river_sigil": 0.0
+       },
+       "sigils_before": {
+        "field_sigil": 1.0,
+        "ridge_sigil": 1.0,
+        "river_sigil": 1.0
+       }
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371906177038313": 0.0,
+        "-9223371906193815530": 278.0,
+        "-9223371906210592747": 278.0,
+        "-9223371906227369964": 278.0,
+        "-9223371906244147181": 556.0
+       },
+       "frames": 2264.0,
+       "hits": 29.0,
+       "id": "stronghold_patrol",
+       "items_after": {
+        "coin": 485.0,
+        "potion_small": 2.0
+       },
+       "items_before": {
+        "coin": 425.0,
+        "potion_small": 0.0
+       },
+       "rounds": 2.0,
+       "wins": 2.0,
+       "xp_after": {
+        "-9223371906177038313": 5547.0,
+        "-9223371906193815530": 6665.0,
+        "-9223371906210592747": 6535.0,
+        "-9223371906227369964": 8491.0,
+        "-9223371906244147181": 6793.0
+       },
+       "xp_before": {
+        "-9223371906177038313": 5547.0,
+        "-9223371906193815530": 6387.0,
+        "-9223371906210592747": 6257.0,
+        "-9223371906227369964": 8213.0,
+        "-9223371906244147181": 6237.0
+       }
+      },
+      {
+       "beat": "hall_passage_crossed",
+       "flag": "defeated_stronghold_patrol",
+       "from": "outer_works",
+       "player": "(8.000072, 6.172785, 7591.474)",
+       "to": "courtyard",
+       "trainer": "stronghold_patrol"
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371906177038313": 445.0,
+        "-9223371906193815530": 890.0,
+        "-9223371906210592747": 445.0,
+        "-9223371906227369964": 445.0,
+        "-9223371906244147181": 0.0
+       },
+       "frames": 5927.0,
+       "hits": 52.0,
+       "id": "stronghold_courtyard",
+       "items_after": {
+        "coin": 575.0,
+        "orb_basic": 51.0,
+        "potion_small": 4.0
+       },
+       "items_before": {
+        "coin": 485.0,
+        "orb_basic": 48.0,
+        "potion_small": 2.0
+       },
+       "rounds": 3.0,
+       "wins": 3.0,
+       "xp_after": {
+        "-9223371906177038313": 5992.0,
+        "-9223371906193815530": 7555.0,
+        "-9223371906210592747": 6980.0,
+        "-9223371906227369964": 8936.0,
+        "-9223371906244147181": 6793.0
+       },
+       "xp_before": {
+        "-9223371906177038313": 5547.0,
+        "-9223371906193815530": 6665.0,
+        "-9223371906210592747": 6535.0,
+        "-9223371906227369964": 8491.0,
+        "-9223371906244147181": 6793.0
+       }
+      },
+      {
+       "beat": "hall_passage_crossed",
+       "flag": "defeated_stronghold_courtyard",
+       "from": "courtyard",
+       "player": "(8.000082, 6.172785, 7623.415)",
+       "to": "tether_approach",
+       "trainer": "stronghold_courtyard"
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371906177038313": 493.0,
+        "-9223371906193815530": 318.0,
+        "-9223371906210592747": 660.0,
+        "-9223371906227369964": 493.0,
+        "-9223371906244147181": 493.0
+       },
+       "frames": 3841.0,
+       "hits": 65.0,
+       "id": "stronghold_elite",
+       "items_after": {
+        "coin": 725.0,
+        "potion_small": 7.0,
+        "revive": 10.0
+       },
+       "items_before": {
+        "coin": 575.0,
+        "potion_small": 4.0,
+        "revive": 9.0
+       },
+       "rounds": 3.0,
+       "wins": 3.0,
+       "xp_after": {
+        "-9223371906177038313": 6485.0,
+        "-9223371906193815530": 7873.0,
+        "-9223371906210592747": 7640.0,
+        "-9223371906227369964": 9429.0,
+        "-9223371906244147181": 7286.0
+       },
+       "xp_before": {
+        "-9223371906177038313": 5992.0,
+        "-9223371906193815530": 7555.0,
+        "-9223371906210592747": 6980.0,
+        "-9223371906227369964": 8936.0,
+        "-9223371906244147181": 6793.0
+       }
+      },
+      {
+       "beat": "hall_passage_crossed",
+       "flag": "defeated_stronghold_elite",
+       "from": "tether_approach",
+       "player": "(7.999907, 6.172785, 7649.672)",
+       "to": "warden_arena",
+       "trainer": "stronghold_elite"
+      },
+      {
+       "beat": "warden_arena_entered",
+       "marker": "(8.0, 6.171943, 7650.2)",
+       "party_ids": [
+        -9.223371906244147e+18,
+        -9.22337190622737e+18,
+        -9.223371906210593e+18,
+        -9.223371906193816e+18,
+        -9.223371906177038e+18
+       ],
+       "player": "(7.999907, 6.172785, 7649.672)",
+       "trainers": [
+        "captain_riverwatch",
+        "captain_field",
+        "captain_ridge",
+        "stronghold_patrol",
+        "stronghold_courtyard",
+        "stronghold_elite"
+       ],
+       "travel": "on_foot"
+      }
+     ],
+     "segment": "hall"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     7.99990653991699,
+     6.17278528213501,
+     7649.671875
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 0,
+     "level": 16,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 8,
+     "level": 18,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 87,
+     "level": 16,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 0,
+     "level": 17,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 37,
+     "level": 15,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 117,
+     "level": 11,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 22,
+     "level": 10,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 36,
+     "level": 10,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 96,
+     "level": 9,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 78,
+     "level": 9,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "passed": true,
+   "segment": "hall",
+   "wall_seconds": 2141.761
+  },
+  {
+   "flags_gained": [
+    "defeated_warden",
+    "learned_legendary_is_the_source",
+    "legendary_answer_world:3ee61ecf63976764c63c01fbb112e1d5",
+    "legendary_freed",
+    "legendary_joined",
+    "legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "legendary_resolution:live",
+    "legendary_settled",
+    "meadows_acknowledged",
+    "realm_heart_meadows_earned",
+    "realm_key_cloudreach"
+   ],
+   "flags_total": 129,
+   "free_build": false,
+   "game_clock_seconds": 3526.96667911088,
+   "game_day": 14,
+   "helper_receipts": [
+    {
+     "passed": false,
+     "receipts": [
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": true,
+       "hp": 0.0,
+       "hp_after": 99.75,
+       "index": 0.0,
+       "item": "revive",
+       "max_hp": 199.5,
+       "species": "ripplet"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": true,
+       "hp": 0.0,
+       "hp_after": 93.177829117775,
+       "index": 3.0,
+       "item": "revive",
+       "max_hp": 186.35565823555,
+       "species": "mudsnout"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 99.75,
+       "hp_after": 149.75,
+       "index": 0.0,
+       "item": "potion_small",
+       "max_hp": 199.5,
+       "species": "ripplet"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 8.99540768418428,
+       "hp_after": 58.9954076841843,
+       "index": 1.0,
+       "item": "potion_small",
+       "max_hp": 202.364196410656,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 87.9428937329716,
+       "hp_after": 137.942893732972,
+       "index": 2.0,
+       "item": "potion_small",
+       "max_hp": 181.386343741417,
+       "species": "mudsnout"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 93.177829117775,
+       "hp_after": 143.177829117775,
+       "index": 3.0,
+       "item": "potion_small",
+       "max_hp": 186.35565823555,
+       "species": "mudsnout"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 37.77885808213,
+       "hp_after": 87.77885808213,
+       "index": 4.0,
+       "item": "potion_small",
+       "max_hp": 162.625689842224,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 58.9954076841843,
+       "hp_after": 108.995407684184,
+       "index": 1.0,
+       "item": "potion_small",
+       "max_hp": 202.364196410656,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 87.77885808213,
+       "hp_after": 137.77885808213,
+       "index": 4.0,
+       "item": "potion_small",
+       "max_hp": 162.625689842224,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "trainer_defeated",
+       "expected_xp": {
+        "-9223371902133729246": 0.0,
+        "-9223371902150506463": 1227.0,
+        "-9223371902167283680": 1227.0,
+        "-9223371902184060897": 1386.0,
+        "-9223371902200838114": 1895.0
+       },
+       "frames": 6135.0,
+       "hits": 92.0,
+       "id": "warden_aldis",
+       "items_after": {
+        "coin": 875.0,
+        "potion_small": 4.0,
+        "revive": 10.0
+       },
+       "items_before": {
+        "coin": 725.0,
+        "potion_small": 0.0,
+        "revive": 8.0
+       },
+       "rounds": 5.0,
+       "wins": 5.0,
+       "xp_after": {
+        "-9223371902133729246": 6485.0,
+        "-9223371902150506463": 9100.0,
+        "-9223371902167283680": 8867.0,
+        "-9223371902184060897": 10815.0,
+        "-9223371902200838114": 9181.0
+       },
+       "xp_before": {
+        "-9223371902133729246": 6485.0,
+        "-9223371902150506463": 7873.0,
+        "-9223371902167283680": 7640.0,
+        "-9223371902184060897": 9429.0,
+        "-9223371902200838114": 7286.0
+       }
+      },
+      {
+       "beat": "veridian_accept_prompt",
+       "distance_m": 2.56281328201294,
+       "prompt": "/root/MeadowsPlayground/StrongholdClimax/VeridianAcceptPromptAnchor/VeridianAcceptPrompt"
+      },
+      {
+       "beat": "veridian_accepted",
+       "choice": "accept_veridian_release_lowest_level_member",
+       "joined": {
+        "level": 22.0,
+        "species": "veridian",
+        "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+       },
+       "released": {
+        "index": 4.0,
+        "level": 15.0,
+        "species": "bramblebun",
+        "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+       }
+      },
+      {
+       "beat": "meadows_ending_settled",
+       "choice": "release_pending_legendary_keep_earned_five",
+       "dialogues": [
+        "stronghold_reveal",
+        "stronghold_warden_challenge",
+        "stronghold_warden_realm_reward",
+        "stronghold_chamber",
+        "stronghold_free_legendary",
+        "stronghold_legendary_joins",
+        "veridian_choice",
+        "stronghold_machinery_fails"
+       ],
+       "legendary_joined": true,
+       "party_ids": [
+        -9.223371902200838e+18,
+        -9.223371902184061e+18,
+        -9.223371902167284e+18,
+        -9.223371902150506e+18,
+        -9.223287587194309e+18
+       ],
+       "released_pending_id": 0.0
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 12.8146302621893,
+       "hp_after": 62.8146302621893,
+       "index": 0.0,
+       "item": "potion_small",
+       "max_hp": 212.1,
+       "species": "ripplet"
+      },
+      {
+       "beat": "between_fight_care",
+       "fainted": false,
+       "hp": 62.8146302621893,
+       "hp_after": 112.814630262189,
+       "index": 0.0,
+       "item": "potion_small",
+       "max_hp": 212.1,
+       "species": "ripplet"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 112.814630262189,
+       "hp_after": 162.814630262189,
+       "index": 0.0,
+       "item": "potion_small",
+       "max_hp": 212.1,
+       "species": "ripplet"
+      },
+      {
+       "beat": "pre_warden_bench_care",
+       "fainted": false,
+       "hp": 83.7379602836866,
+       "hp_after": 133.737960283687,
+       "index": 1.0,
+       "item": "potion_small",
+       "max_hp": 208.375014125824,
+       "species": "bramblebun"
+      },
+      {
+       "beat": "acknowledgement_backtrack_started",
+       "entries": 93.0,
+       "reason": "actual acknowledgement remains at the village; no earned fast travel exists",
+       "road_metres_one_way": 11543.5069665909,
+       "route": "forward roads reversed (B12): band5/4/3 + relay loop, warren_undertrail with B3 detour, band2/band1",
+       "spine_entries": 88.0,
+       "target": "(184.2, 0.109838, 52.6)"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370830774246e+18,
+       "frames": 669.0,
+       "guardian": false,
+       "hits": 10.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370833139835e+18,
+       "frames": 397.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370846695825e+18,
+       "frames": 499.0,
+       "guardian": false,
+       "hits": 8.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370849111745e+18,
+       "frames": 464.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370851494109e+18,
+       "frames": 347.0,
+       "guardian": false,
+       "hits": 5.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370853910028e+18,
+       "frames": 434.0,
+       "guardian": false,
+       "hits": 7.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370900819126e+18,
+       "frames": 486.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370984168336e+18,
+       "frames": 385.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370990711451e+18,
+       "frames": 348.0,
+       "guardian": false,
+       "hits": 5.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370993093815e+18,
+       "frames": 440.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.22337085630917e+18,
+       "frames": 403.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370857903006e+18,
+       "frames": 410.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370860318925e+18,
+       "frames": 456.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371118033746e+18,
+       "frames": 390.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371180595986e+18,
+       "frames": 318.0,
+       "guardian": false,
+       "hits": 4.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371181401293e+18,
+       "frames": 389.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "checkpoint_village_pre_kell",
+       "dir": "/tmp/claude-0/earned_chain/seed4_checkpoints/village_pre_kell/save/",
+       "party": 5.0,
+       "player": "(7.303545, -3.457305, 91.29684)",
+       "saved": true
+      },
+      {
+       "beat": "acknowledgement_approach_walk",
+       "from": "(7.303545, -3.457305, 91.29684)",
+       "to": "(184.2, 0.109838, 52.6)"
+      },
+      {
+       "actor": "Kell",
+       "beat": "meadows_acknowledged",
+       "conversation": "spoke_traveller_storm_road",
+       "player": "(181.915, -0.170625, 53.14729)"
+      },
+      {
+       "beat": "walk_confined_recovery",
+       "player": "(400.0848, -0.472604, 1801.602)",
+       "target": "(330.0, -1.101889, 1950.0)"
+      },
+      {
+       "beat": "walk_confined_recovery",
+       "player": "(399.4111, -0.245662, 1801.391)",
+       "target": "(330.0, -1.101889, 1950.0)"
+      },
+      {
+       "aside": "(393.9749, 1798.852)",
+       "beat": "walk_sidestep",
+       "player": "(399.4111, -0.245662, 1801.391)",
+       "target": "(330.0, -1.101889, 1950.0)"
+      },
+      {
+       "beat": "walk_confined_recovery",
+       "player": "(400.4596, -0.499158, 1801.149)",
+       "target": "(330.0, -1.101889, 1950.0)"
+      }
+     ],
+     "segment": "warden_accept"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     400.777740478516,
+     -0.499887824058533,
+     1800.4765625
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+   },
+   "party_after": [
+    {
+     "hp": 167,
+     "level": 19,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 141,
+     "level": 21,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 151,
+     "level": 19,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 151,
+     "level": 19,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 867,
+     "level": 24,
+     "nickname": "",
+     "species": "veridian",
+     "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 0,
+     "level": 16,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 8,
+     "level": 18,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 87,
+     "level": 16,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 0,
+     "level": 17,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 37,
+     "level": 15,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+   ],
+   "passed": false,
+   "segment": "warden (warden)",
+   "wall_seconds": 3755.171
+  },
+  {
+   "flags_gained": [
+    "meadows_acknowledged",
+    "realm_gate_cloudreach_unlocked"
+   ],
+   "flags_total": 130,
+   "free_build": false,
+   "game_clock_seconds": 34.9858274441367,
+   "game_day": 18,
+   "helper_receipts": [
+    {
+     "passed": false,
+     "receipts": [
+      {
+       "beat": "kell_rift_resumed",
+       "party": 5.0,
+       "player": "(7.303545, -3.457305, 91.29684)"
+      },
+      {
+       "beat": "acknowledgement_approach_walk",
+       "from": "(7.303545, -3.457305, 91.29684)",
+       "to": "(184.2, 0.109838, 52.6)"
+      },
+      {
+       "actor": "Kell",
+       "beat": "meadows_acknowledged",
+       "conversation": "spoke_traveller_storm_road",
+       "player": "(181.772, -0.203531, 53.43604)"
+      },
+      {
+       "beat": "quarry_northbound_detour",
+       "from": "(399.2347, -0.499183, 1798.797)",
+       "reason": "B14 quarry foundation pocket; stick-walked round its east side",
+       "waypoints": "[(408.5, 1803.5), (406.5, 1809.5), (401.0, 1818.0), (398.0, 1828.0)]"
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371181199965e+18,
+       "frames": 449.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.22337118039466e+18,
+       "frames": 363.0,
+       "guardian": false,
+       "hits": 5.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223371117832419e+18,
+       "frames": 725.0,
+       "guardian": false,
+       "hits": 8.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370860906127e+18,
+       "frames": 488.0,
+       "guardian": false,
+       "hits": 7.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370860117598e+18,
+       "frames": 702.0,
+       "guardian": false,
+       "hits": 9.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370857701679e+18,
+       "frames": 474.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370856107844e+18,
+       "frames": 712.0,
+       "guardian": false,
+       "hits": 9.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370992892489e+18,
+       "frames": 452.0,
+       "guardian": false,
+       "hits": 6.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370990510125e+18,
+       "frames": 579.0,
+       "guardian": false,
+       "hits": 8.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370983967009e+18,
+       "frames": 487.0,
+       "guardian": false,
+       "hits": 7.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370900617799e+18,
+       "frames": 687.0,
+       "guardian": false,
+       "hits": 10.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370854514008e+18,
+       "frames": 590.0,
+       "guardian": false,
+       "hits": 8.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370851292783e+18,
+       "frames": 364.0,
+       "guardian": false,
+       "hits": 5.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370849698947e+18,
+       "frames": 496.0,
+       "guardian": false,
+       "hits": 7.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.22337084570597e+18,
+       "frames": 627.0,
+       "guardian": false,
+       "hits": 8.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "checkpoint_storm_road_join",
+       "dir": "/tmp/claude-0/earned_chain/seed4_checkpoints/storm_road_join/save/",
+       "party": 5.0,
+       "player": "(0.703018, -1.549866, 6998.764)",
+       "saved": true
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370832938507e+18,
+       "frames": 486.0,
+       "guardian": false,
+       "hits": 7.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "storm_road_via_sigil_gate",
+       "from": "(20.69569, -6.741502, 7478.722)",
+       "reason": "B15 storm spoke road severed by sigil_gate_gorge_west; crossed at the Sigil Gate on the forward road",
+       "storm_points": "[(-28.12, 7409.87), (-33.99, 7513.46)]"
+      }
+     ],
+     "segment": "kell_rift"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     0.0,
+     105.030204772949,
+     -260.0
+    ],
+    "realm": "cloudreach",
+    "scene": "CloudreachCliffs"
+   },
+   "party_after": [
+    {
+     "hp": 177,
+     "level": 21,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 145,
+     "level": 22,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 159,
+     "level": 21,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 160,
+     "level": 21,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 789,
+     "level": 26,
+     "nickname": "",
+     "species": "veridian",
+     "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 167,
+     "level": 19,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 141,
+     "level": 21,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 151,
+     "level": 19,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 151,
+     "level": 19,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 867,
+     "level": 24,
+     "nickname": "",
+     "species": "veridian",
+     "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+    }
+   ],
+   "passed": false,
+   "segment": "kell_rift (kell_rift2)",
+   "wall_seconds": 3089.19
+  },
+  {
+   "flags_gained": [
+    "realm_gate_cloudreach_unlocked"
+   ],
+   "flags_total": 130,
+   "free_build": false,
+   "game_clock_seconds": 47.7424917774736,
+   "game_day": 18,
+   "helper_receipts": [
+    {
+     "passed": true,
+     "receipts": [
+      {
+       "beat": "kell_rift_resumed",
+       "party": 5.0,
+       "player": "(0.703018, -1.549866, 6998.764)"
+      },
+      {
+       "beat": "storm_road_resumed",
+       "player": "(0.703018, -1.549866, 6998.764)",
+       "road_index": 85.0
+      },
+      {
+       "beat": "wild_victory",
+       "enemy_id": -9.223370830858132e+18,
+       "frames": 890.0,
+       "guardian": false,
+       "hits": 9.0,
+       "switches": 0.0
+      },
+      {
+       "beat": "storm_road_via_sigil_gate",
+       "from": "(20.71231, -6.737614, 7478.691)",
+       "reason": "B15 storm spoke road severed by sigil_gate_gorge_west; crossed at the Sigil Gate on the forward road",
+       "storm_points": "[(-28.12, 7409.87), (-33.99, 7513.46)]"
+      },
+      {
+       "beat": "cloudreach_arrived",
+       "party_ids": [
+        -9.223371902418942e+18,
+        -9.223371902402165e+18,
+        -9.223371902385388e+18,
+        -9.22337190236861e+18,
+        -9.223371902351833e+18
+       ],
+       "player": "(0.0, 105.0302, -260.0)",
+       "readiness": "evaluated on the deadline frame (B16): the headless scene build exceeded the helper's 120 s wall wait",
+       "travel": "production Rift collision callback",
+       "trigger_entries": 1.0
+      }
+     ],
+     "segment": "kell_rift"
+    }
+   ],
+   "key_items": {},
+   "location": {
+    "player": [
+     0.0,
+     105.030204772949,
+     -260.0
+    ],
+    "realm": "cloudreach",
+    "scene": "CloudreachCliffs"
+   },
+   "party_after": [
+    {
+     "hp": 177,
+     "level": 21,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 145,
+     "level": 22,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 159,
+     "level": 21,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 160,
+     "level": 21,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 796,
+     "level": 26,
+     "nickname": "",
+     "species": "veridian",
+     "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+    }
+   ],
+   "party_before": [
+    {
+     "hp": 177,
+     "level": 21,
+     "nickname": "Bud",
+     "species": "ripplet",
+     "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+     "hp": 145,
+     "level": 22,
+     "nickname": "",
+     "species": "bramblebun",
+     "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+     "hp": 159,
+     "level": 21,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+     "hp": 160,
+     "level": 21,
+     "nickname": "",
+     "species": "mudsnout",
+     "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+     "hp": 796,
+     "level": 26,
+     "nickname": "",
+     "species": "veridian",
+     "uid": "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+    }
+   ],
+   "passed": true,
+   "segment": "kell_rift (storm2)",
+   "wall_seconds": 451.42
+  }
+ ],
+ "source_sha": "a850e47647d04504407ec8afda9157e1063971ea",
+ "total_wall_seconds": 13011.0,
+ "world_seed": 4
+}

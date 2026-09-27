@@ -1,0 +1,8 @@
+bram_01.jpg <- render.yml 36252749910 (x03-act-bram)/tree/shots/act_bram/bram_07_act-dialogue-01.png
+bram_02.jpg <- render.yml 36252749910 (x03-act-bram)/tree/shots/act_bram/bram_11_act-02-fight-start.png
+bram_03.jpg <- render.yml 36252749910 (x03-act-bram)/tree/shots/act_bram/bram_14_act-02-fight-start.png
+bram_04.jpg <- render.yml 36252749910 (x03-act-bram)/tree/shots/act_bram/bram_16_act-04-fight-end.png
+doss_01.jpg <- distinct-actions/doss_02.jpg
+doss_02.jpg <- distinct-actions/doss_03.jpg
+doss_03.jpg <- render.yml 36268625871 (tb-act-doss)/tree/shots/act_doss/doss_07_act-05-dialogue-01.png
+doss_04.jpg <- render.yml 36268625871 (tb-act-doss)/tree/shots/act_doss/doss_08_act-05-dialogue-02.png

@@ -1,0 +1,9 @@
+juno_01_lure-first-seen.jpg <- local render (tests/capture_activity_lures.gd --act --activity=juno, S07-exit-band4, head 8ab9678f data)/act_juno2/juno_07_lure-first-seen.png
+juno_02_lure-first-readable.jpg <- local render (tests/capture_activity_lures.gd --act --activity=juno, S07-exit-band4, head 8ab9678f data)/act_juno2/juno_09_lure-first-readable.png
+juno_03_approach-30m.jpg <- local render (tests/capture_activity_lures.gd --act --activity=juno, S07-exit-band4, head 8ab9678f data)/act_juno2/juno_10_approach-30m.png
+juno_04_prompt-offered.jpg <- local render (tests/capture_activity_lures.gd --act --activity=juno, S07-exit-band4, head 8ab9678f data)/act_juno2/juno_11_prompt-offered.png
+doss_01_cue-160m_road.jpg <- /home/user/Tetherbound/ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/r5-cue-doss_160m_road.jpg
+doss_02_cue-110m_road.jpg <- /home/user/Tetherbound/ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/r5-cue-doss_110m_road.jpg
+doss_03_cue-070m_road.jpg <- /home/user/Tetherbound/ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/r5-cue-doss_070m_road.jpg
+doss_04_approach-30m.jpg <- /home/user/Tetherbound/ralph/reports/MEADOWS-PAYOFFS/six-activities/distinct-actions/doss-repair/doss_04_approach-30m.jpg
+doss_05_prompt-offered.jpg <- /home/user/Tetherbound/ralph/reports/MEADOWS-PAYOFFS/six-activities/distinct-actions/doss-repair/doss_05_prompt-offered.jpg
