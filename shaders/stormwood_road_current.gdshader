@@ -46,7 +46,8 @@ uniform float fade_length = 25.0;
 // warning and compete with it): up to four active warnings (world x, z,
 // radius, strength), set by stormwood_lightning.gd; inside one the cracks dim.
 uniform vec4 warn_zones[4];
-uniform float warn_dim = 0.85;
+uniform float warn_dim = 1.0;
+uniform float warn_margin = 2.5;
 varying vec2 world_xz;
 
 float hash11(float p) {
@@ -124,7 +125,7 @@ void fragment() {
 	float warned = 0.0;
 	for (int w = 0; w < 4; w++) {
 		vec4 zone = warn_zones[w];
-		float inside_zone = 1.0 - smoothstep(zone.z - 0.3, zone.z + 0.6, length(world_xz - zone.xy));
+		float inside_zone = 1.0 - smoothstep(zone.z + warn_margin - 0.5, zone.z + warn_margin + 1.0, length(world_xz - zone.xy));
 		warned = max(warned, zone.w * inside_zone);
 	}
 	distance_fade_all *= 1.0 - warn_dim * warned;
