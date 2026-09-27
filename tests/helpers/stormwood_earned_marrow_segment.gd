@@ -9,7 +9,7 @@ const CAPTAIN := "captain_marrow_dynamo_core"
 ## overload phase at 300 s (round 1 alone ~65 s), before any conduit window.
 const ATTEMPT_MS := 900000
 ## Break windows the witness accepts. BOSSES §3: a timed-out Break retries with
-## a fresh 30 s window in play, but acceptance is the live controller finishing
+## a fresh window in play, but acceptance is the live controller finishing
 ## within one; a timeout fails here, naming how far it got.
 const MAX_BREAK_WINDOWS := 1
 var _attempt_started_ms := 0
@@ -283,7 +283,7 @@ func _attempt_marrow(dynamo: Node) -> void:
 						_fighter_snapshot(_director.call("ally_instance"))])
 			if break_windows == 0:
 				break_windows = 1
-			# The rules cleared a partial set: that 30 s window timed out and a
+			# The rules cleared a partial set: that window timed out and a
 			# fresh one began (the Break retries; the captain win stands).
 			var window_now := float(rules.window_left())
 			if window_now > window_left_before + 1.0:

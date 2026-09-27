@@ -83,22 +83,24 @@ func test_only_a_piloted_creature_within_reach_can_strike_each_conduit_once() ->
 	assert_false(rules.strike_conduit(4, Vector2.ZERO, true), "an invalid fifth conduit cannot alter a released core")
 
 
-func test_the_shared_30s_conduit_window_spans_banks_and_retries_break_only() -> void:
+func test_the_shared_conduit_window_spans_banks_and_retries_break_only() -> void:
 	var rules := _rules()
+	var window: float = rules.break_window_seconds()
+	assert_almost_eq(window, 36.0, 0.001, "the approved 36 s window (BOSSES §3; ~140 m lap on the built deck)")
 	rules.update_team(0, 5)
-	assert_almost_eq(rules.window_left(), 30.0, 0.001, "Break opens a fresh 30 s conduit window (BOSSES §4.7)")
+	assert_almost_eq(rules.window_left(), window, 0.001, "Break opens a fresh conduit window (BOSSES §4.7)")
 	assert_true(rules.strike_conduit(0, rules.bank_position(0), true))
 	assert_true(rules.strike_conduit(1, rules.bank_position(1), true))
 	var full_cycle := _period(rules, "break_core") * 4.0
 	rules.advance(full_cycle + 1.0)
 	assert_eq(rules.conduits, [0, 1], "a whole four-bank cycle inside the window keeps progress: the window spans bank serials")
 	assert_eq(int(rules.bank_state().struck), 2, "the state reports 2/4 for the readout")
-	rules.advance(30.0 - full_cycle - 1.0 - 0.1)
+	rules.advance(window - full_cycle - 1.0 - 0.1)
 	assert_eq(rules.conduits, [0, 1], "just before expiry the partial set stands")
 	rules.advance(0.2)
 	assert_eq(rules.conduits, [], "expiry with fewer than four clears only the partial set")
 	assert_eq(rules.phase, "break_core", "timeout retries Break; the captain win and approach stay")
-	assert_almost_eq(rules.window_left(), 30.0, 0.001, "and a fresh 30 s window begins")
+	assert_almost_eq(rules.window_left(), window, 0.001, "and a fresh window begins")
 	for bank in 4:
 		assert_true(rules.strike_conduit(bank, rules.bank_position(bank), true))
 	assert_eq(rules.phase, "released", "four distinct conduits inside one window release the captive")
