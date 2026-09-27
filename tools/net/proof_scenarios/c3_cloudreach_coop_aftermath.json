@@ -256,11 +256,45 @@
     },
     {
       "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          1110.0,
+          1052.0,
+          2940.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      },
+      "label": "standing on the shrine pad before the carrier setup"
+    },
+    {
+      "peer": 0,
       "action": "fly_setup",
       "args": {
         "species": "galecrest"
       },
       "label": "SETUP (disclosed): an owned galecrest carrier as the fifth (the loaner ends at chapter completion; galecrest is catchable in Meadows band 1)"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          1110.0,
+          2940.0
+        ],
+        "within": 25.0
+      },
+      "label": "the launch search kept the trainer on the shrine pad"
     },
     {
       "peer": 0,
@@ -280,11 +314,45 @@
     },
     {
       "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          1106.0,
+          1052.0,
+          2944.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "on_floor"
+      },
+      "label": "standing on the shrine pad before the carrier setup"
+    },
+    {
+      "peer": 1,
       "action": "fly_setup",
       "args": {
         "species": "galecrest"
       },
       "label": "SETUP (disclosed): an owned galecrest carrier as the fifth (the loaner ends at chapter completion; galecrest is catchable in Meadows band 1)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          1106.0,
+          2944.0
+        ],
+        "within": 25.0
+      },
+      "label": "the launch search kept the trainer on the shrine pad"
     },
     {
       "peer": 1,
@@ -319,33 +387,6 @@
     },
     {
       "peer": 0,
-      "action": "teleport",
-      "args": {
-        "at": [
-          1110.0,
-          1052.0,
-          2940.0
-        ],
-        "settle": 120
-      },
-      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
-    },
-    {
-      "peer": 0,
-      "probe": "input_context",
-      "label": "diagnostic: what owns input before the launch"
-    },
-    {
-      "peer": 0,
-      "action": "wait_context",
-      "args": {
-        "equals": "world",
-        "budget_frames": 600
-      },
-      "label": "ordinary world control before launching"
-    },
-    {
-      "peer": 0,
       "action": "fly_launch",
       "label": "host launches Fly by double jump (production input)"
     },
@@ -360,33 +401,6 @@
       "args": {
         "check": "on_floor"
       }
-    },
-    {
-      "peer": 1,
-      "action": "teleport",
-      "args": {
-        "at": [
-          1106.0,
-          1052.0,
-          2944.0
-        ],
-        "settle": 120
-      },
-      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
-    },
-    {
-      "peer": 1,
-      "probe": "input_context",
-      "label": "diagnostic: what owns input before the launch"
-    },
-    {
-      "peer": 1,
-      "action": "wait_context",
-      "args": {
-        "equals": "world",
-        "budget_frames": 600
-      },
-      "label": "ordinary world control before launching"
     },
     {
       "peer": 1,
