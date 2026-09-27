@@ -492,10 +492,11 @@
       "display_name": "Officer Kestrel",
       "region_id": "dynamo",
       "position": [
-        -100,
-        110.49,
+        -113,
+        111.17,
         5390
       ],
+      "_why_moved_f11_approach": "Stood on the terrain 2.7 m under the Outer Works approach slab (x -105..-95, from the rod station at z 5350 to the deck edge at z 5426), which rises faster than the ground. The player fought Kestrel beneath it, then wedged under its lowering edge walking back to the ramp foot (Stormwood relay DRY RUN 44adfbe4). Moved 13 m west onto open terrain, 13 m off the deepwood_road route.",
       "route_class": "critical",
       "critical_order": 13,
       "humanoid_key": "officer_b",

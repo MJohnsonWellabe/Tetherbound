@@ -10,6 +10,10 @@ const ASCENT_FRAMES := 6000
 const ASCENT_SCALE := 4.0
 const ASCENT_HZ := 60
 const CORE_TOLERANCE := 3.5
+## West of the approach slab (x -105..-95), round its foot from the south,
+## then onto the foot at the rod station.
+const APPROACH_FOOT_ROUTE: Array[Vector2] = [
+	Vector2(-112, 5390), Vector2(-112, 5345), Vector2(-100, 5345), Vector2(-100, 5350)]
 const TRAINERS := ["officer_nysa_deepwood_rod", "outerworks_lieutenant_sera",
 	"officer_kestrel_outer_works"]
 var _outcomes: Dictionary = {}
@@ -316,8 +320,13 @@ func _climb_core() -> bool:
 	var trunk := _world.get_node_or_null("StormheartTree") as Node3D
 	if trunk == null:
 		return _fail("actual Stormheart ascent absent")
-	if not await _walk_xz(Vector2(-100, 5350), "Stormheart approach foot"):
-		return false
+	# The Outer Works approach slab floats up to 3 m over the terrain between
+	# its foot and the deck edge, so a body walking the ground under it wedges
+	# beneath its lowering edge (relay DRY RUN 44adfbe4 at z 5374.6). Keep
+	# west of it and mount it at its foot from the south, as a player would.
+	for point: Vector2 in APPROACH_FOOT_ROUTE:
+		if not await _walk_xz(point, "Stormheart approach foot"):
+			return false
 	var scale_before := Engine.time_scale
 	var hz_before := Engine.physics_ticks_per_second
 	await _tree.process_frame
