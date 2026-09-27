@@ -1,0 +1,17 @@
+{
+  "asset": "Veilfall interior waterfall wall",
+  "authoring": "Original project-authored procedural mesh and Compatibility shaders by Codex; no purchased or generated third-party asset",
+  "reference": "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
+  "reference_panels_inspected": [
+    "Interior View - The Heart Chamber",
+    "Waterfall Wall"
+  ],
+  "reference_use": "Layered luminous blue falling strands, curved crest, separated flowing sheets and low pale plunge spray; reference pixels are not shipped",
+  "source": "generate_waterfall.py regenerates seven OBJ meshes and geometry_audit.json with standard Python",
+  "integration": "Instance interior_waterfall.tscn at configured fall centre (0,6,122.9); front is -Z. Keep current room/world/collision and practical access unchanged. Main span remains 16m wide and 12m tall. Basin extends 4.48m forward, behind crystal.",
+  "construction": "Revision 3: five main falling sheet groups and three narrow layered secondary flows. Source-and-basin stone mesh has original chamfered slate blocks: overhead feeder lintel, exposed dark feed slots, lower protruding lip, low front basin rim and side returns. Water begins at local Y=4.65 below fixed ceiling, curls 1.35m forward, and lands on a rippled receiving surface at Y=-5.36. Five plunge fans and boil fields, 35 splash arcs, ten larger low mist lobes. No collider or added light.",
+  "revision_reason": "Independent r2 judge found hanging sheets with no readable source or receiving system. R3 changes approach by adding actual feeder/basin architecture inside the asset, lowering the visible rolled edge below the ceiling, distinguishing broad flow from fine streaks, and separating mist above dark receiving water. No room/world, crystal, banner or lighting edits.",
+  "revision_authoring": "Original Codex-authored stone mesh, water meshes and procedural shaders, 2026-09-27; inspected Veilfall board used for water/stone relationship only. No board pixels, acquired pack, Meshy task, third-party vertices or purchase. No new third-party licence applies.",
+  "animation": "GPU TIME drives downward streak advection, restrained ribbon flex, impact turbulence and low mist drift. No CPU process or particle simulation.",
+  "verification_scope": "geometry_audit.json verifies triangle area, unit normals and bounds. Native import, motion capture, integration and code-blind visual judgment are separate required checks."
+}

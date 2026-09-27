@@ -1,0 +1,89 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/fall_ribbons.obj" id="1"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/fall_threads.obj" id="2"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/plunge_crowns.obj" id="3"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/splash_arcs.obj" id="4"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/plunge_mist.obj" id="5"]
+[ext_resource type="Shader" path="res://assets/environment/tidewake/interior_waterfall/falling_water.gdshader" id="6"]
+[ext_resource type="Shader" path="res://assets/environment/tidewake/interior_waterfall/plunge_foam.gdshader" id="7"]
+[ext_resource type="Shader" path="res://assets/environment/tidewake/interior_waterfall/plunge_mist.gdshader" id="8"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/source_and_basin_stone.obj" id="9"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/tidewake/interior_waterfall/receiving_water.obj" id="10"]
+[ext_resource type="Shader" path="res://assets/environment/tidewake/interior_waterfall/wet_stone.gdshader" id="11"]
+[ext_resource type="Shader" path="res://assets/environment/tidewake/interior_waterfall/receiving_water.gdshader" id="12"]
+
+[sub_resource type="ShaderMaterial" id="Water"]
+shader = ExtResource("6")
+
+[sub_resource type="ShaderMaterial" id="Threads"]
+shader = ExtResource("6")
+shader_parameter/deep_colour = Color(0.38, 0.62, 0.72, 1)
+shader_parameter/foam_colour = Color(0.76, 0.88, 0.91, 1)
+shader_parameter/opacity = 0.84
+shader_parameter/flow_speed = 6.2
+shader_parameter/foam_bias = 0.16
+shader_parameter/motion = 0.047
+
+[sub_resource type="ShaderMaterial" id="Crown"]
+shader = ExtResource("7")
+
+[sub_resource type="ShaderMaterial" id="Spray"]
+shader = ExtResource("7")
+shader_parameter/foam_colour = Color(0.73, 0.87, 0.90, 1)
+shader_parameter/opacity = 0.69
+shader_parameter/motion = 0.025
+
+[sub_resource type="ShaderMaterial" id="Mist"]
+shader = ExtResource("8")
+
+[sub_resource type="ShaderMaterial" id="WetStone"]
+shader = ExtResource("11")
+
+[sub_resource type="ShaderMaterial" id="ReceivingWater"]
+shader = ExtResource("12")
+
+[node name="VeilfallInteriorWaterfall" type="Node3D"]
+metadata/nominal_size_m = Vector2(16, 12)
+metadata/front_axis = "-Z"
+metadata/origin = "Centre; preserve configured chamber fall centre (0,6,122.9). Shallow receiving basin remains above local Y=-6; no collision."
+
+[node name="RolledCrestAndLayeredSheets" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("1")
+material_override = SubResource("Water")
+extra_cull_margin = 0.1
+
+[node name="DetachedForegroundThreads" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("2")
+material_override = SubResource("Threads")
+extra_cull_margin = 0.1
+
+[node name="BrokenPlungeCrowns" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("3")
+material_override = SubResource("Crown")
+extra_cull_margin = 0.1
+
+[node name="ImpactSplashArcs" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("4")
+material_override = SubResource("Spray")
+extra_cull_margin = 0.1
+
+[node name="LowDriftingPlungeMist" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("5")
+material_override = SubResource("Mist")
+extra_cull_margin = 0.15
+
+[node name="WetStoneFeederAndReceivingBasin" type="MeshInstance3D" parent="."]
+mesh = ExtResource("9")
+material_override = SubResource("WetStone")
+
+[node name="ReceivingWaterSurface" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("10")
+material_override = SubResource("ReceivingWater")
+extra_cull_margin = 0.05
