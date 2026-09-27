@@ -211,3 +211,69 @@ func test_a_guest_collects_their_own_tm_once_after_the_host_world_earns_it() -> 
 func test_the_thanks_heard_preference_is_player_scoped() -> void:
 	assert_eq(PROGRESSION.scope_of(ROOK.RECEIVED_FLAG), "player",
 		"Each character's greeting preference is their own, never the world's")
+
+
+## F10#0 lure (strict re-score): the journal sent players to Lantern Hollow
+## while Rook stands at the Fallen Giant. The step-1 label must name the
+## landmark Rook actually stands at, and Rook's progress line must name every
+## circuit post that stands at a named landmark.
+func _landmarks() -> Array:
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+	return world.get("landmarks", [])
+
+
+func _nearest_landmark(at: Array, within: float) -> String:
+	var best := ""
+	var best_d := within
+	for row: Dictionary in _landmarks():
+		var p: Array = row.get("position", row.get("at", []))
+		if p.size() < 2:
+			continue
+		var d := Vector2(float(p[0]) - float(at[0]), float(p[-1]) - float(at[-1])).length()
+		if d <= best_d:
+			best_d = d
+			best = str(row.get("name", row.get("display_name", "")))
+	return best
+
+
+func test_the_circuit_lure_names_where_rook_and_his_posts_stand() -> void:
+	var rook_at: Array = []
+	var npcs: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_npcs.json"))
+	for actor: Dictionary in npcs.get("characters", []):
+		if str(actor.get("id", "")) == ROOK.ROOK:
+			rook_at = actor.get("position", [])
+	assert_eq(rook_at.size(), 3, "Rook is placed")
+	var rook_place := _nearest_landmark(rook_at, 50.0)
+	assert_false(rook_place.is_empty(), "Rook stands at a named landmark")
+	var chapter: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_chapter.json"))
+	var label := ""
+	for chain: Dictionary in chapter.get("side_chains", []):
+		if str(chain.get("id", "")) == CHAIN:
+			label = str((chain.get("steps", []) as Array)[0].get("label", ""))
+	assert_true(label.to_lower().contains(rook_place.to_lower().trim_prefix("the ")),
+		"step 1 sends the player to %s, where Rook stands (label: %s)" % [rook_place, label])
+	var dialogue: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/dialogue/stormwood.json"))
+	var progress := " ".join(dialogue.get("conversations", {}).get("stormwood_rook_circuit_progress", {}).get("lines", [])).to_lower()
+	var trainers: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_trainers.json"))
+	var named := 0
+	for row: Dictionary in _circuit_trainers(trainers):
+		var place := _nearest_landmark(row.get("position", []), 100.0)
+		if place.is_empty():
+			continue
+		named += 1
+		assert_true(progress.contains(place.to_lower().trim_prefix("the ")),
+			"Rook's progress line names the %s post at %s" % [str(row.get("id")), place])
+	assert_true(named >= 4, "the circuit posts at named landmarks are checked (%d)" % named)
+
+
+func _circuit_trainers(node: Variant) -> Array:
+	var out: Array = []
+	if node is Dictionary:
+		if str((node as Dictionary).get("group", "")) == "deepwood_circuit":
+			out.append(node)
+		for value: Variant in (node as Dictionary).values():
+			out.append_array(_circuit_trainers(value))
+	elif node is Array:
+		for value: Variant in node:
+			out.append_array(_circuit_trainers(value))
+	return out
