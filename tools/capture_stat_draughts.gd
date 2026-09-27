@@ -60,8 +60,8 @@ func _run_roster() -> void:
 
 func _build_rows(_spec: Dictionary) -> Array:
 	return [
-		{"id": "stoneguard_brew", "label": "Authored Stoneguard Brew", "stands": [Vector3(-345, NAN, 2580)], "target": Vector3(-345, NAN, 2585), "target_ground": 0.32, "times": ["day", "night"]},
-		{"id": "attack_tonic", "label": "Authored Attack Tonic", "stands": [Vector3(200, NAN, 3683)], "target": Vector3(200, NAN, 3688), "target_ground": 0.32, "times": ["day", "night"]},
-		{"id": "swift_tonic", "label": "Authored Swift Tonic", "stands": [Vector3(155, NAN, 5600)], "target": Vector3(155, NAN, 5605), "target_ground": 0.32, "times": ["day", "night"]},
-		{"id": "elixir_might", "label": "Authored Might cache", "stands": [Vector3(-165, NAN, 7060)], "target": Vector3(-165, NAN, 7065), "target_ground": 0.32, "times": ["day", "night"]}
+		{"id": "stoneguard_brew", "label": "Authored Stoneguard Brew", "stands": [Vector3(-347, NAN, 2584)], "target": Vector3(-347, NAN, 2610), "target_ground": 1.8, "times": ["day", "night"]},
+		{"id": "attack_tonic", "label": "Authored Attack Tonic", "stands": [Vector3(198, NAN, 3687)], "target": Vector3(198, NAN, 3713), "target_ground": 1.8, "times": ["day", "night"]},
+		{"id": "swift_tonic", "label": "Authored Swift Tonic", "stands": [Vector3(153, NAN, 5604)], "target": Vector3(153, NAN, 5630), "target_ground": 1.8, "times": ["day", "night"]},
+		{"id": "elixir_might", "label": "Authored Might cache", "stands": [Vector3(-167, NAN, 7064)], "target": Vector3(-167, NAN, 7090), "target_ground": 1.8, "times": ["day", "night"]}
 	]

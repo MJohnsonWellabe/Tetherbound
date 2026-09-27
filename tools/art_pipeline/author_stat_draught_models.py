@@ -50,6 +50,11 @@ def mesh(name, verts, faces, material, bevel=0):
     data=bpy.data.meshes.new(name)
     data.from_pydata(verts,[],faces)
     data.update()
+    # Constant UV0 is sufficient for the one-pixel ORM material and makes
+    # every texture reference valid even outside Godot's default-UV fallback.
+    uv=data.uv_layers.new(name='UVMap')
+    for loop in uv.data:
+        loop.uv=(.5,.5)
     obj=bpy.data.objects.new(name,data)
     bpy.context.collection.objects.link(obj)
     obj.data.materials.append(material)
@@ -150,9 +155,19 @@ def bottle(item,stat,permanent,colour,out):
     for obj in front:
         back=obj.copy();back.data=obj.data.copy();back.name=obj.name+' reverse'
         bpy.context.collection.objects.link(back);back.rotation_euler.z=math.pi
+    # Consolidate the evaluated parts into one mesh with shared material
+    # surfaces, so trim pieces do not each cost a separate draw call.
+    for obj in list(bpy.context.scene.objects):
+        bpy.context.view_layer.objects.active=obj
+        for modifier in list(obj.modifiers):
+            bpy.ops.object.modifier_apply(modifier=modifier.name)
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.context.view_layer.objects.active=bpy.context.scene.objects[0]
+    bpy.ops.object.join()
+    bpy.context.object.name=item
     # Export evaluated geometry only; all materials are opaque PBR, no lights.
     bpy.ops.object.select_all(action='SELECT')
-    bpy.ops.export_scene.gltf(filepath=str(out/f'{item}.glb'),export_format='GLB',use_selection=True,export_apply=True,export_yup=True,export_texcoords=False,export_normals=True,export_materials='EXPORT',export_cameras=False,export_lights=False)
+    bpy.ops.export_scene.gltf(filepath=str(out/f'{item}.glb'),export_format='GLB',use_selection=True,export_apply=True,export_yup=True,export_texcoords=True,export_normals=True,export_materials='EXPORT',export_cameras=False,export_lights=False)
     print('DRAUGHT',item,'objects',len(bpy.context.scene.objects))
 
 if __name__=='__main__':
