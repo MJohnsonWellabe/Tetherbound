@@ -203,7 +203,19 @@ func _run() -> void:
 		legs.append(warrens.call("marker", "entrance"))
 		for leg: String in ["mouth", "hall", "den", "vault"]:
 			legs.append(warrens.call("marker", leg))
-	_plan_route(_xz(), _xz3(legs[0]) if not legs.is_empty() else lure_xz)
+	# A save taken inside the Hall (an earned checkpoint before the Warden)
+	# starts in walled chambers the road graph does not know: walk out the way
+	# the player came in, chamber by chamber to the ramp foot, then take roads.
+	var exits := _stronghold_exit_path()
+	_plan_route(_xz3(exits.back()) if not exits.is_empty() else _xz(),
+		_xz3(legs[0]) if not legs.is_empty() else lure_xz)
+	if not exits.is_empty():
+		var prefixed := PackedVector3Array()
+		for e: Vector3 in exits:
+			prefixed.append(Vector3(e.x, 0.0, e.z))
+		prefixed.append_array(_path)
+		_path = prefixed
+		_receipt["stronghold_exit_waypoints"] = exits.size()
 	for i in range(1, legs.size()):
 		var m: Vector3 = legs[i]
 		_path.append(Vector3(m.x, 0.0, m.z))
@@ -356,6 +368,37 @@ func _hud_panel_at(point: Vector2) -> String:
 		if panel.get_global_rect().has_point(point):
 			return str(panel.name)
 	return ""
+
+
+## Stronghold chambers from the deepest to the door, then the ramp foot. Empty
+## unless the player starts within a chamber's reach; otherwise the walk
+## starts from the nearest chamber and heads outward.
+const STRONGHOLD_OUTWARD := ["legendary_chamber", "warden_arena", "tether_approach",
+	"courtyard", "outer_works", "entrance", "ramp_foot"]
+const STRONGHOLD_INSIDE_M := 22.0
+
+func _stronghold_exit_path() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var hold := _world.get_node_or_null(^"Stronghold")
+	if hold == null or not hold.has_method("marker"):
+		return out
+	var here := _xz()
+	var nearest := -1
+	var nearest_d := INF
+	for i in STRONGHOLD_OUTWARD.size() - 2:
+		if not bool(hold.call("has_marker", STRONGHOLD_OUTWARD[i])):
+			continue
+		var m: Vector3 = hold.call("marker", STRONGHOLD_OUTWARD[i])
+		var d := here.distance_to(_xz3(m))
+		if d < nearest_d:
+			nearest_d = d
+			nearest = i
+	if nearest < 0 or nearest_d > STRONGHOLD_INSIDE_M:
+		return out
+	for i in range(nearest, STRONGHOLD_OUTWARD.size()):
+		if bool(hold.call("has_marker", STRONGHOLD_OUTWARD[i])):
+			out.append(hold.call("marker", STRONGHOLD_OUTWARD[i]))
+	return out
 
 
 ## --- route graph --------------------------------------------------------------
