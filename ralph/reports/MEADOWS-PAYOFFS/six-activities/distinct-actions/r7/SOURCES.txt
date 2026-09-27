@@ -1,0 +1,5 @@
+doss_01 <- doss_06_act-00-perch-before.png
+doss_02 <- doss_03.jpg
+doss_03 <- doss_08_act-05-dialogue-01.png
+doss_04 <- doss_15_act-98-perch-after.png
+(Perch timber rails, broken_roll_deg 24, NO MI_WoodTrim retint: the data on the branch after the art-to-Codex revert. doss_02 is round 1's request frame.)

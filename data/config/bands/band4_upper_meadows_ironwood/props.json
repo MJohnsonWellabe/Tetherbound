@@ -830,6 +830,23 @@
           "_why": "One radial firewood piece closes the foreground of the compact camp without adding another seat or collider to the gate lane."
         }
       ]
+    },
+    {
+      "order": 4007,
+      "name": "tether_patrol_holding_camp",
+      "_why": "F03#0 lure, round-6 code-blind judge: the Tether Patrol holding Juno's Meadowhart (trainers.json lost_creature_rue at [-175,5470], moved to the road's edge by #257 Option A) stood on bare grass, so at the save's night hour it read as dark silhouettes and a stray deer ('no oxblood, tent or camp structure at any distance'). This gives the patrol the camp language the band's other Tether postings already use (ridge_road_picket, severed_conduit_post): the installed Banner_1 standard in the Tether oxblood retint, a small bonfire in the generated stone ring, crate, barrel and the band-4 camp tent. It sits 16-20 m behind the patrol, on the side away from the road: a player challenging from the road puts the 11 m fight ring's centre about 2.5 m past the patrol (combat_manager.gd staging), and every camp collider stays outside that ring, as does the Meadowhart's waiting post south of the patrol. The fire's warm glow is the night read and the two standards are the day read; oxblood is Team Tether's reserved colour. No interaction, reward or trainer change; the new colliders are clear of the fight ring, the waiting post and the post-to-Juno escort line.",
+      "props": [
+        {"name": "TetherHoldingStandardEast", "model": "Banner_1", "dir": "res://assets/props/quaternius_fantasy", "at": [-167.5, 5484.0], "yaw_deg": 160.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"name": "TetherHoldingStandardWest", "model": "Banner_1", "dir": "res://assets/props/quaternius_fantasy", "at": [-182.5, 5484.5], "yaw_deg": 160.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"name": "TetherRoadStandardEast", "model": "Banner_1", "dir": "res://assets/props/quaternius_fantasy", "at": [-159.0, 5451.0], "yaw_deg": 200.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}, "_why": "Round-7 judge: the camp's first two standards sit behind the crest from the road. This second pair (the accepted OWNER-0912 standard treatment, scale 1.55) stands on the road-facing slope, about 25 m from the patrol (outside the fight ring; the west one 9 m off the straight escort line from the Meadowhart's post to Juno, after an independent review found it 0.6 m from that line), so red shows on the skyline from the road."},
+        {"name": "TetherRoadStandardWest", "model": "Banner_1", "dir": "res://assets/props/quaternius_fantasy", "at": [-196.0, 5456.0], "yaw_deg": 160.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"model": "campfire_stone_ring", "dir": "res://assets/props/generated_camp", "at": [-172.0, 5485.5], "yaw_deg": 10.0, "sink_m": 0.03, "scale": 0.6},
+        {"name": "TetherHoldingFire", "model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "at": [-172.0, 5485.5], "yaw_deg": 25.0, "sink_m": 0.02, "scale": 0.45, "glow": "campfire", "glow_scale": 2.0},
+        {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-177.0, 5488.5], "yaw_deg": 160.0, "sink_m": -0.64, "scale": 0.85},
+        {"model": "Crate_Wooden", "at": [-180.5, 5487.0], "yaw_deg": 20.0, "sink_m": 0.06, "scale": 1.0},
+        {"model": "Barrel", "at": [-179.5, 5488.8], "yaw_deg": -30.0, "sink_m": 0.05, "scale": 1.0},
+        {"model": "Rope_1", "at": [-181.3, 5488.2], "yaw_deg": 70.0, "sink_m": 0.03, "scale": 1.0}
+      ]
     }
   ]
 }
