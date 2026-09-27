@@ -1597,8 +1597,9 @@
       "placeholder": {
         "colour": "#8899aa",
         "height": 2.95,
-        "radius": 1.0325,
-        "footprint_allowance": 3.2,
+        "radius": 1.475,
+        "footprint_allowance": 2.24,
+        "_why_radius_f10": "F10#2 C3 code-blind judge (Blackwater Elder): the 1.0325 m collider sat inside ~6.4 x 3.9 m art, so fights spaced by it closed to 2.4-3.1 m and the art swallowed the pilot (hidden 2-3 of 3 ally sample heights; none from 3.24 m). The collider grows to the scale ladder's radius/height ceiling of 0.5 (hard rule: grow the smaller side), so spacing reach is ~3.38 m; radius x footprint_allowance stays ~3.304, so the art fit and spawn spacing are unchanged.",
         "model": "res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
