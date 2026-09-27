@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 17:40 UTC",
+ "updated": "2026-09-27 20:30 UTC",
  "headline": [
-  "Criteria met: 78 of 101. Owner ruling: Solmane is a Veridian-style freed legendary in Cloudreach, so F08#5 reopens and C3 needs a new two-peer run. Main CI hotfix #384 in flight.",
-  "PHASE 2, owner away: full runs for Meadows, Cloudreach, Stormwood and Tidewake, plus Meadows F04 readability, F01 walks and F03 lures; Codex on F10#3 and F08#4. Lanes render locally and hand mechanical work to lower-tier subagents."
+  "Criteria met: 79 of 101 (counted at merge). Batch 63: F15#2 Tidewake return cadence; chapter cards T1 and S3 integrated runs. VERIFIER full suite 5159 tests, 0 failed.",
+  "Owner rules today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary; build the game, not proof machinery (every round player-visible, two-strike harness rule, hourly Balance line). 9 Claude lanes plus Codex."
  ],
  "batches": [
   {
@@ -248,76 +248,72 @@
   {
    "name": "Batch 61",
    "sha": "pending",
-   "state": "Merged; main green",
+   "state": "Merged; main green after hotfixes #382/#384",
    "contents": "Meadows route F02#7 route spacing + A7 on one continuous route; device-profile ruling in STATE"
   },
   {
    "name": "Batch 62",
    "sha": "pending",
-   "state": "Auto-merge",
+   "state": "Merged; main green after hotfixes #382/#384",
    "contents": "Cloudreach-B card C3 two-peer co-op/aftermath run; summit wild legendary removed"
+  },
+  {
+   "name": "Batch 63",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Tidewake F15#2 + card T1 run; Stormwood card S3 two-peer run (F03#0 reverted out after Bars A/B fail)"
   }
  ],
  "lanes": [
   {
-   "lane": "Meadows core (F01/F04) #314",
-   "now": "F01#0 overheads + judge; herd fix landing",
-   "next": "F01#2/#3 walks; F04#7 framing"
+   "lane": "Full Meadows run (M1–M4)",
+   "now": "Attempt 3 past Captain Riverwatch; checkpointing; Warden aftermath render attempt 3",
+   "next": "READY M2 at end of route; F04#6 aftermath frames to judge"
   },
   {
-   "lane": "Meadows route (F02/F05) #286",
-   "now": "Seed-15 Hall run",
-   "next": "READY F02#3/#4; then F02#5 ledger"
+   "lane": "Full Cloudreach run (C1–C3)",
+   "now": "C1 run 8 past upper anchors (run 7 finished the chapter); F08#3 frames 9/12",
+   "next": "READY C1; F08#3 judge; Solmane held on an owner permission in its session"
   },
   {
-   "lane": "Meadows activities (F03) #289",
-   "now": "r6 lure judge; Juno/Doss acts",
-   "next": "F03#0, F03#1"
+   "lane": "Full Stormwood run (S1–S3)",
+   "now": "Whole chapter passes continuously (prefix to Marrow and aftermath)",
+   "next": "Repost S3 READY with full unit suite; resubmit F09#3 with Bars A/B"
   },
   {
-   "lane": "Cloudreach (F06–F08) #311",
-   "now": "Entry fix landing in #316",
-   "next": "lower_west_anchor route fix; F07#2 re-walk"
+   "lane": "Stormwood visuals (new 18:02)",
+   "now": "F10#4 round 1: Bar A no / Bar B no (no giant trunk subject, no sky lightning, rod line hidden)",
+   "next": "Round 2 fixes; CODEX ASSET Stormheart hero tree requested"
   },
   {
-   "lane": "Cloudreach-B #294",
-   "now": "Blocked on lower_west_anchor",
-   "next": "F06#1/#2/#3, F08#0 witnesses"
+   "lane": "Full Tidewake run (T1–T3)",
+   "now": "Interrupted 19:02 for about 25 cloud renders; render.yml access withdrawn",
+   "next": "Status post; clean F15#2 READY; T1 rerun; F13#2/#3"
   },
   {
-   "lane": "Stormwood (F09–F11) #305",
-   "now": "F11#3 rerun on main; F11#2 migration",
-   "next": "F11#0 Marrow smoke → continuous"
+   "lane": "Tidewake fights + visuals (new 18:02)",
+   "now": "Tess and Calder reader captures running locally",
+   "next": "F14#0/#1 and F13#5 judge loops"
   },
   {
-   "lane": "Stormwood-B #303",
-   "now": "F10#0 chains; F10#3 lightning read",
-   "next": "minimap arch glyph"
+   "lane": "Meadows F04 readability",
+   "now": "Fight glades + scatter re-bake (holds bake lock)",
+   "next": "F04#0–3, #7 renders and full-bar judge"
   },
   {
-   "lane": "Tidewake (F12–F15) #296",
-   "now": "F14#0 damage tunable",
-   "next": "terrain_height helper; Otto/Halen move; Aquaryn"
+   "lane": "Meadows F01 walks",
+   "now": "Day/night walks; told to render locally",
+   "next": "Judge; READY F01#2/#3"
   },
   {
-   "lane": "Tidewake-B #310",
-   "now": "4 criteria landing in #316",
-   "next": "F13#3 (after Otto/Halen)"
+   "lane": "Meadows F03 lures",
+   "now": "Doss sightline, Vault seam light, smoke flake fix",
+   "next": "Six-lure full-bar judge; READY F03#0"
   },
   {
-   "lane": "X05 co-op #292",
-   "now": "Camera + invite gaps landing in #316",
-   "next": "F14#3 participants; quit hook"
-  },
-  {
-   "lane": "VIS (judge-only) #304",
-   "now": "Judging Cloudreach/Stormwood/Tidewake",
-   "next": "Feed the Codex queue"
-  },
-  {
-   "lane": "Codex (visual)",
-   "now": "V1 dock lanterns landing in #316",
-   "next": "Next Codex queue row"
+   "lane": "Codex (desktop)",
+   "now": "F08#4 cloud volume candidate still Bars A/B no (white stone merges with cloud); Galecrest neck fixed",
+   "next": "Cliff/stone materials; Stormheart hero tree asset"
   }
  ],
  "decisions": [
@@ -331,11 +327,13 @@
   "Stormwood strikes spare a trainer during a creature fight (interim; owner to confirm).",
   "Terrapup kept at field_emission 0.6 (owner: pick what looks better).",
   "F03 lure cue option (a); Juno escort kept; X03 beacon kept under the presentation hold; Xbox B glyph neutral.",
-  "2026-09-26 owner Q&A: tournament grant is a non-starter; a legacy Stormheart receipt is undecided (re-offered once); cliff palette by blind judge; Tether palette as is; Guardian C2/C3 = Nerissa; Meshy and all art go to Codex; one PR per lane."
+  "2026-09-26 owner Q&A: tournament grant is a non-starter; a legacy Stormheart receipt is undecided (re-offered once); cliff palette by blind judge; Tether palette as is; Guardian C2/C3 = Nerissa; Meshy and all art go to Codex; one PR per lane.",
+  "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
   "CI queue: allow draft PRs to skip CI (ci.yml/process.yml edit was blocked by the auto-mode classifier). Otherwise lane-PR runs starve the runners.",
   "Branch cleanup: after #316 merges, a list of deletable branches will be posted.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
- ]
+ ],
+ "four_chapter_run": null
 }

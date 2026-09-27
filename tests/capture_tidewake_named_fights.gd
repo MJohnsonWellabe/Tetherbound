@@ -195,9 +195,13 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 			if not bool(_tell.start_saved) and _fight_t >= float(_tell.start) + TELL_START_LAG_S:
 				_tell.start_saved = true
 				saved += await _save(dir, "tell-start", _fight_t, enemy, ally, _tell)
-			elif not bool(_tell.late_saved) and _fight_t >= float(_tell.start) + float(_tell.seconds) - 0.1:
+			elif not bool(_tell.late_saved) and (_fight_t >= float(_tell.start) + float(_tell.seconds) - 0.1
+					or not _winding_up(enemy)):
+				# Only a tell still winding up is a "tell-late" frame. A READER
+				# pilot often interrupts the wind-up (STAGGERED) or the blow has
+				# resolved: that frame is kept, honestly tagged "tell-ended".
 				_tell.late_saved = true
-				saved += await _save(dir, "tell-late", _fight_t, enemy, ally, _tell)
+				saved += await _save(dir, "tell-late" if _winding_up(enemy) else "tell-ended", _fight_t, enemy, ally, _tell)
 				_tell = {}
 		if _fight_t >= next_periodic:
 			next_periodic += _interval
@@ -234,6 +238,10 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 ## the last completed render, and under software GL one rendered frame can
 ## span several physics ticks, so a same-tick grab can show a frame from
 ## before the telegraph began (both F14 judges read "no cue at tell start").
+func _winding_up(enemy: Node3D) -> bool:
+	return is_instance_valid(enemy) and enemy.has_method("is_winding_up") and bool(enemy.call("is_winding_up"))
+
+
 func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell: Dictionary) -> int:
 	await RenderingServer.frame_post_draw
 	var name := "%s-%06.2f.png" % [tag, t]

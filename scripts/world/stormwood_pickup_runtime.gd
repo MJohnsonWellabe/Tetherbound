@@ -209,7 +209,10 @@ func _reward_beacon(pickup: Node3D, beacon: Dictionary, pocket: Dictionary) -> v
 		var lane := POCKETS.spur(pocket)
 		var junction := Vector2(float(lane.points[0][0]), float(lane.points[0][1]))
 		var up := (Vector2(float(lane.points[1][0]), float(lane.points[1][1])) - junction).normalized()
-		var at := junction + up * float(gate.along)
+		# Round 7 (judge 14: from the road stand the beam hid behind a gate
+		# trunk): the gate shaft stands gate_forward_m in front of the opening,
+		# on the road side of the trunks and lamps.
+		var at := junction + up * maxf(0.0, float(gate.along) - float(shaft.get("gate_forward_m", 0.0)))
 		var ground := float(world.call("ground_height_at", at.x, at.y)) if world.has_method("ground_height_at") else pickup.global_position.y
 		var gate_shaft := _shaft("GateShaft", material, float(shaft.gate_height_m), float(shaft.gate_width_m),
 			Vector3(at.x, ground, at.y))
@@ -218,7 +221,7 @@ func _reward_beacon(pickup: Node3D, beacon: Dictionary, pocket: Dictionary) -> v
 
 const SHAFT_SHADER := """
 shader_type spatial;
-render_mode unshaded, blend_add, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
+render_mode unshaded, blend_mix, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 uniform vec4 tint : source_color = vec4(1.0);
 uniform float alpha = 0.4;
 void vertex() {
@@ -233,11 +236,16 @@ void vertex() {
 }
 void fragment() {
 	// Soft across (no hard edges), brightest at the foot, fading to nothing
-	// toward the top.
+	// toward the top. Round 7 (judge 14: the additive beam washed out against
+	// the pale storm horizon): alpha-mixed, so the pocket's tint stays
+	// saturated over a light sky as well as over dark trunks, with a
+	// near-white core so it still reads as light.
 	float across = 1.0 - smoothstep(0.0, 0.5, abs(UV.x - 0.5));
 	float up = 1.0 - UV.y;
-	float along = smoothstep(0.0, 0.08, up) * (1.0 - smoothstep(0.25, 1.0, up));
-	ALBEDO = tint.rgb * alpha * across * across * along;
+	float along = smoothstep(0.0, 0.06, up) * (1.0 - smoothstep(0.35, 1.0, up));
+	float core = smoothstep(0.55, 1.0, across);
+	ALBEDO = mix(tint.rgb, vec3(1.0), core * 0.55);
+	ALPHA = clamp(alpha * across * along, 0.0, 1.0);
 }
 """
 

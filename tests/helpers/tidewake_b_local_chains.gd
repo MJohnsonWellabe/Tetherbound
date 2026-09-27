@@ -248,19 +248,34 @@ func _deep_watch() -> String:
 		# With a mount, always ride back: a non-empty baked-ground plan from the
 		# cliff-foot shallows still stalls on foot (ridden DRY RUN: every walk
 		# from (1487, -0.2, 3439) stalled at leg 1).
-		if mount != null or (up.points as Array).is_empty() or (swimming != null and swimming.is_swimming()):
-			if mount != null:
-				_check(await _ride_to_point(_landing("deep_watch"), "Tidecoil return to the Deep Watch landing"),
-					"Deep Watch: rode the owned swimmer from the fight back to the landing")
-			else:
-				_pose(_landing("deep_watch"), "deep_watch arrival landing after the Tidecoil win (stranded below the cliff)")
-				await _frames(60)
+		if mount != null:
+			_check(await _ride_to_point(_landing("deep_watch"), "Tidecoil return to the Deep Watch landing"),
+				"Deep Watch: rode the owned swimmer from the fight back to the landing")
+		elif not await _tidecoil_walk_back(fight, up):
+			_pose(_landing("deep_watch"), "deep_watch arrival landing after the Tidecoil win (stranded below the cliff)")
+			await _frames(60)
 	else:
 		await _tidecoil_fixture()
 	_check(game.world.flags.has(resolved), "Deep Watch: Tidecoil resolution recorded")
 	heard = await _talk("water_orsen")
 	_check(heard[0] == "water_orsen_deep_watch_chart_lead", "Deep Watch: Orsen gives the chart lead (%s)" % heard[0])
 	return await _deep_watch_rest(charted, gated)
+
+
+## No swimmer: stick-walk back from wherever the fight left the trainer, first
+## to the shore stand the fight was engaged from (reached on foot on the way
+## in), then to the Deep Watch landing. Single attempts that never count as a
+## failure; false means the caller falls back to the disclosed landing write.
+func _tidecoil_walk_back(fight: Dictionary, up: Dictionary) -> bool:
+	if swimming != null and swimming.is_swimming():
+		return false
+	var shore: Variant = fight.get(&"shore", fight.get("shore", null))
+	if shore is Vector3 and Vector2(player.global_position.x - shore.x, player.global_position.z - shore.z).length() > 2.0:
+		if not await _walk_attempt(shore, 2.0, "Tidecoil return to the engage stand", "deep_watch", 0, false):
+			return false
+	elif (up.points as Array).is_empty():
+		return false
+	return await _walk_attempt(_landing("deep_watch"), 2.0, "Tidecoil return to the Deep Watch landing", "deep_watch", 0, false)
 
 
 func _tidecoil_fixture() -> void:

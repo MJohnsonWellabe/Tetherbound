@@ -1,0 +1,32 @@
+**frame_01: WEAK** — A wooden post with a blue banner sits at the upper-left, half-obscured by trees, plus a hard-edged solid black wedge overhead (reads as a smoke plume but renders as a flat triangular shape, more like a graphics artifact than an inviting effect). Nothing sits on the player's actual sightline (bare sand dead ahead); the banner would need to be bigger, centered, or lit to register as "go here."
+
+**frame_02: NOTICEABLE** — A blue-and-white creature crouches directly ahead, close and in the player's path, with strong color contrast against the green grass. Clear, immediate point of interest; the banner/smoke in the deep background barely register by comparison, but they don't need to.
+
+**frame_03: WEAK** — The same banner post appears mid-distance on the ridge, now joined by a tiny distant figure top-right; both are small and colored close to the surrounding grey rock/green grass, so they blend in. The pale dirt path bending toward it gives a faint directional cue.
+
+**frame_04: WEAK** — Two banner posts now visible along the ridge and a grey smoke column rising behind one of them, with a mountain silhouette behind. The repetition of banners plus the smoke is a slightly stronger "something's there" signal than frame_03, but everything is small, backgrounded, and tonally close to the hillside — easy to miss while just looking at the vista.
+
+**frame_05: NOTICEABLE** — A small camp cluster reads clearly now: tent, campfire, a workbench/table, and a standing NPC figure, all under the banner post with smoke rising above. Multiple recognizable silhouettes grouped together makes this legible as a destination.
+
+**frame_06: NOTICEABLE** — Framed in a grass corridor between rock walls, the banner/smoke pillar sits at the vanishing point, and two blue creatures are now visible near it. Animals + smoke + structure together is a strong compound lure.
+
+**frame_07: WEAK** — Close on the banner post, but the black smoke column now dominates the upper half of the frame as a heavy, flat, oddly geometric dark wedge — it reads more as visual noise/rendering oddity than as a compelling effect. The small flame glow at its base is a nice touch but is easy to miss under the smoke shape.
+
+**frame_08: WEAK** — Two banners atop a grassy dune with ocean/horizon behind and the same black smoke column overhead. Everything of interest is compressed into the top strip of the frame at small scale against sky — doesn't clearly beat "just more ridge to walk."
+
+**frame_09: NOTICEABLE** — A single banner post with a hanging lantern and a crate beneath it sits centered directly ahead on a raised grassy shelf. Clean, uncluttered, centered composition — reads well as a marker/checkpoint.
+
+**frame_10: NOTICEABLE** — Same post now close and detailed (lantern, banner, crate clearly rendered), still centered on the player's forward line. Strong, unambiguous anchor point.
+
+**frame_11: NOTICEABLE** — A full camp: tent, lantern/banner post, a lit campfire with orange glow, and a standing NPC to the right. Warm campfire light plus a person is the game's clearest "someone is here" signal in the set.
+
+**frame_12: NOTICEABLE** — Player is already in the water swimming toward a blue dragon/serpent-like creature and an odd dark rocky creature on the shoreline, with the camp faintly visible behind on the beach. High color contrast (blue creature on tan sand) and clear creature silhouettes make this an obvious encounter to swim toward.
+
+---
+
+**PLACE 1 (frames 01+02): YES** — weak on arrival, but the creature in frame_02 is an unmistakable draw.
+**PLACE 2 (frames 03+04): WEAK** — banners and smoke are present but small, distant, and tonally blended into the rock/grass backdrop in both frames.
+**PLACE 3 (frames 05+06): YES** — camp objects plus creatures plus smoke read clearly as a destination in both frames.
+**PLACE 4 (frames 07+08): WEAK** — the smoke column reads as visual noise rather than an enticing effect, and the banners are small/background-toned in both frames.
+**PLACE 5 (frames 09+10): YES** — a clean, centered lantern/banner/crate marker in both frames, easy to read as a waypoint.
+**PLACE 6 (frames 11+12): YES** — the strongest pair: a lived-in camp with an NPC and fire, followed by a colorful creature encounter right at the water's edge.

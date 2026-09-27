@@ -1,0 +1,258 @@
+[
+  {
+    "fight_s": 0.0,
+    "file": "res://shots/tidewake/c3_tess/tess/t-000.00.png",
+    "gap_m": 5.0,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 0.65,
+    "file": "res://shots/tidewake/c3_tess/tess/tell-start-000.65.png",
+    "gap_m": 4.86,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 1.25,
+    "file": "res://shots/tidewake/c3_tess/tess/tell-late-001.25.png",
+    "gap_m": 5.43,
+    "opponent": "water_mirejaw",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 2.78,
+    "file": "res://shots/tidewake/c3_tess/tess/tell-start-002.78.png",
+    "gap_m": 6.23,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 3.38,
+    "file": "res://shots/tidewake/c3_tess/tess/tell-late-003.38.png",
+    "gap_m": 6.94,
+    "opponent": "water_mirejaw",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "fight_s": 4.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-004.02.png",
+    "gap_m": 7.0,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 8.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-008.02.png",
+    "gap_m": 7.69,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 12.0,
+    "file": "res://shots/tidewake/c3_tess/tess/t-012.00.png",
+    "gap_m": 6.76,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 16.0,
+    "file": "res://shots/tidewake/c3_tess/tess/t-016.00.png",
+    "gap_m": 6.47,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 20.0,
+    "file": "res://shots/tidewake/c3_tess/tess/t-020.00.png",
+    "gap_m": 7.73,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 24.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-024.02.png",
+    "gap_m": 6.51,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 28.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-028.02.png",
+    "gap_m": 6.43,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 32.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-032.02.png",
+    "gap_m": 6.63,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 36.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-036.02.png",
+    "gap_m": 6.33,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 40.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-040.02.png",
+    "gap_m": 2.68,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 44.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-044.02.png",
+    "gap_m": 4.24,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 48.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-048.02.png",
+    "gap_m": 1.53,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 52.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-052.02.png",
+    "gap_m": 0.32,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 56.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-056.02.png",
+    "gap_m": 1.53,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 60.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-060.02.png",
+    "gap_m": 0.53,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 64.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-064.02.png",
+    "gap_m": 0.82,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 68.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-068.02.png",
+    "gap_m": 0.67,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 72.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-072.02.png",
+    "gap_m": 0.57,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 76.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-076.02.png",
+    "gap_m": 0.37,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 80.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-080.02.png",
+    "gap_m": 2.05,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 84.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-084.02.png",
+    "gap_m": 0.51,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 88.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-088.02.png",
+    "gap_m": 0.9,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 92.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-092.02.png",
+    "gap_m": 0.78,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 96.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-096.02.png",
+    "gap_m": 3.2,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 100.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-100.02.png",
+    "gap_m": 1.45,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 104.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-104.02.png",
+    "gap_m": 0.64,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "fight_s": 108.02,
+    "file": "res://shots/tidewake/c3_tess/tess/t-108.02.png",
+    "gap_m": 0.38,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

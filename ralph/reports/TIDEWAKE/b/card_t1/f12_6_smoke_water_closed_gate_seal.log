@@ -1,0 +1,16 @@
+== f12_6_smoke_water_closed_gate_seal: /root/godot-bin/godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _run (res://tests/smoke_water_closed_gate_seal.gd:52)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+WATER CLOSED GATE SEAL OK assertions=23 closed_first_closest_m=34.50 closed_second_closest_m=116.70 stamina_at_open=0.00 health=77.27 explanation='The tide race on the Salt Crown crossing throws you back. Clear the Tidal Cradle dock first.' spray_emitting=6/27
+== f12_6_smoke_water_closed_gate_seal exit=0
