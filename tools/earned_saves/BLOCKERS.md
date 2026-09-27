@@ -372,7 +372,7 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   `Ordinary quarry/Warrens movement did not reach (184.2, 0.109838, 52.6); player=(72.52981, -5.808105, 71.52964)`
   after 3 `walk_confined_recovery`. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt11/`.
 
-## B13: Kell stands at a stale storm-road end, about 180 m off every road (Meadows data drift, open)
+## B13: Kell stands at a stale storm-road end, about 180 m off every road (Meadows data drift; walked 2026-09-27)
 
 - `village_npcs.json` places Kell at (184.2,52.6). Its comment says this is "at the storm road's
   own end (spokes.routes[1] finishes at [185.5,49.7])". The current `terrain_playground.json`
@@ -382,6 +382,24 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   (the helper's 1800-frame prompt approach) and attempt 11 (the ordinary walker).
 - Not fixed (Meadows data). `tools/earned_saves/kell_probe.gd` (read-only terrain/obstacle map
   from (8,90) to Kell) was written but not run to completion; it was stopped at wrap-up.
+
+- 2026-09-27 run: the ordinary walker (`_walk_ground` then `_talk`) reached Kell and earned
+  `meadows_acknowledged` at (181.9,-0.17,53.1). The data drift is still there, but the chain no
+  longer stops on it.
+
+## B14: quarry foundation pocket on the northbound storm-road walk (detour, walked by stick)
+
+- After Kell, the forward road walk from the quarry point (400,1800) toward (330,1950) sticks at
+  (400.8,-0.5,1800.5). The trainer is between the quarry foundation (about (397,1805), yaw 30) and a
+  pylon at (404,1804). It stayed stuck after 3 `walk_confined_recovery` attempts and 1 sidestep.
+- The southbound return passed this leg by dropping off the ledge at (384,3.15,1836).
+- `area_probe.gd` (x 320–430, z 1770–1960, step 3) shows the blocking mass: x 368–395, z 1794–1821.
+- Detour: `warden_accept.gd` `QUARRY_NORTHBOUND_DETOUR` goes (408.5,1803.5) → (406.5,1809.5) →
+  (401,1818) → (398,1828), then rejoins the road. It is stick-walked and has the receipt
+  `quarry_northbound_detour`.
+- Proposed product fix (Meadows quarry build): keep the storm-road segment (400,1800)→(330,1950)
+  clear of the quarry foundation, or re-author that road point east of the foundation.
+- Resume: segment `kell_rift` from the `village_pre_kell` checkpoint.
 
 ## Where the chain stands (wrap-up 2026-09-26 ~17:50 UTC)
 

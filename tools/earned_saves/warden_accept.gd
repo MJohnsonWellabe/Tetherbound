@@ -522,6 +522,9 @@ func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[V
 		return _fail("The actual rebuilt storm-road approach is missing")
 	var storm_join := nearest_index(points, storm[0])
 	for index in range(storm_join + 1):
+		if index > 0 and points[index - 1].distance_to(QUARRY_POCKET) < 2.0:
+			if not await _quarry_northbound_detour():
+				return false
 		_leg_target = points[index]
 		if not await _walk_road_entry(road[index]):
 			return false
@@ -530,6 +533,28 @@ func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[V
 		if not await _walk_ground(point):
 			return false
 	return await _cross_the_live_rift()
+
+
+## B14: northbound from the quarry road point (400,1800) the straight line
+## to (330,1950) runs into the quarry foundation (about (397,1805), the '#'
+## block at x 368-395, z 1794-1821 in area_probe.gd), and confined recovery
+## leaves the trainer in the pocket between the foundation and the pylon at
+## (404,1804). The southbound return had dropped off a ledge there. Walk round
+## the foundation's east side by ordinary stick input and rejoin the road;
+## disclosed as a helper-routing detour in the receipts.
+const QUARRY_POCKET := Vector2(400.0, 1800.0)
+const QUARRY_NORTHBOUND_DETOUR: Array[Vector2] = [Vector2(408.5, 1803.5), Vector2(406.5, 1809.5),
+	Vector2(401.0, 1818.0), Vector2(398.0, 1828.0)]
+
+
+func _quarry_northbound_detour() -> bool:
+	_receipt("quarry_northbound_detour", {"from": _player.global_position, "waypoints": str(QUARRY_NORTHBOUND_DETOUR),
+		"reason": "B14 quarry foundation pocket; stick-walked round its east side"})
+	for point: Vector2 in QUARRY_NORTHBOUND_DETOUR:
+		_leg_target = point
+		if not await _walk_ground(point, 2.0):
+			return false
+	return true
 
 
 ## Death watch (B12 root cause): every drop in the trainer's health is logged
