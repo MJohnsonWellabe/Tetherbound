@@ -25,6 +25,13 @@ const STANDS := [
 	# lens against the hanging arch banner; both stands keep >= 5 m from every
 	# needle axis. Render r1 (2026-09-26) showed those two defects.
 	{"id": "portal-threshold", "position": Vector2(904.0, 2689.5), "target": Vector3(900.0, 1026.0, 2710.0), "rig": true},
+	# r4 (code-blind judge r1: no sense of height in the court stands): the
+	# landed trainer walks out through the south portal to the crown's rim
+	# (production ground ends ~16 m south of the court centre) and looks out
+	# the way they flew in, so the production rig shows the lip, the drop and
+	# the sky. r2's in-court version put the spring arm between two needles.
+	{"id": "rim-looking-out", "position": Vector2(900.0, 2686.0), "target": Vector3(900.0, 990.0, 2620.0), "rig": true},
+	{"id": "southeast-rim-looking-out", "position": Vector2(913.0, 2687.0), "target": Vector3(950.0, 990.0, 2650.0), "rig": true},
 	{"id": "southwest-court-oblique", "position": Vector2(886.0, 2689.0), "target": Vector2(900.0, 2701.0), "camera_back_m": 10.0, "camera_lateral_m": -3.0, "aim_up_m": 8.0},
 ]
 
@@ -138,7 +145,7 @@ func _pose(stand: Dictionary) -> bool:
 	var right := Vector2(-toward.y, toward.x)
 	var model := _player.get_node_or_null(^"Model") as Node3D
 	if model != null:
-		model.global_rotation.y = atan2(-toward.x, -toward.y)
+		model.global_rotation.y = atan2(toward.x, toward.y)
 	var camera_xz := at - toward * float(stand.get("camera_back_m", 10.0)) \
 		+ right * float(stand.get("camera_lateral_m", 0.0))
 	_camera.global_position = Vector3(camera_xz.x, ground + 3.0, camera_xz.y)
@@ -167,7 +174,9 @@ func _pose_rig(stand: Dictionary) -> bool:
 	var sightline := target - _player.global_position
 	var model := _player.get_node_or_null(^"Model") as Node3D
 	if model != null:
-		model.global_rotation.y = atan2(-sightline.x, -sightline.z)
+		# The production model faces +Z (player_controller.gd::_face uses
+		# atan2(x, z)); the rig's yaw below keeps the camera's -Z convention.
+		model.global_rotation.y = atan2(sightline.x, sightline.z)
 	# F08#3 r3: pivot height and pitch are the rig's own production values
 	# (movement.json camera.height / pitch_start_deg, which Fly dismount keeps:
 	# riding_controller hands the rig back with an empty profile). r2 aimed the
