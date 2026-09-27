@@ -125,6 +125,10 @@ var _surface_nodes: Dictionary = {}
 var _site_members: Dictionary = {}
 var _site_failures: Dictionary = {}
 var _wild_homes: Dictionary = {}
+## Wilds whose site keeps the trainer corridor clear; their exemption follows
+## the trainer onto a mount (`keep_mount_corridor_clear`).
+var _corridor_wilds: Array = []
+var _corridor_mount_id := 0
 
 # Default-off, read-only diagnostics for the active-roaming probe. No clock or
 # counter work is performed by the normal path. The proxy counts actual rays,
@@ -260,6 +264,30 @@ static func keep_trainer_corridor_clear(wild: CollisionObject3D,
 	trainer.add_collision_exception_with(wild)
 
 
+## The same exemption for the creature the trainer is RIDING. Riding is how a
+## player travels these ribbons too, and a ridden mount is its own body: with
+## only the trainer exempt, a roadside pair shouldered the mount off its line
+## (F06 mid-ride proof #66 stalled 3 m short beside
+## `road_visibility_windscar_counterweight_pass_08`). Returns how many wilds
+## were newly exempted.
+static func keep_mount_corridor_clear(wilds: Array, mount: CollisionObject3D) -> int:
+	if mount == null or not is_instance_valid(mount):
+		return 0
+	var added := 0
+	for wild: Variant in wilds:
+		if not is_instance_valid(wild) or not wild is CollisionObject3D or wild == mount:
+			continue
+		var body := wild as CollisionObject3D
+		if body is PhysicsBody3D and (body as PhysicsBody3D).get_collision_exceptions().has(mount):
+			continue
+		if body is PhysicsBody3D:
+			(body as PhysicsBody3D).add_collision_exception_with(mount)
+		if mount is PhysicsBody3D:
+			(mount as PhysicsBody3D).add_collision_exception_with(body)
+		added += 1
+	return added
+
+
 func setup(world: Node, bodies: Dictionary = {}, data: Dictionary = {}) -> void:
 	realm_world = world
 	reused_npcs = bodies
@@ -325,6 +353,7 @@ func _process(delta: float) -> void:
 	super._process(delta)
 	_release_shared_footprint()
 	_spawn_available_sites()
+	_keep_ride_corridor_clear()
 	for id: String in trainer_prompts:
 		var prompt: Node = trainer_prompts[id]
 		prompt.set("enabled", can_challenge(trainer_specs[id]))
@@ -411,6 +440,8 @@ func _spawn_available_sites() -> void:
 						and wild is CollisionObject3D and _player is CollisionObject3D:
 					keep_trainer_corridor_clear(wild as CollisionObject3D,
 						_player as CollisionObject3D)
+					_corridor_wilds.append(wild)
+					_corridor_mount_id = 0
 				members.append(wild)
 				_wild_respawn[wild] = float(encounter_config.get("wild_respawn_seconds", 180.0))
 				if not gate.is_empty():
@@ -825,6 +856,21 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ## places fighters and takes the camera; with nowhere verified to stand the
 ## admission is refused and the rider told why
 ## (`cloudreach_riding_controller.gd::dismount_for_admission`).
+## Re-applied only when the ridden body (or the corridor set) changes.
+func _keep_ride_corridor_clear() -> void:
+	if _corridor_wilds.is_empty():
+		return
+	var riding := get_parent().get_node_or_null(^"RidingController") if get_parent() != null else null
+	var mount: Variant = riding.call("mount_body") if riding != null and riding.has_method("mount_body") else null
+	if mount == null or not is_instance_valid(mount) or not mount is CollisionObject3D:
+		return
+	if (mount as Object).get_instance_id() == _corridor_mount_id:
+		return
+	_corridor_wilds = _corridor_wilds.filter(func(w: Variant) -> bool: return is_instance_valid(w))
+	keep_mount_corridor_clear(_corridor_wilds, mount as CollisionObject3D)
+	_corridor_mount_id = (mount as Object).get_instance_id()
+
+
 func _rider_off_for_admission() -> bool:
 	var riding := get_parent().get_node_or_null(^"RidingController") if get_parent() != null else null
 	if riding == null or not riding.has_method("dismount_for_admission"):

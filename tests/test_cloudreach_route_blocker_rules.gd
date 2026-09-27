@@ -76,3 +76,20 @@ func test_roost_perches_stands_on_high_roost_ground() -> void:
 		assert_false(DIRECTOR.site_keeps_trainer_corridor_clear(site), "off-road, it needs no corridor exemption")
 		return
 	assert_true(false, "roost_perches site exists")
+
+
+func test_the_corridor_exemption_follows_the_trainer_onto_a_mount() -> void:
+	var mount := CharacterBody3D.new()
+	var wild_a := CharacterBody3D.new()
+	var wild_b := CharacterBody3D.new()
+	var freed := CharacterBody3D.new()
+	freed.free()
+	assert_eq(DIRECTOR.keep_mount_corridor_clear([wild_a, wild_b, freed], mount), 2,
+		"both living corridor wilds are exempted from the ridden mount")
+	assert_true(wild_a.get_collision_exceptions().has(mount) and mount.get_collision_exceptions().has(wild_a),
+		"the exemption is mutual, as the trainer's is")
+	assert_true(mount.get_collision_exceptions().has(wild_b))
+	assert_eq(DIRECTOR.keep_mount_corridor_clear([wild_a, wild_b], mount), 0, "re-applying adds nothing")
+	assert_eq(DIRECTOR.keep_mount_corridor_clear([wild_a], null), 0, "no mount, no exemption")
+	for body: Node in [mount, wild_a, wild_b]:
+		body.free()
