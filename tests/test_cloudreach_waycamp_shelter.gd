@@ -98,3 +98,25 @@ func test_the_bed_check_reads_this_peers_resting_companion() -> void:
 	assert_false(bool(runtime.call("party_resting_in_bed", -25)), "a different camp's bed does not count")
 	runtime.free()
 	game.free()
+
+
+func test_the_sheltered_bed_keeps_a_companion_rested_longer() -> void:
+	var cfg: Dictionary = RULES.read(RUNTIME.DATA_PATH)["sheltered_rest"]
+	assert_eq(int(cfg.bed_index), int(_specs()["waycamp_shelter_rest"].requires_resting_bed_index), "Galefoot's own bed")
+	var condition := preload("res://scripts/creatures/creature_condition.gd")
+	var full: float = condition._rested_seconds(condition.config())
+	var flags: RefCounted = FLAGS.new()
+	var member: RefCounted = SPECIES.spawn("sparkit")
+	member.set("rested", true)
+	member.set("rested_seconds_left", full)
+	assert_false(RUNTIME.apply_sheltered_rest_bonus(member, flags, cfg), "no bonus before the shelter is built")
+	flags.set_flag("side_waycamp_shelter_complete")
+	assert_true(RUNTIME.apply_sheltered_rest_bonus(member, flags, cfg), "a completed night pays")
+	assert_almost_eq(float(member.get("rested_seconds_left")), full * float(cfg.rested_multiplier), 0.01)
+	var early: RefCounted = SPECIES.spawn("sparkit")
+	early.set("rested", true)
+	early.set("rested_seconds_left", full * 0.5)
+	assert_false(RUNTIME.apply_sheltered_rest_bonus(early, flags, cfg), "an old or interrupted rest does not pay")
+	var awake: RefCounted = SPECIES.spawn("sparkit")
+	awake.set("rested", false)
+	assert_false(RUNTIME.apply_sheltered_rest_bonus(awake, flags, cfg), "unassigning without sleeping does not pay")

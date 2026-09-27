@@ -147,6 +147,9 @@ var _all_pad_points: Array[Dictionary] = []
 ## current state gates the deck's visibility, collision and ground surfaces.
 var _flag_built_bridges: Array[Dictionary] = []
 var _open_bridge_flags := {}
+## Deck lines of those flag-built bridges (a subset of `_all_route_lines`):
+## ridge spurs and rooted shelves are not grown across them.
+var _latched_deck_lines: Array[Dictionary] = []
 var _all_crown_reference_lines: Array[Dictionary] = []
 var _built_pad_keys: Dictionary = {}
 const SURFACE_CELL_M := 128.0
@@ -1525,6 +1528,7 @@ func _collect_all_route_lines() -> void:
 	# half in the ground" the owner reported. Bridge decks are joined the same
 	# way `_build_bridges` joins them (0.75 fraction) and count as routes.
 	_all_route_lines.clear()
+	_latched_deck_lines.clear()
 	_all_pad_points.clear()
 	var landmass: Dictionary = _visual_config.get("landmass", {})
 	for raw: Variant in _config.get("routes", []):
@@ -1563,9 +1567,10 @@ func _collect_all_route_lines() -> void:
 			continue
 		var bridge := raw as Dictionary
 		var profile: Array = bridge.get("deck_profile", bridge.get("endpoints", []))
-		# A latch-built deck is not part of the ground-truth road network the
-		# crowns and shoulders conform to: it is absent until its flag holds.
-		if profile.size() < 2 or not str(bridge.get("built_by_flag", "")).is_empty():
+		# A latch-built deck (`built_by_flag`) still counts: its pads' crowns
+		# must taper to meet it once it exists, or the deck runs into a mesa's
+		# side (F07#0 latch stair, climbing onto the mid landing).
+		if profile.size() < 2:
 			continue
 		var cap_half := float(landmass.get("landing_size_m", 16.0)) * 0.41
 		var deck_half_width := float(bridge.get("width_m", 3.2)) * 0.5
@@ -1581,6 +1586,8 @@ func _collect_all_route_lines() -> void:
 			# Matches `_build_bridge_section`'s deck lift for stone paving.
 			var lift := _segment_basis(a, b).y * (0.2 if stone_bridge else 0.0)
 			_append_route_line(deck_id, a + lift, b + lift, deck_half_width)
+			if not str(bridge.get("built_by_flag", "")).is_empty():
+				_latched_deck_lines.append(_all_route_lines[-1])
 	# Landmark ledges are flat crowns too (see `_build_landmarks`): a shoulder
 	# running onto one conforms to it exactly as to a landing pad.
 	for raw: Variant in _config.get("landmarks", []):
@@ -2335,6 +2342,18 @@ func _overpass_ceiling(centre: Vector3, right: Vector3, reach: float, lines: Arr
 
 
 ## Whether any overpass line (below `below_y`) passes within `radius` of `p`.
+## F07#0: does a latch-built deck pass within `radius` (XZ) of `p` at a height
+## inside [low_y, high_y]? Its pads sit on other routes' ridges, so it leaves
+## them at ridge height, where the overpass rule does not see it.
+func _latched_deck_through(p: Vector3, radius: float, low_y: float, high_y: float) -> bool:
+	for line: Dictionary in _latched_deck_lines:
+		var hit := _line_point_xz(line, p)
+		if float(hit["distance"]) <= radius and float(hit["height"]) >= low_y - 2.0 \
+				and float(hit["height"]) <= high_y + 3.0:
+			return true
+	return false
+
+
 func _overpass_near(p: Vector3, radius: float, lines: Array[Dictionary], below_y: float) -> bool:
 	for line: Dictionary in lines:
 		var hit := _line_point_xz(line, p)
@@ -2573,13 +2592,15 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			spur_at += right * side * (half_width + spur_width * 0.40)
 			# No rock spur/shelf standing in an overpass deck's corridor.
 			if not _overpass_near(spur_at, spur_width * 0.6 + arch_margin, overpass_lines,
-					centre.y - arch_clearance):
+					centre.y - arch_clearance) \
+					and not _latched_deck_through(spur_at, spur_width * 0.6, spur_at.y - spur_height * 0.5, spur_at.y + spur_height * 0.5):
 				_mesa(parent, "%sRockShoulder%d" % [label, i], spur_at,
 					Vector3(spur_width, spur_height, spur_width * (0.7 + depth_mix * 0.5)),
 					_materials["cliff_mid"], _materials["cliff_high"], false, seed_value + i * 7, true)
 			var shelf := centre + right * side * (half_width + 8.0) - Vector3.UP * 8.0
 			if posmod(i + seed_value, 3) == 0 and not straddles_closed_ground_gate(shelf - Vector3.UP * 9.0, Vector3(23, 18, 21)) \
-					and not _overpass_near(shelf, 16.0 + arch_margin, overpass_lines, centre.y - arch_clearance):
+					and not _overpass_near(shelf, 16.0 + arch_margin, overpass_lines, centre.y - arch_clearance) \
+					and not _latched_deck_through(shelf, 16.0, shelf.y - 18.0, shelf.y + 4.0):
 				_mesa(parent, "%sRootedShelf%d" % [label, i], shelf - Vector3.UP * 9.0,
 					Vector3(23, 18, 21), _materials["cliff"], _materials["upland"], true, seed_value + i)
 				var tree := NATURE_TREES[posmod(seed_value + i, NATURE_TREES.size())].instantiate() as Node3D

@@ -52,6 +52,7 @@ func _run() -> void:
 	var stair := world.get_node_or_null(^"SuspendedBridges/ObservatoryLatchStairUpper") as Node3D
 	report["stair_built"] = stair != null
 	report["deck_visible_before"] = stair != null and (stair.get_node(^"DeckSection1") as Node3D).visible
+	report["deck_colliding_before"] = _any_shape_enabled()
 	# Sighting at the fork, then the latch at the summit loop's west pad.
 	for step: Array in [["observatory_latch_sighting", "side_observatory_latch_sighted"],
 			["observatory_return_latch", "side_observatory_latch_complete"]]:
@@ -62,6 +63,7 @@ func _run() -> void:
 	await _frames(20)
 	report["mid_ground_after"] = float(world.call("ground_height_near", MID))
 	report["deck_visible_after"] = stair != null and (stair.get_node(^"DeckSection1") as Node3D).visible
+	report["deck_colliding_after"] = _any_shape_enabled()
 	# Walk down from the top pad to the fork on the stair, ordinary input.
 	failed = false
 	_place_near(TOP)
@@ -72,13 +74,33 @@ func _run() -> void:
 	report["walked_down"] = walked and not failed
 	report["walk_seconds"] = snappedf(simulated_seconds - t0, 0.1)
 	report["end"] = str(player.global_position)
+	# And back up: the route is bidirectional.
+	failed = false
+	t0 = simulated_seconds
+	var climbed := await _walk(TOP, 2.0)
+	_release()
+	report["walked_up"] = climbed and not failed
+	report["climb_seconds"] = snappedf(simulated_seconds - t0, 0.1)
 	var ok: bool = bool(report["stair_built"]) and is_nan(float(report["mid_ground_before"])) \
 		and not bool(report["deck_visible_before"]) and bool(report.get("observatory_latch_sighting", false)) \
 		and bool(report.get("observatory_return_latch", false)) and is_finite(float(report["mid_ground_after"])) \
-		and bool(report["deck_visible_after"]) and bool(report["walked_down"])
+		and bool(report["deck_visible_after"]) and bool(report["walked_down"]) and bool(report["walked_up"]) \
+		and not bool(report["deck_colliding_before"]) and bool(report["deck_colliding_after"])
 	print("OBSERVATORY LATCH " + JSON.stringify(report))
 	print("OBSERVATORY LATCH %s" % ("PASS" if ok else "FAIL"))
 	quit(0 if ok else 1)
+
+
+func _any_shape_enabled() -> bool:
+	for name: String in ["ObservatoryLatchStairUpper", "ObservatoryLatchStairLower"]:
+		var bridge := world.get_node_or_null(NodePath("SuspendedBridges/" + name))
+		if bridge == null:
+			continue
+		for node: Node in bridge.find_children("*", "CollisionShape3D", true, false):
+			if node.get_parent().name.begins_with("DeckSection") or str(node.get_path()).contains("DeckSection"):
+				if not (node as CollisionShape3D).disabled:
+					return true
+	return false
 
 
 func _place_near(at: Vector3) -> void:
