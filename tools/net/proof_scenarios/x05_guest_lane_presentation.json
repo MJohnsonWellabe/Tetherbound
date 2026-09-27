@@ -110,6 +110,11 @@
     },
     {
       "peer": 1,
+      "action": "deploy_creature",
+      "label": "SETUP: the guest's lead creature is out (joining needs a standing ally)"
+    },
+    {
+      "peer": 1,
       "action": "join_running_fight",
       "args": {
         "kind": "wild",
