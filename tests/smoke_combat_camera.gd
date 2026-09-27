@@ -319,6 +319,22 @@ func _measure_requested_framing(gap: float) -> float:
 func _prove_neutral_camera_keeps_the_opponent_in_frame() -> void:
 	_send_axis(RIGHT_X, 0.0)
 	_send_axis(RIGHT_Y, 0.0)
+	# A NEUTRAL camera: stick at rest and the combat profile's own pitch. The
+	# tracker corrects yaw only, so without this the check inherited whatever
+	# pitch the previous orbit check left -- a run whose stick-down release
+	# landed late started pinned at the pitch clamp and failed every bearing
+	# with identical screen positions (opponent ~25% below the frame).
+	for i in 120:
+		await physics_frame
+		if Input.get_vector("look_left", "look_right", "look_up", "look_down").is_zero_approx():
+			break
+	var cam_cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
+	var inherited_pitch := float(_rig.get("pitch"))
+	var neutral_pitch := deg_to_rad(float(cam_cfg.get("pitch_start_deg", -25.0)))
+	print("neutral check: inherited pitch %.1f deg, reset to profile %.1f deg" % [
+		rad_to_deg(inherited_pitch), rad_to_deg(neutral_pitch)])
+	_rig.set("pitch", neutral_pitch)
+	_rig.rotation = Vector3(neutral_pitch, float(_rig.get("yaw")), 0.0)
 	var ally_at := _ally.global_position
 	var wild_was_processing := _wild.is_physics_processing()
 	_wild.set_physics_process(false)
