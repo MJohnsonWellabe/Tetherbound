@@ -30,6 +30,11 @@
   "current_flow": {
     "_comment": "F13#5 visible currents (scripts/world/water_current_flow_view.gd): one foam ribbon per water_world.json current, streaks drifting along its physics flow vector; opacity and speed rise with strength (full at full_strength_m_s). Calmer after water_currents_restored. One draw call.",
     "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 12.0, "full_strength_m_s": 1.8, "restored_calm_scale": 0.5,
+    "state_shader": {
+      "_comment": "F14#2 (V-TW-1, V-VIS-12): the whole current look follows water_currents_restored; water_current_flow_view.gd applies it over shader{} on build and on each flag change. live = rough race: every lane carries long bright dashes, dense chop flecks, fast drift. restored = glassy: a quarter of the lanes keep short faint dashes, almost no chop, slow drift (with calm_scale 0.5 about 7x slower scroll).",
+      "live": {"opacity": 0.95, "lane_opacity": 0.22, "streak_density": 1.0, "dash_fill": 0.85, "fleck_amount": 0.9, "speed_scale": 2.4, "min_speed_m_s": 0.6, "brightness": 1.15},
+      "restored": {"opacity": 0.4, "lane_opacity": 0.04, "streak_density": 0.25, "dash_fill": 0.2, "fleck_amount": 0.05, "speed_scale": 0.65, "min_speed_m_s": 0.15, "brightness": 0.85}
+    },
     "shader": {"foam_colour": "#eef9f9", "opacity": 0.85, "streak_width_m": 2.6, "streak_length_m": 7.0, "min_speed_m_s": 0.35, "speed_scale": 1.4, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
   },
   "exterior_composition": {
