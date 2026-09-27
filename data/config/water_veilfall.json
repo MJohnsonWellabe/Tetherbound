@@ -92,6 +92,29 @@
   "guardian_position": [0.0, 0.0, 108.0],
   "guardian_freed_position": [-10.0, 0.0, 108.0],
   "crystal_position": [0.0, 5.0, 113.0],
-  "colours": {"stone": "#4c5857", "floor": "#77817a", "metal": "#697676", "brass": "#96724d", "banner": "#345e84", "channel": "#347c89", "crystal": "#a6dce5"},
+  "colours": {"stone": "#4c5857", "floor": "#77817a", "metal": "#697676", "brass": "#96724d", "banner": "#345e84", "channel": "#347c89", "crystal": "#a6dce5", "emblem": "#d8e6ea"},
+  "crystal_glow": 1.1,
+  "crystal_light": {"energy": 2.4, "range_m": 18.0},
+  "banner_x_m": 19.9,
+  "_why_interior_dressing": "F14#1/F13#5 (tb/tidewake-visuals): the code-blind C3 judge read Nerissa's Heart Chamber as grey blockout boxes under one cold light, with a banner seen edge-on as a stray blue slab (ralph/reports/TIDEWAKE/f14_c3_judge/VERDICT_r1.md). The Veilfall stronghold board's chamber is dressed grey masonry, arches, blue emblem banners, warm torches against a cool crystal and falls inside the hall. Presentation only, installed Quaternius medieval/fantasy families; no collider, prompt, captain, Guardian or gate moves.",
+  "interior_dressing": {
+    "enabled": true,
+    "stone": {"albedo": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png", "normal": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png", "tint": "#a9aba4", "uv_scale": 0.3, "roughness": 0.78, "normal_scale": 0.9},
+    "floor": {"albedo": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png", "normal": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png", "tint": "#7f8581", "uv_scale": 0.42, "roughness": 0.34, "normal_scale": 0.7},
+    "structure": {
+      "enabled": true, "seed": 4140, "jitter": 0.12, "ragged": false,
+      "bay_pitch_m": 6.0, "bay_width_m": 1.3, "bay_project_m": 0.45,
+      "capital_height_m": 0.6, "capital_project_m": 0.2,
+      "course": true, "course_at": 0.62, "course_height_m": 0.45, "course_project_m": 0.3, "course_joint_m": 0.3,
+      "ribs": true, "rib_width_m": 1.0, "rib_drop_m": 0.6, "corbel_length_m": 0.8,
+      "reveals": false, "corners": true, "corner_width_m": 1.4, "corner_project_m": 0.5,
+      "doorways": [[0.0, 0.0, 3.5], [0.0, 30.0, 9.5], [0.0, 60.0, 15.5], [0.0, 80.0, 15.5]],
+      "trim": {"albedo": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png", "normal": "res://assets/buildings/quaternius_medieval/T_RockTrim_Normal.png", "uv_scale": 0.5, "roughness": 0.72},
+      "tints": {"shaft": "#c9c6bb", "capital": "#d6d2c4", "course": "#b9b6ab", "corner": "#c9c6bb", "rib": "#8f8d86", "corbel": "#8f8d86", "reveal": "#b9b6ab"}
+    },
+    "lanterns": {"enabled": true, "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "spacing_m": 9.0, "height_m": 3.4, "scale": 2.2, "housing_colour": "#4d4032", "glass_colour": "#ffbc66", "glow_colour": "#ff9e36", "glow_energy": 1.2, "light_colour": "#ffb870", "light_energy": 1.6, "light_range_m": 8.0},
+    "fall_wall": {"enabled": true, "width_m": 16.0, "height_m": 12.0, "centre": [0.0, 6.0, 122.9], "colour": "#e6f6f8", "opacity_min": 0.55, "opacity_max": 0.9, "flow_speed": 0.45, "edge_feather": 0.12, "ground_feather_m": 1.0, "albedo_min": 0.7, "albedo_max": 0.96, "channel_depth_m": 2.2, "channel_colour": "#2f7d8c", "channel_glow": "#1d5866", "light_colour": "#9fd6e6", "light_energy": 1.4, "light_range_m": 16.0},
+    "room_light": {"colour": "#9fb4c4", "energy": 1.1}
+  },
   "_comment_scope": "Two physical world-authority controls open real grilles. The captain and Guardian ceremony are required integration; this geometry/config alone does not complete either. No boats, diving, oxygen or new humanoids."
 }
