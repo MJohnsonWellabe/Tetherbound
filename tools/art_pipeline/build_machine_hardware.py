@@ -15,7 +15,7 @@ bpy.ops.object.select_all(action="SELECT")
 bpy.ops.object.delete(use_global=False)
 
 
-def material(name, color, metallic, roughness, emission=0):
+def material(name, color, metallic, roughness, emission=0, emission_color=None):
     mat = bpy.data.materials.new(name)
     mat.diffuse_color = (*color, 1)
     mat.use_nodes = True
@@ -24,7 +24,7 @@ def material(name, color, metallic, roughness, emission=0):
     bs.inputs["Metallic"].default_value = metallic
     bs.inputs["Roughness"].default_value = roughness
     if emission:
-        bs.inputs["Emission Color"].default_value = (*color, 1)
+        bs.inputs["Emission Color"].default_value = (*(emission_color or color), 1)
         bs.inputs["Emission Strength"].default_value = emission
     return mat
 
@@ -33,7 +33,7 @@ def material(name, color, metallic, roughness, emission=0):
 IRON = material("Blackened chain iron", (.065, .069, .068), .65, .6)
 BRASS = material("Worn brass fittings", (.32, .20, .075), .7, .56)
 PANEL = material("Recessed iron enamel", (.017, .025, .025), .25, .7)
-RUNE = material("Tether rune inlay", (.047, .807, .558), .1, .55, .20)
+RUNE = material("Tether rune inlay", (.005, .04, .022), .1, .55, .75, (.047, .807, .558))
 
 
 def point(p):

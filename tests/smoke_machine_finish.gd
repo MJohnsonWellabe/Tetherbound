@@ -85,9 +85,12 @@ func _run() -> void:
 	_check(not (second.get_node("CoreLight") as Light3D).visible,"loaded core light disabled")
 	_check(_emission(second) == 0,"loaded runes unlit")
 	climax.free()
-	watcher.free()
-	loaded.free()
-	holder.free()
-	other.free()
+	# Let renderer resource creation settle before the scene's deferred teardown.
+	await process_frame
+	watcher.queue_free()
+	loaded.queue_free()
+	holder.queue_free()
+	other.queue_free()
+	await process_frame
 	print("Machine finish: %d checks, %d failures" % [checks,failures.size()])
 	quit(0 if failures.is_empty() else 1)

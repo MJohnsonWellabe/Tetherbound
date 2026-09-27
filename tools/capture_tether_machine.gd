@@ -1,5 +1,9 @@
 extends "res://tools/capture_visual_audit.gd"
 ## DRY RUN — does not count. Installed hero mesh and production Hall camera.
+var _baseline_prepared := false
+
+func _baseline() -> bool:
+	return OS.get_cmdline_user_args().has("--baseline-machine")
 
 func _run() -> void:
 	await process_frame
@@ -35,6 +39,18 @@ func _build_rows(_spec: Dictionary) -> Array:
 	var chamber: Vector3 = hold.call("marker", "legendary_chamber")
 	var reveal: Vector3 = hold.call("marker", "reveal_stand")
 	var machine := hold.call("machine") as Node3D
+	if _baseline() and not _baseline_prepared:
+		# Controlled original presentation: source GLB is unchanged. Remove only
+		# the new fittings and restore the old withdrawal holder list at runtime.
+		_baseline_prepared = true
+		var hardware := machine.get_node_or_null("Hardware")
+		if hardware != null:
+			hardware.free()
+		var watcher: Node = _world.get_node("StrongholdClimax").call("garrison_withdrawal")
+		var cfg: Dictionary = (watcher.get("_config") as Dictionary).duplicate(true)
+		(cfg.withdrawal.darken as Array).erase("TetherMachine")
+		watcher.set("_config",cfg)
+		_log_line({"kind":"note","text":"Control: original machine without new Hardware or machine withdrawal darkening"})
 	var east := hold.global_basis.x.normalized()
 	var south := hold.global_basis.z.normalized()
 	return [
@@ -51,9 +67,9 @@ func _run_region() -> bool:
 	var climax := _world.get_node("StrongholdClimax")
 	var light := machine.get_node("CoreLight") as Light3D
 	var hardware := machine.get_node_or_null("Hardware") as Node3D
-	_check(hardware != null and hardware.get_parent() == machine, "hardware sits outside measured Model")
+	_check(hardware == null if _baseline() else hardware != null and hardware.get_parent() == machine, "control has no hardware / candidate hardware outside Model")
 	_check(light.visible and light.light_energy > 0.0, "bound core light active")
-	_check(_emissive_surfaces(machine) > 0, "bound rune surfaces active")
+	_check(_emissive_surfaces(machine) == 0 if _baseline() else _emissive_surfaces(machine) > 0, "control has no runes / candidate bound runes active")
 	var stage: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stronghold_climax.json")) as Dictionary).legendary.stage
 	var cage: Dictionary = climax.call("_measure_cage", stage)
 	_check(absf(float(cage.dais_top) - 4.063849) < .01, "unchanged measured dais")
@@ -62,12 +78,14 @@ func _run_region() -> bool:
 	_check(shape.shape is CylinderShape3D and is_equal_approx((shape.shape as CylinderShape3D).radius,5.6) and is_equal_approx((shape.shape as CylinderShape3D).height,2.7), "unchanged base collision")
 	# Real release presentation path, with fixture progression. Not earned play.
 	climax.call("_free_the_legendary")
+	_clear_interruptions()
 	for i in 480:
 		await physics_frame
-		_clear_interruptions()
-	_check(not light.visible, "released core light disabled")
+		if i % 60 == 0:
+			_clear_interruptions()
+	_check(light.visible == _baseline(), "control retains core light / candidate released core light disabled")
 	_check(_emissive_surfaces(machine) == 0, "released rune emission disabled")
-	_check(hardware != null and hardware.visible, "released physical fittings remain")
+	_check(hardware == null if _baseline() else hardware != null and hardware.visible, "control has no hardware / candidate released fittings remain")
 	_check(climax.call("_measure_cage", stage) == cage, "release preserves measured cage geometry")
 	for row: Dictionary in _build_rows({}):
 		if row.id != "machine_entrance":
