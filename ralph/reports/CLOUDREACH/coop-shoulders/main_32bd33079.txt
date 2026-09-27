@@ -1,0 +1,10 @@
+COOP SHOULDERS solo {"build_summary":"","collisions":218,"complete":true,"faces_sha256":"54fc5dea07da01dc0a7ccee001fab6064dd7d20e3c01cf192a917e4b17fbced7","frames":0,"live":false,"ms":54,"ridges":720,"shell":false,"sliced":false}
+COOP SHOULDERS live {"build_summary":"24.1 s wall, 272 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 289 ms (in the step following 'materials')","collisions":0,"complete":true,"faces_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","frames":272,"live":true,"ms":24054,"ridges":0,"shell":false,"sliced":true}
+COOP SHOULDERS shell {"build_summary":"2.7 s wall, 128 yields at 8 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 275 ms (in the step following 'materials')","collisions":0,"complete":true,"faces_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","frames":128,"live":true,"ms":2697,"ridges":0,"shell":true,"sliced":true}
+COOP SHOULDERS routes {}
+ERROR: COOP SHOULDERS: live built 0 shoulder ridges, solo 720
+ERROR: COOP SHOULDERS: live has 0 walkable shoulder collisions, solo 218
+ERROR: COOP SHOULDERS: shoulder sets differ by route: live {  } solo { "ArrivalGateRoadCliffShoulders": 25, "LowerCliffRoadCliffShoulders": 26, "LowerOverlookLoopCliffShoulders": 73, "BrokenCausewayMainCliffShoulders": 55, "CausewayWestLoopCliffShoulders": 100, "WindscarFloorLoopCliffShoulders": 57, "WindscarCounterweightPassCliffShoulders": 72, "UpperPlateauCircuitCliffShoulders": 112, "UpperSummitRoadCliffShoulders": 72, "SummitOverlookLoopCliffShoulders": 102, "WindscarCounterweightReturnCliffShoulders": 25, "ObservatorySummitLinkCliffShoulders": 1 }
+ERROR: COOP SHOULDERS: live shoulder collision faces differ from solo
+COOP SHOULDERS FAIL
+exit 1

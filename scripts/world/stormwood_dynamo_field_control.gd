@@ -71,7 +71,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			distance = candidate
 			closest = i
 	if closest >= 0:
-		var creature: RefCounted = _body.get("instance")
+		# The follower body carries no creature instance (see `_process`); the
+		# director's ally is the piloted creature. Reading the body sent an
+		# empty move id, and the host refused every conduit strike.
+		var creature: RefCounted = director.call("ally_instance")
 		var move_id := str(creature.get("move_" + slot)) if creature != null else ""
 		dynamo.call("request_conduit_strike", closest, slot, move_id)
 	get_viewport().set_input_as_handled()
