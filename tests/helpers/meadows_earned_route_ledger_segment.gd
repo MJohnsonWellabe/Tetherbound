@@ -50,6 +50,9 @@ var _a7_violations: Array = []
 var _seen_wilds := {}
 var _seen_offers := {}
 var _flags := {}
+var _revealed := {}
+var _seen_caches := {}
+const CACHE_SCRIPT := "res://scripts/world/item_cache_pickup.gd"
 var _discontinuities := 0
 var beats: Array = []
 var ledger: Array = []
@@ -67,9 +70,12 @@ func start(tree: SceneTree, stage_of: Callable, output_path: String) -> bool:
 	_write({"kind": "contract", "beat_radius_m": BEAT_RADIUS_M, "window_m": WINDOW_M,
 		"spacing_min_m": SPACING_MIN_M, "a7_limit_s": A7_LIMIT_S, "sample_s": SAMPLE_S,
 		"beats": ["fight_started", "wild_within_radius (first time per body)",
-			"offer (first time per provider+prompt)", "flag_set"],
-		"not_detected": ["vista/landmark reveal"], "gaps_are_upper_bounds": true})
+			"offer (first time per provider+prompt)", "flag_set",
+			"reveal (a map landmark or region first discovered)",
+			"cache_within_radius (an untaken world pickup, first time per cache)"],
+		"not_detected": ["unmapped vista"], "gaps_are_upper_bounds": true})
 	_seed_flags()
+	_seed_reveals()
 	tree.physics_frame.connect(_observe)
 	return true
 
@@ -331,6 +337,29 @@ func _observe() -> void:
 				_flags[flag] = true
 				_beat("flag_set", str(flag), pos)
 
+	# A7 names "new vista/landmark reveal" as a beat: the map's own discovery
+	# of a landmark (within its discover_radius) or a region (on entering it,
+	# the HUD's place title) is that reveal, read from the game's map state.
+	# An untaken roadside cache within the beat radius is a discovery and a
+	# preparation opportunity (A7) whether or not this walker detours the last
+	# 2.4 m to its prompt; counted once, like a wild body.
+	for node: Node in _tree.get_nodes_in_group(&"progression_restore"):
+		var script := node.get_script() as Script
+		if script == null or script.resource_path != CACHE_SCRIPT or bool(node.get("_taken")):
+			continue
+		var cache := node as Node3D
+		if cache == null or cache.global_position.distance_to(pos) > BEAT_RADIUS_M:
+			continue
+		var cache_key := str(cache.get_path())
+		if not _seen_caches.has(cache_key):
+			_seen_caches[cache_key] = true
+			_beat("cache_within_radius", cache.name, pos)
+
+	for id: String in _discovered_places(game):
+		if not _revealed.has(id):
+			_revealed[id] = true
+			_beat("reveal", id, pos)
+
 	if not fighting and moved >= MOVING_M:
 		if _active_gap_s == 0.0:
 			_active_gap_start = {"t": snappedf(_t, 0.1), "path_m": snappedf(_path_m, 0.1), "pos": _v(pos), "stage": _stage}
@@ -392,6 +421,32 @@ func _seed_flags() -> void:
 	if progression != null:
 		for flag: Variant in progression.call("all_set"):
 			_flags[flag] = true
+
+
+func _seed_reveals() -> void:
+	var game := _tree.root.get_node_or_null(^"Game")
+	if game != null:
+		for id: String in _discovered_places(game):
+			_revealed[id] = true
+
+
+## "landmark:<id>" / "region:<id>" for every place the local map has
+## discovered. Empty when the realm has no map.
+static func _discovered_places(game: Node) -> Array[String]:
+	var out: Array[String] = []
+	var map: Variant = game.get("map")
+	if not (map is Object) or not (map as Object).has_method("landmarks"):
+		return out
+	for def: Dictionary in (map as Object).call("landmarks"):
+		var id := str(def.get("id", ""))
+		if not id.is_empty() and bool((map as Object).call("is_landmark_discovered", id)):
+			out.append("landmark:" + id)
+	if (map as Object).has_method("regions"):
+		for def: Dictionary in (map as Object).call("regions"):
+			var id := str(def.get("id", ""))
+			if not id.is_empty() and bool((map as Object).call("is_region_discovered", id)):
+				out.append("region:" + id)
+	return out
 
 
 func _v(p: Vector3) -> Array:
