@@ -3390,9 +3390,21 @@ static func _trainer_foe_numbers(tree: SceneTree, args: Dictionary) -> Dictionar
 		await tree.physics_frame
 	var species := str(foe.get("species_id"))
 	var level := int(foe.get("level"))
+	# What the host's record says this peer is fighting (the row every guest
+	# receives), so a guest's local view can be compared with the real foe.
+	var enc_id := str(manager.get("_encounter_id")) if manager.get("_encounter_id") != null else ""
+	var joinable: Variant = director.get("_joinable_encounters")
+	var host_row: Dictionary = {}
+	if joinable is Dictionary and (joinable as Dictionary).has(enc_id):
+		host_row = ((joinable as Dictionary)[enc_id] as Dictionary).get("opponent", {}) as Dictionary
 	var solo := _solo_member(director, trainer_id, species, level)
+	if solo.is_empty() and not host_row.is_empty():
+		solo = _solo_member(director, trainer_id, str(host_row.get("species_id", "")), int(host_row.get("level", 0)))
 	if solo.is_empty():
-		return {"verdict": "FAIL", "detail": "%s L%d is not a member of %s's authored team" % [species, level, trainer_id]}
+		return {"verdict": "FAIL", "data": {"species": species, "level": level, "host_row": host_row,
+			"hp": float(foe.get("hp")), "max_hp": float(foe.get("max_hp")), "encounter_id": enc_id},
+			"detail": "this peer fights %s L%d (hp %.1f/%.1f), not a member of %s's authored team; host record opponent: %s"
+				% [species, level, float(foe.get("hp")), float(foe.get("max_hp")), trainer_id, JSON.stringify(host_row)]}
 	var ref: RefCounted = solo.creature
 	var ref_cfg: Dictionary = solo.config
 	var row: Dictionary = FIGHT_HOST.scaling_for(participants)
@@ -3412,9 +3424,17 @@ static func _trainer_foe_numbers(tree: SceneTree, args: Dictionary) -> Dictionar
 	data["max_hp_matches_solo"] = is_equal_approx(float(data.max_hp), float(data.ref_max_hp))
 	data["moves_match_solo"] = data.move_quick == data.ref_move_quick and data.move_charged == data.ref_move_charged
 	var checks := ["max_hp_matches_solo", "moves_match_solo"]
+	if not host_row.is_empty():
+		data["host_row"] = host_row
+		data["identity_matches_host"] = str(host_row.get("species_id", "")) == species and int(host_row.get("level", -1)) == level
+		var host_frac := float(host_row.get("hp", 0.0)) / maxf(1.0, float(host_row.get("hp_max", 1.0)))
+		data["hp_fraction"] = float(data.hp) / maxf(1.0, float(data.max_hp))
+		data["host_hp_fraction"] = host_frac
+		data["hp_fraction_matches_host"] = absf(float(data.hp_fraction) - host_frac) < 0.02
+		if not is_host:
+			checks += ["identity_matches_host", "hp_fraction_matches_host"]
 	if is_host:
 		var rec_row: Dictionary = {}
-		var enc_id := str(manager.get("_encounter_id")) if manager.get("_encounter_id") != null else ""
 		var host_node: Variant = director.get("_encounter_host")
 		if host_node != null and not enc_id.is_empty():
 			var rec: Dictionary = (host_node as Object).call("record", enc_id)
