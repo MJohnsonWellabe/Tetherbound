@@ -11,6 +11,7 @@ Script: `tests/smoke_cloudreach_b_f07_0_six_activities.gd` (headless). For each 
 | Run | Result |
 |---|---|
 | `default-five/run-1/` (sparkit, mudsnout, bramblebun, terrapup, brooktail) | **5/6 PASS**; Cliff Circuit FAIL. Every set completion flag survives reload. |
+| `default-five/run-2-679ea575/` (Cloudreach head 679ea575 merged: couriers' thanks at the ravine shelter, sheltered-bed rest XP) | **5/6 PASS**; Cliff Circuit FAIL (same refusal). The Waycamp payoff now checks one real camp-rest night: the bedded companion gains 10 XP = 2 × rest XP 5. |
 | `with-air-cliff_circuit/run-1/` (`--with-air --only=cliff_circuit`, pipwing in place of brooktail) | Cliff Circuit PASS: Tavi → prize TM Wind Blade +1, the other two refused, ack `cloudreach_tavi_defeated`, reload kept. |
 
 ## Finding: the Cliff Circuit prize is not useful to the retained five
