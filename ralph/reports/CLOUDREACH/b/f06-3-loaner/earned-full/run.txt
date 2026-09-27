@@ -1,0 +1,6 @@
+CLOUDREACH CONTINUOUS {"closest_to_summit_m":242.4,"end":"(435.6447, 920.0298, 4503.023)","flight_frames":3600,"gated_flags_after":[],"gated_flags_before":[],"grounded_frames_within_gate_radius":0,"kind":"witness_pre_voss_overfly","launched":true,"loaner":true,"party_size":5,"position":"(435.6447, 920.0298, 4503.023)","recoveries_to_last_safe_landing":1,"simulated_seconds":2501.45,"stage":"witness_pre_voss_overfly","start":"(435.6447, 920.0308, 4503.023)","voss_defeated":false,"wall_seconds":921.87692}
+F06#3 WITNESS PASS launches=5 loaner_frames=18127 violations=0
+CLOUDREACH CONTINUOUS PASS from_save=res://tests/fixtures/earned_saves/c1_arrival stage=complete distance_m=19152.2 dead_travel_max_s=152.8
+EXIT 0
+timeout 10800 /tmp/claude-0/godot_slot.sh $HOME/godot-bin/godot --headless --path . --script tests/smoke_cloudreach_loaner_witness.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival --live-combat --accelerated > /tmp/claude-0/runs/e_loaner/log.txt 2>&1
+run code: tb/cloudreach-b 0516c253

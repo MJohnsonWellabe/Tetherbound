@@ -60,6 +60,16 @@ extends RefCounted
 ##                                         shared opponent's lane (`want`: lane|cone) --
 ##                                         a guest's proxy, or the host's own wild body --
 ##                                         then capture the frame
+##   ledge_probe     {max_m?, drop_m?}    read-only: for 16 headings, the nearest point where
+##                                         the ground falls away by `drop_m`, from rays
+##   ledge_launch    {to, wait_autosave_s?, max_frames?}  F06#5: (optionally wait until the
+##                                         game's own autosave timer reaches wait_autosave_s)
+##                                         walk off the ledge toward `to` by stick, then TAP
+##                                         jump in the air -- the ordinary Fly launch
+##   await_autosave  {budget_frames?, require_flying?}  wait for the game's own periodic
+##                                         autosave; report whether this peer was flying then
+##   slot_mtime      {slot, remember? | newer_than?}  read-only: a save slot file's modified
+##                                         time, kept under a name or required newer than one
 ##   perf_snapshot   {frames?}            this peer's own engine monitors over N frames:
 ##                                         frame rate, script/physics time, objects, bodies
 ##   guardian_offer_again {}              ask the HOST for this character's offer once more,
@@ -93,6 +103,7 @@ const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 
+const NAVIGATOR_SCRIPT := preload("res://tests/helpers/stick_navigator.gd")
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
 	"stormheart_answer", "stormheart_state", "stormheart_claim_again", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
@@ -100,7 +111,8 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_dock_resend", "water_dock_cut",
 	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
-	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape"]
+	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
+	"ledge_launch", "await_autosave", "slot_mtime"]
 
 
 static func handles(action: String) -> bool:
@@ -155,6 +167,14 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _perf_snapshot(tree, args)
 		"shared_cue_shape":
 			return await _shared_cue_shape(tree, args)
+		"ledge_probe":
+			return _ledge_probe(tree, args)
+		"ledge_launch":
+			return await _ledge_launch(tree, args)
+		"await_autosave":
+			return await _await_autosave(tree, args)
+		"slot_mtime":
+			return _slot_mtime(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -179,6 +199,9 @@ static func out_dir(tree: SceneTree) -> String:
 ##    `characters/`; any file may be `.gz`): copied as-is, locator kept, so it
 ##    loads through the current split path exactly like a player's Continue.
 ##    This is the faithful form.
+##  * an earned-save fixture root with `slot` given (`tests/fixtures/earned_saves/
+##    <name>/save`, slot files beside worlds/ and characters/): loaded as-is
+##    through the same split path.
 ##  * a single slot json (or `.json.gz`): its `split_locator` names files this
 ##    home does not have, so it is dropped and the save loads through the
 ##    LEGACY-migration path, split into this home's own pair (the character id
@@ -196,7 +219,24 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "no Game.save_system"}
 	var slot := int(args.get("slot", 0))
 	var form := ""
-	if DirAccess.dir_exists_absolute(from):
+	if DirAccess.dir_exists_absolute(from) and args.has("slot") \
+			and FileAccess.file_exists(from.path_join("slot_%d.json" % slot)):
+		# An earned-save fixture's `save/` (tests/fixtures/earned_saves/<name>/save):
+		# the slot files sit at its root beside worlds/ and characters/, exactly
+		# as a production save root lays them out, so they map onto this home's
+		# user://saves/, user://worlds/ and user://characters/ unchanged.
+		form = "earned save fixture root (split path)"
+		var user_root := OS.get_user_data_dir()
+		DirAccess.make_dir_recursive_absolute(user_root.path_join("saves"))
+		var copied_earned := 0
+		for sub: String in ["worlds", "characters"]:
+			copied_earned += _copy_tree(from.path_join(sub), user_root.path_join(sub), true)
+		if DirAccess.copy_absolute(from.path_join("slot_%d.json" % slot),
+				ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))) != OK:
+			return {"verdict": "FAIL", "detail": "could not copy slot_%d.json from %s" % [slot, from]}
+		if copied_earned == 0:
+			return {"verdict": "FAIL", "detail": "no worlds/ or characters/ under %s" % from}
+	elif DirAccess.dir_exists_absolute(from):
 		form = "captured directory (split path)"
 		var found := -1
 		var saves := DirAccess.open(from.path_join("saves"))
@@ -1429,10 +1469,11 @@ static func _party_uids(tree: SceneTree, args: Dictionary) -> Dictionary:
 		tree.set_meta(&"proof_party_uids", kept)
 		detail += "; kept as '%s'" % str(args.remember)
 	if args.has("equals"):
-		var name := str(args.equals)
-		if not kept.has(name):
+		# A literal list survives a process restart; a remembered name does not.
+		var name := "literal" if args.equals is Array else str(args.equals)
+		if not (args.equals is Array) and not kept.has(name):
 			return {"verdict": "ERROR", "detail": "no party UIDs kept as '%s'" % name}
-		var want: Array = kept[name]
+		var want: Array = args.equals if args.equals is Array else kept[name]
 		data["equals"] = want == uids
 		if want != uids:
 			return {"verdict": "FAIL", "detail": "%s; '%s' was %s" % [detail, name, str(want)], "data": data}
@@ -2876,6 +2917,162 @@ static func _shared_cue_marks(director: Node) -> Dictionary:
 			"cone": cone != null and is_instance_valid(cone),
 			"telegraphs": int((runtime as Node).get("telegraph_count"))}
 	return {"body": "none"}
+
+
+## F06#5, read-only: where the ground drops away around this peer. Rays only;
+## nothing moves.
+static func _ledge_probe(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var player := (tree.get("_probe") as RefCounted).call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player"}
+	var space := player.get_world_3d().direct_space_state
+	var origin := player.global_position
+	var max_m := float(args.get("max_m", 40.0))
+	var drop_m := float(args.get("drop_m", 15.0))
+	var rows: Array = []
+	for i in 16:
+		var angle := TAU * float(i) / 16.0
+		var dir := Vector3(sin(angle), 0.0, cos(angle))
+		var found := -1.0
+		var depth := 0.0
+		var d := 2.0
+		while d <= max_m:
+			var at := origin + dir * d
+			var q := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 3.0, at + Vector3.DOWN * 600.0)
+			q.exclude = [player.get_rid()]
+			var hit := space.intersect_ray(q)
+			var ground_y: float = (hit.position as Vector3).y if not hit.is_empty() else origin.y - 600.0
+			if origin.y - ground_y >= drop_m:
+				found = d
+				depth = origin.y - ground_y
+				break
+			d += 1.0
+		rows.append({"heading_deg": int(rad_to_deg(angle)), "edge_m": found, "drop_m": snappedf(depth, 0.1),
+			"to": [snappedf(origin.x + dir.x * (found + 6.0), 0.1), snappedf(origin.z + dir.z * (found + 6.0), 0.1)] if found > 0.0 else []})
+	return {"verdict": "PASS", "detail": JSON.stringify(rows), "data": {"origin": [origin.x, origin.y, origin.z], "rows": rows}}
+
+
+static func _autosave_elapsed(tree: SceneTree) -> float:
+	var game := tree.root.get_node_or_null(^"Game")
+	return float(game.get("_autosave_elapsed")) if game != null else -1.0
+
+
+## F06#5: the ordinary Fly launch from a real ledge. Stick toward `to` until the
+## trainer has left the floor, then one TAP of jump in the air (the production
+## launch). No placement. `wait_autosave_s` first stands still until the game's
+## own periodic autosave timer reaches that many seconds (observed, never set),
+## so the flight that follows spans the next autosave.
+static func _ledge_launch(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var probe := tree.get("_probe") as RefCounted
+	var player := probe.call("player") as CharacterBody3D
+	var rig := probe.call("camera_rig") as Node3D
+	var fly: Node = tree.call("_fly_controller")
+	if player == null or rig == null or fly == null:
+		return {"verdict": "ERROR", "detail": "no live player/camera_rig/FlyController"}
+	var to: Array = args.get("to", [])
+	var chosen := {}
+	if to.size() != 2:
+		# No target named: the nearest real drop of at least `drop_m` (read-only rays).
+		var probed: Dictionary = _ledge_probe(tree, {"max_m": float(args.get("max_m", 40.0)),
+			"drop_m": float(args.get("drop_m", 20.0))})
+		for row: Dictionary in (probed.get("data", {}) as Dictionary).get("rows", []):
+			if float(row.get("edge_m", -1.0)) > 0.0 and (chosen.is_empty()
+					or float(row.edge_m) < float(chosen.edge_m)):
+				chosen = row
+		if chosen.is_empty():
+			return {"verdict": "FAIL", "detail": "no drop of %.0f m within %.0f m" % [float(args.get("drop_m", 20.0)), float(args.get("max_m", 40.0))]}
+		to = chosen.to
+	var wait_s := float(args.get("wait_autosave_s", -1.0))
+	if wait_s >= 0.0:
+		for f in int(args.get("wait_budget_frames", 13000)):
+			if _autosave_elapsed(tree) >= wait_s:
+				break
+			await tree.physics_frame
+		if _autosave_elapsed(tree) < wait_s:
+			return {"verdict": "FAIL", "detail": "autosave timer never reached %.0f s (%.1f)" % [wait_s, _autosave_elapsed(tree)]}
+	var nav = NAVIGATOR_SCRIPT.new(tree, player, rig, Callable(tree, "_drive_left"))
+	var target := Vector3(float(to[0]), player.global_position.y, float(to[1]))
+	var airborne := 0
+	var frames := 0
+	for f in int(args.get("max_frames", 900)):
+		frames = f
+		var dir := target - player.global_position
+		dir.y = 0.0
+		if dir.length() < 0.3:
+			break
+		nav.push_once(dir.normalized())
+		await tree.physics_frame
+		airborne = 0 if player.is_on_floor() else airborne + 1
+		if airborne >= 4:
+			break
+	tree.call("_drive_left", 0.0, 0.0)
+	if airborne < 4:
+		return {"verdict": "FAIL", "detail": "still on the floor after %d frames toward %s at %s" % [frames, str(to), str(player.global_position)]}
+	await tree.call("_press_edge", "jump", true)
+	for i in 3:
+		await tree.physics_frame
+	await tree.call("_press_edge", "jump", false)
+	for i in 20:
+		await tree.physics_frame
+	var flying := bool(fly.call("is_flying"))
+	var loaner := fly.has_method("last_flight_used_mentor_loaner") and bool(fly.call("last_flight_used_mentor_loaner"))
+	var data := {"flying": flying, "loaner": loaner, "autosave_elapsed_s": _autosave_elapsed(tree),
+		"position": [player.global_position.x, player.global_position.y, player.global_position.z], "walk_frames": frames,
+		"toward": to, "edge": chosen}
+	return {"verdict": "PASS" if flying else "FAIL", "detail": JSON.stringify(data), "data": data}
+
+
+## F06#5: wait for the game's own periodic autosave (its timer resetting), then
+## for the fallback write to settle. Reports whether this peer was flying on
+## the frame the autosave was taken.
+static func _await_autosave(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var fly: Node = tree.call("_fly_controller")
+	var player := (tree.get("_probe") as RefCounted).call("player") as Node3D
+	var last := _autosave_elapsed(tree)
+	var at := {}
+	for f in int(args.get("budget_frames", 13000)):
+		await tree.physics_frame
+		var now := _autosave_elapsed(tree)
+		if now < last:
+			at = {"frame": f, "flying": fly != null and bool(fly.call("is_flying")),
+				"loaner": fly != null and fly.has_method("last_flight_used_mentor_loaner") and bool(fly.call("last_flight_used_mentor_loaner")),
+				"position": [player.global_position.x, player.global_position.y, player.global_position.z] if player != null else []}
+			break
+		last = now
+	if at.is_empty():
+		return {"verdict": "FAIL", "detail": "no autosave within budget (timer %.1f s)" % _autosave_elapsed(tree)}
+	for i in int(args.get("settle_frames", 180)):
+		await tree.physics_frame
+	var ok := not bool(args.get("require_flying", false)) or bool(at.get("flying", false))
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "autosave taken: %s" % JSON.stringify(at), "data": at}
+
+
+## F06#5, read-only: when this home's save slot file was last written, so a
+## proof can show which write a later reload reads.
+static func _slot_mtime(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver == null:
+		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	var slot := int(args.get("slot", 0))
+	var path := ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))
+	var mtime := int(FileAccess.get_modified_time(path)) if FileAccess.file_exists(path) else -1
+	var kept: Dictionary = tree.get_meta(&"proof_slot_mtimes", {})
+	var data := {"slot": slot, "path": path, "mtime": mtime}
+	var detail := "slot_%d.json modified %d" % [slot, mtime]
+	if args.has("remember"):
+		kept[str(args.remember)] = mtime
+		tree.set_meta(&"proof_slot_mtimes", kept)
+		detail += "; kept as '%s'" % str(args.remember)
+	if args.has("newer_than"):
+		var name := str(args.newer_than)
+		if not kept.has(name):
+			return {"verdict": "ERROR", "detail": "no slot mtime kept as '%s'" % name}
+		data["newer"] = mtime > int(kept[name])
+		detail += "; '%s' was %d" % [name, int(kept[name])]
+		if mtime <= int(kept[name]):
+			return {"verdict": "FAIL", "detail": detail + " -- not rewritten", "data": data}
+	return {"verdict": "PASS", "detail": detail, "data": data}
 
 
 ## Where this peer's frame time goes, read off the engine's own monitors over

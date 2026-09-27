@@ -1,0 +1,22 @@
+# F03#1 distinct optional action: code-blind judge, earned save, set A (herd, bram, juno, hall, vault)
+
+Judge input: the 20 frames in `distinct-a/` (`<activity>_01..04.jpg` for herd, bram, juno, hall, vault) plus the ledger action lines supplied in the brief. No code, data, config, tests or other files were opened.
+
+| activity | action shown | matches ledger | distinct from nearest | overall |
+|---|---|---|---|---|
+| herd | At night, with Mudsnout summoned beside the player, the player walks up to two Meadowharts, gets a "Watch the Meadowhart herd" prompt and a card saying "You and your companion study the paired tracks...". The herd then moves apart. No fight. | PASS | PASS (nearest: juno, which also features a Meadowhart. Herd is a no-combat observation beat, while juno is a fight followed by an escort.) | PASS |
+| bram | The player meets Old Bram at a forest campfire ("Sit if you like..."), fights his Meadowhart (Lv 6) and then his Galecrest (Lv 7) with the "Old Bram" nameplate, and gets an "Old Bram defeated" reward toast. | PASS | PASS (nearest: juno. Bram is a sit-down NPC meeting plus a two-creature trainer battle. Juno is a fight whose aftermath is an escort and a reunion.) | PASS |
+| juno | A "Tether Patrol defeated" toast appears, then "The Meadowhart falls in behind you. Lead her to Juno in the high pasture". The Meadowhart follows the player across the meadow, and Juno greets her ("There you are, girl... You're home."). The team stays 5/5, so the player does not receive the creature. | PASS (the patrol fight appears only as its result toast) | PASS (nearest: bram. The escort and the handover to another NPC have no counterpart in bram. These are not the same encounter with new art.) | PASS |
+| hall | In open, sunlit meadow, the player fights a wild, oversized Lv 19 "Alpha Galecrest" while ordinary Galecrests stand at the edges. Throw (catch) is available. It ends with "The wild creature is beaten" and "The west shoulder has gone quiet." | PASS (weak: no Hall landmark is visible, so the frames cannot confirm the "approach to the Hall" location) | PASS, marginal (nearest: vault, which uses the same wild-fight template. Bram's second creature is also a Galecrest. What sets hall apart is a rare alpha in open country with its pack and the option to catch it, and the "west shoulder" consequence line.) | PASS |
+| vault | In a dark underground chamber, a glowing Elder Trailpup stands by a stone pedestal ("Engage Elder Trailpup"). The player fights it (Lv 13), it yields two large potions, and a "Take the heartstone" prompt appears on the pedestal. | PASS (the vault is shown, but taking the branch itself is not) | PASS (nearest: hall. A lone guardian in an enclosed cave with a pedestal reward to claim reads as a different place and goal from an open-field alpha hunt, although the combat HUD and the "beaten" banner are identical.) | PASS |
+
+**Result: 5 of 5 pass.**
+
+## Fixes / weaknesses (no FAILs; strongest risks listed)
+
+- **hall vs vault (closest pair):** Both are the same wild single-creature fight template, ending in the same "The wild creature is beaten." banner. Only the setting and the payoff tell them apart. Most important fix: put the Hall landmark in frame on the approach and give the alpha a distinct pre-fight beat, such as a sighting or approach before the fight. Right now hall frames 1 to 3 could be any wild Galecrest fight.
+- **hall species overlap:** Bram's second creature is also a Galecrest, fought in similar grass. Change Bram's second creature or make the alpha look visibly distinct, so the two do not blur together.
+- **juno:** The patrol fight appears only as its "defeated" toast. Capture one combat frame to prove the "defeat the patrol" half directly. After the defeat, the prompt still reads "Greet Tether Patrol" (juno_02), which contradicts the beat.
+- **bram:** The action matches, but a "retired champion" fielding Lv 6 and Lv 7 creatures against a Lv 17 team undercuts the framing. This is a tuning note, not a distinctness failure.
+- **vault:** The frames do not show the branch choice itself. After the fight, the beaten Trailpup renders as a long, stretched green and white smear (vault_03 and vault_04), which looks like a visual defect.
+- **herd:** The card talks about studying tracks rather than the live animals on screen, and the night lighting is dark. The scene is readable, but the text and the image are slightly mismatched.

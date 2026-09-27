@@ -1,0 +1,35 @@
+You are a code-blind visual judge. You see ONLY sheet-fight-Z.jpg in this folder (a labelled
+contact sheet; each tile is a 1280x720 production frame downscaled) and, if you need detail,
+full-size tiles named fight-Z-<label>.jpg in the sibling folder ../frames/Z/. Do not read any
+other file in the repository.
+
+The sheet is one real-time creature fight in a game, captured from the game's normal fight
+camera while a player walked to it and started it. The player pilots a small companion
+creature (the one with the HUD card) against a larger wild opponent. The HUD is the real game
+HUD. Frame labels:
+  - iNN            : fixed one-second interval frames (the first 40 seconds of the fight)
+  - tellN-a-start  : the opponent's attack warning (tell) has just begun
+  - tellN-b-mid    : halfway through that warning
+  - tellN-c-late   : late in that warning, just before the attack
+  - tellN-d-strike : the attack is released
+  - tellN-e-impact : about 0.2 s after release
+  - tellN-f-recovery: the opponent's recovery after the attack
+  - 00-engaged / 99-over : the fight has just started / has just ended
+
+The bar: "All meaningful tells >= 0.8 s, heavy >= 1.1 s. Framing/readability passes at actual
+creature scale." The fight must show, at the normal fight camera, a distinct readable tell
+and a real hit or avoidance.
+
+Intended visible identity of this fight: "A charging alpha in glowing moss: glowmoss and a
+full-body lane cue."
+
+Answer, citing frame names:
+ (a) At the normal fight camera, is the opponent's attack warning clearly visible and
+     distinguishable before it lands?
+ (b) Can you see where it will hit (lane / zone / facing) and where to move to avoid it?
+ (c) Are both creatures readable at their actual scale (not tiny, cropped, or occluded by
+     vegetation, HUD or camera)?
+ (d) Is there a visible hit AND a visible avoidance?
+ (e) Does the frame evidence show the intended identity (glowmoss setting, full-body lane cue)?
+Answer each with PASS or FAIL plus one or two concrete sentences. Then list the three most
+important LOOK defects, each naming a frame. Score nothing else.

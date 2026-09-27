@@ -4218,7 +4218,15 @@ func _build_sky_shrine(root: Node3D) -> void:
 		_box(root, "ShrineApproachStep", Vector3(0, height * 0.5, -12.4 + step * 0.8), Vector3(7.0, height, 1.0), _materials["masonry_trim"], true)
 	_box(root, "Dais", Vector3(0.0, 0.65, 0.0), Vector3(26.0, 1.3, 20.0), _materials["masonry_trim"], true)
 	for x in [-9.5, 9.5]:
-		_box(root, "SkyPillar", Vector3(x, 10.0, 2.5), Vector3(2.2, 20.0, 2.2), _materials["masonry"], true)
+		# Route stall (#340, Cloudreach-B): a 2.2 m BOX collider here trapped a
+		# trainer on the dais at (1099.003, 1051.301, 2941.399) -- every move
+		# with an x component was swept into the dais top beside the box's
+		# corner, never a wall, so no step-up or unwedge could fire -- and it
+		# overlapped the Fly companion's launch room at the shrine landing.
+		# The drawn pillar keeps its shape; its collider is the inscribed
+		# cylinder, which has no corner to catch on.
+		var pillar := _box(root, "SkyPillar", Vector3(x, 10.0, 2.5), Vector3(2.2, 20.0, 2.2), _materials["masonry"], false)
+		_add_cylinder_collider(pillar, float(_visual_config.get("landmass", {}).get("sky_pillar_collider_radius_m", 1.1)), 20.0)
 		for band in [1.8, 6.5, 15.0, 18.2]:
 			_box(root, "CarvedPillarCourse", Vector3(x, band, 2.5), Vector3(3.0, 0.7, 3.0), _materials["masonry_trim"], false)
 		_box(root, "PillarFoot", Vector3(x, 2.0, 2.5), Vector3(4.3, 1.4, 4.3), _materials["masonry"], false)
@@ -5059,6 +5067,21 @@ func _box(parent: Node, label: String, centre: Vector3, size: Vector3, material:
 		body.add_child(shape_node)
 		root.add_child(body)
 	return root
+
+
+## A "Collision" StaticBody3D with an upright cylinder shape under `parent`,
+## the same body name `_box(..., true)` uses, so probes and seals that look
+## for `<label>/Collision` keep finding it.
+func _add_cylinder_collider(parent: Node3D, radius: float, height: float) -> void:
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var shape_node := CollisionShape3D.new()
+	var shape := CylinderShape3D.new()
+	shape.radius = radius
+	shape.height = height
+	shape_node.shape = shape
+	body.add_child(shape_node)
+	parent.add_child(body)
 
 
 ## A flat collidable disc (cylinder), used where a square box's corners would

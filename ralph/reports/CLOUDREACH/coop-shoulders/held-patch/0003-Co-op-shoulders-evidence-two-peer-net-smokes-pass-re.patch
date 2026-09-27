@@ -1,0 +1,98 @@
+From 63bad4bf53a329ea8ce03c3fd1453024a4d85860 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 27 Sep 2026 00:26:23 +0000
+Subject: [PATCH 3/3] Co-op shoulders evidence: two-peer net smokes pass;
+ re-run on current main
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AbnCQbYpP3f5KQ9hTrct95
+---
+ ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md     | 12 ++++++++++++
+ .../coop-shoulders/branch_on_main_51d6dc44.txt       |  6 ++++++
+ .../coop-shoulders/net_cloudreach_riding_SUMMARY.md  | 10 ++++++++++
+ .../coop-shoulders/net_smokes_0909d164.txt           |  5 +++++
+ .../coop-shoulders/net_split_realms_SUMMARY.md       | 10 ++++++++++
+ 5 files changed, 43 insertions(+)
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/branch_on_main_51d6dc44.txt
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/net_cloudreach_riding_SUMMARY.md
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/net_smokes_0909d164.txt
+ create mode 100644 ralph/reports/CLOUDREACH/coop-shoulders/net_split_realms_SUMMARY.md
+
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md b/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+index 700dd5e6..7e88b4b5 100644
+--- a/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/PROOF.md
+@@ -54,3 +54,15 @@ integration check; they run in the full tier.
+ 
+ **Unit tests:** 258 `test_cloudreach*` tests, 0 failed.
+ Raw files: `main_32bd33079.txt`, `branch.txt`, `ridge_profile_solo.txt`.
++
++## Folded onto `tb/cloudreach` (one PR per lane), after re-review APPROVE WITH NITS
++- **Two-peer net smokes on 0909d164** (the reviewer's merge condition):
++  - `smoke_net_cloudreach_riding`: 137 assertions, 0 failures, ALL CHECKS PASSED;
++  - `smoke_net_split_realms`: ALL CHECKS PASSED, both peers exited cleanly.
++
++  Files: `net_smokes_0909d164.txt`, `net_*_SUMMARY.md`.
++- **Re-run on the combined branch** (main 51d6dc44 plus route blockers, `branch_on_main_51d6dc44.txt`): PASS.
++  - Solo and live both have 720 ridges and 218 walkable collisions, with the same faces hash `54fc5dea…`. The shell defers.
++  - The live build took 88.7 s with 596 yields, and its worst held slice was 421 ms, with 1 heartbeat payback. On the older base it took 60.6 s. This base carries newer realm content; X05 measured roughly 110 s for local Cloudreach `enter_realm` builds and about 80 s on GitHub runners.
++  - The realm transition timeout is 120 s. A slower machine could approach it, so it is worth watching in the full-tier net jobs.
++- **Known mismatch, recorded for STATE:** host shells still defer the shoulders. A wild or trainer the host simulates in a shell stands on analytic ground, while the guest's own world has shoulders. This mismatch predates the change.
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/branch_on_main_51d6dc44.txt b/ralph/reports/CLOUDREACH/coop-shoulders/branch_on_main_51d6dc44.txt
+new file mode 100644
+index 00000000..5fc6ba3f
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/branch_on_main_51d6dc44.txt
+@@ -0,0 +1,6 @@
++COOP SHOULDERS solo {"build_summary":"","collisions":218,"complete":true,"faces_sha256":"54fc5dea07da01dc0a7ccee001fab6064dd7d20e3c01cf192a917e4b17fbced7","frames":0,"live":false,"ms":38,"ridges":720,"shell":false,"sliced":false}
++COOP SHOULDERS live {"build_summary":"88.7 s wall, 596 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 421 ms (in the step following 'materials')","collisions":218,"complete":true,"faces_sha256":"54fc5dea07da01dc0a7ccee001fab6064dd7d20e3c01cf192a917e4b17fbced7","frames":596,"live":true,"ms":88634,"ridges":720,"shell":false,"sliced":true}
++COOP SHOULDERS shell {"build_summary":"2.7 s wall, 128 yields at 8 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 318 ms (in the step following 'materials')","collisions":0,"complete":true,"faces_sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","frames":128,"live":true,"ms":2644,"ridges":0,"shell":true,"sliced":true}
++COOP SHOULDERS routes {"ArrivalGateRoadCliffShoulders":25,"BrokenCausewayMainCliffShoulders":55,"CausewayWestLoopCliffShoulders":100,"LowerCliffRoadCliffShoulders":26,"LowerOverlookLoopCliffShoulders":73,"ObservatorySummitLinkCliffShoulders":1,"SummitOverlookLoopCliffShoulders":102,"UpperPlateauCircuitCliffShoulders":112,"UpperSummitRoadCliffShoulders":72,"WindscarCounterweightPassCliffShoulders":72,"WindscarCounterweightReturnCliffShoulders":25,"WindscarFloorLoopCliffShoulders":57}
++COOP SHOULDERS PASS
++exit 0
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/net_cloudreach_riding_SUMMARY.md b/ralph/reports/CLOUDREACH/coop-shoulders/net_cloudreach_riding_SUMMARY.md
+new file mode 100644
+index 00000000..d00cbdee
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/net_cloudreach_riding_SUMMARY.md
+@@ -0,0 +1,10 @@
++# Net smoke run net-20260926T222512Z-21057
++
++Scene: world
++Peers: 2
++Net conditions: clean (no proxy)
++
++- peer 0 (host) pid=21085 exited=true unexpected_exit=false
++- peer 1 (client) pid=21086 exited=true unexpected_exit=false
++
++ALL CHECKS PASSED
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/net_smokes_0909d164.txt b/ralph/reports/CLOUDREACH/coop-shoulders/net_smokes_0909d164.txt
+new file mode 100644
+index 00000000..4c762b0f
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/net_smokes_0909d164.txt
+@@ -0,0 +1,5 @@
++smoke_net_cloudreach_riding: 137 assertions, 0 failures
++ALL CHECKS PASSED
++ALL CHECKS PASSED
++ALL CHECKS PASSED
++ALL CHECKS PASSED
+diff --git a/ralph/reports/CLOUDREACH/coop-shoulders/net_split_realms_SUMMARY.md b/ralph/reports/CLOUDREACH/coop-shoulders/net_split_realms_SUMMARY.md
+new file mode 100644
+index 00000000..f9b8e1ee
+--- /dev/null
++++ b/ralph/reports/CLOUDREACH/coop-shoulders/net_split_realms_SUMMARY.md
+@@ -0,0 +1,10 @@
++# Net smoke run net-20260926T223232Z-22293
++
++Scene: world
++Peers: 2
++Net conditions: clean (no proxy)
++
++- peer 0 (host) pid=22316 exited=true unexpected_exit=false
++- peer 1 (client) pid=22317 exited=true unexpected_exit=false
++
++ALL CHECKS PASSED
+-- 
+2.43.0
+

@@ -1,0 +1,611 @@
+From 4d99bb7c39ec505c0210c3408917af256eee66e2 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 27 Sep 2026 05:24:27 +0000
+Subject: [PATCH] Fly: no held buttons -- A taps a 0.5 s climb pulse, LT
+ toggles descent
+
+Hard rule (CLAUDE.md: no held-button gameplay); settled SYSTEMS Fly spec and
+the #356 interim descent ruling. fly_controller.gd read `jump` and
+`fly_descend` as held states (climb in a current while A was held; descend
+while LT was held).
+
+- A fresh A tap starts a 0.5 s pulse climbing AT 8 m/s and paying climb
+  stamina (1.6/s); another fresh tap refreshes the remainder to 0.5 s, never
+  stacks; holding A repeats nothing (edges only). The launch press is not
+  also a climb tap.
+- Inside a valid authored updraft the tap rides the current up to its
+  ceiling: a tap-started channel that continues while the flyer stays in it,
+  so authored updraft behaviour is preserved without holding; reaching the
+  roof stops the rise there.
+- `fly_descend` is a tap toggle: descend until landing or the next tap; a
+  climb tap also ends it; landing clears it.
+- Numbers in data/config/fly_traversal.json (climb_pulse_seconds 0.5,
+  climb_pulse_mps 8.0).
+- Route harnesses (smoke_cloudreach_continuous, helpers/cloudreach_live_segment)
+  tap toward the flight state they want via `_fly_intent` instead of holding.
+
+Tests: test_cloudreach_fly_no_hold.gd (config, pulse, refresh, no repeat,
+input-owned, current ride, descend toggle, mutual cancel, no held reads);
+smoke_cloudreach_fly_no_hold.gd (real input on the production Player).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AbnCQbYpP3f5KQ9hTrct95
+---
+ data/config/fly_traversal.json           |   4 +-
+ scripts/player/fly_controller.gd         | 108 ++++++++++--
+ tests/helpers/cloudreach_live_segment.gd |  15 +-
+ tests/smoke_cloudreach_continuous.gd     |  15 +-
+ tests/smoke_cloudreach_fly_no_hold.gd    | 199 +++++++++++++++++++++++
+ tests/test_cloudreach_fly_no_hold.gd     |  91 +++++++++++
+ 6 files changed, 414 insertions(+), 18 deletions(-)
+ create mode 100644 tests/smoke_cloudreach_fly_no_hold.gd
+ create mode 100644 tests/test_cloudreach_fly_no_hold.gd
+
+diff --git a/data/config/fly_traversal.json b/data/config/fly_traversal.json
+index 9e7765bf..0a6d694e 100644
+--- a/data/config/fly_traversal.json
++++ b/data/config/fly_traversal.json
+@@ -1,5 +1,5 @@
+ {
+-  "_comment": "Cloudreach Fly. Installed Galecrest is the replaceable traversal presentation. An owned healthy active carrier is preferred; Maela's story loaner guarantees the chapter cannot deadlock a valid full five-creature Meadows team and never becomes owned or consumes a party slot. Second Jump (A) airborne deploys; hold A in marked updrafts to climb; hold LT/C to descend. Outside authored currents flight only descends.",
++  "_comment": "Cloudreach Fly. Installed Galecrest is the replaceable traversal presentation. An owned healthy active carrier is preferred; Maela's story loaner guarantees the chapter cannot deadlock a valid full five-creature Meadows team and never becomes owned or consumes a party slot. Second Jump (A) airborne deploys; no held buttons (hard rule): tap A for a 0.5 s climb pulse at climb_pulse_mps (a fresh tap refreshes it, never stacks; holding A does not repeat); a tap inside a marked updraft rides that current to its ceiling; tap LT/C to toggle descent until landing or the next tap (interim ruling, #356).",
+   "unlock_flag": "fly_traversal_unlocked",
+   "speed_mps": 16.0,
+   "acceleration_mps2": 12.0,
+@@ -12,6 +12,8 @@
+   "minimum_launch_stamina": 18.0,
+   "stamina_per_second": 1.0,
+   "climb_stamina_per_second": 1.6,
++  "climb_pulse_seconds": 0.5,
++  "climb_pulse_mps": 8.0,
+   "maximum_flight_seconds": 180.0,
+   "recovery_drop_m": 100.0,
+   "body_clearance_m": 0.75,
+diff --git a/scripts/player/fly_controller.gd b/scripts/player/fly_controller.gd
+index 66a26c80..92e81d0a 100644
+--- a/scripts/player/fly_controller.gd
++++ b/scripts/player/fly_controller.gd
+@@ -27,6 +27,16 @@ var restrictions: Array[Dictionary] = []
+ var safe_anchor := Vector3.INF
+ var safe_realm := ""
+ var flight_seconds := 0.0
++## No-hold flight (SYSTEMS Fly, hard rule: no held-button gameplay). A fresh
++## A tap refreshes this to `climb_pulse_seconds` (never stacks); while it runs
++## the flyer climbs at `climb_pulse_mps`. Holding A never repeats it.
++var climb_pulse_left := 0.0
++## A tap inside a valid authored updraft rides that current to its ceiling (a
++## tap-started channel that continues while the flyer stays in the current).
++var riding_updraft := false
++## `fly_descend` is a tap toggle (interim ruling, #356): descend until landing
++## or the next tap. A climb tap also ends it.
++var descend_toggled := false
+ var _player: CharacterBody3D
+ var _rig: Node3D
+ var _model: Node3D
+@@ -125,6 +135,56 @@ func is_flying() -> bool:
+ 	return state in ["glide", "climb", "descent", "exhausted"]
+ 
+ 
++## This frame's fresh presses, edges only: holding a button never repeats.
++## The launch press itself is not also a climb tap.
++func no_hold_taps(input_owned: bool, launched_now: bool) -> Dictionary:
++	if input_owned:
++		return {"climb": false, "descend": false}
++	return {"climb": not launched_now and Input.is_action_just_pressed("jump"),
++		"descend": Input.is_action_just_pressed("fly_descend")}
++
++
++## Applies one frame's taps (SYSTEMS Fly no-hold climb; `fly_descend` toggle).
++## A climb tap refreshes the pulse to `pulse_seconds` (never adds to what is
++## left), catches the current when inside a valid updraft, and ends a toggled
++## descent. A descend tap flips the descent toggle and ends climbing.
++func apply_taps(tap: Dictionary, in_updraft: bool, pulse_seconds: float) -> void:
++	if bool(tap.get("descend", false)):
++		descend_toggled = not descend_toggled
++		if descend_toggled:
++			climb_pulse_left = 0.0
++			riding_updraft = false
++	if bool(tap.get("climb", false)):
++		descend_toggled = false
++		climb_pulse_left = pulse_seconds
++		riding_updraft = in_updraft
++
++
++## Inside a valid authored updraft's bounds but at or over its roof.
++func _at_updraft_roof() -> bool:
++	for draft: Dictionary in updrafts:
++		var bounds: AABB = draft["bounds"]
++		var ceiling := minf(float(draft["ceiling"]), bounds.end.y) - 2.0
++		var at := _player.global_position
++		if at.x >= bounds.position.x and at.x <= bounds.end.x and at.z >= bounds.position.z \
++				and at.z <= bounds.end.z and at.y >= ceiling and _has_flag(str(draft["requires_flag"])):
++			return true
++	return false
++
++
++## The authored updraft the flyer is inside and below the roof of, with its
++## effective ceiling, or {}.
++func _in_valid_updraft() -> Dictionary:
++	for draft: Dictionary in updrafts:
++		var bounds: AABB = draft["bounds"]
++		var ceiling := minf(float(draft["ceiling"]), bounds.end.y) - 2.0
++		if bounds.has_point(_player.global_position) and _player.global_position.y < ceiling and _has_flag(str(draft["requires_flag"])):
++			var found := draft.duplicate()
++			found["ceiling_y"] = ceiling
++			return found
++	return {}
++
++
+ ## X03 (`input_owner.gd::TRAVERSAL_GROUP`): while flying or carried, LT is
+ ## `fly_descend`, not a world verb.
+ func owns_traversal_input() -> bool:
+@@ -288,11 +348,13 @@ func launch_blockers() -> String:
+ func physics_step(delta: float, input_owned: bool) -> bool:
+ 	if _anchor_pending:
+ 		_anchor_pending_for += delta
++	var launched_now := false
+ 	if not is_flying():
+ 		if not input_owned and Input.is_action_just_pressed("jump") and not _player.is_on_floor():
+ 			var reason := can_launch()
+ 			if reason.is_empty():
+ 				_launch()
++				launched_now = true
+ 			else:
+ 				_deny(reason)
+ 		if not is_flying():
+@@ -309,28 +371,49 @@ func physics_step(delta: float, input_owned: bool) -> bool:
+ 	var direction := view_basis * Vector3(stick.x, 0.0, stick.y)
+ 	var horizontal := Vector3(_player.velocity.x, 0.0, _player.velocity.z)
+ 	horizontal = horizontal.move_toward(direction * float(config.get("speed_mps", 16.0)), float(config.get("acceleration_mps2", 12.0)) * delta)
++	var pulsing := false
++	var at_roof := false
++	var tap := no_hold_taps(input_owned, launched_now)
++	apply_taps(tap, state != "exhausted" and _in_valid_updraft() != {}, float(config.get("climb_pulse_seconds", 0.5)))
++	climb_pulse_left = maxf(0.0, climb_pulse_left - delta)
+ 	var vertical := -float(config.get("sink_mps", 2.0))
+ 	if state == "exhausted":
+ 		vertical = -float(config.get("exhausted_sink_mps", 9.0))
+-	elif not input_owned and Input.is_action_pressed("fly_descend"):
++		climb_pulse_left = 0.0
++		riding_updraft = false
++		descend_toggled = false
++	elif descend_toggled:
+ 		_set_state("descent")
+ 		vertical = -float(config.get("descent_mps", 8.0))
+ 	else:
+ 		_set_state("glide")
+-		if not input_owned and Input.is_action_pressed("jump"):
+-			for draft: Dictionary in updrafts:
+-				var bounds: AABB = draft["bounds"]
+-				var ceiling := minf(float(draft["ceiling"]), bounds.end.y) - 2.0
+-				if bounds.has_point(_player.global_position) and _player.global_position.y < ceiling and _has_flag(str(draft["requires_flag"])):
+-					vertical = minf(float(draft["speed"]), float(config.get("maximum_updraft_mps", 18.0)))
+-					vertical = minf(vertical, maxf(0.0, (ceiling - _player.global_position.y) / maxf(delta, 0.001)))
+-					_set_state("climb")
+-					break
++		var draft := _in_valid_updraft()
++		if riding_updraft and not draft.is_empty():
++			var ceiling := float(draft["ceiling_y"])
++			vertical = minf(float(draft["speed"]), float(config.get("maximum_updraft_mps", 18.0)))
++			vertical = minf(vertical, maxf(0.0, (ceiling - _player.global_position.y) / maxf(delta, 0.001)))
++			_set_state("climb")
++		else:
++			# Out of the current (or at its roof) the ride ends; a fresh tap
++			# is needed to catch another. Ending AT the roof stops the rise
++			# there, rather than coasting over the authored ceiling.
++			at_roof = riding_updraft and _at_updraft_roof()
++			riding_updraft = false
++			if climb_pulse_left > 0.0:
++				vertical = float(config.get("climb_pulse_mps", 8.0))
++				pulsing = true
++				_set_state("climb")
+ 	_player.velocity = Vector3(horizontal.x, move_toward(_player.velocity.y, vertical, float(config.get("vertical_acceleration_mps2", 12.0)) * delta), horizontal.z)
+ 	# A ceiling is enforced on actual velocity too, so inertia cannot drift over
+-	# the current's authored roof when the climb input remains held.
++	# the current's authored roof while the flyer rides it.
+ 	if state == "climb":
+ 		_player.velocity.y = minf(_player.velocity.y, vertical)
++	# The pulse climbs AT its speed for its whole 0.5 s (SYSTEMS Fly), rather
++	# than easing toward it and ending before it gets there.
++	if pulsing:
++		_player.velocity.y = vertical
++	elif at_roof:
++		_player.velocity.y = minf(_player.velocity.y, 0.0)
+ 	var restriction := _restricted_reason(_player.global_position, _player.global_position + _player.velocity * delta)
+ 	# What a refused flyer may still do: nothing, unless it is already inside a
+ 	# sealed volume with no verified anchor to recover to (below).
+@@ -720,6 +803,9 @@ func _launch() -> void:
+ 
+ 
+ func _finish(next: String) -> void:
++	climb_pulse_left = 0.0
++	riding_updraft = false
++	descend_toggled = false
+ 	_player.floor_snap_length = _saved_snap
+ 	var collider := _player.get_node_or_null(^"Collision") as CollisionShape3D
+ 	if collider != null and _saved_shape != null:
+diff --git a/tests/helpers/cloudreach_live_segment.gd b/tests/helpers/cloudreach_live_segment.gd
+index f5020074..17fad465 100644
+--- a/tests/helpers/cloudreach_live_segment.gd
++++ b/tests/helpers/cloudreach_live_segment.gd
+@@ -336,6 +336,16 @@ func _input(action: String, strength: float) -> void:
+ 	event.strength = strength
+ 	Input.parse_input_event(event)
+ 
++## No-hold flight (SYSTEMS Fly, #356): A taps a climb pulse (or catches a
++## current) and LT toggles descent, so the harness taps toward the state it
++## wants instead of holding. A pressed action is released on the next call,
++## which makes every press a fresh edge.
++func _fly_intent(climb: bool, descend: bool) -> void:
++	var tap_descend := descend != bool(fly.descend_toggled)
++	_input("fly_descend", 1.0 if tap_descend and float(input_values.get("fly_descend", 0.0)) == 0.0 else 0.0)
++	var tap_climb := climb and not descend and fly.state != "climb"
++	_input("jump", 1.0 if tap_climb and float(input_values.get("jump", 0.0)) == 0.0 else 0.0)
++
+ 
+ func _release() -> void:
+ 	for action: String in ["move_left", "move_right", "move_forward", "move_back", "jump", "fly_descend", "interact"]:
+@@ -975,8 +985,7 @@ func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = V
+ 			return _fail("Flight ended before "+str(target))
+ 		var horizontal:=Vector2(offset.x,offset.z).length()
+ 		_steer(offset,clampf(horizontal/12,0,1))
+-		_input("jump",1 if offset.y>2 else 0)
+-		_input("fly_descend",1 if offset.y < -8 else 0)
++		_fly_intent(offset.y > 2, offset.y < -8)
+ 		await _frames(1)
+ 		if failed:return false
+ 	return _fail("Flight timeout toward "+str(target))
+@@ -995,7 +1004,7 @@ func _land(at: Vector3) -> bool:
+ 		if not fly.is_flying():
+ 			return await _verify_landing(at)
+ 		_steer(at-player.global_position,clampf(Vector2(at.x-player.global_position.x,at.z-player.global_position.z).length()/8,0,1))
+-		_input("jump",0); _input("fly_descend",1)
++		_fly_intent(false, true)
+ 		await _frames(1)
+ 		if failed:return false
+ 	return _fail("Landing timed out "+str(at))
+diff --git a/tests/smoke_cloudreach_continuous.gd b/tests/smoke_cloudreach_continuous.gd
+index 9d515541..49a46c96 100644
+--- a/tests/smoke_cloudreach_continuous.gd
++++ b/tests/smoke_cloudreach_continuous.gd
+@@ -365,6 +365,16 @@ func _input(action: String, strength: float) -> void:
+ 	event.strength = strength
+ 	Input.parse_input_event(event)
+ 
++## No-hold flight (SYSTEMS Fly, #356): A taps a climb pulse (or catches a
++## current) and LT toggles descent, so the harness taps toward the state it
++## wants instead of holding. A pressed action is released on the next call,
++## which makes every press a fresh edge.
++func _fly_intent(climb: bool, descend: bool) -> void:
++	var tap_descend := descend != bool(fly.descend_toggled)
++	_input("fly_descend", 1.0 if tap_descend and float(input_values.get("fly_descend", 0.0)) == 0.0 else 0.0)
++	var tap_climb := climb and not descend and fly.state != "climb"
++	_input("jump", 1.0 if tap_climb and float(input_values.get("jump", 0.0)) == 0.0 else 0.0)
++
+ 
+ func _release() -> void:
+ 	for action: String in ["move_left", "move_right", "move_forward", "move_back", "jump", "fly_descend", "interact"]:
+@@ -1065,8 +1075,7 @@ func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = V
+ 			return _fail("Flight ended before "+str(target))
+ 		var horizontal:=Vector2(offset.x,offset.z).length()
+ 		_steer(offset,clampf(horizontal/12,0,1))
+-		_input("jump",1 if offset.y>2 else 0)
+-		_input("fly_descend",1 if offset.y < -8 else 0)
++		_fly_intent(offset.y > 2, offset.y < -8)
+ 		await _frames(1)
+ 		if failed:return false
+ 	return _fail("Flight timeout toward "+str(target))
+@@ -1085,7 +1094,7 @@ func _land(at: Vector3) -> bool:
+ 		if not fly.is_flying():
+ 			return await _verify_landing(at)
+ 		_steer(at-player.global_position,clampf(Vector2(at.x-player.global_position.x,at.z-player.global_position.z).length()/8,0,1))
+-		_input("jump",0); _input("fly_descend",1)
++		_fly_intent(false, true)
+ 		await _frames(1)
+ 		if failed:return false
+ 	return _fail("Landing timed out "+str(at))
+diff --git a/tests/smoke_cloudreach_fly_no_hold.gd b/tests/smoke_cloudreach_fly_no_hold.gd
+new file mode 100644
+index 00000000..9e382d94
+--- /dev/null
++++ b/tests/smoke_cloudreach_fly_no_hold.gd
+@@ -0,0 +1,199 @@
++extends SceneTree
++
++## SYSTEMS Fly no-hold climb + interim `fly_descend` toggle (#356), with real
++## input events on the production Player over real collision. Fixture world
++## (floor, one authored updraft off to the side); not route evidence.
++##
++##   godot --headless --path . --script tests/smoke_cloudreach_fly_no_hold.gd
++##
++## Prints `FLY NO HOLD: n assertions, m failures`; exit 0 on pass.
++
++const PLAYER := preload("res://scenes/player/player.tscn")
++const CAMERA := preload("res://scripts/player/camera_rig.gd")
++const SPECIES := preload("res://scripts/creatures/creature_species.gd")
++const PARTY := preload("res://autoload/party.gd")
++const UPDRAFT := AABB(Vector3(30, 0, -10), Vector3(20, 40, 20))
++var world: Node3D
++var player: CharacterBody3D
++var fly: Node
++var game: Node
++var failures: Array[String] = []
++var assertions := 0
++
++
++func _init() -> void:
++	_run.call_deferred()
++
++
++func _run() -> void:
++	game = root.get_node("Game")
++	game.current_realm = "cloudreach"
++	game.pending_realm_entry = ""
++	game.saved_player_pose = {}
++	game.party = PARTY.new()
++	for species: String in ["bramblebun", "mudsnout", "terrapup", "brooktail", "sparkit"]:
++		game.party.add(SPECIES.spawn(species))
++	game.party.set_active(4)
++	game.progression.set_flag("fly_traversal_unlocked")
++	_build_world()
++	await _frames(60)
++	_check(player.is_on_floor(), "fixture starts on the floor")
++
++	# 1. Held A: exactly one pulse, then the flyer sinks again.
++	player.vitals.rest()
++	await _deploy()
++	_check(fly.is_flying(), "double jump deploys Fly")
++	var start_y := player.global_position.y
++	_action("jump", true)
++	var peak := start_y
++	var pulse_frames := 0
++	var pulse_speed_ok := true
++	for i in 90:
++		await physics_frame
++		peak = maxf(peak, player.global_position.y)
++		if fly.state == "climb":
++			pulse_frames += 1
++			pulse_speed_ok = pulse_speed_ok and absf(player.velocity.y - 8.0) < 0.01
++	var end_y := player.global_position.y
++	_action("jump", false)
++	# 0.5 s at 8 m/s is 4 m; the existing vertical easing (12 m/s^2) then
++	# coasts the last 8 m/s off (~2.7 m) before the ordinary sink resumes.
++	_check(peak - start_y > 3.5 and peak - start_y < 7.5,
++		"one A press climbs one 0.5 s pulse at 8 m/s plus its coast (%.2f m)" % (peak - start_y))
++	_check(pulse_frames >= 28 and pulse_frames <= 32, "the pulse lasts 0.5 s (%d frames at 60 Hz)" % pulse_frames)
++	_check(pulse_speed_ok, "the pulse climbs AT 8 m/s for its whole duration")
++	_check(end_y < peak - 0.3, "holding A does not repeat the climb (peak %.2f, after 1.5 s %.2f)" % [peak, end_y])
++
++	# 2. A fresh tap refreshes to 0.5 s and never stacks.
++	await _tap("jump")
++	await _frames(12)
++	var before_refresh := float(fly.climb_pulse_left)
++	await _tap("jump")
++	var after_refresh := float(fly.climb_pulse_left)
++	_check(before_refresh > 0.0 and before_refresh < 0.45, "the first pulse was running down (%.2f s)" % before_refresh)
++	_check(after_refresh <= 0.5 + 0.001 and after_refresh > 0.45, "a fresh tap refreshes to 0.5 s, not more (%.2f s)" % after_refresh)
++
++	# 3. Climb pays climb stamina while the pulse runs.
++	player.vitals.stamina = 50.0
++	await _tap("jump")
++	var climb_from := float(player.vitals.stamina)
++	await _frames(20)
++	var climb_spent := climb_from - float(player.vitals.stamina)
++	await _frames(40)
++	var glide_from := float(player.vitals.stamina)
++	await _frames(20)
++	var glide_spent := glide_from - float(player.vitals.stamina)
++	_check(climb_spent > glide_spent * 1.3, "the pulse pays climb stamina (%.3f vs glide %.3f over 1/3 s)" % [climb_spent, glide_spent])
++
++	# 4. LT tap toggles a descent that lasts with nothing held, until landing.
++	await _tap("fly_descend")
++	await _frames(30)
++	_check(fly.state == "descent", "one LT tap keeps descending with no button held")
++	for i in 600:
++		await physics_frame
++		if player.is_on_floor() and not fly.is_flying():
++			break
++	_check(not fly.is_flying() and player.is_on_floor(), "the toggled descent ends on the floor")
++	_check(not bool(fly.descend_toggled), "landing clears the toggle")
++
++	# 5. The next LT tap ends the descent in the air.
++	player.vitals.rest()
++	await _deploy()
++	await _tap("jump")
++	await _frames(20)
++	await _tap("fly_descend")
++	await _frames(10)
++	_check(fly.state == "descent", "LT tap descends")
++	await _tap("fly_descend")
++	await _frames(5)
++	_check(fly.is_flying() and fly.state == "glide", "the next LT tap returns to the glide (%s)" % fly.state)
++	for i in 900:
++		await physics_frame
++		if not fly.is_flying():
++			break
++
++	# 6. One tap inside an authored updraft rides it to its roof, no hold.
++	player.vitals.rest()
++	player.global_position = Vector3(40, 0.2, 0)
++	player.velocity = Vector3.ZERO
++	await _frames(20)
++	await _deploy()
++	await _tap("jump")
++	var ride_peak := player.global_position.y
++	for i in 240:
++		await physics_frame
++		ride_peak = maxf(ride_peak, player.global_position.y)
++	_check(ride_peak > 12.0, "a single tap in the current climbs well past one pulse (%.2f m)" % ride_peak)
++	_check(ride_peak <= 18.3, "the authored roof still caps the ride (%.2f m)" % ride_peak)
++
++	for action: String in ["jump", "fly_descend"]:
++		_action(action, false)
++	world.free()
++	for failure: String in failures:
++		printerr("FAIL: " + failure)
++	print("FLY NO HOLD: %d assertions, %d failures" % [assertions, failures.size()])
++	quit(0 if failures.is_empty() else 1)
++
++
++func _build_world() -> void:
++	world = Node3D.new()
++	world.name = "FlyNoHoldFixture"
++	root.add_child(world)
++	_box("Floor", Vector3(0, -1, 0), Vector3(200, 2, 200))
++	var rig := SpringArm3D.new()
++	rig.name = "CameraRig"
++	rig.set_script(CAMERA)
++	var camera := Camera3D.new()
++	camera.name = "Camera3D"
++	rig.add_child(camera)
++	world.add_child(rig)
++	player = PLAYER.instantiate()
++	player.position = Vector3(0, 0.1, 0)
++	world.add_child(player)
++	fly = player.fly_controller
++	fly.register_updraft("fixture", UPDRAFT, 12.0, 20.0)
++
++
++func _box(id: String, at: Vector3, size: Vector3) -> void:
++	var body := StaticBody3D.new()
++	body.name = id
++	body.position = at
++	var collider := CollisionShape3D.new()
++	var shape := BoxShape3D.new()
++	shape.size = size
++	collider.shape = shape
++	body.add_child(collider)
++	world.add_child(body)
++
++
++func _deploy() -> void:
++	await _tap("jump")
++	await _frames(7)
++	await _tap("jump")
++	await _frames(3)
++
++
++func _tap(action: String) -> void:
++	_action(action, true)
++	await _frames(1)
++	_action(action, false)
++	await _frames(1)
++
++
++func _action(action: String, pressed: bool) -> void:
++	var event := InputEventAction.new()
++	event.action = action
++	event.pressed = pressed
++	event.strength = 1.0 if pressed else 0.0
++	Input.parse_input_event(event)
++
++
++func _frames(count: int) -> void:
++	for i in count:
++		await physics_frame
++
++
++func _check(ok: bool, message: String) -> void:
++	assertions += 1
++	if not ok:
++		failures.append(message)
+diff --git a/tests/test_cloudreach_fly_no_hold.gd b/tests/test_cloudreach_fly_no_hold.gd
+new file mode 100644
+index 00000000..db3f3b53
+--- /dev/null
++++ b/tests/test_cloudreach_fly_no_hold.gd
+@@ -0,0 +1,91 @@
++extends "res://tests/test_case.gd"
++
++## SYSTEMS Fly no-hold climb and the interim `fly_descend` toggle (#356): the
++## tap rules in `fly_controller.gd::apply_taps`. The behavioural witness with
++## real input on a real flyer is tests/smoke_cloudreach_fly_no_hold.gd.
++
++const FLY := preload("res://scripts/player/fly_controller.gd")
++const CONFIG := "res://data/config/fly_traversal.json"
++
++
++func _fly() -> Node:
++	return FLY.new()
++
++
++func test_the_numbers_live_in_config() -> void:
++	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
++	assert_almost_eq(float(config.get("climb_pulse_seconds", -1.0)), 0.5)
++	assert_almost_eq(float(config.get("climb_pulse_mps", -1.0)), 8.0)
++	assert_almost_eq(float(config.get("climb_stamina_per_second", -1.0)), 1.6)
++
++
++func test_a_climb_tap_starts_one_pulse() -> void:
++	var fly := _fly()
++	fly.call("apply_taps", {"climb": true}, false, 0.5)
++	assert_almost_eq(float(fly.get("climb_pulse_left")), 0.5, 0.0001, "one tap, one 0.5 s pulse")
++	assert_false(bool(fly.get("riding_updraft")), "outside a current the tap is only the pulse")
++	fly.free()
++
++
++func test_a_fresh_tap_refreshes_and_never_stacks() -> void:
++	var fly := _fly()
++	fly.call("apply_taps", {"climb": true}, false, 0.5)
++	fly.set("climb_pulse_left", 0.2)
++	fly.call("apply_taps", {"climb": true}, false, 0.5)
++	assert_almost_eq(float(fly.get("climb_pulse_left")), 0.5, 0.0001, "refreshed to 0.5 s, not 0.7 s")
++	fly.call("apply_taps", {"climb": true}, false, 0.5)
++	assert_almost_eq(float(fly.get("climb_pulse_left")), 0.5, 0.0001, "a tap at full pulse stays at 0.5 s")
++	fly.free()
++
++
++func test_no_tap_no_pulse_so_holding_does_not_repeat() -> void:
++	var fly := _fly()
++	fly.call("apply_taps", {"climb": true}, false, 0.5)
++	fly.set("climb_pulse_left", 0.0)
++	# A held button produces no further edge: the frame's taps are all false.
++	fly.call("apply_taps", {"climb": false, "descend": false}, false, 0.5)
++	assert_almost_eq(float(fly.get("climb_pulse_left")), 0.0, 0.0001, "a held A starts nothing new")
++	fly.free()
++
++
++func test_input_owned_frames_carry_no_taps() -> void:
++	var fly := _fly()
++	var taps: Dictionary = fly.call("no_hold_taps", true, false)
++	assert_false(bool(taps.climb) or bool(taps.descend), "a panel or cutscene owns the buttons")
++	fly.free()
++
++
++func test_a_climb_tap_in_a_current_rides_it() -> void:
++	var fly := _fly()
++	fly.call("apply_taps", {"climb": true}, true, 0.5)
++	assert_true(bool(fly.get("riding_updraft")), "a tap inside a valid updraft rides the current (no hold)")
++	fly.free()
++
++
++func test_descend_is_a_toggle() -> void:
++	var fly := _fly()
++	fly.call("apply_taps", {"descend": true}, false, 0.5)
++	assert_true(bool(fly.get("descend_toggled")), "one tap starts the descent")
++	fly.call("apply_taps", {}, false, 0.5)
++	assert_true(bool(fly.get("descend_toggled")), "it continues with no button held")
++	fly.call("apply_taps", {"descend": true}, false, 0.5)
++	assert_false(bool(fly.get("descend_toggled")), "the next tap ends it")
++	fly.free()
++
++
++func test_descend_and_climb_taps_end_each_other() -> void:
++	var fly := _fly()
++	fly.call("apply_taps", {"climb": true}, true, 0.5)
++	fly.call("apply_taps", {"descend": true}, false, 0.5)
++	assert_true(bool(fly.get("descend_toggled")))
++	assert_almost_eq(float(fly.get("climb_pulse_left")), 0.0, 0.0001, "descending cancels the pulse")
++	assert_false(bool(fly.get("riding_updraft")), "and the ride")
++	fly.call("apply_taps", {"climb": true}, false, 0.5)
++	assert_false(bool(fly.get("descend_toggled")), "a climb tap ends a toggled descent")
++	fly.free()
++
++
++func test_the_controller_reads_no_held_state() -> void:
++	var source := FileAccess.get_file_as_string("res://scripts/player/fly_controller.gd")
++	assert_false(source.contains("is_action_pressed(\"jump\")"), "climb never reads a held A")
++	assert_false(source.contains("is_action_pressed(\"fly_descend\")"), "descent never reads a held LT")
+-- 
+2.43.0
+

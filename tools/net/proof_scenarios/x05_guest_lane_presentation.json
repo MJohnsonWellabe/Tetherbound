@@ -87,11 +87,31 @@
     },
     {
       "peer": 0,
+      "action": "deploy_creature",
+      "label": "SETUP: the host's lead creature is out (the engage press needs a standing ally)"
+    },
+    {
+      "peer": 0,
+      "probe": "deployed_creatures",
+      "label": "DIAG: host's deployed bodies before the engage"
+    },
+    {
+      "peer": 0,
+      "probe": "tournament",
+      "label": "DIAG: host party before the engage"
+    },
+    {
+      "peer": 0,
       "action": "engage_wild",
       "args": {
         "settle": 30
       },
       "label": "the host engages the Hollows Alpha (production engage press)"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "label": "SETUP: the guest's lead creature is out (joining needs a standing ally)"
     },
     {
       "peer": 1,

@@ -9,7 +9,7 @@ var phase := "bank_cycle"
 var elapsed := 0.0
 var conduits: Array[int] = []
 var attempt := 0
-## BOSSES §4.7: seconds into the current shared 30 s conduit window. The window
+## BOSSES §4.7: seconds into the current shared conduit window (36 s, config). The window
 ## spans bank serials; only its expiry with fewer than four distinct conduits
 ## clears the partial set and starts a fresh window.
 var window_elapsed := 0.0
@@ -53,7 +53,7 @@ func _set_phase(next: String) -> void:
 	conduits.clear()
 
 func break_window_seconds() -> float:
-	return float(config.get("break_window_seconds", 30.0))
+	return float(config.get("break_window_seconds", 36.0))
 
 func window_left() -> float:
 	return maxf(0.0, break_window_seconds() - window_elapsed) if phase == "break_core" else 0.0
@@ -66,7 +66,7 @@ func advance(seconds: float) -> Dictionary:
 		window_elapsed += seconds
 		if window_elapsed >= break_window_seconds():
 			# Timing out retries Break only: the partial conduit set clears and
-			# a fresh 30 s window begins. It never awards victory or respawns
+			# a fresh window begins. It never awards victory or respawns
 			# a defeated trainer team.
 			if conduits.size() < int(config.bank_count):
 				conduits.clear()
@@ -132,7 +132,7 @@ func load_data(data: Dictionary) -> void:
 			if (id is int or id is float) and int(id) >= 0 and int(id) < int(config.bank_count) and not conduits.has(int(id)):
 				conduits.append(int(id))
 	attempt = maxi(0, int(data.get("attempt", 0)))
-	# Saves from before the 30 s window begin a fresh window rather than
+	# Saves from before the shared window begin a fresh window rather than
 	# inheriting a bank-cycle position.
 	var window: Variant = data.get("window_elapsed", 0.0)
 	window_elapsed = clampf(float(window), 0.0, break_window_seconds()) \

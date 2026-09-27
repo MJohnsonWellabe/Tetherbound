@@ -28,6 +28,7 @@ func _run() -> void:
 	var tries := {}
 	var offroad: Array = []
 	var offroad_at := {}
+	var near := {}
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--sites="):
 			ids = Array(arg.trim_prefix("--sites=").split(",", false))
@@ -45,6 +46,12 @@ func _run() -> void:
 				var xyz := pair.get_slice("@", 1).split(",")
 				offroad_at[pair.get_slice("@", 0)] = Vector3(float(xyz[0]), float(xyz[1]), float(xyz[2]))
 				offroad.append(pair.get_slice("@", 0))
+		elif arg.begins_with("--near="):
+			# --near=<id>@x,y,z@radius: every supported point (road allowed)
+			# within radius of the anchor, nearest first.
+			var parts := arg.trim_prefix("--near=").split("@")
+			var xyz := parts[1].split(",")
+			near[parts[0]] = {"at": Vector3(float(xyz[0]), float(xyz[1]), float(xyz[2])), "r": float(parts[2])}
 		elif arg.begins_with("--try="):
 			# --try=<site id>:x,y,z|x,y,z  authored candidates, resolved the way
 			# the runtime resolves a site (world._resource_position).
@@ -100,6 +107,26 @@ func _run() -> void:
 		for entry: Dictionary in table.get("entries", []):
 			species.append(str(entry.get("placeholder_species", "")))
 		var centre := _vec3(site["position"])
+		if near.has(id):
+			var anchor: Vector3 = near[id].at
+			var r: float = near[id].r
+			var found := 0
+			var gx := -r
+			while gx <= r:
+				var gz := -r
+				while gz <= r:
+					var p := Vector3(anchor.x + gx, anchor.y, anchor.z + gz)
+					if Vector2(gx, gz).length() <= r:
+						var y := float(world.call("ground_height_near", p))
+						if is_finite(y) and absf(y - anchor.y) <= 45.0:
+							p.y = y
+							if bool(_site_supported(site, p, species).ok):
+								found += 1
+								print("[site_near] %s ok at=%s from_anchor=%.1f" % [id, p, Vector2(gx, gz).length()])
+					gz += 4.0
+				gx += 4.0
+			print("[site_near] %s found=%d" % [id, found])
+			continue
 		if tries.has(id):
 			for raw_try: String in tries[id]:
 				var parts := raw_try.split(",")

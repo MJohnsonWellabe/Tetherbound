@@ -1,0 +1,122 @@
+[lure-walk] START activity=doss save=slot_1.json pos=[8.0, 6.17, 7649.67] lure=[-19.0, 4180.0] route_m=5007.4 hour=3.93
+[lure-walk] CAPTURE doss_01_start.png t=0.0s walked=0.0m pos=(8.0,7649.7) lure_m=3469.8
+[lure-walk] PROGRESS t=10.0s walked=79.1m pos=(8.0,7570.6) cursor=3/626
+[lure-walk] PROGRESS t=20.0s walked=140.2m pos=(8.3,7509.5) cursor=6/626
+[lure-walk] PROGRESS t=30.0s walked=202.1m pos=(33.9,7454.6) cursor=15/626
+[lure-walk] PROGRESS t=40.0s walked=263.5m pos=(63.2,7400.7) cursor=22/626
+[lure-walk] PROGRESS t=50.0s walked=324.5m pos=(62.5,7349.0) cursor=30/626
+[lure-walk] PROGRESS t=60.0s walked=386.7m pos=(22.7,7301.3) cursor=38/626
+[lure-walk] PROGRESS t=70.0s walked=448.2m pos=(-16.5,7254.2) cursor=46/626
+[lure-walk] PROGRESS t=80.0s walked=509.3m pos=(-43.3,7199.5) cursor=54/626
+[lure-walk] PROGRESS t=90.0s walked=571.3m pos=(-69.1,7143.1) cursor=62/626
+[lure-walk] PROGRESS t=100.0s walked=632.8m pos=(-59.6,7089.4) cursor=70/626
+[lure-walk] CAPTURE doss_02_fight-wild_galecrest_5006_4.png t=103.1s walked=650.5m pos=(-46.1,7080.8) lure_m=2900.9
+[lure-walk] CAPTURE doss_03_fight-wild_galecrest_5006_2.png t=105.8s walked=650.5m pos=(-46.7,7073.6) lure_m=2893.8
+[lure-walk] PROGRESS t=115.5s walked=708.5m pos=(-16.3,7024.4) cursor=80/626
+[lure-walk] PROGRESS t=125.5s walked=769.1m pos=(15.5,6972.8) cursor=88/626
+[lure-walk] PROGRESS t=135.5s walked=831.0m pos=(44.3,6918.2) cursor=96/626
+[lure-walk] CAPTURE doss_04_fight-wild_galecrest_4919_1.png t=135.5s walked=831.3m pos=(44.3,6918.0) lure_m=2738.7
+[lure-walk] CAPTURE doss_05_fight-wild_galecrest_4919_2.png t=138.2s walked=831.3m pos=(37.2,6917.3) lure_m=2737.8
+[lure-walk] PROGRESS t=150.9s walked=908.8m pos=(69.8,6848.2) cursor=106/626
+[lure-walk] PROGRESS t=160.9s walked=971.2m pos=(51.4,6801.0) cursor=114/626
+[lure-walk] PROGRESS t=170.9s walked=1033.2m pos=(-0.0,6766.7) cursor=122/626
+[lure-walk] PROGRESS t=180.9s walked=1095.3m pos=(-51.7,6732.2) cursor=130/626
+[lure-walk] PROGRESS t=190.9s walked=1157.6m pos=(-102.8,6696.6) cursor=138/626
+[lure-walk] CAPTURE doss_06_fight-wild_galecrest_4917_1.png t=196.0s walked=1188.7m pos=(-128.1,6678.5) lure_m=2500.9
+[lure-walk] PROGRESS t=203.7s walked=1227.3m pos=(-159.5,6656.1) cursor=147/626
+[lure-walk] PROGRESS t=213.7s walked=1287.9m pos=(-208.3,6620.4) cursor=155/626
+[lure-walk] CAPTURE doss_07_fight-wild_galecrest_4916_1.png t=222.5s walked=1342.2m pos=(-224.8,6573.9) lure_m=2402.8
+[lure-walk] CAPTURE doss_08_fight-wild_galecrest_4916_2.png t=225.4s walked=1342.4m pos=(-229.3,6568.0) lure_m=2397.2
+[lure-walk] PROGRESS t=229.2s walked=1350.3m pos=(-234.4,6562.0) cursor=163/626
+[lure-walk] PROGRESS t=239.2s walked=1421.9m pos=(-263.9,6496.8) cursor=172/626
+[lure-walk] PROGRESS t=249.2s walked=1460.0m pos=(-278.4,6462.0) cursor=177/626
+[lure-walk] PROGRESS t=260.8s walked=1538.6m pos=(-219.5,6417.3) cursor=186/626
+[lure-walk] PROGRESS t=270.8s walked=1599.6m pos=(-169.6,6382.1) cursor=194/626
+[lure-walk] PROGRESS t=280.8s walked=1659.9m pos=(-120.4,6347.3) cursor=202/626
+[lure-walk] PROGRESS t=290.8s walked=1721.2m pos=(-69.3,6313.6) cursor=210/626
+[lure-walk] CAPTURE doss_09_fight-wild_galecrest_4914_1.png t=298.1s walked=1766.3m pos=(-34.5,6282.6) lure_m=2102.7
+[lure-walk] PROGRESS t=324.7s walked=1791.6m pos=(-18.2,6280.4) cursor=218/626
+[lure-walk] PROGRESS t=334.7s walked=1865.2m pos=(43.7,6240.5) cursor=227/626
+[lure-walk] PROGRESS t=344.7s walked=1925.4m pos=(95.6,6211.2) cursor=235/626
+[lure-walk] PROGRESS t=354.7s walked=1987.3m pos=(150.2,6182.2) cursor=243/626
+[lure-walk] PROGRESS t=364.7s walked=2049.8m pos=(205.5,6153.0) cursor=251/626
+[lure-walk] CAPTURE doss_10_fight-wild_galecrest_4070_3.png t=369.0s walked=2077.5m pos=(230.0,6140.2) lure_m=1975.9
+[lure-walk] PROGRESS t=377.6s walked=2119.5m pos=(268.6,6123.5) cursor=260/626
+[lure-walk] PROGRESS t=387.6s walked=2180.2m pos=(320.0,6092.8) cursor=268/626
+[lure-walk] PROGRESS t=397.6s walked=2240.7m pos=(365.9,6053.5) cursor=276/626
+[lure-walk] PROGRESS t=407.6s walked=2301.0m pos=(395.9,6003.4) cursor=284/626
+[lure-walk] PROGRESS t=417.6s walked=2362.9m pos=(422.6,5947.9) cursor=291/626
+[lure-walk] CAPTURE doss_11_fight-wild_galecrest_4043_1.png t=420.2s walked=2379.0m pos=(428.3,5939.1) lure_m=1815.1
+[lure-walk] PROGRESS t=431.9s walked=2430.1m pos=(434.9,5892.7) cursor=299/626
+[lure-walk] PROGRESS t=441.9s walked=2490.0m pos=(425.1,5836.3) cursor=307/626
+[lure-walk] PROGRESS t=451.9s walked=2551.8m pos=(399.4,5780.3) cursor=315/626
+[lure-walk] CAPTURE doss_12_fight-wild_galecrest_4040_5.png t=458.3s walked=2592.2m pos=(369.2,5755.4) lure_m=1622.5
+[lure-walk] CAPTURE doss_13_fight-wild_galecrest_4040_2.png t=463.6s walked=2612.6m pos=(357.6,5731.6) lure_m=1596.6
+[lure-walk] PROGRESS t=467.4s walked=2619.0m pos=(354.9,5728.5) cursor=324/626
+[lure-walk] PROGRESS t=477.4s walked=2686.1m pos=(305.8,5683.4) cursor=333/626
+[lure-walk] PROGRESS t=487.4s walked=2746.7m pos=(255.9,5649.1) cursor=340/626
+[lure-walk] PROGRESS t=497.4s walked=2808.2m pos=(205.2,5614.2) cursor=348/626
+[lure-walk] PROGRESS t=507.4s walked=2867.7m pos=(156.6,5582.3) cursor=356/626
+[lure-walk] PROGRESS t=517.4s walked=2930.1m pos=(102.9,5550.5) cursor=364/626
+[lure-walk] CAPTURE doss_14_fight-wild_galecrest_4913_1.png t=521.6s walked=2955.6m pos=(81.3,5538.0) lure_m=1361.7
+[lure-walk] PROGRESS t=530.2s walked=2998.3m pos=(44.5,5516.2) cursor=372/626
+[lure-walk] PROGRESS t=540.2s walked=3059.9m pos=(-9.0,5485.8) cursor=380/626
+[lure-walk] PROGRESS t=550.2s walked=3121.4m pos=(-64.6,5460.0) cursor=388/626
+[lure-walk] PROGRESS t=560.2s walked=3182.0m pos=(-119.3,5433.9) cursor=396/626
+[lure-walk] PROGRESS t=570.2s walked=3243.5m pos=(-174.6,5407.0) cursor=404/626
+[lure-walk] PROGRESS t=580.2s walked=3304.6m pos=(-226.2,5374.9) cursor=411/626
+[lure-walk] CAPTURE doss_15_fight-wild_galecrest_4912_1.png t=585.0s walked=3334.3m pos=(-251.4,5359.2) lure_m=1201.8
+[lure-walk] PROGRESS t=609.7s walked=3380.8m pos=(-288.1,5336.2) cursor=421/626
+[lure-walk] PROGRESS t=619.7s walked=3448.1m pos=(-338.5,5293.8) cursor=429/626
+[lure-walk] PROGRESS t=629.7s walked=3510.2m pos=(-367.6,5239.0) cursor=437/626
+[lure-walk] PROGRESS t=639.7s walked=3572.8m pos=(-396.9,5183.7) cursor=445/626
+[lure-walk] PROGRESS t=649.7s walked=3634.4m pos=(-411.2,5129.4) cursor=454/626
+[lure-walk] PROGRESS t=659.7s walked=3696.5m pos=(-372.6,5080.8) cursor=462/626
+[lure-walk] PROGRESS t=669.7s walked=3758.5m pos=(-333.9,5032.4) cursor=470/626
+[lure-walk] PROGRESS t=679.7s walked=3820.4m pos=(-293.7,4985.5) cursor=478/626
+[lure-walk] PROGRESS t=689.7s walked=3882.3m pos=(-244.3,4948.3) cursor=486/626
+[lure-walk] PROGRESS t=699.7s walked=3943.8m pos=(-195.1,4911.3) cursor=493/626
+[lure-walk] PROGRESS t=709.7s walked=4005.5m pos=(-145.8,4874.3) cursor=501/626
+[lure-walk] CAPTURE doss_16_fight-wild_galecrest_4910_2.png t=714.5s walked=4033.8m pos=(-121.8,4849.8) lure_m=677.7
+[lure-walk] PROGRESS t=722.5s walked=4077.3m pos=(-85.7,4827.3) cursor=511/626
+[lure-walk] PROGRESS t=732.5s walked=4139.4m pos=(-36.9,4789.0) cursor=519/626
+[lure-walk] PROGRESS t=742.5s walked=4201.2m pos=(12.6,4752.0) cursor=527/626
+[lure-walk] PROGRESS t=752.5s walked=4262.6m pos=(64.3,4719.1) cursor=535/626
+[lure-walk] PROGRESS t=762.5s walked=4324.0m pos=(112.6,4682.7) cursor=543/626
+[lure-walk] PROGRESS t=772.5s walked=4385.8m pos=(136.7,4625.8) cursor=551/626
+[lure-walk] CAPTURE doss_17_fight-wild_galecrest_3103_2.png t=782.2s walked=4446.9m pos=(163.2,4566.1) lure_m=426.9
+[lure-walk] PROGRESS t=785.2s walked=4447.8m pos=(162.3,4566.0) cursor=559/626
+[lure-walk] PROGRESS t=795.2s walked=4517.6m pos=(106.8,4525.0) cursor=568/626
+[lure-walk] PROGRESS t=805.2s walked=4579.5m pos=(59.8,4485.2) cursor=576/626
+[lure-walk] PROGRESS t=815.2s walked=4642.0m pos=(12.0,4444.8) cursor=584/626
+[lure-walk] PROGRESS t=825.2s walked=4704.3m pos=(-35.5,4404.6) cursor=592/626
+[lure-walk] PROGRESS t=835.2s walked=4766.4m pos=(-82.9,4364.4) cursor=600/626
+[lure-walk] PROGRESS t=845.2s walked=4828.9m pos=(-100.0,4309.0) cursor=608/626
+[lure-walk] CAPTURE doss_18_fight-wild_galecrest_3039_3.png t=845.2s walked=4829.1m pos=(-94.0,4312.7) lure_m=152.4
+[lure-walk] CAPTURE doss_19_fight-wild_galecrest_3039_1.png t=852.0s walked=4856.0m pos=(-100.8,4287.4) lure_m=135.0
+[lure-walk] PROGRESS t=860.7s walked=4900.6m pos=(-96.2,4243.1) cursor=616/626
+[lure-walk] CAPTURE doss_20_left-road-lure-not-yet-on-screen.png t=861.9s walked=4909.8m pos=(-94.9,4234.0) lure_m=93.1
+[lure-walk] CAPTURE doss_21_lure-first-seen.png t=864.0s walked=4920.5m pos=(-93.3,4223.1) lure_m=85.9
+[lure-walk] PROGRESS t=872.9s walked=4960.8m pos=(-67.7,4189.5) cursor=620/626
+[lure-walk] PROGRESS t=884.8s walked=5024.1m pos=(-82.2,4188.2) cursor=624/626
+[lure-walk] CAPTURE doss_22_lure-first-readable.png t=888.9s walked=5050.7m pos=(-55.7,4184.9) lure_m=37.0
+[lure-walk] CAPTURE doss_23_approach-30m.png t=890.7s walked=5058.2m pos=(-48.4,4184.3) lure_m=29.8
+[lure-walk] CAPTURE doss_24_prompt-offered.png t=895.5s walked=5084.7m pos=(-22.2,4180.5) lure_m=3.3
+[lure-walk] CAPTURE doss_25_act-0a-gather-fiber.png t=897.7s walked=5093.9m pos=(-23.5,4189.6) lure_m=10.6
+[lure-walk] CAPTURE doss_26_act-0b-gathered-fiber.png t=903.4s walked=5093.9m pos=(-23.5,4189.6) lure_m=10.6
+[lure-walk] CAPTURE doss_27_act-0c-satchel-before.png t=906.9s walked=5101.2m pos=(-20.4,4183.0) lure_m=3.3
+[lure-walk] CAPTURE doss_28_act-00-perch-before.png t=912.6s walked=5109.7m pos=(-13.7,4188.1) lure_m=9.7
+[lure-walk] CAPTURE doss_29_act-01-pressed.png t=916.7s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_30_act-05-dialogue-01.png t=916.7s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_31_act-05-dialogue-02.png t=917.4s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_32_act-11-pressed.png t=920.9s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_33_act-15-dialogue-01.png t=920.9s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_34_act-15-dialogue-02.png t=921.5s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_35_act-21-pressed.png t=925.0s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_36_act-25-dialogue-01.png t=925.0s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_37_act-25-dialogue-02.png t=925.7s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_38_act-97-satchel-after.png t=929.6s walked=5116.2m pos=(-17.3,4182.6) lure_m=3.2
+[lure-walk] CAPTURE doss_39_act-98-perch-after.png t=935.0s walked=5122.7m pos=(-13.5,4187.9) lure_m=9.7
+[lure-walk] CAPTURE doss_40_act-99-after.png t=937.2s walked=5122.7m pos=(-13.5,4187.9) lure_m=9.7
+[lure-walk] RECEIPT {"act":[{"doss_prompt_winning_after_gather":true,"gathered":{"fiber":{"after":2,"before":0,"equip_tries":[{"fighting":false,"input_owner":"<null>","world_input_allowed":true},{"fighting":false,"input_owner":"<null>","world_input_allowed":true}],"equipped_after_press":"knife","hotbar_slot":2,"tool":"knife","tool_in_hand":true},"wood":{"before":1}}},{"satchel_before":{"closed":true,"fiber":2,"open":true,"wood":1}},{"dialogue_lines":2,"fought":false,"round":0},{"dialogue_lines":2,"fought":false,"round":1},{"dialogue_lines":2,"fought":false,"round":2},{"satchel_after":{"closed":true,"fiber":1,"open":true,"wood":0}},{"perch_repaired":true},{"fought":false,"total_dialogue_lines":6}],"activity":"doss","budget_s":2400.0,"clock_hour":3.93172303994115,"companion_out_at_start":true,"entered_road_at":[12.7,7509.1],"fights":[{"foe":"Wild_galecrest_5006_4","resolved_by":"combat_run","t_s":103.1},{"foe":"Wild_galecrest_5006_2","resolved_by":"combat_run","t_s":105.8},{"foe":"Wild_galecrest_4919_1","resolved_by":"combat_run","t_s":135.5},{"foe":"Wild_galecrest_4919_2","resolved_by":"combat_run","t_s":138.3},{"foe":"Wild_galecrest_4917_1","resolved_by":"combat_run","t_s":196.0},{"foe":"Wild_galecrest_4916_1","resolved_by":"combat_run","t_s":222.5},{"foe":"Wild_galecrest_4916_2","resolved_by":"combat_run","t_s":225.4},{"foe":"Wild_galecrest_4914_1","outcome":"won","resolved_by":"input combat pilot","t_s":298.1},{"foe":"Wild_galecrest_4070_3","resolved_by":"combat_run","t_s":369.0},{"foe":"Wild_galecrest_4043_1","resolved_by":"combat_run","t_s":420.2},{"foe":"Wild_galecrest_4040_5","resolved_by":"combat_run","t_s":458.3},{"foe":"Wild_galecrest_4040_2","resolved_by":"combat_run","t_s":463.6},{"foe":"Wild_galecrest_4913_1","resolved_by":"combat_run","t_s":521.6},{"foe":"Wild_galecrest_4912_1","outcome":"won","resolved_by":"input combat pilot","t_s":585.0},{"foe":"Wild_galecrest_4910_2","resolved_by":"combat_run","t_s":714.5},{"foe":"Wild_galecrest_3103_2","resolved_by":"combat_run","t_s":782.3},{"foe":"Wild_galecrest_3039_3","resolved_by":"combat_run","t_s":845.2},{"foe":"Wild_galecrest_3039_1","resolved_by":"combat_run","t_s":852.0}],"final_position":[-13.5,4187.9],"flags_set_by_game_during_walk":["vegetation:meadows:bushes#40375","felled:meadows:bushes#40375","river_nest_doss_met","river_nest_doss_cleared"],"frames":[{"file":"doss_01_start.png","label":"start","lure_m":3469.8,"pos":[8.0,7649.7],"t_s":0.0,"walked_m":0.0},{"file":"doss_02_fight-wild_galecrest_5006_4.png","label":"fight-wild_galecrest_5006_4","lure_m":2900.9,"pos":[-46.1,7080.8],"t_s":103.1,"walked_m":650.5},{"file":"doss_03_fight-wild_galecrest_5006_2.png","label":"fight-wild_galecrest_5006_2","lure_m":2893.8,"pos":[-46.7,7073.6],"t_s":105.8,"walked_m":650.5},{"file":"doss_04_fight-wild_galecrest_4919_1.png","label":"fight-wild_galecrest_4919_1","lure_m":2738.7,"pos":[44.3,6918.0],"t_s":135.5,"walked_m":831.3},{"file":"doss_05_fight-wild_galecrest_4919_2.png","label":"fight-wild_galecrest_4919_2","lure_m":2737.8,"pos":[37.2,6917.3],"t_s":138.3,"walked_m":831.3},{"file":"doss_06_fight-wild_galecrest_4917_1.png","label":"fight-wild_galecrest_4917_1","lure_m":2500.9,"pos":[-128.1,6678.5],"t_s":196.0,"walked_m":1188.7},{"file":"doss_07_fight-wild_galecrest_4916_1.png","label":"fight-wild_galecrest_4916_1","lure_m":2402.8,"pos":[-224.8,6573.9],"t_s":222.5,"walked_m":1342.2},{"file":"doss_08_fight-wild_galecrest_4916_2.png","label":"fight-wild_galecrest_4916_2","lure_m":2397.2,"pos":[-229.3,6568.0],"t_s":225.4,"walked_m":1342.4},{"file":"doss_09_fight-wild_galecrest_4914_1.png","label":"fight-wild_galecrest_4914_1","lure_m":2102.7,"pos":[-34.5,6282.6],"t_s":298.1,"walked_m":1766.3},{"file":"doss_10_fight-wild_galecrest_4070_3.png","label":"fight-wild_galecrest_4070_3","lure_m":1975.9,"pos":[230.0,6140.2],"t_s":369.0,"walked_m":2077.5},{"file":"doss_11_fight-wild_galecrest_4043_1.png","label":"fight-wild_galecrest_4043_1","lure_m":1815.1,"pos":[428.3,5939.1],"t_s":420.2,"walked_m":2379.0},{"file":"doss_12_fight-wild_galecrest_4040_5.png","label":"fight-wild_galecrest_4040_5","lure_m":1622.5,"pos":[369.2,5755.4],"t_s":458.3,"walked_m":2592.2},{"file":"doss_13_fight-wild_galecrest_4040_2.png","label":"fight-wild_galecrest_4040_2","lure_m":1596.6,"pos":[357.6,5731.6],"t_s":463.6,"walked_m":2612.6},{"file":"doss_14_fight-wild_galecrest_4913_1.png","label":"fight-wild_galecrest_4913_1","lure_m":1361.7,"pos":[81.3,5538.0],"t_s":521.6,"walked_m":2955.6},{"file":"doss_15_fight-wild_galecrest_4912_1.png","label":"fight-wild_galecrest_4912_1","lure_m":1201.8,"pos":[-251.4,5359.2],"t_s":585.0,"walked_m":3334.3},{"file":"doss_16_fight-wild_galecrest_4910_2.png","label":"fight-wild_galecrest_4910_2","lure_m":677.7,"pos":[-121.8,4849.8],"t_s":714.5,"walked_m":4033.8},{"file":"doss_17_fight-wild_galecrest_3103_2.png","label":"fight-wild_galecrest_3103_2","lure_m":426.9,"pos":[163.2,4566.1],"t_s":782.3,"walked_m":4446.9},{"file":"doss_18_fight-wild_galecrest_3039_3.png","label":"fight-wild_galecrest_3039_3","lure_m":152.4,"pos":[-94.0,4312.7],"t_s":845.2,"walked_m":4829.1},{"file":"doss_19_fight-wild_galecrest_3039_1.png","label":"fight-wild_galecrest_3039_1","lure_m":135.0,"pos":[-100.8,4287.4],"t_s":852.0,"walked_m":4856.0},{"file":"doss_20_left-road-lure-not-yet-on-screen.png","label":"left-road-lure-not-yet-on-screen","lure_m":93.1,"pos":[-94.9,4234.0],"t_s":861.9,"walked_m":4909.8},{"file":"doss_21_lure-first-seen.png","label":"lure-first-seen","lure_m":85.9,"pos":[-93.3,4223.1],"t_s":864.0,"walked_m":4920.5},{"file":"doss_22_lure-first-readable.png","label":"lure-first-readable","lure_m":37.0,"pos":[-55.7,4184.9],"t_s":888.9,"walked_m":5050.7},{"file":"doss_23_approach-30m.png","label":"approach-30m","lure_m":29.8,"pos":[-48.4,4184.3],"t_s":890.7,"walked_m":5058.2},{"file":"doss_24_prompt-offered.png","label":"prompt-offered","lure_m":3.3,"pos":[-22.2,4180.5],"t_s":895.5,"walked_m":5084.7},{"file":"doss_25_act-0a-gather-fiber.png","label":"act-0a-gather-fiber","lure_m":10.6,"pos":[-23.5,4189.6],"t_s":897.7,"walked_m":5093.9},{"file":"doss_26_act-0b-gathered-fiber.png","label":"act-0b-gathered-fiber","lure_m":10.6,"pos":[-23.5,4189.6],"t_s":903.4,"walked_m":5093.9},{"file":"doss_27_act-0c-satchel-before.png","label":"act-0c-satchel-before","lure_m":3.3,"pos":[-20.4,4183.0],"t_s":906.9,"walked_m":5101.2},{"file":"doss_28_act-00-perch-before.png","label":"act-00-perch-before","lure_m":9.7,"pos":[-13.7,4188.1],"t_s":912.6,"walked_m":5109.7},{"file":"doss_29_act-01-pressed.png","label":"act-01-pressed","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":916.7,"walked_m":5116.2},{"file":"doss_30_act-05-dialogue-01.png","label":"act-05-dialogue-01","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":916.7,"walked_m":5116.2},{"file":"doss_31_act-05-dialogue-02.png","label":"act-05-dialogue-02","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":917.4,"walked_m":5116.2},{"file":"doss_32_act-11-pressed.png","label":"act-11-pressed","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":920.9,"walked_m":5116.2},{"file":"doss_33_act-15-dialogue-01.png","label":"act-15-dialogue-01","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":920.9,"walked_m":5116.2},{"file":"doss_34_act-15-dialogue-02.png","label":"act-15-dialogue-02","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":921.5,"walked_m":5116.2},{"file":"doss_35_act-21-pressed.png","label":"act-21-pressed","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":925.0,"walked_m":5116.2},{"file":"doss_36_act-25-dialogue-01.png","label":"act-25-dialogue-01","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":925.0,"walked_m":5116.2},{"file":"doss_37_act-25-dialogue-02.png","label":"act-25-dialogue-02","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":925.7,"walked_m":5116.2},{"file":"doss_38_act-97-satchel-after.png","label":"act-97-satchel-after","lure_m":3.2,"pos":[-17.3,4182.6],"t_s":929.7,"walked_m":5116.2},{"file":"doss_39_act-98-perch-after.png","label":"act-98-perch-after","lure_m":9.7,"pos":[-13.5,4187.9],"t_s":935.0,"walked_m":5122.7},{"file":"doss_40_act-99-after.png","label":"act-99-after","lure_m":9.7,"pos":[-13.5,4187.9],"t_s":937.2,"walked_m":5122.7}],"game_seconds":937.3,"left_road_at":[-86.0,4186.0],"load_vs_saved_xz_m":0.0,"lure_first_readable":{"after_deliberate_look":true,"camera_to_lure_m":43.0,"height_px":24,"t_s":888.9,"walked_m":5050.7,"while_on_road":false},"lure_first_seen":{"after_deliberate_look":true,"camera_to_lure_m":89.6,"screen_px":[1251,211],"t_s":864.0,"walked_m":4920.5,"while_on_road":false},"lure_node":"/root/MeadowsPlayground/RiverNestClear/Doss","lure_position":[-19.0,4180.0],"notes":["pressed creature_recall (attempt 1); companion out afterwards: true","t=249.5s no progress at (-278.4,6462.0); unstick attempt 1 (jump + strafe)","t=320.4s no progress at (-41.3,6285.2); unstick attempt 1 (jump + strafe)","t=424.2s no progress at (428.3,5936.3); unstick attempt 1 (jump + strafe)","t=603.0s no progress at (-251.4,5359.2); unstick attempt 1 (jump + strafe)","t=869.2s no progress at (-67.3,4189.2); unstick attempt 1 (jump + strafe)","t=878.7s no progress at (-66.0,4188.1); unstick attempt 2 (jump + strafe)","act-00-perch-before; pressed creature_recall (attempt 1); companion out afterwards: true","act-98-perch-after; pressed creature_recall (attempt 1); companion out afterwards: true"],"off_road_leg_m":67.3,"position_after_load":[8.0,6.17,7649.67],"prompt":{"t_s":895.0,"walked_m":5084.5,"winner":"{ \"label\": \"Help Doss repair the bank perch\", \"distance\": 3.71833276748657, \"priority\": 0, \"actionable\": true }"},"route_m":5007.4,"route_road_points":618,"save":"res://tests/fixtures/earned_saves/checkpoints/seed4_hall/save/slot_1.json","save_dir":"res://tests/fixtures/earned_saves/checkpoints/seed4_hall/save","save_sha256":"c05f81d123391f51af6eca937120144b2e90ba32cc760000a8ab2efdefc7e1a3","save_version":27.0,"saved_position":[7.99990653991699,6.17278528213501,7649.671875],"scene":"res://scenes/world/meadows_playground.tscn","script_state_writes":"none","start_distance_to_lure_m":3469.8,"stronghold_exit_waypoints":6,"verdict":"PASS","walked_m":5122.7,"why":"lure seen and the activity's prompt was offered"}
+[lure-walk] PASS activity=doss: lure seen and the activity's prompt was offered

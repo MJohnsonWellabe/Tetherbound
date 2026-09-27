@@ -1,0 +1,4 @@
+doss_01 <- distinct-actions/doss-perch (local render, walker at the tb/meadows-activities head)/doss_06_act-00-perch-before.png
+doss_02 <- distinct-actions/doss_03.jpg
+doss_03 <- distinct-actions/doss-perch (local render, walker at the tb/meadows-activities head)/doss_08_act-05-dialogue-01.png
+doss_04 <- distinct-actions/doss-perch (local render, walker at the tb/meadows-activities head)/doss_14_act-98-perch-after.png

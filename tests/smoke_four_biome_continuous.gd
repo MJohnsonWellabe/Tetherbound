@@ -277,6 +277,21 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 		_finish(false)
 		return false
 	reached = "rested_team"
+	# F02#4 "recovery survives reload": the camp rest's restored HP, rested
+	# and fed state must come back from a production save before the bracket.
+	var bed_marks: Array = []
+	for bed: Node3D in camp._beds:
+		bed_marks.append(int(bed.get_meta("placed_index", -1)))
+	var roll_mark := int(camp._bedroll.get_meta("placed_index", -1))
+	if not await _reload_transition(game, "rested_team"):
+		_finish(false)
+		return
+	# The rebuilt world stood the placed camp back up from the save; re-find
+	# its beds and bedroll by their saved placement index for the bracket's
+	# recovery (the pre-reload nodes are gone).
+	if OS.get_cmdline_user_args().has("--reload-at-transitions") and not _refind_camp(camp, bed_marks, roll_mark):
+		_finish(false)
+		return
 	if OS.get_cmdline_user_args().has("--through-rest"):
 		_finish(true)
 		return false
@@ -886,6 +901,9 @@ func _reload_transition(game: Node, label: String) -> bool:
 	var flags_before: Array = (progression.call("all_set") as Array).duplicate()
 	flags_before.sort()
 	var uids_before := _party_uids(party)
+	var inventory: RefCounted = game.get("inventory")
+	var items_before := _inventory_totals(inventory)
+	var members_before := _party_condition(party)
 	var scene_path := str(current_scene.scene_file_path)
 	if not bool(game.call("save_game", 0)):
 		failures.append("RELOAD %s: save_game(0) refused" % label)
@@ -897,9 +915,16 @@ func _reload_transition(game: Node, label: String) -> bool:
 		await process_frame
 	progression.call("load_data", {})
 	party.call("clear")
+	# F02#4: rewards must come back from the save, not survive in memory.
+	for i in int(inventory.call("slot_count")):
+		inventory.call("set_slot", i, null)
 	if not bool(game.call("load_game", 0)):
 		failures.append("RELOAD %s: load_game(0) failed" % label)
 		return false
+	# Read what the save restored at once: nourishment drains in real time,
+	# so reading after the world rebuild's settle frames drifts by a tick
+	# (0.1 over 240 frames, local 7a0634a3 validation) without any defect.
+	var members_after := _party_condition(party)
 	var world: Node = (load(scene_path) as PackedScene).instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -911,6 +936,7 @@ func _reload_transition(game: Node, label: String) -> bool:
 	var flags_after: Array = (progression.call("all_set") as Array).duplicate()
 	flags_after.sort()
 	var uids_after := _party_uids(party)
+	var items_after := _inventory_totals(inventory)
 	var lost: Array = []
 	for flag: Variant in flags_before:
 		if not flags_after.has(flag):
@@ -925,11 +951,67 @@ func _reload_transition(game: Node, label: String) -> bool:
 		str(player.global_position) if player != null else "NONE"])
 	if not lost.is_empty():
 		failures.append("RELOAD %s: flags lost across the reload: %s" % [label, str(lost)])
+	print("RELOAD %s: inventory %s -> %s" % [label, JSON.stringify(items_before), JSON.stringify(items_after)])
+	print("RELOAD %s: party condition %s -> %s" % [label, JSON.stringify(members_before), JSON.stringify(members_after)])
+	if members_after != members_before:
+		failures.append("RELOAD %s: party HP/fainted/level/XP/rest changed across the reload (%s -> %s)" % [label,
+			JSON.stringify(members_before), JSON.stringify(members_after)])
+	if items_after != items_before:
+		failures.append("RELOAD %s: the carried inventory changed across the reload (%s -> %s)" % [label,
+			JSON.stringify(items_before), JSON.stringify(items_after)])
 	if uids_after != uids_before:
 		failures.append("RELOAD %s: the party changed across the reload (%s -> %s)" % [label, str(uids_before), str(uids_after)])
 	if player == null:
 		failures.append("RELOAD %s: the rebuilt world has no Player" % label)
 	return failures.is_empty()
+
+
+## Recovery state per member, keyed by UID: HP (0.1 precision, as saved),
+## max HP, fainted, level, XP, and the rest/feeding condition a camp night
+## restores. F02#4's "recovery survives reload" compares this exactly.
+func _refind_camp(camp: RefCounted, bed_marks: Array, roll_mark: int) -> bool:
+	var by_mark := {}
+	for node: Node in (current_scene as Node).find_children("*", "", true, false):
+		if node is Node3D and node.has_meta("placed_index"):
+			by_mark[int(node.get_meta("placed_index"))] = node
+	var beds: Array[Node3D] = []
+	for mark: int in bed_marks:
+		var bed := by_mark.get(mark) as Node3D
+		if bed == null or not bed.has_method("build_index"):
+			failures.append("RELOAD rested_team: placed creature bed %d did not come back from the save" % mark)
+			return false
+		beds.append(bed)
+	var roll := by_mark.get(roll_mark) as Node3D
+	if roll == null:
+		failures.append("RELOAD rested_team: the placed bedroll did not come back from the save")
+		return false
+	camp.set("_beds", beds)
+	camp.set("_bedroll", roll)
+	print("RELOAD rested_team: camp re-found from the save (beds %s, bedroll %d)" % [str(bed_marks), roll_mark])
+	return true
+
+
+func _party_condition(party: RefCounted) -> Dictionary:
+	var out := {}
+	for i in int(party.call("size")):
+		var member: RefCounted = party.call("at", i)
+		if member == null:
+			continue
+		out[str(member.get("uid"))] = {"hp": snappedf(float(member.get("hp")), 0.1),
+			"max_hp": snappedf(float(member.get("max_hp")), 0.1), "fainted": bool(member.get("fainted")),
+			"level": int(member.get("level")), "xp": int(member.get("xp")),
+			"rested": bool(member.get("rested")), "nourishment": snappedf(float(member.get("nourishment")), 0.1)}
+	return out
+
+
+func _inventory_totals(inventory: RefCounted) -> Dictionary:
+	var totals := {}
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if not stack.is_empty():
+			var id := str(stack.get("id", ""))
+			totals[id] = int(totals.get(id, 0)) + int(stack.get("n", 0))
+	return totals
 
 
 func _party_uids(party: RefCounted) -> Array:

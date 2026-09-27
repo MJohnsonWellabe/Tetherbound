@@ -728,7 +728,7 @@
           "id": "step_1",
           "flag_id": "stormwood:side_deepwood_circuit_1",
           "scope": "world",
-          "label": "Accept Rook's circuit at Lantern Hollow.",
+          "label": "Accept Rook's circuit at the Fallen Giant.",
           "requires_flags": [
             "stormwood:lantern_hollow_reached"
           ],
