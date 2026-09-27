@@ -1,0 +1,176 @@
+F05#7 r6 — code-blind visual judge, pass 2
+Inputs viewed: _sheet_pairs.jpg, _sheet_fall.jpg, h01..h04 -a/-b at full size,
+f00, f02, f07, f12, f14, f16, f24 at full size; keyart; palworld-02/03/05.
+No source, config, docs or text files in the frames directory were opened.
+
+======================================================================
+Q. Does the land visibly heal between each -a and -b, readable untold?
+======================================================================
+YES — in three of four pairs the land itself reads as healed; in the fourth
+(h04) what reads is "life came back", not "the land changed".
+
+h01 (Old Quarry)  — YES, clearly. -a is a parched straw/ochre floor with
+  scattered grey tufts; -b is the same floor shifted to a live yellow-green,
+  with fresher grass cards. The two cyan-crystal pylons are gone from the
+  skyline — one now lies toppled across the mid-ground (x~650-780, y~320-345)
+  — and the glowing cyan panel in the gate frame (x~425, y~290) is dark. A
+  new broad-leaf plant has sprouted beside the yellow turnip. Weakness: the
+  bare dead trees on the right (x~850-1000) are unchanged in -b, so the
+  "healed" claim is contradicted in the same frame.
+
+h02 (Approach)    — YES, the strongest pair. The cyan tether beams that slash
+  across -a are gone; the tall pylon is down; the ochre field turns green.
+  Readable at thumbnail size. Weaknesses: (1) the fallen pylon leaves a dark
+  brown dome/half-cylinder (x~490-570, y~250-310) that reads as an unexplained
+  bunker or boulder, not wreckage; (2) a dark cable still runs from it to a
+  short surviving pylon (x~635), so the network looks partly alive; (3) the
+  heal stops at the near field — the far hills and middle distance are
+  identical between -a and -b, so it reads as a local tint, not a region.
+
+h03 (Works)       — YES, but the weakest land change. The lit slope on the
+  right goes from dry straw to green and the overhead cyan beam disappears.
+  The shadowed foreground and path are virtually identical, so most of the
+  frame does not change. -b also introduces a large flat pale beige wedge
+  (x~845-1010, y~200-300) that reads as untextured ramp geometry rather than
+  anything healed. The comparison is confounded by HUD: the TEAM 4/5 panel
+  covers the left of -a and is absent in -b, so "new" boulders at x~0-120 in
+  -b are just revealed, not grown.
+
+h04 (Highfield)   — PARTIAL. The ground is already green in -a and is the
+  same green in -b; the land does not visibly heal. What changes is a herd of
+  ~8 deer and a boulder-backed beast (x~200-240, y~290) appearing — readable
+  as "wildlife returned", which is a good story beat, but not a land heal.
+  Again the team panel present in -a / absent in -b makes the left third
+  non-comparable.
+
+f-sequence (tall structure, one vantage):
+  f00 (0 s)      Two dark spire-pylons with glowing cyan crystal tips, cyan
+                 tether line strung between them and off to the right.
+  f01-f02 (1-2 s) Crystals go grey/dead; the cyan line becomes a dark sagging
+                 cable. "Power off" is readable.
+  f03-f07 (3-4 s) The left pylon begins to tip left; the centre pylon begins
+                 to lean. f07: left pylon at ~30°, centre at ~10°.
+  f08-f12 (4.25-5.25 s) Centre pylon rotates as one rigid body toward
+                 camera-right; f12 it is at ~45° directly behind the trainer's
+                 head; left pylon is down on the horizon.
+  f13-f14 (5.5-5.75 s) Centre pylon near horizontal behind the trainer; a
+                 third spire enters from off-screen top-right (f14, by the
+                 minimap / objective box).
+  f15-f17 (6-6.5 s) Impact: a tan dust puff rises around the base and to the
+                 left; the right-hand spire lands in the tree line.
+  f18-f23 (6.75-8 s) Dust thins; wreck at rest.
+  f24 (12 s)     Prone wreck, dust gone, cable gone.
+  Readable as an event: YES. Shutdown -> topple -> dust -> rest reads without
+  captions and the timing has weight. It does not read as a climax: see
+  defects 1-3.
+
+======================================================================
+Defects, ranked
+======================================================================
+1. f03-f16: each pylon falls as a single rigid piece pivoting at its base —
+   no breakup, no crystal shatter, no sparks or discharge when the power
+   dies, no ground reaction (grass never flattens, no crater, no debris
+   scatter). It reads as a prop being rotated, not a structure failing.
+2. f15-f19: the dust is one flat, low-opacity beige card; it has no volume,
+   no rising column, and never occludes the wreck. Palworld-03's event VFX
+   (bright radial streaks, particulate) is the comparison — this is a
+   whisper.
+3. f00-f24: the land does not change at all in the fall sequence — the grass
+   is equally green at t=0 and t=12 s. The one event on screen and the heal
+   are disconnected; nothing spreads outward from the fallen pylon.
+4. h02-b: dark dome remnant (x~490-570) and surviving dark cable to a short
+   pylon; reads as unexplained geometry and "not fully shut down".
+5. h03-b: large flat pale beige wedge (x~845-1010, y~200-300) looks like
+   untextured blockout geometry; it is the brightest shape in the frame.
+6. h01-a/b, h04-a/b: the cart (h04 x~415-510, h01 x~455-520) and fence runs
+   (h04 x~780-980; h01 x~360-610) are pure flat white with no texture or
+   shading — they read as missing materials, and are the highest-value
+   shapes in the frame, pulling the eye off the event.
+7. h04-b: the deer are identical clones (same size, tint, pose), pale and low
+   detail; they read as stock placeholder fauna, not creatures of this world.
+8. h03-a/b: the badger creature and the Hall walls carry a crunchy,
+   pixelated low-res texture (visible stair-step on the black/white face
+   stripe and wall stones) that clashes with the smooth painted trainer and
+   grass.
+9. h01-b: bare dead trees on the right remain dead after the heal.
+10. h02, h03, h04: heal is near-field only; distant hills (h02) and shadowed
+    ground (h03) do not change, so the heal reads as a colour grade around
+    the camera rather than the region recovering.
+11. All pairs: HUD state differs between -a and -b (team panel, alpha toast,
+    one caption box), so each pair has regions that are not comparable.
+    This is a capture defect, not an art defect, but it weakens the evidence.
+12. f12-f16: the falling spire passes directly behind the trainer at close
+    range with no reaction and no shake — scale of danger is lost.
+13. All frames: the horizon is a pale, desaturated grey mountain card (h02,
+    f00) with little value separation from the sky; distance reads as fog
+    rather than landscape.
+
+Scale check (trainer = 1.80 m): pylons ~6-8x trainer — plausible for a
+landmark; badger (h03) is bulkier than the trainer and reads as a large
+companion — consistent; deer (h04-b) shoulder roughly at trainer chest at
+range — plausible; orange rabbit-creature (h04) ~0.5 m — plausible for a
+small wild creature. No scale defect found.
+
+Colour/identity: oxblood appears only on the Hall's banners (h03) — reserved
+correctly. Cyan marks the Tether tech and is removed by the heal — a clean,
+readable colour language for the event.
+
+======================================================================
+Three things that most separate these frames from the references
+======================================================================
+1. The event has no spectacle (f03-f19). Palworld-03 makes a field event
+   loud: bright VFX streaks, particulates, a creature silhouette dominating
+   the frame. Here a rigid mesh tips over with a faint dust card. The
+   story's climax payoff is visually the quietest thing in the sequence.
+2. Materials/art consistency (h01, h03-b, h04). Palworld-05's props (fence,
+   crafting bench, rocks) are all textured and lit in one style; the
+   keyart's fences and carts are weathered wood. Here pure-white untextured
+   carts and fences, a blank beige ramp, pixel-crunchy creature/Hall
+   textures and clone deer sit beside a smoothly painted trainer — four art
+   styles in one frame.
+3. Ground and depth structure (h02, h04, f00). Palworld-02 breaks the ground
+   into readable dirt paths, short grass, rock and cliff with strong value
+   breaks and a clear mid-ground. These frames fill the lower half with an
+   even carpet of identical flower/grass cards at regular spacing, and the
+   distance collapses into a pale grey mountain card; the keyart's village
+   and mountain landmark language is absent from every view.
+
+======================================================================
+Bar questions
+======================================================================
+A. Belongs to the key-art world: YES.
+   Carried by: the post-heal palette (h01-b, h02-b, h04) lands on the
+   keyart's greens, olive and warm yellow; the Hall (h03) with oxblood
+   banners is recognisably the "Team Tether Stronghold" panel; oak-like
+   groves and wildflower meadows match; the heal turning ochre to green is
+   exactly the keyart's "welcoming region" mood. Held back by the white
+   props, the grey horizon card and the absence of settlement/landmark
+   silhouettes in the distance.
+
+B. Same kind of game as Palworld: YES.
+   Carried by: third-person trainer in a creature-populated open meadow, a
+   companion creature beside the player, Palworld-style HUD layout (objective
+   top-right, bars bottom-left, hotbar), a wild herd in h04. Nobody would
+   mistake the genre. It does not meet the bar on execution (gaps 1-3).
+
+Fixable by changing the scene (no new art):
+  - Event staging: split the pylon into its existing sub-parts or add a
+    snap point, crystal-shatter/discharge particles, a rising dust column,
+    grass flattening/decal at impact, camera shake (gap 1, defects 1-2, 12).
+  - Make the heal spread visibly from the fallen pylon and reach the middle
+    distance; include the dead trees and shadowed ground (defects 3, 9, 10).
+  - Remove/replace the dark dome remnant and the leftover cable (defect 4).
+  - Assign existing wood materials to the white cart/fences; texture or
+    remove the beige ramp (defects 5-6, part of gap 2).
+  - Vary deer scale/tint/pose and stagger their placement (part of defect 7).
+  - Break up grass/flower scatter into clusters and clearings with dirt and
+    rock patches; push horizon colour/value and add a distant landmark
+    silhouette from installed assets (gap 3, defect 13).
+  - Capture pairs with identical HUD state (defect 11).
+Needs art not in the build:
+  - Higher-quality, stylistically matched textures for the badger creature
+    and the Hall walls (defect 8) and a bespoke deer/wild-herd creature to
+    replace the stock-looking clones (defect 7) — the creature fidelity gap
+    to Palworld's bespoke fauna is not closable by scene work.
+  - A purpose-made destruction/wreck variant of the pylon, if splitting the
+    existing mesh does not yield convincing pieces.
