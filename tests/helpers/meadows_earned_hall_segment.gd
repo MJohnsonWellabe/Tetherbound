@@ -119,6 +119,10 @@ func _reload_with_sigils() -> bool:
 	if not ok:
 		return _fail("The save/reload with the three Sigils carried failed")
 	_collect(_tree.current_scene)
+	# The retained-five checks compare creature instance ids, which a load
+	# replaces; the caller's reload has already required the saved party UIDs
+	# to be identical, so re-baseline on the reloaded instances.
+	_initial_ids = _party_ids()
 	if _player == null or _sigil_gate == null or _combat == null or _panel == null or _arbiter == null:
 		return _fail("The reloaded world lacks the Sigil Gate route dependencies")
 	_hook()
