@@ -1,0 +1,91 @@
+{
+  "source_commit": "ecb7a8515edeaab90bb13c1d895a5f453cfd57f7",
+  "grounding_restored_off": true,
+  "rounds": [
+    {
+      "name": "p2037-before-exterior-r1",
+      "frames": 6,
+      "candidate_enabled": false,
+      "max_camera_delta_m": null
+    },
+    {
+      "name": "p2037-after-routes-r1",
+      "frames": 5,
+      "candidate_enabled": true,
+      "max_camera_delta_m": 0.00010708365467157551
+    },
+    {
+      "name": "p2037-after-exterior-r1",
+      "frames": 6,
+      "candidate_enabled": true,
+      "max_camera_delta_m": 0.0
+    }
+  ],
+  "excluded_rounds": [
+    {
+      "name": "p2037-after-locations-r1",
+      "frames": 4,
+      "source_manifest_sha256": "4a832b4aeb8042f25f1679487fc625a11287020ec5caf5b5fd5bbaa5e71d64f5",
+      "max_camera_delta_m": 73.8168199889612,
+      "reason": "Narrowing the location subset changes neighboring destinations used for fallback headings. Matching frame IDs do not establish camera parity. All four frames are excluded from acceptance. Replay the complete original 12-subset, day/night, approach/close command before location comparison.",
+      "comparisons": [
+        {
+          "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+          "before_camera_position": [
+            -107.663330078125,
+            112.464416503906,
+            5506.2861328125
+          ],
+          "excluded_camera_position": [
+            -100.0,
+            115.045875549316,
+            5432.91357421875
+          ],
+          "camera_delta_m": 73.8168199889612
+        },
+        {
+          "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day__close",
+          "before_camera_position": [
+            -102.08422088623,
+            114.535041809082,
+            5479.869140625
+          ],
+          "excluded_camera_position": [
+            -100.0,
+            115.107284545898,
+            5459.9140625
+          ],
+          "camera_delta_m": 20.071785705992617
+        },
+        {
+          "frame_id": "stormwood__landmark__dynamo_core__day__approach",
+          "before_camera_position": [
+            -116.585830688477,
+            114.402862548828,
+            5436.82861328125
+          ],
+          "excluded_camera_position": [
+            -100.0,
+            115.045875549316,
+            5432.91357421875
+          ],
+          "camera_delta_m": 17.053761350696888
+        },
+        {
+          "frame_id": "stormwood__landmark__dynamo_core__day__close",
+          "before_camera_position": [
+            -104.51106262207,
+            115.036430358887,
+            5460.978515625
+          ],
+          "excluded_camera_position": [
+            -100.0,
+            115.107276916504,
+            5459.9140625
+          ],
+          "camera_delta_m": 4.635489798315331
+        }
+      ]
+    }
+  ]
+}
