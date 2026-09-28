@@ -27,6 +27,21 @@ func test_every_captain_and_the_warden_hold_a_clear_ground() -> void:
 	director.free()
 
 
+func test_a_fallback_spot_inside_a_ground_is_pushed_to_its_edge() -> void:
+	var director: Node = DIRECTOR.new()
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get("named_trainer_wild_clear_m", 0.0))
+	var stand := _stand("captain_field")
+	# Cluster 4002's own centre, 11 m from Halder's stand.
+	var inside := Vector3(180.0, 2.0, 5595.0)
+	var out: Vector3 = director.call("_out_of_named_trainer_grounds", inside)
+	assert_true(bool(director.call("_clear_of_named_trainer_grounds", out)), "the pushed spot is clear: %s" % out)
+	assert_true(Vector2(out.x, out.z).distance_to(Vector2(stand.x, stand.z)) <= clear + 1.5, "pushed only to the edge")
+	assert_eq(out.y, 2.0, "height untouched")
+	var open := stand + Vector3(clear + 5.0, 0.0, 0.0)
+	assert_eq(director.call("_out_of_named_trainer_grounds", open), open, "a clear spot is unchanged")
+	director.free()
+
+
 func test_ordinary_trainers_and_open_country_are_unaffected() -> void:
 	var director: Node = DIRECTOR.new()
 	var grunts := 0

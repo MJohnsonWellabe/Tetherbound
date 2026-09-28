@@ -782,6 +782,10 @@ func _spawn_creatures() -> void:
 				if not bool(resolved["feasible"]):
 					push_warning("wild cluster %d member %d cannot fit %.2fm body spacing inside its authored %.2fm radius; kept the best deterministic candidate" % [
 						int(spawn.get("order", index)), n + 1, gap, radius])
+			# F04#2: a cluster whose disc overlaps a named trainer's ground can
+			# run out of clear candidates (order 4002 beside captain_field); the
+			# fallback must still not stand on the fight ground.
+			spot = _out_of_named_trainer_grounds(spot)
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
@@ -3430,6 +3434,27 @@ func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
 		if here.distance_to(stand) < clear:
 			return false
 	return true
+
+## `pos` moved radially to just outside any named trainer's ground it stands
+## on (unchanged when it is already clear). The last resort after every
+## placement attempt landed inside one.
+func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
+		"named_trainer_wild_clear_m", 0.0))
+	if clear <= 0.0:
+		return pos
+	var out := pos
+	for stand: Vector2 in _named_trainer_grounds():
+		var here := Vector2(out.x, out.z)
+		if here.distance_to(stand) >= clear:
+			continue
+		var away := here - stand
+		if away.length() < 0.01:
+			away = Vector2(1.0, 0.0)
+		var moved := stand + away.normalized() * (clear + 1.0)
+		out = Vector3(moved.x, out.y, moved.y)
+	return out
+
 
 ## WORLD-LIFE-0903. True when `pos` is clear of every authored road/trail --
 ## `playground_heightfield.gd::path_factor()`, the same road geometry the
