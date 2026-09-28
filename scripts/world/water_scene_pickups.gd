@@ -2,6 +2,7 @@ extends Node3D
 ## Disposable physical residency over durable production ledger claims. The
 ## catalogue remains complete when no peer is nearby; scene counts are actual.
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const CANDY_PRESENTATION := preload("res://scripts/world/candy_pickup_presentation.gd")
 const HARVEST := preload("res://scripts/world/harvest_node.gd")
 const PERSONAL := preload("res://scripts/world/water_personal_pickup.gd")
 const DATA := "res://data/config/water_pickups.json"
@@ -211,6 +212,7 @@ func _spawn(row: Dictionary) -> void:
 		node.global_position = spot
 		node.call("setup", str(row.item_id), "Take " + str(definition.name), str(definition.get("world_model", CRATE)),
 			float(definition.get("world_model_scale", 0.35)), id.trim_prefix("water:"), "water", int(row.get("quantity", 1)))
+		CANDY_PRESENTATION.apply(node, str(row.item_id), definition, id)
 		if personal:
 			var label := Label3D.new()
 			label.text = str(row.get("tier_marking", ""))
