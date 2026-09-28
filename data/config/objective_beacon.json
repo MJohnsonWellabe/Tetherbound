@@ -20,6 +20,6 @@
   "pulse_hz": 0.72,
   "pulse_amount": 0.22,
   "visible_range_m": 3200.0,
-  "_comment_camera_clear": "F01#2/#3 walk judge (day_070/night_070): an arrival camera inside the beam painted a cyan slab over the frame. Within this many metres (horizontal) of the beam axis the beacon stands down; the player is already at the objective. 3.6 m still left the slab on the frame edge at the camp arrival (render 36414241336 day_069), where the camera stood a few metres further out; 9 m covers an arrival camera. TUNABLE.",
-  "camera_clear_m": 9.0
+  "_comment_camera_clear": "F01#2/#3 walk judge (day_070/night_070): an arrival camera inside the beam painted a cyan slab over the frame. Within this many metres (horizontal) of the beam axis the beacon stands down; the player is already at the objective. 3.6 m still left the slab on the frame edge at the camp arrival (render 36414241336 day_069), where the camera stood a few metres further out; 9 m still left it on the frame at the camp beside the Practice Meadow clearing (night walk 9e0a6edb, night_071: the camera about 12 m from the clearing's beam); 16 m covers a player standing in the clearing's own neighbourhood. TUNABLE.",
+  "camera_clear_m": 16.0
 }

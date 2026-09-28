@@ -109,8 +109,11 @@ const WELL := Vector2(10.0, -10.0)
 ## (30,-40). The walk used to stop at the clearing's centre, where a judge
 ## saw only the objective beam and no camp; the visit now aims just short of
 ## the fire on the road side, so the arrival frame holds fire, tent and bed.
-const CAMP_AT := Vector2(26.3, -27.7)
-const CAMP_ARRIVAL_M := 4.0
+## Aimed between fire and tent, arriving 7 m out: at 2.5 m (night walk
+## 9e0a6edb, night_071) the over-the-shoulder camera put the camp under the
+## hotbar at the frame's lower right.
+const CAMP_AT := Vector2(25.9, -25.2)
+const CAMP_ARRIVAL_M := 7.0
 ## Stop this far short of the pack: its crate and barrel are solid, and the
 ## trainer who owns it stands beside them.
 const CAMP_STOP_M := 2.5
