@@ -179,6 +179,7 @@ const BUILD_TOOL := "hammer"
 ## game time, so the message had expired before the next rendered frame.
 const HOTBAR_MESSAGE_SECONDS := 2.2
 const HUD_CONFIG_PATH := "res://data/config/hud.json"
+const VICTORY_HIERARCHY_CONFIG := "res://data/config/victory_hierarchy_visual.json"
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 
@@ -975,6 +976,9 @@ var _moment_banner: PanelContainer = null
 var _moment_title: Label = null
 var _moment_detail: Label = null
 var _moment_also: Label = null
+var _moment_separator: MarginContainer = null
+var _quick_items_heading: Label = null
+var _victory_hierarchy_candidate := false
 var _moment_queue: Array = []
 var _moment_feed_seq: int = 0
 var _moment_feed_epoch: int = -1
@@ -1047,6 +1051,8 @@ func _ready() -> void:
 
 	_load_buff_config()
 	_load_hud_config()
+	var victory_visual: Variant = JSON.parse_string(FileAccess.get_file_as_string(VICTORY_HIERARCHY_CONFIG))
+	_victory_hierarchy_candidate = victory_visual is Dictionary and victory_visual.get("enabled", false) == true
 	_build_creature_block()
 	_mount_party_strip()
 	_build_vitals_cluster()
@@ -1152,7 +1158,30 @@ func _ready() -> void:
 ## their own accent border instead, so all three tiers are visually distinct
 ## rather than one repeated dark-navy box.
 func _style_hotbar() -> void:
-	$Root/BottomDock/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_deep_box())
+	var box := UITokens.panel_deep_box()
+	if _victory_hierarchy_candidate:
+		var layout := $Root/BottomDock/HotbarPanel/Margin/Layout as VBoxContainer
+		var margin := $Root/BottomDock/HotbarPanel/Margin as MarginContainer
+		_quick_items_heading = Label.new()
+		_quick_items_heading.name = "QuickItemsHeading"
+		_quick_items_heading.text = "QUICK ITEMS"
+		_quick_items_heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_quick_items_heading.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+		_quick_items_heading.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		layout.add_child(_quick_items_heading)
+		layout.move_child(_quick_items_heading, 0)
+		UITokens.make_text_legible(_quick_items_heading)
+		# Spend existing panel + Margin padding on the heading. Slots keep
+		# their full height, width and glyph sizes; the dock does not grow.
+		var padding := box.content_margin_top + box.content_margin_bottom \
+			+ margin.get_theme_constant("margin_top") + margin.get_theme_constant("margin_bottom")
+		var heading_height := _quick_items_heading.get_combined_minimum_size().y \
+			+ layout.get_theme_constant("separation")
+		margin.add_theme_constant_override("margin_top", 0)
+		margin.add_theme_constant_override("margin_bottom", 0)
+		box.content_margin_top = maxf(0.0, (padding - heading_height) * 0.5)
+		box.content_margin_bottom = box.content_margin_top
+	_hotbar_panel.add_theme_stylebox_override("panel", box)
 	for chip in _hotbar_chips:
 		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
@@ -3274,6 +3303,19 @@ func _build_moment_banner() -> void:
 	_moment_detail.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_moment_detail.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	column.add_child(_moment_detail)
+	if _victory_hierarchy_candidate:
+		_moment_separator = MarginContainer.new()
+		_moment_separator.name = "ReceiptGrowthSeparator"
+		_moment_separator.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_moment_separator.add_theme_constant_override("margin_top", 4)
+		_moment_separator.add_theme_constant_override("margin_bottom", 4)
+		_moment_separator.visible = false
+		var line := ColorRect.new()
+		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		line.color = UITokens.BORDER
+		line.custom_minimum_size.y = 1.0
+		_moment_separator.add_child(line)
+		column.add_child(_moment_separator)
 
 	_moment_also = Label.new()
 	_moment_also.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -3467,7 +3509,8 @@ func _render_moment_events() -> void:
 			growth.append(event)
 			has_level = has_level or str(event.get("kind", "")) == "level_up"
 
-	_dress_moment_banner("level_up" if has_level else "bond_milestone")
+	var receipt_accent := _victory_hierarchy_candidate and not receipts.is_empty()
+	_dress_moment_banner("level_up" if has_level and not receipt_accent else "bond_milestone")
 	var rows := PackedStringArray()
 	var used_awards: Dictionary = {}
 	var single_growth := receipts.is_empty() and growth.size() == 1
@@ -3519,6 +3562,8 @@ func _render_moment_events() -> void:
 	_moment_detail.visible = not _moment_detail.text.is_empty()
 	_moment_also.text = "\n".join(rows)
 	_moment_also.visible = not _moment_also.text.is_empty()
+	if _moment_separator != null:
+		_moment_separator.visible = not receipts.is_empty() and _moment_detail.visible and _moment_also.visible
 	_position_moment_banner()
 
 
