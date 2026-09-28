@@ -46,17 +46,13 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
   - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
   - **Blocked** on the shared contact-spacing rule, now owned by the COMBAT SPACING lane (`tb/combat-spacing`, coordinator 16:28). When it lands on main, Tidewake merges it and re-judges Tess and Nerissa C3 under `C3_RUBRIC.md`. This lane builds no spacing fix of its own.
   - **Landed as progress:** the Heart Chamber arena bound, the tell and head camera swings, and Riptusk's lunge opt-in. All are presentation-only, apart from the smaller ring.
-  - **C2 to rerun:** Nerissa's ring is now 9 m, so her 144-fight in-world C2 must be rerun. Local seeds: READER wins 5/5 at 24-33% party cost, and the MASHER wipes.
-  - **Card T2 prep:** `tests/card_t2_tidewake_islands.sh` runs every non-C3 feeder at one SHA: islands, loops, pockets, chains, ledgers, currents, Guardian units and named C2. It writes to `ralph/reports/TIDEWAKE/phase1/card_t2/`. The 1920x1080 opengl3 device-profile capture follows Stormwood F10#6's 7-inch method.
-  - **Device-profile read, first pass: FAIL 2 of 4** (`phase1/card_t2/device/JUDGE.md`).
-    - Tells: pass (marginal). HUD safe area: pass.
-    - HUD text at 7 inches: fail.
-      - The move-button and quick-bind glyphs are too small, and the explore HUD shows keyboard glyphs.
-      - The FOOD label vanishes on sand; LEVEL, type and Lv text are too small; the Undertow label is clipped.
-      - Owner: the shared HUD work, which overlaps Stormwood F10#6.
-    - Subjects: fail.
-      - Nothing marks the piloted creature or the trainer. Owner: shared combat and HUD.
-      - The dock and current views did not show their subjects. Owner: this lane re-aims those capture stands.
+  - **C2 met for both rows under option (c) (main 1e0ddd39).**
+    - Tess, Calder and Venn: reader win 1.00, masher lead-faint 1.00. Venn's lane now locks at 0.25 of the tell.
+    - Nerissa at the 9 m ring: 144 in-world fights, reader win 1.00 x3, party cost 0.13-0.24.
+    - Aquaryn and Tidecoil pass under the named-wild ruling.
+  - **Card T2's non-fight clauses** belong to the CARDS lane (`tb/cards`, coordinator 18:13): islands, loops, shortcuts, pockets, activities, currents and docks, ledgers, and the device profile.
+    - This lane's prep is on main for it to use: `tests/card_t2_tidewake_islands.sh`, and `phase1/card_t2/device/` with a first 7-inch read of FAIL 2/4.
+    - The dock and current capture stands missed their subjects.
   - Other defects, recorded, not fixed:
     - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
     - the ordinary tell ring marks the attacker's feet, not a landing spot.
