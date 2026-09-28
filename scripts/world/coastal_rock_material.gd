@@ -4,6 +4,7 @@ extends RefCounted
 const MARKER := "// COASTAL-ROCK"
 const UNIFORM_ANCHOR := "void fragment() {"
 const MATERIAL_ANCHOR := "mat.ao_strength *= weight_inv;"
+const SHORE_CONFIG := "res://data/config/water_shore_presentation.json"
 const UNIFORMS := """
 // COASTAL-ROCK: coherent projection over exposed rock and steep faces.
 uniform sampler2D coast_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -17,6 +18,26 @@ uniform float coast_full_y = 0.32;
 uniform int coast_rock_texture_id = 2;
 uniform vec2 coast_exclude_centre = vec2(200.0, 4140.0);
 uniform float coast_exclude_radius = 430.0;
+uniform bool coast_weathering_enabled = false;
+uniform float coast_weathering_scale = 0.11;
+uniform vec3 coast_moss_colour : source_color = vec3(0.32, 0.42, 0.24);
+uniform float coast_moss_amount = 0.65;
+uniform vec3 coast_sediment_colour : source_color = vec3(0.71, 0.61, 0.45);
+uniform float coast_sediment_height_m = 4.8;
+uniform vec3 coast_wet_colour : source_color = vec3(0.22, 0.29, 0.27);
+uniform float coast_wet_height_m = 1.6;
+uniform float coast_rock_detail = 0.45;
+
+float coast_hash(vec2 p) {
+	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+float coast_noise(vec2 p) {
+	vec2 i = floor(p);
+	vec2 f = fract(p);
+	f = f * f * (3.0 - 2.0 * f);
+	return mix(mix(coast_hash(i), coast_hash(i + vec2(1.0, 0.0)), f.x),
+		mix(coast_hash(i + vec2(0.0, 1.0)), coast_hash(i + vec2(1.0)), f.x), f.y);
+}
 """
 const MATERIAL := """
 	// COASTAL-ROCK. Evaluate derivatives outside the slope branch.
@@ -57,6 +78,17 @@ const MATERIAL := """
 		float bed = fract((v_vertex.y + warp) / 12.0);
 		float ledge = smoothstep(0.02, 0.15, bed) * (1.0 - smoothstep(0.55, 0.98, bed));
 		rock *= coast_tint * mix(0.90, 1.10, ledge);
+		if (coast_weathering_enabled) {
+			// Broad mineral planes, with irregular vegetation tongues at the
+			// slope transition; the real surface and its silhouette stay intact.
+			float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
+			float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
+			rock = mix(coast_tint * 0.42, rock, coast_rock_detail);
+			rock *= mix(0.78, 1.15, patch);
+			float moss = smoothstep(0.48, 0.91, abs(coast_face.y) + (patch - 0.5) * 0.32);
+			moss *= smoothstep(1.8, 5.0, v_vertex.y) * coast_moss_amount;
+			rock = mix(rock, coast_moss_colour * mix(0.65, 1.05, grain), moss);
+		}
 		vec3 detail = vec3(0.0, nx.y, -side.x * nx.x) * coast_weights.x
 			+ vec3(ny.x, 0.0, -ny.y) * coast_weights.y
 			+ vec3(side.y * nz.x, nz.y, 0.0) * coast_weights.z;
@@ -68,6 +100,20 @@ const MATERIAL := """
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, rock, coast_weight);
 		mat.normal_rough = mix(mat.normal_rough, vec4(mapped, 0.88), coast_weight);
 		mat.normal_map_depth = mix(mat.normal_map_depth, coast_normal_depth, coast_weight);
+	}
+	if (coast_weathering_enabled) {
+		// Sand and wet mineral stains soften the waterline without painting
+		// new walkable terrain or touching Veilfall's separate treatment.
+		float patch = coast_noise(v_vertex.xz * coast_weathering_scale);
+		float grain = coast_noise(v_vertex.xz * coast_weathering_scale * 3.7);
+		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
+		float strand = 1.0 - smoothstep(coast_sediment_height_m * 0.35, coast_sediment_height_m, v_vertex.y + (patch - 0.5) * 2.8);
+		strand *= smoothstep(0.25, 0.85, abs(coast_face.y)) * outside;
+		vec3 sediment = coast_sediment_colour * mix(0.70, 0.96, grain);
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sediment, strand * 0.8);
+		float wet = (1.0 - smoothstep(0.05, coast_wet_height_m, v_vertex.y + (patch - 0.5) * 0.6)) * outside;
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, coast_wet_colour * mix(0.65, 1.0, grain), wet * 0.65);
+		mat.normal_rough.a = mix(mat.normal_rough.a, 0.55, wet);
 	}
 """
 
@@ -101,6 +147,14 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	var centre: Array = excluded.get("centre_xz", [200.0, 4140.0])
 	material.call("set_shader_param", "coast_exclude_centre", Vector2(float(centre[0]), float(centre[1])))
 	material.call("set_shader_param", "coast_exclude_radius", float(excluded.get("radius_m", 430.0)))
+	var shore: Variant = JSON.parse_string(FileAccess.get_file_as_string(SHORE_CONFIG))
+	if shore is Dictionary:
+		material.call("set_shader_param", "coast_weathering_enabled", bool(shore.get("enabled", false)))
+		for key: String in shore:
+			if key.begins_with("_") or key == "enabled":
+				continue
+			var value: Variant = shore[key]
+			material.call("set_shader_param", "coast_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
 	var installed: Shader = material.call("get_shader_override")
 	receipt.installed = installed != null and installed.code.contains(MARKER)
 	receipt.reason = "installed" if receipt.installed else "override was regenerated"
