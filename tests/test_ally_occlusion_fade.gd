@@ -100,3 +100,25 @@ func test_the_config_is_declared() -> void:
 	var cfg: Dictionary = camera.get("occlusion_fade", {}) as Dictionary
 	assert_true(bool(cfg.get("enabled", false)))
 	assert_true(float(cfg.get("transparency", 0.0)) > 0.0 and float(cfg.get("transparency", 1.0)) < 1.0)
+
+
+func test_head_point_leads_the_base_along_the_flat_facing() -> void:
+	# A 6 m long, 2 m tall foe facing +Z: the head sits 2.4 m ahead, 1.5 m up.
+	var head := FADE.head_point(Vector3(1.0, 0.0, -5.0), Vector3(2.0, 2.0, 6.0), Vector3(0.0, 0.3, 1.0), 0.4, 0.75)
+	assert_almost_eq(head.x, 1.0, 0.0001)
+	assert_almost_eq(head.y, 1.5, 0.0001)
+	assert_almost_eq(head.z, -2.6, 0.0001)
+
+
+func test_the_ally_can_hide_a_long_foes_head_while_its_centre_column_is_clear() -> void:
+	# F14 C3: lens behind and a little to the right of the ally; a 7 m long foe
+	# 5 m beyond, offset left, facing the ally. The column is visible past the
+	# ally's side; the head, leading toward the ally, is behind it.
+	var eye := Vector3(1.2, 5.0, 9.0)
+	var base := Vector3(-3.5, 0.0, -6.5)
+	var size := Vector3(2.0, 2.4, 7.0)
+	var column := FADE.hidden_points(eye, base, size.y, Transform3D.IDENTITY, ALLY_BOUNDS)
+	var head := FADE.head_point(base, size, (Vector3.ZERO - base).normalized(), 0.4, 0.75)
+	var head_hidden := FADE.segment_hits_ellipsoid(eye, head, Transform3D.IDENTITY, ALLY_BOUNDS)
+	assert_true(column < 2, "the centre column reads as clear (%d)" % column)
+	assert_true(head_hidden, "the head behind the ally is caught")

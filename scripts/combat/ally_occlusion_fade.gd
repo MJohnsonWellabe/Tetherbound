@@ -49,6 +49,17 @@ static func segment_hits_ellipsoid(eye: Vector3, point: Vector3, model: Transfor
 	return t1 >= 0.0 and t0 <= 1.0
 
 
+## Where a long body's head sits: `forward_fraction` of its longer horizontal
+## extent ahead of its base along its flat facing, at `height_fraction` of its
+## rendered height. The centre column misses it on quadrupeds and serpents.
+static func head_point(foe_base: Vector3, foe_size: Vector3, facing: Vector3,
+		forward_fraction: float, height_fraction: float) -> Vector3:
+	var flat := Vector3(facing.x, 0.0, facing.z)
+	flat = flat.normalized() if flat.length() > 0.001 else Vector3.ZERO
+	var reach := maxf(foe_size.x, foe_size.z) * forward_fraction
+	return foe_base + flat * reach + Vector3.UP * foe_size.y * height_fraction
+
+
 ## How many of the foe's sample points the ally hides from `eye`.
 static func hidden_points(eye: Vector3, foe_base: Vector3, foe_height: float,
 		ally_model: Transform3D, ally_bounds: AABB) -> int:

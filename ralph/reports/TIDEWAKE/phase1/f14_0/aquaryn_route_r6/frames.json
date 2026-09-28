@@ -1,0 +1,170 @@
+[
+ {
+  "file": "t-000.00.jpg",
+  "tag": "t",
+  "fight_s": 0.0,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.89
+ },
+ {
+  "file": "tell-start-000.45.jpg",
+  "tag": "tell-start",
+  "fight_s": 0.45,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.25,
+  "gap_m": 10.78
+ },
+ {
+  "file": "tell-ended-001.12.jpg",
+  "tag": "tell-ended",
+  "fight_s": 1.12,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.25,
+  "gap_m": 11.24
+ },
+ {
+  "file": "hit-002.03.jpg",
+  "tag": "hit",
+  "fight_s": 2.03,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.64
+ },
+ {
+  "file": "hit-002.12.jpg",
+  "tag": "hit",
+  "fight_s": 2.12,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.67
+ },
+ {
+  "file": "t-004.02.jpg",
+  "tag": "t",
+  "fight_s": 4.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.68
+ },
+ {
+  "file": "tell-start-004.12.jpg",
+  "tag": "tell-start",
+  "fight_s": 4.12,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.25,
+  "gap_m": 7.68
+ },
+ {
+  "file": "tell-ended-004.48.jpg",
+  "tag": "tell-ended",
+  "fight_s": 4.48,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.25,
+  "gap_m": 7.78
+ },
+ {
+  "file": "t-008.02.jpg",
+  "tag": "t",
+  "fight_s": 8.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.58
+ },
+ {
+  "file": "tell-start-008.12.jpg",
+  "tag": "tell-start",
+  "fight_s": 8.12,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.25,
+  "gap_m": 7.58
+ },
+ {
+  "file": "tell-ended-008.85.jpg",
+  "tag": "tell-ended",
+  "fight_s": 8.85,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.25,
+  "gap_m": 9.79
+ },
+ {
+  "file": "t-012.00.jpg",
+  "tag": "t",
+  "fight_s": 12.0,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.76
+ },
+ {
+  "file": "tell-start-012.27.jpg",
+  "tag": "tell-start",
+  "fight_s": 12.27,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.5,
+  "gap_m": 7.68
+ },
+ {
+  "file": "tell-ended-013.40.jpg",
+  "tag": "tell-ended",
+  "fight_s": 13.4,
+  "opponent": "water_aquaryn",
+  "tell_s": 1.5,
+  "gap_m": 11.08
+ },
+ {
+  "file": "t-016.00.jpg",
+  "tag": "t",
+  "fight_s": 16.0,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.76
+ },
+ {
+  "file": "t-020.00.jpg",
+  "tag": "t",
+  "fight_s": 20.0,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.65
+ },
+ {
+  "file": "t-024.02.jpg",
+  "tag": "t",
+  "fight_s": 24.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 9.87
+ },
+ {
+  "file": "t-028.02.jpg",
+  "tag": "t",
+  "fight_s": 28.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.34
+ },
+ {
+  "file": "t-032.02.jpg",
+  "tag": "t",
+  "fight_s": 32.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 8.86
+ },
+ {
+  "file": "t-036.02.jpg",
+  "tag": "t",
+  "fight_s": 36.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 8.97
+ },
+ {
+  "file": "t-040.02.jpg",
+  "tag": "t",
+  "fight_s": 40.02,
+  "opponent": "water_aquaryn",
+  "tell_s": 0.0,
+  "gap_m": 7.8
+ }
+]

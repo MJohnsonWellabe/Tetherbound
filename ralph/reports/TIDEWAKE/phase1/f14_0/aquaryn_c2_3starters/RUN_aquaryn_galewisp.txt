@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_aquaryn_alpha galewisp MASHER runs=24 win=1.00 med_lead=0.217 med_party=0.042 med_s=42.4 max_s=43.4 lead_faint=0.00 wipe=0.00 max_hit=0.064 tell=[1.25,1.70] stalled=0
+WATER_C2C3 water_aquaryn_alpha galewisp READER runs=24 win=1.00 med_lead=0.118 med_party=0.023 med_s=70.5 max_s=78.2 lead_faint=0.00 wipe=0.00 max_hit=0.064 tell=[1.25,1.70] stalled=0
+WATER_C2C3_PAIR water_aquaryn_alpha galewisp reader/masher median lead cost = 0.118 / 0.217 (ratio 0.54)
+WATER_C2C3 done: 1 rows, 48 runs, 0 errors

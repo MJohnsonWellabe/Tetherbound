@@ -25,7 +25,7 @@ const LIVE := preload("res://tests/helpers/cloudreach_live_segment.gd")
 const PILOT := preload("res://tools/combat_pilot.gd")
 const TIDECOIL_ID := "water_deep_watch_tidecoil"
 const RESOLVED := "water_named_deep_watch_tidecoil_resolved"
-const SITE := Vector3(1483.196, -0.5075, 3427.917)
+const SITE := Vector3(1262.0, -0.43, 3377.0)
 
 var _tree: SceneTree
 var _world: Node3D

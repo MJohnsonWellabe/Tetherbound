@@ -8,7 +8,7 @@ extends "res://tools/net/peer_runner.gd"
 const GATED := "water:deep_watch:pickup:002"
 const RESOLVED := "water_named_deep_watch_tidecoil_resolved"
 const TIDECOIL_ID := "water_deep_watch_tidecoil"
-const TIDECOIL_SITE := Vector3(1483.196, -0.5075, 3427.917)
+const TIDECOIL_SITE := Vector3(1262.0, -0.43, 3377.0)
 const ISLAND_CENTRE := Vector3(1350.0, 0.0, 3500.0)
 
 var _refusals: Array = []
