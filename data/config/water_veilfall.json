@@ -60,6 +60,13 @@
       {"support":"rear_right_spire", "seed":5106, "radius_m":6.2, "trees":4, "shrubs":8, "groundcover":10}
     ]
   },
+  "interior_props": {
+    "_why": "F14#1 Veilfall interior readability (visuals/nerissa_interior_r2 VERDICT B: 'none of the three function rooms show the machinery their names promise'). Codex's scoped-PASS assets placed by their contracts (ralph/reports/VISUAL/veilfall-props-native/integration.md; assets/environment/tidewake/sluice_gate/source/integration.md) in scripts/world/water_veilfall.gd. Presentation only: prompts, colliders, flags and gate state are unchanged. The pump station replaces each pump control's placeholder box visual; the sluice GateLeaf replaces each barrier's bars (the barrier's visibility still hides it when open) while the FixedFrame housing stays; the heart banners replace the primitive banners.",
+    "enabled": true,
+    "pump_station": {"enabled": true, "scene": "res://assets/environment/tidewake/pump_station/pump_station.tscn", "controls": ["intake_pump", "sluice_wheel"], "offset": [0.0, -1.0, 0.0], "yaw_deg": 180.0},
+    "sluice_gates": {"enabled": true, "by_width": {"18": "res://assets/environment/tidewake/sluice_gate/sluice_gate_18.tscn", "30": "res://assets/environment/tidewake/sluice_gate/sluice_gate_30.tscn"}},
+    "heart_banner": {"enabled": true, "scene": "res://assets/environment/tidewake/heart_banner/heart_banner.tscn", "placements": [[-18.0, 3.5, 105.0, -90.0], [18.0, 3.5, 105.0, 90.0]]}
+  },
   "interior_origin": [1800.0, 40.0, 4140.0],
   "interact_radius_m": 4.2,
   "floor_thickness_m": 1.0,

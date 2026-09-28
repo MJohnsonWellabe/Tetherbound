@@ -98,6 +98,7 @@ func build(realm: Node3D) -> void:
 		_box(machinery, Vector3.ZERO, Vector3(2, 2, 1.5), Color(rules.colours.metal), true)
 		_box(machinery, Vector3(0, 1.25, 0), Vector3(1.1, 0.3, 1.1), Color(rules.colours.brass), false)
 		_controls[str(control.id)] = _prompt(machinery, str(control.label), Vector3(0, 0.4, -1.1), _activate.bind(str(control.id)))
+		_place_pump_station(machinery, str(control.id))
 	for gate: Dictionary in rules.gates:
 		var barrier := StaticBody3D.new()
 		barrier.name = str(gate.id)
@@ -109,6 +110,7 @@ func build(realm: Node3D) -> void:
 		for x in range(-int(width * 0.5), int(width * 0.5) + 1, 2):
 			_box(barrier, Vector3(x, height * 0.5, 0), Vector3(0.3, height, 0.4), Color(rules.colours.metal), false)
 		_gates[str(gate.opens_with)] = barrier
+		_place_sluice_gate(barrier, gate)
 	_build_heart_chamber()
 	_build_guardian()
 	if not bool(world.get("simulation_only")):
@@ -268,9 +270,11 @@ func _build_heart_chamber() -> void:
 	# Banners hang flush on the chamber's side walls, facing the hall (the C3
 	# judge read the former free-standing 0.12 m board as a "stray blue slab").
 	var banner_x := float(rules.get("banner_x_m", 18.0))
+	var hung := _place_heart_banners()
 	for side in [-1, 1]:
-		_box(interior, Vector3(side * banner_x, 7, 105), Vector3(0.12, 6, 3), Color(rules.colours.banner), false)
-		if rules.has("banner_x_m"):
+		if not hung:
+			_box(interior, Vector3(side * banner_x, 7, 105), Vector3(0.12, 6, 3), Color(rules.colours.banner), false)
+		if rules.has("banner_x_m") and not hung:
 			# The Tetherbound diamond sigil, not a blank square: the emblem
 			# turned 45 degrees in the banner's plane, with a smaller inset.
 			_box(interior, Vector3(side * (banner_x - 0.08), 7.4, 105), Vector3(0.06, 1.7, 1.7), Color(rules.colours.get("emblem", "#d8e6ea")), false)
@@ -694,6 +698,89 @@ func _local_deferred_guardian() -> bool:
 func _local_pending_guardian() -> bool:
 	var claims := _claims()
 	return claims != null and not str(claims.call("pending_guardian_id")).is_empty()
+
+## F14#1 interior readability: Codex's validated Veilfall props
+## (`interior_props` in water_veilfall.json; placement contracts in each
+## asset's source/ and ralph/reports/VISUAL/veilfall-props-native/). The rooms
+## named for pumps and sluices now show them. Presentation only: every prompt,
+## collider, flag and gate state below is unchanged.
+func _interior_prop(key: String) -> Dictionary:
+	var props: Dictionary = rules.get("interior_props", {}) as Dictionary
+	var prop: Dictionary = props.get(key, {}) as Dictionary
+	return prop if bool(props.get("enabled", false)) and bool(prop.get("enabled", false)) else {}
+
+
+## The pump station stands in for the control's grey placeholder box; the
+## box's collider and the prompt stay exactly where they were.
+func _place_pump_station(machinery: Node3D, control_id: String) -> void:
+	var prop := _interior_prop("pump_station")
+	if prop.is_empty() or not (prop.get("controls", []) as Array).has(control_id):
+		return
+	var scene := load(str(prop.get("scene", ""))) as PackedScene
+	if scene == null:
+		push_error("Veilfall pump station scene missing")
+		return
+	for child: Node in machinery.get_children():
+		if child is MeshInstance3D:
+			(child as MeshInstance3D).visible = false
+	var station := scene.instantiate() as Node3D
+	station.name = "PumpStation"
+	machinery.add_child(station)
+	station.position = _v(prop.get("offset", [0.0, -1.0, 0.0]))
+	station.rotation.y = deg_to_rad(float(prop.get("yaw_deg", 180.0)))
+
+
+## The gate's fixed housing stands in the room; its leaf replaces the old
+## bars on the barrier, so the barrier's own open/closed visibility hides only
+## the leaf and the housing stays.
+func _place_sluice_gate(barrier: StaticBody3D, gate: Dictionary) -> void:
+	var prop := _interior_prop("sluice_gates")
+	var path := str((prop.get("by_width", {}) as Dictionary).get(str(int(float(gate.width_m))), ""))
+	if prop.is_empty() or path.is_empty():
+		return
+	var scene := load(path) as PackedScene
+	if scene == null:
+		push_error("Veilfall sluice gate scene missing: " + path)
+		return
+	var built := scene.instantiate() as Node3D
+	var frame := built.get_node_or_null(^"FixedFrame") as Node3D
+	var leaf := built.get_node_or_null(^"GateLeaf") as Node3D
+	if frame == null or leaf == null:
+		built.free()
+		push_error("Veilfall sluice gate lacks FixedFrame/GateLeaf: " + path)
+		return
+	for child: Node in barrier.get_children():
+		if child is MeshInstance3D:
+			(child as MeshInstance3D).visible = false
+	built.remove_child(frame)
+	built.remove_child(leaf)
+	built.free()
+	frame.name = "%sFrame" % str(gate.id)
+	interior.add_child(frame)
+	frame.position = Vector3(0.0, 0.0, float(gate.z))
+	leaf.name = "GateLeaf"
+	barrier.add_child(leaf)
+	leaf.position = Vector3.ZERO
+
+
+## Returns whether the authored banners were hung (the primitive ones are then
+## not built).
+func _place_heart_banners() -> bool:
+	var prop := _interior_prop("heart_banner")
+	var scene := load(str(prop.get("scene", ""))) as PackedScene if not prop.is_empty() else null
+	if scene == null:
+		return false
+	var index := 0
+	for raw: Variant in prop.get("placements", []):
+		var at := raw as Array
+		var banner := scene.instantiate() as Node3D
+		banner.name = "HeartBanner%d" % index
+		interior.add_child(banner)
+		banner.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		banner.rotation.y = deg_to_rad(float(at[3]))
+		index += 1
+	return index > 0
+
 
 func _box(parent: Node3D, at: Vector3, size: Vector3, colour: Color, collision: bool) -> void:
 	var mesh := MeshInstance3D.new()
