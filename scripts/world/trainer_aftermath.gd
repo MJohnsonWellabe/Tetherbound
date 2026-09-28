@@ -204,15 +204,36 @@ static func _plant_standard(placer: Node3D, body: Node3D, id: String, cfg: Dicti
 ## Heart of the Meadows hang in the air between him and the player, lit, so
 ## the thing he hands over is seen, not only named. Local presentation; it
 ## leaves when the dialogue closes (or after `seconds`).
-static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: String) -> Node3D:
+## The flat direction the handover is laid out toward. Across the line the
+## shot actually looks along when there is one, so `side_m` reads as beside
+## the speaker on screen (aftermath render af3 b0b922d9: laid out across
+## Vess's own shoulder line, her Sigil landed on her from the swung camera);
+## otherwise toward the player; otherwise +Z.
+static func victory_toward(speaker_at: Vector3, view_from: Vector3, player_at: Vector3) -> Vector3:
+	var toward := Vector3.FORWARD
+	if view_from.is_finite():
+		toward = view_from - speaker_at
+	elif player_at.is_finite():
+		toward = player_at - speaker_at
+	toward.y = 0.0
+	return toward.normalized() if toward.length() > 0.01 else Vector3.FORWARD
+
+
+## Where the handover floats: `toward_player_m` along `toward`, `side_m`
+## across it, `height_m` up.
+static func victory_origin(speaker_at: Vector3, toward: Vector3, show: Dictionary) -> Vector3:
+	var side := Vector3(toward.z, 0.0, -toward.x)
+	return speaker_at + toward * float(show.get("toward_player_m", 1.3)) \
+		+ side * float(show.get("side_m", 0.0)) + Vector3.UP * float(show.get("height_m", 1.55))
+
+
+static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: String,
+		view_from: Vector3 = Vector3.INF) -> Node3D:
 	var show: Dictionary = for_trainer(id).get("victory_show", {}) as Dictionary
 	if show.is_empty() or speaker == null or not is_instance_valid(speaker):
 		return null
-	var toward := Vector3.FORWARD
-	if player != null and is_instance_valid(player):
-		toward = player.global_position - speaker.global_position
-		toward.y = 0.0
-		toward = toward.normalized() if toward.length() > 0.01 else Vector3.FORWARD
+	var toward := victory_toward(speaker.global_position, view_from,
+		player.global_position if player != null and is_instance_valid(player) else Vector3.INF)
 	var node := Node3D.new()
 	node.name = "VictoryShow_%s" % id
 	world.add_child(node)
@@ -220,9 +241,7 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	# 7121d40c: a medallion at face height between lens and captain read as an
 	# interact marker over the face): `side_m` shifts the tokens along the
 	# speaker's own shoulder line.
-	var side := Vector3(toward.z, 0.0, -toward.x)
-	node.global_position = speaker.global_position + toward * float(show.get("toward_player_m", 1.3)) \
-		+ side * float(show.get("side_m", 0.0)) + Vector3.UP * float(show.get("height_m", 1.55))
+	node.global_position = victory_origin(speaker.global_position, toward, show)
 	node.rotation.y = atan2(toward.x, toward.z)
 	var tokens: Array = show.get("tokens", ["heart", "key"]) as Array
 	var spacing := 0.58

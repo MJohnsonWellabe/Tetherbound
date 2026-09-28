@@ -8,46 +8,25 @@ extends "res://tests/test_case.gd"
 const ARENA_SCRIPT := preload("res://scripts/combat/combat_arena.gd")
 
 
-class Walker:
-	extends Node3D
-	var walks: Array = []
-	func walk_to(target: Vector3, speed: float, on_arrived: Callable = Callable()) -> void:
-		walks.append([target, speed])
-		global_position = target
-		if on_arrived.is_valid():
-			on_arrived.call()
+func test_bystanders_inside_the_ring_step_straight_out_to_its_edge() -> void:
+	# Pure placement (the unit runner has no live tree for the group walk).
+	var centre := Vector3(0.0, 5.0, 0.0)
+	var edge := ARENA_SCRIPT.bystander_edge(centre, 12.0, Vector3(4.0, 5.2, 0.0))
+	assert_true(edge.is_finite(), "the grunt in the ring walks out")
+	assert_almost_eq(edge.x, 12.0, 0.001, "to the ring's edge plus the margin, straight out")
+	assert_almost_eq(edge.z, 0.0, 0.001, "along the line from the fight's centre")
+	assert_almost_eq(edge.y, 5.2, 0.001, "keeping their own ground height as a start")
+	assert_false(ARENA_SCRIPT.bystander_edge(centre, 12.0, Vector3(20.0, 5.0, 0.0)).is_finite(),
+		"a bystander already clear is left alone")
+	var dead_centre := ARENA_SCRIPT.bystander_edge(centre, 12.0, centre)
+	assert_almost_eq(Vector2(dead_centre.x, dead_centre.z).length(), 12.0, 0.001, "even one on the exact centre gets out")
 
 
-func _walker(root: Node3D, at: Vector3, bystander: bool) -> Walker:
-	var body := Walker.new()
-	root.add_child(body)
-	body.global_position = at
-	if bystander:
-		body.add_to_group(ARENA_SCRIPT.BYSTANDER_GROUP)
-	return body
-
-
-func test_bystanders_inside_the_ring_step_to_its_edge_and_come_back() -> void:
-	var root := Node3D.new()
-	(Engine.get_main_loop() as SceneTree).root.add_child(root)
-	var inside := _walker(root, Vector3(4.0, 0.0, 0.0), true)
-	var outside := _walker(root, Vector3(20.0, 0.0, 0.0), true)
-	var fighter := _walker(root, Vector3(0.0, 0.0, 3.0), false)
-	var arena := Node3D.new()
-	arena.set_script(ARENA_SCRIPT)
-	root.add_child(arena)
-	arena.call("configure", Vector3.ZERO, {"radius": 11.0, "clear_bystanders": true,
-		"bystander_edge_m": 1.0, "bystander_walk_mps": 2.6})
-	assert_eq(inside.walks.size(), 1, "the grunt in the ring walks out")
-	assert_almost_eq((inside.walks[0][0] as Vector3).x, 12.0, 0.01, "to the ring's edge plus the margin, straight out")
-	assert_almost_eq(float(inside.walks[0][1]), 2.6, 0.001, "at the configured pace")
-	assert_almost_eq(inside.rotation.y, atan2(-1.0, 0.0), 0.01, "and turns to watch the fight")
-	assert_eq(outside.walks.size(), 0, "a bystander already clear is left alone")
-	assert_eq(fighter.walks.size(), 0, "a body outside the group is never moved")
-	arena.free()
-	assert_eq(inside.walks.size(), 2, "the fight closing walks them back")
-	assert_almost_eq((inside.walks[1][0] as Vector3).x, 4.0, 0.01, "to where they stood")
-	root.free()
+func test_only_set_dressing_joins_the_group() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/world/village_npcs.gd")
+	assert_true(source.contains("if not has_anything_to_say(spec):\n\t\t# Pure set dressing"),
+		"village_npcs.gd adds only bodies with nothing to say")
+	assert_true(source.contains("npc.add_to_group(COMBAT_ARENA.BYSTANDER_GROUP)"), "to the arena's group")
 
 
 func test_the_arena_config_turns_it_on() -> void:

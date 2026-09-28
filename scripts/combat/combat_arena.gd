@@ -62,19 +62,28 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 ## Bystanders inside the ring walk straight out to `reach` and turn to watch.
 ## Presentation only, like the scatter above: each peer moves its own copy and
 ## nothing is saved.
+## Where a bystander standing at `at` walks to for a fight centred on
+## `centre`, or INF if they are already clear of `reach`. Straight out.
+static func bystander_edge(centre: Vector3, reach: float, at: Vector3) -> Vector3:
+	var offset := at - centre
+	offset.y = 0.0
+	if offset.length() > reach:
+		return Vector3.INF
+	var outward := offset.normalized() if offset.length() > 0.01 else Vector3.FORWARD
+	var edge := centre + outward * reach
+	return Vector3(edge.x, at.y, edge.z)
+
+
 func _clear_bystanders(reach: float) -> void:
 	for node: Node in get_tree().get_nodes_in_group(BYSTANDER_GROUP):
 		var body := node as Node3D
 		if body == null or not body.is_inside_tree() or not body.has_method("walk_to"):
 			continue
-		var offset := body.global_position - global_position
-		offset.y = 0.0
-		if offset.length() > reach:
-			continue
-		var outward := offset.normalized() if offset.length() > 0.01 else Vector3.FORWARD
 		var home := body.global_position
-		var edge := global_position + outward * reach
-		var target := Vector3(edge.x, home.y, edge.z)
+		var target := bystander_edge(global_position, reach, home)
+		if not target.is_finite():
+			continue
+		var edge := target
 		if body.has_method("stand_at") and bool(body.call("stand_at", edge.x, edge.z, home.y)):
 			target = body.global_position
 			body.global_position = home

@@ -110,3 +110,22 @@ func test_the_heart_is_a_heart_and_held_clear_of_the_warden() -> void:
 	holder.free()
 	var show: Dictionary = AFTERMATH.for_trainer("warden_aldis")["victory_show"]
 	assert_true(absf(float(show["side_m"])) >= 1.2, "held clear of the Warden's chest")
+
+
+## Aftermath render af3 (b0b922d9): laid out across Vess's own shoulder line,
+## her Sigil landed on her from the swung victory camera. Given the lens, the
+## tokens sit across the line the shot looks along -- beside her on screen.
+## (Pure layout: the unit runner has no live tree for show_victory itself.)
+func test_tokens_are_laid_out_beside_the_speaker_as_the_lens_sees_them() -> void:
+	var speaker := Vector3(10.0, 0.0, 10.0)
+	var lens := Vector3(10.0, 2.0, 16.0)
+	var player := Vector3(14.0, 0.0, 10.0)
+	var toward := AFTERMATH.victory_toward(speaker, lens, player)
+	assert_almost_eq(toward.z, 1.0, 0.001, "the lens, not the player, sets the layout line")
+	var show: Dictionary = AFTERMATH.for_trainer("captain_ridge")["victory_show"]
+	var offset := AFTERMATH.victory_origin(speaker, toward, show) - speaker
+	assert_almost_eq(offset.z, float(show["toward_player_m"]), 0.01, "toward the lens")
+	assert_almost_eq(absf(offset.x), absf(float(show["side_m"])), 0.01, "and across the lens line, beside her on screen")
+	assert_almost_eq(offset.y, float(show["height_m"]), 0.01, "at the configured height")
+	assert_almost_eq(AFTERMATH.victory_toward(speaker, Vector3.INF, player).x, 1.0, 0.001,
+		"with no solved shot, toward the player as before")
