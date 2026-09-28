@@ -243,7 +243,7 @@ const ROWS := [
 		"target": Vector3(430.0, 932.0, 4500.0),
 		"why": "Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd."},
 	{"n": 25, "region": "upper_cloudreach", "row": "settlement-cliffhold", "time": "day", "sheet": "hero",
-		"stands": [Vector3(-309.2, 830.0, 3991.2), Vector3(-352.0, 830.0, 3954.0)],
+		"stands": [Vector3(-315.4, 830.0, 3987.1), Vector3(-309.2, 830.0, 3991.2), Vector3(-352.0, 830.0, 3954.0)],
 		"target": Vector3(-340.0, 838.0, 3970.0),
 		"why": "Key settlement Cliffhold from its east arrival; production-integration `08-upper-cliffhold-east-arrival` / `12-cliffhold-ground-connection`."},
 	# --- Summit / Stronghold ------------------------------------------------------------
