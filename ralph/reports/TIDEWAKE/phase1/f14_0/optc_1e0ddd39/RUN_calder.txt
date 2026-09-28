@@ -1,0 +1,10 @@
+WATER_C2C3 water_trainer_calder terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=1.000 med_s=145.4 max_s=153.2 lead_faint=1.00 wipe=1.00 max_hit=0.282 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_trainer_calder terrapup READER runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=326.3 max_s=338.3 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_trainer_calder terrapup reader/masher median lead cost = 0.000 / 1.000 (ratio 0.00)
+WATER_C2C3 water_trainer_calder ripplet MASHER runs=24 win=0.04 med_lead=1.000 med_party=1.000 med_s=153.6 max_s=159.2 lead_faint=1.00 wipe=0.96 max_hit=0.181 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_trainer_calder ripplet READER runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=220.2 max_s=225.2 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_trainer_calder ripplet reader/masher median lead cost = 0.000 / 1.000 (ratio 0.00)
+WATER_C2C3 water_trainer_calder galewisp MASHER runs=24 win=0.00 med_lead=1.000 med_party=1.000 med_s=137.6 max_s=150.5 lead_faint=1.00 wipe=1.00 max_hit=0.275 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_trainer_calder galewisp READER runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=176.1 max_s=180.0 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_trainer_calder galewisp reader/masher median lead cost = 0.000 / 1.000 (ratio 0.00)
+WATER_C2C3 done: 3 rows, 144 runs, 0 errors

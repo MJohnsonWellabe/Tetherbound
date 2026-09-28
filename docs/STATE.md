@@ -43,10 +43,17 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
     - Tess on the ordinary route: r5 scored 97% / 84% (r4 about 86% strict).
     - Nerissa r17: 98% / 83%.
   - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
-  - **Blocked** on a shared combat contact-spacing rule (bodies interpenetrate today). That rule changes C2 balance and is shared with the other lanes' named fights.
+  - **Blocked** on the shared contact-spacing rule, now owned by the COMBAT SPACING lane (`tb/combat-spacing`, coordinator 16:28). When it lands on main, Tidewake merges it and re-judges Tess and Nerissa C3 under `C3_RUBRIC.md`. This lane builds no spacing fix of its own.
   - **Landed as progress:** the Heart Chamber arena bound, the tell and head camera swings, and Riptusk's lunge opt-in. All are presentation-only, apart from the smaller ring.
-  - **C2 to rerun:** Nerissa's ring is now 9 m, so her 144-fight in-world C2 must be rerun. Local seeds: READER wins 5/5 at 24-33% party cost, and the MASHER wipes.
+  - **C2 met for both rows under option (c) (main 1e0ddd39).**
+    - Tess, Calder and Venn: reader win 1.00, masher lead-faint 1.00. Venn's lane now locks at 0.25 of the tell.
+    - Nerissa at the 9 m ring: 144 in-world fights, reader win 1.00 x3, party cost 0.13-0.24.
+    - Aquaryn and Tidecoil pass under the named-wild ruling.
+  - **Card T2's non-fight clauses** belong to the CARDS lane (`tb/cards`, coordinator 18:13): islands, loops, shortcuts, pockets, activities, currents and docks, ledgers, and the device profile.
+    - This lane's prep is on main for it to use: `tests/card_t2_tidewake_islands.sh`, and `phase1/card_t2/device/` with a first 7-inch read of FAIL 2/4.
+    - The dock and current capture stands missed their subjects.
   - Other defects, recorded, not fixed:
+    - The travelling-lane "locked" visual (`wild_creature.gd:853/972`) reads the global `charger_lunge.face_lock_fraction` (0.5), while a per-body `face_lock_fraction` (Venn 0.25; the Stormwood CHARGERs) freezes the heading earlier. The lane shows as locked later than it is. Owner: shared combat.
     - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
     - the ordinary tell ring marks the attacker's feet, not a landing spot.
 

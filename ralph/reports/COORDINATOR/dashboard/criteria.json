@@ -814,16 +814,16 @@
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md (tb/tidewake Phase 1). C3 under the fixed rubric (phase1/C3_RUBRIC.md: two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 152 m stick walk from the Tidal Cradle landing, creature_recall, Challenge prompt; 100%/100%, tells 4/4); Tidecoil PASS (tidecoil_r12: 100%/91.7%, tells 4/4; engaged by walking down the arrival bay and the Engage prompt). C2: f14_confirm_main (Tess top-fight pass; Tidecoil named-wild ratios 0.05-0.07) plus aquaryn_c2_3starters (ratios 0.54/0.32/0.29, reader win 1.00), under the STATE named-wild ruling. Tells observed 0.80-0.90 s in the in-world smoke.",
-     "gap": "Tess on the ordinary route (317 m walk, prompt): r5 judge A 97%, judge B 84% under the fixed rubric (both must reach 90%). All of judge B's failures are the ally in front of the opponent's head at contact range (4.7-6.6 m). Blocked on a shared combat contact-spacing rule (bodies interpenetrate); the camera cannot separate touching bodies.",
-     "note": "Strict re-check (phase1/f14_0/RECHECK_F14_0.md) NOT MET before the fixes; gaps 1, 2, 3 and 5 are now addressed and gap 4 (Tess) remains. Tidewake lane (Phase 1)."
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md. C2: top trainers against the option-(c) bar on main 1e0ddd39 (optc_1e0ddd39/): Tess, Calder, Venn reader win 1.00 x3, masher lead-faint 1.00, reader/masher party cost <= 0.19, chapter-level masher loss 1.00. Venn's Riptusk lane now locks at 0.25 of the tell (it failed at 0.33-0.50 reader win). Aquaryn (3 starters) and Tidecoil pass under the named-wild ruling. C3 under the fixed rubric (phase1/C3_RUBRIC.md, two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 100/100), Tidecoil PASS (tidecoil_r12: 100/91.7). Tells observed 0.80-0.90 s.",
+     "gap": "C3: Tess on the ordinary route 97% / 84% (r5), with contact-range head occlusion. Waits on the COMBAT SPACING lane (tb/combat-spacing), then a re-judge under C3_RUBRIC.",
+     "note": "C2 met under option (c). Tidewake lane (Phase 1)."
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (tb/tidewake Phase 1): C2 PASS at a3269be7 in the actual Heart Chamber, 144 fights: READER win 1.00 x3, party cost 0.12/0.07/0.24 of the masher's, masher wipe 1.00, max single hit 18%, tells 0.8/1.1 s. The regression since dbe43195 (render bisect) was the ring reaching the Sluice Crossing channel; Nerissa's stand moved 9 m deeper. C3 tells 12/12 with the heavy distinct (orange HEAVY banner plus chevron lane). Veilfall interior route readable in every frame (room identity WEAK, Phase 2).",
-     "gap": "C3 blocked after r17 (two-strike rule): judge A 98%, judge B 83%. The ring bound (water_veilfall arena_bounds), the tell swing and Riptusk's camera_ignore_lunge removed the banner-wall, edge-crop and camera-in-ally failures. What remains is contact-range head occlusion, which needs the shared combat spacing rule. Her ring is now 9 m, so the 144-fight in-world C2 must be rerun (local seeds: READER 5/5, cost 0.24-0.33, MASHER wipes).",
-     "note": "Blocked on the shared contact-spacing rule (with Tess). Tidewake lane (Phase 1)."
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md. C2 at the 9 m Heart Chamber ring (main 1e0ddd39, c2_1e0ddd39/): 144 in-world fights, reader win 1.00 x3, masher lead-faint and wipe 1.00, reader/masher party cost 0.13 / 0.24 / 0.24, max single hit 17%, observed tells 0.80-1.58 s (heavy 1.1 s). C3 tells 12/12 with the heavy distinct; banner-wall and camera-in-ally failures are fixed (arena bound, lunge opt-in).",
+     "gap": "C3 framing: r17 98% / 83%. Contact-range head occlusion waits on the COMBAT SPACING lane (tb/combat-spacing), then a re-judge under C3_RUBRIC.",
+     "note": "C2 met under option (c) at the 9 m ring. Tidewake lane (Phase 1)."
     },
     {
      "text": "Water/current network visibly changes and persists",
