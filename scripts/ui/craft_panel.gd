@@ -222,7 +222,7 @@ func _build() -> void:
 
 	var hint := Label.new()
 	hint.text = "Leave: %s" % _cancel_glyph()
-	hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if _readable_action_hints else UITokens.FONT_TINY)
+	hint.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _readable_action_hints else UITokens.FONT_TINY)
 	hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	outer.add_child(hint)
 
@@ -253,8 +253,8 @@ func _build_list_zone() -> Control:
 	_list_scroll = ScrollContainer.new()
 	var list_height := float(LIST_VISIBLE_HEIGHT)
 	if _readable_recipe_rows:
-		var visible_rows := maxi(1, int(_presentation.get("visible_rows", 4)))
-		list_height = visible_rows * float(_presentation.get("row_height", 128)) + (visible_rows - 1) * 8.0
+		var visible_rows := maxi(1, int(_presentation.get("visible_rows", 3)))
+		list_height = visible_rows * float(_presentation.get("row_height", 208)) + (visible_rows - 1) * 8.0
 	_list_scroll.custom_minimum_size = Vector2(list_width, list_height)
 	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	side.add_child(_list_scroll)
@@ -295,7 +295,7 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = Vector2(300, ROW_HEIGHT)
 	if _readable_recipe_rows:
-		button.custom_minimum_size = Vector2(float(_presentation.get("list_width", 480)), float(_presentation.get("row_height", 128)))
+		button.custom_minimum_size = Vector2(float(_presentation.get("list_width", 480)), float(_presentation.get("row_height", 208)))
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = ""
 	button.add_theme_stylebox_override("normal", UITokens.slot_box(false))
@@ -354,9 +354,10 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name.clip_text = true
 	if _readable_recipe_rows:
+		name.clip_text = false
 		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		name.max_lines_visible = 2
-	name.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	name.add_theme_font_size_override("font_size", UITokens.FONT_READ if _readable_recipe_rows else UITokens.FONT_BODY)
 	name.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	text_col.add_child(name)
 
@@ -376,9 +377,10 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	cost_label.clip_text = true
 	if _readable_recipe_rows:
+		cost_label.clip_text = false
 		cost_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		cost_label.max_lines_visible = 2
-	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		cost_label.max_lines_visible = 4
+	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_READ if _readable_recipe_rows else UITokens.FONT_TINY)
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
 
@@ -412,7 +414,7 @@ func _build_center_zone() -> Control:
 	_center_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	if _readable_recipe_rows:
 		_center_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_center_name.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
+	_center_name.add_theme_font_size_override("font_size", UITokens.FONT_SECTION if _readable_recipe_rows else UITokens.FONT_HEADING)
 	_center_name.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	side.add_child(_center_name)
 
@@ -430,7 +432,7 @@ func _build_right_zone() -> Control:
 
 	var ingredients_header := Label.new()
 	ingredients_header.text = "Ingredients"
-	ingredients_header.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	ingredients_header.add_theme_font_size_override("font_size", UITokens.FONT_SECTION if _readable_recipe_rows else UITokens.FONT_TINY)
 	ingredients_header.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	side.add_child(ingredients_header)
 
@@ -440,18 +442,18 @@ func _build_right_zone() -> Control:
 
 	_output_line = Label.new()
 	_output_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_output_line.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_output_line.add_theme_font_size_override("font_size", UITokens.FONT_READ if _readable_recipe_rows else UITokens.FONT_LABEL)
 	_output_line.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	side.add_child(_output_line)
 
 	_status = Label.new()
 	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_status.add_theme_font_size_override("font_size", UITokens.FONT_READ if _readable_recipe_rows else UITokens.FONT_LABEL)
 	side.add_child(_status)
 
 	_craft_hint = Label.new()
 	_craft_hint.text = "Craft: A / Enter"
-	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if _readable_action_hints else UITokens.FONT_TINY)
+	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _readable_action_hints else UITokens.FONT_TINY)
 	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	side.add_child(_craft_hint)
 
@@ -507,6 +509,8 @@ func _poll() -> void:
 		var colour := UITokens.SUCCESS if affordable else UITokens.DANGER
 		if i < _cost_labels.size():
 			_cost_labels[i].add_theme_color_override("font_color", colour)
+			if _readable_recipe_rows:
+				_cost_labels[i].text = _cost_line(db.call("recipe", id))
 	_describe(_selected)
 
 
@@ -555,7 +559,7 @@ func _make_ingredient_row(item_id: String, need: int, have: int, enough: bool) -
 	var name := str(db.call("item_name", item_id)) if db != null else item_id
 	var label := Label.new()
 	label.text = "%s %d / have %d" % [name, need, have]
-	label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	label.add_theme_font_size_override("font_size", UITokens.FONT_SECTION if _readable_recipe_rows else UITokens.FONT_BODY)
 	label.add_theme_color_override("font_color", UITokens.SUCCESS if enough else UITokens.DANGER)
 	row.add_child(label)
 
@@ -575,7 +579,7 @@ func _cost_line(recipe: Dictionary) -> String:
 		var name := str(db.call("item_name", id)) if db != null else id
 		# Ownership counts remain in the selected recipe's ingredient panel.
 		# The list needs a short, distinguishable preview of every requirement.
-		parts.append("%d %s" % [need, name] if _readable_recipe_rows else "%d %s (have %d)" % [need, name, have])
+		parts.append("%d %s (have %d)" % [need, name, have])
 	return ", ".join(parts)
 
 

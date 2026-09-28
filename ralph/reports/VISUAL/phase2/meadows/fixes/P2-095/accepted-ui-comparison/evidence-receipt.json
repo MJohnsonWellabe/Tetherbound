@@ -1,0 +1,243 @@
+{
+  "scope": "P2-095 recipe/material readability and P2-096 Craft/Leave readability only; no chapter or regional Bar acceptance. Implementation not yet committed/landed.",
+  "mapping": {
+    "A": "candidate",
+    "B": "baseline"
+  },
+  "inventory_sha256": "9a23d275e96533721b42eec82c86b724e886bb53b7bd2c1e66afeb25650b09ba",
+  "independent_mapping_verification_sha256": "ff155edc9f312896b762f2864b4f155a779f9ad4328b241c898433de19cc76ea",
+  "blind_verdict_sha256": "188cd0fff8004c18326349f0fe993b1376dbac86c5128c8bc06cd60f7f05bba7",
+  "frames": [
+    {
+      "pair": "meadows-1080",
+      "variant": "baseline",
+      "file": "meadows-1080__B.jpg",
+      "sha256": "25a46b0f4abe4daabbcc70bfe9ebe1f976d7b0c175e18640c75989e2826703b0",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "original_manifest_sha256": "dac33d446a672e9765c60f64ec19b08b58fb06ccac4c3b7d74d4e8bcfd8e9c78"
+    },
+    {
+      "pair": "meadows-1080",
+      "variant": "candidate",
+      "file": "meadows-1080__A.jpg",
+      "sha256": "05d2f32ac562eac36224c58fda72253a964af729e8f273bba83824cfd428b832",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "original_manifest_sha256": "d4049b9af3d63d787722bd80485bc8aacb4a0f22ebee31286d5d27a2188ecb9b"
+    },
+    {
+      "pair": "cloudreach-1080",
+      "variant": "baseline",
+      "file": "cloudreach-1080__B.jpg",
+      "sha256": "f74cb5a0b0ffa00ce865d8a7ffd9e6e3b5faf385515ce1a41fea426e047e6c5d",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "original_manifest_sha256": "4f8087d78240dada3f8a134af87a7fed5037321fc565243e20bc0336f22cf9c7"
+    },
+    {
+      "pair": "cloudreach-1080",
+      "variant": "candidate",
+      "file": "cloudreach-1080__A.jpg",
+      "sha256": "f78cb0d105ab0287df7d20fed6f3a2106b275a18cbd827971fbeea44ec7e34e6",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "original_manifest_sha256": "136cbea278d98409889c701ce79d8f6d858fc042f6f556f246308b58f36cc380"
+    },
+    {
+      "pair": "stormwood-1080",
+      "variant": "baseline",
+      "file": "stormwood-1080__B.jpg",
+      "sha256": "bdc68825b66fcd154fc974faf74cf5f5cd391711114a18a11622aa6e69de81e1",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "original_manifest_sha256": "7e2e612be399fb022414777e05570c00cc23675803a1852933dc91afb6399db3"
+    },
+    {
+      "pair": "stormwood-1080",
+      "variant": "candidate",
+      "file": "stormwood-1080__A.jpg",
+      "sha256": "62773871f268c1c4b7332f9d057f3e81be4c15e000c4f12bcb8688db7695c4ee",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "original_manifest_sha256": "40dd0a0c17920856e547090ca09884cc59d6d3960c55787f9c1571cebd2c7499"
+    },
+    {
+      "pair": "meadows-720-cloudreach_pickaxe_bracing",
+      "variant": "baseline",
+      "file": "meadows-720-cloudreach_pickaxe_bracing__B.jpg",
+      "sha256": "c17fba4560fcc1f87e48a8ee431079f644728cbc92dca0764ea6ed487fe047ca",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "591edd6e95e83669361a8dc0546de00fae72db35f390ae21198266515a41ea22"
+    },
+    {
+      "pair": "meadows-720-cloudreach_pickaxe_bracing",
+      "variant": "candidate",
+      "file": "meadows-720-cloudreach_pickaxe_bracing__A.jpg",
+      "sha256": "4830ddf0b7eda7e074bac33de288a21435403c5664509d64b412518a18c3fdcf",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "9b479fa4b6473a6970063e195d22d4214d99963adbd212ff82225e879d7e0bae"
+    },
+    {
+      "pair": "meadows-720-saddle",
+      "variant": "baseline",
+      "file": "meadows-720-saddle__B.jpg",
+      "sha256": "06fa66d9f82ff4ca6d76b09bc0d56a905ecb08aae4fb82fe2f44ab6b8ca7db54",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "591edd6e95e83669361a8dc0546de00fae72db35f390ae21198266515a41ea22"
+    },
+    {
+      "pair": "meadows-720-saddle",
+      "variant": "candidate",
+      "file": "meadows-720-saddle__A.jpg",
+      "sha256": "4bfe67a0a507f7dc1bfbed6a17839352e76db7a6aef738701fecd5a29d6ff266",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "9b479fa4b6473a6970063e195d22d4214d99963adbd212ff82225e879d7e0bae"
+    },
+    {
+      "pair": "meadows-720-reinforce_axe",
+      "variant": "baseline",
+      "file": "meadows-720-reinforce_axe__B.jpg",
+      "sha256": "7ce65e6987c6d348a58294b7a826befcbfd017936f53e3cf89eaba017296c74b",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "591edd6e95e83669361a8dc0546de00fae72db35f390ae21198266515a41ea22"
+    },
+    {
+      "pair": "meadows-720-reinforce_axe",
+      "variant": "candidate",
+      "file": "meadows-720-reinforce_axe__A.jpg",
+      "sha256": "32e4bd973f78320c7676104c6a0041f75a288ca99fff244e745439b511250080",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "9b479fa4b6473a6970063e195d22d4214d99963adbd212ff82225e879d7e0bae"
+    },
+    {
+      "pair": "meadows-720-water_trail_preserve",
+      "variant": "baseline",
+      "file": "meadows-720-water_trail_preserve__B.jpg",
+      "sha256": "5632ac672c20126936a61f40529812ca6e33c467d3cfa43e72e1040d34b069f3",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "591edd6e95e83669361a8dc0546de00fae72db35f390ae21198266515a41ea22"
+    },
+    {
+      "pair": "meadows-720-water_trail_preserve",
+      "variant": "candidate",
+      "file": "meadows-720-water_trail_preserve__A.jpg",
+      "sha256": "125b4e34f3aae316d55c7612feea1d7ea89efb1f5ab51379da9307b058be067b",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "original_manifest_sha256": "9b479fa4b6473a6970063e195d22d4214d99963adbd212ff82225e879d7e0bae"
+    }
+  ],
+  "native_profile": "Computer Compatibility captures; no Ally hardware. 1080 realm pairs and four actual720 stress pairs.",
+  "fixture_disclosure": "Staged catalogue visibility, one legal item maximum per720view, refusal text; no earned progression or craft transactions in captures. Six1080 originals and eight720 originals retain distinct capture-era fixtures/provenance.",
+  "synthetic_test": {
+    "cases": 164,
+    "labels": 1696,
+    "failures": 0,
+    "input": "synthetic joypad events; real craft/spend/owned-count-refresh/close path",
+    "shipping_config_geometry_exactly_matches_reviewed_candidate": true,
+    "shipping_layout_sha256": "f1a25dd979227d93302b149743b4a76f0dcedb6d2a04706e6ed693ea705d2d5b",
+    "shipping_log_sha256": "c3d57eb83989448359c98ce8ef16fe0ff2ab12d9cf9e3a22cbd4fc0679090a3c"
+  },
+  "implementation": {
+    "scripts/ui/craft_panel.gd": "0e28add730974b159ef5a8158aadc11287150c7ca1d7749511f568644ee5f1b0",
+    "data/config/craft_presentation.json": "23f60b588f5fa23ae3f32dec362f00f85c2031bc4321503fa441a1ef47f9a5e1",
+    "tests/smoke_craft_panel_controller.gd": "86da60d7e7b69f9ee4995542788cfccef35190faf48c2555d9342a6e543e0638"
+  },
+  "status": "Scoped UI pass accepted for landing; catalog not marked fixed before implementation commit. Regional overallBarA/BarB remain open.",
+  "retention_policy": "WORKFLOW section 9: original per-frame images remain local; written verdict and one contact sheet per distinct capture round are allowlisted.",
+  "contact_sheets": [
+    {
+      "file": "_sheet1080.png",
+      "original_file": "overview-1080.png",
+      "round": "Three-realm 1080 comparison (retained capture-era originals from initial valid baseline and R2); no R3 images.",
+      "sha256": "4aec2ea1b5825da91f2e2864662aefe8eb7ce28b34a3572bf35b9b3a6dac75fb"
+    },
+    {
+      "file": "_sheet720.png",
+      "original_file": "overview-720.png",
+      "round": "Separate corrected R3 720 stress comparison; eight fresh originals, no invalid R2 720 frames.",
+      "sha256": "e8d5838b7a8fb4570085e554b886e009ae4707943045c17e7ef72aa6a14bc8e9"
+    }
+  ],
+  "local_originals_root": ".artifacts/phase2-meadows/crafting-native-stress-r3/judge-neutral-final",
+  "focused_shipping_tests": {
+    "tracked_default": {
+      "exit_code": 0,
+      "log_sha256": "25be010897019631f212399bba2d0a010f3a5317c1415c31948e062183c8d05a"
+    },
+    "tracked_baseline_presentation": {
+      "exit_code": 0,
+      "log_sha256": "25be010897019631f212399bba2d0a010f3a5317c1415c31948e062183c8d05a"
+    },
+    "current_main_integration": "Pending an exact released current-main test snapshot; these checks used the frozen local source checkout. Draft publication authorized now but blocked by actual approval-policy rejection; no auto-merge while #414 runs."
+  },
+  "preserved_capture_sources": [
+    {
+      "original_path": ".artifacts/phase2-meadows/crafting-native-final/phase2_capture_craft_final.gd",
+      "preserved_path": "ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/sources/capture-1080.gd",
+      "sha256": "f4e55f592cbc08f2131766736d0acddcdc6c246d94f8ab4b98dfcc83aab12a64",
+      "bytes": 18639
+    },
+    {
+      "original_path": ".artifacts/phase2-meadows/crafting-native-stress-r3/phase2_capture_craft_stress.gd",
+      "preserved_path": "ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/sources/capture-720.gd",
+      "sha256": "b2ed2c15cdabe0c6ad64f40288be39ba6dbb79588f8faca8b12276a737ea49f6",
+      "bytes": 21707
+    },
+    {
+      "original_path": ".artifacts/phase2-meadows/crafting-landing/capture-era-source/craft_presentation.json",
+      "preserved_path": "ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/sources/capture-era-config.json",
+      "sha256": "87ab87a3a72af39ad5c0a4d031d2974b8696f5d84fda6cd02278a86763031fba",
+      "bytes": 360
+    }
+  ],
+  "reproduction": {
+    "restore": "Restore byte-exact helper copies to original_path. Use original local HEAD d1ca575208e39961dbc7ba806c42ba30710b40f0 plus judged panel0e28add7 and preserved false capture-era config; newer main needs separate integration and a new receipt. Do not rewrite original manifests/pins.",
+    "seed": 2042,
+    "settings": "Fresh isolated APPDATA/LOCALAPPDATA; no settings file. Native Compatibility/opengl3.",
+    "1080": "--resolution 1920x1080 --fullscreen --script .artifacts/phase2-meadows/crafting-native-final/phase2_capture_craft_final.gd -- --biome=<meadows|cloudreach|stormwood> --seed=2042 --times=day --views=approach --output=<fresh res:// evidence directory>",
+    "720": "--resolution 1280x720 --windowed --script .artifacts/phase2-meadows/crafting-native-stress-r3/phase2_capture_craft_stress.gd -- --biome=meadows --seed=2042 --times=day --views=approach --craft-raster=720 --craft-stress --output=<fresh res:// evidence directory>",
+    "candidate_args": [
+      "--craft-readable-preview",
+      "--craft-hints-preview"
+    ],
+    "baseline_args": [],
+    "limitation": "Preserved capture-era fixture sources are historical reproduction inputs, not new runtime changes or permission to render. Use serialized lock/process ownership for future native work."
+  }
+}

@@ -50,6 +50,17 @@ stick through the camera's yaw either way.
 - The earlier 652f2b5e face-lock tuning keyed the ordinary-strike lock, not the lane's,
   and measured no change. It was reverted (6ba25e5c).
 
+**C2 at the 9 m ring (main 1e0ddd39): PASS under option (c)** (`c2_1e0ddd39/`: 144 in-world fights in 9 render.yml headless cells; `SUMMARY.txt`).
+- `arena_radius` is 9.0 in every run, from `water_veilfall.gd::combat_arena_bounds_at` with the stand at x 7.
+
+| Starter | Reader win | Masher lead-faint / wipe | Reader / masher median party cost | Max single hit |
+|---|---|---|---|---|
+| galewisp | 1.00 | 1.00 / 1.00 | 0.13 | 0.149 |
+| ripplet | 1.00 | 1.00 / 1.00 | 0.24 | 0.135 |
+| terrapup | 1.00 | 1.00 / 1.00 | 0.24 | 0.128 |
+
+- **Tells:** declared 0.8 s and 1.1 s. Observed from tell start to strike: 0.80-1.58 s, where 1.58 s is the 1.1 s heavy plus Riptusk's 7 m travel.
+
 ## C3 rounds at the new stand
 | Round | Stand and change | Framing | Tells | Heavy distinct |
 |---|---|---|---|---|
