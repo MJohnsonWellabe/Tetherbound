@@ -96,6 +96,14 @@ func _capture_row(_row: Dictionary) -> void:
 	_place(placer, game, "workbench", anchor, active)
 	await _settle()
 	placer.call("_open_craft_panel")
+	if OS.get_cmdline_user_args().has("--craft-readable-preview"):
+		var panel := root.get_node_or_null(^"CraftPanel")
+		if panel != null:
+			panel.call("close")
+			panel.set("_readable_recipe_rows", true)
+			panel.call("_build")
+			panel.call("open")
+			_manifest["craft_readable_preview"] = true
 	await _settle()
 	await _shoot("crafting", "crafting", "workbench and production CraftPanel directly opened")
 	_write_manifest()
