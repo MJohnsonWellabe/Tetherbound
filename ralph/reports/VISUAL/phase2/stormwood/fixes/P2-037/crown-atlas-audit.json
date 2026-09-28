@@ -1,0 +1,33 @@
+{
+  "method": "Deterministic 78 barycentric samples per actual leaf triangle, weighted by model-space triangle area; nearest alpha threshold >0.2. Diagnostic source UV/alpha pairing, not screen coverage or a visual acceptance result.",
+  "textures": [
+    {
+      "path": "assets/environment/stylized_nature/Leaves_TwistedTree_C.png",
+      "sha256": "5beae7c34d783d99f44df2c7272eec3959472ce1991f51683813493cb58e6483"
+    },
+    {
+      "path": "assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png",
+      "sha256": "d1bb0818cae9ff88a4c27af9f368255d3d9c5ab7a184e79bf84caa6f5e8b54b9"
+    }
+  ],
+  "models": [
+    {
+      "model": "TwistedTree_2",
+      "leaf_triangles": 2344,
+      "sample_points_per_triangle": 78,
+      "authored_opaque_area": 708.3072507037566,
+      "substituted_opaque_area": 620.3120002452379,
+      "authored_leaf_area_lost_fraction": 0.4997953070319649,
+      "substituted_opaque_area_outside_authored_mask_fraction": 0.42883805129477576
+    },
+    {
+      "model": "TwistedTree_4",
+      "leaf_triangles": 2700,
+      "sample_points_per_triangle": 78,
+      "authored_opaque_area": 813.6159183004728,
+      "substituted_opaque_area": 712.5433023411493,
+      "authored_leaf_area_lost_fraction": 0.49984813175249354,
+      "substituted_opaque_area_outside_authored_mask_fraction": 0.4289027484549108
+    }
+  ]
+}
