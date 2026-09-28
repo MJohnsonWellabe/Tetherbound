@@ -469,6 +469,19 @@ func _capture_row(row: Dictionary) -> void:
 		await process_frame
 	_hide_hud()
 	await RenderingServer.frame_post_draw
+	var stand_failure := capture_stand_failure(at, _player.global_position,
+		_camera.global_position, float(row.get("min_camera_player_distance_m", 3.5)),
+		_rig.spring_length + 3.0)
+	if not stand_failure.is_empty():
+		_failures.append("%s: %s" % [str(row.frame_id), stand_failure])
+		if not _manifest.has("invalid_stands"):
+			_manifest["invalid_stands"] = []
+		_manifest["invalid_stands"].append({"frame_id": row.frame_id,
+			"reason": stand_failure, "selected_stand_xz": [at.x, at.y],
+			"player_position": _vec3(_player.global_position),
+			"camera_position": _vec3(_camera.global_position)})
+		_write_manifest()
+		return
 	var image := root.get_texture().get_image()
 	var path := "%s/%s.jpg" % [_output_dir, str(row.frame_id)]
 	if image == null or image.is_empty() or image.get_width() != root.size.x or image.get_height() != root.size.y:
@@ -550,6 +563,19 @@ static func resolve_capture_ground(from: Node, x: float, z: float, terrain: floa
 
 static func capture_yaw(forward: Vector2) -> float:
 	return atan2(-forward.x, -forward.y)
+
+
+static func capture_stand_failure(stand: Vector2, player: Vector3, camera: Vector3,
+		minimum_distance: float, maximum_distance: float) -> String:
+	if not player.is_finite() or not camera.is_finite():
+		return "non-finite player or camera position"
+	var displacement := stand.distance_to(Vector2(player.x, player.z))
+	if displacement > 2.0:
+		return "player left staged stand by %.2fm (possible slide, encounter or respawn)" % displacement
+	var distance := camera.distance_to(player)
+	if distance < minimum_distance or distance > maximum_distance:
+		return "camera/player separation %.2fm outside the staged ordinary-camera range" % distance
+	return ""
 
 
 func _pin_time(time_name: String) -> Dictionary:
