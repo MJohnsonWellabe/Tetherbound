@@ -1,0 +1,1269 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 296201750359,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296218527579,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T03:42:35",
+	"capture_started_utc": "2026-09-28T03:39:42",
+	"captured_frame_count": 9,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 490823,
+			"camera_player_distance_m": 5.82121133804321,
+			"camera_position": [
+				-539.008117675781,
+				332.862182617188,
+				1271.36853027344
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.0,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836643099785,
+					0.978147625923157,
+					0.12800320982933
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.207911685109138,
+					-0.602207779884338
+				],
+				"origin": [
+					-535.0,
+					331.781005859375,
+					1274.5
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.615661382675171,
+					0.000000285314456505148,
+					0.788010835647583
+				],
+				"basis_y": [
+					0.163836792111397,
+					0.978147625923157,
+					0.128002941608429
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.207911640405655,
+					-0.602207779884338
+				],
+				"origin": [
+					-539.008117675781,
+					332.862182617188,
+					1271.36853027344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Three Bells Bridge",
+			"destination_index": 3,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__03__three_bells_bridge__day__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day__approach",
+			"identity": "cloudreach__broken_causeways__03__three_bells_bridge",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-461.843109130859,
+						319.802154541016,
+						1197.27282714844
+					],
+					"species_id": "ribbonray"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-463.964416503906,
+						320.093139648438,
+						1199.39416503906
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_04_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-446.5,
+						342.029998779297,
+						1358.0
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_04_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-449.5,
+						342.029998779297,
+						1358.0
+					],
+					"species_id": "ribbonray"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.216666666667,
+				"hour": 8.00866666666666,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-535.0,
+				330.031036376953,
+				1274.5
+			],
+			"position_xz": [
+				-535.0,
+				1274.5
+			],
+			"resolved_ground_y": 330.03,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 1,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-5.0
+			],
+			"target_position_xz": [
+				-535.0,
+				1274.5
+			],
+			"terrain_ground_y": 330.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 52.0,
+			"view_heading_xz": [
+				0.788010776042938,
+				0.61566150188446
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 433324,
+			"camera_player_distance_m": 5.82121133804321,
+			"camera_position": [
+				-539.008117675781,
+				332.862182617188,
+				1271.36853027344
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.0,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836643099785,
+					0.978147625923157,
+					0.12800320982933
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.207911685109138,
+					-0.602207779884338
+				],
+				"origin": [
+					-535.0,
+					331.781005859375,
+					1274.5
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.615661382675171,
+					0.000000285314456505148,
+					0.788010835647583
+				],
+				"basis_y": [
+					0.163836792111397,
+					0.978147625923157,
+					0.128002941608429
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.207911640405655,
+					-0.602207779884338
+				],
+				"origin": [
+					-539.008117675781,
+					332.862182617188,
+					1271.36853027344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Three Bells Bridge",
+			"destination_index": 3,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__03__three_bells_bridge__golden__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__golden__approach",
+			"identity": "cloudreach__broken_causeways__03__three_bells_bridge",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_02_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-462.415130615234,
+						319.795288085938,
+						1196.63024902344
+					],
+					"species_id": "ribbonray"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-464.100402832031,
+						320.106536865234,
+						1199.44458007813
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_04_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-447.070739746094,
+						342.030853271484,
+						1358.77416992188
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_04_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-449.5,
+						342.029998779297,
+						1358.0
+					],
+					"species_id": "ribbonray"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 450.215004848485,
+				"hour": 18.0086001939394,
+				"requested": "golden",
+				"time_of_day": "golden"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-535.0,
+				330.031036376953,
+				1274.5
+			],
+			"position_xz": [
+				-535.0,
+				1274.5
+			],
+			"resolved_ground_y": 330.03,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 1,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-5.0
+			],
+			"target_position_xz": [
+				-535.0,
+				1274.5
+			],
+			"terrain_ground_y": 330.03,
+			"time": "golden",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 52.0,
+			"view_heading_xz": [
+				0.788010776042938,
+				0.61566150188446
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 407791,
+			"camera_player_distance_m": 5.82121133804321,
+			"camera_position": [
+				-539.008117675781,
+				332.862182617188,
+				1271.36853027344
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.615661442279816,
+					0.0,
+					0.788010776042938
+				],
+				"basis_y": [
+					0.163836643099785,
+					0.978147625923157,
+					0.12800320982933
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.207911685109138,
+					-0.602207779884338
+				],
+				"origin": [
+					-535.0,
+					331.781005859375,
+					1274.5
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.615661382675171,
+					0.000000285314456505148,
+					0.788010835647583
+				],
+				"basis_y": [
+					0.163836792111397,
+					0.978147625923157,
+					0.128002941608429
+				],
+				"basis_z": [
+					-0.770790874958038,
+					0.207911640405655,
+					-0.602207779884338
+				],
+				"origin": [
+					-539.008117675781,
+					332.862182617188,
+					1271.36853027344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Three Bells Bridge",
+			"destination_index": 3,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__03__three_bells_bridge__night__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__night__approach",
+			"identity": "cloudreach__broken_causeways__03__three_bells_bridge",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_02_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-462.636047363281,
+						319.792419433594,
+						1196.38269042969
+					],
+					"species_id": "ribbonray"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_02_1",
+					"node_scale": [
+						0.999999463558197,
+						1.0,
+						0.999999463558197
+					],
+					"position": [
+						-465.014343261719,
+						320.191436767578,
+						1199.78332519531
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_broken_causeway_main_04_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						-447.677307128906,
+						342.030944824219,
+						1359.62756347656
+					],
+					"species_id": "breezetail"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_04_1",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						-450.105438232422,
+						342.030883789063,
+						1358.83679199219
+					],
+					"species_id": "ribbonray"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 575.213412666667,
+				"hour": 23.0085365066667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-535.0,
+				330.031036376953,
+				1274.5
+			],
+			"position_xz": [
+				-535.0,
+				1274.5
+			],
+			"resolved_ground_y": 330.03,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 1,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-5.0
+			],
+			"target_position_xz": [
+				-535.0,
+				1274.5
+			],
+			"terrain_ground_y": 330.03,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 52.0,
+			"view_heading_xz": [
+				0.788010776042938,
+				0.61566150188446
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 460922,
+			"camera_player_distance_m": 7.09007120132446,
+			"camera_position": [
+				368.403503417969,
+				465.842712402344,
+				1921.22021484375
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.743144810199738,
+					0.0,
+					-0.669130623340607
+				],
+				"basis_y": [
+					-0.13912008702755,
+					0.978147625923157,
+					0.154508501291275
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.2079117000103,
+					-0.726905345916748
+				],
+				"origin": [
+					365.0,
+					464.761535644531,
+					1925.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.743144869804382,
+					0.000000284222949176183,
+					-0.669130563735962
+				],
+				"basis_y": [
+					-0.139119938015938,
+					0.978147566318512,
+					0.154508784413338
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.207911819219589,
+					-0.726905345916748
+				],
+				"origin": [
+					368.403503417969,
+					465.842712402344,
+					1921.22021484375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Broken Skyroad Arch",
+			"destination_index": 4,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach",
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.206666666667,
+				"hour": 8.00826666666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				365.0,
+				460.903228759766,
+				1925.0
+			],
+			"position_xz": [
+				365.0,
+				1925.0
+			],
+			"resolved_ground_y": 480.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 2,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-3.0,
+				-6.0
+			],
+			"target_position_xz": [
+				365.0,
+				1925.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": -42.0,
+			"view_heading_xz": [
+				-0.669130623340607,
+				0.743144810199738
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 462260,
+			"camera_player_distance_m": 7.06676721572876,
+			"camera_position": [
+				368.403503417969,
+				465.809204101563,
+				1921.22021484375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.743144810199738,
+					0.0,
+					-0.669130623340607
+				],
+				"basis_y": [
+					-0.13912008702755,
+					0.978147625923157,
+					0.154508501291275
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.2079117000103,
+					-0.726905345916748
+				],
+				"origin": [
+					365.0,
+					464.72802734375,
+					1925.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.743144869804382,
+					0.000000284222949176183,
+					-0.669130563735962
+				],
+				"basis_y": [
+					-0.139119938015938,
+					0.978147566318512,
+					0.154508784413338
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.207911819219589,
+					-0.726905345916748
+				],
+				"origin": [
+					368.403503417969,
+					465.809204101563,
+					1921.22021484375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Broken Skyroad Arch",
+			"destination_index": 4,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__day__close.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day__close",
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.204427515152,
+				"hour": 8.00817710060606,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				365.0,
+				460.903228759766,
+				1925.0
+			],
+			"position_xz": [
+				365.0,
+				1925.0
+			],
+			"resolved_ground_y": 480.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 2,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-3.0,
+				-6.0
+			],
+			"target_position_xz": [
+				365.0,
+				1925.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": -42.0,
+			"view_heading_xz": [
+				-0.669130623340607,
+				0.743144810199738
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 254789,
+			"camera_player_distance_m": 7.00738048553467,
+			"camera_position": [
+				368.403503417969,
+				466.334991455078,
+				1921.22021484375
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.743144810199738,
+					0.0,
+					-0.669130623340607
+				],
+				"basis_y": [
+					-0.13912008702755,
+					0.978147625923157,
+					0.154508501291275
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.2079117000103,
+					-0.726905345916748
+				],
+				"origin": [
+					365.0,
+					465.253875732422,
+					1925.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.743144869804382,
+					0.000000284222949176183,
+					-0.669130563735962
+				],
+				"basis_y": [
+					-0.139119938015938,
+					0.978147566318512,
+					0.154508784413338
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.207911819219589,
+					-0.726905345916748
+				],
+				"origin": [
+					368.403503417969,
+					466.334991455078,
+					1921.22021484375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Broken Skyroad Arch",
+			"destination_index": 4,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach",
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 450.203148148148,
+				"hour": 18.0081259259259,
+				"requested": "golden",
+				"time_of_day": "golden"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				365.0,
+				461.514953613281,
+				1925.0
+			],
+			"position_xz": [
+				365.0,
+				1925.0
+			],
+			"resolved_ground_y": 480.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 2,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-3.0,
+				-6.0
+			],
+			"target_position_xz": [
+				365.0,
+				1925.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "golden",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": -42.0,
+			"view_heading_xz": [
+				-0.669130623340607,
+				0.743144810199738
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 256925,
+			"camera_player_distance_m": 6.98769092559814,
+			"camera_position": [
+				368.403564453125,
+				465.694458007813,
+				1921.22009277344
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.743144810199738,
+					0.0,
+					-0.669130623340607
+				],
+				"basis_y": [
+					-0.13912008702755,
+					0.978147625923157,
+					0.154508501291275
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.2079117000103,
+					-0.726905345916748
+				],
+				"origin": [
+					365.0,
+					464.613250732422,
+					1925.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.743144869804382,
+					0.000000284222949176183,
+					-0.669130563735962
+				],
+				"basis_y": [
+					-0.139119938015938,
+					0.978147566318512,
+					0.154508784413338
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.207911819219589,
+					-0.726905345916748
+				],
+				"origin": [
+					368.403564453125,
+					465.694458007813,
+					1921.22009277344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Broken Skyroad Arch",
+			"destination_index": 4,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close",
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 450.194873666667,
+				"hour": 18.0077949466667,
+				"requested": "golden",
+				"time_of_day": "golden"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				365.0,
+				460.903228759766,
+				1925.0
+			],
+			"position_xz": [
+				365.0,
+				1925.0
+			],
+			"resolved_ground_y": 480.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 2,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-3.0,
+				-6.0
+			],
+			"target_position_xz": [
+				365.0,
+				1925.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "golden",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": -42.0,
+			"view_heading_xz": [
+				-0.669130623340607,
+				0.743144810199738
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 309622,
+			"camera_player_distance_m": 7.06831789016724,
+			"camera_position": [
+				368.403594970703,
+				466.423004150391,
+				1921.22009277344
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.743144810199738,
+					0.0,
+					-0.669130623340607
+				],
+				"basis_y": [
+					-0.13912008702755,
+					0.978147625923157,
+					0.154508501291275
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.2079117000103,
+					-0.726905345916748
+				],
+				"origin": [
+					365.0,
+					465.341857910156,
+					1925.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.743144869804382,
+					0.000000284222949176183,
+					-0.669130563735962
+				],
+				"basis_y": [
+					-0.139119938015938,
+					0.978147566318512,
+					0.154508784413338
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.207911819219589,
+					-0.726905345916748
+				],
+				"origin": [
+					368.403594970703,
+					466.423004150391,
+					1921.22009277344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Broken Skyroad Arch",
+			"destination_index": 4,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach",
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.20625,
+				"hour": 23.00825,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				365.0,
+				461.514953613281,
+				1925.0
+			],
+			"position_xz": [
+				365.0,
+				1925.0
+			],
+			"resolved_ground_y": 480.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 2,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-3.0,
+				-6.0
+			],
+			"target_position_xz": [
+				365.0,
+				1925.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": -42.0,
+			"view_heading_xz": [
+				-0.669130623340607,
+				0.743144810199738
+			]
+		},
+		{
+			"band_display_name": "Region 2 — Broken Causeways",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach Cliffs",
+			"biome_id": "cloudreach",
+			"bytes": 309276,
+			"camera_player_distance_m": 7.03078651428223,
+			"camera_position": [
+				368.403503417969,
+				466.368957519531,
+				1921.22021484375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.743144810199738,
+					0.0,
+					-0.669130623340607
+				],
+				"basis_y": [
+					-0.13912008702755,
+					0.978147625923157,
+					0.154508501291275
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.2079117000103,
+					-0.726905345916748
+				],
+				"origin": [
+					365.0,
+					465.287841796875,
+					1925.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.743144869804382,
+					0.000000284222949176183,
+					-0.669130563735962
+				],
+				"basis_y": [
+					-0.139119938015938,
+					0.978147566318512,
+					0.154508784413338
+				],
+				"basis_z": [
+					0.654508531093597,
+					0.207911819219589,
+					-0.726905345916748
+				],
+				"origin": [
+					368.403503417969,
+					466.368957519531,
+					1921.22021484375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Broken Skyroad Arch",
+			"destination_index": 4,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/validated_stands_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__night__close.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__night__close",
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 575.198087888888,
+				"hour": 23.0079235155555,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				365.0,
+				461.514953613281,
+				1925.0
+			],
+			"position_xz": [
+				365.0,
+				1925.0
+			],
+			"resolved_ground_y": 480.0,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 2,
+			"stand_laterals_m": [
+				0.0,
+				2.0,
+				-2.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				-3.0,
+				-6.0
+			],
+			"target_position_xz": [
+				365.0,
+				1925.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": -42.0,
+			"view_heading_xz": [
+				-0.669130623340607,
+				0.743144810199738
+			]
+		}
+	],
+	"planned_frame_count": 9,
+	"planned_frame_ids": [
+		"cloudreach__broken_causeways__03__three_bells_bridge__day__approach",
+		"cloudreach__broken_causeways__03__three_bells_bridge__golden__approach",
+		"cloudreach__broken_causeways__03__three_bells_bridge__night__approach",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__day__close",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__night__close"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296218527579,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}
