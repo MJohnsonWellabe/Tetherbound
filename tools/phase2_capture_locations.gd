@@ -430,7 +430,7 @@ func _capture_row(row: Dictionary) -> void:
 			terrain_ground = float(_world.call("ground_height_at", at.x, at.y))
 			if is_nan(terrain_ground):
 				continue
-			resolved_ground = resolve_capture_ground(_player, at.x, at.y, terrain_ground)
+			resolved_ground = terrain_ground if bool(row.get("prefer_terrain_ground", false)) else resolve_capture_ground(_player, at.x, at.y, terrain_ground)
 			_player.global_position = Vector3(at.x, resolved_ground + TRAINER_CLEARANCE, at.y)
 			_player.velocity = Vector3.ZERO
 			_player.rotation.y = atan2(forward.x, forward.y)
