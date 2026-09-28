@@ -14,7 +14,8 @@ func _load_plan() -> bool:
 		return false
 	for row: Dictionary in _planned:
 		row["view"] = "post"
-		row["stand_offsets_m"] = [3.0, 5.0, 8.0]
-		row["stand_laterals_m"] = [0.0, -3.0, 3.0]
+		row["stand_offsets_m"] = [2.0, 3.0, 5.0, 8.0]
+		row["stand_laterals_m"] = [0.0, -2.0, 2.0, -4.0, 4.0]
 		row["camera_pitch_deg"] = -10.0
+		row["min_camera_player_distance_m"] = 1.8
 	return true

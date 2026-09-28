@@ -450,7 +450,7 @@ func _capture_row(row: Dictionary) -> void:
 				await physics_frame
 			for _frame in 2:
 				await process_frame
-			if _camera.global_position.distance_to(_player.global_position) >= 3.5:
+			if _camera.global_position.distance_to(_player.global_position) >= float(row.get("min_camera_player_distance_m", 3.5)):
 				selected = true
 				selected_offset = offset
 				selected_lateral = lateral
@@ -493,6 +493,9 @@ func _capture_row(row: Dictionary) -> void:
 		record["camera_transform"] = _transform(_camera.global_transform)
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
 		record["observed_clock"] = observed_clock
+		var surge := _world.get_node_or_null(^"StormwoodSurge")
+		if surge != null:
+			record["phase"] = str(surge.get("phase"))
 		record["trainer_visible_intent"] = true
 		record["player_character"] = _character_id
 		record["trainer_visibility_limit"] = "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame."
