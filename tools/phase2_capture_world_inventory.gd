@@ -8,8 +8,12 @@ extends "res://tools/phase2_capture_locations.gd"
 const PLAN := "res://tools/phase2_world_inventory_plan.json"
 
 
+func _plan_path() -> String:
+	return PLAN
+
+
 func _load_plan() -> bool:
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PLAN))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_plan_path()))
 	if not parsed is Dictionary:
 		push_error("Phase 2 world inventory plan is missing or invalid")
 		return false

@@ -31,7 +31,7 @@ def main() -> None:
     parser.add_argument("--report-biome", help="Evidence label when the game's realm ID differs (water -> tidewake)")
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
-    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items"), default="locations")
+    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items", "characters"), default="locations")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     report_biome = args.report_biome or args.biome
@@ -125,6 +125,7 @@ def main() -> None:
         capture_script = {
             "routes": "phase2_capture_routes.gd",
             "items": "phase2_capture_world_inventory.gd",
+            "characters": "phase2_capture_characters.gd",
         }.get(args.category, "phase2_capture_locations.gd")
         selection = f"--biome={args.biome} --subset={frame['identity']} "
         if args.category == "locations":
@@ -140,6 +141,7 @@ def main() -> None:
             "biome": report_biome,
             "category": {
                 "routes": "route_and_terrain", "items": "world_items",
+                "characters": "characters",
             }.get(args.category, "named_locations"),
             "subject": frame["destination_display_name"],
             "location_id": frame["identity"],
@@ -157,7 +159,7 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(existing[key] for key in sorted(existing))
-    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain", "items": "world_items"}[args.category]
+    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain", "items": "world_items", "characters": "characters"}[args.category]
     build_sheet(repo, base, list(existing.values()), sheet_category)
     print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
 
