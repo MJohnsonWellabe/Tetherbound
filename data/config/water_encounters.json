@@ -6683,6 +6683,10 @@
       "purpose": "Broken sluice outflows",
       "requires_aquatic_combat": true,
       "placement_status": "analytic_spawn_footprint_only_arena_and_navigation_unproven",
+      "placement_mode": "water_surface",
+      "surface_y_m": 0.0,
+      "surface_submerge_fraction": 0.12,
+      "_why_water_surface_f14_0": "F14#0 C3 (Tidecoil r2-r4, ralph/reports/TIDEWAKE/phase1/f14_0): on ground placement the serpent walked down Deep Watch's steep reef seabed and fought about 3 m under the surface, reading see-through or invisible in 4-7 of 20 code-blind frames. The existing water_surface mode holds it at the surface like the open-water pairs; 0.12 of its height sits below the water line.",
       "named_replacement_id": "water_deep_watch_tidecoil"
     },
     {
@@ -8478,6 +8482,10 @@
       "arena_mode": "shallow_surface",
       "arena_radius_m": 5.0,
       "arena_capture_radius_m": 16.0,
+      "combat_camera": {
+        "_why": "F14#0 C3 (Tidecoil r2/r3, ralph/reports/TIDEWAKE/phase1/f14_0): the fight forms at the foot of Deep Watch's 12 m sea cliff with the ally landward and Tidecoil seaward, so the default behind-the-ally arm pointed into the cliff and collapsed onto the ally (code-blind framing 10/20); composing along the shore instead lost the serpent off the frame edge (9/20). A steep overhead arm rises above the cliff instead of into it. Merged over combat.json camera by combat_manager.gd::_opponent_camera. TUNABLE.",
+        "profile": {"pitch_start_deg": -58.0}
+      },
       "_why_arena_radius_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): the shallow_surface mode was data only; the default 11 m ring let the fight drift down the reef slope and Tidecoil fought 5 m under the water surface, hidden, for most of the capture. A 5 m ring keeps it in the reef-edge shallows (water_encounter_director.combat_arena_bounds_at).",
       "combat_intent": "A late apex sweeps the visible surface at the reef edge; prepare on the island and punish recovery between broad lateral attacks.",
       "completion_flag": "water_named_deep_watch_tidecoil_resolved",

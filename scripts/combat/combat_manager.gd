@@ -1002,8 +1002,9 @@ func _take_camera() -> void:
 	# tracker only corrects a neutral camera after manual-look grace, so the
 	# player keeps full right-stick/mouse ownership instead of entering lock-on.
 	if _camera_rig.has_method("set_tracking_target"):
-		var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
-			.get("tracking", {}) as Dictionary
+		var tracking: Dictionary = ((MATH.config().get("camera", {}) as Dictionary) \
+			.get("tracking", {}) as Dictionary).duplicate()
+		tracking.merge(_opponent_camera("tracking"), true)
 		_camera_rig.call("set_tracking_target", _wild, tracking)
 		if bool(tracking.get("snap_on_open", false)) and _camera_rig.has_method("snap_to_tracking"):
 			_camera_rig.call("snap_to_tracking")
@@ -1019,8 +1020,22 @@ func _take_camera() -> void:
 ## The offset is still solved from fighter spacing here. Collision constraints
 ## belong to the rig because they depend on the current orbit direction and
 ## must be recomputed while the player rotates the camera.
+## F14#0 C3: an opponent whose ground defeats the default fight camera (a
+## tall alpha uphill of the ally, a serpent at a sea-cliff foot) may carry an
+## authored `combat_camera` block ({"tracking": {...}, "profile": {...},
+## "framing": {...}}) as node meta; each part merges over combat.json's own.
+## Every other fight is unchanged.
+func _opponent_camera(part: String) -> Dictionary:
+	if _wild == null or not is_instance_valid(_wild) or not _wild.has_meta("combat_camera"):
+		return {}
+	var block: Variant = _wild.get_meta("combat_camera")
+	var value: Variant = (block as Dictionary).get(part, {}) if block is Dictionary else {}
+	return value as Dictionary if value is Dictionary else {}
+
+
 func _combat_camera_profile() -> Dictionary:
 	var profile: Dictionary = (MATH.config().get("camera", {}) as Dictionary).duplicate()
+	profile.merge(_opponent_camera("profile"), true)
 	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
@@ -1226,7 +1241,69 @@ func _update_combat_camera_framing(delta: float) -> void:
 		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
 		shoulder = minf(shoulder, _hud_safe_shoulder_cap(cfg.get("hud_safe", {}) as Dictionary))
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
+	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
 	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+
+
+## F14#0 C3 (Aquaryn): a tall opponent standing uphill of the ally rode up
+## under the boss panel at the top of the screen, head hidden in 9 of 18
+## judged frames. Measured through the live camera each physics frame, the
+## lens shifts up (Camera3D.v_offset) just enough to bring the opponent's top
+## below the band, never so far that the ally's feet leave the frame, and
+## eases back to level once the opponent sits lower. Flat-ground fights never
+## trigger it.
+func _update_combat_top_band(hud: Dictionary, weight: float) -> void:
+	if _camera_rig == null or not _camera_rig.has_method("set_lens_lift"):
+		return
+	var band: Dictionary = hud.get("top_band", {}) as Dictionary
+	var live := float(_camera_rig.call("lens_lift"))
+	var wanted := 0.0
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	var on := bool(band.get("enabled", false)) or bool(_opponent_camera("framing").get("top_band", false))
+	if bool(hud.get("enabled", false)) and on and camera != null \
+			and camera.is_inside_tree() and _wild != null and is_instance_valid(_wild) \
+			and _ally_body != null and is_instance_valid(_ally_body):
+		var viewport := camera.get_viewport().get_visible_rect().size
+		var foe := _screen_extent(camera, _body_world_bounds(_wild))
+		var ally := _screen_extent(camera, _body_world_bounds(_ally_body))
+		if foe.x < INF and ally.x < INF and viewport.y > 1.0:
+			wanted = top_band_lift(live, foe.x, foe.z, ally.y, ally.z, viewport.y, camera.fov,
+				float(band.get("bottom", 0.25)), float(band.get("margin", 0.02)),
+				float(band.get("ally_bottom_limit", 0.97)), float(band.get("max_lift_m", 3.0)))
+		else:
+			wanted = live
+	_camera_rig.call("set_lens_lift", lerpf(live, wanted, weight))
+
+
+## (top px, bottom px, centre depth m) of a world AABB through `camera`; INF
+## when empty or any corner is behind the lens.
+static func _screen_extent(camera: Camera3D, world: AABB) -> Vector3:
+	if world.size.is_zero_approx():
+		return Vector3(INF, INF, INF)
+	var forward := -camera.global_basis.z
+	var top := INF
+	var bottom := -INF
+	for i in 8:
+		var corner := world.get_endpoint(i)
+		if (corner - camera.global_position).dot(forward) <= 0.05:
+			return Vector3(INF, INF, INF)
+		var p := camera.unproject_position(corner)
+		top = minf(top, p.y)
+		bottom = maxf(bottom, p.y)
+	return Vector3(top, bottom, maxf((world.get_center() - camera.global_position).dot(forward), 0.05))
+
+
+## Pure form. Shifting the lens up by `m` metres moves a point at depth `d`
+## down by about m * focal / d pixels. Returns the lift (metres, 0..max) that
+## puts the opponent's top at the band's bottom plus margin, limited so the
+## ally's bottom stays above `ally_bottom_limit` of the viewport.
+static func top_band_lift(live: float, foe_top_px: float, foe_depth: float, ally_bottom_px: float,
+		ally_depth: float, viewport_h: float, fov_deg: float, band_bottom: float, margin: float,
+		ally_bottom_limit: float, max_lift_m: float) -> float:
+	var focal := viewport_h * 0.5 / tan(deg_to_rad(fov_deg) * 0.5)
+	var for_foe := ((band_bottom + margin) * viewport_h - foe_top_px) * foe_depth / focal
+	var for_ally := (ally_bottom_limit * viewport_h - ally_bottom_px) * ally_depth / focal
+	return clampf(live + minf(for_foe, for_ally), 0.0, max_lift_m)
 
 
 ## F10#2 C3 (V-SW-3/5): the largest shoulder that keeps the ally's live render
@@ -1455,6 +1532,13 @@ func _combat_camera_framing_target(framing: Dictionary) -> float:
 	var fill: float = clampf(float(framing.get("horizontal_fill", 0.82)), 0.4, 0.95)
 	var horizontal_tan: float = maxf(tan(horizontal_fov * 0.5) * fill, 0.01)
 	var vertical_tan: float = maxf(tan(vertical_fov * 0.5) * fill, 0.01)
+	# `framing.top_fill` (opponent camera block only): the fraction of the upper
+	# half-frame a body may reach, so a tall uphill opponent is fitted below the
+	# boss panel rather than under it. Absent = symmetric, as before.
+	var top_tan := vertical_tan
+	var own_framing := _opponent_camera("framing")
+	if own_framing.has("top_fill"):
+		top_tan = maxf(tan(vertical_fov * 0.5) * clampf(float(own_framing.top_fill), 0.2, 0.95), 0.01)
 	var pivot: Vector3 = _ally_body.global_position + Vector3.UP * float(_camera_rig.get("_height"))
 	pivot += Basis(Vector3.UP, float(_camera_rig.get("yaw"))).x * float(_camera_rig.get("_shoulder"))
 	var rig_3d := _camera_rig as Node3D
@@ -1473,7 +1557,8 @@ func _combat_camera_framing_target(framing: Dictionary) -> float:
 					var relative: Vector3 = model.global_transform * local - pivot
 					var depth: float = relative.dot(basis.z)
 					var horizontal: float = absf(relative.dot(basis.x)) / horizontal_tan
-					var vertical: float = absf(relative.dot(basis.y)) / vertical_tan
+					var up: float = relative.dot(basis.y)
+					var vertical: float = up / top_tan if up > 0.0 else -up / vertical_tan
 					required_distance = maxf(required_distance, depth + maxf(horizontal, vertical))
 	# F04#7: never closer than the piloted body's own depth plus a clearance,
 	# measured along the arm's horizontal setback -- a push-in for a small foe
@@ -1690,6 +1775,8 @@ func _release_camera(fought_at: Variant = null) -> void:
 		_camera_rig.call("set_clearance_extra", 0.0)
 	_clear_ally_fade()
 	_framing_bounds_cache.clear()
+	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_lens_lift"):
+		_camera_rig.call("set_lens_lift", 0.0)
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	_camera_rig.call("set_target", _player, {})
