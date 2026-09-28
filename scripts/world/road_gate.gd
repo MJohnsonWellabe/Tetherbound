@@ -689,6 +689,55 @@ func _say(conversation_id: String) -> void:
 ## A modest timber frame turns the village's otherwise identical fence leaf
 ## into an intentional road threshold. It is presentation only: the existing
 ## leaf and boundary panels remain the entire collision/progression contract.
+## F01#2/#3 (code-blind walk judge: the three village gates were the same
+## unlabelled arch; the fingerposts beside them read edge-on from the road).
+## A plank hung under the crossbeam names the road the gate opens onto, on both
+## faces, in unshaded cream ink so it also reads at night. `name_board` in the
+## gate's own dressing (village_boundary.json gates.entries[].name_board);
+## presentation only, no collider.
+func _build_village_name_board(wood: StandardMaterial3D, post_h: float, beam_h: float, half: float) -> void:
+	var text := str(village_dressing.get("name_board", ""))
+	if text.is_empty():
+		return
+	var width := minf(half * 2.0 - 0.3, float(village_dressing.get("name_board_width_m", 1.7)))
+	var height := float(village_dressing.get("name_board_height_m", 0.42))
+	var drop := float(village_dressing.get("name_board_drop_m", 0.3))
+	var centre_y := post_h - beam_h - drop - height * 0.5
+	var board := MeshInstance3D.new()
+	board.name = "VillageGateNameBoard"
+	var board_mesh := BoxMesh.new()
+	board_mesh.size = Vector3(width, height, 0.06)
+	board.mesh = board_mesh
+	var plank := StandardMaterial3D.new()
+	plank.albedo_color = Color(str(village_dressing.get("name_board_colour", "#3b2a1c")))
+	plank.roughness = 0.9
+	board.material_override = plank
+	board.position = Vector3(0.0, centre_y, 0.0)
+	add_child(board)
+	for side: float in [-1.0, 1.0]:
+		var hanger := MeshInstance3D.new()
+		var hanger_mesh := BoxMesh.new()
+		hanger_mesh.size = Vector3(0.04, drop + 0.02, 0.04)
+		hanger.mesh = hanger_mesh
+		hanger.material_override = wood
+		hanger.position = Vector3(side * width * 0.38, post_h - beam_h - drop * 0.5, 0.0)
+		add_child(hanger)
+	for face: float in [-1.0, 1.0]:
+		var label := Label3D.new()
+		label.name = "VillageGateName%s" % ("Out" if face < 0.0 else "In")
+		label.text = text
+		label.font_size = 96
+		label.pixel_size = float(village_dressing.get("name_board_pixel_size", 0.0032))
+		label.outline_size = 18
+		label.modulate = Color(str(village_dressing.get("name_board_ink", "#f2e6c4")))
+		label.outline_modulate = Color(0.08, 0.05, 0.03, 1.0)
+		label.double_sided = false
+		label.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+		label.rotation.y = 0.0 if face > 0.0 else PI
+		label.position = Vector3(0.0, centre_y, face * 0.036)
+		add_child(label)
+
+
 func _build_village_threshold(aabb: AABB) -> void:
 	var post_w := float(village_dressing.get("post_width_m", 0.42))
 	var post_h := float(village_dressing.get("post_height_m", 3.4))
@@ -790,6 +839,8 @@ func _build_village_threshold(aabb: AABB) -> void:
 	beam.material_override = wood
 	beam.position = Vector3(0.0, post_h - beam_h * 0.5, 0.0)
 	add_child(beam)
+
+	_build_village_name_board(wood, post_h, beam_h, half)
 
 	# A fitted installed wooden shield gives the threshold a readable civic
 	# crest and real modeled depth. The small ochre lozenge is rural heraldry,
