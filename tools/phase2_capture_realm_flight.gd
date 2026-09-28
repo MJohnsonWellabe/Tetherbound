@@ -62,6 +62,8 @@ func _run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water" if _biome == "tidewake" else _biome
 	game.progression.set_flag("fly_traversal_unlocked")
+	if _biome == "stormwood":
+		game.progression.set_flag("stormwood:canopy_flight_forbidden")
 	game.party.add(SPECIES.spawn("galecrest"))
 	_world = (load(SCENES[_biome]) as PackedScene).instantiate()
 	root.add_child(_world)
@@ -103,19 +105,33 @@ func _attempt(xz: Vector2) -> bool:
 	_rig.call("set_target", _player)
 	await _frames(80)
 	var blockers := str(_fly.call("launch_blockers"))
+	var elevated := false
+	if (_biome == "meadows" and blockers == "Find a clear launch with room for your companion overhead.") or _biome == "stormwood":
+		# A fixture ledge provides clearance and airtime while the actual
+		# Jump, Fly restriction checks, glide and descend remain production code.
+		_player.global_position += Vector3.UP * 60.0
+		_player.velocity = Vector3.ZERO
+		await _frames(4)
+		blockers = str(_fly.call("launch_blockers"))
+		elevated = true
 	if not blockers.is_empty():
 		_failures.append("At %s: %s" % [str(xz), blockers])
 		return false
-	_action("jump", true)
-	await _frames(3)
-	_action("jump", false)
-	await _frames(6)
+	if not elevated:
+		_action("jump", true)
+		await _frames(3)
+		_action("jump", false)
+		await _frames(6)
 	_action("jump", true)
 	await _frames(3)
 	_action("jump", false)
 	if not bool(_fly.call("is_flying")):
 		_failures.append("At %s: double Jump denied: %s" % [str(xz), str(_fly.get("last_denial"))])
 		return false
+	if elevated:
+		# Let the normal follow camera catch up with the fixture ledge before
+		# naming this a launch frame; the immediate image contains only scenery.
+		await _frames(24)
 	await _save("launch")
 	await _frames(80)
 	if bool(_fly.call("is_flying")):
@@ -148,7 +164,7 @@ func _write_manifest(complete: bool) -> void:
 		"seed": _seed, "display_server": DisplayServer.get_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"resolution": [root.size.x, root.size.y],
-		"fixture": "In-memory Fly unlock and one Galecrest carrier; actual double-Jump, glide and descend input at clear realm stands; no campaign progression proof",
+		"fixture": "In-memory Fly unlock and one Galecrest carrier; actual Jump, glide and descend input at realm stands. Meadows adds 60 m fixture height above a grounded safe anchor for clearance/airtime. Stormwood also lifts its sealed canopy flag in memory and adds 60 m fixture height, so those frames show possible carrier art rather than reachable campaign traversal. No campaign progression proof",
 		"repro_args": ["--biome=%s" % _biome, "--seed=%d" % _seed],
 		"output_option": "--output", "frames": _records,
 		"failures": _failures, "complete": complete}

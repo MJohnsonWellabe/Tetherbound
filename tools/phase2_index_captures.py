@@ -34,6 +34,8 @@ def main() -> None:
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items", "characters", "weather", "systems"), default="locations")
     parser.add_argument("--capture-script", help="Tool basename for a targeted location reshoot")
+    parser.add_argument("--only-frame", action="append", default=[],
+                        help="Index only this captured frame ID from a multi-angle probe (repeatable)")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     report_biome = args.report_biome or args.biome
@@ -54,6 +56,11 @@ def main() -> None:
         raise SystemExit("Biome does not match capture manifest")
     if args.render_path == "native GPU Compatibility" and manifest.get("display_server") == "headless":
         raise SystemExit("GPU capture was headless")
+    if args.only_frame:
+        available = {frame.get("frame_id", frame.get("id")) for frame in manifest["frames"]}
+        unknown = set(args.only_frame) - available
+        if unknown:
+            raise SystemExit(f"Selected frames not in capture manifest: {sorted(unknown)}")
 
     base = repo / "ralph" / "reports" / "VISUAL" / "phase2" / report_biome
     frames_dir = base / args.category
@@ -70,6 +77,8 @@ def main() -> None:
         with csv_path.open(newline="", encoding="utf-8") as stream:
             existing = {row["id"]: row for row in csv.DictReader(stream)}
     for frame in manifest["frames"]:
+        if args.only_frame and frame.get("frame_id", frame.get("id")) not in args.only_frame:
+            continue
         if args.category == "creatures":
             source_id = frame["id"]
             frame_id = source_id.replace(f"{args.biome}__", f"{report_biome}__", 1)

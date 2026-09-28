@@ -1,18 +1,18 @@
 {
   "biomes": {
     "meadows": {
-      "frames": 614,
+      "frames": 617,
       "categories": {
         "characters": 152,
         "creatures": 126,
         "named_locations": 114,
         "route_and_terrain": 50,
-        "systems": 82,
+        "systems": 85,
         "ui": 12,
         "world_items": 78
       },
       "times": {
-        "day": 525,
+        "day": 528,
         "dusk": 48,
         "night": 41
       },
@@ -23,10 +23,10 @@
         "catching": 12,
         "crafting": 1,
         "fights": 60,
+        "flying": 3,
         "riding": 6
       },
       "expected_systems_without_indexed_frames": [
-        "flying",
         "swimming"
       ],
       "dialogue_frames": 76,
@@ -51,18 +51,18 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 910,
+      "frames": 913,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 270,
+        "systems": 273,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 710,
+        "day": 713,
         "dusk": 114,
         "night": 86
       },
@@ -73,11 +73,11 @@
         "crafting": 3,
         "current_states": 16,
         "fights": 210,
+        "flying": 3,
         "riding": 10,
         "swimming": 13
       },
       "expected_systems_without_indexed_frames": [
-        "flying",
         "building"
       ],
       "dialogue_frames": 66,
@@ -159,10 +159,10 @@
         "creatures": 98,
         "named_locations": 186,
         "route_and_terrain": 60,
-        "systems": 188,
+        "systems": 191,
         "time_and_weather": 12,
         "ui": 12,
-        "world_items": 30
+        "world_items": 27
       },
       "times": {
         "day": 592,
@@ -175,10 +175,10 @@
         "camp": 1,
         "catching": 12,
         "crafting": 1,
-        "fights": 172
+        "fights": 172,
+        "flying": 3
       },
       "expected_systems_without_indexed_frames": [
-        "flying",
         "riding",
         "swimming"
       ],

@@ -1,0 +1,43 @@
+{
+	"biome": "stormwood",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "In-memory Fly unlock and one Galecrest carrier; actual Jump, glide and descend input at realm stands. Meadows adds 60 m fixture height above a grounded safe anchor for clearance/airtime. Stormwood also lifts its sealed canopy flag in memory and adds 60 m fixture height, so those frames show possible carrier art rather than reachable campaign traversal. No campaign progression proof",
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/flight_main140/01-launch.png",
+			"id": "launch",
+			"position": "(-320.0, 90.17498, 240.0)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/flight_main140/02-glide.png",
+			"id": "glide",
+			"position": "(-320.0, 87.50835, 240.0)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/flight_main140/03-landed.png",
+			"id": "landed",
+			"position": "(-320.0, 31.54835, 240.0)",
+			"state": "grounded",
+			"time": "day"
+		}
+	],
+	"output_option": "--output",
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--biome=stormwood",
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"seed": 2042,
+	"system": "flying"
+}
