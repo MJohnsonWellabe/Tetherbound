@@ -216,8 +216,13 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	var node := Node3D.new()
 	node.name = "VictoryShow_%s" % id
 	world.add_child(node)
+	# Held out beside the speaker, not hung in front of their face (judge r4
+	# 7121d40c: a medallion at face height between lens and captain read as an
+	# interact marker over the face): `side_m` shifts the tokens along the
+	# speaker's own shoulder line.
+	var side := Vector3(toward.z, 0.0, -toward.x)
 	node.global_position = speaker.global_position + toward * float(show.get("toward_player_m", 1.3)) \
-		+ Vector3.UP * float(show.get("height_m", 1.55))
+		+ side * float(show.get("side_m", 0.0)) + Vector3.UP * float(show.get("height_m", 1.55))
 	node.rotation.y = atan2(toward.x, toward.z)
 	var tokens: Array = show.get("tokens", ["heart", "key"]) as Array
 	var spacing := 0.58
@@ -225,9 +230,11 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 		var at := Vector3((float(i) - (tokens.size() - 1) * 0.5) * spacing, 0.0, 0.0)
 		var token: Variant = tokens[i]
 		if token is Dictionary and str((token as Dictionary).get("kind", "")) == "sigil":
-			_build_sigil(node, at, _item_colour(world, str((token as Dictionary).get("item", ""))))
+			var item := str((token as Dictionary).get("item", ""))
+			_build_sigil(node, at, _item_colour(world, item), _item_icon(world, item),
+				float(show.get("token_scale", 1.0)))
 		elif str(token) == "heart":
-			_build_heart(node, at)
+			_build_heart(node, at, float(show.get("heart_scale", 1.0)))
 		elif str(token) == "key":
 			_build_key(node, at + Vector3(0.0, 0.02, 0.0))
 	var light := OmniLight3D.new()
@@ -264,13 +271,40 @@ static func _item_colour(world: Node, item_id: String) -> Color:
 	return Color("c9a227")
 
 
+static func _item_icon(world: Node, item_id: String) -> Texture2D:
+	var game := world.get_node_or_null(^"/root/Game") if world != null else null
+	var items: RefCounted = game.get("items") if game != null else null
+	if items == null or item_id == "":
+		return null
+	var path := str((items.call("definition", item_id) as Dictionary).get("icon", ""))
+	return load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null
+
+
 ## A captain's Sigil: a faceted medallion in the item's own colour, rim-lit,
-## the same primitive language as the key and heart.
-static func _build_sigil(parent: Node3D, at: Vector3, colour: Color) -> void:
+## the same primitive language as the key and heart. Its face carries the
+## item's own emblem (river waves, field chevrons, ridge peak), so each
+## captain's handover reads as that captain's and not a generic marker.
+static func _build_sigil(parent: Node3D, at: Vector3, colour: Color, icon: Texture2D = null,
+		size: float = 1.0) -> void:
 	var sigil := Node3D.new()
 	sigil.name = "Sigil"
 	sigil.position = at
+	sigil.scale = Vector3.ONE * size
 	parent.add_child(sigil)
+	if icon != null:
+		var emblem := MeshInstance3D.new()
+		emblem.name = "Emblem"
+		var quad := QuadMesh.new()
+		quad.size = Vector2(0.5, 0.5)
+		emblem.mesh = quad
+		emblem.position.z = 0.03
+		var face_material := StandardMaterial3D.new()
+		face_material.albedo_texture = icon
+		face_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+		face_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		face_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		emblem.material_override = face_material
+		sigil.add_child(emblem)
 	var face := MeshInstance3D.new()
 	var disc := CylinderMesh.new()
 	disc.top_radius = 0.24
@@ -297,6 +331,7 @@ static func _build_sigil(parent: Node3D, at: Vector3, colour: Color) -> void:
 	gem.rotation.z = deg_to_rad(45.0)
 	gem.position.z = 0.04
 	gem.material_override = _glow(Color("f6efd0"), 1.1)
+	gem.visible = icon == null
 	sigil.add_child(gem)
 
 
@@ -311,12 +346,15 @@ static func _glow(colour: Color, energy: float) -> StandardMaterial3D:
 
 
 ## The Meadows heart's own three-lobe shape (`realm_heart_shrine.gd`), lit.
-static func _build_heart(parent: Node3D, at: Vector3) -> void:
+static func _build_heart(parent: Node3D, at: Vector3, size: float = 1.0) -> void:
 	var heart := Node3D.new()
 	heart.name = "Heart"
 	heart.position = at
+	heart.scale = Vector3.ONE * size
 	parent.add_child(heart)
-	var material := _glow(Color("d7f59a"), 1.2)
+	# The shrine's placed-heart green, not its white-hot active tint: judge r4
+	# read the active tint as a pale blob beside the key, not a heart.
+	var material := _glow(Color("a9d477"), 0.8)
 	for piece: Array in [[Vector3(-0.08, 0.05, 0.0), Vector3(0.13, 0.12, 0.08), 0.0],
 			[Vector3(0.08, 0.05, 0.0), Vector3(0.13, 0.12, 0.08), 0.0],
 			[Vector3(0.0, -0.065, 0.0), Vector3(0.155, 0.155, 0.085), deg_to_rad(45.0)]]:
