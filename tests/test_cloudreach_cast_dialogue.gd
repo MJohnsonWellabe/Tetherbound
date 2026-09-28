@@ -266,3 +266,33 @@ func test_each_settlement_is_occupied_on_its_first_visit() -> void:
 			if Vector2(offset.x, offset.z).length() <= 25.0 and absf(offset.y) <= 5.0:
 				working += 1
 		assert_true(working >= 2, "%s has %d residents at work on its first visit" % [landmark_id, working])
+
+
+## F08#4: a resident's patrol never walks through a cottage. The settlement
+## cottages (cloudreach_visual.json settlement.houses; `lower_position` at the
+## lower settlement) measure at most about 8.8 x 9.6 m in engine; a 5 m
+## half-extent box around each keeps a 0.6 m margin.
+func test_residents_walk_clear_of_the_settlement_cottages() -> void:
+	var payoffs: Dictionary = _read(RUNTIME_PATH)["world_payoffs"]
+	var houses: Array = _read("res://data/config/cloudreach_visual.json")["settlement"]["houses"]
+	var world := _read("res://data/config/cloudreach_world.json")
+	var centres: Dictionary = {}
+	for landmark: Dictionary in world["landmarks"]:
+		centres[landmark["id"]] = Vector3(landmark["position"][0], landmark["position"][1], landmark["position"][2])
+	var checked := 0
+	for traveler: Dictionary in payoffs["travelers"]:
+		if not str(traveler["id"]).begins_with("waycamp_") and not str(traveler["id"]).begins_with("cliffhold_"):
+			continue
+		var upper := str(traveler["id"]).begins_with("cliffhold_")
+		var centre: Vector3 = centres["cliffhold_settlement" if upper else "lower_cliffs_waycamp"]
+		var a := Vector2(traveler["position"][0] - centre.x, traveler["position"][2] - centre.z)
+		var b := Vector2(traveler["walk_to"][0] - centre.x, traveler["walk_to"][2] - centre.z)
+		for house: Dictionary in houses:
+			var at: Array = house["position"] if upper else house.get("lower_position", house["position"])
+			var box := Rect2(Vector2(at[0] - 5.0, at[2] - 5.0), Vector2(10.0, 10.0))
+			for step in 21:
+				var point := a.lerp(b, float(step) / 20.0)
+				var gap := maxf(maxf(box.position.x - point.x, point.x - box.end.x), maxf(box.position.y - point.y, point.y - box.end.y))
+				assert_true(gap > 0.6, "%s walks through the cottage at %s" % [traveler["id"], at])
+		checked += 1
+	assert_eq(checked, 4)

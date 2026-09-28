@@ -300,9 +300,9 @@ const ROWS := [
 	# F08#4 (Phase 1): row 05 stands inside the terrace; this is Galefoot from the
 	# road a player arrives on, before its terrace edge (z 502).
 	{"n": 37, "region": "gate_lower_cliffs", "row": "settlement-galefoot-approach", "time": "day", "sheet": "hero",
-		"stands": [Vector3(-280.0, 176.5, 461.0), Vector3(-279.0, 178.5, 475.0)],
+		"stands": [Vector3(-280.0, 179.0, 484.0), Vector3(-279.0, 178.5, 475.0)],
 		"target": Vector3(-278.0, 184.0, 518.0),
-		"why": "Galefoot Waycamp from arrival_gate_road's last segment (t~0.9), ~57 m out, toward the hearth and yard."},
+		"why": "Galefoot Waycamp from arrival_gate_road's last segment, ~36 m out below the terrace edge, toward the arrival lane and yard."},
 ]
 
 var _game: Node
