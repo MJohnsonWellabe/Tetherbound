@@ -361,3 +361,27 @@ func test_sky_shrine_authors_the_upper_route_unlock() -> void:
 	var counterweight := _entry(_list("gates"), "upper_counterweight_gate")
 	assert_eq(str(counterweight.get("requires_unlock", "")), UPPER_UNLOCK)
 	assert_eq(counterweight.get("protects_region_ids", []), LATE_GROUND_REGIONS)
+
+
+## F08#4: broken_causeway_main climbs from the Three Bells landing into the
+## Broken Causeways crown (top y 390) at its rim and runs ~20 m under it; the
+## region must carve its crown down to that road (the summit's crown_cut), or
+## the road vanishes into a grass wall with the crown's cover floating over it.
+func test_causeway_climb_is_carved_out_of_the_broken_causeways_crown() -> void:
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var region: Dictionary = {}
+	for spec: Dictionary in data["regions"]:
+		if spec["id"] == "broken_causeways":
+			region = spec
+	var cut: Dictionary = region.get("crown_cut", {})
+	assert_false(cut.is_empty(), "broken_causeways needs a crown_cut")
+	var crown_y := float(region["position"][1])
+	var climb: Array = []
+	for route: Dictionary in data["routes"]:
+		if route["id"] == "broken_causeway_main":
+			climb = [route["polyline"][4], route["polyline"][5]]
+	assert_eq(climb.size(), 2)
+	var low := minf(float(climb[0][1]), float(climb[1][1]))
+	# The same test _region_crown_cut applies: a road this far under the crown is carved.
+	assert_true(low - float(cut.get("floor_drop_m", 0.25)) < crown_y - float(cut.get("min_lowering_m", 0.3)),
+		"the climb starts under the crown, so the carve applies to it")
