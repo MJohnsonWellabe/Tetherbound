@@ -90,6 +90,7 @@ func _ready() -> void:
 			# The scene's capsule stays visible, so a missing trainer is a
 			# trainer that looks wrong rather than a trainer who is not there.
 			push_error("no trainer model; falling back to the placeholder capsule")
+	preload("res://scripts/player/human_water_contact_view.gd").attach(self, _player)
 
 
 static func resolved_appearance_id(explicit_id: String, game: Object) -> String:
