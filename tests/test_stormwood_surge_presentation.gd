@@ -1330,3 +1330,65 @@ func test_only_break_shows_sky_lightning() -> void:
 		assert_eq(decorative.size(), 0, "%s%s has no sky lightning" % ["aftermath " if bool(target[1]) else "", str(target[0])])
 		assert_almost_eq(float(run.bolt_peak), 0.0, 0.0001)
 	surge.free()
+
+
+## F10#3 round 6: Break's still-frame signature. Only Break carries crawler
+## lightning along the cloud base; no other phase and no aftermath phase does,
+## and the ceiling receives it. It is a held glow, not a flash onset.
+func test_only_break_carries_crawler_lightning_on_the_ceiling() -> void:
+	MOTION_PREFS.set_reduced_motion(false)
+	var surge := SURGE.new()
+	for phase: String in PHASES:
+		var row := surge._resolved(surge.presentation_for(phase))
+		if phase == "break":
+			assert_true(float(row.crawlers) >= 0.5, "Break carries crawler lightning a still can catch")
+		else:
+			assert_almost_eq(float(row.crawlers), 0.0, 0.0001, "%s has no crawlers" % phase)
+		var after := surge._resolved(surge.presentation_for(phase, true))
+		assert_almost_eq(float(after.crawlers), 0.0, 0.0001, "aftermath %s has no crawlers" % phase)
+	surge.free()
+	var parts := _world_with_look()
+	var live := SURGE.new()
+	live.world = parts.world
+	live.call("_build_ceiling")
+	live.phase = "break"
+	live.settle_presentation()
+	live.call("_update_ceiling", live._current(live._last_base))
+	assert_almost_eq(float(live._ceiling_material.get_shader_parameter("crawlers")),
+		float(_config().presentation.phases["break"].crawlers), 0.0001, "the ceiling draws Break's crawlers")
+	assert_almost_eq(float(live._ceiling_material.get_shader_parameter("crawler_width")),
+		float(_config().presentation.ceiling.crawler_width), 0.0001, "vein width comes from config")
+	live.phase = "calm"
+	live.settle_presentation()
+	live.call("_update_ceiling", live._current(live._last_base))
+	assert_almost_eq(float(live._ceiling_material.get_shader_parameter("crawlers")), 0.0, 0.0001, "Calm clears them")
+	live.free()
+	parts.world.free()
+
+
+## F10#3 round 6 (strike judge: the veins read as lightning already striking
+## elsewhere): a drawn ground warning puts the crawler veins out with the held
+## decorative bolts, and they ease back once the hold ends.
+func test_crawlers_go_out_during_a_ground_warning() -> void:
+	MOTION_PREFS.set_reduced_motion(false)
+	var parts := _world_with_look()
+	var surge := SURGE.new()
+	surge.world = parts.world
+	surge.call("_build_ceiling")
+	surge.phase = "break"
+	surge.settle_presentation()
+	var full := float(_config().presentation.phases["break"].crawlers)
+	surge.call("_advance_flash", 0.05)
+	assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("crawlers")), full, 0.0001, "Break veins shown before a warning")
+	surge.hold_sky_bolts(1.5)
+	assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("crawlers")), 0.0, 0.0001, "veins out from the warning's first frame")
+	for _i in 3:
+		surge.call("_advance_sky_lightning", 0.05)
+		surge.call("_advance_flash", 0.05)
+	assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("crawlers")), 0.0, 0.0001, "veins out during the warning")
+	for _i in 70:
+		surge.call("_advance_sky_lightning", 0.05)
+		surge.call("_advance_flash", 0.05)
+	assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("crawlers")), full, 0.0001, "veins back after the warning")
+	surge.free()
+	parts.world.free()
