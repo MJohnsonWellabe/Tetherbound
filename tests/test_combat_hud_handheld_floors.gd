@@ -13,6 +13,8 @@ const COMBAT_HUD_SCENE := preload("res://scenes/combat/combat_hud.tscn")
 const COMBAT_HUD := preload("res://scripts/ui/combat_hud.gd")
 const HUD_SCALE := preload("res://scripts/ui/hud_scale.gd")
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
+const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 const SENTENCES: Array[String] = ["Telegraph", "Prompt", "AimRow", "CatchRow"]
 
@@ -43,8 +45,27 @@ func test_every_combat_hud_text_clears_its_handheld_floor() -> void:
 		if size < 0:
 			continue
 		var floor_px := sentence if SENTENCES.has(String(node.name)) else glance
+		# F10#6 r6: UX section 8's raster floors bind too (18 px essential text
+		# and 20 px prompts at the 1280x720 stress raster).
+		floor_px = maxi(floor_px, UI_TOKENS.FONT_PROMPT if SENTENCES.has(String(node.name)) \
+			else UI_TOKENS.FONT_READ)
 		assert_true(size >= floor_px, "%s authored at %d px, below its %d px handheld floor" % [
 			str(hud.get_path_to(node)), size, floor_px])
+	hud.free()
+
+
+func test_move_badges_and_roster_portraits_read_at_seven_inches() -> void:
+	# F10#6 r6: badge lettering at 34 px read about 4 px on the 7-inch sheet.
+	assert_true(COMBAT_HUD.CELL_GLYPH_PX >= 40, "move badge %d px" % COMBAT_HUD.CELL_GLYPH_PX)
+	assert_true(COMBAT_HUD.GLANCE_FONT_PX >= UI_TOKENS.FONT_READ)
+	# The compact fight column knows each member by portrait (r6: five swatches).
+	var member: RefCounted = CREATURE_INSTANCE.from_species("mudsnout",
+		SPECIES.definition("mudsnout"), 0.5)
+	var hud := COMBAT_HUD.new()
+	var entries: Array = hud._party_entries([member])
+	assert_eq(entries.size(), 1)
+	assert_eq(str(entries[0].get("portrait", "")), "res://assets/ui/portraits/creatures/mudsnout.png")
+	assert_true(ResourceLoader.exists(str(entries[0]["portrait"])), "the portrait exists")
 	hud.free()
 
 

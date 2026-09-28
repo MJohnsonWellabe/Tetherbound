@@ -153,7 +153,9 @@ const ROW_MARGIN := 4  # 6 -> 4, alongside ROW_SIZE.y: a one-line row needs less
 ## Pinned rather than re-measured by hand next time:
 ## `smoke_combat_hud_left_column.gd` asserts the live stack against
 ## `TOTAL_HEIGHT` and fails naming the child that grew.
-const HEADER_HEIGHT := 40.0
+## F10#6 r6: at STRIP_READABLE_FONT_SIZE 28 the live header draws 43
+## (`smoke_combat_hud_left_column.gd` measured the stack 3 px past 40's total).
+const HEADER_HEIGHT := 43.0
 const HEADER_GAP := 4.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
 ## HUD-SCALE: 40 -> 30. A species chip is recognised as a silhouette rather
@@ -177,7 +179,9 @@ const CHIP_SIZE := Vector2(30.0, 30.0)
 ## computed through a content scale the owner's 1920x1080 device does not
 ## have. 26 is `HUD_SCALE.GLANCE_CAP_ARCMIN`: a roster row is a name, a level
 ## and a tag, all recognised rather than read.
-const STRIP_READABLE_FONT_SIZE := 26
+## F10#6 device profile r6: UX section 8's raster floor (UITokens.FONT_READ,
+## 27) binds above the glance floor, so the strip takes the next token up.
+const STRIP_READABLE_FONT_SIZE := 28
 const RAIL_WIDTH := 4.0
 ## 72 -> 56 alongside the one-line row: the bar shares its line with the name
 ## now instead of sitting beside a two-line stack, and 16px of bar buys 16px of
@@ -193,7 +197,8 @@ const XP_BAR_SIZE := Vector2(44.0, 3.0)
 const BAR_GAP := 2
 ## The bond pip text ("bond 2/5") beside the level, one size down from the
 ## row so the level number stays the louder of the two.
-const BOND_FONT_SIZE := 19
+## r6: the 7-inch judge could not read "bond 0/5" at 19; UX section 8's floor.
+const BOND_FONT_SIZE := 27
 ## The name never shrinks below this, and the level/bond group never below
 ## its own content (both were being squeezed to illegibility, round 1).
 const NAME_MIN_WIDTH := 150.0

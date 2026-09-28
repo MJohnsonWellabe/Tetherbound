@@ -163,6 +163,8 @@ const FONT_BIG_NUMBER := 56
 const FONT_READ := 27
 const FONT_PROMPT := 30
 const FONT_SECTION := 36
+## UX §8's critical changing numbers (HP, food): 22 px at the stress raster.
+const FONT_NUMBER := 33
 
 # --- Spacing -------------------------------------------------------------
 

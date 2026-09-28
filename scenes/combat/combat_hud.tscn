@@ -49,7 +49,7 @@ theme_override_constants/separation = 4
 
 [node name="Eyebrow" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "LEVEL —"
 
@@ -61,7 +61,7 @@ text = "—"
 
 [node name="TypeTag" type="Label" parent="Root/EnemyPanel/EnemyVBox"]
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 text = ""
 
 [node name="HealthGap" type="Control" parent="Root/EnemyPanel/EnemyVBox"]
@@ -110,12 +110,12 @@ size_flags_vertical = 4
 theme_override_constants/separation = 2
 
 [node name="Name" type="Label" parent="Root/AllyPanel/AllyVBox/TopRow/Info"]
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.949, 0.961, 0.949, 1)
 text = "—"
 
 [node name="Level" type="Label" parent="Root/AllyPanel/AllyVBox/TopRow/Info"]
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "Lv —"
 
@@ -133,7 +133,7 @@ theme_override_constants/separation = 10
 [node name="Caption" type="Label" parent="Root/AllyPanel/AllyVBox/EnergyRow"]
 custom_minimum_size = Vector2(70, 0)
 vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "Energy"
 
@@ -161,7 +161,7 @@ anchor_bottom = 1.0
 color = Color(0.42, 0.9, 0.85, 0.0)
 
 [node name="Status" type="Label" parent="Root/AllyPanel/AllyVBox"]
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = ""
 
@@ -177,7 +177,7 @@ offset_top = -234.0
 offset_right = 436.0
 offset_bottom = -206.0
 grow_vertical = 0
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.451, 0.902, 0.867, 1)
 text = ""
 
@@ -206,7 +206,7 @@ grow_vertical = 0
 mouse_filter = 2
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 text = ""
 
 [node name="GridPanel" type="PanelContainer" parent="Root"]
@@ -257,7 +257,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
-theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/normal_font_size = 28
 text = ""
 
 [node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellQuick/Layout"]
@@ -296,7 +296,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
-theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/normal_font_size = 28
 text = ""
 
 [node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellCharged/Layout"]
@@ -335,7 +335,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
-theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/normal_font_size = 28
 text = ""
 
 [node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellThrow/Layout"]
@@ -374,7 +374,7 @@ size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
-theme_override_font_sizes/normal_font_size = 26
+theme_override_font_sizes/normal_font_size = 28
 text = ""
 
 [node name="Pulse" type="ColorRect" parent="Root/GridPanel/Grid/CellSwitch/Layout"]
@@ -506,6 +506,6 @@ offset_bottom = 66.0
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(0.294, 0.824, 0.545, 1)
 text = ""

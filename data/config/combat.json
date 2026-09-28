@@ -215,6 +215,8 @@
       "enabled": true,
       "_why_left_column_f10_6": "F10#6 round 6: the fight roster is a 232 px pip column and the active card 280 px (x 56-336 of 1920), so the column the ally is kept clear of ends at 0.19, not 0.26.",
       "left_column": {"right": 0.19, "top": 0.42},
+      "_why_trainer": "F10#6 round 7 (code-blind 7-inch judge r6, Hi/H2b: the trainer stood under the faded ally card). UX section 1.4 names the trainer too, so the trainer's 0.7 x 1.8 m standing box joins the ally's bounds in the cap: whichever reaches further left is kept right of the column. Presentation only. TUNABLE.",
+      "trainer": true,
       "margin": 0.02,
       "min_shoulder": -1.5,
     "top_band": {

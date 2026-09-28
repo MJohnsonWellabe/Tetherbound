@@ -241,9 +241,10 @@ const REGION_BANNER_HEIGHT := 48.0
 ## F10#6 device profile (code-blind 7-inch judge r3: "Day/time" unreadable):
 ## the glance floor (`hud_scale.gd`, 26 px) with the HUD's outline so the
 ## muted text holds against a bright or violet sky.
-const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_BODY
+## r6: UX section 8's raster floor (FONT_READ) rather than the glance floor.
+const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_BUTTON
 const DAYTIME_READOUT_TOP := UITokens.HUD_INSET
-const DAYTIME_READOUT_HEIGHT := 36.0
+const DAYTIME_READOUT_HEIGHT := 40.0
 
 ## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
@@ -363,7 +364,13 @@ const VITALS_WIDTH := 244.0
 const VITALS_PLATE_OVERHANG := 8.0
 const VITALS_BAR_HEIGHT := 20.0
 const VITALS_ROW_GAP := 10.0
-const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
+## F10#6 device profile r6 (code-blind 7-inch judge: "100 / 100" and "100%"
+## about 5 px on the 7-inch sheet): these are UX section 8's critical changing
+## numbers, 22 px at the 1280x720 stress raster = 33 on this canvas.
+const VITALS_VALUE_FONT := UITokens.FONT_NUMBER
+## The value labels' box, centred on the bar row, tall enough for that font.
+const VITALS_VALUE_BOX_HEIGHT := 46.0
+const VITALS_VALUE_BOX_TOP := (VITALS_BAR_HEIGHT - VITALS_VALUE_BOX_HEIGHT) * 0.5
 ## Chip behind the vitals value text: translucent so a full meter reads full
 ## through it (see `_style_meter_value_chip()`).
 const METER_VALUE_CHIP_ALPHA := 0.6
@@ -377,7 +384,8 @@ const METER_VALUE_CHIP_ALPHA := 0.6
 ## HUD-SCALE: 104 -> 76. This was widened to 104 so "FOOD" (4 capitals at the
 ## old 38px `VITALS_VALUE_FONT`) had room; at 26 the same four capitals need
 ## about 73px, so the column follows the font that set it.
-const VITALS_CAPTION_WIDTH := 76.0
+## r6: "FOOD" at HUD_READABLE_FONT_SIZE (28) needs about 80 px.
+const VITALS_CAPTION_WIDTH := 88.0
 const VITALS_HP_ROW_Y := 28.0 + VITALS_ROW_GAP
 const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
 ## Real content height of the vitals cluster (buff row 0-28, HP icon/bar/value
@@ -673,7 +681,10 @@ const LEGEND_FONT_SIZE := 26
 ## GLANCE tier is the right one for a label you recognise rather than read;
 ## the sentence-shaped text on this HUD (the objective line) takes
 ## `HUD_SENTENCE_FONT_SIZE` below instead, so the two stop sharing one number.
-const HUD_READABLE_FONT_SIZE := 26
+## F10#6 device profile r6: UX section 8's raster floor (18 px essential text at
+## the 1280x720 stress raster = UITokens.FONT_READ, 27, on this canvas) sits
+## just above the glance floor, so the HUD takes the next token up.
+const HUD_READABLE_FONT_SIZE := UITokens.FONT_BUTTON
 ## Text on this HUD that is an actual sentence and is parsed rather than
 ## recognised. See `HUD_SCALE.SENTENCE_CAP_ARCMIN`.
 const HUD_SENTENCE_FONT_SIZE := 32
@@ -2240,7 +2251,7 @@ func _build_vitals_cluster() -> void:
 	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, 34.0)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
-	_satiety_caption_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING)
 	_vitals_cluster.add_child(_satiety_caption_label)
 
@@ -2262,8 +2273,8 @@ func _build_vitals_cluster() -> void:
 
 	_satiety_value_label = Label.new()
 	_satiety_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y - 8.0)
-	_satiety_value_label.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH - 8.0, 34.0)
+	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_satiety_value_label.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_satiety_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
@@ -2280,7 +2291,7 @@ func _build_vitals_cluster() -> void:
 	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
 	_satiety_state_label.size = Vector2(220.0, 34.0)
 	_satiety_state_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_satiety_state_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_satiety_state_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_state_label.visible = false
 	_vitals_cluster.add_child(_satiety_state_label)
 
@@ -2353,8 +2364,8 @@ func _build_player_health_bar() -> void:
 
 	_hp_value_label = Label.new()
 	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_value_label.position = Vector2(0.0, HEALTH_BAR_ROW_Y - 8.0)
-	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 34.0)
+	_hp_value_label.position = Vector2(0.0, HEALTH_BAR_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_hp_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
@@ -2883,7 +2894,9 @@ func _build_objective_block() -> void:
 
 	var eyebrow := Label.new()
 	eyebrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	eyebrow.text = "M A I N   S T O R Y" # letter-spaced feel; no theme letter-spacing support
+	# F10#6 device profile r6: the spaced-out letters ("M A I N") read as
+	# single-letter specks at 7 inches; a plain word reads as a word.
+	eyebrow.text = "MAIN STORY"
 	# `UITokens.FONT_TINY` (19) measured ~7 physical px at the Ally's real
 	# resolution -- same "shared by a dozen screens this lane does not own"
 	# reason `HUD_READABLE_FONT_SIZE`'s own header gives for not raising that

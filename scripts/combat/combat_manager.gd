@@ -1406,6 +1406,11 @@ static func top_band_lift(live: float, foe_top_px: float, foe_depth: float, ally
 ## camera. INF when disabled, without a live camera, or while the ally's bounds
 ## stay above the column; otherwise finite (it may exceed the live shoulder when
 ## the ally has room to spare).
+## The trainer's standing box for the HUD-safe cap: width (x, also depth) and
+## height in metres, the same 0.7 x 1.8 m box combat_hud.gd's subject fade uses.
+const TRAINER_SAFE_BOX_M := Vector2(0.7, 1.8)
+
+
 func _hud_safe_shoulder_cap(hud: Dictionary) -> float:
 	if not bool(hud.get("enabled", false)) or _camera_rig == null or _ally_body == null \
 			or not is_instance_valid(_ally_body):
@@ -1427,6 +1432,20 @@ func _hud_safe_shoulder_cap(hud: Dictionary) -> float:
 			return INF
 		depth = maxf(depth, ahead)
 		corners.append(camera.unproject_position(corner))
+	# F10#6 device profile (code-blind 7-inch judge r6, Hi/H2b: the trainer
+	# stood under the faded ally card, "illegible and still covers"). UX
+	# section 1.4 names the trainer too, so their standing box joins the
+	# ally's: the cap keeps whichever reaches further left clear of the column.
+	if bool(hud.get("trainer", false)) and _player != null and is_instance_valid(_player):
+		var half := TRAINER_SAFE_BOX_M * 0.5
+		var base := _player.global_position
+		for i in 8:
+			var corner := base + Vector3(
+				half.x if i & 1 else -half.x, TRAINER_SAFE_BOX_M.y if i & 2 else 0.0,
+				half.x if i & 4 else -half.x)
+			if (corner - camera.global_position).dot(forward) <= 0.05:
+				continue
+			corners.append(camera.unproject_position(corner))
 	var column: Dictionary = hud.get("left_column", {}) as Dictionary
 	var centre := world.get_center()
 	var centre_depth := maxf((centre - camera.global_position).dot(forward), 0.05)
