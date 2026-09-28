@@ -15,8 +15,8 @@
       43.7,
       -17.9
     ],
-    "dune_gap_start": 0.48,
-    "dune_gap_full": 0.65,
+    "dune_gap_start": 0.43,
+    "dune_gap_full": 0.60,
     "dune_pioneer_start": 0.36,
     "dune_pioneer_probability": 0.045,
     "dune_pioneer_ground": [
@@ -41,8 +41,8 @@
     "clump_contrast": 1.0,
     "clump_patch_start": 0.47,
     "clump_patch_full": 0.64,
-    "tint_base": "#777451",
-    "tint_tip": "#c2b47d",
+    "tint_base": "#656b46",
+    "tint_tip": "#a9a16e",
     "tint_jitter": 0.13,
     "ground_blend": 0.16,
     "cover_tiers": [

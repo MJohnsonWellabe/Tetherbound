@@ -29,6 +29,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	var rings := maxi(4, int(config.get("rings", 36)))
 	var segments := maxi(8, int(config.get("segments", 96)))
 	var skirt := float(config.get("skirt_y_m", -3.0))
+	var far_relief: Dictionary = config.get("far_relief", {})
 	var grid: Array = []
 	for ring in rings + 1:
 		var r := radius * float(ring) / float(rings)
@@ -37,6 +38,8 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 			var angle := TAU * float(segment) / float(segments)
 			var xz := centre_xz + Vector2(cos(angle), sin(angle)) * r
 			var y := float(world.call("ground_height_at", xz.x, xz.y))
+			if is_finite(y):
+				y += _far_relief_height(xz - centre_xz, far_relief)
 			row.append(Vector3(xz.x, y if is_finite(y) else skirt, xz.y))
 		grid.append(row)
 	var skirt_row: Array[Vector3] = []
@@ -78,6 +81,24 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	if candidate is Dictionary and bool(candidate.get("enabled", false)):
 		var composition := world.get_node_or_null(str(candidate.get("source_root", ""))) as Node3D
 		add_decorative_far_meshes(world, composition, candidate)
+
+
+## Presentation-only crag crowns interrupt the analytic mountain's cone at
+## long distance. The profile returns to the exact physical terrain outside
+## each crown; trails, falls sampling, collision and the near scene are intact.
+static func _far_relief_height(local_xz: Vector2, settings: Dictionary) -> float:
+	if not bool(settings.get("enabled", false)):
+		return 0.0
+	var height := 0.0
+	for spec: Dictionary in settings.get("peaks", []):
+		var raw: Array = spec.get("offset_xz_m", [0.0, 0.0])
+		if raw.size() != 2:
+			continue
+		var radius := maxf(1.0, float(spec.get("radius_m", 1.0)))
+		var distance := local_xz.distance_to(Vector2(float(raw[0]), float(raw[1])))
+		var crown := pow(maxf(0.0, 1.0 - distance / radius), float(spec.get("power", 0.85)))
+		height = maxf(height, crown * float(spec.get("height_m", 0.0)))
+	return height
 
 
 ## Reuse only visible crag/cap surfaces. Never duplicate the source hierarchy:

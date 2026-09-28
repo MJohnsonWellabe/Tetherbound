@@ -3,6 +3,15 @@ extends "res://tests/test_case.gd"
 const SILHOUETTE := preload("res://scripts/world/water_veilfall_silhouette.gd")
 
 
+func test_far_relief_crowns_are_local_and_disabled_by_default() -> void:
+	var settings := {"enabled": true, "peaks": [
+		{"offset_xz_m": [20.0, -10.0], "radius_m": 80.0, "height_m": 50.0, "power": 0.85}
+	]}
+	assert_eq(SILHOUETTE._far_relief_height(Vector2(20.0, -10.0), settings), 50.0)
+	assert_eq(SILHOUETTE._far_relief_height(Vector2(100.0, -10.0), settings), 0.0)
+	assert_eq(SILHOUETTE._far_relief_height(Vector2(20.0, -10.0), {}), 0.0)
+
+
 func test_disabled_candidate_adds_nothing() -> void:
 	var world := Node3D.new()
 	var far := SILHOUETTE.new()
