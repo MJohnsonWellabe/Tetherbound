@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const DUNES := preload("res://scripts/world/water_dune_cover.gd")
 const VEGETATION := preload("res://scripts/world/water_vegetation.gd")
+const GRASS := preload("res://scripts/world/grass_field.gd")
 
 
 func test_disabled_profile_and_veilfall_preserve_original_inputs() -> void:
@@ -25,7 +26,7 @@ func test_enabled_copies_preserve_clearances_and_unrelated_layers() -> void:
 		"res://data/config/water_ground_cover.json"))
 	var original := source.duplicate(true)
 	var candidate := DUNES.ground_profile(source, settings)
-	assert_true(candidate.tuft_count < source.tuft_count)
+	assert_true(candidate.tuft_count <= source.tuft_count, "colony cores stay within the source profile's requested tuft count")
 	assert_true(candidate.height_near > source.height_near)
 	assert_eq(candidate.anchor_clear_radius_m, source.anchor_clear_radius_m)
 	assert_eq(candidate.forbidden_ground, source.forbidden_ground)
@@ -39,6 +40,40 @@ func test_enabled_copies_preserve_clearances_and_unrelated_layers() -> void:
 	assert_true(str(dune_grass.models[0]).ends_with("Grass_Wispy_Tall.gltf"))
 	assert_eq(grass.models, ["broad_leaf"])
 	assert_eq(dune_grass.min_height_m, grass.min_height_m)
+
+
+func test_colony_and_arc_overrides_bind_only_to_the_candidate_material() -> void:
+	var settings := DUNES.config()
+	assert_false(bool(settings.enabled), "native-unjudged candidate remains off")
+	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/water_ground_cover.json"))
+	var original := source.duplicate(true)
+	settings.enabled = true
+	var candidate := DUNES.ground_profile(source, settings)
+	var ordinary := GRASS.new()
+	var dunes := GRASS.new()
+	for field in [ordinary, dunes]:
+		field.configure_profile(source, ["grass", "shore", "rock"])
+		field._material = ShaderMaterial.new()
+		field._material.shader = load(GRASS.SHADER_PATH)
+	ordinary._apply_config(source)
+	dunes._apply_config(candidate)
+	for key: String in ["clump_patch_start", "clump_patch_full"]:
+		assert_almost_eq(float(ordinary._material.get_shader_parameter(key)), 0.0,
+			0.0001, "ordinary profile keeps the disabled shader default: " + key)
+		assert_almost_eq(float(dunes._material.get_shader_parameter(key)), float(candidate[key]))
+	var original_arc := float(ordinary._material.get_shader_parameter("blade_arc_angle"))
+	assert_almost_eq(original_arc, 1.047198, 0.0001, "existing grass curvature remains unchanged")
+	assert_almost_eq(float(dunes._material.get_shader_parameter("blade_arc_angle")), float(candidate.blade_arc_angle))
+	assert_true(float(candidate.blade_arc_angle) < original_arc)
+	assert_true(float(candidate.clump_patch_full) > float(candidate.clump_patch_start))
+	assert_almost_eq(float(dunes._material.get_shader_parameter("clump_contrast")), 1.0,
+		0.0001, "threshold gaps retain zero keep probability")
+	assert_eq(source, original)
+	assert_false(source.has("clump_patch_start"))
+	assert_false(source.has("blade_arc_angle"))
+	ordinary.free()
+	dunes.free()
 
 
 func test_shelter_leaves_windward_ground_open_without_affecting_ordinary_layers() -> void:

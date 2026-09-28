@@ -1612,6 +1612,7 @@ func _apply_config(cfg: Dictionary) -> void:
 	for key: String in [
 		"field_radius", "fade_start", "blade_width", "height_near", "height_far",
 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
+		"clump_patch_start", "clump_patch_full", "blade_arc_angle",
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
 		"lens_clear_m", "lens_clear_band",

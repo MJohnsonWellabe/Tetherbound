@@ -118,6 +118,12 @@ uniform float shade_jitter : hint_range(0.0, 1.0) = 0.22;
 uniform float density_gain : hint_range(0.0, 1.0) = 0.82;
 uniform float clump_scale = 0.035;
 uniform float clump_contrast : hint_range(0.0, 1.0) = 0.55;
+// Optional colonies, using the same threshold idiom as cover_tier's patches.
+// Equal defaults keep the original linear drift exactly. With full contrast,
+// the enabled ramp makes truly empty sand below start and dense cores above
+// full; density_gain then sets the within-colony tuft population.
+uniform float clump_patch_start : hint_range(0.0, 1.0) = 0.0;
+uniform float clump_patch_full : hint_range(0.0, 1.0) = 0.0;
 
 // Colour. `tint_base`/`tint_tip` are the base-to-tip gradient a blind critic
 // named as missing from the scattered tufts ("flat two-tone polygon, no
@@ -516,6 +522,9 @@ void vertex() {
 	// so the field reads as drifts with open ground between them rather than a
 	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
 	float drift = value_noise(world_xz * clump_scale);
+	if (clump_patch_full > clump_patch_start) {
+		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
+	}
 	drift = mix(1.0, drift, clump_contrast);
 	// The bush tier's drift, evaluated with the bush tier's own numbers. Same
 	// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
