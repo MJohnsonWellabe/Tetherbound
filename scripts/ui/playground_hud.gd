@@ -2247,8 +2247,8 @@ func _build_vitals_cluster() -> void:
 	# a right-aligned percentage value mirroring the HP row exactly.
 	_satiety_caption_label = Label.new()
 	_satiety_caption_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_caption_label.position = Vector2(0.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
-	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, 34.0)
+	_satiety_caption_label.position = Vector2(0.0, VITALS_FOOD_ONLY_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
 	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
@@ -2288,8 +2288,8 @@ func _build_vitals_cluster() -> void:
 	# task's own floor for a state word the player needs to actually read.
 	_satiety_state_label = Label.new()
 	_satiety_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
-	_satiety_state_label.size = Vector2(220.0, 34.0)
+	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_FOOD_ONLY_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_satiety_state_label.size = Vector2(220.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_state_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_state_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_state_label.visible = false

@@ -1401,59 +1401,88 @@ static func top_band_lift(live: float, foe_top_px: float, foe_depth: float, ally
 	return clampf(live + minf(for_foe, for_ally), 0.0, max_lift_m)
 
 
-## F10#2 C3 (V-SW-3/5): the largest shoulder that keeps the ally's live render
-## bounds out of the combat HUD's left column, measured through the live
-## camera. INF when disabled, without a live camera, or while the ally's bounds
-## stay above the column; otherwise finite (it may exceed the live shoulder when
-## the ally has room to spare).
 ## The trainer's standing box for the HUD-safe cap: width (x, also depth) and
 ## height in metres, the same 0.7 x 1.8 m box combat_hud.gd's subject fade uses.
 const TRAINER_SAFE_BOX_M := Vector2(0.7, 1.8)
 
 
+## F10#2 C3 (V-SW-3/5): the largest shoulder that keeps the ally's live render
+## bounds out of the combat HUD's left column, measured through the live
+## camera. INF when disabled, without a live camera, or while the ally's bounds
+## stay above the column; otherwise finite (it may exceed the live shoulder when
+## the ally has room to spare).
+##
+## F10#6 device profile (code-blind 7-inch judge r6, Hi/H2b: the trainer stood
+## under the faded ally card). UX section 1.4 names the trainer too, so with
+## `trainer` set their standing box is capped the same way, at its own depth,
+## and the smaller of the two caps wins.
 func _hud_safe_shoulder_cap(hud: Dictionary) -> float:
-	if not bool(hud.get("enabled", false)) or _camera_rig == null or _ally_body == null \
-			or not is_instance_valid(_ally_body):
+	if not bool(hud.get("enabled", false)) or _camera_rig == null:
 		return INF
 	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null or not camera.is_inside_tree():
 		return INF
 	var viewport := camera.get_viewport().get_visible_rect().size
-	var world := _body_world_bounds(_ally_body)
-	if world.size.is_zero_approx() or viewport.x <= 1.0 or viewport.y <= 1.0:
+	if viewport.x <= 1.0 or viewport.y <= 1.0:
 		return INF
-	var corners: Array[Vector2] = []
-	var depth := 0.0
+	var column: Dictionary = hud.get("left_column", {}) as Dictionary
+	var column_right := float(column.get("right", 0.26))
+	var column_top := float(column.get("top", 0.42))
+	var margin := float(hud.get("margin", 0.02))
+	var min_shoulder := float(hud.get("min_shoulder", -1.5))
+	var live := float(_camera_rig.get("_shoulder"))
+	var cap := INF
+	if _ally_body != null and is_instance_valid(_ally_body):
+		var world := _body_world_bounds(_ally_body)
+		if not world.size.is_zero_approx():
+			cap = minf(cap, _box_shoulder_cap(camera, world, viewport, live, column_right,
+				column_top, margin, min_shoulder, false))
+	if bool(hud.get("trainer", false)) and _player != null and is_instance_valid(_player):
+		var half := TRAINER_SAFE_BOX_M.x * 0.5
+		var box := AABB(_player.global_position - Vector3(half, 0.0, half),
+			Vector3(TRAINER_SAFE_BOX_M.x, TRAINER_SAFE_BOX_M.y, TRAINER_SAFE_BOX_M.x))
+		cap = minf(cap, _box_shoulder_cap(camera, box, viewport, live, column_right,
+			column_top, margin, min_shoulder, true))
+	return cap
+
+
+## One body's cap through the live camera. INF unless all eight corners are in
+## front of the lens (a corner at the near plane projects to a huge coordinate).
+## `need_on_column` (the trainer) also asks that the box's screen rect actually
+## overlap the column's on-screen region, so a trainer outside the frame never
+## drags the shoulder.
+func _box_shoulder_cap(camera: Camera3D, world: AABB, viewport: Vector2, live: float,
+		column_right: float, column_top: float, margin: float, min_shoulder: float,
+		need_on_column: bool) -> float:
 	var forward := -camera.global_basis.z
+	var corners: Array[Vector2] = []
 	for i in 8:
 		var corner := world.get_endpoint(i)
-		var ahead := (corner - camera.global_position).dot(forward)
-		if ahead <= 0.05:
+		if (corner - camera.global_position).dot(forward) <= 0.05:
 			return INF
-		depth = maxf(depth, ahead)
 		corners.append(camera.unproject_position(corner))
-	# F10#6 device profile (code-blind 7-inch judge r6, Hi/H2b: the trainer
-	# stood under the faded ally card, "illegible and still covers"). UX
-	# section 1.4 names the trainer too, so their standing box joins the
-	# ally's: the cap keeps whichever reaches further left clear of the column.
-	if bool(hud.get("trainer", false)) and _player != null and is_instance_valid(_player):
-		var half := TRAINER_SAFE_BOX_M * 0.5
-		var base := _player.global_position
-		for i in 8:
-			var corner := base + Vector3(
-				half.x if i & 1 else -half.x, TRAINER_SAFE_BOX_M.y if i & 2 else 0.0,
-				half.x if i & 4 else -half.x)
-			if (corner - camera.global_position).dot(forward) <= 0.05:
-				continue
-			corners.append(camera.unproject_position(corner))
-	var column: Dictionary = hud.get("left_column", {}) as Dictionary
-	var centre := world.get_center()
-	var centre_depth := maxf((centre - camera.global_position).dot(forward), 0.05)
-	# Pixels one metre of shoulder moves the ally at its own depth.
+	if need_on_column and not rect_meets_column(corners, viewport, column_right, column_top):
+		return INF
+	var centre_depth := maxf((world.get_center() - camera.global_position).dot(forward), 0.05)
+	# Pixels one metre of shoulder moves this body at its own depth.
 	var pixels_per_metre := viewport.y * 0.5 / (centre_depth * tan(deg_to_rad(camera.fov) * 0.5))
-	return hud_safe_shoulder_cap(float(_camera_rig.get("_shoulder")), corners, viewport,
-		pixels_per_metre, float(column.get("right", 0.26)), float(column.get("top", 0.42)),
-		float(hud.get("margin", 0.02)), float(hud.get("min_shoulder", -1.5)))
+	return hud_safe_shoulder_cap(live, corners, viewport, pixels_per_metre, column_right,
+		column_top, margin, min_shoulder)
+
+
+## Whether projected corners overlap the column's on-screen region (x 0 to
+## column_right, y column_top to the bottom edge), in viewport pixels.
+static func rect_meets_column(corners: Array[Vector2], viewport: Vector2, column_right: float,
+		column_top: float) -> bool:
+	if corners.is_empty():
+		return false
+	var lo := corners[0]
+	var hi := corners[0]
+	for p: Vector2 in corners:
+		lo = lo.min(p)
+		hi = hi.max(p)
+	return hi.x > 0.0 and lo.x < column_right * viewport.x \
+		and hi.y > column_top * viewport.y and lo.y < viewport.y
 
 
 ## Pure form of the cap. Lowering the shoulder by one metre moves the pivot

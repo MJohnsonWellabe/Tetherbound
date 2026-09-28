@@ -9,6 +9,7 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const RIG := preload("res://scripts/player/camera_rig.gd")
 const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 const VIEW := Vector2(1280, 720)
+const MATH_CFG := preload("res://scripts/combat/combat_math.gd")
 
 
 func _rect(left: float, top: float, right: float, bottom: float) -> Array[Vector2]:
@@ -34,6 +35,39 @@ func test_the_cap_never_goes_below_its_floor() -> void:
 	var cap := MANAGER.hud_safe_shoulder_cap(0.0, _rect(0, 400, 50, 700), VIEW, 20.0, 0.26, 0.42, 0.02, -1.5)
 	assert_almost_eq(cap, -1.5, 0.001, "a huge overlap is bounded by min_shoulder")
 	assert_eq(MANAGER.hud_safe_shoulder_cap(1.0, [], VIEW, 100.0, 0.26, 0.42, 0.02, -1.5), INF)
+
+
+## F10#6 (UX section 1.4): the trainer's box is capped only while it really
+## overlaps the column on screen; a trainer outside the frame never drags the
+## shoulder, and each body converts pixels to metres at its own depth.
+func test_the_trainer_is_capped_only_while_on_the_column() -> void:
+	var under := _rect(100, 500, 200, 700)
+	assert_true(MANAGER.rect_meets_column(under, VIEW, 0.19, 0.42), "a trainer under the column")
+	assert_false(MANAGER.rect_meets_column(_rect(-300, 500, -10, 700), VIEW, 0.19, 0.42),
+		"a trainer off the left edge is not on the column")
+	assert_false(MANAGER.rect_meets_column(_rect(100, 730, 200, 900), VIEW, 0.19, 0.42),
+		"a trainer below the frame is not on the column")
+	assert_false(MANAGER.rect_meets_column(_rect(100, 50, 200, 250), VIEW, 0.19, 0.42),
+		"a trainer above the column's top is not on it")
+	assert_false(MANAGER.rect_meets_column(_rect(400, 500, 500, 700), VIEW, 0.19, 0.42),
+		"a trainer right of the column is not on it")
+	# The same 60 px overlap asks for twice the metres at half the pixel scale
+	# (a trainer twice as far from the lens as the ally).
+	var right_px := (0.19 + 0.02) * VIEW.x
+	var near := MANAGER.hud_safe_shoulder_cap(1.0, _rect(right_px - 60.0, 500, right_px + 40.0, 700),
+		VIEW, 100.0, 0.19, 0.42, 0.02, -1.5)
+	var far := MANAGER.hud_safe_shoulder_cap(1.0, _rect(right_px - 60.0, 500, right_px + 40.0, 700),
+		VIEW, 50.0, 0.19, 0.42, 0.02, -1.5)
+	assert_almost_eq(near, 0.4, 0.001)
+	assert_almost_eq(far, -0.2, 0.001)
+
+
+func test_the_left_column_bound_covers_the_compact_fight_column() -> void:
+	var hud_safe: Dictionary = (MATH_CFG.config().get("camera", {}) as Dictionary).get("hud_safe", {})
+	var right := float((hud_safe.get("left_column", {}) as Dictionary).get("right", 0.0))
+	# The compact column's active card spans x 56-336 of the 1920 canvas.
+	assert_true(right >= 336.0 / 1920.0, "column bound %.3f covers the 336 px card" % right)
+	assert_true(bool(hud_safe.get("trainer", false)), "the trainer joins the cap")
 
 
 func test_the_arm_stops_short_of_a_foe_render_box_in_its_way() -> void:

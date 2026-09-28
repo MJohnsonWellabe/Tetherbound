@@ -36,8 +36,8 @@ const CREATURE_PORTRAIT := preload("res://scripts/ui/creature_portrait.gd")
 ## 22 px "marginal" rung; 40 lands it at the ladder's comfortable size.
 const CELL_GLYPH_PX := 40
 ## UX section 8 raster floor: essential text is at least 18 px at the 1280x720
-## stress raster, which is UITokens.FONT_READ (27) on this 1920x1080 canvas.
-## Every glance label on this HUD (combat_hud.tscn) uses this size.
+## stress raster, UITokens.FONT_READ (27) on this 1920x1080 canvas; the HUD's
+## glance labels (combat_hud.tscn) take the next token up, FONT_BUTTON (28).
 const GLANCE_FONT_PX := UITokens.FONT_BUTTON
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")

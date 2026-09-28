@@ -847,6 +847,10 @@ func test_compact_rows_are_opaque_and_state_moves_to_the_name() -> void:
 	assert_eq(strip._name_labels[0].get_theme_color("font_color"), UI_TOKENS.TEXT_PRIMARY, "the active row reads brightest")
 	assert_eq(strip._name_labels[1].get_theme_color("font_color"), UI_TOKENS.TEXT_SECONDARY, "a benched row is dimmer")
 	assert_eq(strip._name_labels[2].get_theme_color("font_color"), UI_TOKENS.TEXT_MUTED, "a fainted row is dimmest")
+	# Names are hidden in compact mode, so the portrait chip carries the state.
+	assert_almost_eq(strip._portraits[0].modulate.r, 1.0, 0.0001, "the active chip is brightest")
+	assert_almost_eq(strip._portraits[1].modulate.r, PARTY_STRIP.COMPACT_CHIP_BENCHED, 0.0001, "a benched chip is dimmer")
+	assert_almost_eq(strip._portraits[2].modulate.r, PARTY_STRIP.COMPACT_CHIP_MUTED, 0.0001, "a fainted chip is dimmest")
 	strip.free()
 
 

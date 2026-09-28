@@ -992,6 +992,9 @@ const COMPACT_HP_BAR_SIZE := Vector2(96.0, 8.0)
 ## and each member is known by its portrait (owner choice 2026-09-28).
 const COMPACT_ROW_WIDTH := 232.0
 const COMPACT_CHIP_SIZE := Vector2(40.0, 40.0)
+## Compact rows' chip shade by state (the hidden name's colour, moved).
+const COMPACT_CHIP_BENCHED := 0.72
+const COMPACT_CHIP_MUTED := 0.45
 var compact := false
 
 
@@ -1144,6 +1147,13 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 		_name_labels[i].add_theme_color_override("font_color",
 			UI_TOKENS.TEXT_MUTED if fainted or resting
 			else (UI_TOKENS.TEXT_PRIMARY if selected else UI_TOKENS.TEXT_SECONDARY))
+	# F10#6 review: compact rows hide their names, so the portrait chip carries
+	# the state the name colour did: the active one brightest, benched dimmer,
+	# fainted or resting dimmest (the KO/REST tags still name the state).
+	var chip_shade := (COMPACT_CHIP_MUTED if fainted or resting
+		else (1.0 if selected else COMPACT_CHIP_BENCHED)) if compact else 1.0
+	_chip_boxes[i].bg_color = tint * Color(chip_shade, chip_shade, chip_shade, 1.0)
+	_portraits[i].modulate = Color(chip_shade, chip_shade, chip_shade, 1.0)
 
 	_set_label(_name_labels[i], i, str(entry.get("label", "")))
 	var level := int(entry.get("level", 1))

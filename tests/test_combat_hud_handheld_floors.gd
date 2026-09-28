@@ -11,6 +11,8 @@ extends "res://tests/test_case.gd"
 
 const COMBAT_HUD_SCENE := preload("res://scenes/combat/combat_hud.tscn")
 const COMBAT_HUD := preload("res://scripts/ui/combat_hud.gd")
+const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
+const PLAYGROUND_HUD := preload("res://scripts/ui/playground_hud.gd")
 const HUD_SCALE := preload("res://scripts/ui/hud_scale.gd")
 const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
@@ -67,6 +69,17 @@ func test_move_badges_and_roster_portraits_read_at_seven_inches() -> void:
 	assert_eq(str(entries[0].get("portrait", "")), "res://assets/ui/portraits/creatures/mudsnout.png")
 	assert_true(ResourceLoader.exists(str(entries[0]["portrait"])), "the portrait exists")
 	hud.free()
+
+
+## The sizes built in code rather than authored in the scene (review note).
+func test_code_built_hud_text_clears_ux_section_8() -> void:
+	assert_true(PARTY_STRIP.STRIP_READABLE_FONT_SIZE >= UI_TOKENS.FONT_READ, "party strip text")
+	assert_true(PARTY_STRIP.BOND_FONT_SIZE >= UI_TOKENS.FONT_READ, "bond pip text")
+	assert_true(PLAYGROUND_HUD.HUD_READABLE_FONT_SIZE >= UI_TOKENS.FONT_READ, "exploration glance text")
+	assert_true(PLAYGROUND_HUD.DAYTIME_READOUT_FONT_SIZE >= UI_TOKENS.FONT_READ, "Day/time")
+	assert_true(PLAYGROUND_HUD.VITALS_VALUE_FONT >= UI_TOKENS.FONT_NUMBER, "HP and food numbers")
+	assert_true(PLAYGROUND_HUD.VITALS_VALUE_BOX_HEIGHT >= float(UI_TOKENS.FONT_NUMBER) * 1.3,
+		"the value box holds its font")
 
 
 func test_dimmed_move_cells_keep_names_and_glyphs_readable() -> void:
