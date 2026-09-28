@@ -19,11 +19,12 @@ func _load_plan() -> bool:
 		row["stand_laterals_m"] = [0.0, -4.0, 4.0, -8.0, 8.0, -15.0, 15.0]
 		row["min_camera_player_distance_m"] = 1.5
 		if str(row.frame_id) == "cloudreach__inventory__character__healer_iven":
-			# The shelf crushes the spring arm at the nearby stands. Record the
-			# production camera honestly even if it cannot pull back.
-			row["stand_offsets_m"] = [20.0, 14.0, 9.0, 5.0, 2.0, 0.0, 30.0]
-			row["stand_laterals_m"] = [0.0, -8.0, 8.0, -15.0, 15.0, -25.0, 25.0]
-			row["min_camera_player_distance_m"] = 0.1
+			# The catalogue coordinate is west of Iven's mounted runtime post.
+			# Aim the ordinary rig at the actual authored NPC position instead.
+			row["position_xz"] = [-290.0, 526.0]
+			row["stand_offsets_m"] = [8.0, 12.0, 5.0, 16.0, 2.0]
+			row["stand_laterals_m"] = [0.0, -4.0, 4.0, -8.0, 8.0]
+			row["min_camera_player_distance_m"] = 1.5
 		selected.append(row)
 	_planned = selected
 	return not _planned.is_empty()

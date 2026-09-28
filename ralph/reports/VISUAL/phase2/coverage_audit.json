@@ -51,29 +51,29 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 873,
+      "frames": 889,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 233,
+        "systems": 249,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 673,
+        "day": 689,
         "dusk": 114,
         "night": 86
       },
       "systems": {
         "current_states": 16,
         "fights": 210,
-        "swimming": 7
+        "riding": 10,
+        "swimming": 13
       },
       "expected_systems_without_indexed_frames": [
         "flying",
-        "riding",
         "catching",
         "camp",
         "bed",
@@ -102,9 +102,9 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 382,
+      "frames": 392,
       "categories": {
-        "characters": 24,
+        "characters": 34,
         "creatures": 98,
         "named_locations": 144,
         "route_and_terrain": 39,
@@ -113,7 +113,7 @@
         "world_items": 12
       },
       "times": {
-        "day": 271,
+        "day": 281,
         "dusk": 57,
         "night": 54
       },
@@ -131,7 +131,7 @@
         "catching",
         "fights"
       ],
-      "dialogue_frames": 11,
+      "dialogue_frames": 16,
       "defeated_frames": 6,
       "ui_ids": [
         "cloudreach__exploration_hud",
@@ -148,11 +148,7 @@
         "cloudreach__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {
-        "characters": [
-          "cloudreach__inventory__character__healer_iven"
-        ]
-      },
+      "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },

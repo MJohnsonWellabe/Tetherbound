@@ -1,0 +1,141 @@
+{
+	"biome": "tidewake",
+	"complete": true,
+	"fixture_disclosure": "Owned Aquaryn, Swim Stone and saddle seeded; mounted through production RidingController; movement uses ordinary directional input; visual capture only, no earned progression proof.",
+	"labels": [
+		"0.0s:LAND:riding",
+		"2.5s:LAND:riding",
+		"5.0s:MOUNTED:riding",
+		"7.5s:MOUNTED:riding",
+		"10.0s:MOUNTED:riding",
+		"12.5s:MOUNTED:riding",
+		"15.0s:MOUNTED:riding",
+		"17.5s:MOUNTED:riding",
+		"20.0s:MOUNTED:riding",
+		"22.5s:MOUNTED:riding",
+		"dismount@1.71m->HUMAN",
+		"25.0s:LAND:on-foot",
+		"27.5s:LAND:on-foot",
+		"30.0s:LAND:on-foot",
+		"32.5s:LAND:on-foot",
+		"35.0s:LAND:on-foot",
+		"37.5s:LAND:on-foot"
+	],
+	"records": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-01-land.png",
+			"frame_id": "mounted-swim-01-land",
+			"mode": "LAND",
+			"mounted": true,
+			"time_s": 0.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-02-land.png",
+			"frame_id": "mounted-swim-02-land",
+			"mode": "LAND",
+			"mounted": true,
+			"time_s": 2.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-03-mounted.png",
+			"frame_id": "mounted-swim-03-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 5.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-04-mounted.png",
+			"frame_id": "mounted-swim-04-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 7.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-05-mounted.png",
+			"frame_id": "mounted-swim-05-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 10.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-06-mounted.png",
+			"frame_id": "mounted-swim-06-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 12.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-07-mounted.png",
+			"frame_id": "mounted-swim-07-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 15.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-08-mounted.png",
+			"frame_id": "mounted-swim-08-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 17.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-09-mounted.png",
+			"frame_id": "mounted-swim-09-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 20.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-10-mounted.png",
+			"frame_id": "mounted-swim-10-mounted",
+			"mode": "MOUNTED",
+			"mounted": true,
+			"time_s": 22.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-11-land.png",
+			"frame_id": "mounted-swim-11-land",
+			"mode": "LAND",
+			"mounted": false,
+			"time_s": 25.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-12-land.png",
+			"frame_id": "mounted-swim-12-land",
+			"mode": "LAND",
+			"mounted": false,
+			"time_s": 27.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-13-land.png",
+			"frame_id": "mounted-swim-13-land",
+			"mode": "LAND",
+			"mounted": false,
+			"time_s": 30.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-14-land.png",
+			"frame_id": "mounted-swim-14-land",
+			"mode": "LAND",
+			"mounted": false,
+			"time_s": 32.5
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-15-land.png",
+			"frame_id": "mounted-swim-15-land",
+			"mode": "LAND",
+			"mounted": false,
+			"time_s": 35.0
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/mounted_swim_main120/mounted-swim-16-land.png",
+			"frame_id": "mounted-swim-16-land",
+			"mode": "LAND",
+			"mounted": false,
+			"time_s": 37.5
+		}
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "mounted swimming"
+}
