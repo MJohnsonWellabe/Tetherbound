@@ -1,0 +1,177 @@
+{
+	"camera": "production CameraRig/Camera3D, HUD on",
+	"frames": [
+		{
+			"distance_m": 172.457397460938,
+			"frame": "dock-reedhaven-arrival-day",
+			"ground_y": 1.92857146263123,
+			"player": [
+				0.0,
+				2.07857155799866,
+				278.0
+			],
+			"swimming_stand": false,
+			"target": [
+				-54.0,
+				26.1940002441406,
+				440.0
+			],
+			"what": "Reedhaven Woven Hall from the dock arrival point"
+		},
+		{
+			"distance_m": 172.457397460938,
+			"frame": "dock-reedhaven-arrival-night",
+			"ground_y": 1.92857146263123,
+			"player": [
+				0.0,
+				2.07857155799866,
+				278.0
+			],
+			"swimming_stand": false,
+			"target": [
+				-54.0,
+				26.1940002441406,
+				440.0
+			],
+			"what": "Reedhaven Woven Hall from the dock arrival point"
+		},
+		{
+			"distance_m": 39.9986381530762,
+			"frame": "dock-shellwatch-jetty-day",
+			"ground_y": 17.5057334899902,
+			"player": [
+				250.0,
+				17.6557331085205,
+				975.0
+			],
+			"swimming_stand": false,
+			"target": [
+				267.0,
+				35.8546829223633,
+				1006.29998779297
+			],
+			"what": "Shellwatch Rescue Jetty (occupied dock) from 35 m"
+		},
+		{
+			"distance_m": 39.9986381530762,
+			"frame": "dock-shellwatch-jetty-night",
+			"ground_y": 17.5057334899902,
+			"player": [
+				250.0,
+				17.6557331085205,
+				975.0
+			],
+			"swimming_stand": false,
+			"target": [
+				267.0,
+				35.8546829223633,
+				1006.29998779297
+			],
+			"what": "Shellwatch Rescue Jetty (occupied dock) from 35 m"
+		},
+		{
+			"distance_m": 451.922882080078,
+			"frame": "current-cradle-salt-crown-day",
+			"ground_y": 1.87549710273743,
+			"player": [
+				560.0,
+				2.02549719810486,
+				1728.0
+			],
+			"swimming_stand": false,
+			"target": [
+				299.799987792969,
+				2.0,
+				2097.5
+			],
+			"what": "Tidal Cradle to Salt Crown current along its line"
+		},
+		{
+			"distance_m": 451.922882080078,
+			"frame": "current-cradle-salt-crown-night",
+			"ground_y": 1.87549710273743,
+			"player": [
+				560.0,
+				2.02549719810486,
+				1728.0
+			],
+			"swimming_stand": false,
+			"target": [
+				299.799987792969,
+				2.0,
+				2097.5
+			],
+			"what": "Tidal Cradle to Salt Crown current along its line"
+		},
+		{
+			"distance_m": 682.178771972656,
+			"frame": "current-sluice-veilfall-day",
+			"ground_y": 2.83129644393921,
+			"player": [
+				722.0,
+				2.98129653930664,
+				3192.0
+			],
+			"swimming_stand": false,
+			"target": [
+				393.0,
+				2.0,
+				3789.60009765625
+			],
+			"what": "Sluice Isle to Veilfall current (strongest) along its line"
+		},
+		{
+			"distance_m": 682.178771972656,
+			"frame": "current-sluice-veilfall-night",
+			"ground_y": 2.83129644393921,
+			"player": [
+				722.0,
+				2.98129653930664,
+				3192.0
+			],
+			"swimming_stand": false,
+			"target": [
+				393.0,
+				2.0,
+				3789.60009765625
+			],
+			"what": "Sluice Isle to Veilfall current (strongest) along its line"
+		},
+		{
+			"distance_m": 1637.24792480469,
+			"frame": "veilfall-mid-salt-crown-day",
+			"ground_y": 1.5,
+			"player": [
+				419.600006103516,
+				1.64999997615814,
+				2640.0
+			],
+			"swimming_stand": false,
+			"target": [
+				200.0,
+				620.0,
+				4140.0
+			],
+			"what": "Veilfall from the Salt Crown rest, ~1.5 km"
+		},
+		{
+			"distance_m": 1637.24792480469,
+			"frame": "veilfall-mid-salt-crown-night",
+			"ground_y": 1.5,
+			"player": [
+				419.600006103516,
+				1.64999997615814,
+				2640.0
+			],
+			"swimming_stand": false,
+			"target": [
+				200.0,
+				620.0,
+				4140.0
+			],
+			"what": "Veilfall from the Salt Crown rest, ~1.5 km"
+		}
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"staged": "teleported stands, frozen clock"
+}
