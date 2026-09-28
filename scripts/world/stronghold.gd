@@ -1000,7 +1000,29 @@ func _box(size: Vector3, at: Vector3, material: Material, solid := true,
 		body.add_child(shape)
 		body.position = at
 		add_child(body)
+	else:
+		add_camera_occluder(self, size, Transform3D(Basis(), at))
 	return mesh
+
+
+## F04#7 C3 / M3 (judge r4 7121d40c; `capture_named_fight.gd --lens-probe`):
+## decoration is never solid -- a girder with a collider is a ledge -- so the
+## fight camera's arm swept straight through it and drew the Warden's fight
+## from inside trim bands, wall skins and pilasters. Each decoration box gets
+## the banners' camera-only body: it stops the lens and nothing else (mask 0;
+## the player and creatures collide on layer 1).
+static func add_camera_occluder(parent: Node, size: Vector3, where: Transform3D) -> void:
+	var body := StaticBody3D.new()
+	body.name = "CameraOccluder"
+	body.collision_layer = BANNER_CAMERA_OCCLUSION_LAYER
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = size
+	shape.shape = box
+	body.add_child(shape)
+	body.transform = where
+	parent.add_child(body)
 
 
 ## Every chamber: a floor slab reaching `skirt` metres down, a ceiling slab
