@@ -27,6 +27,7 @@ const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
 const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
 const ENVIRONMENT_VELOCITY := preload("res://scripts/world/environment_velocity_modifiers.gd")
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
@@ -289,6 +290,21 @@ var _impulse_damping: float = 9.0
 ## Optional arena that holds this creature inside a boundary. Null outside
 ## combat, which is why the wild creature can wander freely before it is engaged.
 var arena: Node = null
+
+## COMBAT §5 contact spacing (`contact_spacing.gd`). The body across the fight
+## from this one, and whether this body yields (`ally`) or holds (`foe`). Set
+## and cleared by whoever binds the fight; null outside combat.
+var contact_partner: Node3D = null
+var contact_spacing_role: StringName = &""
+var _contact_deficit_age_s := 0.0
+## Height above the feet of the correction's tunnelling ray (combat_arena's
+## HOLD_CROSS_CHECK_LIFT_M), so the floor underfoot is not itself "crossed".
+const CONTACT_SPACING_CROSS_LIFT_M := 0.6
+## The fitted art's horizontal half-width (x) and half-length (y, along the
+## art's own +Z), and the model yaw that turns art into body space. Written by
+## `_fit()`/`_build_capsule()`, scaled by `apply_size_multiplier()`.
+var _render_half_extents := Vector2.ZERO
+var _render_yaw := 0.0
 
 ## The world node that answers `ground_height_at`. Found once, then cached.
 var _ground_source: Node = null
@@ -577,6 +593,7 @@ func _build_model(look: Dictionary) -> bool:
 	# so this is the per-species correction, verified by looking at a survey
 	# frame rather than assumed.
 	_model.rotation.y = deg_to_rad(float(look.get("model_yaw", 0.0)))
+	_render_yaw = _model.rotation.y
 
 	_body.visible = false
 	_head.visible = false
@@ -690,6 +707,7 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 		fit = minf(fit, allowed)
 	fit *= maxf(extra_scale, 0.01)
 	art.scale = Vector3.ONE * fit
+	_render_half_extents = Vector2(box.size.x, box.size.z) * fit * 0.5
 	# Feet to the origin, and centred on it horizontally.
 	art.position = Vector3(
 		-(box.position.x + box.size.x * 0.5) * fit,
@@ -739,6 +757,8 @@ func _build_capsule(look: Dictionary) -> void:
 	_head.position = Vector3(0.0, _height * 0.82, _radius * 0.9)
 	_head.visible = true
 	_has_model = false
+	_render_half_extents = Vector2(_radius, _radius * 0.9 + snout.radius)
+	_render_yaw = 0.0
 
 
 ## --- variant tinting (OF27) --------------------------------------------------
@@ -1624,11 +1644,109 @@ func _resize_fitted_model(multiplier: float) -> bool:
 		art.position *= multiplier
 		art.scale *= multiplier
 		resized = true
+	if resized:
+		_render_half_extents *= multiplier
 	return resized
 
 
 func body_radius() -> float:
 	return _radius
+
+
+## How far this body's rendered footprint reaches toward `world_point`, on the
+## horizontal plane, never less than the collider. COMBAT §5's "directional
+## rendered half-extent": a long body met head-on reaches further than broadside.
+func contact_extent_towards(world_point: Vector3) -> float:
+	if _render_half_extents.x <= 0.0 or _render_half_extents.y <= 0.0:
+		return _radius
+	var origin := global_position if is_inside_tree() else position
+	var basis := global_transform.basis if is_inside_tree() else transform.basis
+	var dir := Vector3(world_point.x - origin.x, 0.0, world_point.z - origin.z)
+	var local := basis.inverse() * dir
+	var art := Vector2(local.x, local.z).rotated(_render_yaw)
+	return maxf(_radius, CONTACT_SPACING.directional_extent(
+		_render_half_extents.x, _render_half_extents.y, art))
+
+
+## This body's longest rendered half-extent, whichever way it faces.
+func contact_half_length() -> float:
+	return maxf(_radius, maxf(_render_half_extents.x, _render_half_extents.y))
+
+
+## Bind (or with null, release) the fight's contact-spacing pair for this body.
+func set_contact_partner(partner: Node3D, role: StringName = &"") -> void:
+	contact_partner = partner
+	contact_spacing_role = role if partner != null else &""
+	_contact_deficit_age_s = 0.0
+
+
+## COMBAT §5: after this step's own movement, stand clear of the fight partner's
+## rendered body (see `contact_spacing.gd` for the rule and why it is safe for
+## hit/avoidance and co-op). Swept, so terrain stops it; the arena hold that
+## follows still owns the ring.
+func _hold_contact_spacing(delta: float) -> void:
+	if contact_partner == null:
+		return
+	if not is_instance_valid(contact_partner):
+		contact_partner = null
+		_contact_deficit_age_s = 0.0
+		return
+	var partner := contact_partner
+	if contact_spacing_role == &"":
+		return
+	if not partner.is_inside_tree() or not is_inside_tree():
+		contact_partner = null
+		_contact_deficit_age_s = 0.0
+		return
+	var cfg := CONTACT_SPACING.config()
+	if not CONTACT_SPACING.enabled(cfg) or not partner.visible or not partner.has_method("body_radius"):
+		_contact_deficit_age_s = 0.0
+		return
+	# A burst or travelling lunge on either side decides its own contact.
+	if combat_burst_active() or (partner.has_method("combat_burst_active")
+			and bool(partner.call("combat_burst_active"))):
+		_contact_deficit_age_s = 0.0
+		return
+	var theirs_at := partner.global_position
+	var mine_extent := contact_extent_towards(theirs_at)
+	var theirs_extent := float(partner.call("contact_extent_towards", global_position)) \
+		if partner.has_method("contact_extent_towards") else float(partner.call("body_radius"))
+	var need := CONTACT_SPACING.min_separation(mine_extent, theirs_extent,
+		_radius, float(partner.call("body_radius")), cfg)
+	var offset := Vector3(global_position.x - theirs_at.x, 0.0, global_position.z - theirs_at.z)
+	if offset.length() >= need - float(cfg.get("tolerance_m", 0.01)):
+		_contact_deficit_age_s = 0.0
+		return
+	_contact_deficit_age_s += delta
+	var share := CONTACT_SPACING.share_for(contact_spacing_role, _contact_deficit_age_s, cfg)
+	var away := offset.normalized() if offset.length() > 0.0001 else -facing()
+	var closing := maxf(0.0, -Vector3(velocity.x, 0.0, velocity.z).dot(away))
+	var step := CONTACT_SPACING.correction(global_position, theirs_at, need, share,
+		closing, delta, -facing(), cfg)
+	if step.is_zero_approx():
+		return
+	var start := global_position
+	var hit := move_and_collide(step)
+	if hit != null:
+		var rest := hit.get_remainder().slide(hit.get_normal())
+		if rest.length() > 0.001:
+			move_and_collide(rest)
+	# The arena's own tunnelling guard (a Terrain3D sweep can miss a steep
+	# face): a correction whose centre line passes through solid geometry
+	# went through a surface, and is undone.
+	var lift := Vector3.UP * CONTACT_SPACING_CROSS_LIFT_M
+	if start.distance_to(global_position) > 0.01:
+		var query := PhysicsRayQueryParameters3D.create(start + lift, global_position + lift,
+			collision_mask, [get_rid(), partner.get_rid()] if partner is CollisionObject3D else [get_rid()])
+		if not get_world_3d().direct_space_state.intersect_ray(query).is_empty():
+			global_position = start
+	# A soft stop: the part of this body's velocity walking into the partner
+	# is spent, so the next step does not re-enter what this one resolved.
+	if closing > 0.0 and share > 0.0:
+		var flat := Vector3(velocity.x, 0.0, velocity.z)
+		flat += away * closing
+		velocity.x = flat.x
+		velocity.z = flat.z
 
 
 ## Where an attack aimed at this creature should be measured to: the middle of
@@ -1779,6 +1897,7 @@ func _physics_process(delta: float) -> void:
 	_environment_velocity.apply(self, delta, _impulse)
 	move_and_slide()
 	_environment_velocity.after_slide(self)
+	_hold_contact_spacing(delta)
 
 	if arena != null:
 		var constraint: Variant = arena.call("hold_inside", self)

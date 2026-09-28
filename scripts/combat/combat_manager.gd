@@ -23,6 +23,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const OCCLUSION_FADE := preload("res://scripts/combat/ally_occlusion_fade.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
@@ -611,6 +612,7 @@ func begin(
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
 	_ally_body.set("arena", null if realm_owned_opponent else _arena)
+	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
 
@@ -620,6 +622,25 @@ func begin(
 	entered.emit()
 	state_changed.emit()
 	return true
+
+
+## COMBAT §5 contact spacing (`contact_spacing.gd`). The piloted ally yields;
+## the opponent holds. A realm-owned opponent is simulated by the host, so this
+## participant binds only its own ally against it and never writes the
+## opponent's transform.
+func _bind_contact_spacing(realm_owned_opponent: bool) -> void:
+	if _ally_body != null and _ally_body.has_method("set_contact_partner"):
+		_ally_body.call("set_contact_partner", _wild, CONTACT_SPACING.ROLE_ALLY)
+	if not realm_owned_opponent and _wild != null and _wild.has_method("set_contact_partner"):
+		_wild.call("set_contact_partner", _ally_body, CONTACT_SPACING.ROLE_FOE)
+
+
+func _release_contact_spacing() -> void:
+	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("set_contact_partner"):
+		_ally_body.call("set_contact_partner", null)
+	if not _realm_owned_opponent and _wild != null and is_instance_valid(_wild) \
+			and _wild.has_method("set_contact_partner") and _wild.get("contact_partner") == _ally_body:
+		_wild.call("set_contact_partner", null)
 
 
 ## End only the presentation fight whose realm-owned body is being withdrawn.
@@ -2731,7 +2752,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 ## longer reach by describing its own move in the intent -- it names the move,
 ## and this decides what the move is.
 static func host_move_profile(moves: RefCounted, block: String, move_id: String,
-		mine: float, theirs: float, cooldown_multiplier: float = 1.0) -> Dictionary:
+		mine: float, theirs: float, cooldown_multiplier: float = 1.0, reach_floor: float = 0.0) -> Dictionary:
 	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
 	if not move_id.is_empty() and moves != null:
 		var move: Dictionary = moves.call("move", move_id)
@@ -2741,7 +2762,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
 	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
-	return floor_reach_for_bodies(profile, mine, theirs)
+	return floor_reach_for_bodies(profile, mine, theirs, reach_floor)
 
 
 ## Realm powers may shorten a move's cooldown, but never lengthen it and never
@@ -3329,16 +3350,21 @@ func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 	if _wild.has_method("body_radius"):
 		theirs = float(_wild.call("body_radius"))
 
-	return floor_reach_for_bodies(move, mine, theirs)
+	return floor_reach_for_bodies(move, mine, theirs, CONTACT_SPACING.pair_reach_need(_ally_body, _wild))
 
 
 ## The reach floor itself, static so the host's own profile builder
 ## (`host_move_profile()`) and this instance path are one copy rather than two
 ## that eventually disagree about what a quick attack reaches.
-static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float) -> Dictionary:
+## `reach_floor` is the pair's longest rendered separation
+## (`contact_spacing.pair_reach_need`): the hold-apart never exceeds it, so the
+## reach clears it by the same 0.5 m.
+static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float,
+		reach_floor: float = 0.0) -> Dictionary:
 	var clearance: float = float(MATH.config().get("enemy", {}).get("body_clearance", 1.35))
 	var adjusted := move.duplicate()
-	adjusted["range"] = maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5)
+	adjusted["range"] = maxf(maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5),
+		reach_floor + 0.5)
 	return adjusted
 
 
@@ -4069,6 +4095,7 @@ func _begin_resolve(outcome: String) -> void:
 		else float(flow.get("faint_pause", 1.6))
 	if _wild != null and not _realm_owned_opponent:
 		_wild.call("set_engaged", false)
+	_release_contact_spacing()
 	state_changed.emit()
 
 
@@ -4096,6 +4123,7 @@ func _finish() -> void:
 		if not hold:
 			_ally_body.visible = false
 		_ally_body.set("arena", null)
+	_release_contact_spacing()
 	# Freed with the arena it was parented to; only the stale reference needs
 	# clearing here.
 	_target_marker = null

@@ -1,0 +1,2 @@
+TIDEWAKE C3 CAPTURE water_trainer_nerissa: 46 frames over 349.8 s, fight active=false
+TIDEWAKE C3 CAPTURE done: 1 trainer(s), 0 failure(s), 46 frames
