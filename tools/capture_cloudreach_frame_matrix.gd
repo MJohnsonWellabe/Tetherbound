@@ -322,6 +322,9 @@ var _rest_pitch_deg := -12.0
 var _only: Dictionary = {}
 var _motion := false
 var _force_night := false
+## `--active=<species>`: which party member is out (default galecrest). The
+## earned five carry no flier, so F08#4 settlement rows also render with one.
+var _active_species := "galecrest"
 var _flag_state := ""
 
 
@@ -336,6 +339,8 @@ func _parse_args() -> void:
 			_motion = true
 		elif arg == "--night":
 			_force_night = true
+		elif arg.begins_with("--active="):
+			_active_species = arg.substr("--active=".length()).strip_edges()
 		elif arg.begins_with("--output="):
 			OUT = arg.substr("--output=".length()).strip_edges().trim_suffix("/")
 		elif arg.begins_with("--only="):
@@ -374,7 +379,7 @@ func _boot() -> bool:
 		party.call("add", SPECIES.spawn(species))
 	for index in (party.call("members") as Array).size():
 		var member: RefCounted = party.call("at", index)
-		if member != null and str(member.get("species_id")) == "galecrest":
+		if member != null and str(member.get("species_id")) == _active_species:
 			party.call("set_active", index)
 			break
 	var flags: RefCounted = _game.get("progression")
