@@ -19,5 +19,7 @@
   "label_font_size": 30,
   "pulse_hz": 0.72,
   "pulse_amount": 0.22,
-  "visible_range_m": 3200.0
+  "visible_range_m": 3200.0,
+  "_comment_camera_clear": "F01#2/#3 walk judge (day_070/night_070): an arrival camera inside the beam painted a cyan slab over the frame. Within this many metres (horizontal) of the beam axis the beacon stands down; the player is already at the objective. TUNABLE.",
+  "camera_clear_m": 3.6
 }

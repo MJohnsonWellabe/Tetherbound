@@ -153,7 +153,7 @@
           "model": "Bonfire_Fire",
           "at": [26.8, -26.6],
           "yaw_deg": 0.0,
-          "scale": 0.3,
+          "scale": 0.45,
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": 0.03,
           "glow": "campfire",
@@ -163,10 +163,36 @@
           "model": "campfire_stone_ring",
           "at": [26.8, -26.6],
           "yaw_deg": 0.0,
-          "scale": 0.65,
+          "scale": 1.05,
           "dir": "res://assets/props/generated_camp",
           "sink_m": 0.04,
           "_why": "The fire's stone ring, as pond_fisher_camp pairs them."
+        },
+        {
+          "model": "camp_tent",
+          "at": [29.2, -24.6],
+          "yaw_deg": 215.0,
+          "scale": 0.95,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": -0.58,
+          "_why": "F01#2/#3 code-blind walk judge (day_070/night_070): the practice-meadow trainer camp read as 'a supply cache, not a camp' -- crate, barrel, sack and a small fire with no shelter or bedding. The trail camp's own accepted generated_camp tent (same model and seating ratio), 8.2 m off route 2's centreline ([18,-24]->[30,-40]), its door turned toward the fire. TUNABLE."
+        },
+        {
+          "model": "camp_bed",
+          "at": [28.2, -25.9],
+          "yaw_deg": 215.0,
+          "scale": 0.9,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": -0.19,
+          "_why": "A bedroll between the tent mouth and the fire, as trail_camp pairs them."
+        },
+        {
+          "model": "tree-log",
+          "at": [25.3, -25.4],
+          "yaw_deg": 120.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "A log seat on the fire's village side, so the camp reads as somewhere a trainer sits."
         }
       ]
     },
