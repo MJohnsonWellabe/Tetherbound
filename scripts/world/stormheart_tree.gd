@@ -170,7 +170,8 @@ func _instances(parent: Node3D,poses: Array[Transform3D],material: Material) -> 
 	visual.material_override = material
 	parent.add_child(visual)
 
-func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leaves_only: bool = false) -> void:
+func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leaves_only: bool = false,
+		shape: Vector3 = Vector3.ONE) -> void:
 	var model := (load("res://assets/environment/stylized_nature/"+file) as PackedScene).instantiate() as Node3D
 	if leaves_only:
 		_leaf_surfaces(model)
@@ -188,8 +189,8 @@ func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leav
 	pivot.position = at
 	pivot.rotation.y = yaw
 	add_child(pivot)
-	model.scale *= factor
-	model.position -= Vector3(box.get_center().x,box.position.y,box.get_center().z)*factor
+	model.scale *= factor * shape
+	model.position -= Vector3(box.get_center().x,box.position.y,box.get_center().z)*factor*shape
 	_green_canopy(model)
 	pivot.add_child(model)
 
@@ -313,6 +314,10 @@ func _root_ground(at: Vector3) -> float:
 
 
 func _living_crown() -> void:
+	var branching: Dictionary = _presentation.get("branching_crown", {})
+	if bool(_presentation.get("enabled", false)) and bool(branching.get("enabled", false)):
+		_branching_crown(branching)
+		return
 	var tips: Array[Vector3] = [Vector3(-69,163,3),Vector3(77,188,15),Vector3(-62,222,33),
 		Vector3(58,235,-9),Vector3(2,267,23),Vector3(-20,209,-43)]
 	for i in tips.size():
@@ -321,6 +326,90 @@ func _living_crown() -> void:
 		_wood_limb("CrownBough%d"%i,[root,root.lerp(tip,0.48)-Vector3.UP*10,tip],[10.0,7.0,2.4])
 		_fit_tree("LivingCanopy%d"%i,"TwistedTree_2.gltf" if i%2 else "TwistedTree_4.gltf",
 			tip-Vector3.UP*8,43.0+float(i%3)*7.0,float(i)*1.7,true)
+
+
+## Board A/B: branches carry overlapping crown masses at several heights.
+## These visual limbs remain outside the playable lower trunk; their installed
+## leaf surfaces add no bodies, routes, harvest points or collision.
+func _branching_crown(settings: Dictionary) -> void:
+	var shape_data: Array = settings.get("leaf_shape", [1.35, 0.85, 1.25])
+	var shape := Vector3(float(shape_data[0]), float(shape_data[1]), float(shape_data[2]))
+	var repeat_m := maxf(0.5, float(settings.get("bark_repeat_m", 6.0)))
+	var index := 0
+	for branch: Dictionary in settings.get("branches", []):
+		var points: Array[Vector3] = []
+		var radii: Array[float] = []
+		for point: Array in branch.points:
+			points.append(Vector3(float(point[0]), float(point[1]), float(point[2])))
+		for radius: float in branch.radii:
+			radii.append(radius)
+		var id := str(branch.id)
+		_crown_limb("BranchCrown" + id, points, radii, repeat_m)
+		for leaf_index in branch.leaves.size():
+			var leaf: Dictionary = branch.leaves[leaf_index]
+			var at := Vector3(float(leaf.at[0]), float(leaf.at[1]), float(leaf.at[2]))
+			if leaf_index > 0:
+				var fork := points[points.size() - 2]
+				var tip := at + Vector3.UP * 12.0
+				_crown_limb("BranchFork" + id + str(leaf_index),
+					[fork, fork.lerp(tip, 0.5) - Vector3.UP * 3.0, tip], [5.0, 3.0, 0.9], repeat_m)
+			_fit_tree("BranchLeaves" + id + str(leaf_index),
+				"TwistedTree_2.gltf" if index % 2 else "TwistedTree_4.gltf",
+				at, float(leaf.height), float(leaf.yaw), true, shape)
+			index += 1
+
+
+## Continuous rings follow a curved centreline, avoiding the open joints of
+## independently oriented straight segments. UVs follow the limb in metres.
+func _crown_limb(id: String, controls: Array[Vector3], radii: Array[float], repeat_m: float) -> void:
+	var centres: Array[Vector3] = []
+	var widths: Array[float] = []
+	for segment in controls.size() - 1:
+		for step in 8:
+			var t := float(step) / 8.0
+			centres.append(controls[segment].cubic_interpolate(controls[segment + 1],
+				controls[maxi(0, segment - 1)], controls[mini(controls.size() - 1, segment + 2)], t))
+			widths.append(lerpf(radii[segment], radii[segment + 1], smoothstep(0.0, 1.0, t)))
+	centres.append(controls.back())
+	widths.append(radii.back())
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var rings: Array[PackedVector3Array] = []
+	var radial_normals: Array[PackedVector3Array] = []
+	var lengths: Array[float] = [0.0]
+	var previous_side := Vector3.ZERO
+	for ring in centres.size():
+		var tangent := (centres[mini(ring + 1, centres.size() - 1)] - centres[maxi(0, ring - 1)]).normalized()
+		# Carry the prior frame through vertical bends instead of flipping it
+		# when a branch changes which side of world-up its tangent lies on.
+		var side := (previous_side - tangent * previous_side.dot(tangent)).normalized()
+		if side.length_squared() < 0.01:
+			side = tangent.cross(Vector3.UP).normalized()
+		if side.length_squared() < 0.01:
+			side = Vector3.RIGHT
+		previous_side = side
+		var up := side.cross(tangent).normalized()
+		var positions := PackedVector3Array()
+		var directions := PackedVector3Array()
+		for face in 13:
+			var angle := TAU * float(face) / 12.0
+			var direction := side * cos(angle) + up * sin(angle)
+			positions.append(centres[ring] + direction * widths[ring])
+			directions.append(direction)
+		rings.append(positions)
+		radial_normals.append(directions)
+		if ring > 0:
+			lengths.append(lengths.back() + centres[ring].distance_to(centres[ring - 1]))
+	for ring in centres.size() - 1:
+		for face in 12:
+			for corner: Vector2i in [Vector2i(ring, face), Vector2i(ring, face + 1), Vector2i(ring + 1, face + 1),
+					Vector2i(ring, face), Vector2i(ring + 1, face + 1), Vector2i(ring + 1, face)]:
+				vertices.append(rings[corner.x][corner.y])
+				normals.append(radial_normals[corner.x][corner.y])
+				uvs.append(Vector2(float(corner.y) / 12.0 * TAU * widths[corner.x] / repeat_m,
+					lengths[corner.x] / repeat_m))
+	_bark_visual(id, vertices, normals, uvs)
 
 
 func _leaf_surfaces(node: Node) -> void:
