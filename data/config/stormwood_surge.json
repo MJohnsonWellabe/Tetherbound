@@ -5,6 +5,14 @@
   "disabled_rod_calm_multiplier": 1.5,
   "disabled_rod_break_multiplier": 0.6,
   "presentation": {
+    "phase_readability_candidate": {
+      "enabled": false,
+      "_comment": "P2-042 native baseline: Fading resembles Calm at both fixed gameplay stands. Strengthen only its existing recovery steam and afterglow, including below the Stormheart canopy. No phase duration, strike, movement, flash cadence, aftermath or camera changes. Default off pending matched blind review.",
+      "phases": {
+        "fading": {"ceiling_breakup": 0.48, "ramp": {"rain_amount": [0.6, 0.15], "wind": [1.0, 0.15], "steam": [1.0, 0.0, 1.2], "afterglow": [1.0, 0.0, 1.2]}}
+      },
+      "steam": {"max_puffs": 140, "inner_radius_m": 3.0, "outer_radius_m": 12.0, "puff_size_m": 2.8, "colour": "#b1a4ca", "alpha": 0.45}
+    },
     "_comment_shadow_opacity": "Stormwood's scene authors a 0.68 canopy-shadow floor for its permanent storm. WorldLook reapplies the global sun defaults after scene setup, so every phase must carry that realm-local value explicitly; Break alone returns to fully hard shadows, as the surge brief specifies.",
     "shadow_opacity": {"calm":0.68,"building":0.68,"break":1.0,"fading":0.68},
     "transition_seconds": 6.0,
