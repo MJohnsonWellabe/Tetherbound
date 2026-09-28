@@ -408,39 +408,56 @@ func _capture_row(row: Dictionary) -> void:
 	var position_values := row.position_xz as Array
 	var target := Vector2(float(position_values[0]), float(position_values[1]))
 	var forward := _capture_forward(row)
-	var at := target - forward * (32.0 if str(row.view) == "approach" else 5.0)
+	var at := Vector2.ZERO
 	var game := root.get_node_or_null(^"Game")
-	var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
-	if not moved:
-		_failures.append("%s: Game.debug_teleport_to refused destination" % str(row.frame_id))
+	var terrain_ground := NAN
+	var resolved_ground := NAN
+	var selected := false
+	var selected_offset := 0.0
+	var selected_lateral := 0.0
+	var offsets: Array[float] = [32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]
+	var sideways := Vector2(-forward.y, forward.x)
+	for offset: float in offsets:
+		for lateral: float in [0.0, -5.0, 5.0]:
+			at = target - forward * offset + sideways * lateral
+			var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
+			if not moved:
+				continue
+			for _frame in ARRIVE_FRAMES:
+				await physics_frame
+			terrain_ground = float(_world.call("ground_height_at", at.x, at.y))
+			if is_nan(terrain_ground):
+				continue
+			resolved_ground = resolve_capture_ground(_player, at.x, at.y, terrain_ground)
+			_player.global_position = Vector3(at.x, resolved_ground + TRAINER_CLEARANCE, at.y)
+			_player.velocity = Vector3.ZERO
+			_player.rotation.y = atan2(forward.x, forward.y)
+			_rig.call("set_target", _player)
+			var camera_yaw := capture_yaw(forward)
+			var camera_pitch := float(_rig.get("pitch"))
+			_rig.set("yaw", camera_yaw)
+			_rig.rotation = Vector3(camera_pitch, camera_yaw, 0.0)
+			# Snap the production pivot after a long debug teleport.
+			_rig.global_position = _player.global_position
+			_camera.make_current()
+			_player.reset_physics_interpolation()
+			_rig.reset_physics_interpolation()
+			_camera.reset_physics_interpolation()
+			for _frame in POPULATE_FRAMES:
+				await physics_frame
+			for _frame in 2:
+				await process_frame
+			if _camera.global_position.distance_to(_player.global_position) >= 3.5:
+				selected = true
+				selected_offset = offset
+				selected_lateral = lateral
+				break
+		if selected:
+			break
+	if not selected:
+		_failures.append("%s: no unoccluded production-camera stand near destination" % str(row.frame_id))
 		_write_manifest()
 		return
-	for _frame in ARRIVE_FRAMES:
-		await physics_frame
-	var terrain_ground := float(_world.call("ground_height_at", at.x, at.y))
-	if is_nan(terrain_ground):
-		_failures.append("%s: destination has no ground height" % str(row.frame_id))
-		_write_manifest()
-		return
-	var resolved_ground := resolve_capture_ground(_player, at.x, at.y, terrain_ground)
-	_player.global_position = Vector3(at.x, resolved_ground + TRAINER_CLEARANCE, at.y)
-	_player.velocity = Vector3.ZERO
-	_player.rotation.y = atan2(forward.x, forward.y)
-	_rig.call("set_target", _player)
-	var camera_yaw := capture_yaw(forward)
-	var camera_pitch := float(_rig.get("pitch"))
-	_rig.set("yaw", camera_yaw)
-	_rig.rotation = Vector3(camera_pitch, camera_yaw, 0.0)
-	# A catalogue jump is the same remote-target case as loading a saved pose:
-	# snap the production pivot so Terrain3D collision and the spring arm update
-	# at the destination immediately instead of lerping across kilometres.
-	_rig.global_position = _player.global_position
-	_camera.make_current()
-	_player.reset_physics_interpolation()
-	_rig.reset_physics_interpolation()
-	_camera.reset_physics_interpolation()
-	for _frame in POPULATE_FRAMES:
-		await physics_frame
 	var observed_clock := await _pin_time(str(row.time))
 	if observed_clock.is_empty():
 		_write_manifest()
@@ -464,6 +481,8 @@ func _capture_row(row: Dictionary) -> void:
 		record["view_heading_xz"] = [forward.x, forward.y]
 		record["target_position_xz"] = [target.x, target.y]
 		record["camera_purpose"] = str(row.view)
+		record["selected_stand_offset_m"] = selected_offset
+		record["selected_stand_lateral_m"] = selected_lateral
 		record["terrain_ground_y"] = terrain_ground
 		record["resolved_ground_y"] = resolved_ground
 		record["camera_rig_transform"] = _transform(_rig.global_transform)
