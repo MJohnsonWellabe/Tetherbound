@@ -259,7 +259,28 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	if pose == "idle":
 		print("PHASE2 POSE PLAYER %s player=%s active=%s" % [species,
 			str(player != null), str(player.current_animation) if player != null else ""])
-	if player != null and not str(player.current_animation).is_empty():
+	var rest_receipt: Dictionary = body.call("rest_pose_receipt") if pose == "resting" else {}
+	var authored_rest := str((rest_receipt.get("config", {}) as Dictionary).get("mode", "")) == "authored"
+	# Live transition capture has already returned above: only endpoint stills wait.
+	if authored_rest:
+		# The recipe is applied by animation_finished. Seeking to 45% and
+		# pausing would strand it pending and photograph an unfinished pose.
+		var wait_seconds := 5.0
+		if player != null and not str(player.current_animation).is_empty():
+			wait_seconds = clampf(player.current_animation_length / maxf(absf(player.speed_scale), 0.01) + 2.0, 5.0, 30.0)
+		var deadline := Time.get_ticks_msec() + int(wait_seconds * 1000.0)
+		while bool(body.call("rest_pose_pending")) and Time.get_ticks_msec() < deadline:
+			await process_frame
+		rest_receipt = body.call("rest_pose_receipt")
+		if bool(rest_receipt.get("pending", false)) or not bool(rest_receipt.get("active", false)):
+			_failures.append("%s resting: authored rest did not complete before capture" % species)
+			body.queue_free()
+			await process_frame
+			return
+		if player != null:
+			player.pause()
+	elif player != null and not str(player.current_animation).is_empty():
+		# Preserve the inventory's original sampling for every legacy pose.
 		var length := player.get_animation(player.current_animation).length
 		player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
 		player.pause()
@@ -274,6 +295,7 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	else:
 		_records.append({"id": frame_id, "species": species, "pose": pose,
 			"shiny": shiny, "alpha_scale": scale_factor, "path": path,
+			"rest_pose": rest_receipt,
 			"model_loaded": bool(body.get("_has_model")),
 			"animator_present": animator != null,
 			"animation_player_present": player != null,

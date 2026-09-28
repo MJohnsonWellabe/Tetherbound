@@ -22,6 +22,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
+const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
@@ -1940,7 +1941,7 @@ const REST_SINK_METERS := 0.12
 func play_rest() -> void:
 	if _rest_pose_active or _rest_pose_pending:
 		return
-	var look := SPECIES.placeholder(species_id)
+	var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 	var authored: Variant = look.get("rest_pose", {})
 	if authored is Dictionary and not (authored as Dictionary).is_empty():
 		_begin_authored_rest_pose(authored as Dictionary, look)
