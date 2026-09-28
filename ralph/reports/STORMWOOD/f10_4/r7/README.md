@@ -23,12 +23,14 @@
 
 | Check | Result | File |
 |---|---|---|
-| Stormwood, scatter and vegetation suites (clearances, route walkability, pockets, perf) | 505 tests, 0 failed | — |
+| Stormwood, scatter and vegetation suites (`--only=stormwood,scatter,vegetation`: bake freshness, clearances, route walkability, pockets, fight clearings) | 505 tests, 0 failed (console run; no log committed) | — |
+
+**Not measured:** Stormwood frame time or instance cost after the density change. The only scatter perf test (`test_scatter_perf_budget.gd`) covers the playground world. The bake grew 38,789 → 43,161 placements, and the heart region files grew by about 50%. This is recorded as an open risk in STATE (owner: Stormwood lane).
 | All five loops, walked from the earned 4_core save | 20 checks, 0 failures | `route_walks_loops_dense.txt` |
 | dynamo_west_approach | 8 checks, 0 failures | `route_walks_dynamo_west_dense.txt` |
 | Deepwood pocket walk (from 3_rootgate) | 22 checks, 0 failures | `pocket_walk_deepwood_dense.txt` |
 
-**Code-blind forest judge** (`JUDGE_forest.md`; the three views shuffled and re-encoded, key in `forest_blind_key.json`). All three read **INSIDE DEEP FOREST**:
+**Code-blind forest judge** (`JUDGE_forest.md`; the three views shuffled and re-encoded, key in `forest_blind_key.json`). The blind key was compromised: the judge was also given the named storm-state frames and matched them. The strict re-check checked the frames independently and agrees. All three read **INSIDE DEEP FOREST**:
 
 | Stand | Verdict | Notes |
 |---|---|---|
