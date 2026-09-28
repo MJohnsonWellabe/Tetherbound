@@ -1,0 +1,13 @@
+{
+  "wrapper_launcher_match_native_receipt": true,
+  "metadata_matches_native_embedded": true,
+  "files_sha256": {
+    "after.zip": "07e8e2e41f3093afe99a0683e76fe158f1ece7e7f08a1b09646a6cd082816b59",
+    "before.zip": "a2ab7d27fe96601622f3708a2c6e2c0d27f84832fa1da337c83c2b769f223472",
+    "check.py": "d3d57bbb29a0321240d29095f3be99b45a2d0c6125a0be31ad63649600ee0364",
+    "description.md": "9656ec9606f582d57fcf808687ba668cd594c1582f4356cfad08f53e705641aa",
+    "launch.ps1": "a41cee1fb2568fbca700c1659415af36519e2f89ef7f43613c13c9fea73be4b1",
+    "source-hashes.json": "989cf36f285df4f0b2aa04f53ff464acc8aac3173832aa7c39d8f983742e28ff",
+    "wrapper.gd": "135c724dad531207b7e85976488d12f34a1e9ca30edd1f2508331ec11a942832"
+  }
+}

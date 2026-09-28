@@ -1,0 +1,229 @@
+param([string]$Round = 'rest-native-01', [ValidateRange(30,7200)][int]$TimeoutSeconds = 1800, [switch]$StaticPreflight, [switch]$BeforeOnly)
+$ErrorActionPreference = 'Stop'
+
+function Read-RenderLeaseState([IO.Stream]$Stream) {
+    $Stream.Position = 0
+    $reader = [IO.StreamReader]::new($Stream, [Text.Encoding]::UTF8, $true, 1024, $true)
+    try { $text = $reader.ReadToEnd() } finally { $reader.Dispose() }
+    if ([string]::IsNullOrWhiteSpace($text)) { return @{} }
+    $state = $text | ConvertFrom-Json
+    if ($null -eq $state -or $state -isnot [pscustomobject]) { throw 'Render lock has an invalid state; no claim made.' }
+    return $state
+}
+
+function Claim-RenderLeaseStream([IO.Stream]$Stream, [string]$Token, [string]$Purpose) {
+    $state = Read-RenderLeaseState $Stream
+    if ($state.held_by -or $state.token -or $state.run_token) { throw 'Render lock is occupied; no queue slot claimed.' }
+    $bytes = [Text.Encoding]::UTF8.GetBytes((@{ held_by='tb/x04-tidewake'; token=$Token; run_token=$Token;
+        since_utc=[DateTime]::UtcNow.ToString('o'); purpose=$Purpose; launcher_pid=$PID } | ConvertTo-Json -Compress))
+    $Stream.Position = 0
+    $Stream.SetLength(0)
+    $Stream.Write($bytes, 0, $bytes.Length)
+    $Stream.Flush()
+}
+
+function Open-RenderLeaseStream([string]$Path) {
+    return [IO.File]::Open($Path, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+}
+
+function Enter-RenderLease([string]$Path, [string]$Token, [string]$Purpose) {
+    $handle = Open-RenderLeaseStream $Path
+    try {
+        Claim-RenderLeaseStream $handle $Token $Purpose
+        # Keep FileShare.None through the whole batch, including child cleanup.
+        return [pscustomobject]@{ Stream=$handle; Token=$Token; Path=$Path }
+    } catch {
+        try { $handle.Dispose() } catch { Write-Warning "Render lock handle cleanup failed: $($_.Exception.Message)" }
+        throw
+    }
+}
+
+function Release-RenderLease($Lease, [bool]$ChildTerminal) {
+    if (-not $ChildTerminal) { throw 'Owned child is not verified terminal; render token retained.' }
+    $state = Read-RenderLeaseState $Lease.Stream
+    if ($state.token -cne $Lease.Token -or $state.run_token -cne $Lease.Token -or $state.held_by -cne 'tb/x04-tidewake') {
+        throw 'Render lock ownership changed; no token cleared.'
+    }
+    $bytes = [Text.Encoding]::UTF8.GetBytes('{}')
+    $Lease.Stream.Position = 0
+    $Lease.Stream.SetLength(0)
+    $Lease.Stream.Write($bytes, 0, $bytes.Length)
+    $Lease.Stream.Flush()
+}
+
+function Wait-CaptureChild($Process, [int]$TimeoutMilliseconds = 1800000) {
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        while ($true) {
+            $remaining = $TimeoutMilliseconds - [int]$timer.ElapsedMilliseconds
+            if ($remaining -le 0) { throw [TimeoutException]::new('Owned capture exceeded its configured process deadline.') }
+            if ($Process.WaitForExit([Math]::Min(1000, $remaining))) {
+                $Process.Refresh()
+                if (-not $Process.HasExited) { throw 'Child wait completed without a verified terminal process.' }
+                return
+            }
+        }
+    } finally { $timer.Stop() }
+}
+
+function Stop-OwnedCaptureChild($Process) {
+    # Only the Process object returned by our Start-Process, never a PID/name search.
+    Stop-Process -InputObject $Process -Force -ErrorAction Stop
+}
+
+function Resolve-OwnedCaptureChild($Process) {
+    if ($null -eq $Process) { return [pscustomobject]@{ Terminal=$true; Error='' } }
+    try {
+        $Process.Refresh()
+        if (-not $Process.HasExited) {
+            try { Stop-OwnedCaptureChild $Process } catch {
+                $stopError = $_.Exception.Message
+                # A natural exit between HasExited and Stop-Process is successful cleanup.
+                $Process.Refresh()
+                if (-not $Process.HasExited) { return [pscustomobject]@{ Terminal=$false; Error=$stopError } }
+            }
+            if (-not $Process.WaitForExit(10000)) {
+                return [pscustomobject]@{ Terminal=$false; Error='Owned child did not terminate within the 10-second cleanup bound.' }
+            }
+        }
+        $Process.Refresh()
+        if (-not $Process.HasExited) { return [pscustomobject]@{ Terminal=$false; Error='Owned child terminal state cannot be verified.' } }
+        return [pscustomobject]@{ Terminal=$true; Error='' }
+    } catch { return [pscustomobject]@{ Terminal=$false; Error=$_.Exception.Message } }
+}
+
+if ($Round -notmatch '^rest-native-[a-zA-Z0-9-]+$') { throw 'Round must start rest-native- and use letters/digits/hyphens' }
+$captureRoot = 'D:\tetherbound\x04-tidewake'
+$captureEngine = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
+$capturePython = 'C:\Users\mattj\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+$captureLock = 'D:\tetherbound\RENDER_LOCK.json'
+$captureToken = [Guid]::NewGuid().ToString()
+$captureChecker = Join-Path $captureRoot '.artifacts/phase2/rest-native-check.py'
+$captureSource = (& git -C $captureRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0) { throw 'Cannot read HEAD' }
+$captureVariants = if ($BeforeOnly) { @('before') } else { @('before','after') }
+$captureRuns = @($captureVariants | ForEach-Object {
+    [pscustomobject]@{
+        Variant=$_
+        Output=(Join-Path $captureRoot ('.artifacts/phase2/p2029-' + $Round + '-' + $_))
+        Appdata=(Join-Path $captureRoot ('.artifacts/phase2/' + $Round + '-' + $_ + '-appdata'))
+        Log=(Join-Path $captureRoot ('.artifacts/phase2/' + $Round + '-' + $_ + '.log'))
+        Errors=(Join-Path $captureRoot ('.artifacts/phase2/' + $Round + '-' + $_ + '-errors.log'))
+    }
+})
+$captureReceipt = Join-Path $captureRoot ('.artifacts/phase2/' + $Round + '-launcher.json')
+$captureResultSuffix = if ($BeforeOnly) { '-before-validation.json' } else { '-comparison.json' }
+$captureComparison = Join-Path $captureRoot ('.artifacts/phase2/' + $Round + $captureResultSuffix)
+foreach ($path in @($captureReceipt, $captureComparison)) {
+    if (Test-Path -LiteralPath $path) { throw ('Fresh receipt required: ' + $path) }
+}
+foreach ($run in $captureRuns) {
+    foreach ($path in @($run.Output,$run.Appdata,$run.Log,$run.Errors)) {
+        if (Test-Path -LiteralPath $path) { throw ('Fresh path required: ' + $path) }
+    }
+}
+foreach ($path in @($captureEngine,$capturePython,$captureChecker,(Join-Path $captureRoot '.artifacts/phase2/rest-native-wrapper.gd'))) {
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw ('Required file missing: ' + $path) }
+}
+& $capturePython $captureChecker
+if ($LASTEXITCODE -ne 0) { throw 'CPU/source/gate/ZIP preflight failed; review and rebuild explicitly' }
+if ($StaticPreflight) {
+    [ordered]@{ static_preflight='PASS'; engine_launched=$false; lock_touched=$false;
+        source_commit=$captureSource; before_only=[bool]$BeforeOnly; required_frames=(14 * $captureRuns.Count); boots=$captureRuns } | ConvertTo-Json -Depth 6
+    return
+}
+
+# Empty lock is a race safeguard, not external native queue authorization.
+$captureOldAppdata = $env:APPDATA
+$captureOldVariant = $env:REST_NATIVE_VARIANT
+$captureOldSource = $env:REST_NATIVE_SOURCE_COMMIT
+$captureProcess = $null
+$captureLease = $null
+$capturePrimaryError = $null
+$captureCleanupErrors = [Collections.Generic.List[string]]::new()
+$captureChildren = [Collections.Generic.List[object]]::new()
+try {
+    $captureLease = Enter-RenderLease $captureLock $captureToken $Round
+    foreach ($run in $captureRuns) {
+        # Recheck between boots; never compare a pair across source mutation.
+        if ((& git -C $captureRoot rev-parse HEAD).Trim() -cne $captureSource) { throw 'HEAD changed between boots' }
+        if ($LASTEXITCODE -ne 0) { throw 'Cannot recheck HEAD' }
+        & $capturePython $captureChecker
+        if ($LASTEXITCODE -ne 0) { throw 'Source changed before boot' }
+        $env:APPDATA = $run.Appdata
+        $env:REST_NATIVE_VARIANT = $run.Variant
+        $env:REST_NATIVE_SOURCE_COMMIT = $captureSource
+        $captureArgs = @('--path',$captureRoot,'--rendering-driver','opengl3','--resolution','1920x1080','--fullscreen',
+            '--audio-driver','Dummy','--script','.artifacts/phase2/rest-native-wrapper.gd','--',
+            '--biome=water','--seed=2042','--only=riptusk,torrentoad','--poses=resting','--live-transitions',
+            ('--output=res://.artifacts/phase2/p2029-' + $Round + '-' + $run.Variant))
+        $captureProcess = Start-Process -FilePath $captureEngine -ArgumentList $captureArgs -WorkingDirectory $captureRoot -WindowStyle Hidden -RedirectStandardOutput $run.Log -RedirectStandardError $run.Errors -PassThru
+        $captureChild = [ordered]@{ variant=$run.Variant; pid=$captureProcess.Id; output=$run.Output; appdata=$run.Appdata;
+            log=$run.Log; errors=$run.Errors; started_utc=[DateTime]::UtcNow.ToString('o'); exit_code=$null; terminal=$false }
+        $captureChildren.Add($captureChild)
+        Wait-CaptureChild $captureProcess ($TimeoutSeconds * 1000)
+        $captureChild.exit_code = $captureProcess.ExitCode
+        $captureChild.terminal = $true
+        if ($captureProcess.ExitCode -ne 0) { throw ('Native rest ' + $run.Variant + ' failed: ' + $captureProcess.ExitCode) }
+        foreach ($manifestName in @('manifest.json','rest-final-manifest.json')) {
+            $captureManifest = Get-Content -LiteralPath (Join-Path $run.Output $manifestName) -Raw -Encoding UTF8 | ConvertFrom-Json
+            if (-not $captureManifest.complete -or $captureManifest.failures.Count -ne 0 -or $captureManifest.frames.Count -ne 14) {
+                throw ('Incomplete rest capture: ' + $run.Variant + '/' + $manifestName)
+            }
+        }
+        if (Select-String -LiteralPath @($run.Log,$run.Errors) -Pattern 'SCRIPT ERROR|Parse Error|Compile Error|SHADER ERROR|Shader compilation failed' -Quiet) {
+            throw ('Engine errors in rest capture: ' + $run.Variant)
+        }
+        $captureProcess.Dispose()
+        $captureProcess = $null
+    }
+    if ($BeforeOnly) {
+        & $capturePython $captureChecker --round $Round --before-only
+    } else {
+        & $capturePython $captureChecker --round $Round
+    }
+    if ($LASTEXITCODE -ne 0) { throw 'Selected boot frame/stand/collider/camera/light/lifecycle validation failed' }
+} catch {
+    $capturePrimaryError = $_
+} finally {
+    try { $captureTerminal = Resolve-OwnedCaptureChild $captureProcess } catch {
+        $captureTerminal = [pscustomobject]@{ Terminal=$false; Error=$_.Exception.Message }
+    } finally {
+        $env:APPDATA = $captureOldAppdata
+        $env:REST_NATIVE_VARIANT = $captureOldVariant
+        $env:REST_NATIVE_SOURCE_COMMIT = $captureOldSource
+    }
+    if (-not $captureTerminal.Terminal) { $captureCleanupErrors.Add('Owned child unverified; render token retained: ' + $captureTerminal.Error) }
+    if ($null -ne $captureLease) {
+        try {
+            if ($captureTerminal.Terminal) { Release-RenderLease $captureLease $true }
+        } catch { $captureCleanupErrors.Add($_.Exception.Message) }
+        finally {
+            try { $captureLease.Stream.Dispose() } catch { $captureCleanupErrors.Add($_.Exception.Message) }
+        }
+    }
+    if ($null -ne $captureProcess -and $captureTerminal.Terminal) {
+        try {
+            if ($captureChildren.Count -gt 0) {
+                $captureChildren[$captureChildren.Count - 1].terminal = $true
+                $captureChildren[$captureChildren.Count - 1].exit_code = $captureProcess.ExitCode
+            }
+            $captureProcess.Dispose()
+        } catch { $captureCleanupErrors.Add($_.Exception.Message) }
+    }
+}
+$captureErrorText = if ($null -ne $capturePrimaryError) { $capturePrimaryError.Exception.Message } else { '' }
+try {
+    [ordered]@{ complete=($null -eq $capturePrimaryError -and $captureCleanupErrors.Count -eq 0);
+        source_commit=$captureSource; render_token=$captureToken; children=$captureChildren.ToArray();
+        before_only=[bool]$BeforeOnly; required_accepted_frames=(14 * $captureRuns.Count);
+        error=$captureErrorText; cleanup_errors=$captureCleanupErrors.ToArray();
+        last_child_terminal_verified=$captureTerminal.Terminal; partial_evidence_retained=$true;
+        visual_acceptance=$false; process_exit_authoritative=$true } |
+        ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $captureReceipt -Encoding UTF8
+} catch { $captureCleanupErrors.Add('Launcher receipt write failed: ' + $_.Exception.Message) }
+if ($null -ne $capturePrimaryError) { throw $capturePrimaryError }
+if ($captureCleanupErrors.Count -gt 0) { throw ($captureCleanupErrors -join '; ') }
+Write-Output ('Native rest comparison complete: ' + $captureComparison)
+
+
