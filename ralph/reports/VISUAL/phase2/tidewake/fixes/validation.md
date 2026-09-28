@@ -107,9 +107,10 @@ dialogue capture review found save isolation, camera identity and manifest-error
 handling issues; fixes are included in `f0012d3d0`, with a passing parser check.
 These source reviews do not replace the required native item and chapter judges.
 
-No new visual candidate is accepted or enabled by this report. The full chapter
-matrix, native paired item reviews, 720p stress rasters and CI landing remain
-separate outstanding requirements. Device evidence is computer capture, no Ally
+P2-032 is the sole new accepted/enabled item in this bundle, as documented above.
+All other visual candidates remain disabled. The full chapter matrix, remaining
+native paired item reviews, 720p stress rasters and CI landing remain separate
+outstanding requirements. Device evidence is computer capture, no Ally
 hardware; fixed-frame recording cannot establish real-time performance.
 
 Scoped independent review at `0930716ac` found no actionable source findings in trainer swim posing, human water contact, creature shiny overrides, compact party strip and capture reticle, including their five disabled config gates. Disabled paths preserve prior rendering; enabled paths contain no gameplay-state, velocity, collision, input, catch-chance, save or network mutations. These shared component flags are not restricted to Tidewake. Native acceptance remains outstanding.
@@ -121,4 +122,17 @@ crags, world bindings or the current shader/configs. Disabled paths remain
 unchanged; no gameplay, collision or encounter mutation was found. The new
 grass/mineral patch also passes source review and focused tests 35/87970
 (`.local/phase2/dune05-focused.log`). This source review does not claim native
-visual acceptance; dunes-05 remains off pending capture and judgment.
+visual acceptance. Dunes-05's subsequent three-view pilot at `750421581` is
+complete but independently FAIL, limited Bars A/B No/No: gray walls accentuate
+the steep forms and Sluice loses its right-toe vegetation transition. Both gates
+remain off. See `P2-008/dunes-05-pilot-{capture-validation,visual-judge}.md`.
+
+The integrated two-shard unit diagnostic at production source `264d3f53c`
+(docs-only head `750421581` during execution) completed with **642/642 files,
+5290 tests, 3961658 assertions, 0 failures**, both shards and launcher exit 0.
+No SCRIPT ERROR, Parse Error or Compile Error appeared. Fixture tree-access,
+intentional malformed-input/unknown-ID diagnostics, and headless teardown
+RID/ObjectDB/resource leaks remain disclosed; this is not an error-free-log
+claim. Exact counts, commands, error categories and log SHA-256 values are in
+`landing-map01-unit-diagnostic.json`. The specified four-shard suite after
+import on the final merged landing source is still outstanding.

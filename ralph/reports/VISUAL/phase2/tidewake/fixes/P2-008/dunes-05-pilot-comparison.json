@@ -1,0 +1,26 @@
+[
+  {
+    "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+    "camera_drift_m": 0.0003186128729837855,
+    "player_equal": true,
+    "selected_stand_offset_equal": true,
+    "selected_stand_lateral_equal": true,
+    "source_sha256": "9b7f20999c7ebc8fc1e90e1e739e0779c2cd94b1152b9af866294ebf53b03777"
+  },
+  {
+    "frame_id": "water__gull_rest__20__gull_rest_beach__day__close",
+    "camera_drift_m": 8.867761026712236e-05,
+    "player_equal": true,
+    "selected_stand_offset_equal": true,
+    "selected_stand_lateral_equal": true,
+    "source_sha256": "cc84a6fdd858ae31c9c0e441797dc69692921c711f1771ded55600e95bec4e8b"
+  },
+  {
+    "frame_id": "water__first_shore__02__first_shore_horizon_stones__route_day",
+    "camera_drift_m": 0.0,
+    "player_equal": true,
+    "selected_stand_offset_equal": true,
+    "selected_stand_lateral_equal": true,
+    "source_sha256": "9ba5e95e43607759f0e41a99ca89421c92cc46fc419f71bc4892104a5340acaf"
+  }
+]

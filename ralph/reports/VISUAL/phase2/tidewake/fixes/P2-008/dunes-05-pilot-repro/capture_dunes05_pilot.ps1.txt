@@ -1,0 +1,47 @@
+param([string]$Round = 'dunes-05-pilot')
+$ErrorActionPreference = 'Stop'
+$root = 'D:\tetherbound\x04-tidewake'
+$engine = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
+$lockPath = 'D:\tetherbound\RENDER_LOCK.json'
+foreach ($kind in @('locations','routes')) {
+    $destination = Join-Path $root ('.artifacts/phase2/p2008-' + $Round + '-after-' + $kind)
+    if (Test-Path -LiteralPath $destination) { throw ('Fresh output required: ' + $destination) }
+}
+$handle = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+try {
+    $reader = [IO.StreamReader]::new($handle, [Text.Encoding]::UTF8, $true, 1024, $true)
+    $state = $reader.ReadToEnd() | ConvertFrom-Json
+    $reader.Dispose()
+    if ($state.held_by) { throw ('Render held by ' + $state.held_by) }
+    $bytes = [Text.Encoding]::UTF8.GetBytes((@{held_by='tb/x04-tidewake'; since_utc=[DateTime]::UtcNow.ToString('o'); purpose=('P2-008 three-view diagnostic ' + $Round)} | ConvertTo-Json -Compress))
+    $handle.SetLength(0)
+    $handle.Write($bytes, 0, $bytes.Length)
+} finally { $handle.Dispose() }
+$savedConfig = @{}
+try {
+    foreach ($relative in @('data\config\water_dune_terrain.json', 'data\config\water_dune_cover.json')) {
+        $target = Join-Path $root $relative
+        $savedConfig[$target] = [IO.File]::ReadAllText($target)
+        if ($savedConfig[$target] -notmatch '"enabled": false') { throw ('Expected disabled gate: ' + $relative) }
+    }
+    $env:APPDATA = $root + '\.local\appdata'
+    $common = @('--path', $root, '--rendering-driver', 'opengl3', '--resolution', '1920x1080', '--fullscreen', '--audio-driver', 'Dummy')
+    function Run-Capture([string]$Name, [string[]]$Arguments) {
+        $log = $root + '\.local\phase2\' + $Round + '-' + $Name
+        $process = Start-Process -FilePath $engine -ArgumentList ($common + $Arguments) -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput ($log + '.log') -RedirectStandardError ($log + '-errors.log') -PassThru
+        $process.WaitForExit()
+        if ($process.ExitCode -ne 0) { throw ('Capture failed: ' + $Name + ', exit ' + $process.ExitCode) }
+    }
+    Run-Capture 'size' @('--script', '.artifacts/phase2/viewport_probe.gd')
+    foreach ($phase in @('after')) {
+        foreach ($target in $savedConfig.Keys) {
+            $value = if ($phase -eq 'after') { $savedConfig[$target] -replace '"enabled": false', '"enabled": true' } else { $savedConfig[$target] }
+        }
+        $prefix = 'res://.artifacts/phase2/p2008-' + $Round + '-' + $phase
+        Run-Capture ($phase + '-locations') @('--script', '.artifacts/phase2/dune05_locations.gd', '--', '--biome=water', '--seed=2042', '--times=day', '--views=close', '--subset=water__gull_rest__20__gull_rest_beach', '--subset=water__sluice_isle__13__sluice_isle_twin_pumps', ('--output=' + $prefix + '-locations'))
+        Run-Capture ($phase + '-routes') @('--script', '.artifacts/phase2/dune05_routes.gd', '--', '--biome=water', '--seed=2042', '--subset=water__first_shore__02__first_shore_horizon_stones', '--frame=water__first_shore__02__first_shore_horizon_stones__route_day', ('--output=' + $prefix + '-routes'))
+    }
+} finally {
+    $state = Get-Content -Raw $lockPath | ConvertFrom-Json
+    if ($state.held_by -eq 'tb/x04-tidewake') { [IO.File]::WriteAllText($lockPath, '{}') }
+}

@@ -1,0 +1,23 @@
+extends "res://tools/phase2_capture_routes.gd"
+func _init() -> void:
+	if not ProjectSettings.load_resource_pack("res://.artifacts/phase2/dune05-runtime.zip", true):
+		push_error("Dune capture configuration pack refused")
+		quit(1)
+		return
+	print("DUNE_RUNTIME_PACK mounted; terrain=%s cover=%s" % [
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_dune_terrain.json")).enabled,
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_dune_cover.json")).enabled])
+	super()
+
+func _begin_manifest() -> void:
+	super._begin_manifest()
+	_manifest["candidate_override"] = {
+		"mechanism": "process-local resource ZIP; production JSON files remain disabled",
+		"pack": "res://.artifacts/phase2/dune05-runtime.zip",
+		"pack_sha256": FileAccess.get_sha256("res://.artifacts/phase2/dune05-runtime.zip"),
+		"source_commit": "75042158127633e778649d6a4d91571d838db9d1",
+		"terrain": JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_dune_terrain.json")),
+		"cover": JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_dune_cover.json")),
+		"wrapper_sha256": FileAccess.get_sha256(get_script().resource_path),
+		"scope": "three-view pilot; not full catalog or chapter acceptance"
+	}
