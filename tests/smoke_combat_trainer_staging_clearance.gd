@@ -1,5 +1,6 @@
 extends SceneTree
 
+const MATH := preload("res://scripts/combat/combat_math.gd")
 const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
 var failures: Array[String] = []
@@ -54,15 +55,20 @@ func _run() -> void:
 	manager.set("_arena", arena)
 	await physics_frame
 	await physics_frame
+	# combat.json `trainer_aside`: side_fraction of the radius, forward_m along
+	# the fight's forward (Vector3.FORWARD is -Z here).
+	var aside: Dictionary = MATH.config().get("trainer_aside", {})
+	var side_x := 8.0 * float(aside.get("side_fraction", 0.55))
+	var along_z := -float(aside.get("forward_m", -1.2))
 	manager.call("_stand_the_trainer_aside", Vector3.FORWARD)
-	_check(player.position.distance_to(Vector3(4.4, 0, 1.2)) < 0.01, "open side preserves intended grounded placement")
+	_check(player.position.distance_to(Vector3(side_x, 0, along_z)) < 0.01, "open side preserves intended grounded placement")
 	player.position = Vector3.ZERO
 	# Endpoint is clear, but reaching it would cross a closed cottage wall.
 	var right_wall := _box(world, Vector3(2, 1.5, 0), Vector3(0.3, 3, 10))
 	await physics_frame
 	await physics_frame
 	manager.call("_stand_the_trainer_aside", Vector3.FORWARD)
-	_check(player.position.distance_to(Vector3(-4.4, 0, 1.2)) < 0.01, "blocked transit selects clear opposite side")
+	_check(player.position.distance_to(Vector3(-side_x, 0, along_z)) < 0.01, "blocked transit selects clear opposite side")
 	player.position = Vector3.ZERO
 	var left_wall := _box(world, Vector3(-2, 1.5, 0), Vector3(0.3, 3, 10))
 	await physics_frame
@@ -84,7 +90,7 @@ func _run() -> void:
 	await physics_frame
 	await physics_frame
 	manager.call("_stand_the_trainer_aside", Vector3.FORWARD)
-	var expected := Vector3(4.4, 4.4 * tan(world.slope), 1.2)
+	var expected := Vector3(side_x, side_x * tan(world.slope), along_z)
 	_check(player.position.distance_to(expected) < 0.01, "supported gentle slope uses real grounded candidate")
 	player.position = Vector3.ZERO
 	arena.set("radius", 0.5)

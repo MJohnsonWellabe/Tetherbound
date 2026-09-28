@@ -56,12 +56,16 @@ const ORB_ITEM_ID := "orb_basic"
 ## plain hex (not `UITokens.TEXT_PRIMARY`/`TEXT_MUTED`) because `input_glyph.icon`
 ## wants a `Color`, not a token name, and these feed straight into it.
 const VERB_READY := Color("F2F5F2")
-const VERB_DIMMED := Color("8b9184")
+const VERB_DIMMED := Color("bec3b8")
 
-## Non-usable grid cell: 55% grey, not full transparency — the button is still
+## Non-usable grid cell: grey, not full transparency — the button is still
 ## there, only its availability changed (`_verb`'s old header comment, ported
 ## from the verb-row era: an unavailable action reads as disabled, not gone).
-const CELL_DIMMED := Color(0.55, 0.55, 0.55, 1.0)
+## F10#6 device profile (code-blind 7-inch judges r2/r3): at 55% the dimmed
+## names and the VERB_DIMMED glyph lettering fell under 4.5:1 exactly when a
+## tell was on screen. 75% keeps the name >= 7:1 and the glyph >= 4.5:1
+## (test_combat_hud_handheld_floors.gd).
+const CELL_DIMMED := Color(0.75, 0.75, 0.75, 1.0)
 const CELL_READY := Color(1.0, 1.0, 1.0, 1.0)
 
 ## Horizontal inset for `PartyStrip`, matching `AllyPanel`'s own left inset
@@ -384,8 +388,8 @@ func _build_wind_bar() -> void:
 	row.add_theme_constant_override("separation", 8)
 	var label := Label.new()
 	label.text = "WIND"
-	label.custom_minimum_size.x = 48.0
-	label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	label.custom_minimum_size.x = 72.0
+	label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	label.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
 	row.add_child(label)
 	_ally_wind = ProgressBar.new()
@@ -776,9 +780,14 @@ func _draw_grid() -> void:
 		return
 
 	if has_message:
-		_grid_panel.visible = false
+		# F10#6 device profile (code-blind judges r2/r3, C2f): hiding the move
+		# grid under "it missed you" emptied the panel in the exact punish
+		# window the tell line calls "it's open — hit it". The line sits
+		# bottom-centre, clear of the grid; both show.
 		_aim_row.visible = true
 		_aim_row.text = "[center]%s[/center]" % _miss_text
+		_grid_panel.visible = true
+		_draw_cells(orbs)
 		return
 
 	if aiming:
@@ -851,8 +860,10 @@ func _draw_charged_cell(creature: RefCounted, ready: bool) -> void:
 	var text := "[center]%s\n%s[/center]" % [glyph, name_text]
 	if not ready:
 		var required: int = int(_moves.move(move_id).get("energy_cost", 100)) if move_id != "" else 100
-		text = "[center]%s\n%s\n[font_size=%d][color=#%s]%d[/color][/font_size][/center]" % [
-			glyph, name_text, UITokens.FONT_TINY, VERB_DIMMED.to_html(false), required
+		# F10#6: the cost shares the name's line at the name's size rather
+		# than a FONT_TINY third line the 7-inch judge could not read.
+		text = "[center]%s\n%s  [color=#%s]%d[/color][/center]" % [
+			glyph, name_text, VERB_DIMMED.to_html(false), required
 		]
 	_cell_charged_content.text = text
 	_cell_charged_hairline.color = _type_color(_move_type(move_id, str(creature.creature_type)))

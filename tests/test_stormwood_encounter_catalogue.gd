@@ -185,3 +185,24 @@ func test_trainer_specs_are_schema_compatible_and_preserve_authored_3d_metadata(
 		for member: Dictionary in TRAINERS.team_of(spec):
 			assert_true(SPECIES.has(str(member["species"])))
 			assert_true(int(member["level"]) > 0)
+
+
+## F10#6 device profile: every named Stormwood wild carries its authored
+## combat camera block into the spawn, and each fits its top below the enemy
+## card with `framing.top_fill` (never the top band's lens lift, which rendered
+## the lit Stormwood fight black on Compatibility).
+func test_named_wilds_fit_below_the_enemy_card() -> void:
+	var spawns: Array = CATALOGUE.wild_config("calm")["spawns"]
+	var named := 0
+	for spawn: Dictionary in spawns:
+		if not bool(spawn.get("fixed_encounter", false)):
+			assert_false(spawn.has("stormwood_combat_camera"), "ordinary clusters carry no camera block")
+			continue
+		named += 1
+		var camera: Dictionary = spawn.get("stormwood_combat_camera", {})
+		var framing: Dictionary = camera.get("framing", {})
+		assert_true(float(framing.get("top_fill", 1.0)) <= 0.46,
+			"%s fits its top below the enemy card" % str(spawn.stormwood_named_id))
+		assert_false(bool(framing.get("top_band", false)),
+			"%s stays off the lens-lift top band" % str(spawn.stormwood_named_id))
+	assert_eq(named, 6, "six named Stormwood wilds")
