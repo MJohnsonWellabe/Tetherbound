@@ -60,3 +60,13 @@ func test_a_far_opponent_does_not_start_the_swing() -> void:
 	assert_true(bool(_manager.call("_wild_tell_swing", 7.0)), "within reach of contact")
 	_foe.position = Vector3(0.0, 0.0, -10.0)
 	assert_false(bool(_manager.call("_wild_tell_swing", 7.0)), "a far opponent would leave the frame")
+
+
+func test_the_head_swing_is_opt_in() -> void:
+	assert_false(bool(_manager.call("_wild_head_swing", {})), "off for every other fight")
+	assert_true(bool(_manager.call("_wild_head_swing", {"head_swing": true})), "the shared switch")
+	_foe.set_meta("combat_camera", {"framing": {"head_swing": true}})
+	assert_true(bool(_manager.call("_wild_head_swing", {})), "an opponent camera block")
+	_foe.remove_meta("combat_camera")
+	_foe.tell_swing = true
+	assert_true(bool(_manager.call("_wild_head_swing", {})), "a body whose tells swing the camera")

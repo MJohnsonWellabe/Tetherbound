@@ -1467,7 +1467,8 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 	var column_hidden := enabled and _ally_hides_wild(model, int(cfg.get("hidden_points", 2)))
 	# F14 C3: a hidden head swings the camera like a hidden body, but never
 	# dithers the ally (Tess r2: the dithered ally fused into the foe's head).
-	var hidden := column_hidden or (enabled and _ally_hides_wild_head(model, cfg))
+	# Opt-in (`_wild_head_swing`): fights judged before it keep their camera.
+	var hidden := column_hidden or (enabled and _wild_head_swing(cfg) and _ally_hides_wild_head(model, cfg))
 	# F14#0 C3 (Tess r1-r3): an ordinary strike carries an opted-in foe to
 	# contact, where 35 degrees of composition cannot part two bodies this size
 	# and the swing above only starts once the head is already hidden. Its tell
@@ -1501,6 +1502,16 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
 	OCCLUSION_FADE.apply(model, _ally_fade, _ally_fade_state,
 		camera.global_position if camera != null else model.global_position)
+
+
+## Whether the hidden-head swing applies to this opponent: the shared
+## `occlusion_fade.head_swing` switch (off), the opponent's own camera block
+## (`framing.head_swing`), or a body whose tells swing the camera.
+func _wild_head_swing(cfg: Dictionary) -> bool:
+	if bool(cfg.get("head_swing", false)) or bool(_opponent_camera("framing").get("head_swing", false)):
+		return true
+	return _wild != null and is_instance_valid(_wild) and _wild.has_method("tell_camera_swing") \
+		and bool(_wild.call("tell_camera_swing"))
 
 
 ## Nerissa r15: at a wide gap the swing put the opponent past the frame edge

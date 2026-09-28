@@ -8476,7 +8476,7 @@
       "optional": true,
       "mount_compatible": false,
       "arena_mode": "shallow_surface",
-      "combat_camera": {"framing": {"top_fill": 0.46, "top_band": true}},
+      "combat_camera": {"framing": {"top_fill": 0.46, "top_band": true, "head_swing": true}},
       "_why_combat_camera_f14_0": "F14#0 C3 r7 (code-blind judge): the tall serpent's head sat under the boss panel in 3 of 25 frames. Aquaryn's authored framing (water_alpha.json combat_camera: fit the body below the top band, then the lens shift) applies to this named body too; combat_manager.gd _opponent_camera reads the body's meta, set by water_encounter_director.gd. Presentation only.",
       "arena_radius_m": 5.0,
       "arena_capture_radius_m": 16.0,
