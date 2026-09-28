@@ -415,10 +415,12 @@ func _capture_row(row: Dictionary) -> void:
 	var selected := false
 	var selected_offset := 0.0
 	var selected_lateral := 0.0
-	var offsets: Array = [32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]
+	var offsets: Array = row.get("stand_offsets_m",
+		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0])
 	var sideways := Vector2(-forward.y, forward.x)
+	var laterals: Array = row.get("stand_laterals_m", [0.0, -5.0, 5.0])
 	for offset: float in offsets:
-		for lateral: float in [0.0, -5.0, 5.0]:
+		for lateral: float in laterals:
 			at = target - forward * offset + sideways * lateral
 			var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
 			if not moved:
@@ -434,7 +436,8 @@ func _capture_row(row: Dictionary) -> void:
 			_player.rotation.y = atan2(forward.x, forward.y)
 			_rig.call("set_target", _player)
 			var camera_yaw := capture_yaw(forward)
-			var camera_pitch := float(_rig.get("pitch"))
+			var camera_pitch := deg_to_rad(float(row.get("camera_pitch_deg", rad_to_deg(float(_rig.get("pitch"))))))
+			_rig.set("pitch", camera_pitch)
 			_rig.set("yaw", camera_yaw)
 			_rig.rotation = Vector3(camera_pitch, camera_yaw, 0.0)
 			# Snap the production pivot after a long debug teleport.
@@ -447,7 +450,7 @@ func _capture_row(row: Dictionary) -> void:
 				await physics_frame
 			for _frame in 2:
 				await process_frame
-			if _camera.global_position.distance_to(_player.global_position) >= 3.5:
+			if _camera.global_position.distance_to(_player.global_position) >= float(row.get("min_camera_player_distance_m", 3.5)):
 				selected = true
 				selected_offset = offset
 				selected_lateral = lateral
@@ -490,6 +493,9 @@ func _capture_row(row: Dictionary) -> void:
 		record["camera_transform"] = _transform(_camera.global_transform)
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
 		record["observed_clock"] = observed_clock
+		var surge := _world.get_node_or_null(^"StormwoodSurge")
+		if surge != null:
+			record["phase"] = str(surge.get("phase"))
 		record["trainer_visible_intent"] = true
 		record["player_character"] = _character_id
 		record["trainer_visibility_limit"] = "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame."
