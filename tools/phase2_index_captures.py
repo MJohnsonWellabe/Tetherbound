@@ -53,7 +53,7 @@ def main() -> None:
             existing = {row["id"]: row for row in csv.DictReader(stream)}
     for frame in manifest["frames"]:
         frame_id = frame["frame_id"]
-        src = source / f"{frame_id}.png"
+        src = source / f"{frame_id}.jpg"
         if not src.is_file():
             raise SystemExit(f"Missing {src}")
         with Image.open(src) as image:
