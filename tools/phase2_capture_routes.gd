@@ -3,6 +3,8 @@ extends "res://tools/phase2_capture_locations.gd"
 ## Seeded visual walk around the authored catalogue waypoints. The waypoint
 ## sequence is an audit route proxy, not proof of campaign traversal. Each
 ## off-route shot records the cumulative random-walk offset in the manifest.
+## Repeat --frame=<exact frame_id> to replay selected sightings. Filtering
+## happens after route generation so a selection never changes seeded offsets.
 
 const WALK_STEPS := 3
 
@@ -62,4 +64,23 @@ func _load_plan() -> bool:
 			"walk_seed": rng.seed, "walk_step": 0,
 			"walk_offset_xz": [0.0, 0.0]}, true)
 		_planned.append(vista_row)
+	var requested: Array[String] = []
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--frame="):
+			var frame_id := arg.trim_prefix("--frame=").strip_edges()
+			if frame_id.is_empty():
+				push_error("phase2 routes: --frame requires an exact frame id")
+				return false
+			if frame_id not in requested:
+				requested.append(frame_id)
+	if not requested.is_empty():
+		var selected: Array[Dictionary] = []
+		for row: Dictionary in _planned:
+			if str(row.frame_id) in requested:
+				selected.append(row)
+				requested.erase(str(row.frame_id))
+		if not requested.is_empty():
+			push_error("phase2 routes: unmatched frame ids: %s" % ", ".join(requested))
+			return false
+		_planned.assign(selected)
 	return not _planned.is_empty()
