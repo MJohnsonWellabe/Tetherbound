@@ -1,0 +1,29 @@
+| Encounter | Tier | Starter | Seeds | Masher win / lead faint / wipe | Masher med lead cost | Reader win | Reader med lead cost | Ratio | Med s (M/R) | Max hit | Tells s | C2 | C3 (measured) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| water_lantern_shell_sentinel | named_wild | terrapup | 24 | 0.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.044 | 0.04 | 69 / 125 | 0.047 | 0.80–0.80 | PASS | PASS |
+| water_lantern_shell_sentinel | named_wild | ripplet | 24 | 1.00 / 0.00 / 0.00 | 0.915 | 1.00 | 0.039 | 0.04 | 75 / 90 | 0.044 | 0.80–0.80 | PASS | PASS |
+| water_lantern_shell_sentinel | named_wild | galewisp | 24 | 1.00 / 0.00 / 0.00 | 0.655 | 1.00 | 0.035 | 0.05 | 69 / 70 | 0.037 | 0.80–0.80 | PASS | PASS |
+| water_gull_basalt_claw | named_wild | terrapup | 24 | 0.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 72 / 146 | 0.048 | 0.80–0.80 | PASS | PASS |
+| water_gull_basalt_claw | named_wild | ripplet | 24 | 0.17 / 0.83 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 79 / 93 | 0.044 | 0.80–0.80 | PASS | PASS |
+| water_gull_basalt_claw | named_wild | galewisp | 24 | 1.00 / 0.00 / 0.00 | 0.725 | 1.00 | 0.000 | 0.00 | 70 / 79 | 0.038 | 0.80–0.80 | PASS | PASS |
+| water_brine_root_watcher | named_wild | terrapup | 24 | 0.96 / 0.04 / 0.00 | 0.821 | 1.00 | 0.000 | 0.00 | 71 / 105 | 0.050 | 0.80–0.80 | PASS | PASS |
+| water_brine_root_watcher | named_wild | ripplet | 24 | 1.00 / 0.00 / 0.00 | 0.500 | 1.00 | 0.000 | 0.00 | 54 / 70 | 0.045 | 0.80–0.80 | PASS | PASS |
+| water_brine_root_watcher | named_wild | galewisp | 24 | 1.00 / 0.00 / 0.00 | 0.530 | 1.00 | 0.000 | 0.00 | 51 / 58 | 0.039 | 0.80–0.80 | PASS | PASS |
+| water_drowned_garden_songweaver | named_wild | terrapup | 24 | 0.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 67 / 113 | 0.054 | 0.80–0.80 | PASS | PASS |
+| water_drowned_garden_songweaver | named_wild | ripplet | 24 | 1.00 / 0.00 / 0.00 | 0.901 | 1.00 | 0.000 | 0.00 | 65 / 72 | 0.049 | 0.80–0.80 | PASS | PASS |
+| water_drowned_garden_songweaver | named_wild | galewisp | 24 | 1.00 / 0.00 / 0.00 | 0.615 | 1.00 | 0.000 | 0.00 | 56 / 58 | 0.042 | 0.80–0.80 | PASS | PASS |
+| water_trainer_pell_trial | floor | terrapup | 24 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.042 | 0.04 | 136 / 199 | 0.085 | 0.80–0.80 | PASS | PASS |
+| water_trainer_pell_trial | floor | ripplet | 24 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 111 / 130 | 0.064 | 0.80–0.80 | PASS | PASS |
+| water_trainer_pell_trial | floor | galewisp | 24 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 105 / 104 | 0.064 | 0.80–0.80 | PASS | PASS |
+| water_trainer_tovin | ladder | terrapup | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.057 | 0.06 | 146 / 216 | 0.087 | 0.80–0.80 | PASS | PASS |
+| water_trainer_tovin | ladder | ripplet | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.052 | 0.05 | 130 / 148 | 0.087 | 0.80–0.80 | PASS | PASS |
+| water_trainer_tovin | ladder | galewisp | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.044 | 0.04 | 133 / 120 | 0.087 | 0.80–0.80 | PASS | PASS |
+| water_trainer_solm | ladder | terrapup | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.091 | 0.09 | 123 / 183 | 0.088 | 0.80–0.80 | PASS | PASS |
+| water_trainer_solm | ladder | ripplet | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 98 / 121 | 0.088 | 0.80–0.80 | PASS | PASS |
+| water_trainer_solm | ladder | galewisp | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 91 / 100 | 0.088 | 0.80–0.80 | PASS | PASS |
+| water_trainer_irva | ladder | terrapup | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.103 | 0.10 | 170 / 236 | 0.088 | 0.80–0.80 | PASS | PASS |
+| water_trainer_irva | ladder | ripplet | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.096 | 0.10 | 144 / 165 | 0.088 | 0.80–0.80 | PASS | PASS |
+| water_trainer_irva | ladder | galewisp | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.000 | 0.00 | 146 / 132 | 0.088 | 0.80–0.80 | PASS | PASS |
+| water_trainer_bex | ladder | terrapup | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.057 | 0.06 | 177 / 293 | 0.089 | 0.80–0.80 | PASS | PASS |
+| water_trainer_bex | ladder | ripplet | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.053 | 0.05 | 169 / 196 | 0.090 | 0.80–0.80 | PASS | PASS |
+| water_trainer_bex | ladder | galewisp | 8 | 1.00 / 1.00 / 0.00 | 1.000 | 1.00 | 0.047 | 0.05 | 170 / 153 | 0.090 | 0.80–0.80 | PASS | PASS |

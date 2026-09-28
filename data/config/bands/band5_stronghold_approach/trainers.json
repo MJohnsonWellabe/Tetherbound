@@ -131,7 +131,32 @@
           "_why_combat": "G-2/G-3, W-7. Left at DEFAULT deliberately, the same floor-role Corr and Verrick hold earlier in the band (see their own `_why_combat` in this file's other rows) -- Hald's team is meant to read as DIVER and WALL either side of one ordinary fighter, not three novelties at once. `stronghold_courtyard`'s own team stays fully DEFAULT for the same reason: the first behavioural surprise inside the Hall is reserved for Hald, right before the Warden fields five, so it lands as a real step rather than diluting across every fight in the building.",
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
-            "telegraph": 0.9
+            "telegraph": 0.9,
+            "power": 23.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "trailpup",
+          "level": 19,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 21.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "duskhush",
+          "level": 19,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 32.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
@@ -141,11 +166,12 @@
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
-            "power": 12.0,
+            "power": 23.0,
             "chase_speed": 3.4,
             "reposition_distance": 2.5,
             "poise_max": 60.0,
-            "stagger_seconds": 0.85
+            "stagger_seconds": 0.85,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         }
       ],
@@ -193,22 +219,27 @@
         {
           "species": "burrowback",
           "level": 18,
-          "moves": {"quick": "rock_throw"},
+          "moves": {
+            "quick": "rock_throw"
+          },
           "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-2. WALL, sent first -- the drilled line that does not move, telegraph long enough to punish, on-type rock_throw (W-3). A player's first read of the Warden's doctrine is 'this one holds ground', the plainest of the five profiles and the correct one to open on. Inert until G-2's `wild_creature.gd` merge lands.",
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
-            "power": 12.0,
+            "power": 22.0,
             "chase_speed": 3.4,
             "reposition_distance": 2.5,
             "poise_max": 60.0,
-            "stagger_seconds": 0.85
+            "stagger_seconds": 0.85,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
           "species": "galecrest",
           "level": 18,
-          "moves": {"quick": "wind_blade"},
+          "moves": {
+            "quick": "wind_blade"
+          },
           "_why_combat": "G-2/G-3, W-2. DIVER, sent second -- hit-and-run, short tell, comes again from a new side. Ness fielded this same profile on all three of her creatures at the Sigil gate (this file's other rows); meeting it again here, on one creature this time, is the doctrine repeating at the top of the ladder rather than a one-off. Inert until G-2 lands.",
           "combat": {
             "telegraph": 0.4,
@@ -225,21 +256,26 @@
         {
           "species": "brooktail",
           "level": 19,
-          "moves": {"quick": "aqua_shot"},
+          "moves": {
+            "quick": "aqua_shot"
+          },
           "_why_combat": "G-2/G-3, W-2. CURRENT, sent third -- relentless pressure, short cooldown, never backs off far. The Water answer in the five, and the profile that turns 'brief lull between send-outs' into 'no lull at all' for one round, so the fight's middle does not sag between the WALL/DIVER opener and the CHARGER/ACE close. Inert until G-2 lands.",
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
             "reposition_time": 0.5,
             "reposition_distance": 2.0,
-            "power": 6.4,
-            "poise_max": 28.0
+            "power": 24.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
           "species": "meadowhart",
           "level": 19,
-          "moves": {"quick": "rock_throw"},
+          "moves": {
+            "quick": "rock_throw"
+          },
           "_why_combat": "G-2/G-3, W-2. CHARGER, sent fourth -- the stag that closes the distance in one lunge, tell is distance not time. The second-to-last send-out is where the contract asks for the fight's own tension to visibly rise before the ace; a long-range closer that punishes standing still is the shape of that rise. Inert until G-2 lands.",
           "combat": {
             "preferred_range": 4.5,
@@ -258,19 +294,22 @@
         {
           "species": "tuskroot",
           "level": 20,
-          "moves": {"quick": "rock_throw"},
+          "moves": {
+            "quick": "rock_throw"
+          },
           "_why_combat": "G-2/G-3, W-2. ACE, sent last -- the one telegraph in the chapter worth reading. `lunge`/`cone_degrees` widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move at level 14): the chapter's first telegraph-worth-respecting and its last are the same shape, on the same move family, eighteen levels and every fight in this file apart. A player who learned to step out of Earth Fist in the first hour gets to feel that lesson pay off in the last one. Inert until G-2 lands.",
           "combat": {
             "_why_telegraph_f04": "F04: BOSSES writes the Warden ace a 1.1 s signature tell and COMBAT a 1.10 s heavy floor; 1.0 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 1.1,
             "recovery": 1.2,
-            "power": 14.4,
+            "power": 18.0,
             "lunge": 6.5,
             "cone_degrees": 72,
             "attack_cooldown": 1.8,
             "first_attack_delay": 2.5,
             "poise_max": 70.0,
-            "stagger_seconds": 1.2
+            "stagger_seconds": 1.2,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         }
       ],
@@ -357,17 +396,38 @@
         {
           "species": "trailpup",
           "level": 16,
-          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4, "poise_max": 28.0}
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4,
+            "poise_max": 28.0
+          }
         },
         {
           "species": "galecrest",
           "level": 16,
-          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4, "poise_max": 28.0}
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4,
+            "poise_max": 28.0
+          }
         },
         {
           "species": "mosshell",
           "level": 16,
-          "combat": {"attack_cooldown": 0.7, "recovery": 0.55, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4, "poise_max": 28.0}
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4,
+            "poise_max": 28.0
+          }
         }
       ],
       "_why_team": "Trailpup and galecrest are this band's own wild roster (spawns.json orders 5003/5001); mosshell is `stronghold_courtyard`'s own species, met here a room early and wilder for it, the same continuity the mudsnout special encounter (spawns.json order 5004) uses. Three creatures, one level above the outer watch, and the escalation reads: the further in, the more the checkpoint fields.",

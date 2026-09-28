@@ -111,7 +111,7 @@
       "lines": [
         "This station is necessary, and it stays.",
         "Every road you found closed, we closed on purpose. Your village is safer for it.",
-        "Three of mine, and I don't send the weakest out first. If your five are still worn from the walk up here, fix it now — I'd rather you understood than fought me."
+        "Five of mine, and I don't send the weakest out first. If your five are still worn from the walk up here, fix it now — I'd rather you understood than fought me."
       ]
     },
     "relay_captain_defeated_greeting": {
@@ -214,7 +214,7 @@
       "lines": [
         "Riverwatch. We keep the low ground — where everything ends up.",
         "You'll think the barriers are wrong. Stand a season in this draw and you'll thank whoever set them.",
-        "Three of mine, not all one type. You'll want a plan, not a favourite."
+        "Five of mine, not all one type. You'll want a plan, not a favourite."
       ]
     },
     "captain_riverwatch_defeated": {
