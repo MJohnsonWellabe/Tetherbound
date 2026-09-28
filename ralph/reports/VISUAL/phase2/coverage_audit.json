@@ -46,6 +46,9 @@
         "meadows__settings_controls"
       ],
       "missing_files": [],
+      "bad_tiles": [],
+      "retained_raw_frames": [],
+      "contact_sheets": 30,
       "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
@@ -97,6 +100,9 @@
         "tidewake__settings_controls"
       ],
       "missing_files": [],
+      "bad_tiles": [],
+      "retained_raw_frames": [],
+      "contact_sheets": 41,
       "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
@@ -148,6 +154,9 @@
         "cloudreach__settings_controls"
       ],
       "missing_files": [],
+      "bad_tiles": [],
+      "retained_raw_frames": [],
+      "contact_sheets": 21,
       "missing_planned_frames": {
         "items": [
           "cloudreach__inventory__pickup__potion_small",
@@ -222,13 +231,17 @@
         "stormwood__settings_controls"
       ],
       "missing_files": [],
+      "bad_tiles": [],
+      "retained_raw_frames": [],
+      "contact_sheets": 34,
       "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     }
   },
   "notes": [
-    "Counts confirm indexed files, not successful framing or gameplay access.",
+    "Each indexed capture is retained as a 320x180 contact-sheet tile, not a full-resolution image.",
+    "Counts confirm indexed previews, not successful framing or gameplay access.",
     "Open visual and checklist gaps are tracked in the catalog notes and validation reports."
   ]
 }

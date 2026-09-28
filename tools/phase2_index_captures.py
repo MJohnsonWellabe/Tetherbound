@@ -76,6 +76,8 @@ def main() -> None:
     if csv_path.exists():
         with csv_path.open(newline="", encoding="utf-8") as stream:
             existing = {row["id"]: row for row in csv.DictReader(stream)}
+        if any(row.get("evidence_format", "").startswith("contact_sheet_tile") for row in existing.values()):
+            raise SystemExit("This Phase 2 manifest is compacted into contact-sheet tiles; do not append raw frames with this indexer")
     for frame in manifest["frames"]:
         if args.only_frame and frame.get("frame_id", frame.get("id")) not in args.only_frame:
             continue
