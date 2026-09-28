@@ -1,0 +1,7 @@
+F10#6 device profile round 2 (computer capture, no Ally hardware; owner ruling 2026-09-27: 1920x1080, Compatibility/opengl3, handheld settings profile if one exists, code-blind 7-inch readability).
+No handheld/Ally settings profile exists in config (hud_scale.gd authors at 1920x1080); defaults used.
+explore/: tools/capture_stormwood_f10_matrix.gd --hud --stands=rod_line,glass,forest --phases=calm,break --no-aftermath, xvfb-run 1920x1080x24, --rendering-driver opengl3 --resolution 1920x1080, on the dense Deepwood bake (3d5fb0e6) with the F10#3 Break crawlers (9adc99f1).
+fight/: ralph/reports/STORMWOOD/b/f10_2/capture_named_fights.gd --ids=hollows_alpha,crown_guardian --seconds=10 --fixed-fps 10 at 1920x1080 opengl3 on tb/stormwood 29edb0cd game code (compact fight roster from d4283e3c is on main), PNG -> JPG q88.
+_sheet_7inch.jpg: each cell 586x330 = a 7.0" 16:9 panel (155 mm wide) at 96 dpi.
+Adapter: llvmpipe (LLVM 20.1.2); Godot 4.7-stable Compatibility.
+Staging: matrix tool (one debug teleport per stand, hour and surge pinned, HUD on); fight tool (L42 fixture five, teleport beside each named wild, other wilds within 25 m hidden, storm pinned in Calm, ally healed between fights).
