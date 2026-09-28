@@ -29,7 +29,11 @@ Result: `FRESH CAMPAIGN RESULT … "failures":[], "reached":"tournament_won", "r
 - Harness-driven controller input (real `InputEvent`s through the live InputMap) and harness fights; headless.
 - One seed (15) and one starter (terrapup) in the integrated run; the other two starters come from F01#4, whose chain grants the third member and levels.
 - Day/night walks, overhead plan and two-peer layout are feeder evidence, not re-run here. F01#6 records that cold reconnect and road-layout agreement were not re-proved.
-- Composite card: this run plus the F01 feeders.
+- "Every gate, NPC and interaction" is covered in F01's sense: the 11 opening targets of the day/night walks plus the NPC, gate and gather beats this run plays, not all 18 villagers. In the walks the camp, PondGate and TrailGate count as reached by proximity and are not operated.
+- Tournament consent is shown by the marshal visit, the bed receipts for party 0-2 and bracket entry; the run prints no explicit three-of-five selection line.
+- The two-peer opening witness (PR174) predates the F01 road rebuild; road layout comes from authored config, not the world seed.
+- The integrated run is on main `e35e2611`; `tb/cards` then merged main `94e59c48` before landing.
+- Composite card: this run plus the F01 feeders. Independent strict re-check: `RECHECK_M1.md`, VERDICT: MET.
 
 **Not in M1's scope, found by the same route:** past the tournament, the South Bridge guardian now fails
 on main (see `../m2/BRIDGE_GUARDIAN_REGRESSION.md`). The bridge crossing is M2/F02, and F01#4's
