@@ -6,6 +6,20 @@ extends "res://tools/phase2_capture_characters.gd"
 ## proof that a normal interaction or progress gate is reachable.
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	var start := 0
+	var count := -1
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--start="):
+			start = maxi(0, int(arg.trim_prefix("--start=")))
+		elif arg.begins_with("--count="):
+			count = maxi(1, int(arg.trim_prefix("--count=")))
+	if start > 0 or count > 0:
+		_planned = _planned.slice(start, mini(_planned.size(), start + count) if count > 0 else _planned.size())
+	return not _planned.is_empty()
+
 func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."

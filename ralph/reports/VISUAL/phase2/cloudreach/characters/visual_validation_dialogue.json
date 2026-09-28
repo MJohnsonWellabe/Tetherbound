@@ -1,0 +1,9 @@
+{
+  "review": "Code-blind inspection of eight Cloudreach dialogue frames",
+  "findings": [
+    "P2-076: Kelm and Veyra speakers absent from world view",
+    "P2-077: foreground player/posts hide Tavi, Sora, Rusk, Maela and Aila; Voss small and uncertain"
+  ],
+  "text_panel": "Readable with portraits; no clipping in eight frames.",
+  "caveat": "Direct-start fixture at authored post. Normal interaction camera not established by these frames."
+}

@@ -1,0 +1,17 @@
+{
+  "review": "Code-blind inspection of ten Meadows dialogue frames",
+  "findings": [
+    "P2-078: creature hides Kell and Corin",
+    "P2-079: rock-face view hides quarry foreman",
+    "P2-080: Bram and Sela edge obstruction"
+  ],
+  "well_framed": [
+    "halda",
+    "mira",
+    "oskar",
+    "tam",
+    "wilhelm"
+  ],
+  "text_panel": "Readable in all ten frames.",
+  "caveat": "Direct-start at authored post; these do not establish normal interaction camera defects."
+}
