@@ -35,10 +35,19 @@ func test_settle_puts_a_beaten_captain_in_the_after_state() -> void:
 	body.set_meta(AFTERMATH.HOME_META, Transform3D(Basis(Vector3.UP, 0.3), Vector3(10.0, 0.0, 20.0)))
 	var standard := Node3D.new()
 	holder.add_child(standard)
+	var cloth := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	var source := StandardMaterial3D.new()
+	source.resource_name = "MI_Banner"
+	box.material = source
+	cloth.mesh = box
+	standard.add_child(cloth)
 	body.set_meta(AFTERMATH.STANDARD_META, standard)
 	AFTERMATH.settle(body, "captain_field")
-	assert_almost_eq(standard.rotation.z, deg_to_rad(float(AFTERMATH.config().get("fallen_roll_deg", 0.0))),
-		0.001, "the standard lies fallen")
+	var struck := cloth.get_surface_override_material(0) as StandardMaterial3D
+	assert_ne(struck, null, "the cloth has its own material")
+	assert_almost_eq(struck.albedo_color.a, 0.0, 0.001, "the standard's colours are struck")
+	assert_almost_eq(source.albedo_color.a, 1.0, 0.001, "the shared Banner_1 material is untouched")
 	var down: Dictionary = AFTERMATH.for_trainer("captain_field")["stand_down"]
 	assert_almost_eq(body.rotation.y, 0.3 + deg_to_rad(float(down["turn_deg"])), 0.001,
 		"the captain has turned from the fight")

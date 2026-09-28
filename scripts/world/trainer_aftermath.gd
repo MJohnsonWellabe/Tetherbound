@@ -62,7 +62,8 @@ static func settle(body: Node3D, id: String) -> void:
 	var entry := for_trainer(id)
 	var standard := body.get_meta(STANDARD_META, null) as Node3D
 	if standard != null and is_instance_valid(standard):
-		standard.rotation.z = deg_to_rad(float(config().get("fallen_roll_deg", 80.0)))
+		for material: StandardMaterial3D in _cloth_materials(standard):
+			material.albedo_color.a = 0.0
 	var down: Dictionary = entry.get("stand_down", {}) as Dictionary
 	if not down.is_empty():
 		var spot := stand_down_spot(body, down)
@@ -71,17 +72,43 @@ static func settle(body: Node3D, id: String) -> void:
 		body.rotation.y = _home_yaw(body) + deg_to_rad(float(down.get("turn_deg", 0.0)))
 
 
-## The moment of defeat: the standard falls now; the captain steps aside once
-## the slump (`trainer_npc.gd::_play_defeat_reaction`) has played out.
+## The moment of defeat: the standard's colours are struck now (its oxblood
+## cloth fades from the frame, leaving the bare post); the captain steps aside
+## once the slump (`trainer_npc.gd::_play_defeat_reaction`) has played out.
 static func begin_fall(body: Node3D, id: String) -> void:
 	var standard := body.get_meta(STANDARD_META, null) as Node3D
 	if standard == null or not is_instance_valid(standard):
 		return
-	var tween := standard.create_tween()
-	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.tween_property(standard, "rotation:z",
-		deg_to_rad(float(config().get("fallen_roll_deg", 80.0))),
-		float(config().get("fall_seconds", 1.4)))
+	var tween := standard.create_tween().set_parallel(true)
+	for material: StandardMaterial3D in _cloth_materials(standard):
+		tween.tween_property(material, "albedo_color:a", 0.0, float(config().get("strike_seconds", 1.6)))
+
+
+## The standard's cloth surfaces (the Banner_1 mesh's `MI_Banner` surface),
+## given their own transparent-capable material once, so the frame and every
+## other Banner_1 in the world are untouched.
+static func _cloth_materials(standard: Node3D) -> Array[StandardMaterial3D]:
+	var out: Array[StandardMaterial3D] = []
+	var cloth_name := str(config().get("cloth_material", "MI_Banner"))
+	for node: Node in standard.find_children("*", "MeshInstance3D", true, false):
+		var mesh_node := node as MeshInstance3D
+		if mesh_node.mesh == null:
+			continue
+		for i in mesh_node.mesh.get_surface_count():
+			var source := mesh_node.mesh.surface_get_material(i)
+			if source == null or source.resource_name != cloth_name:
+				continue
+			var own := mesh_node.get_surface_override_material(i) as StandardMaterial3D
+			if own == null or not own.has_meta("aftermath_cloth"):
+				var active := mesh_node.get_active_material(i) as StandardMaterial3D
+				if active == null:
+					continue
+				own = active.duplicate() as StandardMaterial3D
+				own.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+				own.set_meta("aftermath_cloth", true)
+				mesh_node.set_surface_override_material(i, own)
+			out.append(own)
+	return out
 
 
 ## Returns true when it started a walk (the caller then leaves the clip alone).
@@ -119,7 +146,7 @@ static func _home_yaw(body: Node3D) -> float:
 
 ## The standard: the installed oxblood Banner_1 placed through props.gd (same
 ## seating, retint and material fix-ups as every roadside standard), then
-## re-hung from a pivot at its foot so it can fall, and its collider dropped.
+## held under a pivot at its foot, and its collider dropped.
 static func _plant_standard(placer: Node3D, body: Node3D, id: String, cfg: Dictionary) -> Node3D:
 	var yaw := body.global_rotation.y
 	var at := local_offset(body.global_position, yaw, cfg.get("offset", [2.6, -0.8]) as Array)
