@@ -12,10 +12,10 @@
     "cloudreach__inventory__character__captain_veyra"
   ],
   "subject_uncertain": ["cloudreach__inventory__character__officer_voss"],
-  "engine_capture_failures": [
-    "cloudreach__inventory__character__healer_iven",
+  "recovered_but_distant": [
     "cloudreach__inventory__character__bridgekeeper_orrin",
     "cloudreach__inventory__character__courier_neri"
   ],
-  "notes": "P2-068 records small or obscured post presentation. A wider-stand retry is prepared for the engine failures. Post stills do not establish dialogue or defeated states."
+  "engine_capture_failures": ["cloudreach__inventory__character__healer_iven"],
+  "notes": "P2-068 records small or obscured post presentation. Wider stands recovered Orrin and Neri only as small figures roughly 15 m from the trainer; a closer conversation view is still needed. Healer Iven has no accepted production-camera stand. Post stills do not establish dialogue or defeated states."
 }
