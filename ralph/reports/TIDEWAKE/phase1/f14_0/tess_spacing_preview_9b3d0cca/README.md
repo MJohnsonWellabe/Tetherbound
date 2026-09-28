@@ -12,7 +12,7 @@ This is a **preview, not landing evidence**. It is a local detached merge of mai
 **One code-blind judge** (default model) under `../../C3_RUBRIC.md`, handed the rubric before any frame: **19/24 = 79.2%**; tell-start markings 4/4.
 
 The five failures are all rule 3:
-- **At contact** (hit-004.25, t-000.00, t-036.02): Ripplet's head covers Mirejaw's snout. With 0.6 m of clearance, the bodies still read as touching behind the ally.
+- **At contact** (hit-004.25, t-000.00, t-036.02): Ripplet's head covers Mirejaw's snout. At the rule's 0.6 m margin (configured, not measured), the bodies still read as touching behind the ally.
 - **The player trainer** (tell-ended-000.58, tell-ended-001.93): after Mirejaw's lunge carries it past Ripplet, the player stands in front of Mirejaw's lowered head. The fight camera fades only the ally, not the trainer.
 
 **Reading:** the rule stops fighters from interpenetrating. As committed, it does not by itself bring Tess to the C3 bar.

@@ -45,7 +45,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
     - Nerissa r17: 98% / 83%.
   - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
   - **Blocked** on the shared contact-spacing rule, now owned by the COMBAT SPACING lane (`tb/combat-spacing`, coordinator 16:28). When it lands on main, Tidewake merges it and re-judges Tess and Nerissa C3 under `C3_RUBRIC.md`. This lane builds no spacing fix of its own.
-  - **Preview on the unlanded spacing commit** (`f14_0/tess_spacing_preview_9b3d0cca/`): Tess scores 79% on one code-blind judge. The gap holds at 6.99 m or more, yet Ripplet's head still covers Mirejaw's snout at 0.6 m of clearance, and after Mirejaw lunges past the ally the player trainer stands in front of its head. As committed, the rule does not bring Tess to the C3 bar.
+  - **Preview on the unlanded spacing commit** (`f14_0/tess_spacing_preview_9b3d0cca/`): Tess scores 79% on one code-blind judge. The gap holds at 6.99 m or more, yet Ripplet's head still covers Mirejaw's snout at the rule's 0.6 m margin, and after Mirejaw lunges past the ally the player trainer stands in front of its head. As committed, the rule does not bring Tess to the C3 bar.
   - **Landed as progress:** the Heart Chamber arena bound, the tell and head camera swings, and Riptusk's lunge opt-in. All are presentation-only, apart from the smaller ring.
   - **C2 met for both rows under option (c) (main 1e0ddd39).**
     - Tess, Calder and Venn: reader win 1.00, masher lead-faint 1.00. Venn's lane now locks at 0.25 of the tell.
