@@ -57,6 +57,31 @@ def cloudreach_plan() -> list[dict]:
     } for obj in data["npcs"]]
 
 
+def water_plan() -> list[dict]:
+    source = ROOT / "data/config/water_characters.json"
+    world_source = ROOT / "data/config/water_world.json"
+    cast = json.loads(source.read_text(encoding="utf-8"))
+    world = json.loads(world_source.read_text(encoding="utf-8"))
+    centres = {island["id"]: island["center_xz_m"] for island in world["islands"]}
+    rows: list[dict] = []
+    for list_key, family in (("npcs", "character"), ("trainers", "trainer")):
+        for obj in cast[list_key]:
+            island_id = obj["island_id"]
+            centre = centres[island_id]
+            offset = obj["island_local_offset"]
+            rows.append({
+                "family_type": family, "slug": slug(obj["id"]),
+                "subject": obj["display_name"],
+                "position_xz": [centre[0] + offset[0], centre[1] + offset[2]],
+                "band": island_id, "source": source.relative_to(ROOT).as_posix(),
+                "authored_id": obj["id"],
+                "heading_deg": (obj.get("facing_deg", 0) + 180) % 360,
+                "route": "main", "view": "post",
+                "shared_npc_entity_id": obj.get("npc_entity_id", ""),
+            })
+    return rows
+
+
 def stormwood_plan() -> list[dict]:
     rows: list[dict] = []
     for filename, list_key, name_key, family in [
@@ -81,6 +106,7 @@ def stormwood_plan() -> list[dict]:
 def main() -> None:
     data = json.loads(DEST.read_text(encoding="utf-8")) if DEST.exists() else {}
     data["meadows"] = meadows_plan()
+    data["water"] = water_plan()
     data["cloudreach"] = cloudreach_plan()
     data["stormwood"] = stormwood_plan()
     DEST.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")

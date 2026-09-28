@@ -1620,5 +1620,679 @@
       "route": "main",
       "view": "post"
     }
+  ],
+  "water": [
+    {
+      "family_type": "character",
+      "slug": "water_mara",
+      "subject": "Dockkeeper Mara",
+      "position_xz": [
+        -5.0,
+        154.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_mara",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_pell",
+      "subject": "Swimmer Pell",
+      "position_xz": [
+        53.368,
+        151.502
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_pell",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_elin",
+      "subject": "Campkeeper Elin",
+      "position_xz": [
+        11.0,
+        141.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_elin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_rowan",
+      "subject": "Pierwright Rowan",
+      "position_xz": [
+        -13.34,
+        468.56
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_rowan",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_sella",
+      "subject": "Caretaker Sella",
+      "position_xz": [
+        0.0,
+        452.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_sella",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_tovin",
+      "subject": "Keeper Tovin",
+      "position_xz": [
+        395.0,
+        809.0
+      ],
+      "band": "brine_steps",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_tovin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_adair",
+      "subject": "Surveyor Adair",
+      "position_xz": [
+        411.0,
+        672.0
+      ],
+      "band": "brine_steps",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_adair",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_nalia",
+      "subject": "Resident Nalia",
+      "position_xz": [
+        320.0,
+        1143.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_nalia",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_bren",
+      "subject": "Pump Tender Bren",
+      "position_xz": [
+        329.0,
+        1132.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_bren",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_iona",
+      "subject": "Researcher Iona",
+      "position_xz": [
+        711.504,
+        1550.0
+      ],
+      "band": "tidal_cradle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_iona",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_otto",
+      "subject": "Tracker Otto",
+      "position_xz": [
+        555.0,
+        1362.0
+      ],
+      "band": "tidal_cradle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_otto",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_edda",
+      "subject": "Shrinekeeper Edda",
+      "position_xz": [
+        159.0,
+        2333.0
+      ],
+      "band": "salt_crown",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_edda",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_corin",
+      "subject": "Defector Corin",
+      "position_xz": [
+        141.0,
+        2322.0
+      ],
+      "band": "salt_crown",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_corin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_orsen",
+      "subject": "Channel Keeper Orsen",
+      "position_xz": [
+        850.0,
+        2983.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_orsen",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_jessa",
+      "subject": "Courier Jessa",
+      "position_xz": [
+        859.0,
+        2972.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_jessa",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_halen",
+      "subject": "Campkeeper Halen",
+      "position_xz": [
+        375.2,
+        3817.9
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_halen",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_venn",
+      "subject": "Officer Venn",
+      "position_xz": [
+        365.78,
+        3794.43
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_venn",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "character",
+      "slug": "water_nerissa",
+      "subject": "Captain Nerissa",
+      "position_xz": [
+        209.0,
+        4163.0
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_nerissa",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": ""
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_pell_trial",
+      "subject": "Pell",
+      "position_xz": [
+        -18.0,
+        -20.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_pell_trial",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_pell_trial"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_fen",
+      "subject": "Fen",
+      "position_xz": [
+        -356.0,
+        140.0
+      ],
+      "band": "lantern_cove",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_fen",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_fen"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_lysa",
+      "subject": "Lysa",
+      "position_xz": [
+        6.0,
+        400.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_lysa",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_lysa"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_daro",
+      "subject": "Daro",
+      "position_xz": [
+        18.0,
+        420.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_daro",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_daro"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_tovin",
+      "subject": "Keeper Tovin",
+      "position_xz": [
+        402.0,
+        630.0
+      ],
+      "band": "brine_steps",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_tovin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_tovin"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_keir",
+      "subject": "Keir",
+      "position_xz": [
+        414.0,
+        620.0
+      ],
+      "band": "brine_steps",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_keir",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_keir"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_rune",
+      "subject": "Rune",
+      "position_xz": [
+        -64.0,
+        850.0
+      ],
+      "band": "gull_rest",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_rune",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_rune"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_solm",
+      "subject": "Solm",
+      "position_xz": [
+        338.0,
+        1090.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_solm",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_solm"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_irva",
+      "subject": "Irva",
+      "position_xz": [
+        302.0,
+        1080.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_irva",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_irva"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_nel",
+      "subject": "Nel",
+      "position_xz": [
+        314.0,
+        1100.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_nel",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_nel"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_oswin",
+      "subject": "Oswin",
+      "position_xz": [
+        706.0,
+        1500.0
+      ],
+      "band": "tidal_cradle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_oswin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_oswin"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_tal",
+      "subject": "Tal",
+      "position_xz": [
+        718.0,
+        1490.0
+      ],
+      "band": "tidal_cradle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_tal",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_tal"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_sera",
+      "subject": "Sera",
+      "position_xz": [
+        132.0,
+        2290.0
+      ],
+      "band": "salt_crown",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_sera",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_sera"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_odan",
+      "subject": "Odan",
+      "position_xz": [
+        144.0,
+        2280.0
+      ],
+      "band": "salt_crown",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_odan",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_odan"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_yara",
+      "subject": "Yara",
+      "position_xz": [
+        1206.0,
+        2200.0
+      ],
+      "band": "drowned_garden",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_yara",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_yara"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_bex",
+      "subject": "Bex",
+      "position_xz": [
+        671.0,
+        2805.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_bex",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_bex"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_calder",
+      "subject": "Calder",
+      "position_xz": [
+        743.0,
+        3176.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_calder",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_calder"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_vera",
+      "subject": "Vera",
+      "position_xz": [
+        844.0,
+        2920.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_vera",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_vera"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_tess",
+      "subject": "Tess",
+      "position_xz": [
+        1366.0,
+        3480.0
+      ],
+      "band": "deep_watch",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_tess",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_tess"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_fennel",
+      "subject": "Fennel",
+      "position_xz": [
+        218.0,
+        4110.0
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_fennel",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_fennel"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_venn",
+      "subject": "Officer Venn",
+      "position_xz": [
+        182.0,
+        4100.0
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_venn",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_venn"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_morra",
+      "subject": "Morra",
+      "position_xz": [
+        194.0,
+        4120.0
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_morra",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_morra"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_evi",
+      "subject": "Evi",
+      "position_xz": [
+        206.0,
+        4110.0
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_evi",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_trainer_evi"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "water_trainer_nerissa",
+      "subject": "Captain Nerissa",
+      "position_xz": [
+        218.0,
+        4100.0
+      ],
+      "band": "veilfall",
+      "source": "data/config/water_characters.json",
+      "authored_id": "water_trainer_nerissa",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post",
+      "shared_npc_entity_id": "water_nerissa"
+    }
   ]
 }
