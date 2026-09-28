@@ -4,6 +4,8 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 ## 0. Resume here
 
+**Serial closer lane (`tb/closer`, owner, 2026-09-28).** The owner consolidated eight lanes into one serial lane working the open criteria one at a time: F04#1/#2/#6/#7, F10#6, F14#0/#1, then cards M2, T2, S2, M3. The look-development, HUD-legibility and Stormwood-audio lanes were archived and not started. Queue order: (1) combat spacing, (2) Meadows #437 and F04#6, (3) F14#0/#1, (4) F04#2/#7 and the bridge guardian, (5) F10#6, (6) stretch cards. Each item's outcome is one line in its row below. Item 1 status: PR open from `tb/closer` (spacing merged in); verified only what CI proves on the final head, see the PR.
+
 **Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress. Batch 67 consolidated every lane head and every remaining branch, including the full Codex branch and Vess, onto `tb/integration`, and landed it through one PR after one unit run and one CI run. **Next is Phase 1 (`CLAUDE_START_HERE.md`):** one self-landing lane per biome. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
 
 **Criteria:** 94 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3, F10#3 and F10#4, Cloudreach F08#3 and F08#4, Tidewake F13#3 and F13#5, Meadows F03#0, F04#3, F01#2 and F01#3, Stormwood F10#2). No chapter is accepted.
