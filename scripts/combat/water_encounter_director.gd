@@ -57,6 +57,7 @@ static func named_spawn_plan(site: Dictionary, named_encounters: Array) -> Dicti
 		"position": named.get("position", []).duplicate(),
 		"display_name": str(named.get("display_name", id)),
 		"reward_role": str(named.get("reward_role", "")),
+		"combat_camera": (named.combat_camera as Dictionary).duplicate(true) if named.get("combat_camera") is Dictionary else {},
 		"opts": {"name": id, "once_id": str(named.get("completion_flag", "")),
 			"level": int(named.get("level", 1)), "aggressive": false,
 			"wander_radius": float(site.get("roam_radius_m", site.get("radius_m", 4))),
@@ -286,6 +287,11 @@ func _spawn_available_sites() -> void:
 						(instance as RefCounted).set("display_name", str(plan.display_name))
 					wild.set_meta("water_named_encounter", str(plan.id))
 					wild.set_meta("water_reward_role", str(plan.reward_role))
+					# F14#0: an authored fight-camera block (framing/tracking/
+					# profile parts), read by CombatManager._opponent_camera exactly
+					# as WaterAlpha passes Aquaryn's. Presentation only.
+					if plan.get("combat_camera") is Dictionary and not (plan.combat_camera as Dictionary).is_empty():
+						wild.set_meta("combat_camera", (plan.combat_camera as Dictionary).duplicate(true))
 				members.append(wild)
 				_wild_respawn[wild] = float(encounter_config.get("wild_respawn_seconds", 240))
 		_site_members[id] = members

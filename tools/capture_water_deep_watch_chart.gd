@@ -14,7 +14,7 @@ const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const GATED := "water:deep_watch:pickup:002"
 const TIDECOIL_ID := "water_deep_watch_tidecoil"
-const TIDECOIL_SITE := Vector3(1483.196, -0.5075, 3427.917)
+const TIDECOIL_SITE := Vector3(1262.0, -0.43, 3377.0)
 
 var world: Node3D
 var game: Node

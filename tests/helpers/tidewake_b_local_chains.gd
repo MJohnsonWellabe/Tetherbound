@@ -281,7 +281,7 @@ func _tidecoil_walk_back(fight: Dictionary, up: Dictionary) -> bool:
 func _tidecoil_fixture() -> void:
 	# DISCLOSED FIXTURE: Tidecoil's fight resolved through the director's handler.
 	var director: Node = world.get_node("EncounterDirector")
-	var site := Vector3(1483.196, -0.5075, 3427.917)
+	var site := Vector3(1262.0, -0.43, 3377.0)
 	var stand := Vector3.INF
 	for distance: float in [30.0, 40.0, 50.0, 60.0, 70.0, 80.0]:
 		var candidate := site + (Vector3(1350.0, 0.0, 3500.0) - site).normalized() * distance
