@@ -85,11 +85,17 @@ func test_owned_active_healthy_carrier_is_preferred_without_sixth_slot() -> void
 	bird.fainted = true
 	game.progression.set_flag("fly_traversal_unlocked")
 	assert_ne(fly.eligible_creature(), bird, "a fainted owned carrier is never used")
-	assert_eq(fly.eligible_creature(), null, "and a five that holds a carrier gets no loaner in its place")
-	assert_false((game.party.members() as Array).has(fly.eligible_creature()), "mentor loaner is not secretly owned")
+	# A five whose only carrier is unwell keeps the loaner's safety net, so a
+	# carrier that faints on a flight-only shelf cannot strand the trainer.
+	var net: RefCounted = fly.eligible_creature()
+	assert_ne(net, null, "an unwell carrier leaves Maela's loaner in Cloudreach")
+	assert_false((game.party.members() as Array).has(net), "mentor loaner is not secretly owned")
 	bird.fainted = false
 	bird.resting = true
 	assert_ne(fly.eligible_creature(), bird, "a resting owned carrier is never used")
+	game.progression.set_flag("cloudreach_chapter_complete")
+	assert_eq(fly.eligible_creature(), null, "past the loaner's chapter nothing carries")
+	assert_eq(fly.carrier_refusal(), "Galecrest needs to recover before it can carry you.", "the refusal names the unwell carrier")
 
 
 func test_full_non_fly_party_gets_transient_maela_carrier_for_trial_and_unlock() -> void:
@@ -239,7 +245,6 @@ func test_galewisp_starter_gains_fly_at_the_unlock_without_a_sixth_slot() -> voi
 	game.progression.set_flag("fly_traversal_unlocked")
 	assert_true(fly.carrier_qualifies("galewisp"))
 	assert_eq(fly.eligible_creature(), wisp, "after the unlock the owned Galewisp carries")
-	assert_true(fly.eligible_creature() != fly.get("_mentor_loaner") or fly.get("_mentor_loaner") == null)
 	assert_eq(game.party.size(), 5, "no sixth creature appears")
 	game.progression.set_flag("cloudreach_chapter_complete")
 	assert_eq(fly.eligible_creature(), wisp, "the promise outlives the loaner's chapter")
@@ -257,6 +262,7 @@ func test_an_owned_carrier_that_is_not_out_gets_no_loaner_after_the_unlock() -> 
 	game.progression.set_flag("fly_traversal_unlocked")
 	assert_eq(fly.owned_carrier(), bird)
 	assert_eq(fly.eligible_creature(), null, "no loaner while the five hold their own carrier")
+	assert_eq(fly.carrier_refusal(), "Send out Galecrest to fly.", "the refusal names the carrier to send out")
 	fly.set_trial_authorization(AABB(Vector3(-10, 0, -10), Vector3(20, 40, 20)))
 	var trial_carrier: RefCounted = fly.eligible_creature()
 	assert_ne(trial_carrier, null, "the trial keeps Maela's loaner")
@@ -265,6 +271,13 @@ func test_an_owned_carrier_that_is_not_out_gets_no_loaner_after_the_unlock() -> 
 	assert_true(game.party.set_active(4))
 	assert_eq(fly.eligible_creature(), bird, "sent out, the owned bird carries")
 	assert_eq(game.party.size(), 5)
+	var spare: RefCounted = SPECIES.spawn("galecrest")
+	game.party.remove_at(3)
+	assert_true(game.party.add(spare))
+	bird.fainted = true
+	assert_eq(fly.owned_carrier(), spare, "a healthy carrier on the bench is named before a fainted one")
+	assert_eq(fly.eligible_creature(), null, "and while it is healthy there is still no loaner")
+	assert_eq(fly.carrier_refusal(), "Send out Galecrest to fly.")
 
 
 ## A five with no qualifying carrier still gets the loaner after the unlock

@@ -9,8 +9,10 @@ Before this change every proof flight used Maela's loaner: the earned five hold 
   - `scripts/player/fly_controller.gd` `carrier_qualifies()` / `owned_carrier()`.
 - **Maela's loaner** serves only two cases:
   - her flight trial;
-  - after the unlock, a five that holds no carrier, until `cloudreach_chapter_complete`.
-- **Carrier in the five but not usable.** A five whose carrier is not out, or not well, gets no loaner. The refusal names the companion: "Send out Galecrest to fly." or "Galecrest needs to recover before it can carry you."
+  - after the unlock, a five that holds no healthy carrier, until `cloudreach_chapter_complete`.
+- **Carrier in the five but not out.** A five with a healthy carrier that is not out gets no loaner. The refusal names it: "Send out Galecrest to fly." (`carrier_refusal()`).
+- **Carrier unwell.** A five whose only carrier is fainted or resting keeps the loaner's safety net inside Cloudreach until the chapter ends, as before this change. A carrier that faints on a flight-only shelf therefore cannot strand the trainer. Past the chapter the refusal says "Galecrest needs to recover before it can carry you."
+- **One creature, drawn once.** An owned launch puts the carrier's ground follower away through the production recall, so co-op viewers lose its body too, and touchdown sends it back out. `party_cycle` and `creature_recall` are refused mid-air ("Land before changing or recalling your companion."), because a swap would drop the trainer. A loaner flight keeps carrying to touchdown if the unlock commits mid-flight, for example a co-op peer's trial.
 - **Party, save and network.** No party write, no sixth creature, and no save or network format change.
   - Remotes already build the carrier art from `net_fly_species`.
   - The host still decides where the flyer may land.

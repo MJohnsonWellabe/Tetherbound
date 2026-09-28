@@ -100,6 +100,9 @@ var _anchor_host_granted := false
 ## and which is pulled back when it does not -- and "this client walked eight
 ## metres", which is ordinary movement the host is already simulating.
 var _touched_down := false
+## The owned carrier's ground follower was recalled at launch; summon it back
+## out on touchdown (`_recall_carrier_follower`).
+var _recalled_follower := false
 
 
 func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
@@ -211,12 +214,13 @@ func _flight_stamina_multiplier() -> float:
 ## and its promise has opened (WORLD §4.2 "a healthy active carrier"; the
 ## Galewisp starter "gains Fly at the Cloudreach unlock", CREATURES §7, via
 ## the capability's `requires_flag`). Maela's transient story carrier serves
-## her flight trial, and after the unlock only a five that holds no carrier at
-## all ("prevents a full non-flying team from deadlocking the chapter"). A
-## five with its own carrier that is not out, or not well, gets no loaner:
-## `launch_blockers()` says which companion to send out or let recover. The
-## loaner is never added to Party, saved, caught, or treated as a sixth owned
-## creature.
+## her flight trial, and after the unlock only a five that holds no HEALTHY
+## carrier ("prevents a full non-flying team from deadlocking the chapter"; a
+## fainted or resting carrier keeps the pre-owned-carrier safety net, so a
+## carrier that faints on a flight-only shelf cannot strand the trainer). A
+## five with a healthy carrier that is not out gets no loaner:
+## `launch_blockers()` says which companion to send out. The loaner is never
+## added to Party, saved, caught, or treated as a sixth owned creature.
 func eligible_creature() -> RefCounted:
 	var party: Variant = _game.get("party") if is_instance_valid(_game) else null
 	if party != null:
@@ -229,7 +233,8 @@ func eligible_creature() -> RefCounted:
 	if not mentor_loaner_available(loaner, _trial_enabled, _unlocked(), not ends_at.is_empty() and _has_flag(ends_at)) \
 			or _realm() != str(loaner.get("realm_id", "cloudreach")):
 		return null
-	if not _trial_enabled and owned_carrier() != null:
+	var own := owned_carrier()
+	if not _trial_enabled and own != null and _is_healthy(own):
 		return null
 	var species_id := str(loaner.get("species_id", ""))
 	if species_id.is_empty() or not bool(SPECIES.fly_capability(species_id).get("can_carry", false)):
@@ -247,19 +252,40 @@ func carrier_qualifies(species_id: String) -> bool:
 	return bool(capability.get("can_carry", false)) and _has_flag(str(capability.get("requires_flag", "")))
 
 
-## The first member of the five whose species qualifies as a carrier now,
-## whether or not it is out or well; null when the five hold none.
+## The five's carrier, whether or not it is out: the active member if it
+## qualifies and is healthy, else the first healthy qualifying member, else
+## the first qualifying member at all (fainted or resting); null when the five
+## hold none.
 func owned_carrier() -> RefCounted:
 	var party: Variant = _game.get("party") if is_instance_valid(_game) else null
 	if party == null:
 		return null
-	var active: RefCounted = party.call("active")
-	if active != null and carrier_qualifies(str(active.get("species_id"))):
-		return active
-	for member: RefCounted in party.call("members"):
-		if member != null and carrier_qualifies(str(member.get("species_id"))):
+	var candidates: Array = [party.call("active")]
+	candidates.append_array(party.call("members"))
+	var unwell: RefCounted = null
+	for member: RefCounted in candidates:
+		if member == null or not carrier_qualifies(str(member.get("species_id"))):
+			continue
+		if _is_healthy(member):
 			return member
-	return null
+		if unwell == null:
+			unwell = member
+	return unwell
+
+
+## Why no carrier is available, naming the five's own when they hold one:
+## send a healthy one out, or let an unwell one recover.
+func carrier_refusal() -> String:
+	var own := owned_carrier()
+	if own == null:
+		return "No healthy Fly carrier is available here."
+	if not _is_healthy(own):
+		return "%s needs to recover before it can carry you." % str(own.call("label"))
+	return "Send out %s to fly." % str(own.call("label"))
+
+
+static func _is_healthy(creature: RefCounted) -> bool:
+	return not bool(creature.get("fainted")) and not bool(creature.get("resting"))
 
 
 ## Maela's Galecrest is a temporary trial and routed-transport carrier
@@ -300,13 +326,7 @@ func launch_blockers() -> String:
 	if not _unlocked() and not (_trial_enabled and _trial.has_point(_player.global_position)):
 		return "Complete the Windscar flight trial to unlock Fly."
 	if eligible_creature() == null:
-		var own := owned_carrier()
-		if own == null:
-			return "No healthy Fly carrier is available here."
-		var party: Variant = _game.get("party")
-		if party == null or party.call("active") != own:
-			return "Send out %s to fly." % str(own.call("label"))
-		return "%s needs to recover before it can carry you." % str(own.call("label"))
+		return carrier_refusal()
 	var active_power := _active_realm_power()
 	var minimum_stamina := adjusted_stamina_cost(float(config.get("minimum_launch_stamina", 18.0)), active_power)
 	if minimum_stamina > 0.0 and float(_player.get("vitals").get("stamina")) < minimum_stamina:
@@ -346,7 +366,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	_player.call("begin_environment_velocity_step")
 	flight_seconds += delta
 	var vitals: RefCounted = _player.get("vitals")
-	if eligible_creature() != _creature or (_flight_stamina_multiplier() > 0.0 and float(vitals.get("stamina")) <= 0.0) or flight_seconds >= float(config.get("maximum_flight_seconds", 180.0)):
+	if not _carrier_still_valid() or (_flight_stamina_multiplier() > 0.0 and float(vitals.get("stamina")) <= 0.0) or flight_seconds >= float(config.get("maximum_flight_seconds", 180.0)):
 		_set_state("exhausted")
 	var stick := Vector2.ZERO if input_owned else Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var view_basis := Basis.IDENTITY
@@ -740,9 +760,38 @@ func set_recovery_anchor(position: Vector3, realm: String) -> bool:
 	return true
 
 
+## The flight's carrier may keep carrying: it is still the eligible one, or it
+## is Maela's loaner and a carrier is still eligible (the unlock flag that
+## opens an owned promise can commit mid-flight, e.g. a co-op peer's trial;
+## the loaner then carries on to touchdown rather than dropping the trainer).
+func _carrier_still_valid() -> bool:
+	var now := eligible_creature()
+	return now == _creature or (_creature != null and _creature == _mentor_loaner and now != null)
+
+
+## An owned carrier is the companion that was walking beside the trainer: the
+## production recall puts that follower away for the flight (so co-op viewers
+## lose its body too, `encounter_director.gd::_announce_recall`) and it is
+## sent back out on touchdown -- one creature, drawn once. The director refuses
+## `party_cycle`/`creature_recall` while flying.
+func _director() -> Node:
+	var world: Node = _player.get_parent() if is_instance_valid(_player) else null
+	return world.get_node_or_null(^"EncounterDirector") if world != null else null
+
+
+func _recall_carrier_follower() -> void:
+	_recalled_follower = false
+	var director := _director()
+	if director == null or _creature == null or _creature == _mentor_loaner or not director.has_method("ally_instance"):
+		return
+	if director.call("ally_instance") == _creature:
+		_recalled_follower = bool(director.call("dismiss_active_creature"))
+
+
 func _launch() -> void:
 	_creature = eligible_creature()
 	_last_flight_used_loaner = _creature != null and _creature == _mentor_loaner
+	_recall_carrier_follower()
 	last_denial = ""
 	flight_seconds = 0.0
 	_saved_snap = _player.floor_snap_length
@@ -781,6 +830,11 @@ func _finish(next: String) -> void:
 	if _rig != null and _rig.has_method("set_target"):
 		_rig.call("set_target", _player, _saved_camera)
 	_creature = null
+	if _recalled_follower:
+		_recalled_follower = false
+		var director := _director()
+		if director != null and director.is_inside_tree():
+			director.call("summon_active_creature")
 	_set_state(next)
 
 

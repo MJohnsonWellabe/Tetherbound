@@ -51,7 +51,9 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## in the five but not out and requires the refusal to name it (no loaner for a
 ## five that holds a carrier); then, before every launch, it sends the carrier
 ## out with the real `party_cycle` press. `_deploy` requires the owned carrier
-## to fly.
+## to fly; each owned flight must have put the carrier's ground follower away
+## (and brought it back out by the next launch), and one real `party_cycle`
+## press mid-air must be refused without ending the flight.
 ##
 ## Precedent: smoke_cloudreach_floor_loop_return.gd / aerie_services.gd use the
 ## same declared flags-before-build plus single placement fixture.
@@ -91,6 +93,9 @@ var owned_carrier_species := ""
 var owned_carrier_record: Dictionary = {}
 var owned_carrier_refusal: Dictionary = {}
 var owned_carrier_switches: Array[Dictionary] = []
+var owned_flight_rows: Array[Dictionary] = []
+var owned_mid_air_cycle: Dictionary = {}
+var owned_flight_recalled := false
 const CHECKPOINT_ROOT := "user://cloudreach_witness_checkpoints/"
 const MAP_STATE_SCRIPT := preload("res://scripts/world/cloudreach_map_state.gd")
 
@@ -504,7 +509,47 @@ func _deploy() -> bool:
 			if not await _send_back_owned_carrier("refusal"): return false
 			if not await _owned_carrier_not_out_refusal(): return false
 		if not await _send_out_owned_carrier(): return false
+		if owned_flight_rows.is_empty() and not _follower_out():
+			# Make the recall check non-vacuous: bring the carrier out beside the
+			# trainer with the real `creature_recall` press first.
+			await _tap("creature_recall")
+			for tick in 240:
+				if _follower_out(): break
+				await _frames(1)
+			_log("witness_owned_carrier_summon", {"stage": stage, "follower_out": _follower_out()})
+		var follower_before := _follower_out()
+		if owned_flight_rows.is_empty() and not _require(follower_before, "Owned carrier: its follower is out beside the trainer before the first owned launch"): return false
+		if owned_flight_recalled and not _require(follower_before, "Owned carrier: the follower recalled for the last flight is back out after touchdown"): return false
+		if not await super._deploy(): return false
+		return await _owned_flight_checks(follower_before)
 	return await super._deploy()
+
+
+## One creature, drawn once: an owned flight recalls the carrier's follower
+## (production recall) and the director refuses `party_cycle` mid-air; the
+## active member and the flight both survive the refused press.
+func _owned_flight_checks(follower_before: bool) -> bool:
+	var row := {"stage": stage, "follower_out_before": follower_before, "follower_out_in_flight": _follower_out()}
+	owned_flight_recalled = follower_before
+	if owned_mid_air_cycle.is_empty():
+		var active_before: RefCounted = game.party.active()
+		await _tap("party_cycle")
+		owned_mid_air_cycle = {"stage": stage, "active_unchanged": game.party.active() == active_before, "still_flying": fly.is_flying(),
+			"follower_out": _follower_out()}
+		row.mid_air_cycle = owned_mid_air_cycle
+	owned_flight_rows.append(row)
+	_log("witness_owned_flight", row)
+	if not _require(not bool(row.follower_out_in_flight), "Owned carrier: its ground follower is put away while it carries the trainer"): return false
+	if row.has("mid_air_cycle"):
+		return _require(bool(owned_mid_air_cycle.active_unchanged) and bool(owned_mid_air_cycle.still_flying) and not bool(owned_mid_air_cycle.follower_out),
+			"Owned carrier: party_cycle mid-air is refused; the carrier and the flight carry on")
+	return true
+
+
+func _follower_out() -> bool:
+	var director: Node = world.get_node_or_null(^"EncounterDirector") if world != null else null
+	var body: Variant = director.call("ally_body") if director != null else null
+	return body is Node3D and is_instance_valid(body)
 
 
 ## `--owned-carrier`: see the header. The swap happens after the title load, so
