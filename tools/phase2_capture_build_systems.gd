@@ -5,6 +5,13 @@ extends "res://tools/phase2_capture_locations.gd"
 ## player and camera, and the production CraftPanel. No build costs, placement
 ## validation, sleep, recipe execution, save or progression are demonstrated.
 
+const OPEN_STANDS := {
+	"meadows": Vector2(9.0, 1300.0),
+	"water": Vector2(35.707, 98.104),
+	"cloudreach": Vector2(-15.5, -202.0),
+	"stormwood": Vector2(-320.0, 240.0),
+}
+
 func _load_plan() -> bool:
 	_planned = [{"frame_id": "%s__system__build_suite" % _biome_id}]
 	return true
@@ -12,7 +19,7 @@ func _load_plan() -> bool:
 
 func _begin_manifest() -> void:
 	super._begin_manifest()
-	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof."
+	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof."
 
 
 func _finish(_complete: bool) -> void:
@@ -25,6 +32,32 @@ func _capture_row(_row: Dictionary) -> void:
 	if game == null or placer == null or not placer.has_method("_spawn_building"):
 		_failures.append("production BuildPlacer unavailable")
 		return
+	var stand: Vector2 = OPEN_STANDS[_biome_id]
+	if not bool(game.call("debug_teleport_to", stand.x, stand.y, _biome_id, "")):
+		_failures.append("debug travel to open build stand failed")
+		return
+	for _frame in ARRIVE_FRAMES:
+		await physics_frame
+	var stand_y := float(_world.call("ground_height_at", stand.x, stand.y))
+	if is_nan(stand_y):
+		_failures.append("open build stand has no terrain")
+		return
+	_player.global_position = Vector3(stand.x, stand_y + TRAINER_CLEARANCE, stand.y)
+	_player.velocity = Vector3.ZERO
+	var heading := Vector2(0.0, 1.0)
+	var yaw := capture_yaw(heading)
+	_player.rotation.y = atan2(heading.x, heading.y)
+	_rig.call("set_target", _player)
+	_rig.set("pitch", deg_to_rad(-12.0))
+	_rig.set("yaw", yaw)
+	_rig.rotation = Vector3(deg_to_rad(-12.0), yaw, 0.0)
+	_rig.global_position = _player.global_position
+	_camera.make_current()
+	_player.reset_physics_interpolation()
+	_rig.reset_physics_interpolation()
+	_camera.reset_physics_interpolation()
+	for _frame in POPULATE_FRAMES:
+		await physics_frame
 	var observed := await _pin_time("day")
 	if observed.is_empty():
 		return
