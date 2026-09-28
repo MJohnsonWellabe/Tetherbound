@@ -3,10 +3,10 @@ extends "res://tests/test_case.gd"
 const OFFSHORE := preload("res://scripts/world/water_offshore_material.gd")
 
 
-func test_default_off_retains_the_exact_shared_material() -> void:
+func test_disabled_setting_retains_the_exact_shared_material() -> void:
 	var source := ShaderMaterial.new()
 	source.shader = load("res://shaders/water.gdshader")
-	assert_true(OFFSHORE.apply(source) == source)
+	assert_true(OFFSHORE.apply(source, {"enabled": false}) == source)
 	assert_true(OFFSHORE.apply(null) == null)
 
 
