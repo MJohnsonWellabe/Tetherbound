@@ -347,8 +347,8 @@
  "lanes": [
   {
    "lane": "Tidewake visual fixes (tb/x04-tidewake)",
-   "now": "Phase 2c in progress. Owner Lake Michigan dune direction implemented as default-off candidate; first native dune round rejected (P2-008 FAIL, Bars A/B No/No). Two Salt Crown respawned-player frames are invalid comparison evidence; capture displacement checks now reject them. Shared and Water-only visual candidates remain off; no new chapter acceptance.",
-   "next": "Capture corrected dune material, complete owned impact>=12 fixes/dispositions and paired reviews, chapter frame matrix and independent Bars A/B; update evidence and self-land through CI-green PRs. Evidence: ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/."
+   "now": "Phase 2c in progress. Dunes-02 independent PARTIAL, limited Bars A/B No/No; palette/readability pass. Three native ablations isolate terrain self-shadow striping and support a gated 0.05 m caster-depth correction at Gull Rest. Upright grass colonies and terrain-sheltered shared groves populate all eleven dune islands; focused confirmation15/129 clean. Candidates remain off pending island/route judgment. Full unit suite completed with sparse-evidence failure resolved by targeted confirmation; main throughcf0a3b974 merged. No new chapter acceptance.",
+   "next": "Re-capture all dune sightings and obtain independent review; complete owned impact>=12 fixes/dispositions and paired reviews, full chapter matrix and Bars A/B, then self-land through CI-green PRs. Evidence: ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/ and fixes/validation.md."
   },
   {
    "lane": "Meadows (tb/meadows)",

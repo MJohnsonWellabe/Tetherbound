@@ -14,6 +14,7 @@ These checks establish implementation invariants, not visual acceptance.
 | Unit shard 3/4 | 1307 tests, 156613 assertions, 0 failed, exit 0 |
 | Unit shard 4/4 | 1402 tests, 948984 assertions, 0 failed, exit 0 |
 | Dune cover and named-character clearance | 9 tests, 69 assertions, 0 failed |
+| Dune colonies, shared groves and clearance confirmation | 15 tests, 129 assertions, 0 failed, no script errors; supersedes a misleading earlier 10/70 summary whose new material test aborted on null dummy-renderer defaults |
 | Offshore material isolation | 2 tests, 12 assertions, 0 failed |
 | Current field and visual-state preservation | 14 tests, 169 assertions, 0 failed; subsequent shader-only length correction retains authored restored short-dash response and still requires native motion review |
 | Water decorative bedding | 3 tests, 46 assertions, 0 failed |
@@ -50,6 +51,16 @@ does not mean a clean engine-error log.
   Bars A No/B No: palette and trainer readability pass; banding, jagged shading,
   diffuse grass and weak sheltered woodland remain. See
   `P2-008/dunes-02-visual-judge.md`. Controlled render ablation is the next step.
+- Three controlled surface/shadow rounds completed 5/5, 6/6 and 6/6 native
+  frames with exact camera matches. Texture-detail removal did not fix bands;
+  terrain-only 0.05 m caster-depth offset did at Gull Rest while retaining the
+  trainer shadow. See `P2-008/{surface,shadow,receiver}-01-ablation/`. The gated
+  implementation still requires the cross-island and route judge; steep bluff
+  shading remains a visible concern.
+- Shared grove placement uses actual upwind terrain relief with unchanged
+  gameplay clearances. A placement-only probe and native scene report 73 groves
+  across eleven candidate islands, 426 trees and 339 shrubs. Counts establish
+  placement, not art acceptance; Veilfall remains on its original path.
 
 Independent source reviews found no remaining issues in named-character grass
 clearance, Water offshore material isolation and decorative bedding. The current
