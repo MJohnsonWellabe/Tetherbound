@@ -22,8 +22,10 @@ CHECKS PASSED**; the five FAIL rows are two `any` steps and three negative contr
   `realm_heart_cloudreach_earned` and `realm_key_stormwood` read from the host world before and after, and in the
   saved world.
 - **Solmane:** freed once as a world fact; each peer answers its own offer through the real accept/refuse
-  handlers; both refuse at five, and the refusal receipts survive the drop/rejoin and the host restart with no
-  second offer and no Solmane in either saved character. The accept branch (host accepts at four and keeps
+  handlers; both refuse at five, and the refusal receipts survive the host restart and the guest's rejoin after
+  it, with no Solmane in either saved character. (In this run the guest's mid-flight drop happens before the
+  answers; the guest dropping after answering, and no second offer after a rejoin or host reload, are
+  F08#5 run3.) The accept branch (host accepts at four and keeps
   Solmane as its fifth; guest refuses; no re-offer after rejoin or host reload) is F08#5's two-peer run3
   (`../b/f08-5-solmane/`). Summit wild tables hold tempestwing, so no wild or catchable Solmane exists
   (`test_cloudreach_no_legendary_offer`).
@@ -35,3 +37,11 @@ the Solmane freeing is written as a world fact (the lever press is `smoke_cloudr
 galecrest; teleport to the shrine pad; the receipts' persistence after the restart is read from Stormwood (a
 return crossing outran the 15 s heartbeat in run-9); loopback ENet is local evidence, not internet or Steam
 acceptance. Output pruned to the proof, summary, net record and gzipped peer logs.
+
+## Independent re-check: PASS
+Disclosed with it: the run head is `d0ee930d` (`head.txt`), which carries both F08#4 game commits; the accept
+branch and the no-second-offer checks are borrowed from F08#5 run3 at `45ef17fd` (world_ledger.gd and
+encounter_host.gd changed slightly since); `veridian_fixture` journals both peers as Veyra participants (no
+live Veyra fight here); realm crossings are `enter_realm` steps, not flown; the host did not restart mid-flight;
+peer-1's log has four ENet `get_unique_id` errors during the client leave at the drop, which do not affect the
+result.
