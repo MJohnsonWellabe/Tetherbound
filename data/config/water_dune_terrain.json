@@ -7,5 +7,7 @@
   "bluff_colour": "#b0a080",
   "patch_scale": 0.022,
   "ripple_scale": 16.0,
-  "ripple_strength": 0.012
+  "ripple_strength": 0.012,
+  "shadow_push_m": 0.05,
+  "_comment_shadow": "Gated terrain-only shadow caster offset in metres, limited to 0..0.10 and faded out at Veilfall. Native Gull Rest controlled receiver-01 comparison removed fine self-shadow bands at 0.05 while retaining the trainer contact shadow. Visual terrain/collision and global Sun bias are unchanged. Cross-island/day-night review remains required."
 }

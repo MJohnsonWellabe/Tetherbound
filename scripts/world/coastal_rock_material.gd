@@ -2,7 +2,8 @@ extends RefCounted
 ## Presentation-only cliff layer over the actual Terrain3D shader. Retains its
 ## height/control sampling and the separately installed Veilfall treatment.
 const MARKER := "// COASTAL-ROCK"
-const UNIFORM_ANCHOR := "void fragment() {"
+const UNIFORM_ANCHOR := "void vertex() {"
+const VERTEX_ANCHOR := "VERTEX = (VIEW_MATRIX * vec4(v_vertex, 1.0)).xyz;"
 const MATERIAL_ANCHOR := "mat.ao_strength *= weight_inv;"
 const SHORE_CONFIG := "res://data/config/water_shore_presentation.json"
 const DUNE_CONFIG := "res://data/config/water_dune_terrain.json"
@@ -35,6 +36,7 @@ uniform vec3 coast_dune_bluff_colour : source_color = vec3(0.62, 0.60, 0.54);
 uniform float coast_dune_patch_scale = 0.022;
 uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
+uniform float coast_dune_shadow_push_m = 0.0;
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -153,6 +155,18 @@ const MATERIAL := """
 	}
 """
 
+const DUNE_SHADOW_DEPTH := """
+	// Compatibility computes shadow coordinates before fragment lighting.
+	// Bias only this terrain's caster depth: visible vertices and other
+	// objects' contact-shadow lookups retain their original positions.
+	if (coast_dunes_enabled && IN_SHADOW_PASS) {
+		float dune_shadow_outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0,
+			length(v_vertex.xz - coast_exclude_centre));
+		VERTEX.z -= clamp(coast_dune_shadow_push_m, 0.0, 0.10) * dune_shadow_outside;
+	}
+"""
+
+
 static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -> Dictionary:
 	var receipt := {"installed": false, "reason": "disabled"}
 	if terrain == null or not bool(config.get("enabled", false)):
@@ -164,12 +178,14 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 		current = material.call("get_shader_override")
 	var code := current.code if current != null else ""
 	if not code.contains(MARKER):
-		if not code.contains(UNIFORM_ANCHOR) or not code.contains(MATERIAL_ANCHOR):
+		if not code.contains(UNIFORM_ANCHOR) or not code.contains(MATERIAL_ANCHOR) or not code.contains(VERTEX_ANCHOR):
 			receipt.reason = "Terrain3D material anchors unavailable"
 			push_warning(str(receipt.reason))
 			return receipt
 		var shader := Shader.new()
-		shader.code = code.replace(UNIFORM_ANCHOR, UNIFORMS + UNIFORM_ANCHOR).replace(MATERIAL_ANCHOR, MATERIAL_ANCHOR + "\n" + MATERIAL)
+		shader.code = code.replace(UNIFORM_ANCHOR, UNIFORMS + UNIFORM_ANCHOR) \
+			.replace(VERTEX_ANCHOR, VERTEX_ANCHOR + DUNE_SHADOW_DEPTH) \
+			.replace(MATERIAL_ANCHOR, MATERIAL_ANCHOR + "\n" + MATERIAL)
 		material.call("enable_shader_override", false)
 		material.call("set_shader_override", shader)
 		material.call("enable_shader_override", true)
@@ -194,7 +210,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	var dune: Variant = JSON.parse_string(FileAccess.get_file_as_string(DUNE_CONFIG))
 	if dune is Dictionary:
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
-		for key: String in ["sand_colour", "wet_colour", "bluff_colour", "patch_scale", "ripple_scale", "ripple_strength"]:
+		for key: String in ["sand_colour", "wet_colour", "bluff_colour", "patch_scale", "ripple_scale", "ripple_strength", "shadow_push_m"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
