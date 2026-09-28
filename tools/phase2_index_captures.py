@@ -31,7 +31,7 @@ def main() -> None:
     parser.add_argument("--report-biome", help="Evidence label when the game's realm ID differs (water -> tidewake)")
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
-    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures"), default="locations")
+    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items"), default="locations")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     report_biome = args.report_biome or args.biome
@@ -122,9 +122,12 @@ def main() -> None:
         rel = dst.relative_to(repo).as_posix()
         view = frame.get("view", "normal")
         time = frame["time"]
-        capture_script = "phase2_capture_routes.gd" if args.category == "routes" else "phase2_capture_locations.gd"
+        capture_script = {
+            "routes": "phase2_capture_routes.gd",
+            "items": "phase2_capture_world_inventory.gd",
+        }.get(args.category, "phase2_capture_locations.gd")
         selection = f"--biome={args.biome} --subset={frame['identity']} "
-        if args.category != "routes":
+        if args.category == "locations":
             selection += f"--times={time} --views={view} "
         repro = (
             "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
@@ -135,13 +138,15 @@ def main() -> None:
         existing[frame_id] = {
             "id": frame_id,
             "biome": report_biome,
-            "category": "route_and_terrain" if args.category == "routes" else "named_locations",
+            "category": {
+                "routes": "route_and_terrain", "items": "world_items",
+            }.get(args.category, "named_locations"),
             "subject": frame["destination_display_name"],
             "location_id": frame["identity"],
             "route": frame.get("route_class", "off"),
             "time_of_day": "dusk" if time == "golden" else time,
             "weather_or_phase": "clear",
-            "pose_or_state": view,
+            "pose_or_state": frame.get("family_type", view) if args.category == "items" else view,
             "camera": "vista" if view == "vista" else ("close" if view == "close" else "normal"),
             "frame_path": rel,
             "repro": repro,
@@ -152,7 +157,7 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(existing[key] for key in sorted(existing))
-    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain"}[args.category]
+    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain", "items": "world_items"}[args.category]
     build_sheet(repo, base, list(existing.values()), sheet_category)
     print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
 
