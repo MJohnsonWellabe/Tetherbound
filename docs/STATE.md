@@ -25,7 +25,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#6. |
 | C2, C3 | **Complete (Cloudreach Phase 1 landing).** C2: earned chapter run (longest travel gap 98 s, same five, no new catch) plus the six-activities witness, frame matrix by the F08#3/#4 code-blind verdicts; C3: two-peer co-op and Solmane aftermath, ALL CHECKS PASSED. Evidence `ralph/reports/CLOUDREACH/c2-card/`, `c3-card/`. |
 | M3 | Failing: named-fight framing and Bars A/B. |
-| T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function). |
+| T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function; Aquaryn and Tidecoil C3 pass; Tess and Nerissa C3 are blocked on contact-range occlusion). |
 
 **Open criteria (12):**
 - **Meadows:** F01#2, F01#3; F04#1, #2, #6, #7. F04#3 is met (`ralph/reports/MEADOWS/f04/RECHECK_F04_3.md`: the Warden's HEAVY question reads at the normal camera; victory lines frame him clear with the HUD down). F03#0 is met (`ralph/reports/MEADOWS/f03/`: six ordinary-input lure walks to each prompt, the herd's night fire, the Hall pack on a road sightline with its nameplate depth-tested; strict re-check MET).
@@ -34,12 +34,23 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 - **Cloudreach lane done** (2026-09-28): complete for Phase 1 (every row and card C1-C3 met), and the owned-carrier Fly debt is closed (#411). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Owned-carrier Fly closed (`ralph/reports/CLOUDREACH/owned-carrier-fly/`): the five's healthy active carrier flies (WORLD §4.2), and the Galewisp starter gains Fly at the unlock (CREATURES §7). Maela's loaner serves her trial and, after the unlock, only a five with no healthy carrier, until the chapter ends. A five whose healthy carrier is not out gets a refusal naming it; an unwell carrier keeps the loaner's safety net. The carrier's ground follower is recalled for the flight, and LB/recall wait for touchdown. Earned c1_arrival flight leg on an owned Galecrest (disclosed swap): the trial flew on the loaner, one refusal, 4 owned launches, party 5. Open: Cliffhold reads thin (Phase 2).
   - **Phase 2c disposition pass (`tb/x04-cloudreach`).** All 20 owned impact >=12 catalog rows are explicitly deferred with reason, owner and follow-up; **zero fixes are claimed**. P2-021 skyline and P2-022 crown-arcade candidates remain off after failed native paired reviews. The 37-row chapter matrix and four summit views were captured before/after; regional Bars A/B are **No / No**, so F08#3/#4 visual debt remains open. Evidence: `ralph/reports/VISUAL/phase2/cloudreach/catalog-disposition-audit.json`, `disposition-code-review.md`, and `p2-022/{regional-baseline-judge,paired-visual-judge}.md`. Obstructed views remain inadequate; stills do not prove motion or earned traversal. The separate P2-053 baseline is 9/12 and retains its failures. P2-069 explicitly distinguishes historical loaner evidence from newer owned-carrier follower restoration.
 - **Stormwood:** F10#2, #6. F10#4 met (`ralph/reports/STORMWOOD/f10_4/r7/`: denser Deepwood reads as deep forest at every judged stand). F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
-- **Tidewake:** F14#0, #1.
-  - F13#3 is met (`ralph/reports/TIDEWAKE/phase1/f13_3/`): six chains in one real-swim run (619/0), and a lead now pins its destination on the map.
-  - F13#5 is met on function (`phase1/f13_5/`): dock residents at every mandatory dock, current comets, and the Veilfall distance read.
-  - F14#1 next. Nerissa's C2 regressed with dbe43195's Riptusk lane (render bisect in `phase1/f14_1/c2_bisect/`). Her ring spills south of the Heart Chamber lip into the 1 m sluice channel, and a sidestepping ally is pinned there.
-  - F14#0: Tidecoil still fails C3 at the cliff foot; a Deep Watch arrival-beach stand is probed.
-  - Other defects: after Tidecoil, a swimmer-less player may be left in the cliff-foot shallows (harness pose).
+- **Tidewake:** F14#0 and F14#1 are open; T2 waits on both.
+  - F13#3 and F13#5 are met (`ralph/reports/TIDEWAKE/phase1/f13_3/`, `f13_5/`).
+  - **Rubric.** C3 framing is judged under a rubric fixed before judging (`ralph/reports/TIDEWAKE/phase1/C3_RUBRIC.md`). Two code-blind judges score each round, and both must reach 90%.
+  - **Passed under it:**
+    - Aquaryn on the ordinary route, r6: 100% / 100%.
+    - Tidecoil r12: 100% / 91.7%.
+    - Aquaryn C2 with all three starters, under the named-wild ruling.
+  - **Still open:**
+    - Tess on the ordinary route: r5 scored 97% / 84% (r4 about 86% strict).
+    - Nerissa r17: 98% / 83%.
+  - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
+  - **Blocked** on a shared combat contact-spacing rule (bodies interpenetrate today). That rule changes C2 balance and is shared with the other lanes' named fights.
+  - **Landed as progress:** the Heart Chamber arena bound, the tell and head camera swings, and Riptusk's lunge opt-in. All are presentation-only, apart from the smaller ring.
+  - **C2 to rerun:** Nerissa's ring is now 9 m, so her 144-fight in-world C2 must be rerun. Local seeds: READER wins 5/5 at 24-33% party cost, and the MASHER wipes.
+  - Other defects, recorded, not fixed:
+    - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
+    - the ordinary tell ring marks the attacker's feet, not a landing spot.
 
 **Switched off or unwired in batch 67.** This is unjudged visual work, landed as the wind-down rule requires. Flip each item on only after a code-blind Bars A/B pass.
 - `stormwood_glass_field.json` `scorched_scars=false`.
@@ -161,7 +172,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex). Owned-carrier Fly closed. |
 | Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), device profile (F10#6). Open risk (owner: Stormwood lane): the denser Deepwood bake (3d5fb0e6) has no perf measurement. Phase 2: aftermath under the canopy is brighter than the owner's 'only lighter rain, no lightning, scars' ruling. Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
-| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Veilfall and named-fight C2/C3 (F14#0/#1); Bars A/B looks go to Phase 2. |
+| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Named-fight C3 framing: Aquaryn and Tidecoil pass. Tess and Nerissa are blocked on contact-range occlusion, which needs a shared combat spacing rule. Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |

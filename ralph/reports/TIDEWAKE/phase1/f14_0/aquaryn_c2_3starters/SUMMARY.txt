@@ -1,0 +1,6 @@
+galewisp MASHER n=24 win=1.00 wipe=0.00 leadfaint=0.00 med_lead=0.217 med_party=0.042 maxhit=0.064 tells=1.25-1.7 errors=0
+galewisp READER n=24 win=1.00 wipe=0.00 leadfaint=0.00 med_lead=0.118 med_party=0.023 maxhit=0.064 tells=1.25-1.7 errors=0
+ripplet MASHER n=24 win=1.00 wipe=0.00 leadfaint=0.00 med_lead=0.390 med_party=0.085 maxhit=0.066 tells=1.25-1.7 errors=0
+ripplet READER n=24 win=1.00 wipe=0.00 leadfaint=0.00 med_lead=0.123 med_party=0.027 maxhit=0.066 tells=1.25-1.7 errors=0
+terrapup MASHER n=24 win=1.00 wipe=0.00 leadfaint=0.00 med_lead=0.665 med_party=0.160 maxhit=0.069 tells=1.25-1.7 errors=0
+terrapup READER n=24 win=1.00 wipe=0.00 leadfaint=0.00 med_lead=0.194 med_party=0.047 maxhit=0.068 tells=1.25-1.7 errors=0

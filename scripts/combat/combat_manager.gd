@@ -1462,8 +1462,11 @@ func _update_combat_body_clear(clear: Dictionary) -> void:
 	# lens on body_clear's 2m floor, inside the player's creature (probe at
 	# the relay, every lunge). A charging body briefly crossing the shot reads
 	# as the charge; the lens inside your own creature reads as nothing.
-	if bool(clear.get("ignore_lunging_foe", false)) and _wild.has_method("is_lunging") \
-			and bool(_wild.call("is_lunging")):
+	# F14#1: one body can opt in (`camera_ignore_lunge`, Nerissa's Riptusk)
+	# while the shared flag stays off for F04#1 to judge.
+	var ignore := bool(clear.get("ignore_lunging_foe", false)) \
+		or (_wild.has_method("camera_ignores_lunge") and bool(_wild.call("camera_ignores_lunge")))
+	if ignore and _wild.has_method("is_lunging") and bool(_wild.call("is_lunging")):
 		_camera_rig.call("set_body_limit", INF)
 		return
 	var pivot: Vector3 = (_camera_rig as Node3D).global_position
@@ -1514,8 +1517,18 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 		_ally_faded_model = model
 	if model == null:
 		return
-	var hidden := bool(cfg.get("enabled", true)) and _ally_hides_wild(model, int(cfg.get("hidden_points", 2)))
-	_ally_hidden_for = _ally_hidden_for + delta if hidden else 0.0
+	var enabled := bool(cfg.get("enabled", true))
+	var column_hidden := enabled and _ally_hides_wild(model, int(cfg.get("hidden_points", 2)))
+	# F14 C3: a hidden head swings the camera like a hidden body, but never
+	# dithers the ally (Tess r2: the dithered ally fused into the foe's head).
+	# Opt-in (`_wild_head_swing`): fights judged before it keep their camera.
+	var hidden := column_hidden or (enabled and _wild_head_swing(cfg) and _ally_hides_wild_head(model, cfg))
+	# F14#0 C3 (Tess r1-r3): an ordinary strike carries an opted-in foe to
+	# contact, where 35 degrees of composition cannot part two bodies this size
+	# and the swing above only starts once the head is already hidden. Its tell
+	# starts the same swing, and the hold carries it through the contact.
+	hidden = hidden or (enabled and _wild_tell_swing(float(cfg.get("tell_swing_max_gap_m", 7.0))))
+	_ally_hidden_for = _ally_hidden_for + delta if column_hidden else 0.0
 	_ally_clear_for = 0.0 if hidden else _ally_clear_for + delta
 	# First answer: the neutral tracker swings wider until the foe is clear,
 	# which a still frame reads as ordinary framing. The dither is the fallback
@@ -1532,7 +1545,7 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 		var ease_rate := maxf(float(cfg.get("composition_ease_deg_per_s", 90.0)), 1.0)
 		_camera_rig.call("set_composition_extra", move_toward(current, extra_target, ease_rate * delta))
 	var target := 0.0
-	if hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 0.2)):
+	if column_hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 0.2)):
 		target = clampf(float(cfg.get("transparency", 0.6)), 0.0, 0.9)
 	var speed := maxf(float(cfg.get("speed", 4.0)), 0.01)
 	_ally_fade = move_toward(_ally_fade, target, speed * delta)
@@ -1543,6 +1556,33 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
 	OCCLUSION_FADE.apply(model, _ally_fade, _ally_fade_state,
 		camera.global_position if camera != null else model.global_position)
+
+
+## Whether the hidden-head swing applies to this opponent: the shared
+## `occlusion_fade.head_swing` switch (off), the opponent's own camera block
+## (`framing.head_swing`), or a body whose tells swing the camera.
+func _wild_head_swing(cfg: Dictionary) -> bool:
+	if bool(cfg.get("head_swing", false)) or bool(_opponent_camera("framing").get("head_swing", false)):
+		return true
+	return _wild != null and is_instance_valid(_wild) and _wild.has_method("tell_camera_swing") \
+		and bool(_wild.call("tell_camera_swing"))
+
+
+## Nerissa r15: at a wide gap the swing put the opponent past the frame edge
+## (indoors the arm cannot back off far enough), so it starts only when the
+## two fighters stand within `max_gap` metres, where the strike reaches contact.
+func _wild_tell_swing(max_gap: float = 7.0) -> bool:
+	if _wild == null or not is_instance_valid(_wild) or not _wild.has_method("is_winding_up"):
+		return false
+	var opted := bool(_opponent_camera("framing").get("tell_swing", false)) \
+		or (_wild.has_method("tell_camera_swing") and bool(_wild.call("tell_camera_swing")))
+	if not opted or not bool(_wild.call("is_winding_up")):
+		return false
+	if _ally_body == null or not is_instance_valid(_ally_body):
+		return true
+	var foe: Vector3 = _wild.global_position if _wild.is_inside_tree() else _wild.position
+	var ally: Vector3 = _ally_body.global_position if _ally_body.is_inside_tree() else _ally_body.position
+	return Vector2(foe.x - ally.x, foe.z - ally.z).length() <= max_gap
 
 
 func _ally_hides_wild(ally_model: Node3D, needed: int) -> bool:
@@ -1560,6 +1600,29 @@ func _ally_hides_wild(ally_model: Node3D, needed: int) -> bool:
 	var base := Vector3(_wild.global_position.x, wild_world.position.y, _wild.global_position.z)
 	return OCCLUSION_FADE.hidden_points(camera.global_position, base, wild_world.size.y,
 		ally_model.global_transform, ally_bounds) >= maxi(1, needed)
+
+
+## F14 C3: a long body's head leads its centre column toward the ally, so the
+## ally can cover the face (judges: "facing not readable") while the column
+## stays clear. Tested at `head_forward_fraction` of the foe's longer horizontal
+## extent ahead of its base; 0 turns it off.
+func _ally_hides_wild_head(ally_model: Node3D, cfg: Dictionary) -> bool:
+	var forward_fraction := float(cfg.get("head_forward_fraction", 0.0))
+	if forward_fraction <= 0.0 or _wild == null or not is_instance_valid(_wild) \
+			or not _wild.has_method("model_pivot") or not _wild.has_method("facing"):
+		return false
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var ally_bounds := _body_render_bounds(_ally_body)
+	var wild_bounds := _body_render_bounds(_wild)
+	var wild_model := _wild.call("model_pivot") as Node3D
+	if camera == null or ally_bounds.size.is_zero_approx() or wild_bounds.size.is_zero_approx() or wild_model == null:
+		return false
+	var wild_world: AABB = wild_model.global_transform * wild_bounds
+	var base := Vector3(_wild.global_position.x, wild_world.position.y, _wild.global_position.z)
+	var head := OCCLUSION_FADE.head_point(base, wild_world.size, _wild.call("facing") as Vector3,
+		forward_fraction, float(cfg.get("head_height_fraction", 0.75)))
+	return OCCLUSION_FADE.segment_hits_ellipsoid(camera.global_position, head,
+		ally_model.global_transform, ally_bounds)
 
 
 ## The occlusion swing's target: the authored extra while the ally hides the
