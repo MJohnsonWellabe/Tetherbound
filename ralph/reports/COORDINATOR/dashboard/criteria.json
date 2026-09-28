@@ -523,10 +523,10 @@
    "id": "F09",
    "title": "Stormwood earned traversal",
    "chapter": "Stormwood",
-   "pct": 60,
+   "pct": 100,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 5,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -555,9 +555,10 @@
     },
     {
      "text": "Four loops, three shortcuts, five pockets, alternate routes physically traversable",
-     "status": "partial",
-     "evidence": "test_stormwood_route_walkability, test_stormwood_pockets, dynamo_west_approach, five walled pockets + re-bake, mouth lamps/approach cones (main fe07d0d2, CI green); fixture-staged captures",
-     "gap": "Pocket lures not visible from road; ordinary walk witness"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f09_3_r8/ @ tb/stormwood b2653f34: tests/smoke_stormwood_route_walks.gd from the earned 4_core checkpoint, 72/0: all five loops walked vertex by vertex, dynamo_west_approach end to end, arch pairs C and D relit by their prompts and crossed both ways, Raise a Road pair raised by ordinary Build input and crossed both ways; smoke_stormwood_pocket_walks.gd from the earned 3_rootgate checkpoint 102/0 (five pockets walked by stick, rewards claimed); route/pocket/Surge/rod/Arch units 101/0. Building-uid defect found by the walk fixed (c4fdd59c). Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Starts: earned 4_core (routes/shortcuts) and 3_rootgate (pockets) checkpoints; the full run began at the Cloudreach-boundary fixture. Teleports: one per route start, per dark arch before relight, per road footing, per pocket (32 m before junction). Grants: 3 Stormglass per relight; road-arch recipe shortfall. Clock x8 at 480 Hz (fights, conductor roads, Build at 1x); harness-driven stick, fights and Build input; waypoints interpolated <=40 m; Calm waits. Frames: teleport, day pinned, Calm. Lures visible 5/5 in every judge round; detour read r7d 4/5, r8 2 YES + 1 PROBABLY; lure tuning stopped under the two-strikes rule. FINDINGs (non-blocking, owned in STATE): pools_west_loop crosses b_pools; b2 landing curb 1.11 m; d_giant rear step 0.4-0.67 m. Bars A/B -> Phase 2 catalog. Landed by the Stormwood Phase 1 lane."
     },
     {
      "text": "Two peers and reload retain the same world gates",
@@ -943,7 +944,7 @@
   {
    "id": "S1",
    "status": "partial",
-   "note": "Integrated run passed review in batch 64; card completes when F09#3 (pocket lures, full art bar) closes.",
+   "note": "Integrated run passed review in batch 64; F09#3 met (route and pocket walks, f09_3_r8). Card run recorded after the landing.",
    "integrated_run": "ralph/reports/STORMWOOD/full_run/run_a.txt + s1/ @ tb/stormwood 9dc96424 (batch 64): one continuous chapter run passes prefix, Crown arch, Rootgate, core, Marrow and aftermath with live fights; route unit tests 101/0; closed-arch bypass 15/0; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: Cloudreach-boundary fixture start (no earned C3 save), fresh L44 party with granted tools, 8x clock, harness input and fights, helper routing B1-B8, one teleport per pocket for the walk witness."
   },
   {

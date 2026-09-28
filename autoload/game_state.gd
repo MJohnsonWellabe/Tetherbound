@@ -393,6 +393,12 @@ var placed_buildings: Array:
 	set(value):
 		if world != null:
 			world.placed_buildings = value
+			# A title Load restores the records through here, not through
+			# WorldState.load_data, so derive the uid counter from them the same
+			# way: the next placement must never mint a uid already in use (F09#3
+			# route-walk finding: a post-Load arch reused the Crown arch's "b1"
+			# and relinked the Crown pair). Never lowers the counter.
+			world.call("_migrate_building_uids")
 
 ## R7.6. What each bed of the berry farm is doing — `{state, ripe_on_day}` per
 ## entry, in the order `data/config/farm.json` lists its plots.

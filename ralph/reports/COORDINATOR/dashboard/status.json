@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T03:15Z",
+ "updated": "2026-09-28T05:30Z",
  "headline": [
-  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main. Its first full CI (run 36367365900) found 2 real failures: the earned-aim eight-tick tap (fixed, #394) and the Cloudreach co-op forced dismount, where the guest lands 4.9 m above its mount (fix in progress). Fast CI on main is green at 7cb77fa7.",
+  "Criteria met: 83 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main. Its first full CI (run 36367365900) found 2 real failures: the earned-aim eight-tick tap (fixed, #394) and the Cloudreach co-op forced dismount, where the guest lands 4.9 m above its mount (fix in progress). Fast CI on main is green at 7cb77fa7.",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
