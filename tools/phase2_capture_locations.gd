@@ -1,5 +1,11 @@
 extends SceneTree
 
+## Phase 2 named-place capture. Derived from catalogue_survey.gd so the
+## production scene, trainer and camera setup stay consistent. This version
+## adds seeded approach/close views, golden-hour captures and HUD suppression.
+## A full run uses --biome=<meadows|water|cloudreach|stormwood>, --seed=2042,
+## and an output under res://ralph/reports/VISUAL/phase2/<biome>/locations.
+
 ## Complete Settings-catalogue visual survey for one production biome.
 ##
 ## This is audit evidence only. It uses Game.debug_teleport_to for destination
@@ -20,7 +26,7 @@ extends SceneTree
 ## production title-screen picker before the world instantiates.
 
 const CATALOGUE_PATH := "res://data/config/debug_teleport_spots.json"
-const DEFAULT_OUTPUT_ROOT := "res://shots/catalogue"
+const DEFAULT_OUTPUT_ROOT := "res://ralph/reports/VISUAL/phase2"
 const SCENES := {
 	"meadows": "res://scenes/world/meadows_playground.tscn",
 	"cloudreach": "res://scenes/world/cloudreach_cliffs.tscn",
