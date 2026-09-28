@@ -1680,10 +1680,16 @@ func set_contact_partner(partner: Node3D, role: StringName = &"") -> void:
 ## hit/avoidance and co-op). Swept, so terrain stops it; the arena hold that
 ## follows still owns the ring.
 func _hold_contact_spacing(delta: float) -> void:
-	var partner := contact_partner
-	if partner == null or contact_spacing_role == &"":
+	if contact_partner == null:
 		return
-	if not is_instance_valid(partner) or not partner.is_inside_tree() or not is_inside_tree():
+	if not is_instance_valid(contact_partner):
+		contact_partner = null
+		_contact_deficit_age_s = 0.0
+		return
+	var partner := contact_partner
+	if contact_spacing_role == &"":
+		return
+	if not partner.is_inside_tree() or not is_inside_tree():
 		contact_partner = null
 		_contact_deficit_age_s = 0.0
 		return
