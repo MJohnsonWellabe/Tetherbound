@@ -1,0 +1,11 @@
+{
+  "enabled": false,
+  "_comment": "Owner-directed Lake Michigan dune islands, 2026-09-28. Presentation-only surface replacement outside Veilfall's separate mountain treatment; no height, collision, control-map, route or water-depth changes. Pair with water_dune_cover.json. Default off until production review.",
+  "_reference": "Inspected NPS Sleeping Bear Dunes photo: https://www.nps.gov/slbe/learn/photosmultimedia/index.htm (pale quartz sand, sparse sage/straw beach grass, dark damp waterline); direction only, no photographic pixels shipped.",
+  "sand_colour": "#c9b795",
+  "wet_colour": "#827969",
+  "bluff_colour": "#b4ac96",
+  "patch_scale": 0.022,
+  "ripple_scale": 16.0,
+  "ripple_strength": 0.025
+}

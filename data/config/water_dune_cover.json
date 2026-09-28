@@ -1,0 +1,33 @@
+{
+  "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
+  "enabled": false,
+  "preserve_islands": ["veilfall"],
+  "ground_cover": {
+    "tuft_count": 18000,
+    "blades_per_tuft": 5,
+    "blade_width": 0.85,
+    "height_near": 0.68,
+    "height_far": 0.88,
+    "height_jitter": 0.28,
+    "bend": 0.12,
+    "density_gain": 0.46,
+    "clump_scale": 0.018,
+    "clump_contrast": 1.0,
+    "tint_base": "#777a4d",
+    "tint_tip": "#c4b782",
+    "tint_jitter": 0.13,
+    "ground_blend": 0.16,
+    "cover_tiers": [
+      {"name": "strand_bushes", "count": 280, "density_gain": 0.16, "item_size": 0.58, "tint_base": "#5b6545", "tint_tip": "#89916a", "ground_blend": 0.16},
+      {"name": "strand_flowers", "count": 100, "density_gain": 0.10, "item_size": 0.40, "tint_tip": "#c8c0a0"}
+    ]
+  },
+  "layers": {
+    "trees": {"clusters": 8, "per_cluster": [3, 6], "cluster_radius_m": [7.0, 17.0], "_dune_sheltered": true},
+    "shrubs": {"models": ["res://assets/environment/stylized_nature/Bush_Common.gltf"], "clusters": 9, "per_cluster": [3, 6], "cluster_radius_m": [5.0, 11.0], "scale": [0.45, 0.85], "_dune_sheltered": true},
+    "groundcover": {"models": ["res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"], "clusters": 28, "per_cluster": [5, 10], "cluster_radius_m": [3.0, 8.0], "scale": [0.42, 0.68]}
+  },
+  "shelter": {"lee_direction_xz": [1.0, 0.35], "min_projection": 0.04, "max_radius_fraction": 0.78},
+  "grass_texture": "res://assets/environment/stylized_nature/derived/Grass_C_dune_sage_straw.png",
+  "grass_palette": {"sage": "#92966a", "straw": "#c4b782"}
+}

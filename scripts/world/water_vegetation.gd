@@ -11,6 +11,7 @@ const CHARACTER_CONFIG_PATH := "res://data/config/water_characters.json"
 const ENCOUNTER_CONFIG_PATH := "res://data/config/water_encounters.json"
 const MAX_ATTEMPTS_PER_POINT := 12
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+const DUNE_COVER := preload("res://scripts/world/water_dune_cover.gd")
 
 var placed_by_layer: Dictionary = {}
 var placed_by_island: Dictionary = {}
@@ -24,6 +25,7 @@ var _rules: Dictionary
 var _field: RefCounted
 var _exclusion_points: Array[Dictionary] = []
 var _route_segments: Array[Dictionary] = []
+var _dune_settings: Dictionary = {}
 
 
 func build(world_config: Dictionary, field: RefCounted) -> void:
@@ -34,6 +36,7 @@ func build(world_config: Dictionary, field: RefCounted) -> void:
 		push_error("Water vegetation needs valid rules and the Water heightfield")
 		return
 	_rules = parsed
+	_dune_settings = DUNE_COVER.config()
 	_compile_exclusions()
 	var batches: Dictionary = {}
 	for island: Dictionary in _world_config.get("islands", []):
@@ -134,7 +137,8 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 	var profile := str((_rules.get("island_profiles", {}) as Dictionary).get(island_id, "green"))
 	var layers: Dictionary = _rules.get("layers", {})
 	for layer_name: String in layers:
-		var layer: Dictionary = layers[layer_name]
+		var layer: Dictionary = DUNE_COVER.layer_profile(layers[layer_name], layer_name,
+			island_id, _dune_settings)
 		var profile_scale := float((layer.get("profile_scale", {}) as Dictionary).get(profile, 1.0))
 		layer = layer.duplicate()
 		layer["max_slope_deg"] = float((layer.get("profile_max_slope_deg", {}) as Dictionary).get(
@@ -210,6 +214,8 @@ func _sample_member(rng: RandomNumberGenerator, cluster: Vector2, spread: float,
 
 
 func _accept(point: Vector2, centre: Vector2, radius: float, layer: Dictionary) -> Dictionary:
+	if not DUNE_COVER.accepts_shelter(point, centre, radius, layer, _dune_settings):
+		return {"valid": false}
 	if point.distance_to(centre) > radius - float(_rules.get("shore_margin_m", 10.0)):
 		return {"valid": false}
 	for exclusion: Dictionary in _exclusion_points:
@@ -235,7 +241,9 @@ func _build_batch(model_path: String, batch_label: String, origin: Vector3, plac
 		if not placements.is_empty():
 			push_warning("Water vegetation skipped missing model: " + model_path)
 		return
-	var mesh_instances: Array[Dictionary] = _prepared_meshes_for(model_path)
+	var dune_palette := DUNE_COVER.applies_to_island(
+		str((placements[0] as Dictionary).get("island_id", "")), _dune_settings)
+	var mesh_instances: Array[Dictionary] = _prepared_meshes_for(model_path, dune_palette)
 	if mesh_instances.is_empty():
 		return
 	for source_mesh: Dictionary in mesh_instances:
@@ -273,36 +281,37 @@ func _build_batch(model_path: String, batch_label: String, origin: Vector3, plac
 	rendered_by_model[model_path] = int(rendered_by_model.get(model_path, 0)) + placements.size()
 
 
-func _prepared_meshes_for(model_path: String) -> Array[Dictionary]:
-	if _prepared_meshes.has(model_path):
-		return _prepared_meshes[model_path]
+func _prepared_meshes_for(model_path: String, dune_palette: bool = false) -> Array[Dictionary]:
+	var cache_key := model_path + ("::dune" if dune_palette else "")
+	if _prepared_meshes.has(cache_key):
+		return _prepared_meshes[cache_key]
 	var packed := load(model_path) as PackedScene
 	if packed == null:
 		push_warning("Water vegetation model could not be loaded: " + model_path)
-		_prepared_meshes[model_path] = []
+		_prepared_meshes[cache_key] = []
 		return []
 	var source := packed.instantiate()
 	var mesh_instances: Array[Dictionary] = []
-	_collect_meshes(source, Transform3D.IDENTITY, model_path, mesh_instances)
+	_collect_meshes(source, Transform3D.IDENTITY, model_path, mesh_instances, dune_palette)
 	source.free()
-	_prepared_meshes[model_path] = mesh_instances
+	_prepared_meshes[cache_key] = mesh_instances
 	return mesh_instances
 
 
 func _collect_meshes(node: Node, parent_transform: Transform3D, model_path: String,
-		into: Array[Dictionary]) -> void:
+		into: Array[Dictionary], dune_palette: bool = false) -> void:
 	var relative := parent_transform
 	if node is Node3D:
 		relative = parent_transform * (node as Node3D).transform
 	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
 		var source := node as MeshInstance3D
-		into.append({"name": str(source.name), "mesh": _presentation_mesh(source, model_path),
+		into.append({"name": str(source.name), "mesh": _presentation_mesh(source, model_path, dune_palette),
 			"transform": relative})
 	for child: Node in node.get_children():
-		_collect_meshes(child, relative, model_path, into)
+		_collect_meshes(child, relative, model_path, into, dune_palette)
 
 
-func _presentation_mesh(source: MeshInstance3D, model_path: String) -> Mesh:
+func _presentation_mesh(source: MeshInstance3D, model_path: String, dune_palette: bool = false) -> Mesh:
 	var mesh := source.mesh.duplicate(true) as Mesh
 	for surface in mesh.get_surface_count():
 		var material: Material = source.material_override
@@ -323,6 +332,10 @@ func _presentation_mesh(source: MeshInstance3D, model_path: String) -> Mesh:
 				standard.albedo_color = Color("79a76f") if model_path.contains("Bush_Common") else Color("8fb77d")
 			elif standard.resource_name == "Flowers":
 				standard.albedo_color = Color("bca6cb")
+			if dune_palette and standard.resource_name == "Grass" and standard.albedo_texture != null:
+				var dune_texture := str(_dune_settings.get("grass_texture", ""))
+				if not dune_texture.is_empty():
+					standard.albedo_texture = load(dune_texture) as Texture2D
 			IMPORTED_MATERIALS.apply_thin_foliage_backlight(standard.resource_name, standard)
 			material_textures["%s|%s" % [model_path, standard.resource_name]] = \
 				standard.albedo_texture.resource_path if standard.albedo_texture != null else ""

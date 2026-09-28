@@ -5,6 +5,7 @@ const MARKER := "// COASTAL-ROCK"
 const UNIFORM_ANCHOR := "void fragment() {"
 const MATERIAL_ANCHOR := "mat.ao_strength *= weight_inv;"
 const SHORE_CONFIG := "res://data/config/water_shore_presentation.json"
+const DUNE_CONFIG := "res://data/config/water_dune_terrain.json"
 const UNIFORMS := """
 // COASTAL-ROCK: coherent projection over exposed rock and steep faces.
 uniform sampler2D coast_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -27,6 +28,13 @@ uniform float coast_sediment_height_m = 4.8;
 uniform vec3 coast_wet_colour : source_color = vec3(0.22, 0.29, 0.27);
 uniform float coast_wet_height_m = 1.6;
 uniform float coast_rock_detail = 0.45;
+uniform bool coast_dunes_enabled = false;
+uniform vec3 coast_dune_sand_colour : source_color = vec3(0.78, 0.71, 0.59);
+uniform vec3 coast_dune_wet_colour : source_color = vec3(0.51, 0.47, 0.40);
+uniform vec3 coast_dune_bluff_colour : source_color = vec3(0.62, 0.60, 0.54);
+uniform float coast_dune_patch_scale = 0.022;
+uniform float coast_dune_ripple_scale = 16.0;
+uniform float coast_dune_ripple_strength = 0.025;
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -115,6 +123,25 @@ const MATERIAL := """
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, coast_wet_colour * mix(0.65, 1.0, grain), wet * 0.65);
 		mat.normal_rough.a = mix(mat.normal_rough.a, 0.55, wet);
 	}
+	if (coast_dunes_enabled) {
+		// Owner-directed Great Lakes dune palette. This is surface colour and
+		// roughness only: the baked heights, controls and collision stay intact.
+		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
+		float patch = coast_noise(v_vertex.xz * coast_dune_patch_scale);
+		float grain = coast_noise(v_vertex.xz * 3.4);
+		float phase = dot(v_vertex.xz, vec2(0.63, 0.77)) * coast_dune_ripple_scale + patch * 5.0;
+		// Fade subpixel ripples rather than drawing distant moire across sand.
+		float ripple = sin(phase) * (1.0 - smoothstep(0.7, 2.0, fwidth(phase)));
+		vec3 sand = coast_dune_sand_colour * (mix(0.90, 1.04, patch) + (grain - 0.5) * 0.035 + ripple * coast_dune_ripple_strength);
+		float bluff = 1.0 - smoothstep(0.18, 0.48, abs(coast_face.y));
+		sand = mix(sand, coast_dune_bluff_colour * mix(0.91, 1.05, patch), bluff * 0.7);
+		float wet = 1.0 - smoothstep(0.15, 1.25, v_vertex.y + (patch - 0.5) * 0.4);
+		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * 0.8);
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, outside);
+		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), outside * 0.85);
+		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), outside);
+		mat.normal_map_depth = mix(mat.normal_map_depth, 0.12, outside);
+	}
 """
 
 static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -> Dictionary:
@@ -155,6 +182,13 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 				continue
 			var value: Variant = shore[key]
 			material.call("set_shader_param", "coast_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
+	var dune: Variant = JSON.parse_string(FileAccess.get_file_as_string(DUNE_CONFIG))
+	if dune is Dictionary:
+		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
+		for key: String in ["sand_colour", "wet_colour", "bluff_colour", "patch_scale", "ripple_scale", "ripple_strength"]:
+			if dune.has(key):
+				var value: Variant = dune[key]
+				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
 	var installed: Shader = material.call("get_shader_override")
 	receipt.installed = installed != null and installed.code.contains(MARKER)
 	receipt.reason = "installed" if receipt.installed else "override was regenerated"
