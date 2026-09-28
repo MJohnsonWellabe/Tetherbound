@@ -2,7 +2,7 @@ You are a code-blind visual judge for a stylised creature-expedition action RPG 
 
 **Frames:** `ralph/reports/CARDS/t2_device/`.
 - `_sheet_7inch_1.jpg`, `_sheet_7inch_2.jpg`, `_sheet_7inch_3.jpg`: each cell is scaled to the physical width of a 7-inch 16:9 panel on a normal monitor. **Make every readability call from these sheets at 100% zoom**, as if each cell were the handheld screen.
-- `frames/F01.jpg` … `frames/F20.jpg`: the same 1920x1080 captures at full size, only for checking what a detail actually is.
+- `frames/F01.jpg` … `frames/F20.jpg`: the same 1920x1080 captures at full size, only for checking what a detail actually is. (Not committed, to keep the PR small; regenerate with `tools/capture_tidewake_f13_5.gd` and `tools/capture_tidewake_b_current_restore.gd` at `--resolution 1920x1080` under xvfb with `--rendering-driver opengl3`.)
 
 **What the frames are.** An island chapter the player crosses by swimming.
 - F01–F06: three sea crossings between islands, two views each, from the normal game camera. Sea currents on these crossings carry a swimmer in one direction.

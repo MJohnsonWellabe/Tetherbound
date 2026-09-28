@@ -20,5 +20,5 @@ where a 2.4 m lateral seat may land the ally on the slope.
 
 Owner: Meadows lane (F04#2, `tb/meadows`), which owns the change; contact spacing is `tb/combat-spacing`.
 Not fixed here (cards lane does not edit fight/combat files). Blocks the M2 continuous run.
-Logs: `main_e35e2611_m1_bridge_fail.txt` (two interleaved processes), `main_e35e2611_m2_bridge_fail.txt`,
+Logs: `main_e35e2611_m2_bridge_fail.txt` (main runs 1-2 wrote one interleaved log, kept out of the repo),
 `diag_lateral0_A1_bridge_pass.txt`, `diag_lateral0_A2_bridge_pass.txt`.
