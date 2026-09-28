@@ -54,6 +54,9 @@ var _cap_tells: Array[Dictionary] = []
 ## CHARGER, Vess's DIVER, the Warden's ACE). DISCLOSED shortcut.
 var _live_member := {}
 var _tell_source: Node = null
+## `--ally=<starter>` (F04#7 varied-size framing): the fixture party's
+## creature, terrapup (default), ripplet or galewisp.
+##
 ## `--keep-alive` (DISCLOSED harness help): tops the player's active creature
 ## back up when it falls below KEEP_ALIVE_FRACTION, so a level-3 capture
 ## creature survives a level 11-19 captain long enough to reach the
@@ -87,6 +90,8 @@ func _run() -> void:
 				_live_member[pair.get_slice(":", 0)] = int(pair.get_slice(":", 1))
 		elif arg == "--keep-alive":
 			_keep_alive = true
+		elif arg.begins_with("--ally="):
+			_ally_species = arg.trim_prefix("--ally=")
 		elif arg.begins_with("--after-frames="):
 			_after_frames = maxi(1, int(arg.trim_prefix("--after-frames=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
