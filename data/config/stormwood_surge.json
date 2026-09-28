@@ -6,8 +6,8 @@
   "disabled_rod_break_multiplier": 0.6,
   "presentation": {
     "phase_readability_candidate": {
-      "enabled": false,
-      "_comment": "P2-042 round 1: Fading's low recovery mist reads at both stands without obstruction, but Building still resembles Calm beneath Stormheart. Round 2 keeps Fading and gives Building a blue-green understory fill with heavier wind-driven rain, within ART_DIRECTION 3.3. The sky stays purple. No phase duration, strike, movement, flash cadence, aftermath or camera changes. Default off pending full-item matched blind review.",
+      "enabled": true,
+      "_comment": "P2-042 accepted round 2: a blue-green Building understory and Fading's low recovery mist distinguish all four phases at both original stands. Independent native and small-size review passed phase identity and readability preservation; see stormwood/fixes/P2-042/after-r2-verdict.md. The sky stays purple. No phase duration, strike, movement, flash cadence, aftermath or camera changes. Regional Bars A/B remain open.",
       "phases": {
         "building": {"ambient_colour": "#68abc3", "ambient_energy_mult": 0.52, "sun_energy_mult": 0.24, "rain_amount": 0.82, "wind": 1.0, "fog_density_add": 0.0021},
         "fading": {"ceiling_breakup": 0.48, "ramp": {"rain_amount": [0.6, 0.15], "wind": [1.0, 0.15], "steam": [1.0, 0.0, 1.2], "afterglow": [1.0, 0.0, 1.2]}}

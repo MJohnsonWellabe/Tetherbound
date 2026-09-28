@@ -28,6 +28,18 @@ understory ambient color/energy, key-light energy, rain amount, wind slant and
 fog contribution. The blue-green fill follows ART_DIRECTION 3.3; all sky
 colors remain purple. Independent code review found no actionable defects.
 Default-off surge tests passed 55 tests / 762 assertions. An ignored wrapper
-subclass enabled the candidate in the existing presentation suite's returned
-config, without changing the on-disk flag: 51 tests / 716 assertions passed.
-Native matched round-2 review is pending.
+reported 51 tests / 716 assertions, but only changed the test suite's returned
+config, not the production nodes' config. That run is invalid as evidence of
+the enabled path.
+
+The fresh blind review in `after-r2-verdict.md` passes all four phases at both
+stands and readability preservation. Bars A/B remain NO. The accepted config
+is now enabled. Actual on-disk enabled tests initially found three stale
+expectations reading only baseline phase rows. The expectations now include
+the configured overlay, and both surge suites pass 55 tests / 762 assertions
+with the actual production flag enabled.
+
+Independent activation review by `stormwood_dialogue_review`: clean, no
+actionable issues. The five tests still compare configuration-derived
+expectations against production outputs; no assertions or tolerances were
+removed or weakened. Only the accepted presentation flag is enabled.
