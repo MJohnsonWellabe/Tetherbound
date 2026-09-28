@@ -399,11 +399,11 @@ func _capture_row(row: Dictionary) -> void:
 	_hide_hud()
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
-	var path := "%s/%s.png" % [_output_dir, str(row.frame_id)]
+	var path := "%s/%s.jpg" % [_output_dir, str(row.frame_id)]
 	if image == null or image.is_empty() or image.get_width() != root.size.x or image.get_height() != root.size.y:
 		_failures.append("%s: viewport image is empty or wrong-sized" % str(row.frame_id))
-	elif image.save_png(path) != OK:
-		_failures.append("%s: save_png failed" % str(row.frame_id))
+	elif image.save_jpg(path, 0.87) != OK:
+		_failures.append("%s: save_jpg failed" % str(row.frame_id))
 	else:
 		var record := row.duplicate(true)
 		record["file"] = path
