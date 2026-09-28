@@ -1,0 +1,13 @@
+{
+  "review": "Code-blind inspection of three full-resolution Cloudreach production flight frames",
+  "confirmed_findings": [
+    "P2-004: boxed HUD panels crowd the flight vista",
+    "P2-069: glide and perch approach have nearly identical spread-wing silhouettes"
+  ],
+  "capture_limits": [
+    "The path sits against a large dark rock pillar, reducing contrast; a second route angle is needed before calling this a general camera defect",
+    "approach_perch is still airborne and does not establish a landing or perch",
+    "Three stills do not establish flight animation timing or steering"
+  ],
+  "strengths": "The creature has a clear feathered silhouette and the trainer is visibly attached beneath it."
+}
