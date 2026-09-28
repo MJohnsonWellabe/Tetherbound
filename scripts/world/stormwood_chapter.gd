@@ -57,19 +57,22 @@ func mount(owner_world: Node3D) -> void:
 	# Register this realm's authored conversations without changing another
 	# chapter's ids or introducing a separate dialogue implementation.
 	var conversations: Dictionary = _read("res://data/dialogue/stormwood.json").get("conversations", {})
-	var openings: Dictionary = _read("res://data/config/stormwood_dialogue_presentation.json").get("npc_openings", {})
+	conversations[WEN_REFUSAL_CONVERSATION] = wen_refusal_conversation()
+	var actors: Array = _read("res://data/config/stormwood_npcs.json").get("characters", [])
+	var presentation := _read("res://data/config/stormwood_dialogue_presentation.json")
+	apply_npc_portraits(conversations, actors, presentation.get("npc_portraits", {}))
+	var openings: Dictionary = presentation.get("npc_openings", {})
 	if bool(openings.get("enabled", false)):
 		for id: String in openings.get("lines", {}):
 			if conversations.has(id) and not conversations[id].get("lines", []).is_empty():
 				conversations[id]["lines"][0] = str(openings.lines[id])
 	for id: String in conversations:
 		RUNNER.table()[id] = conversations[id].duplicate(true)
-	RUNNER.table()[WEN_REFUSAL_CONVERSATION] = wen_refusal_conversation()
 	people = PEOPLE.new()
 	people.name = "StormwoodPeople"
 	world.add_child(people)
 	var specs: Array = []
-	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
+	for actor: Dictionary in actors:
 		specs.append(npc_spec(actor))
 	people.build_specs(world.get_node("Player"), specs)
 	_parcels = PIMS_PARCELS.new()
@@ -84,6 +87,12 @@ func mount(owner_world: Node3D) -> void:
 	_glass_for_bryn.name = "GlassForBryn"
 	world.add_child(_glass_for_bryn)
 	_glass_for_bryn.call("mount", world)
+	# This activity registers its own four conversations during mount, after
+	# the chapter's authored table. Update only these known registrations.
+	var bryn_conversations := {}
+	for id: String in GLASS_FOR_BRYN.conversations():
+		bryn_conversations[id] = RUNNER.table()[id]
+	apply_npc_portraits(bryn_conversations, actors, presentation.get("npc_portraits", {}))
 	# A core NPC stands on the authored arena, not the terrain far below it.
 	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
 		if str(actor.get("surface_id", "")) == "dynamo_core":
@@ -263,6 +272,22 @@ static func wen_refusal_conversation() -> Dictionary:
 			"Settle the guardian — defeat it or catch it — then return. Only then can I read the truth without the Crown fighting us.",
 		],
 	}
+
+
+static func apply_npc_portraits(conversations: Dictionary, actors: Array, settings: Dictionary) -> void:
+	if not bool(settings.get("enabled", false)):
+		return
+	var profiles: Dictionary = settings.get("plates_by_profile", {})
+	var speakers := {}
+	for actor: Dictionary in actors:
+		var plate := str(profiles.get(str(actor.get("body_profile", "")), ""))
+		var speaker := str(actor.get("name", ""))
+		if not speaker.is_empty() and not plate.is_empty() and ResourceLoader.exists(plate):
+			speakers[speaker] = plate
+	for conversation: Dictionary in conversations.values():
+		var speaker := str(conversation.get("speaker", ""))
+		if speakers.has(speaker):
+			conversation["portrait"] = speakers[speaker]
 
 func _read(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))

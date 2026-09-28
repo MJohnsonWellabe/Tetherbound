@@ -1,0 +1,194 @@
+{
+  "source_commit": "5b4f093d3790abe310ed492e88259053e03d3dd8",
+  "exterior_baseline_commit": "d0f5151c6a4b15086001da78d17ee14311710167",
+  "flags_restored_off": true,
+  "pairs": [
+    {
+      "id": "stormheart400_calm",
+      "kind": "exterior",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": null,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-branching-exterior-r1/stormheart400_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_calm.jpg",
+      "before_sha256": "20e96f2d8c1d6ed4304d9834999bd95698728dd7cf2026f5236c842209daecd3",
+      "after_sha256": "e908b368fb05e4fa504203107db7664fb014a93c0bba01be4b3e7db7095f5572"
+    },
+    {
+      "id": "stormheart400_break",
+      "kind": "exterior",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": null,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-branching-exterior-r1/stormheart400_break.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_break.jpg",
+      "before_sha256": "544cee3fc12a44b66f392de411a87e6eb483de8a42177f91742628d9c0888d7a",
+      "after_sha256": "c1685c258a158223bde3d78762ced9232474999731a073e635a1a1980ffa776c"
+    },
+    {
+      "id": "stormheart100_calm",
+      "kind": "exterior",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": null,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-branching-exterior-r1/stormheart100_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_calm.jpg",
+      "before_sha256": "962888e905809fe2b24a10799eba7461c4ec9bbb61dac1f36891c40719bfce4a",
+      "after_sha256": "cfde90bc8daa300af3406d6486553543fc1e50e32dde544a069165587395bf94"
+    },
+    {
+      "id": "stormheart100_break",
+      "kind": "exterior",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": null,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-branching-exterior-r1/stormheart100_break.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_break.jpg",
+      "before_sha256": "0c1a93bb3e2f37fe688971d170c550afe08e99823f6f828e09b117866773b304",
+      "after_sha256": "11ca29a8131e1872b1ba89cac9a30b497435349fbacb7fb63eb13b4b435ea48b"
+    },
+    {
+      "id": "stormheart400_aftermath_calm",
+      "kind": "exterior",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": null,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-branching-exterior-r1/stormheart400_aftermath_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_aftermath_calm.jpg",
+      "before_sha256": "00d1db0fb7da34c8d7130536a08c41d9d8f171cc2671dc72e9c0908139139992",
+      "after_sha256": "fce2d8e4bf5e2fb26dc66545ea7b6bc36790893421e7cff327efb3c7a3a36853"
+    },
+    {
+      "id": "stormheart100_aftermath_calm",
+      "kind": "exterior",
+      "camera_position_delta_m": 1.5258789005656581e-05,
+      "camera_basis_max_delta": null,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-branching-exterior-r1/stormheart100_aftermath_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_aftermath_calm.jpg",
+      "before_sha256": "d9660017be8ad0519eb7f0185a2df0f84a3f71948bc0f60dd5d28d73d103c8ef",
+      "after_sha256": "ce996961bad1f4321ce55d191f083e52007d3a798ebe983a29068a355c355036"
+    },
+    {
+      "id": "entry_deck_calm",
+      "kind": "decks",
+      "camera_position_delta_m": 7.629395000208206e-06,
+      "camera_basis_max_delta": 0.0,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/entry_deck_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/entry_deck_calm.jpg",
+      "before_sha256": "946f995abaeef8d2c5e07b078c14b0ae21c581d5d97a0c98c513b1bde43905c8",
+      "after_sha256": "a7aa19d40af7b197c95b9a3f60bfa882e26b918329212ae158b78f4bb4ff7867"
+    },
+    {
+      "id": "entry_deck_break",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 0.0,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/entry_deck_break.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/entry_deck_break.jpg",
+      "before_sha256": "058935111fa92c91439f9d3f72797f633e92d728d3633f1a1d836f80d90c6f41",
+      "after_sha256": "3f9d39d91e76b807bbc3bbf3add5bf94631436085d440b140d65d37b6fb6a552"
+    },
+    {
+      "id": "middle_ascent_calm",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 0.0,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/middle_ascent_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/middle_ascent_calm.jpg",
+      "before_sha256": "d656066b3ec73844777a645716833474707aaa2c8f5e477294bc698ccd778b78",
+      "after_sha256": "0b80f37f5f06364ce50ef7c081d8d90fdbeb9adf4d4383eea7d2fb7e13b9d6fa"
+    },
+    {
+      "id": "middle_ascent_break",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 0.0,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/middle_ascent_break.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/middle_ascent_break.jpg",
+      "before_sha256": "c334764ec56779361cc1c516bc44b763ee39c4d4712530538d056810617acbf2",
+      "after_sha256": "2ee84b5c807de2ed5a08821dd39ddbf10c93d2b64346ffe8b462615d97198ee6"
+    },
+    {
+      "id": "core_arena_calm",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 3.552713698652836e-15,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/core_arena_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/core_arena_calm.jpg",
+      "before_sha256": "749a1054e80eec663c81ad0a57413f3705ba5685031ce8794338ee77a8507ba6",
+      "after_sha256": "7e09934d93d0db63c20402834bc454d53574bc2220ccd90dbd0af6dc6fc0842b"
+    },
+    {
+      "id": "core_arena_break",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 2.2382096180413623e-13,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/core_arena_break.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/core_arena_break.jpg",
+      "before_sha256": "d92aa246631b178503a20594de1f8cfa28ab1a9ffec1cf6d084db726da11f4f4",
+      "after_sha256": "d01455758a0315975424f08278ba497dd2b46b306f70324cfdf7f77652085283"
+    },
+    {
+      "id": "crown_chamber_calm",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.6342482919835326e-13,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/crown_chamber_calm.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/crown_chamber_calm.jpg",
+      "before_sha256": "b196e644c49f64eccdace15186e661aa9a4b7f6d2debd333b4aead79902f2cd2",
+      "after_sha256": "5e00b7ce69b5185cfcaa0561bfff305240ff34cb7b1f16ee8e6ff5437099a7cf"
+    },
+    {
+      "id": "crown_chamber_break",
+      "kind": "decks",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.6342482919835326e-13,
+      "phase_matches": true,
+      "eligible": true,
+      "before_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/crown_chamber_break.jpg",
+      "after_path": ".tmp/stormwood-phase2/p2037-ancient-decks-after-r1/crown_chamber_break.jpg",
+      "before_sha256": "0597850d0df11063ccf02ad51fa535f9c09ca04b5addbfc2dd65353d2fca07ba",
+      "after_sha256": "8ec14e280329dcc76dd1f63c75a6f2e6e4a494d561ca6be138d6b71172ade305"
+    }
+  ],
+  "orientation_limit": "Exterior legacy recorder lacks camera basis; position and phase equivalence only. Raised-deck basis recorded.",
+  "temporal_limit": "Wild motion and rain/lightning samples are not synchronized.",
+  "logs": [
+    {
+      "job": "p2037-ancient-exterior-r1",
+      "stdout_sha256": "082b020fadd89e872d89dae19a5d99cb24808a425edf83662103b9d32074b383",
+      "stderr_sha256": "f1971f0209c8b10ea16376b4b9289ac081b16d1f591733f4519c62f25d5754cc"
+    },
+    {
+      "job": "p2037-ancient-decks-before-r1",
+      "stdout_sha256": "9a70c7967227e6c9263b402d40f017701290a28e3e2251c4089504e9c10f1b47",
+      "stderr_sha256": "f1971f0209c8b10ea16376b4b9289ac081b16d1f591733f4519c62f25d5754cc"
+    },
+    {
+      "job": "p2037-ancient-decks-after-r1",
+      "stdout_sha256": "0d75f42dff65725e720cd30071801fe3abef0f782b730c8d61f20a1039c78298",
+      "stderr_sha256": "f1971f0209c8b10ea16376b4b9289ac081b16d1f591733f4519c62f25d5754cc"
+    }
+  ]
+}

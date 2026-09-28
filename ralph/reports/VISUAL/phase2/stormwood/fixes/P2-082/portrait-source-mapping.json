@@ -1,0 +1,448 @@
+{
+  "scope": "Source mapping audit only. Installed portrait render recipe keys compared with production body_profile; native identity still requires direct comparison. No assets or production config changed.",
+  "actors": [
+    {
+      "id": "rodkeeper_hesk",
+      "world_body_profile": "local_historian",
+      "registry_portrait": "res://assets/ui/portraits/villager_male.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/old_perrin.png"
+      ],
+      "conversations": {
+        "stormwood_rodkeeper_hesk_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_rodkeeper_hesk_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_rodkeeper_hesk_post_storm": "res://assets/ui/portraits/villager_male.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_rodkeeper_hesk_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_rodkeeper_hesk_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_rodkeeper_hesk_post_storm": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_hesk_dark_arches_report": "res://assets/ui/portraits/villager_male.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/old_perrin.png": "08482f0d5f784613d356c37d90544f534952229140ae04c9e65dd291545a42b2"
+      }
+    },
+    {
+      "id": "stormreader_tamsin",
+      "world_body_profile": "young_trainer",
+      "registry_portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/bryn.png"
+      ],
+      "conversations": {
+        "stormwood_stormreader_tamsin_arrival": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_stormreader_tamsin_in_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_stormreader_tamsin_post_storm": "res://assets/ui/portraits/young_trainer.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_stormreader_tamsin_arrival": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_stormreader_tamsin_in_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_stormreader_tamsin_post_storm": "res://assets/ui/portraits/young_trainer.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/bryn.png": "7e73a1838dc2bd53533e639f5f80215fd45a4e9d074bda415498fa9726bd0acf"
+      }
+    },
+    {
+      "id": "cook_marl",
+      "world_body_profile": "innkeeper",
+      "registry_portrait": "res://assets/ui/portraits/wilhelm.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/wilhelm.png"
+      ],
+      "conversations": {
+        "stormwood_cook_marl_arrival": "res://assets/ui/portraits/wilhelm.png",
+        "stormwood_cook_marl_in_progress": "res://assets/ui/portraits/wilhelm.png",
+        "stormwood_cook_marl_post_storm": "res://assets/ui/portraits/innkeeper.png"
+      },
+      "registry_matches_world_profile": true,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_cook_marl_arrival": "res://assets/ui/portraits/wilhelm.png",
+        "stormwood_cook_marl_in_progress": "res://assets/ui/portraits/wilhelm.png",
+        "stormwood_cook_marl_post_storm": "res://assets/ui/portraits/innkeeper.png",
+        "stormwood_pim_parcel_cook_marl": "res://assets/ui/portraits/wilhelm.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/wilhelm.png": "ea271c1d263857260b00badc940c424a396069c8b2c058eb26131c15bf688157"
+      }
+    },
+    {
+      "id": "courier_pim",
+      "world_body_profile": "courier",
+      "registry_portrait": "res://assets/ui/portraits/lark.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/lark.png"
+      ],
+      "conversations": {
+        "stormwood_courier_pim_arrival": "res://assets/ui/portraits/lark.png",
+        "stormwood_courier_pim_in_progress": "res://assets/ui/portraits/lark.png",
+        "stormwood_courier_pim_post_storm": "res://assets/ui/portraits/courier.png"
+      },
+      "registry_matches_world_profile": true,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_courier_pim_arrival": "res://assets/ui/portraits/lark.png",
+        "stormwood_courier_pim_in_progress": "res://assets/ui/portraits/lark.png",
+        "stormwood_courier_pim_post_storm": "res://assets/ui/portraits/courier.png",
+        "stormwood_pim_parcels_offer": "res://assets/ui/portraits/lark.png",
+        "stormwood_pim_parcels_progress": "res://assets/ui/portraits/lark.png",
+        "stormwood_pim_parcels_return": "res://assets/ui/portraits/lark.png",
+        "stormwood_pim_parcels_thanks": "res://assets/ui/portraits/lark.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/lark.png": "c4a5a26e2919bf73179f435d2f21b21671fda12e79e3514909e1e16b93464ce9"
+      }
+    },
+    {
+      "id": "trainer_ivo",
+      "world_body_profile": "wandering_trainer",
+      "registry_portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/wandering_trainer.png"
+      ],
+      "conversations": {
+        "stormwood_trainer_ivo_arrival": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_trainer_ivo_in_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_trainer_ivo_post_storm": "res://assets/ui/portraits/wandering_trainer.png"
+      },
+      "registry_matches_world_profile": true,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_trainer_ivo_arrival": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_trainer_ivo_in_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_trainer_ivo_post_storm": "res://assets/ui/portraits/wandering_trainer.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/wandering_trainer.png": "110541ee9f08c727e9e11f18da971e219820d5887aee7732e36bf58e01924d0d"
+      }
+    },
+    {
+      "id": "grunt_lieutenant_dace",
+      "world_body_profile": "grunt_c",
+      "registry_portrait": "res://assets/ui/portraits/grunt_c.png",
+      "matching_installed_plates": [],
+      "conversations": {
+        "stormwood_grunt_lieutenant_dace_arrival": "res://assets/ui/portraits/grunt_c.png",
+        "stormwood_grunt_lieutenant_dace_in_progress": "res://assets/ui/portraits/grunt_c.png",
+        "stormwood_grunt_lieutenant_dace_post_storm": "res://assets/ui/portraits/grunt_c.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_grunt_lieutenant_dace_arrival": "res://assets/ui/portraits/grunt_c.png",
+        "stormwood_grunt_lieutenant_dace_in_progress": "res://assets/ui/portraits/grunt_c.png",
+        "stormwood_grunt_lieutenant_dace_post_storm": "res://assets/ui/portraits/grunt_c.png"
+      },
+      "plate_sha256": {}
+    },
+    {
+      "id": "warden_elect_bryn",
+      "world_body_profile": "local_historian",
+      "registry_portrait": "res://assets/ui/portraits/villager_male.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/old_perrin.png"
+      ],
+      "conversations": {
+        "stormwood_warden_elect_bryn_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_warden_elect_bryn_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_warden_elect_bryn_post_storm": "res://assets/ui/portraits/villager_male.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_warden_elect_bryn_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_warden_elect_bryn_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_warden_elect_bryn_post_storm": "res://assets/ui/portraits/villager_male.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/old_perrin.png": "08482f0d5f784613d356c37d90544f534952229140ae04c9e65dd291545a42b2"
+      }
+    },
+    {
+      "id": "trader_oswin",
+      "world_body_profile": "trader",
+      "registry_portrait": "res://assets/ui/portraits/villager_male.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/corin.png"
+      ],
+      "conversations": {
+        "stormwood_trader_oswin_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_trader_oswin_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_trader_oswin_post_storm": "res://assets/ui/portraits/trader.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_trader_oswin_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_trader_oswin_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_trader_oswin_post_storm": "res://assets/ui/portraits/trader.png",
+        "stormwood_pim_parcel_trader_oswin": "res://assets/ui/portraits/villager_male.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/corin.png": "cc439e9c800fa28056c1af92a2d091ca6b196ab7168a8b60dc0d11cf85d9ad5c"
+      }
+    },
+    {
+      "id": "tether_lieutenant_varga",
+      "world_body_profile": "officer_a",
+      "registry_portrait": "res://assets/ui/portraits/officer_a.png",
+      "matching_installed_plates": [],
+      "conversations": {
+        "stormwood_tether_lieutenant_varga_arrival": "res://assets/ui/portraits/officer_a.png",
+        "stormwood_tether_lieutenant_varga_in_progress": "res://assets/ui/portraits/officer_a.png",
+        "stormwood_tether_lieutenant_varga_post_storm": "res://assets/ui/portraits/officer_a.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_tether_lieutenant_varga_arrival": "res://assets/ui/portraits/officer_a.png",
+        "stormwood_tether_lieutenant_varga_in_progress": "res://assets/ui/portraits/officer_a.png",
+        "stormwood_tether_lieutenant_varga_post_storm": "res://assets/ui/portraits/officer_a.png"
+      },
+      "plate_sha256": {}
+    },
+    {
+      "id": "keeper_ondra",
+      "world_body_profile": "craftsperson",
+      "registry_portrait": "res://assets/ui/portraits/villager_female.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/ada.png"
+      ],
+      "conversations": {
+        "stormwood_keeper_ondra_arrival": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_keeper_ondra_in_progress": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_keeper_ondra_post_storm": "res://assets/ui/portraits/craftsperson.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_keeper_ondra_arrival": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_keeper_ondra_in_progress": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_keeper_ondra_post_storm": "res://assets/ui/portraits/craftsperson.png",
+        "stormwood_ondra_raise_a_road_report": "res://assets/ui/portraits/craftsperson.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/ada.png": "3653474707d1c63d27826bd2748c1004dac2f81e79a731b2b157f3c58b3642d1"
+      }
+    },
+    {
+      "id": "archivist_wen",
+      "world_body_profile": "field_researcher",
+      "registry_portrait": "res://assets/ui/portraits/old_perrin.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/maren.png"
+      ],
+      "conversations": {
+        "stormwood_archivist_wen_arrival": "res://assets/ui/portraits/old_perrin.png",
+        "stormwood_archivist_wen_in_progress": "res://assets/ui/portraits/old_perrin.png",
+        "stormwood_archivist_wen_post_storm": "res://assets/ui/portraits/field_researcher.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_archivist_wen_arrival": "res://assets/ui/portraits/old_perrin.png",
+        "stormwood_archivist_wen_in_progress": "res://assets/ui/portraits/old_perrin.png",
+        "stormwood_archivist_wen_post_storm": "res://assets/ui/portraits/field_researcher.png",
+        "stormwood_wen_crown_records_return": "res://assets/ui/portraits/old_perrin.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/maren.png": "19975aebfa440852a9355090988ce08053b86d588ac1679af0b71f909005118d"
+      }
+    },
+    {
+      "id": "elder_maud",
+      "world_body_profile": "local_historian",
+      "registry_portrait": "res://assets/ui/portraits/villager_male.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/old_perrin.png"
+      ],
+      "conversations": {
+        "stormwood_elder_maud_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_elder_maud_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_elder_maud_post_storm": "res://assets/ui/portraits/villager_male.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_elder_maud_arrival": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_elder_maud_in_progress": "res://assets/ui/portraits/villager_male.png",
+        "stormwood_elder_maud_post_storm": "res://assets/ui/portraits/villager_male.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/old_perrin.png": "08482f0d5f784613d356c37d90544f534952229140ae04c9e65dd291545a42b2"
+      }
+    },
+    {
+      "id": "trader_fenn",
+      "world_body_profile": "trader",
+      "registry_portrait": "res://assets/ui/portraits/villager_male.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/corin.png"
+      ],
+      "conversations": {
+        "stormwood_trader_fenn_arrival": "res://assets/ui/portraits/trader.png",
+        "stormwood_trader_fenn_in_progress": "res://assets/ui/portraits/trader.png",
+        "stormwood_trader_fenn_post_storm": "res://assets/ui/portraits/trader.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_trader_fenn_arrival": "res://assets/ui/portraits/trader.png",
+        "stormwood_trader_fenn_in_progress": "res://assets/ui/portraits/trader.png",
+        "stormwood_trader_fenn_post_storm": "res://assets/ui/portraits/trader.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/corin.png": "cc439e9c800fa28056c1af92a2d091ca6b196ab7168a8b60dc0d11cf85d9ad5c"
+      }
+    },
+    {
+      "id": "caretaker_lio",
+      "world_body_profile": "creature_caretaker",
+      "registry_portrait": "res://assets/ui/portraits/lark.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/fenn.png"
+      ],
+      "conversations": {
+        "stormwood_caretaker_lio_arrival": "res://assets/ui/portraits/lark.png",
+        "stormwood_caretaker_lio_in_progress": "res://assets/ui/portraits/lark.png",
+        "stormwood_caretaker_lio_post_storm": "res://assets/ui/portraits/creature_caretaker.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_caretaker_lio_arrival": "res://assets/ui/portraits/lark.png",
+        "stormwood_caretaker_lio_in_progress": "res://assets/ui/portraits/lark.png",
+        "stormwood_caretaker_lio_post_storm": "res://assets/ui/portraits/creature_caretaker.png",
+        "stormwood_pim_parcel_caretaker_lio": "res://assets/ui/portraits/lark.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/fenn.png": "07685f643434e03fe304b23824e0666cb535a6f5f03c447da250ebdfb957d727"
+      }
+    },
+    {
+      "id": "ace_trainer_rook",
+      "world_body_profile": "rival_trainer",
+      "registry_portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/juno.png"
+      ],
+      "conversations": {
+        "stormwood_ace_trainer_rook_arrival": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_ace_trainer_rook_in_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_ace_trainer_rook_post_storm": "res://assets/ui/portraits/rival_trainer.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_ace_trainer_rook_arrival": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_ace_trainer_rook_in_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_ace_trainer_rook_post_storm": "res://assets/ui/portraits/rival_trainer.png",
+        "stormwood_rook_circuit_offer": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_rook_circuit_progress": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_rook_circuit_return": "res://assets/ui/portraits/wandering_trainer.png",
+        "stormwood_rook_circuit_thanks": "res://assets/ui/portraits/wandering_trainer.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/juno.png": "ed337051a5686e01231bf19561f8dc62917a3ae4be1228c4d3a9ff9b154ac540"
+      }
+    },
+    {
+      "id": "defector_sable",
+      "world_body_profile": "former_tether_member",
+      "registry_portrait": "res://assets/ui/portraits/ren.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/ren.png"
+      ],
+      "conversations": {
+        "stormwood_defector_sable_arrival": "res://assets/ui/portraits/ren.png",
+        "stormwood_defector_sable_in_progress": "res://assets/ui/portraits/ren.png",
+        "stormwood_defector_sable_post_storm": "res://assets/ui/portraits/former_tether_member.png"
+      },
+      "registry_matches_world_profile": true,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_defector_sable_arrival": "res://assets/ui/portraits/ren.png",
+        "stormwood_defector_sable_in_progress": "res://assets/ui/portraits/ren.png",
+        "stormwood_defector_sable_post_storm": "res://assets/ui/portraits/former_tether_member.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/ren.png": "a11345788c22d07d7162ee4468a94ff5d7703b1496193ab6782014aa08f57015"
+      }
+    },
+    {
+      "id": "officer_kestrel",
+      "world_body_profile": "officer_b",
+      "registry_portrait": "res://assets/ui/portraits/officer_b.png",
+      "matching_installed_plates": [],
+      "conversations": {
+        "stormwood_officer_kestrel_arrival": "res://assets/ui/portraits/officer_b.png",
+        "stormwood_officer_kestrel_in_progress": "res://assets/ui/portraits/officer_b.png",
+        "stormwood_officer_kestrel_post_storm": "res://assets/ui/portraits/officer_b.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_officer_kestrel_arrival": "res://assets/ui/portraits/officer_b.png",
+        "stormwood_officer_kestrel_in_progress": "res://assets/ui/portraits/officer_b.png",
+        "stormwood_officer_kestrel_post_storm": "res://assets/ui/portraits/officer_b.png"
+      },
+      "plate_sha256": {}
+    },
+    {
+      "id": "captain_marrow",
+      "world_body_profile": "captain_a",
+      "registry_portrait": "res://assets/ui/portraits/captain_a.png",
+      "matching_installed_plates": [],
+      "conversations": {
+        "stormwood_captain_marrow_arrival": "res://assets/ui/portraits/captain_a.png",
+        "stormwood_captain_marrow_in_progress": "res://assets/ui/portraits/captain_a.png",
+        "stormwood_captain_marrow_post_storm": "res://assets/ui/portraits/captain_a.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_captain_marrow_arrival": "res://assets/ui/portraits/captain_a.png",
+        "stormwood_captain_marrow_in_progress": "res://assets/ui/portraits/captain_a.png",
+        "stormwood_captain_marrow_post_storm": "res://assets/ui/portraits/captain_a.png",
+        "stormwood_stormheart_release": "res://assets/ui/portraits/captain_a.png"
+      },
+      "plate_sha256": {}
+    },
+    {
+      "id": "crown_caretaker_neri",
+      "world_body_profile": "creature_caretaker",
+      "registry_portrait": "res://assets/ui/portraits/villager_female.png",
+      "matching_installed_plates": [
+        "res://assets/ui/portraits/fenn.png"
+      ],
+      "conversations": {
+        "stormwood_crown_caretaker_neri_arrival": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_crown_caretaker_neri_in_progress": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_crown_caretaker_neri_post_storm": "res://assets/ui/portraits/villager_female.png"
+      },
+      "registry_matches_world_profile": false,
+      "all_matching_plates_exist": true,
+      "speaker_matched_conversations": {
+        "stormwood_crown_caretaker_neri_arrival": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_crown_caretaker_neri_in_progress": "res://assets/ui/portraits/villager_female.png",
+        "stormwood_crown_caretaker_neri_post_storm": "res://assets/ui/portraits/villager_female.png"
+      },
+      "plate_sha256": {
+        "res://assets/ui/portraits/fenn.png": "07685f643434e03fe304b23824e0666cb535a6f5f03c447da250ebdfb957d727"
+      }
+    }
+  ],
+  "source_files": {
+    "scripts/world/stormwood_chapter.gd": "3de29024eea5d479163f5fdf638d0102378b21ae3773444312750dc86e67f806",
+    "data/config/stormwood_npcs.json": "eae3732b2ba70c75e907b1f4b939833876c5de0584fe0c523a0778ad7554dd06",
+    "data/dialogue/stormwood.json": "01963b2d4f73e53455d2d3a8b1f037108398f9a42dbf13b69a224052a8904239",
+    "tools/_capture_portraits.gd": "bfa8d29fcc04e1b484906a39abc52f1513d2d503fd6260583a1e945797613f1d"
+  },
+  "source_commit": "5b4f093d3790abe310ed492e88259053e03d3dd8"
+}

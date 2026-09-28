@@ -53,3 +53,35 @@ func test_settle_puts_a_beaten_captain_in_the_after_state() -> void:
 	assert_almost_eq(body.rotation.y, 0.3 + deg_to_rad(float(down["turn_deg"])), 0.001,
 		"the captain has turned from the fight")
 	holder.free()
+
+
+## Judge r4 (7121d40c): a Sigil hung at face height between lens and captain
+## read as an interact marker over the face. Each handover is held out below
+## the face and to one side, and each Sigil shows its own emblem.
+func test_victory_tokens_are_held_beside_the_speaker_below_the_face() -> void:
+	for id: String in ["captain_riverwatch", "captain_field", "captain_ridge", "warden_aldis"]:
+		var show: Dictionary = AFTERMATH.for_trainer(id)["victory_show"]
+		assert_true(float(show.get("height_m", 1.55)) <= 1.3, "%s's tokens sit below the face" % id)
+		assert_true(absf(float(show.get("side_m", 0.0))) >= 0.5, "%s's tokens are held to one side" % id)
+	assert_true(float(AFTERMATH.for_trainer("warden_aldis")["victory_show"].get("heart_scale", 1.0)) > 1.0,
+		"the Warden's heart is shown larger than the shrine's own")
+
+
+func test_each_captains_sigil_carries_its_own_emblem() -> void:
+	var items := preload("res://autoload/item_db.gd").new()
+	var seen := {}
+	for id: String in ["captain_riverwatch", "captain_field", "captain_ridge"]:
+		var token: Dictionary = (AFTERMATH.for_trainer(id)["victory_show"]["tokens"] as Array)[0]
+		var icon := str(items.definition(str(token["item"])).get("icon", ""))
+		assert_true(ResourceLoader.exists(icon), "%s's sigil has an emblem icon" % id)
+		assert_false(seen.has(icon), "%s's emblem is its own" % id)
+		seen[icon] = true
+	var holder := Node3D.new()
+	var texture := load(str(seen.keys()[0])) as Texture2D
+	AFTERMATH._build_sigil(holder, Vector3.ZERO, Color("4e8ea3"), texture, 1.35)
+	var sigil := holder.get_node("Sigil") as Node3D
+	var emblem := sigil.get_node_or_null(^"Emblem") as MeshInstance3D
+	assert_ne(emblem, null, "the medallion face shows the emblem")
+	assert_eq((emblem.material_override as StandardMaterial3D).albedo_texture, texture, "with the item's own icon")
+	assert_almost_eq(sigil.scale.x, 1.35, 0.001, "at the configured size")
+	holder.free()
