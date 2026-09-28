@@ -39,6 +39,7 @@ const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## R8.1: the trainer table's own reader. `trainer_npc.gd` places the people;
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const TRAINER_AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## WORLD-LIFE-0903. Pure `RefCounted`, offline-constructible (no live
@@ -5881,6 +5882,8 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 	var push_in := get_tree().get_first_node_in_group("conversation_camera")
 	if push_in != null and speaker != null and is_instance_valid(speaker) and speaker.is_inside_tree():
 		push_in.call("begin", speaker, "aftermath")
+		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
+		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
 	panel.call("start", conversation)
 
 

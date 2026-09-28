@@ -1,0 +1,20 @@
+{
+  "_comment": "F04#6 distinct aftermath (round-1 judge: 'aftermaths are dialogue shots with no world change'). Per named Meadows trainer, what the world visibly does once they are beaten. Read by scripts/world/trainer_aftermath.gd; derived entirely from the trainer's existing world-scoped defeat flag, so every peer and every reload converges on the same state with no new durable data. `standard`: Team Tether's installed oxblood Banner_1 standard (props.json's own MEADOWS-VERTICAL-STANDARDS values) planted beside the captain at `offset` [right, forward] metres in the captain's own frame (bodies face +Z), no collider; beaten, it falls away from them. `stand_down`: after the defeat slump the captain walks to `offset` and turns `turn_deg` from their fighting facing (until the player comes within notice range, when the body turns to them as every NPC does) -- out of the road, no longer barring it. `victory_show`: the Warden's Realm Key and the Heart of the Meadows shown in the air between him and the player while his victory lines run. ALL TUNABLE.",
+  "standard_prop": {
+    "model": "Banner_1",
+    "dir": "res://assets/props/quaternius_fantasy",
+    "sink_m": -2.4,
+    "scale": 1.55,
+    "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}
+  },
+  "fall_seconds": 1.4,
+  "fallen_roll_deg": 80.0,
+  "stand_down_speed_mps": 1.4,
+  "trainers": {
+    "relay_captain": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}},
+    "captain_riverwatch": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}},
+    "captain_field": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}},
+    "captain_ridge": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}},
+    "warden_aldis": {"victory_show": {"height_m": 1.55, "toward_player_m": 1.3, "seconds": 14.0}}
+  }
+}
