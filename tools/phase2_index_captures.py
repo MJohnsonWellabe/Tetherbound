@@ -141,7 +141,12 @@ def main() -> None:
             if "/" in args.capture_script or "\\" in args.capture_script or not args.capture_script.endswith(".gd"):
                 raise SystemExit("--capture-script must be a tools/ basename ending in .gd")
             capture_script = args.capture_script
-        selection = f"--biome={args.biome} --subset={frame['identity']} "
+        # A dialogue record adds a state suffix to the plan identity. Replay
+        # selects the authored post, then captures its dialogue state again.
+        selection_identity = str(frame["identity"])
+        if view == "dialogue" and selection_identity.endswith("__dialogue"):
+            selection_identity = selection_identity.removesuffix("__dialogue")
+        selection = f"--biome={args.biome} --subset={selection_identity} "
         if args.category == "locations":
             selection += f"--times={time} --views={view} "
         repro = (
@@ -164,7 +169,7 @@ def main() -> None:
             "time_of_day": "dusk" if time == "golden" else time,
             "weather_or_phase": frame.get("phase", "unmeasured" if args.biome == "stormwood" else "clear"),
             "pose_or_state": frame.get("family_type", view) if args.category == "items" else view,
-            "camera": "vista" if view == "vista" else ("close" if view == "close" else "normal"),
+            "camera": "ui" if view == "dialogue" else ("vista" if view == "vista" else ("close" if view == "close" else "normal")),
             "frame_path": rel,
             "repro": repro,
             "commit": args.commit,
