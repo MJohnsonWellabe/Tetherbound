@@ -27,6 +27,13 @@ def main() -> None:
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--seed", type=int, default=2042)
     parser.add_argument("--max-frames", type=int, default=32)
+    parser.add_argument("--interval", type=float, default=1.0)
+    parser.add_argument("--level", type=int, default=53)
+    parser.add_argument("--pilot", default="READER")
+    parser.add_argument("--cap-s", type=int, default=180)
+    parser.add_argument("--tells-per-opponent", type=int, default=2)
+    parser.add_argument("--hits-per-opponent", type=int, default=2)
+    parser.add_argument("--run-suffix", default="")
     args = parser.parse_args()
     if len(args.commit) != 40 or subprocess.run(
         ["git", "-C", str(args.repo), "cat-file", "-e", f"{args.commit}^{{commit}}"],
@@ -53,7 +60,7 @@ def main() -> None:
         trainer = Path(relative).parent.name
         state = record["tag"]
         stem = Path(relative).stem.replace(".", "_")
-        frame_id = f"tidewake__fight__{trainer}__{stem}"
+        frame_id = f"tidewake__fight__{trainer}{args.run_suffix}__{stem}"
         output = dest / f"{frame_id}.png"
         with Image.open(origin) as image:
             image.verify()
@@ -68,7 +75,10 @@ def main() -> None:
                 "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
                 "--script tools/phase2_capture_tidewake_fights.gd -- "
                 f"--trainer=water_trainer_{trainer} --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/{trainer} "
-                f"--interval=1.0 --max-frames={args.max_frames} --level=53 --pilot=READER --cap-s=180 "
+                f"--interval={args.interval} --max-frames={args.max_frames} "
+                f"--level={args.level} --pilot={args.pilot} --cap-s={args.cap_s} "
+                f"--tells-per-opponent={args.tells_per_opponent} "
+                f"--hits-per-opponent={args.hits_per_opponent} "
                 f"--render-only-saves --seed={args.seed}"
             ),
             "commit": args.commit, "render_path": args.render_path,

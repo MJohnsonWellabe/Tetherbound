@@ -42,6 +42,15 @@ func _load_plan() -> bool:
 		row["defeated_dialogue_id"] = conversation
 		row["frame_id"] = str(row.frame_id) + "__defeated"
 		selected.append(row)
+	var start := 0
+	var count := -1
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--defeated-start="):
+			start = maxi(0, int(arg.trim_prefix("--defeated-start=")))
+		elif arg.begins_with("--defeated-count="):
+			count = maxi(1, int(arg.trim_prefix("--defeated-count=")))
+	if start > 0 or count > 0:
+		selected = selected.slice(start, mini(selected.size(), start + count) if count > 0 else selected.size())
 	_planned = selected
 	return not _planned.is_empty()
 

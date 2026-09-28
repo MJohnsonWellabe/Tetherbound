@@ -1,9 +1,9 @@
 {
   "biomes": {
     "meadows": {
-      "frames": 545,
+      "frames": 558,
       "categories": {
-        "characters": 83,
+        "characters": 96,
         "creatures": 126,
         "named_locations": 114,
         "route_and_terrain": 50,
@@ -12,7 +12,7 @@
         "world_items": 78
       },
       "times": {
-        "day": 456,
+        "day": 469,
         "dusk": 48,
         "night": 41
       },
@@ -29,7 +29,7 @@
         "flying",
         "swimming"
       ],
-      "dialogue_frames": 35,
+      "dialogue_frames": 48,
       "defeated_frames": 0,
       "ui_ids": [
         "meadows__exploration_hud",
@@ -55,24 +55,24 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 735,
+      "frames": 804,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 95,
+        "systems": 164,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 535,
+        "day": 604,
         "dusk": 114,
         "night": 86
       },
       "systems": {
         "current_states": 16,
-        "fights": 72,
+        "fights": 141,
         "swimming": 7
       },
       "expected_systems_without_indexed_frames": [
@@ -164,34 +164,34 @@
       "missing_repro_or_render_path": []
     },
     "stormwood": {
-      "frames": 622,
+      "frames": 626,
       "categories": {
         "characters": 142,
         "creatures": 98,
         "named_locations": 186,
         "route_and_terrain": 60,
-        "systems": 82,
+        "systems": 86,
         "time_and_weather": 12,
         "ui": 12,
         "world_items": 30
       },
       "times": {
-        "day": 486,
+        "day": 490,
         "dusk": 74,
         "night": 62
       },
       "systems": {
+        "bed": 1,
+        "building": 1,
+        "camp": 1,
+        "crafting": 1,
         "fights": 82
       },
       "expected_systems_without_indexed_frames": [
         "flying",
         "riding",
         "swimming",
-        "catching",
-        "camp",
-        "bed",
-        "building",
-        "crafting"
+        "catching"
       ],
       "dialogue_frames": 71,
       "defeated_frames": 52,
@@ -210,7 +210,11 @@
         "stormwood__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {},
+      "missing_planned_frames": {
+        "systems": [
+          "stormwood__system__build_suite"
+        ]
+      },
       "bad_commits": [],
       "missing_repro_or_render_path": []
     }
