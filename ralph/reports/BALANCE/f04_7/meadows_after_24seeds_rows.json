@@ -1,0 +1,1041 @@
+{
+ "seeds": 24,
+ "harness": "tests/smoke_meadows_named_c2c3.gd --seeds=24 --starter=<each>",
+ "rows": [
+  {
+   "band": "band2_stone_and_root",
+   "case": "warrens_guardian",
+   "kind": "named_wild",
+   "party_level": 9,
+   "pilots": {
+    "MASHER": {
+     "hits": 660,
+     "incoming_hits": 144,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 28.8,
+     "max_single_hit_frac": 0.122266913459566,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 0.641514302845861,
+     "median_party_cost": 0.154581759721894,
+     "median_seconds": 26.25,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 405,
+     "incoming_hits": 0,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 34.1166666666667,
+     "max_single_hit_frac": 0.0,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 0.0,
+     "median_party_cost": 0.0,
+     "median_seconds": 32.95,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band3_the_river_lock",
+   "case": "relay_captain",
+   "kind": "top",
+   "party_level": 12,
+   "pilots": {
+    "MASHER": {
+     "hits": 2642,
+     "incoming_hits": 551,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 98.2666666666667,
+     "max_single_hit_frac": 0.267083825485377,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.789156626506024,
+     "median_seconds": 90.4166666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 1862,
+     "incoming_hits": 250,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 202.416666666667,
+     "max_single_hit_frac": 0.186648715960692,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.240963855421687,
+     "median_seconds": 191.008333333333,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band3_the_river_lock",
+   "case": "captain_riverwatch",
+   "kind": "top",
+   "party_level": 12,
+   "pilots": {
+    "MASHER": {
+     "hits": 2869,
+     "incoming_hits": 590,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 106.283333333333,
+     "max_single_hit_frac": 0.446386627720314,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 1.0,
+     "median_seconds": 100.366666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 1.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.0,
+     "wins": 0
+    },
+    "READER": {
+     "hits": 2061,
+     "incoming_hits": 58,
+     "lead_faint_rate": 0.0416666666666667,
+     "max_seconds": 214.05,
+     "max_single_hit_frac": 0.244135210006233,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 0.44316066533367,
+     "median_party_cost": 0.106785702490041,
+     "median_seconds": 200.075,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band4_upper_meadows_ironwood",
+   "case": "captain_field",
+   "kind": "top",
+   "party_level": 15,
+   "pilots": {
+    "MASHER": {
+     "hits": 3060,
+     "incoming_hits": 638,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 109.7,
+     "max_single_hit_frac": 0.445759307743079,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.939645126014393,
+     "median_seconds": 105.225,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0833333333333333,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.916666666666667,
+     "wins": 22
+    },
+    "READER": {
+     "hits": 2267,
+     "incoming_hits": 336,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 221.95,
+     "max_single_hit_frac": 0.13296985653342,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.263991220713975,
+     "median_seconds": 209.383333333333,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band4_upper_meadows_ironwood",
+   "case": "captain_ridge",
+   "kind": "top",
+   "party_level": 15,
+   "pilots": {
+    "MASHER": {
+     "hits": 2623,
+     "incoming_hits": 505,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 95.3333333333333,
+     "max_single_hit_frac": 0.423280151054828,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.692692841117629,
+     "median_seconds": 91.55,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.9,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 1802,
+     "incoming_hits": 434,
+     "lead_faint_rate": 0.375,
+     "max_seconds": 215.716666666667,
+     "max_single_hit_frac": 0.159972085053672,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 0.907481483408276,
+     "median_party_cost": 0.21867023696585,
+     "median_seconds": 211.875,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.9,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "case": "stronghold_elite",
+   "kind": "top",
+   "party_level": 17,
+   "pilots": {
+    "MASHER": {
+     "hits": 2845,
+     "incoming_hits": 545,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 104.833333333333,
+     "max_single_hit_frac": 0.259800212272526,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.764726169821909,
+     "median_seconds": 101.341666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 2244,
+     "incoming_hits": 473,
+     "lead_faint_rate": 0.75,
+     "max_seconds": 233.5,
+     "max_single_hit_frac": 0.175458875537106,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.240963855421687,
+     "median_seconds": 229.391666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "case": "warden_aldis",
+   "kind": "top",
+   "party_level": 17,
+   "pilots": {
+    "MASHER": {
+     "hits": 2977,
+     "incoming_hits": 544,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 111.916666666667,
+     "max_single_hit_frac": 0.429708414337262,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.789156626506024,
+     "median_seconds": 105.991666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 2217,
+     "incoming_hits": 446,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 193.95,
+     "max_single_hit_frac": 0.160402451342895,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.240963855421687,
+     "median_seconds": 188.025,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "terrapup",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band2_stone_and_root",
+   "case": "warrens_guardian",
+   "kind": "named_wild",
+   "party_level": 9,
+   "pilots": {
+    "MASHER": {
+     "hits": 461,
+     "incoming_hits": 117,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 19.7833333333333,
+     "max_single_hit_frac": 0.11310587836322,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 0.491401846699683,
+     "median_party_cost": 0.110766809706896,
+     "median_seconds": 19.0166666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 288,
+     "incoming_hits": 0,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 20.7166666666667,
+     "max_single_hit_frac": 0.0,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 0.0,
+     "median_party_cost": 0.0,
+     "median_seconds": 20.7166666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band3_the_river_lock",
+   "case": "relay_captain",
+   "kind": "top",
+   "party_level": 12,
+   "pilots": {
+    "MASHER": {
+     "hits": 2498,
+     "incoming_hits": 474,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 91.3,
+     "max_single_hit_frac": 0.276950193433581,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.784836065573771,
+     "median_seconds": 82.325,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 1558,
+     "incoming_hits": 199,
+     "lead_faint_rate": 0.0416666666666667,
+     "max_seconds": 158.016666666667,
+     "max_single_hit_frac": 0.0947331737132625,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 0.666903094925053,
+     "median_party_cost": 0.15032651729868,
+     "median_seconds": 145.691666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band3_the_river_lock",
+   "case": "captain_riverwatch",
+   "kind": "top",
+   "party_level": 12,
+   "pilots": {
+    "MASHER": {
+     "hits": 2752,
+     "incoming_hits": 597,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 102.05,
+     "max_single_hit_frac": 0.377187213343155,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 1.0,
+     "median_seconds": 99.55,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.958333333333333,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.0416666666666667,
+     "wins": 1
+    },
+    "READER": {
+     "hits": 1617,
+     "incoming_hits": 0,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 149.283333333333,
+     "max_single_hit_frac": 0.0,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 0.0,
+     "median_party_cost": 0.0,
+     "median_seconds": 142.675,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band4_upper_meadows_ironwood",
+   "case": "captain_field",
+   "kind": "top",
+   "party_level": 15,
+   "pilots": {
+    "MASHER": {
+     "hits": 2963,
+     "incoming_hits": 594,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 103.05,
+     "max_single_hit_frac": 0.444442534954681,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.93504934450755,
+     "median_seconds": 100.275,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.25,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.75,
+     "wins": 18
+    },
+    "READER": {
+     "hits": 1805,
+     "incoming_hits": 242,
+     "lead_faint_rate": 0.0833333333333333,
+     "max_seconds": 214.35,
+     "max_single_hit_frac": 0.12554955176138,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 0.796402191059906,
+     "median_party_cost": 0.179516887329077,
+     "median_seconds": 161.983333333333,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band4_upper_meadows_ironwood",
+   "case": "captain_ridge",
+   "kind": "top",
+   "party_level": 15,
+   "pilots": {
+    "MASHER": {
+     "hits": 2286,
+     "incoming_hits": 442,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 87.1,
+     "max_single_hit_frac": 0.410954576213103,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.634248948273643,
+     "median_seconds": 82.6916666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.9,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 1653,
+     "incoming_hits": 418,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 173.083333333333,
+     "max_single_hit_frac": 0.0999153828264451,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.308194129501713,
+     "median_seconds": 170.216666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.9,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "case": "stronghold_elite",
+   "kind": "top",
+   "party_level": 17,
+   "pilots": {
+    "MASHER": {
+     "hits": 2880,
+     "incoming_hits": 555,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 109.9,
+     "max_single_hit_frac": 0.259914005160475,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.739809069134452,
+     "median_seconds": 104.5,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 2308,
+     "incoming_hits": 443,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 220.483333333333,
+     "max_single_hit_frac": 0.0949100643099062,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.315671617455264,
+     "median_seconds": 216.391666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "case": "warden_aldis",
+   "kind": "top",
+   "party_level": 17,
+   "pilots": {
+    "MASHER": {
+     "hits": 2831,
+     "incoming_hits": 520,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 111.033333333333,
+     "max_single_hit_frac": 0.428301169150541,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.771517650921903,
+     "median_seconds": 105.041666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0416666666666667,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.958333333333333,
+     "wins": 23
+    },
+    "READER": {
+     "hits": 2095,
+     "incoming_hits": 439,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 184.766666666667,
+     "max_single_hit_frac": 0.10808090522861,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.344556466634228,
+     "median_seconds": 181.35,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "ripplet",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band2_stone_and_root",
+   "case": "warrens_guardian",
+   "kind": "named_wild",
+   "party_level": 9,
+   "pilots": {
+    "MASHER": {
+     "hits": 539,
+     "incoming_hits": 154,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 30.8333333333333,
+     "max_single_hit_frac": 0.190385563704645,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.217391304347826,
+     "median_seconds": 23.85,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.0,
+     "wins": 0
+    },
+    "READER": {
+     "hits": 469,
+     "incoming_hits": 0,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 44.15,
+     "max_single_hit_frac": 0.0,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 0.0,
+     "median_party_cost": 0.0,
+     "median_seconds": 42.5833333333333,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band3_the_river_lock",
+   "case": "relay_captain",
+   "kind": "top",
+   "party_level": 12,
+   "pilots": {
+    "MASHER": {
+     "hits": 2506,
+     "incoming_hits": 492,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 95.2166666666667,
+     "max_single_hit_frac": 0.26749401831428,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.795197087922853,
+     "median_seconds": 85.225,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 1651,
+     "incoming_hits": 209,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 169.283333333333,
+     "max_single_hit_frac": 0.159128298926102,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.217391304347826,
+     "median_seconds": 154.558333333333,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band3_the_river_lock",
+   "case": "captain_riverwatch",
+   "kind": "top",
+   "party_level": 12,
+   "pilots": {
+    "MASHER": {
+     "hits": 2663,
+     "incoming_hits": 608,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 107.1,
+     "max_single_hit_frac": 0.434900090941628,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 1.0,
+     "median_seconds": 98.7083333333333,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.833333333333333,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.166666666666667,
+     "wins": 4
+    },
+    "READER": {
+     "hits": 1680,
+     "incoming_hits": 0,
+     "lead_faint_rate": 0.0,
+     "max_seconds": 161.766666666667,
+     "max_single_hit_frac": 0.0,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 0.0,
+     "median_party_cost": 0.0,
+     "median_seconds": 161.575,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band4_upper_meadows_ironwood",
+   "case": "captain_field",
+   "kind": "top",
+   "party_level": 15,
+   "pilots": {
+    "MASHER": {
+     "hits": 2984,
+     "incoming_hits": 597,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 105.466666666667,
+     "max_single_hit_frac": 0.448239899281157,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.916014123131366,
+     "median_seconds": 99.7416666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.291666666666667,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.708333333333333,
+     "wins": 17
+    },
+    "READER": {
+     "hits": 2280,
+     "incoming_hits": 241,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 221.516666666667,
+     "max_single_hit_frac": 0.147308609219092,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.217391304347826,
+     "median_seconds": 207.491666666667,
+     "min_diver_tell_s": -1.0,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band4_upper_meadows_ironwood",
+   "case": "captain_ridge",
+   "kind": "top",
+   "party_level": 15,
+   "pilots": {
+    "MASHER": {
+     "hits": 2504,
+     "incoming_hits": 490,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 94.2666666666667,
+     "max_single_hit_frac": 0.423452435964414,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.782608695652174,
+     "median_seconds": 88.6166666666667,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.9,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    },
+    "READER": {
+     "hits": 1883,
+     "incoming_hits": 388,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 195.3,
+     "max_single_hit_frac": 0.0856437513268512,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.258673507963886,
+     "median_seconds": 190.675,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.9,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "case": "stronghold_elite",
+   "kind": "top",
+   "party_level": 17,
+   "pilots": {
+    "MASHER": {
+     "hits": 2917,
+     "incoming_hits": 574,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 112.65,
+     "max_single_hit_frac": 0.377171055607071,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.782608695652174,
+     "median_seconds": 105.25,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.25,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.75,
+     "wins": 18
+    },
+    "READER": {
+     "hits": 2261,
+     "incoming_hits": 403,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 214.133333333333,
+     "max_single_hit_frac": 0.0812001433564291,
+     "max_tell_s": 0.9,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.244588301965106,
+     "median_seconds": 210.25,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.85,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "case": "warden_aldis",
+   "kind": "top",
+   "party_level": 17,
+   "pilots": {
+    "MASHER": {
+     "hits": 3051,
+     "incoming_hits": 593,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 110.316666666667,
+     "max_single_hit_frac": 0.356678708280836,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.958929867796342,
+     "median_seconds": 106.333333333333,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.333333333333333,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 0.666666666666667,
+     "wins": 16
+    },
+    "READER": {
+     "hits": 2231,
+     "incoming_hits": 408,
+     "lead_faint_rate": 1.0,
+     "max_seconds": 205.783333333333,
+     "max_single_hit_frac": 0.0927897870400317,
+     "max_tell_s": 1.1,
+     "median_lead_cost": 1.0,
+     "median_party_cost": 0.292655193852397,
+     "median_seconds": 198.533333333333,
+     "min_diver_tell_s": 0.4,
+     "min_tell_s": 0.8,
+     "party_wipe_rate": 0.0,
+     "runs": 24,
+     "stalled": 0,
+     "win_rate": 1.0,
+     "wins": 24
+    }
+   },
+   "starter": "galewisp",
+   "verdict": {
+    "pass": true,
+    "reasons": []
+   }
+  }
+ ],
+ "chapter_observed": {
+  "terrapup": "24/24",
+  "ripplet": "24/24",
+  "galewisp": "22/24"
+ },
+ "note": "rows only; per-run detail omitted for size. chapter_observed pairs the per-fight runs by seed index; each fight's seed is its own hash, so these are independent draws, not one shared playthrough."
+}

@@ -80,12 +80,16 @@ Water regression: every Water named row that passed before still passes. That is
 - **DIVER exemption:** a tell from a body with a tell under 0.8 s whose dive travels after a reposition of 7 m or more is held to 0.4 s (BOSSES §2).
 - **Bar:** the verdict now applies the ruling-12 bar and prints a `MEADOWS_C2C3_CHAPTER` line per starter.
 
-**24-seed result** (`f04_7/RUN_meadows_24seeds.txt`): all 21 rows pass.
+**24-seed result** (`f04_7/RUN_meadows_after_24seeds.txt`, printed by the committed harness, one run per starter): all 21 rows pass. The before-tuning run is `f04_7/RUN_meadows_before_24seeds.txt`.
 - The reader wins 100% everywhere.
 - The masher loses its lead in 100% of runs.
 - The reader/masher party-cost ratio is 0.00–0.49.
 - The worst hit is 0.448.
-- Chapter masher-loss is 1.00, 0.97 and 0.94 (terrapup, ripplet, galewisp).
+- Chapter masher-loss (terrapup, ripplet, galewisp):
+  - 1 − Π: 1.00, 0.97, 0.94 (the `MEADOWS_C2C3_CHAPTER` lines).
+  - Observed over seed-indexed six-fight playthroughs: 24/24, 24/24, 22/24. Each fight's seed is its own hash, so these pairings are independent draws, not one shared playthrough.
+- Known bias: the harness party order is fixed and always ends on Trailpup, which finishes the last foe. That makes the masher-loss figures conservative.
+- The chapter-level 25% is the Balance lane's reading of the owner's intent, not the owner's words. Per fight, Vance (L12 Band 3 pin) and Vess (DIVER ending) never beat a masher. If the owner wants a per-fight 25%, the one-line option is to raise the Band 3 pin for Vance.
 
 Per-fight masher loss:
 
