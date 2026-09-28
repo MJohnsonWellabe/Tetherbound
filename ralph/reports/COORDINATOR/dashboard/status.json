@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T05:30Z",
+ "updated": "2026-09-28T05:25Z",
  "headline": [
-  "Criteria met: 83 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main. Its first full CI (run 36367365900) found 2 real failures: the earned-aim eight-tick tap (fixed, #394) and the Cloudreach co-op forced dismount, where the guest lands 4.9 m above its mount (fix in progress). Fast CI on main is green at 7cb77fa7.",
+  "Criteria met: 83 of 101 (Stormwood F09#3 landed, #398). Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Main is green: full CI run 36375973966 passed 33/33 at d971d248, after the eight-tick (#394) and co-op forced-dismount (#396) fixes.",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
@@ -301,10 +301,10 @@
    "contents": "gate_a_opening_drive counts tap ticks from the parse: full-run failure in verify-regions-shard"
   },
   {
-   "name": "Cloudreach riding forced-dismount fix",
-   "sha": "pending",
-   "state": "In progress",
-   "contents": "smoke_net_cloudreach_riding: a mounted guest who joins the host's fight is set down 4.9 m above its mount; then one full CI run on main"
+   "name": "Co-op forced-dismount fix (PR #396)",
+   "sha": "d971d248",
+   "state": "Merged; full CI green (33/33)",
+   "contents": "A shared realm fight seats the ally sideways only onto real, level ground; the guest's creature no longer falls off a Cloudreach road when a fight opens"
   }
  ],
  "lanes": [
