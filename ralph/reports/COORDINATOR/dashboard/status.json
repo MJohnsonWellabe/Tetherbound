@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T07:30Z",
+ "updated": "2026-09-28T07:50Z",
  "headline": [
-  "Criteria met: 86 of 101 (Stormwood F09#3 landed, #398; F10#3 landed). Chapter cards complete: M4, C1, C2, C3, S3, T1 and T3 (7 of 13). Main is green: full CI run 36375973966 passed 33/33 at d971d248, after the eight-tick (#394) and co-op forced-dismount (#396) fixes.",
+  "Criteria met: 88 of 101 (Tidewake F13#3 and F13#5 landed; Stormwood F09#3 and F10#3 landed). Chapter cards complete: M4, C1, C2, C3, S3, T1 and T3 (7 of 13). Main is green: full CI run 36375973966 passed 33/33 at d971d248, after the eight-tick (#394) and co-op forced-dismount (#396) fixes.",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
@@ -311,6 +311,12 @@
    "sha": "see PR",
    "state": "PR with auto-merge",
    "contents": "F08#3 (live production-camera High Perches, judge PASS), F08#4 (settlement residents, Cliffhold ambience, Broken Causeways crown carve; judges PASS), card C2 (earned chapter A7/ledger + six activities) and card C3 (two-peer co-op and Solmane aftermath); Cloudreach complete for Phase 1"
+  },
+  {
+   "name": "Tidewake Phase 1 landing 1 (tb/tidewake)",
+   "sha": "see PR",
+   "state": "PR with auto-merge",
+   "contents": "F13#3 (six local chains in one real-swim run, 619/0; a requester's lead pins its destination on the map; re-check MET) and F13#5 (dock residents at every mandatory dock, current comets, Veilfall distance read; judges and re-check MET); F14 work in progress (Aquaryn fight camera block, Veilfall interior props and Pump Hall machinery, Heart Chamber camera occluders)"
   }
  ],
  "lanes": [
@@ -331,7 +337,7 @@
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "Phase 1 queue: F13#3, F13#5, F14#0, F14#1, then T2",
+   "now": "F13#3 and F13#5 landed; F14#1 next (Nerissa C2: the Riptusk lane traps the ally in the sluice channel at the chamber door), then F14#0 (Tidecoil stand), then T2",
    "next": "Self-lands each criterion"
   },
   {
