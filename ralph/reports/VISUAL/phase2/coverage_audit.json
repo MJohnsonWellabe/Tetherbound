@@ -51,30 +51,30 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 663,
+      "frames": 735,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 23,
+        "systems": 95,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 463,
+        "day": 535,
         "dusk": 114,
         "night": 86
       },
       "systems": {
         "current_states": 16,
+        "fights": 72,
         "swimming": 7
       },
       "expected_systems_without_indexed_frames": [
         "flying",
         "riding",
         "catching",
-        "fights",
         "camp",
         "bed",
         "building",
@@ -102,7 +102,7 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 336,
+      "frames": 338,
       "categories": {
         "characters": 24,
         "creatures": 98,
@@ -110,10 +110,10 @@
         "route_and_terrain": 39,
         "systems": 9,
         "ui": 12,
-        "world_items": 10
+        "world_items": 12
       },
       "times": {
-        "day": 231,
+        "day": 233,
         "dusk": 57,
         "night": 48
       },
@@ -151,38 +151,36 @@
       "missing_planned_frames": {
         "characters": [
           "cloudreach__inventory__character__healer_iven"
-        ],
-        "items": [
-          "cloudreach__inventory__pickup__great_candy",
-          "cloudreach__inventory__pickup__tm_wind_blade"
         ]
       },
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },
     "stormwood": {
-      "frames": 540,
+      "frames": 622,
       "categories": {
         "characters": 142,
         "creatures": 98,
         "named_locations": 186,
         "route_and_terrain": 60,
+        "systems": 82,
         "time_and_weather": 12,
         "ui": 12,
         "world_items": 30
       },
       "times": {
-        "day": 404,
+        "day": 486,
         "dusk": 74,
         "night": 62
       },
-      "systems": {},
+      "systems": {
+        "fights": 82
+      },
       "expected_systems_without_indexed_frames": [
         "flying",
         "riding",
         "swimming",
         "catching",
-        "fights",
         "camp",
         "bed",
         "building",
@@ -205,11 +203,7 @@
         "stormwood__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {
-        "characters": [
-          "stormwood__inventory__trainer__circuit_orin_blacktidewake__defeated"
-        ]
-      },
+      "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     }

@@ -208,7 +208,7 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(existing[key] for key in sorted(existing))
-    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain", "items": "world_items", "characters": "characters", "weather": "time_and_weather"}[args.category]
+    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain", "items": "world_items", "characters": "characters", "weather": "time_and_weather", "systems": "systems"}[args.category]
     build_sheet(repo, base, list(existing.values()), sheet_category)
     print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
 

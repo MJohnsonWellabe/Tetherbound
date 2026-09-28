@@ -80,9 +80,11 @@ func _capture_row(_row: Dictionary) -> void:
 		return
 	await _settle()
 	await _shoot("camp", "camp", "placed camp tent and campfire visual fixture")
+	_clear(active)
+	await _settle()
 	_place(placer, game, "bedroll", anchor, active)
 	await _settle()
-	await _shoot("bed", "bed", "placed bedroll in production tent visual fixture")
+	await _shoot("bed", "bed", "placed bedroll visual fixture")
 	_clear(active)
 	await _settle()
 	_place(placer, game, "floor", anchor, active)
