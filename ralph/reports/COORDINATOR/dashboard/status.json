@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-28T18:35Z",
+ "updated": "2026-09-28T21:55Z",
  "headline": [
-  "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429); Stormwood landed card S1 and F10#2 (#425).",
-  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M2, M3, S2, T2. Cards lane: M1 met; M2 blocked on a South Bridge guardian regression from trainer_ally_lateral_m (3f04ece8, Meadows lane).",
-  "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2 and F04#7. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
-  "Main CI is green on each merge. Meadows render jobs are capped at about 3 at a time so CI isn't starved. The owner has delegated lane decisions to the coordinator."
+  "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Since 18:35: Cards landed M1 (#435); Codex landed Meadows crafting P2-095/P2-096 (#433) and the Phase 2d rules (#432, #434).",
+  "Open: Meadows F04#1, F04#2, F04#6, F04#7; Stormwood F10#6; Tidewake F14#0, F14#1; cards M2, M3, S2, T2.",
+  "Plan to close them: (1) Combat Spacing lands its code now (judge verdicts follow as evidence), which unblocks F04#2/#7 and F14#0/#1. (2) Meadows lands its 16 queued commits (camera occluders, bystanders, CHARGER tell, victory shots), then fixes the South Bridge guardian regression blocking M2. (3) Stormwood lands its r6/r7 HUD work; F10#6 is capped at the r7 judge, after which it and T2's device profile move to one shared HUD-legibility lane. Then T2, M2 and S2 follow; M3 depends on the visual bar.",
+  "Main: the full-tier relay smoke is red until a Codex PR merges (the smoke never finished the relay captains' new victory lines, d541cb040); the fix f58afe4c4 is in #414, #428 and #430. #414 also raises the Stormwood Nysa press step to 420 s (a legitimate wild route fight overran 240 s twice)."
  ],
  "batches": [
   {
@@ -354,13 +354,19 @@
    "sha": "6b85e6b0",
    "state": "Merged",
    "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
+  },
+  {
+   "name": "Landings 18:35–21:55",
+   "sha": "33afd91f",
+   "state": "Merged",
+   "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
   }
  ],
  "lanes": [
   {
    "lane": "Meadows (tb/meadows)",
-   "now": "Landed F03#0, F04#3, F01#2, F01#3. Queue: F04#1 (Dell/Vance tells), F04#6 aftermath, F04#2 and F04#7 C3 after combat spacing lands, then card M3. M1/M2 moved to the Cards lane.",
-   "next": "Self-lands each criterion"
+   "now": "16 commits unlanded: camera occluders (Hall decoration, banner folds), bystanders step out of the fight ring, Vance's CHARGER tell, relay gate arch stops the camera, victory-shot fixes; F04#1 hit/avoidance witness PASS; F04#7 C3 FAIL (Vance face occlusion, bystander in the lane).",
+   "next": "Told 21:51 to open the PR now; F04#2/#7 re-judge after spacing lands; then the South Bridge guardian fix (M2)"
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
@@ -369,28 +375,28 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "Landed card S1 and F10#2 (#425). Open: F10#6 (handheld HUD: fight column covers trainer and attack lanes; plate fade hides the punish line). S2's non-F10 parts moved to the Cards lane.",
-   "next": "Self-lands each criterion"
+   "now": "F10#6 r6 FAIL 3/4 (text ~1.5x under the floors, pip roster without names); r7 raises HUD text to UX §8 floors, adds roster portraits, keeps the trainer in the HUD-safe cap; re-rendering.",
+   "next": "Told 21:51 to land r6/r7 now; F10#6 capped at the r7 judge, else it moves to a shared HUD lane"
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "Landed #407 (Nerissa stand, Tidecoil bay, camera liners) and #429 (F14 C2 met under option c: Venn lane lock, Nerissa at the 9 m ring). Open: F14#0/#1 C3, re-judged once combat spacing lands. T2's non-fight clauses moved to the Cards lane.",
-   "next": "Self-lands each criterion"
+   "now": "PR #436 (auto-merge). F14#0 Tess C3 preview on the unlanded spacing code: 79%.",
+   "next": "Re-judge F14#0/#1 on main once Combat Spacing merges"
   },
   {
    "lane": "Combat Spacing (tb/combat-spacing)",
-   "now": "Shared contact-spacing rule committed; after-runs pass, C2 baselines running; then Tess/Nerissa C3 re-capture under the two-judge rubric",
-   "next": "Lands its own PR; the biome lanes then re-judge C3"
+   "now": "Contact-spacing rule plus reach floor at the rendered separation; C2 before/after, net smokes and unit suite pass; round-2 C3 captures and judge B running.",
+   "next": "Told 21:51 to open its PR now; judge verdicts follow as evidence; announces the merge commit to Tidewake and Meadows"
   },
   {
    "lane": "Cards (tb/cards)",
-   "now": "M1 met (integrated run, strict re-check). M2 blocked: fresh runs fail the South Bridge guardian 0/3 on main; lateral 0.0 diagnostic passes 2/2 (owner Meadows lane). T2 and S2 notes re-scored: T2 device profile fails 7-inch (current direction, small HUD text); S2 audio has no Stormwood assets.",
-   "next": "Re-run M2 when the bridge fix lands"
+   "now": "M1 landed (#435). M2 blocked on the South Bridge guardian regression (owner Meadows); Hall retries from the relay checkpoint. T2 fails the 7-inch device profile; S2 lacks all nine Stormwood audio assets.",
+   "next": "M2's continuous earned run after the bridge fix"
   },
   {
    "lane": "Codex (Phase 2)",
-   "now": "2c lanes running for all four biomes. Stormwood: four weather phases read apart (#412), landmark evidence (#418). Cloudreach #414 and Meadows #416 open.",
-   "next": "The other 2c lanes start as each Claude biome lane completes (Cloudreach can start now)"
+   "now": "#414 Cloudreach dispositions, #428 Stormwood NPC portraits/openings, #430 Tidewake map tabs: full-ci and auto-merge, rebased on #435, CI queued on shared runners. Water combat-pause smoke confirmed intermittent (passed on re-run).",
+   "next": "Merge in order as each goes green; coordinator updates the others"
   },
   {
    "lane": "Balance (tb/balance)",
@@ -423,7 +429,10 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "Branch cleanup: every merged lane branch is contained in main; see the coordinator's list.",
+  "Stormwood audio (blocks S2): all nine assets/audio/stormwood/*.wav are missing and placeholders are forbidden. Proposal: build them from installed audio, judged and with provenance recorded like art.",
+  "Visual bar (blocks M3 and Phase 2 Bars A/B): approve a shared look-development pass (creature materials, lighting/fog/atmosphere, grading, hero landmarks via reference + Meshy) before the per-biome catalog.",
+  "Approve moving F10#6 and T2's device profile into one shared HUD-legibility lane if Stormwood's r7 fails.",
+  "Usage: all lanes show the seven-day limit at warning; if it tightens, pause Cards retries first.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
  ],
  "four_chapter_run": null,
