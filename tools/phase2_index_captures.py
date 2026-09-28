@@ -31,13 +31,14 @@ def main() -> None:
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--category", choices=("locations", "ui"), default="locations")
+    parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     repo = args.repo.resolve()
     source = args.source.resolve()
     if len(args.commit) != 40 or any(c not in "0123456789abcdef" for c in args.commit):
         raise SystemExit("--commit must be a full Git SHA")
     manifest = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
-    if not manifest.get("complete") or manifest.get("failures"):
+    if (not manifest.get("complete") or manifest.get("failures")) and not args.allow_partial:
         raise SystemExit("Capture manifest is incomplete; inspect its failures")
     if manifest.get("biome_id", manifest.get("biome")) != args.biome:
         raise SystemExit("Biome does not match capture manifest")
@@ -48,6 +49,10 @@ def main() -> None:
     frames_dir = base / args.category
     frames_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source / "manifest.json", frames_dir / "engine_manifest.json")
+    if manifest.get("failures"):
+        (frames_dir / "open_capture_failures.json").write_text(
+            json.dumps(manifest["failures"], indent=2) + "\n", encoding="utf-8"
+        )
     csv_path = base / "manifest.csv"
     existing = {}
     if csv_path.exists():
