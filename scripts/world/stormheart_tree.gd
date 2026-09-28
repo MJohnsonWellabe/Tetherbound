@@ -10,7 +10,9 @@ const RAMP_WIDTH := 8.0
 const RAMP_TURNS := 4.0
 const RAMP_SEGMENTS := 384
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
+const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 var simulation_only := false
+var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
 var _metal: StandardMaterial3D
 var _bark: StandardMaterial3D
@@ -35,6 +37,8 @@ func build() -> void:
 	_ramp("CrownStair",Vector3(34,CORE_HEIGHT,0),Vector3(-16,CORE_HEIGHT+24,0),6)
 	if simulation_only:
 		return
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH))
+	_presentation = presentation if presentation is Dictionary else {}
 	_bark = _wood.duplicate() as StandardMaterial3D
 	_bark.albedo_color = Color("bca58a")
 	_bark.uv1_scale = Vector3.ONE
@@ -228,7 +232,14 @@ func _trunk_point(angle: float,height: float,inner: bool) -> Vector3:
 		radius += sin(angle*7.0+height*0.018)*2.1+cos(angle*11.0-height*0.027)*1.0
 	# Preserve the lower ramp corridor; the broad leaning crown begins above it.
 	var lean := smoothstep(185,250,height)
-	return Vector3(cos(angle)*radius+lean*9.0,height,sin(angle)*radius+lean*6.0)
+	var point := Vector3(cos(angle)*radius+lean*9.0,height,sin(angle)*radius+lean*6.0)
+	# Only the visual skirt extends down to the existing terrain. Keep its
+	# upper bands and the full southern entrance split exactly as authored.
+	if height == 0.0 and bool(_presentation.get("enabled", false)) \
+			and bool(_presentation.get("ground_shell_base", false)):
+		var embed := maxf(0.0, float(_presentation.get("bark_embed_m", 0.5)))
+		point.y = minf(point.y, _root_ground(point) - embed)
+	return point
 
 
 func _bark_quad(vertices: PackedVector3Array,normals: PackedVector3Array,uvs: PackedVector2Array,
