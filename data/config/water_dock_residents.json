@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "_why": "F13#5 function (ACCEPTANCE §6.1 F13; ART_DIRECTION Tidewake: 'Docks read as lived destinations'). A code-blind round-1 read (ralph/reports/TIDEWAKE/f13_5_function/r1) found six of seven mandatory docks with no people. This presentation-only layer (scripts/world/water_dock_residents.gd) stands two dock hands from the installed humanoid cast at every mandatory departure dock, on land beside the dock dressing's cargo cluster and off the safe->shore swim lane. They are not named characters, have no prompt, no dialogue, no collider (a route walker or swimmer cannot snag on them) and no state; every peer builds the same people from this file. The profiles are installed art.json bodies that no Tidewake named NPC wears, so a resident is never mistaken for a quest giver.",
+  "mandatory_only": true,
+  "profiles": ["craftsperson", "farmer", "inn_helper", "lost_traveler", "alpha_tracker"],
+  "_why_profiles": "Rotated by dock index so neighbouring docks show different people.",
+  "spots": [
+    {"side_m": 5.4, "back_m": 2.2, "face": "pier", "_what": "beside the cargo cluster, looking at the pier"},
+    {"side_m": 1.9, "back_m": 5.0, "face": "water", "_what": "at the head of the dock, looking out over the crossing"}
+  ],
+  "_why_spots": "In the dock dressing's frame: side_m along the side the pier and cargo stand on (water_dock_dressing.gd _side_away_from), back_m landward from the departure anchor's safe position. Both stay at least 1.9 m off the safe->shore lane and on dry ground; a spot over water is skipped.",
+  "min_ground_y_m": 0.4
+}

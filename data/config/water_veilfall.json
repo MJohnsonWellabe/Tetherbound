@@ -32,10 +32,11 @@
     "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 12.0, "full_strength_m_s": 1.8, "restored_calm_scale": 0.5,
     "state_shader": {
       "_comment": "F14#2 (V-TW-1, V-VIS-12): the whole current look follows water_currents_restored; water_current_flow_view.gd applies it over shader{} on build and on each flag change. live = rough race: every lane carries long bright dashes, dense chop flecks, fast drift. restored = glassy: a quarter of the lanes keep short faint dashes, almost no chop, slow drift (with calm_scale 0.5 about 7x slower scroll).",
-      "live": {"opacity": 0.95, "lane_opacity": 0.22, "streak_density": 1.0, "dash_fill": 0.85, "fleck_amount": 0.9, "speed_scale": 2.4, "min_speed_m_s": 0.6, "brightness": 1.15},
-      "restored": {"opacity": 0.4, "lane_opacity": 0.04, "streak_density": 0.25, "dash_fill": 0.2, "fleck_amount": 0.05, "speed_scale": 0.65, "min_speed_m_s": 0.15, "brightness": 0.85}
+      "live": {"opacity": 0.95, "lane_opacity": 0.22, "streak_density": 1.0, "dash_fill": 0.85, "fleck_amount": 0.9, "speed_scale": 2.4, "min_speed_m_s": 0.6, "brightness": 1.15, "chevron_opacity": 0.9},
+      "restored": {"opacity": 0.4, "lane_opacity": 0.04, "streak_density": 0.25, "dash_fill": 0.2, "fleck_amount": 0.05, "speed_scale": 0.65, "min_speed_m_s": 0.15, "brightness": 0.85, "chevron_opacity": 0.3}
     },
-    "shader": {"foam_colour": "#eef9f9", "opacity": 0.85, "streak_width_m": 2.6, "streak_length_m": 7.0, "min_speed_m_s": 0.35, "speed_scale": 1.4, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
+    "_comment_chevrons": "F13#5 function r1 (ralph/reports/TIDEWAKE/f13_5_function/r1): a code-blind judge saw the foam move but could not tell which way. chevron_* draws sparse foam chevrons, apex downstream, drifting with the physics flow; strong in the live race, faint once restored.",
+    "shader": {"foam_colour": "#eef9f9", "opacity": 0.85, "chevron_spacing_m": 12.0, "chevron_row_m": 9.0, "chevron_half_width_m": 3.8, "chevron_sweep": 0.9, "chevron_thickness_m": 1.1, "chevron_fill": 0.7, "end_fade_m": 6.0, "streak_width_m": 2.6, "streak_length_m": 7.0, "min_speed_m_s": 0.35, "speed_scale": 1.4, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
   },
   "exterior_composition": {
     "_comment": "Faceted static crags frame the existing physical Terrain3D gate approach. Each vegetation cluster sits on a named, colliding flat geological cap. Analytic route-edge clearances below are from the actual configured hike polyline; the central entrance corridor and interaction point remain unobstructed.",
