@@ -35,6 +35,9 @@ var _panel: Node = null
 var _trainer: Node3D = null
 var _spec: Dictionary = {}
 var _ally: Node3D = null
+## The starter the fixture party adopts; tools/art_pipeline/capture_named_fight.gd
+## `--ally=` swaps it (F04#7 varied-size framing).
+var _ally_species := "terrapup"
 
 
 func _init() -> void:
@@ -205,7 +208,7 @@ func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director == null or director.call("ally_instance") != null:
 		return
-	await director.call("adopt_starter", "terrapup", "Camera")
+	await director.call("adopt_starter", _ally_species, "Camera")
 
 
 func _collect_nodes() -> bool:
