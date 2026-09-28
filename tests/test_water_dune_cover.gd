@@ -29,6 +29,8 @@ func test_enabled_copies_preserve_clearances_and_unrelated_layers() -> void:
 	assert_true(candidate.tuft_count <= source.tuft_count, "colony cores stay within the source profile's requested tuft count")
 	assert_true(candidate.height_near > source.height_near)
 	assert_eq(candidate.anchor_clear_radius_m, source.anchor_clear_radius_m)
+	assert_eq(candidate.camp_clear_radius_m, source.camp_clear_radius_m)
+	assert_eq(candidate.min_ground_height, source.min_ground_height)
 	assert_eq(candidate.forbidden_ground, source.forbidden_ground)
 	assert_eq(candidate.cover_tiers[0].ground, source.cover_tiers[0].ground)
 	assert_true(candidate.cover_tiers[0].count < source.cover_tiers[0].count)
@@ -76,6 +78,16 @@ func test_colony_and_arc_overrides_bind_only_to_the_candidate_material() -> void
 	assert_false(source.has("clump_patch_start"))
 	assert_false(source.has("blade_arc_angle"))
 	assert_true(bool(dunes._material.get_shader_parameter("dune_tussock")))
+	assert_true(bool(dunes._material.get_shader_parameter("dune_colony_shape")))
+	assert_eq(int(dunes._material.get_shader_parameter("dune_pioneer_base_mask")), 2)
+	assert_eq(dunes._material.get_shader_parameter("dune_gap_offset"),
+		Vector2(float(candidate.dune_gap_offset[0]), float(candidate.dune_gap_offset[1])))
+	for key: String in ["dune_gap_scale", "dune_gap_warp_scale", "dune_gap_warp_m", "dune_gap_start", "dune_gap_full",
+			"dune_pioneer_start", "dune_pioneer_probability", "dune_shore_probability",
+			"dune_shore_dry_start_y", "dune_shore_dry_full_y", "dune_stabilized_height_y"]:
+		assert_almost_eq(float(dunes._material.get_shader_parameter(key)), float(candidate[key]))
+	assert_true(ordinary._material.get_shader_parameter("dune_colony_shape") in [null, false])
+	assert_true(float(candidate.dune_stabilized_height_y) > float(candidate.dune_shore_dry_full_y))
 	var ordinary_tussock: Variant = ordinary._material.get_shader_parameter("dune_tussock")
 	assert_true(ordinary_tussock == null or ordinary_tussock == false)
 	ordinary.free()
@@ -138,3 +150,14 @@ func test_ordinary_and_dune_batches_never_share_modified_imported_materials() ->
 	assert_eq(ordinary_material.albedo_texture.resource_path, original_texture.resource_path)
 	source.free()
 	vegetation.free()
+
+
+func test_pioneer_eligibility_tracks_only_the_requested_shore_texture() -> void:
+	var cfg := {"dune_colony_shape": true, "dune_pioneer_ground": ["shore", "rock", "grass"]}
+	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 2)
+	assert_eq(GRASS.pioneer_ground_mask(["rock", "grass", "shore"], cfg), 4)
+	assert_eq(GRASS.pioneer_ground_mask(["grass", "rock"], cfg), 0)
+	cfg.dune_pioneer_ground = ["grass"]
+	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 0)
+	cfg.dune_colony_shape = false
+	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 0)

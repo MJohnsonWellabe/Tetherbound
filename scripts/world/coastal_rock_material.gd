@@ -33,14 +33,14 @@ uniform float coast_rock_detail = 0.45;
 uniform bool coast_dunes_enabled = false;
 uniform vec3 coast_dune_sand_colour : source_color = vec3(0.78, 0.71, 0.59);
 uniform vec3 coast_dune_wet_colour : source_color = vec3(0.51, 0.47, 0.40);
-uniform vec3 coast_dune_bluff_colour : source_color = vec3(0.62, 0.60, 0.54);
 uniform float coast_dune_patch_scale = 0.022;
 uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
 uniform float coast_dune_shadow_push_m = 0.0;
 uniform float coast_dune_bluff_start_y = 0.72;
 uniform float coast_dune_bluff_full_y = 0.38;
-uniform float coast_dune_bluff_detail = 0.65;
+uniform float coast_dune_painted_bluff_start_y = 0.90;
+uniform float coast_dune_painted_bluff_full_y = 0.70;
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -154,18 +154,22 @@ const MATERIAL := """
 		float bluff_patch = coast_noise(v_vertex.xz * 0.16 + vec2(v_vertex.y * 0.025));
 		float bluff = 1.0 - smoothstep(coast_dune_bluff_full_y, coast_dune_bluff_start_y,
 			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12);
-		bluff *= smoothstep(1.3, 3.5, v_vertex.y);
-		float mineral_value = dot(mat.albedo_height.rgb, vec3(0.299, 0.587, 0.114));
-		vec3 mineral = coast_dune_bluff_colour * mix(0.55, 1.0, clamp(mineral_value * 2.0, 0.0, 1.0));
-		sand = mix(sand, mineral, bluff);
+		// The baked painted banks include 33-degree slopes: the purely
+		// steep-face mask misses much of them. Retain the installed mineral
+		// material through a broader, smoothly blended painted-rock mask.
+		float painted_bluff = coast_painted * (1.0 - smoothstep(
+			coast_dune_painted_bluff_full_y, coast_dune_painted_bluff_start_y,
+			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08));
+		bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);
+		float dune_weight = outside * (1.0 - bluff);
 		float wet = 1.0 - smoothstep(0.15, 1.25, v_vertex.y + (patch - 0.5) * 0.4);
 		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * 0.8);
-		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, outside);
-		vec3 dune_detail = mix(vec3(0.0, 1.0, 0.0), mat.normal_rough.rgb,
-			bluff * coast_dune_bluff_detail);
-		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, dune_detail, outside);
-		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), outside);
-		mat.normal_map_depth *= mix(1.0, bluff * coast_dune_bluff_detail, outside);
+		// At full mineral coverage every installed albedo/normal/roughness
+		// value survives unchanged; do not turn the exposed bank beige again.
+		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, dune_weight);
+		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), dune_weight);
+		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), dune_weight);
+		mat.normal_map_depth *= 1.0 - dune_weight;
 	}
 """
 
@@ -229,7 +233,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	var dune: Variant = JSON.parse_string(FileAccess.get_file_as_string(DUNE_CONFIG))
 	if dune is Dictionary:
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
-		for key: String in ["sand_colour", "wet_colour", "bluff_colour", "patch_scale", "ripple_scale", "ripple_strength", "shadow_push_m", "bluff_start_y", "bluff_full_y", "bluff_detail"]:
+		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))

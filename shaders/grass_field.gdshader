@@ -126,6 +126,22 @@ uniform float clump_contrast : hint_range(0.0, 1.0) = 0.55;
 // full; density_gain then sets the within-colony tuft population.
 uniform float clump_patch_start : hint_range(0.0, 1.0) = 0.0;
 uniform float clump_patch_full : hint_range(0.0, 1.0) = 0.0;
+// Water-only proposal: independent bare gaps, sparse colony margins and dry
+// shore pioneers. Disabled defaults retain the ordinary coverage expression.
+uniform bool dune_colony_shape = false;
+uniform float dune_gap_scale = 0.0;
+uniform float dune_gap_warp_scale = 0.0;
+uniform float dune_gap_warp_m = 0.0;
+uniform vec2 dune_gap_offset = vec2(0.0);
+uniform float dune_gap_start = 0.0;
+uniform float dune_gap_full = 0.0;
+uniform float dune_pioneer_start = 0.0;
+uniform float dune_pioneer_probability = 0.0;
+uniform int dune_pioneer_base_mask = 0;
+uniform float dune_shore_probability = 0.0;
+uniform float dune_shore_dry_start_y = 0.0;
+uniform float dune_shore_dry_full_y = 0.0;
+uniform float dune_stabilized_height_y = 0.0;
 
 // Colour. `tint_base`/`tint_tip` are the base-to-tip gradient a blind critic
 // named as missing from the scattered tufts ("flat two-tone polygon, no
@@ -524,6 +540,13 @@ void vertex() {
 	int base_id = int(control >> 27u & 0x1Fu);
 	bool hole = bool(control >> 2u & 0x1u);
 	bool forbidden = ((forbidden_base_mask >> base_id) & 1) == 1;
+	bool dune_shape_active = dune_colony_shape && dune_gap_scale > 0.0
+			&& dune_gap_full > dune_gap_start && dune_stabilized_height_y > dune_shore_dry_full_y;
+	bool dune_shore = dune_shape_active && ((dune_pioneer_base_mask >> base_id) & 1) == 1
+			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+	// The opt-in mask resolves only the requested shore texture name on CPU.
+	// Water's painted shore already excludes slopes above its rock threshold.
+	forbidden = forbidden && !dune_shore;
 
 	// Coverage: two octaves of noise decide whether this blade exists at all,
 	// so the field reads as drifts with open ground between them rather than a
@@ -534,6 +557,7 @@ void vertex() {
 		// changing world-stable placement or terrain/landmark clearances.
 		drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
 	}
+	float colony_noise = drift;
 	if (clump_patch_full > clump_patch_start) {
 		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
 	}
@@ -547,10 +571,33 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
+	if (dune_shape_active) {
+		vec2 warp = vec2(
+			value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
+			value_noise(world_xz * dune_gap_warp_scale - dune_gap_offset.yx)) - vec2(0.5);
+		float gap = value_noise((world_xz + warp * dune_gap_warp_m) * dune_gap_scale + dune_gap_offset);
+		float gap_keep = 1.0 - smoothstep(dune_gap_start, dune_gap_full, gap);
+		float pioneer = 0.0;
+		if (clump_patch_start > dune_pioneer_start) {
+			pioneer = dune_pioneer_probability
+				* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
+		}
+		// One density ceiling crosses the painted shore/grass boundary. Lift
+		// it gradually inland instead of jumping to full colonies at 3m.
+		float coast_ceiling = mix(dune_shore_probability, 1.0,
+			smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+		// Margin pioneers never fill the independent blowout's zero core.
+		keep = min(max(drift * density_gain, pioneer), coast_ceiling)
+			* gap_keep * (1.0 - clearing);
+		if (dune_shore) {
+			keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
+		}
+	}
 	v_drain = drain_at(world_xz);
 	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
+			|| (dune_shape_active && keep <= 0.0)
 			|| hash12(world_xz * 7.31) > keep
 			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
 

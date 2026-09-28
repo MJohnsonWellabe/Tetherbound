@@ -77,6 +77,15 @@ static func texture_mask(texture_names: Array, selected_names: Array) -> int:
 	return mask
 
 
+## Decorative pioneer eligibility is opt-in and resolved by texture identity.
+## Only requested shore is eligible; other ground names cannot widen it.
+static func pioneer_ground_mask(texture_names: Array, cfg: Dictionary) -> int:
+	if not bool(cfg.get("dune_colony_shape", false)):
+		return 0
+	return texture_mask(texture_names, cfg.get("dune_pioneer_ground", [])) \
+		& texture_mask(texture_names, ["shore"])
+
+
 func profile_receipt() -> Dictionary:
 	var cfg := _active_config()
 	var names := _terrain_texture_names()
@@ -1620,10 +1629,18 @@ func surface_tuft_mesh(blades: int = 4, segments: int = 3) -> ArrayMesh:
 func _apply_config(cfg: Dictionary) -> void:
 	if cfg.has("dune_tussock"):
 		_material.set_shader_parameter("dune_tussock", bool(cfg.dune_tussock))
+	if cfg.has("dune_colony_shape"):
+		_material.set_shader_parameter("dune_colony_shape", bool(cfg.dune_colony_shape))
+		_material.set_shader_parameter("dune_pioneer_base_mask", pioneer_ground_mask(_terrain_texture_names(), cfg))
+		var offset: Array = cfg.get("dune_gap_offset", [0.0, 0.0])
+		_material.set_shader_parameter("dune_gap_offset", Vector2(float(offset[0]), float(offset[1])))
 	for key: String in [
 		"field_radius", "fade_start", "blade_width", "height_near", "height_far",
 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
 		"clump_patch_start", "clump_patch_full", "blade_arc_angle",
+		"dune_gap_scale", "dune_gap_warp_scale", "dune_gap_warp_m", "dune_gap_start", "dune_gap_full",
+		"dune_pioneer_start", "dune_pioneer_probability", "dune_shore_probability",
+		"dune_shore_dry_start_y", "dune_shore_dry_full_y", "dune_stabilized_height_y",
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
 		"lens_clear_m", "lens_clear_band",

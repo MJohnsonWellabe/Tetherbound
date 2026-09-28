@@ -6,6 +6,26 @@
     "veilfall"
   ],
   "ground_cover": {
+    "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+    "dune_colony_shape": true,
+    "dune_gap_scale": 0.025,
+    "dune_gap_warp_scale": 0.013,
+    "dune_gap_warp_m": 12.0,
+    "dune_gap_offset": [
+      43.7,
+      -17.9
+    ],
+    "dune_gap_start": 0.48,
+    "dune_gap_full": 0.65,
+    "dune_pioneer_start": 0.36,
+    "dune_pioneer_probability": 0.045,
+    "dune_pioneer_ground": [
+      "shore"
+    ],
+    "dune_shore_probability": 0.07,
+    "dune_shore_dry_start_y": 1.0,
+    "dune_shore_dry_full_y": 3.0,
+    "dune_stabilized_height_y": 6.0,
     "tuft_count": 54000,
     "blades_per_tuft": 5,
     "blade_segments": 4,
