@@ -8,6 +8,7 @@ extends Node3D
 ## one.
 
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const CANDY_PRESENTATION := preload("res://scripts/world/candy_pickup_presentation.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 
 const REALM_ID := "stormwood"
@@ -138,6 +139,7 @@ func _mount_pickup(spec: Dictionary) -> void:
 	pickup.setup(item_id, "Take " + str(definition.get("name", item_id)),
 		str(presentation.get("model", "")), scale,
 		id, REALM_ID, int(spec.get("count", 1)))
+	CANDY_PRESENTATION.apply(pickup, item_id, definition, id)
 	if not beacon.is_empty() and world.get("simulation_only") != true:
 		_reward_beacon(pickup, beacon, pocket)
 	_placements[id] = pickup
