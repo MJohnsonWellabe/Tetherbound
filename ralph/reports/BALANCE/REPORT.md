@@ -41,47 +41,70 @@ All 18 Stormwood named rows (six fights × three starters) pass after the change
 
 Water regression: every Water named row that passed before still passes. That is 27 rows across the named wilds, the Pell floor fight and the ladder (`water_regression/SUMMARY_TABLE.md`).
 
-## F04#7 C2: harder Meadows named trainers. **Not met: blocked on an owner decision.**
+## F04#7 C2: harder Meadows named trainers. **C2 met under the owner's restated bar (ruling 12, 2026-09-28).**
 
-**Delivered.** The DIVER exemption in `tests/smoke_meadows_named_c2c3.gd`. BOSSES §2 allows the DIVER's 0.4 s tell only with a long positional cue. In built data that cue is the travelling dive, whose ground lane is drawn through the tell, entered from a reposition of 7 m or more. Such tells are now held to a 0.4 s floor and reported as `diver_tell`. Every other tell is still held to 0.8 s. This removes the `C3 tell 0.40 < 0.80` reason from Vess, Hald and the Warden.
+**Decision.** The owner delegated the call, with the intent that an unprepared masher should lose to Meadows named trainers about a quarter of the time.
+- **Why not per fight:** the per-fight 25% masher team wipe cannot be reached inside the constraints below (history in `f04_7/EXPERIMENTS_8seeds.md` and `f04_7/RELAY_SWEEP.md`).
+- **The bar, per top fight and starter at 24 seeds:**
+  - reader win ≥ 75%;
+  - the masher loses its lead in every run;
+  - the reader's median party cost is ≤ 55% of the masher's.
+- **The 25%, judged per chapter:** a masher loses at least one of the six named trainer fights in ≥ 25% of playthroughs, computed as 1 − Π masher win rate with the fights taken as independent.
+- **Scope:** the same bar applies to Tidewake F14#0.
+- **Recorded in:** COMBAT §7, BOSSES §9, the ACCEPTANCE C2 row and STATE ruling 12.
 
-**Not delivered.** Meadows trainer data is unchanged. No tuning that respects the constraints below reaches the 0.25 masher team-wipe bar for all three starters, so none is committed. Committing a half-measure would make the fights harder without closing the criterion.
+**Constraints kept:**
+- Tells, recoveries and profiles are unchanged.
+- No HP sponge.
+- C3's 0.5 hit ceiling holds.
+- The `test_trainers_data` level pins hold: Band 3 ≤ 12, captains ≤ 16, the four-level step rule, and the stronghold below the Warden's ace.
+- Teams stay at five creatures or fewer.
 
-**The constraints that bind.** None of these is mine to relax:
-- **Tells and telegraph timings** are unchanged (owner).
-- **No HP sponge.** BOSSES §2/§4.5: "A name, larger scale and more HP do not satisfy this contract."
-- **C3 ceiling.** No single hit may reach 50% of an entry creature's HP.
-- **Level pins** in `tests/test_trainers_data.gd`, which encode the PROGRESSION curve:
-  - Relay teams stay within Band 3's L8–12.
-  - Captains stay within L10–16.
-  - No critical-path step jumps more than four levels.
-  - Nothing in the stronghold out-levels the Warden's ace.
-- **At most five creatures.** The Warden's test enforces the §5 five-creature limit.
+**What ships** (`data/config/bands/*/trainers.json`, mirrored in `tests/fixtures/band_split_baseline/trainers.json`):
 
-**What the measurements show** (`f04_7/EXPERIMENTS_8seeds.md`, `f04_7/RELAY_SWEEP.md`, `f04_7/RUN_meadows_24seeds.txt`):
-1. **The reader already reads most members.** It takes 0–1 hits from baseline, WALL, CURRENT and ACE members. Its only real damage comes from travelling-lunge members (the CHARGER and DIVER), which hit the reader more than the masher. With the final move timings, the reader wins 100% in every variant tried.
-2. **Power alone does not reach the bar.** Each readable member costs a masher about one creature, then dies. Power is capped by the 0.5 hit ceiling: the sequential worst hit is about 1.6× the isolated one, through the stagger crit ×1.5, variance ±10% and type ×1.25.
-3. **Levels do little.** Even +12 levels (Vance at L23–24, far outside the pins) left a three-creature Vance at 0.56–0.62 masher party cost.
-4. **The closest legal shape still falls short.**
-   - Every captain and Hald field five, adding band-pool Burrowback, Mosshell, Trailpup, Duskhush or Tuskroot.
-   - Levels go to each pin's ceiling.
-   - Readable members get power 22–38 and poise 60.
-   - Result: the masher loses 0.62–0.97 of its party. Galewisp-led runs wipe 12–88%; Terrapup- and Ripplet-led runs mostly do not.
-5. **Tell-free pacing helps only two starters.** Attack cooldown 0.3 s and reposition 0.2 s on readable members give Ripplet 38–50% and Galewisp 88% wipes. Terrapup stays at 0.84–0.90 with no wipes, and the worst hit reaches 0.66, over the C3 ceiling.
-6. **Why the masher's fifth creature survives.** The harness party order is fixed: starter, bramblebun, mudsnout, pipwing, trailpup. The masher consistently loses exactly four creatures, and Trailpup finishes the last foe at 50–100% HP. With pipwing last instead, the same team wipes the masher 50% of the time. Terrapup's 9 m ranged quick also lets its "masher" chip foes while they walk in.
-7. **Independent confirmation.** Tidewake's F14#0 reached the same finding: in top fights the masher's team never wipes (`ralph/reports/TIDEWAKE/f14_named_c2c3/REPORT.md`).
+| Fight | Team (added members in bold) | Levels |
+|---|---|---|
+| Vance | Galecrest, Duskhush, **Burrowback**, **Mosshell**, Tuskroot CHARGER | 12 ×5 (was 11/11/12) |
+| Oreth | Mosshell WALL, Trailpup, **Burrowback**, **Duskhush**, Brooktail CURRENT | 16 ×5 (was 13/14/15) |
+| Halder | Duskhush, Tuskroot CHARGER, **Burrowback**, **Mosshell**, Meadowhart CURRENT | 16 ×5 (was 13/14/15) |
+| Vess | Trailpup, Duskhush, **Trailpup**, **Tuskroot**, Galecrest DIVER | 16 ×5 (was 14/15/16) |
+| Hald | Galecrest DIVER, Burrowback, **Trailpup**, **Duskhush**, Mosshell WALL | 18/19/19/19/19 |
+| Warden | unchanged team | 18/18/19/19/20 |
 
-**24-seed record on the final data** (`f04_7/RUN_meadows_24seeds.txt`; Meadows trainers unchanged, new starters, DIVER exemption):
-- **Before:** 18 of 21 rows failed; 9 of them also failed C3 on the 0.40 s DIVER tell.
-- **After:** 18 of 21 rows still fail, all on the masher wipe (0.00 against the 0.25 bar), and some also on the masher lead-faint rate. C3 passes on every row, with a worst hit of 0.335. The Warrens guardian passes for all three starters.
+- **Added members** are baseline bodies from each band's own pool, with a 0.9 s tell.
+- **Readable (non-lunge) members** get per-body `power` of 17.5–32, set from each body's measured worst hit, and `poise_max` 60.
+- **Lunge members** (CHARGER and DIVER) are unchanged.
+- **Player-visible text:** the stronghold duty board now reads "HALD — 5", and Vance's and Oreth's challenge lines say "Five of mine".
 
-**Owner options** (any one unblocks F04#7):
-- **(a) Relax the level pins.** Allow Meadows named trainers above the band ranges and above the four-level step, then re-tune with five-member teams. Point 3 suggests this alone is not enough.
-- **(b) Allow a new Y or named heavy attack** for the last readable member of each captain. That is a new tell, which the current ruling forbids.
-- **(c) Restate the top-fight bar for Meadows** as a masher lead-faint rate plus a reader/masher party-cost ratio, rather than a team wipe of a five-creature party at entry level. This is the same question F14#0 raises for Tidewake.
-- **(d) Accept five-member captains as the harder Meadows**, which clears Galewisp only, and record Terrapup and Ripplet as exceptions.
+**Harness.**
+- **DIVER exemption:** a tell from a body with a tell under 0.8 s whose dive travels after a reposition of 7 m or more is held to 0.4 s (BOSSES §2).
+- **Bar:** the verdict now applies the ruling-12 bar and prints a `MEADOWS_C2C3_CHAPTER` line per starter.
+
+**24-seed result** (`f04_7/RUN_meadows_24seeds.txt`): all 21 rows pass.
+- The reader wins 100% everywhere.
+- The masher loses its lead in 100% of runs.
+- The reader/masher party-cost ratio is 0.00–0.49.
+- The worst hit is 0.448.
+- Chapter masher-loss is 1.00, 0.97 and 0.94 (terrapup, ripplet, galewisp).
+
+Per-fight masher loss:
+
+| Fight | Terrapup | Ripplet | Galewisp |
+|---|---|---|---|
+| Oreth | 100% | 96% | 83% |
+| Halder | 8% | 25% | 29% |
+| Warden | 0% | 4% | 33% |
+| Hald | 0% | 0% | 25% |
+| Vance | 0% | 0% | 0% |
+| Vess | 0% | 0% | 0% |
+
+**Before** (`tb/integration` data, 24 seeds): 18 of 21 rows failed. The masher's party cost was only 0.14–0.61, and the masher lost no fight.
+
+**Still open on the board.** Varied-size framing and the C3 blind fight-footage verdict, so F04#7 stays partial.
 
 ## Tests
+
+(First landing; see the PR for the full sharded unit run on the merged head.)
 
 - **Focused unit run:** `--only=` over band_content, chapter_curve, charger_lunge, combat_*, trainers_data, named_fight_*, moves, progression, save_format, starters, stormwood/water data and 19 more. 743 tests, 22,376 assertions, **1 failed**.
 - **The failure is pre-existing:** `test_charger_lunge.gd::test_only_named_charger_profiles_opt_in` flags the DIVER `lunge_travels` bodies. It fails identically on `tb/integration` `73157990` with this lane's changes stashed, so it is not caused here, and it is left for its owner.

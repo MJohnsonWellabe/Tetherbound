@@ -29,9 +29,13 @@ extends SceneTree
 ## chapter_curve.json `team.enter`. --party-level overrides it for every case.
 ##
 ## Verdict rules per case/starter (printed; nothing is tuned):
-##   top trainer (Band 3 onward; every trainer case here):
-##     READER win >= 75%, MASHER loses its lead in every run and its whole
-##     team in >= 25% of runs (COMBAT 7).
+##   top trainer (Band 3 onward; every trainer case here). Meadows bar, owner
+##   decision 2026-09-28 (F04#7 option c; COMBAT 7, BOSSES 9):
+##     READER win >= 75%, MASHER loses its lead in every run, and READER median
+##     party HP cost <= 0.55 x MASHER's.
+##   chapter (printed once all six trainer cases ran for a starter): a MASHER
+##     playing the six named trainer fights loses at least one in >= 25% of
+##     playthroughs, 1 - product(masher win rate), fights taken as independent.
 ##   named wild (the guardian): READER median lead HP cost <= 0.55 x MASHER's,
 ##     READER win >= 90%.
 ##   C3: no single incoming hit >= 50% of an entry creature's HP (worst seen, a
@@ -63,7 +67,8 @@ const TRAINER_CASES := {
 const GUARDIAN_BAND := "band2_stone_and_root"
 const TOP_READER_WIN_MIN := 0.75
 const TOP_MASHER_LEAD_FAINT_MIN := 1.0
-const TOP_MASHER_WIPE_MIN := 0.25
+const TOP_PARTY_RATIO_MAX := 0.55
+const CHAPTER_MASHER_LOSS_MIN := 0.25
 const WILD_RATIO_MAX := 0.55
 const WILD_READER_WIN_MIN := 0.90
 const HIT_CEILING := 0.50
@@ -219,6 +224,7 @@ func _run() -> void:
 				"" if bool(verdict.pass) else " -- " + "; ".join(verdict.reasons)])
 			rows.append(row)
 	if rows.is_empty(): errors.append("no cases matched: %s" % _selection)
+	failures += _chapter_verdict(rows)
 	if not _json.is_empty():
 		var file := FileAccess.open(_json, FileAccess.WRITE)
 		if file == null:
@@ -242,8 +248,8 @@ func _verdict(entry: Dictionary, m: Dictionary, r: Dictionary) -> Dictionary:
 			reasons.append("reader win %.2f < %.2f" % [r.win_rate, TOP_READER_WIN_MIN])
 		if float(m.lead_faint_rate) < TOP_MASHER_LEAD_FAINT_MIN:
 			reasons.append("masher lead faint %.2f < %.2f" % [m.lead_faint_rate, TOP_MASHER_LEAD_FAINT_MIN])
-		if float(m.party_wipe_rate) < TOP_MASHER_WIPE_MIN:
-			reasons.append("masher wipe %.2f < %.2f" % [m.party_wipe_rate, TOP_MASHER_WIPE_MIN])
+		if float(r.median_party_cost) > float(m.median_party_cost) * TOP_PARTY_RATIO_MAX:
+			reasons.append("reader/masher party cost %.3f/%.3f > %.2f" % [r.median_party_cost, m.median_party_cost, TOP_PARTY_RATIO_MAX])
 	else:
 		if float(r.median_lead_cost) > float(m.median_lead_cost) * WILD_RATIO_MAX:
 			reasons.append("reader/masher lead cost %.3f/%.3f > %.2f" % [r.median_lead_cost, m.median_lead_cost, WILD_RATIO_MAX])
@@ -265,11 +271,33 @@ func _verdict(entry: Dictionary, m: Dictionary, r: Dictionary) -> Dictionary:
 	return {"pass": reasons.is_empty(), "reasons": reasons}
 
 
+## The owner's "a masher should lose a Meadows named fight a quarter of the
+## time" (2026-09-28), read over the chapter: per starter, the chance a masher
+## loses at least one of the six trainer fights. Only judged when all six ran.
+func _chapter_verdict(rows: Array[Dictionary]) -> int:
+	var failing := 0
+	for starter: String in STARTERS:
+		var survive := 1.0
+		var counted := 0
+		for row: Dictionary in rows:
+			if str(row.kind) != "top" or str(row.starter) != starter: continue
+			survive *= float((row.pilots.get("MASHER", {}) as Dictionary).get("win_rate", 1.0))
+			counted += 1
+		if counted < TRAINER_CASES.size(): continue
+		var loss := 1.0 - survive
+		var ok := loss >= CHAPTER_MASHER_LOSS_MIN
+		failing += int(not ok)
+		print("MEADOWS_C2C3_CHAPTER %s masher_loses_a_named_fight=%.2f %s" % [starter, loss,
+			"PASS" if ok else "FAIL -- < %.2f" % CHAPTER_MASHER_LOSS_MIN])
+	return failing
+
+
 ## BOSSES 2's DIVER: its short tell is lawful only with the long positional
 ## cue, which in built data is the travelling dive (its ground lane is drawn
 ## through the tell) entered from a >= 7 m reposition.
 static func _diver_cue(config: Dictionary) -> bool:
-	return bool(config.get("lunge_travels", false)) \
+	return float(config.get("telegraph", TELL_FLOOR)) < TELL_FLOOR - 0.001 \
+		and bool(config.get("lunge_travels", false)) \
 		and float(config.get("reposition_distance", 0.0)) >= DIVER_REPOSITION_MIN - 0.001
 
 

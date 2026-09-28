@@ -74,7 +74,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 1. **Internet co-op resources:** a real Steam AppID with Steamworks partner access, and four Steam accounts, two or more on separate home networks, for the internet co-op proof. `steam_api64.dll` redistribution is approved. Packaging (`ship_steam_runtime`) stays off until an AppID exists.
 2. **Four decisions made by the owner at 23:55 and now in implementation (batch 68):** F04#7 difficulty (the Meadows named trainers get harder), F10#2 (starter parity), female officer Vess, and aerie art. See ruling 11 below.
-   - **Balance lane (`tb/balance`):** F10#2 C2 is met. Ripple Jab and Gale Peck timing plus Ripplet/Galewisp stats bring Capacitor Alpha to 0.42/0.50/0.41, and all 18 Stormwood named rows pass. **F04#7 is blocked on a new owner decision.** No Meadows tuning inside the tell ruling, the no-HP-sponge rule, the 0.5 hit ceiling, the band level pins and the five-creature cap reaches the 0.25 masher wipe for all three starters. Options (a)–(d) are in `ralph/reports/BALANCE/REPORT.md`. The Meadows harness now carries the BOSSES DIVER 0.4 s tell exemption.
+   - **Balance lane (`tb/balance`):** F10#2 C2 and F04#7 C2 are met (ruling 12). F10#2: Ripple Jab/Gale Peck timing and Ripplet/Galewisp stats give Capacitor Alpha 0.42/0.50/0.41, and 18/18 Stormwood named rows pass. F04#7: the captains and Hald field five at their band level ceilings, all 21 Meadows rows pass the ruling-12 bar at 24 seeds. Both criteria stay partial on the C3 blind fight-footage verdict. Evidence `ralph/reports/BALANCE/`.
 
 **Settled by the owner (2026-09-27, 23:55):** the Capacitor Alpha no-stagger ruling and the storm strike sparing a trainer in a fight are **kept**. They are no longer interim.
 
@@ -96,11 +96,12 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
    - READY means a criterion fully closes, with an attached strict re-check, one criterion at a time. Codex-queue IDs are lane-prefixed and append-only.
 10. **F04 split.** Meadows core had F04#0, #1 and #7; Meadows F04 bosses had F04#2, #3 and #6. Both lanes are wound down. The F04 bosses round-1 evidence is `ralph/reports/MEADOWS/f04_bosses/r1/`.
 11. **Owner decisions, 23:55.**
-   - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7).
+   - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7). The bar is restated by ruling 12.
    - **Galewisp and ripplet are tuned to match terrapup in skill and strength**, so starter C2 difficulty is even (F10#2, CREATURES).
    - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
    - **Codex does the Cloudreach aerie art** (F08#3). The Codex lane is shut down; the owner assigns this when the next round of work starts.
    - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
+12. **Meadows top-fight bar (owner, 2026-09-28; F04#7 option c, decision delegated to the Balance lane).** The owner's intent: an unprepared masher should lose to Meadows named trainers about a quarter of the time. Per top fight and starter at 24 seeds: reader win ≥75%, masher loses its lead every run, and reader median party cost ≤55% of the masher's. The 25% is judged per chapter: a masher loses at least one named trainer fight in ≥25% of playthroughs (1 − Π masher win rate, fights independent). This replaces the per-fight 25% team wipe, which the five-creature cap, band level pins, 0.5 hit ceiling and no-HP rule cannot reach (`ralph/reports/BALANCE/REPORT.md`). Same bar for Tidewake F14#0. COMBAT §7, BOSSES §9, ACCEPTANCE C2.
 
 **Owner, 2026-09-26 (still in force):**
 - The tournament creature grant is a non-starter species; starters stay player-exclusive.
