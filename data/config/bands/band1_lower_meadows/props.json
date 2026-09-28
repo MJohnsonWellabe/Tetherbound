@@ -1588,11 +1588,11 @@
     {
       "order": 1058,
       "name": "meadowhart_watch_fire",
-      "_why": "F03#0 herd night cue (lure judge set F: at the 123 m night road glance nothing reads; the pair reads from 55 m). A herd-watcher's small fire on the grazing ground's road side, ~20 m from the herd centre (-70,1310) -- outside the 12 m visit circle and the herd's 12 m scatter -- ~21 m off the road end at (-40,1310), and on the road's sightline toward the herd from (36,1248). The same Bonfire_Fire + campfire_glow + stone-ring recipe as pond_fisher_camp: at night a warm point on the open ground says someone watches something here, from the forest road; by day it is a small fire and seat beside the herd. glow_scale 1.3 carries the light toward the road. TUNABLE.",
+      "_why": "F03#0 herd night cue (lure judge set F: at the 123 m night road glance nothing reads; the pair reads from 55 m). A herd-watcher's small fire and seat at the grazing ground's south edge, 14.6 m from the herd centre (-70,1310) -- outside its 12 m scatter and the 12 m visit circle. Sited by tests/probe_lure_road_visibility.gd --at=herd:x,z: here 14 hard-clear road samples reach out to 135 m (the first try at (-56,1296) sat behind a boulder, clear only to 43 m). The same Bonfire_Fire + campfire_glow + stone-ring recipe as pond_fisher_camp: at night a warm point in the road's sightline says someone watches something here; by day a small fire and seat beside the herd. glow_scale 1.3 carries the light. TUNABLE.",
       "props": [
         {
           "model": "Bonfire_Fire",
-          "at": [-56.0, 1296.0],
+          "at": [-74.0, 1296.0],
           "yaw_deg": 30.0,
           "scale": 0.3,
           "dir": "res://assets/props/quaternius_survival",
@@ -1602,7 +1602,7 @@
         },
         {
           "model": "campfire_stone_ring",
-          "at": [-56.0, 1296.0],
+          "at": [-74.0, 1296.0],
           "yaw_deg": 0.0,
           "scale": 0.65,
           "dir": "res://assets/props/generated_camp",
@@ -1611,7 +1611,7 @@
         {
           "name": "HerdWatchSeat",
           "model": "Bench",
-          "at": [-54.2, 1294.6],
+          "at": [-72.3, 1297.2],
           "yaw_deg": 120.0,
           "scale": 0.9,
           "sink_m": 0.03,
