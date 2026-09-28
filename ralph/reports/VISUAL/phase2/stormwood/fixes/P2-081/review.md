@@ -30,7 +30,7 @@ trainer presentation enablement is claimed.
 The config-only audit in `existing-plate-audit.json` finds exact existing plate
 recipes for19 of26 trainers. It compares the actual trainer catalogue through
 `trainer_npc.model_config()` against every installed portrait recipe through
-`village_npcs.model_config()`, requires a loadable plate, and retains source
+`village_npcs.model_config()`, requires `ResourceLoader.exists()`, and retains source
 and plate hashes. Seven trainers have no exact match across four profiles:
 `grunt_c`, `officer_a`, `officer_b` and `captain_a`. Their world specs use raw
 `config_key` profiles; the existing plates add rank palettes/accessories, so
