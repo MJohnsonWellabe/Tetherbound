@@ -67,14 +67,14 @@ func _capture_row(_row: Dictionary) -> void:
 	if forward.length() < 0.5:
 		forward = Vector3.FORWARD
 	var side := Vector3(-forward.z, 0.0, forward.x)
-	var anchor := _player.global_position + forward * 8.0
+	var anchor := _player.global_position + forward * 5.0
 	var ground := float(_world.call("ground_height_at", anchor.x, anchor.z))
 	if is_nan(ground):
 		ground = _player.global_position.y - 0.3
 	anchor.y = ground
 	var active: Array[Node3D] = []
 	var tent := _place(placer, game, "tent", anchor, active)
-	_place(placer, game, "campfire", anchor + side * 4.0, active)
+	_place(placer, game, "campfire", anchor + side * 3.0, active)
 	if tent == null:
 		_failures.append("tent could not be created")
 		return
