@@ -28,11 +28,13 @@ def main() -> None:
     parser.add_argument("--repo", type=Path, required=True)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--biome", required=True)
+    parser.add_argument("--report-biome", help="Evidence label when the game's realm ID differs (water -> tidewake)")
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures"), default="locations")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
+    report_biome = args.report_biome or args.biome
     repo = args.repo.resolve()
     source = args.source.resolve()
     if len(args.commit) != 40 or any(c not in "0123456789abcdef" for c in args.commit):
@@ -45,7 +47,7 @@ def main() -> None:
     if args.render_path == "native GPU Compatibility" and manifest.get("display_server") == "headless":
         raise SystemExit("GPU capture was headless")
 
-    base = repo / "ralph" / "reports" / "VISUAL" / "phase2" / args.biome
+    base = repo / "ralph" / "reports" / "VISUAL" / "phase2" / report_biome
     frames_dir = base / args.category
     frames_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source / "manifest.json", frames_dir / "engine_manifest.json")
@@ -60,16 +62,17 @@ def main() -> None:
             existing = {row["id"]: row for row in csv.DictReader(stream)}
     for frame in manifest["frames"]:
         if args.category == "creatures":
-            frame_id = frame["id"]
-            src = source / f"{frame_id}.jpg"
+            source_id = frame["id"]
+            frame_id = source_id.replace(f"{args.biome}__", f"{report_biome}__", 1)
+            src = source / f"{source_id}.jpg"
             if not src.is_file():
                 raise SystemExit(f"Missing {src}")
             with Image.open(src) as image:
                 image.verify()
-            dst = frames_dir / src.name
+            dst = frames_dir / f"{frame_id}.jpg"
             shutil.copy2(src, dst)
             existing[frame_id] = {
-                "id": frame_id, "biome": args.biome, "category": "creatures",
+                "id": frame_id, "biome": report_biome, "category": "creatures",
                 "subject": frame["species"], "location_id": "capture_stage",
                 "route": "off", "time_of_day": "day", "weather_or_phase": "clear",
                 "pose_or_state": frame["pose"], "camera": "normal",
@@ -78,13 +81,13 @@ def main() -> None:
                     "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
                     "--script tools/phase2_capture_creatures.gd -- "
                     f"--biome={args.biome} --only={frame['species']} --seed={manifest['seed']} "
-                    f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/creature_repro_{frame['species']}"
+                    f"--output=res://ralph/reports/VISUAL/phase2/{report_biome}/creature_repro_{frame['species']}"
                 ),
                 "commit": args.commit, "render_path": args.render_path,
             }
             continue
         if args.category == "ui":
-            frame_id = f"{args.biome}__{frame['id']}"
+            frame_id = f"{report_biome}__{frame['id']}"
             src = source / f"{frame['id']}.jpg"
             if not src.is_file():
                 raise SystemExit(f"Missing {src}")
@@ -93,7 +96,7 @@ def main() -> None:
             dst = frames_dir / src.name
             shutil.copy2(src, dst)
             existing[frame_id] = {
-                "id": frame_id, "biome": args.biome, "category": "ui",
+                "id": frame_id, "biome": report_biome, "category": "ui",
                 "subject": frame["subject"], "location_id": "",
                 "route": "main", "time_of_day": "day", "weather_or_phase": "clear",
                 "pose_or_state": frame["id"], "camera": "ui",
@@ -102,18 +105,19 @@ def main() -> None:
                     "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
                     "--script tools/phase2_capture_ui.gd -- "
                     f"--biome={args.biome} --seed={manifest['seed']} "
-                    f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/ui_repro"
+                    f"--output=res://ralph/reports/VISUAL/phase2/{report_biome}/ui_repro"
                 ),
                 "commit": args.commit, "render_path": args.render_path,
             }
             continue
-        frame_id = frame["frame_id"]
-        src = source / f"{frame_id}.jpg"
+        source_id = frame["frame_id"]
+        frame_id = source_id.replace(f"{args.biome}__", f"{report_biome}__", 1)
+        src = source / f"{source_id}.jpg"
         if not src.is_file():
             raise SystemExit(f"Missing {src}")
         with Image.open(src) as image:
             image.verify()
-        dst = frames_dir / src.name
+        dst = frames_dir / f"{frame_id}.jpg"
         shutil.copy2(src, dst)
         rel = dst.relative_to(repo).as_posix()
         view = frame.get("view", "normal")
@@ -126,11 +130,11 @@ def main() -> None:
             "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
             f"--script tools/{capture_script} -- "
             f"{selection}--seed={manifest.get('seed', 2042)} "
-            f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/repro/{frame_id}"
+            f"--output=res://ralph/reports/VISUAL/phase2/{report_biome}/repro/{frame_id}"
         )
         existing[frame_id] = {
             "id": frame_id,
-            "biome": args.biome,
+            "biome": report_biome,
             "category": "route_and_terrain" if args.category == "routes" else "named_locations",
             "subject": frame["destination_display_name"],
             "location_id": frame["identity"],
