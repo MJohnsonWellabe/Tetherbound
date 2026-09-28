@@ -1,0 +1,11 @@
+# P2-053 current route-marker baseline
+
+Source: `e62f42e95` (subsequent `f9c198a98` changes only board/STATE). Native NVIDIA GTX 1060 3GB, OpenGL 3.3 Compatibility, Godot 4.7, fullscreen 1920×1080, seed 2042, isolated APPDATA profile. No presentation change was enabled for this capture; P2-021/P2-022 candidates remained disabled.
+
+The existing `tools/phase2_capture_locations.gd` ran both Three Bells and Flight Aerie destination subsets, day/golden/night, approach/close. Exact reproduction command, raster, adapter, original per-frame records, hashes and failures are retained in `baseline-route-markers/manifest.json`. Local native JPEGs are under `.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/` and are not committed.
+
+**Incomplete: 9/12 frames; engine exit 1.** All three Three Bells approaches failed the existing unoccluded-stand search. The three original catalog bridge close sightings were obtained. All six added Flight Aerie views were written, but the independent review found the approaches boulder-obstructed and the close views inadequate to show the destination. The receipt's success/failure accounting is retained unchanged. No fallback camera or stand override was added. The capture uses fixture progression, teleporting stands and pinned clocks; it does not prove ordinary traversal or the original flying-return sequence.
+
+The fresh code-blind review inspected every native image and the reference set. It found conspicuous synthetic cyan accents at the bridge while the wood/stone/brass crossing remained primary. It could not establish the aerie's full material hierarchy from these views. Bars A/B: No/No for the submitted evidence. This narrows the bridge criticism; it is neither a paired fix verdict nor clearance of the unresolved flying-return sightings.
+
+**Catalog remains open.** Next: reproduce the original flying-return views or obtain an unobstructed authored aerie view; identify the actual visible cyan post/ring family before changing materials. The bridge portal's beacons and the aerie's already warm torch props must not be assumed to be the same geometry as the conspicuous marker in the pictures. Avoid a global palette change based on that unverified attribution.

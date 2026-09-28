@@ -1,0 +1,1460 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "e62f42e95a5548ac71876d51b792403cebd816e6",
+  "repro": "APPDATA=.artifacts/cloudreach-phase2/profile; Godot_v4.7-stable_win64_console.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --script tools/phase2_capture_locations.gd -- --biome=cloudreach --subset=cloudreach__broken_causeways__03__three_bells_bridge --subset=cloudreach__windscar_ravine__06__windscar_flight_aerie --times=day,golden,night --views=approach,close --seed=2042 --output=res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers",
+  "source_manifest_sha256": "c8204364cbdf410e4b69935ec87c47da895f1746a8d41a3abb99b4686126ff03",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "cloudreach",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 296554071895,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 296570849115,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T14:20:04",
+    "capture_started_utc": "2026-09-28T14:16:48",
+    "captured_frame_count": 9,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": false,
+    "display_server": "Windows",
+    "failures": [
+      "cloudreach__broken_causeways__03__three_bells_bridge__day__approach: no unoccluded production-camera stand near destination",
+      "cloudreach__broken_causeways__03__three_bells_bridge__golden__approach: no unoccluded production-camera stand near destination",
+      "cloudreach__broken_causeways__03__three_bells_bridge__night__approach: no unoccluded production-camera stand near destination"
+    ],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 12,
+    "planned_frame_ids": [
+      "cloudreach__broken_causeways__03__three_bells_bridge__day__approach",
+      "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+      "cloudreach__broken_causeways__03__three_bells_bridge__golden__approach",
+      "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+      "cloudreach__broken_causeways__03__three_bells_bridge__night__approach",
+      "cloudreach__broken_causeways__03__three_bells_bridge__night__close",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__day__approach",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__day__close",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__approach",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__close",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__night__approach",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie__night__close"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 296570849115,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day",
+      "golden",
+      "night"
+    ],
+    "requested_views": [
+      "approach",
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "cloudreach__broken_causeways__03__three_bells_bridge",
+      "cloudreach__windscar_ravine__06__windscar_flight_aerie"
+    ]
+  },
+  "frames": [
+    {
+      "id": "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 2 \u2014 Broken Causeways",
+        "band_id": "broken_causeways",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 521786,
+        "camera_player_distance_m": 5.82119607925415,
+        "camera_position": [
+          -546.026489257813,
+          332.862152099609,
+          1272.23034667969
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.615661442279816,
+            0.0,
+            0.788010776042938
+          ],
+          "basis_y": [
+            0.163836643099785,
+            0.978147625923157,
+            0.12800320982933
+          ],
+          "basis_z": [
+            -0.770790874958038,
+            0.207911685109138,
+            -0.602207779884338
+          ],
+          "origin": [
+            -542.018371582031,
+            331.781005859375,
+            1275.36181640625
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.615661382675171,
+            2.85314456505148e-07,
+            0.788010835647583
+          ],
+          "basis_y": [
+            0.163836792111397,
+            0.978147625923157,
+            0.128002941608429
+          ],
+          "basis_z": [
+            -0.770790874958038,
+            0.207911640405655,
+            -0.602207779884338
+          ],
+          "origin": [
+            -546.026489257813,
+            332.862152099609,
+            1272.23034667969
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Three Bells Bridge",
+        "destination_index": 3,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+        "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+        "identity": "cloudreach__broken_causeways__03__three_bells_bridge",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.295,
+            "node_path": "road_visibility_broken_causeway_main_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -461.843109130859,
+              319.802154541016,
+              1197.27282714844
+            ],
+            "species_id": "ribbonray"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_broken_causeway_main_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -463.964416503906,
+              320.093139648438,
+              1199.39416503906
+            ],
+            "species_id": "breezetail"
+          },
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.225,
+            "node_path": "road_visibility_broken_causeway_main_04_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -446.5,
+              342.029998779297,
+              1358.0
+            ],
+            "species_id": "craghorn"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_broken_causeway_main_04_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -449.5,
+              342.029998779297,
+              1358.0
+            ],
+            "species_id": "breezetail"
+          }
+        ],
+        "nearby_creatures_160m": 4,
+        "observed_clock": {
+          "elapsed_seconds": 200.202018666667,
+          "hour": 8.00808074666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -542.018371582031,
+          330.031036376953,
+          1275.36181640625
+        ],
+        "position_xz": [
+          -535.0,
+          1274.5
+        ],
+        "resolved_ground_y": 330.03,
+        "selected_stand_lateral_m": 5.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          -535.0,
+          1274.5
+        ],
+        "terrain_ground_y": 330.03,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 52.0,
+        "view_heading_xz": [
+          0.788010776042938,
+          0.61566150188446
+        ]
+      },
+      "source_sha256": "f3f766797fbf1cfa21fa6e27577bacfc685b83710f3a3c6c3f662971f1e7b128",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__broken_causeways__03__three_bells_bridge__day__close.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 2 \u2014 Broken Causeways",
+        "band_id": "broken_causeways",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 476274,
+        "camera_player_distance_m": 5.82119607925415,
+        "camera_position": [
+          -546.026489257813,
+          332.862152099609,
+          1272.23034667969
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.615661442279816,
+            0.0,
+            0.788010776042938
+          ],
+          "basis_y": [
+            0.163836643099785,
+            0.978147625923157,
+            0.12800320982933
+          ],
+          "basis_z": [
+            -0.770790874958038,
+            0.207911685109138,
+            -0.602207779884338
+          ],
+          "origin": [
+            -542.018371582031,
+            331.781005859375,
+            1275.36181640625
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.615661382675171,
+            2.85314456505148e-07,
+            0.788010835647583
+          ],
+          "basis_y": [
+            0.163836792111397,
+            0.978147625923157,
+            0.128002941608429
+          ],
+          "basis_z": [
+            -0.770790874958038,
+            0.207911640405655,
+            -0.602207779884338
+          ],
+          "origin": [
+            -546.026489257813,
+            332.862152099609,
+            1272.23034667969
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Three Bells Bridge",
+        "destination_index": 3,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+        "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+        "identity": "cloudreach__broken_causeways__03__three_bells_bridge",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.295,
+            "node_path": "road_visibility_broken_causeway_main_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -461.843109130859,
+              319.802154541016,
+              1197.27282714844
+            ],
+            "species_id": "ribbonray"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_broken_causeway_main_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -463.964416503906,
+              320.093139648438,
+              1199.39416503906
+            ],
+            "species_id": "breezetail"
+          },
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.225,
+            "node_path": "road_visibility_broken_causeway_main_04_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -446.5,
+              342.029998779297,
+              1358.0
+            ],
+            "species_id": "craghorn"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_broken_causeway_main_04_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -449.5,
+              342.029998779297,
+              1358.0
+            ],
+            "species_id": "breezetail"
+          }
+        ],
+        "nearby_creatures_160m": 4,
+        "observed_clock": {
+          "elapsed_seconds": 450.208333333333,
+          "hour": 18.0083333333333,
+          "requested": "golden",
+          "time_of_day": "golden"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -542.018371582031,
+          330.031036376953,
+          1275.36181640625
+        ],
+        "position_xz": [
+          -535.0,
+          1274.5
+        ],
+        "resolved_ground_y": 330.03,
+        "selected_stand_lateral_m": 5.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          -535.0,
+          1274.5
+        ],
+        "terrain_ground_y": 330.03,
+        "time": "golden",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 52.0,
+        "view_heading_xz": [
+          0.788010776042938,
+          0.61566150188446
+        ]
+      },
+      "source_sha256": "a86f1c196c3703c3a08225fc700257907bb661f96dc579081833735ec2d4a8c5",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__broken_causeways__03__three_bells_bridge__golden__close.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__broken_causeways__03__three_bells_bridge__night__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 2 \u2014 Broken Causeways",
+        "band_id": "broken_causeways",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 437577,
+        "camera_player_distance_m": 5.82119607925415,
+        "camera_position": [
+          -546.026489257813,
+          332.862152099609,
+          1272.23034667969
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.615661442279816,
+            0.0,
+            0.788010776042938
+          ],
+          "basis_y": [
+            0.163836643099785,
+            0.978147625923157,
+            0.12800320982933
+          ],
+          "basis_z": [
+            -0.770790874958038,
+            0.207911685109138,
+            -0.602207779884338
+          ],
+          "origin": [
+            -542.018371582031,
+            331.781005859375,
+            1275.36181640625
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.615661382675171,
+            2.85314456505148e-07,
+            0.788010835647583
+          ],
+          "basis_y": [
+            0.163836792111397,
+            0.978147625923157,
+            0.128002941608429
+          ],
+          "basis_z": [
+            -0.770790874958038,
+            0.207911640405655,
+            -0.602207779884338
+          ],
+          "origin": [
+            -546.026489257813,
+            332.862152099609,
+            1272.23034667969
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Three Bells Bridge",
+        "destination_index": 3,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+        "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__night__close",
+        "identity": "cloudreach__broken_causeways__03__three_bells_bridge",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.295,
+            "node_path": "road_visibility_broken_causeway_main_02_0",
+            "node_scale": [
+              0.99999988079071,
+              1.0,
+              0.99999988079071
+            ],
+            "position": [
+              -461.889282226563,
+              319.782196044922,
+              1196.93994140625
+            ],
+            "species_id": "ribbonray"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_broken_causeway_main_02_1",
+            "node_scale": [
+              0.999999701976776,
+              1.0,
+              0.999999701976776
+            ],
+            "position": [
+              -463.711730957031,
+              320.043975830078,
+              1198.92822265625
+            ],
+            "species_id": "breezetail"
+          },
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.225,
+            "node_path": "road_visibility_broken_causeway_main_04_0",
+            "node_scale": [
+              0.999999046325684,
+              1.0,
+              0.999999046325684
+            ],
+            "position": [
+              -447.17138671875,
+              342.030853271484,
+              1357.91674804688
+            ],
+            "species_id": "craghorn"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_broken_causeway_main_04_1",
+            "node_scale": [
+              0.999999225139618,
+              1.0,
+              0.999999225139618
+            ],
+            "position": [
+              -449.409545898438,
+              342.030853271484,
+              1357.12841796875
+            ],
+            "species_id": "breezetail"
+          }
+        ],
+        "nearby_creatures_160m": 4,
+        "observed_clock": {
+          "elapsed_seconds": 575.200407,
+          "hour": 23.00801628,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -542.018371582031,
+          330.031036376953,
+          1275.36181640625
+        ],
+        "position_xz": [
+          -535.0,
+          1274.5
+        ],
+        "resolved_ground_y": 330.03,
+        "selected_stand_lateral_m": 5.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          -535.0,
+          1274.5
+        ],
+        "terrain_ground_y": 330.03,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 52.0,
+        "view_heading_xz": [
+          0.788010776042938,
+          0.61566150188446
+        ]
+      },
+      "source_sha256": "d44383c485867d0c858589fa5498786cadc441379619e4ad9402a8ea6ca462cf",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__broken_causeways__03__three_bells_bridge__night__close.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 3 \u2014 Windscar Ravine",
+        "band_id": "windscar_ravine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 576255,
+        "camera_player_distance_m": 5.82122659683228,
+        "camera_position": [
+          394.223907470703,
+          612.936767578125,
+          3266.91577148438
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.422618240118027,
+            0.0,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.188431993126869,
+            0.978147625923157,
+            -0.0878672748804092
+          ],
+          "basis_z": [
+            0.886502861976624,
+            0.2079117000103,
+            0.413383036851883
+          ],
+          "origin": [
+            389.614013671875,
+            611.855712890625,
+            3264.76611328125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.422618269920349,
+            4.91202115426859e-07,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.18843224644661,
+            0.978147625923157,
+            -0.087866872549057
+          ],
+          "basis_z": [
+            0.886502742767334,
+            0.207911744713783,
+            0.41338312625885
+          ],
+          "origin": [
+            394.223907470703,
+            612.936767578125,
+            3266.91577148438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Windscar Flight Aerie",
+        "destination_index": 6,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__day__approach.jpg",
+        "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day__approach",
+        "identity": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.083333,
+            "node_path": "road_visibility_windscar_floor_loop_14_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              312.912994384766,
+              590.246032714844,
+              3288.42797851563
+            ],
+            "species_id": "galecrest"
+          },
+          {
+            "body_height_m": 4.0,
+            "body_radius_m": 1.4,
+            "node_path": "road_visibility_windscar_floor_loop_14_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              314.241394042969,
+              590.268737792969,
+              3291.25634765625
+            ],
+            "species_id": "aeriex"
+          }
+        ],
+        "nearby_creatures_160m": 2,
+        "observed_clock": {
+          "elapsed_seconds": 200.190968555556,
+          "hour": 8.00763874222222,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          389.614013671875,
+          610.105773925781,
+          3264.76611328125
+        ],
+        "position_xz": [
+          373.0,
+          3262.5357
+        ],
+        "resolved_ground_y": 610.0,
+        "selected_stand_lateral_m": 5.0,
+        "selected_stand_offset_m": 16.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          373.0,
+          3262.53564453125
+        ],
+        "terrain_ground_y": 610.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": -115.0,
+        "view_heading_xz": [
+          -0.906307816505432,
+          -0.422618269920349
+        ]
+      },
+      "source_sha256": "d35c0066f2999b7f6c8a30ef0daf084a690dcc738ac0f8491d98aa986ec2d9cb",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__day__approach.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 3 \u2014 Windscar Ravine",
+        "band_id": "windscar_ravine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 322829,
+        "camera_player_distance_m": 5.82124948501587,
+        "camera_position": [
+          382.141296386719,
+          612.862121582031,
+          3266.79858398438
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.422618240118027,
+            0.0,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.188431993126869,
+            0.978147625923157,
+            -0.0878672748804092
+          ],
+          "basis_z": [
+            0.886502861976624,
+            0.2079117000103,
+            0.413383036851883
+          ],
+          "origin": [
+            377.531524658203,
+            611.781005859375,
+            3264.64868164063
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.422618269920349,
+            4.91202115426859e-07,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.18843224644661,
+            0.978147625923157,
+            -0.087866872549057
+          ],
+          "basis_z": [
+            0.886502742767334,
+            0.207911744713783,
+            0.41338312625885
+          ],
+          "origin": [
+            382.141296386719,
+            612.862121582031,
+            3266.79858398438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Windscar Flight Aerie",
+        "destination_index": 6,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__day__close.jpg",
+        "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day__close",
+        "identity": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.083333,
+            "node_path": "road_visibility_windscar_floor_loop_14_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              312.912994384766,
+              590.246032714844,
+              3288.42797851563
+            ],
+            "species_id": "galecrest"
+          },
+          {
+            "body_height_m": 4.0,
+            "body_radius_m": 1.4,
+            "node_path": "road_visibility_windscar_floor_loop_14_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              314.241394042969,
+              590.268737792969,
+              3291.25634765625
+            ],
+            "species_id": "aeriex"
+          }
+        ],
+        "nearby_creatures_160m": 2,
+        "observed_clock": {
+          "elapsed_seconds": 200.204439666667,
+          "hour": 8.00817758666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          377.531524658203,
+          610.031066894531,
+          3264.64868164063
+        ],
+        "position_xz": [
+          373.0,
+          3262.5357
+        ],
+        "resolved_ground_y": 610.03,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          373.0,
+          3262.53564453125
+        ],
+        "terrain_ground_y": 610.03,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": -115.0,
+        "view_heading_xz": [
+          -0.906307816505432,
+          -0.422618269920349
+        ]
+      },
+      "source_sha256": "990b807e583e6b63be7222ba8725a45f43670c1566a0eda6a4aed874017f87fb",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__day__close.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 3 \u2014 Windscar Ravine",
+        "band_id": "windscar_ravine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 534947,
+        "camera_player_distance_m": 5.82122659683228,
+        "camera_position": [
+          394.223907470703,
+          612.936767578125,
+          3266.91577148438
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.422618240118027,
+            0.0,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.188431993126869,
+            0.978147625923157,
+            -0.0878672748804092
+          ],
+          "basis_z": [
+            0.886502861976624,
+            0.2079117000103,
+            0.413383036851883
+          ],
+          "origin": [
+            389.614013671875,
+            611.855712890625,
+            3264.76611328125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.422618269920349,
+            4.91202115426859e-07,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.18843224644661,
+            0.978147625923157,
+            -0.087866872549057
+          ],
+          "basis_z": [
+            0.886502742767334,
+            0.207911744713783,
+            0.41338312625885
+          ],
+          "origin": [
+            394.223907470703,
+            612.936767578125,
+            3266.91577148438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Windscar Flight Aerie",
+        "destination_index": 6,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__approach.jpg",
+        "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__approach",
+        "identity": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.083333,
+            "node_path": "road_visibility_windscar_floor_loop_14_0",
+            "node_scale": [
+              0.999999582767487,
+              1.0,
+              0.999999582767487
+            ],
+            "position": [
+              312.805816650391,
+              590.191162109375,
+              3288.60986328125
+            ],
+            "species_id": "galecrest"
+          },
+          {
+            "body_height_m": 4.0,
+            "body_radius_m": 1.4,
+            "node_path": "road_visibility_windscar_floor_loop_14_1",
+            "node_scale": [
+              0.999999165534973,
+              1.0,
+              0.999999165534973
+            ],
+            "position": [
+              314.336608886719,
+              590.398620605469,
+              3290.56640625
+            ],
+            "species_id": "aeriex"
+          }
+        ],
+        "nearby_creatures_160m": 2,
+        "observed_clock": {
+          "elapsed_seconds": 450.188888888889,
+          "hour": 18.0075555555556,
+          "requested": "golden",
+          "time_of_day": "golden"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          389.614013671875,
+          610.105773925781,
+          3264.76611328125
+        ],
+        "position_xz": [
+          373.0,
+          3262.5357
+        ],
+        "resolved_ground_y": 610.0,
+        "selected_stand_lateral_m": 5.0,
+        "selected_stand_offset_m": 16.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          373.0,
+          3262.53564453125
+        ],
+        "terrain_ground_y": 610.0,
+        "time": "golden",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": -115.0,
+        "view_heading_xz": [
+          -0.906307816505432,
+          -0.422618269920349
+        ]
+      },
+      "source_sha256": "f64a6ddcbc7643cdd3909085a5a9c5f285e3702568cb6dc6280145d7743f383d",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__approach.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 3 \u2014 Windscar Ravine",
+        "band_id": "windscar_ravine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 288967,
+        "camera_player_distance_m": 5.82124948501587,
+        "camera_position": [
+          382.141296386719,
+          612.862121582031,
+          3266.79858398438
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.422618240118027,
+            0.0,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.188431993126869,
+            0.978147625923157,
+            -0.0878672748804092
+          ],
+          "basis_z": [
+            0.886502861976624,
+            0.2079117000103,
+            0.413383036851883
+          ],
+          "origin": [
+            377.531524658203,
+            611.781005859375,
+            3264.64868164063
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.422618269920349,
+            4.91202115426859e-07,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.18843224644661,
+            0.978147625923157,
+            -0.087866872549057
+          ],
+          "basis_z": [
+            0.886502742767334,
+            0.207911744713783,
+            0.41338312625885
+          ],
+          "origin": [
+            382.141296386719,
+            612.862121582031,
+            3266.79858398438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Windscar Flight Aerie",
+        "destination_index": 6,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__close.jpg",
+        "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__close",
+        "identity": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.083333,
+            "node_path": "road_visibility_windscar_floor_loop_14_0",
+            "node_scale": [
+              0.999999046325684,
+              1.0,
+              0.999999046325684
+            ],
+            "position": [
+              312.266510009766,
+              589.940490722656,
+              3289.19897460938
+            ],
+            "species_id": "galecrest"
+          },
+          {
+            "body_height_m": 4.0,
+            "body_radius_m": 1.4,
+            "node_path": "road_visibility_windscar_floor_loop_14_1",
+            "node_scale": [
+              0.99999737739563,
+              1.0,
+              0.99999737739563
+            ],
+            "position": [
+              314.384521484375,
+              590.422790527344,
+              3290.49780273438
+            ],
+            "species_id": "aeriex"
+          }
+        ],
+        "nearby_creatures_160m": 2,
+        "observed_clock": {
+          "elapsed_seconds": 450.195584015873,
+          "hour": 18.0078233606349,
+          "requested": "golden",
+          "time_of_day": "golden"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          377.531524658203,
+          610.031066894531,
+          3264.64868164063
+        ],
+        "position_xz": [
+          373.0,
+          3262.5357
+        ],
+        "resolved_ground_y": 610.03,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          373.0,
+          3262.53564453125
+        ],
+        "terrain_ground_y": 610.03,
+        "time": "golden",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": -115.0,
+        "view_heading_xz": [
+          -0.906307816505432,
+          -0.422618269920349
+        ]
+      },
+      "source_sha256": "347729694d91b79ead4cf682a58bd70a41e7a41b9a3e8c737ee4f2ab23aef079",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__golden__close.jpg",
+      "tile_index": 6,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__night__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 3 \u2014 Windscar Ravine",
+        "band_id": "windscar_ravine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 564373,
+        "camera_player_distance_m": 5.82122659683228,
+        "camera_position": [
+          394.223907470703,
+          612.936767578125,
+          3266.91577148438
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.422618240118027,
+            0.0,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.188431993126869,
+            0.978147625923157,
+            -0.0878672748804092
+          ],
+          "basis_z": [
+            0.886502861976624,
+            0.2079117000103,
+            0.413383036851883
+          ],
+          "origin": [
+            389.614013671875,
+            611.855712890625,
+            3264.76611328125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.422618269920349,
+            4.91202115426859e-07,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.18843224644661,
+            0.978147625923157,
+            -0.087866872549057
+          ],
+          "basis_z": [
+            0.886502742767334,
+            0.207911744713783,
+            0.41338312625885
+          ],
+          "origin": [
+            394.223907470703,
+            612.936767578125,
+            3266.91577148438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Windscar Flight Aerie",
+        "destination_index": 6,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__night__approach.jpg",
+        "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__night__approach",
+        "identity": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.083333,
+            "node_path": "road_visibility_windscar_floor_loop_14_0",
+            "node_scale": [
+              0.999998331069946,
+              1.0,
+              0.999998331069946
+            ],
+            "position": [
+              311.973175048828,
+              589.756225585938,
+              3289.85205078125
+            ],
+            "species_id": "galecrest"
+          },
+          {
+            "body_height_m": 4.0,
+            "body_radius_m": 1.4,
+            "node_path": "road_visibility_windscar_floor_loop_14_1",
+            "node_scale": [
+              0.999995529651642,
+              1.0,
+              0.999995529651642
+            ],
+            "position": [
+              314.393035888672,
+              590.436889648438,
+              3290.41528320313
+            ],
+            "species_id": "aeriex"
+          }
+        ],
+        "nearby_creatures_160m": 2,
+        "observed_clock": {
+          "elapsed_seconds": 575.202625333333,
+          "hour": 23.0081050133333,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          389.614013671875,
+          610.105773925781,
+          3264.76611328125
+        ],
+        "position_xz": [
+          373.0,
+          3262.5357
+        ],
+        "resolved_ground_y": 610.0,
+        "selected_stand_lateral_m": 5.0,
+        "selected_stand_offset_m": 16.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          373.0,
+          3262.53564453125
+        ],
+        "terrain_ground_y": 610.0,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": -115.0,
+        "view_heading_xz": [
+          -0.906307816505432,
+          -0.422618269920349
+        ]
+      },
+      "source_sha256": "6f7a35952cfd20603308d90c55e4f0dc1266686eddbacfe0fb14445049ea9da1",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__night__approach.jpg",
+      "tile_index": 7,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__night__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-053/baseline-route-markers/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 3 \u2014 Windscar Ravine",
+        "band_id": "windscar_ravine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 261540,
+        "camera_player_distance_m": 5.82124948501587,
+        "camera_position": [
+          382.141296386719,
+          612.862121582031,
+          3266.79858398438
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.422618240118027,
+            0.0,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.188431993126869,
+            0.978147625923157,
+            -0.0878672748804092
+          ],
+          "basis_z": [
+            0.886502861976624,
+            0.2079117000103,
+            0.413383036851883
+          ],
+          "origin": [
+            377.531524658203,
+            611.781005859375,
+            3264.64868164063
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.422618269920349,
+            4.91202115426859e-07,
+            -0.906307816505432
+          ],
+          "basis_y": [
+            -0.18843224644661,
+            0.978147625923157,
+            -0.087866872549057
+          ],
+          "basis_z": [
+            0.886502742767334,
+            0.207911744713783,
+            0.41338312625885
+          ],
+          "origin": [
+            382.141296386719,
+            612.862121582031,
+            3266.79858398438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Windscar Flight Aerie",
+        "destination_index": 6,
+        "file": "res://.artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__night__close.jpg",
+        "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__night__close",
+        "identity": "cloudreach__windscar_ravine__06__windscar_flight_aerie",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.5,
+            "body_radius_m": 1.083333,
+            "node_path": "road_visibility_windscar_floor_loop_14_0",
+            "node_scale": [
+              0.999996840953827,
+              1.0,
+              0.999996840953827
+            ],
+            "position": [
+              312.143920898438,
+              589.707214355469,
+              3290.56005859375
+            ],
+            "species_id": "galecrest"
+          },
+          {
+            "body_height_m": 4.0,
+            "body_radius_m": 1.4,
+            "node_path": "road_visibility_windscar_floor_loop_14_1",
+            "node_scale": [
+              0.999993503093719,
+              1.0,
+              0.999993503093719
+            ],
+            "position": [
+              314.434844970703,
+              590.567932128906,
+              3289.59838867188
+            ],
+            "species_id": "aeriex"
+          }
+        ],
+        "nearby_creatures_160m": 2,
+        "observed_clock": {
+          "elapsed_seconds": 575.211690333333,
+          "hour": 23.0084676133333,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          377.531524658203,
+          610.031066894531,
+          3264.64868164063
+        ],
+        "position_xz": [
+          373.0,
+          3262.5357
+        ],
+        "resolved_ground_y": 610.03,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          373.0,
+          3262.53564453125
+        ],
+        "terrain_ground_y": 610.03,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": -115.0,
+        "view_heading_xz": [
+          -0.906307816505432,
+          -0.422618269920349
+        ]
+      },
+      "source_sha256": "6d2ff77977e2cda7701276579d18fa91eed1789e80c8a8da8c3a3e42308bf5c4",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-053/baseline-route-markers/cloudreach__windscar_ravine__06__windscar_flight_aerie__night__close.jpg",
+      "tile_index": 8,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}
