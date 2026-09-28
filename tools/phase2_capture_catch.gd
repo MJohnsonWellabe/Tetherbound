@@ -29,7 +29,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
-const OUT_DIR := "res://ralph/reports/VISUAL/phase2/meadows/catch_raw_main"
+var _out_dir := "res://ralph/reports/VISUAL/phase2/meadows/catch_raw_main"
+var _seed := 2042
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 2
@@ -61,8 +62,18 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			_out_dir = arg.trim_prefix("--output=")
+		elif arg.begins_with("--seed="):
+			_seed = int(arg.trim_prefix("--seed="))
+	if not _out_dir.begins_with("res://ralph/reports/VISUAL/phase2/meadows/"):
+		push_error("Catch capture output must stay in Meadows Phase 2 evidence")
+		quit(1)
+		return
+	seed(_seed)
 	_start_ms = Time.get_ticks_msec()
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
@@ -440,7 +451,7 @@ func _capture(name: String) -> void:
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
 		return
-	var path := "%s/%s.png" % [OUT_DIR, name]
+	var path := "%s/%s.png" % [_out_dir, name]
 	if image.save_png(path) != OK:
 		_failures.append("%s: save_png failed" % name)
 		return
@@ -458,8 +469,20 @@ func _capture_paused(name: String) -> void:
 
 func _finish() -> void:
 	print("")
-	print("%d frames -> %s" % [_written.size(), OUT_DIR])
+	print("%d frames -> %s" % [_written.size(), _out_dir])
 	print("Software rendering: composition, readability and colour only.")
+	var records: Array[Dictionary] = []
+	for path: String in _written:
+		records.append({"id": path.get_file().get_basename(), "file": path})
+	var manifest := {"biome": "meadows", "category": "systems", "system": "catch",
+		"seed": _seed, "scene": SCENE, "display_server": DisplayServer.get_name(),
+		"rendering_method": RenderingServer.get_current_rendering_method(),
+		"adapter": RenderingServer.get_video_adapter_name(),
+		"resolution": [root.size.x, root.size.y], "frames": records,
+		"failures": _failures, "complete": _failures.is_empty()}
+	var manifest_file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
+	manifest_file.store_string(JSON.stringify(manifest, "\t") + "\n")
+	manifest_file.close()
 	if not _failures.is_empty():
 		for line in _failures:
 			print("FAIL: %s" % line)
