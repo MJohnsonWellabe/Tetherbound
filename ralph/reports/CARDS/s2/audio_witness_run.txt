@@ -1,0 +1,72 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD BUILD shell=false elapsed_ms=284 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=589 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=825 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=832 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=837 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=840 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=840 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=840 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=850 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=850 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1115 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1134 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1135 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 43161 placements, 0 skipped]=97 reorder[8 layers]=33
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=160 mark_harvestable=19 group_by_model=40 register_mesh_assets=22 build_batches_total=1241 (of which harvest_points[15940 nodes]=1009, initial_collision_stream[16002 solid]=61) update_mmis=208
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+  PASS: StormwoodSurgeAudio is mounted by the production Stormwood world
+LIGHTNING CONFIG telegraph_seconds=1.200 interval=4.0..8.0
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: an open, exposed trainer stance found by the lightning's own exposed() ((-1400.0, 29.86957, 2300.0), conductor_run)
+  PASS: the Long Storm's end committed through the ledger
+  PASS: a replayed impact/warning id fires no second cue (89 -> 89 rows)
+  PASS: phase cues fire exactly once each, in order Calm, Building, Break, Fading, release: ["sw_surge_calm_bed", "sw_surge_building_bed", "sw_surge_break_bed", "sw_surge_fading_decay", "sw_release_forest_sky_bed"]
+  PASS: sw_surge_building_bed fires at its phase boundary (clock 240.009, boundary 240)
+  PASS: sw_surge_break_bed fires at its phase boundary (clock 330.003, boundary 330)
+  PASS: sw_surge_fading_decay fires at its phase boundary (clock 450.006, boundary 450)
+  PASS: every impact fires its strike, body and decay layers once each
+  PASS: real Break strikes happened (21 warnings, 21 impacts)
+  PASS: no strike warning fires in Calm, Building or Fading (0 outside Break)
+  PASS: every strike has a warning with its id (0 without)
+  PASS: every warning's position equals its strike's position
+IMPACTS RESOLVING OUTSIDE BREAK (from a Break warning): 0
+  PASS: warning -> strike is telegraph_seconds 1.20 (+ one frame): min 1.200 max 1.213 s over 21 strikes
+STRIKE SPACING warnings: n=20 min=4.069 max=7.243  scheduler slots: n=23 min=4.069 max=7.243
+STRIKE SPACING gaps: ["4.22", "7.20", "6.94", "6.13", "5.53", "5.04", "5.52", "5.98", "5.38", "5.43", "4.67", "4.53", "6.49", "4.07", "7.24", "4.52", "5.48", "7.03", "5.85", "4.71"]
+  PASS: Break strike spacing is within 4-8 s (measured 4.069..7.243)
+  PASS: no cue claims playback without its asset
+  PASS: every caption is resolved (direction wedge filled)
+
+=================== MISSING ASSETS (9) ===================
+  MISSING res://assets/audio/stormwood/surge_calm_bed.wav  <- cue sw_surge_calm_bed (§4.3 Calm, 240 s baseline: rain/drip and low moss/forest life; distant thunder with long spacing)
+  MISSING res://assets/audio/stormwood/surge_building_bed.wav  <- cue sw_surge_building_bed (§4.3 Building, 90 s: copper-vine ticks, increasing canopy motion and rising electrical bed; birds/insects fall away; no strike yet)
+  MISSING res://assets/audio/stormwood/surge_break_bed.wav  <- cue sw_surge_break_bed (§4.3 Break, 120 s: the Break bed under the strike chain; rhythm follows the authored 4-8 s strike spacing)
+  MISSING res://assets/audio/stormwood/surge_fading_decay.wav  <- cue sw_surge_fading_decay (§4.3 Fading, 60 s: strike density stops; steam, glass and low rolling thunder decay; charged nodes/afterglow remain audible locally)
+  MISSING res://assets/audio/stormwood/release_forest_sky_bed.wav  <- cue sw_release_forest_sky_bed (§4.3 Stormheart release: removes the oppressive rod-line bed and opens ordinary forest/sky sound; it does not leave the same loop under brighter lighting)
+  MISSING res://assets/audio/stormwood/strike_warning.wav  <- cue sw_strike_warning (§4.3 Break: each strike uses a spatial 1.2 s warning whose direction and ground location are readable)
+  MISSING res://assets/audio/stormwood/strike_crack.wav  <- cue sw_strike_crack (§4.3 Break: followed by strike/body/decay layers (strike))
+  MISSING res://assets/audio/stormwood/strike_body.wav  <- cue sw_strike_body (§4.3 Break: followed by strike/body/decay layers (body))
+  MISSING res://assets/audio/stormwood/strike_decay.wav  <- cue sw_strike_decay (§4.3 Break: followed by strike/body/decay layers (decay))
+  No Stormwood Surge/lightning cue was heard: every row played=false.
+============================================================
+WITNESS WRITTEN /root/.local/share/godot/app_userdata/Tetherbound/f10_audio_witness
+  PASS: the cue log is empty after realm teardown
+  PASS: the observer is disconnected from the replicated lightning event after teardown
+STORMWOOD SURGE AUDIO WITNESS OK: 19 passed, 0 failed (wiring and timing only; no audio played)
