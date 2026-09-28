@@ -1620,17 +1620,18 @@
           "model": "Bonfire_Fire",
           "at": [-74.0, 1296.0],
           "yaw_deg": 30.0,
-          "scale": 0.3,
+          "scale": 0.65,
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": 0.03,
           "glow": "campfire",
-          "glow_scale": 1.3
+          "glow_scale": 2.4,
+          "_why_night_size": "Night cue views (render 36419344502, tests/capture_lure_cue_views.gd --cue=herd --time=night): at 0.3/1.3 the fire was a ~10 px speck at 41 m and gone by 71 m. The halo scales with the prop, so the fire doubles (Doss's signal fire is 0.6) and the light's reach grows with glow_scale."
         },
         {
           "model": "campfire_stone_ring",
           "at": [-74.0, 1296.0],
           "yaw_deg": 0.0,
-          "scale": 0.65,
+          "scale": 1.2,
           "dir": "res://assets/props/generated_camp",
           "sink_m": 0.04
         },
