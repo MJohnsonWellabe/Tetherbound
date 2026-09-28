@@ -34,3 +34,10 @@ traversal or sightline proof. Existing presentation, wayfinding and atlas tests
 also pass. Native exterior and interior views, branch joins, seams, visibility
 and code-blind Bars A/B review remain required. No activation or visual pass is
 claimed.
+
+Subsequent native comparison at `d0f5151c6` is now retained in the three
+`branching-*-r1` folders and `branching-comparison-coverage.json`. Fresh blind
+review confirms stronger distant tree recognition but crude branch joins and
+pale fragmented canopy; the full landmark and Bars A/B remain NO/NO. Eight
+matched ground-level interior pairs do not establish upper-arena visibility.
+See `branching-pair-verdict.md`. The candidate stays disabled.
