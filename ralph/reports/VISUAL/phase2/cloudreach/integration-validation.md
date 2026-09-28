@@ -30,3 +30,11 @@ Some headless logs include teardown RID/ObjectDB/resource leak diagnostics, incl
 - Existing native GPU paired and regional judge artifacts retain their FAIL / No-No verdicts and capture limits. Disabled candidates were not re-enabled or represented as accepted fixes.
 
 PR CI and main ancestry are separate landing gates, verified through GitHub and git after this receipt; this file does not pre-claim either.
+
+## Current-main integration after Meadows and Balance
+
+Main `e1d036903` (Balance #413 and Meadows #417) merged cleanly as `59776928a91aa688cfec11ec151494558fd4e30b`. Incoming shared combat, dialogue-camera and HUD changes justified another focused integration run. The lane's six executable/config/test/tool files remain identical to the preceding reviewed source.
+
+`integration-main-e1d.log`: 93 tests / 4196 assertions / 0 failed, exit 0; SHA-256 `6f20752443793624c335f0351666bbada4008292bead6a51a9dd163dbf559873`. Covered suites: alpha pins, Cloudreach aviary architecture, conversation-camera aftermath profile, creature viewport framing, texture import policy, earned Hall and relay segments, Meadows route ambush spacing, named-fight profiles/tell timing, named-trainer wild clearing, open-door prompts, stronghold Warden arena and trainer aftermath. Teardown RID/ObjectDB/resource diagnostics remain disclosed.
+
+Independent `p2_021_code_review` rechecked this merge: no findings; exact six-file lane code unchanged, 20 deferred / 0 fixed, candidate flags off, STATE/board/F08 visual debt preserved, valid UTF-8 and clean diff. Rebuilding the dashboard produced no additional changes. All 118 reviewed Cloudreach evidence files have the same committed Git tree identity as before this main merge; the new receipt paragraph is subsequent documentation.
