@@ -22,3 +22,12 @@ Native matched replay completed: eight stills and 160 temporal samples at
 new identity and preservation of readability, but still fails the full item:
 Calm and Building remain too similar beneath Stormheart. The flag stays off.
 No fixed status or regional bar is claimed.
+
+Round 2 retains the accepted Fading values and changes only Building's
+understory ambient color/energy, key-light energy, rain amount, wind slant and
+fog contribution. The blue-green fill follows ART_DIRECTION 3.3; all sky
+colors remain purple. Independent code review found no actionable defects.
+Default-off surge tests passed 55 tests / 762 assertions. An ignored wrapper
+subclass enabled the candidate in the existing presentation suite's returned
+config, without changing the on-disk flag: 51 tests / 716 assertions passed.
+Native matched round-2 review is pending.
