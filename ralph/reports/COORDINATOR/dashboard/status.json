@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-28T18:30Z",
+ "updated": "2026-09-28T18:35Z",
  "headline": [
-  "Criteria met: 93 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429). Stormwood's #425 (card S1 and F10#2) is waiting on a merge conflict.",
-  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#2, F10#6; Tidewake F14#0, F14#1 (C3); cards M1, M2, M3, S1, S2, T2.",
-  "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2, F04#7 and F10#2. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
+  "Criteria met: 94 of 101. Chapter cards complete: 8 of 13 (M4, C1, C2, C3, S1, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429); Stormwood landed card S1 and F10#2 (#425).",
+  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M1, M2, M3, S2, T2.",
+  "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2 and F04#7. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
   "Main CI is green on each merge. Meadows render jobs are capped at about 3 at a time so CI isn't starved. The owner has delegated lane decisions to the coordinator."
  ],
  "batches": [
@@ -350,10 +350,10 @@
    "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
   },
   {
-   "name": "Phase 1 landings 16:52–18:23",
-   "sha": "a789a9eb",
-   "state": "Merged, CI green",
-   "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); Codex 2c #421/#422/#424/#426"
+   "name": "Phase 1 landings 16:52–18:26",
+   "sha": "6b85e6b0",
+   "state": "Merged",
+   "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
   }
  ],
  "lanes": [
@@ -369,7 +369,7 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "#425 (card S1 met, F10#2 met, F10#6 HUD at the handheld floors) is waiting on a merge conflict; told to resolve it. Then F10#6. S2's non-F10 parts moved to the Cards lane.",
+   "now": "Landed card S1 and F10#2 (#425). Open: F10#6 (handheld HUD: fight column covers trainer and attack lanes; plate fade hides the punish line). S2's non-F10 parts moved to the Cards lane.",
    "next": "Self-lands each criterion"
   },
   {
