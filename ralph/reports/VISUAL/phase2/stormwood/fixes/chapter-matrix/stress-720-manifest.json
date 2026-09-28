@@ -1,0 +1,337 @@
+{
+  "source_commit": "8d73955a12e98e75c9ad2d585f80b57fdc4fb5fa",
+  "method": "Pillow LANCZOS resize of complete native1920x1080 JPEG to1280x720 PNG; no crop or composition changes.",
+  "scope": "Derived environment downscale stress raster, not native720p UI layout, ordinary combat, Ally hardware or performance proof.",
+  "frames": [
+    {
+      "id": "forest_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/forest_calm.jpg",
+      "source_sha256": "59660ad65d4ff5e6e7c482793ba04072ce534ad430534a8ba5ad762ffbd21158",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/forest_calm.png",
+      "sha256": "bc71f6f59a25e4df1979812926ed76413b991c66ba8f7020b4917a334923999a",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "forest_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/forest_break.jpg",
+      "source_sha256": "f21e01ade976f24b90b1cc94a5659d518fa696ba40094b1e2ed688a8585dc03c",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/forest_break.png",
+      "sha256": "68bafa7ce97f1c25bb59f642c9282ca959e51d8e32d5baec9532b8be661b86ec",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "giant_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/giant_calm.jpg",
+      "source_sha256": "ce964e648abd371c6598d990d3a1f4e6d343464dfdabd3eda84976a8e09f6d8c",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/giant_calm.png",
+      "sha256": "424b6dae79b049dd1d8e623520993dae139ce6bd5826833e0fa746b65fbbdfcf",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "giant_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/giant_break.jpg",
+      "source_sha256": "795f4aca62ac2607cf21eb58bab7192ca36a3df9685e69849554d8f4fbafdd11",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/giant_break.png",
+      "sha256": "1d820de93b6857176c1a99ade9c032abc47568ad8757417d8692ec595cfd6b19",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "glass_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/glass_calm.jpg",
+      "source_sha256": "ab226f646bcdb36ba5760dbcbc9fcef847b2a4f669ba04358db8edca43f270e9",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/glass_calm.png",
+      "sha256": "f6a1693942b770368212cbc79e5c1eec0ae0122b571bb4d729ebcd59873473b6",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "glass_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/glass_break.jpg",
+      "source_sha256": "5dea53ce335a742c2634056ec55dffcf5963d08834b4511a82aecdf0afb6c719",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/glass_break.png",
+      "sha256": "4c89c514d457424c47d5647a3ce498c5c51bbccec76ead50f3d6a35a6674f3f7",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "rod_line_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/rod_line_calm.jpg",
+      "source_sha256": "ad170ec41c49698d31f84bc8fcf1af596781b5ec7ec0e1435b65f6f2b5d86569",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/rod_line_calm.png",
+      "sha256": "560928e58887009cf5b2c93d58619bc66d5c8f4b763978e3cffe501fda75de2d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "rod_line_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/rod_line_break.jpg",
+      "source_sha256": "465494a679fd4a749721d4e1d9bb91df8a618ce7468522d8980364fe9b94aed3",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/rod_line_break.png",
+      "sha256": "e2216bae1022e6da188695e721b7632f11310e4f272f86733d4263412a040f7d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "arrival_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/arrival_calm.jpg",
+      "source_sha256": "c4bd7393df3de2f6c20d24d2c7bedbe7c9242729c00dc23d715ee3d6585f9a14",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/arrival_calm.png",
+      "sha256": "342bfbbe2b7ebf487cf2085b2d50f690554f459df980a9dc143e2bb99cdb795d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "arrival_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/arrival_break.jpg",
+      "source_sha256": "a20808a64e22f7db1a954f896fa58825045c3f692ca83a4f7f2d7c145b7ff102",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/arrival_break.png",
+      "sha256": "9e7155ba18ec6015a36f7a62dbc4c5e2b584fc54d609e6b2e998b0a7b441af89",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "reverse_route_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/reverse_route_calm.jpg",
+      "source_sha256": "db6000f2eed7971f16ff86c8cb9bb1204e5cbf5bf9c70f8750f1c4b97d13d75b",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/reverse_route_calm.png",
+      "sha256": "d97977e5e49b6e978454d6e7eb7a9ef226d5afbef61137d6d99edab0b84718fa",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "reverse_route_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/reverse_route_break.jpg",
+      "source_sha256": "63a0161a6a29d76af9faa56346ec2cf83a81e9928b7940d6f6f00bcedca8000c",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/reverse_route_break.png",
+      "sha256": "5fb7845d74a85247b6a41e4afde954160cb7e7468ba66eeb911daf3af5f47de8",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "ashfoot_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/ashfoot_calm.jpg",
+      "source_sha256": "38377d3f9d8b5e6d61944c4c0ba45866ece31a0fb37321b4de973c9813d8dfc9",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/ashfoot_calm.png",
+      "sha256": "3fb6b18ed7c29904b3a0b01fbab60822f42060385ae889074be77d58ffec6d54",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "ashfoot_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/ashfoot_break.jpg",
+      "source_sha256": "30c44d9e569610bd2744bce0b21cf2dae46ab5964b52dc7fd654dc4c46e2aef8",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/ashfoot_break.png",
+      "sha256": "78a70c8ccf49115402d6aa02a9872be86fae3ac1e008a3a3de5812e15b4692b8",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "stormheart400_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/stormheart400_calm.jpg",
+      "source_sha256": "c71a8c00cfc81646c4022da46f1cfe692619447ad99a0f1bcee140a81adef4d8",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/stormheart400_calm.png",
+      "sha256": "809ffa9407198ca19a82208374e5f66c103bc561decc6844cf4b36acd285204d",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "stormheart400_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/stormheart400_break.jpg",
+      "source_sha256": "2633940cd0bb43bc7c2397dbe4a3813976251cb1a0bc37ad390a6edad28ff428",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/stormheart400_break.png",
+      "sha256": "9044e0c0add50832da90b4ce005564a127183531552b797755ca569a264e727e",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "stormheart100_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/stormheart100_calm.jpg",
+      "source_sha256": "75f19d6627d25c883a549e474b6b480bdd1bc20e9dd59d04d154ddd6370b02c5",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/stormheart100_calm.png",
+      "sha256": "66ac2169bc8d1b07bf1dc0d2b98aad71680424f03800fbfbf2dd21df8e6e7ab7",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "stormheart100_break",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/stormheart100_break.jpg",
+      "source_sha256": "c0dd91bce7a38167fdf93da8168e74b44cfa9850b1fe940dda2a28ef2ee269e9",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/stormheart100_break.png",
+      "sha256": "60dc0c23fed3476fd3c48d39bb5176ce52cad303ffdb68ad4e1dd912b6e5d1a7",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "forest_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/forest_aftermath_calm.jpg",
+      "source_sha256": "06b6783de10bb992b9a017637fb7df8aec6abb13289045b0a769b9fccdedc8a9",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/forest_aftermath_calm.png",
+      "sha256": "243a0ec0247b553d448e855d7c8d8b965d69b6c6259f3e546e95ff66a352f4b2",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "giant_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/giant_aftermath_calm.jpg",
+      "source_sha256": "0177aad45a18737514f0e94ef1426dc9a2bf1b9b36bc55174b277917b5814ecb",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/giant_aftermath_calm.png",
+      "sha256": "37445c1c0d99e3a21bfb4f1eb7477d4ed047d0e87c3e62c64120976a7c622d55",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "glass_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/glass_aftermath_calm.jpg",
+      "source_sha256": "f1b86693903fbecbe2f94db00b099f3cb07ee8be18430b07b8402d29b47b582f",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/glass_aftermath_calm.png",
+      "sha256": "27766b2f016abb1bc5655c2bb0ba71e610bafcfa471a55d38449b037c9a1d995",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "rod_line_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/rod_line_aftermath_calm.jpg",
+      "source_sha256": "7c9691ce983ebb1129051a096d2d01fcf5e49ee5e7135e24f29174bb871c42e3",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/rod_line_aftermath_calm.png",
+      "sha256": "c27f83fde98a9ad863de22ff4b2e52118be159326f52769ddb1e8432422ee935",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "arrival_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/arrival_aftermath_calm.jpg",
+      "source_sha256": "d27ce3f167cde0492b188aa4ab5c6a74cf8ab634a1a6d0092d0c9017230e06e2",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/arrival_aftermath_calm.png",
+      "sha256": "b46c059d16539df6e48bd8b56cf317ed4831cc63d32a36d768b560ea9194f7ac",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "reverse_route_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/reverse_route_aftermath_calm.jpg",
+      "source_sha256": "084845c6bf998a1cdea60c0e9d887bf464a93ee90df2ff5b9f936f54d102bca4",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/reverse_route_aftermath_calm.png",
+      "sha256": "f4d88adf8898938b6e928122d371621041360b26c0376dba554f637695f37648",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "ashfoot_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/ashfoot_aftermath_calm.jpg",
+      "source_sha256": "45b9f720d0ce7ea92c474bb750394556180769888d9ebbe78d31970d871e1f51",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/ashfoot_aftermath_calm.png",
+      "sha256": "8f72e905ded2256d6071f56b69da9e0eec682f2c19916e5494919fb5202b2f66",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "stormheart400_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/stormheart400_aftermath_calm.jpg",
+      "source_sha256": "8846b584d3a0d69090c270951e6fbccda2288285abf7c2bd7f526a88e321f2b0",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/stormheart400_aftermath_calm.png",
+      "sha256": "ba7faab69e778ec7344121bc52d302cbe9dcdf4d341cb2f99bfcda880f578340",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "stormheart100_aftermath_calm",
+      "source_frame": ".tmp/stormwood-phase2/chapter-matrix-r1/stormheart100_aftermath_calm.jpg",
+      "source_sha256": "af1c421dc25581d6dea22081d5e2daf76e3a8ee8bfa43d0a788d7d5e5f547e16",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/stormheart100_aftermath_calm.png",
+      "sha256": "c11e039c8388a4c6e9d23c1445f64c4f676e13876195347e6b674dc28db3378c",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "pocket_verge_ash_hollow_a_approach",
+      "source_frame": ".tmp/stormwood-phase2/chapter-pocket-r1/pocket_verge_ash_hollow_a_approach.jpg",
+      "source_sha256": "04f3abf5e4ec764de2f0b18854dbb0bf2b1bb2050569f65a716ce3cc1f5a5b08",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/pocket_verge_ash_hollow_a_approach.png",
+      "sha256": "f5c2245f26e8ab39bb93e74cfdbfbaf0c896d2c5a1d00f69fcf652f5de442f0a",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "pocket_verge_ash_hollow_b_mouth",
+      "source_frame": ".tmp/stormwood-phase2/chapter-pocket-r1/pocket_verge_ash_hollow_b_mouth.jpg",
+      "source_sha256": "da4d80554bb98c4ccfc593ce9aa6c71164eca3f380d7c2c37b14fc3e146b7026",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/pocket_verge_ash_hollow_b_mouth.png",
+      "sha256": "62b98d87e593628ef1b4448944bfde0a8fffb777462995507fc7d9b1ee2e91bb",
+      "size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "id": "spur_verge_ash_hollow_junction",
+      "source_frame": ".tmp/stormwood-phase2/chapter-pocket-r1/spur_verge_ash_hollow_junction.jpg",
+      "source_sha256": "3db545989dc6bd4950fd24b9bd108899c81b4f408eb13b265ea74fba827f8830",
+      "file": ".tmp/stormwood-phase2/chapter-stress-720-r1/spur_verge_ash_hollow_junction.png",
+      "sha256": "f095f07954bd54160e8ebbd81a186b8f41b6fa80b9e21daeaea29641ea26900f",
+      "size": [
+        1280,
+        720
+      ]
+    }
+  ]
+}
