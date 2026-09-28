@@ -127,6 +127,10 @@ var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
 ## The always-on party strip (spec 9.4). Built in code, mounted at
 ## `_party_strip_position()`.
 var _party_strip: Control = null
+## Full-rect holder the subject fade dims in place of the strip itself.
+var _strip_fader: Control = null
+## Per-panel subject-fade level, 1.0 = opaque (see `_update_subject_fade`).
+var _subject_fade := {}
 ## OWNER-0902-HUD-TEAM-MENU: edge-detects the fight-just-ended frame for
 ## `_show_fight(false)`'s `hide_now()` call below -- `_process()` calls
 ## `_show_fight(false)` on EVERY frame nothing is fighting, not just the one
@@ -278,7 +282,14 @@ func _ready() -> void:
 
 	_party_strip = PARTY_STRIP.new()
 	_party_strip.set("progression_feedback_enabled", false)
-	$Root.add_child(_party_strip)
+	# F10#6 (UX §1.4): the strip drives its own `modulate` fades, so the
+	# subject fade (`_update_subject_fade`) dims this full-rect holder instead.
+	_strip_fader = Control.new()
+	_strip_fader.name = "StripFader"
+	_strip_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_strip_fader.set_anchors_preset(Control.PRESET_FULL_RECT)
+	$Root.add_child(_strip_fader)
+	_strip_fader.add_child(_party_strip)
 	# F10#6: the fight roster is name + HP, opaque (party_strip.gd `compact`).
 	_party_strip.call("set_compact", true)
 	# `set_rest_position()`, not a plain `.position` write: the strip is not
@@ -522,6 +533,85 @@ func _process(delta: float) -> void:
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()
+	_update_subject_fade(delta)
+
+
+## F10#6 device profile (UX §1.4: the HUD supports direction, team state and
+## danger "without covering the trainer, active creature, target or attack
+## geometry"; code-blind 7-inch judges r2-r4 found the trainer under the
+## move grid or the left column and the target under its plate). The fight
+## camera orbits while the trainer stands still, so no one placement keeps
+## them clear. Each frame the trainer, the active creature and the target are
+## projected; a fight panel over one of them eases down to `alpha`, and back
+## once it is clear. Presentation only. combat.json `hud_subject_fade`.
+func _update_subject_fade(delta: float) -> void:
+	var cfg: Dictionary = COMBAT_MATH.config().get("hud_subject_fade", {}) as Dictionary
+	var enabled := bool(cfg.get("enabled", true))
+	var low := float(cfg.get("alpha", 0.3))
+	var rate := float(cfg.get("rate", 6.0))
+	var min_overlap := float(cfg.get("min_overlap", 0.1))
+	var subjects: Array[Rect2] = _subject_rects() if enabled else []
+	# Enemy plate and grid: their own draw code resets `modulate.a` every
+	# frame, so the fade multiplies. Ally panel, orbs plate and strip holder
+	# are not written elsewhere, so the fade is their alpha.
+	for entry: Array in [[_enemy_panel, true], [_grid_panel, true], [_ally_panel, false],
+			[_orbs_panel, false], [_strip_fader, false]]:
+		var panel := entry[0] as Control
+		if panel == null:
+			continue
+		var want := 1.0
+		if panel.is_visible_in_tree():
+			var rect := panel.get_global_rect()
+			for subject: Rect2 in subjects:
+				var area := subject.get_area()
+				if area > 0.0 and rect.intersection(subject).get_area() >= area * min_overlap:
+					want = low
+					break
+		var level := move_toward(float(_subject_fade.get(panel, 1.0)), want, delta * rate)
+		_subject_fade[panel] = level
+		if bool(entry[1]):
+			panel.modulate.a *= level
+		else:
+			panel.modulate.a = level
+
+
+## Screen rects of the trainer, the active creature and the target through the
+## live camera; a body with any corner behind the lens is skipped.
+func _subject_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = []
+	var camera := get_viewport().get_camera_3d()
+	if camera == null or _manager == null:
+		return rects
+	var bodies: Array[Node3D] = []
+	for key in ["_player", "_ally_body"]:
+		var body: Variant = _manager.get(key)
+		if body is Node3D and is_instance_valid(body):
+			bodies.append(body as Node3D)
+	if _manager.has_method("enemy_body"):
+		var foe: Variant = _manager.call("enemy_body")
+		if foe is Node3D and is_instance_valid(foe):
+			bodies.append(foe as Node3D)
+	for body: Node3D in bodies:
+		var box := AABB()
+		if _manager.has_method("_body_world_bounds"):
+			box = _manager.call("_body_world_bounds", body) as AABB
+		if box.size.is_zero_approx():
+			box = AABB(body.global_position + Vector3(-0.35, 0.0, -0.35), Vector3(0.7, 1.8, 0.7))
+		var forward := -camera.global_basis.z
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		var behind := false
+		for i in 8:
+			var corner := box.get_endpoint(i)
+			if (corner - camera.global_position).dot(forward) <= 0.05:
+				behind = true
+				break
+			var p := camera.unproject_position(corner)
+			lo = lo.min(p)
+			hi = hi.max(p)
+		if not behind:
+			rects.append(Rect2(lo, hi - lo))
+	return rects
 
 
 ## `just_ended`: true only on the single frame `fighting` flips from true to
@@ -539,6 +629,12 @@ func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
 		_grid_panel.visible = false
 		_aim_row.visible = false
 		_catch_row.visible = false
+		# The next fight opens with every panel opaque, not at the last one's
+		# subject-fade level (`_update_subject_fade`).
+		_subject_fade.clear()
+		for panel: Control in [_ally_panel, _orbs_panel, _strip_fader]:
+			if panel != null:
+				panel.modulate.a = 1.0
 		if _party_strip != null:
 			if just_ended:
 				# OWNER-0902-HUD-TEAM-MENU: `set_pinned(false)` merely starts
