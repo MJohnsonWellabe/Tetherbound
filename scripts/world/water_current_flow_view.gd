@@ -16,6 +16,9 @@ extends MeshInstance3D
 const SHADER := preload("res://shaders/water_current_flow.gdshader")
 const RESTORED_FLAG := "water_currents_restored"
 const POLL_SECONDS := 1.0
+const VISUAL_CONFIG := "res://data/config/water_current_flow_visual.json"
+const VISUAL_UNIFORMS := ["visual_cell_width_m", "visual_cell_length_m",
+	"visual_density", "visual_breakup", "visual_band_gain"]
 
 var ribbon_count := 0
 var _flags: RefCounted
@@ -57,7 +60,24 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 		var value: Variant = config.shader[key]
 		material.set_shader_parameter(key, Color(str(value)) if value is String else value)
 	material_override = material
+	var visual: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
+	apply_visual_settings(visual if visual is Dictionary else {})
 	_refresh(true)
+
+
+## Local material only. A strict allowlist prevents visual settings from
+## replacing the existing live/restored state or any ribbon/flow inputs.
+func apply_visual_settings(settings: Dictionary) -> void:
+	var material := material_override as ShaderMaterial
+	if material == null:
+		return
+	var enabled := bool(settings.get("enabled", false))
+	material.set_shader_parameter("visual_groups_enabled", enabled)
+	if enabled:
+		var values: Dictionary = settings.get("shader", {})
+		for key: String in VISUAL_UNIFORMS:
+			if values.has(key):
+				material.set_shader_parameter(key, float(values[key]))
 
 
 func _process(delta: float) -> void:

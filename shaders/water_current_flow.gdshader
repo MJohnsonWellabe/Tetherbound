@@ -42,6 +42,13 @@ uniform float end_fade_m = 0.0;
 uniform float fade_start_m = 180.0;
 uniform float fade_end_m = 520.0;
 uniform float depth_pull_fraction = 0.003;
+// P2-066. A local flag keeps the original expression path intact when off.
+uniform bool visual_groups_enabled = false;
+uniform float visual_cell_width_m = 3.6;
+uniform float visual_cell_length_m = 11.0;
+uniform float visual_density = 0.62;
+uniform float visual_breakup = 0.55;
+uniform float visual_band_gain = 0.55;
 varying vec3 v_world;
 varying float v_distance;
 
@@ -55,6 +62,30 @@ float noise(vec2 p) {
 	f = f * f * (3.0 - 2.0 * f);
 	return mix(mix(hash(cell), hash(cell + vec2(1.0, 0.0)), f.x),
 		mix(hash(cell + vec2(0.0, 1.0)), hash(cell + vec2(1.0)), f.x), f.y);
+}
+
+// Groups stay strictly inside their cells; changing the cell hash therefore
+// happens only in empty water. All coordinates advect together, so neither
+// the silhouette nor its broken edges flicker/reseed as time advances.
+float foam_group(vec2 moving) {
+	vec2 cell_size = vec2(max(visual_cell_width_m, 1.0), max(visual_cell_length_m, 4.0));
+	vec2 cell = floor(moving / cell_size);
+	vec2 local = fract(moving / cell_size);
+	float selected = step(hash(cell + vec2(13.1, 47.3)), clamp(visual_density * streak_density, 0.0, 1.0));
+	float centre_x = mix(0.25, 0.75, hash(cell + vec2(5.9, 71.2)));
+	float head = mix(0.70, 0.90, hash(cell + vec2(83.4, 2.6)));
+	float length_fraction = mix(0.22, 0.56, hash(cell + vec2(17.8, 29.1)));
+	float phase = (local.y - (head - length_fraction)) / length_fraction;
+	// At larger along coordinates the downstream head is fuller/brighter;
+	// the upstream tail narrows and fades. Translation follows physics flow.
+	float body = smoothstep(0.0, 0.78, phase) * (1.0 - smoothstep(0.86, 1.0, phase));
+	float half_width = mix(0.07, 0.14, hash(cell + vec2(61.0, 11.7)))
+		* mix(0.28, 1.0, clamp(phase, 0.0, 1.0));
+	float wander = (noise(moving * vec2(0.4, 0.65)) - 0.5) * 0.045;
+	float cross_shape = 1.0 - smoothstep(half_width * 0.35, half_width,
+		abs(local.x - centre_x + wander));
+	float erosion = smoothstep(0.25, 0.72, noise(moving * vec2(1.6, 0.95) + vec2(31.0)));
+	return selected * body * cross_shape * mix(1.0, erosion, clamp(visual_breakup, 0.0, 1.0));
 }
 
 void vertex() {
@@ -74,31 +105,45 @@ void fragment() {
 	float along = dot(v_world.xz, flow);
 	float across_m = dot(v_world.xz, vec2(-flow.y, flow.x));
 	float speed = max(min_speed_m_s, strength * speed_scale) * calm_scale;
-	// Thin wandering foam lanes, broken into dashes that drift with the flow.
-	float lane = across_m / streak_width_m + noise(vec2(along / 30.0, across_m / 20.0)) * 1.5;
-	float girth = noise(vec2(floor(lane) * 1.7, along / 18.0));
-	float line = smoothstep(0.78 - girth * 0.22, 0.97, 1.0 - abs(fract(lane) * 2.0 - 1.0));
-	float carried = step(hash(vec2(floor(lane), 7.31)), streak_density);
-	float dash = smoothstep(0.65 - 0.35 * dash_fill, 0.9 - 0.2 * dash_fill,
-		noise(vec2(floor(lane) * 3.1, (along - TIME * speed) / streak_length_m)));
-	float fleck_cut = 0.97 - 0.22 * fleck_amount;
-	float fleck = smoothstep(fleck_cut, fleck_cut + 0.08,
-		noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35))) * min(1.0, fleck_amount * 1.5);
-	float streak = max(line * dash * carried, fleck * 0.6);
+	float streak = 0.0;
 	float comet = 0.0;
-	if (comet_opacity > 0.0) {
-		// Per lane, one comet every comet_length_m (some skipped): its body
-		// ramps up along the flow and cuts off at the head.
-		float lane_id = floor(lane);
-		float phase = fract((along - TIME * speed) / comet_length_m + hash(vec2(lane_id, 1.37)));
-		float body = smoothstep(0.0, 0.8, phase) * (1.0 - smoothstep(0.9, 0.97, phase));
-		float profile = 1.0 - abs(fract(lane) * 2.0 - 1.0);
-		float taper = smoothstep(0.9 - 0.35 * phase, 0.98, profile);
-		float kept = step(hash(vec2(lane_id, floor((along - TIME * speed) / comet_length_m + hash(vec2(lane_id, 1.37))))), comet_fill);
-		comet = body * taper * kept * comet_opacity;
+	if (visual_groups_enabled) {
+		vec2 moving = vec2(across_m, along - TIME * speed);
+		float group = foam_group(moving);
+		float chop = smoothstep(0.78, 0.94, noise(moving * vec2(0.7, 0.9)))
+			* smoothstep(0.48, 0.76, noise(moving * 0.16 + vec2(7.0)));
+		streak = group * 0.38 + chop * fleck_amount * 0.22;
+		comet = group * comet_opacity;
+	} else {
+		// Thin wandering foam lanes, broken into dashes that drift with the flow.
+		float lane = across_m / streak_width_m + noise(vec2(along / 30.0, across_m / 20.0)) * 1.5;
+		float girth = noise(vec2(floor(lane) * 1.7, along / 18.0));
+		float line = smoothstep(0.78 - girth * 0.22, 0.97, 1.0 - abs(fract(lane) * 2.0 - 1.0));
+		float carried = step(hash(vec2(floor(lane), 7.31)), streak_density);
+		float dash = smoothstep(0.65 - 0.35 * dash_fill, 0.9 - 0.2 * dash_fill,
+			noise(vec2(floor(lane) * 3.1, (along - TIME * speed) / streak_length_m)));
+		float fleck_cut = 0.97 - 0.22 * fleck_amount;
+		float fleck = smoothstep(fleck_cut, fleck_cut + 0.08,
+			noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35))) * min(1.0, fleck_amount * 1.5);
+		streak = max(line * dash * carried, fleck * 0.6);
+		if (comet_opacity > 0.0) {
+			// Per lane, one comet every comet_length_m (some skipped): its body
+			// ramps up along the flow and cuts off at the head.
+			float lane_id = floor(lane);
+			float phase = fract((along - TIME * speed) / comet_length_m + hash(vec2(lane_id, 1.37)));
+			float body = smoothstep(0.0, 0.8, phase) * (1.0 - smoothstep(0.9, 0.97, phase));
+			float profile = 1.0 - abs(fract(lane) * 2.0 - 1.0);
+			float taper = smoothstep(0.9 - 0.35 * phase, 0.98, profile);
+			float kept = step(hash(vec2(lane_id, floor((along - TIME * speed) / comet_length_m + hash(vec2(lane_id, 1.37))))), comet_fill);
+			comet = body * taper * kept * comet_opacity;
+		}
 	}
 	float across = abs(UV.x - 0.5) * 2.0;
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
+	if (visual_groups_enabled) {
+		float edge_noise = noise(vec2(across_m / 8.0, (along - TIME * speed) / 11.0));
+		edge = 1.0 - smoothstep(0.35 + edge_noise * 0.2, 0.75 + edge_noise * 0.25, across);
+	}
 	float ends = smoothstep(0.0, 0.12, UV2.x) * (1.0 - smoothstep(0.88, 1.0, UV2.x));
 	if (end_fade_m > 0.0 && UV2.y > 0.0) {
 		ends = smoothstep(0.0, end_fade_m, UV.y) * (1.0 - smoothstep(UV2.y - end_fade_m, UV2.y, UV.y));
@@ -109,6 +154,10 @@ void fragment() {
 	float foam = clamp(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), 0.0, 1.0);
 	float band = lane_opacity * mix(0.5, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
+	if (visual_groups_enabled) {
+		band *= visual_band_gain * smoothstep(0.18, 0.75,
+			noise(vec2(across_m / 9.0, (along - TIME * speed) / 17.0)));
+	}
 	float alpha = foam + band * (1.0 - foam);
 	ALBEDO = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
 	ROUGHNESS = 0.7;

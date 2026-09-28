@@ -1,0 +1,11 @@
+{
+  "_comment": "P2-066 default-off local/static presentation candidate. Replace repeated long foam lanes with stable irregular short groups advected by the existing flow vector and state speed. No physics, route, tide-race, terrain, flag or restoration-state changes. Current live/restored uniforms remain authoritative. Pending native motion/capture review against Tidewake art direction.",
+  "enabled": false,
+  "shader": {
+    "visual_cell_width_m": 3.6,
+    "visual_cell_length_m": 11.0,
+    "visual_density": 0.62,
+    "visual_breakup": 0.55,
+    "visual_band_gain": 0.55
+  }
+}
