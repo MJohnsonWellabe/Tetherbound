@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-28T15:45Z",
+ "updated": "2026-09-28T18:35Z",
  "headline": [
-  "Criteria met: 94 of 101. Chapter cards complete: 8 of 13 (M4, C1, C2, C3, S1, S3, T1, T3). Stormwood landed card S1 (integrated re-run at 0068c542, strict re-check MET) and F10#2 (C3 on the current fight camera, all six named fights PASS). Since 14:15: Meadows landed F03#0 and F04#3 (#417, #419) and F01#2/#3 (the day and night walks); Balance landed F10#2 starter parity and the F04#7 C2 half (#413); Cloudreach landed owned-carrier Fly (#411) and finished. Open: Meadows 4 (F04#1, F04#2, F04#6, F04#7 C3), Stormwood 1 (F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S2, T2.",
-  "Main is green: CI passed on every merge through #417, and the runs for #418 and #419 are going. The auto-merge workflow dispatches CI after each merge.",
-  "F04#7 (owner option c): harder five-member captains at the level ceiling. Bar: reader win ≥ 0.75; masher lead-faint = 1.00; reader median party cost ≤ 0.55× the masher's; a masher loses at least one Meadows named fight in ≥ 25% of seeded playthroughs. Per fight, Vance and Vess never beat a masher (disclosed). The Balance lane is running tests before it lands. The same bar applies to Tidewake F14#0.",
-  "The owner has delegated lane decisions to the coordinator. Lanes land their own PRs and update this board and STATE."
+  "Criteria met: 94 of 101. Chapter cards complete: 8 of 13 (M4, C1, C2, C3, S1, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429); Stormwood landed card S1 and F10#2 (#425).",
+  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M1, M2, M3, S2, T2.",
+  "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2 and F04#7. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
+  "Main CI is green on each merge. Meadows render jobs are capped at about 3 at a time so CI isn't starved. The owner has delegated lane decisions to the coordinator."
  ],
  "batches": [
   {
@@ -348,12 +348,18 @@
    "sha": "4b02032b",
    "state": "Merged, CI green",
    "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
+  },
+  {
+   "name": "Phase 1 landings 16:52–18:26",
+   "sha": "6b85e6b0",
+   "state": "Merged",
+   "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
   }
  ],
  "lanes": [
   {
    "lane": "Meadows (tb/meadows)",
-   "now": "Landing per criterion now: F03#0 and F04#3 met (#417, #419). Open: F01#2/#3 (camp framing), F04#1, F04#2, F04#6, F04#7 C3, then cards M1–M3.",
+   "now": "Landed F03#0, F04#3, F01#2, F01#3. Queue: F04#1 (Dell/Vance tells), F04#6 aftermath, F04#2 and F04#7 C3 after combat spacing lands, then card M3. M1/M2 moved to the Cards lane.",
    "next": "Self-lands each criterion"
   },
   {
@@ -363,13 +369,23 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "Landed F09#3, F10#3, F10#4 and card S1. F10#6 open after device rounds r2-r5 (UX 1.4: the left fight column covers the trainer and attack lanes; next approach a compact fight column). F10#2 met (C3 all six PASS). Then card S2.",
+   "now": "Landed card S1 and F10#2 (#425). Open: F10#6 (handheld HUD: fight column covers trainer and attack lanes; plate fade hides the punish line). S2's non-F10 parts moved to the Cards lane.",
    "next": "Self-lands each criterion"
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "#407 is out of draft but conflicts with main after today's merges; told to merge main and land (15:42). Then F14#1 and F14#0 (C3 framing, option-(c) bar), then T2.",
+   "now": "Landed #407 (Nerissa stand, Tidecoil bay, camera liners) and #429 (F14 C2 met under option c: Venn lane lock, Nerissa at the 9 m ring). Open: F14#0/#1 C3, re-judged once combat spacing lands. T2's non-fight clauses moved to the Cards lane.",
    "next": "Self-lands each criterion"
+  },
+  {
+   "lane": "Combat Spacing (tb/combat-spacing)",
+   "now": "Shared contact-spacing rule committed; after-runs pass, C2 baselines running; then Tess/Nerissa C3 re-capture under the two-judge rubric",
+   "next": "Lands its own PR; the biome lanes then re-judge C3"
+  },
+  {
+   "lane": "Cards (tb/cards)",
+   "now": "M1 integrated run (all feeders met), then M2 continuous earned route, then re-scoring T2 and S2's non-fight clauses",
+   "next": "Lands each card as it passes"
   },
   {
    "lane": "Codex (Phase 2)",
@@ -388,6 +404,7 @@
   }
  ],
  "decisions": [
+  "Coordinator 2026-09-28 (delegated): new Combat Spacing lane owns contact-range body separation; new Cards lane owns M1/M2 integrated runs and T2/S2 non-fight clauses; biome lanes keep only their F rows (Meadows also M3).",
   "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
   "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
   "Owner 2026-09-28: fix the auto-merge CI gap. A merge pushed by GITHUB_TOKEN auto-merge starts no CI run, so batch 67 reached main untested and the next docs-only run skipped every job. Fixed by chaining main CI to the last run and a 30-minute CI reconciler.",
