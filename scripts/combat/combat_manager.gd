@@ -4342,8 +4342,13 @@ func enemy_windup_shape() -> String:
 	var cfg: Dictionary = _wild.call("combat_config")
 	if not bool(cfg.get("lunge_travels", false)) or float(cfg.get("lunge", 0.0)) <= 0.0:
 		return ""
+	# The DIVE question is the fight's own authored shape, not the species'
+	# base movement: a Tuskroot's default reposition read as a dive on Vance's
+	# CHARGER (render 5e8c3de3). Only the named fight's override says DIVER.
+	var authored: Variant = _wild.get("combat_override")
 	var tell := MATH.config().get("telegraph", {}) as Dictionary
-	if float(cfg.get("reposition_distance", 0.0)) >= float(tell.get("dive_reposition_m", 5.0)):
+	if authored is Dictionary and float((authored as Dictionary).get("reposition_distance", 0.0)) \
+			>= float(tell.get("dive_reposition_m", 5.0)):
 		return "dive"
 	return "charge"
 
