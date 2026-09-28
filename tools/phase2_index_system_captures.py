@@ -6,6 +6,7 @@ import argparse
 import csv
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 from PIL import Image
@@ -29,6 +30,8 @@ def main() -> None:
     if len(args.commit) != 40:
         raise SystemExit("A full pinned commit SHA is required")
     repo = args.repo.resolve()
+    if subprocess.run(["git", "-C", str(repo), "cat-file", "-e", f"{args.commit}^{{commit}}"], capture_output=True).returncode:
+        raise SystemExit("Pinned commit does not resolve locally")
     source = args.source.resolve()
     engine = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
     if not engine.get("complete") and not args.allow_partial:
@@ -52,10 +55,12 @@ def main() -> None:
             image.verify()
         dst = frames_dir / f"{frame_id}{src.suffix.lower()}"
         shutil.copy2(src, dst)
+        replay_args = engine.get("repro_args", [f"--seed={args.seed}"])
+        output_option = engine.get("output_option", "--output")
         repro = (
             "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
-            f"--script {args.script} -- --seed={args.seed} "
-            f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/repro_{args.system}_{source_id}"
+            f"--script {args.script} -- " + " ".join(replay_args) + " "
+            f"{output_option}=res://ralph/reports/VISUAL/phase2/{args.biome}/repro_{args.system}_{source_id}"
         )
         existing[frame_id] = {
             "id": frame_id, "biome": args.biome, "category": "systems",
