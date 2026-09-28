@@ -67,7 +67,7 @@ func _run() -> void:
 			_seed = int(arg.trim_prefix("--seed="))
 		elif arg.begins_with("--only="):
 			_only = arg.trim_prefix("--only=")
-	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
+	if not SCENES.has(_biome) or not (_output.begins_with("res://ralph/reports/VISUAL/phase2/") or _output.begins_with("res://.artifacts/phase2/")):
 		push_error("Use --biome and a Phase 2 evidence output")
 		quit(1)
 		return
@@ -129,7 +129,7 @@ func _run() -> void:
 	for frame in 45:
 		await physics_frame
 	for species: String in SPECIES[_biome]:
-		if not _only.is_empty() and species != _only:
+		if not _only.is_empty() and species not in _only.split(",", false):
 			continue
 		for pose: String in POSES:
 			await _capture_pose(species, pose, false, 1.0)
