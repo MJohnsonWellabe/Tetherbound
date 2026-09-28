@@ -13,9 +13,11 @@ current lunge or recovery state.
 
 The gameplay body separately exposes `is_lunging()`. Contact, obstacle or
 travel completion reaches `_finish_lunge()`, clears `_lunge_active` and emits
-`strike_ready`. The production HUD shows its opening text when
-`combat_manager.gd::enemy_is_rooted()` delegates to the body's `is_rooted()`;
-that predicate excludes an active lunge. Therefore the source permits a lane
+`strike_ready`. The production HUD's opening text uses
+`combat_manager.gd::enemy_is_rooted()`, which delegates to the body's
+`is_rooted()` and excludes an active lunge. Wind-up takes precedence; player
+stagger suppresses opening advice; catch resolution or a fight outcome clears
+it. Subject to those guards, the source permits a lane
 fade to outlast a short travelling charge while the HUD already reads recovery.
 This is a plausible explanation for the captured conflicting signals, not
 proof that it caused each original frame.

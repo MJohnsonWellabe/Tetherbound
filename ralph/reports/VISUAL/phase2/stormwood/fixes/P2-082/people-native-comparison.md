@@ -39,9 +39,12 @@ interaction, travel, combat or complete chapter acceptance.
 After terminal completion, the launcher restored the exact original disabled
 configuration. A clean config diff and process inspection verified restoration
 and no remaining Stormwood Godot children. The matching lock was released and
-the next lane notified. Main was subsequently merged at `95f11b61b`; the capture
-helpers, chapter and presentation configuration have no diff from the captured
-source. Independent visual and evidence verdicts are recorded separately.
+the next lane notified. At the subsequent main merge `95f11b61b`, before
+acceptance, the capture helpers, chapter and presentation configuration had no
+diff from the captured source. Acceptance commits `a53f158c9` and `8f5c25445`
+then enabled the two reviewed gates and updated comments. The resulting
+configuration exactly matches captured B apart from comments; trainer remains
+off. Independent visual and evidence verdicts are recorded separately.
 
 Independent evidence reviewer `stormwood_dialogue_review` completed the bounded
 audit with no remaining blockers: all originals decoded at native dimensions;
