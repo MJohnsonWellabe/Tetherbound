@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "8d73955a12e98e75c9ad2d585f80b57fdc4fb5fa",
+  "repro": "Fresh isolated APPDATA; all listed candidate flags false. godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --position 0,0 --audio-driver Dummy --script tools/capture_stormwood_f09_pockets_roads.gd -- --out=res://.tmp/stormwood-phase2/chapter-pocket-r1 --label=phase2c-pocket-r1 --only=pockets,spurs --pockets=verge_ash_hollow --frames=spur_verge_ash_hollow_junction,pocket_verge_ash_hollow_a_approach,pocket_verge_ash_hollow_b_mouth --hud=off --native-size",
+  "source_manifest_sha256": "af293354cfe45147bd504c58a362c14f8c057d059cb4608ba2ff126f5e39e0cd",
+  "capture_metadata": {
+    "failures": [],
+    "label": "phase2c-pocket-r1",
+    "scatter_bake_fresh": true,
+    "source_engine_manifest_sha256": "98c484af67e418c048f2f7c98abc6663a2efb37c4ec76a1593e9c62b0ef77422",
+    "fixture_limits": [
+      "Production scene and player camera with debug travel, healing, day/phase pins and aftermath fixture; not earned progression proof.",
+      "Arrival is the southern route approach at [-350,315], not the exact spawn/entry gate.",
+      "Legacy chapter matrix records camera position but not basis; no numerical orientation comparison is claimed.",
+      "Pocket fixture pins Calm and sets stormwood:rootgate_released; this is not an earned gate-state proof.",
+      "Static environment-only frames omit ordinary combat HUD, 720p stress, movement and device performance; full chapter acceptance remains incomplete."
+    ],
+    "candidate_flags": {
+      "stormheart_master": false,
+      "canopy_atlas": false,
+      "branching_crown": false,
+      "dialogue_trainers": false,
+      "npc_openings": false,
+      "glass_scars": false
+    }
+  },
+  "frames": [
+    {
+      "id": "pocket_verge_ash_hollow_a_approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/chapter-matrix/chapter-pocket-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -0.17364901304245,
+            0.0,
+            0.98480761051178
+          ],
+          [
+            0.102940425276756,
+            0.994521915912628,
+            0.0181512646377087
+          ],
+          [
+            -0.979412734508514,
+            0.104528456926346,
+            -0.172697752714157
+          ]
+        ],
+        "camera_player_m": 5.65729808807373,
+        "camera_pos": [
+          -103.254249572754,
+          31.5036926269531,
+          412.373046875
+        ],
+        "description": "verge_ash_hollow: 30 m outside the mouth on the road side, facing the mouth",
+        "file": "res://.tmp/stormwood-phase2/chapter-pocket-r1/pocket_verge_ash_hollow_a_approach.jpg",
+        "hud": "off",
+        "id": "pocket_verge_ash_hollow_a_approach",
+        "in_fight": false,
+        "label": "phase2c-pocket-r1",
+        "mouth_centre": [
+          -68.6170654296875,
+          418.480590820313
+        ],
+        "mouth_yaw_deg": -100.0,
+        "native_size_requested": true,
+        "player": [
+          -98.1613006591797,
+          29.2101459503174,
+          413.271118164063
+        ],
+        "pocket": "verge_ash_hollow",
+        "pocket_centre": [
+          -60.0,
+          420.0
+        ],
+        "pockets_node_present": true,
+        "prompt": "",
+        "renderer": "opengl3",
+        "reward_config_pos": [
+          -57.0499992370605,
+          30.2199993133545,
+          420.519989013672
+        ],
+        "reward_node": {
+          "found": true,
+          "ground_below": 29.8740731209517,
+          "pos": [
+            -57.0499992370605,
+            30.2199993133545,
+            420.519989013672
+          ],
+          "visible": true
+        },
+        "reward_pickup_id": "stormwood_pickup_pocket_008",
+        "road_current": {
+          "chunks": 574,
+          "chunks_in_draw_range": 5,
+          "frame_draw_calls": 459
+        },
+        "size": [
+          1920,
+          1080
+        ],
+        "source_size": [
+          1920,
+          1080
+        ],
+        "staged": {
+          "clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+          "flags": [
+            "stormwood:rootgate_released"
+          ],
+          "placement": "debug_teleport_to + Player transform at stand point"
+        },
+        "stand": [
+          -98.1613006591797,
+          413.271118164063
+        ],
+        "surge_elapsed": 60.1726068148148,
+        "surge_phase": "calm",
+        "time_of_day": "day"
+      },
+      "source_sha256": "04f3abf5e4ec764de2f0b18854dbb0bf2b1bb2050569f65a716ce3cc1f5a5b08",
+      "source_frame_path": ".tmp/stormwood-phase2/chapter-pocket-r1/pocket_verge_ash_hollow_a_approach.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "pocket_verge_ash_hollow_b_mouth",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/chapter-matrix/chapter-pocket-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -0.17364689707756,
+            0.0,
+            0.984807968139648
+          ],
+          [
+            0.20475310087204,
+            0.978147625923157,
+            0.0361032225191593
+          ],
+          [
+            -0.963287591934204,
+            0.2079117000103,
+            -0.169852301478386
+          ]
+        ],
+        "camera_player_m": 5.82121610641479,
+        "camera_pos": [
+          -73.6261596679688,
+          32.6008987426758,
+          417.597320556641
+        ],
+        "description": "verge_ash_hollow: standing in the mouth, looking in at the reward",
+        "file": "res://.tmp/stormwood-phase2/chapter-pocket-r1/pocket_verge_ash_hollow_b_mouth.jpg",
+        "hud": "off",
+        "id": "pocket_verge_ash_hollow_b_mouth",
+        "in_fight": false,
+        "label": "phase2c-pocket-r1",
+        "mouth_centre": [
+          -68.6170654296875,
+          418.480590820313
+        ],
+        "mouth_yaw_deg": -100.0,
+        "native_size_requested": true,
+        "player": [
+          -68.6170654296875,
+          29.7697563171387,
+          418.480590820313
+        ],
+        "player_to_reward_m": 11.7454748153687,
+        "pocket": "verge_ash_hollow",
+        "pocket_centre": [
+          -60.0,
+          420.0
+        ],
+        "pockets_node_present": true,
+        "prompt": "",
+        "renderer": "opengl3",
+        "reward_config_pos": [
+          -57.0499992370605,
+          30.2199993133545,
+          420.519989013672
+        ],
+        "reward_node": {
+          "found": true,
+          "ground_below": 29.8740731209517,
+          "pos": [
+            -57.0499992370605,
+            30.2199993133545,
+            420.519989013672
+          ],
+          "visible": true
+        },
+        "reward_pickup_id": "stormwood_pickup_pocket_008",
+        "road_current": {
+          "chunks": 574,
+          "chunks_in_draw_range": 4,
+          "frame_draw_calls": 408
+        },
+        "size": [
+          1920,
+          1080
+        ],
+        "source_size": [
+          1920,
+          1080
+        ],
+        "staged": {
+          "clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+          "flags": [
+            "stormwood:rootgate_released"
+          ],
+          "placement": "debug_teleport_to + Player transform at stand point"
+        },
+        "stand": [
+          -68.6170654296875,
+          418.480590820313
+        ],
+        "surge_elapsed": 60.1845656666667,
+        "surge_phase": "calm",
+        "time_of_day": "day"
+      },
+      "source_sha256": "da4d80554bb98c4ccfc593ce9aa6c71164eca3f380d7c2c37b14fc3e146b7026",
+      "source_frame_path": ".tmp/stormwood-phase2/chapter-pocket-r1/pocket_verge_ash_hollow_b_mouth.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "spur_verge_ash_hollow_junction",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/chapter-matrix/chapter-pocket-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -0.66206431388855,
+            4.6673495290861e-08,
+            0.749447107315063
+          ],
+          [
+            0.0522788465023041,
+            0.997564077377319,
+            0.0461832657456398
+          ],
+          [
+            -0.747621476650238,
+            0.0697565153241158,
+            -0.660451531410217
+          ]
+        ],
+        "camera_player_m": 5.60108470916748,
+        "camera_pos": [
+          -335.610015869141,
+          30.0501365661621,
+          348.066589355469
+        ],
+        "description": "verge_ash_hollow: on ash_road, 18 m before the spur junction, facing 30 m up the spur toward the pocket",
+        "file": "res://.tmp/stormwood-phase2/chapter-pocket-r1/spur_verge_ash_hollow_junction.jpg",
+        "hud": "off",
+        "id": "spur_verge_ash_hollow_junction",
+        "in_fight": false,
+        "joins": "ash_road",
+        "junction": [
+          -335.0,
+          369.200012207031
+        ],
+        "label": "phase2c-pocket-r1",
+        "native_size_requested": true,
+        "player": [
+          -331.722381591797,
+          27.9374027252197,
+          351.500946044922
+        ],
+        "pocket": "verge_ash_hollow",
+        "prompt": "",
+        "renderer": "opengl3",
+        "road_current": {
+          "chunks": 574,
+          "chunks_in_draw_range": 12,
+          "frame_draw_calls": 4385
+        },
+        "size": [
+          1920,
+          1080
+        ],
+        "source_size": [
+          1920,
+          1080
+        ],
+        "spur": "spur_verge_ash_hollow",
+        "spur_lamp_present": true,
+        "spur_length_m": 270.118499755859,
+        "staged": {
+          "clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+          "flags": [
+            "stormwood:rootgate_released"
+          ],
+          "placement": "debug_teleport_to + Player transform at stand point"
+        },
+        "stand": [
+          -331.722381591797,
+          351.500946044922
+        ],
+        "surge_elapsed": 60.2912386666667,
+        "surge_phase": "calm",
+        "time_of_day": "day"
+      },
+      "source_sha256": "3db545989dc6bd4950fd24b9bd108899c81b4f408eb13b265ea74fba827f8830",
+      "source_frame_path": ".tmp/stormwood-phase2/chapter-pocket-r1/spur_verge_ash_hollow_junction.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

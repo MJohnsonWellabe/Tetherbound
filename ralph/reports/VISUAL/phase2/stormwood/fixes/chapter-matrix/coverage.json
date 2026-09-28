@@ -1,0 +1,280 @@
+{
+  "source_commit": "8d73955a12e98e75c9ad2d585f80b57fdc4fb5fa",
+  "rounds": [
+    {
+      "name": "chapter-matrix-r1",
+      "native_frames": 27,
+      "engine_manifest_sha256": "1e63dba8cbff4d5dc96b5768fe6e73ec5745c0ef17ba48fbcc04489d71bc3aa1",
+      "repro": "Fresh isolated APPDATA; all listed candidate flags false. godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --position 0,0 --audio-driver Dummy --script tools/capture_stormwood_f10_matrix.gd -- --out=res://.tmp/stormwood-phase2/chapter-matrix-r1 --label=phase2c-r1 --stands=arrival,rod_line,reverse_route,forest,giant,glass,ashfoot,stormheart400,stormheart100 --phases=calm,break --custom=arrival@-350,315@-350,3,450@-3;reverse_route@-442.2,567.5@-350,3,450@-3;ashfoot@-350,410@-350,3,450@-3;stormheart400@-100,5070@-100,70,5470@8;stormheart100@-100,5370@-100,45,5470@18",
+      "frames": [
+        {
+          "id": "forest_calm",
+          "source_sha256": "59660ad65d4ff5e6e7c482793ba04072ce534ad430534a8ba5ad762ffbd21158",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "forest_break",
+          "source_sha256": "f21e01ade976f24b90b1cc94a5659d518fa696ba40094b1e2ed688a8585dc03c",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "giant_calm",
+          "source_sha256": "ce964e648abd371c6598d990d3a1f4e6d343464dfdabd3eda84976a8e09f6d8c",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "giant_break",
+          "source_sha256": "795f4aca62ac2607cf21eb58bab7192ca36a3df9685e69849554d8f4fbafdd11",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "glass_calm",
+          "source_sha256": "ab226f646bcdb36ba5760dbcbc9fcef847b2a4f669ba04358db8edca43f270e9",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "glass_break",
+          "source_sha256": "5dea53ce335a742c2634056ec55dffcf5963d08834b4511a82aecdf0afb6c719",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "rod_line_calm",
+          "source_sha256": "ad170ec41c49698d31f84bc8fcf1af596781b5ec7ec0e1435b65f6f2b5d86569",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "rod_line_break",
+          "source_sha256": "465494a679fd4a749721d4e1d9bb91df8a618ce7468522d8980364fe9b94aed3",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "arrival_calm",
+          "source_sha256": "c4bd7393df3de2f6c20d24d2c7bedbe7c9242729c00dc23d715ee3d6585f9a14",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "arrival_break",
+          "source_sha256": "a20808a64e22f7db1a954f896fa58825045c3f692ca83a4f7f2d7c145b7ff102",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "reverse_route_calm",
+          "source_sha256": "db6000f2eed7971f16ff86c8cb9bb1204e5cbf5bf9c70f8750f1c4b97d13d75b",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "reverse_route_break",
+          "source_sha256": "63a0161a6a29d76af9faa56346ec2cf83a81e9928b7940d6f6f00bcedca8000c",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "ashfoot_calm",
+          "source_sha256": "38377d3f9d8b5e6d61944c4c0ba45866ece31a0fb37321b4de973c9813d8dfc9",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "ashfoot_break",
+          "source_sha256": "30c44d9e569610bd2744bce0b21cf2dae46ab5964b52dc7fd654dc4c46e2aef8",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "stormheart400_calm",
+          "source_sha256": "c71a8c00cfc81646c4022da46f1cfe692619447ad99a0f1bcee140a81adef4d8",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "stormheart400_break",
+          "source_sha256": "2633940cd0bb43bc7c2397dbe4a3813976251cb1a0bc37ad390a6edad28ff428",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "stormheart100_calm",
+          "source_sha256": "75f19d6627d25c883a549e474b6b480bdd1bc20e9dd59d04d154ddd6370b02c5",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "stormheart100_break",
+          "source_sha256": "c0dd91bce7a38167fdf93da8168e74b44cfa9850b1fe940dda2a28ef2ee269e9",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "forest_aftermath_calm",
+          "source_sha256": "06b6783de10bb992b9a017637fb7df8aec6abb13289045b0a769b9fccdedc8a9",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "giant_aftermath_calm",
+          "source_sha256": "0177aad45a18737514f0e94ef1426dc9a2bf1b9b36bc55174b277917b5814ecb",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "glass_aftermath_calm",
+          "source_sha256": "f1b86693903fbecbe2f94db00b099f3cb07ee8be18430b07b8402d29b47b582f",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "rod_line_aftermath_calm",
+          "source_sha256": "7c9691ce983ebb1129051a096d2d01fcf5e49ee5e7135e24f29174bb871c42e3",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "arrival_aftermath_calm",
+          "source_sha256": "d27ce3f167cde0492b188aa4ab5c6a74cf8ab634a1a6d0092d0c9017230e06e2",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "reverse_route_aftermath_calm",
+          "source_sha256": "084845c6bf998a1cdea60c0e9d887bf464a93ee90df2ff5b9f936f54d102bca4",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "ashfoot_aftermath_calm",
+          "source_sha256": "45b9f720d0ce7ea92c474bb750394556180769888d9ebbe78d31970d871e1f51",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "stormheart400_aftermath_calm",
+          "source_sha256": "8846b584d3a0d69090c270951e6fbccda2288285abf7c2bd7f526a88e321f2b0",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "stormheart100_aftermath_calm",
+          "source_sha256": "af1c421dc25581d6dea22081d5e2daf76e3a8ee8bfa43d0a788d7d5e5f547e16",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "stdout_sha256": "5fa1b03b41802b1fe8f0877a183b610a7f2d7e28ff0f8b1145826cc8026b3b76",
+      "stderr_sha256": "f1971f0209c8b10ea16376b4b9289ac081b16d1f591733f4519c62f25d5754cc"
+    },
+    {
+      "name": "chapter-pocket-r1",
+      "native_frames": 3,
+      "engine_manifest_sha256": "98c484af67e418c048f2f7c98abc6663a2efb37c4ec76a1593e9c62b0ef77422",
+      "repro": "Fresh isolated APPDATA; all listed candidate flags false. godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --position 0,0 --audio-driver Dummy --script tools/capture_stormwood_f09_pockets_roads.gd -- --out=res://.tmp/stormwood-phase2/chapter-pocket-r1 --label=phase2c-pocket-r1 --only=pockets,spurs --pockets=verge_ash_hollow --frames=spur_verge_ash_hollow_junction,pocket_verge_ash_hollow_a_approach,pocket_verge_ash_hollow_b_mouth --hud=off --native-size",
+      "frames": [
+        {
+          "id": "pocket_verge_ash_hollow_a_approach",
+          "source_sha256": "04f3abf5e4ec764de2f0b18854dbb0bf2b1bb2050569f65a716ce3cc1f5a5b08",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "pocket_verge_ash_hollow_b_mouth",
+          "source_sha256": "da4d80554bb98c4ccfc593ce9aa6c71164eca3f380d7c2c37b14fc3e146b7026",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "id": "spur_verge_ash_hollow_junction",
+          "source_sha256": "3db545989dc6bd4950fd24b9bd108899c81b4f408eb13b265ea74fba827f8830",
+          "actual_size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "stdout_sha256": "e61b316aca56e74ec853c020b870ec2ab5080566245bb15e1ef6c38feadd770b",
+      "stderr_sha256": "1869052772067e8d181b10f0e87ec798036cdfbf0c551cafc6ae8187e8ddc3f8"
+    }
+  ],
+  "fixture_limits": [
+    "Production scene and player camera with debug travel, healing, day/phase pins and aftermath fixture; not earned progression proof.",
+    "Arrival is the southern route approach at [-350,315], not the exact spawn/entry gate.",
+    "Legacy chapter matrix records camera position but not basis; no numerical orientation comparison is claimed.",
+    "Pocket fixture pins Calm and sets stormwood:rootgate_released; this is not an earned gate-state proof.",
+    "Static environment-only frames omit ordinary combat HUD, 720p stress, movement and device performance; full chapter acceptance remains incomplete."
+  ],
+  "candidate_flags": {
+    "stormheart_master": false,
+    "canopy_atlas": false,
+    "branching_crown": false,
+    "dialogue_trainers": false,
+    "npc_openings": false,
+    "glass_scars": false
+  }
+}
