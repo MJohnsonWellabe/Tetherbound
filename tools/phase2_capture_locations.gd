@@ -450,7 +450,7 @@ func _capture_row(row: Dictionary) -> void:
 				await physics_frame
 			for _frame in 2:
 				await process_frame
-			if _camera.global_position.distance_to(_player.global_position) >= 3.5:
+			if _camera.global_position.distance_to(_player.global_position) >= float(row.get("min_camera_player_distance_m", 3.5)):
 				selected = true
 				selected_offset = offset
 				selected_lateral = lateral

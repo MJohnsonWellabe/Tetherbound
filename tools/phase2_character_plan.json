@@ -1,0 +1,1624 @@
+{
+  "meadows": [
+    {
+      "family_type": "character",
+      "slug": "mira",
+      "subject": "Mira",
+      "position_xz": [
+        19.4,
+        4.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Mira",
+      "heading_deg": 90.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "oskar",
+      "subject": "Oskar",
+      "position_xz": [
+        25.0,
+        4.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Oskar",
+      "heading_deg": 90.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "tam",
+      "subject": "Tam",
+      "position_xz": [
+        8.0,
+        12.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Tam",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "quarry_foreman",
+      "subject": "Quarry Foreman",
+      "position_xz": [
+        392.0,
+        1792.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Quarry Foreman",
+      "heading_deg": 206.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "sela",
+      "subject": "Sela",
+      "position_xz": [
+        -348.0,
+        505.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Sela",
+      "heading_deg": 255.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "kell",
+      "subject": "Kell",
+      "position_xz": [
+        184.2,
+        52.6
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Kell",
+      "heading_deg": 195.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "bram",
+      "subject": "Bram",
+      "position_xz": [
+        -1.5,
+        2.39
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Bram",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "halda",
+      "subject": "Halda",
+      "position_xz": [
+        23.5,
+        11.5
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Halda",
+      "heading_deg": 35.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "wilhelm",
+      "subject": "Wilhelm",
+      "position_xz": [
+        341.0,
+        932.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Wilhelm",
+      "heading_deg": 20.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "corin",
+      "subject": "Corin",
+      "position_xz": [
+        -150.0,
+        4232.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Corin",
+      "heading_deg": 192.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "ada",
+      "subject": "Ada",
+      "position_xz": [
+        -262.0,
+        2258.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Ada",
+      "heading_deg": 215.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "garrick",
+      "subject": "Garrick",
+      "position_xz": [
+        -45.0,
+        185.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Garrick",
+      "heading_deg": 200.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "old_perrin",
+      "subject": "Old Perrin",
+      "position_xz": [
+        -378.0,
+        352.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Old Perrin",
+      "heading_deg": 245.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "tobin",
+      "subject": "Tobin",
+      "position_xz": [
+        -28.0,
+        1298.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Tobin",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "nessa",
+      "subject": "Nessa",
+      "position_xz": [
+        102.2,
+        177.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Nessa",
+      "heading_deg": 330.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "maren",
+      "subject": "Maren",
+      "position_xz": [
+        -343.0,
+        501.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Maren",
+      "heading_deg": 108.4,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "sorrel",
+      "subject": "Sorrel",
+      "position_xz": [
+        -390.0,
+        524.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Sorrel",
+      "heading_deg": 121.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "lark",
+      "subject": "Lark",
+      "position_xz": [
+        -32.0,
+        4062.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Lark",
+      "heading_deg": 195.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "ren",
+      "subject": "Ren",
+      "position_xz": [
+        334.0,
+        5704.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Ren",
+      "heading_deg": 100.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "rae",
+      "subject": "Rae",
+      "position_xz": [
+        -205.0,
+        1185.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Rae",
+      "heading_deg": 250.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "practice_trainer",
+      "subject": "Bryn",
+      "position_xz": [
+        13.0,
+        9.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "practice_trainer",
+      "heading_deg": 8.900000000000006,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "south_bridge_grunt",
+      "subject": "Tether Grunt",
+      "position_xz": [
+        14.0,
+        1314.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "south_bridge_grunt",
+      "heading_deg": 210.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tournament_quarter_mira",
+      "subject": "Mira",
+      "position_xz": [
+        20.0,
+        12.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "tournament_quarter_mira",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tournament_semi_tam",
+      "subject": "Tam",
+      "position_xz": [
+        20.0,
+        12.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "tournament_semi_tam",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tournament_final_oskar",
+      "subject": "Oskar",
+      "position_xz": [
+        20.0,
+        12.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "tournament_final_oskar",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "shepherd_the_rise",
+      "subject": "Dara",
+      "position_xz": [
+        -305.0,
+        360.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "shepherd_the_rise",
+      "heading_deg": 250.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "wanderer_trail_camp",
+      "subject": "Gil",
+      "position_xz": [
+        328.3,
+        905.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "wanderer_trail_camp",
+      "heading_deg": 30.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "old_champion_bram",
+      "subject": "Old Bram",
+      "position_xz": [
+        300.0,
+        983.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "old_champion_bram",
+      "heading_deg": 307.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "quarry_picket_dorn",
+      "subject": "Dorn",
+      "position_xz": [
+        317.5,
+        1666.4
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "quarry_picket_dorn",
+      "heading_deg": 44.30000000000001,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "warrens_watch_pell",
+      "subject": "Pell",
+      "position_xz": [
+        -332.0,
+        2585.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "warrens_watch_pell",
+      "heading_deg": 46.80000000000001,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "band2_outrider_kest",
+      "subject": "Kest",
+      "position_xz": [
+        0.0,
+        2980.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "band2_outrider_kest",
+      "heading_deg": 37.599999999999994,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "night_watch_farro",
+      "subject": "Tether Grunt",
+      "position_xz": [
+        95.0,
+        2900.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "night_watch_farro",
+      "heading_deg": 20.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_picket_hess",
+      "subject": "Hess",
+      "position_xz": [
+        241.3,
+        3680.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_picket_hess",
+      "heading_deg": 53.099999999999994,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_picket_orrin",
+      "subject": "Orrin",
+      "position_xz": [
+        284.0,
+        3710.5
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_picket_orrin",
+      "heading_deg": 53.099999999999994,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_officer_dell",
+      "subject": "Officer Dell",
+      "position_xz": [
+        343.2,
+        3771.1
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_officer_dell",
+      "heading_deg": 325.6,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_captain",
+      "subject": "Captain Vance",
+      "position_xz": [
+        352.0,
+        3757.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_captain",
+      "heading_deg": 145.6,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_riverwatch",
+      "subject": "Captain Oreth",
+      "position_xz": [
+        -100.0,
+        4350.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "captain_riverwatch",
+      "heading_deg": 19.5,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_field",
+      "subject": "Captain Halder",
+      "position_xz": [
+        170.0,
+        5590.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "captain_field",
+      "heading_deg": 159.4,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_ridge",
+      "subject": "Captain Vess",
+      "position_xz": [
+        -280.0,
+        6460.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "captain_ridge",
+      "heading_deg": 155.1,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "patrol_ridgeline",
+      "subject": "Tether Patrol",
+      "position_xz": [
+        -235.0,
+        6470.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "patrol_ridgeline",
+      "heading_deg": 155.1,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "pasture_drover_juno",
+      "subject": "Juno",
+      "position_xz": [
+        -225.0,
+        5400.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "pasture_drover_juno",
+      "heading_deg": 58.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "lost_creature_rue",
+      "subject": "Tether Patrol",
+      "position_xz": [
+        -175.0,
+        5470.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "lost_creature_rue",
+      "heading_deg": 340.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_patrol",
+      "subject": "Patrolman Verrick",
+      "position_xz": [
+        6.0,
+        7560.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_patrol",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_courtyard",
+      "subject": "Warder Solene",
+      "position_xz": [
+        36.0,
+        7564.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_courtyard",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_elite",
+      "subject": "Keeper Hald",
+      "position_xz": [
+        69.0,
+        7557.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_elite",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "warden_aldis",
+      "subject": "Warden Aldis",
+      "position_xz": [
+        90.2,
+        7569.4
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "warden_aldis",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_outer_watch",
+      "subject": "Watchman Corr",
+      "position_xz": [
+        -68.0,
+        7140.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_outer_watch",
+      "heading_deg": 340.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_checkpoint",
+      "subject": "Warder Ness",
+      "position_xz": [
+        45.0,
+        7440.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_checkpoint",
+      "heading_deg": 345.0,
+      "route": "main",
+      "view": "post"
+    }
+  ],
+  "cloudreach": [
+    {
+      "family_type": "character",
+      "slug": "warden_aila",
+      "subject": "Warden Aila",
+      "position_xz": [
+        -275.0,
+        180.0,
+        520.0
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "warden_aila",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "healer_iven",
+      "subject": "Iven",
+      "position_xz": [
+        -320.0,
+        180.0,
+        540.0
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "healer_iven",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "bridgekeeper_orrin",
+      "subject": "Orrin",
+      "position_xz": [
+        -500.0,
+        338.0,
+        1300.0
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "bridgekeeper_orrin",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "courier_neri",
+      "subject": "Neri",
+      "position_xz": [
+        -790.0,
+        400.0,
+        2040.0
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "courier_neri",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "keeper_maela",
+      "subject": "Keeper Maela",
+      "position_xz": [
+        395.0,
+        610.0,
+        3245.0
+      ],
+      "band": "windscar_ravine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "keeper_maela",
+      "heading_deg": 315.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "naturalist_sora",
+      "subject": "Sora",
+      "position_xz": [
+        1100.0,
+        1050.0,
+        2950.0
+      ],
+      "band": "high_roost_sky_shrine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "naturalist_sora",
+      "heading_deg": 90.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "trader_kelm",
+      "subject": "Kelm",
+      "position_xz": [
+        -360.0,
+        830.0,
+        3980.0
+      ],
+      "band": "upper_cloudreach",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "trader_kelm",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "young_trainer_tavi",
+      "subject": "Tavi",
+      "position_xz": [
+        -180.0,
+        875.0,
+        4100.0
+      ],
+      "band": "upper_cloudreach",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "young_trainer_tavi",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "defector_rusk",
+      "subject": "Rusk",
+      "position_xz": [
+        420.0,
+        920.0,
+        4490.0
+      ],
+      "band": "upper_cloudreach",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "defector_rusk",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "officer_voss",
+      "subject": "Officer Voss",
+      "position_xz": [
+        300.0,
+        1080.0,
+        5100.0
+      ],
+      "band": "summit_final_stronghold",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "officer_voss",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "captain_veyra",
+      "subject": "Captain Veyra",
+      "position_xz": [
+        100.0,
+        1160.0,
+        5350.0
+      ],
+      "band": "summit_final_stronghold",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "captain_veyra",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    }
+  ],
+  "stormwood": [
+    {
+      "family_type": "character",
+      "slug": "rodkeeper_hesk",
+      "subject": "Rodkeeper Hesk",
+      "position_xz": [
+        -350,
+        30.31,
+        450
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "rodkeeper_hesk",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "stormreader_tamsin",
+      "subject": "Tamsin",
+      "position_xz": [
+        -300,
+        26.56,
+        350
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "stormreader_tamsin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "cook_marl",
+      "subject": "Marl",
+      "position_xz": [
+        -360,
+        30.966332,
+        443
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "cook_marl",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "courier_pim",
+      "subject": "Pim",
+      "position_xz": [
+        -380,
+        32.38,
+        1400
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "courier_pim",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "trainer_ivo",
+      "subject": "Ivo",
+      "position_xz": [
+        -500,
+        29.55,
+        1600
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "trainer_ivo",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "grunt_lieutenant_dace",
+      "subject": "Lieutenant Dace",
+      "position_xz": [
+        -904,
+        31.44,
+        1787
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "grunt_lieutenant_dace",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "warden_elect_bryn",
+      "subject": "Warden-Elect Bryn",
+      "position_xz": [
+        -700,
+        44.18,
+        2300
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "warden_elect_bryn",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "trader_oswin",
+      "subject": "Oswin",
+      "position_xz": [
+        -680,
+        46.611389,
+        2310
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "trader_oswin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "tether_lieutenant_varga",
+      "subject": "Lieutenant Varga",
+      "position_xz": [
+        -600,
+        66.56,
+        2500
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "tether_lieutenant_varga",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "keeper_ondra",
+      "subject": "Keeper Ondra",
+      "position_xz": [
+        -160,
+        34.69,
+        2700
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "keeper_ondra",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "archivist_wen",
+      "subject": "Archivist Wen",
+      "position_xz": [
+        700,
+        74.15,
+        2700
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "archivist_wen",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "elder_maud",
+      "subject": "Elder Maud",
+      "position_xz": [
+        -438,
+        57.585462,
+        3960
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "elder_maud",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "trader_fenn",
+      "subject": "Fenn",
+      "position_xz": [
+        -400,
+        61.37,
+        4000
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "trader_fenn",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "caretaker_lio",
+      "subject": "Lio",
+      "position_xz": [
+        -350,
+        65.43,
+        4050
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "caretaker_lio",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "ace_trainer_rook",
+      "subject": "Rook",
+      "position_xz": [
+        -150,
+        61.14,
+        4460
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "ace_trainer_rook",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "defector_sable",
+      "subject": "Sable",
+      "position_xz": [
+        -450,
+        55.8394,
+        3948
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "defector_sable",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "officer_kestrel",
+      "subject": "Officer Kestrel",
+      "position_xz": [
+        -100,
+        108.14,
+        5358
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "officer_kestrel",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "captain_marrow",
+      "subject": "Captain Marrow",
+      "position_xz": [
+        -90,
+        262.21,
+        5450
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "captain_marrow",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "crown_caretaker_neri",
+      "subject": "Neri",
+      "position_xz": [
+        620,
+        74.15,
+        2600
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_npcs.json",
+      "authored_id": "crown_caretaker_neri",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tamsin_surge_lesson",
+      "subject": "Tamsin",
+      "position_xz": [
+        -340,
+        29.88,
+        430
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "tamsin_surge_lesson",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "rodfolk_pathfinder_elin",
+      "subject": "Elin",
+      "position_xz": [
+        -600,
+        24.99,
+        780
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "rodfolk_pathfinder_elin",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "lieutenant_dace_hollows_rod",
+      "subject": "Lieutenant Dace",
+      "position_xz": [
+        -880,
+        32.06,
+        1770
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "lieutenant_dace_hollows_rod",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "traveller_ivo_lantern_pools",
+      "subject": "Ivo",
+      "position_xz": [
+        -400,
+        33.981319,
+        1410
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "traveller_ivo_lantern_pools",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "lieutenant_varga_rodline_bridge",
+      "subject": "Lieutenant Varga",
+      "position_xz": [
+        -630,
+        56.60764165,
+        2390
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "lieutenant_varga_rodline_bridge",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "officer_maren_verge_rod",
+      "subject": "Officer Maren",
+      "position_xz": [
+        -650,
+        20.61,
+        822
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "officer_maren_verge_rod",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "archwright_senn_crown_footing",
+      "subject": "Senn",
+      "position_xz": [
+        485,
+        74.15,
+        2700
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "archwright_senn_crown_footing",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "archivist_wen_crown_trial",
+      "subject": "Wen",
+      "position_xz": [
+        600,
+        74.15,
+        2820
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "archivist_wen_crown_trial",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "crown_wayfarer_nell",
+      "subject": "Nell",
+      "position_xz": [
+        820,
+        74.15,
+        2800
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "crown_wayfarer_nell",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "officer_nysa_deepwood_rod",
+      "subject": "Officer Nysa",
+      "position_xz": [
+        -890,
+        52.25,
+        4482
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "officer_nysa_deepwood_rod",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "rodfolk_guard_bram",
+      "subject": "Bram",
+      "position_xz": [
+        -462,
+        57.470444,
+        3960
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "rodfolk_guard_bram",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "outerworks_lieutenant_sera",
+      "subject": "Lieutenant Sera",
+      "position_xz": [
+        -94,
+        107.41,
+        5342
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "outerworks_lieutenant_sera",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "officer_kestrel_outer_works",
+      "subject": "Officer Kestrel",
+      "position_xz": [
+        -100,
+        110.49,
+        5390
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "officer_kestrel_outer_works",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_marrow_dynamo_core",
+      "subject": "Captain Marrow",
+      "position_xz": [
+        -90,
+        262.21,
+        5450
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "captain_marrow_dynamo_core",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tamsin_ash_ring",
+      "subject": "Tamsin's Ash Ring",
+      "position_xz": [
+        -370,
+        30.005714,
+        430
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "tamsin_ash_ring",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "ranger_pax_sentinel",
+      "subject": "Ranger Pax",
+      "position_xz": [
+        -320,
+        29.92,
+        240
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "ranger_pax_sentinel",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "courier_pim_pool_loop",
+      "subject": "Pim",
+      "position_xz": [
+        -380,
+        32.38,
+        1400
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "courier_pim_pool_loop",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "traveller_ivo_moss_detour",
+      "subject": "Ivo's Moss Detour",
+      "position_xz": [
+        -900,
+        32.91,
+        1772
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "traveller_ivo_moss_detour",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "rodline_scout_kael",
+      "subject": "Kael",
+      "position_xz": [
+        -560,
+        62.68,
+        2480
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "rodline_scout_kael",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "rodline_keeper_fenn",
+      "subject": "Fenn",
+      "position_xz": [
+        -178.4592194978723,
+        35.85,
+        2706.5597586667554
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "rodline_keeper_fenn",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "rodline_duelist_ren",
+      "subject": "Ren",
+      "position_xz": [
+        -1120,
+        62.24,
+        3290
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "rodline_duelist_ren",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "rook_circuit_lantern",
+      "subject": "Rook",
+      "position_xz": [
+        -150,
+        61.14,
+        4460
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "rook_circuit_lantern",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "circuit_lena_giant",
+      "subject": "Lena",
+      "position_xz": [
+        -1590,
+        31.63,
+        4370
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "circuit_lena_giant",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "circuit_orin_blackwater",
+      "subject": "Orin",
+      "position_xz": [
+        550,
+        38.02,
+        4050
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "circuit_orin_blackwater",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "circuit_mira_lantern",
+      "subject": "Mira",
+      "position_xz": [
+        -450,
+        57.9932,
+        3972
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "circuit_mira_lantern",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "circuit_tavi_rodline",
+      "subject": "Tavi",
+      "position_xz": [
+        -881.1,
+        52.38,
+        4479.2
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_trainers.json",
+      "authored_id": "circuit_tavi_rodline",
+      "heading_deg": 180,
+      "route": "main",
+      "view": "post"
+    }
+  ]
+}
