@@ -1,0 +1,223 @@
+{
+	"biome_id": "cloudreach",
+	"capture_finished_utc": "2026-09-28T04:02:43",
+	"complete": false,
+	"display_server": "Windows",
+	"failures": [
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach loses the installed gateway centre",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach loses the installed gateway centre",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach loses the installed gateway centre",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__day__close loses the installed gateway centre",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close loses the installed gateway centre",
+		"cloudreach__broken_causeways__04__broken_skyroad_arch__night__close loses the installed gateway centre"
+	],
+	"fixture_disclosure": "Production Cloudreach world, terrain, Broken Skyroad presentation, player, WorldLook and CameraRig/Camera3D. HUD is hidden and the player frozen at the authored crown-edge stand; the production camera is manually posed from that shelf to show the arch.",
+	"frames": [
+		{
+			"bytes": 345240,
+			"camera_fov": 70.0,
+			"camera_position": [
+				1.31644475460052,
+				107.536575317383,
+				-263.037872314453
+			],
+			"destination_display_name": "Broken Skyroad Arch",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/arch_targeted_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach",
+			"gateway_centre_screen": [
+				-59.5177459716797,
+				512.800109863281
+			],
+			"gateway_visible": false,
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"observed_clock": {
+				"hour": 8.00782567851851,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"route_class": "main",
+			"stand_id": "east-reveal",
+			"time": "day",
+			"view": "approach"
+		},
+		{
+			"bytes": 341111,
+			"camera_fov": 70.0,
+			"camera_position": [
+				1.31644475460052,
+				107.536575317383,
+				-263.037872314453
+			],
+			"destination_display_name": "Broken Skyroad Arch",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/arch_targeted_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach",
+			"gateway_centre_screen": [
+				-59.5177459716797,
+				512.800109863281
+			],
+			"gateway_visible": false,
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"observed_clock": {
+				"hour": 18.00700488,
+				"requested": "golden",
+				"time_of_day": "golden"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"route_class": "main",
+			"stand_id": "east-reveal",
+			"time": "golden",
+			"view": "approach"
+		},
+		{
+			"bytes": 272930,
+			"camera_fov": 70.0,
+			"camera_position": [
+				1.31644475460052,
+				107.536575317383,
+				-263.037872314453
+			],
+			"destination_display_name": "Broken Skyroad Arch",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/arch_targeted_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach",
+			"gateway_centre_screen": [
+				-59.5177459716797,
+				512.800109863281
+			],
+			"gateway_visible": false,
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"observed_clock": {
+				"hour": 23.0069291447619,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"route_class": "main",
+			"stand_id": "east-reveal",
+			"time": "night",
+			"view": "approach"
+		},
+		{
+			"bytes": 292192,
+			"camera_fov": 70.0,
+			"camera_position": [
+				1.31644475460052,
+				107.536575317383,
+				-263.037872314453
+			],
+			"destination_display_name": "Broken Skyroad Arch",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/arch_targeted_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__day__close.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day__close",
+			"gateway_centre_screen": [
+				-1204.7890625,
+				352.037475585938
+			],
+			"gateway_visible": false,
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"observed_clock": {
+				"hour": 8.00861111111111,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"route_class": "main",
+			"stand_id": "east-profile",
+			"time": "day",
+			"view": "close"
+		},
+		{
+			"bytes": 278285,
+			"camera_fov": 70.0,
+			"camera_position": [
+				1.31644475460052,
+				107.536575317383,
+				-263.037872314453
+			],
+			"destination_display_name": "Broken Skyroad Arch",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/arch_targeted_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close",
+			"gateway_centre_screen": [
+				-1204.7890625,
+				352.037475585938
+			],
+			"gateway_visible": false,
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"observed_clock": {
+				"hour": 18.0067222222222,
+				"requested": "golden",
+				"time_of_day": "golden"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"route_class": "main",
+			"stand_id": "east-profile",
+			"time": "golden",
+			"view": "close"
+		},
+		{
+			"bytes": 219689,
+			"camera_fov": 70.0,
+			"camera_position": [
+				1.31644475460052,
+				107.536575317383,
+				-263.037872314453
+			],
+			"destination_display_name": "Broken Skyroad Arch",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/arch_targeted_main062/cloudreach__broken_causeways__04__broken_skyroad_arch__night__close.jpg",
+			"frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__night__close",
+			"gateway_centre_screen": [
+				-1204.7890625,
+				352.037475585938
+			],
+			"gateway_visible": false,
+			"identity": "cloudreach__broken_causeways__04__broken_skyroad_arch",
+			"observed_clock": {
+				"hour": 23.0074629066667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				365.0,
+				480.220001220703,
+				1925.0
+			],
+			"presentation_children": 11,
+			"route_class": "main",
+			"stand_id": "east-profile",
+			"time": "night",
+			"view": "close"
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042
+}
