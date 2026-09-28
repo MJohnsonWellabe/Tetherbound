@@ -6,6 +6,7 @@ extends SceneTree
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const SCENES := {
 	"meadows": "res://scenes/world/meadows_playground.tscn",
@@ -145,7 +146,13 @@ func _run() -> void:
 
 func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: float) -> void:
 	var stage: Vector2 = STAGES[_biome]
-	var ground := float(_world.call("ground_height_at", stage.x, stage.y + 14.0))
+	var placeholder: Dictionary = SPECIES_DATA.placeholder(species)
+	var height := float(placeholder.get("height", 2.0)) * scale_factor
+	var distance := maxf(7.0, height * 1.8)
+	var side := clampf(height * 0.7, 2.0, 5.0)
+	var subject_x := stage.x + side
+	var subject_z := stage.y + distance
+	var ground := float(_world.call("ground_height_at", subject_x, subject_z))
 	var body := CREATURE_SCENE.instantiate() as Node3D
 	body.name = "Phase2_%s_%s" % [species, pose]
 	body.set_script(BODY)
@@ -153,12 +160,15 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	body.call("setup", species, shiny)
 	if scale_factor > 1.0 and body.has_method("apply_size_multiplier"):
 		body.call("apply_size_multiplier", scale_factor)
-	body.global_position = Vector3(stage.x, ground, stage.y + 14.0)
+	body.global_position = Vector3(subject_x, ground, subject_z)
 	body.rotation.y = PI
 	body.set_process(false)
 	body.set_physics_process(false)
 	_seat(body, ground)
 	var animator: Variant = body.get("_animator")
+	if pose == "idle":
+		print("PHASE2 POSE RIG %s model=%s animator=%s" % [species,
+			str(body.get("_has_model")), str(animator != null)])
 	if pose == "moving" and animator is Object:
 		(animator as Object).call("tick", 0.0, 4.0, 8.0)
 	elif pose == "attacking":
@@ -174,6 +184,9 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	for frame in 5:
 		await process_frame
 	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
+	if pose == "idle":
+		print("PHASE2 POSE PLAYER %s player=%s active=%s" % [species,
+			str(player != null), str(player.current_animation) if player != null else ""])
 	if player != null and not str(player.current_animation).is_empty():
 		var length := player.get_animation(player.current_animation).length
 		player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
@@ -189,6 +202,11 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	else:
 		_records.append({"id": frame_id, "species": species, "pose": pose,
 			"shiny": shiny, "alpha_scale": scale_factor, "path": path,
+			"model_loaded": bool(body.get("_has_model")),
+			"animator_present": animator != null,
+			"animation_player_present": player != null,
+			"trainer_to_subject_xz_m": sqrt(side * side + distance * distance),
+			"subject_stand_xz": [subject_x, subject_z],
 			"animation": str(player.current_animation) if player != null else "",
 			"trainer_visible_intent": true, "camera": "production CameraRig/Camera3D"})
 		print("PHASE2 CREATURE %s -> %s" % [frame_id, path])
