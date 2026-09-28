@@ -10,6 +10,10 @@ func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."
 
+func _finish(_complete: bool) -> void:
+	# This pass deliberately records a post plus a conversation per plan row.
+	super._finish(_failures.is_empty() and _records.size() == _planned.size() * 2)
+
 func _dialogue_for(row: Dictionary) -> String:
 	var source := str(row.get("authored_source", ""))
 	var authored := str(row.get("authored_id", ""))
@@ -97,4 +101,9 @@ func _capture_row(row: Dictionary) -> void:
 		print("DIALOGUE CAPTURE %s -> %s" % [conversation, path])
 	panel.call("close")
 	panel.visible = false
+	# The production conversation camera eases its spring back after close.
+	# Give the next post its ordinary third-person stand, not the last NPC's
+	# close conversation framing.
+	for frame in 30:
+		await physics_frame
 	_write_manifest()
