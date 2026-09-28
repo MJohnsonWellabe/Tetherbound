@@ -35,13 +35,13 @@ mouse_filter = 2
 
 [node name="EnemyPanel" type="PanelContainer" parent="Root"]
 mouse_filter = 2
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -280.0
-offset_right = 280.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -592.0
+offset_right = -32.0
 offset_top = 32.0
 offset_bottom = 224.0
-grow_horizontal = 2
+grow_horizontal = 0
 
 [node name="EnemyVBox" type="VBoxContainer" parent="Root/EnemyPanel"]
 mouse_filter = 2

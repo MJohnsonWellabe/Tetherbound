@@ -353,17 +353,20 @@ func _build_orb_cluster() -> void:
 ## below it and never overlaps the action grid at the bottom of the screen or
 ## the ally plate.
 ##
-## Centred and anchored top like the plate it hangs from, so it stays put at
-## every handheld aspect ratio rather than drifting with the safe margin.
+## Anchored top-right like the plate it hangs from, so it stays put at every
+## handheld aspect ratio rather than drifting with the safe margin.
 func _build_effect_banner() -> void:
 	_effect_banner = Label.new()
 	_effect_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_effect_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_effect_banner.add_theme_font_size_override("font_size", 26)
-	_effect_banner.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	_effect_banner.offset_left = -280.0
-	_effect_banner.offset_right = 280.0
-	_effect_banner.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	# F10#6 (UX §1.4): the plate moved to the top-right corner, off the
+	# framed target; the banner stays under it.
+	_effect_banner.anchor_left = 1.0
+	_effect_banner.anchor_right = 1.0
+	_effect_banner.offset_left = -592.0
+	_effect_banner.offset_right = -32.0
+	_effect_banner.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	_effect_banner.visible = false
 	$Root.add_child(_effect_banner)
 	_position_effect_banner()

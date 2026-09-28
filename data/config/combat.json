@@ -114,10 +114,12 @@
     "power": 10.4
   },
   "trainer_aside": {
-    "_why": "combat_manager.gd::_stand_the_trainer_aside offsets: side_fraction of the arena radius, forward_m along the fight's forward (negative = back toward the lens). F10#6 r3 tried 0.8 and 0.0 to lift the trainer out of the frame's bottom corners; both left them at the frame edge under the tight two-combatant fit (COMBAT section 5 frames the combatants, not the bystander trainer) and 0.8 stood them in charge lanes, so the original -1.2 stays. TUNABLE.",
+    "_why": "combat_manager.gd::_stand_the_trainer_aside offsets: side_m metres to the side (side_fraction of the arena radius when side_m is absent) and forward_m along the fight's forward (negative = back toward the lens). F10#6 device profile (UX section 1.4: the HUD must not cover the trainer; code-blind 7-inch judges r2-r4): 0.55 x an 8 m radius = 4.4 m stood the trainer at the frame's edge under the move grid or the left column. 2.4 m at the ally's depth keeps them beside the fight, clear of a Voltarach-wide charge lane, in the frame's clear middle band. forward 0.8 stood them in charge lanes (r3 experiment). TUNABLE.",
     "side_fraction": 0.55,
+    "side_m": 2.4,
     "forward_m": -1.2
   },
+
 
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",

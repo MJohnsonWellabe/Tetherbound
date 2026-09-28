@@ -58,7 +58,7 @@ func _run() -> void:
 	# combat.json `trainer_aside`: side_fraction of the radius, forward_m along
 	# the fight's forward (Vector3.FORWARD is -Z here).
 	var aside: Dictionary = MATH.config().get("trainer_aside", {})
-	var side_x := 8.0 * float(aside.get("side_fraction", 0.55))
+	var side_x := float(aside.get("side_m", 8.0 * float(aside.get("side_fraction", 0.55))))
 	var along_z := -float(aside.get("forward_m", -1.2))
 	manager.call("_stand_the_trainer_aside", Vector3.FORWARD)
 	_check(player.position.distance_to(Vector3(side_x, 0, along_z)) < 0.01, "open side preserves intended grounded placement")
