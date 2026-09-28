@@ -33,6 +33,7 @@ def main() -> None:
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items", "characters", "weather"), default="locations")
+    parser.add_argument("--capture-script", help="Tool basename for a targeted location reshoot")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     report_biome = args.report_biome or args.biome
@@ -135,6 +136,10 @@ def main() -> None:
             "characters": "phase2_capture_characters.gd",
             "weather": "phase2_capture_storm_phases.gd",
         }.get(args.category, "phase2_capture_locations.gd")
+        if args.capture_script:
+            if "/" in args.capture_script or "\\" in args.capture_script or not args.capture_script.endswith(".gd"):
+                raise SystemExit("--capture-script must be a tools/ basename ending in .gd")
+            capture_script = args.capture_script
         selection = f"--biome={args.biome} --subset={frame['identity']} "
         if args.category == "locations":
             selection += f"--times={time} --views={view} "
