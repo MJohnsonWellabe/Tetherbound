@@ -93,6 +93,8 @@ func _run() -> void:
 		for frame in 6:
 			await process_frame
 		await _shoot("menu_%s" % tab_id, "Menu %s" % tab_id, world)
+		if tab_id == "settings":
+			await _shoot_settings_sections(menu, world)
 	menu.call("close")
 	var manifest := {
 		"biome": _biome, "scene": SCENES[_biome], "seed": _seed,
@@ -108,6 +110,35 @@ func _run() -> void:
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	file.close()
 	quit(0 if _failures.is_empty() else 1)
+
+
+func _shoot_settings_sections(menu: Node, world: Node) -> void:
+	var bodies: Array = menu.get("_bodies")
+	var index := int(menu.get("_index"))
+	if index < 0 or index >= bodies.size():
+		_failures.append("Settings tab body unavailable")
+		return
+	var tab := bodies[index] as Node
+	var scroll := tab.get("_scroll") as ScrollContainer
+	if scroll == null:
+		_failures.append("Settings scroll container unavailable")
+		return
+	for label_and_id: Dictionary in [
+		{"label": "Controls", "id": "settings_controls"},
+		{"label": "Quick items", "id": "quick_bindings"},
+	]:
+		var heading: Control = null
+		for candidate: Node in tab.find_children("*", "Label", true, false):
+			if (candidate as Label).text.strip_edges() == str(label_and_id.label):
+				heading = candidate as Control
+				break
+		if heading == null:
+			_failures.append("Settings label %s unavailable" % str(label_and_id.label))
+			continue
+		scroll.ensure_control_visible(heading)
+		for frame in 4:
+			await process_frame
+		await _shoot(str(label_and_id.id), str(label_and_id.label), world)
 
 
 func _stock_fixture(game: Node) -> void:
