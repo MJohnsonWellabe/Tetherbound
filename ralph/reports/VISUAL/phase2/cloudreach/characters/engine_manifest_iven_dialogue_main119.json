@@ -1,0 +1,500 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 296923170650,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296939947870,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T07:12:12",
+	"capture_started_utc": "2026-09-28T07:09:22",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "healer_iven",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 435507,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76737928390503,
+			"camera_position": [
+				-276.878997802734,
+				182.683944702148,
+				526.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.0,
+					-1.0
+				],
+				"basis_y": [
+					-0.173647835850716,
+					0.984805822372437,
+					0.00000000759038787379041
+				],
+				"basis_z": [
+					0.984805822372437,
+					0.173647835850716,
+					-0.0000000430472262280546
+				],
+				"origin": [
+					-282.0,
+					181.780990600586,
+					526.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.0000000178358163793746,
+					-0.000000146747694884652,
+					-1.0
+				],
+				"basis_y": [
+					-0.173648253083229,
+					0.984807789325714,
+					-0.000000141421111266027
+				],
+				"basis_z": [
+					0.984807789325714,
+					0.173648253083229,
+					-0.0000000430473292567513
+				],
+				"origin": [
+					-276.878997802734,
+					182.683944702148,
+					526.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Iven",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/iven_dialogue_main119/cloudreach__inventory__character__healer_iven.jpg",
+			"frame_id": "cloudreach__inventory__character__healer_iven",
+			"identity": "cloudreach__inventory__character__healer_iven",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_08_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.434112548828,
+						455.017822265625
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_08_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.810699462891,
+						458.017822265625
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_09_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-254.5,
+						183.201034545898,
+						547.0
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-257.5,
+						183.007690429688,
+						547.0
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-210.765869140625,
+						190.500503540039,
+						595.20068359375
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-208.644546508789,
+						190.834518432617,
+						597.322021484375
+					],
+					"species_id": "skyrill"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.194398383838,
+				"hour": 8.00777593535354,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-282.0,
+				180.031021118164,
+				526.0
+			],
+			"position_xz": [
+				-290.0,
+				526.0
+			],
+			"resolved_ground_y": 180.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 8.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				0.0,
+				-4.0,
+				4.0,
+				-8.0,
+				8.0
+			],
+			"stand_offsets_m": [
+				8.0,
+				12.0,
+				5.0,
+				16.0,
+				2.0
+			],
+			"target_position_xz": [
+				-290.0,
+				526.0
+			],
+			"terrain_ground_y": 180.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 270.0,
+			"view_heading_xz": [
+				-1.0,
+				-0.000000000000000183690953073357
+			]
+		},
+		{
+			"authored_id": "healer_iven",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 435507,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76737928390503,
+			"camera_position": [
+				-276.878997802734,
+				182.683944702148,
+				526.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.0,
+					-1.0
+				],
+				"basis_y": [
+					-0.173647835850716,
+					0.984805822372437,
+					0.00000000759038787379041
+				],
+				"basis_z": [
+					0.984805822372437,
+					0.173647835850716,
+					-0.0000000430472262280546
+				],
+				"origin": [
+					-282.0,
+					181.780990600586,
+					526.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.0000000178358163793746,
+					-0.000000146747694884652,
+					-1.0
+				],
+				"basis_y": [
+					-0.173648253083229,
+					0.984807789325714,
+					-0.000000141421111266027
+				],
+				"basis_z": [
+					0.984807789325714,
+					0.173648253083229,
+					-0.0000000430473292567513
+				],
+				"origin": [
+					-276.878997802734,
+					182.683944702148,
+					526.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Iven",
+			"destination_index": 1,
+			"dialogue_id": "cloudreach_iven_waycamp",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/iven_dialogue_main119/cloudreach__inventory__character__healer_iven__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__healer_iven__dialogue",
+			"identity": "cloudreach__inventory__character__healer_iven__dialogue",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_08_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.434112548828,
+						455.017822265625
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_08_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.810699462891,
+						458.017822265625
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_09_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-254.5,
+						183.201034545898,
+						547.0
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-257.5,
+						183.007690429688,
+						547.0
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-210.765869140625,
+						190.500503540039,
+						595.20068359375
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-208.644546508789,
+						190.834518432617,
+						597.322021484375
+					],
+					"species_id": "skyrill"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.194398383838,
+				"hour": 8.00777593535354,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-282.0,
+				180.031021118164,
+				526.0
+			],
+			"position_xz": [
+				-290.0,
+				526.0
+			],
+			"resolved_ground_y": 180.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 8.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				0.0,
+				-4.0,
+				4.0,
+				-8.0,
+				8.0
+			],
+			"stand_offsets_m": [
+				8.0,
+				12.0,
+				5.0,
+				16.0,
+				2.0
+			],
+			"target_position_xz": [
+				-290.0,
+				526.0
+			],
+			"terrain_ground_y": 180.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 270.0,
+			"view_heading_xz": [
+				-1.0,
+				-0.000000000000000183690953073357
+			]
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__healer_iven"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296939947870,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"healer_iven"
+	]
+}

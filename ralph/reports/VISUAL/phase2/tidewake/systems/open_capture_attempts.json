@@ -1,0 +1,10 @@
+{
+  "attempts": [
+    {
+      "source": "build_systems_main098",
+      "commit": "04778410bdc39d153a8c0315dc94aad28397a5eb",
+      "render_path": "GPU service Windows 1920x1080 gl_compatibility NVIDIA GeForce GTX 1060 3GB",
+      "result": "The production Tidewake scene exposed no BuildPlacer node. The fixture saved no frames, and camp, bed, building and crafting world views remain uncovered."
+    }
+  ]
+}

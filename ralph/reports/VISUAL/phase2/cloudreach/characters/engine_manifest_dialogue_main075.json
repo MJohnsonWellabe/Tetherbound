@@ -1,0 +1,2304 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 296788952921,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296805730141,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T05:02:14",
+	"capture_started_utc": "2026-09-28T04:59:13",
+	"captured_frame_count": 16,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": false,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [
+		"cloudreach__inventory__character__healer_iven: no unoccluded production-camera stand near destination",
+		"cloudreach__inventory__character__bridgekeeper_orrin: no unoccluded production-camera stand near destination",
+		"cloudreach__inventory__character__courier_neri: no unoccluded production-camera stand near destination"
+	],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "warden_aila",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 495095,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76736640930176,
+			"camera_position": [
+				-276.0,
+				182.682861328125,
+				512.879028320313
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					-276.0,
+					181.779891967773,
+					518.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.0000001467478369932,
+					-0.000000176871566281989
+				],
+				"basis_y": [
+					-0.000000175231917864949,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.000000148701928992523,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					-276.0,
+					182.682861328125,
+					512.879028320313
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Warden Aila",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__warden_aila.jpg",
+			"frame_id": "cloudreach__inventory__character__warden_aila",
+			"identity": "cloudreach__inventory__character__warden_aila",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_08_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.433792114258,
+						455.017822265625
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_08_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.811279296875,
+						458.017822265625
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-254.515243530273,
+						183.197052001953,
+						546.982849121094
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-257.5,
+						183.007690429688,
+						547.0
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_lower_cliff_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-210.765869140625,
+						190.500137329102,
+						595.20068359375
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-208.644546508789,
+						190.834518432617,
+						597.322021484375
+					],
+					"species_id": "skyrill"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.213899151515,
+				"hour": 8.00855596606061,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-276.0,
+				180.029907226563,
+				518.0
+			],
+			"position_xz": [
+				-275.0,
+				520.0
+			],
+			"resolved_ground_y": 180.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-275.0,
+				520.0
+			],
+			"terrain_ground_y": 180.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "warden_aila",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 495095,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76736640930176,
+			"camera_position": [
+				-276.0,
+				182.682861328125,
+				512.879028320313
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					-276.0,
+					181.779891967773,
+					518.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.0000001467478369932,
+					-0.000000176871566281989
+				],
+				"basis_y": [
+					-0.000000175231917864949,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.000000148701928992523,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					-276.0,
+					182.682861328125,
+					512.879028320313
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Warden Aila",
+			"destination_index": 1,
+			"dialogue_id": "cloudreach_aila_arrival",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__warden_aila__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__warden_aila__dialogue",
+			"identity": "cloudreach__inventory__character__warden_aila__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_08_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.433792114258,
+						455.017822265625
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_08_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.811279296875,
+						458.017822265625
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-254.515243530273,
+						183.197052001953,
+						546.982849121094
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-257.5,
+						183.007690429688,
+						547.0
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_lower_cliff_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-210.765869140625,
+						190.500137329102,
+						595.20068359375
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-208.644546508789,
+						190.834518432617,
+						597.322021484375
+					],
+					"species_id": "skyrill"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.213899151515,
+				"hour": 8.00855596606061,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-276.0,
+				180.029907226563,
+				518.0
+			],
+			"position_xz": [
+				-275.0,
+				520.0
+			],
+			"resolved_ground_y": 180.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-275.0,
+				520.0
+			],
+			"terrain_ground_y": 180.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "keeper_maela",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 447792,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76731634140015,
+			"camera_position": [
+				399.328186035156,
+				612.763305664063,
+				3239.25756835938
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.707106113433838,
+					0.0,
+					-0.707106113433838
+				],
+				"basis_y": [
+					-0.122787475585938,
+					0.984805107116699,
+					0.122787475585938
+				],
+				"basis_z": [
+					0.696362435817719,
+					0.173647731542587,
+					-0.696362435817719
+				],
+				"origin": [
+					395.707122802734,
+					611.860412597656,
+					3242.87866210938
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.70710688829422,
+					-0.000000160110431579596,
+					-0.70710676908493
+				],
+				"basis_y": [
+					-0.122788190841675,
+					0.984807729721069,
+					0.122787997126579
+				],
+				"basis_z": [
+					0.696364164352417,
+					0.173648595809937,
+					-0.696364283561707
+				],
+				"origin": [
+					399.328186035156,
+					612.763305664063,
+					3239.25756835938
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Keeper Maela",
+			"destination_index": 5,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__keeper_maela.jpg",
+			"frame_id": "cloudreach__inventory__character__keeper_maela",
+			"identity": "cloudreach__inventory__character__keeper_maela",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_14_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						312.912994384766,
+						590.263793945313,
+						3288.42797851563
+					],
+					"species_id": "aeriex"
+				},
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_14_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						312.120086669922,
+						589.489807128906,
+						3292.13500976563
+					],
+					"species_id": "aeriex"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.18625,
+				"hour": 8.00745,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				395.707122802734,
+				610.110473632813,
+				3242.87866210938
+			],
+			"position_xz": [
+				395.0,
+				3245.0
+			],
+			"resolved_ground_y": 610.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				395.0,
+				3245.0
+			],
+			"terrain_ground_y": 610.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 315.0,
+			"view_heading_xz": [
+				-0.70710676908493,
+				0.70710676908493
+			]
+		},
+		{
+			"authored_id": "keeper_maela",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 447792,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76731634140015,
+			"camera_position": [
+				399.328186035156,
+				612.763305664063,
+				3239.25756835938
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.707106113433838,
+					0.0,
+					-0.707106113433838
+				],
+				"basis_y": [
+					-0.122787475585938,
+					0.984805107116699,
+					0.122787475585938
+				],
+				"basis_z": [
+					0.696362435817719,
+					0.173647731542587,
+					-0.696362435817719
+				],
+				"origin": [
+					395.707122802734,
+					611.860412597656,
+					3242.87866210938
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.70710688829422,
+					-0.000000160110431579596,
+					-0.70710676908493
+				],
+				"basis_y": [
+					-0.122788190841675,
+					0.984807729721069,
+					0.122787997126579
+				],
+				"basis_z": [
+					0.696364164352417,
+					0.173648595809937,
+					-0.696364283561707
+				],
+				"origin": [
+					399.328186035156,
+					612.763305664063,
+					3239.25756835938
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Keeper Maela",
+			"destination_index": 5,
+			"dialogue_id": "cloudreach_maela_aerie",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__keeper_maela__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__keeper_maela__dialogue",
+			"identity": "cloudreach__inventory__character__keeper_maela__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_14_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						312.912994384766,
+						590.263793945313,
+						3288.42797851563
+					],
+					"species_id": "aeriex"
+				},
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_14_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						312.120086669922,
+						589.489807128906,
+						3292.13500976563
+					],
+					"species_id": "aeriex"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.18625,
+				"hour": 8.00745,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				395.707122802734,
+				610.110473632813,
+				3242.87866210938
+			],
+			"position_xz": [
+				395.0,
+				3245.0
+			],
+			"resolved_ground_y": 610.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				395.0,
+				3245.0
+			],
+			"terrain_ground_y": 610.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 315.0,
+			"view_heading_xz": [
+				-0.70710676908493,
+				0.70710676908493
+			]
+		},
+		{
+			"authored_id": "naturalist_sora",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "high_roost_sky_shrine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 349959,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76725053787231,
+			"camera_position": [
+				1092.87890625,
+				1052.783203125,
+				2951.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113385487464,
+					0.0,
+					0.999998867511749
+				],
+				"basis_y": [
+					0.173647746443748,
+					0.984805285930634,
+					0.00000000759038432107673
+				],
+				"basis_z": [
+					-0.984804928302765,
+					0.173647686839104,
+					-0.0000000430471871482041
+				],
+				"origin": [
+					1098.0,
+					1051.88024902344,
+					2951.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.000000381005463623296,
+					-0.000000165675004382138,
+					1.0
+				],
+				"basis_y": [
+					0.173648610711098,
+					0.984807670116425,
+					0.0000000969969491393385
+				],
+				"basis_z": [
+					-0.984807670116425,
+					0.173648610711098,
+					0.00000040398631995231
+				],
+				"origin": [
+					1092.87890625,
+					1052.783203125,
+					2951.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Sora",
+			"destination_index": 6,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__naturalist_sora.jpg",
+			"frame_id": "cloudreach__inventory__character__naturalist_sora",
+			"identity": "cloudreach__inventory__character__naturalist_sora",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.195198515151,
+				"hour": 8.00780794060606,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1098.0,
+				1050.13073730469,
+				2951.0
+			],
+			"position_xz": [
+				1100.0,
+				2950.0
+			],
+			"resolved_ground_y": 1050.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				1100.0,
+				2950.0
+			],
+			"terrain_ground_y": 1050.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 90.0,
+			"view_heading_xz": [
+				1.0,
+				0.0000000000000000612303176911189
+			]
+		},
+		{
+			"authored_id": "naturalist_sora",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "high_roost_sky_shrine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 349959,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76725053787231,
+			"camera_position": [
+				1092.87890625,
+				1052.783203125,
+				2951.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113385487464,
+					0.0,
+					0.999998867511749
+				],
+				"basis_y": [
+					0.173647746443748,
+					0.984805285930634,
+					0.00000000759038432107673
+				],
+				"basis_z": [
+					-0.984804928302765,
+					0.173647686839104,
+					-0.0000000430471871482041
+				],
+				"origin": [
+					1098.0,
+					1051.88024902344,
+					2951.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.000000381005463623296,
+					-0.000000165675004382138,
+					1.0
+				],
+				"basis_y": [
+					0.173648610711098,
+					0.984807670116425,
+					0.0000000969969491393385
+				],
+				"basis_z": [
+					-0.984807670116425,
+					0.173648610711098,
+					0.00000040398631995231
+				],
+				"origin": [
+					1092.87890625,
+					1052.783203125,
+					2951.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Sora",
+			"destination_index": 6,
+			"dialogue_id": "cloudreach_sora_shrine",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__naturalist_sora__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__naturalist_sora__dialogue",
+			"identity": "cloudreach__inventory__character__naturalist_sora__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.195198515151,
+				"hour": 8.00780794060606,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1098.0,
+				1050.13073730469,
+				2951.0
+			],
+			"position_xz": [
+				1100.0,
+				2950.0
+			],
+			"resolved_ground_y": 1050.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				1100.0,
+				2950.0
+			],
+			"terrain_ground_y": 1050.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 90.0,
+			"view_heading_xz": [
+				1.0,
+				0.0000000000000000612303176911189
+			]
+		},
+		{
+			"authored_id": "trader_kelm",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 378687,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.31368970870972,
+			"camera_position": [
+				-352.34912109375,
+				832.571044921875,
+				3979.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113136797507,
+					0.0,
+					-0.999998331069946
+				],
+				"basis_y": [
+					-0.17364776134491,
+					0.984805405139923,
+					0.00000000759038520925515
+				],
+				"basis_z": [
+					0.984804749488831,
+					0.173647657036781,
+					-0.0000000430471800427767
+				],
+				"origin": [
+					-357.0,
+					831.7509765625,
+					3979.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.000000561228603146446,
+					-0.000000166316226568597,
+					-1.0
+				],
+				"basis_y": [
+					-0.173648595809937,
+					0.984807670116425,
+					-0.000000066332951575987
+				],
+				"basis_z": [
+					0.984807729721069,
+					0.173648610711098,
+					-0.000000581582867198449
+				],
+				"origin": [
+					-352.34912109375,
+					832.571044921875,
+					3979.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Kelm",
+			"destination_index": 7,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__trader_kelm.jpg",
+			"frame_id": "cloudreach__inventory__character__trader_kelm",
+			"identity": "cloudreach__inventory__character__trader_kelm",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.203117333333,
+				"hour": 8.00812469333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-357.0,
+				830.001098632813,
+				3979.0
+			],
+			"position_xz": [
+				-360.0,
+				3980.0
+			],
+			"resolved_ground_y": 830.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 3.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-360.0,
+				3980.0
+			],
+			"terrain_ground_y": 830.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 270.0,
+			"view_heading_xz": [
+				-1.0,
+				-0.000000000000000183690953073357
+			]
+		},
+		{
+			"authored_id": "trader_kelm",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 378687,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.31368970870972,
+			"camera_position": [
+				-352.34912109375,
+				832.571044921875,
+				3979.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113136797507,
+					0.0,
+					-0.999998331069946
+				],
+				"basis_y": [
+					-0.17364776134491,
+					0.984805405139923,
+					0.00000000759038520925515
+				],
+				"basis_z": [
+					0.984804749488831,
+					0.173647657036781,
+					-0.0000000430471800427767
+				],
+				"origin": [
+					-357.0,
+					831.7509765625,
+					3979.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.000000561228603146446,
+					-0.000000166316226568597,
+					-1.0
+				],
+				"basis_y": [
+					-0.173648595809937,
+					0.984807670116425,
+					-0.000000066332951575987
+				],
+				"basis_z": [
+					0.984807729721069,
+					0.173648610711098,
+					-0.000000581582867198449
+				],
+				"origin": [
+					-352.34912109375,
+					832.571044921875,
+					3979.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Kelm",
+			"destination_index": 7,
+			"dialogue_id": "cloudreach_kelm_cliffhold",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__trader_kelm__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__trader_kelm__dialogue",
+			"identity": "cloudreach__inventory__character__trader_kelm__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.203117333333,
+				"hour": 8.00812469333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-357.0,
+				830.001098632813,
+				3979.0
+			],
+			"position_xz": [
+				-360.0,
+				3980.0
+			],
+			"resolved_ground_y": 830.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 3.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-360.0,
+				3980.0
+			],
+			"terrain_ground_y": 830.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 270.0,
+			"view_heading_xz": [
+				-1.0,
+				-0.000000000000000183690953073357
+			]
+		},
+		{
+			"authored_id": "young_trainer_tavi",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 670215,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				-181.0,
+				852.682861328125,
+				4092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999998331069946,
+					0.0,
+					-0.000000150995546732702
+				],
+				"basis_y": [
+					-0.0000000262200838818671,
+					0.984805405139923,
+					0.17364776134491
+				],
+				"basis_z": [
+					0.000000148701374769189,
+					0.173647657036781,
+					-0.984804749488831
+				],
+				"origin": [
+					-181.0,
+					851.779968261719,
+					4098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000166316368677144,
+					0.000000366521419437049
+				],
+				"basis_y": [
+					-0.000000100143715542345,
+					0.984807729721069,
+					0.173648610711098
+				],
+				"basis_z": [
+					-0.00000038983372974144,
+					0.173648610711098,
+					-0.984807729721069
+				],
+				"origin": [
+					-181.0,
+					852.682861328125,
+					4092.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Tavi",
+			"destination_index": 8,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__young_trainer_tavi.jpg",
+			"frame_id": "cloudreach__inventory__character__young_trainer_tavi",
+			"identity": "cloudreach__inventory__character__young_trainer_tavi",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.194335,
+				"hour": 8.0077734,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-181.0,
+				850.030029296875,
+				4098.0
+			],
+			"position_xz": [
+				-180.0,
+				4100.0
+			],
+			"resolved_ground_y": 850.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-180.0,
+				4100.0
+			],
+			"terrain_ground_y": 850.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "young_trainer_tavi",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 670215,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				-181.0,
+				852.682861328125,
+				4092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999998331069946,
+					0.0,
+					-0.000000150995546732702
+				],
+				"basis_y": [
+					-0.0000000262200838818671,
+					0.984805405139923,
+					0.17364776134491
+				],
+				"basis_z": [
+					0.000000148701374769189,
+					0.173647657036781,
+					-0.984804749488831
+				],
+				"origin": [
+					-181.0,
+					851.779968261719,
+					4098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000166316368677144,
+					0.000000366521419437049
+				],
+				"basis_y": [
+					-0.000000100143715542345,
+					0.984807729721069,
+					0.173648610711098
+				],
+				"basis_z": [
+					-0.00000038983372974144,
+					0.173648610711098,
+					-0.984807729721069
+				],
+				"origin": [
+					-181.0,
+					852.682861328125,
+					4092.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Tavi",
+			"destination_index": 8,
+			"dialogue_id": "cloudreach_tavi_circuit",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__young_trainer_tavi__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+			"identity": "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.194335,
+				"hour": 8.0077734,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-181.0,
+				850.030029296875,
+				4098.0
+			],
+			"position_xz": [
+				-180.0,
+				4100.0
+			],
+			"resolved_ground_y": 850.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-180.0,
+				4100.0
+			],
+			"terrain_ground_y": 850.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "defector_rusk",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 550221,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				419.0,
+				922.653930664063,
+				4482.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999997437000275,
+					0.0,
+					-0.000000150995418835009
+				],
+				"basis_y": [
+					-0.0000000262200821055103,
+					0.984805285930634,
+					0.17364776134491
+				],
+				"basis_z": [
+					0.000000148700948443548,
+					0.173647165298462,
+					-0.984801948070526
+				],
+				"origin": [
+					419.0,
+					921.751037597656,
+					4488.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000186775352517543,
+					0.000000553948609649524
+				],
+				"basis_y": [
+					-0.0000000877451498126902,
+					0.98480761051178,
+					0.173649027943611
+				],
+				"basis_z": [
+					-0.00000057796620467343,
+					0.173649027943611,
+					-0.98480761051178
+				],
+				"origin": [
+					419.0,
+					922.653930664063,
+					4482.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Rusk",
+			"destination_index": 9,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__defector_rusk.jpg",
+			"frame_id": "cloudreach__inventory__character__defector_rusk",
+			"identity": "cloudreach__inventory__character__defector_rusk",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.209356777778,
+				"hour": 8.00837427111111,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				419.0,
+				920.001098632813,
+				4488.0
+			],
+			"position_xz": [
+				420.0,
+				4490.0
+			],
+			"resolved_ground_y": 920.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				420.0,
+				4490.0
+			],
+			"terrain_ground_y": 920.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "defector_rusk",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 550221,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				419.0,
+				922.653930664063,
+				4482.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999997437000275,
+					0.0,
+					-0.000000150995418835009
+				],
+				"basis_y": [
+					-0.0000000262200821055103,
+					0.984805285930634,
+					0.17364776134491
+				],
+				"basis_z": [
+					0.000000148700948443548,
+					0.173647165298462,
+					-0.984801948070526
+				],
+				"origin": [
+					419.0,
+					921.751037597656,
+					4488.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000186775352517543,
+					0.000000553948609649524
+				],
+				"basis_y": [
+					-0.0000000877451498126902,
+					0.98480761051178,
+					0.173649027943611
+				],
+				"basis_z": [
+					-0.00000057796620467343,
+					0.173649027943611,
+					-0.98480761051178
+				],
+				"origin": [
+					419.0,
+					922.653930664063,
+					4482.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Rusk",
+			"destination_index": 9,
+			"dialogue_id": "cloudreach_rusk_observatory",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__defector_rusk__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__defector_rusk__dialogue",
+			"identity": "cloudreach__inventory__character__defector_rusk__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.209356777778,
+				"hour": 8.00837427111111,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				419.0,
+				920.001098632813,
+				4488.0
+			],
+			"position_xz": [
+				420.0,
+				4490.0
+			],
+			"resolved_ground_y": 920.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				420.0,
+				4490.0
+			],
+			"terrain_ground_y": 920.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "officer_voss",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 695670,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76730680465698,
+			"camera_position": [
+				299.0,
+				1082.68322753906,
+				5092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999996542930603,
+					0.0,
+					-0.000000150995276726462
+				],
+				"basis_y": [
+					-0.0000000262200803291535,
+					0.984805285930634,
+					0.173647746443748
+				],
+				"basis_z": [
+					0.000000148700848967565,
+					0.173647031188011,
+					-0.984801232814789
+				],
+				"origin": [
+					299.0,
+					1081.78051757813,
+					5098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000196565935084436,
+					0.000000606119726853649
+				],
+				"basis_y": [
+					-0.0000000883265016682344,
+					0.984807312488556,
+					0.17365063726902
+				],
+				"basis_z": [
+					-0.000000631044997589925,
+					0.173650652170181,
+					-0.984807372093201
+				],
+				"origin": [
+					299.0,
+					1082.68322753906,
+					5092.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Officer Voss",
+			"destination_index": 10,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__officer_voss.jpg",
+			"frame_id": "cloudreach__inventory__character__officer_voss",
+			"identity": "cloudreach__inventory__character__officer_voss",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.196394333333,
+				"hour": 8.00785577333334,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				299.0,
+				1080.03063964844,
+				5098.0
+			],
+			"position_xz": [
+				300.0,
+				5100.0
+			],
+			"resolved_ground_y": 1080.08996582031,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				300.0,
+				5100.0
+			],
+			"terrain_ground_y": 1080.08996582031,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "officer_voss",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 695670,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76730680465698,
+			"camera_position": [
+				299.0,
+				1082.68322753906,
+				5092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999996542930603,
+					0.0,
+					-0.000000150995276726462
+				],
+				"basis_y": [
+					-0.0000000262200803291535,
+					0.984805285930634,
+					0.173647746443748
+				],
+				"basis_z": [
+					0.000000148700848967565,
+					0.173647031188011,
+					-0.984801232814789
+				],
+				"origin": [
+					299.0,
+					1081.78051757813,
+					5098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000196565935084436,
+					0.000000606119726853649
+				],
+				"basis_y": [
+					-0.0000000883265016682344,
+					0.984807312488556,
+					0.17365063726902
+				],
+				"basis_z": [
+					-0.000000631044997589925,
+					0.173650652170181,
+					-0.984807372093201
+				],
+				"origin": [
+					299.0,
+					1082.68322753906,
+					5092.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Officer Voss",
+			"destination_index": 10,
+			"dialogue_id": "cloudreach_voss_challenge",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__officer_voss__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__officer_voss__dialogue",
+			"identity": "cloudreach__inventory__character__officer_voss__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.196394333333,
+				"hour": 8.00785577333334,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				299.0,
+				1080.03063964844,
+				5098.0
+			],
+			"position_xz": [
+				300.0,
+				5100.0
+			],
+			"resolved_ground_y": 1080.08996582031,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				300.0,
+				5100.0
+			],
+			"terrain_ground_y": 1080.08996582031,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "captain_veyra",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 470736,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				99.0,
+				1162.78393554688,
+				5342.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999996542930603,
+					0.0,
+					-0.000000150995276726462
+				],
+				"basis_y": [
+					-0.0000000262200803291535,
+					0.984805285930634,
+					0.173647746443748
+				],
+				"basis_z": [
+					0.000000148700848967565,
+					0.173647031188011,
+					-0.984801232814789
+				],
+				"origin": [
+					99.0,
+					1161.88098144531,
+					5348.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000196565935084436,
+					0.000000606119726853649
+				],
+				"basis_y": [
+					-0.0000000883252795347289,
+					0.984807014465332,
+					0.173652544617653
+				],
+				"basis_z": [
+					-0.000000631045168120181,
+					0.173652544617653,
+					-0.984807014465332
+				],
+				"origin": [
+					99.0,
+					1162.78393554688,
+					5342.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Captain Veyra",
+			"destination_index": 11,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__captain_veyra.jpg",
+			"frame_id": "cloudreach__inventory__character__captain_veyra",
+			"identity": "cloudreach__inventory__character__captain_veyra",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.204604888889,
+				"hour": 8.00818419555556,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				99.0,
+				1160.13110351563,
+				5348.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"resolved_ground_y": 1160.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				100.0,
+				5350.0
+			],
+			"terrain_ground_y": 1160.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "captain_veyra",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 470736,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				99.0,
+				1162.78393554688,
+				5342.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999996542930603,
+					0.0,
+					-0.000000150995276726462
+				],
+				"basis_y": [
+					-0.0000000262200803291535,
+					0.984805285930634,
+					0.173647746443748
+				],
+				"basis_z": [
+					0.000000148700848967565,
+					0.173647031188011,
+					-0.984801232814789
+				],
+				"origin": [
+					99.0,
+					1161.88098144531,
+					5348.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000196565935084436,
+					0.000000606119726853649
+				],
+				"basis_y": [
+					-0.0000000883252795347289,
+					0.984807014465332,
+					0.173652544617653
+				],
+				"basis_z": [
+					-0.000000631045168120181,
+					0.173652544617653,
+					-0.984807014465332
+				],
+				"origin": [
+					99.0,
+					1162.78393554688,
+					5342.87890625
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Captain Veyra",
+			"destination_index": 11,
+			"dialogue_id": "cloudreach_veyra_prebattle",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/dialogue_main075/cloudreach__inventory__character__captain_veyra__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__captain_veyra__dialogue",
+			"identity": "cloudreach__inventory__character__captain_veyra__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.204604888889,
+				"hour": 8.00818419555556,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				99.0,
+				1160.13110351563,
+				5348.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"resolved_ground_y": 1160.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				100.0,
+				5350.0
+			],
+			"terrain_ground_y": 1160.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		}
+	],
+	"planned_frame_count": 11,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__warden_aila",
+		"cloudreach__inventory__character__healer_iven",
+		"cloudreach__inventory__character__bridgekeeper_orrin",
+		"cloudreach__inventory__character__courier_neri",
+		"cloudreach__inventory__character__keeper_maela",
+		"cloudreach__inventory__character__naturalist_sora",
+		"cloudreach__inventory__character__trader_kelm",
+		"cloudreach__inventory__character__young_trainer_tavi",
+		"cloudreach__inventory__character__defector_rusk",
+		"cloudreach__inventory__character__officer_voss",
+		"cloudreach__inventory__character__captain_veyra"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296805730141,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}

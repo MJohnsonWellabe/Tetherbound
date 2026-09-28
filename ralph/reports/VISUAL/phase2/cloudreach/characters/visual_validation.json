@@ -1,0 +1,21 @@
+{
+  "review": "Code-blind inspection of eight full-resolution Cloudreach character post frames",
+  "subject_visible": [
+    "cloudreach__inventory__character__young_trainer_tavi",
+    "cloudreach__inventory__character__warden_aila",
+    "cloudreach__inventory__character__naturalist_sora",
+    "cloudreach__inventory__character__keeper_maela",
+    "cloudreach__inventory__character__defector_rusk"
+  ],
+  "subject_not_isolated": [
+    "cloudreach__inventory__character__trader_kelm",
+    "cloudreach__inventory__character__captain_veyra"
+  ],
+  "subject_uncertain": ["cloudreach__inventory__character__officer_voss"],
+  "recovered_but_distant": [
+    "cloudreach__inventory__character__bridgekeeper_orrin",
+    "cloudreach__inventory__character__courier_neri"
+  ],
+  "engine_capture_failures": ["cloudreach__inventory__character__healer_iven"],
+  "notes": "P2-068 records small or obscured post presentation. Wider stands recovered Orrin and Neri only as small figures roughly 15 m from the trainer; a closer conversation view is still needed. Healer Iven has no accepted production-camera stand. Post stills do not establish dialogue or defeated states."
+}

@@ -1,0 +1,54 @@
+{
+	"biome": "cloudreach",
+	"complete": true,
+	"display_server": "Windows",
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_return_main068/launch.png",
+			"id": "launch",
+			"player_position": "(400.0, 611.2658, 3250.0)",
+			"state": "climb",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_return_main068/approach_perch.png",
+			"id": "approach_perch",
+			"player_position": "(400.0, 616.4063, 3250.0)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_return_main068/descent.png",
+			"id": "descent",
+			"player_position": "(400.0, 618.4934, 3250.0)",
+			"state": "descent",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_return_main068/landed_shelf.png",
+			"id": "landed_shelf",
+			"player_position": "(400.0, 610.1303, 3250.0)",
+			"state": "grounded",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_return_main068/perch_rest.png",
+			"id": "perch_rest",
+			"player_position": "(400.0, 610.1303, 3250.0)",
+			"state": "grounded",
+			"time": "day"
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--return-perch",
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"seed": 2042,
+	"system": "flying"
+}

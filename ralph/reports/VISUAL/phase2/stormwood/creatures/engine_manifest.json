@@ -1,0 +1,1883 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome": "stormwood",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "Production scene, trainer and camera; direct visual pose fixture, not combat or traversal proof",
+	"frames": [
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormtrail__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormtrail__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "stormtrail",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltwig__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltwig__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "voltwig",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__mosshock__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__mosshock__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "mosshock",
+			"subject_stand_xz": [
+				-347.935,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__staticub__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__staticub__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "staticub",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__voltarach__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__voltarach__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "voltarach",
+			"subject_stand_xz": [
+				-347.025,
+				457.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__fulgocobra__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__fulgocobra__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "fulgocobra",
+			"subject_stand_xz": [
+				-346.36,
+				459.36
+			],
+			"trainer_to_subject_xz_m": 10.0428681162305,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormraven__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormraven__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "stormraven",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__pebbik__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__pebbik__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__craghorn__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__craghorn__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-347.55,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__stormbrush__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__stormbrush__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "stormbrush",
+			"subject_stand_xz": [
+				-347.725,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__tanglevolt__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__tanglevolt__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "tanglevolt",
+			"subject_stand_xz": [
+				-347.62,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__thundertunnel__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__thundertunnel__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "thundertunnel",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__sparkit__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__sparkit__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "sparkit",
+			"subject_stand_xz": [
+				-348.0,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "stormwood__glimmermoth__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/stormwood/creatures_near_main062/stormwood__glimmermoth__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-347.83,
+				457.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"seed": 2042,
+	"stage_xz": [
+		-350.0,
+		450.0
+	]
+}
