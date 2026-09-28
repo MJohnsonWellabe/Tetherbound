@@ -44,11 +44,6 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 	wild.name = "Named_%s" % id
 	wild.set_meta("stormwood_named_encounter", id)
 	wild.set_meta("stormwood_behavior_profile", str(spawn.get("stormwood_behavior_profile", "")))
-	# An authored combat camera block (named_encounters[].combat_camera) is read
-	# by combat_manager.gd::_opponent_camera, as Tidewake's water alphas do.
-	var camera: Variant = spawn.get("stormwood_combat_camera", {})
-	if camera is Dictionary and not (camera as Dictionary).is_empty():
-		wild.set_meta("combat_camera", (camera as Dictionary).duplicate(true))
 	wild.set("trainer_owned", not bool(spawn.get("catchable", false)))
 
 func can_challenge(spec: Dictionary) -> bool:

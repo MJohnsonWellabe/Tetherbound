@@ -144,8 +144,6 @@ static func _named_spawn(authored: Dictionary, field: RefCounted) -> Dictionary:
 		"catchable": bool(authored.get("catchable", false)),
 		"once_only": bool(authored.get("once_only", false)),
 		"fixed_encounter": true,
-		"stormwood_combat_camera": (authored.get("combat_camera", {}) as Dictionary).duplicate(true) \
-			if authored.get("combat_camera", {}) is Dictionary else {},
 	}
 
 

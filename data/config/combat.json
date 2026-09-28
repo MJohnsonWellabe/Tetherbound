@@ -114,10 +114,11 @@
     "power": 10.4
   },
   "trainer_aside": {
-    "_why": "F10#6 device profile (code-blind 7-inch judges r2/r3, ralph/reports/STORMWOOD/f10_6/): combat_manager.gd::_stand_the_trainer_aside stepped the trainer to side_fraction of the arena radius and 1.2 m back toward the lens, which put them in the frame's bottom corners under the move grid or the ally card (Ci, C1b) or among the piloted creature's legs. forward_m > 0 stands them beside the fight in the clear middle band instead; still out of the lane and inside the arena. TUNABLE.",
+    "_why": "combat_manager.gd::_stand_the_trainer_aside offsets: side_fraction of the arena radius, forward_m along the fight's forward (negative = back toward the lens). F10#6 r3 tried 0.8 and 0.0 to lift the trainer out of the frame's bottom corners; both left them at the frame edge under the tight two-combatant fit (COMBAT section 5 frames the combatants, not the bystander trainer) and 0.8 stood them in charge lanes, so the original -1.2 stays. TUNABLE.",
     "side_fraction": 0.55,
-    "forward_m": 0.8
+    "forward_m": -1.2
   },
+
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
