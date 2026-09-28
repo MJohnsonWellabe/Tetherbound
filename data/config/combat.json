@@ -125,6 +125,8 @@
     "clear_soft_occluders": true,
     "_comment_named_trainer_wild_clear": "F04#2 (round-1 judge B1: a wild burrowback in the foreground of Halder's fight confused who was fighting; Halder stood inside wild cluster 4002). Wild bodies neither spawn nor choose a wander destination within this many metres of a named Meadows trainer's stand (ranks below), so a captain's or the Warden's fight ground holds only the fight. encounter_director.gd::_clear_of_named_trainer_grounds. 0 disables. TUNABLE.",
     "named_trainer_wild_clear_m": 18.0,
+    "_comment_trainer_ally_lateral": "F04#2 (round-1 judge B1/D): in a trainer fight the ally opened on the player->opponent line and the camera, behind the ally, looked through it at the opponent. The ally is seated this far beside that line, on the side with room (combat_manager.gd::_place_fighters; realm fights already do the same with REALM_SEAT_LATERAL_M). 0 keeps the in-line formation. TUNABLE.",
+    "trainer_ally_lateral_m": 2.4,
     "named_trainer_ranks": ["captain", "warden"],
     "occluder_clear_margin": 2.0,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
