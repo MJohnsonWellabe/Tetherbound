@@ -1,0 +1,5 @@
+{
+  "_comment": "P2-057 unjudged local ground-cover clearance on actual Water named NPC/trainer bodies. Default off until paired native approach evidence. Reload the Water scene after changing this gate. Does not affect static vegetation, actor placement, prompts or collisions.",
+  "enabled": false,
+  "radius_m": 2.5
+}
