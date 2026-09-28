@@ -11,6 +11,30 @@ func _begin_manifest() -> void:
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."
 
 func _dialogue_for(row: Dictionary) -> String:
+	var source := str(row.get("authored_source", ""))
+	var authored := str(row.get("authored_id", ""))
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://" + source)) if not source.is_empty() else null
+	if parsed is Dictionary:
+		var config := parsed as Dictionary
+		var groups: Array[String] = ["villagers", "trainers", "npcs", "characters"]
+		for group: String in groups:
+			for raw: Variant in config.get(group, []):
+				if not raw is Dictionary:
+					continue
+				var spec := raw as Dictionary
+				if str(spec.get("id", spec.get("name", ""))) != authored:
+					continue
+				for field: String in ["greeting", "challenge", "intro_conversation"]:
+					var direct := str(spec.get(field, ""))
+					if RUNNER.table().has(direct):
+						return direct
+				var ids: Array = spec.get("dialogue_ids", [])
+				if not ids.is_empty() and RUNNER.table().has(str(ids[0])):
+					return str(ids[0])
+				if _biome_id == "stormwood":
+					var derived := "stormwood_trainer_%s_challenge" % authored if group == "trainers" else "stormwood_%s_arrival" % authored
+					if RUNNER.table().has(derived):
+						return derived
 	var slug := str(row.get("authored_id", row.get("destination_display_name", ""))).to_lower().replace(" ", "_").replace("-", "_")
 	if slug.is_empty():
 		return ""
@@ -18,7 +42,7 @@ func _dialogue_for(row: Dictionary) -> String:
 	var prefixes: Array[String] = []
 	match _biome_id:
 		"meadows": prefixes = ["village_%s" % slug, "trainer_%s" % slug]
-		"water": prefixes = ["water_%s" % slug]
+		"water": prefixes = [slug if slug.begins_with("water_") else "water_%s" % slug]
 		"cloudreach": prefixes = ["cloudreach_%s" % slug]
 		"stormwood": prefixes = ["stormwood_%s" % slug]
 	var candidates: Array[String] = []
