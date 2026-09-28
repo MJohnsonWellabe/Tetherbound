@@ -58,6 +58,22 @@ func test_dimmed_move_cells_keep_names_and_glyphs_readable() -> void:
 		"dimmed glyph %.2f:1 over the cell" % _contrast(glyph_colour, panel))
 
 
+## F10#6 (UX §1.4): a fight panel fades only when it covers a real share of a
+## subject's screen area, not for a pixel of edge contact.
+func test_panels_fade_only_over_a_subject() -> void:
+	var grid := Rect2(1420, 790, 440, 230)
+	var trainer_under := [Rect2(1500, 850, 40, 120)] as Array[Rect2]
+	var trainer_clear := [Rect2(1200, 700, 40, 120)] as Array[Rect2]
+	var edge_touch := [Rect2(1380, 700, 44, 120)] as Array[Rect2]
+	assert_almost_eq(COMBAT_HUD.subject_fade_target(grid, trainer_under, 0.1, 0.3), 0.3, 0.001,
+		"the grid over the trainer fades")
+	assert_almost_eq(COMBAT_HUD.subject_fade_target(grid, trainer_clear, 0.1, 0.3), 1.0, 0.001,
+		"a clear trainer leaves the grid opaque")
+	assert_almost_eq(COMBAT_HUD.subject_fade_target(grid, edge_touch, 0.1, 0.3), 1.0, 0.001,
+		"a sliver of edge contact is not covering")
+	assert_almost_eq(COMBAT_HUD.subject_fade_target(grid, [] as Array[Rect2], 0.1, 0.3), 1.0, 0.001)
+
+
 func _contrast(a: Color, b: Color) -> float:
 	var la := _luminance(a)
 	var lb := _luminance(b)

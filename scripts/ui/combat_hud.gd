@@ -559,20 +559,24 @@ func _update_subject_fade(delta: float) -> void:
 		var panel := entry[0] as Control
 		if panel == null:
 			continue
-		var want := 1.0
-		if panel.is_visible_in_tree():
-			var rect := panel.get_global_rect()
-			for subject: Rect2 in subjects:
-				var area := subject.get_area()
-				if area > 0.0 and rect.intersection(subject).get_area() >= area * min_overlap:
-					want = low
-					break
+		var want := subject_fade_target(panel.get_global_rect(), subjects, min_overlap, low) \
+			if panel.is_visible_in_tree() else 1.0
 		var level := move_toward(float(_subject_fade.get(panel, 1.0)), want, delta * rate)
 		_subject_fade[panel] = level
 		if bool(entry[1]):
 			panel.modulate.a *= level
 		else:
 			panel.modulate.a = level
+
+
+## Pure form: `low` when `panel` covers at least `min_overlap` of any
+## subject's own screen area, else 1.0.
+static func subject_fade_target(panel: Rect2, subjects: Array[Rect2], min_overlap: float, low: float) -> float:
+	for subject: Rect2 in subjects:
+		var area := subject.get_area()
+		if area > 0.0 and panel.intersection(subject).get_area() >= area * min_overlap:
+			return low
+	return 1.0
 
 
 ## Screen rects of the trainer, the active creature and the target through the
