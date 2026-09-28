@@ -375,8 +375,8 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "F10#6 r6 FAIL 3/4 (text ~1.5x under the floors, pip roster without names); r7 raises HUD text to UX §8 floors, adds roster portraits, keeps the trainer in the HUD-safe cap; re-rendering.",
-   "next": "Told 21:51 to land r6/r7 now; F10#6 capped at the r7 judge, else it moves to a shared HUD lane"
+   "now": "F10#6 r6 FAIL 3/4 (text ~1.5x under the floors, pip roster without names); r6/r7 HUD work in PR #439 (full-ci, auto-merge): compact portrait fight column, UX §8 text floors, trainer kept clear of the left column; unit suite 5271/0; independent review pass after fixes. r7 frames re-rendering on the final code.",
+   "next": "r7 code-blind judge + strict re-check; F10#6 met only if both pass, else exact failures to STATE for the shared HUD lane"
   },
   {
    "lane": "Tidewake (tb/tidewake)",
