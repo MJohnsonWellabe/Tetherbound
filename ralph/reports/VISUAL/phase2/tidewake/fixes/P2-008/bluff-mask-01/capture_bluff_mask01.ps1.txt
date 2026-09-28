@@ -1,0 +1,37 @@
+$ErrorActionPreference = 'Stop'
+$captureRoot = 'D:\tetherbound\x04-tidewake'
+$captureEngine = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
+$lockPath = 'D:\tetherbound\RENDER_LOCK.json'
+$captureOut = Join-Path $captureRoot '.artifacts\phase2\p2008-bluff-mask-01'
+$captureAppdata = Join-Path $captureRoot '.local\bluff-mask-appdata-01'
+if ((Test-Path -LiteralPath $captureOut) -or (Test-Path -LiteralPath $captureAppdata)) { throw 'Fresh diagnostic directories required' }
+foreach ($config in @('water_dune_terrain', 'water_dune_cover')) {
+    $data = Get-Content -Raw (Join-Path $captureRoot ('data/config/' + $config + '.json')) | ConvertFrom-Json
+    if ($data.enabled) { throw 'Production dune gate must remain disabled' }
+}
+$handle = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+try {
+    $reader = [IO.StreamReader]::new($handle, [Text.Encoding]::UTF8, $true, 1024, $true)
+    $state = $reader.ReadToEnd() | ConvertFrom-Json
+    $reader.Dispose()
+    if ($state.held_by) { throw ('Render held by ' + $state.held_by) }
+    $bytes = [Text.Encoding]::UTF8.GetBytes((@{held_by='tb/x04-tidewake'; since_utc=[DateTime]::UtcNow.ToString('o'); purpose='P2-008 Gull exact bluff mask two-frame diagnostic'} | ConvertTo-Json -Compress))
+    $handle.SetLength(0)
+    $handle.Write($bytes, 0, $bytes.Length)
+} finally { $handle.Dispose() }
+$captureProcess = $null
+try {
+    $env:APPDATA = $captureAppdata
+    $sourceCommit = git -C $captureRoot rev-parse HEAD
+    [IO.File]::WriteAllText((Join-Path $captureRoot '.local/phase2/bluff-mask01-launch.json'), (@{source_commit=$sourceCommit; appdata=$captureAppdata; started_utc=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json))
+    $captureArgs = @('--path', $captureRoot, '--rendering-driver', 'opengl3', '--resolution', '1920x1080', '--fullscreen', '--audio-driver', 'Dummy', '--script', '.artifacts/phase2/dune_bluff_mask_ablation.gd', '--', '--biome=water', '--seed=2042', '--output=res://.artifacts/phase2/p2008-bluff-mask-01')
+    $captureProcess = Start-Process -FilePath $captureEngine -ArgumentList $captureArgs -WorkingDirectory $captureRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $captureRoot '.local/phase2/bluff-mask-01.log') -RedirectStandardError (Join-Path $captureRoot '.local/phase2/bluff-mask-01-errors.log') -PassThru
+    Write-Output ('START native mask diagnostic PID ' + $captureProcess.Id)
+    $captureProcess.WaitForExit()
+    Write-Output ('DONE native mask diagnostic exit ' + $captureProcess.ExitCode)
+    if ($captureProcess.ExitCode -ne 0) { throw ('Diagnostic failed: ' + $captureProcess.ExitCode) }
+} finally {
+    if ($null -ne $captureProcess -and -not $captureProcess.HasExited) { Stop-Process -Id $captureProcess.Id; $captureProcess.WaitForExit() }
+    $state = Get-Content -Raw $lockPath | ConvertFrom-Json
+    if ($state.held_by -eq 'tb/x04-tidewake') { [IO.File]::WriteAllText($lockPath, '{}') }
+}

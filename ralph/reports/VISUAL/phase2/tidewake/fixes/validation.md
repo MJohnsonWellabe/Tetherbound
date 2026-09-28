@@ -146,3 +146,18 @@ copying endpoint fields from the already deep-copied record fixed it. Confirmed
 4 tests / 38 assertions / 0 failures in `.local/phase2/matrix-export-confirm.log`;
 independent source review by `compact_review` found no actionable issues. Native
 chapter capture and export remain outstanding.
+
+Main integration `0dbd61980` includes incoming `d8d0276c8`. Independent
+`compact_review` verified both capture-tool feature unions, encounter-camera
+metadata plus grass binding, all 116 catalog rows and eight upstream-only
+changed cells. It found one generated-HTML encoding regression: Windows-default
+output was CP1252. Explicit UTF-8 reads/writes in the dashboard builder correct
+this; regenerated output decodes as UTF-8 and reflects 91 met / 10 open criteria.
+Tidewake F14#0/#1 remain partial. Capture-tool parser checks pass.
+
+The subsequent native two-frame Gull mask diagnostic at `0dbd61980` is complete
+with exact camera/player/basis/stand agreement and actual LOD readbacks 48/7/1.
+The cap/foot teeth remain visible in the exact final bluff mask without terrain
+lighting, excluding a shadow-only or albedo-only cause. Sampling/control/normal
+contributions remain to be isolated; no art acceptance follows. See
+`P2-008/bluff-mask-01/findings.md`. Both dune gates remain off.
