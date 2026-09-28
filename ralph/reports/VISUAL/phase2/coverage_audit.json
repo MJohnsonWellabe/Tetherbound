@@ -51,24 +51,24 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 833,
+      "frames": 873,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 193,
+        "systems": 233,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 633,
+        "day": 673,
         "dusk": 114,
         "night": 86
       },
       "systems": {
         "current_states": 16,
-        "fights": 170,
+        "fights": 210,
         "swimming": 7
       },
       "expected_systems_without_indexed_frames": [
@@ -102,18 +102,18 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 354,
+      "frames": 382,
       "categories": {
         "characters": 24,
         "creatures": 98,
         "named_locations": 144,
         "route_and_terrain": 39,
-        "systems": 25,
+        "systems": 53,
         "ui": 12,
         "world_items": 12
       },
       "times": {
-        "day": 243,
+        "day": 271,
         "dusk": 57,
         "night": 54
       },
@@ -123,10 +123,10 @@
         "camp": 1,
         "crafting": 1,
         "flying": 16,
-        "flying_return": 5
+        "flying_return": 5,
+        "riding": 28
       },
       "expected_systems_without_indexed_frames": [
-        "riding",
         "swimming",
         "catching",
         "fights"
