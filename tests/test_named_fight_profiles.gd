@@ -240,10 +240,10 @@ func test_the_profile_sequence_lands_on_the_creatures_bosses_names() -> void:
 		% checked)
 
 
-## Keys BOSSES §2.1 step 3's chapter clamp may author on a BASELINE member: it
-## raises tell/recovery to the post-South-Bridge floor (.9/.75 s) and changes
-## nothing else, so a block made only of these (and `_` notes) is still a
-## baseline, not a profile. `power` and `poise_max` are the F04#7 difficulty
+## Keys a BASELINE member may author without becoming a profile. Two sources:
+## BOSSES §2.1 step 3's chapter clamp raises tell/recovery to the
+## post-South-Bridge floor (.9/.75 s), and the F04#7 decision (below) adds two
+## stats. A block made only of these (and `_` notes) is still a baseline. `power` and `poise_max` are the F04#7 difficulty
 ## stats (owner decision 2026-09-28, BOSSES §4.3): how hard a body hits and how
 ## much it takes to stagger, not its behaviour shape -- the same reason
 ## SHAPE_EXCLUDED below leaves `power` out of a profile's shape.
