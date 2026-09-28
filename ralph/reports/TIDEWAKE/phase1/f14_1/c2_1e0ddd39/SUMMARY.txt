@@ -1,0 +1,12 @@
+starter pilot n win wipe med_lead_lost med_party_lost max_hit tells_min-max reached_all err
+galewisp MASHER 24 0.0 1.0 1.0 1.0 0.166 0.8 0.8 0 0
+galewisp READER 24 1.0 0.0 0.608 0.132 0.149 0.8 1.1 24 0
+ripplet MASHER 24 0.0 1.0 1.0 1.0 0.166 0.8 0.8 0 0
+ripplet READER 24 1.0 0.0 1.0 0.237 0.135 0.8 1.1 24 0
+terrapup MASHER 24 0.0 1.0 1.0 1.0 0.166 0.8 0.8 0 0
+terrapup READER 24 1.0 0.0 1.0 0.241 0.128 0.8 1.1 24 0
+
+option (c) per starter: reader_win  masher_lead_faint  reader/masher median party cost  arena_radius  observed tells
+galewisp 24 24 1.0 1.0 0.132 / 1.0 = 0.132 [9.0] 0.8 1.58
+ripplet 24 24 1.0 1.0 0.237 / 1.0 = 0.237 [9.0] 0.8 1.58
+terrapup 24 24 1.0 1.0 0.241 / 1.0 = 0.241 [9.0] 0.8 1.58
