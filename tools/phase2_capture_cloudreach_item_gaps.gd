@@ -15,9 +15,10 @@ func _load_plan() -> bool:
 	for row: Dictionary in _planned:
 		if str(row.frame_id) not in IDS:
 			continue
+		row["view_heading_deg"] = 180.0
 		row["stand_offsets_m"] = [5.0, 8.0, 12.0, 20.0, 2.0]
-		row["stand_laterals_m"] = [0.0, -4.0, 4.0, -8.0, 8.0, -15.0, 15.0]
-		row["min_camera_player_distance_m"] = 1.5
+		row["stand_laterals_m"] = [0.0, -4.0, 4.0, -8.0, 8.0]
+		row["min_camera_player_distance_m"] = 1.2
 		selected.append(row)
 	_planned = selected
 	return not _planned.is_empty()

@@ -26,6 +26,7 @@ def main() -> None:
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--seed", type=int, default=2042)
+    parser.add_argument("--max-frames", type=int, default=32)
     args = parser.parse_args()
     if len(args.commit) != 40 or subprocess.run(
         ["git", "-C", str(args.repo), "cat-file", "-e", f"{args.commit}^{{commit}}"],
@@ -67,7 +68,7 @@ def main() -> None:
                 "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
                 "--script tools/phase2_capture_tidewake_fights.gd -- "
                 f"--trainer=water_trainer_{trainer} --out=res://ralph/reports/VISUAL/phase2/tidewake/repro/{trainer} "
-                f"--interval=1.0 --max-frames=32 --level=53 --pilot=READER --cap-s=180 "
+                f"--interval=1.0 --max-frames={args.max_frames} --level=53 --pilot=READER --cap-s=180 "
                 f"--render-only-saves --seed={args.seed}"
             ),
             "commit": args.commit, "render_path": args.render_path,
