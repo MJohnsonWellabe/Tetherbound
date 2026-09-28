@@ -852,6 +852,10 @@ func _place_fighters() -> void:
 ## How far a realm fight seats the player's creature beside the trainer's line
 ## to the shared opponent (see `_place_realm_owned_ally`).
 const REALM_SEAT_LATERAL_M := 2.4
+## The most the lateral seat's ground may differ from the unshifted seat's. A
+## side beyond it is off the edge of the path/deck the fight formed on, so that
+## side is not taken.
+const REALM_SEAT_MAX_STEP_M := 1.0
 
 
 func _place_realm_owned_ally() -> void:
@@ -881,10 +885,38 @@ func _place_realm_owned_ally() -> void:
 		var side := Vector3(-line.z, 0.0, line.x).normalized()
 		var right := _staging_reach(ally_spot, side, REALM_SEAT_LATERAL_M)
 		var left := _staging_reach(ally_spot, -side, REALM_SEAT_LATERAL_M)
-		ally_spot += side * right if right >= left else -side * left
+		# Only onto real ground at the same level. In Cloudreach the ground
+		# claim runs past a road ribbon's collider: 2.4 m sideways the ally was
+		# seated on the claimed 105.0 with nothing under it and fell out of the
+		# fight (net riding smoke, forced leg). No such side keeps spot 0.
+		var base_level := _ground_height(ally_spot.x, ally_spot.z)
+		var sides: Array[Vector3] = [side * right, -side * left]
+		if right < left:
+			sides.reverse()
+		for shift: Vector3 in sides:
+			if _realm_seat_stands(ally_spot + shift, base_level):
+				ally_spot += shift
+				break
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
 	_ally_body.call("face_towards", _combat_position(_wild))
+
+
+## A lateral realm seat must stand on a real surface at the unshifted seat's
+## level (within REALM_SEAT_MAX_STEP_M): the ground claim alone is not proof,
+## as `_stand_the_trainer_aside` found for built floors. With no ground source
+## (NAN) or no physics body there is nothing to check against; the seat stands.
+func _realm_seat_stands(at: Vector3, base_level: float) -> bool:
+	if is_nan(base_level) or not (_ally_body is CollisionObject3D) or not _ally_body.is_inside_tree():
+		return true
+	var level := _ground_height(at.x, at.z)
+	if is_nan(level) or absf(level - base_level) > REALM_SEAT_MAX_STEP_M:
+		return false
+	var body := _ally_body as CollisionObject3D
+	var query := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.z),
+		Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.z), body.collision_mask, [body.get_rid()])
+	var hit := body.get_world_3d().direct_space_state.intersect_ray(query)
+	return not hit.is_empty() and (hit["normal"] as Vector3).dot(Vector3.UP) > 0.5
 
 
 func _combat_position(body: Node3D) -> Vector3:

@@ -1236,6 +1236,7 @@ func _tap_action(action: StringName) -> void:
 	if event == null:
 		_fail("'%s' has no physical joypad binding" % action)
 		return
+	var edge_start := Engine.get_physics_frames()
 	Input.parse_input_event(event)
 	# Parsed events are flushed once per PROCESS frame. Under a slow renderer
 	# several physics ticks run inside one frame, so counting physics frames
@@ -1243,17 +1244,21 @@ func _tap_action(action: StringName) -> void:
 	# polled grid (name_prompt.gd::_tick_cursor) never saw the gap between
 	# taps, read them as one hold and never moved (xvfb: "controller stopped
 	# on 'A' instead of 'B'"). Each edge now spans a process frame.
+	# The tick count runs from the parse, so a process frame that itself
+	# contains a physics tick does not stretch the tap: headless, the tap stays
+	# the eight ticks tools/aim_eight_tick_probe.gd pins (it read 9 otherwise).
 	await _tree.process_frame
-	for _i in 3:
+	while Engine.get_physics_frames() - edge_start < 3:
 		await _tree.physics_frame
 	var released := event.duplicate() as InputEvent
 	if released is InputEventJoypadButton:
 		(released as InputEventJoypadButton).pressed = false
 	elif released is InputEventJoypadMotion:
 		(released as InputEventJoypadMotion).axis_value = 0.0
+	edge_start = Engine.get_physics_frames()
 	Input.parse_input_event(released)
 	await _tree.process_frame
-	for _i in 5:
+	while Engine.get_physics_frames() - edge_start < 5:
 		await _tree.physics_frame
 
 
