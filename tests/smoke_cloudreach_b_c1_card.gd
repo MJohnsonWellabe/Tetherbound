@@ -172,7 +172,7 @@ func _write_c1() -> void:
 		"pre_voss_overfly_recoveries": overfly_recoveries, "post_chapter_probe": post_chapter_probe,
 		"loaner_violations": violations, "stormwood": stormwood,
 		"exhausted_rows": recoveries.size(), "static_stall_sidesteps": static_sidesteps,
-		"owned_carrier_fly": "OPEN DEBT: no starter path gives a flier (opening.json starters terrapup/ripplet/galewisp; only galecrest has a fly_traversal carry capability, and galewisp has none). The earned five (ripplet, bramblebun, mudsnout x2, veridian) have no carrier, so every flight is Maela's loaner. A wild galecrest is catchable in Meadows band 1; an earned save that caught one would close this.",
+		"owned_carrier_fly": "CLOSED (ralph/reports/CLOUDREACH/owned-carrier-fly/): a healthy active carrier of the five flies (WORLD §4.2) and the Galewisp starter gains Fly at the unlock (CREATURES §7). This earned five (ripplet, bramblebun, mudsnout x2, veridian) holds no carrier, so Maela's loaner still serves it until the chapter ends, as designed.",
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}
 	DirAccess.make_dir_recursive_absolute(_witness_dir(C1_DIR))
 	var file := FileAccess.open(_witness_dir(C1_DIR) + "/c1.json", FileAccess.WRITE)
