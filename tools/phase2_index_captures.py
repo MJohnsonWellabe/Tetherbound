@@ -58,7 +58,8 @@ def main() -> None:
     base = repo / "ralph" / "reports" / "VISUAL" / "phase2" / report_biome
     frames_dir = base / args.category
     frames_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source / "manifest.json", frames_dir / "engine_manifest.json")
+    raw_name = f"engine_manifest_{source.name}.json"
+    shutil.copy2(source / "manifest.json", frames_dir / raw_name)
     if manifest.get("failures"):
         (frames_dir / "open_capture_failures.json").write_text(
             json.dumps(manifest["failures"], indent=2) + "\n", encoding="utf-8"
