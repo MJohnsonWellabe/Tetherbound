@@ -172,6 +172,13 @@ func _trainer(id: String) -> bool:
 	# out another healthy member and challenges again.
 	var challenged := false
 	for _challenge_attempt in 3:
+		# S1 run (b0c10d8c): a wild engaged during the walk to Nysa, her answer
+		# was the mid-battle refusal, and the retry then waited on a challenge
+		# that cannot open during a fight. A player fights it out first.
+		if bool(_manager.call("is_fighting")):
+			_note("WILD engaged at %s's stance; fighting it out before challenging" % id)
+			if not await _fight_current(id + " stance"):
+				return false
 		if not await _ensure_usable_ally(id):
 			return false
 		# The send-out that `_ensure_usable_ally` pressed deploys asynchronously;
