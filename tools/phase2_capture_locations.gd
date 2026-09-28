@@ -26,6 +26,12 @@ extends SceneTree
 ## production title-screen picker before the world instantiates.
 
 const CATALOGUE_PATH := "res://data/config/debug_teleport_spots.json"
+const LANDMARK_PATHS := {
+	"meadows": "res://data/config/map_landmarks.json",
+	"water": "res://data/config/water_world.json",
+	"cloudreach": "res://data/config/cloudreach_world.json",
+	"stormwood": "res://data/config/stormwood_world.json",
+}
 const DEFAULT_OUTPUT_ROOT := "res://ralph/reports/VISUAL/phase2"
 const SCENES := {
 	"meadows": "res://scenes/world/meadows_playground.tscn",
@@ -193,6 +199,7 @@ func _load_plan() -> bool:
 					frame_ids[frame_id] = true
 					_planned.append({
 					"frame_id": frame_id,
+					"identity": identity,
 					"biome_id": _biome_id,
 					"biome_display_name": str(selected_biome.get("display_name", _biome_id)),
 					"band_id": str(band.get("id", "")),
@@ -205,6 +212,44 @@ func _load_plan() -> bool:
 					"time": time_name,
 					"view": view_name,
 					})
+	var landmarks_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(LANDMARK_PATHS[_biome_id])))
+	if typeof(landmarks_data) != TYPE_DICTIONARY:
+		push_error("phase2 locations: landmark source is invalid")
+		return false
+	for raw_landmark: Variant in (landmarks_data as Dictionary).get("landmarks", []):
+		if not raw_landmark is Dictionary:
+			continue
+		var landmark := raw_landmark as Dictionary
+		var location_id := str(landmark.get("id", ""))
+		var display_name := str(landmark.get("display_name", landmark.get("name", location_id)))
+		var position: Variant = landmark.get("position", [])
+		if location_id.is_empty() or not position is Array or (position as Array).size() not in [2, 3]:
+			continue
+		var parts := position as Array
+		var x := float(parts[0])
+		var z := float(parts[1] if parts.size() == 2 else parts[2])
+		if not is_finite(x) or not is_finite(z):
+			continue
+		var identity := "%s__landmark__%s" % [_biome_id, _slug(location_id)]
+		if not _matches_subset((identity + " " + display_name).to_lower()):
+			continue
+		destination_index += 1
+		_all_destinations.append({"destination_index": destination_index, "identity": identity,
+			"position_xz": [x, z], "view_heading_deg": null})
+		for time_name: String in _times:
+			for view_name: String in _views:
+				var frame_id := "%s__%s__%s" % [identity, time_name, view_name]
+				if frame_ids.has(frame_id):
+					push_error("phase2 locations: duplicate frame id %s" % frame_id)
+					return false
+				frame_ids[frame_id] = true
+				_planned.append({"frame_id": frame_id, "biome_id": _biome_id,
+					"biome_display_name": str(selected_biome.get("display_name", _biome_id)),
+					"band_id": str(landmark.get("region_id", landmark.get("island_id", ""))),
+					"band_display_name": "", "destination_index": destination_index,
+					"spot_index_in_band": 0, "destination_display_name": display_name,
+					"position_xz": [x, z], "view_heading_deg": null,
+					"time": time_name, "view": view_name, "identity": identity})
 	if _planned.is_empty():
 		push_error("catalogue survey: selection yielded no frames")
 		return false
