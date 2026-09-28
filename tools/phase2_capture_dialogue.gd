@@ -10,6 +10,10 @@ func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."
 
+func _finish(_complete: bool) -> void:
+	# This pass deliberately records a post plus a conversation per plan row.
+	super._finish(_failures.is_empty() and _records.size() == _planned.size() * 2)
+
 func _dialogue_for(row: Dictionary) -> String:
 	var source := str(row.get("authored_source", ""))
 	var authored := str(row.get("authored_id", ""))
