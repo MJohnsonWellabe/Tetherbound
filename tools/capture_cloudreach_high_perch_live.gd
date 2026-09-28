@@ -352,7 +352,7 @@ func _finish() -> void:
 	var manifest := {"schema_version": 1, "tool": "tools/capture_cloudreach_high_perch_live.gd",
 		"scene": "res://scenes/world/cloudreach_cliffs.tscn", "named_location": "The High Perches",
 		"camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
-		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); party terrapup/bramblebun/mudsnout/brooktail (no flier: Maela's loaner carries every flight); trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; clock pinned; HUD hidden for each frame.",
+		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); party terrapup/bramblebun/mudsnout/brooktail (no flier: Maela's loaner carries every flight); trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame.",
 		"records": _records, "failures": _failures, "complete": _failures.is_empty() and _records.size() == expected,
 		"finished_utc": Time.get_datetime_string_from_system(true)}
 	var file := FileAccess.open(OUT + "/manifest.json", FileAccess.WRITE)
