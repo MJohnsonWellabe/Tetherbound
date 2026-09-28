@@ -32,7 +32,8 @@ All of this is presentation only, in `scripts/world/stormwood_surge.gd` and `dat
 
 **Recorded, not fixed.** These are outside the open item and are telegraph polish:
 - Q2's mid-countdown steps are subtle, and the strongest last-moment cue lands late.
-- A decorative sky bolt can appear 0.4–0.5 s after a strike. The existing hold is telegraph + 0.3 s.
+- The Break crawler veins fade back in 0.4–0.5 s after impact (t160–t170). Judges read that as a possible second bolt (the independent re-check identified it as the veins, not a decorative bolt).
+- Both r6 judges' overall lines are PARTIAL. The phase judge's reasons are Calm/Fading naming, the vein pattern being fixed and 2D-looking, and no ground contact. The strike judge's reason is Q2. The look complaints are Bars A/B → Phase 2 catalog.
 - Calm and Fading can be confused by name from a single still (moderate).
 - The telegraph's timing (1.2 s) and rules are the spec and are unchanged.
 
