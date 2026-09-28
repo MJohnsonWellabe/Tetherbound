@@ -6,7 +6,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 **Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress. Batch 67 consolidated every lane head and every remaining branch, including the full Codex branch and Vess, onto `tb/integration`, and landed it through one PR after one unit run and one CI run. **Next is Phase 1 (`CLAUDE_START_HERE.md`):** one self-landing lane per biome. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
 
-**Criteria:** 83 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3). No chapter is accepted.
+**Criteria:** 86 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3 and F10#3, Cloudreach F08#3 and F08#4). No chapter is accepted.
 
 **The board is the source of truth.**
 - `ralph/reports/COORDINATOR/dashboard/criteria.json` holds every criterion and card, with its evidence and gap.
@@ -19,15 +19,15 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 |---|---|
 | M4, C1, T3, S3, T1 | **Complete.** M4, C1 and T3 in batches 59, 65 and 67. S3 and T1 had their integrated runs in batch 63 and all feeders (F11, F12) met, and are recorded as complete in batch 67. |
 | S1 | Integrated run passed (batch 64); F09#3 is met, so every feeder is met. |
-| C3 | The Solmane two-peer rerun passed (batch 67). The card waits on F08#3 and F08#4. |
 | M1 | In progress: F01#2/#3 day and night walks need a render and a judge. |
 | M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#3/#4/#6. |
-| M3, C2, T2 | Failing: named-fight framing, Bars A/B, and the F08#3/#4 and F13#5 art rows. |
+| C2, C3 | **Complete (Cloudreach Phase 1 landing).** C2: earned chapter run (longest travel gap 98 s, same five, no new catch) plus the six-activities witness, frame matrix by the F08#3/#4 code-blind verdicts; C3: two-peer co-op and Solmane aftermath, ALL CHECKS PASSED. Evidence `ralph/reports/CLOUDREACH/c2-card/`, `c3-card/`. |
+| M3, T2 | Failing: named-fight framing, Bars A/B, and the F13#5 art row. |
 
-**Open criteria (19):**
+**Open criteria (17):**
 - **Meadows:** F01#2, F01#3; F03#0; F04#1, #2, #3, #6, #7.
-- **Cloudreach:** F08#3, F08#4.
-- **Stormwood:** F10#2, #3, #4, #6. F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
+- **Cloudreach: complete for Phase 1** (every row and card C1-C3 met). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Open debt outside the queue: owned-carrier Fly; Cliffhold reads thin (Phase 2).
+- **Stormwood:** F10#2, #4, #6. F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
 - **Tidewake:** F13#3, F13#5; F14#0, #1.
 
 **Switched off or unwired in batch 67.** This is unjudged visual work, landed as the wind-down rule requires. Flip each item on only after a code-blind Bars A/B pass.
@@ -147,7 +147,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | Creatures | 57 base species, individual IVs and bond, and limited evolution. Galecrest was rebuilt from a reference; its `companion_presence` head-tracking override did not land because main lacks that code. | Creature finish for Bars A/B, and attack-pose clipping (AUDIT §A). |
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
-| Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), Break cue (F10#3), forest readability (F10#4), device profile (F10#6). Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
+| Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), forest readability (F10#4), device profile (F10#6). Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
 | Tidewake | Human swim route (F12 met), eight pockets, dock exchange, return, Grandpa and credits (F15 met, T3 complete). | Local chains (F13#3), currents/docks/Veilfall art (F13#5), Veilfall and named-fight C2/C3. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |

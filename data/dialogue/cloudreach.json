@@ -171,6 +171,22 @@
       "speaker":"Upper Road Courier", "portrait":"res://assets/ui/portraits/lark.png",
       "lines":["The anchor is letting the wind through. I'm carrying the first regular deliveries back to the observatory."]
     },
+    "cloudreach_waycamp_carter": {
+      "speaker":"Waycamp Carter", "portrait":"res://assets/ui/portraits/villager_male.png",
+      "lines":["Half this load was meant for Cliffhold. With the wind roads down it goes as far as the causeway, then it waits.", "If you're climbing, rest by the fire first. Up there everything you need has to be carried."]
+    },
+    "cloudreach_waycamp_mender": {
+      "speaker":"Waycamp Mender", "portrait":"res://assets/ui/portraits/villager_female.png",
+      "lines":["Every harness that comes back from the causeway needs stitching. The gusts chew through leather.", "Warden Aila keeps the camp. Talk to her before you go up; she knows which roads still hold."]
+    },
+    "cloudreach_cliffhold_ropewright": {
+      "speaker":"Cliffhold Ropewright", "portrait":"res://assets/ui/portraits/villager_female.png",
+      "lines":["We splice rope for bridges nobody can reach. Kelm says keep working, so the rope is ready when the wind is.", "Mind the lip past the commons. The drop doesn't forgive."]
+    },
+    "cloudreach_cliffhold_porter": {
+      "speaker":"Cliffhold Porter", "portrait":"res://assets/ui/portraits/villager_male.png",
+      "lines":["Everything comes up the counterweight stair one crate at a time now. My shoulders know every step.", "The commons has dry beds. Rest there before the upper anchors; Kelm trades what you'll need."]
+    },
     "cloudreach_rusk_observatory": {
       "speaker": "Rusk", "portrait": "res://assets/ui/portraits/ren.png",
       "lines": ["I worked on those feed housings. They told us the anchors would make travel safer. Then the couriers stopped arriving and we were ordered to increase the pull.", "Sora's record tells you what the network does. I can tell you where it is vulnerable: the west anchor, east anchor, and summit feed must all stop before the engine approach clears.", "I left my uniform behind. The things I helped build are still here. Showing you their weak points is a start."]

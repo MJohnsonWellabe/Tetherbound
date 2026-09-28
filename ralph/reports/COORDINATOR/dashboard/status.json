@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T05:25Z",
+ "updated": "2026-09-28T07:30Z",
  "headline": [
-  "Criteria met: 83 of 101 (Stormwood F09#3 landed, #398). Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Main is green: full CI run 36375973966 passed 33/33 at d971d248, after the eight-tick (#394) and co-op forced-dismount (#396) fixes.",
+  "Criteria met: 86 of 101 (Stormwood F09#3 landed, #398; F10#3 landed). Chapter cards complete: M4, C1, C2, C3, S3, T1 and T3 (7 of 13). Main is green: full CI run 36375973966 passed 33/33 at d971d248, after the eight-tick (#394) and co-op forced-dismount (#396) fixes.",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
@@ -305,6 +305,12 @@
    "sha": "d971d248",
    "state": "Merged; full CI green (33/33)",
    "contents": "A shared realm fight seats the ally sideways only onto real, level ground; the guest's creature no longer falls off a Cloudreach road when a fight opens"
+  },
+  {
+   "name": "Cloudreach Phase 1 landing (tb/cloudreach)",
+   "sha": "see PR",
+   "state": "PR with auto-merge",
+   "contents": "F08#3 (live production-camera High Perches, judge PASS), F08#4 (settlement residents, Cliffhold ambience, Broken Causeways crown carve; judges PASS), card C2 (earned chapter A7/ledger + six activities) and card C3 (two-peer co-op and Solmane aftermath); Cloudreach complete for Phase 1"
   }
  ],
  "lanes": [
@@ -315,8 +321,8 @@
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
-   "now": "Phase 1 queue: F08#3, F08#4, then C2 and C3",
-   "next": "Self-lands each criterion"
+   "now": "Complete for Phase 1: F08#3, F08#4, C2, C3 landed; every Cloudreach row and card met (Bars A/B clauses → Phase 2 catalog)",
+   "next": "Stops. Open debt outside the queue: owned-carrier Fly (every flight uses Maela's loaner)"
   },
   {
    "lane": "Stormwood (tb/stormwood)",
