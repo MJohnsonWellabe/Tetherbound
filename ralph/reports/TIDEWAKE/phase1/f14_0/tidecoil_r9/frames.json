@@ -1,0 +1,186 @@
+[
+ {
+  "file": "t-000.00.jpg",
+  "tag": "t",
+  "fight_s": 0.0,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 4.88
+ },
+ {
+  "file": "tell-start-000.57.jpg",
+  "tag": "tell-start",
+  "fight_s": 0.57,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 5.39
+ },
+ {
+  "file": "tell-ended-000.85.jpg",
+  "tag": "tell-ended",
+  "fight_s": 0.85,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 5.74
+ },
+ {
+  "file": "hit-000.92.jpg",
+  "tag": "hit",
+  "fight_s": 0.92,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 5.7
+ },
+ {
+  "file": "hit-001.00.jpg",
+  "tag": "hit",
+  "fight_s": 1.0,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 6.64
+ },
+ {
+  "file": "tell-start-001.12.jpg",
+  "tag": "tell-start",
+  "fight_s": 1.12,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 7.3
+ },
+ {
+  "file": "tell-ended-001.40.jpg",
+  "tag": "tell-ended",
+  "fight_s": 1.4,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 8.49
+ },
+ {
+  "file": "tell-start-002.58.jpg",
+  "tag": "tell-start",
+  "fight_s": 2.58,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 8.67
+ },
+ {
+  "file": "tell-ended-002.65.jpg",
+  "tag": "tell-ended",
+  "fight_s": 2.65,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 8.67
+ },
+ {
+  "file": "tell-start-003.68.jpg",
+  "tag": "tell-start",
+  "fight_s": 3.68,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 8.22
+ },
+ {
+  "file": "tell-ended-003.95.jpg",
+  "tag": "tell-ended",
+  "fight_s": 3.95,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.8,
+  "gap_m": 8.04
+ },
+ {
+  "file": "t-004.02.jpg",
+  "tag": "t",
+  "fight_s": 4.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 7.69
+ },
+ {
+  "file": "t-008.02.jpg",
+  "tag": "t",
+  "fight_s": 8.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.35
+ },
+ {
+  "file": "t-012.00.jpg",
+  "tag": "t",
+  "fight_s": 12.0,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 7.51
+ },
+ {
+  "file": "t-016.00.jpg",
+  "tag": "t",
+  "fight_s": 16.0,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.29
+ },
+ {
+  "file": "t-020.00.jpg",
+  "tag": "t",
+  "fight_s": 20.0,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.09
+ },
+ {
+  "file": "t-024.02.jpg",
+  "tag": "t",
+  "fight_s": 24.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.22
+ },
+ {
+  "file": "t-028.02.jpg",
+  "tag": "t",
+  "fight_s": 28.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.56
+ },
+ {
+  "file": "t-032.02.jpg",
+  "tag": "t",
+  "fight_s": 32.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.41
+ },
+ {
+  "file": "t-036.02.jpg",
+  "tag": "t",
+  "fight_s": 36.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.23
+ },
+ {
+  "file": "t-040.02.jpg",
+  "tag": "t",
+  "fight_s": 40.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 8.35
+ },
+ {
+  "file": "t-044.02.jpg",
+  "tag": "t",
+  "fight_s": 44.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 7.95
+ },
+ {
+  "file": "t-048.02.jpg",
+  "tag": "t",
+  "fight_s": 48.02,
+  "opponent": "water_tidecoil",
+  "tell_s": 0.0,
+  "gap_m": 7.65
+ }
+]

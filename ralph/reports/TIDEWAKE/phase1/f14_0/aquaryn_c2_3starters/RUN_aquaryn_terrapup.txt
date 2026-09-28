@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_aquaryn_alpha terrapup MASHER runs=24 win=1.00 med_lead=0.665 med_party=0.160 med_s=95.2 max_s=97.9 lead_faint=0.00 wipe=0.00 max_hit=0.069 tell=[1.25,1.70] stalled=0
+WATER_C2C3 water_aquaryn_alpha terrapup READER runs=24 win=1.00 med_lead=0.194 med_party=0.047 med_s=150.5 max_s=179.6 lead_faint=0.00 wipe=0.00 max_hit=0.068 tell=[1.25,1.70] stalled=0
+WATER_C2C3_PAIR water_aquaryn_alpha terrapup reader/masher median lead cost = 0.194 / 0.665 (ratio 0.29)
+WATER_C2C3 done: 1 rows, 48 runs, 0 errors

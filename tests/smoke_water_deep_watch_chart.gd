@@ -158,7 +158,7 @@ func run() -> void:
 	check(not game.world.flags.has(CHARTED), "Early chart attempt leaves the current uncharted")
 
 	# Step 2: resolve Tidecoil through the director's won-fight terminal handler.
-	var tidecoil_site := Vector3(1483.196, -0.5075, 3427.917)
+	var tidecoil_site := Vector3(1262.0, -0.43, 3377.0)
 	var stand := Vector3.INF
 	for distance: float in [30.0, 40.0, 50.0, 60.0, 70.0, 80.0]:
 		var candidate := tidecoil_site + (Vector3(1350.0, 0.0, 3500.0) - tidecoil_site).normalized() * distance
