@@ -85,3 +85,28 @@ func test_each_captains_sigil_carries_its_own_emblem() -> void:
 	assert_eq((emblem.material_override as StandardMaterial3D).albedo_texture, texture, "with the item's own icon")
 	assert_almost_eq(sigil.scale.x, 1.35, 0.001, "at the configured size")
 	holder.free()
+
+
+## Render af2 (03e7486c): three spheres read as a pale cloud. The Heart is the
+## classic square point with a lobe on each upper edge, and the Warden holds it
+## far enough aside to clear his chest.
+func test_the_heart_is_a_heart_and_held_clear_of_the_warden() -> void:
+	var holder := Node3D.new()
+	AFTERMATH._build_heart(holder, Vector3.ZERO, 1.6)
+	var heart := holder.get_node("Heart") as Node3D
+	var boxes := 0
+	var lobes := 0
+	for child: Node in heart.get_children():
+		var mesh := (child as MeshInstance3D).mesh
+		if mesh is BoxMesh:
+			boxes += 1
+			assert_almost_eq(absf((child as Node3D).rotation.z), deg_to_rad(45.0), 0.001, "the point is a turned square")
+		elif mesh is CylinderMesh:
+			lobes += 1
+			assert_true((child as Node3D).position.y > 0.0, "the lobes sit on the upper edges")
+	assert_eq(boxes, 1, "one point")
+	assert_eq(lobes, 2, "two lobes")
+	assert_almost_eq(heart.scale.x, 1.6, 0.001, "at the configured size")
+	holder.free()
+	var show: Dictionary = AFTERMATH.for_trainer("warden_aldis")["victory_show"]
+	assert_true(absf(float(show["side_m"])) >= 1.2, "held clear of the Warden's chest")

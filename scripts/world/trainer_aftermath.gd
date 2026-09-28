@@ -352,22 +352,32 @@ static func _build_heart(parent: Node3D, at: Vector3, size: float = 1.0) -> void
 	heart.position = at
 	heart.scale = Vector3.ONE * size
 	parent.add_child(heart)
-	# The shrine's placed-heart green, not its white-hot active tint: judge r4
-	# read the active tint as a pale blob beside the key, not a heart.
-	var material := _glow(Color("a9d477"), 0.8)
-	for piece: Array in [[Vector3(-0.08, 0.05, 0.0), Vector3(0.13, 0.12, 0.08), 0.0],
-			[Vector3(0.08, 0.05, 0.0), Vector3(0.13, 0.12, 0.08), 0.0],
-			[Vector3(0.0, -0.065, 0.0), Vector3(0.155, 0.155, 0.085), deg_to_rad(45.0)]]:
-		var mesh := MeshInstance3D.new()
-		var sphere := SphereMesh.new()
-		sphere.radius = 0.5
-		sphere.height = 1.0
-		mesh.mesh = sphere
-		mesh.position = piece[0]
-		mesh.scale = piece[1] * 2.0
-		mesh.rotation.z = piece[2]
-		mesh.material_override = material
-		heart.add_child(mesh)
+	# Judge r4/af2: three spheres (the last merely rotated, so still round) read
+	# as a pale cloud, not a heart. The classic construction instead: a square
+	# turned 45 degrees for the point, and a round lobe on each of its two upper
+	# edges. In a deeper leaf green than the shrine's white-hot active tint.
+	var material := _glow(Color("5fae3c"), 0.55)
+	var side := 0.2
+	var point := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(side, side, 0.09)
+	point.mesh = box
+	point.rotation.z = deg_to_rad(45.0)
+	point.material_override = material
+	heart.add_child(point)
+	var lobe_offset := side / (2.0 * sqrt(2.0))
+	for x: float in [-lobe_offset, lobe_offset]:
+		var lobe := MeshInstance3D.new()
+		var cylinder := CylinderMesh.new()
+		cylinder.top_radius = side * 0.5
+		cylinder.bottom_radius = side * 0.5
+		cylinder.height = 0.09
+		cylinder.radial_segments = 20
+		lobe.mesh = cylinder
+		lobe.rotation.x = deg_to_rad(90.0)
+		lobe.position = Vector3(x, lobe_offset, 0.0)
+		lobe.material_override = material
+		heart.add_child(lobe)
 
 
 ## A big gold key, the old key's own shaft-ring-teeth shape (`key_pickup.gd`),
