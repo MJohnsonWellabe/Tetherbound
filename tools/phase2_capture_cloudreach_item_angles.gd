@@ -24,8 +24,12 @@ func _load_plan() -> bool:
 			var angle := row.duplicate(true)
 			angle["frame_id"] = "%s__h%d" % [str(row.frame_id), heading]
 			angle["view_heading_deg"] = float(heading)
-			angle["stand_offsets_m"] = [3.0, 5.0, 8.0, 12.0, 20.0]
-			angle["stand_laterals_m"] = [0.0, -3.0, 3.0, -8.0, 8.0]
+			if str(row.frame_id) in [IDS[2], IDS[3], IDS[4]]:
+				angle["stand_offsets_m"] = [5.0, 8.0, 12.0, 20.0]
+				angle["stand_laterals_m"] = [4.0, -4.0, 8.0, -8.0]
+			else:
+				angle["stand_offsets_m"] = [3.0, 5.0, 8.0, 12.0, 20.0]
+				angle["stand_laterals_m"] = [0.0, -3.0, 3.0, -8.0, 8.0]
 			angle["min_camera_player_distance_m"] = 1.2
 			selected.append(angle)
 	_planned = selected

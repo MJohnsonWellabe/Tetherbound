@@ -102,7 +102,7 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 433,
+      "frames": 435,
       "categories": {
         "characters": 34,
         "creatures": 98,
@@ -110,10 +110,10 @@
         "route_and_terrain": 39,
         "systems": 94,
         "ui": 12,
-        "world_items": 12
+        "world_items": 14
       },
       "times": {
-        "day": 322,
+        "day": 324,
         "dusk": 57,
         "night": 54
       },
@@ -148,7 +148,30 @@
         "cloudreach__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {},
+      "missing_planned_frames": {
+        "items": [
+          "cloudreach__inventory__pickup__potion_small",
+          "cloudreach__inventory__pickup__potion_small__h0",
+          "cloudreach__inventory__pickup__potion_small__h270",
+          "cloudreach__inventory__pickup__potion_small__h90",
+          "cloudreach__inventory__pickup__rare_candy",
+          "cloudreach__inventory__pickup__rare_candy__h0",
+          "cloudreach__inventory__pickup__rare_candy__h180",
+          "cloudreach__inventory__pickup__rare_candy__h90",
+          "cloudreach__inventory__pickup__stamina_mushroom",
+          "cloudreach__inventory__pickup__stamina_mushroom__h180",
+          "cloudreach__inventory__pickup__stamina_mushroom__h270",
+          "cloudreach__inventory__pickup__stamina_mushroom__h90",
+          "cloudreach__inventory__pickup__tm_aerial_flash",
+          "cloudreach__inventory__pickup__tm_aerial_flash__h180",
+          "cloudreach__inventory__pickup__tm_aerial_flash__h270",
+          "cloudreach__inventory__pickup__tm_aerial_flash__h90",
+          "cloudreach__inventory__pickup__tm_heavenfall",
+          "cloudreach__inventory__pickup__tm_heavenfall__h180",
+          "cloudreach__inventory__pickup__tm_heavenfall__h270",
+          "cloudreach__inventory__pickup__tm_heavenfall__h90"
+        ]
+      },
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },

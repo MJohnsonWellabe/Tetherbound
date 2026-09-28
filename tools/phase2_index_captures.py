@@ -184,6 +184,8 @@ def main() -> None:
             selection_identity = selection_identity.removesuffix("__dialogue")
         if selection_identity.endswith("__defeated"):
             selection_identity = selection_identity.removesuffix("__defeated")
+        if args.capture_script == "phase2_capture_cloudreach_item_stage.gd":
+            selection_identity = selection_identity.rsplit("__", 1)[-1]
         selection = f"--biome={args.biome} --subset={selection_identity} "
         if args.category == "locations":
             selection += f"--times={time} --views={view} "
@@ -219,7 +221,8 @@ def main() -> None:
         writer.writerows(existing[key] for key in sorted(existing))
     sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain", "items": "world_items", "characters": "characters", "weather": "time_and_weather", "systems": "systems"}[args.category]
     build_sheet(repo, base, list(existing.values()), sheet_category)
-    print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
+    indexed = len(args.only_frame) if args.only_frame else len(manifest["frames"])
+    print(f"Indexed {indexed} captures; {len(existing)} total in {csv_path}")
 
 
 def build_sheet(repo: Path, base: Path, rows: list[dict], category: str) -> None:
