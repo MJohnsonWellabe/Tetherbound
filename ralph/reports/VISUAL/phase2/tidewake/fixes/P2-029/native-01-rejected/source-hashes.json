@@ -1,0 +1,37 @@
+{
+  "prepared_head": "45c737025aec8d890270640d9fb2f279e9f7f5f2",
+  "sources": {
+    "data/config/water_creature_rest_visual.json": "938ecb7c8945f806fd61d185cc4c8c4ab5514f1b2c104c9a20a026f4f45e01dd",
+    "tools/phase2_capture_creatures.gd": "b88d4a83a78849e04c952d7395847ce9aa4edaf53a40723fe620b29428d08482",
+    "project.godot": "ae6c6a0e6e4f7d26c441c6075841b40c78225230f63e3017f889634eb55cd2c9",
+    "autoload/game_state.gd": "6ab20b980b6b263d43206cf90da4c0717e57ffc63a701f5f4e232490f6fcffd0",
+    "data/creatures/species.json": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+    "scripts/creatures/creature_body.gd": "7fe136e616945432d4f5f8bfd17e2b1b711bd0f30d4318155196e6906d5105aa",
+    "scripts/creatures/creature_animator.gd": "a23f708c491ff8433d16e33017c0af262db34e54a27a96d2bafa0643a64f7d78",
+    "scripts/creatures/creature_species.gd": "22be0364b448437e0afc075c2141b709fd6ad1be22dfc85d34435290d30591e3",
+    "scripts/creatures/water_rest_pose_visual.gd": "60ce97b7d571e7471ac66a72eb75c3062724a5bec88236b6edcd43b43fe0b8e9",
+    "scripts/characters/render_bounds.gd": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90",
+    "scripts/save/save_game.gd": "5fc4909ea193dc0b3d2d743984e95ef78abdd58bb34df95ff59260e8e2a6e9ca",
+    "scenes/creatures/creature.tscn": "d1096b7a4ea22a67ee1be02bb865045edf08a365c4d56ba5fdee73bd9036085a",
+    "scenes/world/water_archipelago.tscn": "366399beff3d93a6ee958faece7039bfbeaa971c8ccbb0dcb6afacfc24f08a81",
+    "scripts/player/camera_rig.gd": "125363a186a833c09276ddf0adc53db179d429f3a8ee021c5e157e28e9827f7c",
+    "scripts/world/world_look.gd": "cfa597b5ec5cd49922e45687326cb7be6dbf4e3c9bef6d61286f9c17096b116b",
+    "scripts/world/water_world.gd": "3efa0f5360776a9a4b2899441bcaaf78335e92bade4c244814889c92a57280b4",
+    "assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb": "fc6cc22690bff0d14eaabb978699fc39bf350ca987e808fd5b19017f33ef35cc",
+    "assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb": "f5a567fd5b97f3c0334e66a12d3db6ebdf5ae4f4c55467592d24dd6da7d4d04c"
+  },
+  "packs": {
+    "before": "a2ab7d27fe96601622f3708a2c6e2c0d27f84832fa1da337c83c2b769f223472",
+    "after": "07e8e2e41f3093afe99a0683e76fe158f1ece7e7f08a1b09646a6cd082816b59"
+  },
+  "packed_config_sha256": {
+    "before": "938ecb7c8945f806fd61d185cc4c8c4ab5514f1b2c104c9a20a026f4f45e01dd",
+    "after": "ecc7e79c624707bfdde42fd42903772a8f1ab57af6d2cf87b187f670259b9db5"
+  },
+  "pack_entries": [
+    "data/config/water_creature_rest_visual.json"
+  ],
+  "only_variant_difference": "rest config enabled false/true",
+  "required_frames_total": 28,
+  "required_frames_per_boot": 14
+}
