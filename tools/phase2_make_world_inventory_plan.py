@@ -1,4 +1,4 @@
-"""Select one authored Meadows example of each visible item/prop family.
+"""Select one authored example of each visible world-item family.
 
 Run at the pinned capture checkout; the JSON plan is committed with the
 capture script so any frame can be reproduced from its recorded commit.
@@ -63,11 +63,55 @@ def meadows_plan() -> list[dict]:
     return rows
 
 
+def water_plan() -> list[dict]:
+    data = json.loads((ROOT / "data/config/water_pickups.json").read_text(encoding="utf-8"))
+    rows: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    source = "data/config/water_pickups.json"
+    for obj in data["pickups"]:
+        add_family(rows, seen, "pickup", obj["item_id"], obj["position"],
+                   obj["island_id"], source, obj["id"])
+    for obj in data["harvest"]:
+        add_family(rows, seen, "harvest", obj["item_id"], obj["position"],
+                   obj["island_id"], source, obj["id"])
+    return rows
+
+
+def cloudreach_plan() -> list[dict]:
+    data = json.loads((ROOT / "data/config/cloudreach_chapter.json").read_text(encoding="utf-8"))
+    runtime = json.loads((ROOT / "data/config/cloudreach_physical_runtime.json").read_text(encoding="utf-8"))
+    overrides = runtime.get("pickup_overrides", {})
+    rows: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    for obj in data["pickups"]:
+        add_family(rows, seen, "pickup", obj["item_id"], overrides.get(obj["id"], obj["position"]),
+                   obj["region_id"], "data/config/cloudreach_chapter.json", obj["id"])
+    return rows
+
+
+def stormwood_plan() -> list[dict]:
+    rows: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    pickups = json.loads((ROOT / "data/config/stormwood_pickups.json").read_text(encoding="utf-8"))
+    for obj in pickups["pickups"]:
+        add_family(rows, seen, "pickup", obj["item_id"], obj["position"],
+                   obj["region_id"], "data/config/stormwood_pickups.json", obj["id"])
+    harvests = json.loads((ROOT / "data/config/stormwood_harvests.json").read_text(encoding="utf-8"))
+    for obj in harvests["sites"]:
+        add_family(rows, seen, "harvest", obj["item"], obj["position"],
+                   obj["region_id"], "data/config/stormwood_harvests.json", obj["id"])
+    return rows
+
+
 def main() -> None:
     existing = json.loads(DEST.read_text(encoding="utf-8")) if DEST.exists() else {}
     existing["meadows"] = meadows_plan()
+    existing["water"] = water_plan()
+    existing["cloudreach"] = cloudreach_plan()
+    existing["stormwood"] = stormwood_plan()
     DEST.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
-    print(f"Meadows world inventory: {len(existing['meadows'])} families")
+    print("World inventory families: " + ", ".join(
+        f"{biome}={len(rows)}" for biome, rows in existing.items()))
 
 
 if __name__ == "__main__":

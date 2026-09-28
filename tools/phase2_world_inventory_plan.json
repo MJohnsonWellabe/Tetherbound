@@ -1170,5 +1170,1046 @@
       "route": "off",
       "view": "close"
     }
+  ],
+  "water": [
+    {
+      "family_type": "pickup",
+      "slug": "torch",
+      "subject": "torch",
+      "position_xz": [
+        -30.0,
+        -54.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        -144.0,
+        18.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "cloudreach_trail_preserve",
+      "subject": "cloudreach_trail_preserve",
+      "position_xz": [
+        60.0,
+        -156.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:003",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -72.0,
+        132.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:004",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "attack_tonic",
+      "subject": "attack_tonic",
+      "position_xz": [
+        96.0,
+        138.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        -138.0,
+        -108.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:007",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        -48.0,
+        -168.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:009",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        162.0,
+        54.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:010",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_prime",
+      "subject": "orb_prime",
+      "position_xz": [
+        -72.0,
+        54.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:014",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "swift_tonic",
+      "subject": "swift_tonic",
+      "position_xz": [
+        174.0,
+        -6.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:020",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "skill_candy_i",
+      "subject": "skill_candy_i",
+      "position_xz": [
+        66.0,
+        374.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:reedhaven:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "hide_boots",
+      "subject": "hide_boots",
+      "position_xz": [
+        -30.0,
+        548.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:reedhaven:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_greater",
+      "subject": "orb_greater",
+      "position_xz": [
+        90.0,
+        578.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:reedhaven:pickup:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_aqua_shot",
+      "subject": "tm_aqua_shot",
+      "position_xz": [
+        594.0,
+        654.0
+      ],
+      "band": "brine_steps",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:brine_steps:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "travel_pack",
+      "subject": "travel_pack",
+      "position_xz": [
+        302.0,
+        1210.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:shellwatch:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "berries",
+      "subject": "berries",
+      "position_xz": [
+        290.0,
+        1300.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:shellwatch:pickup:012",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "skill_candy_ii",
+      "subject": "skill_candy_ii",
+      "position_xz": [
+        562.0,
+        1680.0
+      ],
+      "band": "tidal_cradle",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:tidal_cradle:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_tidal_burst",
+      "subject": "tm_tidal_burst",
+      "position_xz": [
+        6.0,
+        2124.0
+      ],
+      "band": "salt_crown",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:salt_crown:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        1012.0,
+        2900.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:sluice_isle:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_riptide_lance",
+      "subject": "tm_riptide_lance",
+      "position_xz": [
+        754.0,
+        2708.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:sluice_isle:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "skill_candy_iii",
+      "subject": "skill_candy_iii",
+      "position_xz": [
+        1409.751,
+        3550.137
+      ],
+      "band": "deep_watch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:deep_watch:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_leviathan_surge",
+      "subject": "tm_leviathan_surge",
+      "position_xz": [
+        1464.0,
+        3410.0
+      ],
+      "band": "deep_watch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:deep_watch:pickup:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "reed_fiber",
+      "subject": "reed_fiber",
+      "position_xz": [
+        18.0,
+        -18.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "driftwood",
+      "subject": "driftwood",
+      "position_xz": [
+        -12.0,
+        66.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:003",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "reef_stone",
+      "subject": "reef_stone",
+      "position_xz": [
+        72.0,
+        -24.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "tide_bloom",
+      "subject": "tide_bloom",
+      "position_xz": [
+        -30.0,
+        -6.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:010",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "sluice_metal",
+      "subject": "sluice_metal",
+      "position_xz": [
+        302.0,
+        1018.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:shellwatch:harvest:007",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
+  ],
+  "cloudreach": [
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        -281.5,
+        509.5
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_lower_good_candy",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -124,
+        704
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_lower_potion",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        -320,
+        1040
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_lower_revive",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        -1004,
+        1315
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_west_great_candy",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        346,
+        1945
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_arch_large_potion",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_wind_blade",
+      "subject": "tm_wind_blade",
+      "position_xz": [
+        -1204,
+        1695
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_west_wind_tm",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stamina_mushroom",
+      "subject": "stamina_mushroom",
+      "position_xz": [
+        409,
+        3245
+      ],
+      "band": "windscar_ravine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_aerie_stamina",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        1116,
+        2946
+      ],
+      "band": "high_roost_sky_shrine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_shrine_rare_candy",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_heavenfall",
+      "subject": "tm_heavenfall",
+      "position_xz": [
+        895,
+        2705
+      ],
+      "band": "high_roost_sky_shrine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_perches_heavenfall",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_aerial_flash",
+      "subject": "tm_aerial_flash",
+      "position_xz": [
+        -755,
+        4565
+      ],
+      "band": "upper_cloudreach",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_upper_aerial_tm",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "speed_mushroom",
+      "subject": "speed_mushroom",
+      "position_xz": [
+        300.9,
+        654.4
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_recovery_gate_detour_speed_01",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "wild_mushroom",
+      "subject": "wild_mushroom",
+      "position_xz": [
+        -939,
+        1292.4
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_recovery_broken_detour_wild_01",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
+  ],
+  "stormwood": [
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        -300,
+        180
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_01",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        -166.1,
+        2696.6
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_09",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        -1118.8,
+        3282.1
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_12",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -650,
+        3550
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_13",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        784,
+        2566
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_112",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        758,
+        2732
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_130",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "speed_mushroom",
+      "subject": "speed_mushroom",
+      "position_xz": [
+        -1100,
+        4200
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_154",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stamina_mushroom",
+      "subject": "stamina_mushroom",
+      "position_xz": [
+        -378,
+        4284
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_162",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "wild_mushroom",
+      "subject": "wild_mushroom",
+      "position_xz": [
+        -282,
+        4248
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_170",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "swift_tonic",
+      "subject": "swift_tonic",
+      "position_xz": [
+        -126,
+        5236
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_178",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "attack_tonic",
+      "subject": "attack_tonic",
+      "position_xz": [
+        -78,
+        5568
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_182",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stoneguard_brew",
+      "subject": "stoneguard_brew",
+      "position_xz": [
+        -30,
+        5200
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_186",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_basic",
+      "subject": "orb_basic",
+      "position_xz": [
+        18,
+        5532
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_190",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_greater",
+      "subject": "orb_greater",
+      "position_xz": [
+        -160,
+        5330
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_196",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_prime",
+      "subject": "orb_prime",
+      "position_xz": [
+        -112,
+        5662
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_200",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_static_snap",
+      "subject": "tm_static_snap",
+      "position_xz": [
+        -800,
+        1900
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_202",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_voltaic_whip",
+      "subject": "tm_voltaic_whip",
+      "position_xz": [
+        620,
+        2600
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_203",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_thunder_break",
+      "subject": "tm_thunder_break",
+      "position_xz": [
+        -900,
+        4400
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_204",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_stormfall",
+      "subject": "tm_stormfall",
+      "position_xz": [
+        73,
+        5377
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_205",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "insulated_leggings",
+      "subject": "insulated_leggings",
+      "position_xz": [
+        -290,
+        5460
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_206",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "insulated_boots",
+      "subject": "insulated_boots",
+      "position_xz": [
+        -153,
+        5543
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_207",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rootgate_release_key",
+      "subject": "rootgate_release_key",
+      "position_xz": [
+        -16,
+        5626
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_208",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "dynamo_core_key",
+      "subject": "dynamo_core_key",
+      "position_xz": [
+        121,
+        5009
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_209",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "spark_of_stormwood",
+      "subject": "spark_of_stormwood",
+      "position_xz": [
+        -242,
+        5092
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_210",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "conductor_vine",
+      "subject": "conductor_vine",
+      "position_xz": [
+        -1850,
+        220
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_cinder_verge_001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "glowmoss",
+      "subject": "glowmoss",
+      "position_xz": [
+        -1725,
+        220
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_cinder_verge_002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "stormglass",
+      "subject": "stormglass",
+      "position_xz": [
+        -1600,
+        220
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_cinder_verge_003",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "voltcap",
+      "subject": "voltcap",
+      "position_xz": [
+        -1720,
+        1270
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_glowmoss_hollows_042",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "stormglass_crown",
+      "subject": "stormglass_crown",
+      "position_xz": [
+        -1750,
+        2380
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_conductor_run_071",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "thunderwood",
+      "subject": "thunderwood",
+      "position_xz": [
+        -1750,
+        2510
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_conductor_run_076",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
   ]
 }
