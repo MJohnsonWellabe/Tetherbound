@@ -1,0 +1,23 @@
+MEADOWS_C2C3 warrens_guardian ripplet MASHER L9 runs=24 win=1.00 med_lead=0.290 lead_faint=0.00 wipe=0.00 max_hit=0.113 tell=[0.85,1.10] diver_tell=-1.00 med_s=17.1 stalled=0
+MEADOWS_C2C3 warrens_guardian ripplet READER L9 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.10] diver_tell=-1.00 med_s=20.7 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian ripplet PASS
+MEADOWS_C2C3 relay_captain ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.277 tell=[0.80,0.90] diver_tell=-1.00 med_s=87.1 stalled=0
+MEADOWS_C2C3 relay_captain ripplet READER L12 runs=24 win=1.00 med_lead=0.739 lead_faint=0.00 wipe=0.00 max_hit=0.095 tell=[0.80,0.90] diver_tell=-1.00 med_s=147.1 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain ripplet PASS
+MEADOWS_C2C3 captain_riverwatch ripplet MASHER L12 runs=24 win=0.46 med_lead=1.000 lead_faint=1.00 wipe=0.54 max_hit=0.446 tell=[0.80,0.90] diver_tell=-1.00 med_s=95.9 stalled=0
+MEADOWS_C2C3 captain_riverwatch ripplet READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.90] diver_tell=-1.00 med_s=142.0 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch ripplet PASS
+MEADOWS_C2C3 captain_field ripplet MASHER L15 runs=24 win=0.79 med_lead=1.000 lead_faint=1.00 wipe=0.21 max_hit=0.444 tell=[0.80,0.90] diver_tell=-1.00 med_s=101.4 stalled=0
+MEADOWS_C2C3 captain_field ripplet READER L15 runs=24 win=1.00 med_lead=0.806 lead_faint=0.12 wipe=0.00 max_hit=0.088 tell=[0.80,0.90] diver_tell=-1.00 med_s=161.2 stalled=0
+MEADOWS_C2C3_VERDICT captain_field ripplet PASS
+MEADOWS_C2C3 captain_ridge ripplet MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.420 tell=[0.90,0.90] diver_tell=0.40 med_s=86.6 stalled=0
+MEADOWS_C2C3 captain_ridge ripplet READER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.100 tell=[0.90,0.90] diver_tell=0.40 med_s=165.6 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge ripplet PASS
+MEADOWS_C2C3 stronghold_elite ripplet MASHER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.361 tell=[0.85,0.90] diver_tell=0.40 med_s=104.7 stalled=0
+MEADOWS_C2C3 stronghold_elite ripplet READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.095 tell=[0.85,0.90] diver_tell=0.40 med_s=213.8 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite ripplet PASS
+MEADOWS_C2C3 warden_aldis ripplet MASHER L17 runs=24 win=0.88 med_lead=1.000 lead_faint=1.00 wipe=0.12 max_hit=0.429 tell=[0.80,1.10] diver_tell=0.40 med_s=105.1 stalled=0
+MEADOWS_C2C3 warden_aldis ripplet READER L17 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.108 tell=[0.80,1.10] diver_tell=0.40 med_s=173.7 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis ripplet PASS
+MEADOWS_C2C3_CHAPTER ripplet masher_loses_a_named_fight=0.68 PASS
+MEADOWS_C2C3 done: 7 rows, 0 failing rows, 336 runs, 0 errors
