@@ -1,3 +1,2 @@
-hall alpha decline receipt: {"closest_alpha_m":44.4,"closest_pack_m":44.4,"other_road_fights":[],"pack_members":3}
+hall alpha decline receipt: {"closest_alpha_m":39.0,"closest_pack_m":39.0,"other_road_fights":[],"pack_members":3}
 hall alpha decline: OK -- road input walked the spine past the Hall pack without a fight
-exit=0 at 7e8b17cf7 (tests/smoke_alpha_pins.gd --hall-decline, local headless)

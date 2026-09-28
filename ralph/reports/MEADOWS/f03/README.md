@@ -17,7 +17,7 @@ Each witness is `tests/capture_activity_lures.gd` driving ordinary input only: m
 | Juno | 36413144937 (122a8efb) `walks_122a8efb/juno` | S07-exit-band4 | PASS |
 | Herd (night) | 36426783755 (8fc88f20) `herd_night_walk_8fc88f20` | S04-exit-pose-on-road | PASS, first seen 63 m on the road at 23:31 |
 | Vault | 36418251618 (36d88a84) `vault_cleared_36d88a84` | S06-exit-band3 | PASS (prompt "Engage Elder Trailpup") |
-| Hall | 36422882434 (14e917a3) `hall_south_14e917a3` | S08-exit-band4 | PASS, first seen 141 m and readable 112 m on the road |
+| Hall | 36437653848 (28d5928b) `hall_south_28d5928b` (earlier site: 36422882434 `hall_south_14e917a3`) | S08-exit-band4 | PASS, first seen 109 m and readable 109 m (25 px) on the road |
 
 - **Vault, before the guardian:** `walks_122a8efb/vault` is from the uncleared save (a disclosed derived fixture). It shows the guardian and the lit vault door from the den entry, then GAPs behind the required guardian. The harness only runs from fights.
 - **The saves:** the lure saves are Gate F exits and derived fixtures (`tests/fixtures/f03_lure_saves/README.md`), not earned play. They are allowed when disclosed under the relaxed-proof rule (STATE §1.1).
@@ -30,9 +30,12 @@ Each witness is `tests/capture_activity_lures.gd` driving ordinary input only: m
 
 ## 4. The Hall pack on a road sightline (nameplate depth test stays on)
 
-- **The move:** band5 spawns order 5001 moves to (-45,7300), with an 8 m disc and 5 m wander. It is west of approach pylon 8 and scores 13 hard-clear road samples on `tests/probe_lure_road_visibility.gd`. `no_depth_test` stays false.
-- **Walk from the south:** `hall_south_14e917a3`. Judge r13 finds the alpha's body "in the open field right beside the road path … unobstructed by any structure or terrain … in direct line of sight from the road" at 58 m (hall_13). The name reads from 112 m.
-- **Optionality:** `smoke_alpha_pins.gd --hall-decline` OK. The closest pack member is 44.4 m from the road walker, and no fight starts (`hall_decline_smoke.txt`).
+- **Site:** band5 spawns order 5001 now centres on (-36,7290), with its authored 18 m disc and default wander. The envelope still reaches the Hall spine, so `tests/test_meadows_route_ambush_spacing.gd` passes for the authored world and 200 seeds.
+- **New flag:** `alpha.stand_at_centre` puts the alpha itself on that centre. In the first two re-walks the alpha had landed 16 m from the probed spot, or behind approach pylon 8.
+- **Sightline:** the centre is west of the pylon, 20 degrees or more off every walked sightline, inside the probe's clear band. `no_depth_test` stays false.
+- **Walk from the south:** `hall_south_28d5928b`. The name and the alpha's warm-lit body read from the road at 103 m (hall_11–13). The alpha is under its name at 30 m (hall_16), and the pack is present at the prompt (hall_17).
+- **The earlier 14e917a3 walk:** judged in r13 and the re-check, at (-45,7300) with an 8 m disc. It showed the body in open ground from the road at 58 m and 48 m.
+- **Optionality:** `smoke_alpha_pins.gd --hall-decline` OK. The closest pack member is 39.0 m from the road walker and no fight starts (`hall_decline_smoke.txt`).
 
 ## 5. Judges this round
 
