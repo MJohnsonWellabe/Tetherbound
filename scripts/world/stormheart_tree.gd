@@ -12,11 +12,13 @@ const RAMP_SEGMENTS := 384
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
+const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
 var _metal: StandardMaterial3D
 var _bark: StandardMaterial3D
+var _cut_wood: ShaderMaterial
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -38,8 +40,7 @@ func build() -> void:
 	_ramp("CrownStair",Vector3(34,CORE_HEIGHT,0),Vector3(-16,CORE_HEIGHT+24,0),6)
 	if simulation_only:
 		return
-	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH))
-	_presentation = presentation if presentation is Dictionary else {}
+	_presentation = _read_presentation()
 	_bark = _wood.duplicate() as StandardMaterial3D
 	_bark.albedo_color = Color("bca58a")
 	_bark.uv1_scale = Vector3.ONE
@@ -49,6 +50,18 @@ func build() -> void:
 	_ascent_dressing()
 	_ascent_wayfinding()
 	_energy_seam()
+	if _presentation_enabled("built_detail"):
+		_built_detail()
+
+
+func _presentation_enabled(key: String) -> bool:
+	var settings: Dictionary = _presentation.get(key, {})
+	return bool(_presentation.get("enabled", false)) and bool(settings.get("enabled", false))
+
+
+func _read_presentation() -> Dictionary:
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH))
+	return presentation if presentation is Dictionary else {}
 
 func core_anchor() -> Vector3:
 	return global_position+Vector3(0,CORE_HEIGHT+0.2,-25)
@@ -155,7 +168,7 @@ func _surface(id: String,vertices: PackedVector3Array,uv: PackedVector2Array) ->
 	if not simulation_only:
 		var visual := MeshInstance3D.new()
 		visual.mesh = mesh
-		visual.material_override = _wood
+		visual.material_override = _cut_wood if _cut_wood != null else _wood
 		body.add_child(visual)
 
 func _instances(parent: Node3D,poses: Array[Transform3D],material: Material) -> void:
@@ -170,7 +183,8 @@ func _instances(parent: Node3D,poses: Array[Transform3D],material: Material) -> 
 	visual.material_override = material
 	parent.add_child(visual)
 
-func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leaves_only: bool = false) -> void:
+func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leaves_only: bool = false,
+		shape: Vector3 = Vector3.ONE) -> void:
 	var model := (load("res://assets/environment/stylized_nature/"+file) as PackedScene).instantiate() as Node3D
 	if leaves_only:
 		_leaf_surfaces(model)
@@ -188,8 +202,8 @@ func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leav
 	pivot.position = at
 	pivot.rotation.y = yaw
 	add_child(pivot)
-	model.scale *= factor
-	model.position -= Vector3(box.get_center().x,box.position.y,box.get_center().z)*factor
+	model.scale *= factor * shape
+	model.position -= Vector3(box.get_center().x,box.position.y,box.get_center().z)*factor*shape
 	_green_canopy(model)
 	pivot.add_child(model)
 
@@ -199,6 +213,9 @@ func _fit_tree(id: String,file: String,at: Vector3,height: float,yaw: float,leav
 ## full 44 m arena/deck, while the southern split frames the charged heart from the
 ## authored approach. Separate curved lobes replace four inflated stock trunks.
 func _split_bark_shell() -> void:
+	if _presentation_enabled("ancient_trunk"):
+		_ancient_bark_shell()
+		return
 	var heights := [0.0,12.0,35.0,70.0,110.0,150.0,185.0,220.0,250.0]
 	for side in 2:
 		var vertices := PackedVector3Array()
@@ -223,6 +240,64 @@ func _split_bark_shell() -> void:
 					_trunk_point(angle,heights[band],false),_trunk_point(angle,heights[band],true),
 					_trunk_point(angle,heights[band+1],true),_trunk_point(angle,heights[band+1],false))
 		_bark_visual("EastLivingTrunk" if side == 0 else "WestLivingTrunk",vertices,normals,uvs)
+
+
+## The inner wall retains its physical-route clearance. The outside has broad
+## twisting buttresses and a tapering waist, rather than a constant cylinder.
+## Dense longitudinal rings and smooth surface normals carry the ridges across
+## old band boundaries; the angular UV coordinate never wraps at atan2's seam.
+func _ancient_bark_shell() -> void:
+	var settings: Dictionary = _presentation.get("ancient_trunk", {})
+	var repeat_m := maxf(0.5, float(settings.get("bark_repeat_m", 4.0)))
+	for side in 2:
+		var vertices := PackedVector3Array()
+		var normals := PackedVector3Array()
+		var uvs := PackedVector2Array()
+		var start := -PI*0.5+0.27 if side == 0 else PI*0.5+0.14
+		var end := PI*0.5-0.14 if side == 0 else PI*1.5-0.27
+		for band in 50:
+			var low := float(band)*5.0
+			var high := float(band+1)*5.0
+			for panel in 64:
+				var a := lerpf(start,end,float(panel)/64.0)
+				var b := lerpf(start,end,float(panel+1)/64.0)
+				for inner in [false,true]:
+					var corners: Array[Vector2] = [Vector2(a,low),Vector2(b,low),Vector2(b,high),Vector2(a,high)]
+					var order := [0,2,1,0,3,2] if inner else [0,1,2,0,2,3]
+					for index: int in order:
+						var coordinate := corners[index]
+						vertices.append(_ancient_trunk_point(coordinate.x,coordinate.y,inner))
+						var across := _ancient_trunk_point(coordinate.x+0.001,coordinate.y,inner)-_ancient_trunk_point(coordinate.x-0.001,coordinate.y,inner)
+						var up := _ancient_trunk_point(coordinate.x,coordinate.y+0.02,inner)-_ancient_trunk_point(coordinate.x,coordinate.y-0.02,inner)
+						var normal := up.cross(across).normalized()
+						normals.append(-normal if inner else normal)
+						uvs.append(Vector2(coordinate.x*58.0/repeat_m,coordinate.y/repeat_m))
+			for angle in [start,end]:
+				_bark_quad(vertices,normals,uvs,_ancient_trunk_point(angle,low,false),
+					_ancient_trunk_point(angle,low,true),_ancient_trunk_point(angle,high,true),
+					_ancient_trunk_point(angle,high,false),angle == end)
+		_bark_visual("EastLivingTrunk" if side == 0 else "WestLivingTrunk",vertices,normals,uvs)
+
+
+func _ancient_trunk_point(angle: float,height: float,inner: bool) -> Vector3:
+	# Below the upper crown this is exactly the existing inner clearance.
+	if inner:
+		var inside := _trunk_point(angle,height,true)
+		inside.y += smoothstep(185.0,250.0,height)*(sin(angle*3.0+0.8)*8.0+sin(angle*7.0)*4.0)
+		return inside
+	var settings: Dictionary = _presentation.get("ancient_trunk", {})
+	var depth := clampf(float(settings.get("lobe_depth_m",8.0)),0.0,12.0)
+	var taper := smoothstep(185.0,250.0,height)
+	var radius := lerpf(60.0-8.0*smoothstep(30.0,170.0,height),24.0,taper)
+	var roots := 16.0*exp(-maxf(height,0.0)/24.0)
+	var ridges := sin(angle*3.0+height*0.009)+0.45*sin(angle*7.0-height*0.015)
+	# Outer geometry never crosses the protected inner skin.
+	radius = maxf(radius+roots+ridges*depth*(1.0-taper*0.4),lerpf(51.0,19.0,taper))
+	var point := Vector3(cos(angle)*radius+taper*9.0,height,sin(angle)*radius+taper*6.0)
+	point.y += taper*(sin(angle*3.0+0.8)*8.0+sin(angle*7.0)*4.0)
+	if height == 0.0 and bool(_presentation.get("ground_shell_base",false)):
+		point.y = minf(point.y,_root_ground(point)-maxf(0.0,float(_presentation.get("bark_embed_m",0.5))))
+	return point
 
 
 func _trunk_point(angle: float,height: float,inner: bool) -> Vector3:
@@ -313,6 +388,10 @@ func _root_ground(at: Vector3) -> float:
 
 
 func _living_crown() -> void:
+	var branching: Dictionary = _presentation.get("branching_crown", {})
+	if bool(_presentation.get("enabled", false)) and bool(branching.get("enabled", false)):
+		_branching_crown(branching)
+		return
 	var tips: Array[Vector3] = [Vector3(-69,163,3),Vector3(77,188,15),Vector3(-62,222,33),
 		Vector3(58,235,-9),Vector3(2,267,23),Vector3(-20,209,-43)]
 	for i in tips.size():
@@ -321,6 +400,90 @@ func _living_crown() -> void:
 		_wood_limb("CrownBough%d"%i,[root,root.lerp(tip,0.48)-Vector3.UP*10,tip],[10.0,7.0,2.4])
 		_fit_tree("LivingCanopy%d"%i,"TwistedTree_2.gltf" if i%2 else "TwistedTree_4.gltf",
 			tip-Vector3.UP*8,43.0+float(i%3)*7.0,float(i)*1.7,true)
+
+
+## Board A/B: branches carry overlapping crown masses at several heights.
+## These visual limbs remain outside the playable lower trunk; their installed
+## leaf surfaces add no bodies, routes, harvest points or collision.
+func _branching_crown(settings: Dictionary) -> void:
+	var shape_data: Array = settings.get("leaf_shape", [1.35, 0.85, 1.25])
+	var shape := Vector3(float(shape_data[0]), float(shape_data[1]), float(shape_data[2]))
+	var repeat_m := maxf(0.5, float(settings.get("bark_repeat_m", 6.0)))
+	var index := 0
+	for branch: Dictionary in settings.get("branches", []):
+		var points: Array[Vector3] = []
+		var radii: Array[float] = []
+		for point: Array in branch.points:
+			points.append(Vector3(float(point[0]), float(point[1]), float(point[2])))
+		for radius: float in branch.radii:
+			radii.append(radius)
+		var id := str(branch.id)
+		_crown_limb("BranchCrown" + id, points, radii, repeat_m)
+		for leaf_index in branch.leaves.size():
+			var leaf: Dictionary = branch.leaves[leaf_index]
+			var at := Vector3(float(leaf.at[0]), float(leaf.at[1]), float(leaf.at[2]))
+			if leaf_index > 0:
+				var fork := points[points.size() - 2]
+				var tip := at + Vector3.UP * 12.0
+				_crown_limb("BranchFork" + id + str(leaf_index),
+					[fork, fork.lerp(tip, 0.5) - Vector3.UP * 3.0, tip], [5.0, 3.0, 0.9], repeat_m)
+			_fit_tree("BranchLeaves" + id + str(leaf_index),
+				"TwistedTree_2.gltf" if index % 2 else "TwistedTree_4.gltf",
+				at, float(leaf.height), float(leaf.yaw), true, shape)
+			index += 1
+
+
+## Continuous rings follow a curved centreline, avoiding the open joints of
+## independently oriented straight segments. UVs follow the limb in metres.
+func _crown_limb(id: String, controls: Array[Vector3], radii: Array[float], repeat_m: float) -> void:
+	var centres: Array[Vector3] = []
+	var widths: Array[float] = []
+	for segment in controls.size() - 1:
+		for step in 8:
+			var t := float(step) / 8.0
+			centres.append(controls[segment].cubic_interpolate(controls[segment + 1],
+				controls[maxi(0, segment - 1)], controls[mini(controls.size() - 1, segment + 2)], t))
+			widths.append(lerpf(radii[segment], radii[segment + 1], smoothstep(0.0, 1.0, t)))
+	centres.append(controls.back())
+	widths.append(radii.back())
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var rings: Array[PackedVector3Array] = []
+	var radial_normals: Array[PackedVector3Array] = []
+	var lengths: Array[float] = [0.0]
+	var previous_side := Vector3.ZERO
+	for ring in centres.size():
+		var tangent := (centres[mini(ring + 1, centres.size() - 1)] - centres[maxi(0, ring - 1)]).normalized()
+		# Carry the prior frame through vertical bends instead of flipping it
+		# when a branch changes which side of world-up its tangent lies on.
+		var side := (previous_side - tangent * previous_side.dot(tangent)).normalized()
+		if side.length_squared() < 0.01:
+			side = tangent.cross(Vector3.UP).normalized()
+		if side.length_squared() < 0.01:
+			side = Vector3.RIGHT
+		previous_side = side
+		var up := side.cross(tangent).normalized()
+		var positions := PackedVector3Array()
+		var directions := PackedVector3Array()
+		for face in 13:
+			var angle := TAU * float(face) / 12.0
+			var direction := side * cos(angle) + up * sin(angle)
+			positions.append(centres[ring] + direction * widths[ring])
+			directions.append(direction)
+		rings.append(positions)
+		radial_normals.append(directions)
+		if ring > 0:
+			lengths.append(lengths.back() + centres[ring].distance_to(centres[ring - 1]))
+	for ring in centres.size() - 1:
+		for face in 12:
+			for corner: Vector2i in [Vector2i(ring, face), Vector2i(ring, face + 1), Vector2i(ring + 1, face + 1),
+					Vector2i(ring, face), Vector2i(ring + 1, face + 1), Vector2i(ring + 1, face)]:
+				vertices.append(rings[corner.x][corner.y])
+				normals.append(radial_normals[corner.x][corner.y])
+				uvs.append(Vector2(float(corner.y) / 12.0 * TAU * widths[corner.x] / repeat_m,
+					lengths[corner.x] / repeat_m))
+	_bark_visual(id, vertices, normals, uvs)
 
 
 func _leaf_surfaces(node: Node) -> void:
@@ -437,6 +600,114 @@ func _visual_box(parent: Node3D, id: String, at: Vector3, size: Vector3,
 	visual.position = at
 	parent.add_child(visual)
 	return visual
+
+
+## All construction here dresses existing floors/rails. Braces hang below the
+## decks, pickets lie inside the existing rail collision, and cloth hangs on
+## the outside of the spiral. It adds no platform or physical blocker.
+func _built_detail() -> void:
+	var settings: Dictionary = _presentation.get("built_detail", {})
+	var wood := ShaderMaterial.new()
+	wood.shader = CUT_WOOD_SHADER
+	wood.set_shader_parameter("wood_atlas",load("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"))
+	wood.set_shader_parameter("wood_tint",Color(str(settings.get("wood_tint","#c4aa87"))))
+	_cut_wood = wood
+	for visual: MeshInstance3D in find_children("*","MeshInstance3D",true,false):
+		if visual.material_override == _wood:
+			visual.material_override = wood
+	for visual: MultiMeshInstance3D in find_children("*","MultiMeshInstance3D",true,false):
+		if visual.material_override == _wood:
+			visual.material_override = wood
+	var detail := Node3D.new()
+	detail.name = "BuiltDetail"
+	add_child(detail)
+	var fascia: Array[Transform3D] = []
+	var brackets: Array[Transform3D] = []
+	for tier: Vector2 in [Vector2(6.0,44.0),Vector2(CORE_HEIGHT,44.0),Vector2(CORE_HEIGHT+24.0,18.0)]:
+		for index in 64:
+			# Same opening as the physical core floor, no trim across its ramp.
+			if tier.x == CORE_HEIGHT and index >= 43 and index < 48:
+				continue
+			var a := float(index)*TAU/64.0
+			var b := float(index+1)*TAU/64.0
+			var p := Vector3(cos(a)*tier.y,tier.x-0.25,sin(a)*tier.y)
+			var q := Vector3(cos(b)*tier.y,tier.x-0.25,sin(b)*tier.y)
+			fascia.append(_beam_pose(p,q,0.35,0.45))
+			if index%4 == 0:
+				var ray := Vector3(cos(a),0,sin(a))
+				var low := maxf(0.0,tier.x-8.0)
+				brackets.append(_beam_pose(ray*(tier.y+2.0)+Vector3.UP*low,
+					ray*(tier.y-1.0)+Vector3.UP*(tier.x-1.4),0.7,0.7))
+	_instances(detail,fascia,wood)
+	_instances(detail,brackets,wood)
+	var pickets: Array[Transform3D] = []
+	for index in 192:
+		var at := ascent_point(float(index)/192.0)
+		var radial := Vector3(at.x,0,at.z).normalized()
+		for side in [-1.0,1.0]:
+			pickets.append(Transform3D(Basis.IDENTITY.scaled(Vector3(0.14,1.18,0.14)),
+				at+radial*(RAMP_WIDTH*0.5*side)+Vector3.UP*0.65))
+	_instances(detail,pickets,wood)
+	var cloth := StandardMaterial3D.new()
+	cloth.albedo_color = Color(str(settings.get("banner_colour","#183e65")))
+	cloth.roughness = 0.96
+	cloth.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var trim := StandardMaterial3D.new()
+	trim.albedo_color = Color(str(settings.get("banner_trim","#d5b466")))
+	trim.roughness = 0.72
+	for index in 8:
+		var at := ascent_point((float(index)/2.0+0.16)/RAMP_TURNS)
+		var radial := Vector3(at.x,0,at.z).normalized()
+		_hanging_banner(detail,at+radial*6.2-Vector3.UP*0.35,cloth,trim,index)
+
+
+func _beam_pose(start: Vector3,finish: Vector3,width: float,height: float) -> Transform3D:
+	var vector := finish-start
+	return Transform3D(Basis.looking_at(vector.normalized()).scaled_local(Vector3(width,height,vector.length())),(start+finish)*0.5)
+
+
+func _banner_point(u: float,v: float) -> Vector3:
+	return Vector3((u-0.5)*3.2,-v*(6.6-absf(u-0.5)*2.0),
+		sin(u*PI)*0.12+sin(v*5.0+u*2.0)*0.08*v)
+
+
+func _hanging_banner(parent: Node3D,at: Vector3,cloth: Material,trim: Material,index: int) -> void:
+	var holder := Node3D.new()
+	holder.name = "HangingBanner%02d"%index
+	holder.position = at
+	holder.rotation.y = atan2(at.x,at.z)
+	parent.add_child(holder)
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for row in 16:
+		for column in 8:
+			for corner: Vector2i in [Vector2i(0,0),Vector2i(1,0),Vector2i(1,1),Vector2i(0,0),Vector2i(1,1),Vector2i(0,1)]:
+				var uv := Vector2(float(column+corner.x)/8.0,float(row+corner.y)/16.0)
+				surface.set_uv(uv)
+				surface.add_vertex(_banner_point(uv.x,uv.y))
+	surface.generate_normals()
+	var visual := MeshInstance3D.new()
+	visual.name = "ShapedCloth"
+	visual.mesh = surface.commit()
+	visual.material_override = cloth
+	holder.add_child(visual)
+	_visual_box(holder,"ClothRod",Vector3(0,0.12,0),Vector3(3.65,0.16,0.16),_metal)
+	for side in [-1.0,1.0]:
+		_visual_beam(holder,"RodBracket",Vector3(side*1.1,0.35,-2.2),Vector3(side*1.1,0.12,0),0.16,_metal)
+	var trim_poses: Array[Transform3D] = []
+	for edge in [0.04,0.96]:
+		for row in 16:
+			trim_poses.append(_beam_pose(_banner_point(edge,float(row)/16.0),
+				_banner_point(edge,float(row+1)/16.0),0.075,0.075))
+	# A raised lightning embroidery follows the cloth's curve on both sides.
+	var lightning: Array[Vector2] = [Vector2(0.65,0.22),Vector2(0.38,0.48),Vector2(0.62,0.46),Vector2(0.38,0.75)]
+	for side in [-1.0,1.0]:
+		for segment in lightning.size()-1:
+			var a := lightning[segment]
+			var b := lightning[segment+1]
+			trim_poses.append(_beam_pose(_banner_point(a.x,a.y)+Vector3.FORWARD*0.055*side,
+				_banner_point(b.x,b.y)+Vector3.FORWARD*0.055*side,0.14,0.14))
+	_instances(holder,trim_poses,trim)
 
 
 func _visual_beam(parent: Node3D, id: String, start: Vector3, finish: Vector3,

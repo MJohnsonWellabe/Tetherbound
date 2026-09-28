@@ -1,0 +1,13 @@
+T2 device profile: computer capture, no Ally hardware. No handheld/Ally settings profile exists in config (hud_scale.gd authors at the Ally's 1920x1080), so defaults were used.
+
+explore/: tools/art_pipeline/capture_tidewake_matrix.gd --only=dock-reedhaven-arrival,dock-shellwatch-jetty,current-cradle-salt-crown,current-sluice-veilfall,veilfall-mid-salt-crown at main 1e0ddd39. xvfb-run 1920x1080x24, --rendering-driver opengl3 --resolution 1920x1080. Production camera and HUD, day and night.
+
+fight/: tests/capture_tidewake_named_fights.gd --wild=aquaryn --approach=shellwatch_to_tidal_cradle_arrival --pilot=READER --level=43 --interval=6 --tells-per-opponent=2 --max-frames=10 at 1920x1080 opengl3.
+- The fight is reached by a stick walk from the Tidal Cradle landing and the Challenge prompt.
+- Shortcuts: a granted L43 five, and the READER harness pilot.
+
+Frames are PNG converted to JPG at q88.
+
+_sheet_7inch.jpg: each cell is 586x330, a 7.0" 16:9 panel (155 mm wide) at 96 dpi.
+
+Adapter: llvmpipe; Godot 4.7-stable, Compatibility renderer.

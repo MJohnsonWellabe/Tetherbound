@@ -584,6 +584,24 @@ func _hold_and_press(body: Node3D, prompt: Node3D, stance: Vector2, label: Strin
 					_note("%s was consumed by the press" % label)
 					return true
 				if _activated_provider_id != 0:
+					# S1 (28012b3a): a wild engaged during the tap, the fight's
+					# trainer-aside step put the player beside circuit Tavi 7 m
+					# away, and the same press opened Tavi (the arbiter does
+					# not gate on a starting fight; STATE finding). A player
+					# closes that line, fights the wild and tries again.
+					var here := Vector2(_player.global_position.x, _player.global_position.z)
+					var fighting := bool(_manager.call("is_fighting"))
+					if fighting or here.distance_to(stance) > 1.5:
+						_note("%s: the press landed on %s as a wild engaged (fighting=%s, %.1f m from the stance); closing it and retrying" % [
+							label, _activated_provider_path, str(fighting), here.distance_to(stance)])
+						var panel := _world.get_node_or_null(^"DialoguePanel")
+						for _line in 64:
+							if panel == null or not bool(panel.call("is_open")):
+								break
+							await _tap(&"interact")
+						if bool(_manager.call("is_fighting")) and not await _fight_current(label + " stance"):
+							return false
+						return null
 					var winner_now := _arbiter.call("winning_provider") as Node
 					var provider_node := instance_from_id(_activated_provider_id) as Node3D
 					return _fail(("%s activated competing provider %s#%d (activations=%s; player=%s; wanted prompt at %s %.2f m; "
