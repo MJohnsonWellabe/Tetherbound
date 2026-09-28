@@ -1,33 +1,33 @@
 {
   "biomes": {
     "meadows": {
-      "frames": 541,
+      "frames": 545,
       "categories": {
         "characters": 83,
         "creatures": 126,
         "named_locations": 114,
         "route_and_terrain": 50,
-        "systems": 78,
+        "systems": 82,
         "ui": 12,
         "world_items": 78
       },
       "times": {
-        "day": 452,
+        "day": 456,
         "dusk": 48,
         "night": 41
       },
       "systems": {
+        "bed": 1,
+        "building": 1,
+        "camp": 1,
         "catching": 12,
+        "crafting": 1,
         "fights": 60,
         "riding": 6
       },
       "expected_systems_without_indexed_frames": [
         "flying",
-        "swimming",
-        "camp",
-        "bed",
-        "building",
-        "crafting"
+        "swimming"
       ],
       "dialogue_frames": 35,
       "defeated_frames": 0,
@@ -46,7 +46,11 @@
         "meadows__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {},
+      "missing_planned_frames": {
+        "systems": [
+          "meadows__system__build_suite"
+        ]
+      },
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },
@@ -102,22 +106,26 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 338,
+      "frames": 342,
       "categories": {
         "characters": 24,
         "creatures": 98,
         "named_locations": 144,
         "route_and_terrain": 39,
-        "systems": 9,
+        "systems": 13,
         "ui": 12,
         "world_items": 12
       },
       "times": {
-        "day": 233,
+        "day": 237,
         "dusk": 57,
         "night": 48
       },
       "systems": {
+        "bed": 1,
+        "building": 1,
+        "camp": 1,
+        "crafting": 1,
         "flying": 4,
         "flying_return": 5
       },
@@ -125,11 +133,7 @@
         "riding",
         "swimming",
         "catching",
-        "fights",
-        "camp",
-        "bed",
-        "building",
-        "crafting"
+        "fights"
       ],
       "dialogue_frames": 11,
       "defeated_frames": 6,
@@ -151,6 +155,9 @@
       "missing_planned_frames": {
         "characters": [
           "cloudreach__inventory__character__healer_iven"
+        ],
+        "systems": [
+          "cloudreach__system__build_suite"
         ]
       },
       "bad_commits": [],
