@@ -370,8 +370,8 @@
   },
   {
    "lane": "Cloudreach Phase 2c (tb/x04-cloudreach)",
-   "now": "11/20 owned impact >=12 rows deferred with reason and owner; 0 fixed. P2-021/P2-022 paired FAIL; both candidates off. Regional Bars A/B NO/NO; 37-row native before/after matrix retained compactly.",
-   "next": "Land reviewed disabled candidates/evidence after unit suite and CI; work or disposition remaining nine rows. F08#3/#4 visual debt stays open."
+   "now": "20/20 owned impact >=12 rows explicitly deferred with reason/owner/follow-up; 0 fixed. Eleven compact rounds verified. P2-021/P2-022 paired FAIL; both candidates off. Regional Bars A/B NO/NO; 37-row native before/after matrix retained.",
+   "next": "Deferred owners follow the per-item catalog evidence. F08#3/#4 visual debt remains open; disposition completion is not visual acceptance."
   }
  ],
  "decisions": [
@@ -416,6 +416,6 @@
   "Cloudreach F08#3 aerie art (dome, towers, banners, rock, cloud floor): Codex, once the owner reopens the Codex lane.",
   "Codex branch tb/x04-cross-game-visual-sweep is merged in batch 67. Cloudreach towers and terrace flags are OFF; Stormwood's judged r5 lightning won over Codex's bolt; the Stormheart hero candidate is unwired and .gdignored; Codex's joined current-wave surfaces (1560de9e) were not kept (Tidewake's b0ce38fc script is), so their stale test was removed. Phase 2 may revisit.",
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
-  "Cloudreach Phase 2c: skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Eleven of 20 owned impact >=12 rows deferred with named owners; nine remain. Full native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/p2-022 reviews. Do not count obstructed rows as accepted or stills as motion/earned traversal proof."
+  "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ]
 }

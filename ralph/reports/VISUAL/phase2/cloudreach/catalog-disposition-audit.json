@@ -1,0 +1,142 @@
+{
+  "audited_commit": "df4ef3d0b41af1f7a084243ec09a2db721f0c964",
+  "owned_threshold": 12,
+  "owned_rows": 20,
+  "statuses": {
+    "deferred": 20
+  },
+  "fixed_claims": [],
+  "candidates_enabled": false,
+  "top20_owned_rows_match_catalog": true,
+  "compact_rounds_verified": [
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-021\\baseline-locations",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-021\\baseline-matrix",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-021\\baseline-routes",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-021\\candidate-locations",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-021\\candidate-matrix",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-021\\candidate-routes",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-022\\baseline-full-matrix",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-022\\baseline-summit-locations",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-022\\candidate-full-matrix",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-022\\candidate-summit-locations",
+    "ralph\\reports\\VISUAL\\phase2\\cloudreach\\p2-053\\baseline-route-markers"
+  ],
+  "regional_visual_acceptance": false,
+  "regional_bars": {
+    "A": "No",
+    "B": "No"
+  },
+  "regional_review": "p2-022/regional-baseline-judge.md",
+  "paired_reviews": [
+    "p2-021/paired-visual-judge.md",
+    "p2-022/paired-visual-judge.md"
+  ],
+  "limitations": [
+    "Disposition completion does not mean visual acceptance.",
+    "Obstructed chapter rows remain inadequate for their intended subjects.",
+    "P2-053 baseline is incomplete (9/12); original failures are retained.",
+    "Stills do not establish animation, continuous gameplay or earned progression."
+  ],
+  "items": [
+    {
+      "id": "P2-021",
+      "impact": 100,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-022",
+      "impact": 75,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-024",
+      "impact": 64,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-023",
+      "impact": 60,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-053",
+      "impact": 36,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-025",
+      "impact": 36,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-068",
+      "impact": 36,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-069",
+      "impact": 48,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-077",
+      "impact": 27,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-076",
+      "impact": 24,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-048",
+      "impact": 18,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-049",
+      "impact": 18,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-054",
+      "impact": 18,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-102",
+      "impact": 18,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-105",
+      "impact": 40,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-106",
+      "impact": 27,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-107",
+      "impact": 12,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-112",
+      "impact": 48,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-117",
+      "impact": 24,
+      "status": "deferred"
+    },
+    {
+      "id": "P2-118",
+      "impact": 18,
+      "status": "deferred"
+    }
+  ]
+}
