@@ -1,0 +1,289 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-596.708862304688,
+				59.8415451049805,
+				4135.97802734375
+			],
+			"description": "custom stand forest_road, storm Calm",
+			"file": "forest_road_calm.jpg",
+			"full_size_requested": true,
+			"hud": false,
+			"id": "forest_road_calm",
+			"label": "r6",
+			"long_storm_ended": false,
+			"player": [
+				-600.0,
+				57.9100608825684,
+				4140.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.019,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "deepwood",
+			"renderer": "opengl3",
+			"size": [
+				1920,
+				1080
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 4.49040166666668,
+			"surge_phase": "calm"
+		},
+		{
+			"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-596.708862304688,
+				59.8415451049805,
+				4135.97802734375
+			],
+			"description": "custom stand forest_road, storm Break",
+			"file": "forest_road_break.jpg",
+			"full_size_requested": true,
+			"hud": false,
+			"id": "forest_road_break",
+			"label": "r6",
+			"long_storm_ended": false,
+			"player": [
+				-600.0,
+				57.9100608825684,
+				4140.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.698,
+				"flash_level": 0.0,
+				"phase_progress": 0.058,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "deepwood",
+			"renderer": "opengl3",
+			"size": [
+				1920,
+				1080
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+			],
+			"surge_elapsed": 336.976265,
+			"surge_phase": "break"
+		},
+		{
+			"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-324.88232421875,
+				62.1827850341797,
+				4199.0966796875
+			],
+			"description": "custom stand forest_heart_west, storm Calm",
+			"file": "forest_heart_west_calm.jpg",
+			"full_size_requested": true,
+			"hud": false,
+			"id": "forest_heart_west_calm",
+			"label": "r6",
+			"long_storm_ended": false,
+			"player": [
+				-330.0,
+				60.2513084411621,
+				4200.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.019,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "deepwood",
+			"renderer": "opengl3",
+			"size": [
+				1920,
+				1080
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+			],
+			"surge_elapsed": 4.50815133333333,
+			"surge_phase": "calm"
+		},
+		{
+			"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-324.88232421875,
+				62.1827850341797,
+				4199.0966796875
+			],
+			"description": "custom stand forest_heart_west, storm Break",
+			"file": "forest_heart_west_break.jpg",
+			"full_size_requested": true,
+			"hud": false,
+			"id": "forest_heart_west_break",
+			"label": "r6",
+			"long_storm_ended": false,
+			"player": [
+				-330.0,
+				60.2513084411621,
+				4200.0
+			],
+			"presentation": {
+				"bolt_level": 1.0,
+				"cloud_flash_level": 0.333,
+				"flash_level": 0.0,
+				"phase_progress": 0.056,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "deepwood",
+			"renderer": "opengl3",
+			"size": [
+				1920,
+				1080
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+			],
+			"surge_elapsed": 336.716981,
+			"surge_phase": "break"
+		},
+		{
+			"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-596.708862304688,
+				59.8415451049805,
+				4135.97802734375
+			],
+			"description": "custom stand forest_road, aftermath Calm",
+			"file": "forest_road_aftermath_calm.jpg",
+			"full_size_requested": true,
+			"hud": false,
+			"id": "forest_road_aftermath_calm",
+			"label": "r6",
+			"long_storm_ended": true,
+			"player": [
+				-600.0,
+				57.9100608825684,
+				4140.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.002,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0399999991059303,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "deepwood",
+			"renderer": "opengl3",
+			"size": [
+				1920,
+				1080
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s",
+				"flag stormwood:long_storm_ended set (aftermath pass)"
+			],
+			"surge_elapsed": 4.48998966666667,
+			"surge_phase": "calm"
+		},
+		{
+			"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-324.88232421875,
+				62.1827850341797,
+				4199.0966796875
+			],
+			"description": "custom stand forest_heart_west, aftermath Calm",
+			"file": "forest_heart_west_aftermath_calm.jpg",
+			"full_size_requested": true,
+			"hud": false,
+			"id": "forest_heart_west_aftermath_calm",
+			"label": "r6",
+			"long_storm_ended": true,
+			"player": [
+				-330.0,
+				60.2513084411621,
+				4200.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.002,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0399999991059303,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "deepwood",
+			"renderer": "opengl3",
+			"size": [
+				1920,
+				1080
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s",
+				"flag stormwood:long_storm_ended set (aftermath pass)"
+			],
+			"surge_elapsed": 4.5,
+			"surge_phase": "calm"
+		}
+	],
+	"label": "r6"
+}
