@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "5b4f093d3790abe310ed492e88259053e03d3dd8",
+  "repro": "Fresh isolated APPDATA. Temporarily enable master, canopy_atlas and branching_crown; ancient_trunk and built_detail=true. godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --position 0,0 --audio-driver Dummy --script tools/capture_stormwood_f10_matrix.gd -- --out=res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1 --label=ancient-r1 --stands=stormheart400,stormheart100 --phases=calm,break --custom=stormheart400@-100,5070@-100,70,5470@8;stormheart100@-100,5370@-100,45,5470@18; restore original disabled config.",
+  "source_manifest_sha256": "dcbaa49220b39e5c273710f7e7e80a60378af83ebc1ce3f479b3d9eaa6154ffd",
+  "capture_metadata": {
+    "failures": [],
+    "label": "ancient-r1",
+    "source_engine_manifest_sha256": "0ac243efc796c93f1d022f6ed0022c7cd3e9c235f606628b9a37462a36445ff8",
+    "candidate_flags": {
+      "master": true,
+      "canopy_atlas": true,
+      "branching_crown": true,
+      "ancient_trunk": true,
+      "built_detail": true
+    },
+    "fixture_limits": "Debug staging in production scene/camera, weather/clock pins and healing; HUD hidden. Deck stands verify physical floor collider/height. Not earned progression, ascent or traversal proof."
+  },
+  "frames": [
+    {
+      "id": "stormheart400_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-exterior-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.0,
+          76.793586730957,
+          5064.85009765625
+        ],
+        "description": "custom stand stormheart400, storm Calm",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_calm.jpg",
+        "full_size_requested": true,
+        "hud": false,
+        "id": "stormheart400_calm",
+        "label": "ancient-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          75.7673797607422,
+          5070.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.011,
+          "presentation_key": "calm",
+          "rain_amount_ratio": 0.300000011920929,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+        ],
+        "surge_elapsed": 2.55,
+        "surge_phase": "calm"
+      },
+      "source_sha256": "e908b368fb05e4fa504203107db7664fb014a93c0bba01be4b3e7db7095f5572",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_calm.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormheart400_break",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-exterior-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.0,
+          76.793586730957,
+          5064.85009765625
+        ],
+        "description": "custom stand stormheart400, storm Break",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_break.jpg",
+        "full_size_requested": true,
+        "hud": false,
+        "id": "stormheart400_break",
+        "label": "ancient-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          75.7673797607422,
+          5070.0
+        ],
+        "presentation": {
+          "bolt_level": 0.457,
+          "cloud_flash_level": 0.201,
+          "flash_level": 0.0,
+          "phase_progress": 0.037,
+          "presentation_key": "break",
+          "rain_amount_ratio": 1.0,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 334.487442999999,
+        "surge_phase": "break"
+      },
+      "source_sha256": "c1685c258a158223bde3d78762ced9232474999731a073e635a1a1980ffa776c",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_break.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormheart100_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-exterior-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.0,
+          110.620803833008,
+          5365.0546875
+        ],
+        "description": "custom stand stormheart100, storm Calm",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_calm.jpg",
+        "full_size_requested": true,
+        "hud": false,
+        "id": "stormheart100_calm",
+        "label": "ancient-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          110.477600097656,
+          5370.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.011,
+          "presentation_key": "calm",
+          "rain_amount_ratio": 0.300000011920929,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s",
+          "player health restored between Break frames"
+        ],
+        "surge_elapsed": 2.543905,
+        "surge_phase": "calm"
+      },
+      "source_sha256": "cfde90bc8daa300af3406d6486553543fc1e50e32dde544a069165587395bf94",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_calm.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormheart100_break",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-exterior-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.0,
+          110.620803833008,
+          5365.0546875
+        ],
+        "description": "custom stand stormheart100, storm Break",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_break.jpg",
+        "full_size_requested": true,
+        "hud": false,
+        "id": "stormheart100_break",
+        "label": "ancient-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          110.477600097656,
+          5370.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.075,
+          "flash_level": 0.0,
+          "phase_progress": 0.023,
+          "presentation_key": "break",
+          "rain_amount_ratio": 1.0,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s",
+          "player health restored between Break frames"
+        ],
+        "surge_elapsed": 332.721998,
+        "surge_phase": "break"
+      },
+      "source_sha256": "11ca29a8131e1872b1ba89cac9a30b497435349fbacb7fb63eb13b4b435ea48b",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_break.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormheart400_aftermath_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-exterior-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.0,
+          76.793586730957,
+          5064.85009765625
+        ],
+        "description": "custom stand stormheart400, aftermath Calm",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_aftermath_calm.jpg",
+        "full_size_requested": true,
+        "hud": false,
+        "id": "stormheart400_aftermath_calm",
+        "label": "ancient-r1",
+        "long_storm_ended": true,
+        "player": [
+          -100.0,
+          75.7673797607422,
+          5070.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.001,
+          "presentation_key": "aftermath:calm",
+          "rain_amount_ratio": 0.0399999991059303,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s",
+          "player health restored between Break frames",
+          "flag stormwood:long_storm_ended set (aftermath pass)"
+        ],
+        "surge_elapsed": 2.54876833333333,
+        "surge_phase": "calm"
+      },
+      "source_sha256": "fce2d8e4bf5e2fb26dc66545ea7b6bc36790893421e7cff327efb3c7a3a36853",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart400_aftermath_calm.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormheart100_aftermath_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-exterior-r1/contact_sheet_01.jpg",
+      "capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.0,
+          110.620796203613,
+          5365.0546875
+        ],
+        "description": "custom stand stormheart100, aftermath Calm",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_aftermath_calm.jpg",
+        "full_size_requested": true,
+        "hud": false,
+        "id": "stormheart100_aftermath_calm",
+        "label": "ancient-r1",
+        "long_storm_ended": true,
+        "player": [
+          -100.0,
+          110.477600097656,
+          5370.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.001,
+          "presentation_key": "aftermath:calm",
+          "rain_amount_ratio": 0.0399999991059303,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s",
+          "player health restored between Break frames",
+          "flag stormwood:long_storm_ended set (aftermath pass)"
+        ],
+        "surge_elapsed": 2.50901033333333,
+        "surge_phase": "calm"
+      },
+      "source_sha256": "ce996961bad1f4321ce55d191f083e52007d3a798ebe983a29068a355c355036",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-exterior-r1/stormheart100_aftermath_calm.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

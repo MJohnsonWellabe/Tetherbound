@@ -51,5 +51,7 @@ triangle check covers bark only. The new `phase2_capture_stormheart_decks.gd`
 stages the actual entry, spiral,150m core and174m chamber, verifies a collision
 floor within a bounded ray interval, and records actual local player height,
 floor collider and camera basis. It remains debug staging, not earned ascent.
-Native exterior/deck comparisons and a fresh code-blind verdict are required
-before either candidate can be enabled. P2-037 remains open.
+Native exterior/deck comparisons are now retained in `ancient-pair-verdict.md`:
+14 eligible pairs, with the new architecture preferred but the full landmark
+still failing. Both scoped alternatives receive Bar A YES / Bar B NO. Neither
+candidate is enabled, and P2-037 remains open.
