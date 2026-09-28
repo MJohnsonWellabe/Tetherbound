@@ -1,0 +1,21 @@
+{
+  "_comment": "F04#6 distinct aftermath (round-1 judge: 'aftermaths are dialogue shots with no world change'). Per named Meadows trainer, what the world visibly does once they are beaten. Read by scripts/world/trainer_aftermath.gd; derived entirely from the trainer's existing world-scoped defeat flag, so every peer and every reload converges on the same state with no new durable data. `standard`: Team Tether's installed oxblood Banner_1 standard (props.json's own MEADOWS-VERTICAL-STANDARDS values) planted beside the captain at `offset` [right, forward] metres in the captain's own frame (bodies face +Z), no collider; beaten, its colours are struck: the oxblood cloth fades off the frame and the bare post is left (a tipped Banner_1 is a gallows shape hanging in the air, not a fallen flag -- local preview 2026-09-28). `stand_down`: after the defeat slump the captain walks to `offset` and turns `turn_deg` from their fighting facing (until the player comes within notice range, when the body turns to them as every NPC does) -- out of the road, no longer barring it. `victory_show`: what the trainer hands over, shown in the air between them and the player while the victory lines run (the Warden's Realm Key and Heart of the Meadows; each captain's Sigil in its item colour), then carried to the player. ALL TUNABLE.",
+  "standard_prop": {
+    "model": "Banner_1",
+    "dir": "res://assets/props/quaternius_fantasy",
+    "sink_m": -2.4,
+    "scale": 1.55,
+    "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}
+  },
+  "strike_seconds": 1.6,
+  "cloth_material": "MI_Banner",
+  "stand_down_speed_mps": 1.4,
+  "trainers": {
+    "relay_captain": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}},
+    "captain_riverwatch": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}, "victory_show": {"tokens": [{"kind": "sigil", "item": "river_sigil"}], "height_m": 1.5, "toward_player_m": 1.2, "seconds": 9.0}},
+    "captain_field": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}, "victory_show": {"tokens": [{"kind": "sigil", "item": "field_sigil"}], "height_m": 1.5, "toward_player_m": 1.2, "seconds": 9.0}},
+    "captain_ridge": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}, "victory_show": {"tokens": [{"kind": "sigil", "item": "ridge_sigil"}], "height_m": 1.5, "toward_player_m": 1.2, "seconds": 9.0}},
+    "relay_officer_dell": {"stand_down": {"offset": [1.8, -1.0], "turn_deg": 120.0}, "_why": "F04#6 (judge r3 3b6f965a): the relay officer's win changed nothing in frame. Beaten at his own post, Dell steps aside from it, as his lines say, toward the captain's console; Vance's own change is the struck standard."},
+    "warden_aldis": {"victory_show": {"tokens": ["heart", "key"], "height_m": 1.55, "toward_player_m": 1.3, "seconds": 14.0}}
+  }
+}
