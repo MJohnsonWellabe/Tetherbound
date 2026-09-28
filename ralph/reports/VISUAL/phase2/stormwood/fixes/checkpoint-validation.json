@@ -51,6 +51,16 @@
     "assertions": 762,
     "failed": 0
   },
+  "merged_main_followup": {
+    "commit": "04ca924248421de076bc6827d5014d2933f591e7",
+    "main_commit": "d066ff203bb7279ecc381235c82b7c858a7565aa",
+    "scope": "fly_traversal, merged_progression, stormwood_surge, stormheart, water_return_connection, hud_party_vitals",
+    "log": ".tmp/stormwood-phase2/merged-followup-tests.log",
+    "sha256": "36a6e3f7d27ff55db64d9b0f1fca62ad7558ee4f474cb8d56332a79cb4f8562f",
+    "tests": 99,
+    "assertions": 1156,
+    "failed": 0
+  },
   "unresolved_test_failures": 0,
-  "limits": "The full suite ran the prior disabled-weather state. Later accepted weather is covered by the actual on-disk enabled surge suites; bark grounding remains disabled and has its own 9-test/187-assertion followup. Main merge 8d39047ca changes dashboard files only. Exit ObjectDB/resource warnings were present. This report is local logic evidence, not visual, campaign or hardware acceptance."
+  "limits": "The full suite ran the prior disabled-weather state. Later accepted weather is covered by the actual on-disk enabled surge suites; bark grounding remains disabled and has its own 9-test/187-assertion followup. Main merge 8d39047ca changed dashboard files only; the later d066ff203 owned-carrier Fly merge is covered by the focused merged-state followup. Exit ObjectDB/resource warnings were present. This report is local logic evidence, not visual, campaign or hardware acceptance."
 }
