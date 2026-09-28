@@ -48,6 +48,15 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
   - **Landed as progress:** the Heart Chamber arena bound, the tell and head camera swings, and Riptusk's lunge opt-in. All are presentation-only, apart from the smaller ring.
   - **C2 to rerun:** Nerissa's ring is now 9 m, so her 144-fight in-world C2 must be rerun. Local seeds: READER wins 5/5 at 24-33% party cost, and the MASHER wipes.
   - **Card T2 prep:** `tests/card_t2_tidewake_islands.sh` runs every non-C3 feeder at one SHA: islands, loops, pockets, chains, ledgers, currents, Guardian units and named C2. It writes to `ralph/reports/TIDEWAKE/phase1/card_t2/`. The 1920x1080 opengl3 device-profile capture follows Stormwood F10#6's 7-inch method.
+  - **Device-profile read, first pass: FAIL 2 of 4** (`phase1/card_t2/device/JUDGE.md`).
+    - Tells: pass (marginal). HUD safe area: pass.
+    - HUD text at 7 inches: fail.
+      - The move-button and quick-bind glyphs are too small, and the explore HUD shows keyboard glyphs.
+      - The FOOD label vanishes on sand; LEVEL, type and Lv text are too small; the Undertow label is clipped.
+      - Owner: the shared HUD work, which overlaps Stormwood F10#6.
+    - Subjects: fail.
+      - Nothing marks the piloted creature or the trainer. Owner: shared combat and HUD.
+      - The dock and current views did not show their subjects. Owner: this lane re-aims those capture stands.
   - Other defects, recorded, not fixed:
     - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
     - the ordinary tell ring marks the attacker's feet, not a landing spot.
