@@ -76,3 +76,26 @@ func test_mix_and_presentation_do_not_invent_rewards() -> void:
 	assert_true(AMBIENCE.presentation_for(flags)["returning_travelers"])
 	assert_false(AMBIENCE.presentation_for(flags)["waterward_enterable"])
 	assert_false(flags.has("realm_key_stormwood"))
+
+
+## F08#4: the settlement ambience plays where people live. Each centre sits on
+## the landmark of an inhabited settlement (one with a camp or named resident),
+## and each such landmark has a centre.
+func test_settlement_ambience_sits_on_each_inhabited_settlement() -> void:
+	var data := AMBIENCE.read_json("res://data/config/cloudreach_atmosphere.json")
+	var world := AMBIENCE.read_json("res://data/config/cloudreach_world.json")
+	var landmarks: Dictionary = {}
+	for landmark: Dictionary in world["landmarks"]:
+		landmarks[landmark["id"]] = Vector3(landmark["position"][0], landmark["position"][1], landmark["position"][2])
+	var inhabited := ["lower_cliffs_waycamp", "cliffhold_settlement"]
+	var centres: Array = data["settlements"]
+	assert_eq(centres.size(), inhabited.size())
+	for id: String in inhabited:
+		var near := false
+		for p: Array in centres:
+			var offset := Vector3(p[0], p[1], p[2]) - (landmarks[id] as Vector3)
+			near = near or (Vector2(offset.x, offset.z).length() <= 15.0 and absf(offset.y) <= 5.0)
+		assert_true(near, "no settlement ambience centre on " + id)
+	var flags := FLAGS.new()
+	flags.set_flag("cloudreach_upper_route_unlocked")
+	assert_true(float(AMBIENCE.mix_for(data, "upper_cloudreach", flags, false, true)["settlement"]) > 0.0)
