@@ -16,6 +16,9 @@ func _load_plan() -> bool:
 		var identity := str(row.identity)
 		if identity == "cloudreach__broken_causeways__04__broken_skyroad_arch":
 			row["stand_offsets_m"] = [0.0, -3.0, -6.0]
+			# Built-floor resolution finds the lower shelf beneath this overlapping
+			# cliff mesh; use the production terrain height for this camera stand.
+			row["prefer_terrain_ground"] = true
 		elif identity == "cloudreach__broken_causeways__03__three_bells_bridge" and str(row.view) == "approach":
 			row["stand_offsets_m"] = [0.0, -5.0]
 		else:
