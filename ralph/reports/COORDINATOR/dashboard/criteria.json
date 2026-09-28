@@ -7,11 +7,11 @@
    "id": "F01",
    "title": "Village road topology and opening",
    "chapter": "Meadows",
-   "pct": 71,
+   "pct": 86,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -32,9 +32,8 @@
     },
     {
      "text": "Normal-controller DAY walk reaches every opening NPC, camp and gate",
-     "status": "in_progress",
-     "evidence": "tests/capture_village_walk.gd (WORLD 3.2 acceptance walk) added on ralph/f01-village-road-plan; no recorded result",
-     "gap": "Run walk, record result, independent verdict"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS/f01-walks/day_d41ff2f0 (render 36439730921: tests/capture_village_walk.gd --route=visits --time=day --from-title, PASS visited=11, max_off_road 0.00 m, controller events only); code-blind verdict code_blind_judge_verdict_day_d41ff2f0.md PASS (gates, lived-in camp with fire/tent/bedroll, key on its post); strict re-check RECHECK_F01_2.md MET. Bars A/B → Phase 2 catalog."
     },
     {
      "text": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate",
