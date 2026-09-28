@@ -170,7 +170,8 @@
       "defeat_flag": "defeated_captain_ridge",
       "rechallenge": false,
       "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
-      "base": "captain_b",
+      "base": "officer_b",
+      "_comment_base_vess": "Owner, 2026-09-27 23:55 (STATE ruling 11): Vess is written as a woman and stood on Oreth's male captain_b body. She now wears the installed female officer body `officer_b` (defeated clip added through animate_humanoid.py --only defeated) and its portrait; the rank badge/palette still applies on top.",
       "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
     },
     {
