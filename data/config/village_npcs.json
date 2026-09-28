@@ -6,6 +6,8 @@
   "villagers": [
     {
       "name": "Mira",
+      "prompt_height_m": 1.5,
+      "_why_prompt_height": "F01#2 (village walk day r2, render.yml 36365090624): standing at her counter 2.3 m away, the greet prompt's waist-height sight ray hit the counter, so only the shop door's Close Door was offered. village_npcs.gd lifts her prompt point to 1.5 m, above the counter top. TUNABLE.",
       "config_key": "villager_farmer",
       "position": [
         19.4,
