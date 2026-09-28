@@ -30,6 +30,7 @@ def main() -> None:
     parser.add_argument("--biome", required=True)
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
+    parser.add_argument("--category", choices=("locations", "ui"), default="locations")
     args = parser.parse_args()
     repo = args.repo.resolve()
     source = args.source.resolve()
@@ -38,20 +39,45 @@ def main() -> None:
     manifest = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
     if not manifest.get("complete") or manifest.get("failures"):
         raise SystemExit("Capture manifest is incomplete; inspect its failures")
-    if manifest.get("biome_id") != args.biome:
+    if manifest.get("biome_id", manifest.get("biome")) != args.biome:
         raise SystemExit("Biome does not match capture manifest")
     if args.render_path == "native GPU Compatibility" and manifest.get("display_server") == "headless":
         raise SystemExit("GPU capture was headless")
 
     base = repo / "ralph" / "reports" / "VISUAL" / "phase2" / args.biome
-    frames_dir = base / "locations"
+    frames_dir = base / args.category
     frames_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source / "manifest.json", frames_dir / "engine_manifest.json")
     csv_path = base / "manifest.csv"
     existing = {}
     if csv_path.exists():
         with csv_path.open(newline="", encoding="utf-8") as stream:
             existing = {row["id"]: row for row in csv.DictReader(stream)}
     for frame in manifest["frames"]:
+        if args.category == "ui":
+            frame_id = f"{args.biome}__{frame['id']}"
+            src = source / f"{frame['id']}.jpg"
+            if not src.is_file():
+                raise SystemExit(f"Missing {src}")
+            with Image.open(src) as image:
+                image.verify()
+            dst = frames_dir / src.name
+            shutil.copy2(src, dst)
+            existing[frame_id] = {
+                "id": frame_id, "biome": args.biome, "category": "ui",
+                "subject": frame["subject"], "location_id": "",
+                "route": "main", "time_of_day": "day", "weather_or_phase": "clear",
+                "pose_or_state": frame["id"], "camera": "ui",
+                "frame_path": dst.relative_to(repo).as_posix(),
+                "repro": (
+                    "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
+                    "--script tools/phase2_capture_ui.gd -- "
+                    f"--biome={args.biome} --seed={manifest['seed']} "
+                    f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/ui_repro"
+                ),
+                "commit": args.commit, "render_path": args.render_path,
+            }
+            continue
         frame_id = frame["frame_id"]
         src = source / f"{frame_id}.jpg"
         if not src.is_file():
@@ -90,7 +116,7 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(existing[key] for key in sorted(existing))
-    build_sheet(repo, base, list(existing.values()), "named_locations")
+    build_sheet(repo, base, list(existing.values()), "ui" if args.category == "ui" else "named_locations")
     print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
 
 
