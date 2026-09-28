@@ -442,15 +442,31 @@ func _play_defeat_reaction(body: Node3D) -> void:
 		return
 	var clip := str(body.call("clip_for", "defeated", ""))
 	if clip.is_empty():
-		TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
+		await _after_the_victory_lines()
+		if is_instance_valid(body):
+			TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
 		return
 	body.call("play", clip, false)
 	var reactions := CHARACTER_MODEL.config_for("cast_reactions")
 	var hold := float(reactions.get("defeat_hold_seconds", 7.0))
 	await get_tree().create_timer(hold).timeout
+	await _after_the_victory_lines()
 	if is_instance_valid(body):
 		if not TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", ""))):
 			body.call("play", str(body.call("clip_for", "idle")))
+
+
+## F04#6 (aftermath render af2, 03e7486c): a trainer without a `defeated` clip
+## stepped aside the instant the fight ended and walked out of their own
+## victory shot mid-line (Dell). The stand-down waits for the lines to close:
+## the victory panel opens on a deferred call after the fight, so give it a
+## frame to open, then wait while it is.
+func _after_the_victory_lines() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var panel := _panel()
+	while panel != null and is_instance_valid(panel) and bool(panel.call("is_open")):
+		await get_tree().create_timer(0.25).timeout
 
 
 ## --- the table ----------------------------------------------------------------
