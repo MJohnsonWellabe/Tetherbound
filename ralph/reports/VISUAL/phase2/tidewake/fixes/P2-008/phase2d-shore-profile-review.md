@@ -67,3 +67,9 @@ The local-defect column asks only whether the recorded gray skirt/green-carpet s
 | Sluice Isle twin pumps, route | PASS | FAIL | Broad blank dune face and weak destination staging dominate despite the corrected creature palette. |
 
 **Pass report: 8/8 local symptom checks pass; 0/8 complete visual-bar checks pass.** The first queue item cannot be signed off from these side-by-sides.
+
+### Rejected scene-wide probes after the eight-view audit
+
+I tested the existing distant ground-cover sheet with a sand-value palette. The native Sluice route frame in `.artifacts/phase2/p2008-phase2d-farcover01-routes` exposed a translucent sheet crossing the dune and Veilfall skyline. It was reverted; no far-cover acceptance or visual-bar improvement is claimed.
+
+I then tested a configurable broad angular warp of ordinary-island interior height contours, preserving coast shoulders and summits. The analytic heightfield tests passed 15 tests/11,041 assertions and all 31 Terrain3D regions baked. Native four-location and four-route captures are in `.artifacts/phase2/p2008-phase2d-macroshape01-locations` and `.artifacts/phase2/p2008-phase2d-macroshape01-routes`. The Sluice route view became a steeper, larger sand wall and First Shore still showed the same simplified far Veilfall landmark. The formula and its bake were reverted. Neither passing geometry checks nor creating more relief supplied the authored middle-scale dune shelves, vegetation transitions and landmarks needed for the full frame. The gallery remains on the last retained candidate, `shinyselect01`.
