@@ -174,6 +174,17 @@ func test_load_data_splits_a_flat_v22_list_back_by_scope() -> void:
 	assert_false(player.has("defeated_warden"))
 
 
+## `Game.progression = <one flat store>` puts the same object behind both
+## halves. Loading must keep every id, not let the player half's replace wipe
+## the world ids (tests/smoke_cloudreach_physical_runtime.gd's reload check).
+func test_load_data_into_one_flat_store_behind_both_halves_keeps_every_id() -> void:
+	var flat: RefCounted = FLAGS.new()
+	var shared: RefCounted = MERGED.new(flat, flat)
+	shared.load_data({"flags": ["defeated_warden", "tam_tools_given"]})
+	assert_true(shared.has("defeated_warden"), "the world id survives")
+	assert_true(shared.has("tam_tools_given"), "and so does the player id")
+
+
 func test_load_data_replaces_both_stores_rather_than_merging_into_them() -> void:
 	# Loading a save must never leave a flag standing from the run before it.
 	world.set_flag("south_bridge_open")
