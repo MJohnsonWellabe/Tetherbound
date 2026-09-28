@@ -8,6 +8,24 @@ ART_DIRECTION owns the visual bar. Record status in STATE, not here.
 function-complete and the biome reorder has landed. The game order is then
 **Meadows → Tidewake → Cloudreach → Stormwood**.
 
+## 0. Order change (owner, 2026-09-28): shared look development comes first
+
+Phase 2c fixed one catalog row of 116 and every regional Bars A/B verdict stayed
+NO/NO, on shared causes rather than local defects: creature materials and
+readability, landscape depth and atmosphere, hero landmarks, character quality.
+The owner therefore approved a **shared look-development pass before any further
+per-biome catalog work**. It is the Claude lane `tb/lookdev`; its brief and bar
+live in `ralph/reports/VISUAL/lookdev/BAR.md` and STATE.
+
+- The four Codex biome lanes (2c/2d) do not start new catalog items until
+  `tb/lookdev` reports its first system in STATE. Landing accepted work already in
+  flight (#414, #428, #430) continues.
+- When the pass reports, re-score the catalog against the new baseline. Rows a
+  shared system makes moot are marked with evidence, not deleted; the rest resume
+  in descending impact order under 2d.
+- Handheld HUD legibility is the separate lane `tb/hud-legibility`; catalog rows
+  about HUD text or fight-column layout belong to it.
+
 ## 1. Shape of the phase
 
 | Step | Who | Output |

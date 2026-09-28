@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28T21:55Z",
+ "updated": "2026-09-28T22:45Z",
  "headline": [
   "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Since 18:35: Cards landed M1 (#435); Codex landed Meadows crafting P2-095/P2-096 (#433) and the Phase 2d rules (#432, #434).",
   "Open: Meadows F04#1, F04#2, F04#6, F04#7; Stormwood F10#6; Tidewake F14#0, F14#1; cards M2, M3, S2, T2.",
@@ -390,13 +390,23 @@
   },
   {
    "lane": "Cards (tb/cards)",
-   "now": "M1 landed (#435). M2 blocked on the South Bridge guardian regression (owner Meadows); Hall retries from the relay checkpoint. T2 fails the 7-inch device profile; S2 lacks all nine Stormwood audio assets.",
-   "next": "M2's continuous earned run after the bridge fix"
+   "now": "PAUSED by the coordinator (owner, 22:40) until the Meadows bridge-guardian fix merges; M1 landed (#435). T2 device profile fails 7-inch; S2 lacks the nine Stormwood audio assets.",
+   "next": "Coordinator messages it when the bridge fix is on main; then one M2 continuous earned run"
   },
   {
    "lane": "Codex (Phase 2)",
    "now": "#414 Cloudreach dispositions, #428 Stormwood NPC portraits/openings, #430 Tidewake map tabs: full-ci and auto-merge, rebased on #435, CI queued on shared runners. Water combat-pause smoke confirmed intermittent (passed on re-run).",
-   "next": "Merge in order as each goes green; coordinator updates the others"
+   "next": "Biome lanes start no new catalog items until the look-dev lane reports its first system; in-flight PRs (#414, #428, #430) still land, one at a time"
+  },
+  {
+   "lane": "HUD Legibility (tb/hud-legibility)",
+   "now": "New 22:38 (owner-approved). One shared handheld pass: F10#6 device profile (builds on Stormwood PR #439), T2 small HUD text, hud_scale floors across explore/fight/menus.",
+   "next": "BAR.md, then one judge round run twice plus strict re-check; PR per piece"
+  },
+  {
+   "lane": "Look Development (tb/lookdev)",
+   "now": "New 22:38 (owner-approved). Shared visual bar before per-biome catalog: creature materials/lighting, atmosphere, landscape depth, hero landmarks (Stormheart first). 24 key frames (6 per biome) as the Bars A/B target.",
+   "next": "BAR.md and baseline, then system 1; reports in STATE after each system"
   },
   {
    "lane": "Balance (tb/balance)",
@@ -429,10 +439,9 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "Stormwood audio (blocks S2): all nine assets/audio/stormwood/*.wav are missing and placeholders are forbidden. Proposal: build them from installed audio, judged and with provenance recorded like art.",
-  "Visual bar (blocks M3 and Phase 2 Bars A/B): approve a shared look-development pass (creature materials, lighting/fog/atmosphere, grading, hero landmarks via reference + Meshy) before the per-biome catalog.",
-  "Approve moving F10#6 and T2's device profile into one shared HUD-legibility lane if Stormwood's r7 fails.",
-  "Usage: all lanes show the seven-day limit at warning; if it tightens, pause Cards retries first.",
+  "Stormwood audio (blocks S2): all nine assets/audio/stormwood/*.wav are missing. AUDIO §10 permits authoring them from installed sources and available tools with provenance. Agents can synthesize and remix but cannot listen, so acceptance = spectral/loop/phase-separation checks plus an owner listen. Go or no-go?",
+  "Decided 2026-09-28: shared look-development first; one shared HUD-legibility lane; Cards paused until the bridge fix lands.",
+  "Usage: all lanes show the seven-day limit at warning; the two new lanes are told to run one system/one round at a time.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
  ],
  "four_chapter_run": null,

@@ -105,6 +105,8 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 2. **Four decisions made by the owner at 23:55 and now in implementation (batch 68):** F04#7 difficulty (the Meadows named trainers get harder), F10#2 (starter parity), female officer Vess, and aerie art. See ruling 11 below.
    - **Balance lane:** F10#2 and F04#7 C2 halves met (ruling 12; `ralph/reports/BALANCE/`). C3 halves stay open.
 
+3. **Settled by the owner, 2026-09-28:** (a) a **shared look-development pass** comes before further per-biome Phase 2 work (lane `tb/lookdev`; see CODEX_START_HERE §0); (b) **one shared handheld HUD-legibility lane** (`tb/hud-legibility`) takes F10#6's device profile and T2's small-HUD-text clause from the Stormwood and Tidewake lanes; (c) the **Cards lane is paused** until the Meadows bridge-guardian fix merges, then re-runs M2 once. Still open: whether to author the nine missing `assets/audio/stormwood/*.wav` from installed sources under AUDIO §10 (blocks S2). Agents cannot listen, so acceptance would rest on spectral/loop checks plus an owner listen.
+
 **Settled by the owner (2026-09-27, 23:55):** the Capacitor Alpha no-stagger ruling and the storm strike sparing a trainer in a fight are **kept**. They are no longer interim.
 
 ## 1. Rulings in force
