@@ -7,6 +7,8 @@ const RELAY_CONFIG := "res://data/config/tether_relay.json"
 const CAPTAIN := "relay_captain"
 const TRAINER_FRAMES := 9000  # Existing earned bridge/tournament round deadline.
 const GEAR := "mill_bridge_gear"
+## A player reading a victory line before pressing on (same pace as the Hall helper).
+const VICTORY_READ_FRAMES := 120
 var _relay: Node3D
 var _mill: Node3D
 var _trainers: Node3D
@@ -250,8 +252,17 @@ func _fight_captain() -> bool:
 	_receipt("relay_captain_defeated", {"rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
 		"xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "gear": _count(GEAR)})
-	for _frame in 120:
-		if INPUT_OWNER.current(_tree) == null:
+	# The captain's `victory_conversation` (F04#1/#6, d541cb04) opens a deferred
+	# frame after the win; read it through with Interact at the Hall helper's
+	# reader pace before world input is expected back.
+	var victory := not str(_captain_spec.get("victory_conversation", "")).is_empty()
+	var read := not victory
+	for frame in 120 + (VICTORY_READ_FRAMES * 8 if victory else 0):
+		if bool(_panel.call("is_open")):
+			read = true
+			if frame % VICTORY_READ_FRAMES == VICTORY_READ_FRAMES - 1:
+				await _input._tap("interact")
+		elif INPUT_OWNER.current(_tree) == null and (read or frame >= 30):
 			return true
 		await _tree.physics_frame
 	return _fail("The actual captain victory did not release world input")

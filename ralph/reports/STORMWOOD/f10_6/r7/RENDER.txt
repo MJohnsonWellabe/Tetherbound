@@ -1,0 +1,7 @@
+F10#6 device profile round 7 (computer capture, no Ally hardware; 1920x1080, Compatibility/opengl3, xvfb llvmpipe, LP_NUM_THREADS=2).
+Game code: tb/stormwood 29295e77 (HUD text at UX section 8 raster floors, portrait roster in the compact column, trainer in the HUD-safe cap).
+explore/: tools/capture_stormwood_f10_matrix.gd --hud --pad --stands=<forest|glass|rod_line> --phases=calm,break --no-aftermath, one process per stand (a single process stalled after one frame at the first attempt). 6 frames, 0 failures.
+fight/: NOT YET CAPTURED at handoff. ralph/reports/STORMWOOD/b/f10_2/capture_named_fights.gd --ids=hollows_alpha,crown_guardian --seconds=10 --fixed-fps 10 -- --out=<dir> (about 30 minutes on llvmpipe). An earlier run on a1 code (a2ccf118, before the trainer-cap review fix) exists only in the lane's scratch directory and is not evidence.
+strike/: reuse r6/strike (nothing since touches the strike ring).
+Judge prompt: JUDGE_PROMPT.md (the r6 wording with paths moved to r7). The sheet builder is a plain 586x330 cell resize (7.0 inch 16:9 at 96 dpi), 3 columns.
+r7 judge NOT RUN. Coordinator cap: one judge round, then a strict re-check; if it fails, record the failures in STATE and hand F10#6 to the shared HUD-legibility lane.
