@@ -6,8 +6,8 @@
       "directions_tried": [
         "(0.0, 0.0, -1.0)"
       ],
-      "end": "(426.2041, 641.0449, 3215.775)",
-      "from": "(417.5509, 627.4639, 3249.808)",
+      "end": "(426.2079, 641.0496, 3215.784)",
+      "from": "(417.3262, 627.3305, 3249.792)",
       "inside_trial": true,
       "refused": true,
       "still_flying": true,
@@ -18,47 +18,42 @@
   "criterion": "F06#2",
   "denials": [
     {
-      "position": "(426.2041, 641.0782, 3215.775)",
+      "position": "(426.2079, 641.0829, 3215.784)",
       "reason": "Stay inside the marked flight trial.",
       "stage": "flight_trial_start"
     },
     {
-      "position": "(426.2041, 640.9449, 3215.755)",
+      "position": "(426.2079, 640.9163, 3215.751)",
       "reason": "Stay inside the marked flight trial.",
       "stage": "flight_trial_start"
     },
     {
-      "position": "(426.2041, 640.8782, 3215.752)",
-      "reason": "Stay inside the marked flight trial.",
-      "stage": "flight_trial_start"
-    },
-    {
-      "position": "(399.8361, 611.3299, 3249.415)",
+      "position": "(399.8061, 611.4286, 3248.951)",
       "reason": "Send out Galecrest to fly.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4629, 740.092, 3599.187)",
+      "position": "(439.7173, 740.7023, 3599.211)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4664, 739.892, 3599.237)",
+      "position": "(439.7195, 740.5356, 3599.244)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4671, 739.7921, 3599.247)",
+      "position": "(439.7197, 740.469, 3599.247)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     }
   ],
   "exhausted_fall": {
-    "anchor": "(1110.242, 1050.131, 2950.533)",
-    "controller_safe_anchor": "(1110.242, 1050.131, 2950.533)",
+    "anchor": "(1110.242, 1050.131, 2950.534)",
+    "controller_safe_anchor": "(1110.242, 1050.131, 2950.534)",
     "drop_below_anchor_m": 99.9150390625,
-    "end": "(1110.835, 1050.131, 2950.495)",
-    "end_distance_to_anchor_m": 0.594514429569244,
+    "end": "(1110.267, 1050.131, 2950.532)",
+    "end_distance_to_anchor_m": 0.0249609164893627,
     "exhausted_after_frames": 3853,
     "exhausted_at": "(1047.266, 1086.0, 2961.813)",
     "exhaustion_cause": "stamina",
@@ -68,7 +63,7 @@
     "hover_frames": 3853,
     "landed_elsewhere": false,
     "launch_blocker_at_landing": {
-      "at": "(1110.242, 1050.131, 2950.533)",
+      "at": "(1110.242, 1050.131, 2950.534)",
       "clear": true,
       "overlapping": []
     },
@@ -76,7 +71,7 @@
     "on_floor": true,
     "party_size": 5,
     "recovered_after_frames": 928,
-    "recovered_at": "(1110.242, 1050.21, 2950.533)",
+    "recovered_at": "(1110.242, 1050.21, 2950.534)",
     "recovery_drop_m": 100.0,
     "recovery_reasons": [
       "The wind carried you back to your last safe landing."
@@ -90,28 +85,28 @@
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(399.8361, 610.1301, 3249.415)",
+      "position": "(399.8061, 610.1301, 3248.951)",
       "stage": "flight_trial_start"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(398.4226, 610.1303, 3250.261)",
+      "position": "(398.4237, 610.1302, 3250.275)",
       "stage": "witness_sealed_upper_attempt"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(1099.027, 1051.301, 2941.463)",
+      "position": "(1098.933, 1051.301, 2941.612)",
       "stage": "mandatory_high_roost_flight"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(400.2928, 610.1301, 3250.018)",
+      "position": "(400.1287, 610.1309, 3250.001)",
       "stage": "return_glide_to_grounded_counterweight"
     }
   ],
@@ -214,7 +209,7 @@
     "blocker": "Send out Galecrest to fly.",
     "flying": false,
     "last_denial": "Send out Galecrest to fly.",
-    "position": "(399.8361, 611.4738, 3249.415)"
+    "position": "(399.8061, 611.3765, 3248.951)"
   },
   "owned_carrier_switches": [
     {
@@ -230,26 +225,60 @@
       "why": "send out to fly"
     }
   ],
+  "owned_flights": [
+    {
+      "follower_out_before": true,
+      "follower_out_in_flight": false,
+      "mid_air_cycle": {
+        "active_unchanged": true,
+        "follower_out": false,
+        "stage": "witness_sealed_upper_attempt",
+        "still_flying": true
+      },
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "follower_out_before": true,
+      "follower_out_in_flight": false,
+      "stage": "mandatory_high_roost_flight"
+    },
+    {
+      "follower_out_before": true,
+      "follower_out_in_flight": false,
+      "stage": "witness_exhausted_fall"
+    },
+    {
+      "follower_out_before": true,
+      "follower_out_in_flight": false,
+      "stage": "return_glide_to_grounded_counterweight"
+    }
+  ],
+  "owned_mid_air_cycle": {
+    "active_unchanged": true,
+    "follower_out": false,
+    "stage": "witness_sealed_upper_attempt",
+    "still_flying": true
+  },
   "passed": true,
   "recoveries": [
     {
-      "position": "(1110.242, 1050.21, 2950.533)",
+      "position": "(1110.242, 1050.21, 2950.534)",
       "reason": "The wind carried you back to your last safe landing.",
       "stage": "witness_exhausted_fall"
     }
   ],
   "sealed_attempt": {
-    "climb_end_y": 770.281311035156,
-    "closest_gap_to_box_m": 0.7529296875,
+    "climb_end_y": 770.124938964844,
+    "closest_gap_to_box_m": 0.752685546875,
     "denials": [
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper."
     ],
-    "end": "(439.4671, 724.6737, 3599.247)",
+    "end": "(439.7197, 724.0836, 3599.247)",
     "frames_inside_sealed_box": 0,
     "on_floor": false,
-    "refused_after_frames": 1411,
+    "refused_after_frames": 1418,
     "still_flying": true,
     "target": "(450.0, 700.0, 3750.0)"
   },
