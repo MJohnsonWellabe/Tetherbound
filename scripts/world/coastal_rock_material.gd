@@ -2,6 +2,7 @@ extends RefCounted
 ## Presentation-only cliff layer over the actual Terrain3D shader. Retains its
 ## height/control sampling and the separately installed Veilfall treatment.
 const MARKER := "// COASTAL-ROCK"
+const DUNE_SHADOW_MARKER := "// COASTAL-DUNE-SHADOW-V1"
 const UNIFORM_ANCHOR := "void vertex() {"
 const VERTEX_ANCHOR := "VERTEX = (VIEW_MATRIX * vec4(v_vertex, 1.0)).xyz;"
 const MATERIAL_ANCHOR := "mat.ao_strength *= weight_inv;"
@@ -156,6 +157,7 @@ const MATERIAL := """
 """
 
 const DUNE_SHADOW_DEPTH := """
+	// COASTAL-DUNE-SHADOW-V1
 	// Compatibility computes shadow coordinates before fragment lighting.
 	// Bias only this terrain's caster depth: visible vertices and other
 	// objects' contact-shadow lookups retain their original positions.
@@ -177,6 +179,10 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 		material.call("enable_shader_override", true)
 		current = material.call("get_shader_override")
 	var code := current.code if current != null else ""
+	if code.contains(MARKER) and not code.contains(DUNE_SHADOW_MARKER):
+		receipt.reason = "older coastal override lacks the dune shadow injection; rebuild terrain material"
+		push_warning(str(receipt.reason))
+		return receipt
 	if not code.contains(MARKER):
 		if not code.contains(UNIFORM_ANCHOR) or not code.contains(MATERIAL_ANCHOR) or not code.contains(VERTEX_ANCHOR):
 			receipt.reason = "Terrain3D material anchors unavailable"
@@ -215,6 +221,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
 	var installed: Shader = material.call("get_shader_override")
-	receipt.installed = installed != null and installed.code.contains(MARKER)
+	receipt.installed = installed != null and installed.code.contains(MARKER) \
+		and installed.code.contains(DUNE_SHADOW_MARKER)
 	receipt.reason = "installed" if receipt.installed else "override was regenerated"
 	return receipt
