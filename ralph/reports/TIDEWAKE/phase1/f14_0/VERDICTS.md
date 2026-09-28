@@ -76,3 +76,34 @@ cause is staging, not the camera:
 
 Next step: a stand-off for the trainer in a large-wild fight, or surface staging for
 `shallow_surface` bodies. Both are shared combat behaviour.
+
+## Tess on the ordinary route (`tess_route_r1/`)
+The brief asks for an ordinary-route witness.
+`capture_tidewake_named_fights.gd --approach=sluice_isle_to_deep_watch_arrival`:
+1. Starts on the Deep Watch landing.
+2. Walks 317 m (42 legs) by left stick to Tess on the crown.
+3. Deploys the lead by the `creature_recall` input (a Water challenge prompt is enabled
+   only while an ally is out).
+4. Challenges through the prompt (`APPROACH.txt`).
+
+The fight runs 221 s with the READER pilot. **The route reaches her by ordinary input.**
+
+**C3 from that approach FAILS:**
+- framing 23/37 (62%);
+- tells 0/6: the judge wanted the landing spot, and the ring sits at the attacker's feet.
+
+The same judge brief rated the placed capture (`../../visuals/fights_c3_r1/tess`, player
+placed at the trainer, 1920x1080) 46/46 with 9/9 tells. From the landing side the fight
+forms on the line from camera to ally to opponent, and the ally hides the opponent's head
+in 13 frames, 5 of them tell-ended. This is the shared combat-camera composition (ally in
+line with the opponent at 5-7 m gaps), the same residue as Tidecoil r8. The ring-at-feet
+tell is the combat-wide ordinary telegraph.
+
+## F14#0 status
+Open.
+- Aquaryn: C3 PASS (r5).
+- Tidecoil: moved to the arrival bay; framing 21/24 (88%) against the 90% bar, tells 4/4.
+- Tess: reached on the ordinary route, but framing is 62% from that approach.
+
+The remaining failures are the fight camera's composition when the ally stands between
+it and the opponent. That is shared combat-camera work, not Tidewake placement.
