@@ -6,6 +6,7 @@ const SCENE:=preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES:=preload("res://scripts/creatures/creature_species.gd")
 var output:="res://ralph/reports/VISUAL/phase2/cloudreach/flight_main"
 var _seed := 2042
+var _return_perch := false
 var _records: Array[Dictionary] = []
 
 func _save(name: String, player: CharacterBody3D, fly: Node) -> void:
@@ -24,7 +25,7 @@ func _write_manifest(complete: bool) -> void:
 		"display_server": DisplayServer.get_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"resolution": [root.size.x, root.size.y], "frames": _records,
-		"complete": complete, "repro_args": ["--seed=%d" % _seed]}, "\t") + "\n")
+		"complete": complete, "repro_args": (["--return-perch"] if _return_perch else []) + ["--seed=%d" % _seed]}, "\t") + "\n")
 	file.close()
 
 func _init() -> void:
@@ -46,6 +47,8 @@ func _run() -> void:
 			output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg == "--return-perch":
+			_return_perch = true
 	if not output.begins_with("res://ralph/reports/VISUAL/phase2/cloudreach/"):
 		push_error("Flight evidence must stay under Cloudreach Phase 2 reports")
 		quit(1)
@@ -91,7 +94,7 @@ func _run() -> void:
 		return
 	await _save("launch", player, fly)
 	# The authored launch ledge at 520,650,3300 is a real landing surface.
-	var target:=Vector3(520,665,3300)
+	var target:=Vector3(400,620,3250) if _return_perch else Vector3(520,665,3300)
 	var reached:=false
 	var history: Array[Dictionary]=[]
 	for frame in 2400:
