@@ -1,0 +1,32 @@
+{
+  "subject": "production flight landing and perch",
+  "captured": [
+    "cloudreach__flying__launch",
+    "cloudreach__flying__glide",
+    "cloudreach__flying__approach_perch",
+    "cloudreach__flying__descent"
+  ],
+  "uncaptured": [
+    "landing contact",
+    "perch rest"
+  ],
+  "attempts": [
+    {
+      "target": [
+        535,
+        760,
+        3170
+      ],
+      "result": "descent remained airborne at y686 after 600 frames"
+    },
+    {
+      "target": [
+        520,
+        665,
+        3300
+      ],
+      "result": "descent remained airborne at y589 after 600 frames"
+    }
+  ],
+  "limitation": "Both targets resolved over open void from the production player controller; no landed frame was labeled or staged."
+}

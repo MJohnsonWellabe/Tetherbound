@@ -4,24 +4,31 @@
 	"display_server": "Windows",
 	"frames": [
 		{
-			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_main062/launch.png",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_perch_main067/launch.png",
 			"id": "launch",
-			"player_position": "(400.0, 611.1911, 3250.0)",
+			"player_position": "(400.0, 611.3332, 3250.0)",
 			"state": "climb",
 			"time": "day"
 		},
 		{
-			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_main062/glide.png",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_perch_main067/glide.png",
 			"id": "glide",
-			"player_position": "(414.1086, 636.3681, 3241.638)",
+			"player_position": "(415.1385, 635.6779, 3256.309)",
 			"state": "climb",
 			"time": "day"
 		},
 		{
-			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_main062/approach_perch.png",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_perch_main067/approach_perch.png",
 			"id": "approach_perch",
-			"player_position": "(533.9439, 765.1313, 3170.625)",
+			"player_position": "(517.8081, 668.3455, 3299.085)",
 			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/flight_perch_main067/descent.png",
+			"id": "descent",
+			"player_position": "(518.8878, 664.9953, 3299.536)",
+			"state": "descent",
 			"time": "day"
 		}
 	],
