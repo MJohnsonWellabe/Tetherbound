@@ -586,21 +586,27 @@ func _subject_rects() -> Array[Rect2]:
 	var camera := get_viewport().get_camera_3d()
 	if camera == null or _manager == null:
 		return rects
-	var bodies: Array[Node3D] = []
-	for key in ["_player", "_ally_body"]:
-		var body: Variant = _manager.get(key)
-		if body is Node3D and is_instance_valid(body):
-			bodies.append(body as Node3D)
+	var boxes: Array[AABB] = []
+	# The trainer as a 1.8 m capsule's box: the player node's subtree also
+	# holds the camera rig, so its aggregate bounds would cover the screen.
+	var trainer: Variant = _manager.get("_player")
+	if trainer is Node3D and is_instance_valid(trainer):
+		boxes.append(AABB((trainer as Node3D).global_position + Vector3(-0.35, 0.0, -0.35),
+			Vector3(0.7, 1.8, 0.7)))
+	var creatures: Array[Node3D] = []
+	var ally: Variant = _manager.get("_ally_body")
+	if ally is Node3D and is_instance_valid(ally):
+		creatures.append(ally as Node3D)
 	if _manager.has_method("enemy_body"):
 		var foe: Variant = _manager.call("enemy_body")
 		if foe is Node3D and is_instance_valid(foe):
-			bodies.append(foe as Node3D)
-	for body: Node3D in bodies:
-		var box := AABB()
+			creatures.append(foe as Node3D)
+	for body: Node3D in creatures:
 		if _manager.has_method("_body_world_bounds"):
-			box = _manager.call("_body_world_bounds", body) as AABB
-		if box.size.is_zero_approx():
-			box = AABB(body.global_position + Vector3(-0.35, 0.0, -0.35), Vector3(0.7, 1.8, 0.7))
+			var measured := _manager.call("_body_world_bounds", body) as AABB
+			if not measured.size.is_zero_approx():
+				boxes.append(measured)
+	for box: AABB in boxes:
 		var forward := -camera.global_basis.z
 		var lo := Vector2(INF, INF)
 		var hi := Vector2(-INF, -INF)
