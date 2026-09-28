@@ -11,7 +11,7 @@ extends "res://tools/capture_stormwood_surge_phases.gd"
 ##     --script tools/capture_stormwood_f10_matrix.gd -- \
 ##     --out=res://ralph/reports/STORMWOOD/f10_4/r1 [--label=r1] \
 ##     [--stands=forest,giant,glass,rod_line,stormheart] [--phases=calm,break] \
-##     [--no-aftermath] [--hud]
+##     [--no-aftermath] [--hud] [--pad]
 ##
 ## Camera, placement and surge pinning are the parent tool's: the production
 ## CameraRig following the real Player, one Game.debug_teleport_to per stand,
@@ -22,6 +22,7 @@ var _stands_only: Array[String] = []
 var _phases_only: Array[String] = []
 var _aftermath_on := true
 var _hud := false
+var _pad := false
 var _custom: Array[String] = []
 
 
@@ -50,6 +51,11 @@ func _run() -> void:
 			_aftermath_on = false
 		elif arg == "--hud":
 			_hud = true
+		elif arg == "--pad":
+			# F10#6 device profile: the ROG Ally is a controller device, so
+			# glyphs follow a pad as the last input device (Game's own
+			# last_input_was_gamepad flag, which the HUD polls).
+			_pad = true
 		elif arg.begins_with("--custom="):
 			# id@x,z@fx,fy_above_ground,fz@pitch ; several separated by ';'
 			for spec: String in arg.trim_prefix("--custom=").split(";", false):
@@ -70,6 +76,9 @@ func _run() -> void:
 		return
 	_log("world mounted")
 	_pin_day()
+	if _pad:
+		_game.set("_last_input_was_gamepad", true)
+		_note("last input device set to gamepad (the handheld's controller), so HUD glyphs are pad glyphs")
 	_note("world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic")
 	await _matrix_pass(false)
 	if _aftermath_on:

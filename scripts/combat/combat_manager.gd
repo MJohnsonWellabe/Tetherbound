@@ -1011,8 +1011,17 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# actual player capsule along the relocation before accepting either side.
 	# If both are obstructed, retaining the real starting position is safer than
 	# moving through a wall merely to improve the camera composition.
+	# F10#6 device profile (code-blind 7-inch judges r2/r3): 1.2 m back toward
+	# the lens stood the trainer in the frame's bottom corners, under the move
+	# grid or the ally card. combat.json `trainer_aside` sets the offsets.
+	var aside: Dictionary = MATH.config().get("trainer_aside", {}) as Dictionary
+	var side_fraction := float(aside.get("side_fraction", 0.55))
+	var forward_m := float(aside.get("forward_m", -1.2))
+	# `side_m` (metres) wins over the radius fraction when set: a big arena's
+	# 0.55 x radius put the trainer at the frame's edge, under the HUD corners.
+	var lateral := float(aside.get("side_m", float(_arena.get("radius")) * side_fraction))
 	for sign_value in [1.0, -1.0]:
-		var candidate: Vector3 = centre + side * (float(_arena.get("radius")) * 0.55 * float(sign_value)) - forward * 1.2
+		var candidate: Vector3 = centre + side * (lateral * float(sign_value)) + forward * forward_m
 		if Vector2(candidate.x - centre.x, candidate.z - centre.z).length() > float(_arena.get("radius")):
 			continue
 		var height := _ground_height(candidate.x, candidate.z)

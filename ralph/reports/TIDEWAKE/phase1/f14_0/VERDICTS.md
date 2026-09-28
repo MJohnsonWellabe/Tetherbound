@@ -126,6 +126,9 @@ Tess r4 on the ordinary route (`tess_route_r4/`, walked 317 m by stick): judge A
 ## F14#0 status
 **Open.** The strict re-check (`RECHECK_F14_0.md`) returned NOT MET. Its gaps:
 1. **Aquaryn C2, all three starters: done** (`aquaryn_c2_3starters/`, 144 runs, 0 errors).
+2a. **Top trainer fights against the option-(c) bar: PASS** (`optc_1e0ddd39/README.md`).
+   - Tess, Calder and Venn: reader win 1.00, masher lead-faint 1.00, cost ≤ 0.19. Venn needed its lane locked at 0.25 of the tell.
+   - Chapter-level masher loss is 1.00.
 2. **Named-wild C2 tier: resolved.**
    - STATE's "Coordinator rulings (owner-delegated, still in force)" for Tidewake reads: "F14 named wilds are judged by the named-wild rule". The re-check had missed that ruling.
    - Under it, Tidecoil passes (`../../f14_confirm_main/` addendum: ratios 0.05-0.07, reader win 1.00).
