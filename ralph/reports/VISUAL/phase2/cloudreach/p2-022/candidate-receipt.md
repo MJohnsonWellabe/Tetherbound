@@ -18,5 +18,11 @@ The focused architecture suite passes 4 tests / 129 assertions, including a
 candidate-enabled check for no collision objects/shapes and geometry above the
 existing required route headroom, plus disabled-scene equivalence. The new
 script passes GDScript check-only. These checks do not establish visual quality,
-performance, complete traversal, or regional acceptance. Native paired day/night
-capture and independent visual judgement remain required.
+performance, complete traversal, or regional acceptance.
+
+The subsequent native paired capture and independent review are complete:
+`paired-visual-judge.md` records **FAIL**, with Bars A/B **No/No**. The four
+matched summit views and 37-row chapter matrices are retained in the compact
+before/after packages. The candidate remains disabled; the catalog disposition
+is deferred to the Cloudreach architecture/art lane. This closes the experiment's
+review step, not the visual defect or regional acceptance.
