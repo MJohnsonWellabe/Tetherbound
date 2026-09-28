@@ -347,8 +347,8 @@
  "lanes": [
   {
    "lane": "Tidewake visual fixes (tb/x04-tidewake)",
-   "now": "Phase 2c active. Dunes-04 has all eight fresh matched native sightings (16 frames), including repaired Brine Steps stand; independent item PARTIAL, direction PASS, ecology/transitions PARTIAL, limited Bars A/B No/No. Gates remain off. Rooted grass/capture support tests pass 34/87947; victory hierarchy off candidate passes 99 lifecycle checks at 720p. P2-032 three-realm native comparison is in progress. Full unit suite and resolved sparse-evidence failure recorded in fixes/validation.md. No chapter acceptance.",
-   "next": "Preserve exposed bank substrate and break contour-bound grass ecology; complete map and victory native reviews, remaining owned impact>=12 fixes/dispositions, chapter matrix and independent Bars A/B, then land through CI-green PRs. See ralph/reports/VISUAL/phase2/tidewake/fixes/."
+   "now": "Phase 2c active. P2-032 fixed/enabled by 8c5009e09 after six native map boots (24 frames, source 0930716ac), independent visual PASS and strict item recheck; actual enabled tests pass 8/36. Dunes-04 remains item PARTIAL, direction PASS, ecology/transitions PARTIAL, limited Bars A/B No/No; repaired paired stands documented. Dunes-05 e22fdbcb2 remains off, source review clean, focused 35/87970 pass, native pending. Victory hierarchy remains off, 99 lifecycle checks at 720p pass, native pending. No chapter acceptance.",
+   "next": "Capture and judge dune corrections and victory hierarchy; complete remaining owned impact>=12 fixes/dispositions, chapter matrix and independent Bars A/B, then land through CI-green PRs. See ralph/reports/VISUAL/phase2/tidewake/fixes/."
   },
   {
    "lane": "Meadows (tb/meadows)",

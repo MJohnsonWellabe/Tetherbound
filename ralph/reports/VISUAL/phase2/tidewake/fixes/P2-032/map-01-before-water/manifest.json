@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "0930716acaf88f4827576b050e782c32fb46269e",
+  "repro": "Godot_v4.7-stable_win64.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --audio-driver Dummy --script tools/phase2_capture_ui.gd -- --biome=water --seed=2042 --map-cycle --output=res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water; isolated APPDATA=.local/appdata; TB_WORLD_SEED=2042; map_realm_selection_visual.enabled=false; all other visual candidate flags at committed defaults",
+  "source_manifest_sha256": "b3888f1494f5c3f23423a2252dfbc9b487594a64c8bfd394ec52fea2c9673129",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome": "water",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture": "Stocked party and satchel in production scene; no save or progression proof",
+    "rendering_method": "gl_compatibility",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/water_archipelago.tscn",
+    "seed": 2042
+  },
+  "frames": [
+    {
+      "id": "exploration_hud",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-water/contact_sheet_01.jpg",
+      "capture": {
+        "camera": "production CameraRig/Camera3D",
+        "id": "exploration_hud",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/exploration_hud.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/water_archipelago.tscn",
+        "subject": "HUD in exploration",
+        "ui": true
+      },
+      "source_sha256": "7051202df389f4a704d78fd1018f1a31800e3d60266801ddd38d9fc98c33805b",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/exploration_hud.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "menu_map",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-water/contact_sheet_01.jpg",
+      "capture": {
+        "camera": "production CameraRig/Camera3D",
+        "id": "menu_map",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/menu_map.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/water_archipelago.tscn",
+        "subject": "Menu map",
+        "ui": true
+      },
+      "source_sha256": "c3a2b5b153fa242df47a199bf1645f26f0a6c397e6445afe6d59a3e7c2acff99",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/menu_map.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "map_selected_meadows",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-water/contact_sheet_01.jpg",
+      "capture": {
+        "available_realms": [
+          "meadows",
+          "water"
+        ],
+        "camera": "production CameraRig/Camera3D",
+        "id": "map_selected_meadows",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/map_selected_meadows.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/water_archipelago.tscn",
+        "selected_button_disabled": true,
+        "selected_realm": "meadows",
+        "subject": "Explicit map region selection: meadows",
+        "ui": true
+      },
+      "source_sha256": "2cdb90e52aa278e45dcf84932e57ba8b7261cc88b7e381f1dcb7768b4ea4948e",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/map_selected_meadows.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "map_selected_water",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-water/contact_sheet_01.jpg",
+      "capture": {
+        "available_realms": [
+          "meadows",
+          "water"
+        ],
+        "camera": "production CameraRig/Camera3D",
+        "id": "map_selected_water",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/map_selected_water.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/water_archipelago.tscn",
+        "selected_button_disabled": true,
+        "selected_realm": "water",
+        "subject": "Explicit map region selection: water",
+        "ui": true
+      },
+      "source_sha256": "4aecbe66d8c7f8c7d1786d75fa39d55cca185f6822ccb28915c05aa672822f28",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-water/map_selected_water.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

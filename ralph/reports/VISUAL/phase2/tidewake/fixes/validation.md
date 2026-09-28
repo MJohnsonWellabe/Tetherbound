@@ -86,12 +86,13 @@ does not mean a clean engine-error log.
   PARTIAL, limited Bars A/B No/No. Angular bank boundaries, smooth steep forms,
   regular grass colonies and weak midground/ecological layering remain. Both
   gates are off. See `P2-008/dunes-04-{capture-validation,visual-judge}.md`.
-- P2-032 selected-realm styling candidate `d68213708` remains off. Existing
-  realm-selection tests pass 8 methods / 36 assertions with no script errors
-  (`.local/phase2/map-realm-selection-focused.log`). Native explicit map
-  selection comparisons in all three affected realms remain outstanding.
-  Independent source review found no actionable issues; normal theme margins,
-  radii and input semantics are preserved without per-frame style allocation.
+- P2-032 selected-realm styling is fixed/enabled by `8c5009e09` after MAP-01:
+  six native boots / 24 actual 1920x1080 frames on source `0930716ac`, with
+  only the temporary config gate changed before/after. Explicit Meadows and
+  production-realm selections pass independent visual judgment and strict item
+  recheck across all three affected realms. Prior and actual enabled tests each
+  pass 8 methods / 36 assertions, no errors; independent source review is clean.
+  See `P2-032/map-01-{validation,visual-judge}.md`. No chapter bar acceptance.
 - P2-103 victory hierarchy candidate `0930716ac` remains off. It identifies the
   persistent five-slot bar as QUICK ITEMS, separates exact reward receipts from
   growth rows and keeps receipt-bearing cards gold. TEAM counts remain occupied
@@ -112,3 +113,12 @@ separate outstanding requirements. Device evidence is computer capture, no Ally
 hardware; fixed-frame recording cannot establish real-time performance.
 
 Scoped independent review at `0930716ac` found no actionable source findings in trainer swim posing, human water contact, creature shiny overrides, compact party strip and capture reticle, including their five disabled config gates. Disabled paths preserve prior rendering; enabled paths contain no gameplay-state, velocity, collision, input, catch-chance, save or network mutations. These shared component flags are not restricted to Tidewake. Native acceptance remains outstanding.
+
+Landing source review through `e22fdbcb2`: independent review of the remaining
+production appearance changes from origin/main found no actionable issues in
+Water vegetation, gated materials, bedding, named-character clearance, far
+crags, world bindings or the current shader/configs. Disabled paths remain
+unchanged; no gameplay, collision or encounter mutation was found. The new
+grass/mineral patch also passes source review and focused tests 35/87970
+(`.local/phase2/dune05-focused.log`). This source review does not claim native
+visual acceptance; dunes-05 remains off pending capture and judgment.
