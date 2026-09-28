@@ -97,4 +97,9 @@ func _capture_row(row: Dictionary) -> void:
 		print("DIALOGUE CAPTURE %s -> %s" % [conversation, path])
 	panel.call("close")
 	panel.visible = false
+	# The production conversation camera eases its spring back after close.
+	# Give the next post its ordinary third-person stand, not the last NPC's
+	# close conversation framing.
+	for frame in 30:
+		await physics_frame
 	_write_manifest()
