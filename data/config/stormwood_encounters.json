@@ -5755,8 +5755,6 @@
       "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
       "combat": {"lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "completion_reward": {"title": "Hollows Alpha", "items": [{"id": "great_candy", "count": 1}], "acknowledgement": "The Hollows Alpha yields the glowmoss lanes. Great Candy for each trainer who stood in the fight."},
-      "_why_combat_camera_f10_6": "F10#6 device profile (code-blind 7-inch judge r2: the boss panel sat over the named foe's head). The shared opponent top band (combat.json hud_safe.top_band, combat_manager.gd::_update_combat_top_band) lifts the lens until the foe's top clears the panel; opt-in per opponent, read by combat_manager.gd::_opponent_camera. Presentation only.",
-      "combat_camera": {"framing": {"top_band": true}},
       "once_only": true
     },
     {
@@ -5774,8 +5772,6 @@
       "catchable": true,
       "_why_route_cue_f10": "BOSSES §7: a 1.1 s visible route-line cue before the 0.8 s strike tell. route_cue_seconds draws the dive lane for 1.1 s first (wild_creature.gd, granted on #345); the dive then travels its 5.5 m down that lane (lunge_travels) and locks its heading at 0.25 of the tell like the 0.8 s lane CHARGERs.",
       "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
-      "_why_combat_camera_f10_6": "F10#6 device profile (code-blind 7-inch judge r2: the boss panel sat over the named foe's head). The shared opponent top band (combat.json hud_safe.top_band, combat_manager.gd::_update_combat_top_band) lifts the lens until the foe's top clears the panel; opt-in per opponent, read by combat_manager.gd::_opponent_camera. Presentation only.",
-      "combat_camera": {"framing": {"top_band": true}},
       "once_only": true
     },
     {
@@ -5794,8 +5790,6 @@
       "catchable": true,
       "_why_guard_stance_f10": "BOSSES §7: a stationary frontal guard stance provides the look. guard_stance draws its frontal cone (its own range and cone) on the ground for the tell; presentation only, no block or damage change (wild_creature.gd, granted on #345). Its numbers are unchanged.",
       "combat": {"guard_stance": true, "telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4, "reposition_distance": 2.5, "power": 12.0},
-      "_why_combat_camera_f10_6": "F10#6 device profile (code-blind 7-inch judge r2: the boss panel sat over the named foe's head). The shared opponent top band (combat.json hud_safe.top_band, combat_manager.gd::_update_combat_top_band) lifts the lens until the foe's top clears the panel; opt-in per opponent, read by combat_manager.gd::_opponent_camera. Presentation only.",
-      "combat_camera": {"framing": {"top_band": true}},
       "once_only": true
     },
     {
@@ -5815,8 +5809,6 @@
       "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
       "combat": {"lunge_travels": true, "telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
       "completion_reward": {"title": "Old Rodfolk Hall Guardian", "items": [{"id": "rare_candy", "count": 1}], "acknowledgement": "The Hall's guardian stands down. Rare Candy for each trainer who stood in the fight."},
-      "_why_combat_camera_f10_6": "F10#6 device profile (code-blind 7-inch judge r2: the boss panel sat over the named foe's head). The shared opponent top band (combat.json hud_safe.top_band, combat_manager.gd::_update_combat_top_band) lifts the lens until the foe's top clears the panel; opt-in per opponent, read by combat_manager.gd::_opponent_camera. Presentation only.",
-      "combat_camera": {"framing": {"top_band": true}},
       "once_only": true
     },
     {
@@ -5835,8 +5827,6 @@
       "catchable": true,
       "combat": {"telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
       "completion_reward": {"title": "Blackwater Elder", "items": [{"id": "glowmoss_tonic", "count": 1}], "acknowledgement": "The Blackwater Elder slips back into the pool. A Glowmoss Tonic for each trainer who stood in the fight."},
-      "_why_combat_camera_f10_6": "F10#6 device profile (code-blind 7-inch judge r2: the boss panel sat over the named foe's head). The shared opponent top band (combat.json hud_safe.top_band, combat_manager.gd::_update_combat_top_band) lifts the lens until the foe's top clears the panel; opt-in per opponent, read by combat_manager.gd::_opponent_camera. Presentation only.",
-      "combat_camera": {"framing": {"top_band": true}},
       "once_only": true
     },
     {
@@ -5855,8 +5845,6 @@
       "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
       "combat": {"lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "completion_reward": {"title": "Glass Field Alpha", "items": [{"id": "stormglass", "count": 2}], "acknowledgement": "The Glass Field lane goes quiet. Two Stormglass for each trainer who stood in the fight."},
-      "_why_combat_camera_f10_6": "F10#6 device profile (code-blind 7-inch judge r2: the boss panel sat over the named foe's head). The shared opponent top band (combat.json hud_safe.top_band, combat_manager.gd::_update_combat_top_band) lifts the lens until the foe's top clears the panel; opt-in per opponent, read by combat_manager.gd::_opponent_camera. Presentation only.",
-      "combat_camera": {"framing": {"top_band": true}},
       "once_only": true
     }
   ],

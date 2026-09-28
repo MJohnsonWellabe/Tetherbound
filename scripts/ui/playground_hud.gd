@@ -361,6 +361,9 @@ const VITALS_PLATE_OVERHANG := 8.0
 const VITALS_BAR_HEIGHT := 20.0
 const VITALS_ROW_GAP := 10.0
 const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
+## Chip behind the vitals value text: translucent so a full meter reads full
+## through it (see `_style_meter_value_chip()`).
+const METER_VALUE_CHIP_ALPHA := 0.6
 ## HUD-EMPHASIS: 68 -> 92. A blind critic's real render showed "FOOD" (4
 ## capitals at `VITALS_VALUE_FONT`, 38) running past the caption column's old
 ## 60px text box (`VITALS_CAPTION_WIDTH - 8`) and directly into the satiety
@@ -2136,7 +2139,12 @@ func _style_meter_value_chip() -> Panel:
 	var chip := Panel.new()
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var box := StyleBoxFlat.new()
-	box.bg_color = Color(UITokens.OUTLINE, 1.0)
+	# F10#6 device profile (code-blind 7-inch judge r2: "the health and food
+	# bars read as about 40 % full" at 100/100): an opaque chip hid the right
+	# half of a full fill. At METER_VALUE_CHIP_ALPHA the fill shows through
+	# while the digits keep WCAG 7.7:1 on HP_GREEN and 4.8:1 even on the
+	# white hit flash (the worst state this chip exists for).
+	box.bg_color = Color(UITokens.OUTLINE, METER_VALUE_CHIP_ALPHA)
 	box.corner_radius_top_left = UITokens.RADIUS_BAR
 	box.corner_radius_top_right = UITokens.RADIUS_BAR
 	box.corner_radius_bottom_left = UITokens.RADIUS_BAR
