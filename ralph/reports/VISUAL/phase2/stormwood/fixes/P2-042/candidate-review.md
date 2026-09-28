@@ -17,5 +17,8 @@ Existing `test_stormwood_surge.gd` and
 762 assertions) and temporarily enabled (55 tests, 760 assertions), zero
 failures in both runs. The flag was restored to false after the enabled run.
 
-Native matched replay and independent before/after review remain pending.
+Native matched replay completed: eight stills and 160 temporal samples at
+1920x1080. The independent review in `after-r1-verdict.md` accepts Fading's
+new identity and preservation of readability, but still fails the full item:
+Calm and Building remain too similar beneath Stormheart. The flag stays off.
 No fixed status or regional bar is claimed.
