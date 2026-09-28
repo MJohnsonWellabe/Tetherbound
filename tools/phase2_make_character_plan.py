@@ -1,4 +1,4 @@
-"""Pin authored Meadows villager and trainer post locations for Phase 2."""
+"""Pin authored character and trainer post locations for Phase 2."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ def slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
 
 
-def main() -> None:
+def meadows_plan() -> list[dict]:
     rows: list[dict] = []
     villagers_path = ROOT / "data/config/village_npcs.json"
     villagers = json.loads(villagers_path.read_text(encoding="utf-8"))
@@ -40,10 +40,51 @@ def main() -> None:
                 "authored_id": obj["id"], "heading_deg": (obj.get("facing_deg", 0) + 180) % 360,
                 "route": "main", "view": "post",
             })
+    return rows
+
+
+def cloudreach_plan() -> list[dict]:
+    source = ROOT / "data/config/cloudreach_chapter.json"
+    data = json.loads(source.read_text(encoding="utf-8"))
+    runtime = json.loads((ROOT / "data/config/cloudreach_npc_runtime.json").read_text(encoding="utf-8"))
+    facing = {row["id"]: row.get("facing_deg", 0) for row in runtime["npcs"]}
+    return [{
+        "family_type": "character", "slug": slug(obj["id"]),
+        "subject": obj["name"], "position_xz": obj["position"],
+        "band": obj["region_id"], "source": source.relative_to(ROOT).as_posix(),
+        "authored_id": obj["id"], "heading_deg": (facing.get(obj["id"], 0) + 180) % 360,
+        "route": "main", "view": "post",
+    } for obj in data["npcs"]]
+
+
+def stormwood_plan() -> list[dict]:
+    rows: list[dict] = []
+    for filename, list_key, name_key, family in [
+        ("stormwood_npcs.json", "characters", "name", "character"),
+        ("stormwood_trainers.json", "trainers", "display_name", "trainer"),
+    ]:
+        source = ROOT / "data/config" / filename
+        data = json.loads(source.read_text(encoding="utf-8"))
+        for obj in data[list_key]:
+            rows.append({
+                "family_type": family, "slug": slug(obj["id"]),
+                "subject": obj.get(name_key, obj["id"]),
+                "position_xz": obj["position"], "band": obj.get("region_id", ""),
+                "source": source.relative_to(ROOT).as_posix(),
+                "authored_id": obj["id"],
+                "heading_deg": (obj.get("facing_deg", 0) + 180) % 360,
+                "route": "main", "view": "post",
+            })
+    return rows
+
+
+def main() -> None:
     data = json.loads(DEST.read_text(encoding="utf-8")) if DEST.exists() else {}
-    data["meadows"] = rows
+    data["meadows"] = meadows_plan()
+    data["cloudreach"] = cloudreach_plan()
+    data["stormwood"] = stormwood_plan()
     DEST.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    print(f"Meadows character posts: {len(rows)}")
+    print("Character posts: " + ", ".join(f"{biome}={len(rows)}" for biome, rows in data.items()))
 
 
 if __name__ == "__main__":
