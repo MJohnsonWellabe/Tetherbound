@@ -556,7 +556,10 @@ func _update_subject_fade(delta: float) -> void:
 	# are not written elsewhere, so the fade is their alpha.
 	# [faded node, multiply?, node whose rect is tested]: the strip holder is
 	# full-rect by design, so the strip's own rect decides its fade.
-	for entry: Array in [[_enemy_panel, true, _enemy_panel], [_grid_panel, true, _grid_panel],
+	# The target plate is not faded: it carries the tell line, and both the
+	# C3 footage judge and device judge r5 read a faded "incoming" as a miss.
+	# It sits top-right, off the framed target.
+	for entry: Array in [[_grid_panel, true, _grid_panel],
 			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
 			[_strip_fader, false, _party_strip]]:
 		var panel := entry[0] as Control

@@ -979,11 +979,40 @@ var progression_feedback_enabled := true
 ## row's alpha, so nothing in the world shows through the roster.
 const COMPACT_NAME_FONT_SIZE := STRIP_READABLE_FONT_SIZE + 2
 const COMPACT_HP_BAR_SIZE := Vector2(96.0, 8.0)
+## F10#6 device profile, round 6 (UX §1.4; code-blind 7-inch judges r2-r5:
+## the 420 px fight roster plus the active card filled a quarter of the fight
+## screen and covered the trainer and attack lanes). The fight roster is a
+## column of pips: rail, a larger portrait chip, KO/REST state and the HP bar.
+## Names and levels drop; the active creature is named on its own card below,
+## and each member is known by its portrait (owner choice 2026-09-28).
+const COMPACT_ROW_WIDTH := 232.0
+const COMPACT_CHIP_SIZE := Vector2(40.0, 40.0)
 var compact := false
+
+
+## Tick plates sit just right of the rows, at whichever width they have.
+func _tick_x() -> float:
+	return (COMPACT_ROW_WIDTH if compact else ROW_SIZE.x) + 10.0
 
 
 func set_compact(enabled: bool) -> void:
 	compact = enabled
+	var width := COMPACT_ROW_WIDTH if compact else ROW_SIZE.x
+	size = Vector2(width, TOTAL_HEIGHT)
+	if _count_label != null and _count_label.get_parent() is Control:
+		var header := _count_label.get_parent() as Control
+		header.custom_minimum_size = Vector2(width, HEADER_HEIGHT)
+		header.size = header.custom_minimum_size
+		if header.get_parent() is Control:
+			(header.get_parent() as Control).size = Vector2(width, TOTAL_HEIGHT)
+	var chip_size := COMPACT_CHIP_SIZE if compact else CHIP_SIZE
+	for i in _rows.size():
+		_rows[i].custom_minimum_size = Vector2(width, ROW_SIZE.y)
+		_rows[i].size = _rows[i].custom_minimum_size
+		_chips[i].custom_minimum_size = chip_size
+		_portraits[i].size = chip_size - Vector2(4.0, 4.0)
+		_slot_labels[i].size = chip_size
+		_name_labels[i].visible = not compact
 	for i in _name_labels.size():
 		_name_labels[i].add_theme_font_size_override("font_size",
 			COMPACT_NAME_FONT_SIZE if compact else STRIP_READABLE_FONT_SIZE)
@@ -1112,6 +1141,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 	var has_bond := entry.has("bond_nodes")
 	_bond_labels[i].visible = has_bond and not compact
 	_level_labels[i].visible = not compact
+	_name_labels[i].visible = not compact
 	if has_bond:
 		_bond_labels[i].text = "bond %d/%d" % [int(entry.get("bond_nodes", 0)), int(entry.get("bond_total", 5))]
 	_near[i] = bool(entry.get("bond_near", false)) or bool(entry.get("xp_near", false))
@@ -1288,7 +1318,7 @@ func _flick(i: int, event: Dictionary) -> void:
 	var bond := str(event.get("kind", "")) == "bond_credit"
 	_tick_labels[i].text = label
 	_tick_labels[i].add_theme_color_override("font_color", UI_TOKENS.WARNING if bond else UI_TOKENS.TEAL_SOFT)
-	_tick_plates[i].position = Vector2(TICK_X, _row_top(i) + TICK_PLATE_INSET_Y)
+	_tick_plates[i].position = Vector2(_tick_x(), _row_top(i) + TICK_PLATE_INSET_Y)
 	_tick_plates[i].modulate.a = 1.0
 	_tick_plates[i].visible = true
 	_tick_left[i] = FEED.seconds("tick_seconds", 0.9)
@@ -1308,7 +1338,7 @@ func _tick_ticks(timer_delta: float) -> void:
 		_tick_left[i] -= timer_delta
 		var t := clampf(1.0 - _tick_left[i] / maxf(total, 0.01), 0.0, 1.0)
 		# Rise a little and fade over the last half.
-		_tick_plates[i].position = Vector2(TICK_X, _row_top(i) + TICK_PLATE_INSET_Y - TICK_RISE * t)
+		_tick_plates[i].position = Vector2(_tick_x(), _row_top(i) + TICK_PLATE_INSET_Y - TICK_RISE * t)
 		_tick_plates[i].modulate.a = 1.0 if t < 0.5 else 1.0 - (t - 0.5) * 2.0
 		_bond_labels[i].scale = Vector2.ONE.lerp(Vector2(1.25, 1.25), maxf(0.0, 1.0 - t * 2.0))
 		if _tick_left[i] <= 0.0:

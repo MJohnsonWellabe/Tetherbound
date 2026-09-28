@@ -51,6 +51,24 @@ func test_build_makes_five_fixed_rows() -> void:
 	strip.free()
 
 
+## F10#6 round 6 (UX §1.4): the fight roster is a narrow pip column: portrait,
+## state and HP per slot, no name or level text, so the left column no longer
+## covers a quarter of the fight screen.
+func test_compact_roster_is_a_narrow_pip_column() -> void:
+	var strip := _make_strip()
+	strip.set_compact(true)
+	assert_almost_eq(strip.size.x, PARTY_STRIP.COMPACT_ROW_WIDTH, 0.01, "strip width follows the pip column")
+	assert_true(PARTY_STRIP.COMPACT_ROW_WIDTH <= 240.0, "pip column stays narrow")
+	for i in PARTY_STRIP.SLOTS:
+		assert_almost_eq(strip._rows[i].custom_minimum_size.x, PARTY_STRIP.COMPACT_ROW_WIDTH, 0.01)
+		assert_false(strip._name_labels[i].visible, "row %d hides its name in the fight column" % i)
+		assert_eq(strip._chips[i].custom_minimum_size, PARTY_STRIP.COMPACT_CHIP_SIZE)
+	strip.set_compact(false)
+	assert_almost_eq(strip.size.x, PARTY_STRIP.ROW_SIZE.x, 0.01, "exploration strip keeps its full width")
+	assert_true(strip._name_labels[0].visible, "exploration rows keep their names")
+	strip.free()
+
+
 func test_build_is_idempotent() -> void:
 	# A test (or a stray double-mount) calling `_build()` twice must not double
 	# the rows — `autoload/party.gd`'s five-creature cap is meaningless if the
