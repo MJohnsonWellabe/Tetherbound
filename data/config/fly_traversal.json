@@ -48,6 +48,19 @@
       "wing_flap_frequency": 2.2,
       "feet_offset": [0.0, 2.45, 0.0],
       "animation": "idle"
+    },
+    "galewisp": {
+      "_why": "CREATURES §7: the Galewisp starter gains Fly at the Cloudreach unlock (SYSTEMS Fly target: 'honor Galewisp's starter promise with the same lawful flight capability after unlock'). Before the unlock it does not carry, so Maela's trial keeps her loaner. Its rig has no feet or forearm bones: the lower legs grip the wrists and the upper wing aims at the tip. height_m scales Galecrest's 2.1 m carrier by the two species' world heights (3.25 / 3.5), still above the 1.80 m trainer.",
+      "can_carry": true,
+      "requires_flag": "fly_traversal_unlocked",
+      "model": "res://assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb",
+      "height_m": 1.95,
+      "grip_bones": ["leg_lower_l", "leg_lower_r"],
+      "procedural_wing_pose": true,
+      "wing_flap_amplitude": 0.18,
+      "wing_flap_frequency": 2.4,
+      "feet_offset": [0.0, 2.3, 0.0],
+      "animation": "idle"
     }
   }
 }

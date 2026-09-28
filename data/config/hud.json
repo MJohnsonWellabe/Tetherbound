@@ -1,5 +1,6 @@
 {
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
+  "party_vitals_refresh_candidate": false,
   "toasts": {
     "_comment": "Hold durations in GAME seconds: the HUD advances its own clock by its process delta, so a slow frame (software GL at a fixed capture fps, a hitch) never eats the hold. Fallbacks: HOTBAR_MESSAGE_SECONDS 2.2, REGION_BANNER_SECONDS 3.2.",
     "hotbar_message_seconds": 2.2,

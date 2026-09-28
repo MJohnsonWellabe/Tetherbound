@@ -3515,6 +3515,11 @@ func ally_body() -> Node3D:
 	return _ally_body
 
 
+func _player_is_flying() -> bool:
+	var fly: Variant = _player.get("fly_controller") if _player != null else null
+	return fly is Node and is_instance_valid(fly) and bool((fly as Node).call("is_flying"))
+
+
 ## The trainer's creature currently ON THE FIELD, or null between rounds.
 ##
 ## Beside `ally_body()` and for the same reason: something that needs the body
@@ -3671,6 +3676,16 @@ func _read_creature_control_input() -> void:
 	# is PROCESS_MODE_PAUSABLE like the rest of the world, so it has already
 	# stopped running while one of those is up.
 	if INPUT_OWNER.current(get_tree()) != null:
+		return
+
+	# Fly: an owned carrier overhead IS the active companion, its follower
+	# recalled for the flight (fly_controller.gd `_recall_carrier_follower`).
+	# Changing or recalling it mid-air would drop the trainer or draw it twice,
+	# so both verbs wait for touchdown.
+	if (Input.is_action_just_pressed("party_cycle") or Input.is_action_just_pressed("creature_recall")) and _player_is_flying():
+		var flying_game := get_node_or_null(^"/root/Game")
+		if flying_game != null:
+			flying_game.call("push_world_message", "Land before changing or recalling your companion.")
 		return
 
 	# CONTROLLER-MAP: one verb, one button. "Cycle party member" and "switch
