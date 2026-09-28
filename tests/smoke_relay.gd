@@ -154,6 +154,9 @@ func _run() -> void:
 		return
 	await _fight_the_whole_team()
 	_the_captain_is_recorded_as_beaten()
+	if not await _finish_captain_victory():
+		_report()
+		return
 
 	await _free_the_captive()
 	_the_gear_is_in_the_satchel()
@@ -679,6 +682,38 @@ func _rescue_only_flow() -> void:
 		_fail("MillCrossing did not consume exactly one rescue Gear")
 	else:
 		print("MillCrossing opened through the real item gate and consumed one Gear")
+
+
+## The captain now speaks automatically after victory. Finish those exact
+## authored lines through ordinary input before approaching Sela; an open
+## dialogue correctly prevents the interaction arbiter from offering her.
+func _finish_captain_victory() -> bool:
+	var expected := str(_spec.get("victory_conversation", ""))
+	var runner: RefCounted = _panel.call("runner")
+	if expected.is_empty() or not bool(_panel.call("is_open")) \
+			or str(runner.call("conversation_id")) != expected:
+		_fail("the captain's configured victory dialogue was not open after the battle")
+		return false
+	print("captain victory dialogue open: '%s'" % expected)
+	var completed: Array[String] = []
+	var on_completed := func(id: String) -> void: completed.append(id)
+	_panel.connect("completed", on_completed)
+	for i in 64:
+		if not bool(_panel.call("is_open")):
+			break
+		if str(runner.call("conversation_id")) != expected:
+			_panel.disconnect("completed", on_completed)
+			_fail("the captain's victory dialogue was replaced before completion")
+			return false
+		await _press("interact")
+		for n in 6:
+			await physics_frame
+	_panel.disconnect("completed", on_completed)
+	if completed != [expected] or bool(_panel.call("is_open")) or bool(_panel.call("owns_input")):
+		_fail("the captain's exact victory dialogue did not complete and release input within its line budget")
+		return false
+	print("captain victory dialogue completed through Interact: '%s'" % expected)
+	return true
 
 
 func _the_captain_is_recorded_as_beaten() -> void:
