@@ -18,11 +18,13 @@ func _load_plan() -> bool:
 	_all_destinations.append_array(waypoints)
 	_planned.clear()
 	var rng := RandomNumberGenerator.new()
-	rng.seed = _seed
 	for destination: Dictionary in waypoints:
+		if not _matches_subset(str(destination.identity).to_lower()):
+			continue
 		var origin_values := destination.position_xz as Array
 		var origin := Vector2(float(origin_values[0]), float(origin_values[1]))
 		var identity := str(destination.identity)
+		rng.seed = _seed + absi(identity.hash())
 		var display_name := identity.replace("__", " / ").replace("_", " ")
 		var base := {
 			"identity": identity, "biome_id": _biome_id,
@@ -37,7 +39,7 @@ func _load_plan() -> bool:
 		route_row.merge({"frame_id": "%s__route_day" % identity,
 			"position_xz": [origin.x, origin.y], "time": "day",
 			"view": "close", "route_class": "main",
-			"walk_seed": _seed, "walk_step": 0,
+			"walk_seed": rng.seed, "walk_step": 0,
 			"walk_offset_xz": [0.0, 0.0]}, true)
 		_planned.append(route_row)
 		var delta := Vector2.ZERO
@@ -49,7 +51,7 @@ func _load_plan() -> bool:
 			off_row.merge({"frame_id": "%s__walk_%02d_day" % [identity, step + 1],
 				"position_xz": [origin.x + delta.x, origin.y + delta.y],
 				"time": "day", "view": "close", "route_class": "off",
-				"walk_seed": _seed, "walk_step": step + 1,
+				"walk_seed": rng.seed, "walk_step": step + 1,
 				"walk_offset_xz": [delta.x, delta.y],
 				"walk_angle_rad": angle, "walk_distance_m": distance}, true)
 			_planned.append(off_row)
@@ -57,7 +59,7 @@ func _load_plan() -> bool:
 		vista_row.merge({"frame_id": "%s__vista_dusk" % identity,
 			"position_xz": [origin.x, origin.y], "time": "golden",
 			"view": "vista", "route_class": "main",
-			"walk_seed": _seed, "walk_step": 0,
+			"walk_seed": rng.seed, "walk_step": 0,
 			"walk_offset_xz": [0.0, 0.0]}, true)
 		_planned.append(vista_row)
 	return not _planned.is_empty()
