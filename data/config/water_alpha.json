@@ -68,6 +68,10 @@
       "surface_run_every_s": 9.0
     }
   ],
+  "combat_camera": {
+    "_why": "F14#0 C3 (Aquaryn r2/r4, ralph/reports/TIDEWAKE/phase1/f14_0): on the ordinary approach from the Tidal Cradle landing the fight forms on the basin slope with Aquaryn uphill, and the symmetric framing fit put its head under the boss panel (top 27% of the frame) in 5-9 of 18 code-blind frames. top_fill fits the upper half-frame only down to the panel's bottom edge ((0.5 - 0.27) / 0.5), so the camera stands back far enough to keep the head clear. Merged by combat_manager.gd::_opponent_camera. TUNABLE.",
+    "framing": {"top_fill": 0.46, "top_band": true}
+  },
   "placement": {
     "_comment": "Existing Tidal Basin landmark X/Z; ground samples the shipped bake. Channel coordinates will be enabled with the authored basin terrain, never simulated by teleportation.",
     "spawn": [601.574, 1389.434],

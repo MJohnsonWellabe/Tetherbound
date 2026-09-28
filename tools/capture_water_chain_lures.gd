@@ -207,5 +207,35 @@ func _run() -> void:
 				lamp = Vector3(float(landmark.position[0]), float(landmark.position[1]), float(landmark.position[2]))
 		await _approach("lastlight", "veilfall", lamp, "Lastlight lamp post", -2.0)
 
+	if _on("map"):
+		await _map_frame()
+
 	print("LURE CAPTURE OK frames=%d\n%s" % [labels.size(), "\n".join(labels)])
 	quit(0)
+
+
+## F13#3: the leads also pin their destinations on the Tidewake map
+## (water_local_chains.json `lead_map_pins`). One frame of the map tab from
+## First Shore with every lead held. Fixtures, disclosed: Tidecoil resolved by
+## flag (the Deep Watch lead), and the whole map revealed so every pin shows.
+func _map_frame() -> void:
+	game.progression.call("set_flag", "water_named_deep_watch_tidecoil_resolved")
+	var shore := Vector3.INF
+	for anchor: Dictionary in config.anchors:
+		if str(anchor.id) == "first_shore_to_lantern_cove_departure":
+			var at: Array = anchor.safe_position
+			shore = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	_pose(shore, _landing("lantern_cove"))
+	await _settle(120)
+	var map: RefCounted = game.call("bind_realm_map", "water")
+	map.call("reveal_all")
+	var pins: Array[String] = []
+	for entry: Dictionary in map.call("landmarks"):
+		if str(entry.get("id", "")).begins_with("water_lead_"):
+			pins.append("%s@%s" % [entry.id, entry.position])
+	print("map pins (%d): %s" % [pins.size(), " ".join(pins)])
+	game.call("menu").call("open", "map")
+	for _frame in 90:
+		await process_frame
+	await _grab("map_leads.jpg", "Tidewake map tab with all six chain leads held")
+	game.call("menu").call("close")

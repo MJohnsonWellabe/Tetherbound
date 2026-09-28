@@ -358,7 +358,12 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 	if wild == "aquaryn":
 		var alpha: Node = world.get_node("WaterAlpha")
 		body = alpha.get("body")
-		player.global_position = body.global_position + Vector3(7, 0, 0)
+		# The ordinary route reaches the basin from the Tidal Cradle arrival
+		# landing (water_world.json shellwatch_to_tidal_cradle_arrival), so the
+		# player stands 7 m out on that approach line, not on the basin's far
+		# (cliff) side as the r1 capture did.
+		var approach := Vector3(535.497 - body.global_position.x, 0.0, 1352.51 - body.global_position.z).normalized()
+		player.global_position = body.global_position + approach * 7.0
 		player.global_position.y = float(world.ground_height_at(player.global_position.x, player.global_position.z)) + 0.2
 		await _frames(20)
 		if not await director.summon_active_creature():

@@ -744,14 +744,14 @@
    "id": "F13",
    "title": "Tidewake islands, chains and look",
    "chapter": "Tidewake",
-   "pct": 67,
+   "pct": 100,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 6,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -776,10 +776,10 @@
     },
     {
      "text": "Six local chains, one per group, satisfy §5",
-     "status": "partial",
-     "evidence": "Six chain smokes with production save/reload in CI (batch 22)",
-     "gap": "Inter-island swims replaced by position writes; Tidecoil resolved by fixture; Lastlight supplies/bed fixtured; no visible lure; solo only. (strict re-score 23:40)",
-     "note": "Blocked on moving Otto and Halen to reachable ground (Tidewake lane). Tidewake-B (#310)."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_3/ @ tb/tidewake 8d7e3ddf (Phase 1 lane landing): one uninterrupted production run of all six chains, tests/smoke_tidewake_b_chain_route.gd --continuous: 619 checks, 0 failures, exit 0. Every inter-island leg swum by real input (35 SWIM legs, retained five, no mount); each chain lure -> action -> payoff -> acknowledgement (Pell, Adair, Otto, Edda, Orsen with a real Tidecoil win then the separate chart control, Halen with gathered driftwood/reed and a bed rest); production save, reset, load, then every requester re-greeted with acknowledgement and no re-offer. Lure: WORLD §11 counts NPC knowledge; every requester names the place (HUD toast for five, dialogue for Orsen) and a lead now pins its destination on the Tidewake map (98ce9985, water_local_chains.json lead_map_pins, test_water_lead_map_pins 5 tests). Two-peer: full/f13_3_chains two_peer_local_chains_1fa83a57.log ALL CHECKS PASSED. Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Shortcuts disclosed: declared fixture start (retained five at L43, pickaxe/axe/knife, upstream story flags; the log's 'DRY RUN' self-label predates the relaxed rule); one position write to the Deep Watch landing after the Tidecoil win; harness-planned walks steered by real stick input, headless; the run tree carried the Tidecoil surface-mode data since reverted to main's (a524fb4d run covers main's setup, 619/0); the map frame is a fixture capture; the two-peer run used teleports and fixture materials. Recorded, not fixed: after Tidecoil a swimmer-less player may be left in the cliff-foot shallows (the harness pose); the 3-10 min detour budget is unmeasured; lure props (Lantern WEAK 4/4) and the pin look -> Phase 2 catalog. Landed by the Tidewake Phase 1 lane."
     },
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
@@ -789,10 +789,10 @@
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
-     "status": "failing",
-     "evidence": "Tide-race shader on main fe07d0d2; blind judges: surf read 'no' then 'weakly' (WATER-HUMAN-ROUTE); stop rule reached",
-     "gap": "Readable currents; docks/Veilfall matrix",
-     "note": "Art: Codex lane (queue V1–V3). Dock lanterns (V1) landing in #316."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/ @ tb/tidewake 811c3244/8d7e3ddf (Phase 1 lane landing), VERDICTS.md and RECHECK.md. Function under STATE §1 ruling 4. Code-blind judges (tools/capture_tidewake_f13_5.gd, production CameraRig and HUD): Veilfall distance read YES (the same cone and falls from First Shore, Tidal Cradle and Sluice Isle, gaining detail); docks 7/7 INHABITED (r1: six of seven empty; scripts/world/water_dock_residents.gd stands two installed-cast dock hands at every mandatory dock, presentation only, built from data on every peer, test_water_dock_residents 3 tests); currents read as moving water with the correct direction from motion (foam comets along each lane, water_current_flow shader; still-frame arrow WEAK 3/3). Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Shortcuts disclosed: teleport stands and mid-chapter flags; xvfb + llvmpipe opengl3 at 1280x720, no device capture; day only, clock frozen; motion judged from still pairs 0.5 s apart; dock and Veilfall frames not re-shot after the comet change. Recorded -> Phase 2 catalog: still-frame current direction, Veilfall small from First Shore, dock coves share one template with small static figures, the Sluice Isle control block hides the player from the approach stand, Veilfall interior room identity WEAK (pumps/sluices/banners placed, route readable). Landed by the Tidewake Phase 1 lane."
     }
    ]
   },
