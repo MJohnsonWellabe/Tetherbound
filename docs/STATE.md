@@ -161,6 +161,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 1. **Internet co-op proof needs:** real Steam AppID/partner access, four accounts, ≥2 on separate home networks. `steam_api64.dll` redistribution approved; packaging (`ship_steam_runtime`) off until AppID exists.
 2. **Owner 23:55 decisions, implementing in batch 68:** harder Meadows trainers (F04#7), starter parity (F10#2), female officer Vess, aerie art; ruling 11.
+3. **Consolidated landing (owner, 2026-09-28 23:55): PR #442 (`tb/consolidated`) carries everything open** (Combat Spacing, Meadows #437, the bridge fix, Stormwood #439, Codex #414/#428/#430, plus the relay and Nysa CI fixes). #414, #428, #430, #437 and #439 are closed as superseded, branches untouched. No criterion is marked met by it. The serial lane validates on #442 and resumes its queue (F14#0/#1 residual camera fixes, F04#2/#7, F10#6 r7 judge) after it merges. Look development, HUD-legibility and Stormwood-audio lanes are approved but archived, not started.
    - **Balance lane:** F10#2 and F04#7 C2 halves met (ruling 12; `ralph/reports/BALANCE/`). C3 halves stay open.
 
 **Owner, 2026-09-27 23:55:** Capacitor Alpha no-stagger and storm strikes sparing trainers in fights are **kept**, no longer interim.
