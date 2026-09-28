@@ -164,3 +164,75 @@ no coordinator.
 4. Open a PR to `main` from the lane branch, with auto-merge on; CI runs once.
 5. At wind-down, push everything. Leave work in progress unwired or flagged off,
    and list it in the catalog.
+
+## 2d. Visual recovery: deliver fixes, not dispositions
+
+The Phase 2c review found one fixed catalog row out of 116, twenty deferred rows,
+and accepted work stranded in local or draft branches. Phase 2d replaces that
+delivery pattern. The catalog and the static visual dashboard under
+`ralph/reports/VISUAL/phase2/` are the work queue and review surface; neither a
+capture count nor a passed narrow test is a finished visual item.
+
+- Work one biome and one item at a time, in descending impact order (then impact
+  per effort). Recheck the player view before choosing a smaller item. Complete
+  the selected item or establish a concrete external dependency, then move to
+  the next actionable item. Do not batch documentation or tooling as a substitute
+  for a game change.
+- **Do not defer catalog items.** Preserve every unresolved item as `open` or
+  `needs_capture`. If another owner must change gameplay, camera logic, or a
+  shared asset, record that owner and the exact dependency in `notes`, keep the
+  item open, and continue with the next actionable item. A blocker never counts
+  toward completion.
+- Timebox diagnosis. After two unsuccessful attempts at a fix or measurement,
+  change approach or take the next actionable item. Reuse the manifest repro;
+  create new capture tooling only when the current repro cannot show the defect.
+- For each fix, compare the same seed, camera, render path, and player state
+  before/after at native 1080p. Use the code-blind judge, then inspect the
+  complete player encounter or route in motion. A scoped PASS cannot override
+  a worse fight, route, or chapter frame. Keep failed candidates off.
+- Commit one accepted item at a time. Update its catalog row **and the existing
+  board criterion** in the same commit or PR. Refresh the HTML dashboard from
+  the catalog after each landing. Record the commit and evidence links. Report
+  only fixes enabled and merged on main as delivered; label drafts and local
+  work separately.
+- The current main checkout may lack the board files named in `docs/STATE.md`.
+  Resolve that integration gap first by locating the published board's source
+  and landing it on main; do not invent a parallel board or silently skip board
+  updates. Until then, keep each affected criterion open in STATE with its
+  catalog ID and evidence link.
+- Land a PR after each one or two accepted items. Merge current main, run the
+  relevant focused check and the required unit suite once, check CI, and enable
+  auto-merge. If publication fails, stop accumulating new work and resolve the
+  publication path before continuing.
+- Review progress after each two-hour work window: name catalog IDs accepted
+  on main, IDs still open, board rows updated, Bars A/B result, and next item.
+  If zero fixes landed, change the approach rather than extending diagnostics.
+
+### Paste-ready next-session prompt
+
+> /goal Tetherbound Phase 2d visual recovery. Start from current `origin/main`.
+> Read `AGENTS.md`, `CODEX_START_HERE.md` §2d and §3, `docs/STATE.md`,
+> `docs/design/ART_DIRECTION.md`, the Phase 2 catalog, the relevant biome
+> manifests/top-20 lists, and the static visual dashboard. Work biome by biome
+> in game order: Meadows, Tidewake, Cloudreach, Stormwood. Start with the highest
+> impact actionable catalog item; use impact per effort to break ties. Do not
+> defer or bulk-disposition items. If one requires an external owner, leave it
+> open with the exact owner/dependency in notes and immediately take the next
+> actionable item. Fix presentation only; retain all AGENTS.md hard rules.
+>
+> For each item, reproduce its sightings, make the smallest visible fix, recapture
+> matched before/after frames, get a code-blind verdict, and inspect the full
+> player view in motion. Enable only a PASS that does not worsen the route,
+> encounter, or chapter. Commit one item at a time with its catalog status,
+> evidence, and the corresponding board criterion updated. If main lacks the
+> board files referenced by STATE, restore the existing board source and land
+> that integration first. Refresh the dashboard after each landing.
+> Every one or two accepted items, merge current main, run focused checks and the
+> four unit shards once after import, open a PR to main with traceability, fix CI,
+> and enable auto-merge. Count only enabled fixes merged on main as delivered.
+> Every two hours report landed IDs, open IDs, board rows changed, regional Bars
+> A/B, and the next item. Stop repeating a failed approach after two attempts.
+> Continue until every impact >= 12 item is fixed on main, then run each biome's
+> ACCEPTANCE chapter frame matrix and Bars A/B verdict. If an external dependency
+> prevents completion, leave the item open and give a precise blocker report;
+> never turn it into a deferral or claim the biome complete.
