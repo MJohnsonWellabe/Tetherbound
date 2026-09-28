@@ -239,7 +239,13 @@ func _cap_dodge_stick() -> Vector2:
 	# A CHARGER's travelling lunge runs down its locked lane, so backing away
 	# stays on it; the answer a player is taught is to step off it sideways,
 	# toward whichever side the creature already stands.
+	# `_lunge_heading` is only set when the lunge begins, so during the
+	# wind-up it is empty or the previous lunge's; the creature already
+	# faces down the lane it is about to take.
 	var lane: Variant = foe.get("_lunge_heading")
+	if foe.has_method("lunge_travels") and bool(foe.call("lunge_travels")) \
+			and foe.has_method("facing"):
+		lane = foe.call("facing")
 	if lane is Vector3 and (lane as Vector3).length() > 0.01:
 		var heading := Vector3((lane as Vector3).x, 0.0, (lane as Vector3).z).normalized()
 		var side := Vector3(-heading.z, 0.0, heading.x)

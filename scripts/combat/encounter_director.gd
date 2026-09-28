@@ -5950,7 +5950,8 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 			var on_line := func(_id: String, is_last: bool) -> void:
 				if is_last and is_instance_valid(shown):
 					shown.get_tree().create_timer(delay).timeout.connect(func() -> void:
-						TRAINER_AFTERMATH.hand_over(shown, player))
+						if is_instance_valid(shown):
+							TRAINER_AFTERMATH.hand_over(shown, player))
 			panel.connect("line_presented", on_line)
 			panel.connect("finished", func(_id: String) -> void:
 				if panel.is_connected("line_presented", on_line):
