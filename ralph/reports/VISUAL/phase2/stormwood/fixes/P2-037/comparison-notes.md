@@ -18,7 +18,14 @@ by as much as 73.81682 m. `comparison-coverage.json` retains all four camera
 comparisons and the rejected manifest hash. Those images cannot establish
 before/after improvement. The correction is an exact replay of the original
 12-destination, day/night, approach/close command, with only the output path
-and temporary candidate activation changed.
+and temporary candidate activation changed. That replay is now retained in
+`after-locations-r2/`: 48 native frames, 46 pairs within the original 0.02 m
+position / 0.001 basis-vector tolerances. All eight Stormheart and Dynamo
+Core pairs match within 0.0000616 m with identical orientation. Both Crown
+Arch approach views differ by 0.14-0.15 m and are excluded from paired
+acceptance. These exclusions remain explicit in `comparison-coverage.json`;
+the tolerance was not relaxed. The independent addendum in `pair-verdict.md`
+completes review of all six required P2-037 sightings.
 
 The exterior helper uses declared 400 m and 100 m stands, debug travel,
 phase/clock pins, healing and an aftermath fixture. Location and route helpers

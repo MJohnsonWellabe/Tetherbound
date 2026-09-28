@@ -1,0 +1,41 @@
+{
+  "source_commit": "d80ae4a7b24323dad5b14a34a610c820c7c9ebce",
+  "source_manifest_sha256": "84c4e9df9e0cb70bf8e0899dbb03ad64ef7b2cea3af4bf8e9098f5bbdf4f7a45",
+  "candidate_restored_off": true,
+  "frames": 5,
+  "native_dimensions": [
+    1920,
+    1080
+  ],
+  "max_camera_delta_m": 0.0,
+  "comparisons": [
+    {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__route_day",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.674243438471043e-06
+    },
+    {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__walk_01_day",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.6658005363233189e-06
+    },
+    {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__walk_02_day",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.6658005363233189e-06
+    },
+    {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__walk_03_day",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.6658005363233189e-06
+    },
+    {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__vista_dusk",
+      "camera_position_delta_m": 0.0,
+      "camera_basis_max_delta": 1.6658005363233189e-06
+    }
+  ],
+  "required_original_sighting": "stormwood__dynamo__11__the_glass_field__walk_03_day",
+  "baseline": "../catalog-baseline/routes/manifest.json",
+  "limits": "Debug travel and clock fixture using production scene/camera; not earned arrival, motion, collision, or Ally performance proof."
+}

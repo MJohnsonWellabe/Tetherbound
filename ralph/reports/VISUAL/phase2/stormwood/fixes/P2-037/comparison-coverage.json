@@ -19,6 +19,308 @@
       "frames": 6,
       "candidate_enabled": true,
       "max_camera_delta_m": 0.0
+    },
+    {
+      "name": "p2037-after-locations-r2",
+      "source_commit": "d80ae4a7b24323dad5b14a34a610c820c7c9ebce",
+      "frames": 48,
+      "candidate_enabled": true,
+      "source_manifest_sha256": "38c11361a360cd9490496e7bd6bfb21c8f87eb8351850af1a3557156b20de0d8",
+      "max_camera_delta_m": 0.1514437881612519,
+      "max_eligible_camera_delta_m": 6.151014597992319e-05,
+      "max_camera_basis_delta": 8.940696699655248e-08,
+      "eligible_pairs": 46,
+      "excluded_pair_reason": "Both Crown Arch approach views differ by more than 0.02 m and are excluded from paired acceptance; origin and rotation match but camera position does not. All eight Stormheart and Dynamo Core location pairs meet the unchanged tolerances.",
+      "comparisons": [
+        {
+          "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__night__approach",
+          "camera_position_delta_m": 1.1444091803980427e-05,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 5.960464399823451e-08,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+          "camera_position_delta_m": 1.9073486008380769e-06,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__09__lantern_hollow__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 8.940696699655248e-08,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__09__lantern_hollow__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 3.3320008938681805e-08,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__09__lantern_hollow__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__09__lantern_hollow__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 6.828569909537513e-08,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__10__the_fallen_giant__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__10__the_fallen_giant__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__10__the_fallen_giant__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__deepwood__10__the_fallen_giant__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+          "camera_position_delta_m": 6.151014597992319e-05,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__dynamo__12__the_stormheart_tree__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__dynamo__12__the_stormheart_tree__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_arch__day__approach",
+          "camera_position_delta_m": 0.1421255389663568,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": false
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_arch__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_arch__night__approach",
+          "camera_position_delta_m": 0.1514437881612519,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": false
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_arch__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_heartstone__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_heartstone__day__close",
+          "camera_position_delta_m": 2.288818359375e-05,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_heartstone__night__approach",
+          "camera_position_delta_m": 7.629394602304274e-06,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__crown_heartstone__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__lantern_hollow__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__lantern_hollow__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__lantern_hollow__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__lantern_hollow__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__old_rodfolk_hall__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__old_rodfolk_hall__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__old_rodfolk_hall__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__old_rodfolk_hall__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__glass_field__day__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__glass_field__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__glass_field__night__approach",
+          "camera_position_delta_m": 3.814697301152137e-06,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__glass_field__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__dynamo_core__day__approach",
+          "camera_position_delta_m": 7.629395000208206e-06,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__dynamo_core__day__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__dynamo_core__night__approach",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        },
+        {
+          "frame_id": "stormwood__landmark__dynamo_core__night__close",
+          "camera_position_delta_m": 0.0,
+          "camera_basis_max_delta": 0.0,
+          "eligible_for_paired_review": true
+        }
+      ]
     }
   ],
   "excluded_rounds": [
