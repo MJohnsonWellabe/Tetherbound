@@ -21,6 +21,12 @@ Validation on Godot 4.7, Windows:
 - `--headless --script tests/smoke_craft_panel_controller.gd -- --readable-recipe-rows`:
   exit 0; physical pad navigation, crafting, retained focus and close passed.
 
+Independent code review found that the capture fixture assumed an explicit
+`/root/CraftPanel` name which the production constructor does not assign.
+Both preview activation and visibility restoration now use BuildPlacer's
+actual panel reference and fail explicitly if it is unavailable. The reviewer
+found no other actionable issue; that review did not render or judge the UI.
+
 Matched production captures remain pending for Meadows, Cloudreach and
 Stormwood. Append `--craft-readable-preview` to the manifest reproduction to
 preview the candidate without enabling the shipping config. The fixture records

@@ -12,6 +12,8 @@ const OPEN_STANDS := {
 	"stormwood": Vector2(-320.0, 240.0),
 }
 
+var _craft_panel: CanvasLayer
+
 func _load_plan() -> bool:
 	_planned = [{"frame_id": "%s__system__build_suite" % _biome_id}]
 	return true
@@ -96,14 +98,16 @@ func _capture_row(_row: Dictionary) -> void:
 	_place(placer, game, "workbench", anchor, active)
 	await _settle()
 	placer.call("_open_craft_panel")
+	_craft_panel = placer.get("_craft_panel") as CanvasLayer
+	if _craft_panel == null:
+		_failures.append("craft capture requires the production CraftPanel")
+		return
 	if OS.get_cmdline_user_args().has("--craft-readable-preview"):
-		var panel := root.get_node_or_null(^"CraftPanel")
-		if panel != null:
-			panel.call("close")
-			panel.set("_readable_recipe_rows", true)
-			panel.call("_build")
-			panel.call("open")
-			_manifest["craft_readable_preview"] = true
+		_craft_panel.call("close")
+		_craft_panel.set("_readable_recipe_rows", true)
+		_craft_panel.call("_build")
+		_craft_panel.call("open")
+		_manifest["craft_readable_preview"] = true
 	await _settle()
 	await _shoot("crafting", "crafting", "workbench and production CraftPanel directly opened")
 	_write_manifest()
@@ -136,9 +140,10 @@ func _settle() -> void:
 func _shoot(state: String, system: String, note: String) -> void:
 	_hide_hud()
 	if state == "crafting":
-		var panel := root.get_node_or_null(^"CraftPanel") as CanvasLayer
-		if panel != null:
-			panel.visible = true
+		if not is_instance_valid(_craft_panel):
+			_failures.append("craft panel unavailable when saving the frame")
+			return
+		_craft_panel.visible = true
 	await RenderingServer.frame_post_draw
 	var frame_id := "%s__system__%s" % [_biome_id, state]
 	var path := "%s/%s.jpg" % [_output_dir, frame_id]
