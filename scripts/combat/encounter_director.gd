@@ -765,6 +765,15 @@ func _spawn_creatures() -> void:
 			wild.set_script(WILD_SCRIPT)
 			get_parent().add_child(wild)
 			var spot := _pick_clear_spot(centre, radius, rng)
+			# F03#0: an alpha whose block sets `stand_at_centre` stands on its
+			# cluster's authored centre (a probed sightline) while the rest of
+			# the pack keeps the disc. The pick above still draws, so every
+			# other member's placement is unchanged.
+			var centre_alpha: Variant = spawn.get("alpha", {})
+			if n == 0 and centre_alpha is Dictionary \
+					and bool((centre_alpha as Dictionary).get("stand_at_centre", false)) \
+					and _clear_of_named_trainer_grounds(centre):
+				spot = centre
 			var declared_radius := _declared_spawn_body_radius(species, spawn, n)
 			var occupied: Array[Dictionary] = []
 			for prior: Node3D in (cluster["members"] as Array[Node3D]):
