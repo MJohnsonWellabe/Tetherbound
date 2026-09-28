@@ -11,6 +11,7 @@ const DEBIT := preload("res://scripts/net/water_dock_debit.gd")
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const RECONCILE_EVERY_FRAMES := 60
 const FIRST_SHORE_DOCK := "first_shore_to_reedhaven_dock"
+const FIRST_SHORE_NOTICE := preload("res://scripts/world/water_first_shore_current_notice.gd")
 const FENCE_SCENES: Array[PackedScene] = [
 	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf"),
 	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension1.gltf"),
@@ -60,6 +61,15 @@ func build(world: Node3D) -> void:
 		prompt.activated.connect(_activate.bind(action))
 		_prompts[str(action.flag)] = prompt
 	for dock: Dictionary in world.config.docks:
+		if str(dock.id) == FIRST_SHORE_DOCK:
+			# A beach-wide route is closed by the existing adverse current and
+			# Reedhaven tide race. The old freestanding fence could be walked
+			# around; retire its misleading visual AND redundant collision.
+			var notice := FIRST_SHORE_NOTICE.new()
+			notice.name = "FirstShoreCurrentNotice"
+			add_child(notice)
+			notice.build(world, _game)
+			continue
 		if str(dock.unlock_flag).is_empty():
 			continue
 		var anchor: Dictionary = {}
