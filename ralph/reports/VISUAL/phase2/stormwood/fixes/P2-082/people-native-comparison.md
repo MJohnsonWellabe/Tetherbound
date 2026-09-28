@@ -42,3 +42,11 @@ and no remaining Stormwood Godot children. The matching lock was released and
 the next lane notified. Main was subsequently merged at `95f11b61b`; the capture
 helpers, chapter and presentation configuration have no diff from the captured
 source. Independent visual and evidence verdicts are recorded separately.
+
+Independent evidence reviewer `stormwood_dialogue_review` completed the bounded
+audit with no remaining blockers: all originals decoded at native dimensions;
+hashes, retained metadata, tile mappings, neutral review copies and logs agree;
+all required speakers/openings/synthetic IDs are covered; candidate paths match
+the installed world profiles; all dialogue blends settled; flags stayed empty.
+The reviewer explicitly leaves native text legibility and visual acceptance to
+the fresh code-blind review, and preserves the fixture limits above.
