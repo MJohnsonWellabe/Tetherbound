@@ -94,6 +94,15 @@ on:
     # (the default types would wait for the next push).
     types: [opened, synchronize, reopened, labeled, ready_for_review]
   workflow_dispatch:
+    inputs:
+      tier:
+        # `fast` is what publish-watch.yml dispatches when a merge pushed by
+        # GITHUB_TOKEN auto-merge started no CI run on main (see there).
+        description: CI tier (full, or fast for a missed main push)
+        required: false
+        type: choice
+        options: [full, fast]
+        default: full
   # TWO TIERS, 2026-09-26 (owner: "pare it down and run a full run every 8
   # hours instead of every hour"). Every pull request and main push runs the
   # FAST tier only: parse/import, bake freshness, the unit-test shards and the
@@ -158,6 +167,10 @@ jobs:
     # so the run looks like a tidy no-op rather than a job that died. Raised as
     # a safety net only; `filter: blob:none` below is the actual fix.
     timeout-minutes: 15
+    # actions: read lets a main push find the last commit CI ran on (below).
+    permissions:
+      contents: read
+      actions: read
     outputs:
       code: ${{ steps.filter.outputs.code }}
       # The FULL tier (see `on:`): scheduled runs, manual dispatches and PRs
@@ -190,6 +203,8 @@ jobs:
         env:
           BEFORE: ${{ github.event.before }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
         run: |
           set -uo pipefail
 
@@ -216,14 +231,30 @@ jobs:
           # three times in one day, with the code never executed. A branch
           # is verified against what it would land on `main`, so for any
           # push that is not to `main` itself the base is the merge-base
-          # with `origin/main`. Pushes to `main` keep `before`: there the
-          # previous tip is exactly what changed.
+          # with `origin/main`.
+          #
+          # Pushes to `main`, corrected 2026-09-28: the base is the newest
+          # main commit that already has a CI run, not `before`. A merge made
+          # by GITHUB_TOKEN auto-merge starts no push run at all, so batch 67
+          # (3dbec66b) got none; the next merge was board-only, diffed against
+          # `before` = 3dbec66b, skipped every job and reported success with
+          # batch 67's code never executed. Chaining each main run to the last
+          # one that ran means code anywhere in between still builds.
+          # A cancelled run built nothing (a newer queued run on main replaces a
+          # pending one), so it is not a base.
+          # `before` stays the fallback when the run list is unreadable.
           base=""
           if [ -n "${BASE_SHA:-}" ]; then
             base="$BASE_SHA"
           elif [ "${GITHUB_REF_NAME:-}" != "main" ]; then
             git fetch --no-tags --depth=0 origin main 2>/dev/null || true
             base="$(git merge-base origin/main HEAD 2>/dev/null || true)"
+          elif last="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?branch=main&per_page=30" \
+                  --jq "[.workflow_runs[] | select(.id != $RUN_ID and .event != \"pull_request\" and .head_sha != \"$GITHUB_SHA\" and .conclusion != \"cancelled\" and .conclusion != \"skipped\")][0].head_sha // empty" 2>/dev/null)" \
+               && [ -n "$last" ] \
+               && git merge-base --is-ancestor "$last" HEAD 2>/dev/null; then
+            echo "Last main commit with a CI run: $last"
+            base="$last"
           elif [ -n "${BEFORE:-}" ] \
                && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] \
                && git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
@@ -276,11 +307,12 @@ jobs:
         id: tier
         env:
           FULL_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'full-ci') }}
+          DISPATCH_TIER: ${{ inputs.tier || 'full' }}
         run: |
           if [ "${{ steps.filter.outputs.code }}" != "true" ]; then
             echo "full=false" >> "$GITHUB_OUTPUT"
-          elif [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] \
-               || [ "$FULL_LABEL" = "true" ]; then
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$FULL_LABEL" = "true" ] \
+               || { [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && [ "$DISPATCH_TIER" != "fast" ]; }; then
             echo "Full tier."
             echo "full=true" >> "$GITHUB_OUTPUT"
           else

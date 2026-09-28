@@ -1,0 +1,4 @@
+C1 CARD PASS regions=["gate_lower_cliffs:ok","broken_causeways:ok","windscar_ravine:ok","high_roost_sky_shrine:ok","upper_cloudreach:ok","summit_final_stronghold:ok"] launches=6 stormwood=true
+F06#3 WITNESS PASS launches=6 loaner_frames=23078 violations=0
+CLOUDREACH CONTINUOUS PASS from_save=res://tests/fixtures/earned_saves/c1_arrival stage=complete distance_m=18865.5 dead_travel_max_s=98.9
+exit 0

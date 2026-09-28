@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T01:40Z",
+ "updated": "2026-09-28T07:30Z",
  "headline": [
-  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main (3dbec66b): every lane's work, partial work included.",
+  "Criteria met: 86 of 101 (Stormwood F09#3 landed, #398; F10#3 landed). Chapter cards complete: M4, C1, C2, C3, S3, T1 and T3 (7 of 13). Main is green: full CI run 36375973966 passed 33/33 at d971d248, after the eight-tick (#394) and co-op forced-dismount (#396) fixes.",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
@@ -287,6 +287,30 @@
    "sha": "3dbec66b",
    "state": "Merged",
    "contents": "Every lane head consolidated, work in progress switched off or unwired; phase briefs CLAUDE_START_HERE/CODEX_START_HERE; self-landing process; docs cleanup; owner's 23:55 decisions"
+  },
+  {
+   "name": "CI gap fix (PR #393)",
+   "sha": "6f0420d8",
+   "state": "Merged; the merge push got CI",
+   "contents": "Main pushes diff against the last main commit CI ran on; publish-watch dispatches fast CI when main's tip has no CI run (GITHUB_TOKEN auto-merge pushes start none)"
+  },
+  {
+   "name": "Eight-tick tap fix (PR #394)",
+   "sha": "7cb77fa7",
+   "state": "Merged, fast CI green",
+   "contents": "gate_a_opening_drive counts tap ticks from the parse: full-run failure in verify-regions-shard"
+  },
+  {
+   "name": "Co-op forced-dismount fix (PR #396)",
+   "sha": "d971d248",
+   "state": "Merged; full CI green (33/33)",
+   "contents": "A shared realm fight seats the ally sideways only onto real, level ground; the guest's creature no longer falls off a Cloudreach road when a fight opens"
+  },
+  {
+   "name": "Cloudreach Phase 1 landing (tb/cloudreach)",
+   "sha": "see PR",
+   "state": "PR with auto-merge",
+   "contents": "F08#3 (live production-camera High Perches, judge PASS), F08#4 (settlement residents, Cliffhold ambience, Broken Causeways crown carve; judges PASS), card C2 (earned chapter A7/ledger + six activities) and card C3 (two-peer co-op and Solmane aftermath); Cloudreach complete for Phase 1"
   }
  ],
  "lanes": [
@@ -297,8 +321,8 @@
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
-   "now": "Phase 1 queue: F08#3, F08#4, then C2 and C3",
-   "next": "Self-lands each criterion"
+   "now": "Complete for Phase 1: F08#3, F08#4, C2, C3 landed; every Cloudreach row and card met (Bars A/B clauses → Phase 2 catalog)",
+   "next": "Stops. Open debt outside the queue: owned-carrier Fly (every flight uses Maela's loaner)"
   },
   {
    "lane": "Stormwood (tb/stormwood)",
@@ -327,6 +351,7 @@
   }
  ],
  "decisions": [
+  "Owner 2026-09-28: fix the auto-merge CI gap. A merge pushed by GITHUB_TOKEN auto-merge starts no CI run, so batch 67 reached main untested and the next docs-only run skipped every job. Fixed by chaining main CI to the last run and a 30-minute CI reconciler.",
   "Owner 21:20: the homeward return route after Tidewake is exempt from A7 (T3/F15).",
   "Healed Meadows: runtime regreen, herd returns, pylons fall; no re-bake.",
   "Bramblebun: sheet 06 approved for one Meshy redo with rust/ochre thorns.",

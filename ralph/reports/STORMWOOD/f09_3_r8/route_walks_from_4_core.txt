@@ -1,0 +1,1044 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ROUTE WALKS loading a copy of user://swcp_a/4_core from user://route_walks_8048_2901772
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+STORMWOOD BUILD shell=false elapsed_ms=199 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=455 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=691 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=695 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=701 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=703 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=704 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=704 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=705 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=705 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=967 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=987 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=987 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 38789 placements, 0 skipped]=322 reorder[8 layers]=34
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=382 mark_harvestable=19 group_by_model=36 register_mesh_assets=21 build_batches_total=1055 (of which harvest_points[13559 nodes]=873, initial_collision_stream[13621 solid]=47) update_mmis=169
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+ROUTE WALKS earned start user://swcp_a/4_core rootgate_released=true party=5 placed_buildings=1
+DISCLOSED SEAM 1 earned start: title Load of user://swcp_a/4_core (4_core of the continuous full run, which began at the Cloudreach-boundary fixture)
+STORMWOOD ENCOUNTERS READY wild=806
+DISCLOSED SEAM 4 clock: Engine.time_scale=8 physics=480 Hz (fights/conductor roads/Build at 1x)
+ROUTE WALKS start LOOP pools_west_loop: 6 vertices, 71 waypoints, 2728 m authored, requires=
+DISCLOSED SEAM 2 teleport: pools_west_loop start (-590.0,1060.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 1/71 from=(-590.0, 27.0659, 1060.0) target=(-627.647, 29.75399, 1068.823) distance_m=38.7 budget_frames=3093
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 1/71 elapsed_ms=1164 walked_frames=451 player=(-625.2186, 29.58818, 1068.254)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 2/71 from=(-625.2186, 29.58818, 1068.254) target=(-665.2941, 32.372, 1077.647) distance_m=41.2 budget_frames=3292
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 2/71 elapsed_ms=1072 walked_frames=466 player=(-662.8959, 32.33483, 1077.083)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 3/71 from=(-662.8959, 32.33483, 1077.083) target=(-702.9412, 32.84415, 1086.471) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 3/71 elapsed_ms=987 walked_frames=465 player=(-700.5422, 32.82214, 1085.908)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 4/71 from=(-700.5422, 32.82214, 1085.908) target=(-740.5883, 32.84204, 1095.294) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 4/71 elapsed_ms=1250 walked_frames=465 player=(-738.2155, 32.6427, 1094.737)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 5/71 from=(-738.2155, 32.6427, 1094.737) target=(-778.2353, 35.36463, 1104.118) distance_m=41.1 budget_frames=3288
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 5/71 elapsed_ms=1268 walked_frames=465 player=(-775.8036, 35.21656, 1103.547)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 6/71 from=(-775.8036, 35.21656, 1103.547) target=(-815.8823, 37.42867, 1112.941) distance_m=41.2 budget_frames=3293
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 6/71 elapsed_ms=1107 walked_frames=466 player=(-813.4798, 37.26061, 1112.378)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 7/71 from=(-813.4798, 37.26061, 1112.378) target=(-853.5294, 36.44758, 1121.765) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 7/71 elapsed_ms=1261 walked_frames=465 player=(-851.1342, 36.44642, 1121.202)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 8/71 from=(-851.1342, 36.44642, 1121.202) target=(-891.1765, 34.3168, 1130.588) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 8/71 elapsed_ms=1118 walked_frames=466 player=(-888.8173, 34.32946, 1130.035)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 9/71 from=(-888.8173, 34.32946, 1130.035) target=(-928.8235, 32.45527, 1139.412) distance_m=41.1 budget_frames=3287
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 9/71 elapsed_ms=990 walked_frames=464 player=(-926.3954, 32.72739, 1138.844)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 10/71 from=(-926.3954, 32.72739, 1138.844) target=(-966.4706, 30.00328, 1148.235) distance_m=41.2 budget_frames=3292
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 10/71 elapsed_ms=1000 walked_frames=466 player=(-964.1083, 30.3134, 1147.683)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 11/71 from=(-964.1083, 30.3134, 1147.683) target=(-1004.118, 31.07947, 1157.059) distance_m=41.1 budget_frames=3287
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 11/71 elapsed_ms=1010 walked_frames=465 player=(-1001.731, 31.20505, 1156.5)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 12/71 from=(-1001.731, 31.20505, 1156.5) target=(-1041.765, 30.24461, 1165.882) distance_m=41.1 budget_frames=3289
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 12/71 elapsed_ms=1045 walked_frames=464 player=(-1039.335, 30.44211, 1165.313)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 13/71 from=(-1039.335, 30.44211, 1165.313) target=(-1079.412, 27.93048, 1174.706) distance_m=41.2 budget_frames=3293
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 13/71 elapsed_ms=1021 walked_frames=466 player=(-1077.02, 28.10141, 1174.149)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 14/71 from=(-1077.02, 28.10141, 1174.149) target=(-1117.059, 24.42338, 1183.529) distance_m=41.1 budget_frames=3289
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 14/71 elapsed_ms=1019 walked_frames=466 player=(-1114.659, 24.61676, 1182.969)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 15/71 from=(-1114.659, 24.61676, 1182.969) target=(-1154.706, 22.21899, 1192.353) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 15/71 elapsed_ms=1735 walked_frames=465 player=(-1152.275, 22.42243, 1191.784)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 16/71 from=(-1152.275, 22.42243, 1191.784) target=(-1192.353, 22.02679, 1201.177) distance_m=41.2 budget_frames=3293
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 16/71 elapsed_ms=1134 walked_frames=465 player=(-1189.964, 22.19692, 1200.616)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 17/71 (vertex 1) from=(-1189.964, 22.19692, 1200.616) target=(-1230.0, 22.60583, 1210.0) distance_m=41.1 budget_frames=3289
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 17/71 (vertex 1) elapsed_ms=981 walked_frames=465 player=(-1227.619, 22.46356, 1209.442)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 18/71 from=(-1227.619, 22.46356, 1209.442) target=(-1255.0, 23.61003, 1239.0) distance_m=40.3 budget_frames=3223
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 18/71 elapsed_ms=987 walked_frames=458 player=(-1253.391, 23.56676, 1237.194)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 19/71 from=(-1253.391, 23.56676, 1237.194) target=(-1280.0, 25.72072, 1268.0) distance_m=40.7 budget_frames=3256
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 19/71 elapsed_ms=1048 walked_frames=460 player=(-1278.396, 25.73195, 1266.143)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 20/71 from=(-1278.396, 25.73195, 1266.143) target=(-1305.0, 24.74715, 1297.0) distance_m=40.7 budget_frames=3259
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 20/71 elapsed_ms=1065 walked_frames=460 player=(-1303.398, 24.99476, 1295.143)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 21/71 from=(-1303.398, 24.99476, 1295.143) target=(-1330.0, 25.20692, 1326.0) distance_m=40.7 budget_frames=3259
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 21/71 elapsed_ms=947 walked_frames=460 player=(-1328.391, 25.13993, 1324.133)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 22/71 from=(-1328.391, 25.13993, 1324.133) target=(-1355.0, 27.20311, 1355.0) distance_m=40.8 budget_frames=3260
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 22/71 elapsed_ms=1086 walked_frames=460 player=(-1353.371, 27.11526, 1353.109)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 23/71 from=(-1353.371, 27.11526, 1353.109) target=(-1380.0, 27.71826, 1384.0) distance_m=40.8 budget_frames=3262
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 23/71 elapsed_ms=1266 walked_frames=460 player=(-1378.368, 27.78765, 1382.106)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 24/71 from=(-1378.368, 27.78765, 1382.106) target=(-1405.0, 28.59929, 1413.0) distance_m=40.8 budget_frames=3263
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 24/71 elapsed_ms=1047 walked_frames=461 player=(-1403.374, 28.72552, 1411.115)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 25/71 from=(-1403.374, 28.72552, 1411.115) target=(-1430.0, 28.01952, 1442.0) distance_m=40.8 budget_frames=3262
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 25/71 elapsed_ms=1156 walked_frames=460 player=(-1428.383, 27.96712, 1440.125)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 26/71 from=(-1428.383, 27.96712, 1440.125) target=(-1455.0, 29.68222, 1471.0) distance_m=40.8 budget_frames=3261
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 26/71 elapsed_ms=1044 walked_frames=463 player=(-1453.369, 29.76985, 1469.107)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 27/71 (vertex 2) from=(-1453.369, 29.76985, 1469.107) target=(-1480.0, 30.87416, 1500.0) distance_m=40.8 budget_frames=3262
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 27/71 (vertex 2) elapsed_ms=1126 walked_frames=461 player=(-1478.412, 30.84826, 1498.159)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 28/71 from=(-1478.412, 30.84826, 1498.159) target=(-1445.882, 29.40338, 1516.471) distance_m=37.3 budget_frames=2986
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 28/71 elapsed_ms=1009 walked_frames=449 player=(-1448.074, 29.72051, 1515.385)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 29/71 from=(-1448.074, 29.72051, 1515.385) target=(-1411.765, 27.09774, 1532.941) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 29/71 elapsed_ms=1043 walked_frames=456 player=(-1413.962, 27.2872, 1531.883)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 30/71 from=(-1413.962, 27.2872, 1531.883) target=(-1377.647, 28.04522, 1549.412) distance_m=40.3 budget_frames=3225
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 30/71 elapsed_ms=1001 walked_frames=455 player=(-1379.864, 27.92992, 1548.34)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 31/71 from=(-1379.864, 27.92992, 1548.34) target=(-1343.529, 24.98336, 1565.882) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 31/71 elapsed_ms=1436 walked_frames=460 player=(-1345.741, 25.40511, 1564.814)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 32/71 from=(-1345.741, 25.40511, 1564.814) target=(-1309.412, 23.31196, 1582.353) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 32/71 elapsed_ms=1104 walked_frames=457 player=(-1311.594, 23.28404, 1581.297)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 33/71 from=(-1311.594, 23.28404, 1581.297) target=(-1275.294, 24.4761, 1598.823) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 33/71 elapsed_ms=944 walked_frames=455 player=(-1277.478, 24.21872, 1597.768)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 34/71 from=(-1277.478, 24.21872, 1597.768) target=(-1241.177, 25.96899, 1615.294) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 34/71 elapsed_ms=974 walked_frames=455 player=(-1243.394, 25.75251, 1614.219)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 35/71 from=(-1243.394, 25.75251, 1614.219) target=(-1207.059, 26.91742, 1631.765) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 35/71 elapsed_ms=1093 walked_frames=456 player=(-1209.269, 26.81997, 1630.696)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 36/71 from=(-1209.269, 26.81997, 1630.696) target=(-1172.941, 29.01673, 1648.235) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 36/71 elapsed_ms=1169 walked_frames=459 player=(-1175.157, 29.0345, 1647.165)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 37/71 from=(-1175.157, 29.0345, 1647.165) target=(-1138.823, 30.69413, 1664.706) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 37/71 elapsed_ms=1089 walked_frames=455 player=(-1141.061, 30.55832, 1663.622)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 38/71 from=(-1141.061, 30.55832, 1663.622) target=(-1104.706, 32.78544, 1681.177) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 38/71 elapsed_ms=1082 walked_frames=456 player=(-1106.925, 32.616, 1680.103)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 39/71 from=(-1106.925, 32.616, 1680.103) target=(-1070.588, 31.31004, 1697.647) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 39/71 elapsed_ms=1195 walked_frames=456 player=(-1072.79, 31.278, 1696.584)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 40/71 from=(-1072.79, 31.278, 1696.584) target=(-1036.471, 29.3619, 1714.118) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 40/71 elapsed_ms=1068 walked_frames=455 player=(-1038.714, 29.60089, 1713.035)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 41/71 from=(-1038.714, 29.60089, 1713.035) target=(-1002.353, 29.30125, 1730.588) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 41/71 elapsed_ms=956 walked_frames=456 player=(-1004.593, 29.48613, 1729.507)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 42/71 from=(-1004.593, 29.48613, 1729.507) target=(-968.2353, 29.48774, 1747.059) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 42/71 elapsed_ms=1018 walked_frames=458 player=(-970.4766, 29.33527, 1745.976)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 43/71 from=(-970.4766, 29.33527, 1745.976) target=(-934.1176, 31.5896, 1763.529) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 43/71 elapsed_ms=1211 walked_frames=457 player=(-936.3422, 31.71944, 1762.454)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 44/71 (vertex 3) from=(-936.3422, 31.71944, 1762.454) target=(-900.0, 31.94764, 1780.0) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 44/71 (vertex 3) elapsed_ms=1398 walked_frames=456 player=(-902.1859, 32.10683, 1778.946)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 45/71 from=(-902.1859, 32.10683, 1778.946) target=(-869.4117, 30.28553, 1757.647) distance_m=39.1 budget_frames=3126
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 45/71 elapsed_ms=1723 walked_frames=456 player=(-871.3852, 30.54106, 1759.096)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 46/71 from=(-871.3852, 30.54106, 1759.096) target=(-838.8235, 28.00529, 1735.294) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 46/71 elapsed_ms=1907 walked_frames=456 player=(-840.7878, 28.214, 1736.731)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 47/71 from=(-840.7878, 28.214, 1736.731) target=(-808.2353, 27.16934, 1712.941) distance_m=40.3 budget_frames=3225
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 47/71 elapsed_ms=1838 walked_frames=455 player=(-810.226, 27.45124, 1714.397)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 48/71 from=(-810.226, 27.45124, 1714.397) target=(-777.647, 27.10133, 1690.588) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 48/71 elapsed_ms=2149 walked_frames=455 player=(-779.6471, 27.09263, 1692.049)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 49/71 from=(-779.6471, 27.09263, 1692.049) target=(-747.0588, 27.49284, 1668.235) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 49/71 elapsed_ms=2042 walked_frames=455 player=(-749.0603, 27.52537, 1669.697)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 50/71 from=(-749.0603, 27.52537, 1669.697) target=(-716.4706, 27.37146, 1645.882) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 50/71 elapsed_ms=1776 walked_frames=455 player=(-718.4761, 27.15693, 1647.346)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 51/71 from=(-718.4761, 27.15693, 1647.346) target=(-685.8823, 28.75768, 1623.529) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 51/71 elapsed_ms=2854 walked_frames=456 player=(-687.8446, 28.59859, 1624.96)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 52/71 from=(-687.8446, 28.59859, 1624.96) target=(-655.2941, 28.09474, 1601.177) distance_m=40.3 budget_frames=3225
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 52/71 elapsed_ms=1832 walked_frames=455 player=(-657.2624, 28.11058, 1602.613)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 53/71 from=(-657.2624, 28.11058, 1602.613) target=(-624.7059, 26.547, 1578.823) distance_m=40.3 budget_frames=3225
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 53/71 elapsed_ms=1983 walked_frames=455 player=(-626.7065, 26.53536, 1580.285)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 54/71 from=(-626.7065, 26.53536, 1580.285) target=(-594.1177, 26.20165, 1556.471) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 54/71 elapsed_ms=2025 walked_frames=455 player=(-596.127, 26.38279, 1557.937)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 55/71 from=(-596.127, 26.38279, 1557.937) target=(-563.5294, 27.77426, 1534.118) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 55/71 elapsed_ms=1537 walked_frames=456 player=(-565.5044, 27.58558, 1535.559)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 56/71 from=(-565.5044, 27.58558, 1535.559) target=(-532.9412, 29.94231, 1511.765) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 56/71 elapsed_ms=2049 walked_frames=456 player=(-534.9441, 29.76114, 1513.224)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 57/71 from=(-534.9441, 29.76114, 1513.224) target=(-502.3529, 32.37026, 1489.412) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 57/71 elapsed_ms=2236 walked_frames=456 player=(-504.3538, 32.27841, 1490.871)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 58/71 from=(-504.3538, 32.27841, 1490.871) target=(-471.7647, 35.46269, 1467.059) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 58/71 elapsed_ms=1905 walked_frames=457 player=(-473.7815, 35.383, 1468.529)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 59/71 from=(-473.7815, 35.383, 1468.529) target=(-441.1765, 36.07753, 1444.706) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 59/71 elapsed_ms=1495 walked_frames=456 player=(-443.1293, 36.08891, 1446.132)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 60/71 from=(-443.1293, 36.08891, 1446.132) target=(-410.5882, 34.92533, 1422.353) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 60/71 elapsed_ms=1820 walked_frames=455 player=(-412.5896, 35.13459, 1423.814)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 61/71 (vertex 4) from=(-412.5896, 35.13459, 1423.814) target=(-380.0, 32.23082, 1400.0) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 61/71 (vertex 4) elapsed_ms=1878 walked_frames=457 player=(-382.0035, 32.24108, 1401.467)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 62/71 from=(-382.0035, 32.24108, 1401.467) target=(-401.0, 30.89469, 1366.0) distance_m=40.2 budget_frames=3218
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 62/71 elapsed_ms=2504 walked_frames=503 player=(-400.0116, 31.10012, 1368.24)
+FINDING pools_west_loop: the authored line (-400,1368)->(-422,1332) crosses lit linked arch b_pools at (-410.0,1350.0) (0.9 m from its centre); walking it straight carries the trainer to b_rodline, so the walk steps round the frame via [(-417.0, 1356.5), (-417.0, 1343.5)]
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 63/71 round arch b_pools from=(-400.0116, 31.10012, 1368.24) target=(-417.0, 29.68626, 1356.5) distance_m=20.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 63/71 round arch b_pools elapsed_ms=1287 walked_frames=238 player=(-416.064, 29.79606, 1357.144)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 63/71 round arch b_pools from=(-416.064, 29.79606, 1357.144) target=(-417.0, 28.85578, 1343.5) distance_m=13.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 63/71 round arch b_pools elapsed_ms=1073 walked_frames=160 player=(-417.0571, 28.86767, 1344.645)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 63/71 from=(-417.0571, 28.86767, 1344.645) target=(-422.0, 28.84139, 1332.0) distance_m=13.6 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 63/71 elapsed_ms=588 walked_frames=135 player=(-420.955, 28.85781, 1334.269)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 64/71 from=(-420.955, 28.85781, 1334.269) target=(-443.0, 30.48881, 1298.0) distance_m=42.4 budget_frames=3395
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 64/71 elapsed_ms=2263 walked_frames=481 player=(-441.7273, 30.39534, 1300.075)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 65/71 from=(-441.7273, 30.39534, 1300.075) target=(-464.0, 29.52442, 1264.0) distance_m=42.4 budget_frames=3391
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 65/71 elapsed_ms=2341 walked_frames=480 player=(-462.6974, 29.27288, 1266.107)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 66/71 from=(-462.6974, 29.27288, 1266.107) target=(-485.0, 30.34246, 1230.0) distance_m=42.4 budget_frames=3395
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 66/71 elapsed_ms=1207 walked_frames=481 player=(-483.7249, 30.46102, 1232.061)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 67/71 from=(-483.7249, 30.46102, 1232.061) target=(-506.0, 29.80528, 1196.0) distance_m=42.4 budget_frames=3390
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 67/71 elapsed_ms=1681 walked_frames=479 player=(-504.6905, 29.9045, 1198.121)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 68/71 from=(-504.6905, 29.9045, 1198.121) target=(-527.0, 28.9023, 1162.0) distance_m=42.5 budget_frames=3396
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 68/71 elapsed_ms=1371 walked_frames=481 player=(-525.7087, 28.8688, 1164.094)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 69/71 from=(-525.7087, 28.8688, 1164.094) target=(-548.0, 28.18264, 1128.0) distance_m=42.4 budget_frames=3393
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 69/71 elapsed_ms=1495 walked_frames=480 player=(-546.7061, 28.23575, 1130.097)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 70/71 from=(-546.7061, 28.23575, 1130.097) target=(-569.0, 25.9162, 1094.0) distance_m=42.4 budget_frames=3394
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 70/71 elapsed_ms=2073 walked_frames=481 player=(-567.7139, 25.89453, 1096.081)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to pools_west_loop waypoint 71/71 (vertex 5) from=(-567.7139, 25.89453, 1096.081) target=(-590.0, 27.06199, 1060.0) distance_m=42.4 budget_frames=3392
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to pools_west_loop waypoint 71/71 (vertex 5) elapsed_ms=1422 walked_frames=480 player=(-588.7061, 26.76917, 1062.091)
+LOOP pools_west_loop vertices=5/5 waypoints=71/71 walked=2728m authored=2728m wall=101s fights=0 lightning_hits=0 deaths=0 jumps=0 result=PASS
+ROUTE WALKS start LOOP crown_sightline_loop: 7 vertices, 78 waypoints, 3010 m authored, requires=
+DISCLOSED SEAM 2 teleport: crown_sightline_loop start (-380.0,1400.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 1/78 from=(-380.102, 32.27396, 1401.917) target=(-344.1667, 30.94654, 1414.167) distance_m=38.0 budget_frames=3037
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 1/78 elapsed_ms=2031 walked_frames=432 player=(-346.5044, 31.05257, 1413.368)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 2/78 from=(-346.5044, 31.05257, 1413.368) target=(-308.3333, 31.63756, 1428.333) distance_m=41.0 budget_frames=3279
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 2/78 elapsed_ms=1062 walked_frames=463 player=(-310.6268, 31.41116, 1427.428)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 3/78 from=(-310.6268, 31.41116, 1427.428) target=(-272.5, 31.29161, 1442.5) distance_m=41.0 budget_frames=3279
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 3/78 elapsed_ms=1417 walked_frames=463 player=(-274.7664, 31.49763, 1441.603)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 4/78 from=(-274.7664, 31.49763, 1441.603) target=(-236.6667, 28.25653, 1456.667) distance_m=41.0 budget_frames=3277
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 4/78 elapsed_ms=1536 walked_frames=464 player=(-238.9348, 28.47378, 1455.768)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 5/78 from=(-238.9348, 28.47378, 1455.768) target=(-200.8333, 29.9595, 1470.833) distance_m=41.0 budget_frames=3277
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 5/78 elapsed_ms=1714 walked_frames=463 player=(-203.1428, 29.72535, 1469.92)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 6/78 from=(-203.1428, 29.72535, 1469.92) target=(-165.0, 31.19498, 1485.0) distance_m=41.0 budget_frames=3281
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 6/78 elapsed_ms=1693 walked_frames=463 player=(-167.3232, 31.0899, 1484.083)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 7/78 from=(-167.3232, 31.0899, 1484.083) target=(-129.1667, 31.07076, 1499.167) distance_m=41.0 budget_frames=3282
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 7/78 elapsed_ms=1875 walked_frames=464 player=(-131.4184, 31.01109, 1498.275)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 8/78 from=(-131.4184, 31.01109, 1498.275) target=(-93.33331, 32.66119, 1513.333) distance_m=41.0 budget_frames=3276
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 8/78 elapsed_ms=1092 walked_frames=463 player=(-95.61583, 32.6303, 1512.432)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 9/78 from=(-95.61583, 32.6303, 1512.432) target=(-57.5, 31.08046, 1527.5) distance_m=41.0 budget_frames=3278
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 9/78 elapsed_ms=1184 walked_frames=463 player=(-59.77081, 31.24677, 1526.601)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 10/78 from=(-59.77081, 31.24677, 1526.601) target=(-21.66669, 30.38268, 1541.667) distance_m=41.0 budget_frames=3277
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 10/78 elapsed_ms=1150 walked_frames=463 player=(-23.92732, 30.47767, 1540.772)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 11/78 from=(-23.92732, 30.47767, 1540.772) target=(14.16669, 28.29899, 1555.833) distance_m=41.0 budget_frames=3277
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 11/78 elapsed_ms=1107 walked_frames=463 player=(11.88208, 28.27749, 1554.931)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 12/78 (vertex 1) from=(11.88208, 28.27749, 1554.931) target=(50.0, 26.21876, 1570.0) distance_m=41.0 budget_frames=3279
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 12/78 (vertex 1) elapsed_ms=986 walked_frames=463 player=(47.68482, 26.14668, 1569.086)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 13/78 from=(47.68482, 26.14668, 1569.086) target=(60.0, 23.92198, 1607.273) distance_m=40.1 budget_frames=3209
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 13/78 elapsed_ms=1049 walked_frames=458 player=(59.2878, 24.184, 1604.89)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 14/78 from=(59.2878, 24.184, 1604.89) target=(70.0, 22.22328, 1644.545) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 14/78 elapsed_ms=1034 walked_frames=465 player=(69.37401, 22.07607, 1642.207)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 15/78 from=(69.37401, 22.07607, 1642.207) target=(80.0, 22.4256, 1681.818) distance_m=41.0 budget_frames=3280
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 15/78 elapsed_ms=1074 walked_frames=464 player=(79.3746, 22.68826, 1679.463)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 16/78 from=(79.3746, 22.68826, 1679.463) target=(90.0, 21.11477, 1719.091) distance_m=41.0 budget_frames=3282
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 16/78 elapsed_ms=1000 walked_frames=463 player=(89.3548, 21.3007, 1716.678)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 17/78 from=(89.3548, 21.3007, 1716.678) target=(100.0, 22.80678, 1756.364) distance_m=41.1 budget_frames=3287
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 17/78 elapsed_ms=1119 walked_frames=465 player=(99.36991, 22.62507, 1754.02)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 18/78 from=(99.36991, 22.62507, 1754.02) target=(110.0, 24.63099, 1793.636) distance_m=41.0 budget_frames=3281
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 18/78 elapsed_ms=998 walked_frames=464 player=(109.353, 24.50863, 1791.262)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 19/78 from=(109.353, 24.50863, 1791.262) target=(120.0, 26.05102, 1830.909) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 19/78 elapsed_ms=1054 walked_frames=464 player=(119.3556, 26.11236, 1828.502)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 20/78 from=(119.3556, 26.11236, 1828.502) target=(130.0, 28.20074, 1868.182) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 20/78 elapsed_ms=1076 walked_frames=464 player=(129.3584, 27.98175, 1865.775)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 21/78 from=(129.3584, 27.98175, 1865.775) target=(140.0, 27.78245, 1905.455) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 21/78 elapsed_ms=1030 walked_frames=464 player=(139.362, 27.77354, 1903.07)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 22/78 from=(139.362, 27.77354, 1903.07) target=(150.0, 29.1197, 1942.727) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 22/78 elapsed_ms=1257 walked_frames=464 player=(149.3533, 29.13627, 1940.332)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 23/78 (vertex 2) from=(149.3533, 29.13627, 1940.332) target=(160.0, 27.29358, 1980.0) distance_m=41.1 budget_frames=3285
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 23/78 (vertex 2) elapsed_ms=1114 walked_frames=464 player=(159.3449, 27.33461, 1977.594)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 24/78 from=(159.3449, 27.33461, 1977.594) target=(127.2727, 24.40764, 1996.364) distance_m=37.2 budget_frames=2972
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 24/78 elapsed_ms=873 walked_frames=422 player=(129.4312, 24.58676, 1995.129)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 25/78 from=(129.4312, 24.58676, 1995.129) target=(94.54546, 23.74809, 2012.727) distance_m=39.1 budget_frames=3125
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 25/78 elapsed_ms=1002 walked_frames=440 player=(96.75555, 23.57264, 2011.619)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 26/78 from=(96.75555, 23.57264, 2011.619) target=(61.81818, 24.99862, 2029.091) distance_m=39.1 budget_frames=3125
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 26/78 elapsed_ms=987 walked_frames=440 player=(64.02124, 25.13003, 2027.989)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 27/78 from=(64.02124, 25.13003, 2027.989) target=(29.09091, 24.44583, 2045.455) distance_m=39.1 budget_frames=3124
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 27/78 elapsed_ms=1085 walked_frames=440 player=(31.27412, 24.64547, 2044.361)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 28/78 from=(31.27412, 24.64547, 2044.361) target=(-3.636368, 23.85808, 2061.818) distance_m=39.0 budget_frames=3122
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 28/78 elapsed_ms=1082 walked_frames=441 player=(-1.472554, 23.87375, 2060.737)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 29/78 from=(-1.472554, 23.87375, 2060.737) target=(-36.36365, 24.54057, 2078.182) distance_m=39.0 budget_frames=3120
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 29/78 elapsed_ms=1090 walked_frames=439 player=(-34.14956, 24.44289, 2077.078)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 30/78 from=(-34.14956, 24.44289, 2077.078) target=(-69.09091, 26.15129, 2094.545) distance_m=39.1 budget_frames=3125
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 30/78 elapsed_ms=989 walked_frames=440 player=(-66.87524, 26.06835, 2093.438)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 31/78 from=(-66.87524, 26.06835, 2093.438) target=(-101.8182, 28.31209, 2110.909) distance_m=39.1 budget_frames=3125
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 31/78 elapsed_ms=1282 walked_frames=441 player=(-99.60259, 28.22665, 2109.804)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 32/78 from=(-99.60259, 28.22665, 2109.804) target=(-134.5454, 29.42384, 2127.273) distance_m=39.1 budget_frames=3125
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 32/78 elapsed_ms=1146 walked_frames=441 player=(-132.3539, 29.2724, 2126.18)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 33/78 from=(-132.3539, 29.2724, 2126.18) target=(-167.2727, 31.24557, 2143.636) distance_m=39.0 budget_frames=3123
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 33/78 elapsed_ms=1185 walked_frames=440 player=(-165.0538, 31.0341, 2142.527)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 34/78 (vertex 3) from=(-165.0538, 31.0341, 2142.527) target=(-200.0, 32.53221, 2160.0) distance_m=39.1 budget_frames=3125
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 34/78 (vertex 3) elapsed_ms=993 walked_frames=440 player=(-197.7902, 32.47609, 2158.896)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 35/78 from=(-197.7902, 32.47609, 2158.896) target=(-238.4615, 31.40273, 2170.769) distance_m=42.4 budget_frames=3389
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 35/78 elapsed_ms=1139 walked_frames=480 player=(-236.1378, 31.46058, 2170.089)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 36/78 from=(-236.1378, 31.46058, 2170.089) target=(-276.9231, 32.3371, 2181.539) distance_m=42.4 budget_frames=3388
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 36/78 elapsed_ms=1044 walked_frames=480 player=(-274.5732, 32.15454, 2180.884)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 37/78 from=(-274.5732, 32.15454, 2180.884) target=(-315.3846, 33.38934, 2192.308) distance_m=42.4 budget_frames=3390
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 37/78 elapsed_ms=1056 walked_frames=480 player=(-313.0426, 33.16107, 2191.656)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 38/78 from=(-313.0426, 33.16107, 2191.656) target=(-353.8462, 35.04691, 2203.077) distance_m=42.4 budget_frames=3389
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 38/78 elapsed_ms=1106 walked_frames=480 player=(-351.4767, 34.90437, 2202.416)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 39/78 from=(-351.4767, 34.90437, 2202.416) target=(-392.3077, 35.21601, 2213.846) distance_m=42.4 budget_frames=3392
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 39/78 elapsed_ms=1277 walked_frames=480 player=(-389.9526, 35.14323, 2213.19)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 40/78 from=(-389.9526, 35.14323, 2213.19) target=(-430.7692, 35.43848, 2224.615) distance_m=42.4 budget_frames=3390
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 40/78 elapsed_ms=1132 walked_frames=479 player=(-428.3669, 35.4604, 2223.944)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 41/78 from=(-428.3669, 35.4604, 2223.944) target=(-469.2308, 36.88662, 2235.385) distance_m=42.4 budget_frames=3394
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 41/78 elapsed_ms=1477 walked_frames=481 player=(-466.834, 36.73549, 2234.719)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 42/78 from=(-466.834, 36.73549, 2234.719) target=(-507.6923, 39.30172, 2246.154) distance_m=42.4 budget_frames=3394
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 42/78 elapsed_ms=1038 walked_frames=481 player=(-505.3295, 39.08081, 2245.496)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 43/78 from=(-505.3295, 39.08081, 2245.496) target=(-546.1539, 42.32598, 2256.923) distance_m=42.4 budget_frames=3391
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 43/78 elapsed_ms=1011 walked_frames=483 player=(-543.7631, 42.53722, 2256.258)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 44/78 from=(-543.7631, 42.53722, 2256.258) target=(-584.6154, 41.50063, 2267.692) distance_m=42.4 budget_frames=3393
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 44/78 elapsed_ms=1028 walked_frames=480 player=(-582.254, 41.76389, 2267.031)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 45/78 from=(-582.254, 41.76389, 2267.031) target=(-623.0769, 40.62418, 2278.461) distance_m=42.4 budget_frames=3391
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 45/78 elapsed_ms=1206 walked_frames=480 player=(-620.7103, 40.71942, 2277.8)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 46/78 from=(-620.7103, 40.71942, 2277.8) target=(-661.5385, 42.91654, 2289.231) distance_m=42.4 budget_frames=3391
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 46/78 elapsed_ms=1426 walked_frames=480 player=(-659.1559, 42.75359, 2288.565)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 47/78 (vertex 4) from=(-659.1559, 42.75359, 2288.565) target=(-700.0, 44.03091, 2300.0) distance_m=42.4 budget_frames=3393
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 47/78 (vertex 4) elapsed_ms=1225 walked_frames=480 player=(-697.5937, 44.02115, 2299.33)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 48/78 from=(-697.5937, 44.02115, 2299.33) target=(-714.2857, 42.83415, 2262.857) distance_m=40.1 budget_frames=3208
+ROUTE WALKS jump 7.3 m (-707.0,2279.7) -> (-713.6,2276.7) fighting=true
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during crown_sightline_loop waypoint 48/78 (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 48/78 elapsed_ms=57697 walked_frames=412 player=(-714.1613, 43.05506, 2265.314)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 49/78 from=(-714.1613, 43.05506, 2265.314) target=(-728.5714, 42.88113, 2225.714) distance_m=42.1 budget_frames=3371
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 49/78 elapsed_ms=1071 walked_frames=475 player=(-727.7159, 43.10293, 2227.978)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 50/78 from=(-727.7159, 43.10293, 2227.978) target=(-742.8571, 42.53675, 2188.572) distance_m=42.2 budget_frames=3377
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 50/78 elapsed_ms=1474 walked_frames=481 player=(-741.9487, 42.6466, 2190.836)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 51/78 from=(-741.9487, 42.6466, 2190.836) target=(-757.1429, 38.37849, 2151.428) distance_m=42.2 budget_frames=3378
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 51/78 elapsed_ms=1051 walked_frames=480 player=(-756.2511, 38.87697, 2153.739)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 52/78 from=(-756.2511, 38.87697, 2153.739) target=(-771.4286, 33.49294, 2114.286) distance_m=42.3 budget_frames=3381
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 52/78 elapsed_ms=1038 walked_frames=482 player=(-770.5426, 33.72858, 2116.59)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 53/78 from=(-770.5426, 33.72858, 2116.59) target=(-785.7143, 30.65477, 2077.143) distance_m=42.3 budget_frames=3381
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 53/78 elapsed_ms=1018 walked_frames=479 player=(-784.8255, 30.88003, 2079.448)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 54/78 from=(-784.8255, 30.88003, 2079.448) target=(-800.0, 29.96056, 2040.0) distance_m=42.3 budget_frames=3381
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 54/78 elapsed_ms=1263 walked_frames=478 player=(-799.1179, 29.99673, 2042.281)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 55/78 from=(-799.1179, 29.99673, 2042.281) target=(-814.2857, 28.72851, 2002.857) distance_m=42.2 budget_frames=3379
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 55/78 elapsed_ms=1299 walked_frames=481 player=(-813.4012, 28.89781, 2005.155)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 56/78 from=(-813.4012, 28.89781, 2005.155) target=(-828.5714, 28.29447, 1965.714) distance_m=42.3 budget_frames=3380
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 56/78 elapsed_ms=1236 walked_frames=478 player=(-827.686, 28.38127, 1968.017)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 57/78 from=(-827.686, 28.38127, 1968.017) target=(-842.8572, 25.50895, 1928.571) distance_m=42.3 budget_frames=3380
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 57/78 elapsed_ms=1352 walked_frames=479 player=(-841.969, 25.57525, 1930.882)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 58/78 from=(-841.969, 25.57525, 1930.882) target=(-857.1428, 25.25297, 1891.429) distance_m=42.3 budget_frames=3381
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 58/78 elapsed_ms=1150 walked_frames=478 player=(-856.2491, 25.2272, 1893.753)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 59/78 from=(-856.2491, 25.2272, 1893.753) target=(-871.4286, 27.44396, 1854.286) distance_m=42.3 budget_frames=3382
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 59/78 elapsed_ms=1231 walked_frames=479 player=(-870.5461, 27.34751, 1856.577)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 60/78 from=(-870.5461, 27.34751, 1856.577) target=(-885.7143, 29.76991, 1817.143) distance_m=42.3 budget_frames=3380
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 60/78 elapsed_ms=1826 walked_frames=479 player=(-884.8453, 29.69958, 1819.399)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 61/78 (vertex 5) from=(-884.8453, 29.69958, 1819.399) target=(-900.0, 31.94764, 1780.0) distance_m=42.2 budget_frames=3377
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 61/78 (vertex 5) elapsed_ms=1868 walked_frames=478 player=(-899.1047, 31.70832, 1782.328)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 62/78 from=(-899.1047, 31.70832, 1782.328) target=(-869.4117, 30.28553, 1757.647) distance_m=38.6 budget_frames=3088
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 62/78 elapsed_ms=1294 walked_frames=446 player=(-871.3217, 30.53107, 1759.144)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 63/78 from=(-871.3217, 30.53107, 1759.144) target=(-838.8235, 28.00529, 1735.294) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 63/78 elapsed_ms=1395 walked_frames=455 player=(-840.8348, 28.2203, 1736.767)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 64/78 from=(-840.8348, 28.2203, 1736.767) target=(-808.2353, 27.16934, 1712.941) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 64/78 elapsed_ms=1423 walked_frames=456 player=(-810.2042, 27.44883, 1714.383)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 65/78 from=(-810.2042, 27.44883, 1714.383) target=(-777.647, 27.10133, 1690.588) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 65/78 elapsed_ms=1559 walked_frames=455 player=(-779.6253, 27.09319, 1692.033)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 66/78 from=(-779.6253, 27.09319, 1692.033) target=(-747.0588, 27.49284, 1668.235) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 66/78 elapsed_ms=1662 walked_frames=455 player=(-749.0392, 27.52428, 1669.681)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 67/78 from=(-749.0392, 27.52428, 1669.681) target=(-716.4706, 27.37146, 1645.882) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 67/78 elapsed_ms=1678 walked_frames=455 player=(-718.4536, 27.15904, 1647.329)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 68/78 from=(-718.4536, 27.15904, 1647.329) target=(-685.8823, 28.75768, 1623.529) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 68/78 elapsed_ms=2173 walked_frames=455 player=(-687.8915, 28.59788, 1624.993)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 69/78 from=(-687.8915, 28.59788, 1624.993) target=(-655.2941, 28.09474, 1601.177) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 69/78 elapsed_ms=1370 walked_frames=455 player=(-657.3093, 28.11158, 1602.649)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 70/78 from=(-657.3093, 28.11158, 1602.649) target=(-624.7059, 26.547, 1578.823) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 70/78 elapsed_ms=1615 walked_frames=456 player=(-626.6862, 26.53651, 1580.271)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 71/78 from=(-626.6862, 26.53651, 1580.271) target=(-594.1177, 26.20165, 1556.471) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 71/78 elapsed_ms=1966 walked_frames=455 player=(-596.1046, 26.38213, 1557.921)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 72/78 from=(-596.1046, 26.38213, 1557.921) target=(-563.5294, 27.77426, 1534.118) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 72/78 elapsed_ms=1439 walked_frames=455 player=(-565.5475, 27.5805, 1535.591)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 73/78 from=(-565.5475, 27.5805, 1535.591) target=(-532.9412, 29.94231, 1511.765) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 73/78 elapsed_ms=1875 walked_frames=457 player=(-534.9186, 29.76534, 1513.206)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 74/78 from=(-534.9186, 29.76534, 1513.206) target=(-502.3529, 32.37026, 1489.412) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 74/78 elapsed_ms=1868 walked_frames=456 player=(-504.3269, 32.2794, 1490.852)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 75/78 from=(-504.3269, 32.2794, 1490.852) target=(-471.7647, 35.46269, 1467.059) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 75/78 elapsed_ms=1716 walked_frames=457 player=(-473.7548, 35.38227, 1468.51)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 76/78 from=(-473.7548, 35.38227, 1468.51) target=(-441.1765, 36.07753, 1444.706) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 76/78 elapsed_ms=1440 walked_frames=455 player=(-443.1717, 36.08951, 1446.163)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 77/78 from=(-443.1717, 36.08951, 1446.163) target=(-410.5882, 34.92533, 1422.353) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 77/78 elapsed_ms=1360 walked_frames=456 player=(-412.5631, 35.13433, 1423.793)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to crown_sightline_loop waypoint 78/78 (vertex 6) from=(-412.5631, 35.13433, 1423.793) target=(-380.0, 32.23082, 1400.0) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to crown_sightline_loop waypoint 78/78 (vertex 6) elapsed_ms=1864 walked_frames=460 player=(-381.9807, 32.24091, 1401.451)
+LOOP crown_sightline_loop vertices=6/6 waypoints=78/78 walked=2997m authored=3010m wall=158s fights=1 lightning_hits=0 deaths=0 jumps=1 result=PASS
+ROUTE WALKS start LOOP conductor_west_loop: 6 vertices, 83 waypoints, 3206 m authored, requires=
+DISCLOSED SEAM 2 teleport: conductor_west_loop start (-700.0,2300.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 1/83 from=(-700.0, 45.68117, 2300.0) target=(-738.6364, 48.55346, 2307.273) distance_m=39.3 budget_frames=3145
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 1/83 elapsed_ms=7613 walked_frames=459 player=(-736.244, 48.27206, 2306.803)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 2/83 from=(-736.5211, 48.32109, 2306.858) target=(-777.2727, 52.77719, 2314.545) distance_m=41.5 budget_frames=3317
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 2/83 elapsed_ms=7919 walked_frames=475 player=(-774.8737, 52.62035, 2314.095)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 3/83 from=(-775.224, 52.6439, 2314.161) target=(-815.9091, 55.54853, 2321.818) distance_m=41.4 budget_frames=3311
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 3/83 elapsed_ms=7873 walked_frames=473 player=(-813.5129, 55.30739, 2321.367)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 4/83 from=(-813.8329, 55.33571, 2321.427) target=(-854.5455, 59.04822, 2329.091) distance_m=41.4 budget_frames=3314
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 4/83 elapsed_ms=7876 walked_frames=472 player=(-852.1426, 58.64141, 2328.638)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 5/83 from=(-852.4583, 58.69873, 2328.698) target=(-893.1818, 61.3744, 2336.364) distance_m=41.4 budget_frames=3315
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 5/83 elapsed_ms=7896 walked_frames=474 player=(-890.8008, 61.41972, 2335.916)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 6/83 from=(-891.141, 61.41203, 2335.979) target=(-931.8182, 60.82256, 2343.636) distance_m=41.4 budget_frames=3311
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 6/83 elapsed_ms=7844 walked_frames=470 player=(-929.435, 60.82096, 2343.189)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 7/83 from=(-929.8046, 60.81247, 2343.258) target=(-970.4545, 60.49039, 2350.909) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 7/83 elapsed_ms=7873 walked_frames=472 player=(-968.0646, 60.78038, 2350.458)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 8/83 from=(-968.4513, 60.73373, 2350.53) target=(-1009.091, 58.58844, 2358.182) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 8/83 elapsed_ms=7839 walked_frames=471 player=(-1006.641, 58.56704, 2357.722)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 9/83 from=(-1006.907, 58.56599, 2357.771) target=(-1047.727, 54.83999, 2365.455) distance_m=41.5 budget_frames=3322
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 9/83 elapsed_ms=7883 walked_frames=473 player=(-1045.294, 55.17027, 2364.994)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 10/83 from=(-1045.449, 55.14407, 2365.024) target=(-1086.364, 51.75949, 2372.727) distance_m=41.6 budget_frames=3330
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 10/83 elapsed_ms=7876 walked_frames=473 player=(-1083.915, 51.93603, 2372.263)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 11/83 from=(-1084.292, 51.90978, 2372.334) target=(-1125.0, 49.41069, 2380.0) distance_m=41.4 budget_frames=3313
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 11/83 elapsed_ms=7867 walked_frames=473 player=(-1122.601, 49.60922, 2379.548)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 12/83 from=(-1122.871, 49.59119, 2379.599) target=(-1163.636, 49.09678, 2387.273) distance_m=41.5 budget_frames=3318
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 12/83 elapsed_ms=7843 walked_frames=471 player=(-1161.238, 49.31799, 2386.822)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 13/83 from=(-1161.583, 49.29472, 2386.887) target=(-1202.273, 48.28286, 2394.545) distance_m=41.4 budget_frames=3312
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 13/83 elapsed_ms=7842 walked_frames=471 player=(-1199.872, 48.35809, 2394.095)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 14/83 from=(-1200.142, 48.342, 2394.146) target=(-1240.909, 46.58393, 2401.818) distance_m=41.5 budget_frames=3318
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 14/83 elapsed_ms=7833 walked_frames=471 player=(-1238.472, 46.61789, 2401.36)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 15/83 from=(-1238.553, 46.6206, 2401.375) target=(-1279.545, 44.67321, 2409.091) distance_m=41.7 budget_frames=3336
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 15/83 elapsed_ms=7890 walked_frames=474 player=(-1277.135, 44.51028, 2408.639)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 16/83 from=(-1277.216, 44.51699, 2408.654) target=(-1318.182, 43.20779, 2416.364) distance_m=41.7 budget_frames=3334
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 16/83 elapsed_ms=7885 walked_frames=473 player=(-1315.804, 43.4646, 2415.917)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 17/83 from=(-1316.19, 43.42212, 2415.989) target=(-1356.818, 42.33192, 2423.636) distance_m=41.3 budget_frames=3307
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 17/83 elapsed_ms=7850 walked_frames=471 player=(-1354.42, 42.43267, 2423.186)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 18/83 from=(-1354.797, 42.40566, 2423.257) target=(-1395.455, 38.91156, 2430.909) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 18/83 elapsed_ms=7897 walked_frames=474 player=(-1393.034, 38.97561, 2430.455)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 19/83 from=(-1393.406, 38.9619, 2430.524) target=(-1434.091, 35.77691, 2438.182) distance_m=41.4 budget_frames=3311
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 19/83 elapsed_ms=7889 walked_frames=475 player=(-1431.701, 35.99031, 2437.669)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 20/83 from=(-1432.051, 35.94294, 2437.744) target=(-1472.727, 31.58954, 2445.455) distance_m=41.4 budget_frames=3312
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 20/83 elapsed_ms=7913 walked_frames=475 player=(-1470.395, 31.8394, 2444.722)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 21/83 from=(-1470.731, 31.81423, 2444.827) target=(-1511.364, 28.18233, 2452.727) distance_m=41.4 budget_frames=3311
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 21/83 elapsed_ms=7848 walked_frames=471 player=(-1508.919, 28.44451, 2452.252)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 22/83 (vertex 1) from=(-1509.0, 28.44117, 2452.268) target=(-1550.0, 25.43084, 2460.0) distance_m=41.7 budget_frames=3337
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 22/83 (vertex 1) elapsed_ms=7949 walked_frames=477 player=(-1547.709, 25.52679, 2459.203)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 23/83 from=(-1548.07, 25.50524, 2459.329) target=(-1560.625, 26.03217, 2496.25) distance_m=39.0 budget_frames=3119
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 23/83 elapsed_ms=7403 walked_frames=444 player=(-1559.886, 26.14345, 2493.935)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 24/83 from=(-1560.002, 26.12811, 2494.298) target=(-1571.25, 28.14317, 2532.5) distance_m=39.8 budget_frames=3185
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 24/83 elapsed_ms=7555 walked_frames=453 player=(-1570.556, 27.97508, 2530.137)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 25/83 from=(-1570.656, 27.99998, 2530.478) target=(-1581.875, 28.66476, 2568.75) distance_m=39.9 budget_frames=3190
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 25/83 elapsed_ms=7625 walked_frames=457 player=(-1581.189, 28.63368, 2566.407)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 26/83 from=(-1581.292, 28.64189, 2566.76) target=(-1592.5, 27.40234, 2605.0) distance_m=39.8 budget_frames=3187
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 26/83 elapsed_ms=7559 walked_frames=454 player=(-1591.812, 27.68416, 2602.652)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 27/83 from=(-1591.89, 27.65512, 2602.919) target=(-1603.125, 23.46888, 2641.25) distance_m=39.9 budget_frames=3195
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 27/83 elapsed_ms=7604 walked_frames=456 player=(-1602.571, 23.58313, 2638.874)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 28/83 from=(-1602.634, 23.5547, 2639.144) target=(-1613.75, 25.30209, 2677.5) distance_m=39.9 budget_frames=3194
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 28/83 elapsed_ms=7572 walked_frames=454 player=(-1613.132, 25.15743, 2675.1)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 29/83 from=(-1613.215, 25.17875, 2675.42) target=(-1624.375, 26.70383, 2713.75) distance_m=39.9 budget_frames=3193
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 29/83 elapsed_ms=7560 walked_frames=453 player=(-1623.733, 26.4648, 2711.384)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 30/83 from=(-1623.825, 26.49177, 2711.724) target=(-1635.0, 26.01786, 2750.0) distance_m=39.9 budget_frames=3189
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 30/83 elapsed_ms=7602 walked_frames=456 player=(-1634.818, 26.245, 2747.572)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 31/83 from=(-1634.995, 26.21382, 2747.917) target=(-1645.625, 25.92956, 2786.25) distance_m=39.8 budget_frames=3182
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 31/83 elapsed_ms=7521 walked_frames=452 player=(-1644.991, 25.78907, 2783.89)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 32/83 from=(-1645.031, 25.79771, 2784.038) target=(-1656.25, 26.18274, 2822.5) distance_m=40.1 budget_frames=3205
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 32/83 elapsed_ms=7559 walked_frames=453 player=(-1655.595, 26.26034, 2820.098)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 33/83 from=(-1655.693, 26.26023, 2820.458) target=(-1666.875, 27.05833, 2858.75) distance_m=39.9 budget_frames=3191
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 33/83 elapsed_ms=7562 walked_frames=454 player=(-1666.193, 27.05263, 2856.413)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 34/83 from=(-1666.297, 27.05306, 2856.769) target=(-1677.5, 25.08636, 2895.0) distance_m=39.8 budget_frames=3187
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 34/83 elapsed_ms=7469 walked_frames=454 player=(-1676.816, 25.4674, 2892.669)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 35/83 from=(-1676.927, 25.41736, 2893.047) target=(-1688.125, 23.57839, 2931.25) distance_m=39.8 budget_frames=3184
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 35/83 elapsed_ms=7597 walked_frames=456 player=(-1687.425, 23.47099, 2928.862)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 36/83 from=(-1687.511, 23.48778, 2929.154) target=(-1698.75, 23.8868, 2967.5) distance_m=40.0 budget_frames=3196
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 36/83 elapsed_ms=7542 walked_frames=452 player=(-1698.049, 24.02115, 2965.106)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 37/83 from=(-1698.157, 23.99891, 2965.475) target=(-1709.375, 23.2668, 3003.75) distance_m=39.9 budget_frames=3190
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 37/83 elapsed_ms=7598 walked_frames=456 player=(-1708.679, 23.3613, 3001.375)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 38/83 (vertex 2) from=(-1708.724, 23.35128, 3001.527) target=(-1720.0, 23.1866, 3040.0) distance_m=40.1 budget_frames=3207
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 38/83 (vertex 2) elapsed_ms=7574 walked_frames=454 player=(-1719.313, 23.06286, 3037.651)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 39/83 from=(-1719.414, 23.0812, 3037.997) target=(-1684.706, 24.64084, 3054.706) distance_m=38.5 budget_frames=3081
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 39/83 elapsed_ms=7279 walked_frames=437 player=(-1686.951, 24.58195, 3053.625)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 40/83 from=(-1686.622, 24.57569, 3053.784) target=(-1649.412, 25.88642, 3069.412) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 40/83 elapsed_ms=7685 walked_frames=461 player=(-1651.692, 25.60888, 3068.454)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 41/83 from=(-1651.374, 25.64265, 3068.588) target=(-1614.118, 31.04763, 3084.118) distance_m=40.4 budget_frames=3229
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 41/83 elapsed_ms=7719 walked_frames=463 player=(-1616.409, 30.92152, 3083.162)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 42/83 from=(-1616.071, 30.93059, 3083.303) target=(-1578.823, 35.19396, 3098.823) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 42/83 elapsed_ms=7709 walked_frames=462 player=(-1581.062, 34.8401, 3097.886)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 43/83 from=(-1580.76, 34.89577, 3098.011) target=(-1543.529, 38.01397, 3113.529) distance_m=40.3 budget_frames=3226
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 43/83 elapsed_ms=7668 walked_frames=460 player=(-1545.818, 37.70421, 3112.574)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 44/83 from=(-1545.505, 37.74503, 3112.704) target=(-1508.235, 40.21587, 3128.235) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 44/83 elapsed_ms=7677 walked_frames=460 player=(-1510.523, 40.14354, 3127.281)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 45/83 from=(-1510.182, 40.14616, 3127.423) target=(-1472.941, 42.91245, 3142.941) distance_m=40.3 budget_frames=3227
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 45/83 elapsed_ms=7672 walked_frames=460 player=(-1475.181, 42.77807, 3142.005)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 46/83 from=(-1474.85, 42.79744, 3142.141) target=(-1437.647, 44.23496, 3157.647) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 46/83 elapsed_ms=7678 walked_frames=461 player=(-1439.939, 44.25181, 3156.692)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 47/83 from=(-1439.623, 44.2505, 3156.823) target=(-1402.353, 47.79818, 3172.353) distance_m=40.4 budget_frames=3230
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 47/83 elapsed_ms=7651 walked_frames=459 player=(-1404.642, 47.58089, 3171.397)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 48/83 from=(-1404.37, 47.61479, 3171.51) target=(-1367.059, 48.27145, 3187.059) distance_m=40.4 budget_frames=3233
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 48/83 elapsed_ms=7645 walked_frames=459 player=(-1369.302, 48.22383, 3186.123)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 49/83 from=(-1369.014, 48.2213, 3186.243) target=(-1331.765, 53.02273, 3201.765) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 49/83 elapsed_ms=7682 walked_frames=460 player=(-1334.029, 52.70309, 3200.819)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 50/83 from=(-1333.716, 52.74881, 3200.949) target=(-1296.471, 54.33857, 3216.471) distance_m=40.4 budget_frames=3228
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 50/83 elapsed_ms=7653 walked_frames=460 player=(-1298.717, 53.94851, 3215.532)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 51/83 from=(-1298.58, 53.97277, 3215.589) target=(-1261.177, 56.72676, 3231.177) distance_m=40.5 budget_frames=3241
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 51/83 elapsed_ms=7640 walked_frames=459 player=(-1263.455, 56.65247, 3230.226)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 52/83 from=(-1263.208, 56.66084, 3230.329) target=(-1225.882, 56.42917, 3245.882) distance_m=40.4 budget_frames=3234
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 52/83 elapsed_ms=7599 walked_frames=457 player=(-1228.189, 56.13251, 3244.921)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 53/83 from=(-1227.89, 56.16111, 3245.045) target=(-1190.588, 56.97148, 3260.588) distance_m=40.4 budget_frames=3232
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during conductor_west_loop waypoint 53/83 (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 53/83 elapsed_ms=39915 walked_frames=466 player=(-1192.847, 56.89721, 3259.653)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 54/83 from=(-1192.507, 56.90271, 3259.794) target=(-1155.294, 59.96009, 3275.294) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 54/83 elapsed_ms=7540 walked_frames=460 player=(-1157.562, 59.85245, 3274.348)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 55/83 (vertex 3) from=(-1157.363, 59.86308, 3274.431) target=(-1120.0, 62.08991, 3290.0) distance_m=40.5 budget_frames=3238
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 55/83 (vertex 3) elapsed_ms=7623 walked_frames=458 player=(-1122.308, 61.97918, 3289.04)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 56/83 from=(-1121.964, 61.9749, 3289.182) target=(-1114.286, 62.16994, 3251.428) distance_m=38.5 budget_frames=3082
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 56/83 elapsed_ms=7286 walked_frames=438 player=(-1114.77, 61.82797, 3253.815)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 57/83 from=(-1114.729, 61.85673, 3253.613) target=(-1108.571, 64.28685, 3212.857) distance_m=41.2 budget_frames=3297
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 57/83 elapsed_ms=7800 walked_frames=468 player=(-1108.94, 64.12881, 3215.289)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 58/83 from=(-1108.885, 64.14401, 3214.928) target=(-1102.857, 67.86904, 3174.286) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 58/83 elapsed_ms=7840 walked_frames=470 player=(-1103.223, 67.66302, 3176.755)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 59/83 from=(-1103.174, 67.70998, 3176.421) target=(-1097.143, 68.07275, 3135.714) distance_m=41.2 budget_frames=3292
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 59/83 elapsed_ms=7813 walked_frames=469 player=(-1097.508, 68.21619, 3138.182)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 60/83 from=(-1097.468, 68.20293, 3137.91) target=(-1091.429, 69.98219, 3097.143) distance_m=41.2 budget_frames=3296
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 60/83 elapsed_ms=7845 walked_frames=471 player=(-1091.79, 70.1041, 3099.584)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 61/83 from=(-1091.734, 70.08572, 3099.206) target=(-1085.714, 71.51255, 3058.572) distance_m=41.1 budget_frames=3286
+ROUTE WALKS jump 7.3 m (-1089.6,3085.0) -> (-1085.5,3079.0) fighting=true
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during conductor_west_loop waypoint 61/83 (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 61/83 elapsed_ms=41875 walked_frames=398 player=(-1085.689, 71.37794, 3061.002)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 62/83 (vertex 4) from=(-1085.693, 71.39843, 3060.638) target=(-1080.0, 73.8132, 3020.0) distance_m=41.0 budget_frames=3282
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 62/83 (vertex 4) elapsed_ms=7811 walked_frames=469 player=(-1080.337, 73.76437, 3022.402)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 63/83 from=(-1080.287, 73.77116, 3022.048) target=(-1061.905, 77.81388, 2985.714) distance_m=40.7 budget_frames=3257
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 63/83 elapsed_ms=7823 walked_frames=469 player=(-1063.022, 77.76003, 2987.927)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 64/83 from=(-1062.857, 77.7515, 2987.601) target=(-1043.81, 77.95266, 2951.428) distance_m=40.9 budget_frames=3270
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 64/83 elapsed_ms=7782 walked_frames=467 player=(-1044.963, 78.02701, 2953.623)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 65/83 from=(-1044.817, 78.01973, 2953.345) target=(-1025.714, 78.59341, 2917.143) distance_m=40.9 budget_frames=3274
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 65/83 elapsed_ms=7735 walked_frames=464 player=(-1026.874, 78.32963, 2919.344)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 66/83 from=(-1026.724, 78.36604, 2919.059) target=(-1007.619, 80.61714, 2882.857) distance_m=40.9 budget_frames=3274
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 66/83 elapsed_ms=7743 walked_frames=465 player=(-1008.785, 80.32643, 2885.062)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 67/83 from=(-1008.665, 80.35429, 2884.834) target=(-989.5238, 82.02571, 2848.572) distance_m=41.0 budget_frames=3280
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 67/83 elapsed_ms=7760 walked_frames=465 player=(-990.6786, 82.12691, 2850.763)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 68/83 from=(-990.5125, 82.13694, 2850.447) target=(-971.4286, 82.56762, 2814.286) distance_m=40.9 budget_frames=3271
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 68/83 elapsed_ms=7812 walked_frames=469 player=(-972.5609, 82.50159, 2816.432)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 69/83 from=(-972.4178, 82.50974, 2816.16) target=(-953.3333, 84.60684, 2780.0) distance_m=40.9 budget_frames=3270
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 69/83 elapsed_ms=7742 walked_frames=465 player=(-954.4922, 84.78328, 2782.197)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 70/83 from=(-954.3184, 84.75908, 2781.867) target=(-935.2381, 82.90708, 2745.714) distance_m=40.9 budget_frames=3270
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 70/83 elapsed_ms=7800 walked_frames=468 player=(-936.3831, 83.07986, 2747.884)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 71/83 from=(-936.2343, 83.05823, 2747.602) target=(-917.1428, 80.61936, 2711.428) distance_m=40.9 budget_frames=3272
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 71/83 elapsed_ms=7745 walked_frames=465 player=(-918.2741, 80.79562, 2713.572)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 72/83 from=(-918.1254, 80.77408, 2713.291) target=(-899.0476, 80.52832, 2677.143) distance_m=40.9 budget_frames=3269
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 72/83 elapsed_ms=7722 walked_frames=463 player=(-900.209, 80.56396, 2679.345)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 73/83 from=(-900.1062, 80.55597, 2679.151) target=(-880.9524, 81.48988, 2642.857) distance_m=41.0 budget_frames=3283
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 73/83 elapsed_ms=7738 walked_frames=465 player=(-882.09, 81.32386, 2645.009)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 74/83 from=(-881.9284, 81.34921, 2644.699) target=(-862.8571, 81.55703, 2608.571) distance_m=40.9 budget_frames=3268
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 74/83 elapsed_ms=7759 walked_frames=465 player=(-863.986, 81.31911, 2610.708)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 75/83 from=(-863.8343, 81.34729, 2610.42) target=(-844.7619, 80.8373, 2574.286) distance_m=40.9 budget_frames=3268
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 75/83 elapsed_ms=7771 walked_frames=467 player=(-845.9233, 80.94652, 2576.483)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 76/83 from=(-845.7948, 80.9302, 2576.24) target=(-826.6666, 80.52027, 2540.0) distance_m=41.0 budget_frames=3278
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 76/83 elapsed_ms=7816 walked_frames=469 player=(-827.4338, 80.49646, 2542.305)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 77/83 from=(-827.3217, 80.50873, 2541.967) target=(-808.5714, 78.90711, 2505.714) distance_m=40.8 budget_frames=3265
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 77/83 elapsed_ms=7835 walked_frames=470 player=(-809.4408, 79.13108, 2508.003)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 78/83 from=(-809.3036, 79.09162, 2507.64) target=(-790.4762, 74.9519, 2471.429) distance_m=40.8 budget_frames=3265
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 78/83 elapsed_ms=7839 walked_frames=472 player=(-791.5134, 75.28266, 2473.681)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 79/83 from=(-791.3484, 75.22943, 2473.323) target=(-772.381, 69.42249, 2437.143) distance_m=40.9 budget_frames=3268
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 79/83 elapsed_ms=7857 walked_frames=471 player=(-773.4354, 69.7719, 2439.395)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 80/83 from=(-773.2704, 69.74197, 2439.045) target=(-754.2857, 64.54417, 2402.857) distance_m=40.9 budget_frames=3269
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 80/83 elapsed_ms=7868 walked_frames=472 player=(-755.4246, 64.76203, 2405.036)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 81/83 from=(-755.2492, 64.72584, 2404.702) target=(-736.1904, 57.70777, 2368.571) distance_m=40.8 budget_frames=3267
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 81/83 elapsed_ms=7992 walked_frames=480 player=(-737.0674, 58.00438, 2370.869)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 82/83 from=(-736.9871, 57.97618, 2370.661) target=(-718.0952, 50.39446, 2334.286) distance_m=41.0 budget_frames=3279
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 82/83 elapsed_ms=7842 walked_frames=472 player=(-719.1856, 50.61309, 2336.499)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor_west_loop waypoint 83/83 (vertex 5) from=(-719.116, 50.60259, 2336.357) target=(-700.0, 44.03091, 2300.0) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor_west_loop waypoint 83/83 (vertex 5) elapsed_ms=7860 walked_frames=471 player=(-701.1348, 44.41434, 2302.17)
+LOOP conductor_west_loop vertices=5/5 waypoints=83/83 walked=3194m authored=3206m wall=711s fights=2 lightning_hits=0 deaths=0 jumps=1 result=PASS
+ROUTE WALKS start LOOP hall_loop: 5 vertices, 71 waypoints, 2761 m authored, requires=stormwood:rootgate_released
+DISCLOSED SEAM 2 teleport: hall_loop start (-450.0,3960.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 1/71 from=(-450.0, 57.49021, 3960.0) target=(-489.4118, 54.73856, 3954.706) distance_m=39.8 budget_frames=3181
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 1/71 elapsed_ms=1742 walked_frames=466 player=(-487.0086, 54.69276, 3955.03)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 2/71 from=(-487.0086, 54.69276, 3955.03) target=(-528.8235, 53.38319, 3949.412) distance_m=42.2 budget_frames=3375
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 2/71 elapsed_ms=1615 walked_frames=481 player=(-526.4248, 53.50007, 3949.733)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 3/71 from=(-526.4248, 53.50007, 3949.733) target=(-568.2353, 52.58591, 3944.118) distance_m=42.2 budget_frames=3374
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 3/71 elapsed_ms=1164 walked_frames=477 player=(-565.7926, 52.58567, 3944.447)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 4/71 from=(-565.7926, 52.58567, 3944.447) target=(-607.6471, 50.28832, 3938.823) distance_m=42.2 budget_frames=3378
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 4/71 elapsed_ms=1534 walked_frames=478 player=(-605.1817, 50.3588, 3939.155)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 5/71 from=(-605.1817, 50.3588, 3939.155) target=(-647.0588, 48.16436, 3933.529) distance_m=42.3 budget_frames=3380
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 5/71 elapsed_ms=1704 walked_frames=479 player=(-644.6369, 48.11989, 3933.856)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 6/71 from=(-644.6369, 48.11989, 3933.856) target=(-686.4706, 46.73707, 3928.235) distance_m=42.2 budget_frames=3376
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 6/71 elapsed_ms=1047 walked_frames=478 player=(-684.0621, 46.73205, 3928.558)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 7/71 from=(-684.0621, 46.73205, 3928.558) target=(-725.8823, 42.86444, 3922.941) distance_m=42.2 budget_frames=3375
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 7/71 elapsed_ms=1110 walked_frames=479 player=(-723.4288, 43.23836, 3923.269)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 8/71 from=(-723.4288, 43.23836, 3923.269) target=(-765.2941, 39.03756, 3917.647) distance_m=42.2 budget_frames=3379
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 8/71 elapsed_ms=1378 walked_frames=486 player=(-762.8604, 39.34439, 3917.971)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 9/71 from=(-762.8604, 39.34439, 3917.971) target=(-804.7059, 37.54868, 3912.353) distance_m=42.2 budget_frames=3377
+ROUTE WALKS jump 7.3 m (-773.5,3916.5) -> (-780.0,3919.9) fighting=true
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during hall_loop waypoint 9/71 (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 9/71 elapsed_ms=51634 walked_frames=416 player=(-802.371, 37.31544, 3913.074)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 10/71 from=(-802.371, 37.31544, 3913.074) target=(-844.1177, 38.63003, 3907.059) distance_m=42.2 budget_frames=3374
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 10/71 elapsed_ms=1352 walked_frames=478 player=(-841.7076, 38.5434, 3907.4)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 11/71 from=(-841.7076, 38.5434, 3907.4) target=(-883.5294, 42.77626, 3901.765) distance_m=42.2 budget_frames=3375
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 11/71 elapsed_ms=1394 walked_frames=481 player=(-881.101, 42.89227, 3902.093)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 12/71 from=(-881.101, 42.89227, 3902.093) target=(-922.9412, 42.0184, 3896.471) distance_m=42.2 budget_frames=3377
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 12/71 elapsed_ms=1060 walked_frames=478 player=(-920.5339, 41.92506, 3896.798)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 13/71 from=(-920.5339, 41.92506, 3896.798) target=(-962.353, 40.60639, 3891.177) distance_m=42.2 budget_frames=3375
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 13/71 elapsed_ms=1027 walked_frames=478 player=(-959.9471, 40.50555, 3891.502)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 14/71 from=(-959.9471, 40.50555, 3891.502) target=(-1001.765, 40.00857, 3885.882) distance_m=42.2 budget_frames=3375
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 14/71 elapsed_ms=1016 walked_frames=477 player=(-999.3174, 39.97681, 3886.215)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 15/71 from=(-999.3174, 39.97681, 3886.215) target=(-1041.177, 37.55808, 3880.588) distance_m=42.2 budget_frames=3378
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 15/71 elapsed_ms=1143 walked_frames=479 player=(-1038.755, 37.47124, 3880.916)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 16/71 from=(-1038.755, 37.47124, 3880.916) target=(-1080.588, 38.18306, 3875.294) distance_m=42.2 budget_frames=3376
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 16/71 elapsed_ms=1159 walked_frames=478 player=(-1078.161, 38.15395, 3875.623)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 17/71 (vertex 1) from=(-1078.161, 38.15395, 3875.623) target=(-1120.0, 37.09016, 3870.0) distance_m=42.2 budget_frames=3377
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 17/71 (vertex 1) elapsed_ms=1201 walked_frames=478 player=(-1117.561, 37.291, 3870.33)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 18/71 from=(-1117.561, 37.291, 3870.33) target=(-1146.111, 37.72721, 3897.778) distance_m=39.6 budget_frames=3168
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 18/71 elapsed_ms=986 walked_frames=454 player=(-1144.407, 37.70199, 3896.027)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 19/71 from=(-1144.407, 37.70199, 3896.027) target=(-1172.222, 41.99899, 3925.556) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 19/71 elapsed_ms=1443 walked_frames=461 player=(-1170.545, 41.87344, 3923.777)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 20/71 from=(-1170.545, 41.87344, 3923.777) target=(-1198.333, 43.89956, 3953.333) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 20/71 elapsed_ms=1275 walked_frames=459 player=(-1196.666, 43.76687, 3951.56)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 21/71 from=(-1196.666, 43.76687, 3951.56) target=(-1224.444, 45.50426, 3981.111) distance_m=40.6 budget_frames=3244
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 21/71 elapsed_ms=1194 walked_frames=458 player=(-1222.745, 45.40039, 3979.306)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 22/71 from=(-1222.745, 45.40039, 3979.306) target=(-1250.556, 47.67192, 4008.889) distance_m=40.6 budget_frames=3248
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 22/71 elapsed_ms=1097 walked_frames=460 player=(-1248.896, 47.79588, 4007.125)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 23/71 from=(-1248.896, 47.79588, 4007.125) target=(-1276.667, 45.55925, 4036.667) distance_m=40.5 budget_frames=3243
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 23/71 elapsed_ms=1043 walked_frames=458 player=(-1274.986, 45.69461, 4034.883)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 24/71 from=(-1274.986, 45.69461, 4034.883) target=(-1302.778, 44.63148, 4064.444) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 24/71 elapsed_ms=1058 walked_frames=458 player=(-1301.077, 45.09348, 4062.642)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 25/71 from=(-1301.077, 45.09348, 4062.642) target=(-1328.889, 40.9103, 4092.222) distance_m=40.6 budget_frames=3248
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 25/71 elapsed_ms=1076 walked_frames=461 player=(-1327.179, 40.80783, 4090.406)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 26/71 from=(-1327.179, 40.80783, 4090.406) target=(-1355.0, 41.11499, 4120.0) distance_m=40.6 budget_frames=3249
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 26/71 elapsed_ms=1048 walked_frames=459 player=(-1353.323, 41.43154, 4118.212)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 27/71 from=(-1353.323, 41.43154, 4118.212) target=(-1381.111, 39.39818, 4147.778) distance_m=40.6 budget_frames=3246
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 27/71 elapsed_ms=1172 walked_frames=459 player=(-1379.443, 39.32962, 4146.005)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 28/71 from=(-1379.443, 39.32962, 4146.005) target=(-1407.222, 40.19814, 4175.556) distance_m=40.6 budget_frames=3244
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 28/71 elapsed_ms=1131 walked_frames=458 player=(-1405.527, 40.36112, 4173.75)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 29/71 from=(-1405.527, 40.36112, 4173.75) target=(-1433.333, 36.73983, 4203.333) distance_m=40.6 budget_frames=3248
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 29/71 elapsed_ms=1274 walked_frames=463 player=(-1431.638, 37.13854, 4201.523)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 30/71 from=(-1431.638, 37.13854, 4201.523) target=(-1459.444, 35.98667, 4231.111) distance_m=40.6 budget_frames=3248
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 30/71 elapsed_ms=1230 walked_frames=460 player=(-1457.77, 36.04438, 4229.332)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 31/71 from=(-1457.77, 36.04438, 4229.332) target=(-1485.556, 34.63802, 4258.889) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 31/71 elapsed_ms=1203 walked_frames=458 player=(-1483.88, 34.89657, 4257.1)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 32/71 from=(-1483.88, 34.89657, 4257.1) target=(-1511.667, 32.84565, 4286.667) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 32/71 elapsed_ms=1333 walked_frames=458 player=(-1509.957, 33.04929, 4284.844)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 33/71 from=(-1509.957, 33.04929, 4284.844) target=(-1537.778, 33.31753, 4314.444) distance_m=40.6 budget_frames=3249
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 33/71 elapsed_ms=1167 walked_frames=462 player=(-1536.109, 33.53507, 4312.667)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 34/71 from=(-1536.109, 33.53507, 4312.667) target=(-1563.889, 31.81032, 4342.222) distance_m=40.6 budget_frames=3244
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 34/71 elapsed_ms=1196 walked_frames=461 player=(-1562.185, 31.93786, 4340.406)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 35/71 (vertex 2) from=(-1562.185, 31.93786, 4340.406) target=(-1590.0, 31.47892, 4370.0) distance_m=40.6 budget_frames=3249
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 35/71 (vertex 2) elapsed_ms=1020 walked_frames=459 player=(-1588.323, 31.34385, 4368.214)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 36/71 from=(-1588.323, 31.34385, 4368.214) target=(-1551.111, 30.40545, 4376.667) distance_m=38.2 budget_frames=3052
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 36/71 elapsed_ms=1046 walked_frames=464 player=(-1553.506, 30.35018, 4376.216)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 37/71 from=(-1553.506, 30.35018, 4376.216) target=(-1512.222, 34.31965, 4383.333) distance_m=41.9 budget_frames=3351
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 37/71 elapsed_ms=1038 walked_frames=476 player=(-1514.647, 34.0974, 4382.929)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 38/71 from=(-1514.647, 34.0974, 4382.929) target=(-1473.333, 36.46119, 4390.0) distance_m=41.9 budget_frames=3353
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 38/71 elapsed_ms=1001 walked_frames=475 player=(-1475.725, 36.31189, 4389.601)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 39/71 from=(-1475.725, 36.31189, 4389.601) target=(-1434.444, 38.97208, 4396.667) distance_m=41.9 budget_frames=3350
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 39/71 elapsed_ms=1030 walked_frames=475 player=(-1436.854, 38.82595, 4396.264)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 40/71 from=(-1436.854, 38.82595, 4396.264) target=(-1395.556, 39.86707, 4403.333) distance_m=41.9 budget_frames=3351
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 40/71 elapsed_ms=1080 walked_frames=474 player=(-1397.981, 39.79773, 4402.931)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 41/71 from=(-1397.981, 39.79773, 4402.931) target=(-1356.667, 38.59521, 4410.0) distance_m=41.9 budget_frames=3353
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 41/71 elapsed_ms=1089 walked_frames=474 player=(-1359.122, 38.48524, 4409.594)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 42/71 from=(-1359.122, 38.48524, 4409.594) target=(-1317.778, 40.72712, 4416.667) distance_m=41.9 budget_frames=3355
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 42/71 elapsed_ms=1046 walked_frames=475 player=(-1320.2, 40.71159, 4416.26)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 43/71 from=(-1320.2, 40.71159, 4416.26) target=(-1278.889, 45.21712, 4423.333) distance_m=41.9 budget_frames=3352
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 43/71 elapsed_ms=1151 walked_frames=477 player=(-1281.319, 44.51475, 4422.922)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 44/71 from=(-1281.319, 44.51475, 4422.922) target=(-1240.0, 47.962, 4430.0) distance_m=41.9 budget_frames=3353
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 44/71 elapsed_ms=967 walked_frames=477 player=(-1242.438, 47.64551, 4429.597)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 45/71 from=(-1242.438, 47.64551, 4429.597) target=(-1201.111, 50.68795, 4436.667) distance_m=41.9 budget_frames=3354
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 45/71 elapsed_ms=1152 walked_frames=475 player=(-1203.573, 50.60051, 4436.255)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 46/71 from=(-1203.573, 50.60051, 4436.255) target=(-1162.222, 52.71888, 4443.333) distance_m=42.0 budget_frames=3356
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 46/71 elapsed_ms=1226 walked_frames=475 player=(-1164.655, 52.6419, 4442.929)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 47/71 from=(-1164.655, 52.6419, 4442.929) target=(-1123.333, 51.88649, 4450.0) distance_m=41.9 budget_frames=3353
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 47/71 elapsed_ms=1058 walked_frames=474 player=(-1125.782, 51.80657, 4449.593)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 48/71 from=(-1125.782, 51.80657, 4449.593) target=(-1084.444, 54.10466, 4456.667) distance_m=41.9 budget_frames=3355
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 48/71 elapsed_ms=1548 walked_frames=475 player=(-1086.865, 54.03418, 4456.261)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 49/71 from=(-1086.865, 54.03418, 4456.261) target=(-1045.556, 54.85858, 4463.333) distance_m=41.9 budget_frames=3352
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 49/71 elapsed_ms=1462 walked_frames=474 player=(-1048.008, 54.94124, 4462.922)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 50/71 from=(-1048.008, 54.94124, 4462.922) target=(-1006.667, 54.13596, 4470.0) distance_m=41.9 budget_frames=3355
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 50/71 elapsed_ms=1257 walked_frames=474 player=(-1009.117, 54.00824, 4469.589)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 51/71 from=(-1009.117, 54.00824, 4469.589) target=(-967.7778, 54.42877, 4476.667) distance_m=41.9 budget_frames=3355
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 51/71 elapsed_ms=1143 walked_frames=474 player=(-970.1948, 54.32176, 4476.261)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 52/71 from=(-970.1948, 54.32176, 4476.261) target=(-928.8889, 55.13762, 4483.333) distance_m=41.9 budget_frames=3352
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 52/71 elapsed_ms=1102 walked_frames=474 player=(-931.2855, 55.4337, 4482.934)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 53/71 (vertex 3) from=(-931.2855, 55.4337, 4482.934) target=(-890.0, 51.41863, 4490.0) distance_m=41.9 budget_frames=3350
+ROUTE WALKS jump 7.3 m (-894.0,4489.3) -> (-888.0,4485.2) fighting=true
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during hall_loop waypoint 53/71 (vertex 3) (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 53/71 (vertex 3) elapsed_ms=45355 walked_frames=494 player=(-889.0419, 51.5116, 4487.737)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 54/71 from=(-889.0419, 51.5116, 4487.737) target=(-865.5555, 54.69793, 4460.556) distance_m=35.9 budget_frames=2873
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 54/71 elapsed_ms=3032 walked_frames=572 player=(-866.4804, 54.16887, 4462.81)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 55/71 from=(-866.4804, 54.16887, 4462.81) target=(-841.1111, 58.11612, 4431.111) distance_m=40.6 budget_frames=3248
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 55/71 elapsed_ms=1198 walked_frames=469 player=(-842.6714, 58.02536, 4432.983)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 56/71 from=(-842.6714, 58.02536, 4432.983) target=(-816.6667, 61.24455, 4401.667) distance_m=40.7 budget_frames=3256
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 56/71 elapsed_ms=1547 walked_frames=461 player=(-818.2318, 61.0666, 4403.555)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 57/71 from=(-818.2318, 61.0666, 4403.555) target=(-792.2222, 62.9288, 4372.222) distance_m=40.7 budget_frames=3257
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 57/71 elapsed_ms=2147 walked_frames=460 player=(-793.8177, 63.05747, 4374.139)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 58/71 from=(-793.8177, 63.05747, 4374.139) target=(-767.7778, 64.44781, 4342.778) distance_m=40.8 budget_frames=3261
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 58/71 elapsed_ms=2566 walked_frames=464 player=(-769.325, 64.11221, 4344.639)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 59/71 from=(-769.325, 64.11221, 4344.639) target=(-743.3333, 65.26604, 4313.333) distance_m=40.7 budget_frames=3255
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 59/71 elapsed_ms=2013 walked_frames=460 player=(-744.8911, 65.15842, 4315.207)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 60/71 from=(-744.8911, 65.15842, 4315.207) target=(-718.8889, 63.05455, 4283.889) distance_m=40.7 budget_frames=3256
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 60/71 elapsed_ms=1964 walked_frames=460 player=(-720.4674, 63.17469, 4285.786)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 61/71 from=(-720.4674, 63.17469, 4285.786) target=(-694.4445, 60.15428, 4254.444) distance_m=40.7 budget_frames=3258
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 61/71 elapsed_ms=1562 walked_frames=464 player=(-696.0201, 60.20243, 4256.339)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 62/71 from=(-696.0201, 60.20243, 4256.339) target=(-670.0, 58.85801, 4225.0) distance_m=40.7 budget_frames=3258
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 62/71 elapsed_ms=1051 walked_frames=460 player=(-671.594, 58.83546, 4226.918)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 63/71 from=(-671.594, 58.83546, 4226.918) target=(-645.5555, 58.88266, 4195.556) distance_m=40.8 budget_frames=3261
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 63/71 elapsed_ms=1413 walked_frames=460 player=(-647.1519, 58.84647, 4197.473)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 64/71 from=(-647.1519, 58.84647, 4197.473) target=(-621.1111, 58.52933, 4166.111) distance_m=40.8 budget_frames=3261
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 64/71 elapsed_ms=1785 walked_frames=460 player=(-622.7114, 58.44893, 4168.027)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 65/71 from=(-622.7114, 58.44893, 4168.027) target=(-596.6666, 58.15049, 4136.667) distance_m=40.8 budget_frames=3261
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 65/71 elapsed_ms=1976 walked_frames=465 player=(-598.217, 58.13444, 4138.529)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 66/71 from=(-598.217, 58.13444, 4138.529) target=(-572.2222, 57.57577, 4107.222) distance_m=40.7 budget_frames=3255
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 66/71 elapsed_ms=2181 walked_frames=459 player=(-573.8212, 57.74771, 4109.142)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 67/71 from=(-573.8212, 57.74771, 4109.142) target=(-547.7778, 57.06689, 4077.778) distance_m=40.8 budget_frames=3261
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 67/71 elapsed_ms=1826 walked_frames=461 player=(-549.3411, 57.35125, 4079.658)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 68/71 from=(-549.3411, 57.35125, 4079.658) target=(-523.3334, 59.71763, 4048.333) distance_m=40.7 budget_frames=3257
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 68/71 elapsed_ms=1684 walked_frames=465 player=(-524.9164, 59.49352, 4050.227)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 69/71 from=(-524.9164, 59.49352, 4050.227) target=(-498.8889, 59.63637, 4018.889) distance_m=40.7 budget_frames=3258
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 69/71 elapsed_ms=1316 walked_frames=460 player=(-500.4651, 59.67136, 4020.784)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 70/71 from=(-500.4651, 59.67136, 4020.784) target=(-474.4445, 58.38652, 3989.444) distance_m=40.7 budget_frames=3258
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 70/71 elapsed_ms=1655 walked_frames=461 player=(-476.0153, 58.5112, 3991.333)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hall_loop waypoint 71/71 (vertex 4) from=(-476.0153, 58.5112, 3991.333) target=(-450.0, 57.48942, 3960.0) distance_m=40.7 budget_frames=3258
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hall_loop waypoint 71/71 (vertex 4) elapsed_ms=2468 walked_frames=460 player=(-451.5551, 57.57744, 3961.878)
+LOOP hall_loop vertices=4/4 waypoints=71/71 walked=2760m authored=2761m wall=191s fights=2 lightning_hits=0 deaths=0 jumps=2 result=PASS
+ROUTE WALKS start LOOP blackwater_loop: 5 vertices, 80 waypoints, 3101 m authored, requires=stormwood:rootgate_released
+DISCLOSED SEAM 2 teleport: blackwater_loop start (-450.0,3960.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 1/80 from=(-449.0981, 57.44981, 3960.421) target=(-411.5385, 59.07737, 3963.461) distance_m=37.7 budget_frames=3014
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 1/80 elapsed_ms=2307 walked_frames=434 player=(-414.0108, 58.99223, 3963.264)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 2/80 from=(-414.0108, 58.99223, 3963.264) target=(-373.0769, 61.52816, 3966.923) distance_m=41.1 budget_frames=3287
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 2/80 elapsed_ms=1590 walked_frames=465 player=(-375.556, 61.44538, 3966.702)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 3/80 from=(-375.556, 61.44538, 3966.702) target=(-334.6154, 60.1249, 3970.385) distance_m=41.1 budget_frames=3288
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 3/80 elapsed_ms=1561 walked_frames=464 player=(-337.0969, 60.31879, 3970.162)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 4/80 from=(-337.0969, 60.31879, 3970.162) target=(-296.1538, 58.75776, 3973.846) distance_m=41.1 budget_frames=3288
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 4/80 elapsed_ms=1633 walked_frames=465 player=(-298.5702, 58.9776, 3973.627)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 5/80 from=(-298.5702, 58.9776, 3973.627) target=(-257.6923, 57.83946, 3977.308) distance_m=41.0 budget_frames=3283
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 5/80 elapsed_ms=2010 walked_frames=464 player=(-260.1279, 57.89682, 3977.091)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 6/80 from=(-260.1279, 57.89682, 3977.091) target=(-219.2308, 55.4299, 3980.769) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 6/80 elapsed_ms=1581 walked_frames=464 player=(-221.7152, 55.44542, 3980.549)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 7/80 from=(-221.7152, 55.44542, 3980.549) target=(-180.7692, 53.66372, 3984.231) distance_m=41.1 budget_frames=3288
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 7/80 elapsed_ms=1079 walked_frames=464 player=(-183.2343, 53.71182, 3984.012)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 8/80 from=(-183.2343, 53.71182, 3984.012) target=(-142.3077, 54.0134, 3987.692) distance_m=41.1 budget_frames=3287
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 8/80 elapsed_ms=1598 walked_frames=464 player=(-144.7897, 53.98724, 3987.473)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 9/80 from=(-144.7897, 53.98724, 3987.473) target=(-103.8461, 56.39358, 3991.154) distance_m=41.1 budget_frames=3288
+ROUTE WALKS jump 7.2 m (-124.8,3989.3) -> (-127.5,3982.7) fighting=true
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during blackwater_loop waypoint 9/80 (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 9/80 elapsed_ms=23517 walked_frames=521 player=(-106.1798, 56.47776, 3990.316)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 10/80 from=(-106.1798, 56.47776, 3990.316) target=(-65.38461, 56.69414, 3994.615) distance_m=41.0 budget_frames=3281
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 10/80 elapsed_ms=1357 walked_frames=464 player=(-67.81272, 56.7095, 3994.391)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 11/80 from=(-67.81272, 56.7095, 3994.391) target=(-26.92307, 56.56705, 3998.077) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 11/80 elapsed_ms=1172 walked_frames=464 player=(-29.38171, 56.72653, 3997.858)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 12/80 from=(-29.38171, 56.72653, 3997.858) target=(11.53845, 54.32911, 4001.539) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 12/80 elapsed_ms=966 walked_frames=468 player=(9.113729, 54.37809, 4001.321)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 13/80 from=(9.113729, 54.37809, 4001.321) target=(50.0, 52.94636, 4005.0) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 13/80 elapsed_ms=1027 walked_frames=464 player=(47.54861, 53.24022, 4004.78)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 14/80 from=(47.54861, 53.24022, 4004.78) target=(88.46155, 51.06027, 4008.461) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 14/80 elapsed_ms=1085 walked_frames=467 player=(85.97244, 51.23675, 4008.239)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 15/80 from=(85.97244, 51.23675, 4008.239) target=(126.9231, 50.53735, 4011.923) distance_m=41.1 budget_frames=3289
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 15/80 elapsed_ms=1007 walked_frames=468 player=(124.49, 50.48225, 4011.706)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 16/80 from=(124.49, 50.48225, 4011.706) target=(165.3846, 51.0447, 4015.385) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 16/80 elapsed_ms=979 walked_frames=464 player=(162.9545, 51.01115, 4015.169)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 17/80 from=(162.9545, 51.01115, 4015.169) target=(203.8461, 51.25021, 4018.846) distance_m=41.1 budget_frames=3284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 17/80 elapsed_ms=993 walked_frames=464 player=(201.4266, 51.26176, 4018.631)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 18/80 from=(201.4266, 51.26176, 4018.631) target=(242.3077, 50.89237, 4022.308) distance_m=41.0 budget_frames=3283
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 18/80 elapsed_ms=939 walked_frames=463 player=(239.8275, 50.92478, 4022.088)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 19/80 from=(239.8275, 50.92478, 4022.088) target=(280.7692, 48.23211, 4025.769) distance_m=41.1 budget_frames=3288
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 19/80 elapsed_ms=986 walked_frames=465 player=(278.3123, 48.58852, 4025.544)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 20/80 from=(278.3123, 48.58852, 4025.544) target=(319.2308, 45.67777, 4029.231) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 20/80 elapsed_ms=964 walked_frames=465 player=(316.7733, 45.92723, 4029.009)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 21/80 from=(316.7733, 45.92723, 4029.009) target=(357.6923, 42.66925, 4032.692) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 21/80 elapsed_ms=975 walked_frames=468 player=(355.2431, 42.8061, 4032.472)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 22/80 from=(355.2431, 42.8061, 4032.472) target=(396.1539, 41.87584, 4036.154) distance_m=41.1 budget_frames=3286
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 22/80 elapsed_ms=961 walked_frames=464 player=(393.7092, 42.08863, 4035.936)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 23/80 from=(393.7092, 42.08863, 4035.936) target=(434.6154, 37.78083, 4039.615) distance_m=41.1 budget_frames=3285
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 23/80 elapsed_ms=1009 walked_frames=466 player=(432.1792, 37.98314, 4039.391)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 24/80 from=(432.1792, 37.98314, 4039.391) target=(473.0769, 37.05133, 4043.077) distance_m=41.1 budget_frames=3285
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 24/80 elapsed_ms=952 walked_frames=464 player=(470.6357, 37.32343, 4042.861)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 25/80 from=(470.6357, 37.32343, 4042.861) target=(511.5385, 36.41938, 4046.539) distance_m=41.1 budget_frames=3285
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 25/80 elapsed_ms=1020 walked_frames=464 player=(509.0963, 36.21259, 4046.324)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 26/80 (vertex 1) from=(509.0963, 36.21259, 4046.324) target=(550.0, 37.86765, 4050.0) distance_m=41.1 budget_frames=3285
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 26/80 (vertex 1) elapsed_ms=1199 walked_frames=464 player=(547.5117, 37.61305, 4049.78)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 27/80 from=(547.5117, 37.61305, 4049.78) target=(569.2857, 38.59336, 4083.572) distance_m=40.2 budget_frames=3215
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 27/80 elapsed_ms=946 walked_frames=455 player=(567.9528, 38.57544, 4081.475)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 28/80 from=(567.9528, 38.57544, 4081.475) target=(588.5714, 38.76363, 4117.143) distance_m=41.2 budget_frames=3295
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 28/80 elapsed_ms=973 walked_frames=466 player=(587.3615, 38.72456, 4115.041)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 29/80 from=(587.3615, 38.72456, 4115.041) target=(607.8571, 40.92459, 4150.714) distance_m=41.1 budget_frames=3291
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 29/80 elapsed_ms=970 walked_frames=465 player=(606.6274, 40.8648, 4148.566)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 30/80 from=(606.6274, 40.8648, 4148.566) target=(627.1429, 41.42085, 4184.286) distance_m=41.2 budget_frames=3295
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 30/80 elapsed_ms=970 walked_frames=468 player=(625.9066, 41.65327, 4182.122)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 31/80 from=(625.9066, 41.65327, 4182.122) target=(646.4286, 40.94399, 4217.857) distance_m=41.2 budget_frames=3296
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 31/80 elapsed_ms=1042 walked_frames=466 player=(645.2255, 40.91603, 4215.757)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 32/80 from=(645.2255, 40.91603, 4215.757) target=(665.7143, 41.26127, 4251.429) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 32/80 elapsed_ms=952 walked_frames=465 player=(664.4963, 40.95829, 4249.306)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 33/80 from=(664.4963, 40.95829, 4249.306) target=(685.0, 40.81383, 4285.0) distance_m=41.2 budget_frames=3293
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 33/80 elapsed_ms=947 walked_frames=465 player=(683.7892, 40.93948, 4282.881)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 34/80 from=(683.7892, 40.93948, 4282.881) target=(704.2857, 39.14522, 4318.571) distance_m=41.2 budget_frames=3292
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 34/80 elapsed_ms=967 walked_frames=465 player=(703.0553, 39.06665, 4316.413)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 35/80 from=(703.0553, 39.06665, 4316.413) target=(723.5714, 39.00093, 4352.143) distance_m=41.2 budget_frames=3296
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 35/80 elapsed_ms=995 walked_frames=465 player=(722.3535, 38.81958, 4350.002)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 36/80 from=(722.3535, 38.81958, 4350.002) target=(742.8572, 38.82741, 4385.714) distance_m=41.2 budget_frames=3294
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 36/80 elapsed_ms=1041 walked_frames=465 player=(741.6299, 38.80495, 4383.565)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 37/80 from=(741.6299, 38.80495, 4383.565) target=(762.1428, 38.361, 4419.286) distance_m=41.2 budget_frames=3295
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 37/80 elapsed_ms=1054 walked_frames=465 player=(760.9216, 38.47525, 4417.145)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 38/80 from=(760.9216, 38.47525, 4417.145) target=(781.4286, 38.71749, 4452.857) distance_m=41.2 budget_frames=3294
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 38/80 elapsed_ms=976 walked_frames=466 player=(780.2262, 38.6767, 4450.757)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 39/80 from=(780.2262, 38.6767, 4450.757) target=(800.7143, 39.61962, 4486.429) distance_m=41.1 budget_frames=3290
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 39/80 elapsed_ms=980 walked_frames=464 player=(799.4706, 39.57975, 4484.26)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 40/80 (vertex 2) from=(799.4706, 39.57975, 4484.26) target=(820.0, 39.77971, 4520.0) distance_m=41.2 budget_frames=3297
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 40/80 (vertex 2) elapsed_ms=962 walked_frames=468 player=(818.7599, 39.70082, 4517.838)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 41/80 from=(818.7599, 39.70082, 4517.838) target=(781.2, 41.93468, 4517.6) distance_m=37.6 budget_frames=3004
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 41/80 elapsed_ms=938 walked_frames=459 player=(783.6633, 41.8176, 4517.862)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 42/80 from=(783.6633, 41.8176, 4517.862) target=(742.4, 43.07461, 4515.2) distance_m=41.3 budget_frames=3307
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 42/80 elapsed_ms=968 walked_frames=467 player=(744.8771, 42.90704, 4515.357)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 43/80 from=(744.8771, 42.90704, 4515.357) target=(703.6, 45.57965, 4512.8) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 43/80 elapsed_ms=979 walked_frames=469 player=(706.0773, 45.47397, 4512.959)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 44/80 from=(706.0773, 45.47397, 4512.959) target=(664.8, 44.60125, 4510.4) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 44/80 elapsed_ms=984 walked_frames=467 player=(667.2936, 44.88566, 4510.561)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 45/80 from=(667.2936, 44.88566, 4510.561) target=(626.0, 44.65111, 4508.0) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 45/80 elapsed_ms=971 walked_frames=471 player=(628.4768, 44.36876, 4508.156)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 46/80 from=(628.4768, 44.36876, 4508.156) target=(587.2, 46.01192, 4505.6) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 46/80 elapsed_ms=993 walked_frames=468 player=(589.6834, 46.27583, 4505.76)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 47/80 from=(589.6834, 46.27583, 4505.76) target=(548.4, 47.38945, 4503.2) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 47/80 elapsed_ms=993 walked_frames=468 player=(550.8538, 47.25776, 4503.355)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 48/80 from=(550.8538, 47.25776, 4503.355) target=(509.6, 49.91576, 4500.8) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 48/80 elapsed_ms=958 walked_frames=471 player=(512.0652, 49.68307, 4500.956)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 49/80 from=(512.0652, 49.68307, 4500.956) target=(470.8, 52.81407, 4498.4) distance_m=41.3 budget_frames=3307
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 49/80 elapsed_ms=988 walked_frames=469 player=(473.2382, 52.80108, 4498.556)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 50/80 from=(473.2382, 52.80108, 4498.556) target=(432.0, 54.89051, 4496.0) distance_m=41.3 budget_frames=3305
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 50/80 elapsed_ms=970 walked_frames=470 player=(434.4851, 54.83871, 4496.157)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 51/80 from=(434.4851, 54.83871, 4496.157) target=(393.2, 54.09031, 4493.6) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 51/80 elapsed_ms=968 walked_frames=468 player=(395.617, 53.84548, 4493.754)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 52/80 from=(395.617, 53.84548, 4493.754) target=(354.4, 56.49834, 4491.2) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 52/80 elapsed_ms=989 walked_frames=468 player=(356.893, 56.68739, 4491.36)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 53/80 from=(356.893, 56.68739, 4491.36) target=(315.6, 56.03337, 4488.8) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 53/80 elapsed_ms=989 walked_frames=471 player=(318.0332, 56.03318, 4488.955)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 54/80 from=(318.0332, 56.03318, 4488.955) target=(276.8, 57.45731, 4486.4) distance_m=41.3 budget_frames=3304
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 54/80 elapsed_ms=966 walked_frames=467 player=(279.2765, 57.29662, 4486.556)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 55/80 from=(279.2765, 57.29662, 4486.556) target=(238.0, 60.10298, 4484.0) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 55/80 elapsed_ms=980 walked_frames=469 player=(240.4356, 59.97369, 4484.155)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 56/80 from=(240.4356, 59.97369, 4484.155) target=(199.2, 59.22969, 4481.6) distance_m=41.3 budget_frames=3305
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 56/80 elapsed_ms=971 walked_frames=470 player=(201.6534, 59.33147, 4481.759)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 57/80 from=(201.6534, 59.33147, 4481.759) target=(160.4, 57.75909, 4479.2) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 57/80 elapsed_ms=982 walked_frames=467 player=(162.8541, 57.89095, 4479.358)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 58/80 from=(162.8541, 57.89095, 4479.358) target=(121.6, 58.95949, 4476.8) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 58/80 elapsed_ms=975 walked_frames=467 player=(124.0782, 58.98929, 4476.958)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 59/80 from=(124.0782, 58.98929, 4476.958) target=(82.79999, 60.20538, 4474.4) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 59/80 elapsed_ms=959 walked_frames=468 player=(85.23009, 60.13003, 4474.555)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 60/80 from=(85.23009, 60.13003, 4474.555) target=(44.0, 60.36994, 4472.0) distance_m=41.3 budget_frames=3304
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 60/80 elapsed_ms=999 walked_frames=471 player=(46.41729, 60.49549, 4472.156)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 61/80 from=(46.41729, 60.49549, 4472.156) target=(5.200012, 58.069, 4469.6) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 61/80 elapsed_ms=961 walked_frames=470 player=(7.693129, 58.176, 4469.767)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 62/80 from=(7.693129, 58.176, 4469.767) target=(-33.59998, 59.65413, 4467.2) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 62/80 elapsed_ms=1017 walked_frames=471 player=(-31.13361, 59.61525, 4467.356)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 63/80 from=(-31.13361, 59.61525, 4467.356) target=(-72.40002, 58.7644, 4464.8) distance_m=41.3 budget_frames=3307
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 63/80 elapsed_ms=1154 walked_frames=467 player=(-69.94204, 58.71346, 4464.956)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 64/80 from=(-69.94204, 58.71346, 4464.956) target=(-111.2, 59.41726, 4462.4) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 64/80 elapsed_ms=1593 walked_frames=467 player=(-108.7433, 59.29565, 4462.559)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 65/80 (vertex 3) from=(-108.7433, 59.29565, 4462.559) target=(-150.0, 60.98669, 4460.0) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 65/80 (vertex 3) elapsed_ms=2075 walked_frames=471 player=(-147.5729, 61.18752, 4460.156)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 66/80 from=(-147.5729, 61.18752, 4460.156) target=(-170.0, 61.68582, 4426.667) distance_m=40.3 budget_frames=3224
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 66/80 elapsed_ms=1466 walked_frames=477 player=(-168.7085, 61.67597, 4428.718)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 67/80 from=(-168.7085, 61.67597, 4428.718) target=(-190.0, 60.0918, 4393.333) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 67/80 elapsed_ms=1234 walked_frames=470 player=(-188.7212, 60.07153, 4395.461)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 68/80 from=(-188.7212, 60.07153, 4395.461) target=(-210.0, 60.99053, 4360.0) distance_m=41.4 budget_frames=3308
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 68/80 elapsed_ms=1002 walked_frames=467 player=(-208.7233, 60.85981, 4362.117)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 69/80 from=(-208.7233, 60.85981, 4362.117) target=(-230.0, 59.87925, 4326.667) distance_m=41.3 budget_frames=3307
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 69/80 elapsed_ms=1016 walked_frames=467 player=(-228.7408, 60.0167, 4328.765)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 70/80 from=(-228.7408, 60.0167, 4328.765) target=(-250.0, 59.31036, 4293.333) distance_m=41.3 budget_frames=3305
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 70/80 elapsed_ms=945 walked_frames=467 player=(-248.735, 59.39285, 4295.424)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 71/80 from=(-248.735, 59.39285, 4295.424) target=(-270.0, 58.32023, 4260.0) distance_m=41.3 budget_frames=3305
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 71/80 elapsed_ms=1145 walked_frames=467 player=(-268.7487, 58.31354, 4262.07)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 72/80 from=(-268.7487, 58.31354, 4262.07) target=(-290.0, 58.11998, 4226.667) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 72/80 elapsed_ms=2328 walked_frames=467 player=(-288.7527, 58.30279, 4228.741)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 73/80 from=(-288.7527, 58.30279, 4228.741) target=(-310.0, 59.02849, 4193.333) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 73/80 elapsed_ms=1842 walked_frames=467 player=(-308.731, 59.01557, 4195.436)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 74/80 from=(-308.731, 59.01557, 4195.436) target=(-330.0, 61.56905, 4160.0) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 74/80 elapsed_ms=1437 walked_frames=468 player=(-328.7516, 61.57177, 4162.069)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 75/80 from=(-328.7516, 61.57177, 4162.069) target=(-350.0, 63.65636, 4126.667) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 75/80 elapsed_ms=1090 walked_frames=467 player=(-348.7462, 63.41206, 4128.75)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 76/80 from=(-348.7462, 63.41206, 4128.75) target=(-370.0, 65.6625, 4093.333) distance_m=41.3 budget_frames=3304
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 76/80 elapsed_ms=966 walked_frames=467 player=(-368.7159, 65.65456, 4095.472)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 77/80 from=(-368.7159, 65.65456, 4095.472) target=(-390.0, 65.14206, 4060.0) distance_m=41.4 budget_frames=3309
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 77/80 elapsed_ms=986 walked_frames=467 player=(-388.7281, 65.27432, 4062.119)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 78/80 from=(-388.7281, 65.27432, 4062.119) target=(-410.0, 62.207, 4026.667) distance_m=41.3 budget_frames=3307
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 78/80 elapsed_ms=1108 walked_frames=468 player=(-408.7382, 62.26434, 4028.776)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 79/80 from=(-408.7382, 62.26434, 4028.776) target=(-430.0, 60.42742, 3993.333) distance_m=41.3 budget_frames=3306
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 79/80 elapsed_ms=1037 walked_frames=467 player=(-428.7488, 60.74032, 3995.413)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to blackwater_loop waypoint 80/80 (vertex 4) from=(-428.7488, 60.74032, 3995.413) target=(-450.0, 57.48942, 3960.0) distance_m=41.3 budget_frames=3303
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to blackwater_loop waypoint 80/80 (vertex 4) elapsed_ms=2206 walked_frames=468 player=(-448.7385, 57.47784, 3962.103)
+LOOP blackwater_loop vertices=4/4 waypoints=80/80 walked=3099m authored=3101m wall=114s fights=1 lightning_hits=0 deaths=0 jumps=1 result=PASS
+ROUTE WALKS start ALTERNATE dynamo_west_approach: 4 vertices, 30 waypoints, 1114 m authored, requires=stormwood:rootgate_released
+DISCLOSED SEAM 2 teleport: dynamo_west_approach start (-890.0,4490.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 1/30 from=(-890.0, 51.42408, 4490.0) target=(-871.0, 49.63681, 4523.0) distance_m=38.1 budget_frames=3046
+ROUTE WALKS jump 7.2 m (-890.0,4490.0) -> (-883.8,4486.4) fighting=true
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during dynamo_west_approach waypoint 1/30 (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 1/30 elapsed_ms=52259 walked_frames=443 player=(-871.8045, 49.73475, 4520.695)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 2/30 from=(-871.8045, 49.73475, 4520.695) target=(-852.0, 50.33717, 4556.0) distance_m=40.5 budget_frames=3238
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 2/30 elapsed_ms=988 walked_frames=457 player=(-853.2348, 50.31757, 4553.841)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 3/30 from=(-853.2348, 50.31757, 4553.841) target=(-833.0, 47.01536, 4589.0) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 3/30 elapsed_ms=1307 walked_frames=466 player=(-834.2069, 47.11769, 4586.9)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 4/30 from=(-834.2069, 47.11769, 4586.9) target=(-814.0, 45.70504, 4622.0) distance_m=40.5 budget_frames=3240
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 4/30 elapsed_ms=1197 walked_frames=457 player=(-815.2401, 45.73711, 4619.833)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 5/30 from=(-815.2401, 45.73711, 4619.833) target=(-795.0, 47.59025, 4655.0) distance_m=40.6 budget_frames=3246
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 5/30 elapsed_ms=974 walked_frames=461 player=(-796.2388, 47.38109, 4652.852)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 6/30 from=(-796.2388, 47.38109, 4652.852) target=(-776.0, 49.12388, 4688.0) distance_m=40.6 budget_frames=3244
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 6/30 elapsed_ms=1100 walked_frames=459 player=(-777.2147, 49.2094, 4685.887)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 7/30 from=(-777.2147, 49.2094, 4685.887) target=(-757.0, 47.72549, 4721.0) distance_m=40.5 budget_frames=3241
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 7/30 elapsed_ms=1308 walked_frames=457 player=(-758.2396, 48.05836, 4718.841)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 8/30 from=(-758.2396, 48.05836, 4718.841) target=(-738.0, 48.36135, 4754.0) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 8/30 elapsed_ms=1161 walked_frames=458 player=(-739.2363, 48.21386, 4751.861)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 9/30 from=(-739.2363, 48.21386, 4751.861) target=(-719.0, 48.33477, 4787.0) distance_m=40.5 budget_frames=3243
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 9/30 elapsed_ms=1013 walked_frames=461 player=(-720.23, 48.47086, 4784.859)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 10/30 (vertex 1) from=(-720.23, 48.47086, 4784.859) target=(-700.0, 44.75236, 4820.0) distance_m=40.5 budget_frames=3243
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 10/30 (vertex 1) elapsed_ms=1055 walked_frames=459 player=(-701.2394, 44.90405, 4817.837)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 11/30 from=(-701.2394, 44.90405, 4817.837) target=(-678.0, 43.25583, 4850.0) distance_m=39.7 budget_frames=3174
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 11/30 elapsed_ms=1027 walked_frames=448 player=(-679.4436, 43.27476, 4848.02)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 12/30 from=(-679.4436, 43.27476, 4848.02) target=(-656.0, 41.63918, 4880.0) distance_m=39.7 budget_frames=3172
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 12/30 elapsed_ms=1159 walked_frames=447 player=(-657.4703, 41.7253, 4877.988)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 13/30 from=(-657.4703, 41.7253, 4877.988) target=(-634.0, 38.12802, 4910.0) distance_m=39.7 budget_frames=3175
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 13/30 elapsed_ms=1054 walked_frames=453 player=(-635.4418, 38.07472, 4908.026)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 14/30 from=(-635.4418, 38.07472, 4908.026) target=(-612.0, 40.05422, 4940.0) distance_m=39.6 budget_frames=3171
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 14/30 elapsed_ms=1046 walked_frames=453 player=(-613.4779, 39.94246, 4937.986)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 15/30 from=(-613.4779, 39.94246, 4937.986) target=(-590.0, 41.31834, 4970.0) distance_m=39.7 budget_frames=3175
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 15/30 elapsed_ms=1149 walked_frames=448 player=(-591.4493, 41.28057, 4968.021)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 16/30 from=(-591.4493, 41.28057, 4968.021) target=(-568.0, 43.36856, 5000.0) distance_m=39.7 budget_frames=3172
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 16/30 elapsed_ms=1172 walked_frames=451 player=(-569.4605, 43.30485, 4998.008)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 17/30 from=(-569.4605, 43.30485, 4998.008) target=(-546.0, 46.60543, 5030.0) distance_m=39.7 budget_frames=3173
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 17/30 elapsed_ms=1102 walked_frames=448 player=(-547.4577, 46.23813, 5028.018)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 18/30 from=(-547.4577, 46.23813, 5028.018) target=(-524.0, 50.58644, 5060.0) distance_m=39.7 budget_frames=3173
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 18/30 elapsed_ms=1072 walked_frames=453 player=(-525.4341, 50.56014, 5058.05)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 19/30 from=(-525.4341, 50.56014, 5058.05) target=(-502.0, 54.18116, 5090.0) distance_m=39.6 budget_frames=3169
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 19/30 elapsed_ms=975 walked_frames=448 player=(-503.4706, 53.89615, 5087.996)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 20/30 (vertex 2) from=(-503.4706, 53.89615, 5087.996) target=(-480.0, 59.58835, 5120.0) distance_m=39.7 budget_frames=3175
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 20/30 (vertex 2) elapsed_ms=1677 walked_frames=452 player=(-481.4702, 59.03558, 5118.02)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 21/30 from=(-481.4702, 59.03558, 5118.02) target=(-446.0, 64.86992, 5132.2) distance_m=38.2 budget_frames=3055
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 21/30 elapsed_ms=1003 walked_frames=444 player=(-448.3182, 64.67426, 5131.376)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 22/30 from=(-448.3182, 64.67426, 5131.376) target=(-412.0, 70.81678, 5144.4) distance_m=38.6 budget_frames=3086
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 22/30 elapsed_ms=1128 walked_frames=441 player=(-414.3408, 70.46815, 5143.56)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 23/30 from=(-414.3408, 70.46815, 5143.56) target=(-378.0, 76.42962, 5156.6) distance_m=38.6 budget_frames=3088
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 23/30 elapsed_ms=1175 walked_frames=441 player=(-380.3042, 75.94486, 5155.778)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 24/30 from=(-380.3042, 75.94486, 5155.778) target=(-344.0, 81.68628, 5168.8) distance_m=38.6 budget_frames=3085
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 24/30 elapsed_ms=1333 walked_frames=439 player=(-346.3099, 81.43349, 5167.964)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 25/30 from=(-346.3099, 81.43349, 5167.964) target=(-310.0, 87.70537, 5181.0) distance_m=38.6 budget_frames=3086
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 25/30 elapsed_ms=1233 walked_frames=444 player=(-312.2806, 87.35327, 5180.189)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 26/30 from=(-312.2806, 87.35327, 5180.189) target=(-276.0, 93.4436, 5193.2) distance_m=38.5 budget_frames=3083
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 26/30 elapsed_ms=1071 walked_frames=439 player=(-278.3064, 93.13075, 5192.371)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 27/30 from=(-278.3064, 93.13075, 5192.371) target=(-242.0, 96.93854, 5205.4) distance_m=38.6 budget_frames=3085
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 27/30 elapsed_ms=1216 walked_frames=436 player=(-244.3447, 96.82401, 5204.552)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 28/30 from=(-244.3447, 96.82401, 5204.552) target=(-208.0, 99.11267, 5217.6) distance_m=38.6 budget_frames=3089
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 28/30 elapsed_ms=1669 walked_frames=435 player=(-210.3173, 98.98343, 5216.761)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 29/30 from=(-210.3173, 98.98343, 5216.761) target=(-174.0, 100.3328, 5229.8) distance_m=38.6 budget_frames=3086
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 29/30 elapsed_ms=1566 walked_frames=435 player=(-176.3288, 100.5294, 5228.961)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 30/30 (vertex 3) from=(-176.3288, 100.5294, 5228.961) target=(-140.0, 99.37754, 5242.0) distance_m=38.6 budget_frames=3087
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 30/30 (vertex 3) elapsed_ms=1672 walked_frames=437 player=(-142.3508, 99.3605, 5241.151)
+ALTERNATE dynamo_west_approach vertices=3/3 waypoints=30/30 walked=1112m authored=1114m wall=87s fights=1 lightning_hits=0 deaths=0 jumps=1 result=PASS
+ROUTE WALKS start SHORTCUT c: c_rodline <-> c_lantern
+DISCLOSED SEAM 2 teleport: c_rodline front (-720.0,2268.0) accepted=true
+DISCLOSED SEAM 3 grant: +3 stormglass before c_rodline's Relight prompt (had 0, cost 3)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to c_rodline relight stance from=(-721.9979, 43.3466, 2267.636) target=(-720.0, 42.84951, 2257.2) distance_m=10.6 budget_frames=1800
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during c_rodline relight stance (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to c_rodline relight stance elapsed_ms=45632 walked_frames=146 player=(-720.1304, 43.05333, 2257.88)
+RELIGHT c_rodline prompt='Relight Rodline Long Road Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-719.667, 43.05228, 2255.469) 
+DISCLOSED SEAM 2 teleport: c_lantern front (-420.0,4002.0) accepted=true
+DISCLOSED SEAM 3 grant: +3 stormglass before c_lantern's Relight prompt (had 0, cost 3)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to c_lantern relight stance from=(-420.0, 60.86786, 4002.0) target=(-420.0, 61.90312, 4012.8) distance_m=10.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to c_lantern relight stance elapsed_ms=2850 walked_frames=1020 player=(-420.6071, 61.93497, 4012.645)
+RELIGHT c_lantern prompt='Relight Lantern Hollow Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-419.0356, 61.93505, 4013.041) 
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to c_lantern line up (behind) from=(-419.0356, 61.93505, 4013.041) target=(-420.0, 61.94315, 4013.5) distance_m=1.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to c_lantern line up (behind) elapsed_ms=67 walked_frames=32 player=(-419.3304, 61.94329, 4013.182)
+ROUTE WALKS jump 1772.8 m (-419.9,4010.7) -> (-720.0,2263.5) fighting=false
+SHORTCUT c dir=c_lantern->c_rodline approach=behind lined_up=true event=ok(c_lantern->c_rodline) landed=(-720.0,43.1,2262.5) 2.5 m from c_rodline at (-720,2260) walked=7.9m wall=3.0s fights=0 lightning_hits=0 result=PASS
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to c_rodline line up (front) from=(-720.023, 43.05333, 2262.479) target=(-720.0, 43.25833, 2267.0) distance_m=4.5 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to c_rodline line up (front) elapsed_ms=310 walked_frames=69 player=(-720.0072, 43.1897, 2266.274)
+ROUTE WALKS jump 1771.4 m (-720.0,2260.7) -> (-420.0,4006.5) fighting=false
+SHORTCUT c dir=c_rodline->c_lantern approach=front lined_up=true event=ok(c_rodline->c_lantern) landed=(-420.0,61.9,4005.5) 4.5 m from c_lantern at (-420,4010) walked=17.5m wall=3.3s fights=0 lightning_hits=0 result=PASS
+ROUTE WALKS start SHORTCUT d: d_hall <-> d_giant
+DISCLOSED SEAM 2 teleport: d_hall front (-1120.0,3878.0) accepted=true
+DISCLOSED SEAM 3 grant: +3 stormglass before d_hall's Relight prompt (had 0, cost 3)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to d_hall relight stance from=(-1120.0, 37.22225, 3878.246) target=(-1120.0, 37.13328, 3867.2) distance_m=11.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to d_hall relight stance elapsed_ms=272 walked_frames=137 player=(-1120.0, 37.29098, 3867.833)
+RELIGHT d_hall prompt='Relight Old Rodfolk Hall Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-1120.0, 37.291, 3867.295) 
+DISCLOSED SEAM 2 teleport: d_giant front (-150.0,4452.0) accepted=true
+DISCLOSED SEAM 3 grant: +3 stormglass before d_giant's Relight prompt (had 0, cost 3)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to d_giant relight stance from=(-150.0, 61.10764, 4452.0) target=(-150.0, 60.73069, 4462.8) distance_m=10.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to d_giant relight stance elapsed_ms=950 walked_frames=245 player=(-150.5792, 61.18752, 4462.513)
+RELIGHT d_giant prompt='Relight Fallen Giant Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-150.2484, 61.18753, 4462.68) 
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to d_giant line up (behind) from=(-150.2484, 61.18753, 4462.68) target=(-150.0, 60.68293, 4463.5) distance_m=0.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to d_giant line up (behind) elapsed_ms=101 walked_frames=28 player=(-150.2281, 61.18752, 4462.747)
+FINDING d_giant->d_hall: approaching from behind the trainer could not walk into d_giant's opening and was steered round the frame (local trail twin=d_hall (-0.7,-0.4,-5.7) (-0.6,-0.4,-4.9) (1.3,-0.4,-4.9) (-0.4,-0.4,-4.9) (-2.8,-0.2,-4.9) (-5.3,-0.1,-4.9) (-6.1,-0.1,-4.1) (-4.5,0.2,-2.0) (-2.8,0.2,-0.1) (-1.1,0.2,1.7)); rear footing edge: edge at (-148.0,4464.6): slab 61.19 vs ground 60.78, step 0.40 m; edge at (-150.0,4464.6): slab 61.19 vs ground 60.60, step 0.59 m; edge at (-152.0,4464.6): slab 61.19 vs ground 60.52, step 0.67 m
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to d_giant line up (front) from=(-150.1199, 61.18752, 4456.873) target=(-150.0, 61.15273, 4453.0) distance_m=3.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to d_giant line up (front) elapsed_ms=177 walked_frames=61 player=(-150.0251, 61.19028, 4453.799)
+ROUTE WALKS jump 1133.1 m (-150.0,4459.2) -> (-1120.0,3873.5) fighting=false
+SHORTCUT d dir=d_giant->d_hall approach=front (retry from the other side after FINDING) lined_up=true event=ok(d_giant->d_hall) landed=(-1120.0,37.3,3874.5) 4.5 m from d_hall at (-1120,3870) walked=38.4m wall=6.9s fights=0 lightning_hits=0 result=PASS
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to d_hall line up (front) from=(-1120.004, 37.29099, 3874.521) target=(-1120.0, 37.11293, 3877.0) distance_m=2.5 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to d_hall line up (front) elapsed_ms=112 walked_frames=21 player=(-1120.004, 37.05693, 3876.257)
+ROUTE WALKS jump 1133.1 m (-1120.0,3870.8) -> (-150.0,4456.5) fighting=false
+SHORTCUT d dir=d_hall->d_giant approach=front lined_up=true event=ok(d_hall->d_giant) landed=(-150.0,61.2,4455.5) 4.5 m from d_giant at (-150,4460) walked=11.8m wall=2.9s fights=0 lightning_hits=0 result=PASS
+ROAD cap: player_pair_limit=3 standing crown_pairs=1 ordinary_arches=0 room_for_pairs=2
+ROAD uid counter after title Load: next minted uid=b2 live uids=["b1"] collision=false
+DISCLOSED SEAM 2 teleport: verge_road footing (-630.0,790.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to choose verge_road footing stance from=(-630.0, 22.95389, 790.0) target=(-630.0, 22.69794, 793.7) distance_m=3.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to choose verge_road footing stance elapsed_ms=168 walked_frames=56 player=(-630.0018, 22.74858, 793.0696)
+ROAD choose verge_road prompt='Choose this footing for your road' chosen=true 
+DISCLOSED SEAM 3 grant before the verge_road arch build: +6 stormglass (had 0), +2 thunderwood_frame (had 0), +4 conductor_vine (had 0)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to verge_road build stance from=(-630.0009, 22.57076, 795.3699) target=(-630.0, 22.26803, 798.4) distance_m=3.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to verge_road build stance elapsed_ms=572 walked_frames=35 player=(-630.0007, 22.32876, 797.936)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to verge_road armed build stance from=(-630.0012, 22.28237, 798.3322) target=(-630.0, 22.26803, 798.4) distance_m=0.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to verge_road armed build stance elapsed_ms=0 walked_frames=0 player=(-630.0012, 22.28237, 798.3322)
+ROAD build verge_road record uid=b2 footing=verge_road twin='' paid=true at=[-630.0, 22.0587768554688, 800.0] charged_exact=true
+DISCLOSED SEAM 2 teleport: hollows_road footing (-1050.0,1740.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to choose hollows_road footing stance from=(-1050.0, 30.07481, 1740.0) target=(-1050.0, 29.8648, 1743.7) distance_m=3.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to choose hollows_road footing stance elapsed_ms=86 walked_frames=53 player=(-1050.0, 29.88948, 1743.073)
+ROAD choose hollows_road prompt='Choose this footing for your road' chosen=true 
+DISCLOSED SEAM 3 grant before the hollows_road arch build: +6 stormglass (had 0), +2 thunderwood_frame (had 0), +4 conductor_vine (had 0)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hollows_road build stance from=(-1050.0, 29.85795, 1743.705) target=(-1050.0, 29.55082, 1748.4) distance_m=4.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hollows_road build stance elapsed_ms=900 walked_frames=55 player=(-1050.0, 29.70326, 1747.945)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hollows_road armed build stance from=(-1050.0, 29.70328, 1748.316) target=(-1050.0, 29.55082, 1748.4) distance_m=0.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hollows_road armed build stance elapsed_ms=0 walked_frames=0 player=(-1050.0, 29.70328, 1748.316)
+ROAD build hollows_road record uid=b3 footing=hollows_road twin='b2' paid=true at=[-1050.0, 29.5524444580078, 1750.0] charged_exact=true
+ROAD pair b2(verge_road) <-> b3(hollows_road) linked_twin=b2 chosen_road={ "a": "b2", "b": "b3", "footings": ["verge_road", "hollows_road"] }
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b3 line up (behind) from=(-1050.0, 29.70328, 1748.316) target=(-1050.0, 29.61841, 1746.5) distance_m=1.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b3 line up (behind) elapsed_ms=52 walked_frames=17 player=(-1050.0, 29.70327, 1747.239)
+ROUTE WALKS jump 1034.8 m (-1050.0,1749.3) -> (-630.0,803.5) fighting=false
+SHORTCUT road dir=b3->b2 approach=behind lined_up=true event=ok(b3->b2) landed=(-630.0,22.2,803.6) 3.6 m from b2 at (-630,800) walked=4.0m wall=2.8s fights=0 lightning_hits=0 result=PASS
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b2 line up (front) from=(-630.0, 22.20961, 803.606) target=(-630.0, 21.15371, 807.0) distance_m=3.4 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b2 line up (front) elapsed_ms=125 walked_frames=74 player=(-630.6398, 21.1159, 806.5843)
+FINDING b2->b3: approaching from the front (landing side) the trainer could not walk into b2's opening and was steered round the frame (local trail twin=b3 (-0.4,-1.0,7.3) (-0.3,-0.8,5.1) (-0.3,-0.7,4.9) (1.1,-0.5,5.0) (1.4,-0.7,6.8) (1.8,-0.5,5.4) (4.3,-0.1,5.1) (5.2,0.2,4.1) (6.1,0.5,2.5) (4.3,0.5,0.8) (2.4,0.4,-0.9)); front footing edge: edge at (-632.0,804.6): slab 22.21 vs ground 21.10, step 1.11 m; edge at (-630.0,804.6): slab 22.21 vs ground 21.35, step 0.86 m; edge at (-628.0,804.6): slab 22.21 vs ground 21.67, step 0.54 m
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b2 line up (behind) from=(-630.1942, 22.4127, 796.8342) target=(-630.0, 22.46919, 796.5) distance_m=0.4 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b2 line up (behind) elapsed_ms=0 walked_frames=0 player=(-630.1942, 22.4127, 796.8342)
+ROUTE WALKS jump 1042.6 m (-630.1,799.2) -> (-1050.0,1753.5) fighting=false
+SHORTCUT road dir=b2->b3 approach=behind (retry from the other side after FINDING) lined_up=true event=ok(b2->b3) landed=(-1050.0,29.7,1753.7) 3.7 m from b3 at (-1050,1750) walked=29.6m wall=6.2s fights=0 lightning_hits=0 result=PASS
+ROAD departed flag verge_road = true
+ROAD departed flag hollows_road = true
+
+==== STORMWOOD ROUTE WALKS SUMMARY ====
+LOOP pools_west_loop vertices=5/5 waypoints=71/71 walked=2728m authored=2728m wall=101s fights=0 lightning_hits=0 deaths=0 jumps=0 result=PASS
+  FINDING pools_west_loop: the authored line (-400,1368)->(-422,1332) crosses lit linked arch b_pools at (-410.0,1350.0) (0.9 m from its centre); walking it straight carries the trainer to b_rodline, so the walk steps round the frame via [(-417.0, 1356.5), (-417.0, 1343.5)]
+LOOP crown_sightline_loop vertices=6/6 waypoints=78/78 walked=2997m authored=3010m wall=158s fights=1 lightning_hits=0 deaths=0 jumps=1 result=PASS
+LOOP conductor_west_loop vertices=5/5 waypoints=83/83 walked=3194m authored=3206m wall=711s fights=2 lightning_hits=0 deaths=0 jumps=1 result=PASS
+LOOP hall_loop vertices=4/4 waypoints=71/71 walked=2760m authored=2761m wall=191s fights=2 lightning_hits=0 deaths=0 jumps=2 result=PASS
+LOOP blackwater_loop vertices=4/4 waypoints=80/80 walked=3099m authored=3101m wall=114s fights=1 lightning_hits=0 deaths=0 jumps=1 result=PASS
+ALTERNATE dynamo_west_approach vertices=3/3 waypoints=30/30 walked=1112m authored=1114m wall=87s fights=1 lightning_hits=0 deaths=0 jumps=1 result=PASS
+SHORTCUT c dir=c_lantern->c_rodline approach=behind lined_up=true event=ok(c_lantern->c_rodline) landed=(-720.0,43.1,2262.5) 2.5 m from c_rodline at (-720,2260) walked=7.9m wall=3.0s fights=0 lightning_hits=0 result=PASS
+SHORTCUT c dir=c_rodline->c_lantern approach=front lined_up=true event=ok(c_rodline->c_lantern) landed=(-420.0,61.9,4005.5) 4.5 m from c_lantern at (-420,4010) walked=17.5m wall=3.3s fights=0 lightning_hits=0 result=PASS
+SHORTCUT d dir=d_giant->d_hall approach=front (retry from the other side after FINDING) lined_up=true event=ok(d_giant->d_hall) landed=(-1120.0,37.3,3874.5) 4.5 m from d_hall at (-1120,3870) walked=38.4m wall=6.9s fights=0 lightning_hits=0 result=PASS
+  FINDING d_giant->d_hall: approaching from behind the trainer could not walk into d_giant's opening and was steered round the frame (local trail twin=d_hall (-0.7,-0.4,-5.7) (-0.6,-0.4,-4.9) (1.3,-0.4,-4.9) (-0.4,-0.4,-4.9) (-2.8,-0.2,-4.9) (-5.3,-0.1,-4.9) (-6.1,-0.1,-4.1) (-4.5,0.2,-2.0) (-2.8,0.2,-0.1) (-1.1,0.2,1.7)); rear footing edge: edge at (-148.0,4464.6): slab 61.19 vs ground 60.78, step 0.40 m; edge at (-150.0,4464.6): slab 61.19 vs ground 60.60, step 0.59 m; edge at (-152.0,4464.6): slab 61.19 vs ground 60.52, step 0.67 m
+SHORTCUT d dir=d_hall->d_giant approach=front lined_up=true event=ok(d_hall->d_giant) landed=(-150.0,61.2,4455.5) 4.5 m from d_giant at (-150,4460) walked=11.8m wall=2.9s fights=0 lightning_hits=0 result=PASS
+SHORTCUT road dir=b3->b2 approach=behind lined_up=true event=ok(b3->b2) landed=(-630.0,22.2,803.6) 3.6 m from b2 at (-630,800) walked=4.0m wall=2.8s fights=0 lightning_hits=0 result=PASS
+SHORTCUT road dir=b2->b3 approach=behind (retry from the other side after FINDING) lined_up=true event=ok(b2->b3) landed=(-1050.0,29.7,1753.7) 3.7 m from b3 at (-1050,1750) walked=29.6m wall=6.2s fights=0 lightning_hits=0 result=PASS
+  FINDING b2->b3: approaching from the front (landing side) the trainer could not walk into b2's opening and was steered round the frame (local trail twin=b3 (-0.4,-1.0,7.3) (-0.3,-0.8,5.1) (-0.3,-0.7,4.9) (1.1,-0.5,5.0) (1.4,-0.7,6.8) (1.8,-0.5,5.4) (4.3,-0.1,5.1) (5.2,0.2,4.1) (6.1,0.5,2.5) (4.3,0.5,0.8) (2.4,0.4,-0.9)); front footing edge: edge at (-632.0,804.6): slab 22.21 vs ground 21.10, step 1.11 m; edge at (-630.0,804.6): slab 22.21 vs ground 21.35, step 0.86 m; edge at (-628.0,804.6): slab 22.21 vs ground 21.67, step 0.54 m
+---- details ----
+FINDING pools_west_loop: the authored line (-400,1368)->(-422,1332) crosses lit linked arch b_pools at (-410.0,1350.0) (0.9 m from its centre); walking it straight carries the trainer to b_rodline, so the walk steps round the frame via [(-417.0, 1356.5), (-417.0, 1343.5)]
+RELIGHT c_rodline prompt='Relight Rodline Long Road Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-719.667, 43.05228, 2255.469) 
+RELIGHT c_lantern prompt='Relight Lantern Hollow Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-419.0356, 61.93505, 4013.041) 
+RELIGHT d_hall prompt='Relight Old Rodfolk Hall Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-1120.0, 37.291, 3867.295) 
+RELIGHT d_giant prompt='Relight Fallen Giant Arch · 3 Stormglass' ok=true lit=true stormglass 3->0 player=(-150.2484, 61.18753, 4462.68) 
+FINDING d_giant->d_hall: approaching from behind the trainer could not walk into d_giant's opening and was steered round the frame (local trail twin=d_hall (-0.7,-0.4,-5.7) (-0.6,-0.4,-4.9) (1.3,-0.4,-4.9) (-0.4,-0.4,-4.9) (-2.8,-0.2,-4.9) (-5.3,-0.1,-4.9) (-6.1,-0.1,-4.1) (-4.5,0.2,-2.0) (-2.8,0.2,-0.1) (-1.1,0.2,1.7)); rear footing edge: edge at (-148.0,4464.6): slab 61.19 vs ground 60.78, step 0.40 m; edge at (-150.0,4464.6): slab 61.19 vs ground 60.60, step 0.59 m; edge at (-152.0,4464.6): slab 61.19 vs ground 60.52, step 0.67 m
+ROAD cap: player_pair_limit=3 standing crown_pairs=1 ordinary_arches=0 room_for_pairs=2
+ROAD uid counter after title Load: next minted uid=b2 live uids=["b1"] collision=false
+ROAD choose verge_road prompt='Choose this footing for your road' chosen=true 
+ROAD build verge_road record uid=b2 footing=verge_road twin='' paid=true at=[-630.0, 22.0587768554688, 800.0] charged_exact=true
+ROAD choose hollows_road prompt='Choose this footing for your road' chosen=true 
+ROAD build hollows_road record uid=b3 footing=hollows_road twin='b2' paid=true at=[-1050.0, 29.5524444580078, 1750.0] charged_exact=true
+ROAD pair b2(verge_road) <-> b3(hollows_road) linked_twin=b2 chosen_road={ "a": "b2", "b": "b3", "footings": ["verge_road", "hollows_road"] }
+FINDING b2->b3: approaching from the front (landing side) the trainer could not walk into b2's opening and was steered round the frame (local trail twin=b3 (-0.4,-1.0,7.3) (-0.3,-0.8,5.1) (-0.3,-0.7,4.9) (1.1,-0.5,5.0) (1.4,-0.7,6.8) (1.8,-0.5,5.4) (4.3,-0.1,5.1) (5.2,0.2,4.1) (6.1,0.5,2.5) (4.3,0.5,0.8) (2.4,0.4,-0.9)); front footing edge: edge at (-632.0,804.6): slab 22.21 vs ground 21.10, step 1.11 m; edge at (-630.0,804.6): slab 22.21 vs ground 21.35, step 0.86 m; edge at (-628.0,804.6): slab 22.21 vs ground 21.67, step 0.54 m
+ROAD departed flag verge_road = true
+ROAD departed flag hollows_road = true
+---- disclosed seams used ----
+SEAM 1 earned start: title Load of user://swcp_a/4_core (4_core of the continuous full run, which began at the Cloudreach-boundary fixture)
+SEAM 4 clock: Engine.time_scale=8 physics=480 Hz (fights/conductor roads/Build at 1x)
+SEAM 2 teleport: pools_west_loop start (-590.0,1060.0) accepted=true
+SEAM 2 teleport: crown_sightline_loop start (-380.0,1400.0) accepted=true
+SEAM 2 teleport: conductor_west_loop start (-700.0,2300.0) accepted=true
+SEAM 2 teleport: hall_loop start (-450.0,3960.0) accepted=true
+SEAM 2 teleport: blackwater_loop start (-450.0,3960.0) accepted=true
+SEAM 2 teleport: dynamo_west_approach start (-890.0,4490.0) accepted=true
+SEAM 2 teleport: c_rodline front (-720.0,2268.0) accepted=true
+SEAM 3 grant: +3 stormglass before c_rodline's Relight prompt (had 0, cost 3)
+SEAM 2 teleport: c_lantern front (-420.0,4002.0) accepted=true
+SEAM 3 grant: +3 stormglass before c_lantern's Relight prompt (had 0, cost 3)
+SEAM 2 teleport: d_hall front (-1120.0,3878.0) accepted=true
+SEAM 3 grant: +3 stormglass before d_hall's Relight prompt (had 0, cost 3)
+SEAM 2 teleport: d_giant front (-150.0,4452.0) accepted=true
+SEAM 3 grant: +3 stormglass before d_giant's Relight prompt (had 0, cost 3)
+SEAM 2 teleport: verge_road footing (-630.0,790.0) accepted=true
+SEAM 3 grant before the verge_road arch build: +6 stormglass (had 0), +2 thunderwood_frame (had 0), +4 conductor_vine (had 0)
+SEAM 2 teleport: hollows_road footing (-1050.0,1740.0) accepted=true
+SEAM 3 grant before the hollows_road arch build: +6 stormglass (had 0), +2 thunderwood_frame (had 0), +4 conductor_vine (had 0)
+SAFETY {"damage":0.0,"deaths":0,"dodge_frames":2594,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":47}
+Stormwood route walks smoke: 72 checks, 0 failures
+EXIT 0

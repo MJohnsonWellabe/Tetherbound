@@ -605,29 +605,8 @@ class Segment extends RefCounted:
 
 
 	func run(p_tree: SceneTree, p_world: Node3D, p_game: Node) -> Dictionary:
-		tree = p_tree
-		world = p_world
-		game = p_game
-		player = world.get_node_or_null(^"Player") as CharacterBody3D
-		camera = world.get_node_or_null(^"CameraRig") as Node3D
-		arbiter = tree.get_first_node_in_group(&"interaction_arbiter")
-		director = world.get_node_or_null(^"EncounterDirector")
-		manager = world.get_node_or_null(^"CombatManager")
-		_active_phase_started_ms = Time.get_ticks_msec()
-		if player == null or camera == null or arbiter == null or director == null or manager == null:
-			_fail("Stormwood lacks the live player, camera, InteractionArbiter, or combat runtime")
+		if not bind(p_tree, p_world, p_game):
 			return _result()
-		var session: Node = game.get("session") as Node
-		if session == null or not session.has_signal("stormwood_encounter_message"):
-			_fail("Stormwood lacks the production hosted-encounter result signal")
-			return _result()
-		session.connect("stormwood_encounter_message", _on_stormwood_encounter_message)
-		# F11 witness: react to lightning warnings, log hits/deaths, and take
-		# back the satchel after a death (tests/helpers/stormwood_field_safety.gd).
-		safety = SAFETY.new()
-		safety.attach(tree, world, game, player, camera, _send_stick)
-		manager.connect("exited", _on_combat_exited)
-		navigator = NAVIGATOR.new(tree, player, camera, _send_stick)
 		if game.get("progression").call("has", "stormwood:chapter_started"):
 			_fail("chapter_started was already set before ordinary arrival movement")
 			return _result()
@@ -827,6 +806,36 @@ class Segment extends RefCounted:
 			return _result()
 		_note("LEARNED the Stormglass Arch recipe through Ondra's production dialogue")
 		return _result()
+
+
+	## Binds the live world's player, camera, arbiter, combat runtime, session
+	## signal, field safety and stick navigator. False (with a recorded
+	## failure) when the world lacks one of them.
+	func bind(p_tree: SceneTree, p_world: Node3D, p_game: Node) -> bool:
+		tree = p_tree
+		world = p_world
+		game = p_game
+		player = world.get_node_or_null(^"Player") as CharacterBody3D
+		camera = world.get_node_or_null(^"CameraRig") as Node3D
+		arbiter = tree.get_first_node_in_group(&"interaction_arbiter")
+		director = world.get_node_or_null(^"EncounterDirector")
+		manager = world.get_node_or_null(^"CombatManager")
+		_active_phase_started_ms = Time.get_ticks_msec()
+		if player == null or camera == null or arbiter == null or director == null or manager == null:
+			_fail("Stormwood lacks the live player, camera, InteractionArbiter, or combat runtime")
+			return false
+		var session: Node = game.get("session") as Node
+		if session == null or not session.has_signal("stormwood_encounter_message"):
+			_fail("Stormwood lacks the production hosted-encounter result signal")
+			return false
+		session.connect("stormwood_encounter_message", _on_stormwood_encounter_message)
+		# F11 witness: react to lightning warnings, log hits/deaths, and take
+		# back the satchel after a death (tests/helpers/stormwood_field_safety.gd).
+		safety = SAFETY.new()
+		safety.attach(tree, world, game, player, camera, _send_stick)
+		manager.connect("exited", _on_combat_exited)
+		navigator = NAVIGATOR.new(tree, player, camera, _send_stick)
+		return true
 
 
 	func _collect_route_pickup(id: String) -> bool:
