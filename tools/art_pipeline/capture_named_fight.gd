@@ -148,6 +148,9 @@ func _log_lens(tag: String) -> void:
 		if mesh == null or not mesh.is_visible_in_tree() or mesh.mesh == null:
 			continue
 		var box := mesh.global_transform * mesh.get_aabb()
+		# Horizon ranges and terrain sheets contain every point; not what we want.
+		if box.size.x > 40.0 or box.size.z > 40.0:
+			continue
 		if box.grow(0.05).has_point(lens):
 			inside.append("%s (%s)" % [str(mesh.get_path()).trim_prefix("/root/"), str(box.size.snapped(Vector3.ONE * 0.01))])
 		if inside.size() >= 8:
