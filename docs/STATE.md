@@ -46,7 +46,25 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8 and `CLAUDE_START_HERE.md`.
 3. Land each closed criterion through the lane's own PR (re-check, unit suite once, board and STATE, auto-merge). There is no coordinator and no channel.
 
-**Final step (owner, 2026-09-27).** After all 13 cards pass, make one checkpointed four-chapter earned run on one save, from a new game through Tidewake (`smoke_four_biome_continuous`). It retires the chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter.
+**Open lanes (2026-09-28).** Four Phase 1 biome lanes (`tb/meadows`, `tb/tidewake`, `tb/cloudreach`, `tb/stormwood`; `CLAUDE_START_HERE.md`) and one Codex capture-and-catalog lane (`tb/x04-capture`; `CODEX_START_HERE.md` §2a–2b). The Balance lane (`tb/balance`: harder Meadows trainers, starter parity) lands itself, then stops. Meadows F04#7 and Stormwood F10#2 wait on it.
+
+**Not covered by the open lanes; do these after:**
+1. **Biome reorder (Phase 1b).** Once all four biome lanes are complete, start one lane on `CLAUDE_START_HERE.md` §6: order Meadows → Tidewake → Cloudreach → Stormwood, gates and keys, levels, ending after Stormwood, swim-before-Fly, ledgers, regenerated checkpoint saves, and save migration.
+2. **Four-chapter earned run** in the new order, then a **human play pass** per chapter.
+3. **Codex Phase 2c.** Four biome fix lanes (`CODEX_START_HERE.md` §2c), started after the reorder. Re-shoot the top catalog items first, since the baseline catalog predates Phase 1 and the reorder. Each biome closes with a regional Bars A/B verdict, which clears the `Bars A/B → Phase 2` notes. Known items: aerie art, the Stormheart tree, the waterfall, the Glass Field (flag off), the Pump Hall (flag off), and the Cloudreach towers and terrace (off).
+4. **Debt that no queue covers:**
+   - owned-carrier Fly (every proof flight uses Maela's loaner);
+   - Stormwood-B's reverted 07bc9cad, 45927814 and 85ba1c57, if F10#2 C3 needs them.
+5. **Release (owner).**
+   - Internet co-op by invite: Steam AppID, partner access and four accounts.
+   - Download, install, launch and update.
+   - Licence, provenance and credits audit, and store-claim accuracy.
+   None of these is on the board.
+6. **Housekeeping.**
+   - Republish the board to its link in `ralph/reports/COORDINATOR/README.md`. Lanes rebuild the HTML, but the owner's account holds the link.
+   - Delete each lane branch after its last landing.
+
+**Final step (owner, 2026-09-27).** After all 13 cards pass and the reorder has landed, make one checkpointed four-chapter earned run on one save, from a new game through the last chapter (`smoke_four_biome_continuous`). It retires the chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter.
 
 ### Open owner decisions
 

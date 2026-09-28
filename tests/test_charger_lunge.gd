@@ -257,11 +257,8 @@ func test_only_named_charger_profiles_opt_in() -> void:
 				var id := str((trainer as Dictionary).get("id", "?"))
 				var is_charger := is_equal_approx(float(combat.get("preferred_range", 0.0)), 4.5) \
 					and is_equal_approx(float(combat.get("lunge", 0.0)), 7.0)
-				# The owner-approval note sits inside the member's `combat` block
-				# (band4/band5 trainers.json); accept it on the member as well.
 				var is_diver := is_equal_approx(float(combat.get("lunge", 0.0)), 5.5) \
-					and (combat.has("_why_lunge_travels_diver_f04") \
-						or (member as Dictionary).has("_why_lunge_travels_diver_f04"))
+					and combat.has("_why_lunge_travels_diver_f04")
 				assert_true(is_charger or is_diver,
 					"'%s' opts a body that is neither the CHARGER nor the DIVER profile into lunge_travels" % id)
 				opted.append("%s:%s" % [id, str((member as Dictionary).get("species", "?"))])
