@@ -26,3 +26,10 @@ sightings and the unresolved Skill Candy presentation. P2-081 needs native
 dialogue review and Tidewake's portrait work. P2-110 needs native loss replay;
 duplicate messages and result hierarchy remain open. No regional completion
 or Bars A/B pass follows from this review.
+
+Subsequent P2-037 addition: a separately reviewed default-off bark-grounding
+candidate extends only bottom visual vertices downward onto existing terrain.
+The same independent reviewer found no actionable scope or coordinate issues.
+Existing tree/wayfinding/Water-connection checks passed 9 tests / 187 assertions.
+This fifth candidate also remains visually unaccepted; its evidence and limits
+are in `P2-037/grounding-review.md`.
