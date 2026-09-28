@@ -138,10 +138,10 @@
    "id": "F03",
    "title": "Meadows optional activities",
    "chapter": "Meadows",
-   "pct": 81,
+   "pct": 100,
    "counts": {
-    "met": 7,
-    "partial": 1,
+    "met": 8,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -150,10 +150,10 @@
    "criteria": [
     {
      "text": "At least six activities show a visible lure",
-     "status": "partial",
-     "evidence": "F03 record (MEADOWS-PAYOFFS REPORT, main): 4 outright + 2 conditional; lures file-checked; runtime staged",
-     "gap": "Unstaged ordinary-discovery witness",
-     "note": "r6 lure judge in progress. Meadows activities (#289)."
+     "status": "met",
+     "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f03/ (README, RECHECK). Lure read: judge F (MEADOWS-PAYOFFS/six-activities/earned/LURE-JUDGE-earned-f.md). Unstaged ordinary-input walks to each prompt: Bram, Juno (walks_122a8efb), Doss (earned/lure0/doss-f), herd at night (herd_night_walk_8fc88f20, fire 0.65/glow 2.4), vault (vault_cleared_36d88a84), Hall from the south (hall_south_14e917a3, pack at (-45,7300) r8 wander 5, nameplate depth-tested; --hall-decline OK 44.4 m). Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Disclosed: start saves are fixtures (tests/fixtures/f03_lure_saves/README.md), vault uses the guardian-cleared save; the walker plans on the road graph, sets the rig yaw/pitch, glances, flees fights, unsticks and toggles the companion (doss-f/herd --off-road-cost=10); judges r12/r13 PARTLY (Doss/herd/Hall), overridden by the re-check (r13 took the player's Gale for the alpha; Doss witness is doss-f). Open: no watcher figure at the herd fire; hall_16 shows \"You backed off.\" after the walker's Engage. Bars A/B → Phase 2 catalog."
     },
     {
      "text": "Each is a distinct optional action",

@@ -25,8 +25,10 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | M3 | Failing: named-fight framing and Bars A/B. |
 | T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function). |
 
-**Open criteria (14):**
-- **Meadows:** F01#2, F01#3; F03#0; F04#1, #2, #3, #6, #7.
+**Open criteria (13):**
+- **Meadows:** F01#2, F01#3; F04#1, #2, #3, #6, #7. F03#0 is met (`ralph/reports/MEADOWS/f03/`: six ordinary-input lure walks to each prompt, the herd's night fire, the Hall pack on a road sightline with its nameplate depth-tested; strict re-check MET).
+  - In progress on `tb/meadows`: the practice-meadow camp (fire, tent, bedroll) and the arrival-clear beacon for the F01 walks; for F04, wilds are kept off the named grounds, a widened CHARGER opening now stops short of geometry, and the victory shots clear the fallen ace and stand the ally behind the lens. Captains strike their standards, stand down and hand over their sigils; the Warden shows the key and heart.
+  - Other defect, not this lane's: `smoke_party_strip_reflow` fails before this lane's changes and is not in CI (owner: HUD).
 - **Cloudreach: complete for Phase 1** (every row and card C1-C3 met). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Open debt outside the queue: owned-carrier Fly; Cliffhold reads thin (Phase 2).
 - **Stormwood:** F10#2, #6. F10#4 met (`ralph/reports/STORMWOOD/f10_4/r7/`: denser Deepwood reads as deep forest at every judged stand). F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
 - **Tidewake:** F14#0, #1.
@@ -38,8 +40,8 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 **Switched off or unwired in batch 67.** This is unjudged visual work, landed as the wind-down rule requires. Flip each item on only after a code-blind Bars A/B pass.
 - `stormwood_glass_field.json` `scorched_scars=false`.
-- `camera.body_clear.ignore_lunging_foe=false`. The Vance move is reverted.
-- The Meadows camp firepit is unwired (re-apply `631b8390`).
+- `camera.body_clear.ignore_lunging_foe` and the Vance move are re-applied on `tb/meadows` (F04#1).
+- The Meadows camp firepit is re-applied on `tb/meadows` (F01#2/#3).
 
 **Reverted in batch 67.** Stormwood-B's F10#2 C3 commits `07bc9cad`, `45927814` and `85ba1c57` (the Elder cone and heading, and the guard cone) are reverted. Re-apply them when F10#2's C3 is re-captured.
 

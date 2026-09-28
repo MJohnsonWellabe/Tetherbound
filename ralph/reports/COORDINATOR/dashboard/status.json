@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-28T11:10Z",
  "headline": [
-  "Criteria met: 89 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Cloudreach is complete for Phase 1. Open: Meadows 8 (F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
+  "Criteria met: 90 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Cloudreach is complete for Phase 1. Open: Meadows 7 (F01#2, F01#3, F04#1, F04#2, F04#3, F04#6, F04#7; F03#0 met by the Meadows lane), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
   "Owner decision 2026-09-28 (F04#7, option c): the Meadows captains get harder (five members, levels at the pin ceiling), and the top-fight bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio instead of a masher team wipe. The same bar applies to Tidewake F14#0. The Balance lane is implementing it with F10#2 starter parity and will land tb/balance itself.",
   "CI on main: GITHUB_TOKEN auto-merges start no push run, so #397, #403 and #404 reached main without CI. Fast CI run 36412797891 was dispatched on b920be23 to cover them (queued). #405 now makes the auto-merge workflow dispatch fast CI after every merge; #402 stops counting cancelled runs. The last full run was green (33/33 at d971d248).",
   "Phase 1 lanes land their own PRs and update this board and STATE. Work outside the open lanes is in STATE's after-list."
