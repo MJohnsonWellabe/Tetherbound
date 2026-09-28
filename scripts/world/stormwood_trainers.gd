@@ -2,10 +2,12 @@ extends "res://scripts/world/trainer_npc.gd"
 
 const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
 const DIALOGUE := preload("res://scripts/story/dialogue_runner.gd")
+const PRESENTATION_PATH := "res://data/config/stormwood_dialogue_presentation.json"
 var authored_specs: Dictionary = {}
 
 func build_authored(player: Node3D) -> void:
 	_player = player
+	var presentation: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH))
 	for spec: Dictionary in CATALOGUE.trainer_specs():
 		spec["defeat_flag"] = "stormwood:trainer:%s:defeated" % spec.id
 		spec["rechallenge"] = false
@@ -15,6 +17,16 @@ func build_authored(player: Node3D) -> void:
 			"lines": ["Keep your team close. These woods test how well you work together.", "Show me what they can do."]}
 		DIALOGUE.table()[spec.defeated] = {"speaker": spec.name,
 			"lines": ["A good battle. Rest your team before you press on."]}
+		if bool(presentation.get("enabled", false)):
+			var identity: Dictionary = presentation.get("trainers", {}).get(str(spec.id), {})
+			for kind: String in ["challenge", "defeated"]:
+				if identity.get(kind) is Array and not identity[kind].is_empty():
+					var entry := {"speaker": str(identity.get("speaker", spec.name)),
+						"lines": identity[kind].duplicate()}
+					var portrait := str(identity.get("portrait", ""))
+					if not portrait.is_empty() and ResourceLoader.exists(portrait):
+						entry["portrait"] = portrait
+					DIALOGUE.table()[spec[kind]] = entry
 		authored_specs[str(spec.id)] = spec
 		_spawn(spec)
 		if str(spec.get("surface_id", "")) == "dynamo_core":
