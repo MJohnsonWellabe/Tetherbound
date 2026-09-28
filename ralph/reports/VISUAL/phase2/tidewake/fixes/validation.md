@@ -55,12 +55,27 @@ does not mean a clean engine-error log.
   frames with exact camera matches. Texture-detail removal did not fix bands;
   terrain-only 0.05 m caster-depth offset did at Gull Rest while retaining the
   trainer shadow. See `P2-008/{surface,shadow,receiver}-01-ablation/`. The gated
-  implementation still requires the cross-island and route judge; steep bluff
-  shading remains a visible concern.
+  implementation compiled in the subsequent dunes-03 native island/route run;
+  steep bluff shading remains a visible concern.
 - Shared grove placement uses actual upwind terrain relief with unchanged
   gameplay clearances. A placement-only probe and native scene report 73 groves
   across eleven candidate islands, 426 trees and 339 shrubs. Counts establish
   placement, not art acceptance; Veilfall remains on its original path.
+
+- Dunes-03 source `8f4cb049d`: four location and three route images passed
+  native validation, seven of eight required sightings. Brine Steps walk03
+  failed with 5.56 m drift, matching its invalid old baseline exactly. A new
+  physically supported before/after pair is required. See
+  `P2-008/dunes-03-capture-validation.md`. Independent dunes-03 review confirms
+  the direction, but item acceptance remains incomplete and limited Bars A/B
+  are No/No: sand-coated sheer banks, rigid pale grass strips, jagged shading
+  and weak destination/creature composition remain.
+- P2-032 selected-realm styling candidate `d68213708` remains off. Existing
+  realm-selection tests pass 8 methods / 36 assertions with no script errors
+  (`.local/phase2/map-realm-selection-focused.log`). Native explicit map
+  selection comparisons in all three affected realms remain outstanding.
+  Independent source review found no actionable issues; normal theme margins,
+  radii and input semantics are preserved without per-frame style allocation.
 
 Independent source reviews found no remaining issues in named-character grass
 clearance, Water offshore material isolation and decorative bedding. The current
