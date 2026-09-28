@@ -1,0 +1,200 @@
+param([string]$Round = 'bluff-noise03', [ValidateRange(30,7200)][int]$TimeoutSeconds = 1800, [switch]$StaticPreflight)
+$ErrorActionPreference = 'Stop'
+
+function Read-RenderLeaseState([IO.Stream]$Stream) {
+    $Stream.Position = 0
+    $reader = [IO.StreamReader]::new($Stream, [Text.Encoding]::UTF8, $true, 1024, $true)
+    try { $text = $reader.ReadToEnd() } finally { $reader.Dispose() }
+    if ([string]::IsNullOrWhiteSpace($text)) { return @{} }
+    $state = $text | ConvertFrom-Json
+    if ($null -eq $state -or $state -isnot [pscustomobject]) { throw 'Render lock has an invalid state; no claim made.' }
+    return $state
+}
+
+function Claim-RenderLeaseStream([IO.Stream]$Stream, [string]$Token, [string]$Purpose) {
+    $state = Read-RenderLeaseState $Stream
+    if ($state.held_by -or $state.token -or $state.run_token) { throw 'Render lock is occupied; no queue slot claimed.' }
+    $bytes = [Text.Encoding]::UTF8.GetBytes((@{ held_by='tb/x04-tidewake'; token=$Token; run_token=$Token;
+        since_utc=[DateTime]::UtcNow.ToString('o'); purpose=$Purpose; launcher_pid=$PID } | ConvertTo-Json -Compress))
+    $Stream.Position = 0
+    $Stream.SetLength(0)
+    $Stream.Write($bytes, 0, $bytes.Length)
+    $Stream.Flush()
+}
+
+function Open-RenderLeaseStream([string]$Path) {
+    return [IO.File]::Open($Path, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+}
+
+function Enter-RenderLease([string]$Path, [string]$Token, [string]$Purpose) {
+    $handle = Open-RenderLeaseStream $Path
+    try {
+        Claim-RenderLeaseStream $handle $Token $Purpose
+        # Keep FileShare.None through the whole batch, including child cleanup.
+        return [pscustomobject]@{ Stream=$handle; Token=$Token; Path=$Path }
+    } catch {
+        try { $handle.Dispose() } catch { Write-Warning "Render lock handle cleanup failed: $($_.Exception.Message)" }
+        throw
+    }
+}
+
+function Release-RenderLease($Lease, [bool]$ChildTerminal) {
+    if (-not $ChildTerminal) { throw 'Owned child is not verified terminal; render token retained.' }
+    $state = Read-RenderLeaseState $Lease.Stream
+    if ($state.token -cne $Lease.Token -or $state.run_token -cne $Lease.Token -or $state.held_by -cne 'tb/x04-tidewake') {
+        throw 'Render lock ownership changed; no token cleared.'
+    }
+    $bytes = [Text.Encoding]::UTF8.GetBytes('{}')
+    $Lease.Stream.Position = 0
+    $Lease.Stream.SetLength(0)
+    $Lease.Stream.Write($bytes, 0, $bytes.Length)
+    $Lease.Stream.Flush()
+}
+
+function Wait-CaptureChild($Process, [int]$TimeoutMilliseconds = 1800000) {
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        while ($true) {
+            $remaining = $TimeoutMilliseconds - [int]$timer.ElapsedMilliseconds
+            if ($remaining -le 0) { throw [TimeoutException]::new('Owned capture exceeded its configured process deadline.') }
+            if ($Process.WaitForExit([Math]::Min(1000, $remaining))) {
+                $Process.Refresh()
+                if (-not $Process.HasExited) { throw 'Child wait completed without a verified terminal process.' }
+                return
+            }
+        }
+    } finally { $timer.Stop() }
+}
+
+function Stop-OwnedCaptureChild($Process) {
+    # Only the Process object returned by our Start-Process, never a PID/name search.
+    Stop-Process -InputObject $Process -Force -ErrorAction Stop
+}
+
+function Resolve-OwnedCaptureChild($Process) {
+    if ($null -eq $Process) { return [pscustomobject]@{ Terminal=$true; Error='' } }
+    try {
+        $Process.Refresh()
+        if (-not $Process.HasExited) {
+            try { Stop-OwnedCaptureChild $Process } catch {
+                $stopError = $_.Exception.Message
+                # A natural exit between HasExited and Stop-Process is successful cleanup.
+                $Process.Refresh()
+                if (-not $Process.HasExited) { return [pscustomobject]@{ Terminal=$false; Error=$stopError } }
+            }
+            if (-not $Process.WaitForExit(10000)) {
+                return [pscustomobject]@{ Terminal=$false; Error='Owned child did not terminate within the 10-second cleanup bound.' }
+            }
+        }
+        $Process.Refresh()
+        if (-not $Process.HasExited) { return [pscustomobject]@{ Terminal=$false; Error='Owned child terminal state cannot be verified.' } }
+        return [pscustomobject]@{ Terminal=$true; Error='' }
+    } catch { return [pscustomobject]@{ Terminal=$false; Error=$_.Exception.Message } }
+}
+
+
+if ($Round -notmatch '^bluff-noise03[-a-zA-Z0-9]*$') { throw 'Round must start bluff-noise03 and use letters/digits/hyphens' }
+$captureRoot = 'D:\tetherbound\x04-tidewake'
+$captureEngine = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
+$captureLock = 'D:\tetherbound\RENDER_LOCK.json'
+$captureOwner = 'tb/x04-tidewake'
+$captureToken = [Guid]::NewGuid().ToString()
+$captureOut = Join-Path $captureRoot ('.artifacts\phase2\p2008-' + $Round)
+$captureAppdata = Join-Path $captureRoot ('.artifacts\phase2\' + $Round + '-appdata')
+$captureLog = Join-Path $captureRoot ('.artifacts\phase2\' + $Round + '.log')
+$captureErrors = Join-Path $captureRoot ('.artifacts\phase2\' + $Round + '-errors.log')
+$capturePack = Join-Path $captureRoot '.artifacts\phase2\dune05-runtime.zip'
+foreach ($path in @($captureOut,$captureAppdata,$captureLog,$captureErrors)) {
+    if (Test-Path -LiteralPath $path) { throw ('Fresh output required: ' + $path) }
+}
+if ((Get-FileHash -LiteralPath $capturePack -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12') { throw 'Review changed config pack before running' }
+foreach ($config in @('water_dune_terrain','water_dune_cover')) {
+    $captureConfig = Get-Content -LiteralPath (Join-Path $captureRoot ('data/config/' + $config + '.json')) -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($captureConfig.enabled) { throw 'Production dune gates must remain false' }
+}
+$captureSource = (& git -C $captureRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0) { throw 'Could not record source commit' }
+foreach ($required in @($captureEngine,
+    (Join-Path $captureRoot '.artifacts/phase2/bluff-noise03-wrapper.gd'),
+    (Join-Path $captureRoot '.artifacts/phase2/dune_bluff_mask_ablation.gd'),
+    (Join-Path $captureRoot 'tools/phase2_capture_locations.gd'))) {
+    if (-not (Test-Path -LiteralPath $required -PathType Leaf)) { throw ('Required file missing: ' + $required) }
+}
+# Hash the UTF-8 PowerShell text representation of the tracked working diff.
+# Actual live shader and dependency hashes are also recorded by the wrapper.
+$captureDiffText = (& git -C $captureRoot diff --binary HEAD -- scripts data tools tests | Out-String)
+if ($LASTEXITCODE -ne 0) { throw 'Could not hash source working diff' }
+$captureHasher = [Security.Cryptography.SHA256]::Create()
+try { $captureDiffHash = ([BitConverter]::ToString($captureHasher.ComputeHash([Text.Encoding]::UTF8.GetBytes($captureDiffText)))).Replace('-','').ToLowerInvariant() }
+finally { $captureHasher.Dispose() }
+if ($StaticPreflight) {
+    Write-Output (@{static_preflight='PASS'; engine_launched=$false; lock_touched=$false;
+        source_commit=$captureSource; source_diff_text_sha256=$captureDiffHash;
+        output=$captureOut; appdata=$captureAppdata; required_frames=2;
+        wrapper_sha256=(Get-FileHash -LiteralPath (Join-Path $captureRoot '.artifacts/phase2/bluff-noise03-wrapper.gd') -Algorithm SHA256).Hash.ToLowerInvariant()
+    } | ConvertTo-Json)
+    return
+}
+
+# An empty lock is a race safeguard, not external queue authorization.
+$capturePreviousAppdata = $env:APPDATA
+$capturePreviousSource = $env:BLUFF_NOISE03_SOURCE_COMMIT
+$capturePreviousDiff = $env:BLUFF_NOISE03_DIFF_SHA256
+$captureProcess = $null
+$captureLease = $null
+$capturePrimaryError = $null
+$captureCleanupErrors = [Collections.Generic.List[string]]::new()
+try {
+    # Static preflight has already returned; hold the exclusive handle through cleanup.
+    $captureLease = Enter-RenderLease $captureLock $captureToken $Round
+    $env:APPDATA = $captureAppdata
+    $env:BLUFF_NOISE03_SOURCE_COMMIT = $captureSource
+    $env:BLUFF_NOISE03_DIFF_SHA256 = $captureDiffHash
+    $captureArgs = @('--path',$captureRoot,'--rendering-driver','opengl3','--resolution','1920x1080','--fullscreen','--audio-driver','Dummy','--script','.artifacts/phase2/bluff-noise03-wrapper.gd','--','--biome=water','--seed=2042',('--output=res://.artifacts/phase2/p2008-' + $Round))
+    $captureProcess = Start-Process -FilePath $captureEngine -ArgumentList $captureArgs -WorkingDirectory $captureRoot -WindowStyle Hidden -RedirectStandardOutput $captureLog -RedirectStandardError $captureErrors -PassThru
+    Wait-CaptureChild $captureProcess ($TimeoutSeconds * 1000)
+    if ($captureProcess.ExitCode -ne 0) { throw ('Native diagnostic failed: ' + $captureProcess.ExitCode) }
+    $captureManifest = Get-Content -LiteralPath (Join-Path $captureOut 'manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    if (-not $captureManifest.complete -or $captureManifest.failures.Count -ne 0 -or $captureManifest.frames.Count -ne 2) { throw 'Incomplete two-mask evidence; inspect manifest' }
+    foreach ($frame in $captureManifest.frames) {
+        $captureImage = Join-Path $captureRoot ($frame.file -replace '^res://','')
+        if (-not (Test-Path -LiteralPath $captureImage)) { throw ('Missing frame: ' + $captureImage) }
+        if ((Get-FileHash -LiteralPath $captureImage -Algorithm SHA256).Hash.ToLowerInvariant() -ne $frame.sha256) { throw ('Frame hash mismatch: ' + $captureImage) }
+    }
+    if (Select-String -LiteralPath @($captureLog,$captureErrors) -Pattern 'SCRIPT ERROR|Parse Error|Compile Error|Shader compilation failed|SHADER ERROR' -Quiet) { throw 'Engine errors in diagnostic logs' }
+} catch {
+    $capturePrimaryError = $_
+} finally {
+    try { $captureTerminal = Resolve-OwnedCaptureChild $captureProcess } catch {
+        $captureTerminal = [pscustomobject]@{ Terminal=$false; Error=$_.Exception.Message }
+    } finally {
+        $env:APPDATA = $capturePreviousAppdata
+        $env:BLUFF_NOISE03_SOURCE_COMMIT = $capturePreviousSource
+        $env:BLUFF_NOISE03_DIFF_SHA256 = $capturePreviousDiff
+    }
+    if (-not $captureTerminal.Terminal) { $captureCleanupErrors.Add('Owned child unverified; render token retained: ' + $captureTerminal.Error) }
+    if ($null -ne $captureLease) {
+        try {
+            if ($captureTerminal.Terminal) { Release-RenderLease $captureLease $true }
+        } catch { $captureCleanupErrors.Add($_.Exception.Message) }
+        finally {
+            try { $captureLease.Stream.Dispose() } catch { $captureCleanupErrors.Add($_.Exception.Message) }
+        }
+    }
+    if ($null -ne $captureProcess -and $captureTerminal.Terminal) {
+        try { $captureProcess.Dispose() } catch { $captureCleanupErrors.Add($_.Exception.Message) }
+    }
+}
+if ($null -ne $capturePrimaryError -or $captureCleanupErrors.Count -gt 0) {
+    $captureMessage = if ($null -ne $capturePrimaryError) { $capturePrimaryError.Exception.Message } else { 'Capture cleanup failed.' }
+    try {
+        [ordered]@{ error=$captureMessage; cleanup_errors=$captureCleanupErrors.ToArray();
+            child_terminal_verified=$captureTerminal.Terminal; render_token=$captureToken;
+            output=$captureOut; partial_evidence_retained=$true; engine_exit_authoritative=$true } |
+            ConvertTo-Json -Depth 10 | Set-Content -LiteralPath ($captureLog + '.failure.json') -Encoding UTF8
+    } catch { Write-Warning ('Could not write failure receipt; original error: ' + $captureMessage + '; receipt error: ' + $_.Exception.Message) }
+    foreach ($captureCleanupError in $captureCleanupErrors) { Write-Warning $captureCleanupError }
+    if ($null -ne $capturePrimaryError) { throw $capturePrimaryError }
+    throw ($captureCleanupErrors -join '; ')
+}
+Write-Output ('Native diagnostic complete: ' + $captureOut)

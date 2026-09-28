@@ -1,0 +1,74 @@
+$ErrorActionPreference='Stop'
+# CPU-only: load actual helper definitions and execute actual launcher tail with
+# every process/lease/file-write boundary mocked. Never open the real lock.
+$path=Join-Path $PSScriptRoot 'bluff-noise03-launch.ps1'
+$tokens=$null; $errors=$null
+$ast=[System.Management.Automation.Language.Parser]::ParseFile($path,[ref]$tokens,[ref]$errors)
+if($errors.Count){throw ($errors -join '; ')}
+foreach($f in $ast.FindAll({param($n)$n -is [System.Management.Automation.Language.FunctionDefinitionAst]},$false)){Invoke-Expression $f.Extent.Text}
+$source=[IO.File]::ReadAllText($path)
+$tail=[scriptblock]::Create($source.Substring($source.IndexOf('# An empty lock is a race safeguard')))
+$count=0
+function Check([bool]$Condition,[string]$Label){if(-not $Condition){throw $Label};$script:count++;Write-Output "PASS $Label"}
+foreach($scenario in @('timeout-cleanup','stop-race','stop-fails','start-fails','occupied','failure-receipt-fails','release-fails')){
+ & {
+  $captureRoot=$PSScriptRoot; $Round='cpu-no-files'; $captureToken=[Guid]::NewGuid().ToString('N')
+  $captureLock='MOCK-NO-FILE';$captureAppdata='MOCK-APPDATA';$captureEngine='MOCK-NEVER-EXECUTED'
+  $captureSource='mock-source';$captureDiffHash='mock-diff';$captureOut='MOCK-OUTPUT';$captureLog='MOCK-LOG';$captureErrors='MOCK-ERRORS';$TimeoutSeconds=1800
+  $savedAppData=$env:APPDATA;$savedSource=$env:BLUFF_NOISE03_SOURCE_COMMIT;$savedDiff=$env:BLUFF_NOISE03_DIFF_SHA256
+  $script:mockStream=[IO.MemoryStream]::new()
+  $script:mockChild=[pscustomobject]@{HasExited=$false;Disposed=$false;WaitCalls=@()}
+  $script:mockChild|Add-Member ScriptMethod Refresh {}
+  $script:mockChild|Add-Member ScriptMethod WaitForExit {param([int]$ms)$this.WaitCalls+=$ms;return $this.HasExited}
+  $script:mockChild|Add-Member ScriptMethod Dispose {$this.Disposed=$true}
+  $script:mockStarted=0;$script:mockStopped=0;$script:mockReceipt=$null;$script:mockHidden=$false;$script:mockClaimed=$false
+  function Enter-RenderLease($Path,$Token,$Purpose){
+   if($scenario -eq 'occupied'){throw [IO.IOException]::new('ORIGINAL occupied')}
+   Claim-RenderLeaseStream $script:mockStream $Token $Purpose
+   $script:mockClaimed=$true
+   return [pscustomobject]@{Stream=$script:mockStream;Token=$Token;Path=$Path}
+  }
+  function Start-Process {param($FilePath,$ArgumentList,$WorkingDirectory,$WindowStyle,[switch]$PassThru,$RedirectStandardOutput,$RedirectStandardError)
+   $script:mockStarted++;$script:mockHidden=($WindowStyle -eq 'Hidden')
+   if($scenario -eq 'start-fails'){throw [InvalidOperationException]::new('ORIGINAL start failure')}
+   return $script:mockChild
+  }
+  function Wait-CaptureChild {throw [TimeoutException]::new('ORIGINAL timeout')}
+  function Stop-OwnedCaptureChild($Process){
+   $script:mockStopped++
+   if($Process -ne $script:mockChild){throw 'WRONG CHILD'}
+   if($scenario -eq 'stop-fails'){throw 'CLEANUP stop denied'}
+   $Process.HasExited=$true
+   if($scenario -eq 'stop-race'){throw 'CLEANUP natural-exit race'}
+  }
+  if($scenario -eq 'release-fails'){function Release-RenderLease {throw 'CLEANUP release denied'}}
+  function Set-Content {param($LiteralPath,$Encoding,[Parameter(ValueFromPipeline=$true)]$Value)
+   process {if($scenario -eq 'failure-receipt-fails'){throw 'CLEANUP receipt denied'};$script:mockReceipt=$Value}
+  }
+  $caught=$null
+  try{. $tail}catch{$caught=$_}
+  $expected=if($scenario -eq 'occupied'){'ORIGINAL occupied'}elseif($scenario -eq 'start-fails'){'ORIGINAL start failure'}else{'ORIGINAL timeout'}
+  Check ($null -ne $caught -and $caught.Exception.Message -eq $expected) "$scenario preserves original error"
+  Check ($env:APPDATA -ceq $savedAppData -and $env:BLUFF_NOISE03_SOURCE_COMMIT -ceq $savedSource -and $env:BLUFF_NOISE03_DIFF_SHA256 -ceq $savedDiff) "$scenario restores all environment variables"
+  if($scenario -eq 'occupied'){
+   Check ($script:mockStarted -eq 0 -and $script:mockStopped -eq 0 -and -not $script:mockClaimed) 'occupied lock launches or stops nothing'
+  }else{
+   Check ($script:mockStarted -eq 1 -and $script:mockHidden) "$scenario requests one hidden owned child"
+   $json=[Text.Encoding]::UTF8.GetString($script:mockStream.ToArray())
+   if($scenario -in @('stop-fails','release-fails')){
+    $state=$json|ConvertFrom-Json
+    Check ($state.token -ceq $captureToken -and $state.run_token -ceq $captureToken) "$scenario retains exact own token"
+    if($scenario -eq 'stop-fails'){Check (-not $script:mockChild.HasExited -and -not $script:mockChild.Disposed) 'live child not presented as verified or disposed'}
+   }else{Check ($json -ceq '{}') "$scenario releases only after verified exit or no child"}
+   if($scenario -eq 'start-fails'){Check ($script:mockStopped -eq 0) 'failed start stops no process'}
+   else{Check ($script:mockStopped -eq 1) "$scenario cleanup targets exact returned process once"}
+  }
+  if($scenario -ne 'failure-receipt-fails'){
+   $receipt=$script:mockReceipt|ConvertFrom-Json
+   Check ($receipt.error -eq $expected -and $receipt.partial_evidence_retained -and $receipt.engine_exit_authoritative) "$scenario retains truthful failure receipt and evidence"
+   Check ($receipt.child_terminal_verified -eq ($scenario -ne 'stop-fails')) "$scenario records truthful terminal state"
+  }
+ }
+}
+Write-Output "TOTAL $count CPU execution-tail checks; no files written or real processes/locks used"
+

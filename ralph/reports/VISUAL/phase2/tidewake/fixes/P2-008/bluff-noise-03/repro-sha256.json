@@ -1,0 +1,20 @@
+{
+  ".gitattributes": "61027a078d3c22b14e0c136422dd5bc670eab709efd4ea7e0b37a38559c3c24a",
+  "capture-review.md": "847b091f1548bcfa237bbd20d48405bf3c1ae27c144c21de01b6490d14ad8d4d",
+  "cleanup-check.ps1.txt": "3ab05ae8146f934f9452b3f1b3b936c49a4e3288712c9c38ab2595bc9790d879",
+  "dune05-runtime.zip": "f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12",
+  "independent-source-review.md": "5c1e15a1325a32ea10073b3b89ab3db2fd056208cc2b15ec7580ec8671782b90",
+  "launcher.ps1.txt": "79088634e4d91a967c42514d4f6c0480999edcb691d8155f1ed94ce79b8bd808",
+  "manifest.json": "f2a8c20c60abd5193f07872177da613591e2b9c7ee609350b96659423252c750",
+  "native-errors.log.txt": "b166b7545c9ec5377c4302715f5ace6a7496f6c77d78e5bddb6c8d5b81cf2c2f",
+  "native.log.txt": "9b362ae4d9da45720e87647ab9e543458fcba4b8a184c07a73f73fad0cc703f4",
+  "parent-wrapper.gd.txt": "6ebb9f36f5ea7ee37ce8a011334c6e6d04a676c685076b113e024afe6c331598",
+  "parser.log.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+  "preflight.json": "70d9b034f20f3a59f9ccd28dd0de2f84554c5a870889bcd01a70a8dfc50eae81",
+  "repro.md": "04c1bb6ff80432bb33a0ecaba427dc3d0b326a00ed183f1389d0538efbb83295",
+  "source-check.py.txt": "c3e67def26096d88340977e28bb3aa470c1d9ed15f30272a4c41d69469bbbb2b",
+  "validation.json": "41c324ebb438f8edc32b40ccd581bae9976230bf0b62fff8ba367a6a82424e5b",
+  "water__gull_rest__20__gull_rest_beach__day__close__mask_baseline.jpg": "6a744ebbb8429814fe997b796b973a595d14d63c6145d8d6d8a4115bc12aa696",
+  "water__gull_rest__20__gull_rest_beach__day__close__noise_neutral.jpg": "36686227049df8ecd0fbbc7a2e0be458f2401cae47f80920a6627d74539ea2ad",
+  "wrapper.gd.txt": "f03ab1ea5534379957a49d53c6ecaea8b4d146dd6d0123bf80ffb07e1b1bbed2"
+}
