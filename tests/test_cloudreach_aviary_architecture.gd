@@ -2,10 +2,33 @@ extends "res://tests/test_case.gd"
 
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const CONFIG := "res://data/config/cloudreach_aviary.json"
+const CROWN := preload("res://scripts/world/cloudreach_aviary_crown.gd")
 
 
 func _config() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
+
+
+func test_optional_crown_keeps_routes_clear_and_does_not_create_collision() -> void:
+	var spec := _config()
+	var root := Node3D.new()
+	var material := StandardMaterial3D.new()
+	var disabled := spec.crown_arcade.duplicate(true) as Dictionary
+	disabled.enabled = false
+	assert_true(CROWN.build(root, disabled, spec.drum, material, material) == null)
+	assert_eq(root.get_child_count(), 0, "disabled candidate leaves the scene unchanged")
+	var enabled := disabled.duplicate(true)
+	enabled.enabled = true
+	var crown := CROWN.build(root, enabled, spec.drum, material, material)
+	assert_true(crown != null)
+	assert_eq(crown.find_children("*", "CollisionObject3D", true, false).size(), 0,
+		"decorative crown cannot change movement or Fly collision")
+	assert_eq(crown.find_children("*", "CollisionShape3D", true, false).size(), 0,
+		"installed lanterns do not add hidden collision")
+	var bounds := preload("res://scripts/world/building_prefabs.gd").new().combined_aabb(crown)
+	assert_true(bounds.position.y >= float(spec.throat.required_clear_height_m),
+		"all new visible geometry stays above the existing route headroom")
+	root.free()
 
 
 func test_curved_stone_arches_preserve_the_entire_existing_clear_height() -> void:

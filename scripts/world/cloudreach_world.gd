@@ -78,6 +78,7 @@ const GROUND_ROOST_LOG := preload("res://assets/props/kenney_survival/tree-log-s
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
 const AVIARY_TOWERS := preload("res://scripts/world/cloudreach_aviary_towers.gd")
+const AVIARY_CROWN := preload("res://scripts/world/cloudreach_aviary_crown.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
@@ -4447,6 +4448,8 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, aviary_spec)
 	_seat_aviary_on_summit_carve(root, aviary)
+	AVIARY_CROWN.build(root, aviary_spec.get("crown_arcade", {}), aviary_spec.get("drum", {}),
+		aviary_materials["stone"], aviary_materials["masonry"])
 	AVIARY_TOWERS.build(root, aviary_spec.get("towers", {}), aviary_spec.get("drum", {}),
 		aviary_materials["stone"], aviary_materials["masonry"],
 		_material(Color(str(aviary_surface.get("roof_tint", "#354451"))), 0.9), aviary_gold)
