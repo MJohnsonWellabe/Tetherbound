@@ -554,13 +554,17 @@ func _update_subject_fade(delta: float) -> void:
 	# Enemy plate and grid: their own draw code resets `modulate.a` every
 	# frame, so the fade multiplies. Ally panel, orbs plate and strip holder
 	# are not written elsewhere, so the fade is their alpha.
-	for entry: Array in [[_enemy_panel, true], [_grid_panel, true], [_ally_panel, false],
-			[_orbs_panel, false], [_strip_fader, false]]:
+	# [faded node, multiply?, node whose rect is tested]: the strip holder is
+	# full-rect by design, so the strip's own rect decides its fade.
+	for entry: Array in [[_enemy_panel, true, _enemy_panel], [_grid_panel, true, _grid_panel],
+			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
+			[_strip_fader, false, _party_strip]]:
 		var panel := entry[0] as Control
-		if panel == null:
+		var measured := entry[2] as Control
+		if panel == null or measured == null:
 			continue
-		var want := subject_fade_target(panel.get_global_rect(), subjects, min_overlap, low) \
-			if panel.is_visible_in_tree() else 1.0
+		var want := subject_fade_target(measured.get_global_rect(), subjects, min_overlap, low) \
+			if measured.is_visible_in_tree() else 1.0
 		var level := move_toward(float(_subject_fade.get(panel, 1.0)), want, delta * rate)
 		_subject_fade[panel] = level
 		if bool(entry[1]):
