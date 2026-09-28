@@ -1,0 +1,261 @@
+{
+  "accelerated": true,
+  "attempts": [
+    {
+      "attempt": "trial_escape",
+      "directions_tried": [
+        "(0.0, 0.0, -1.0)"
+      ],
+      "end": "(426.2041, 641.0449, 3215.775)",
+      "from": "(417.5509, 627.4639, 3249.808)",
+      "inside_trial": true,
+      "refused": true,
+      "still_flying": true,
+      "trial_active": true
+    }
+  ],
+  "combat_mode": "live_input",
+  "criterion": "F06#2",
+  "denials": [
+    {
+      "position": "(426.2041, 641.0782, 3215.775)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(426.2041, 640.9449, 3215.755)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(426.2041, 640.8782, 3215.752)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(399.8361, 611.3299, 3249.415)",
+      "reason": "Send out Galecrest to fly.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4629, 740.092, 3599.187)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4664, 739.892, 3599.237)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4671, 739.7921, 3599.247)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    }
+  ],
+  "exhausted_fall": {
+    "anchor": "(1110.242, 1050.131, 2950.533)",
+    "controller_safe_anchor": "(1110.242, 1050.131, 2950.533)",
+    "drop_below_anchor_m": 99.9150390625,
+    "end": "(1110.835, 1050.131, 2950.495)",
+    "end_distance_to_anchor_m": 0.594514429569244,
+    "exhausted_after_frames": 3853,
+    "exhausted_at": "(1047.266, 1086.0, 2961.813)",
+    "exhaustion_cause": "stamina",
+    "flight_seconds_at_exhaustion": 64.3999999999976,
+    "floor_path": "/root/CloudreachCliffs/Landmarks/SkyShrineHeartstone/LandmarkLedge/Collision",
+    "flying_after": false,
+    "hover_frames": 3853,
+    "landed_elsewhere": false,
+    "launch_blocker_at_landing": {
+      "at": "(1110.242, 1050.131, 2950.533)",
+      "clear": true,
+      "overlapping": []
+    },
+    "lowest_y_before_recovery": 950.215698242188,
+    "on_floor": true,
+    "party_size": 5,
+    "recovered_after_frames": 928,
+    "recovered_at": "(1110.242, 1050.21, 2950.533)",
+    "recovery_drop_m": 100.0,
+    "recovery_reasons": [
+      "The wind carried you back to your last safe landing."
+    ],
+    "stamina_at_exhaustion": 0.0,
+    "state_before_recovery": "exhausted"
+  },
+  "failure": [],
+  "landings": [
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(399.8361, 610.1301, 3249.415)",
+      "stage": "flight_trial_start"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(398.4226, 610.1303, 3250.261)",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(1099.027, 1051.301, 2941.463)",
+      "stage": "mandatory_high_roost_flight"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(400.2928, 610.1301, 3250.018)",
+      "stage": "return_glide_to_grounded_counterweight"
+    }
+  ],
+  "leg": "flight",
+  "leg_persistence": {
+    "differences": [],
+    "flags_equal": true,
+    "fly_unlocked_after": true,
+    "load_ok": true,
+    "party_size_after": 5,
+    "save_ok": true
+  },
+  "owned_carrier": {
+    "level": 21,
+    "note": "Declared party write after the earned title load: one non-active, non-starter member replaced by a same-level carrier; party stays five",
+    "party_size": 5,
+    "replaced": {
+      "level": 21,
+      "slot": 2,
+      "species_id": "mudsnout"
+    },
+    "species": "galecrest",
+    "team_after": [
+      {
+        "hp": 177.322864641988,
+        "label": "Bud",
+        "level": 21,
+        "species_id": "ripplet",
+        "xp": 576
+      },
+      {
+        "hp": 145.311437615929,
+        "label": "Bramblebun",
+        "level": 22,
+        "species_id": "bramblebun",
+        "xp": 884
+      },
+      {
+        "hp": 160.709808193421,
+        "label": "Mudsnout",
+        "level": 21,
+        "species_id": "mudsnout",
+        "xp": 622
+      },
+      {
+        "hp": 796.746109780671,
+        "label": "Veridian Stag",
+        "level": 26,
+        "species_id": "veridian",
+        "xp": 1196
+      },
+      {
+        "hp": 231.0,
+        "label": "Galecrest",
+        "level": 21,
+        "species_id": "galecrest",
+        "xp": 0
+      }
+    ],
+    "team_before": [
+      {
+        "hp": 177.322864641988,
+        "label": "Bud",
+        "level": 21,
+        "species_id": "ripplet",
+        "xp": 576
+      },
+      {
+        "hp": 145.311437615929,
+        "label": "Bramblebun",
+        "level": 22,
+        "species_id": "bramblebun",
+        "xp": 884
+      },
+      {
+        "hp": 159.723350638177,
+        "label": "Mudsnout",
+        "level": 21,
+        "species_id": "mudsnout",
+        "xp": 262
+      },
+      {
+        "hp": 160.709808193421,
+        "label": "Mudsnout",
+        "level": 21,
+        "species_id": "mudsnout",
+        "xp": 622
+      },
+      {
+        "hp": 796.746109780671,
+        "label": "Veridian Stag",
+        "level": 26,
+        "species_id": "veridian",
+        "xp": 1196
+      }
+    ]
+  },
+  "owned_carrier_refusal": {
+    "active": "ripplet",
+    "blocker": "Send out Galecrest to fly.",
+    "flying": false,
+    "last_denial": "Send out Galecrest to fly.",
+    "position": "(399.8361, 611.4738, 3249.415)"
+  },
+  "owned_carrier_switches": [
+    {
+      "active": "ripplet",
+      "presses": 1,
+      "stage": "flight_trial_start",
+      "why": "send back for trial"
+    },
+    {
+      "active": "galecrest",
+      "presses": 4,
+      "stage": "witness_sealed_upper_attempt",
+      "why": "send out to fly"
+    }
+  ],
+  "passed": true,
+  "recoveries": [
+    {
+      "position": "(1110.242, 1050.21, 2950.533)",
+      "reason": "The wind carried you back to your last safe landing.",
+      "stage": "witness_exhausted_fall"
+    }
+  ],
+  "sealed_attempt": {
+    "climb_end_y": 770.281311035156,
+    "closest_gap_to_box_m": 0.7529296875,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.4671, 724.6737, 3599.247)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "refused_after_frames": 1411,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
+  "skipped_steps": 0,
+  "stage": "return_glide_to_grounded_counterweight",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival + DISCLOSED party write: one non-active member replaced by a same-level owned galecrest carrier (--owned-carrier)",
+  "trial_escape_violations": 0,
+  "upper_violations": 0
+}
