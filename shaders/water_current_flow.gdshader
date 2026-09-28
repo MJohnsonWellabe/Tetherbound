@@ -75,6 +75,10 @@ float foam_group(vec2 moving) {
 	float centre_x = mix(0.25, 0.75, hash(cell + vec2(5.9, 71.2)));
 	float head = mix(0.70, 0.90, hash(cell + vec2(83.4, 2.6)));
 	float length_fraction = mix(0.22, 0.56, hash(cell + vec2(17.8, 29.1)));
+	// Restoration shortens each group as well as thinning the selected cells.
+	// Keep its downstream head fixed; only the upstream tail retreats. The
+	// multiplier never exceeds one, preserving the original cell containment.
+	length_fraction *= mix(0.25, 1.0, clamp(dash_fill, 0.0, 1.0));
 	float phase = (local.y - (head - length_fraction)) / length_fraction;
 	// At larger along coordinates the downstream head is fuller/brighter;
 	// the upstream tail narrows and fades. Translation follows physics flow.
