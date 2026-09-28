@@ -120,7 +120,7 @@ theme_override_colors/font_color = Color(0.722, 0.773, 0.769, 1)
 text = "Lv —"
 
 [node name="Health" type="ProgressBar" parent="Root/AllyPanel/AllyVBox"]
-custom_minimum_size = Vector2(300, 16)
+custom_minimum_size = Vector2(220, 16)
 size_flags_horizontal = 4
 max_value = 100.0
 value = 100.0
@@ -142,7 +142,7 @@ text = "Energy"
 ; without fighting the ProgressBar's own drawing.
 [node name="EnergyHost" type="Control" parent="Root/AllyPanel/AllyVBox/EnergyRow"]
 mouse_filter = 2
-custom_minimum_size = Vector2(300, 8)
+custom_minimum_size = Vector2(140, 8)
 size_flags_vertical = 4
 
 [node name="Energy" type="ProgressBar" parent="Root/AllyPanel/AllyVBox/EnergyRow/EnergyHost"]

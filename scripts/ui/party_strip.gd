@@ -990,6 +990,20 @@ const COMPACT_CHIP_SIZE := Vector2(40.0, 40.0)
 var compact := false
 
 
+## The header/list stack is not inside a Container, so nothing re-sorts it
+## when its rows' minimums shrink, and in the tree those minimums update a
+## frame late. Re-fit it on each roster update (every frame in a fight) until
+## it matches the pip column.
+func _fit_compact_width() -> void:
+	if not compact or get_child_count() == 0:
+		return
+	var nodes: Array = [get_child(0) as Control, _list]
+	nodes.append_array(_rows)
+	for node: Control in nodes:
+		if node != null and node.size.x > COMPACT_ROW_WIDTH + 0.5:
+			node.size = Vector2(COMPACT_ROW_WIDTH, node.size.y)
+
+
 ## Tick plates sit just right of the rows, at whichever width they have.
 func _tick_x() -> float:
 	return (COMPACT_ROW_WIDTH if compact else ROW_SIZE.x) + 10.0
@@ -999,12 +1013,15 @@ func set_compact(enabled: bool) -> void:
 	compact = enabled
 	var width := COMPACT_ROW_WIDTH if compact else ROW_SIZE.x
 	size = Vector2(width, TOTAL_HEIGHT)
-	if _count_label != null and _count_label.get_parent() is Control:
-		var header := _count_label.get_parent() as Control
+	# `_build()` adds the header/list stack first; it is not inside a
+	# Container, so it keeps whatever width it was given until told otherwise.
+	var stack := get_child(0) as VBoxContainer if get_child_count() > 0 else null
+	if stack != null:
+		var header := stack.get_child(0) as Control
 		header.custom_minimum_size = Vector2(width, HEADER_HEIGHT)
-		header.size = header.custom_minimum_size
-		if header.get_parent() is Control:
-			(header.get_parent() as Control).size = Vector2(width, TOTAL_HEIGHT)
+		stack.size = Vector2(width, TOTAL_HEIGHT)
+		if _list != null:
+			_list.size = Vector2(width, _list.size.y)
 	var chip_size := COMPACT_CHIP_SIZE if compact else CHIP_SIZE
 	for i in _rows.size():
 		_rows[i].custom_minimum_size = Vector2(width, ROW_SIZE.y)
@@ -1047,6 +1064,7 @@ func set_compact(enabled: bool) -> void:
 ## rail rather than silently downgrading every selected row to "picked, not
 ## present."
 func update_from_party(entries: Array, active_index: int, active_out: bool = true) -> void:
+	_fit_compact_width()
 	_count_label.text = "TEAM  %d / %d" % [mini(entries.size(), SLOTS), SLOTS]
 	for i in SLOTS:
 		var has_creature: bool = i < entries.size()
