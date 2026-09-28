@@ -17,6 +17,7 @@ signal host_strike_finished(intent: Dictionary, peer_id: int, verdict: Dictionar
 ## Split from the playground world too, which is about terrain. This node can be
 ## dropped into the real Meadows scene unchanged.
 
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
@@ -2400,7 +2401,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		"player_quick" if slot == "quick" else "player_charged",
 		str(intent.get("move_id", "")),
 		_body_radius(striker), _body_radius(wild),
-		host_card_cooldown_multiplier(card))
+		host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(striker, wild))
 	var now_ms := Time.get_ticks_msec()
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))

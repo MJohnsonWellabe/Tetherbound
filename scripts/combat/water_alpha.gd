@@ -236,7 +236,8 @@ func _alpha_strike(intent: Dictionary, peer: int) -> Dictionary:
 	if slot not in ["quick", "charged"] or move_id != str(card.get("move_" + slot, "")):
 		return _refusal(intent, "That move is not equipped.")
 	var moves: RefCounted = _manager.get("_moves")
-	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id, _body_radius(striker), _body_radius(body))
+	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id, _body_radius(striker), _body_radius(body),
+		1.0, CONTACT_SPACING.pair_reach_need(striker, body))
 	var now_ms := Time.get_ticks_msec()
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var wind_cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))

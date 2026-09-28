@@ -1668,6 +1668,11 @@ func contact_extent_towards(world_point: Vector3) -> float:
 		_render_half_extents.x, _render_half_extents.y, art))
 
 
+## This body's longest rendered half-extent, whichever way it faces.
+func contact_half_length() -> float:
+	return maxf(_radius, maxf(_render_half_extents.x, _render_half_extents.y))
+
+
 ## Bind (or with null, release) the fight's contact-spacing pair for this body.
 func set_contact_partner(partner: Node3D, role: StringName = &"") -> void:
 	contact_partner = partner

@@ -2752,7 +2752,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 ## longer reach by describing its own move in the intent -- it names the move,
 ## and this decides what the move is.
 static func host_move_profile(moves: RefCounted, block: String, move_id: String,
-		mine: float, theirs: float, cooldown_multiplier: float = 1.0) -> Dictionary:
+		mine: float, theirs: float, cooldown_multiplier: float = 1.0, reach_floor: float = 0.0) -> Dictionary:
 	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
 	if not move_id.is_empty() and moves != null:
 		var move: Dictionary = moves.call("move", move_id)
@@ -2762,7 +2762,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
 	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
-	return floor_reach_for_bodies(profile, mine, theirs)
+	return floor_reach_for_bodies(profile, mine, theirs, reach_floor)
 
 
 ## Realm powers may shorten a move's cooldown, but never lengthen it and never
@@ -3350,16 +3350,21 @@ func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 	if _wild.has_method("body_radius"):
 		theirs = float(_wild.call("body_radius"))
 
-	return floor_reach_for_bodies(move, mine, theirs)
+	return floor_reach_for_bodies(move, mine, theirs, CONTACT_SPACING.pair_reach_need(_ally_body, _wild))
 
 
 ## The reach floor itself, static so the host's own profile builder
 ## (`host_move_profile()`) and this instance path are one copy rather than two
 ## that eventually disagree about what a quick attack reaches.
-static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float) -> Dictionary:
+## `reach_floor` is the pair's longest rendered separation
+## (`contact_spacing.pair_reach_need`): the hold-apart never exceeds it, so the
+## reach clears it by the same 0.5 m.
+static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float,
+		reach_floor: float = 0.0) -> Dictionary:
 	var clearance: float = float(MATH.config().get("enemy", {}).get("body_clearance", 1.35))
 	var adjusted := move.duplicate()
-	adjusted["range"] = maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5)
+	adjusted["range"] = maxf(maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5),
+		reach_floor + 0.5)
 	return adjusted
 
 

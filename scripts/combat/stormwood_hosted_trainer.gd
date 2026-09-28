@@ -176,7 +176,8 @@ func _strike(peer: int, intent: Dictionary) -> Dictionary:
 		return refused
 	var profile: Dictionary = FIGHT.host_move_profile(engine.get("_moves"),
 		"player_" + slot, move_id, hub.body_radius(body), hub.body_radius(opponent),
-		float(hub.director.call("host_card_cooldown_multiplier", card)))
+		float(hub.director.call("host_card_cooldown_multiplier", card)),
+		FIGHT.CONTACT_SPACING.pair_reach_need(body, opponent))
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var wind_cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
 	var wind_profile: Dictionary = FIGHT.host_wind_profile(card)

@@ -34,7 +34,7 @@ func test_config_block_is_present_and_documented() -> void:
 	assert_true(str(cfg.get("_why", "")).length() > 40, "the block carries its _why")
 	assert_almost_eq(float(cfg.get("visible_clearance_m", 0.0)), 0.6, 0.0001,
 		"COMBAT §5's 0.6 m visible clearance")
-	assert_true(float(cfg.get("cap_fraction", 2.0)) <= 1.0, "the cap never exceeds the opponent's spacing floor")
+	assert_true(float(cfg.get("max_separation_m", 0.0)) >= 11.0, "the ceiling fits the largest shipped pair")
 
 
 func test_directional_extent_is_longer_head_on_than_broadside() -> void:
@@ -48,49 +48,63 @@ func test_directional_extent_is_longer_head_on_than_broadside() -> void:
 		"no direction answers the larger half-extent")
 
 
-func test_min_separation_is_floored_by_colliders_and_capped_by_spacing() -> void:
+func test_min_separation_is_floored_by_colliders_and_bounded_above() -> void:
 	var cfg := SPACING.config()
-	# Small rendered bodies: the colliders' own sum wins.
 	assert_almost_eq(SPACING.min_separation(0.1, 0.1, 0.6, 0.6, cfg), 1.2, 0.0001,
 		"never less than the two colliders")
-	# Ordinary: extents + clearance.
-	var ordinary := SPACING.min_separation(1.0, 1.2, 0.6, 0.7, cfg)
-	assert_almost_eq(ordinary, 2.8, 0.0001, "half-extents plus the 0.6 m clearance")
-	# Huge art on small colliders: capped at the opponent's spacing floor.
-	var capped := SPACING.min_separation(4.0, 4.0, 0.6, 0.7, cfg)
-	assert_almost_eq(capped, SPACING.spacing_cap(0.6, 0.7, cfg), 0.0001, "capped at the spacing floor")
+	assert_almost_eq(SPACING.min_separation(1.0, 1.2, 0.6, 0.7, cfg), 2.8, 0.0001,
+		"half-extents plus the 0.6 m clearance")
+	# Tess's Water Mirejaw (5.49 m head-on) against Ripplet (1.94 m): the
+	# first cut capped this at the 2.75x collider floor (7.01 m) and the two
+	# snouts still touched on judge B's frames.
+	assert_almost_eq(SPACING.min_separation(5.49, 1.94, 1.18, 1.37, cfg), 8.03, 0.0001,
+		"a long body is not capped back into contact")
+	assert_almost_eq(SPACING.min_separation(40.0, 40.0, 0.6, 0.7, cfg), SPACING.max_separation(cfg), 0.0001,
+		"a malformed model cannot push past the ceiling")
 
 
 ## The hit/avoidance invariant across the whole roster, smallest body to
-## largest: the separation never exceeds the reach either side attacks with.
+## largest: every reach clears the pair's LONGEST separation by 0.5 m, and the
+## separation actually enforced (any facing) never exceeds that.
 func test_every_species_pair_keeps_reach_beyond_the_separation() -> void:
 	var cfg := SPACING.config()
 	var enemy: Dictionary = MATH.config().get("enemy", {})
-	var radii := []
+	var rows := []
 	for id: String in SPECIES.table().keys():
-		radii.append(float(SPECIES.placeholder(id).get("radius", 0.4)))
-	radii.sort()
-	assert_true(radii.size() >= 10, "the roster is read")
-	var smallest: float = radii[0]
-	var largest: float = radii[radii.size() - 1]
-	var checked := 0
+		var look := SPECIES.placeholder(id)
+		var r := float(look.get("radius", 0.4))
+		# The longest rendered half-extent the fit allows.
+		rows.append([r, r * float(look.get("footprint_allowance", 2.4))])
+	rows.sort()
+	assert_true(rows.size() >= 10, "the roster is read")
+	var picks := [rows[0], rows[rows.size() / 2], rows[rows.size() - 1]]
 	var worst_margin := INF
-	for a: float in [smallest, radii[radii.size() / 2], largest]:
-		for b: float in [smallest, radii[radii.size() / 2], largest]:
-			# The largest rendered extent the fit allows: footprint_allowance
-			# 2.4 x the collider diameter, halved, met head-on.
-			var need := SPACING.min_separation(a * 2.4, b * 2.4, a, b, cfg)
-			var ally_reach := float(MANAGER.floor_reach_for_bodies({"range": 2.6}, a, b).get("range"))
-			var foe := WILD.spaced_config_for(enemy, b, a)
-			var foe_reach := float(foe.get("range"))
-			assert_true(need >= a + b - 0.0001, "never inside the colliders (%.2f + %.2f)" % [a, b])
-			assert_true(need <= float(foe.get("preferred_range")) + 0.0001,
-				"never further than the opponent walks to (%.2f + %.2f: %.2f vs %.2f)" % [a, b, need, float(foe.get("preferred_range"))])
-			worst_margin = minf(worst_margin, minf(ally_reach, foe_reach) - need)
-			checked += 1
-	assert_eq(checked, 9)
+	var checked := 0
+	for a: Array in picks:
+		for b: Array in picks:
+			var reach_need := SPACING.min_separation(a[1], b[1], a[0], b[0], cfg)
+			for turn: float in [0.0, 0.5, 1.0]:
+				# Any facing: each body's directional extent lies between its
+				# collider and its longest half-extent.
+				var need := SPACING.min_separation(lerpf(a[0], a[1], turn), lerpf(b[0], b[1], turn), a[0], b[0], cfg)
+				var ally_reach := float(MANAGER.floor_reach_for_bodies({"range": 2.6}, a[0], b[0], reach_need).get("range"))
+				var foe := WILD.spaced_config_for(enemy, b[0], a[0], need, reach_need)
+				assert_true(need >= a[0] + b[0] - 0.0001, "never inside the colliders")
+				assert_true(float(foe.get("preferred_range")) >= need - 0.0001,
+					"the opponent walks to where the bodies clear (%.2f vs %.2f)" % [float(foe.get("preferred_range")), need])
+				worst_margin = minf(worst_margin, minf(ally_reach, float(foe.get("range"))) - need)
+				checked += 1
+	assert_eq(checked, 27)
 	assert_true(worst_margin >= 0.5 - 0.0001,
 		"every reach stays at least 0.5 m beyond the separation (worst %.3f m)" % worst_margin)
+
+
+func test_host_profile_uses_the_same_reach_floor() -> void:
+	var local := MANAGER.floor_reach_for_bodies({"range": 2.6}, 1.37, 1.18, 8.03)
+	var host := MANAGER.host_move_profile(null, "player_quick", "", 1.37, 1.18, 1.0, 8.03)
+	assert_almost_eq(float(host.get("range")), float(local.get("range")), 0.0001,
+		"a peer's strike is tested against the reach the solo player has")
+	assert_true(float(host.get("range")) >= 8.53 - 0.0001, "reach clears the longest separation by 0.5 m")
 
 
 func test_the_ally_yields_and_the_opponent_holds_until_pinned() -> void:

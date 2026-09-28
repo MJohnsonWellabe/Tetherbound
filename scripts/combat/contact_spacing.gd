@@ -12,12 +12,14 @@ extends RefCounted
 ##
 ## The rule: at contact range the pair keeps a minimum separation of the two
 ## rendered half-extents along the line between them plus a visible clearance,
-## floored at the colliders' own sum and capped at the spacing the opponent
-## already walks to (`(r_a + r_b) * enemy.body_clearance`). The cap is what
-## keeps hit/avoidance unchanged: every reach in the game is floored at that
-## spacing plus 0.5 m (`combat_manager.floor_reach_for_bodies`,
-## `wild_creature.spaced_config_for`), so a hold-apart can never carry a body
-## out of a strike that would have reached it.
+## floored at the colliders' own sum (COMBAT §5: body size is not range). The
+## opponent's `preferred_range` floors at the same separation (`pair_need`),
+## so it walks to where the bodies clear. Every reach -- the player's
+## (`combat_manager.floor_reach_for_bodies`, `host_move_profile`) and the
+## opponent's (`wild_creature.spaced_config_for`) -- floors at the pair's
+## LONGEST possible separation (`pair_reach_need`, each body's longest
+## half-extent) plus 0.5 m, so no hold-apart and no turn of either body can
+## carry a target out of a strike that would have reached it.
 ##
 ## Resolution is a soft positional correction on each body's own physics tick,
 ## swept with `move_and_collide` so it slides on terrain and never passes
@@ -61,19 +63,49 @@ static func directional_extent(half_x: float, half_z: float, local_dir: Vector2)
 	return sqrt(half_x * half_x * d.x * d.x + half_z * half_z * d.y * d.y)
 
 
-## The spacing the two bodies' opponent already keeps and every reach is
-## floored beyond. Never exceeded, so this rule cannot open a dodge.
-static func spacing_cap(radius_a: float, radius_b: float, cfg: Dictionary = config()) -> float:
-	var clearance := float((MATH.config().get("enemy", {}) as Dictionary).get("body_clearance", 1.35))
-	return (radius_a + radius_b) * clearance * clampf(float(cfg.get("cap_fraction", 1.0)), 0.0, 1.0)
+## Upper bound on any separation, so a malformed model cannot push a fight
+## across its arena.
+static func max_separation(cfg: Dictionary = config()) -> float:
+	return float(cfg.get("max_separation_m", 12.0))
 
 
-## Minimum centre-to-centre distance for a pair, in metres.
+## Minimum centre-to-centre distance for a pair, in metres: the two rendered
+## extents plus the visible clearance, never inside the colliders.
 static func min_separation(extent_a: float, extent_b: float, radius_a: float, radius_b: float,
 		cfg: Dictionary = config()) -> float:
 	var wanted := extent_a + extent_b + float(cfg.get("visible_clearance_m", 0.6))
 	var floor_at := radius_a + radius_b
-	return maxf(minf(wanted, spacing_cap(radius_a, radius_b, cfg)), floor_at)
+	return maxf(minf(wanted, max_separation(cfg)), floor_at)
+
+
+static func _radius(body: Node) -> float:
+	return float(body.call("body_radius")) if body != null and body.has_method("body_radius") else 0.5
+
+
+## The separation two live bodies keep as they stand now (directional). The
+## opponent's `preferred_range` floors at this, so it walks to where the two
+## bodies clear rather than into the other one. 0 when either is missing or
+## the rule is off, which leaves every caller on its old numbers.
+static func pair_need(a: Node, b: Node, cfg: Dictionary = config()) -> float:
+	if not enabled(cfg) or a == null or b == null or not is_instance_valid(a) or not is_instance_valid(b) \
+			or not a is Node3D or not b is Node3D:
+		return 0.0
+	var ea := float(a.call("contact_extent_towards", (b as Node3D).global_position)) \
+		if a.has_method("contact_extent_towards") and (a as Node3D).is_inside_tree() else _radius(a)
+	var eb := float(b.call("contact_extent_towards", (a as Node3D).global_position)) \
+		if b.has_method("contact_extent_towards") and (b as Node3D).is_inside_tree() else _radius(b)
+	return min_separation(ea, eb, _radius(a), _radius(b), cfg)
+
+
+## The largest separation the pair can ever ask for, whichever way either body
+## turns (each body's longest rendered half-extent). Every reach floors at this
+## plus 0.5 m, so a body that turns mid-tell cannot be pushed out of a strike.
+static func pair_reach_need(a: Node, b: Node, cfg: Dictionary = config()) -> float:
+	if not enabled(cfg) or a == null or b == null or not is_instance_valid(a) or not is_instance_valid(b):
+		return 0.0
+	var ea := float(a.call("contact_half_length")) if a.has_method("contact_half_length") else _radius(a)
+	var eb := float(b.call("contact_half_length")) if b.has_method("contact_half_length") else _radius(b)
+	return min_separation(ea, eb, _radius(a), _radius(b), cfg)
 
 
 ## How much of an existing deficit this body takes this tick, 0..1.
