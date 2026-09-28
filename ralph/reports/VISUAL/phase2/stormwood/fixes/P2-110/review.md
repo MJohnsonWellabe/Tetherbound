@@ -25,3 +25,19 @@ The original Hollows loss sightings still require native replay and blind
 before/after review. Duplicate out-of-fight messages and result hierarchy
 remain with Tidewake's shared P2-103 pass. This candidate addresses the stale
 green bars only; P2-110 remains open and the flag remains off.
+
+Replay preparation: the current `phase2_capture_stormwood_fights.gd` wrapper
+always raised the fixture party to level 80, whereas the original
+`hollows_long` loss capture used level 42. The wrapper now accepts explicit
+`--party-level=42` and keeps 80 as its default. It logs the chosen level and
+permits raw output under ignored `.tmp/stormwood-phase2/` as well as the
+existing report directory. Seed 2042, `--ids=hollows_alpha --seconds=120
+--interval=5 --party-level=42` reproduces the original declared setup on
+current production code; a matching loss outcome must still be observed.
+
+Independent review caught rejection of the approved directory root after
+path normalization; equality with the root is now accepted alongside its
+descendants. Headless preflight confirms valid report/local paths reach the
+existing display requirement, while a normalized directory escape is refused.
+The script parses successfully. These checks do not substitute for native
+fight footage.
