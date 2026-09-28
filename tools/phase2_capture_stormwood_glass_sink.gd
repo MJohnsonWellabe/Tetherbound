@@ -12,8 +12,8 @@ func _load_plan() -> bool:
 			continue
 		if str(row.time) == "night":
 			continue
-		row["view_heading_deg"] = 180.0
-		row["stand_offsets_m"] = [175.0, 165.0] if str(row.view) == "approach" else [125.0, 115.0]
+		row["view_heading_deg"] = 220.0
+		row["stand_offsets_m"] = [220.0, 210.0] if str(row.view) == "approach" else [175.0, 165.0]
 		row["stand_laterals_m"] = [0.0, -20.0, 20.0]
 		row["min_camera_player_distance_m"] = 1.5
 		row["camera_pitch_deg"] = -22.0
