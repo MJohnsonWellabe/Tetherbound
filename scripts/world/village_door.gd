@@ -71,12 +71,22 @@ func setup(leaf: Node3D, door_at: Vector3, label_noun: String,
 	_interactable.connect("activated", _on_activated)
 
 
+## Below every ordinary prompt's 0 (prompt_arbiter.gd: priority first, then
+## distance).
+const OPEN_DOOR_PRIORITY := -1
+
+
 func _on_activated() -> void:
 	_open = not _open
 	if _gate_shape != null:
 		_gate_shape.disabled = _open
 	if _interactable != null:
 		_interactable.set("label", ("Close %s" if _open else "Open %s") % _label_noun())
+		# F01#2 (village walk day r2): standing at Mira's counter, the open shop
+		# door's "Close Door" beat "Greet Mira". An open door never needs
+		# closing to get anywhere, so it yields to any other prompt in reach and
+		# is still offered when nothing else is.
+		_interactable.set("priority", OPEN_DOOR_PRIORITY if _open else 0)
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
 	_tween = create_tween()

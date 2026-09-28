@@ -62,12 +62,12 @@ const ACE_ROW := "| ACE | telegraph 1.1 s, recovery 1.2 s"
 const GUARDIAN_QUICK := "Ordinary pressure follows WALL: .85 s tell and 1.1 s recovery."
 const GUARDIAN_FIST := "Target timing is 1.1 s ground/foreleg tell, 0.8 s active commitment and 1.2 s recovery."
 const VANCE_TUSK := "Tuskroot closes 7 m after a .8 s minimum full-body charge cue, then recovers .9 s."
-const VANCE_TEAM := "**Current team:** Galecrest11, Duskhush11, Tuskroot12. Tuskroot is the ace and CHARGER target."
+const VANCE_TEAM := "**Current team:** Galecrest12, Duskhush12, Burrowback12, Mosshell12, Tuskroot12. Tuskroot is the ace and CHARGER target."
 const DELL_ROW := "| `relay_officer_dell` | Mosshell10, Burrowback10, Galecrest10 | relay officer composition |"
-const ORETH := "- **Oreth:** Mosshell13 WALL → Trailpup14 baseline → Brooktail15 CURRENT."
-const HALDER := "- **Halder:** Duskhush13 baseline → Tuskroot14 CHARGER → Meadowhart15 CURRENT."
-const VESS := "- **Vess:** Trailpup14 baseline → Duskhush15 baseline → Galecrest16 DIVER."
-const HALD := "**Current team:** Galecrest18 DIVER, Burrowback19 baseline, Mosshell19 WALL."
+const ORETH := "- **Oreth:** Mosshell16 WALL → Trailpup16 baseline → Burrowback16 baseline → Duskhush16 baseline → Brooktail16 CURRENT."
+const HALDER := "- **Halder:** Duskhush16 baseline → Tuskroot16 CHARGER → Burrowback16 baseline → Mosshell16 baseline → Meadowhart16 CURRENT."
+const VESS := "- **Vess:** Trailpup16 baseline → Duskhush16 baseline → Trailpup16 baseline → Tuskroot16 baseline → Galecrest16 DIVER."
+const HALD := "**Current team:** Galecrest18 DIVER, Burrowback19 baseline, Trailpup19 baseline, Duskhush19 baseline, Mosshell19 WALL."
 const W_WALL := "| 1 | Burrowback18 | WALL; .85 s tell, 1.1 s recovery;"
 const W_DIVER := "| 2 | Galecrest18 | DIVER; positional entry plus .4 s strike tell"
 const W_CURRENT := "| 3 | Brooktail19 | CURRENT; .7 s cooldown/.55 s recovery;"
@@ -91,7 +91,7 @@ const RECOVERY_FLOOR := 0.6
 ## decision. These are exactly the CURRENT bodies -- any other body under .6 s
 ## fails, and so does one of these drifting off .55.
 const CURRENT_RECOVERY_EXCEPTION := 0.55
-const CURRENT_BODIES := ["captain_riverwatch#2", "captain_field#2", "warden_aldis#2"]
+const CURRENT_BODIES := ["captain_riverwatch#4", "captain_field#4", "warden_aldis#2"]
 
 ## [fight, member index (-1 = the Warrens guardian), species, attack, field,
 ##  op ("eq" exact / "ge" floor), value, BOSSES citations...]
@@ -116,34 +116,54 @@ const PINS := [
 	["relay_captain", 0, "galecrest", "quick", "recovery", "ge", 0.75, VANCE_TEAM, CLAMP_POST_BRIDGE],
 	["relay_captain", 1, "duskhush", "quick", "telegraph", "ge", 0.9, VANCE_TEAM, CLAMP_POST_BRIDGE],
 	["relay_captain", 1, "duskhush", "quick", "recovery", "ge", 0.75, VANCE_TEAM, CLAMP_POST_BRIDGE],
-	["relay_captain", 2, "tuskroot", "quick", "telegraph", "eq", 0.8, VANCE_TUSK, CHARGER_ROW],
-	["relay_captain", 2, "tuskroot", "quick", "recovery", "eq", 0.9, VANCE_TUSK, CHARGER_ROW],
+	["relay_captain", 2, "burrowback", "quick", "telegraph", "ge", 0.9, VANCE_TEAM, CLAMP_POST_BRIDGE],
+	["relay_captain", 2, "burrowback", "quick", "recovery", "ge", 0.75, VANCE_TEAM, CLAMP_POST_BRIDGE],
+	["relay_captain", 3, "mosshell", "quick", "telegraph", "ge", 0.9, VANCE_TEAM, CLAMP_POST_BRIDGE],
+	["relay_captain", 3, "mosshell", "quick", "recovery", "ge", 0.75, VANCE_TEAM, CLAMP_POST_BRIDGE],
+	["relay_captain", 4, "tuskroot", "quick", "telegraph", "eq", 0.8, VANCE_TUSK, CHARGER_ROW],
+	["relay_captain", 4, "tuskroot", "quick", "recovery", "eq", 0.9, VANCE_TUSK, CHARGER_ROW],
 	# §4.3 Oreth: WALL -> baseline -> CURRENT.
 	["captain_riverwatch", 0, "mosshell", "quick", "telegraph", "eq", 0.85, ORETH, WALL_ROW],
 	["captain_riverwatch", 0, "mosshell", "quick", "recovery", "eq", 1.1, ORETH, WALL_ROW],
 	["captain_riverwatch", 1, "trailpup", "quick", "telegraph", "ge", 0.9, ORETH, CLAMP_POST_BRIDGE],
 	["captain_riverwatch", 1, "trailpup", "quick", "recovery", "ge", 0.75, ORETH, CLAMP_POST_BRIDGE],
-	["captain_riverwatch", 2, "brooktail", "quick", "telegraph", "ge", 0.8, ORETH, FLOOR_ORDINARY],
-	["captain_riverwatch", 2, "brooktail", "quick", "recovery", "eq", 0.55, ORETH, CURRENT_ROW],
+	["captain_riverwatch", 2, "burrowback", "quick", "telegraph", "ge", 0.9, ORETH, CLAMP_POST_BRIDGE],
+	["captain_riverwatch", 2, "burrowback", "quick", "recovery", "ge", 0.75, ORETH, CLAMP_POST_BRIDGE],
+	["captain_riverwatch", 3, "duskhush", "quick", "telegraph", "ge", 0.9, ORETH, CLAMP_POST_BRIDGE],
+	["captain_riverwatch", 3, "duskhush", "quick", "recovery", "ge", 0.75, ORETH, CLAMP_POST_BRIDGE],
+	["captain_riverwatch", 4, "brooktail", "quick", "telegraph", "ge", 0.8, ORETH, FLOOR_ORDINARY],
+	["captain_riverwatch", 4, "brooktail", "quick", "recovery", "eq", 0.55, ORETH, CURRENT_ROW],
 	# §4.3 Halder: baseline -> CHARGER -> CURRENT.
 	["captain_field", 0, "duskhush", "quick", "telegraph", "ge", 0.9, HALDER, CLAMP_POST_BRIDGE],
 	["captain_field", 0, "duskhush", "quick", "recovery", "ge", 0.75, HALDER, CLAMP_POST_BRIDGE],
 	["captain_field", 1, "tuskroot", "quick", "telegraph", "eq", 0.8, HALDER, CHARGER_ROW],
 	["captain_field", 1, "tuskroot", "quick", "recovery", "eq", 0.9, HALDER, CHARGER_ROW],
-	["captain_field", 2, "meadowhart", "quick", "telegraph", "ge", 0.8, HALDER, FLOOR_ORDINARY],
-	["captain_field", 2, "meadowhart", "quick", "recovery", "eq", 0.55, HALDER, CURRENT_ROW],
+	["captain_field", 2, "burrowback", "quick", "telegraph", "ge", 0.9, HALDER, CLAMP_POST_BRIDGE],
+	["captain_field", 2, "burrowback", "quick", "recovery", "ge", 0.75, HALDER, CLAMP_POST_BRIDGE],
+	["captain_field", 3, "mosshell", "quick", "telegraph", "ge", 0.9, HALDER, CLAMP_POST_BRIDGE],
+	["captain_field", 3, "mosshell", "quick", "recovery", "ge", 0.75, HALDER, CLAMP_POST_BRIDGE],
+	["captain_field", 4, "meadowhart", "quick", "telegraph", "ge", 0.8, HALDER, FLOOR_ORDINARY],
+	["captain_field", 4, "meadowhart", "quick", "recovery", "eq", 0.55, HALDER, CURRENT_ROW],
 	# §4.3 Vess: baseline -> baseline -> DIVER.
 	["captain_ridge", 0, "trailpup", "quick", "telegraph", "ge", 0.9, VESS, CLAMP_POST_BRIDGE],
 	["captain_ridge", 0, "trailpup", "quick", "recovery", "ge", 0.75, VESS, CLAMP_POST_BRIDGE],
 	["captain_ridge", 1, "duskhush", "quick", "telegraph", "ge", 0.9, VESS, CLAMP_POST_BRIDGE],
 	["captain_ridge", 1, "duskhush", "quick", "recovery", "ge", 0.75, VESS, CLAMP_POST_BRIDGE],
-	["captain_ridge", 2, "galecrest", "quick", "telegraph", "eq", 0.4, VESS, DIVER_ROW],
+	["captain_ridge", 2, "trailpup", "quick", "telegraph", "ge", 0.9, VESS, CLAMP_POST_BRIDGE],
+	["captain_ridge", 2, "trailpup", "quick", "recovery", "ge", 0.75, VESS, CLAMP_POST_BRIDGE],
+	["captain_ridge", 3, "tuskroot", "quick", "telegraph", "ge", 0.9, VESS, CLAMP_POST_BRIDGE],
+	["captain_ridge", 3, "tuskroot", "quick", "recovery", "ge", 0.75, VESS, CLAMP_POST_BRIDGE],
+	["captain_ridge", 4, "galecrest", "quick", "telegraph", "eq", 0.4, VESS, DIVER_ROW],
 	# §4.4 Keeper Hald: DIVER -> baseline -> WALL.
 	["stronghold_elite", 0, "galecrest", "quick", "telegraph", "eq", 0.4, HALD, DIVER_ROW],
 	["stronghold_elite", 1, "burrowback", "quick", "telegraph", "ge", 0.9, HALD, CLAMP_POST_BRIDGE],
 	["stronghold_elite", 1, "burrowback", "quick", "recovery", "ge", 0.75, HALD, CLAMP_POST_BRIDGE],
-	["stronghold_elite", 2, "mosshell", "quick", "telegraph", "eq", 0.85, HALD, WALL_ROW],
-	["stronghold_elite", 2, "mosshell", "quick", "recovery", "eq", 1.1, HALD, WALL_ROW],
+	["stronghold_elite", 2, "trailpup", "quick", "telegraph", "ge", 0.9, HALD, CLAMP_POST_BRIDGE],
+	["stronghold_elite", 2, "trailpup", "quick", "recovery", "ge", 0.75, HALD, CLAMP_POST_BRIDGE],
+	["stronghold_elite", 3, "duskhush", "quick", "telegraph", "ge", 0.9, HALD, CLAMP_POST_BRIDGE],
+	["stronghold_elite", 3, "duskhush", "quick", "recovery", "ge", 0.75, HALD, CLAMP_POST_BRIDGE],
+	["stronghold_elite", 4, "mosshell", "quick", "telegraph", "eq", 0.85, HALD, WALL_ROW],
+	["stronghold_elite", 4, "mosshell", "quick", "recovery", "eq", 1.1, HALD, WALL_ROW],
 	# §4.5 Warden Aldis, row by row.
 	["warden_aldis", 0, "burrowback", "quick", "telegraph", "eq", 0.85, W_WALL, WALL_ROW],
 	["warden_aldis", 0, "burrowback", "quick", "recovery", "eq", 1.1, W_WALL, WALL_ROW],
@@ -161,8 +181,8 @@ const PINS := [
 ## Every Meadows named fight must be pinned member-for-member, so a roster that
 ## grows a creature cannot slip in unpinned.
 const TEAM_SIZES := {
-	"relay_officer_dell": 3, "relay_captain": 3, "captain_riverwatch": 3,
-	"captain_field": 3, "captain_ridge": 3, "stronghold_elite": 3, "warden_aldis": 5,
+	"relay_officer_dell": 3, "relay_captain": 5, "captain_riverwatch": 5,
+	"captain_field": 5, "captain_ridge": 5, "stronghold_elite": 5, "warden_aldis": 5,
 }
 
 

@@ -8,10 +8,11 @@ extends SceneTree
 ##
 ##   flock <render-lock> xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x720 \
-##     --script tests/capture_lure_cue_views.gd -- --cue=bram|doss|juno|vault --out=DIR [--distances=m,m]
+##     --script tests/capture_lure_cue_views.gd -- --cue=bram|doss|juno|vault|herd --out=DIR [--distances=m,m] [--time=night]
 ##
 ## Camera: a third-person rig's height (EYE_M over the terrain), 60 degree
-## vertical FOV. The clock is frozen in the morning. Writes PNGs to --out.
+## vertical FOV. The clock is frozen in the morning, or at `--time=` (a named
+## art.json time such as `night`, for a night cue). Writes PNGs to --out.
 ## Inert by default: a standalone SceneTree script, not a test_*.gd.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -27,6 +28,8 @@ const CUES := {
 	"doss": Vector2(-23.5, 4160.5),
 	"juno": Vector2(-175.0, 5470.0),
 	"vault": Vector2(-351.0, 2611.8),
+	# The herd-watcher's fire (props.json meadowhart_watch_fire), the herd's night cue.
+	"herd": Vector2(-74.0, 1296.0),
 }
 
 var _world: Node3D
@@ -42,11 +45,14 @@ func _run() -> void:
 	var cue_id := "bram"
 	var out := "user://lure_cue_views"
 	var distances: Array = DISTANCES_M.duplicate()
+	var time_name := ""
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--cue="):
 			cue_id = a.trim_prefix("--cue=")
 		elif a.begins_with("--out="):
 			out = a.trim_prefix("--out=")
+		elif a.begins_with("--time="):
+			time_name = a.trim_prefix("--time=")
 		elif a.begins_with("--distances="):
 			distances = []
 			for part: String in a.trim_prefix("--distances=").split(","):
@@ -63,6 +69,8 @@ func _run() -> void:
 	if look != null:
 		look.call("reset_to_morning")
 		look.call("set_clock_frozen", true)
+		if time_name != "":
+			look.call("apply_time", time_name)
 	var terrain: Node = null
 	for n in _world.find_children("*", "Terrain3D", true, false):
 		terrain = n
@@ -99,7 +107,7 @@ func _run() -> void:
 			for i in 30:
 				await process_frame
 			await RenderingServer.frame_post_draw
-			var file := "%s/%s_%03dm_%s.png" % [out, cue_id, int(d), view]
+			var file := "%s/%s%s_%03dm_%s.png" % [out, cue_id, "" if time_name == "" else "_" + time_name, int(d), view]
 			root.get_texture().get_image().save_png(file)
 			print("[cue-view] %s d=%.0fm at=(%.1f,%.1f) cue_off_road_heading=%.0fdeg %s" % [
 				cue_id, at.distance_to(cue), at.x, at.y, off_deg, file])

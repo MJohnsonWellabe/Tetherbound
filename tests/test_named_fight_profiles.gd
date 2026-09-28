@@ -49,10 +49,10 @@ const MEADOWS_PROFILED := ["relay_captain", "captain_riverwatch", "captain_field
 ## ("Tuskroot CHARGER; crossing payoff"), so it carries no row here and is held
 ## by the at-least-one check instead.
 const MEADOWS_SEQUENCES := {
-	"captain_riverwatch": ["WALL", "baseline", "CURRENT"],
-	"captain_field": ["baseline", "CHARGER", "CURRENT"],
-	"captain_ridge": ["baseline", "baseline", "DIVER"],
-	"stronghold_elite": ["DIVER", "baseline", "WALL"],
+	"captain_riverwatch": ["WALL", "baseline", "baseline", "baseline", "CURRENT"],
+	"captain_field": ["baseline", "CHARGER", "baseline", "baseline", "CURRENT"],
+	"captain_ridge": ["baseline", "baseline", "baseline", "baseline", "DIVER"],
+	"stronghold_elite": ["DIVER", "baseline", "baseline", "baseline", "WALL"],
 	"warden_aldis": ["WALL", "DIVER", "CURRENT", "CHARGER", "ACE"],
 }
 
@@ -240,11 +240,14 @@ func test_the_profile_sequence_lands_on_the_creatures_bosses_names() -> void:
 		% checked)
 
 
-## Keys BOSSES §2.1 step 3's chapter clamp may author on a BASELINE member: it
-## raises tell/recovery to the post-South-Bridge floor (.9/.75 s) and changes
-## nothing else, so a block made only of these (and `_` notes) is still a
-## baseline, not a profile.
-const CLAMP_ONLY_KEYS := ["telegraph", "recovery"]
+## Keys a BASELINE member may author without becoming a profile. Two sources:
+## BOSSES §2.1 step 3's chapter clamp raises tell/recovery to the
+## post-South-Bridge floor (.9/.75 s), and the F04#7 decision (below) adds two
+## stats. A block made only of these (and `_` notes) is still a baseline. `power` and `poise_max` are the F04#7 difficulty
+## stats (owner decision 2026-09-28, BOSSES §4.3): how hard a body hits and how
+## much it takes to stagger, not its behaviour shape -- the same reason
+## SHAPE_EXCLUDED below leaves `power` out of a profile's shape.
+const CLAMP_ONLY_KEYS := ["telegraph", "recovery", "power", "poise_max"]
 
 
 func _authors_a_profile(member: Dictionary) -> bool:

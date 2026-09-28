@@ -88,6 +88,8 @@ const ALREADY_BEATEN_CONVERSATION := "trainer_already_beaten"
 ## `data/config/bands/<band>/trainers.json`; `flow` and `prompts` are global
 ## and stay in the head file. `band_content.gd` merges them back.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+## F04#6: the standard that falls and the captain who stands down.
+const TRAINER_AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
 
 ## How far from the trainer the challenge prompt is offered. A little wider
 ## than a villager's greeting (3.8m): a challenge is a thing you walk up to
@@ -198,6 +200,7 @@ func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = 
 		push_error("no ground under trainer '%s' at %.0f, %.0f" % [id, x, z])
 		return
 	npc.rotation.y = deg_to_rad(float(facings.get(id, spec.get("facing_deg", 0.0))))
+	TRAINER_AFTERMATH.attach(self, npc, id, already_beaten(spec, _progression()))
 
 	# The whole spec is bound rather than a resolved label: whether this person
 	# is offering a battle or a nod depends on a progression flag, and that
@@ -426,6 +429,7 @@ func _refresh_prompts(progression: RefCounted) -> void:
 		var id := str(spec.get("id", ""))
 		var beaten := already_beaten(spec, progression)
 		if beaten and _beaten_seen.has(id) and not bool(_beaten_seen[id]):
+			TRAINER_AFTERMATH.begin_fall(body, id)
 			_play_defeat_reaction(body)
 		_beaten_seen[id] = beaten
 
@@ -438,13 +442,15 @@ func _play_defeat_reaction(body: Node3D) -> void:
 		return
 	var clip := str(body.call("clip_for", "defeated", ""))
 	if clip.is_empty():
+		TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
 		return
 	body.call("play", clip, false)
 	var reactions := CHARACTER_MODEL.config_for("cast_reactions")
 	var hold := float(reactions.get("defeat_hold_seconds", 7.0))
 	await get_tree().create_timer(hold).timeout
 	if is_instance_valid(body):
-		body.call("play", str(body.call("clip_for", "idle")))
+		if not TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", ""))):
+			body.call("play", str(body.call("clip_for", "idle")))
 
 
 ## --- the table ----------------------------------------------------------------

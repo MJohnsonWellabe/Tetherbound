@@ -130,7 +130,7 @@ func test_duty_board_names_the_real_garrison_numbers() -> void:
 	for entry: Variant in (trainers.get("trainers", []) as Array):
 		var t: Dictionary = entry as Dictionary
 		by_name[str(t.get("name", ""))] = (t.get("team", []) as Array).size()
-	var expected := {"Patrolman Verrick": 2, "Warder Solene": 3, "Keeper Hald": 3, "Warden Aldis": 5}
+	var expected := {"Patrolman Verrick": 2, "Warder Solene": 3, "Keeper Hald": 5, "Warden Aldis": 5}
 	for label: String in expected:
 		assert_true(by_name.has(label), "trainers.json no longer has '%s'; the board's numbers cannot be checked" % label)
 		if by_name.has(label):

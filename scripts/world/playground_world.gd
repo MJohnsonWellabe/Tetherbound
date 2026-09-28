@@ -1803,6 +1803,7 @@ func _build_road_gate() -> void:
 	boundary.call("build", self)
 	STRUCTURE_VISIBILITY_RANGE.apply(boundary, "village_boundary")
 
+	_build_gate_key_post()
 	var game := get_node_or_null(^"/root/Game")
 	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
 		return
@@ -1837,6 +1838,18 @@ func _build_river_nest_clear() -> void:
 	doss.call("build", self, _player, RIVER_NEST_AT, RIVER_NEST_FACING_DEG)
 
 
+## F01#2/#3. The post stands whether or not the key is still on it: a loaded
+## save that already took the key shows the empty peg.
+func _build_gate_key_post() -> void:
+	if get_node_or_null(^"GateKeyPost") != null \
+			or not bool(KEY_PICKUP.post_config().get("enabled", false)):
+		return
+	var ground := ground_height_at(GATE_KEY_AT.x, GATE_KEY_AT.y)
+	if is_nan(ground):
+		return
+	KEY_PICKUP.build_post(self, Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y))
+
+
 func _spawn_gate_key() -> void:
 	if get_node_or_null(^"GateKey") != null:
 		return
@@ -1848,7 +1861,9 @@ func _spawn_gate_key() -> void:
 	key.name = "GateKey"
 	key.position = Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y)
 	add_child(key)
-	key.call("setup", "castle_gate_key", "Take the old key")
+	# F01#2/#3: the key hangs on a post by the road (data/config/key_post.json).
+	var mount := "post" if bool(KEY_PICKUP.post_config().get("enabled", false)) else "ground"
+	key.call("setup", "castle_gate_key", "Take the old key", "key", "meadows", mount)
 
 
 ## SF34: the Hall approach. Same body as the road gate, three Sigils instead

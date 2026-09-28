@@ -90,9 +90,9 @@ This rule makes every ordinary catalogue row implementable without a designer ch
 
 **Failure.** Return to the nearest quarry/warrens recovery point; guardian and door reset, collected external resources remain.
 
-### 4.2 Captain Vance and the Relay — Meadows, 11/11/12
+### 4.2 Captain Vance and the Relay — Meadows, 12/12/12/12/12
 
-**Current team:** Galecrest11, Duskhush11, Tuskroot12. Tuskroot is the ace and CHARGER target.
+**Current team:** Galecrest12, Duskhush12, Burrowback12, Mosshell12, Tuskroot12. Tuskroot is the ace and CHARGER target.
 
 **Look.** Relay machinery, captive and occupied crossing establish stakes before the challenge.
 
@@ -104,15 +104,17 @@ This rule makes every ordinary catalogue row implementable without a designer ch
 
 These are three distinct trainer exams, not one three-phase boss.
 
-- **Oreth:** Mosshell13 WALL → Trailpup14 baseline → Brooktail15 CURRENT. Tests patience, a neutral reset and then sustained pressure. Awards first Sigil.
-- **Halder:** Duskhush13 baseline → Tuskroot14 CHARGER → Meadowhart15 CURRENT. Tests range control and sustained pressure across an exposed field. Awards second Sigil.
-- **Vess:** Trailpup14 baseline → Duskhush15 baseline → Galecrest16 DIVER. The route supplies the endurance test and the ace supplies the reposition read. Awards third Sigil.
+- **Oreth:** Mosshell16 WALL → Trailpup16 baseline → Burrowback16 baseline → Duskhush16 baseline → Brooktail16 CURRENT. Tests patience, a neutral reset and then sustained pressure. Awards first Sigil.
+- **Halder:** Duskhush16 baseline → Tuskroot16 CHARGER → Burrowback16 baseline → Mosshell16 baseline → Meadowhart16 CURRENT. Tests range control and sustained pressure across an exposed field. Awards second Sigil.
+- **Vess:** Trailpup16 baseline → Duskhush16 baseline → Trailpup16 baseline → Tuskroot16 baseline → Galecrest16 DIVER. The route supplies the endurance test and the ace supplies the reposition read. Awards third Sigil.
+
+**F04#7 difficulty (owner decision, 2026-09-28).** Vance, the three captains and Hald each field five, the Warden's count. Every added body is a baseline creature from its band's own pool with the post-South-Bridge .9 s tell. Levels sit at each band pin's ceiling. Readable (non-lunge) members carry a higher `power`, set per body from its measured worst hit so C3's 0.5 ceiling holds, and `poise_max` 60 so a masher cannot stagger-lock them. No tell, recovery or other timing changed, and nothing gains HP beyond its level. `power` and `poise_max` did change, including on profiled bodies. CURRENT bodies now carry poise 60 and power 23.5–27.5 rather than the ×.8 profile multiplier, and the Warden's ACE power goes 14.4 → 18, so these bodies no longer follow the §2 power multipliers. Evidence: `ralph/reports/BALANCE/`.
 
 Road order is Oreth → Halder → Vess. The three saved Sigils open the Hall approach. Defeat returns to the last regional camp and does not clear any captain.
 
-### 4.4 Keeper Hald — Meadows, 18/19/19
+### 4.4 Keeper Hald — Meadows, 18/19/19/19/19
 
-**Current team:** Galecrest18 DIVER, Burrowback19 baseline, Mosshell19 WALL.
+**Current team:** Galecrest18 DIVER, Burrowback19 baseline, Trailpup19 baseline, Duskhush19 baseline, Mosshell19 WALL.
 
 This is the mandatory kit check before the Warden. Galecrest teaches movement, the middle round provides a reset and Mosshell tests patient punishment. Hald's defeat opens the chamber approach. A physical bed after him allows preparation; it is not available at the exterior waystop.
 
@@ -238,16 +240,16 @@ These 31 rows are current band data. “Baseline” means no bespoke behavior sh
 | `relay_picket_hess` | Bramblebun8, Mudsnout8 | relay escalation 1 |
 | `relay_picket_orrin` | Burrowback9, Pipwing9 | relay escalation 2 |
 | `relay_officer_dell` | Mosshell10, Burrowback10, Galecrest10 | relay officer composition |
-| `relay_captain` / Vance | Galecrest11, Duskhush11, Tuskroot12 | Tuskroot CHARGER; crossing payoff |
-| `captain_riverwatch` / Oreth | Mosshell13, Trailpup14, Brooktail15 | WALL→baseline→CURRENT; Sigil |
-| `captain_field` / Halder | Duskhush13, Tuskroot14, Meadowhart15 | baseline→CHARGER→CURRENT; Sigil |
-| `captain_ridge` / Vess | Trailpup14, Duskhush15, Galecrest16 | baseline→baseline→DIVER; Sigil |
+| `relay_captain` / Vance | Galecrest12, Duskhush12, Burrowback12, Mosshell12, Tuskroot12 | Tuskroot CHARGER; crossing payoff |
+| `captain_riverwatch` / Oreth | Mosshell16, Trailpup16, Burrowback16, Duskhush16, Brooktail16 | WALL→baseline→baseline→baseline→CURRENT; Sigil |
+| `captain_field` / Halder | Duskhush16, Tuskroot16, Burrowback16, Mosshell16, Meadowhart16 | baseline→CHARGER→baseline→baseline→CURRENT; Sigil |
+| `captain_ridge` / Vess | Trailpup16, Duskhush16, Trailpup16, Tuskroot16, Galecrest16 | baseline→baseline→baseline→baseline→DIVER; Sigil |
 | `patrol_ridgeline` | Burrowback13, Galecrest14 | optional ridge baseline |
 | `pasture_drover_juno` | Burrowback13, Mudsnout13 | optional pasture baseline |
 | `lost_creature_rue` | Burrowback14, Trailpup15 | optional recovery story |
 | `stronghold_patrol` / Verrick | Trailpup15, Burrowback16 | garrison floor |
 | `stronghold_courtyard` / Solene | Mosshell16, Reedwing17, Mudsnout17 | three-body numeric escalation |
-| `stronghold_elite` / Hald | Galecrest18, Burrowback19, Mosshell19 | DIVER→baseline→WALL; mandatory door |
+| `stronghold_elite` / Hald | Galecrest18, Burrowback19, Trailpup19, Duskhush19, Mosshell19 | DIVER→baseline→baseline→baseline→WALL; mandatory door |
 | `warden_aldis` | Burrowback18, Galecrest18, Brooktail19, Meadowhart19, Tuskroot20 | WALL→DIVER→CURRENT→CHARGER→ACE final exam |
 | `stronghold_outer_watch` | Burrowback15, Duskhush15 | optional approach baseline |
 | `stronghold_checkpoint` / Ness | Trailpup16, Galecrest16, Mosshell16 | recovered CURRENT pressure at Sigil gate; verify consumer |
@@ -378,6 +380,7 @@ For these catchable wilds, the host journals one catch recipient and never copie
 - Test expected-entry parties, one deliberately unfavorable composition and 1–4 participants.
 - Record maximum single hit, unavoidable damage, time-to-first-safe-read, faint/revive consumption, switches, burst/skill use and whether the player can state the intended answer.
 - A reader should reliably outperform a masher. The campaign acceptance target remains reader ≤55% of masher HP loss and ≥75% success across representative top fights, with sample size disclosed.
+- **Top-fight bar (owner decision, 2026-09-28; F04#7 option c).** Per top fight and starter, at 24 seeds: the reader wins ≥75%; the masher loses its lead in every run; and the reader's median party HP cost is ≤55% of the masher's. This replaces the per-fight 25% masher team wipe, which the five-creature cap, band level pins, 0.5 hit ceiling and no-HP rule cannot reach at chapter entry. The owner asked that an unprepared masher lose about a quarter of the time. The Balance lane reads that at chapter level, and this reading is not the owner's own wording: a masher playing a chapter's named trainer fights loses at least one of them in ≥25% of playthroughs. It is reported both as 1 − Π(masher win rate) with the fights treated as independent and as the observed rate over seed-indexed six-fight playthroughs. Per-fight masher-loss rates are always disclosed beside it. The same form applies to Tidewake's top fights (F14#0); the Tidewake lane measures and closes that row.
 
 ## 10. Built status and out of scope
 
