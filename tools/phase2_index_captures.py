@@ -32,7 +32,7 @@ def main() -> None:
     parser.add_argument("--report-biome", help="Evidence label when the game's realm ID differs (water -> tidewake)")
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
-    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items", "characters", "weather"), default="locations")
+    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures", "items", "characters", "weather", "systems"), default="locations")
     parser.add_argument("--capture-script", help="Tool basename for a targeted location reshoot")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
@@ -115,6 +115,33 @@ def main() -> None:
                     "--script tools/phase2_capture_ui.gd -- "
                     f"--biome={args.biome} --seed={manifest['seed']} "
                     f"--output=res://ralph/reports/VISUAL/phase2/{report_biome}/ui_repro"
+                ),
+                "commit": args.commit, "render_path": args.render_path,
+            }
+            continue
+        if args.category == "systems":
+            source_id = frame["frame_id"]
+            frame_id = source_id.replace(f"{args.biome}__", f"{report_biome}__", 1)
+            src = source / f"{source_id}.jpg"
+            if not src.is_file():
+                raise SystemExit(f"Missing {src}")
+            with Image.open(src) as image:
+                image.verify()
+            dst = frames_dir / f"{frame_id}.jpg"
+            shutil.copy2(src, dst)
+            script = args.capture_script or "phase2_capture_build_systems.gd"
+            existing[frame_id] = {
+                "id": frame_id, "biome": report_biome, "category": "systems",
+                "subject": frame["system"], "location_id": frame.get("identity", ""),
+                "route": "main", "time_of_day": frame.get("time", "day"),
+                "weather_or_phase": "clear", "pose_or_state": frame["system"],
+                "camera": frame.get("view", "normal"),
+                "frame_path": dst.relative_to(repo).as_posix(),
+                "repro": (
+                    "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
+                    f"--script tools/{script} -- --biome={args.biome} "
+                    f"--seed={manifest.get('seed', 2042)} "
+                    f"--output=res://ralph/reports/VISUAL/phase2/{report_biome}/repro/{frame_id}"
                 ),
                 "commit": args.commit, "render_path": args.render_path,
             }

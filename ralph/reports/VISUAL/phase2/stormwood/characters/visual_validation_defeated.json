@@ -1,0 +1,9 @@
+{
+  "review": "Code-blind inspection of 26 Stormwood post-win dialogue fixtures and representative paired post images",
+  "findings": [
+    "P2-081: all 26 repeat one generic defeated line and omit portrait",
+    "P2-083: several camera stands blocked by creatures or geometry"
+  ],
+  "text_panel": "All 26 readable and unclipped.",
+  "caveat": "No fight won, defeat flag or world aftermath was produced by this text fixture. Paired upright post images do not prove defeated pose."
+}

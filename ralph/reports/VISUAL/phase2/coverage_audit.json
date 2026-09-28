@@ -1,9 +1,9 @@
 {
   "biomes": {
     "meadows": {
-      "frames": 525,
+      "frames": 533,
       "categories": {
-        "characters": 67,
+        "characters": 75,
         "creatures": 126,
         "named_locations": 114,
         "route_and_terrain": 50,
@@ -12,7 +12,7 @@
         "world_items": 78
       },
       "times": {
-        "day": 436,
+        "day": 444,
         "dusk": 48,
         "night": 41
       },
@@ -29,7 +29,7 @@
         "building",
         "crafting"
       ],
-      "dialogue_frames": 19,
+      "dialogue_frames": 27,
       "defeated_frames": 0,
       "ui_ids": [
         "meadows__exploration_hud",
@@ -50,9 +50,9 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 615,
+      "frames": 663,
       "categories": {
-        "characters": 84,
+        "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
@@ -61,7 +61,7 @@
         "world_items": 27
       },
       "times": {
-        "day": 415,
+        "day": 463,
         "dusk": 114,
         "night": 86
       },
@@ -79,8 +79,8 @@
         "building",
         "crafting"
       ],
-      "dialogue_frames": 42,
-      "defeated_frames": 0,
+      "dialogue_frames": 66,
+      "defeated_frames": 48,
       "ui_ids": [
         "tidewake__exploration_hud",
         "tidewake__menu_backpack",
@@ -150,9 +150,9 @@
       "missing_repro_or_render_path": []
     },
     "stormwood": {
-      "frames": 488,
+      "frames": 540,
       "categories": {
-        "characters": 90,
+        "characters": 142,
         "creatures": 98,
         "named_locations": 186,
         "route_and_terrain": 60,
@@ -161,7 +161,7 @@
         "world_items": 30
       },
       "times": {
-        "day": 352,
+        "day": 404,
         "dusk": 74,
         "night": 62
       },
@@ -177,8 +177,8 @@
         "building",
         "crafting"
       ],
-      "dialogue_frames": 45,
-      "defeated_frames": 0,
+      "dialogue_frames": 71,
+      "defeated_frames": 52,
       "ui_ids": [
         "stormwood__exploration_hud",
         "stormwood__menu_backpack",

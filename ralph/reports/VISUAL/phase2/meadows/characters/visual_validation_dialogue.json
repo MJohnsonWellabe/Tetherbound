@@ -13,5 +13,21 @@
     "wilhelm"
   ],
   "text_panel": "Readable in all ten frames.",
-  "caveat": "Direct-start at authored post; these do not establish normal interaction camera defects."
+  "caveat": "Direct-start at authored post; these do not establish normal interaction camera defects.",
+  "followup_review": {
+    "frames": 9,
+    "findings": [
+      "P2-079: Garrick rock obstruction",
+      "P2-085: Nessa, Perrin, Lark small in frame"
+    ],
+    "well_framed": [
+      "ada",
+      "tobin",
+      "maren",
+      "sorrel",
+      "ren"
+    ],
+    "rae": "not yet captured",
+    "text_panel": "All nine legible"
+  }
 }
