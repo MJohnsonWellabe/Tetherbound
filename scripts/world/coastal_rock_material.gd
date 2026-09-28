@@ -128,19 +128,28 @@ const MATERIAL := """
 		// roughness only: the baked heights, controls and collision stay intact.
 		float outside = smoothstep(coast_exclude_radius, coast_exclude_radius + 30.0, length(v_vertex.xz - coast_exclude_centre));
 		float patch = coast_noise(v_vertex.xz * coast_dune_patch_scale);
-		float grain = coast_noise(v_vertex.xz * 3.4);
+		// Use Terrain3D's interpolated height normal, not raster triangle
+		// derivatives: slope tint must not outline every terrain triangle.
+		vec3 dune_normal = normalize(w_normal);
+		vec3 dune_weights = abs(dune_normal);
+		dune_weights /= max(dot(dune_weights, vec3(1.0)), 0.001);
+		float grain = coast_noise(v_vertex.zy * 3.4) * dune_weights.x
+			+ coast_noise(v_vertex.xz * 3.4) * dune_weights.y
+			+ coast_noise(v_vertex.xy * 3.4) * dune_weights.z;
 		float phase = dot(v_vertex.xz, vec2(0.63, 0.77)) * coast_dune_ripple_scale + patch * 5.0;
-		// Fade subpixel ripples rather than drawing distant moire across sand.
-		float ripple = sin(phase) * (1.0 - smoothstep(0.7, 2.0, fwidth(phase)));
-		vec3 sand = coast_dune_sand_colour * (mix(0.90, 1.04, patch) + (grain - 0.5) * 0.035 + ripple * coast_dune_ripple_strength);
-		float bluff = 1.0 - smoothstep(0.18, 0.48, abs(coast_face.y));
-		sand = mix(sand, coast_dune_bluff_colour * mix(0.91, 1.05, patch), bluff * 0.7);
+		// Close, gentle ground only. Projecting periodic ripples down cliffs
+		// produced long regular stripes instead of windblown sand.
+		float ripple = sin(phase) * (1.0 - smoothstep(0.3, 0.9, fwidth(phase)))
+			* smoothstep(0.8, 0.98, abs(dune_normal.y));
+		vec3 sand = coast_dune_sand_colour * (mix(0.70, 0.88, patch) + (grain - 0.5) * 0.065 + ripple * coast_dune_ripple_strength);
+		float bluff = 1.0 - smoothstep(0.15, 0.72, abs(dune_normal.y));
+		sand = mix(sand, coast_dune_bluff_colour * mix(0.71, 0.87, patch), bluff * 0.24);
 		float wet = 1.0 - smoothstep(0.15, 1.25, v_vertex.y + (patch - 0.5) * 0.4);
 		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * 0.8);
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, outside);
-		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), outside * 0.85);
+		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), outside);
 		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), outside);
-		mat.normal_map_depth = mix(mat.normal_map_depth, 0.12, outside);
+		mat.normal_map_depth = mix(mat.normal_map_depth, 0.0, outside);
 	}
 """
 

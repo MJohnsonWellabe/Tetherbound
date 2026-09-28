@@ -3,14 +3,14 @@
   "enabled": false,
   "preserve_islands": ["veilfall"],
   "ground_cover": {
-    "tuft_count": 18000,
+    "tuft_count": 26000,
     "blades_per_tuft": 5,
     "blade_width": 0.85,
     "height_near": 0.68,
     "height_far": 0.88,
     "height_jitter": 0.28,
     "bend": 0.12,
-    "density_gain": 0.46,
+    "density_gain": 0.58,
     "clump_scale": 0.018,
     "clump_contrast": 1.0,
     "tint_base": "#777a4d",
@@ -23,7 +23,7 @@
     ]
   },
   "layers": {
-    "trees": {"clusters": 8, "per_cluster": [3, 6], "cluster_radius_m": [7.0, 17.0], "_dune_sheltered": true},
+    "trees": {"clusters": 12, "per_cluster": [4, 8], "cluster_radius_m": [7.0, 17.0], "_dune_sheltered": true},
     "shrubs": {"models": ["res://assets/environment/stylized_nature/Bush_Common.gltf"], "clusters": 9, "per_cluster": [3, 6], "cluster_radius_m": [5.0, 11.0], "scale": [0.45, 0.85], "_dune_sheltered": true},
     "groundcover": {"models": ["res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"], "clusters": 28, "per_cluster": [5, 10], "cluster_radius_m": [3.0, 8.0], "scale": [0.42, 0.68]}
   },
