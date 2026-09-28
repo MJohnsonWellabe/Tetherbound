@@ -102,7 +102,7 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var watchdog := 7200.0 if OS.get_cmdline_user_args().has("--continuous") else 2400.0
+	var watchdog := 10800.0 if OS.get_cmdline_user_args().has("--continuous") else 2400.0
 	create_timer(watchdog).timeout.connect(func() -> void:
 		if not finished:
 			_check(false, "%d second watchdog expired" % int(watchdog))

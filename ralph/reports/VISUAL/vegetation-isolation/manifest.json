@@ -1,0 +1,83 @@
+{
+  "base_commit": "f8b07a0814308b1bf08f8b9f88a19b6f46014209",
+  "frames": 12,
+  "native_raster": [
+    1920,
+    1080
+  ],
+  "exit_code": 0,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "09988058ff8095ae2e36c23a58f46e17ceeb793509db659149667b3889d06337"
+    },
+    {
+      "path": "001_cloudreach_place_cliffhold_court_all_day.png",
+      "sha256": "83d223e72dc1e5b67e2de3c6d5f1c3598f06cb28d4125a7e72b6c8e1f47993b2"
+    },
+    {
+      "path": "002_cloudreach_place_cliffhold_court_no_procedural_day.png",
+      "sha256": "57cc7a38e3675faaf2422e9a111cf5decda45e6029e53102b37f9290f749dbb8"
+    },
+    {
+      "path": "003_cloudreach_place_cliffhold_court_no_finish_day.png",
+      "sha256": "d697ccea3bd6402dc6f7f68abd02c99dceca9b8e44ab580a408545cd0b92a885"
+    },
+    {
+      "path": "004_cloudreach_place_cliffhold_court_no_alpine_day.png",
+      "sha256": "387632dd4a6ed96c997b0bab180bf54f0b19aa8b9824085ba53a160b5f319e89"
+    },
+    {
+      "path": "005_cloudreach_place_cliffhold_court_no_cover_day.png",
+      "sha256": "6c31162b1c1176332e977211530c42ad4ef01e2c2fd74a477d9adec3b5b8ecac"
+    },
+    {
+      "path": "006_cloudreach_place_cliffhold_court_no_cloudbanks_day.png",
+      "sha256": "78079402cf7b089456d70f8f80ee9a2d5ca68961e12c95ef95b352bc32739cd2"
+    },
+    {
+      "path": "007_cloudreach_place_galefoot_hearth_all_day.png",
+      "sha256": "7e1c99ac7f1403be27d5dbdd9f945954fa01f675f40363725f571709184218b9"
+    },
+    {
+      "path": "008_cloudreach_place_galefoot_hearth_no_procedural_day.png",
+      "sha256": "1f2791204c23aec3d7ddaee30af2e9b9c1a79e719a90aa4aeafe0de6dcc2379c"
+    },
+    {
+      "path": "009_cloudreach_place_galefoot_hearth_no_finish_day.png",
+      "sha256": "ff02f38cc39bd78372e65a3f27cd268c8f06541791befc7e6c12980d4b424b0f"
+    },
+    {
+      "path": "010_cloudreach_place_galefoot_hearth_no_alpine_day.png",
+      "sha256": "04d2953d341428fe8df51fcee44cdb6660114db269578b11eac2989f82630a88"
+    },
+    {
+      "path": "011_cloudreach_place_galefoot_hearth_no_cover_day.png",
+      "sha256": "2fe396cfc347e89fd8801b3db9895185b4d3bea017a95f3551c4c142b91c30e6"
+    },
+    {
+      "path": "012_cloudreach_place_galefoot_hearth_no_cloudbanks_day.png",
+      "sha256": "b44fdf2b3adb126b9fbb43476c2359717a0c963399d2355bfeece8d958985354"
+    },
+    {
+      "path": "_sheet_cloudreach_places.jpg",
+      "sha256": "1a1fbfa2dbd58e1adc23b8db2b1cd243b6103a3c2f89035a381846ba7dabc527"
+    },
+    {
+      "path": "manifest.jsonl",
+      "sha256": "1b13cff594cef4676940b989dc80dab03527473e9d7b2c85eda6caa40a23b9d4"
+    },
+    {
+      "path": "run.err",
+      "sha256": "76b704e6eaff7791c1715d1294276924d6a727324d85843f2fa73c42831ef226"
+    },
+    {
+      "path": "run.log",
+      "sha256": "174ba7ed8e500ab706d1b748fa7be7a4f64de3c22f6b117a6dd1542ed02cd032"
+    },
+    {
+      "path": "source-audit.md",
+      "sha256": "d126a961a257b29cd83c6c297d50ddc5c618e480972b8cc47a8e2bd5cd67be05"
+    }
+  ]
+}

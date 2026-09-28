@@ -6,6 +6,11 @@ const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
 const MAP_STATE := preload("res://autoload/map_state.gd")
 
+class FightFixture extends Node:
+	var fighting := false
+	func is_fighting() -> bool:
+		return fighting
+
 class RealmMapFixture extends Node:
 	var current_realm := "water"
 	var map: RefCounted
@@ -207,3 +212,26 @@ func test_real_meadows_world_mounts_one_beacon_and_shells_do_not() -> void:
 	assert_true(source.contains("objective_beacon.name = \"ObjectiveBeacon\""))
 	assert_true(source.contains("if not simulation_only:\n\t\tvar objective_beacon := OBJECTIVE_BEACON.new()"),
 		"simulation shells must not draw or mutate a local player's beacon")
+
+
+## F04#2: the beam (whose target is often the trainer being fought) stands down
+## while a fight is live and comes back the frame it ends; the target is kept.
+func test_the_beam_hides_while_a_fight_is_live_and_returns_after() -> void:
+	var beacon: Node3D = OBJECTIVE_BEACON.new()
+	beacon._config = beacon._load_config()
+	beacon._build_visual()
+	var manager := FightFixture.new()
+	beacon.combat_manager = manager
+	beacon._has_target = true
+	beacon._apply_visibility()
+	assert_true(beacon.beam_visible(), "a target with no fight shows the beam")
+	manager.fighting = true
+	beacon._apply_visibility()
+	assert_false(beacon.beam_visible(), "a live fight hides the beam")
+	assert_true(beacon._has_target, "the target itself is untouched")
+	manager.fighting = false
+	beacon._apply_visibility()
+	assert_true(beacon.beam_visible(), "the beam returns the frame the fight ends")
+	assert_false(OBJECTIVE_BEACON.fight_holds_beam(null), "no combat manager never hides it")
+	beacon.free()
+	manager.free()

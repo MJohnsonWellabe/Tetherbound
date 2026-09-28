@@ -145,6 +145,10 @@ func _ready() -> void:
 	local_chains.name = "WaterLocalChains"
 	add_child(local_chains)
 	local_chains.build(self)
+	var lure_dressing := preload("res://scripts/world/water_local_lure_dressing.gd").new()
+	lure_dressing.name = "WaterLocalLureDressing"
+	add_child(lure_dressing)
+	lure_dressing.build(self)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"
@@ -330,6 +334,9 @@ func _build_materials() -> void:
 	material.set("show_checkered", false)
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
+	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	preload("res://scripts/world/coastal_rock_material.gd").install(terrain,
+		_visual.terrain.get("cliff_material", {}), veilfall.get("rock_material", {}))
 
 
 func _stand_up_ground_cover() -> void:

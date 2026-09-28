@@ -17,6 +17,7 @@ const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
+const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const ROUTE_DETAIL_SCENES := {
 	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
@@ -56,13 +57,15 @@ const CASTLE_GATE := preload("res://assets/buildings/quaternius_castle/WallEntra
 ## Iron grille panel (1.95 x 2.87 m) tiled into a closed ground gate's portcullis.
 const GATE_PORTCULLIS_PANEL := preload("res://assets/buildings/quaternius_medieval/Prop_MetalFence_Simple.gltf")
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
+const WINDWATCH := preload("res://scripts/world/cloudreach_windwatch.gd")
+const CLIFFHOLD_TERRACE := preload("res://scripts/world/cloudreach_cliffhold_terrace.gd")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
 const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
-const CLOUD_BANK_SHADER := preload("res://shaders/cloudreach_cloud_bank.gdshader")
+const CLOUD_DECK_SHADER := preload("res://shaders/cloudreach_cloud_deck.gdshader")
 const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
 const WORLD_RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
@@ -74,6 +77,7 @@ const SUMMIT_CANDLE_STAND := preload("res://assets/props/quaternius_fantasy/Cand
 const GROUND_ROOST_LOG := preload("res://assets/props/kenney_survival/tree-log-small.glb")
 const BRIDGE_KIT:=preload("res://scripts/world/cloudreach_bridge_kit.gd")
 const AVIARY := preload("res://scripts/world/cloudreach_aviary.gd")
+const AVIARY_TOWERS := preload("res://scripts/world/cloudreach_aviary_towers.gd")
 const AVIARY_CONFIG_PATH := "res://data/config/cloudreach_aviary.json"
 const WINDSCAR_BEACON_SITE := preload("res://scripts/world/cloudreach_windscar_beacon_site.gd")
 const REALM_GATE_CRAG_PRESENTATION := preload("res://scripts/world/cloudreach_realm_gate_crag.gd")
@@ -283,14 +287,44 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	root.position=base
 	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
 	parent.add_child(root)
-	var rock:=NATURE_ROCKS[posmod(seed_value,3)].instantiate() as Node3D
-	var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
-	rock.scale=size/bounds.size
-	rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
-	root.add_child(rock)
+	var section_config: Dictionary = _visual_config.get("geology", {}).get("rock_sections", {})
+	var imported_buttress := bool(section_config.get("limestone_buttress_enabled", false)) and (
+		material_key in ["haze_near", "haze_far"] or label.begins_with("SettlementRootedButtress"))
+	if imported_buttress:
+		var buttress := LIMESTONE_BUTTRESS.instantiate() as Node3D
+		var bounds: AABB = BUILDING_PREFABS.new().combined_aabb(buttress)
+		buttress.scale = size / bounds.size
+		buttress.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * buttress.scale
+		root.add_child(buttress)
+		for part: MeshInstance3D in buttress.find_children("*", "MeshInstance3D", true, false):
+			var source_material := part.get_active_material(0) as StandardMaterial3D
+			var stone := ShaderMaterial.new()
+			stone.shader = preload("res://shaders/cloudreach_buttress.gdshader")
+			stone.set_shader_parameter("stone_tint", Color(str(section_config.get("limestone_buttress_tint", "#ffffff"))))
+			if source_material != null:
+				stone.set_shader_parameter("stone_colour", source_material.albedo_texture)
+			var relief: Dictionary = _visual_config.get("distant_relief", {})
+			stone.set_shader_parameter("distance_colour", Color(str(relief.get(material_key + "_colour", "#8ba1b2"))))
+			stone.set_shader_parameter("aerial_blend", float(section_config.get(material_key + "_blend", 0.0)))
+			part.material_override = stone
+	elif material_key in ["haze_near", "haze_far"]:
+		# Purpose-built distant limestone: its normalized proportions preserve
+		# the authored range envelope without stretching a ground boulder.
+		var spire := MeshInstance3D.new()
+		spire.name = "LimestoneSpire"
+		spire.mesh = load("res://assets/environment/cloudreach/limestone_spire_%d.obj" % (posmod(seed_value, 3) + 1)) as Mesh
+		spire.scale = size
+		root.add_child(spire)
+	elif not preload("res://scripts/world/cloudreach_rock_sections.gd").build(root, size, seed_value, NATURE_ROCKS, section_config):
+		var rock:=NATURE_ROCKS[posmod(seed_value,3)].instantiate() as Node3D
+		var bounds: AABB=BUILDING_PREFABS.new().combined_aabb(rock)
+		rock.scale=size/bounds.size
+		rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
+		root.add_child(rock)
 	var mass_material: Material = _materials.get(material_key, _materials["cliff"])
-	for mesh: MeshInstance3D in rock.find_children("*","MeshInstance3D",true,false):
-		mesh.material_override=mass_material
+	if not imported_buttress:
+		for mesh: MeshInstance3D in root.find_children("*","MeshInstance3D",true,false):
+			mesh.material_override=mass_material
 	_set_geometry_visibility(root,visible_distance)
 	return root
 
@@ -732,39 +766,28 @@ func _build_materials() -> void:
 	_materials["key_glow"] = _emissive_material(Color("#4fd0b4"), 0.42)
 	_materials["wind_veil"] = _wind_veil_material()
 	_materials["cloud"] = _cloud_material()
-	_materials["cloud_bank"] = _emissive_material(Color("#d4e2e5"), 0.12)
-	# CLOUDREACH-ATMOS-0906 (C4/C5). The cloud sheets are UNSHADED: they are
-	# read at 1-4 km and any directional shading on a kilometre-wide plane
-	# reads as a tilted floor, not as cloud. The billows and the island mist
-	# are lit on purpose -- a bright top and a shaded base is the whole of what
-	# makes a puff read as cumulus rather than as a white blob -- with a small
-	# emission so the shaded side never falls into the ACES toe the way the
-	# Hall's torches did (archive/docs/handoffs/HANDOFF_2026-09-06.md trap 2).
+	# Lit cloud deck and transparent billow cards follow the realm clock.
 	var cloud_cfg: Dictionary = _visual_config.get("cloud_sea", {})
-	_materials["cloud_deck"] = _unshaded_material(Color(str(cloud_cfg.get("deck_colour", "#c4d5e0"))))
-	_materials["cloud_deck_far"] = _unshaded_material(Color(str(cloud_cfg.get("deck_far_colour", "#94abbd"))))
+	var cloud_deck := ShaderMaterial.new()
+	cloud_deck.shader = CLOUD_DECK_SHADER
+	cloud_deck.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
+	cloud_deck.set_shader_parameter("cloud_base", Color(str(cloud_cfg.get("deck_far_colour", "#6e88a0"))))
+	_materials["cloud_deck"] = cloud_deck
+	var cloud_deck_far := cloud_deck.duplicate() as ShaderMaterial
+	cloud_deck_far.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("deck_colour", "#93aec4"))))
+	_materials["cloud_deck_far"] = cloud_deck_far
 	var cloud_bank := ShaderMaterial.new()
-	cloud_bank.shader = CLOUD_BANK_SHADER
+	cloud_bank.shader = preload("res://shaders/cloudreach_cloud_volume.gdshader")
 	cloud_bank.set_shader_parameter("cloud_lit", Color(str(cloud_cfg.get("billow_colour", "#e4edf2"))))
 	cloud_bank.set_shader_parameter("cloud_base", Color(str(cloud_cfg.get("billow_base_colour", "#8095a8"))))
+	cloud_bank.set_shader_parameter("extinction", float(cloud_cfg.get("bank_extinction", 10.0)))
 	_materials["cloud_billow"] = cloud_bank
 	var island_cfg: Dictionary = _visual_config.get("island_roots", {})
 	_materials["island_mist"] = _emissive_material(Color(str(island_cfg.get("mist_colour", "#e6eef4"))),
 		float(island_cfg.get("mist_emission", 0.16)))
 	_materials["island_mist"].roughness = 1.0
-	# Aerial perspective, as a material rather than as more fog: the fog
-	# density this realm runs is deliberately scaled DOWN (see
-	# cloudreach_atmosphere.json's distant_fog, which exists to stop the
-	# floating islands washing to flat grey), so distance has to be carried by
-	# what the far masses are painted with instead. Two tiers, both hazed
-	# toward the sky's own blue-grey and lifted by emission so a far ridge
-	# never reads as a black silhouette the way stand 04's did.
+	# Far stone uses the geology material below, with two cooler palettes.
 	var relief_cfg: Dictionary = _visual_config.get("distant_relief", {})
-	var haze_energy := float(relief_cfg.get("haze_emission", 0.22))
-	_materials["haze_near"] = _emissive_material(Color(str(relief_cfg.get("haze_near_colour", "#8098a6"))), haze_energy)
-	_materials["haze_near"].roughness = 1.0
-	_materials["haze_far"] = _emissive_material(Color(str(relief_cfg.get("haze_far_colour", "#9fb4c1"))), haze_energy * 1.25)
-	_materials["haze_far"].roughness = 1.0
 	for material_key: String in ["masonry", "masonry_trim"]:
 		var masonry := ENVIRONMENT_MATERIALS.masonry(material_key=="masonry_trim")
 		_materials[material_key] = masonry
@@ -796,6 +819,16 @@ func _build_materials() -> void:
 			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
 	for key: String in ["cliff", "cliff_high", "cliff_mid", "cliff_deep"]:
 		_materials[key] = geology
+	# The distant cliff family receives the same rock response as near cliffs.
+	# Its previous emissive flat colour became white sheets by day and glowing
+	# blue blocks at night. Scene fog supplies aerial perspective naturally.
+	for key: String in ["haze_near", "haze_far"]:
+		var distant_stone := geology.duplicate() as ShaderMaterial
+		var pale := Color(str(relief_cfg.get(key + "_colour", "#8098a6")))
+		distant_stone.set_shader_parameter("stone_light", Vector3(pale.r, pale.g, pale.b))
+		distant_stone.set_shader_parameter("stone_dark", Vector3(pale.r, pale.g, pale.b) * 0.57)
+		distant_stone.set_shader_parameter("normal_scale", 0.0)
+		_materials[key] = distant_stone
 	var trail := ShaderMaterial.new()
 	trail.shader = TRAIL_SHADER
 	trail.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
@@ -807,8 +840,8 @@ func _build_materials() -> void:
 	var trail_dry:=trail.duplicate() as ShaderMaterial
 	ENVIRONMENT_MATERIALS.turf_parameters(trail_dry,true)
 	_materials["trail_dry"]=trail_dry
-	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false)
-	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true)
+	_materials["upland"]=ENVIRONMENT_MATERIALS.ground(false, geology, _visual_config.get("ground_rock_transition", {}))
+	_materials["upland_dry"]=ENVIRONMENT_MATERIALS.ground(true, geology, _visual_config.get("ground_rock_transition", {}))
 
 
 func _build_cloud_sea() -> void:
@@ -878,7 +911,8 @@ func _build_cloud_decks() -> void:
 			heights[row * columns + column] = cloud_sheet_height_at(
 				min_x + float(column) * spacing, z, spacing * 0.5)
 
-	_add_cloud_sheet(root, "CloudSeaUpper", min_x, min_z, spacing, columns, rows, heights, 0.0,
+	_add_cloud_sheet(root, "CloudSeaUpper", min_x, min_z, spacing, columns, rows, heights,
+		-float(cfg.get("upper_deck_offset_m", 100.0)),
 		_materials["cloud_deck"], visible)
 	var lower_offset := float(cfg.get("lower_deck_offset_m", 320.0))
 	if lower_offset > 0.0:
@@ -997,70 +1031,39 @@ func _add_cloud_sheet(parent: Node3D, label: String, min_x: float, min_z: float,
 	parent.add_child(mesh)
 
 
-## Deterministic clustered banks riding the upper sheet, in ONE MultiMesh.
-## Each bank has a broad deck-intersecting body and several offset lobes across
-## three height tiers. The former 760 independent flattened spheres projected
-## as detached white ovals; random size could not turn unrelated stamps into a
-## cloud body.
+## Each instance encloses one soft density bank. The proxy never appears as
+## geometry: the shader integrates bounded density, with no billboard rotation.
 func _add_cloud_billows(parent: Node3D, cfg: Dictionary, min_x: float, min_z: float,
 		spacing: float, columns: int, rows: int, heights: Array[float],
 		visible_distance: float) -> void:
-	var bank_count := maxi(0, int(cfg.get("billow_bank_count", cfg.get("billow_count", 96))))
+	var bank_count := maxi(0, int(cfg.get("billow_bank_count", 110)))
 	if bank_count == 0:
 		return
-	var lobe_range: Array = cfg.get("billow_lobes_per_bank", [4, 7])
-	var min_lobes := maxi(3, int(lobe_range[0]) if lobe_range.size() > 0 else 4)
-	var max_lobes := maxi(min_lobes, int(lobe_range[1]) if lobe_range.size() > 1 else 7)
-	var radii: Array = cfg.get("billow_radius_m", [46.0, 132.0])
-	var min_r := float(radii[0]) if radii.size() > 0 else 46.0
-	var max_r := float(radii[1]) if radii.size() > 1 else 132.0
-	var flatten := float(cfg.get("billow_flatten", 0.42))
-	var sphere := SphereMesh.new()
-	sphere.radius = 1.0
-	sphere.height = 2.0
-	# 12x6 flattened to a single squash factor gave every billow the same
-	# scalloped crescent silhouette, and the judge counted "the same crescent
-	# silhouette repeats about six times in a row". More segments, and a
-	# per-instance squash below, is what breaks that up.
-	sphere.radial_segments = 14
-	sphere.rings = 7
-	sphere.material = _materials["cloud_billow"]
+	var radii: Array = cfg.get("billow_radius_m", [150.0, 420.0])
+	var proxy := BoxMesh.new()
+	proxy.size = Vector3(2.0, 2.0, 2.0)
+	proxy.material = _materials["cloud_billow"]
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
-	multi.mesh = sphere
+	multi.mesh = proxy
+	multi.instance_count = bank_count
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 20260906))
-	var transforms: Array[Transform3D] = []
-	for bank_index in bank_count:
+	for i in bank_count:
 		var column := rng.randi_range(0, columns - 1)
 		var row := rng.randi_range(0, rows - 1)
-		var centre := Vector3(
-			min_x + float(column) * spacing + rng.randf_range(-spacing, spacing) * 0.5,
-			heights[row * columns + column],
-			min_z + float(row) * spacing + rng.randf_range(-spacing, spacing) * 0.5)
-		var bank_r := rng.randf_range(min_r, max_r)
-		var yaw := rng.randf() * TAU
-		# The low body crosses the sheet, eliminating the detached-oval gap.
-		var body_basis := Basis.IDENTITY.rotated(Vector3.UP, yaw)
-		body_basis = body_basis.scaled(Vector3(bank_r * 1.35, bank_r * flatten * 0.48, bank_r))
-		transforms.append(Transform3D(body_basis,
-			centre + Vector3.UP * bank_r * flatten * 0.12))
-		var lobes := rng.randi_range(min_lobes, max_lobes)
-		for lobe_index in lobes:
-			var tier := lobe_index % 3
-			var angle := yaw + float(lobe_index) * TAU / float(lobes) + rng.randf_range(-0.28, 0.28)
-			var offset_r := bank_r * rng.randf_range(0.28, 0.78)
-			var lobe_r := bank_r * rng.randf_range(0.38, 0.72)
-			var squash := flatten * rng.randf_range(0.72, 1.18)
-			var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
-			basis = basis.scaled(Vector3(lobe_r, lobe_r * squash,
-				lobe_r * rng.randf_range(0.72, 1.08)))
-			var at := centre + Vector3(cos(angle) * offset_r,
-				lobe_r * squash * (0.32 + float(tier) * 0.34), sin(angle) * offset_r)
-			transforms.append(Transform3D(basis, at))
-	multi.instance_count = transforms.size()
-	for i in transforms.size():
-		multi.set_instance_transform(i, transforms[i])
+		var x := min_x + (float(column) + rng.randf_range(-0.5, 0.5)) * spacing
+		var z := min_z + (float(row) + rng.randf_range(-0.5, 0.5)) * spacing
+		var radius := rng.randf_range(float(radii[0]), float(radii[1]))
+		var half_height := minf(radius * float(cfg.get("bank_height_ratio", 0.34)),
+			float(cfg.get("bank_half_height_max_m", 90.0)))
+		# Clamp the entire upper proxy below the local safety height. Include
+		# neighbouring terrain at the bank radius, not just its grid cell.
+		var safe_top := minf(heights[row * columns + column], cloud_sheet_height_at(x, z, radius))
+		var at := Vector3(x, safe_top - half_height, z)
+		var basis := Basis.IDENTITY.rotated(Vector3.UP, rng.randf() * TAU)
+		basis = basis.scaled(Vector3(radius, half_height, radius * rng.randf_range(0.7, 1.0)))
+		multi.set_instance_transform(i, Transform3D(basis, at))
 	var node := MultiMeshInstance3D.new()
 	node.name = "CloudBillows"
 	node.multimesh = multi
@@ -2255,7 +2258,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			# is clamped per vertex onto any road ribbon, bridge deck or
 			# pad/landmark crown within reach (`_walkable_height`), rather than
 			# an entire segment near a detected "hub" going collision-free.
-			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+			var surface_rows := _route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
 				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
 				route_id, overpass_lines)
@@ -2274,6 +2277,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 					"path_half_width": float(landmass.get("path_visible_width_m", 4.2)) * 0.5,
 					"seed": serial * 3701 + chunk * 101 + absi(route_name.hash()),
 					"surface_offset_y": 0.025,
+					"surface_rows": surface_rows,
 					"dry": route_is_dry,
 				})
 			serial += 1
@@ -2484,10 +2488,10 @@ func _resource_position(authored: Vector3) -> Vector3:
 
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		half_width: float, seed_value: int, top_material: Material, config: Dictionary,
-		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> void:
+		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> Array:
 	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	if flat.length_squared() < 0.01:
-		return
+		return []
 	var forward := flat.normalized()
 	var right := Vector3.UP.cross(forward).normalized()
 	var spacing := float(config.get("route_station_spacing_m", 48.0))
@@ -2761,6 +2765,7 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	shape_node.shape = collision_mesh.create_trimesh_shape()
 	body.add_child(shape_node)
 	ridge.add_child(body)
+	return rows
 
 
 ## The ridge's crest and shoulders as one quad grid: `rows` is a list of
@@ -3760,16 +3765,20 @@ func _build_return_gate() -> void:
 
 
 func _build_cliff_settlement(root: Node3D) -> void:
+	var first_yard_patch := _cover_patches.size()
 	_cover_exclusions.append({"centre": root.global_position + Vector3(0, 0, -10),
 		"half": Vector2(7, 7), "rotation": 0.0})
 	# A tall windwatch anchors the cluster at route-view distance; the houses
 	# then read as an inhabited terrace instead of five same-sized boxes.
 	var upper_settlement := root.global_position.y > 700.0
 	var watch := Vector3(-20, 0, 18) if upper_settlement else Vector3(-22, 0, 15)
-	var watch_height := 19.0 if upper_settlement else 16.0
+	var watch_cfg: Dictionary = _visual_config.get("settlement", {}).get("windwatch", {})
+	var watch_height := float(watch_cfg.get("upper_stone_height_m", 12.0) if upper_settlement else watch_cfg.get("lower_stone_height_m", 10.0))
 	_castle_piece(root, "WindwatchTower", CASTLE_TOWER, watch, Vector3(10.0, watch_height, 10.0), _materials["stone_light"])
 	_box(root, "WindwatchCrown", watch + Vector3.UP * (watch_height - 0.2), Vector3(11.0, 1.0, 11.0), _materials["wood"], false)
 	_box(root,"WindwatchSplayedFoot",watch+Vector3.UP*0.65,Vector3(10.5,1.3,10.5),_materials["masonry"],false)
+	var lookout_roof := _textured_material(watch_cfg.get("roof", {}), Color("#5a6572"))
+	WINDWATCH.build(root, watch, watch_height, watch_cfg, _materials["weathered_timber"], lookout_roof)
 	for side: float in [-1.0, 1.0]:
 		_box(root, "WindBanner", watch + Vector3(side * 4.6, watch_height - 2.8, 0),
 			Vector3(0.18, 4.2, 2.4), _materials["leaf_gold"], false)
@@ -3777,6 +3786,10 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		_building_prefabs = BUILDING_PREFABS.new()
 		_building_prefabs.call("load_recipes")
 	var settlement: Dictionary = _visual_config.get("settlement", {})
+	var terrace_cfg: Dictionary = settlement.get("occupied_terrace", {})
+	var raised_street := upper_settlement and bool(terrace_cfg.get("enabled", false))
+	if raised_street:
+		CLIFFHOLD_TERRACE.build(self, root, terrace_cfg, _materials)
 	for house: Dictionary in settlement.get("houses", []):
 		var prefab := str(house["prefab"])
 		var model := _building_prefabs.call("instantiate", prefab) as Node3D
@@ -3785,6 +3798,11 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		model.name = "Terrace_%s_%d" % [prefab, root.get_child_count()]
 		model.position = _vec3(house.get("lower_position",house["position"]) if not upper_settlement else house["position"])
 		model.rotation.y = deg_to_rad(float(house.get("lower_yaw_deg",house.get("yaw_deg",0.0)) if not upper_settlement else house.get("yaw_deg",0.0)))
+		var elevated := raised_street and house.has("upper_terrace_position")
+		if elevated:
+			model.position = _vec3(house["upper_terrace_position"])
+			model.position.y = float(terrace_cfg.get("height_m", 4.2))
+			model.rotation.y = PI
 		root.add_child(model)
 		# The kit roof is a thin tile shell. Its underside must also cover the
 		# rafters when a cliff approach sees the eaves from below.
@@ -3819,6 +3837,9 @@ func _build_cliff_settlement(root: Node3D) -> void:
 		var doorway:=model.to_global(Vector3(1,0.18,4.1 if prefab=="cottage_a" else 3.1))
 		var local_door:=root.to_local(doorway)
 		var hub:=Vector3(0,0.18,-1)
+		if elevated:
+			hub = Vector3(float(terrace_cfg.get("stair_x", -11.0)), model.position.y + 0.18,
+				float(terrace_cfg.get("front_z", 16.0)) + 0.5)
 		_path_ribbon(root,"WornHouseThreshold",local_door,hub,2.4,root.get_child_count()*13)
 		_exclude_local_wear_segment(root,local_door,hub,1.05)
 		var threshold:=MeshInstance3D.new()
@@ -3835,6 +3856,13 @@ func _build_cliff_settlement(root: Node3D) -> void:
 	_build_settlement_precinct(root,watch)
 	_path_ribbon(root,"WornArrivalToSharedYard",Vector3(0,0.18,-24),Vector3(0,0.18,-1),4.1,991)
 	_exclude_local_wear_segment(root,Vector3(0,0.18,-24),Vector3(0,0.18,-1),1.85)
+	# Yard patches are flat. Their old ellipses extended past the flat crown
+	# onto its falling sides, leaving whole clumps suspended above the cliff.
+	# Route shoulders provide their own planted surfaces outside this floor.
+	var yard_bounds := Rect2(Vector2(root.global_position.x, root.global_position.z)
+		- Vector2.ONE * 23.8, Vector2.ONE * 47.6)
+	for index in range(first_yard_patch, _cover_patches.size()):
+		_cover_patches[index]["clip_rect"] = yard_bounds
 
 
 func _plant_floor_pocket(parent: Node3D,at: Vector3,half: Vector2,seed_value: int,dry: bool) -> void:
@@ -3856,7 +3884,10 @@ func _build_worn_activity_patch(parent: Node3D,label: String,at: Vector3,half: V
 	# yard at one edge so it reads as lived movement, not a decorative island.
 	var tool:=SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	tool.set_material(ENVIRONMENT_MATERIALS.worn_ground(parent.to_global(at),maxf(half.x,half.y)))
+	var worn := ENVIRONMENT_MATERIALS.worn_ground(parent.to_global(at),maxf(half.x,half.y))
+	if parent.global_position.y > 700.0:
+		worn.set_shader_parameter("footprint_half", half)
+	tool.set_material(worn)
 	for i in 28:
 		var a:=TAU*float(i)/28.0
 		var b:=TAU*float(i+1)/28.0
@@ -3936,7 +3967,10 @@ func _place_local_prop(parent: Node3D, asset: String, at: Vector3, height: float
 func _build_settlement_yard(parent: Node3D) -> void:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	tool.set_material(ENVIRONMENT_MATERIALS.worn_ground(parent.global_position+Vector3(0,0,-2),16.0))
+	var worn := ENVIRONMENT_MATERIALS.worn_ground(parent.global_position+Vector3(0,0,-2),16.0)
+	if parent.global_position.y > 700.0:
+		worn.set_shader_parameter("footprint_half", Vector2(12.5,15.0))
+	tool.set_material(worn)
 	var centre := Vector3(0, 0.17, -2)
 	for i in 32:
 		var a := float(i) * TAU / 32.0
@@ -3984,7 +4018,7 @@ func _build_settlement_yard(parent: Node3D) -> void:
 			_cover_patches.append({"kind": "ellipse", "centre": parent.global_position + Vector3(20.0 + i * 5.0, 0.14, 4.0 + i * 6.0),
 				"half": Vector2(4.5, 5.0), "seed": 842 + i * 13,
 				"dry":dry,"height_scale":0.68})
-		_place_local_prop(parent, "flowers", Vector3(26, 0.14, 10), 0.75, 32)
+		_place_local_prop(parent, "flowers", Vector3(22.5, 0.14, 10), 0.75, 32)
 		_place_local_prop(parent, "rock_low", Vector3(24, 0.04, 8), 0.8, 71)
 
 
@@ -4380,10 +4414,13 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	aviary_veil.emission_energy_multiplier = 0.3
 	var aviary_spec := _read_json(AVIARY_CONFIG_PATH)
 	var aviary_surface: Dictionary = aviary_spec.get("surface", {})
+	var aviary_gold := _material(Color(str(aviary_surface.get("rib_tint", "#a88a48"))), 0.42)
+	aviary_gold.metallic = 0.55
 	var aviary_materials := {
 		"masonry": ENVIRONMENT_MATERIALS.aviary_masonry(true, aviary_surface),
 		"stone": ENVIRONMENT_MATERIALS.aviary_masonry(false, aviary_surface),
 		"timber": _materials["wood"],
+		"dome_rib": aviary_gold,
 		"iron": _material(Color("#4a4d52"), 0.55),
 		"rope": _materials["rope"],
 		"veil": aviary_veil,
@@ -4401,6 +4438,9 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, aviary_spec)
 	_seat_aviary_on_summit_carve(root, aviary)
+	AVIARY_TOWERS.build(root, aviary_spec.get("towers", {}), aviary_spec.get("drum", {}),
+		aviary_materials["stone"], aviary_materials["masonry"],
+		_material(Color(str(aviary_surface.get("roof_tint", "#354451"))), 0.9), aviary_gold)
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
 	# on the ground at the four corners outside the drum, flanking the wings.
 	for corner in [Vector3(-24.0, 0.0, -20.5), Vector3(24.0, 0.0, -20.5), Vector3(-24.0, 0.0, 20.5), Vector3(24.0, 0.0, 20.5)]:

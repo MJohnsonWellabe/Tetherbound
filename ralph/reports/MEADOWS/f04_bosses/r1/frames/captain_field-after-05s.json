@@ -1,0 +1,66 @@
+{
+  "ally": {
+    "camera_m": 6.0,
+    "in_frustum": true,
+    "pos": [
+      170.2,
+      -1.1,
+      5593.2
+    ]
+  },
+  "camera": [
+    166.6,
+    0.4,
+    5588.6
+  ],
+  "fight": "captain_field",
+  "game_frame": 41927,
+  "hud_text": [
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "M A I N   S T O R Y",
+    "Defeat the Upper Meadows captains. 2/3",
+    "Day 8  ·  15:06",
+    "Captain Halder",
+    "Vess is up the road yet, if you haven't already met her wind.",
+    "Close"
+  ],
+  "meta": {
+    "after_s": 5.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 3.5,
+    "in_frustum": true,
+    "pos": [
+      169.2,
+      -1.7,
+      5589.4
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_field-after-05s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 4.1,
+    "in_frustum": true,
+    "pos": [
+      170.0,
+      -1.4,
+      5590.0
+    ]
+  }
+}

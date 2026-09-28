@@ -38,6 +38,9 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 	var dry_grass_material := _cover_material(
 		Color(str(config.get("dry_grass_base", "#4b4919"))),
 		Color(str(config.get("dry_grass_tip", "#a89b42"))), 0.14, 0.50, false)
+	var surface_family := preload("res://scripts/world/cloudreach_environment_materials.gd")
+	surface_family.ground_cover_parameters(grass_material, false, config)
+	surface_family.ground_cover_parameters(dry_grass_material, true, config)
 	grass_material.set_shader_parameter("grass_curve", 0.30)
 	dry_grass_material.set_shader_parameter("grass_curve", 0.30)
 	grass_material.set_shader_parameter("camera_clearance", true)
@@ -108,8 +111,9 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value + int(patch.get("seed", 0)) * 1009
 	var attempts := 0
+	var unsupported := 0
 	var max_attempts := maxi(requested * 7, 32)
-	while transforms.size() < requested and attempts < max_attempts:
+	while transforms.size() + unsupported < requested and attempts < max_attempts:
 		attempts += 1
 		if attempts % 2048 == 0:
 			await _breathe(build_budget)
@@ -152,10 +156,17 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 				tall_eligible = lateral >= tall_clear
 			var role_scales: Vector3 = GRASS_ROLES.scales_for_role(role, height_jitter,
 				width_jitter, float(patch.get("height_scale", 1.0)), config, tall_eligible)
+			role_scales *= GRASS_ROLES.local_scale(at, config)
 			scale_value = role_scales.y
 			width_scale = role_scales.x
 		var basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
 			Vector3(width_scale, scale_value, width_scale))
+		# Discard unsupported roots only after consuming the same placement and
+		# appearance draws. Count them toward the requested total: retrying them
+		# would pack extra grass against the terrace edge and move valid tufts.
+		if patch.has("clip_rect") and not (patch["clip_rect"] as Rect2).has_point(Vector2(at.x, at.z)):
+			unsupported += 1
+			continue
 		transforms.append(Transform3D(basis, at - origin))
 	if transforms.is_empty():
 		return 0
@@ -195,6 +206,7 @@ func _breathe(build_budget: RefCounted) -> void:
 
 func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:
 	var centre := _patch_origin(patch)
+	var follows_surface := patch.has("surface_rows")
 	var radius := 0.0
 	if str(patch.get("kind", "")) == "segment":
 		radius = (patch["a"] as Vector3).distance_to(patch["b"]) * 0.5 + float(patch["half_width"])
@@ -210,11 +222,19 @@ func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:
 			var b: Vector3 = exclusion["b"]
 			var ab := b - a
 			var t := clampf((centre - a).dot(ab) / maxf(ab.length_squared(), 0.01), 0, 1)
+			if follows_surface:
+				var flat := Vector2(ab.x, ab.z)
+				t = clampf(Vector2(centre.x - a.x, centre.z - a.z).dot(flat)
+					/ maxf(flat.length_squared(), 0.01), 0, 1)
 			at = a.lerp(b, t)
 		else:
 			at = exclusion["centre"]
 			extra = (exclusion["half"] as Vector2).length()
-		if at.distance_to(centre) < radius + extra + 4.0:
+		# Surface clamps can move roots vertically away from the source line.
+		# Cull in XZ, then let _excluded test the corrected root's actual height.
+		var distance := Vector2(at.x - centre.x, at.z - centre.z).length() \
+			if follows_surface else at.distance_to(centre)
+		if distance < radius + extra + 4.0:
 			nearby.append(exclusion)
 	return nearby
 
@@ -268,6 +288,8 @@ func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance
 		var worn_width:=clear+minf(2.0,half_width-clear)*(0.5+0.5*sin(at.x*0.27+at.z*0.31))
 		if edge_mass < 0.05 or absf(lateral)<worn_width:
 			return Vector3(NAN,NAN,NAN)
+		if patch.has("surface_rows"):
+			at.y = _ridge_surface_height(patch["surface_rows"], at)
 		return at + Vector3.UP * float(patch.get("surface_offset_y", -0.64))
 	var centre: Vector3 = patch.get("centre", Vector3.ZERO)
 	var half: Vector2 = patch.get("half", Vector2(20.0, 20.0))
@@ -277,6 +299,49 @@ func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance
 		return Vector3(NAN, NAN, NAN)
 	return centre + Vector3(cos(angle) * half.x * radius, 0.08,
 		sin(angle) * half.y * radius)
+
+
+## Sample the same triangle split that builds the visible/collidable shoulder.
+## Its rows are ordered along one straight XZ axis, so only one interval needs
+## testing even where a settlement clamp adds hundreds of cross-sections.
+static func _ridge_surface_height(rows: Array, at: Vector3) -> float:
+	if rows.size() < 2:
+		return NAN
+	var start: Vector3 = rows[0][3]
+	var end: Vector3 = rows[rows.size() - 1][3]
+	var axis := Vector2(end.x - start.x, end.z - start.z).normalized()
+	var along := Vector2(at.x - start.x, at.z - start.z).dot(axis)
+	var low := 0
+	var high := rows.size() - 1
+	while high - low > 1:
+		var middle := (low + high) / 2
+		var point: Vector3 = rows[middle][3]
+		if Vector2(point.x - start.x, point.z - start.z).dot(axis) <= along:
+			low = middle
+		else:
+			high = middle
+	var row_a: Array = rows[low]
+	var row_b: Array = rows[high]
+	for column in row_a.size() - 1:
+		var height := _triangle_height(at, row_a[column], row_b[column], row_a[column + 1])
+		if is_finite(height):
+			return height
+		height = _triangle_height(at, row_a[column + 1], row_b[column], row_b[column + 1])
+		if is_finite(height):
+			return height
+	return NAN
+
+
+static func _triangle_height(at: Vector3, a: Vector3, b: Vector3, c: Vector3) -> float:
+	var det := (b.z - c.z) * (a.x - c.x) + (c.x - b.x) * (a.z - c.z)
+	if absf(det) < 0.000001:
+		return NAN
+	var u := ((b.z - c.z) * (at.x - c.x) + (c.x - b.x) * (at.z - c.z)) / det
+	var v := ((c.z - a.z) * (at.x - c.x) + (a.x - c.x) * (at.z - c.z)) / det
+	var w := 1.0 - u - v
+	if minf(u, minf(v, w)) < -0.00001:
+		return NAN
+	return u * a.y + v * b.y + w * c.y
 
 
 func _patch_origin(patch: Dictionary) -> Vector3:

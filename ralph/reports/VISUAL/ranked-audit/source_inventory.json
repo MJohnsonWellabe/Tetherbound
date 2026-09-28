@@ -1,0 +1,1180 @@
+{
+  "item_definitions": 89,
+  "item_kinds": {
+    "armor": 9,
+    "consumable": 13,
+    "currency": 1,
+    "elixir": 3,
+    "food": 5,
+    "gear": 4,
+    "key": 6,
+    "material": 5,
+    "resource": 18,
+    "tm": 18,
+    "tool": 7
+  },
+  "unique_icon_paths": 46,
+  "missing_icons": [],
+  "explicit_world_models": 21,
+  "species_definitions": 57,
+  "items": [
+    {
+      "id": "hide_boots",
+      "name": "Hide Boots",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_boots.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "212a2990afaef70bb964b21cde57d2699e317c7fde8c485c84e4ff574a5325be",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "hide_helm",
+      "name": "Hide Helm",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_helmet.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "693dda9d054c9bca70691b838bd4cfeec404162918476c72887fa5edae7fcc34",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "hide_leggings",
+      "name": "Hide Leggings",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_leggings.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "5e9f29b471f3bb41e88912112b8aa14a5169ea81ef7b297d69ae11cb1f5b6d1c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "hide_vest",
+      "name": "Hide Vest",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_vest.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "ffc50694bc9b72420291a5dcbdf9799b8e05b76933a03f53a7f0a7fc59c03ffe",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "insulated_boots",
+      "name": "Insulated Boots",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_boots.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "icon_sha256": "212a2990afaef70bb964b21cde57d2699e317c7fde8c485c84e4ff574a5325be",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "insulated_helm",
+      "name": "Insulated Helm",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_helmet.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "icon_sha256": "693dda9d054c9bca70691b838bd4cfeec404162918476c72887fa5edae7fcc34",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "insulated_leggings",
+      "name": "Insulated Leggings",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_leggings.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "icon_sha256": "5e9f29b471f3bb41e88912112b8aa14a5169ea81ef7b297d69ae11cb1f5b6d1c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "insulated_vest",
+      "name": "Insulated Vest",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_vest.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "icon_sha256": "ffc50694bc9b72420291a5dcbdf9799b8e05b76933a03f53a7f0a7fc59c03ffe",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "travel_pack",
+      "name": "Travel Pack",
+      "kind": "armor",
+      "icon": "res://assets/ui/icons/items/armor_backpack.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "be835fbabfb891ba5e94d22190029e4b0a0b9ab0d93e59863ff3d666b9ad7243",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "attack_tonic",
+      "name": "Attack Tonic",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/attack_tonic.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "c86c9577ae997d399585518a4a361f388c0fa85ff7c7b06b3fc9c8fa7616b1d7",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "glowmoss_tonic",
+      "name": "Glowmoss Tonic",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/potion_large.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/potion_plant/potion_plant.glb",
+      "icon_sha256": "9344613dac50f0e8f2eb0b998a399f98c2d84b07996e5971132e25c5d0d10775",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "good_candy",
+      "name": "Good Candy",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/good_candy.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "icon_sha256": "9742bf304efad934062d7af9da9c592797e3d1ddfe937f245126a7f158f1b5f6",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "great_candy",
+      "name": "Great Candy",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/great_candy.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "icon_sha256": "2e2a19368fb3f6457fccc95e596061819f5e9e033c8460a54443bf64e4bf4df0",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "potion_large",
+      "name": "Ridge Tonic",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/potion_large.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/potion_plant/potion_plant.glb",
+      "icon_sha256": "9344613dac50f0e8f2eb0b998a399f98c2d84b07996e5971132e25c5d0d10775",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "potion_small",
+      "name": "Small Potion",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/potion_small.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/potion_plant/potion_plant.glb",
+      "icon_sha256": "9161b3374f76a0b5c688d67bedb0b004e0903698b0771d9add0efb48eed64dd6",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "rare_candy",
+      "name": "Rare Candy",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/rare_candy.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/candy_pickup/candy_pickup.glb",
+      "icon_sha256": "375051e23732f847bac10e1305d7d388c156795aa78d373cf8d07afaf6dd6482",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "revive",
+      "name": "Revive",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/revive.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/revive_flower/revive_flower.glb",
+      "icon_sha256": "d5cee9c142360c5b481614166d7492dd19e4ab77921e4b79959612c14e8322a8",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "speed_mushroom",
+      "name": "Speed Shroom",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/speed_mushroom.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
+      "icon_sha256": "04dc6687f1686fd64bbc117d88a3b9c80b1e428fc24b3d3176c9992347361fa8",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stamina_mushroom",
+      "name": "Stamina Shroom",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/stamina_mushroom.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
+      "icon_sha256": "7b79b3b4e7c7e9d45f7f03ecb217c2a9f06ec3c321156cd8af7d5901e39e337b",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stoneguard_brew",
+      "name": "Stoneguard Brew",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/stoneguard_brew.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "93c9e8186bba06417ac1939886c5006dad7056de39398d4ba7b3b5deb3ead103",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "swift_tonic",
+      "name": "Swift Tonic",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/swift_tonic.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "0dfbbb548baafe44bf7219215e7601ac596fa8521fce6c66712ca7f7a9848d15",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "wild_mushroom",
+      "name": "Wild Shroom",
+      "kind": "consumable",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
+      "icon_sha256": "b29eca9d49140638f314b75f4058bce5814da0fe412457e91d213da01224e36c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "coin",
+      "name": "Coin",
+      "kind": "currency",
+      "icon": "res://assets/ui/icons/items/coin.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "0328d19d387dc2b062bc8f43116ce136c8ebbaa1222c5a03fe6c768eb2fcc5a8",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "elixir_guard",
+      "name": "Elixir of Guard",
+      "kind": "elixir",
+      "icon": "res://assets/ui/icons/items/elixir_guard.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "b7037f4e74fbd4e4018683e0cdb78ca84a6e7fedfe2976c9937b4c4b4e1f26fd",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "elixir_might",
+      "name": "Elixir of Might",
+      "kind": "elixir",
+      "icon": "res://assets/ui/icons/items/elixir_might.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "7c7f10f4672800d67601fed5abcef6a661dcba3b8c5aa679b33176cb3dcb6916",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "elixir_vigour",
+      "name": "Elixir of Vigour",
+      "kind": "elixir",
+      "icon": "res://assets/ui/icons/items/elixir_vigour.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "45d40f80785f90e14a1a78881a1075e0299ce63a1ab0f1095c7d70a10f649634",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "berries",
+      "name": "Berries",
+      "kind": "food",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "a1a46849e3feafae0c147b300ba988b85d5924e47901ae8b11be8b7173706866",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "cloudberry",
+      "name": "Cloudberry",
+      "kind": "food",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "a1a46849e3feafae0c147b300ba988b85d5924e47901ae8b11be8b7173706866",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "cloudreach_trail_preserve",
+      "name": "Cloudberry Trail Preserve",
+      "kind": "food",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "a1a46849e3feafae0c147b300ba988b85d5924e47901ae8b11be8b7173706866",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "voltcap",
+      "name": "Voltcap",
+      "kind": "food",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "b29eca9d49140638f314b75f4058bce5814da0fe412457e91d213da01224e36c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "voltcap_stew",
+      "name": "Voltcap Stew",
+      "kind": "food",
+      "icon": "res://assets/ui/icons/items/wild_mushroom.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "b29eca9d49140638f314b75f4058bce5814da0fe412457e91d213da01224e36c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "orb_basic",
+      "name": "Orb",
+      "kind": "gear",
+      "icon": "res://assets/ui/icons/items/orb_basic.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "00c6f4e321273c04dde5613bb716860980d8d446c8e3fc4a30ecf7ff4cd592f4",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "orb_greater",
+      "name": "Greater Orb",
+      "kind": "gear",
+      "icon": "res://assets/ui/icons/items/orb_greater.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "44a8d0c0116279907706b12a399c90e622022820e9795a8ded24825260bbefdc",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "orb_prime",
+      "name": "Prime Orb",
+      "kind": "gear",
+      "icon": "res://assets/ui/icons/items/orb_prime.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "af8ccd3b12e6f8a613788bd21c02932075225bbee73ffb66c8906a3a22785b12",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "saddle",
+      "name": "Riding Saddle",
+      "kind": "gear",
+      "icon": "res://assets/ui/icons/items/saddle_frame.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "fb81598aeb1c22b3f499fde7e2361eeaea3740f7d63a7f5bc723f4b4b3c46323",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "castle_gate_key",
+      "name": "Old Key",
+      "kind": "key",
+      "icon": "res://assets/ui/icons/items/castle_gate_key.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "f73facb86f3e93b401c10e87948e478b3f7f6b6411bccf591f9ba7bf9706efce",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "field_sigil",
+      "name": "Field Sigil",
+      "kind": "key",
+      "icon": "res://assets/ui/icons/items/field_sigil.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "b8941a2e4d69931e4ed9d7895ff3758cb3ce9764e9723c2b45f4e60f578d5c10",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "mill_bridge_gear",
+      "name": "Mill Bridge Gear",
+      "kind": "key",
+      "icon": "res://assets/ui/icons/items/mill_bridge_gear.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "7c145e2916db5cee291d9b00079135824e1d20b2dd1dc1a55da99f58ebc84d16",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ridge_sigil",
+      "name": "Ridge Sigil",
+      "kind": "key",
+      "icon": "res://assets/ui/icons/items/ridge_sigil.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "9f7074be67f3d0bcda75aff8895ddcffc5c48fc6d8456d6ab5ac89abb382f883",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "river_sigil",
+      "name": "River Sigil",
+      "kind": "key",
+      "icon": "res://assets/ui/icons/items/river_sigil.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "84e9fc6004f6468346fd67e8a79e2d405cbe96ed6949185f5854c7dcb53dae0d",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "south_bridge_key",
+      "name": "South Bridge Key",
+      "kind": "key",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "07c7cd8175e6afd50f1d26c5a2dc4e3b35357444d9cbc9371624e2fbfed8f273",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "rod_mast",
+      "name": "Rod Mast",
+      "kind": "material",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8b7d75dd5cb135539796df062e404fd110f57f4839fda1f997e4488fa787f367",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "saddle_frame",
+      "name": "Saddle Frame",
+      "kind": "material",
+      "icon": "res://assets/ui/icons/items/saddle_frame.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "fb81598aeb1c22b3f499fde7e2361eeaea3740f7d63a7f5bc723f4b4b3c46323",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "sparkfur",
+      "name": "Sparkfur",
+      "kind": "material",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stormglass_lining",
+      "name": "Stormglass Lining",
+      "kind": "material",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "thunderwood_frame",
+      "name": "Thunderwood Frame",
+      "kind": "material",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8b7d75dd5cb135539796df062e404fd110f57f4839fda1f997e4488fa787f367",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "berry_seeds",
+      "name": "Berry Seeds",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "a1a46849e3feafae0c147b300ba988b85d5924e47901ae8b11be8b7173706866",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "cliffglass_ore",
+      "name": "Cliffglass Ore",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "conductor_vine",
+      "name": "Conductor Vine",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "fiber",
+      "name": "Fiber",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "gale_fiber",
+      "name": "Gale Fiber",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "glowmoss",
+      "name": "Glowmoss",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "heartstone",
+      "name": "Heartstone",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "ironwood",
+      "name": "Ironwood",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/ironwood.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "a87f46e8f8f4cdd061271bf9a350fd9d769992923587ada33b0531a174b84220",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "rootstone",
+      "name": "Rootstone",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "skyplume",
+      "name": "Skyplume",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stormglass",
+      "name": "Stormglass",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "stormglass_crown",
+      "name": "Crown-grade Stormglass",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "sunleaf",
+      "name": "Sunleaf",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/fiber.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "bdb60086a8446ae47095d6bebbba266e5c55eb8e36f682397ff55456a30b9184",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "sunstone",
+      "name": "Sunstone",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8ee8f1d4c978a0b82fdf0ce14a70c9d47dcc627df48c5b242186e31d09d78a62",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "thunderwood",
+      "name": "Thunderwood",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8b7d75dd5cb135539796df062e404fd110f57f4839fda1f997e4488fa787f367",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "windworn_heartwood",
+      "name": "Windworn Heartwood",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8b7d75dd5cb135539796df062e404fd110f57f4839fda1f997e4488fa787f367",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "wood",
+      "name": "Wood",
+      "kind": "resource",
+      "icon": "res://assets/ui/icons/items/wood.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "8b7d75dd5cb135539796df062e404fd110f57f4839fda1f997e4488fa787f367",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_aerial_flash",
+      "name": "TM: Aerial Flash",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_aqua_shot",
+      "name": "TM: Aqua Shot",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "dc99d563f152fcd473f423b358490f01d2f3932be63c9d7eb4f65d8aa43442a3",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_burrow_strike",
+      "name": "TM: Burrow Strike",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_burrow_strike.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "29c6ef70ce4a6c3e295da18d5a67dc536dbec3ccbd248fe59045b8b701ea8a6e",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_cyclone",
+      "name": "TM: Cyclone",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_earth_fist",
+      "name": "TM: Earth Fist",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_earthshatter",
+      "name": "TM: Earthshatter",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_heavenfall",
+      "name": "TM: Heavenfall",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_leviathan_surge",
+      "name": "TM: Leviathan Surge",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_riptide_lance",
+      "name": "TM: Riptide Lance",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_rock_throw",
+      "name": "TM: Rock Throw",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "dc99d563f152fcd473f423b358490f01d2f3932be63c9d7eb4f65d8aa43442a3",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_static_snap",
+      "name": "TM: Static Snap",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "dc99d563f152fcd473f423b358490f01d2f3932be63c9d7eb4f65d8aa43442a3",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_stone_rush",
+      "name": "TM: Stone Rush",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_stone_rush.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "095c6de6fae3d78cce8f3a9ab79b66ed2453f5fa3920252b61fe5779aa1478de",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_stone_spike",
+      "name": "TM: Stone Spike",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_stormfall",
+      "name": "TM: Stormfall",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_thunder_break",
+      "name": "TM: Thunder Break",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_tidal_burst",
+      "name": "TM: Tidal Burst",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_voltaic_whip",
+      "name": "TM: Voltaic Whip",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "21f058c9abaaf7f6955f9d3bb3d74f6d4c1016df98aaf6f9e3eaec5ce2b8cb6c",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "tm_wind_blade",
+      "name": "TM: Wind Blade",
+      "kind": "tm",
+      "icon": "res://assets/ui/icons/items/tm_quick.png",
+      "icon_exists": true,
+      "world_model_explicit": "res://assets/props/tm_orb/tm_orb.glb",
+      "icon_sha256": "dc99d563f152fcd473f423b358490f01d2f3932be63c9d7eb4f65d8aa43442a3",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "axe",
+      "name": "Axe",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/items/axe.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "7c0b07c677502d74407abea906d97809b97a424773495f7bcfe4122838029f21",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "fishing_rod",
+      "name": "Fishing Rod",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/items/fishing_rod.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "c27bbecc2536ad9adc12029c7c5b92b455b76e13d7ebb92c76e89a9779c0ab4a",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "hammer",
+      "name": "Hammer",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/items/hammer.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "c10cfffdbaa89549a7cbd60908576d6ddfbc12f483311a36f428756a81cfde54",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "hoe",
+      "name": "Hoe",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/items/pickaxe.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "e31e0181df0601901c8ff963ef8616539c47a4a274bacda880e148669a16d8f3",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "knife",
+      "name": "Knife",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/items/knife.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "1543dfae5b254c6dff6509d2adc71feaf9fae5972b534a51d94b417306798e6a",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "pickaxe",
+      "name": "Pickaxe",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/items/pickaxe.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "e31e0181df0601901c8ff963ef8616539c47a4a274bacda880e148669a16d8f3",
+      "icon_size": [
+        64,
+        64
+      ]
+    },
+    {
+      "id": "torch",
+      "name": "Torch",
+      "kind": "tool",
+      "icon": "res://assets/ui/icons/buildables/torch.png",
+      "icon_exists": true,
+      "world_model_explicit": null,
+      "icon_sha256": "70b0f2fba8c4462696953a991c2b79a53e70553aa2be2f03dfa453b3b9a85d04",
+      "icon_size": [
+        128,
+        128
+      ]
+    }
+  ],
+  "limits": "Icon contact sheet, not UI playback. Missing explicit world_model does not imply missing world art: production loaders have fallbacks. Stage/scene captures determine visible quality."
+}

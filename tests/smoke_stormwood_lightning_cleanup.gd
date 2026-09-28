@@ -62,6 +62,8 @@ func _run() -> void:
 	var bolts_after_impact := lightning.find_children("StrikeBolt", "", false, false).size()
 	var lights_after_impact := lightning.find_children("StrikeLight", "", false, false).size()
 	var break_flash := surge.flash_level()
+	var flash_cfg: Dictionary = lightning.rules.config.presentation.flash
+	var strike_strength := float(flash_cfg.strike_sky_strength)
 	lightning._receive({"id": 2, "kind": "warning", "at": Vector3.ONE})
 	var expired: Node = lightning._visuals[2]
 	await create_timer(0.6).timeout
@@ -103,8 +105,9 @@ func _run() -> void:
 	var reduced_lights := lightning.find_children("StrikeLight", "", false, false)
 	var reduced_light_energy := (reduced_lights[-1] as OmniLight3D).light_energy if not reduced_lights.is_empty() else -1.0
 	MOTION_PREFS.set_reduced_motion(false)
-	var reduced_ok := reduced_ring and reduced_bolt and reduced_flash <= 0.2 and reduced_flash > 0.0 \
-		and reduced_light_energy >= 0.0 and reduced_light_energy <= 8.0 * 0.2
+	var reduced_ok := reduced_ring and reduced_bolt \
+		and is_equal_approx(reduced_flash, strike_strength * float(flash_cfg.reduced_motion_scale)) \
+		and is_equal_approx(reduced_light_energy, float(flash_cfg.strike_light_energy) * float(flash_cfg.reduced_motion_scale))
 
 	# Roof suppression with a real physics roof (review should-fix): a
 	# StaticBody roof over the trainer suppresses the near rain; removed, the
@@ -177,9 +180,10 @@ func _run() -> void:
 	var subject_ok := not piloting_roofed and trainer_roofed and camera_roofed
 
 	var ok := impact_freed and expiry_freed and clean and strike_freed \
-		and bolts_after_impact == 1 and lights_after_impact == 1 and is_equal_approx(break_flash, 1.0) \
+		and bolts_after_impact == 1 and lights_after_impact == 1 and is_equal_approx(break_flash, strike_strength) \
 		and is_equal_approx(rim, 3.0) and is_equal_approx(seconds, 1.2) \
-		and far_calm_flash == 0.0 and bolt_local and near_calm_flash > 0.8 and is_equal_approx(far_break_flash, 1.0) \
+		and far_calm_flash == 0.0 and bolt_local \
+		and is_equal_approx(near_calm_flash, strike_strength * 0.95) and is_equal_approx(far_break_flash, strike_strength) \
 		and reduced_ok and roof_ok and subject_ok
 	print("LIGHTNING CLEANUP impact_freed=%s expiry_freed=%s registry_empty=%s strike_freed=%s bolt=%d light=%d" % [
 		impact_freed, expiry_freed, clean, strike_freed, bolts_after_impact, lights_after_impact])

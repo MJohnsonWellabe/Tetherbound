@@ -7,6 +7,10 @@ signal finale_presentation_mode_changed(mode: String)
 const COMBAT := preload("res://scripts/combat/cloudreach_combat_manager.gd")
 const ENCOUNTERS := preload("res://scripts/world/cloudreach_scene_encounters.gd")
 const FINALE := preload("res://scripts/world/cloudreach_finale_controller.gd")
+## Solmane (owner ruling 2026-09-27, #356 5858140459): the Meadows Veridian flow,
+## reused -- a second stronghold_climax.gd instance with Cloudreach's config.
+const SOLMANE_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
+const SOLMANE_CONFIG := "res://data/config/cloudreach_solmane_climax.json"
 const ATMOSPHERE := preload("res://scripts/world/cloudreach_scene_atmosphere.gd")
 const ARENA := preload("res://scripts/world/cloudreach_summit_presentation.gd")
 const PLACER := preload("res://scripts/build/build_placer.gd")
@@ -22,6 +26,7 @@ var chapter: Node
 var manager: Node
 var director: Node
 var finale: Node3D
+var solmane: Node3D
 var atmosphere: Node
 var death: Node3D
 var presentation: Node3D
@@ -96,6 +101,11 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted,
 	finale.call("setup", game.get("progression"), Callable(chapter.call("events_adapter"), "emit_event"),
 		Callable(self, "controlled_body"), Callable(self, "creature_piloted"), Callable(self, "recover_to_bivouac"))
 	world.add_child(finale)
+	solmane = SOLMANE_CLIMAX.new()
+	solmane.name = "CloudreachSolmaneClimax"
+	solmane.set("config_path", SOLMANE_CONFIG)
+	world.add_child(solmane)
+	solmane.call("build", world, player)
 	_install_creature_relay_prompts()
 	presentation.call("bind_finale", finale)
 	director = ENCOUNTERS.new()

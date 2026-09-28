@@ -1,0 +1,93 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=12501 control_port=41491 home=/tmp/net-run-local-4212923/home-0 log=/tmp/net-run-local-4212923/peer-0.log
+coordinator: launched peer 1 (client) pid=12502 control_port=44003 home=/tmp/net-run-local-4212923/home-1 log=/tmp/net-run-local-4212923/peer-1.log
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+
+peer[0/host]: starting scene=water control_port=41491 enet_port=29481 xdg_data_home=/tmp/net-run-local-4212923/home-0 user_data_dir=/tmp/net-run-local-4212923/home-0/godot/app_userdata/Tetherbound
+peer[1/client]: starting scene=water control_port=44003 enet_port=29482 xdg_data_home=/tmp/net-run-local-4212923/home-1 user_data_dir=/tmp/net-run-local-4212923/home-1/godot/app_userdata/Tetherbound
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+coordinator: peer 1 hello: {"enet_port":29482.0,"godot_version":"4.7-stable (official)","main_sha":"1fa83a5786a7","peer":1.0,"pid":12502.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-run-local-4212923/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":29481.0,"godot_version":"4.7-stable (official)","main_sha":"1fa83a5786a7","peer":0.0,"pid":12501.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-run-local-4212923/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/29481 (cap 4, channels 2); local peer id 1
+PASS: Host starts production session
+[session] dialling via enet as 'Trainer' (character-6f0ffe71aa00e69c162a1da8cf1f2353)
+[session] dialling 127.0.0.1:29481 as 'Trainer' (character-6f0ffe71aa00e69c162a1da8cf1f2353)
+[session] transport: peer 1 connected
+[session] connected as peer 1917627112; sending hello
+[session] transport: peer 1917627112 connected
+[session] peer 1917627112 joined as 'Trainer' (character-6f0ffe71aa00e69c162a1da8cf1f2353) in water
+[trainers] spawning a body for peer 1 at (0.0, 162.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[trainers] spawning a body for peer 1917627112 at (0.0, 162.0)
+[trainers] built Trainer_1917627112 for peer 1917627112, authority 1917627112 (this peer is 1)
+[trainers] Trainer_1917627112 stands up: authority 1917627112, this peer is 1 (another player)
+[session] snapshot applied (14 keys, day 1)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1917627112)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1917627112 (another player)
+[trainers] built Trainer_1917627112 for peer 1917627112, authority 1917627112 (this peer is 1917627112)
+[trainers] Trainer_1917627112 stands up: authority 1917627112, this peer is 1917627112 (our own proxy)
+PASS: Client joins production session
+[fly] peer 1917627112 claimed a landing at (0.0, 1.931024, 162.0) -- granted (ok)
+PASS: Both peers are connected
+PASS: Both peers are connected
+[fly] peer 1917627112 claimed a landing at (376.2, 5.35695, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (376.2, 5.355843, 3817.9) -- granted (ok)
+PASS: Client hears Halen's lead; host commits it: water_halen heard water_halen_shelter_lead; record { "recorded": true, "refusal": {  } }
+PASS: Lead record is in host world truth
+PASS: Host refuses the client's short delivery: site lastlight_shelter_supply: { "recorded": false, "refusal": { "kind": "water_dock_action", "code": "materials", "reason": "Halen\'s shelter needs 4 driftwood and 4 reed fiber." } }
+PASS: Client delivery committed by the host: site lastlight_shelter_supply: { "recorded": true, "refusal": {  } }
+PASS: Only the deliverer paid: client debited exactly 4 + 4 ({ "candy_i": 0.0, "candy_receipts": 0.0, "driftwood": 0.0, "host": false, "lesson": false, "records": ["water_claim:local:lastlight_shelter:lead", "water_claim:local:lastlight_shelter:supplied"], "reed_fiber": 0.0, "shelter_built": true })
+PASS: Host materials untouched
+PASS: Shared shelter stands in both scenes
+PASS: Lead refused before the swim lesson: request lantern_return_lead: { "recorded": false, "refusal": { "kind": "water_dock_action", "code": "prerequisite", "reason": "Finish the sheltered swim lesson before Pell sends you further out." } }
+PASS: Swim lesson fixture set on the host
+PASS: Host claims its own Lantern Cove Candy I
+[fly] peer 1917627112 claimed a landing at (54.368, 2.042279, 151.502) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (54.368, 2.042279, 151.502) -- granted (ok)
+PASS: The host's receipt does not let the client report: request lantern_return_report: { "recorded": false, "refusal": { "kind": "water_dock_action", "code": "claim", "reason": "Take the cache from the dry nook beneath Lantern Cove\'s rock arch first, then swim back to Pell." } }
+[fly] peer 1917627112 claimed a landing at (-406.668, 15.94884, 210.38) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (-406.668, 15.94884, 210.38) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (-406.668, 15.94884, 210.38) -- granted (ok)
+PASS: Client claims its own Candy I
+[fly] peer 1917627112 claimed a landing at (54.368, 2.042279, 151.502) -- refused (too_far)
+[fly] peer 1917627112 claimed a landing at (54.368, 2.042279, 151.502) -- granted (ok)
+PASS: Client's own receipt completes the return: request lantern_return_report: { "recorded": true, "refusal": {  } }
+PASS: Two per-character Candy I receipts in host truth
+PASS: Each character holds its own Candy I
+PASS: Both peers hold the same chain records: ["water_claim:local:lantern_return:complete", "water_claim:local:lantern_return:lead", "water_claim:local:lastlight_shelter:lead", "water_claim:local:lastlight_shelter:supplied"]
+[session] client leave: wrote character 'character-6f0ffe71aa00e69c162a1da8cf1f2353' (no world file -- D100)
+ALL CHECKS PASSED
+EXIT 0

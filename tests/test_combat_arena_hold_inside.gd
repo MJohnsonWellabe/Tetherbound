@@ -20,7 +20,7 @@ const SLOPE_DEGREES := 57.0
 const SLOPE_FOOT_X := 12.0
 const CAPSULE_RADIUS := 0.4
 const CAPSULE_HEIGHT := 1.8
-const EXPECTED_ASSERTIONS := 7
+const EXPECTED_ASSERTIONS := 10
 
 var _root: Node3D = null
 
@@ -124,13 +124,38 @@ func _case_flat_ground_still_returns_the_fighter_to_the_radius() -> void:
 	assert_almost_eq(body.velocity.z, 2.0, 0.0001, "movement along the wall survives")
 
 
+## F14#0 (Tess, Deep Watch crown): the fighter STANDS on ground at the foot of
+## a steep rise toward the ring. The sweep's first contact is that floor
+## (normal up), which the "contact it already had" branch used to answer by
+## writing the whole remainder -- straight into the rise, 6 m inside the hill,
+## and the fighter fell out of the world. A floor contact keeps sweeping.
+func _case_standing_on_a_floor_below_a_steep_rise_is_not_embedded() -> void:
+	var arena := _arena()
+	var theta := deg_to_rad(74.0)
+	var normal := Vector3(sin(theta), cos(theta), 0.0)
+	var basis := Basis(Vector3.BACK, -theta)
+	var on_surface := Vector3(SLOPE_FOOT_X, 0.0, 0.0)
+	_static_box(Vector3(60.0, 2.0, 20.0), Transform3D(basis, on_surface - normal * 1.0))
+	_static_box(Vector3(20.0, 1.0, 20.0), Transform3D(Basis.IDENTITY, Vector3(SLOPE_FOOT_X + 10.0, -0.5, 0.0)))
+	var body := _fighter(Vector3(SLOPE_FOOT_X + 1.2, CAPSULE_HEIGHT * 0.5 + 0.001, 0.0))
+	await (Engine.get_main_loop() as SceneTree).physics_frame
+	await (Engine.get_main_loop() as SceneTree).physics_frame
+	assert_eq(_overlaps(body).size(), 0, "fixture: the fighter stands clear on the floor")
+	arena.call("hold_inside", body)
+	var hits := _overlaps(body)
+	assert_eq(hits.size(), 0,
+		"a floor contact must not write the fighter into the rise (at %s, %d overlaps)" % [body.global_position, hits.size()])
+	assert_true(normal.dot(body.global_position - on_surface) >= CAPSULE_RADIUS - 0.02,
+		"the fighter stays on the open side of the rise (at %s)" % body.global_position)
+
+
 func test_hold_inside_sweeps_in_an_initialized_tree() -> void:
 	var runner_path := "user://arena-hold-inside-child.gd"
 	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
 	assert_true(runner != null)
 	if runner == null:
 		return
-	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_combat_arena_hold_inside.gd").new()\n\tfor method in ["_case_steep_bank_outside_the_ring_is_not_entered", "_case_flat_ground_still_returns_the_fighter_to_the_radius"]:\n\t\ttest._setup_fixture()\n\t\tawait test.call(method)\n\t\ttest._free_fixture()\n\tprint("ARENA_HOLD_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() else 1)\n')
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_combat_arena_hold_inside.gd").new()\n\tfor method in ["_case_steep_bank_outside_the_ring_is_not_entered", "_case_flat_ground_still_returns_the_fighter_to_the_radius", "_case_standing_on_a_floor_below_a_steep_rise_is_not_embedded"]:\n\t\ttest._setup_fixture()\n\t\tawait test.call(method)\n\t\ttest._free_fixture()\n\tprint("ARENA_HOLD_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() else 1)\n')
 	runner.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(runner_path)
@@ -145,5 +170,5 @@ func test_hold_inside_sweeps_in_an_initialized_tree() -> void:
 	for line: String in combined.split("\n"):
 		if line.begins_with("ARENA_HOLD_RESULT="):
 			result = JSON.parse_string(line.trim_prefix("ARENA_HOLD_RESULT="))
-	assert_eq(int(result.get("assertions", 0)), EXPECTED_ASSERTIONS, "the child must run both cases")
+	assert_eq(int(result.get("assertions", 0)), EXPECTED_ASSERTIONS, "the child must run every case")
 	assert_eq(result.get("failures", ["missing result"]), [])

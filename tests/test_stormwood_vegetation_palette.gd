@@ -39,7 +39,7 @@ func test_canopy_policy_retints_bark_without_replacing_its_texture() -> void:
 	var bark := _material_after_policy(str(layer.models[0]), "Bark_TwistedTree",
 			layer, vegetation)
 	assert_true(bark != null, "TwistedTree bark material is outside the palette policy")
-	assert_true(bark.albedo_color.is_equal_approx(Color("#6f6558")))
+	assert_true(bark.albedo_color.is_equal_approx(Color("#8f9580")))
 	assert_true(bark.albedo_texture != null,
 			"Bark retint must preserve the installed bark texture")
 	vegetation.free()

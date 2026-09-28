@@ -231,10 +231,11 @@ func test_host_reports_a_charge_that_reached_nobody_as_a_miss() -> void:
 	_free_manager(fixture, wild)
 
 
-## Only the named Meadows CHARGERs travel. The data is scanned rather than
-## pinned by path so a new band file cannot quietly opt a body in.
+## Only the named Meadows CHARGERs and DIVERs travel (the DIVER dive travelling is
+## owner-approved, F04). The data is scanned rather than pinned by path so a new
+## band file cannot quietly opt a body in.
 func test_only_named_charger_profiles_opt_in() -> void:
-	var opted := 0
+	var opted: Array[String] = []
 	var dir := DirAccess.open("res://data/config/bands")
 	assert_ne(dir, null)
 	if dir == null:
@@ -253,11 +254,18 @@ func test_only_named_charger_profiles_opt_in() -> void:
 				var combat: Dictionary = (member as Dictionary).get("combat", {}) as Dictionary
 				if not bool(combat.get("lunge_travels", false)):
 					continue
-				opted += 1
-				assert_almost_eq(float(combat.get("preferred_range", 0.0)), 4.5, 0.0001,
-					"'%s' opts a non-CHARGER into lunge_travels" % (trainer as Dictionary).get("id", "?"))
-				assert_almost_eq(float(combat.get("lunge", 0.0)), 7.0, 0.0001)
-	assert_eq(opted, 3, "Vance's and Halder's Tuskroot and the Warden's Meadowhart, no more")
+				var id := str((trainer as Dictionary).get("id", "?"))
+				var is_charger := is_equal_approx(float(combat.get("preferred_range", 0.0)), 4.5) \
+					and is_equal_approx(float(combat.get("lunge", 0.0)), 7.0)
+				var is_diver := is_equal_approx(float(combat.get("lunge", 0.0)), 5.5) \
+					and combat.has("_why_lunge_travels_diver_f04")
+				assert_true(is_charger or is_diver,
+					"'%s' opts a body that is neither the CHARGER nor the DIVER profile into lunge_travels" % id)
+				opted.append("%s:%s" % [id, str((member as Dictionary).get("species", "?"))])
+	opted.sort()
+	assert_eq(opted, ["captain_field:tuskroot", "captain_ridge:galecrest", "relay_captain:tuskroot",
+		"stronghold_elite:galecrest", "warden_aldis:galecrest", "warden_aldis:meadowhart"],
+		"Vance's and Halder's Tuskroot, the Warden's Meadowhart, and the DIVER Galecrests of Vess, the elite and the Warden, no more")
 
 
 func test_physics_smoke_passes_in_an_initialized_tree() -> void:

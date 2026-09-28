@@ -1,0 +1,118 @@
+{
+  "old_sha256": "3a467a6bd7901c9ca25b9fece8da7933682269ff9dd2497a915c0052391de6f9",
+  "r2_sha256": "08b690381f612a995ec9974881e730adb2810167f8093443b7202a2455d42fa6",
+  "mesh_accessors": {
+    "POSITION": {
+      "identical": true,
+      "shape": [
+        44194,
+        3
+      ],
+      "maximum_absolute_delta": 0.0
+    },
+    "NORMAL": {
+      "identical": true,
+      "shape": [
+        44194,
+        3
+      ],
+      "maximum_absolute_delta": 0.0
+    },
+    "TEXCOORD_0": {
+      "identical": true,
+      "shape": [
+        44194,
+        2
+      ],
+      "maximum_absolute_delta": 0.0
+    },
+    "JOINTS_0": {
+      "identical": true,
+      "shape": [
+        44194,
+        4
+      ],
+      "maximum_absolute_delta": 0.0
+    },
+    "WEIGHTS_0": {
+      "identical": true,
+      "shape": [
+        44194,
+        4
+      ],
+      "maximum_absolute_delta": 0.0
+    },
+    "indices": {
+      "identical": true
+    }
+  },
+  "embedded_images_identical": true,
+  "changed_animation_channels": {
+    "idle": [
+      "head/rotation"
+    ],
+    "walk": [],
+    "run": [],
+    "attack": [],
+    "hit": [],
+    "faint": [
+      "root/translation",
+      "root/rotation",
+      "root/scale",
+      "pelvis/translation",
+      "pelvis/rotation",
+      "pelvis/scale",
+      "spine/translation",
+      "spine/rotation",
+      "spine/scale",
+      "neck/translation",
+      "neck/rotation",
+      "neck/scale",
+      "head/translation",
+      "head/rotation",
+      "head/scale",
+      "wing_upper_l/translation",
+      "wing_upper_l/rotation",
+      "wing_upper_l/scale",
+      "wing_fore_l/translation",
+      "wing_fore_l/rotation",
+      "wing_fore_l/scale",
+      "wing_tip_l/translation",
+      "wing_tip_l/rotation",
+      "wing_tip_l/scale",
+      "wing_upper_r/translation",
+      "wing_upper_r/rotation",
+      "wing_upper_r/scale",
+      "wing_fore_r/translation",
+      "wing_fore_r/rotation",
+      "wing_fore_r/scale",
+      "wing_tip_r/translation",
+      "wing_tip_r/rotation",
+      "wing_tip_r/scale",
+      "tail_1/translation",
+      "tail_1/rotation",
+      "tail_1/scale",
+      "tail_2/translation",
+      "tail_2/rotation",
+      "tail_2/scale",
+      "leg_upper_l/translation",
+      "leg_upper_l/rotation",
+      "leg_upper_l/scale",
+      "leg_lower_l/translation",
+      "leg_lower_l/rotation",
+      "leg_lower_l/scale",
+      "foot_l/translation",
+      "foot_l/rotation",
+      "foot_l/scale",
+      "leg_upper_r/translation",
+      "leg_upper_r/rotation",
+      "leg_upper_r/scale",
+      "leg_lower_r/translation",
+      "leg_lower_r/rotation",
+      "leg_lower_r/scale",
+      "foot_r/translation",
+      "foot_r/rotation",
+      "foot_r/scale"
+    ]
+  }
+}

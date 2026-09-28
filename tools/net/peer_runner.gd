@@ -4259,10 +4259,13 @@ func _step_veridian_answer(args: Dictionary) -> Dictionary:
 	var answer := str(args.get("answer", ""))
 	if not answer in ["accept", "refuse"]:
 		return {"verdict": "ERROR", "detail": "veridian_answer needs args.answer = accept|refuse"}
-	var climax: Node = current_scene.find_child("StrongholdClimax", true, false) \
+	# `args.node`: Solmane (owner ruling 2026-09-27) is a second instance of the
+	# same climax in Cloudreach ("CloudreachSolmaneClimax"); default Meadows.
+	var node_name := str(args.get("node", "StrongholdClimax"))
+	var climax: Node = current_scene.find_child(node_name, true, false) \
 		if current_scene != null else null
 	if climax == null:
-		return {"verdict": "ERROR", "detail": "no StrongholdClimax in this scene"}
+		return {"verdict": "ERROR", "detail": "no %s in this scene" % node_name}
 	# The choice is READ OUT a beat after the offer opens (F05 WO6: a
 	# conversation naming both answers; no answer is taken while it is open),
 	# so a line can open during the settle after the first clear. Close
@@ -4291,9 +4294,12 @@ func _step_veridian_answer(args: Dictionary) -> Dictionary:
 ## for.
 func _clear_open_dialogue(presses_allowed: int) -> String:
 	var director := _sequence_director()
-	if director == null:
+	# Realms without the opening's director (Cloudreach's Solmane climax)
+	# still open lines in the world's own DialoguePanel.
+	var dialogue: Variant = director.get("_dialogue") if director != null else \
+		(current_scene.get_node_or_null(^"DialoguePanel") if current_scene != null else null)
+	if director == null and dialogue == null:
 		return "no SequenceDirector here; nothing holding the screen"
-	var dialogue: Variant = director.get("_dialogue")
 	if dialogue == null or not (dialogue is Object) or not (dialogue as Object).has_method("is_open"):
 		return "no dialogue panel to close"
 	var panel := dialogue as Object
@@ -4312,7 +4318,7 @@ func _clear_open_dialogue(presses_allowed: int) -> String:
 		presses += 1
 	if bool(panel.call("is_open")):
 		return "STUCK: the opening dialogue would not close after %d interact presses (beat '%s')" \
-			% [presses, str(director.get("_beat"))]
+			% [presses, str(director.get("_beat")) if director != null else ""]
 	return "closed the opening dialogue in %d presses" % presses
 
 

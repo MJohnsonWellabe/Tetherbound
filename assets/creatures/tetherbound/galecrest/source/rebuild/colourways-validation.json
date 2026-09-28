@@ -1,0 +1,64 @@
+{
+  "source_glb_sha256": "3a467a6bd7901c9ca25b9fece8da7933682269ff9dd2497a915c0052391de6f9",
+  "source_embedded_sha256": "7c82eb0a1bf0e1d4730832f6183fbbaacdc5bfeeda4eb73c4afed3af58c2b827",
+  "dimensions": [
+    2048,
+    2048
+  ],
+  "triangles": 29048,
+  "anatomy_source": "rigged.glb position, UV, JOINTS_0 and WEIGHTS_0; direct repository rasterise() call",
+  "surface_pixels": 1855670,
+  "protected_pixels": 622824,
+  "tip_pixels_above_half": 201181,
+  "alpha_pixels_above_half": 458449,
+  "distal_tip_pixels_left": 134483,
+  "distal_tip_pixels_right": 66698,
+  "source_bounds": [
+    [
+      -1.1080870628356934,
+      0.0005529202171601355,
+      -0.7705394625663757
+    ],
+    [
+      0.9175729155540466,
+      1.5529608726501465,
+      0.5117552280426025
+    ]
+  ],
+  "outputs": {
+    "ordinary": {
+      "sha256": "6284e43f13edb0b8792bf2c7ddc546f6558a3c269e3c26a7c63b637077bca402",
+      "surface_value_percentiles": [
+        0.2196,
+        0.3294,
+        0.6902
+      ],
+      "protected_pixels_changed": 0,
+      "surface_pixels_changed": 0
+    },
+    "shiny": {
+      "sha256": "f9217dc4ef3eaeefdffc6f5870bed3393d6f7971f753347b36412c85d74ea1c0",
+      "surface_value_percentiles": [
+        0.2118,
+        0.349,
+        0.6
+      ],
+      "protected_pixels_changed": 0,
+      "surface_pixels_changed": 1210248
+    },
+    "alpha": {
+      "sha256": "820335ff31efc60d68ede1e834fc08851d9a4b26ae0ab7306f60d77e67a90017",
+      "surface_value_percentiles": [
+        0.2078,
+        0.3176,
+        0.6549
+      ],
+      "protected_pixels_changed": 0,
+      "surface_pixels_changed": 632444
+    }
+  },
+  "ordinary_decoded_pixels_identical": true,
+  "source_glb_unchanged": true,
+  "finish": "None. No quantization, posterization, denoising, resampling or noise added.",
+  "validation_limit": "Texture-space inspection only. Native variant material routing and 3D day/night acceptance remain pending."
+}

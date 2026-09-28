@@ -1,0 +1,654 @@
+{
+  "base_commit": "4e41ad25c25084e5189741d40f2d79db177bfc48",
+  "main_commit": "5dac88621a6ba26d8d2e1699e50411a24f0cb4f4",
+  "renderer": "Godot 4.7 Compatibility, NVIDIA GTX 1060 3GB OpenGL 3.3",
+  "native_raster": [
+    1920,
+    1080
+  ],
+  "frames": 44,
+  "pairs": 22,
+  "control": "Preserved HEAD shader source; shared Shader.code switched within one world instance",
+  "candidate": "Working shader patch; all geometry and material uniforms unchanged between paired frames",
+  "matched_pose_fields": [
+    "time",
+    "feet",
+    "target",
+    "camera",
+    "pitch_deg",
+    "yaw_deg"
+  ],
+  "fixture": "Production camera, teleported and physically seated stands; companion parked behind camera; HUD hidden; no earned-play or full-criterion acceptance claim",
+  "shader_variants": [
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_cliffhold_approach",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_cliffhold_approach",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_cliffhold_approach",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_cliffhold_approach",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_cliffhold_court",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_cliffhold_court",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_cliffhold_court",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_cliffhold_court",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_cliffhold_windwatch",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_cliffhold_windwatch",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_cliffhold_windwatch",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_cliffhold_windwatch",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_galefoot_approach",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_galefoot_approach",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_galefoot_approach",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_galefoot_approach",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_galefoot_hearth",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_galefoot_hearth",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_galefoot_hearth",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_galefoot_hearth",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_trainer_ila_lower_ring_wear",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_trainer_ila_lower_ring_wear",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_trainer_ila_lower_ring_wear",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_trainer_ila_lower_ring_wear",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_tether_lieutenant_senn_wear",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_tether_lieutenant_senn_wear",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_tether_lieutenant_senn_wear",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_tether_lieutenant_senn_wear",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_officer_voss_summit_approach_wear",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_officer_voss_summit_approach_wear",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_officer_voss_summit_approach_wear",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_officer_voss_summit_approach_wear",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_brazier_ash",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_brazier_ash",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_brazier_ash",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_brazier_ash",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_brazier_ash_tell",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_brazier_ash_tell",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_brazier_ash_tell",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_brazier_ash_tell",
+      "time": "night",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_aviary_floor_wear",
+      "time": "day",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_aviary_floor_wear",
+      "time": "day",
+      "variant": "candidate"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "subject": "place_aviary_floor_wear",
+      "time": "night",
+      "variant": "control"
+    },
+    {
+      "fixture": "Shared shader code swapped in one world; geometry, material uniforms and production source unchanged between pairs",
+      "kind": "shader_variant",
+      "shader_sha256": "e968e1dba58a4f34a964f3f4e6f522f1d4d64f23b4cbdd0105b591db49715d28",
+      "subject": "place_aviary_floor_wear",
+      "time": "night",
+      "variant": "candidate"
+    }
+  ],
+  "source_sha256": {
+    "shaders/cloudreach_worn_ground.gdshader": "4fa4dc6602c087da674d202d8641ecb5f4b60a7ff3e8d1d9b7d905f08e9c3886",
+    "scripts/world/cloudreach_environment_materials.gd": "4d3dcd920dbb663d2699e3d2b076ddf810469fa23f9a03fb8cbee94211c9f30a",
+    "tools/capture_cloudreach_courtyard_wear.gd": "f57fcfe77beca0decf019ff07aad26546d13741f9c63d62b4e8c04e43ac96e70",
+    "tests/test_cloudreach_environment.gd": "4d8a81b05f5ef73c2bf83cbcd31dbfc24aea8bc788504c143c1d3e0683512bdd"
+  },
+  "files": [
+    {
+      "file": ".gitattributes",
+      "sha256": "09988058ff8095ae2e36c23a58f46e17ceeb793509db659149667b3889d06337",
+      "bytes": 65
+    },
+    {
+      "file": "baseline.shader.txt",
+      "sha256": "f3a85036c8eee186c90b9bfe186809428ed6a98276ee2178ac1d5ba08ba4c310",
+      "bytes": 1099
+    },
+    {
+      "file": "blind-review.md",
+      "sha256": "95fad4ebfbde1cc93265860427b09e62254509b776339712b6be5334138d4f6e",
+      "bytes": 11232
+    },
+    {
+      "file": "candidate/002_cloudreach_place_cliffhold_approach_candidate_day.png",
+      "sha256": "af5572eb99f36705e14769182e56758dcbaf837c2a655688976c41943b33aae8",
+      "bytes": 1555624
+    },
+    {
+      "file": "candidate/004_cloudreach_place_cliffhold_approach_candidate_night.png",
+      "sha256": "85c9f6b0f3f78eddfbd0313e2ea46073ba4241487a7d8b466f3ea312db642c4f",
+      "bytes": 1329426
+    },
+    {
+      "file": "candidate/006_cloudreach_place_cliffhold_court_candidate_day.png",
+      "sha256": "10686ec6a0dc1daf6ee5408c4afc2c82d5a52e81304a3f02cbdbed816381f016",
+      "bytes": 2188652
+    },
+    {
+      "file": "candidate/008_cloudreach_place_cliffhold_court_candidate_night.png",
+      "sha256": "26b63c252a4b3108f4f732a0fb7505ed39f6571ce164421e01ef29e9b8571e7d",
+      "bytes": 1775372
+    },
+    {
+      "file": "candidate/010_cloudreach_place_cliffhold_windwatch_candidate_day.png",
+      "sha256": "e0097992ada3d801576fd9409f5b0bc8e573a5373bf68719a3ae29d8cd160abb",
+      "bytes": 2174993
+    },
+    {
+      "file": "candidate/012_cloudreach_place_cliffhold_windwatch_candidate_night.png",
+      "sha256": "49c7121619f050ca2a5a56da3a45f082f94b752dea723809866e79a37f4a0567",
+      "bytes": 1618006
+    },
+    {
+      "file": "candidate/014_cloudreach_place_galefoot_approach_candidate_day.png",
+      "sha256": "54c3d70974d1daee9e22272590a0ddb15e0c2ccc703016a90af02d5c13234714",
+      "bytes": 2234407
+    },
+    {
+      "file": "candidate/016_cloudreach_place_galefoot_approach_candidate_night.png",
+      "sha256": "3eb537880a82a5e356b7823f7a84f96a4401f31abb8fd0c324256c020290d69c",
+      "bytes": 1941567
+    },
+    {
+      "file": "candidate/018_cloudreach_place_galefoot_hearth_candidate_day.png",
+      "sha256": "775f2080a1101cce50366101111e34c458dd869f1c9779f43b5bf3934ade79d3",
+      "bytes": 2126545
+    },
+    {
+      "file": "candidate/020_cloudreach_place_galefoot_hearth_candidate_night.png",
+      "sha256": "f804da11ce7dc951d39c8ff6b4dd3ecd8ee00416cb8bc8ef62dfd52b05ba967b",
+      "bytes": 1755409
+    },
+    {
+      "file": "candidate/022_cloudreach_place_trainer_ila_lower_ring_wear_candidate_day.png",
+      "sha256": "523a5febd721b312b5dba08a0a39b38a330fb9b5a0e82422de14b3d069f8f5fc",
+      "bytes": 3017361
+    },
+    {
+      "file": "candidate/024_cloudreach_place_trainer_ila_lower_ring_wear_candidate_night.png",
+      "sha256": "ac13525f0bd9fb5f31197063a92a1a34e9ae8b324fba36085c16a334a0994b9d",
+      "bytes": 2607232
+    },
+    {
+      "file": "candidate/026_cloudreach_place_tether_lieutenant_senn_wear_candidate_day.png",
+      "sha256": "f611ddcd13875b918821d9c427453b4c420df9d977f252c8ff9b0e091342f425",
+      "bytes": 3023659
+    },
+    {
+      "file": "candidate/028_cloudreach_place_tether_lieutenant_senn_wear_candidate_night.png",
+      "sha256": "c277832413b3abb112ec2350723d315b3cb08a7a44b3031fe9f3acff909e4f3b",
+      "bytes": 2651456
+    },
+    {
+      "file": "candidate/030_cloudreach_place_officer_voss_summit_approach_wear_candidate_day.png",
+      "sha256": "ccfb283d1da4639b3aa8adc22097143f0deec23742f23ea328b9295976027799",
+      "bytes": 2362083
+    },
+    {
+      "file": "candidate/032_cloudreach_place_officer_voss_summit_approach_wear_candidate_night.png",
+      "sha256": "7e30f7ed9b31a600841f84aa41fe15b8f32d52df03fcfbe2ae6e22b0a7f3b485",
+      "bytes": 2078533
+    },
+    {
+      "file": "candidate/034_cloudreach_place_brazier_ash_candidate_day.png",
+      "sha256": "b7efd9d5d82c034ee5b2340cd4382dbb2d2b3f223b5a2987104bfd217dabb40f",
+      "bytes": 3343104
+    },
+    {
+      "file": "candidate/036_cloudreach_place_brazier_ash_candidate_night.png",
+      "sha256": "7160cb4af0a7599f62234f297480d72a337974275c1c17f789271eda4425918d",
+      "bytes": 3173008
+    },
+    {
+      "file": "candidate/038_cloudreach_place_brazier_ash_tell_candidate_day.png",
+      "sha256": "cc154270ffb1badbde4ba4a781c028ad56fab5dc2a4fa97a84ada87d6b2ce20c",
+      "bytes": 3248431
+    },
+    {
+      "file": "candidate/040_cloudreach_place_brazier_ash_tell_candidate_night.png",
+      "sha256": "73a070d05f2934744fd476957a411cc3a838303001933fdd931fd8a2ce81c026",
+      "bytes": 3092097
+    },
+    {
+      "file": "candidate/042_cloudreach_place_aviary_floor_wear_candidate_day.png",
+      "sha256": "80224c442306175ae15160c39f5266f137f85237a937f058bfcc250a849742d6",
+      "bytes": 3593573
+    },
+    {
+      "file": "candidate/044_cloudreach_place_aviary_floor_wear_candidate_night.png",
+      "sha256": "497b5cc0af7be32cfa704dd203e8ff8e9c029d830fdf694183098d3e5ff1e75c",
+      "bytes": 3348999
+    },
+    {
+      "file": "candidate/sheet.jpg",
+      "sha256": "4f2433866416ca2d4d91ddac29b7d1ddacc197cd2a55bbeac0e18d2277efe04f",
+      "bytes": 509433
+    },
+    {
+      "file": "capture.jsonl",
+      "sha256": "1020355d5e62bb454a6665bf4f5353d167b8a182beb4def77b50dae3d5c45404",
+      "bytes": 36383
+    },
+    {
+      "file": "code-review.md",
+      "sha256": "a992f63bd70af8ef0c20a0b25c2e281fb0a8773b252b5aa1428e7c262c8c1cab",
+      "bytes": 19684
+    },
+    {
+      "file": "control/001_cloudreach_place_cliffhold_approach_control_day.png",
+      "sha256": "f1a76171f6d0beb30d915601766ec35530a09bbb187b1c5926f02c6108fee94f",
+      "bytes": 1554892
+    },
+    {
+      "file": "control/003_cloudreach_place_cliffhold_approach_control_night.png",
+      "sha256": "96883672b84de12b78cf3e410d77eeae5d6b6dc4e20a53c399ad5af50928108b",
+      "bytes": 1328982
+    },
+    {
+      "file": "control/005_cloudreach_place_cliffhold_court_control_day.png",
+      "sha256": "0ed778395b3562820229debf7d4dcf6e9515f6d63535e6e64b17f256a4a3eed0",
+      "bytes": 2191267
+    },
+    {
+      "file": "control/007_cloudreach_place_cliffhold_court_control_night.png",
+      "sha256": "62b98222db275789ea022e806ab528e2668affbb13d4cbbe8e21947f20abf27d",
+      "bytes": 1776156
+    },
+    {
+      "file": "control/009_cloudreach_place_cliffhold_windwatch_control_day.png",
+      "sha256": "e229ed634942b30a925ea682f1f3f0cddf177235f309758125a694a28948c6c9",
+      "bytes": 2243620
+    },
+    {
+      "file": "control/011_cloudreach_place_cliffhold_windwatch_control_night.png",
+      "sha256": "e555c68dfe3f56479f778449c9f23605c97bd9ef410a60031218a3de8011d899",
+      "bytes": 1679559
+    },
+    {
+      "file": "control/013_cloudreach_place_galefoot_approach_control_day.png",
+      "sha256": "2d174b4b4c70eaa299a588742083e86bd903f947060b5d30336c133aa8a61e33",
+      "bytes": 2236830
+    },
+    {
+      "file": "control/015_cloudreach_place_galefoot_approach_control_night.png",
+      "sha256": "c52519052672dc8dcdda8d1700dd6ea55a2d3461367ec1444828df9dc15ac10b",
+      "bytes": 1942889
+    },
+    {
+      "file": "control/017_cloudreach_place_galefoot_hearth_control_day.png",
+      "sha256": "a443c1130f49b4a776e24e586355d3d37d8bc7f12c5f78f9635b11fa243dabe7",
+      "bytes": 2385971
+    },
+    {
+      "file": "control/019_cloudreach_place_galefoot_hearth_control_night.png",
+      "sha256": "1e342cafe9aaf7295bf7cdeb335eae5bd8dc9d3b4c4284c277748eb091d2d13b",
+      "bytes": 2004527
+    },
+    {
+      "file": "control/021_cloudreach_place_trainer_ila_lower_ring_wear_control_day.png",
+      "sha256": "7689ed64b10c4d6614b1aca51f320d717ff3ec8eb1fd988d5fd3452d9636861d",
+      "bytes": 3015285
+    },
+    {
+      "file": "control/023_cloudreach_place_trainer_ila_lower_ring_wear_control_night.png",
+      "sha256": "47353e7baa060b75e4636143e4853c247d59695004feecd5a05d7820a6605e9b",
+      "bytes": 2608206
+    },
+    {
+      "file": "control/025_cloudreach_place_tether_lieutenant_senn_wear_control_day.png",
+      "sha256": "3898494629f174ad4610ce379afa52d4b5fe714c692495f410ec180a3777dd72",
+      "bytes": 3022857
+    },
+    {
+      "file": "control/027_cloudreach_place_tether_lieutenant_senn_wear_control_night.png",
+      "sha256": "e009598a69cb6d384d92b56b93cfaf87f96a538b4743c70cb34aa2238f9d2fa0",
+      "bytes": 2652196
+    },
+    {
+      "file": "control/029_cloudreach_place_officer_voss_summit_approach_wear_control_day.png",
+      "sha256": "523870168be766279e66950a8dcf5d93c0f79a6344c838cd8cf6a7354b53a3a1",
+      "bytes": 2361597
+    },
+    {
+      "file": "control/031_cloudreach_place_officer_voss_summit_approach_wear_control_night.png",
+      "sha256": "5b6de264b21a8ee8fd3f6dde0ca0a8ddbdaf12ccc09ee8c9b6b1d68b3d9b5827",
+      "bytes": 2075769
+    },
+    {
+      "file": "control/033_cloudreach_place_brazier_ash_control_day.png",
+      "sha256": "cabab03530e93a5b8c06ac7216adab5764323c281d45652a73e2c71f801fc373",
+      "bytes": 3354469
+    },
+    {
+      "file": "control/035_cloudreach_place_brazier_ash_control_night.png",
+      "sha256": "49ccd7b20f185a056905cea9807c83166cc00bfb1c5f6958de7ff16c7beeb925",
+      "bytes": 3179999
+    },
+    {
+      "file": "control/037_cloudreach_place_brazier_ash_tell_control_day.png",
+      "sha256": "9aa4e0ea180864dc2ba64bc019c4207acd50c1fcb23f8d5c2b5048b01ffe20fc",
+      "bytes": 3259179
+    },
+    {
+      "file": "control/039_cloudreach_place_brazier_ash_tell_control_night.png",
+      "sha256": "8267cd21f21f09337abe558da61fcde456d0c609f236ccc5e43ac20131a269d7",
+      "bytes": 3099382
+    },
+    {
+      "file": "control/041_cloudreach_place_aviary_floor_wear_control_day.png",
+      "sha256": "5b0158f178359effc2cec1834e853006caed824e5d5aba5d26cbfd01e711911f",
+      "bytes": 3612971
+    },
+    {
+      "file": "control/043_cloudreach_place_aviary_floor_wear_control_night.png",
+      "sha256": "03c4348b2bdd3053239cb7532b1b91c3026755791446bab1546e1ab05b268c98",
+      "bytes": 3371471
+    },
+    {
+      "file": "control/sheet.jpg",
+      "sha256": "f4d20bad9e9c877f5744dbf075a95f506346cf693b89adf6faa6804c6acc1fd1",
+      "bytes": 516808
+    },
+    {
+      "file": "run.err",
+      "sha256": "76b704e6eaff7791c1715d1294276924d6a727324d85843f2fa73c42831ef226",
+      "bytes": 3406
+    },
+    {
+      "file": "run.log",
+      "sha256": "790c8b0e446193d8a73d4516aa4df777eb24dca9e6a15ad0901785694a1fa9fa",
+      "bytes": 37466
+    },
+    {
+      "file": "tests.log",
+      "sha256": "4f5fc14bd37b73100603f96f9b746ecaf67635e12769d9ed3f2d16b9c617a3f9",
+      "bytes": 895
+    }
+  ]
+}

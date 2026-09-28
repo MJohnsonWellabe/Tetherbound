@@ -1,0 +1,26 @@
+{
+  "asset": "Stormheart living split tree hero candidate",
+  "reference": "reference/stormheart.png",
+  "reference_sha256": "67f98805d629b648468c238ad8c9c19b0877486c60ed6796302f53c694f24636",
+  "reference_origin": "OpenAI imagegen exec-4d56786f-66b4-4515-9a21-5cbc2ff33a78; inspected before submission and preparation",
+  "meshy_task_id": "01a0e4a2-5b8b-77c4-bf72-2b340d0a8f00",
+  "license": "Generated under owner's existing Meshy license. Submission and credit receipt in source/submission.json. No purchase.",
+  "preparation_source": "source/prepare_stormheart.py; unmodified download archived at source/model.glb",
+  "geometry_audit": "source/geometry_audit.json",
+  "texture_audit": "source/texture_audit.json verifies the2048x2048 source atlas is byte-identical after preparation",
+  "preparation": "300m height, natural cleft widened in horizontal axes while retaining original branches, bark and texture UVs; smooth low-root taper to approximately92m radius. Original surface triangles clipped to preserve the44m gameplay hollow and10m wide south/east passages. Source front rotated180degrees toward game-Z. No radial cylinder projection.",
+  "integration": "Instance stormheart_hero.tscn at identity under StormheartTree. Replace only _split_bark_shell, _buttress_roots and _living_crown presentation; retain rings, ascent, rails/colliders, wayfinding, braces and energy seam. Do not resize gameplay geometry.  Asset script builds only deterministic visual leaf meshes and instance-local bark materials; no collision or gameplay writes.",
+  "limitations": "Clearance-cut borders remain open surfaces and original source surface is faceted. Tiled finish adds grain without changing topology; near bark remains vertically streaked and canopy pale/patchy in current production lighting. Lane-owned ring/plate architecture, bracing/rail readability, electrical-core VFX, approach occlusion and environment palette remain unchanged. Independent visual-judge-living.md rejects the asset for thin crown fragments, stretched bark and canopy inconsistency. Candidate only: do not integrate; no whole-scene or performance acceptance claimed.",
+  "appearance_revision": {
+    "reference_boards": [
+      "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png",
+      "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png"
+    ],
+    "trigger": "Independent six-frame visual-judge.md rejected pale blurry bark and shredded dead-looking crown; monumental split silhouette was retained.",
+    "bark": "Asset-local Compatibility shader retains embedded reference UV atlas as primary colour, adds triplanar installed-family Bark_TwistedTree ridge detail at10x22m repeat, restrained warm modulation, grain-derived relief and variable roughness. No atlas or source mesh modification.",
+    "canopy": "14 authored leaf-only masses extracted from installed TwistedTree_2/4 leaf surfaces; matching Leaves_TwistedTree_C alpha atlas retained and recolored green by an asset-local Compatibility shader. Front-bough depths measured from original source mesh. No arbitrary primitive crowns or random placement; both split uprights remain open.",
+    "audit": "source/living_finish_audit.json;35,308 added leaf triangles, minimum protected-height canopy AABB clearance91.11m, tops≤299.5m. Source trunk geometry and UV atlas unchanged.",
+    "source_glb_sha256": "b9fdc6cdc588ddaa869391c81f17b271dc9197196760f81e1990a7f257df8890",
+    "native_evidence": "ralph/reports/VISUAL/stormheart-hero-candidate/living-corrected1080:6/6 native1920x1080 frames; same production-camera poses as baseline, allCalm, exact gameplay contract unchanged. First failed living-finish1080 retained as diagnostic."
+  }
+}

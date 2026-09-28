@@ -1,0 +1,8 @@
+== f12_2_smoke_water_player_death: /root/godot-bin/godot --headless --path . --script tests/smoke_water_player_death.gd
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[downed] local player is down; 45.0 s to be revived
+[downed] local player is down; 45.0 s to be revived
+[downed] nobody came; the ordinary death runs
+Water death smoke: 37 checks, 0 failures
+== f12_2_smoke_water_player_death exit=0

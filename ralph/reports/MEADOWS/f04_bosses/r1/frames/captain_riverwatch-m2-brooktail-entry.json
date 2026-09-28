@@ -1,0 +1,84 @@
+{
+  "ally": {
+    "camera_m": 12.5,
+    "in_frustum": true,
+    "pos": [
+      -101.3,
+      -1.9,
+      4347.2
+    ]
+  },
+  "camera": [
+    -92.6,
+    5.2,
+    4352.6
+  ],
+  "enemy": {
+    "camera_m": 15.7,
+    "in_frustum": true,
+    "pos": [
+      -102.8,
+      -1.5,
+      4342.8
+    ]
+  },
+  "fight": "captain_riverwatch",
+  "game_frame": 6929,
+  "hud_text": [
+    "Captain Oreth · LEVEL 15",
+    "Brooktail",
+    "WATER  ▼",
+    "↯  it's open — hit it",
+    "Bud",
+    "Lv 11",
+    "WIND",
+    "Energy",
+    "GO, Bramblebun!",
+    "Orbs  52",
+    "Pebble Toss",
+    "Stone Rush\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 12",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 9",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 10",
+    "▼  it hit YOUR weakness"
+  ],
+  "meta": {
+    "kind": "entry",
+    "shape": "CURRENT"
+  },
+  "player": {
+    "camera_m": 11.2,
+    "in_frustum": true,
+    "pos": [
+      -100.4,
+      -2.0,
+      4349.0
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_riverwatch-m2-brooktail-entry.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 10.7,
+    "in_frustum": true,
+    "pos": [
+      -100.0,
+      -2.1,
+      4350.0
+    ]
+  }
+}

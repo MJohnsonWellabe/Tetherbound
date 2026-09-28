@@ -1,0 +1,475 @@
+{
+  "before_sha": "387cf60fdcf9b65c1ef01c418b4f3bb07718e1d6",
+  "after_parent": "63f3006b1344f5694c3efe596bbb11cf316f7b86",
+  "after_source_sha256": {
+    "scripts/world/stormwood_lightning.gd": "88ceb8286d89a20c9c09db247053f09d4acf15eebbe2594eafc0fc21629fba52",
+    "data/config/stormwood_surge.json": "fc96df10499b021382709e50da36046e63782ffe75bafb807dad50127e7291da"
+  },
+  "renderer": "Windows NVIDIA GTX1060 / Godot4.7 / Compatibility",
+  "fixture": "Production CameraRig. Frozen noon Break, stationary trainer, scripted warning+impact and fixed60fps. No damage or HUD. Baseline and art branch differ in vegetation, so wholeframe comparisons are not pixel-isolated.",
+  "files": [
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t000.png",
+      "sha256": "2a3643bd874c1081fd5566a4837dcb6fbcccbfd40f6673c76ca191946ede52e2",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t010.png",
+      "sha256": "e5bb75c2d6c8ef465c50260885fc8b5f23e2750c66557c5abf4155301e6ac73a",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t020.png",
+      "sha256": "dc5712f5d021bf61c1ec1d31dad05d61d03dd00542e7117a868179d7e19cb9f9",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t030.png",
+      "sha256": "59f83859b2365d8a30726d4a9262e732e4986b2f87706e99b5bdf015345cb4a0",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t040.png",
+      "sha256": "6fb84ac28808910eccca789b137b32a50e5bd3d50f260212470e7a682e755e07",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t050.png",
+      "sha256": "438f2654db67cf64bcb47b10ea1a9a1ec925a2668bb05f34fe635d6d8945d83f",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t060.png",
+      "sha256": "de011c0ea6dcb5ef0517db63e15653ec809e7b7dfaf79d8fc2a3e5a20d0ab11e",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t070.png",
+      "sha256": "da03edfb72d482f1e1cd6dd30752515326f01e113d9d7c8b8fdb33c507c83063",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t080.png",
+      "sha256": "5e2c82372670f1d70ac6afc8e4bbc7c53c1c2d8184b80fb13ff0aa09a8417026",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t090.png",
+      "sha256": "c49787b5ec16b884e29ce0e845a53ff20389f8b84bf776b36856a4f5ba624f65",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t100.png",
+      "sha256": "896e2b552868e889a4be92f70d33100a5eb9747ab2ccc9348db25986353d9fc1",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t110.png",
+      "sha256": "4abd360700fdb0342a1f23f844dc8022dd7e0442a322d9dc3de96ba28f94eef4",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t120.png",
+      "sha256": "96ad849d3fc1a633693b76dada356053b6035f7e9418b6abace8a1f2cd1314dc",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t125.png",
+      "sha256": "e45abce40d98b83573fb2b46bd40e5fc1d2cea6027f6945013d0dc40d9f280a8",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t130.png",
+      "sha256": "dcd0dcc7841336ca5729b783a2b80484c8fcaf170550c1546c31773737b78920",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t140.png",
+      "sha256": "164cbf17f16af78c22d336c61379b23b081cb0550eb102310c73020ad98fbdff",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t150.png",
+      "sha256": "f98d8fc612824b26cb45477c0c167bab19a1ff725348c4976d6f32109119dc43",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t160.png",
+      "sha256": "b6f418942033cfcaff23f51ec844d215608fd93b30c61d064535a3f3f9888e77",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-normal/art-shape-normal-corefinish_h12_t170.png",
+      "sha256": "e81e7b210ee6d1779978e19253a794c2fd7c269a94dab4456ff4a41d61e69735",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t000.png",
+      "sha256": "68e3545a5005fc111cd25324972c61d511b6c30b96a8e194af12859bba0704ad",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t010.png",
+      "sha256": "ae0ac0f9054debe431f28faf872214f1427d4974844adce81e00e05221a1f849",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t020.png",
+      "sha256": "daf1ea70a7c63110989c9480ceae7870fb7c392c4e7c351b6558451d2c8d3890",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t030.png",
+      "sha256": "0a915dc9c204de731da1e54058fc7d7b410b5a9308d1b006d3ed6578972c8e9a",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t040.png",
+      "sha256": "b4873fd83e275f3d5ac73f88f0cd9a775f64132e3d113c20eccc9582007f5464",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t050.png",
+      "sha256": "a8efa93f2cb80b5c63ffd6c127f7669dc758fed41f28cada81fd29c364256f66",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t060.png",
+      "sha256": "9d749da3b26558f64fd3c866605a427c45d0a492da9f8a646ad6a96eae1cb043",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t070.png",
+      "sha256": "a5400aa14c492d070076d3b4dcd2d19476fe2a6dacd01f5fbb06358ae24fe1ee",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t080.png",
+      "sha256": "a067a6cb67faf4b22a9c34404dc7098acfcd52109eec15acff85cce158bd6c62",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t090.png",
+      "sha256": "eb84822cda688869151d2a3c6fb31ca816e1d718ae2f164dcf8499329dbb0d2f",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t100.png",
+      "sha256": "a95c8997976b4d8bc8f6946c00230a1600269a54fe828c62bc46a87872b3dc9b",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t110.png",
+      "sha256": "b518386bbd2afca1276b4380ab883ca496a7a579165bbbeec1de02e2ef60ee6d",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t120.png",
+      "sha256": "1a20e1a3f08e340766cb97a90259a0851acad5a928509346e44361bf90be550c",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t125.png",
+      "sha256": "1f5af081f2d21b1664e52195bb60aa2fa4082f0b7daa46b6836fe41bf030e7ec",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t130.png",
+      "sha256": "4af71ef22a233f94225fe30b6a1961d0cb398b3ce865c5b0c652e2dfb260b1ed",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t140.png",
+      "sha256": "1ddc4ef86cdef06eccdb618b57b5ecc7509682477e77607cdfa12e7712b398f8",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t150.png",
+      "sha256": "25a3587a79cd43499485dc52c9d80f044f9171d3c5ac39644bf467555072ff58",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t160.png",
+      "sha256": "f535c987417ff011d968c314a64d71d1f6f4379a82be49bf9b343cd4042b8a90",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "after-reduced/art-shape-reduced-corefinish_h12_t170.png",
+      "sha256": "9fffabc6fd576346b055deb140262f740ddc77399bd7b02feb6be5a1d5e174e5",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t000.png",
+      "sha256": "8a2b109227b8edae776d7fd68fb4fc6f178cb9f51ff8ce9f3c74bb9b2b443ceb",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t010.png",
+      "sha256": "e744a37e5ef4389a87dad607520691b3b2faeec030c2ef270631cc72ba46a573",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t020.png",
+      "sha256": "35749f7724c27cf7f5fcb985eb08b1abbf61f7bc22746f0e948921a1b9d4c311",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t030.png",
+      "sha256": "99582f36b424fc035e4badc86ed28ea2f8319b9d05190b3fe50765901aece5ff",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t040.png",
+      "sha256": "03200f726fd10af0cfbe8be5507d256c3f3440cf831ec3a48eb59765b19d17c8",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t050.png",
+      "sha256": "854732ca51261bbba31c9a02a981f47d3cfbdcb3551d167fc6b6dd7d05096a27",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t060.png",
+      "sha256": "389a02bdb222281472bf01a47fa3f191fd0c349b5ce363c08308097a40b024cf",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t070.png",
+      "sha256": "b482349599ca0c425c01372f3e66ead200b635d268f0b5a560afedd78ea3af24",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t080.png",
+      "sha256": "1a5908e94161756c1fd93758ed93ef1deffcb64e01f4103a56f92cd4e9e45423",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t090.png",
+      "sha256": "a85e66fd440d6e838fc83605b6571ad5c9d92ee1f4e8b86056792893f8f4a0a6",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t100.png",
+      "sha256": "259626215c48608925e3d55071ed58b85962c02557339c71b781f24343828939",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t110.png",
+      "sha256": "09e8c23d7367b76d27e4a7467d39f2ec42c1e82bbeb15ba12e72763f45b223a7",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t120.png",
+      "sha256": "bbe3d75dcbf8706712d6a8d420a16246eb0c699a8496fd8d9d77e3de524160cf",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t125.png",
+      "sha256": "d0e5e5eed52367b15d65e6f0841d0ebafed27a06f1506237d35686f9382014a7",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t130.png",
+      "sha256": "a7744ac7c1b4a0db8b471e7a4b2dc9c36fd225a96b6cd06f86ba85ea8a20fc7b",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t140.png",
+      "sha256": "d8762ff312d3fe9d56706a724894b2fa6cbf5550fba5463a05e9e6aea1da9d5f",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t150.png",
+      "sha256": "1f1e189f5b826e091b4638772c608d5471373269c02d6f6f3889c7fc37ae14a9",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t160.png",
+      "sha256": "146f36237be138a91399435b03585c5dd7bf10766500e7d57a81d3f86b998c74",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "before/seqA_h12_t170.png",
+      "sha256": "b5ac06e61cef7d3f373c8d91f696ec47c314bf5813a2668d5f62327dfcd7a6bc",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/normal/art-shape-normal_h12_t000.png",
+      "sha256": "47f1db211cd44cee38fc7a735c0453ecf413651bae34df55900b486322e0f5c7",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/normal/art-shape-normal_h12_t110.png",
+      "sha256": "cda5930377f12b76d770d82685f793f023e1ef28dc69471b90e900ffac394a31",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/normal/art-shape-normal_h12_t120.png",
+      "sha256": "5004ffb00450130ac0052c7049adacb0f369738f1b35e40a6b03c1b4bc69e937",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/normal/art-shape-normal_h12_t170.png",
+      "sha256": "1b802049870dbcc963796bb03269fc8bc847e4d1d88addd4760238af914b7a3e",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/reduced/art-shape-reduced_h12_t000.png",
+      "sha256": "2e3a57a095efcd6079a970d85c213aa6696dc7982ddb7c02cb2a54a1a1e7f027",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/reduced/art-shape-reduced_h12_t110.png",
+      "sha256": "c4726939fff627b66e8cbea97c36d0ee63b8698c762d4ef3d72721cfd77b44e4",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/reduced/art-shape-reduced_h12_t120.png",
+      "sha256": "74e0350ade72205c99e962773fdba9745cafbaf0df58bdad0de9e4b5dd98507b",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r3/reduced/art-shape-reduced_h12_t170.png",
+      "sha256": "ffb86515f7ed6ab26e74c295034cf763c748b88968701f506fce3b505c70f29c",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r4/normal/art-shape-normal-finish_h12_t060.png",
+      "sha256": "717a9b6c14305d705cf8213353e6e67b7b69e5aa51732a504faf32b818e99043",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r4/normal/art-shape-normal-finish_h12_t120.png",
+      "sha256": "8a11cec5cd8d6ede9c287eff83ef2b99b0d9fd8c1d654cc4171ffa36f9f53a89",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r4/reduced/art-shape-reduced-finish_h12_t060.png",
+      "sha256": "a576c53a2402c0e293db98592eaff8c8f135ae040585c2370e8beccbe5978584",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r4/reduced/art-shape-reduced-finish_h12_t120.png",
+      "sha256": "2933aa7a882bd1e4af022248670630efc4bd5a12ea5c6c4363dbdf4f2bcda64b",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r5/art-shape-normal-ribbon_h12_t110.png",
+      "sha256": "b451a417d334db63c2019a8434e341f4850adfe9ad4b1ea8dc0b183ae028b4fc",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r5/art-shape-normal-ribbon_h12_t120.png",
+      "sha256": "49dc879fd5fe54a48d7e6c6b5ae7c384f18d0dbdba6ca34a9611c8f1ab1e2d90",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r5/art-shape-reduced-ribbon_h12_t110.png",
+      "sha256": "ab1a8528875e6b8567e98b943a7cb0b9b66032fa4acc2ac4fe03c57aeaa41dc2",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r5/art-shape-reduced-ribbon_h12_t120.png",
+      "sha256": "f3fd36deba7f9e488ddb8d3845a45a3b8954e64167d85ebe870d2d63f4feb8a3",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r6/art-shape-normal-capsules_h12_t110.png",
+      "sha256": "53092225424a9175e255ef9c240194f94b4c071461f3777c43ca22be88c1a677",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r6/art-shape-normal-capsules_h12_t120.png",
+      "sha256": "c51a2c2671935b747109f1ea84893d6d52e5d07cb53977f11c308ebc657ce8af",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r6/art-shape-reduced-capsules_h12_t110.png",
+      "sha256": "9730ca7ce66e81d13a86028b081c8b7f46ec826cfc39d20fac02bdedf22729a6",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "reviewed-r6/art-shape-reduced-capsules_h12_t120.png",
+      "sha256": "a4ee499e222ec72cb594f2b12f84abe6b0542c68dd9e56e2b548a912fc630334",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "after_source_commit": "20f86ab4698bb4dbd4273939234a548e7086a294"
+}

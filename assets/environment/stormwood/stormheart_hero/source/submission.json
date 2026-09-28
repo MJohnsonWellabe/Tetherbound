@@ -1,0 +1,26 @@
+{
+  "task_id": "01a0e4a2-5b8b-77c4-bf72-2b340d0a8f00",
+  "prompt": "One colossal living storm-split hollow tree matching this inspected reference. Deep organic sculpted bark, broad buttress roots, two asymmetric towering trunk halves around a spacious hollow and open front split, branching living crown and muted green foliage. Root passage genuinely open. Preserve all silhouette and depth, bark grooves and glass-fused blue-grey scar seams. No buildings, stairs, platforms, bridges, banners, machines, lightning bolt, characters, landscape or pedestal. The game adds its traversable interior separately.",
+  "settings": {
+    "mode": "refine",
+    "negative_prompt": "solid filled trunk, smooth cylinder, stacked disks, rings, tower, background, terrain base, glowing lightning, text, platforms, buildings, people",
+    "should_remesh": true,
+    "should_texture": true,
+    "topology": "triangle",
+    "target_polycount": 60000,
+    "symmetry_mode": "off"
+  },
+  "reference": "assets\\environment\\stormwood\\stormheart_hero\\reference\\stormheart.png",
+  "reference_sha256": "67f98805d629b648468c238ad8c9c19b0877486c60ed6796302f53c694f24636",
+  "reference_inspected": true,
+  "reference_origin": "OpenAI imagegen exec-4d56786f-66b4-4515-9a21-5cbc2ff33a78",
+  "balance_before": {
+    "balance": 13635
+  },
+  "status": "SUCCEEDED",
+  "created_at": 1790542242312,
+  "finished_at": 1790542460643,
+  "balance_after": {
+    "balance": 13605
+  }
+}

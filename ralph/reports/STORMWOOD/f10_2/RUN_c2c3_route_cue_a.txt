@@ -1,0 +1,32 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD_C2C3 hollows_alpha terrapup MASHER L35 runs=24 win=0.25 med_lead=1.000 med_party=0.241 med_s=70.8 max_s=75.2 lead_faint=0.75 wipe=0.00 max_hit=0.050 tell=[0.80,0.80] incoming=529 stalled=0
+STORMWOOD_C2C3 hollows_alpha terrapup READER L35 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=71.0 max_s=78.8 lead_faint=0.00 wipe=0.00 max_hit=0.050 tell=[0.80,0.80] incoming=10 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.050 min_tell=0.80 
+STORMWOOD_C2C3 hollows_alpha ripplet MASHER L35 runs=24 win=1.00 med_lead=0.854 med_party=0.186 med_s=42.5 max_s=44.2 lead_faint=0.00 wipe=0.00 max_hit=0.095 tell=[0.80,0.80] incoming=236 stalled=0
+STORMWOOD_C2C3 hollows_alpha ripplet READER L35 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=59.7 max_s=60.0 lead_faint=0.00 wipe=0.00 max_hit=0.085 tell=[0.80,0.80] incoming=2 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.095 min_tell=0.80 
+STORMWOOD_C2C3 hollows_alpha galewisp MASHER L35 runs=24 win=0.21 med_lead=1.000 med_party=0.196 med_s=36.9 max_s=37.5 lead_faint=0.79 wipe=0.00 max_hit=0.116 tell=[0.80,0.80] incoming=235 stalled=0
+STORMWOOD_C2C3 hollows_alpha galewisp READER L35 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=47.7 max_s=52.9 lead_faint=0.00 wipe=0.00 max_hit=0.113 tell=[0.80,0.80] incoming=3 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.116 min_tell=0.80 
+STORMWOOD_C2C3 capacitor_alpha terrapup MASHER L37 runs=24 win=1.00 med_lead=0.210 med_party=0.051 med_s=66.1 max_s=70.5 lead_faint=0.00 wipe=0.00 max_hit=0.034 tell=[0.80,0.80] incoming=156 stalled=0
+STORMWOOD_C2C3 capacitor_alpha terrapup READER L37 runs=24 win=1.00 med_lead=0.091 med_party=0.022 med_s=107.0 max_s=132.2 lead_faint=0.00 wipe=0.00 max_hit=0.033 tell=[0.80,0.80] incoming=98 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha terrapup PASS ratio=0.43 reader_win=1.00 max_hit=0.034 min_tell=0.80 
+STORMWOOD_C2C3 capacitor_alpha ripplet MASHER L37 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=40.5 max_s=41.9 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3 capacitor_alpha ripplet READER L37 runs=24 win=1.00 med_lead=0.113 med_party=0.025 med_s=88.4 max_s=93.0 lead_faint=0.00 wipe=0.00 max_hit=0.063 tell=[0.80,0.80] incoming=67 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha ripplet FAIL ratio=inf reader_win=1.00 max_hit=0.063 min_tell=0.80 reader/masher lead cost inf > 0.55
+STORMWOOD_C2C3 capacitor_alpha galewisp MASHER L37 runs=24 win=1.00 med_lead=0.070 med_party=0.014 med_s=39.5 max_s=42.6 lead_faint=0.00 wipe=0.00 max_hit=0.076 tell=[0.80,0.80] incoming=28 stalled=0
+STORMWOOD_C2C3 capacitor_alpha galewisp READER L37 runs=24 win=1.00 med_lead=0.245 med_party=0.048 med_s=84.7 max_s=92.4 lead_faint=0.00 wipe=0.00 max_hit=0.077 tell=[0.80,0.80] incoming=91 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha galewisp FAIL ratio=3.49 reader_win=1.00 max_hit=0.077 min_tell=0.80 reader/masher lead cost 3.49 > 0.55
+STORMWOOD_C2C3 crown_guardian terrapup MASHER L39 runs=24 win=1.00 med_lead=0.393 med_party=0.095 med_s=39.0 max_s=41.5 lead_faint=0.00 wipe=0.00 max_hit=0.048 tell=[0.85,0.85] incoming=222 stalled=0
+STORMWOOD_C2C3 crown_guardian terrapup READER L39 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=43.9 max_s=46.8 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,0.85] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT crown_guardian terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.048 min_tell=0.85 
+STORMWOOD_C2C3 crown_guardian ripplet MASHER L39 runs=24 win=1.00 med_lead=0.494 med_party=0.107 med_s=30.4 max_s=33.8 lead_faint=0.00 wipe=0.00 max_hit=0.091 tell=[0.85,0.85] incoming=144 stalled=0
+STORMWOOD_C2C3 crown_guardian ripplet READER L39 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=35.9 max_s=36.0 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,0.85] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT crown_guardian ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.091 min_tell=0.85 
+STORMWOOD_C2C3 crown_guardian galewisp MASHER L39 runs=24 win=1.00 med_lead=0.408 med_party=0.080 med_s=24.3 max_s=24.9 lead_faint=0.00 wipe=0.00 max_hit=0.112 tell=[0.85,0.85] incoming=104 stalled=0
+STORMWOOD_C2C3 crown_guardian galewisp READER L39 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=34.0 max_s=34.0 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,0.85] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT crown_guardian galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.112 min_tell=0.85 
+STORMWOOD_C2C3 old_rodfolk_hall_guardian terrapup MASHER L41 runs=24 win=1.00 med_lead=0.298 med_party=0.072 med_s=33.2 max_s=33.2 lead_faint=0.00 wipe=0.00 max_hit=0.055 tell=[1.10,1.10] incoming=144 stalled=0
+STORMWOOD_C2C3 old_rodfolk_hall_guardian terrapup READER L41 runs=24 win=1.00 med_lead=0.023 med_party=0.005 med_s=46.5 max_s=62.3 lead_faint=0.00 wipe=0.00 max_hit=0.054 tell=[1.10,1.10] incoming=30 stalled=0
+STORMWOOD_C2C3_VERDICT old_rodfolk_hall_guardian terrapup PASS ratio=0.08 reader_win=1.00 max_hit=0.055 min_tell=1.10 

@@ -1,0 +1,166 @@
+{
+  "_comment": "F13#3 presentation only. Installed Quaternius families; reference 18_Signpost_Bridge_Modular_Props.png and owner camp board. Persistent dressing remains after disposable satchel/record actions. All dimensions are metres; anchors are canonical runtime roots.",
+  "sites": [
+    {
+      "id": "GullSurveySite",
+      "anchor": "WaterLocalChains/gull_research_satchel",
+      "yaw_deg": -155,
+      "pieces": [
+        {
+          "id": "SurveyAwning",
+          "model": "res://assets/props/quaternius_fantasy/Stall_Empty.gltf",
+          "height_m": 3.8,
+          "at": [
+            0,
+            0,
+            2.8
+          ],
+          "clear_radius_m": 2.4
+        },
+        {
+          "id": "SurveyBooks",
+          "model": "res://assets/props/quaternius_fantasy/BookGroup_Medium_1.gltf",
+          "height_m": 0.48,
+          "at": [
+            0.72,
+            1.2054,
+            0
+          ],
+          "support": "SurveyAwning"
+        },
+        {
+          "id": "SupplyCrate",
+          "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+          "height_m": 1.05,
+          "at": [
+            2.15,
+            0,
+            2.9
+          ],
+          "yaw_deg": 12
+        },
+        {
+          "id": "SurveyMast",
+          "kind": "post",
+          "height_m": 5.5,
+          "width_m": 0.2,
+          "at": [
+            -2.4,
+            -0.2,
+            2.7
+          ]
+        },
+        {
+          "id": "SurveyPennant",
+          "model": "res://assets/props/quaternius_fantasy/Banner_1.gltf",
+          "height_m": 2.7,
+          "at": [
+            -1.55,
+            2.7,
+            2.7
+          ]
+        },
+        {
+          "id": "WorkingLantern",
+          "kind": "lantern",
+          "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+          "height_m": 0.72,
+          "at": [
+            1.26,
+            2.45,
+            0.02
+          ],
+          "support": "SurveyAwning",
+          "light_energy": 1.1,
+          "light_range_m": 6.0,
+          "housing_colour": "#796749",
+          "glass_colour": "#ffcf8b",
+          "glow_energy": 0.7
+        },
+        {
+          "id": "SurveyChart",
+          "kind": "chart",
+          "texture": "res://assets/props/quaternius_fantasy/tidewake_chart.svg",
+          "width_m": 2.45,
+          "height_m": 1.35,
+          "at": [
+            0,
+            2.0,
+            -0.18
+          ],
+          "support": "SurveyAwning"
+        }
+      ]
+    },
+    {
+      "id": "DeepWatchChartShelter",
+      "anchor": "WaterDocks/deep_watch_chart",
+      "yaw_deg": -141.34,
+      "pieces": [
+        {
+          "id": "ChartAwning",
+          "model": "res://assets/props/quaternius_fantasy/Stall_Empty.gltf",
+          "height_m": 3.8,
+          "at": [
+            0,
+            0,
+            0
+          ],
+          "clear_radius_m": 2.4
+        },
+        {
+          "id": "ChartBooks",
+          "model": "res://assets/props/quaternius_fantasy/BookGroup_Medium_1.gltf",
+          "height_m": 0.4,
+          "at": [
+            0.72,
+            1.2054,
+            0
+          ],
+          "support": "ChartAwning"
+        },
+        {
+          "id": "ChartCase",
+          "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+          "height_m": 0.85,
+          "at": [
+            -2.0,
+            0,
+            -0.2
+          ],
+          "yaw_deg": 8
+        },
+        {
+          "id": "CurrentChart",
+          "kind": "chart",
+          "texture": "res://assets/props/quaternius_fantasy/tidewake_chart.svg",
+          "width_m": 2.45,
+          "height_m": 1.35,
+          "at": [
+            0,
+            2.0,
+            -0.18
+          ],
+          "support": "ChartAwning"
+        },
+        {
+          "id": "WorkingLantern",
+          "kind": "lantern",
+          "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+          "height_m": 0.72,
+          "at": [
+            1.26,
+            2.45,
+            0.02
+          ],
+          "support": "ChartAwning",
+          "light_energy": 1.1,
+          "light_range_m": 6.0,
+          "housing_colour": "#796749",
+          "glass_colour": "#ffcf8b",
+          "glow_energy": 0.7
+        }
+      ]
+    }
+  ]
+}

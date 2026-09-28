@@ -1,0 +1,46 @@
+[lure-walk] START activity=herd save=S04-exit-pose-on-road.json.gz pos=[13.2, 0.9, 20.26] lure=[-70.0, 1310.0] route_m=2323.5 hour=8.20
+[lure-walk] CAPTURE herd_01_start.png t=0.0s walked=0.0m pos=(13.2,20.3) lure_m=1292.4
+[lure-walk] PROGRESS t=10.0s walked=78.7m pos=(3.6,97.8) cursor=11/302
+[lure-walk] PROGRESS t=20.0s walked=141.0m pos=(-25.5,152.8) cursor=19/302
+[lure-walk] PROGRESS t=30.0s walked=202.5m pos=(-60.3,202.8) cursor=27/302
+[lure-walk] PROGRESS t=40.0s walked=264.7m pos=(-101.6,249.3) cursor=35/302
+[lure-walk] PROGRESS t=50.0s walked=327.1m pos=(-150.5,286.6) cursor=43/302
+[lure-walk] PROGRESS t=60.0s walked=388.9m pos=(-204.8,316.3) cursor=51/302
+[lure-walk] PROGRESS t=70.0s walked=450.8m pos=(-259.2,345.7) cursor=59/302
+[lure-walk] PROGRESS t=80.0s walked=512.7m pos=(-313.7,375.1) cursor=67/302
+[lure-walk] PROGRESS t=90.0s walked=574.8m pos=(-364.5,408.8) cursor=75/302
+[lure-walk] PROGRESS t=100.0s walked=636.7m pos=(-390.0,465.0) cursor=84/302
+[lure-walk] PROGRESS t=110.0s walked=697.7m pos=(-393.9,525.8) cursor=91/302
+[lure-walk] PROGRESS t=120.0s walked=747.6m pos=(-379.0,517.6) cursor=98/302
+[lure-walk] PROGRESS t=133.6s walked=781.9m pos=(-363.8,510.3) cursor=102/302
+[lure-walk] PROGRESS t=143.6s walked=814.5m pos=(-347.0,516.2) cursor=105/302
+[lure-walk] PROGRESS t=153.6s walked=876.7m pos=(-333.2,576.7) cursor=113/302
+[lure-walk] PROGRESS t=163.6s walked=927.2m pos=(-297.4,608.6) cursor=120/302
+[lure-walk] PROGRESS t=175.2s walked=990.1m pos=(-244.9,634.3) cursor=128/302
+[lure-walk] PROGRESS t=185.2s walked=1052.3m pos=(-185.2,651.8) cursor=137/302
+[lure-walk] PROGRESS t=195.2s walked=1114.0m pos=(-127.1,672.5) cursor=144/302
+[lure-walk] PROGRESS t=205.2s walked=1176.0m pos=(-68.7,693.3) cursor=152/302
+[lure-walk] PROGRESS t=215.2s walked=1237.8m pos=(-11.5,716.5) cursor=160/302
+[lure-walk] PROGRESS t=225.2s walked=1299.3m pos=(45.1,740.8) cursor=168/302
+[lure-walk] PROGRESS t=235.2s walked=1361.4m pos=(101.8,765.9) cursor=177/302
+[lure-walk] PROGRESS t=245.2s walked=1423.4m pos=(157.3,793.6) cursor=184/302
+[lure-walk] PROGRESS t=255.2s walked=1485.3m pos=(212.7,821.3) cursor=192/302
+[lure-walk] PROGRESS t=265.2s walked=1547.7m pos=(265.1,854.8) cursor=200/302
+[lure-walk] PROGRESS t=276.9s walked=1594.3m pos=(299.1,879.6) cursor=206/302
+[lure-walk] PROGRESS t=286.9s walked=1657.5m pos=(344.0,924.0) cursor=214/302
+[lure-walk] PROGRESS t=296.9s walked=1719.1m pos=(377.9,973.9) cursor=222/302
+[lure-walk] PROGRESS t=306.9s walked=1781.6m pos=(397.7,1033.1) cursor=230/302
+[lure-walk] PROGRESS t=316.9s walked=1843.5m pos=(375.3,1089.3) cursor=238/302
+[lure-walk] PROGRESS t=326.9s walked=1905.9m pos=(329.1,1130.0) cursor=247/302
+[lure-walk] PROGRESS t=336.9s walked=1968.4m pos=(272.6,1156.8) cursor=255/302
+[lure-walk] PROGRESS t=346.9s walked=2030.8m pos=(216.1,1183.2) cursor=263/302
+[lure-walk] PROGRESS t=356.9s walked=2092.7m pos=(159.0,1207.0) cursor=271/302
+[lure-walk] PROGRESS t=366.9s walked=2154.6m pos=(100.3,1226.6) cursor=278/302
+[lure-walk] PROGRESS t=376.9s walked=2216.4m pos=(41.6,1246.1) cursor=286/302
+[lure-walk] CAPTURE herd_02_lure-first-seen.png t=378.0s walked=2224.1m pos=(34.1,1248.6) lure_m=120.9
+[lure-walk] PROGRESS t=386.9s walked=2278.4m pos=(-7.8,1282.4) cursor=294/302
+[lure-walk] CAPTURE herd_03_lure-first-readable.png t=388.9s walked=2290.5m pos=(-17.3,1290.5) lure_m=56.2
+[lure-walk] CAPTURE herd_04_approach-30m.png t=394.2s walked=2320.4m pos=(-40.4,1308.2) lure_m=29.6
+[lure-walk] CAPTURE herd_05_prompt-offered.png t=397.7s walked=2339.6m pos=(-59.6,1309.4) lure_m=10.4
+[lure-walk] RECEIPT {"activity":"herd","budget_s":1500.0,"clock_hour":8.20492517333335,"companion_out_at_start":true,"entered_road_at":[14.0,20.0],"fights":[],"final_position":[-59.6,1309.4],"flags_set_by_game_during_walk":["alpha_pin_intro_seen"],"frames":[{"file":"herd_01_start.png","label":"start","lure_m":1292.4,"pos":[13.2,20.3],"t_s":0.0,"walked_m":0.0},{"file":"herd_02_lure-first-seen.png","label":"lure-first-seen","lure_m":120.9,"pos":[34.1,1248.6],"t_s":378.0,"walked_m":2224.1},{"file":"herd_03_lure-first-readable.png","label":"lure-first-readable","lure_m":56.2,"pos":[-17.3,1290.5],"t_s":388.9,"walked_m":2290.5},{"file":"herd_04_approach-30m.png","label":"approach-30m","lure_m":29.6,"pos":[-40.4,1308.2],"t_s":394.2,"walked_m":2320.4},{"file":"herd_05_prompt-offered.png","label":"prompt-offered","lure_m":10.4,"pos":[-59.6,1309.4],"t_s":397.7,"walked_m":2339.6}],"game_seconds":397.7,"left_road_at":[-40.0,1310.0],"load_vs_saved_xz_m":0.26,"lure_first_readable":{"after_deliberate_look":false,"camera_to_lure_m":63.1,"height_px":31,"t_s":388.9,"walked_m":2290.5,"while_on_road":true},"lure_first_seen":{"after_deliberate_look":false,"camera_to_lure_m":127.0,"screen_px":[561,309],"t_s":378.0,"walked_m":2224.1,"while_on_road":true},"lure_node":"/root/MeadowsPlayground/MeadowhartHerdVisit","lure_position":[-70.0,1310.0],"notes":["pressed creature_recall (attempt 1); companion out afterwards: true","t=123.1s no progress at (-383.7,517.6); unstick attempt 1 (jump + strafe)","t=129.1s no progress at (-385.6,516.7); unstick attempt 2 (jump + strafe)","t=165.9s no progress at (-297.4,608.6); unstick attempt 1 (jump + strafe)","t=270.9s no progress at (272.0,860.0); unstick attempt 1 (jump + strafe)"],"off_road_leg_m":30.0,"position_after_load":[13.2,0.9,20.26],"prompt":{"t_s":397.2,"walked_m":2338.7,"winner":"{ \"label\": \"Watch the Meadowhart herd\", \"distance\": 11.4666872024536, \"priority\": 5, \"actionable\": true }"},"route_m":2323.5,"route_road_points":300,"save":"res://tests/fixtures/f03_lure_saves/S04-exit-pose-on-road.json.gz","save_sha256":"25d221d3828422a5370fdc367d209a553707820130c1f2dbb2fdcacf23285371","save_version":15.0,"saved_position":[13.2,0.4,20.0],"scene":"res://scenes/world/meadows_playground.tscn","script_state_writes":"none","start_distance_to_lure_m":1292.4,"verdict":"PASS","walked_m":2339.6,"why":"lure seen and the activity's prompt was offered"}
+[lure-walk] PASS activity=herd: lure seen and the activity's prompt was offered

@@ -1,0 +1,55 @@
+GATE A OPENING +1.78s — title interactive
+GATE A OPENING +1.92s — answered the returning-player fresh-game confirmation
+GATE A OPENING +2.04s — answered the character-choice step
+GATE A OPENING +13.79s — confirmed the configured trainer-name prefill
+GATE A OPENING +13.79s — new game world entered
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+GATE A OPENING +96.37s — wake/Get Up complete
+GATE A OPENING +100.93s — Grandpa briefing and pack complete
+GATE A OPENING +100.93s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +105.72s — starter selected and named (terrapup, uid creature-25e5b55e8810efb683e6a5e2ea92e825)
+GATE A OPENING +107.31s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +108.98s — usable house/front doorway exited
+GATE A OPENING +123.02s — tutorial Bramblebun combat entered
+GATE A OPENING +141.28s — Bramblebun naturally weakened to 28/106 HP
+GATE A OPENING +141.28s — satchel drained to 1 orb(s) so the empty case is on the real path
+GATE A OPENING +145.65s — running dry restocked the tutorial satchel to 5 orb(s)
+GATE A OPENING +158.35s — physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE A OPENING +159.87s — catch complete; exploration resumed with two-creature party
+GATE B +159.87s — opening | title interactive
+GATE B +159.87s — opening | answered the returning-player fresh-game confirmation
+GATE B +159.87s — opening | answered the character-choice step
+GATE B +159.87s — opening | confirmed the configured trainer-name prefill
+GATE B +159.87s — opening | new game world entered
+GATE B +159.87s — opening | wake/Get Up complete
+GATE B +159.87s — opening | Grandpa briefing and pack complete
+GATE B +159.87s — opening | starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE B +159.87s — opening | starter selected and named (terrapup, uid creature-25e5b55e8810efb683e6a5e2ea92e825)
+GATE B +159.87s — opening | Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE B +159.87s — opening | usable house/front doorway exited
+GATE B +159.87s — opening | tutorial Bramblebun combat entered
+GATE B +159.87s — opening | Bramblebun naturally weakened to 28/106 HP
+GATE B +159.87s — opening | satchel drained to 1 orb(s) so the empty case is on the real path
+GATE B +159.87s — opening | running dry restocked the tutorial satchel to 5 orb(s)
+GATE B +159.87s — opening | physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE B +159.87s — opening | catch complete; exploration resumed with two-creature party
+GATE B +159.87s — starter terrapup reached the party as 'Bud' (uid creature-25e5b55e8810efb683e6a5e2ea92e825)
+GATE B +159.87s — opening played; player stands where the game left them, at (33.0, -1.0, -36.0)
+GATE A NPC/GATHER +12.26s — Mira cycle 1 exited and movement resumed
+GATE A NPC/GATHER +13.69s — Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue
+GATE A NPC/GATHER +16.09s — Tam cycle 1 exited and movement resumed
+GATE A NPC/GATHER +16.09s — Tam handed over knife, torch and build hammer through dialogue
+GATE A NPC/GATHER +19.78s — Satchel assigned four tools by focused controller input
+GATE A NPC/GATHER +24.57s — axe equipped, swung, gathered +4 Wood
+GATE A NPC/GATHER +27.30s — pickaxe equipped, swung, gathered +4 Stone
+GATE A NPC/GATHER +32.18s — knife equipped, swung, gathered +4 Fiber
+GATE A NPC/GATHER +41.72s — Oskar cycle 1 exited and movement resumed
+GATE A NPC/GATHER +52.67s — Bram cycle 1 exited and movement resumed
+GATE A NPC/GATHER +54.03s — Bram cycle 2 exited and movement resumed
+GATE A NPC/GATHER +55.37s — Bram cycle 3 exited and movement resumed
+GATE A NPC/GATHER +57.07s — five NPC/modal exits and three equipped-tool gathers returned world control
+GATE B +216.94s — visited the village and came away with tools
+GATE B +217.06s — team of 5 at level 5 qualifies for the tournament
+GATE B +217.06s — CORE stops here (opening, road gate, village tools, tournament readiness); pass --gate-b-full-chain to continue into the gather route and the tail
+gate B continuous (CORE): OK — a fresh save walked opening, road gate, village tools and tournament readiness in order
+rc=0

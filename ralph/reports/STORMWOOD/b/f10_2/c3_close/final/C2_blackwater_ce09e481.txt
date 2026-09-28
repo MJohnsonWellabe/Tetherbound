@@ -1,0 +1,10 @@
+STORMWOOD_C2C3 blackwater_elder terrapup MASHER L41 runs=24 win=1.00 med_lead=0.314 med_party=0.076 med_s=42.8 max_s=48.3 lead_faint=0.00 wipe=0.00 max_hit=0.024 tell=[0.80,0.80] incoming=343 stalled=0
+STORMWOOD_C2C3 blackwater_elder terrapup READER L41 runs=24 win=1.00 med_lead=0.023 med_party=0.006 med_s=53.5 max_s=53.8 lead_faint=0.00 wipe=0.00 max_hit=0.024 tell=[0.80,0.80] incoming=24 stalled=0
+STORMWOOD_C2C3_VERDICT blackwater_elder terrapup PASS ratio=0.07 reader_win=1.00 max_hit=0.024 min_tell=0.80 
+STORMWOOD_C2C3 blackwater_elder ripplet MASHER L41 runs=24 win=1.00 med_lead=0.215 med_party=0.047 med_s=24.2 max_s=24.2 lead_faint=0.00 wipe=0.00 max_hit=0.047 tell=[0.80,0.80] incoming=129 stalled=0
+STORMWOOD_C2C3 blackwater_elder ripplet READER L41 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=43.1 max_s=44.4 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT blackwater_elder ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.047 min_tell=0.80 
+STORMWOOD_C2C3 blackwater_elder galewisp MASHER L41 runs=24 win=1.00 med_lead=0.263 med_party=0.051 med_s=26.4 max_s=28.8 lead_faint=0.00 wipe=0.00 max_hit=0.058 tell=[0.80,0.80] incoming=129 stalled=0
+STORMWOOD_C2C3 blackwater_elder galewisp READER L41 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=42.2 max_s=44.1 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3_VERDICT blackwater_elder galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.058 min_tell=0.80 
+STORMWOOD_C2C3 done: 3 rows, 144 runs, 0 failing rows, 0 errors

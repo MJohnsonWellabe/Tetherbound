@@ -1,0 +1,32 @@
+{
+  "inspected_by": "Codex root, every one of 18 native r2 PNGs opened individually",
+  "native": "Windows Godot 4.7, GTX1060, OpenGL3.3 Compatibility, 1920x1080",
+  "exit_code": 0,
+  "colliders_synchronous": [
+    167,
+    167
+  ],
+  "initial_count_146": "Earlier asynchronous world build count; not a valid before-install comparison. Same-call pre/post counts are 167/167.",
+  "camera": "Production CameraRig. Unmodified camera script. Stands/yaw/pitch fixtures disclosed in capture source.",
+  "frame_observations": {
+    "pump_intake": "Twin piston barrels, flywheel and open pipes visible; trainer overlaps lower skid; nearby pre-existing crate remains.",
+    "pump_return": "Pump and flywheel visible, complete pipe silhouette, existing crossing visible beyond.",
+    "gate_intake": "Closed timber lower panels and bars visible; upper hoist partly outside closer camera frame.",
+    "gate_return": "Closed gate spans crossing; top wheel cropped at closest normal stand.",
+    "banner_west": "Complete blue/cream crest and pointed hem visible below gallery, top crossbar against ledge.",
+    "banner_east": "Complete crest and hem visible below gallery.",
+    "heart_entry": "Both banners flank crystal; story HUD covers part of right banner.",
+    "intake_gallery": "Full intake gate hoist and pump silhouette visible from entrance.",
+    "after-open/gate_intake": "Gate leaf gone and passage clear; fixed frame remains overhead.",
+    "after-open/gate_return": "Crossing passage clear; fixed hoist remains overhead."
+  },
+  "limitations": [
+    "Paired before/after clock progresses 08:02 to 08:32; static interior lighting is unchanged.",
+    "Five-member party granted; no summoned companion. No combat or earned traversal proof.",
+    "Baseline party popover visible in first two frames, then auto-hides.",
+    "Portable import cache warned about unresolved UIDs, then resolved textures by original resource path. No missing texture or engine errors seen.",
+    "Static prop presentation only; no pump/hoist motion, no cloth simulation.",
+    "Gate fixed posts are partly inside existing side-wall masonry.",
+    "Full scene acceptance requires separate verdict; scoped props do not close a regional criterion."
+  ]
+}

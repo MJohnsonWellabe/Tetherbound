@@ -202,6 +202,11 @@
     "cloudreach_veyra_defeated": {
       "speaker": "Captain Veyra", "portrait": "res://assets/ui/portraits/captain_b.png",
       "lines": ["Enough. My command is finished.", "The engine won't obey a surrender. Its exposed relays are still holding the extraction cycle. Break all three before the wind folds back through the roads."]
-    }
+    },
+    "cloudreach_solmane_chamber": {"speaker": "Summit Engine", "portrait": "res://assets/ui/portraits/creatures/solmane.png", "_comment": "Solmane (owner ruling 2026-09-27, #356 5858140459): the summit engine's tether chamber, reusing stronghold_climax.gd (data/config/cloudreach_solmane_climax.json).", "lines": ["Behind Veyra's post the storm engine is still running, and it is running on something.", "Inside its cage a great bird stands with its wings bound flat. Every cable on this summit ends at its feet.", "It lifts its head and looks at you."]},
+    "cloudreach_solmane_free": {"speaker": "Summit Engine", "portrait": "res://assets/ui/portraits/creatures/solmane.png", "lines": ["A tether lever, stiff with ice. Nobody here ever meant to pull it.", "You pull it. The cage drops its light, and the wind comes back into the room.", "Solmane opens its wings, slowly, and the light that comes off it is its own."]},
+    "cloudreach_solmane_joins": {"speaker": "Summit Engine", "portrait": "res://assets/ui/portraits/creatures/solmane.png", "lines": ["It crosses the deck to you and lowers its head until the two of you are level.", "Nothing is asked with an orb. It is offering. Fly out, and it would follow."]},
+    "cloudreach_solmane_choice": {"speaker": "Summit Engine", "portrait": "res://assets/ui/portraits/creatures/solmane.png", "lines": ["Step to its shoulder to take it with you, or step back to leave it free. Both are final."]},
+    "cloudreach_solmane_engine_fails": {"speaker": "Summit Engine", "portrait": "res://assets/ui/portraits/creatures/solmane.png", "lines": ["Behind you the engine notices what it has lost. It does not explode. It winds down.", "The tether light goes from teal to nothing, and the summit wind is only wind again."]}
   }
 }

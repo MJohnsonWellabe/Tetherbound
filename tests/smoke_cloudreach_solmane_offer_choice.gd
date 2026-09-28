@@ -1,0 +1,521 @@
+extends SceneTree
+
+## Solmane (owner ruling 2026-09-27, #356 5858140459): Cloudreach's freed
+## legendary works exactly like the Meadows Veridian, so this is the Veridian
+## solo smoke (`smoke_veridian_offer_choice.gd`) run against the SECOND
+## `stronghold_climax.gd` instance Cloudreach mounts
+## (`CloudreachSolmaneClimax`, `data/config/cloudreach_solmane_climax.json`):
+## accept with space, refuse with space, refuse at five, accept at five then
+## let the newcomer go, accept at five releasing one, and a save while the
+## choice is open -- each with a real save/reload and the no-re-offer checks.
+##
+##   godot --headless --path . --script tests/smoke_cloudreach_solmane_offer_choice.gd
+##
+## Every answer is a real `interact` press at the accept/refuse prompt through
+## the live arbiter; at five the release ceremony's own buttons are pressed.
+##
+## DISCLOSED FIXTURES (as the Veridian smoke's, adapted):
+##   * `captain_veyra_defeated` (the gate) and the finale's aftermath flags
+##     (`storm_anchor_network_disabled`, `cloudreach_winds_restored`) are set
+##     directly; Veyra's fight is card C1's earned play. With the aftermath
+##     set the finale's relay exam cannot pilot the ally or push the trainer.
+##   * The party is built with `Game.make_creature`; the player is placed on
+##     the engine control and walked to each prompt by move_and_slide.
+##   * Reload is in-process (save, clear, boot a fresh Cloudreach, load).
+##   * No herd display: that is the Meadows world event (WORLD §3.2), not
+##     part of the Solmane ruling.
+
+const SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
+const PREFIX := "cloudreach:legendary_resolution:"
+const SETTLE_FRAMES := 300
+const SLOT := 4
+const CHOICE_FRAME_BUDGET := 900
+const NO_REOFFER_FRAMES := 240
+
+var _failures: Array[String] = []
+var _game: Node = null
+var _world: Node = null
+var _max_party_seen := 0
+
+
+func _init() -> void:
+	_run()
+
+
+func _fail(message: String) -> void:
+	_failures.append(message)
+	print("  FAIL: %s" % message)
+
+
+func _run() -> void:
+	await _boot_world()
+	_game = root.get_node_or_null(^"Game")
+	if _game == null:
+		print("solmane-offer-choice FAIL: no Game autoload")
+		quit(1)
+		return
+
+	await _scenario("space-accept", 4, "accept", "")
+	await _scenario("space-refuse", 4, "refuse", "")
+	await _scenario("capacity-refuse-at-prompt", 5, "refuse", "")
+	await _scenario("capacity-accept-then-let-newcomer-go", 5, "accept", "newcomer")
+	await _scenario("capacity-accept-release-one", 5, "accept", "slot0")
+	await _a_save_while_the_choice_is_open_keeps_the_offer()
+
+	print("")
+	if _max_party_seen > 5:
+		_fail("the party held %d at some frame; a sixth slot existed" % _max_party_seen)
+	if _failures.is_empty():
+		print("solmane offer choice smoke test passed")
+		quit(0)
+		return
+	print("solmane offer choice smoke test FAILED (%d)" % _failures.size())
+	quit(1)
+
+
+## One answer, end to end: fresh freed-but-unanswered state, the choice opens,
+## the player answers at a prompt (and at five, in the ceremony), the result is
+## checked, saved, reloaded into a fresh world and checked again for no
+## re-offer and no change.
+func _scenario(label: String, party_size: int, answer: String, ceremony: String) -> void:
+	print("--- %s" % label)
+	_reset_state(party_size)
+	var before: Array = (_game.get("party").call("members") as Array).duplicate()
+	await _boot_world()
+	var climax := _world.get_node_or_null(^"CloudreachSolmaneClimax")
+	if climax == null:
+		_fail("(%s) no CloudreachSolmaneClimax in the world" % label)
+		return
+	if not await _pull_the_lever(climax, label):
+		return
+	if not await _drive_to_choice(climax, label):
+		return
+	var character := str(_game.get("local").get("character_id"))
+
+	if not await _answer_at_prompt(climax, answer, label):
+		return
+
+	if ceremony != "":
+		if not await _drive_ceremony(ceremony, label):
+			return
+
+	for i in 30:
+		await _frame()
+	var party: RefCounted = _game.get("party")
+	var members: Array = party.call("members")
+	var solmanes := _count_solmane(members)
+	var accepted := answer == "accept" and ceremony != "newcomer"
+	var flags: RefCounted = _game.get("progression")
+
+	if accepted:
+		if solmanes != 1:
+			_fail("(%s) accepted, but the belt holds %d solmane" % [label, solmanes])
+		if not bool(flags.call("has", "cloudreach:legendary_joined")) or bool(flags.call("has", "cloudreach:legendary_refused")):
+			_fail("(%s) accepted, but the personal receipt is wrong" % label)
+		var expected_size := party_size + 1 if party_size < 5 else 5
+		if members.size() != expected_size:
+			_fail("(%s) accepted into %d, holding %d" % [label, expected_size, members.size()])
+		if ceremony == "slot0" and members.has(before[0]):
+			_fail("(%s) the chosen creature was not the one released" % label)
+		if party_size < 5:
+			# Room on the belt: every creature already there stays, by identity
+			# (independent verifier: this scenario only checked the size).
+			for member: Variant in before:
+				if not members.has(member):
+					_fail("(%s) accepted with room, but %s left the belt" % [label, str((member as RefCounted).get("nickname"))])
+		if ceremony == "slot0":
+			for i in range(1, before.size()):
+				if not members.has(before[i]):
+					_fail("(%s) a creature the player did NOT choose was released (%s)" % [label, str(before[i].get("nickname"))])
+	else:
+		if solmanes != 0:
+			_fail("(%s) refused, but the belt holds %d solmane" % [label, solmanes])
+		if members.size() != before.size():
+			_fail("(%s) refused, but the party changed size %d -> %d" % [label, before.size(), members.size()])
+		for member: Variant in before:
+			if not members.has(member):
+				_fail("(%s) refused, and '%s' was released anyway -- an accidental release" % [label, str((member as RefCounted).get("nickname"))])
+		if not bool(flags.call("has", "cloudreach:legendary_refused")) or bool(flags.call("has", "cloudreach:legendary_joined")):
+			_fail("(%s) refused, but the personal receipt is wrong" % label)
+	var receipt := str(climax.call("resolution_flag", accepted, character if not character.is_empty() else "solo", PREFIX))
+	if not bool(flags.call("has", receipt)):
+		_fail("(%s) the world receipt '%s' was not recorded" % [label, receipt])
+	if not bool(flags.call("has", "cloudreach:legendary_settled")):
+		_fail("(%s) the world never settled after this character answered" % label)
+	if _game.get("pending_catch") != null:
+		_fail("(%s) a pending catch is still parked after the answer" % label)
+	var snapshot := _party_ids()
+	print("(%s) answered: party %d, solmane %d, receipt %s" % [label, members.size(), solmanes, receipt])
+
+	# Save, throw the world and the in-memory state away, boot fresh, load.
+	if not bool(_game.call("save_game", SLOT)):
+		_fail("(%s) Game.save_game() returned false" % label)
+		return
+	_reset_state(0)
+	await _boot_world()
+	if not bool(_game.call("load_game", SLOT)):
+		_fail("(%s) Game.load_game() returned false" % label)
+		return
+	var reloaded := _world.get_node_or_null(^"CloudreachSolmaneClimax")
+	_to_chamber(reloaded)
+	if await _reoffered(reloaded):
+		_fail("(%s) after a real save/reload the same freeing was offered AGAIN" % label)
+	if _party_ids() != snapshot:
+		_fail("(%s) the reloaded party differs from the saved one: %s vs %s" % [label, str(_party_ids()), str(snapshot)])
+	if not bool(_game.get("progression").call("has", receipt)):
+		_fail("(%s) the world receipt did not survive the reload" % label)
+	print("(%s) reload: no re-offer, same party, receipts kept" % label)
+
+	# The personal receipt ALONE must hold. In solo, `legendary_settled`
+	# already sends a reloaded chamber straight to DONE, which would hide a
+	# missing receipt; co-op resumes unanswered participants past it. Take the
+	# settled flag away and stand in the chamber again.
+	_game.get("progression").call("set_flag", "cloudreach:legendary_settled", false)
+	await _boot_world()
+	var bare := _world.get_node_or_null(^"CloudreachSolmaneClimax")
+	_to_chamber(bare)
+	if await _reoffered(bare):
+		_fail("(%s) with only the personal receipt, the freeing was offered AGAIN" % label)
+	else:
+		print("(%s) the personal receipt alone prevents a second offer" % label)
+
+
+## A save taken WHILE this character's choice is open must bring the offer back
+## unanswered, not lose it and not answer it.
+func _a_save_while_the_choice_is_open_keeps_the_offer() -> void:
+	var label := "save-while-choice-open"
+	print("--- %s" % label)
+	_reset_state(4)
+	await _boot_world()
+	var climax := _world.get_node_or_null(^"CloudreachSolmaneClimax")
+	if climax == null or not await _pull_the_lever(climax, label) \
+			or not await _drive_to_choice(climax, label):
+		return
+	if not bool(_game.call("save_game", SLOT)):
+		_fail("(%s) Game.save_game() returned false" % label)
+		return
+	_reset_state(0)
+	await _boot_world()
+	if not bool(_game.call("load_game", SLOT)):
+		_fail("(%s) Game.load_game() returned false" % label)
+		return
+	var reloaded := _world.get_node_or_null(^"CloudreachSolmaneClimax")
+	_to_chamber(reloaded)
+	if reloaded == null or not await _drive_to_choice(reloaded, label):
+		_fail("(%s) the unanswered offer did not come back after a reload" % label)
+		return
+	var flags: RefCounted = _game.get("progression")
+	if bool(flags.call("has", "cloudreach:legendary_joined")) or bool(flags.call("has", "cloudreach:legendary_refused")):
+		_fail("(%s) the reload answered the offer by itself" % label)
+	if _count_solmane(_game.get("party").call("members")) != 0:
+		_fail("(%s) the reload put the creature on the belt without an answer" % label)
+	print("(%s) reload brought the same unanswered choice back" % label)
+
+
+## --- driving ---
+
+## Stand the player on the chamber's machine control.
+func _to_chamber(climax: Node) -> void:
+	var player := _world.get_node_or_null(^"Player") as Node3D
+	var control := climax.find_child("MachineControl", true, false) as Node3D if climax != null else null
+	if player == null or control == null:
+		return
+	player.global_position = control.global_position + Vector3(0.0, 0.3, 0.0)
+	if player is CharacterBody3D:
+		(player as CharacterBody3D).velocity = Vector3.ZERO
+
+
+## The real lever: stand on the control and press interact.
+func _pull_the_lever(climax: Node, label: String) -> bool:
+	_to_chamber(climax)
+	for i in 20:
+		await _frame()
+	for attempt in 5:
+		await _press("interact")
+		for i in 10:
+			await _frame()
+		if str(climax.get("_stage")) != "":
+			return true
+	_fail("(%s) pressing interact on the machine control did not pull the lever" % label)
+	return false
+
+
+## Read through anything the chamber says for `NO_REOFFER_FRAMES` and report
+## whether this character was offered the freeing again: the join beat, the
+## choice, or the ceremony seam.
+func _reoffered(climax: Node) -> bool:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	for i in NO_REOFFER_FRAMES:
+		await _frame()
+		if panel != null and bool(panel.call("is_open")):
+			await _press("interact")
+		if climax != null and str(climax.get("_stage")) in ["join", "choice"]:
+			return true
+		if _game.get("pending_catch") != null:
+			return true
+	return false
+
+
+## --- driving: the choice ------------------------------------------------------------------
+
+## Dismiss whatever the chamber says until this character's choice is open.
+func _drive_to_choice(climax: Node, label: String) -> bool:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	for i in CHOICE_FRAME_BUDGET:
+		await _frame()
+		if bool(climax.call("choice_open")):
+			return true
+		if panel != null and bool(panel.call("is_open")):
+			await _press("interact")
+	_fail("(%s) the choice never opened (stage '%s')" % [label, str(climax.get("_stage"))])
+	return false
+
+
+## Stand at the named prompt and press interact through the live arbiter.
+## Also proves the OTHER prompt is not what the press reached, and that where
+## the player stood when the choice opened, neither prompt was live.
+func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
+	if not await _read_the_choice(climax, label):
+		return false
+	var accept_prompt: Node3D = climax.get("_accept_prompt")
+	var refuse_prompt: Node3D = climax.get("_refuse_prompt")
+	if accept_prompt == null or refuse_prompt == null:
+		_fail("(%s) the choice opened without both prompts" % label)
+		return false
+	var player := _world.get_node_or_null(^"Player") as Node3D
+	if player == null:
+		_fail("(%s) no Player" % label)
+		return false
+	for prompt: Node3D in [accept_prompt, refuse_prompt]:
+		var offer: Dictionary = prompt.call("interaction_offer", player.global_position)
+		if not offer.is_empty():
+			_fail("(%s) '%s' was live where the player stood when the offer landed" % [label, str(offer.get("label", ""))])
+	var target: Node3D = accept_prompt if answer == "accept" else refuse_prompt
+	var anchor := target.get_parent() as Node3D
+	# WALKED, not placed (coordinator, criterion proof): the player's own
+	# body moves across the chamber floor to the prompt the way a player
+	# steers there, so a prompt that cannot be reached on foot -- or a creature
+	# that shoves the player off the spot, the measured 4.3 m WO7 defect --
+	# fails here.
+	var start := player.global_position
+	if not await _walk_to(player, anchor.global_position, 0.35):
+		_fail("(%s) could not walk to the %s prompt: stopped %.2f m short (from %.2f m)" % [label, answer,
+			_flat_distance(player.global_position, anchor.global_position), _flat_distance(start, anchor.global_position)])
+		return false
+	var offer_here: Dictionary = target.call("interaction_offer", player.global_position)
+	if offer_here.is_empty():
+		_fail("(%s) standing at the %s prompt after walking there, it offers nothing" % [label, answer])
+		return false
+	print("(%s) walked %.2f m to the %s prompt; offered '%s'" % [label, _flat_distance(start, anchor.global_position),
+		answer, str(offer_here.get("label", ""))])
+	await _press("interact")
+	for i in 20:
+		await _frame()
+		if not bool(climax.call("choice_open")):
+			return true
+	_fail("(%s) pressing interact at the %s prompt did not answer the offer" % [label, answer])
+	return false
+
+
+## Walk the player's own body toward `to` with move_and_slide until within
+## `stop` metres (flat), the way `smoke_gate_e_finale::_walk_toward` does.
+## False if it never got there within the budget (blocked or shoved).
+func _walk_to(player: Node3D, to: Vector3, stop: float) -> bool:
+	if not player is CharacterBody3D:
+		return false
+	var body := player as CharacterBody3D
+	body.set_physics_process(false)
+	var arrived := false
+	for i in 600:
+		var d := to - body.global_position
+		d.y = 0.0
+		if d.length() <= stop:
+			arrived = true
+			break
+		var flat := d.normalized()
+		body.velocity.x = flat.x * 3.0
+		body.velocity.z = flat.z * 3.0
+		body.velocity.y = 0.0 if body.is_on_floor() else body.velocity.y - 0.5
+		body.move_and_slide()
+		await _frame()
+	body.velocity = Vector3.ZERO
+	body.set_physics_process(true)
+	for i in 8:
+		await _frame()
+	return arrived
+
+
+func _flat_distance(a: Vector3, b: Vector3) -> float:
+	return Vector2(a.x - b.x, a.z - b.z).length()
+
+
+## F05 WO6: the offer is READ OUT before it can be answered -- a conversation
+## at dialogue size naming both answers, where each is, and that either is
+## final. While it is open neither answer is taken.
+func _read_the_choice(climax: Node, label: String) -> bool:
+	return await _read_conversation("cloudreach_solmane_choice", ["shoulder", "step back", "final"], label, climax)
+
+
+## Wait for `id` to open, prove what it says, and read it through with
+## `interact`. With `climax`, also prove that no answer is taken while it is
+## still open.
+func _read_conversation(id: String, must_say: Array, label: String, climax: Node = null) -> bool:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	if panel == null:
+		_fail("(%s) no DialoguePanel to read '%s' in" % [label, id])
+		return false
+	var runner: RefCounted = panel.call("runner")
+	var opened := false
+	for i in 240:
+		await _frame()
+		if bool(panel.call("is_open")) and str(runner.call("conversation_id")) == id:
+			opened = true
+			break
+	if not opened:
+		_fail("(%s) '%s' was never read out" % [label, id])
+		return false
+	if climax != null and (bool(climax.call("accept_offer")) or bool(climax.call("refuse_offer"))):
+		_fail("(%s) an answer was taken while '%s' was still being read" % [label, id])
+		return false
+	var said := ""
+	for i in 40:
+		if not bool(panel.call("is_open")) or str(runner.call("conversation_id")) != id:
+			break
+		said += " " + str((runner.call("line") as Dictionary).get("text", ""))
+		await _press("interact")
+		for j in 6:
+			await _frame()
+	if bool(panel.call("is_open")):
+		_fail("(%s) '%s' never closed" % [label, id])
+		return false
+	for word: String in must_say:
+		if not said.to_lower().contains(word):
+			_fail("(%s) '%s' never says '%s': %s" % [label, id, word, said.strip_edges()])
+			return false
+	print("(%s) read '%s':%s" % [label, id, said])
+	return true
+
+
+## At five, the release ceremony, pressed through its own buttons:
+## "newcomer" lets the offered creature go (a refusal), "slot0" releases the
+## first belt creature for it.
+func _drive_ceremony(mode: String, label: String) -> bool:
+	var menu: CanvasLayer = _game.call("menu")
+	for i in 120:
+		await _frame()
+		if menu != null and bool(menu.call("is_open")):
+			break
+	if menu == null or not bool(menu.call("is_open")) or _game.get("pending_catch") == null:
+		_fail("(%s) accepting at five did not open the release ceremony" % label)
+		return false
+	var tab := _creatures_tab(menu)
+	if tab == null:
+		_fail("(%s) no creatures tab" % label)
+		return false
+	for i in 20:
+		await _frame()
+	if mode == "slot0":
+		var rows: Array = tab.get("_rows")
+		(rows[0] as Control).grab_focus()
+		await _press("ui_accept")
+	else:
+		await _press("ui_accept")  # focus starts on the newcomer's row
+	await _press("ui_down")  # 'Keep them' -> 'Let them go'
+	if int(_game.get("party").call("size")) > 5:
+		_fail("(%s) a sixth appeared mid-ceremony" % label)
+	await _press("ui_accept")
+	await _press("ui_accept")  # done
+	for i in 30:
+		await _frame()
+	if bool(menu.call("is_open")):
+		await _press("menu_cancel")
+	if _game.get("pending_catch") != null:
+		_fail("(%s) the ceremony ended with the offer still parked" % label)
+		return false
+	return true
+
+
+func _creatures_tab(menu: CanvasLayer) -> Node:
+	var tabs: Array = menu.get("_tabs")
+	for i in tabs.size():
+		if str((tabs[i] as Dictionary).get("id", "")) == "creatures":
+			return (menu.get("_bodies") as Array)[i]
+	return null
+
+
+## --- state --------------------------------------------------------------------
+
+## Freed-but-unanswered: the Warden is down and the lever pulled, nothing else.
+## `party_size` 0 leaves the party empty for a load to fill.
+func _reset_state(party_size: int) -> void:
+	_game.get("progression").call("load_data", {})
+	_game.set("pending_catch", null)
+	var party: RefCounted = _game.get("party")
+	party.call("clear")
+	if party_size == 0:
+		return
+	var recipe: Array = ["terrapup", "mudsnout", "bramblebun", "brooktail", "tuskroot"]
+	for i in party_size:
+		var creature: RefCounted = _game.call("make_creature", recipe[i], str(recipe[i]).capitalize())
+		creature.set("hp", float(creature.get("max_hp")))
+		party.call("add", creature)
+	for flag: String in ["realm_key_cloudreach", "cloudreach_chapter_started", "fly_traversal_unlocked",
+			"cloudreach_upper_route_unlocked", "cloudreach_act_ii_complete", "captain_veyra_defeated",
+			"storm_anchor_network_disabled", "cloudreach_winds_restored"]:
+		_game.get("progression").call("set_flag", flag)
+
+
+func _party_ids() -> Array:
+	var out: Array = []
+	for member: Variant in (_game.get("party").call("members") as Array):
+		out.append("%s:%s" % [str((member as RefCounted).get("species_id")), str((member as RefCounted).get("uid"))])
+	return out
+
+
+func _count_solmane(members: Array) -> int:
+	var n := 0
+	for member: Variant in members:
+		if str((member as RefCounted).get("species_id")) == "solmane":
+			n += 1
+	return n
+
+
+func _frame() -> void:
+	await physics_frame
+	var party: RefCounted = _game.get("party") if _game != null else null
+	if party != null:
+		_max_party_seen = maxi(_max_party_seen, int(party.call("size")))
+
+
+func _boot_world() -> void:
+	for child in root.get_children():
+		if child.name != "Game":
+			child.queue_free()
+	for i in 4:
+		await process_frame
+	_game = root.get_node_or_null(^"Game")
+	if _game != null:
+		_game.set("current_realm", "cloudreach")
+	_world = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(_world)
+	current_scene = _world
+	for i in SETTLE_FRAMES:
+		await physics_frame
+
+
+func _press(action: String) -> void:
+	Input.action_press(action)
+	_send(action, true)
+	await process_frame
+	await process_frame
+	Input.action_release(action)
+	_send(action, false)
+	for i in 4:
+		await process_frame
+
+
+func _send(action: String, pressed: bool) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = pressed
+	Input.parse_input_event(event)

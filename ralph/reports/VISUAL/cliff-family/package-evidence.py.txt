@@ -1,0 +1,55 @@
+import hashlib, json, shutil, subprocess
+from pathlib import Path
+from PIL import Image
+
+root=Path('D:/tetherbound/visual-acceptance')
+local=Path('D:/tetherbound/visual-acceptance-local')
+out=root/'ralph/reports/VISUAL/cliff-family'
+out.mkdir(parents=True,exist_ok=True)
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+runs=[]
+for region,tag in [('cloudreach','baseline'),('cloudreach','candidate'),('tidewake','baseline'),('tidewake','candidate'),('tidewake','candidate2')]:
+    folder=root/f'shots/cliff-family-{tag}/region/{region}'
+    manifest=[json.loads(s) for s in (folder/'manifest.jsonl').read_text().splitlines()]
+    frames=[]
+    for row in manifest:
+        if row.get('kind')!='frame': continue
+        p=folder/row['file']
+        with Image.open(p) as im: size=list(im.size)
+        assert size==[1920,1080]
+        frames.append(dict(row,sha256=sha(p),size=size))
+    name=f'{region}-{tag}'
+    shutil.copyfile(folder/f'_sheet_{region}_places.jpg',out/f'{name}.jpg')
+    for ext in ['log','err']:
+        shutil.copyfile(local/f'cliff-family-{tag}-{region}.{ext}',out/f'{name}.{ext}.txt')
+    runs.append({'region':region,'tag':tag,'frames':frames,'frame_count':len(frames),
+      'native_root':str(folder),'manifest_sha256':sha(folder/'manifest.jsonl'),
+      'wrapper_exit':1 if region=='cloudreach' else 0,'engine_exit':0,
+      'diagnostic':'Existing production unscoped fly_tutorial_completed flag; all frames captured.' if region=='cloudreach' else 'No errors; pre-existing interpolation deprecation warning.'})
+for region in ['cloudreach','tidewake']:
+    base=next(r for r in runs if r['region']==region and r['tag']=='baseline')
+    for run in [r for r in runs if r['region']==region and r['tag']!='baseline']:
+        assert len(base['frames'])==len(run['frames'])
+        for a,b in zip(base['frames'],run['frames']):
+            for key in ['file','camera','feet','target','time','yaw_deg','pitch_deg']:
+                assert a[key]==b[key],(region,run['tag'],key)
+        run['matched_recorded_camera_and_feet']=True
+sources={}
+for name in ['scripts/world/coastal_rock_material.gd','scripts/world/water_world.gd','data/config/water_visual.json']:
+    p=root/name
+    sources[name]=sha(p)
+    if p.name!='water_world.gd': shutil.copyfile(p,out/(p.name+'.candidate2.txt'))
+for name in ['capture_cliff_family.gd','run-cliff-family.ps1','cliff-source-review.md','cliff-cloudreach-verdict.md']:
+    dest='cloudreach-verdict.md' if name=='cliff-cloudreach-verdict.md' else name+'.txt' if name.endswith(('.gd','.ps1')) else name
+    shutil.copyfile(local/name,out/dest)
+verdict=local/'cliff-tidewake-verdict.md'
+if verdict.exists(): shutil.copyfile(verdict,out/'tidewake-verdict.md')
+data={'baseline_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
+  'integrated_main':'94c63b1f221063c2cec7122136bb111f6805bfd7',
+  'engine':'Godot 4.7 stable 5b4e0cb0f; Compatibility/OpenGL 3.3; GTX1060 3GB driver560.94',
+  'fixture':'staged location, flags, party and clock; HUD hidden; companion parked; existing production scenes and CameraRig',
+  'candidate2_source_sha256':sources,'runs':runs,
+  'total_native_frames':sum(r['frame_count'] for r in runs),
+  'limits':['No continuous walk or motion witness','No ROG Ally performance witness','Cloudreach execution has a disclosed production flag error','Only Windscar is a strong Cloudreach cliff-face witness; other views mostly regression controls','Contact sheets are summaries; native PNGs remain local at recorded paths']}
+(out/'evidence.json').write_text(json.dumps(data,indent=2)+'\n')
+print(json.dumps({'frames':data['total_native_frames'],'runs':len(runs),'camera_records_match':True,'output':str(out)}))

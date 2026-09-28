@@ -1,0 +1,920 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"approach_finish": [
+		-111.337120056152,
+		108.208808898926,
+		5349.86279296875
+	],
+	"biome_id": "stormwood",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 263200966515,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 263217743733,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-27T21:29:35",
+	"capture_started_utc": "2026-09-27T21:27:17",
+	"captured_frame_count": 6,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"bytes": 1994032,
+			"camera_player_distance_m": 4.87319087982178,
+			"camera_position": [
+				-224.568939208984,
+				90.565803527832,
+				5169.9609375
+			],
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.934809505939484,
+					0.0,
+					0.355148196220398
+				],
+				"basis_y": [
+					-0.124104663729668,
+					0.936956584453583,
+					-0.326664209365845
+				],
+				"basis_z": [
+					-0.332758635282516,
+					-0.349444568157196,
+					-0.875876426696777
+				],
+				"origin": [
+					-222.838684082031,
+					92.382698059082,
+					5174.51513671875
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.934809803962708,
+					0.000000281869574791926,
+					0.355148732662201
+				],
+				"basis_y": [
+					-0.124104641377926,
+					0.936956942081451,
+					-0.326664537191391
+				],
+				"basis_z": [
+					-0.332759141921997,
+					-0.349444836378098,
+					-0.875876486301422
+				],
+				"origin": [
+					-224.568939208984,
+					90.565803527832,
+					5169.9609375
+				]
+			},
+			"debug_travel": false,
+			"file": "res://shots/stormheart-hero/before1080/stormheart_road_320m.png",
+			"frame_id": "stormheart_road_320m",
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.00800000000001,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"ordinary_input_motion": {
+				"look": {
+					"desired_pitch_deg": 22.0359403258879,
+					"desired_yaw_deg": -157.452960805648,
+					"end_pitch_deg": 20.4533550143242,
+					"end_yaw_deg": -159.197462916374,
+					"physics_frames": 24,
+					"pitch_error_deg": 1.58258531156371,
+					"production_pitch_limits_deg": [
+						-60.0,
+						32.0
+					],
+					"reached": true,
+					"start_pitch_deg": -12.0,
+					"start_yaw_deg": -180.0,
+					"target": [
+						-100.0,
+						222.059112548828,
+						5470.0
+					],
+					"yaw_error_deg": 1.74450211072641
+				},
+				"tree_centre_distance_m": 320.000091552734,
+				"walk": {
+					"arrived": true,
+					"finish": [
+						-222.838653564453,
+						90.6327133178711,
+						5174.51611328125
+					],
+					"on_floor": true,
+					"physics_frame_budget": 900,
+					"start": [
+						-222.838653564453,
+						90.6327133178711,
+						5174.51611328125
+					],
+					"target_xz": [
+						-222.838653564453,
+						5174.51611328125
+					]
+				}
+			},
+			"player_position": [
+				-222.838653564453,
+				90.6327133178711,
+				5174.51611328125
+			],
+			"stormwood_phase": {
+				"cycle": 0,
+				"cycle_seconds": 510.0,
+				"duration": 240.0,
+				"elapsed": 4.76666666666666,
+				"phase": "calm",
+				"remaining": 235.233333333333
+			},
+			"stormwood_presentation": "calm",
+			"time": "day",
+			"viewed_face": "320m road, production trainer camera"
+		},
+		{
+			"bytes": 1414563,
+			"camera_player_distance_m": 4.68715572357178,
+			"camera_position": [
+				-165.296096801758,
+				101.680450439453,
+				5254.359375
+			],
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.950015187263489,
+					0.0,
+					0.312201589345932
+				],
+				"basis_y": [
+					-0.122546449303627,
+					0.919741690158844,
+					-0.372903257608414
+				],
+				"basis_z": [
+					-0.287145048379898,
+					-0.392523258924484,
+					-0.873769283294678
+				],
+				"origin": [
+					-163.835144042969,
+					103.677680969238,
+					5258.80517578125
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.950015723705292,
+					0.000000302832802390185,
+					0.31220206618309
+				],
+				"basis_y": [
+					-0.122546099126339,
+					0.919742345809937,
+					-0.372902721166611
+				],
+				"basis_z": [
+					-0.287145614624023,
+					-0.392522603273392,
+					-0.873769700527191
+				],
+				"origin": [
+					-165.296096801758,
+					101.680450439453,
+					5254.359375
+				]
+			},
+			"debug_travel": false,
+			"file": "res://shots/stormheart-hero/before1080/stormheart_road_220m.png",
+			"frame_id": "stormheart_road_220m",
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.00800000000001,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"ordinary_input_motion": {
+				"look": {
+					"desired_pitch_deg": 25.0657620665163,
+					"desired_yaw_deg": -163.153474948282,
+					"end_pitch_deg": 23.111602306366,
+					"end_yaw_deg": -161.808035075665,
+					"physics_frames": 3,
+					"pitch_error_deg": 1.95415976015033,
+					"production_pitch_limits_deg": [
+						-60.0,
+						32.0
+					],
+					"reached": true,
+					"start_pitch_deg": 20.4533550143242,
+					"start_yaw_deg": -159.197462916374,
+					"target": [
+						-100.0,
+						207.059112548828,
+						5470.0
+					],
+					"yaw_error_deg": -1.34543987261729
+				},
+				"tree_centre_distance_m": 220.63037109375,
+				"walk": {
+					"arrived": true,
+					"finish": [
+						-163.835113525391,
+						101.927696228027,
+						5258.80615234375
+					],
+					"on_floor": true,
+					"physics_frame_budget": 7249,
+					"start": [
+						-222.838653564453,
+						90.6327133178711,
+						5174.51611328125
+					],
+					"target_xz": [
+						-163.455062866211,
+						5259.35009765625
+					]
+				}
+			},
+			"player_position": [
+				-163.835113525391,
+				101.927696228027,
+				5258.80615234375
+			],
+			"stormwood_phase": {
+				"cycle": 0,
+				"cycle_seconds": 510.0,
+				"duration": 240.0,
+				"elapsed": 26.3499999999998,
+				"phase": "calm",
+				"remaining": 213.65
+			},
+			"stormwood_presentation": "calm",
+			"time": "day",
+			"viewed_face": "220m road, production trainer camera"
+		},
+		{
+			"bytes": 2079695,
+			"camera_player_distance_m": 3.83965945243835,
+			"camera_position": [
+				-100.504844665527,
+				107.580505371094,
+				5345.638671875
+			],
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999319553375244,
+					0.0,
+					0.0368569977581501
+				],
+				"basis_y": [
+					-0.0150516293942928,
+					0.912812232971191,
+					-0.408101290464401
+				],
+				"basis_z": [
+					-0.033643551170826,
+					-0.408378779888153,
+					-0.912192046642303
+				],
+				"origin": [
+					-100.363372802734,
+					109.297996520996,
+					5349.474609375
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.999320507049561,
+					0.000000290435082206386,
+					0.0368573553860188
+				],
+				"basis_y": [
+					-0.0150514738634229,
+					0.912812888622284,
+					-0.408100664615631
+				],
+				"basis_z": [
+					-0.0336439907550812,
+					-0.408378154039383,
+					-0.912192702293396
+				],
+				"origin": [
+					-100.504844665527,
+					107.580505371094,
+					5345.638671875
+				]
+			},
+			"debug_travel": false,
+			"file": "res://shots/stormheart-hero/before1080/stormheart_road_120m.png",
+			"frame_id": "stormheart_road_120m",
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.00800000000001,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"ordinary_input_motion": {
+				"look": {
+					"desired_pitch_deg": 25.5603256137802,
+					"desired_yaw_deg": -179.767388038236,
+					"end_pitch_deg": 24.1030388474464,
+					"end_yaw_deg": -177.887766420841,
+					"physics_frames": 14,
+					"pitch_error_deg": 1.45728676633379,
+					"production_pitch_limits_deg": [
+						-60.0,
+						32.0
+					],
+					"reached": true,
+					"start_pitch_deg": 23.111602306366,
+					"start_yaw_deg": -161.808035075665,
+					"target": [
+						-100.0,
+						167.059112548828,
+						5470.0
+					],
+					"yaw_error_deg": -1.87962161739506
+				},
+				"tree_centre_distance_m": 120.524963378906,
+				"walk": {
+					"arrived": true,
+					"finish": [
+						-100.363357543945,
+						107.548011779785,
+						5349.4755859375
+					],
+					"on_floor": true,
+					"physics_frame_budget": 7793,
+					"start": [
+						-163.835113525391,
+						101.927696228027,
+						5258.80615234375
+					],
+					"target_xz": [
+						-100.0,
+						5350.0
+					]
+				}
+			},
+			"player_position": [
+				-100.363357543945,
+				107.548011779785,
+				5349.4755859375
+			],
+			"stormwood_phase": {
+				"cycle": 0,
+				"cycle_seconds": 510.0,
+				"duration": 240.0,
+				"elapsed": 49.4833333333318,
+				"phase": "calm",
+				"remaining": 190.516666666668
+			},
+			"stormwood_presentation": "calm",
+			"time": "day",
+			"viewed_face": "120m road, production trainer camera"
+		},
+		{
+			"bytes": 2129708,
+			"camera_player_distance_m": 3.50984668731689,
+			"camera_position": [
+				-111.543601989746,
+				108.391082763672,
+				5346.36376953125
+			],
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.998258769512177,
+					0.0,
+					0.0589386448264122
+				],
+				"basis_y": [
+					-0.0240693539381027,
+					0.912812232971191,
+					-0.407668769359589
+				],
+				"basis_z": [
+					-0.0538000650703907,
+					-0.408378720283508,
+					-0.911225378513336
+				],
+				"origin": [
+					-111.337074279785,
+					109.958793640137,
+					5349.86181640625
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.998261570930481,
+					0.000000300859966273492,
+					0.0589391030371189
+				],
+				"basis_y": [
+					-0.0240691602230072,
+					0.912812948226929,
+					-0.407668083906174
+				],
+				"basis_z": [
+					-0.0538005009293556,
+					-0.408378034830093,
+					-0.911226093769073
+				],
+				"origin": [
+					-111.543601989746,
+					108.391082763672,
+					5346.36376953125
+				]
+			},
+			"debug_travel": false,
+			"file": "res://shots/stormheart-hero/before1080/stormheart_road_120m_verge.png",
+			"frame_id": "stormheart_road_120m_verge",
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.00800000000001,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"ordinary_input_motion": {
+				"look": {
+					"desired_pitch_deg": 25.2893256703588,
+					"desired_yaw_deg": -174.666683783948,
+					"end_pitch_deg": 24.1030388474464,
+					"end_yaw_deg": -176.62109965086,
+					"physics_frames": 2,
+					"pitch_error_deg": 1.18628682291241,
+					"production_pitch_limits_deg": [
+						-60.0,
+						32.0
+					],
+					"reached": true,
+					"start_pitch_deg": 24.1030388474464,
+					"start_yaw_deg": -177.887766420841,
+					"target": [
+						-100.0,
+						167.059112548828,
+						5470.0
+					],
+					"yaw_error_deg": 1.95441586691176
+				},
+				"tree_centre_distance_m": 120.670951843262,
+				"walk": {
+					"arrived": true,
+					"finish": [
+						-111.337120056152,
+						108.208808898926,
+						5349.86279296875
+					],
+					"on_floor": true,
+					"physics_frame_budget": 900,
+					"start": [
+						-100.363357543945,
+						107.548011779785,
+						5349.4755859375
+					],
+					"target_xz": [
+						-112.0,
+						5350.0
+					]
+				}
+			},
+			"player_position": [
+				-111.337120056152,
+				108.208808898926,
+				5349.86279296875
+			],
+			"stormwood_phase": {
+				"cycle": 0,
+				"cycle_seconds": 510.0,
+				"duration": 240.0,
+				"elapsed": 52.3833333333316,
+				"phase": "calm",
+				"remaining": 187.616666666668
+			},
+			"stormwood_presentation": "calm",
+			"time": "day",
+			"viewed_face": "120m road verge after ordinary12m lateral step, production trainer camera"
+		},
+		{
+			"band_display_name": "Region 6 — The Dynamo",
+			"band_id": "dynamo",
+			"biome_display_name": "The Stormwood",
+			"biome_id": "stormwood",
+			"bytes": 2019090,
+			"camera_player_distance_m": 4.76142930984497,
+			"camera_position": [
+				-312.122833251953,
+				64.9304733276367,
+				5045.75439453125
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.894423723220825,
+					0.0,
+					0.447211742401123
+				],
+				"basis_y": [
+					-0.182632490992546,
+					0.912812232971191,
+					-0.365265101194382
+				],
+				"basis_z": [
+					-0.408221930265427,
+					-0.408378750085831,
+					-0.816444098949432
+				],
+				"origin": [
+					-310.0,
+					67.0541229248047,
+					5050.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.894427120685577,
+					0.00000120199536013388,
+					0.447213739156723
+				],
+				"basis_y": [
+					-0.182631030678749,
+					0.912813127040863,
+					-0.365264415740967
+				],
+				"basis_z": [
+					-0.408223032951355,
+					-0.408377528190613,
+					-0.816444635391235
+				],
+				"origin": [
+					-312.122833251953,
+					64.9304733276367,
+					5045.75439453125
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "The Glass Field",
+			"destination_index": 11,
+			"file": "res://shots/stormheart-hero/before1080/stormwood__dynamo__11__the_glass_field__day.png",
+			"frame_id": "stormwood__dynamo__11__the_glass_field__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.25,
+					"body_radius_m": 1.4875,
+					"node_path": "Named_glass_field_alpha",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-250.0,
+						71.283073425293,
+						5080.0
+					],
+					"species_id": "voltarach"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985554_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-283.688354492188,
+						52.805835723877,
+						4936.71923828125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_staticub_43985554_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-285.81787109375,
+						53.0339431762695,
+						4939.68017578125
+					],
+					"species_id": "staticub"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_43985555_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-290.618896484375,
+						59.5605316162109,
+						5007.646484375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_43985555_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-294.5712890625,
+						58.7693214416504,
+						5006.07763671875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_43985556_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-299.677398681641,
+						69.5556259155273,
+						5073.876953125
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_43985556_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-301.172332763672,
+						68.7054672241211,
+						5071.06396484375
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_43985557_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-248.012786865234,
+						79.3445358276367,
+						5124.71337890625
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_43985557_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-252.677719116211,
+						78.5920791625977,
+						5123.4443359375
+					],
+					"species_id": "thundertunnel"
+				}
+			],
+			"nearby_creatures_160m": 9,
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.00800000000001,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-310.0,
+				65.3041381835938,
+				5050.0
+			],
+			"position_xz": [
+				-310.0,
+				5050.0
+			],
+			"resolved_ground_y": 65.2976636575285,
+			"spot_index_in_band": 1,
+			"stormwood_phase": {
+				"cycle": 0,
+				"cycle_seconds": 510.0,
+				"duration": 240.0,
+				"elapsed": 53.7166666666649,
+				"phase": "calm",
+				"remaining": 186.283333333335
+			},
+			"stormwood_presentation": "calm",
+			"terrain_ground_y": 65.2976636575285,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.447213590145111,
+				0.894427180290222
+			]
+		},
+		{
+			"bytes": 2040092,
+			"camera_player_distance_m": 4.80009508132935,
+			"camera_position": [
+				-312.143341064453,
+				65.0360336303711,
+				5045.71337890625
+			],
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.894423723220825,
+					0.0,
+					0.447211742401123
+				],
+				"basis_y": [
+					-0.173563808202744,
+					0.921616613864899,
+					-0.347127705812454
+				],
+				"basis_z": [
+					-0.412159353494644,
+					-0.388100534677505,
+					-0.824318885803223
+				],
+				"origin": [
+					-310.0,
+					67.0541229248047,
+					5050.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.894427061080933,
+					0.00000127144414818758,
+					0.44721382856369
+				],
+				"basis_y": [
+					-0.173562437295914,
+					0.92161750793457,
+					-0.347127288579941
+				],
+				"basis_z": [
+					-0.412160515785217,
+					-0.388099521398544,
+					-0.824319362640381
+				],
+				"origin": [
+					-312.143341064453,
+					65.0360336303711,
+					5045.71337890625
+				]
+			},
+			"debug_travel": false,
+			"file": "res://shots/stormheart-hero/before1080/stormheart_glass_field_look.png",
+			"frame_id": "stormheart_glass_field_look",
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.00800000000001,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"ordinary_input_motion": {
+				"desired_pitch_deg": 20.9927028128304,
+				"desired_yaw_deg": -153.434945526041,
+				"end_pitch_deg": 22.836372077465,
+				"end_yaw_deg": -153.434948822922,
+				"physics_frames": 3,
+				"pitch_error_deg": -1.84366926463465,
+				"production_pitch_limits_deg": [
+					-60.0,
+					32.0
+				],
+				"reached": true,
+				"start_pitch_deg": 24.1030388474464,
+				"start_yaw_deg": -153.434948822922,
+				"target": [
+					-100.0,
+					247.059112548828,
+					5470.0
+				],
+				"yaw_error_deg": 0.00000329688145882749
+			},
+			"player_position": [
+				-310.0,
+				65.3041381835938,
+				5050.0
+			],
+			"stormwood_phase": {
+				"cycle": 0,
+				"cycle_seconds": 510.0,
+				"duration": 240.0,
+				"elapsed": 54.2166666666649,
+				"phase": "calm",
+				"remaining": 185.783333333335
+			},
+			"stormwood_presentation": "calm",
+			"time": "day",
+			"viewed_face": "Glass Field production camera aimed at Stormheart"
+		}
+	],
+	"planned_frame_count": 6,
+	"planned_frame_ids": [
+		"stormheart_road_320m",
+		"stormheart_road_220m",
+		"stormheart_road_120m",
+		"stormheart_road_120m_verge",
+		"stormwood__dynamo__11__the_glass_field__day",
+		"stormheart_glass_field_look"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 263217743733,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"region_banner_clear": {
+		"checked_utc": "2026-09-27T21:28:45",
+		"cleared": true,
+		"node_found": true,
+		"physics_frames_waited": 141
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema_version": 1,
+	"stormheart_runtime": {
+		"collision_shape_count": 775,
+		"outer_deck_radius_m": 44.0,
+		"outer_deck_radius_source": "stormheart_tree.gd::OUTER_WORKS_OUTER_RADIUS",
+		"path": "/root/Stormwood/StormheartTree",
+		"position": [
+			-100.0,
+			112.059112548828,
+			5470.0
+		],
+		"static_body_count": 9
+	},
+	"subsets": [
+		"glass_field"
+	],
+	"supplemental_contract": "Matched art-only audit: production Stormwood, trainer and CameraRig. Seed44719 and day clock pin. Disclosed Settings debug travel to authored deepwood_road320m(-222.83865,5174.51622), then ordinary left-stick travel to220m and120m; ordinary look frames each view. Then canonical Glass Field catalogue debug setup and ordinary look at Stormheart. Gameplay, camera settings and art remain production except the declared before/after tree visual replacement. No progression acceptance claimed.",
+	"supplemental_planned_frame_ids": [
+		"stormheart_road_320m",
+		"stormheart_road_220m",
+		"stormheart_road_120m",
+		"stormheart_road_120m_verge"
+	]
+}

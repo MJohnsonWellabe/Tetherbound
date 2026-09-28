@@ -46,6 +46,8 @@ const STALL := Vector2(-328.8, 505.4)
 const POND_TARGET := Vector2(-342.0, 507.0)
 ## S05's next waypoint after the pond: the Old Bram detour. The stall happened
 ## on the leg to this point, so this is the bearing that actually mattered.
+## Historical: Bram stood at (195,905) when S05 ran; the F03#0 lure move put him
+## at (300,983). Kept at the old stand because this probe reproduces that stall.
 const DETOUR_TARGET := Vector2(195.0, 905.0)
 
 const RING_RADIUS := 6.0

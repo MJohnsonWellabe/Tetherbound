@@ -1,0 +1,564 @@
+{
+  "name": "F08#5: Solmane, two peers -- each Veyra participant answers their own offer (host accepts with space, guest refuses at five), through disconnect/rejoin and a host restart, with no duplicate",
+  "claim": "Owner ruling 2026-09-27 (#356 5858140459): Solmane works exactly like the Meadows Veridian. Reuses stronghold_climax.gd (CloudreachSolmaneClimax). Fixtures (disclosed): story_flag world flags for the completed chapter through Veyra's defeat and the relays; veridian_fixture journals both peers as Veyra participants (the director's own reward_grant); the freeing is set as a world fact (the lever press itself is proven by smoke_cloudreach_solmane_offer_choice); party_grant fills the belts; teleports stand each trainer in the tether chamber; veridian_answer calls the climax's public accept_offer/refuse_offer (the prompts' own activated handlers). Loopback ENet.",
+  "peers": 2,
+  "scene": "title",
+  "budget_s": 4800,
+  "build_allowance_s": 600,
+  "steps": [
+    {
+      "peer": "all",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "budget_frames": 20000,
+      "label": "each peer boots its own fresh Meadows world"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "realm_key_cloudreach",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds realm_key_cloudreach (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "fly_traversal_unlocked",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds fly_traversal_unlocked (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds cloudreach_upper_route_unlocked (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_act_ii_complete",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds cloudreach_act_ii_complete (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "captain_veyra_defeated",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds captain_veyra_defeated (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "storm_anchor_network_disabled",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds storm_anchor_network_disabled (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_winds_restored",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): host world holds cloudreach_winds_restored (the earned play is card C1)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 30
+      },
+      "label": "SETUP: host party_grant bramblebun (four: room on the belt)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 30
+      },
+      "label": "SETUP: host party_grant terrapup (four: room on the belt)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "level": 30
+      },
+      "label": "SETUP: host party_grant mudsnout (four: room on the belt)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "brooktail",
+        "level": 30
+      },
+      "label": "SETUP: host party_grant brooktail (four: room on the belt)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 30
+      },
+      "label": "SETUP: guest party_grant bramblebun (five: at capacity)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 30
+      },
+      "label": "SETUP: guest party_grant terrapup (five: at capacity)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "level": 30
+      },
+      "label": "SETUP: guest party_grant mudsnout (five: at capacity)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "brooktail",
+        "level": 30
+      },
+      "label": "SETUP: guest party_grant brooktail (five: at capacity)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "level": 30
+      },
+      "label": "SETUP: guest party_grant ripplet (five: at capacity)"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000
+    },
+    {
+      "peer": 0,
+      "action": "veridian_fixture",
+      "args": {
+        "trainer": "captain_veyra_storm_anchor",
+        "realm": "cloudreach"
+      },
+      "label": "SETUP (disclosed): host journals both peers as Veyra participants through the reward_grant the director pays a shared trainer win with"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach:legendary_freed",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): the freeing as a world fact (the lever press is proven by smoke_cloudreach_solmane_offer_choice)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_freed",
+        "budget_frames": 1800
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_uids",
+      "args": {
+        "remember": "uids0"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "remember": "uids1"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          99.0,
+          1161.2,
+          5471.0
+        ],
+        "settle": 60
+      },
+      "label": "SETUP: host stands in the tether chamber"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          104.0,
+          1161.2,
+          5471.0
+        ],
+        "settle": 60
+      },
+      "label": "SETUP: guest stands in the tether chamber"
+    },
+    {
+      "peer": "all",
+      "action": "wait",
+      "args": {
+        "frames": 240
+      }
+    },
+    {
+      "peer": 0,
+      "action": "veridian_answer",
+      "args": {
+        "answer": "accept",
+        "node": "CloudreachSolmaneClimax",
+        "presses": 40,
+        "settle": 30
+      },
+      "label": "HOST accepts its own offer (room on the belt)"
+    },
+    {
+      "peer": 1,
+      "action": "veridian_answer",
+      "args": {
+        "answer": "refuse",
+        "node": "CloudreachSolmaneClimax",
+        "presses": 40,
+        "settle": 30
+      },
+      "label": "GUEST refuses its own offer (at five)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:accepted:$character0",
+        "budget_frames": 1800
+      },
+      "label": "host's world receipt: accepted"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:refused:$character1",
+        "budget_frames": 1800
+      },
+      "label": "guest's world receipt: refused"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "host kept Solmane: four + one"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "guest refused: still its own five"
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "equals": "uids1"
+      },
+      "label": "guest's five are unchanged (no accidental release)"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "answered"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "args": {
+        "settle_frames": 60
+      },
+      "label": "DISCONNECT: the guest's link dies"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1,
+        "budget_frames": 3600
+      }
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1"
+        },
+        "returning_route": true
+      },
+      "budget_frames": 20000,
+      "label": "REJOIN as the same character"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000,
+      "expect": "any"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          104.0,
+          1161.2,
+          5471.0
+        ],
+        "settle": 60
+      }
+    },
+    {
+      "peer": 1,
+      "action": "veridian_answer",
+      "args": {
+        "answer": "accept",
+        "node": "CloudreachSolmaneClimax",
+        "presses": 10,
+        "settle": 30
+      },
+      "expect": "FAIL",
+      "label": "NO SECOND OFFER: the guest's refusal holds after the rejoin"
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "equals": "uids1"
+      },
+      "label": "guest's five unchanged after the rejoin"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "pre_restart"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "restart_peer",
+      "args": {
+        "scene": "title"
+      },
+      "label": "RESTART the host process"
+    },
+    {
+      "peer": 0,
+      "action": "title_load",
+      "label": "RELOAD: the host presses Load, which hosts",
+      "budget_frames": 20000
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1"
+        },
+        "returning_route": true
+      },
+      "budget_frames": 20000,
+      "label": "REJOIN the restarted host"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 10000,
+      "expect": "any"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:accepted:$character0",
+        "budget_frames": 1800
+      },
+      "label": "host receipt persisted through the restart"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:refused:$character1",
+        "budget_frames": 1800
+      },
+      "label": "guest receipt persisted through the restart"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "host still holds exactly five, Solmane among them"
+    },
+    {
+      "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          99.0,
+          1161.2,
+          5471.0
+        ],
+        "settle": 60
+      }
+    },
+    {
+      "peer": 0,
+      "action": "veridian_answer",
+      "args": {
+        "answer": "accept",
+        "node": "CloudreachSolmaneClimax",
+        "presses": 10,
+        "settle": 30
+      },
+      "expect": "FAIL",
+      "label": "NO SECOND OFFER: the host's acceptance holds after the reload (no duplicate)"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "contains": [
+          "solmane"
+        ]
+      },
+      "label": "host's saved character holds its Solmane"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "lacks": [
+          "solmane"
+        ]
+      },
+      "label": "guest's saved character holds no Solmane"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "contains": [
+          "solmane"
+        ]
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the saved-character check reads real content"
+    }
+  ]
+}

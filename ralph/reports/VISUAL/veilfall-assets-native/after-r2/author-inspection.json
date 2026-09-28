@@ -1,0 +1,96 @@
+{
+  "type": "Author implementation inspection; not independent visual acceptance",
+  "asset_hashes": [
+    {
+      "sha256": "6E5BFFB0F25B8980585CD206B0DF0936715BD713604EB215D12A5840FE3E7B50",
+      "path": "fall_ribbons.obj"
+    },
+    {
+      "sha256": "503CC186E61D7FD6F7CC0B5AF2E730239F94EEE32601F3433D0F7E0E757965C2",
+      "path": "fall_threads.obj"
+    },
+    {
+      "sha256": "07E3909B512FEF746EACD4198E797D80E1B3F613902174420A8E5BDF4F70E851",
+      "path": "falling_water.gdshader"
+    },
+    {
+      "sha256": "6D507C38780FF8EA97F2B68EBBC3C60E5A3EE878D89A0F74BB4DB798669E2509",
+      "path": "interior_waterfall.tscn"
+    },
+    {
+      "sha256": "B76D251AB7E8884A31DA02CDFF1CB832D89540DD1B13C0903E626752A2E0CA15",
+      "path": "plunge_crowns.obj"
+    },
+    {
+      "sha256": "E44CAB4499CC3A3977845FDE7820BEA68A8094A9A86B072FD04BA1EADD937EDC",
+      "path": "plunge_foam.gdshader"
+    },
+    {
+      "sha256": "BA4EAE34860FD4F041DCAE6B85FD7F2C2183822AD0DF16CA458A03550E546FCC",
+      "path": "plunge_mist.gdshader"
+    },
+    {
+      "sha256": "9F9944F24CF06E24052D17A2618B07E38662D68C1394263DB89DFD04DB96B5FD",
+      "path": "plunge_mist.obj"
+    },
+    {
+      "sha256": "3A4505F924CD6688975D96BBFBCD8FFE57D4D95ED89139213E1BE241E2587414",
+      "path": "splash_arcs.obj"
+    },
+    {
+      "sha256": "BF0A0A2AC1B9E73DBC29760DBFF7D73D63128B6E762C714A360F44EEF2C43C97",
+      "path": "source\\generate_waterfall.py"
+    },
+    {
+      "sha256": "1B7706DE61CACE07EB2AF9CF732C2178EC42F839AB12E871061FF2EDB143E2C8",
+      "path": "source\\geometry_audit.json"
+    },
+    {
+      "sha256": "563C20DD34DC869173864B487369573C6539740ED55AD46EBB1ECFEC3110A646",
+      "path": "source\\provenance.json"
+    }
+  ],
+  "error_matches": 0,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "unresolved_observations": [
+    "Source rollover is modeled but remains difficult to read beneath the unchanged low ceiling from these cameras; top still reads near-straight.",
+    "Low mist blends with the pale plunge spray instead of standing out as a strong separate cloud.",
+    "Receiving water remains poorly integrated with the unchanged room floor/pool staging.",
+    "Crystal, blank support cubes, banner and room architecture remain outside this asset revision.",
+    "Three still samples are not continuous-motion or ROG Ally performance acceptance."
+  ],
+  "positive_observations": [
+    "Broad layered sheets replace the repeated separated narrow ribbons.",
+    "Larger splash fans and pale low impact area are visible in crystal and entry views.",
+    "No rectangular mist borders or missing waterfall faces visible in these nine samples.",
+    "Banner view contains no waterfall and shows no asset intrusion."
+  ],
+  "camera_fixture": "Existing capture_veilfall_interior.gd unchanged: six production-camera stands plus three same-camera motion samples; teleported fixture, five L43 party, pump flags open, live HUD",
+  "independent_review": "Required from a fresh agent; author does not issue Bars A/B or scoped acceptance.",
+  "frames_inspected": [
+    "intake_gallery",
+    "pump_hall",
+    "sluice_crossing",
+    "heart_chamber_entry",
+    "heart_chamber_crystal",
+    "heart_chamber_banner",
+    "motion_0",
+    "motion_1",
+    "motion_2"
+  ],
+  "capture_exit": 0,
+  "stand_notes": {
+    "sluice_crossing": "Same forward route and creature-water intersection; larger pale fall footprint visible.",
+    "heart_chamber_entry": "Main sheets overlap; base reads more active; top remains close to flat ceiling.",
+    "intake_gallery": "Distant endpoint is now a fuller white-blue sheet mass.",
+    "motion_samples": "Flow texture and splash shape change across samples; no continuous playback judgment made.",
+    "heart_chamber_banner": "Waterfall outside view; existing blank banner unchanged.",
+    "pump_hall": "Broad white fall behind crystal; unchanged flat room/pools dominate.",
+    "heart_chamber_crystal": "Irregular sheet boundary and larger splash zone visible; crest turn and separate mist read remain weak."
+  },
+  "renderer": "Godot 4.7 native Windows OpenGL3 Compatibility on NVIDIA GTX 1060 3GB",
+  "variant": "after-r2"
+}

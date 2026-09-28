@@ -1,0 +1,850 @@
+{
+ "name": "Card T3: Tidewake ending and continuation, host and guest in one run",
+ "claim": "ACCEPTANCE card T3, one two-peer run: host and guest settle the shared dock exchange once (the guest pays, the host does a free action, retries charge nothing), free the Guardian (host at a full five releases Rill through the REAL release menu; the guest with room accepts its own), cross home, Grandpa names each character's current team (the release and each personal Guardian choice), credits roll once each, disk reload resumes a completed world with local requests, the repeat greeting and no sequel prompt or fifth key. Composed from f15_dock_exchange_once.json, f15_tidewake_b_grandpa_real_release.json and f15_homecoming_credits_reload.json; their disclosed fixtures carry over (story flags standing in for earlier play, named party grants, guardian_fixture standing in for the Veilfall and Nerissa fight, Game.enter_realm for the crossing, grandpa_homecoming teleports beside Grandpa). The measured physical return (A7) is tests/test_tidewake_return_cadence.gd.",
+ "peers": 2,
+ "scene": "water",
+ "budget_s": 2400,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "defeated_warden",
+    "scope": "world"
+   },
+   "label": "FIXTURE 1: world past the Meadows opening (Grandpa at home)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "scope": "world"
+   },
+   "label": "FIXTURE: the Water route is open (stands in for Stormwood)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "FIXTURE: the Water key Stormwood granted"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_swim_lesson_complete",
+    "scope": "world"
+   },
+   "label": "FIXTURE: the swim lesson (the dock repair's prerequisite)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_named_deep_watch_tidecoil_resolved",
+    "scope": "world"
+   },
+   "label": "FIXTURE: Tidecoil resolved (the free chart's prerequisite)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "old_champion_met",
+    "scope": "world"
+   },
+   "label": "FIXTURE: one Local Request revealed (Old Bram)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_named_deep_watch_tidecoil_resolved",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "nickname": "Acorn"
+   },
+   "label": "FIXTURE 2: companions by name"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "sparkit",
+    "nickname": "Pip"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "nickname": "Rill"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "mosshell",
+    "nickname": "Shelby"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "meadowhart",
+    "nickname": "Volt"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "ripplet",
+    "nickname": "Kestrel"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "nickname": "Bramble"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "water_dock_state",
+   "args": {
+    "grant": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    }
+   },
+   "expect_data": {
+    "bag": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    },
+    "disk": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    }
+   },
+   "label": "SETUP: 8 reed fiber + 6 driftwood gathered and saved (cost is 6 + 4)"
+  },
+  {
+   "peer": "all",
+   "action": "water_dock_state",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": false,
+     "deep_watch_chart": false
+    },
+    "prompt_enabled": true
+   },
+   "label": "before: nothing done, the repair offered (baseline)"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "offered": true,
+    "flag_before": false,
+    "flag_after": true,
+    "taken": {
+     "reed_fiber": 6,
+     "driftwood": 4
+    },
+    "item_takes": [],
+    "disk_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "guest pays for the repair through the real prompt (F15 escrow: the cost is debited and saved at the press; the host sends no item_take)"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "01_guest_at_dock_after_press"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_dock_reedhaven_repaired",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_state",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "bag": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    },
+    "prompt_enabled": false
+   },
+   "label": "host sees it done and paid nothing"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "deep_watch_chart"
+   },
+   "expect_data": {
+    "offered": true,
+    "flag_before": false,
+    "flag_after": true,
+    "taken": {}
+   },
+   "label": "host does a different (free) dock action"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "02_host_at_chart_after_press"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_dock_deep_watch_current_charted",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "capture_saves",
+   "args": {
+    "label": "after_pay"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true,
+     "deep_watch_chart": true
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "prompt_enabled": false
+   },
+   "label": "guest charged exactly once, in memory and on disk"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "force": true
+   },
+   "expect_data": {
+    "flag_before": true,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    }
+   },
+   "label": "guest retries the finished repair (stale resend): no second charge"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "force": true
+   },
+   "expect_data": {
+    "flag_before": true,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    }
+   },
+   "label": "host presses the finished repair: not charged"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true,
+     "deep_watch_chart": true
+    }
+   },
+   "label": "final"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "guest: still charged exactly once"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_state",
+   "expect_data": {
+    "bag": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    },
+    "disk": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    }
+   },
+   "label": "host: never charged"
+  },
+  {
+   "peer": 0,
+   "action": "guardian_state",
+   "expect_data": {
+    "party_size": 5,
+    "guardians_owned": 0,
+    "party": [
+     "Acorn",
+     "Pip",
+     "Rill",
+     "Shelby",
+     "Volt"
+    ]
+   },
+   "label": "the host's belt is full (five), Rill third"
+  },
+  {
+   "peer": 0,
+   "action": "guardian_fixture",
+   "args": {
+    "participants": [
+     "$peer0",
+     "$peer1"
+    ]
+   },
+   "label": "FIXTURE 3: both fought Nerissa (director's own session path journals one reward row each)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_captain_nerissa_defeated",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "veilfall_press",
+   "args": {
+    "prompt": "guardian_tether"
+   },
+   "label": "the host frees the Guardian at the chamber's real control"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_guardian_freed",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "veilfall_press",
+   "args": {
+    "prompt": "invite"
+   },
+   "label": "the host asks for its own offer at the chamber's real prompt"
+  },
+  {
+   "peer": 0,
+   "action": "guardian_answer",
+   "args": {
+    "release": "Rill"
+   },
+   "expect_data": {
+    "stage": "choose"
+   },
+   "label": "REAL RELEASE MENU at a full five: Rill's row, ui_accept, confirm, 'Let them go', Done; the Guardian takes Rill's holder"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_currents_restored",
+    "scope": "world"
+   },
+   "label": "the Guardian resolution itself restored the currents (not the ledger)"
+  },
+  {
+   "peer": 1,
+   "action": "veilfall_press",
+   "args": {
+    "prompt": "invite"
+   },
+   "label": "the guest asks for its own offer"
+  },
+  {
+   "peer": 1,
+   "action": "guardian_answer",
+   "expect_data": {
+    "stage": "guardian"
+   },
+   "label": "WITH ROOM: the guest accepts its own Guardian"
+  },
+  {
+   "peer": 0,
+   "action": "guardian_state",
+   "expect_data": {
+    "party_size": 5,
+    "guardians_owned": 1,
+    "receipt_saved": true,
+    "party": [
+     "Acorn",
+     "Pip",
+     "Abyssal Guardian",
+     "Shelby",
+     "Volt"
+    ]
+   },
+   "label": "host: Rill gone, the Guardian in Rill's holder, never a sixth"
+  },
+  {
+   "peer": 1,
+   "action": "guardian_state",
+   "expect_data": {
+    "party_size": 3,
+    "guardians_owned": 1,
+    "receipt_saved": true,
+    "party": [
+     "Kestrel",
+     "Bramble",
+     "Abyssal Guardian"
+    ]
+   }
+  },
+  {
+   "peer": 0,
+   "action": "menu_toggle",
+   "args": {
+    "open": false
+   },
+   "label": "the host leaves the Creatures tab with B (menu_cancel presses), as a player would"
+  },
+  {
+   "peer": 1,
+   "action": "menu_toggle",
+   "args": {
+    "open": false
+   },
+   "label": "the guest leaves the Creatures tab with B"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "meadows"
+   },
+   "budget_frames": 20000,
+   "label": "FIXTURE 4: the host crosses home to the Meadows (Game.enter_realm)"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "meadows"
+   },
+   "budget_frames": 20000,
+   "label": "FIXTURE 4: the guest crosses home to the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "grandpa_homecoming",
+   "args": {
+    "must_name": [
+     "Acorn",
+     "Pip",
+     "Abyssal Guardian",
+     "Shelby",
+     "Volt"
+    ],
+    "must_not_name": [
+     "Rill",
+     "Kestrel",
+     "Bramble"
+    ]
+   },
+   "expect_data": {
+    "homecoming_seen": true,
+    "party": [
+     "Acorn",
+     "Pip",
+     "Abyssal Guardian",
+     "Shelby",
+     "Volt"
+    ]
+   },
+   "label": "host (FIXTURE 5 teleport beside Grandpa): its current five incl. the Guardian; the released Rill is NOT named"
+  },
+  {
+   "peer": 1,
+   "action": "grandpa_homecoming",
+   "args": {
+    "must_name": [
+     "Kestrel",
+     "Bramble",
+     "Abyssal Guardian"
+    ],
+    "must_not_name": [
+     "Rill",
+     "Acorn",
+     "Pip",
+     "Shelby",
+     "Volt"
+    ]
+   },
+   "expect_data": {
+    "homecoming_seen": true,
+    "party": [
+     "Kestrel",
+     "Bramble",
+     "Abyssal Guardian"
+    ]
+   },
+   "label": "guest (FIXTURE 5): its own current three, nobody else's"
+  },
+  {
+   "peer": 0,
+   "action": "credits_continue",
+   "args": {
+    "watch_seconds": 3.0
+   },
+   "expect_data": {
+    "acknowledged": 1,
+    "open_after_continue": false,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_seen_on_disk": true,
+    "credits_reopened": false
+   },
+   "label": "host: the credits Grandpa's homecoming opened, watched, Continue once"
+  },
+  {
+   "peer": 1,
+   "action": "credits_continue",
+   "args": {
+    "watch_seconds": 3.0
+   },
+   "expect_data": {
+    "acknowledged": 1,
+    "open_after_continue": false,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_seen_on_disk": true,
+    "credits_reopened": false
+   },
+   "label": "guest: its own credits, Continue once"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "homecoming_seen": true,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "grandpa_next": "regional_homecoming_repeat",
+    "local_requests_offered": true
+   },
+   "label": "after the credits, before reload"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after_credits"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after_credits",
+    "dir": "characters",
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "label": "host's saved character holds both receipts"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after_credits",
+    "dir": "characters",
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "label": "guest's saved character holds both receipts"
+  },
+  {
+   "peer": 0,
+   "action": "ending_state",
+   "expect_data": {
+    "disk_reload": {
+     "emptied": true,
+     "reloaded": true
+    }
+   },
+   "label": "host: save, empty memory, reload its slot from disk",
+   "args": {
+    "disk_reload": true
+   }
+  },
+  {
+   "peer": 1,
+   "action": "ending_state",
+   "expect_data": {
+    "disk_reload": {
+     "emptied": true,
+     "reloaded": true
+    }
+   },
+   "label": "guest: save, empty memory, reload its character from disk",
+   "args": {
+    "disk_reload": true
+   }
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "currents_restored": true,
+    "homecoming_seen": true,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "grandpa_next": "regional_homecoming_repeat",
+    "tracked_id": "",
+    "local_requests_offered": true,
+    "sequel_or_chapter_prompt": false
+   },
+   "label": "after the disk reload: a safe completed world"
+  },
+  {
+   "peer": "all",
+   "action": "homecoming_complete",
+   "expect_data": {
+    "repeat": true,
+    "credits_open": false,
+    "credits_pending": false
+   },
+   "label": "after the reload, Grandpa again (pressed now): the repeat greeting, no second roll"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "tracked_id": "",
+    "local_requests_offered": true,
+    "sequel_or_chapter_prompt": false
+   },
+   "label": "final"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "03_after_reload"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after_reload"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "worlds",
+    "lacks": [
+     "water_currents_restored"
+    ]
+   },
+   "label": "non-vacuous: the pre-offer world save had NO water_currents_restored"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "path_contains": "$character0",
+    "contains": [
+     "Rill"
+    ],
+    "lacks": [
+     "homecoming_seen",
+     "water_abyssal_guardian"
+    ]
+   },
+   "label": "non-vacuous: the host's pre-offer save held Rill, no Guardian, no homecoming"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "contains": [
+     "water_currents_restored"
+    ],
+    "lacks": [
+     "homecoming_seen"
+    ]
+   },
+   "label": "the world is restored; the homecoming is personal (not in the shared world)"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "path_contains": "$character0",
+    "contains": [
+     "homecoming_seen",
+     "water_abyssal_guardian",
+     "Acorn",
+     "Pip",
+     "Shelby",
+     "Volt"
+    ],
+    "lacks": [
+     "Rill"
+    ]
+   },
+   "label": "host's saved character: homecoming seen, Rill released, Guardian kept"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "path_contains": "$character1",
+    "contains": [
+     "homecoming_seen",
+     "water_abyssal_guardian",
+     "Kestrel",
+     "Bramble"
+    ]
+   },
+   "label": "guest's saved character: homecoming seen, own team"
+  }
+ ]
+}

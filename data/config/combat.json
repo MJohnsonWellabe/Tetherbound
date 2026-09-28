@@ -157,7 +157,11 @@
     "max_shoulder_offset": 4.5,
     "_comment_blend": "How fast the rig eases onto the creature when a fight opens, and back onto the trainer when it ends.",
     "retarget_lag": 6.0,
+    "_comment_recover": "F04#7 (code-blind judge 2026-09-27): the arm eases from exploration's 5.2m to this profile's 9.5m plus framing (13-24m measured by tools/f04_fight_camera_probe.gd). At movement.json's 4 m/s that took 2-4s, and every named fight opened with the lens inside the creatures. Also the speed the arm grows back after a collider collapses it mid-fight. TUNABLE.",
+    "collision_recover_speed": 14.0,
     "tracking": {
+      "_comment_snap_on_open": "F04#7: when a fight opens, cut the yaw to this tracker's neutral composition instead of swinging from the exploration yaw. The swing ran the arm through the opponent just sent out, and body_clear then pinned the lens inside the player's creature for ~0.75s (code-blind judge 2026-09-27: every named fight's first frames). combat_manager.gd::_take_camera; camera_rig.gd::snap_to_tracking.",
+      "snap_on_open": true,
       "_comment": "OWNER_PLAYTEST_2026-09-12: while the look controls are neutral, softly rotate the ally-centred orbit until the opponent is back inside a safe yaw cone. Manual look always wins immediately and gets a short grace period; this is framing assistance, not target lock.",
       "enabled": true,
       "dead_zone_deg": 10.0,
@@ -177,6 +181,21 @@
       "transparency": 0.6,
       "hidden_points": 2,
       "speed": 12.0
+    },
+    "hud_safe": {
+      "_why": "F10#2 C3 (V-SW-3/5, Tidewake's matching finding): the shoulder solver pushes the pivot up to max_shoulder_offset sideways so the foe clears the ally, which slides the ally into the combat HUD's left column (TEAM list + pilot card), where every code-blind judge found it hidden. Each physics frame combat_manager.gd projects the ally's live render bounds through the live camera and caps the shoulder so their left edge stays right of left_column.right wherever they reach below left_column.top (fractions of the viewport). The occlusion swing/dither stays the fallback when the capped shoulder lets the ally hide the foe. Presentation only. TUNABLE.",
+      "enabled": true,
+      "left_column": {"right": 0.26, "top": 0.42},
+      "margin": 0.02,
+      "min_shoulder": -1.5
+    },
+    "body_clear": {
+        "_why_ignore_lunging_foe": "F04#1 (tools/f04_fight_camera_probe.gd --live-member=relay_captain:2): a CHARGER's travelling lunge ends on the arm behind the ally, and the clamp put the lens on min_length_m inside the player's creature for every lunge. While the foe is mid-lunge the clamp stands down; the charging body crosses the shot instead. combat_manager.gd::_update_combat_body_clear.",
+        "ignore_lunging_foe": false,
+      "_why": "F10#2 C3 (V-SW-7): the SpringArm stops at collision capsules, but a large foe's render mesh (Voltarach's legs) reaches well past its capsule, so at the strike the lens sat inside the mesh and the frame was flat geometry. The arm is clamped short of the foe's live render box along the arm. TUNABLE.",
+      "enabled": true,
+      "margin_m": 0.35,
+      "min_length_m": 2.0
     },
     "aftermath": {
       "_why": "F04#6 (X04 blind judge, #257): after every named win the camera came back facing wherever the fight left it -- away from the defeated trainer and the world beat, and at Keeper Hald's stand collapsed against the outer works' wall for the whole aftermath. On release the exploration camera looks past the player at where the opponent stood, then takes the nearest orbit angle whose arm has room (camera_rig.gd::clear_orbit_offset_deg). One shot; manual look owns it after. TUNABLE.",
@@ -239,6 +258,8 @@
     "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
   },
   "telegraph": {
+    "_comment_heavy_tell_s": "F04#0: a wind-up authored at or above this reads as a HEAVY on the HUD (combat_hud.gd, combat_manager.gd::enemy_windup_is_heavy). BOSSES/C3 name 1.1s as the heavy tell: Earth Fist and the ACE. TUNABLE.",
+    "heavy_tell_s": 1.1,
     "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
     "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Round 1 of this lane tried the HUD's own WARNING amber (#ffbe47, hue 39); a blind judge found it three degrees from the reward gold the orb band, the catch sparkle and the level-up rings all use, at a value inside the sunlit-grass band -- 'a dropped coin', a buff, not a warning. This is magenta on purpose: hue 308, the complement of the meadow's green, a colour nothing in the world or the reward layer carries, 44 degrees of hue from the nearest painted oxblood and 31 from the palette's near-black tether_oxblood, and the genre's established colour for an attack you cannot block and must MOVE off -- which, with no shields in this game, is every wind-up. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched. tests/test_telegraph_glow.gd holds the ring at least 25 degrees of hue from every reserved oxblood.",
     "enabled": true,

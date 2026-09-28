@@ -224,6 +224,8 @@
     "list": [
       {
         "id": "yard_service_frame",
+        "camera_occluder": false,
+        "_why_camera_occluder": "F04#1 (tools/f04_fight_camera_probe.gd, Captain Vance's Tuskroot phase): this tower stands ~3m from Vance at the yard corner, and its camera-only box collapsed the fight arm to 3.5-7m whenever the fight drifted its way, with the lens inside the player's creature. The clear-orbit solver cannot swing past it without losing the opponent from frame. An open scaffold lattice in front of the lens still shows the fight; the lens inside the creature shows nothing. The apparatus-side frame keeps its occluder.",
         "model": "team_tether_scaffold_tower",
         "at": [2.55, -4.15],
         "face_local": [2.55, -9.0],

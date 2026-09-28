@@ -1,0 +1,15 @@
+{
+  "reference_method": "OpenAI imagegen, original single cliff asset reference, inspected before submission",
+  "reference_artifact": "01a0df4e-81c9-79f1-99a2-4ca3a567d865/exec-5701bca9-e419-4e41-9b03-2d349813f445.png",
+  "reference_brief_summary": "Single solid asymmetric limestone buttress, vertical fractures, stepped ledges, muted olive moss, grey background, whole isolated object; no buildings, trees, water or text.",
+  "meshy_task": "01a0e3c1-a953-719a-9c87-e05490ca595f",
+  "generation": "One inspected reference-backed generation, existing owner Meshy license; 30 credits, no new purchase.",
+  "preparation": "Closed voxel reconstruction, decimation to 12000 triangles, smart UV unwrap, source diffuse-colour bake at 2048; original normals not baked, geometry supplies normals.",
+  "rejected_preparation": "Direct UV transfer smeared source seams; four-view inspection rejected it before runtime integration.",
+  "limits": "Turntable review is candidate validation only. C2 requires native full-matrix code-blind PASS.",
+  "sha256": {
+    "assets/environment/cloudreach/cliff_buttress/reference/three_quarter.png": "c9392f89f93884a05db6b0205596d68d35616ce08d8bda328d9171d879390e95",
+    "assets_raw/cloudreach_cliff_buttress/model.glb": "d7ab11d265bbaea58ecbc8c70d60cd49f2f958fb36285f9cca54c8020bb67318",
+    "assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb": "c1ffda72410760b178f6e3001f7c4e6b35b0656624affa43b4db3fa13069ab03"
+  }
+}

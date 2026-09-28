@@ -1,0 +1,19 @@
+{
+  "cloud_sprite": {
+    "file": "assets/environment/cloudreach/cloud_bank_v1.png",
+    "sha256": "8caa5f811fccbe60ef038289844804c17d8c3e5a5fe6788ac31425c31f664692",
+    "generator": "OpenAI built-in imagegen",
+    "task_artifact": "01a0df4e-81c9-79f1-99a2-4ca3a567d865/exec-edaa484e-7da3-4b6e-a348-2b96e11bd10b.png",
+    "reference": "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png",
+    "status": "REJECTED visual candidate; original retained, not accepted final art"
+  },
+  "before_source": "53514232a",
+  "candidate_base": "5e2695bcc",
+  "limitations": [
+    "Scripted progression and stationary stands",
+    "Eight frames only",
+    "Native follower settling changed between before and candidate",
+    "No motion or full C2 verdict",
+    "Judge read ART_DIRECTION embedded status by accident; disclosure retained"
+  ]
+}

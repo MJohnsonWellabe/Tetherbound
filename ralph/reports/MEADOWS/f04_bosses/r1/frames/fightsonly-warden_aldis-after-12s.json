@@ -1,0 +1,59 @@
+{
+  "camera": [
+    -12.6,
+    9.1,
+    7648.4
+  ],
+  "fight": "warden_aldis",
+  "game_frame": 7907,
+  "hud_text": [
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 17",
+    "KO",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 19",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 18",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 18",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15",
+    "KO",
+    "M A I N   S T O R Y",
+    "Settle who walks with you.",
+    "Day 9  ·  08:57",
+    "Chamber Five",
+    "It crosses to you and puts its head down until the two of you are level.",
+    "Continue"
+  ],
+  "meta": {
+    "after_s": 12.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 5.9,
+    "in_frustum": true,
+    "pos": [
+      -17.1,
+      6.2,
+      7650.5
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden/warden_aldis-after-12s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 23.0,
+    "in_frustum": false,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

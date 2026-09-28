@@ -1,0 +1,84 @@
+{
+  "ally": {
+    "camera_m": 10.3,
+    "in_frustum": true,
+    "pos": [
+      6.5,
+      6.2,
+      7659.2
+    ]
+  },
+  "camera": [
+    -1.8,
+    12.3,
+    7660.0
+  ],
+  "enemy": {
+    "camera_m": 11.4,
+    "in_frustum": true,
+    "pos": [
+      7.7,
+      6.2,
+      7661.2
+    ]
+  },
+  "fight": "warden_aldis",
+  "game_frame": 4011,
+  "hud_text": [
+    "Warden Aldis · LEVEL 19",
+    "Brooktail",
+    "WATER",
+    "↯  it's open — hit it",
+    "Bud",
+    "Lv 17",
+    "WIND",
+    "Energy",
+    "Orbs  58",
+    "Ripple Jab",
+    "Undertow\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 17",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 19",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15",
+    "KO"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "CURRENT",
+    "tell_s": 0.8
+  },
+  "player": {
+    "camera_m": 12.5,
+    "in_frustum": true,
+    "pos": [
+      7.8,
+      6.2,
+      7654.7
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden/warden_aldis-m2-brooktail-t1-c-strike.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 11.7,
+    "in_frustum": true,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

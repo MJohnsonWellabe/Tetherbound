@@ -55,6 +55,9 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--trainer="):
 			ids = Array(arg.trim_prefix("--trainer=").split(",", false))
+		elif arg.begins_with("--live-member="):
+			for pair: String in arg.trim_prefix("--live-member=").split(",", false):
+				_live_member[pair.get_slice(":", 0)] = int(pair.get_slice(":", 1))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -99,6 +102,8 @@ func _witness_one() -> bool:
 		_results.append("FAIL %s: the challenge did not start a fight" % _tid)
 		return false
 	print("fight live vs %s" % _tid)
+	if _live_member.has(_tid):
+		await _advance_to_member(int(_live_member[_tid]))
 
 	_strikes.clear()
 	_player_hits = 0

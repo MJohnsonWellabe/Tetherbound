@@ -6,23 +6,23 @@ Scripts that are not part of the game build. Nothing here ships in the export.
 
 | Path | What it is | Referenced from |
 |---|---|---|
-| `ci/ship_branch.sh` | fast-forward landing script used by `ralph-merge.yml` / `ralph-sweep.yml` | CI |
+| `ci/ship_branch.sh` | fast-forward landing script used by `ralph-merge.yml` | CI |
 | `verify_export.sh`, `stage_gdextension_libs.sh` | export verification and GDExtension staging | `ci.yml`, `release.yml` |
 | `survey.sh`, `survey.gd`, `contact_sheet.gd` | the five fixed survey stands and their contact sheet (the visual-judge input) | `.claude/skills/visual-judge` |
-| `vp_capture.sh`, `_capture_locations.gd`, `_capture_ground_and_sky.gd`, `perf_render_stats.gd` | the Visual Parity location/ground/sky capture set and the draw/primitive perf proxy | `docs/VISUAL_BIBLE.md` |
-| `frame_stats.py`, `sheet.py` | measured axes for a critique round (saturation, luminance) and sheet assembly | `docs/AGENT_WORKFLOW.md` |
-| `gate_f/` | the Gate F operator harness, segment step-scripts (`segments/*.json`), `run_segment.sh`, probes | `docs/acceptance/GATE_F_*.md`, `tests/test_gate_f_*.gd` |
-| `art_pipeline/` | Meshy/Blender pipeline scripts (committed scripts, not MCP — D11); needs owner reference art before any generation | `docs/art/TETHERBOUND_3D_ART_PIPELINE.md` |
+| `vp_capture.sh`, `_capture_locations.gd`, `_capture_ground_and_sky.gd`, `perf_render_stats.gd` | the Visual Parity location/ground/sky capture set and the draw/primitive perf proxy | `docs/design/ART_DIRECTION.md` (history: `archive/docs/VISUAL_BIBLE.md`) |
+| `frame_stats.py`, `sheet.py` | measured axes for a critique round (saturation, luminance) and sheet assembly | `docs/WORKFLOW.md` §7 |
+| `gate_f/` | the Gate F operator harness, segment step-scripts (`segments/*.json`), `run_segment.sh`, probes | `archive/docs/acceptance/GATE_F_*.md` (historical), `tests/test_gate_f_*.gd` |
+| `art_pipeline/` | Meshy/Blender pipeline scripts (committed scripts, not MCP — D11); needs a saved, inspected reference (owner-supplied or agent-drafted, ART_DIRECTION §7) before any generation | `docs/design/ART_DIRECTION.md` §7; history `archive/docs/art/TETHERBOUND_3D_ART_PIPELINE.md` |
 | `audio/` | bus layout and SFX generation | `data/config/audio.json` |
 | `opening_fix/` | probes for the opening sequence | tests |
-| `capture_*.gd`, `preview_creatures.gd`, `diagnose_frame.gd`, `capture_diag_minimal.gd` | purpose-built captures; `capture_diag_minimal.gd` is the 120-second "can this box write a PNG" check | `docs/AGENT_WORKFLOW.md` |
+| `capture_*.gd`, `preview_creatures.gd`, `diagnose_frame.gd`, `capture_diag_minimal.gd` | purpose-built captures; `capture_diag_minimal.gd` is the 120-second "can this box write a PNG" check | `docs/WORKFLOW.md` §7 |
 
 ## Scratch convention
 
 Files named `_*.gd`, `_*.py` are one-off probes and captures: run, read the result,
 delete. `.gitignore` already ignores `tools/_scratch_*`; around 300 other `_`-prefixed
 scripts were committed anyway before the 2026-09-02 reset and are listed for removal in
-`docs/CLEANUP_MANIFEST.md`. Do not add to them. A probe worth keeping gets a
+`archive/docs/CLEANUP_MANIFEST.md`. Do not add to them. A probe worth keeping gets a
 non-underscore name, a header saying what it measures, and a mention in the document
 that relies on it.
 

@@ -1,0 +1,1068 @@
+[
+  {
+    "ally": [
+      743.0,
+      8.02,
+      3181.3,
+      8.0
+    ],
+    "camera": [
+      734.56,
+      14.32,
+      3179.18,
+      6.72
+    ],
+    "enemy": [
+      743.65,
+      6.84,
+      3186.26,
+      6.72
+    ],
+    "fight_s": 0.0,
+    "file": "res://shots/twvis/r5c/calder/t-000.00.png",
+    "gap_m": 5.0,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      742.88,
+      8.09,
+      3180.46,
+      8.07
+    ],
+    "camera": [
+      733.11,
+      15.0,
+      3178.53,
+      6.48
+    ],
+    "enemy": [
+      743.66,
+      6.86,
+      3186.21,
+      6.74
+    ],
+    "fight_s": 0.27,
+    "file": "res://shots/twvis/r5c/calder/tell-start-000.27.png",
+    "gap_m": 5.8,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      742.88,
+      8.09,
+      3180.46,
+      8.07
+    ],
+    "camera": [
+      734.59,
+      14.72,
+      3176.16,
+      6.98
+    ],
+    "enemy": [
+      743.64,
+      6.91,
+      3186.07,
+      6.8
+    ],
+    "fight_s": 0.57,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-000.57.png",
+    "gap_m": 5.66,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.06,
+      8.11,
+      3180.46,
+      8.09
+    ],
+    "camera": [
+      737.65,
+      14.41,
+      3173.81,
+      7.65
+    ],
+    "enemy": [
+      742.06,
+      6.15,
+      3187.79,
+      6.01
+    ],
+    "fight_s": 1.67,
+    "file": "res://shots/twvis/r5c/calder/tell-start-001.67.png",
+    "gap_m": 7.39,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.06,
+      8.11,
+      3180.46,
+      8.09
+    ],
+    "camera": [
+      737.51,
+      14.45,
+      3173.8,
+      7.63
+    ],
+    "enemy": [
+      742.08,
+      6.19,
+      3187.7,
+      6.05
+    ],
+    "fight_s": 1.87,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-001.87.png",
+    "gap_m": 7.3,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.8,
+      8.23,
+      3180.27,
+      8.21
+    ],
+    "camera": [
+      740.43,
+      14.56,
+      3172.27,
+      8.14
+    ],
+    "enemy": [
+      740.18,
+      5.72,
+      3188.65,
+      5.58
+    ],
+    "fight_s": 2.93,
+    "file": "res://shots/twvis/r5c/calder/tell-start-002.93.png",
+    "gap_m": 9.13,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.94,
+      8.25,
+      3180.21,
+      8.23
+    ],
+    "camera": [
+      740.69,
+      14.62,
+      3172.1,
+      8.19
+    ],
+    "enemy": [
+      740.23,
+      5.77,
+      3188.54,
+      5.63
+    ],
+    "fight_s": 3.23,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-003.23.png",
+    "gap_m": 9.12,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.02,
+      6.94,
+      3185.84,
+      6.85
+    ],
+    "camera": [
+      737.44,
+      13.38,
+      3178.89,
+      7.35
+    ],
+    "enemy": [
+      744.47,
+      3.88,
+      3193.2,
+      3.8
+    ],
+    "fight_s": 8.02,
+    "file": "res://shots/twvis/r5c/calder/t-008.02.png",
+    "gap_m": 7.5,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      740.21,
+      7.62,
+      3181.63,
+      7.61
+    ],
+    "camera": [
+      732.04,
+      14.04,
+      3178.51,
+      6.34
+    ],
+    "enemy": [
+      748.57,
+      4.24,
+      3192.72,
+      4.17
+    ],
+    "fight_s": 16.0,
+    "file": "res://shots/twvis/r5c/calder/t-016.00.png",
+    "gap_m": 13.89,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      741.02,
+      7.49,
+      3183.27,
+      7.45
+    ],
+    "camera": [
+      732.5,
+      13.89,
+      3180.98,
+      6.31
+    ],
+    "enemy": [
+      744.64,
+      4.71,
+      3191.13,
+      4.56
+    ],
+    "fight_s": 24.02,
+    "file": "res://shots/twvis/r5c/calder/t-024.02.png",
+    "gap_m": 8.66,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      740.58,
+      7.38,
+      3183.57,
+      7.34
+    ],
+    "camera": [
+      732.17,
+      13.7,
+      3182.37,
+      6.24
+    ],
+    "enemy": [
+      748.88,
+      5.59,
+      3189.51,
+      5.42
+    ],
+    "fight_s": 32.02,
+    "file": "res://shots/twvis/r5c/calder/t-032.02.png",
+    "gap_m": 10.21,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      737.08,
+      7.27,
+      3179.7,
+      7.24
+    ],
+    "camera": [
+      727.31,
+      14.44,
+      3179.86,
+      6.0
+    ],
+    "enemy": [
+      742.66,
+      7.71,
+      3183.01,
+      7.67
+    ],
+    "fight_s": 40.02,
+    "file": "res://shots/twvis/r5c/calder/t-040.02.png",
+    "gap_m": 6.49,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      740.7,
+      4.05,
+      3192.47,
+      3.96
+    ],
+    "camera": [
+      748.4,
+      14.14,
+      3202.57,
+      2.89
+    ],
+    "enemy": [
+      743.6,
+      7.4,
+      3184.61,
+      7.32
+    ],
+    "fight_s": 48.02,
+    "file": "res://shots/twvis/r5c/calder/t-048.02.png",
+    "gap_m": 8.38,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      739.84,
+      4.75,
+      3190.81,
+      4.62
+    ],
+    "camera": [
+      737.8,
+      13.87,
+      3202.1,
+      2.48
+    ],
+    "enemy": [
+      747.59,
+      7.34,
+      3185.62,
+      7.2
+    ],
+    "fight_s": 56.02,
+    "file": "res://shots/twvis/r5c/calder/t-056.02.png",
+    "gap_m": 9.33,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      738.54,
+      7.69,
+      3175.96,
+      7.67
+    ],
+    "camera": [
+      730.14,
+      14.53,
+      3170.82,
+      6.95
+    ],
+    "enemy": [
+      739.69,
+      6.81,
+      3185.59,
+      6.73
+    ],
+    "fight_s": 64.02,
+    "file": "res://shots/twvis/r5c/calder/t-064.02.png",
+    "gap_m": 9.69,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      743.0,
+      8.02,
+      3181.3,
+      8.0
+    ],
+    "camera": [
+      737.4,
+      14.44,
+      3174.42,
+      7.58
+    ],
+    "enemy": [
+      742.29,
+      6.78,
+      3186.17,
+      6.69
+    ],
+    "fight_s": 72.02,
+    "file": "res://shots/twvis/r5c/calder/t-072.02.png",
+    "gap_m": 4.92,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      743.0,
+      8.02,
+      3181.3,
+      8.0
+    ],
+    "camera": [
+      737.63,
+      14.4,
+      3174.37,
+      7.61
+    ],
+    "enemy": [
+      742.29,
+      6.78,
+      3186.17,
+      6.69
+    ],
+    "fight_s": 72.12,
+    "file": "res://shots/twvis/r5c/calder/tell-start-072.12.png",
+    "gap_m": 4.92,
+    "opponent": "water_torrentoad",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.0,
+      8.02,
+      3181.3,
+      8.0
+    ],
+    "camera": [
+      737.65,
+      14.39,
+      3174.38,
+      7.61
+    ],
+    "enemy": [
+      742.29,
+      6.78,
+      3186.17,
+      6.69
+    ],
+    "fight_s": 72.18,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-072.18.png",
+    "gap_m": 4.92,
+    "opponent": "water_torrentoad",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      744.25,
+      8.31,
+      3179.95,
+      8.3
+    ],
+    "camera": [
+      741.53,
+      14.8,
+      3171.38,
+      8.38
+    ],
+    "enemy": [
+      740.43,
+      6.35,
+      3187.03,
+      6.26
+    ],
+    "fight_s": 73.1,
+    "file": "res://shots/twvis/r5c/calder/tell-start-073.10.png",
+    "gap_m": 8.05,
+    "opponent": "water_torrentoad",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      744.72,
+      8.42,
+      3179.25,
+      8.41
+    ],
+    "camera": [
+      741.95,
+      14.98,
+      3170.56,
+      8.55
+    ],
+    "enemy": [
+      740.5,
+      6.4,
+      3186.91,
+      6.31
+    ],
+    "fight_s": 73.4,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-073.40.png",
+    "gap_m": 8.75,
+    "opponent": "water_torrentoad",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      744.94,
+      8.43,
+      3179.62,
+      8.41
+    ],
+    "camera": [
+      744.29,
+      14.94,
+      3170.67,
+      8.82
+    ],
+    "enemy": [
+      738.6,
+      6.23,
+      3187.08,
+      6.15
+    ],
+    "fight_s": 74.4,
+    "file": "res://shots/twvis/r5c/calder/tell-start-074.40.png",
+    "gap_m": 9.79,
+    "opponent": "water_torrentoad",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      745.21,
+      8.49,
+      3179.3,
+      8.47
+    ],
+    "camera": [
+      744.05,
+      15.18,
+      3169.94,
+      8.9
+    ],
+    "enemy": [
+      738.71,
+      6.28,
+      3186.95,
+      6.2
+    ],
+    "fight_s": 74.65,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-074.65.png",
+    "gap_m": 10.04,
+    "opponent": "water_torrentoad",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      741.78,
+      6.25,
+      3187.48,
+      6.13
+    ],
+    "camera": [
+      737.38,
+      12.72,
+      3179.61,
+      7.3
+    ],
+    "enemy": [
+      741.55,
+      3.85,
+      3193.04,
+      3.76
+    ],
+    "fight_s": 80.02,
+    "file": "res://shots/twvis/r5c/calder/t-080.02.png",
+    "gap_m": 5.57,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      741.8,
+      6.03,
+      3188.0,
+      5.91
+    ],
+    "camera": [
+      734.87,
+      12.45,
+      3182.5,
+      6.65
+    ],
+    "enemy": [
+      744.98,
+      3.54,
+      3194.62,
+      3.51
+    ],
+    "fight_s": 88.02,
+    "file": "res://shots/twvis/r5c/calder/t-088.02.png",
+    "gap_m": 7.34,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      742.48,
+      5.89,
+      3188.39,
+      5.76
+    ],
+    "camera": [
+      735.58,
+      12.29,
+      3182.92,
+      6.76
+    ],
+    "enemy": [
+      743.82,
+      3.58,
+      3194.1,
+      3.53
+    ],
+    "fight_s": 96.02,
+    "file": "res://shots/twvis/r5c/calder/t-096.02.png",
+    "gap_m": 5.86,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      740.81,
+      7.03,
+      3185.05,
+      6.98
+    ],
+    "camera": [
+      733.11,
+      13.34,
+      3181.26,
+      6.38
+    ],
+    "enemy": [
+      743.63,
+      3.43,
+      3194.78,
+      3.41
+    ],
+    "fight_s": 104.02,
+    "file": "res://shots/twvis/r5c/calder/t-104.02.png",
+    "gap_m": 10.13,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      741.21,
+      6.27,
+      3187.35,
+      6.16
+    ],
+    "camera": [
+      732.97,
+      12.7,
+      3184.09,
+      6.19
+    ],
+    "enemy": [
+      745.77,
+      4.08,
+      3192.7,
+      4.01
+    ],
+    "fight_s": 112.02,
+    "file": "res://shots/twvis/r5c/calder/t-112.02.png",
+    "gap_m": 7.03,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      736.3,
+      6.9,
+      3183.18,
+      6.86
+    ],
+    "camera": [
+      727.5,
+      13.32,
+      3181.3,
+      5.9
+    ],
+    "enemy": [
+      738.87,
+      5.79,
+      3188.31,
+      5.68
+    ],
+    "fight_s": 120.02,
+    "file": "res://shots/twvis/r5c/calder/t-120.02.png",
+    "gap_m": 5.74,
+    "opponent": "water_torrentoad",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      742.09,
+      8.0,
+      3180.22,
+      7.98
+    ],
+    "camera": [
+      733.85,
+      14.36,
+      3177.77,
+      6.67
+    ],
+    "enemy": [
+      743.64,
+      6.84,
+      3186.21,
+      6.74
+    ],
+    "fight_s": 128.82,
+    "file": "res://shots/twvis/r5c/calder/tell-start-128.82.png",
+    "gap_m": 6.19,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      741.03,
+      7.94,
+      3178.4,
+      7.92
+    ],
+    "camera": [
+      728.29,
+      16.13,
+      3178.6,
+      6.04
+    ],
+    "enemy": [
+      743.59,
+      6.9,
+      3186.06,
+      6.8
+    ],
+    "fight_s": 129.13,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-129.13.png",
+    "gap_m": 8.07,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      741.18,
+      7.98,
+      3178.03,
+      7.96
+    ],
+    "camera": [
+      734.2,
+      14.32,
+      3173.03,
+      7.19
+    ],
+    "enemy": [
+      742.41,
+      6.15,
+      3187.79,
+      6.02
+    ],
+    "fight_s": 130.13,
+    "file": "res://shots/twvis/r5c/calder/tell-start-130.13.png",
+    "gap_m": 9.84,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      741.15,
+      7.99,
+      3177.56,
+      7.98
+    ],
+    "camera": [
+      733.68,
+      14.46,
+      3172.6,
+      7.16
+    ],
+    "enemy": [
+      742.4,
+      6.19,
+      3187.68,
+      6.07
+    ],
+    "fight_s": 130.38,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-130.38.png",
+    "gap_m": 10.2,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      740.85,
+      7.88,
+      3178.98,
+      7.87
+    ],
+    "camera": [
+      734.11,
+      14.24,
+      3173.62,
+      7.12
+    ],
+    "enemy": [
+      744.31,
+      5.85,
+      3188.61,
+      5.71
+    ],
+    "fight_s": 131.5,
+    "file": "res://shots/twvis/r5c/calder/tell-start-131.50.png",
+    "gap_m": 10.24,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      740.68,
+      7.88,
+      3178.52,
+      7.86
+    ],
+    "camera": [
+      733.56,
+      14.3,
+      3173.29,
+      7.06
+    ],
+    "enemy": [
+      744.27,
+      5.9,
+      3188.5,
+      5.76
+    ],
+    "fight_s": 131.73,
+    "file": "res://shots/twvis/r5c/calder/tell-ended-131.73.png",
+    "gap_m": 10.6,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      743.52,
+      7.16,
+      3185.32,
+      7.07
+    ],
+    "camera": [
+      735.92,
+      13.55,
+      3180.82,
+      6.94
+    ],
+    "enemy": [
+      745.44,
+      4.83,
+      3190.84,
+      4.7
+    ],
+    "fight_s": 136.0,
+    "file": "res://shots/twvis/r5c/calder/t-136.00.png",
+    "gap_m": 5.85,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      743.69,
+      7.42,
+      3184.52,
+      7.35
+    ],
+    "camera": [
+      735.82,
+      13.77,
+      3180.9,
+      6.92
+    ],
+    "enemy": [
+      746.88,
+      3.82,
+      3193.87,
+      3.78
+    ],
+    "fight_s": 144.0,
+    "file": "res://shots/twvis/r5c/calder/t-144.00.png",
+    "gap_m": 9.88,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      743.88,
+      6.71,
+      3186.6,
+      6.59
+    ],
+    "camera": [
+      735.18,
+      13.13,
+      3184.83,
+      6.41
+    ],
+    "enemy": [
+      747.93,
+      4.2,
+      3192.66,
+      4.14
+    ],
+    "fight_s": 152.0,
+    "file": "res://shots/twvis/r5c/calder/t-152.00.png",
+    "gap_m": 7.29,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      742.83,
+      8.08,
+      3180.46,
+      8.06
+    ],
+    "camera": [
+      735.71,
+      14.37,
+      3175.7,
+      7.23
+    ],
+    "enemy": [
+      744.08,
+      6.02,
+      3188.23,
+      5.88
+    ],
+    "fight_s": 160.0,
+    "file": "res://shots/twvis/r5c/calder/t-160.00.png",
+    "gap_m": 7.87,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      742.4,
+      7.71,
+      3182.81,
+      7.68
+    ],
+    "camera": [
+      735.25,
+      14.12,
+      3177.66,
+      6.98
+    ],
+    "enemy": [
+      746.66,
+      5.14,
+      3190.26,
+      5.0
+    ],
+    "fight_s": 168.0,
+    "file": "res://shots/twvis/r5c/calder/t-168.00.png",
+    "gap_m": 8.58,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      741.7,
+      8.21,
+      3174.47,
+      8.19
+    ],
+    "camera": [
+      734.74,
+      14.48,
+      3169.38,
+      7.99
+    ],
+    "enemy": [
+      742.41,
+      7.69,
+      3182.93,
+      7.66
+    ],
+    "fight_s": 176.0,
+    "file": "res://shots/twvis/r5c/calder/t-176.00.png",
+    "gap_m": 8.49,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      741.44,
+      7.92,
+      3180.08,
+      7.9
+    ],
+    "camera": [
+      736.03,
+      14.31,
+      3173.15,
+      7.46
+    ],
+    "enemy": [
+      740.0,
+      5.6,
+      3188.87,
+      5.48
+    ],
+    "fight_s": 184.0,
+    "file": "res://shots/twvis/r5c/calder/t-184.00.png",
+    "gap_m": 8.91,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

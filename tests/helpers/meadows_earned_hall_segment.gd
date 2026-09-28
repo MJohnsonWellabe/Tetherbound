@@ -8,6 +8,8 @@ const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
 const ROOM_FRAMES := 600  # smoke_stronghold's existing chamber-hop budget.
+## A player reading a victory line before pressing on (F04#6 Sigil handover).
+const VICTORY_READ_FRAMES := 120
 const ENTRANCE_FRAMES := 950  # Its separate authored 40m ramp budget.
 var _hold: Node3D
 var _sigil_gate: Node3D
@@ -26,16 +28,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if tree.current_scene != world or str(game.get("current_realm")) != "meadows" or INPUT_OWNER.current(tree) != null:
 		_fail("Earned Hall requires ordinary world input in the retained Meadows")
 		return result()
-	_player = world.get_node_or_null("Player") as CharacterBody3D
-	_rig = world.get_node_or_null("CameraRig") as Node3D
-	_mill = world.get_node_or_null("MillCrossing") as Node3D
-	_hold = world.get_node_or_null("Stronghold") as Node3D
-	_sigil_gate = world.get_node_or_null("SigilGate") as Node3D
-	_trainers = world.get_node_or_null("Trainers") as Node3D
-	_panel = world.get_node_or_null("DialoguePanel")
-	_director = world.get_node_or_null("EncounterDirector")
-	_combat = world.get_node_or_null("CombatManager")
-	_arbiter = tree.get_first_node_in_group("interaction_arbiter")
+	_collect(world)
 	if _player == null or _rig == null or _mill == null or _hold == null or _sigil_gate == null \
 			or _trainers == null or _panel == null or _director == null or _combat == null or _arbiter == null:
 		_fail("The actual Mill, Sigil Gate, Hall or input dependencies are missing")
@@ -71,20 +64,73 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			return result()
 	_input = INPUTS.new()
 	_input._tree = tree
-	_nav = NAV.new(tree, _player, _rig, _stick)
+	_hook()
+	_completed = await _travel()
+	_stick(0.0, 0.0)
+	_unhook()
+	return result()
+
+
+## M2 "save/reload at ... Sigils": an optional reload with all three earned
+## Sigils carried, between the last captain and the Sigil Gate. The caller's
+## hook saves, frees the world and loads it back; the segment then binds to
+## the rebuilt world. Unset (the default) changes nothing.
+var before_gate: Callable
+
+
+func _collect(world: Node) -> void:
+	_world = world as Node3D
+	_player = world.get_node_or_null("Player") as CharacterBody3D
+	_rig = world.get_node_or_null("CameraRig") as Node3D
+	_mill = world.get_node_or_null("MillCrossing") as Node3D
+	_hold = world.get_node_or_null("Stronghold") as Node3D
+	_sigil_gate = world.get_node_or_null("SigilGate") as Node3D
+	_trainers = world.get_node_or_null("Trainers") as Node3D
+	_panel = world.get_node_or_null("DialoguePanel")
+	_director = world.get_node_or_null("EncounterDirector")
+	_combat = world.get_node_or_null("CombatManager")
+	_arbiter = _tree.get_first_node_in_group("interaction_arbiter")
+
+
+func _hook() -> void:
+	_nav = NAV.new(_tree, _player, _rig, _stick)
 	_combat.connect("entered", _on_entered)
 	_combat.connect("hit_landed", _on_hit)
 	_combat.connect("exited", _on_exit)
 	_panel.connect("finished", _on_dialogue_finished)
 	_arbiter.connect("activated", _on_activated)
-	_completed = await _travel()
+
+
+func _unhook() -> void:
+	for pair: Array in [[_combat, "entered", _on_entered], [_combat, "hit_landed", _on_hit],
+			[_combat, "exited", _on_exit], [_panel, "finished", _on_dialogue_finished],
+			[_arbiter, "activated", _on_activated]]:
+		var node: Object = pair[0]
+		if is_instance_valid(node) and node.is_connected(str(pair[1]), pair[2]):
+			node.disconnect(str(pair[1]), pair[2])
+
+
+func _reload_with_sigils() -> bool:
+	if not before_gate.is_valid():
+		return true
+	if not all_sigils(_sigil_stock(), 1):
+		return _fail("The Sigil reload was reached without the three earned Sigils")
 	_stick(0.0, 0.0)
-	_combat.disconnect("entered", _on_entered)
-	_combat.disconnect("hit_landed", _on_hit)
-	_combat.disconnect("exited", _on_exit)
-	_panel.disconnect("finished", _on_dialogue_finished)
-	_arbiter.disconnect("activated", _on_activated)
-	return result()
+	_unhook()
+	var ok: bool = await before_gate.call()
+	if not ok:
+		return _fail("The save/reload with the three Sigils carried failed")
+	_collect(_tree.current_scene)
+	# The retained-five checks compare creature instance ids, which a load
+	# replaces; the caller's reload has already required the saved party UIDs
+	# to be identical, so re-baseline on the reloaded instances.
+	_initial_ids = _party_ids()
+	if _player == null or _sigil_gate == null or _combat == null or _panel == null or _arbiter == null:
+		return _fail("The reloaded world lacks the Sigil Gate route dependencies")
+	_hook()
+	if not all_sigils(_sigil_stock(), 1):
+		return _fail("The three earned Sigils did not survive the reload")
+	return true
 
 
 ## A spine point that is only a bend in the road (not a captain's junction or
@@ -115,6 +161,8 @@ func _travel() -> bool:
 		if not await _walk_ground(road[join]):
 			return false
 		previous = join + 1
+	if not await _reload_with_sigils():
+		return false
 	var gate_at := Vector2(_sigil_gate.global_position.x, _sigil_gate.global_position.z)
 	var gate_join := nearest_index(road, gate_at)
 	if gate_join < previous or gate_join + 1 >= road.size():
@@ -256,8 +304,18 @@ func _fight_named(body: Node3D, id: String) -> bool:
 	_receipt("trainer_defeated", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
 		"xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate(), "frames": Engine.get_physics_frames() - _captain_start})
-	for _frame in 120:
-		if INPUT_OWNER.current(_tree) == null:
+	# A row's `victory_conversation` (the captains' Sigil handover, F04#6) opens
+	# a deferred frame after the win; it is read through with Interact at a
+	# reader's pace (one line per VICTORY_READ_FRAMES) before world input is
+	# expected back.
+	var victory := not str(_captain_spec.get("victory_conversation", "")).is_empty()
+	var read := not victory
+	for frame in 120 + (VICTORY_READ_FRAMES * 8 if victory else 0):
+		if bool(_panel.call("is_open")):
+			read = true
+			if frame % VICTORY_READ_FRAMES == VICTORY_READ_FRAMES - 1:
+				await _input._tap("interact")
+		elif INPUT_OWNER.current(_tree) == null and (read or frame >= 30):
 			return true
 		await _tree.physics_frame
 	return _fail("The actual trainer victory did not return ordinary world input: " + id)

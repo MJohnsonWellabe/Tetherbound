@@ -275,6 +275,8 @@ func _ready() -> void:
 	_party_strip = PARTY_STRIP.new()
 	_party_strip.set("progression_feedback_enabled", false)
 	$Root.add_child(_party_strip)
+	# F10#6: the fight roster is name + HP, opaque (party_strip.gd `compact`).
+	_party_strip.call("set_compact", true)
 	# `set_rest_position()`, not a plain `.position` write: the strip is not
 	# visible yet (`party_strip.gd::_ready()` leaves it hidden), so this both
 	# snaps `.position` now and records the real `_rest_position` the widget's
@@ -495,6 +497,11 @@ func _process(delta: float) -> void:
 	_draw_prompt()
 
 	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	if not fighting and _manager != null and _manager.has_method("presenting_fight") \
+			and bool(_manager.call("presenting_fight")):
+		# F14 C3: a trainer's held send-out beat. The fight panels stay as the
+		# last round left them until the next creature is out; nothing redraws.
+		return
 	if not fighting:
 		_show_fight(false, _was_fighting)
 		_was_fighting = false
@@ -684,8 +691,14 @@ func _draw_enemy() -> void:
 	if bool(_manager.call("is_resolving_catch")) or str(_manager.call("outcome")) != "":
 		_telegraph.text = ""
 	elif bool(_manager.call("enemy_is_winding_up")):
-		_telegraph.text = "!  incoming — move"
-		_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
+		# F04#0: a heavy (Earth Fist, an ACE's final-exam strike) reads apart
+		# from an ordinary one -- the judge saw both under one warning.
+		if _manager.has_method("enemy_windup_is_heavy") and bool(_manager.call("enemy_windup_is_heavy")):
+			_telegraph.text = "!!  HEAVY — get clear"
+			_telegraph.add_theme_color_override("font_color", UITokens.DANGER)
+		else:
+			_telegraph.text = "!  incoming — move"
+			_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
 	elif bool(_manager.call("enemy_is_rooted")) and not bool(_manager.call("player_is_staggered")):
 		# Not while your own creature is staggered: it cannot act on "hit it",
 		# and the red stagger banner beneath said the opposite at the same time.

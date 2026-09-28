@@ -69,6 +69,12 @@ var _probe_hotbar := false
 var _probe_stands := false
 ## Path index -> {label, face}: frames taken on reaching a named leg.
 var _leg_shots := {}
+var _queued_shots: Array = []
+## Longest a leg shot waits for a wild creature to leave the player's shoulder.
+const SHOT_DEFER_S := 5.0
+var _pending_shot := {}
+## `--via=x,z`: the road point the route leaves the road at (disclosed).
+var _via := Vector2(INF, INF)
 ## Doss's perch framed from its east side, where the river channel runs
 ## behind it (chosen from the diagnostic stand probe; offset from the perch).
 const PERCH_RIVER_STAND := Vector3(8.0, 0.0, 4.0)
@@ -126,6 +132,9 @@ func _run() -> void:
 			_save_path = _save_dir + "/slot_%d.json" % SLOT
 		elif a.begins_with("--budget-s="):
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
+		elif a.begins_with("--via="):
+			var v := a.trim_prefix("--via=").split(",")
+			_via = Vector2(float(v[0]), float(v[1]))
 		elif a.begins_with("--off-road-cost="):
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a == "--act":
@@ -233,14 +242,35 @@ func _run() -> void:
 		if outward.length() > 0.1:
 			legs.append(entrance + outward.normalized() * 12.0)
 		legs.append(entrance)
+		var den_at: Vector3 = warrens.call("marker", "den")
+		var hall_at: Vector3 = warrens.call("marker", "hall")
 		for leg: String in ["mouth", "hall", "den"]:
+			if leg == "den":
+				# Just inside the den from the hall: the required guardian and,
+				# beyond him, the shut vault door's lit seam (the designed lure).
+				# Stand at the den's threshold (10.5 m back toward the hall, the
+				# den's near wall is 11 m), 1.2 m toward the vault side: at 6 m
+				# in, the guardian closed on the player and judge D's frame had
+				# the camera inside him.
+				var back := (hall_at - den_at).normalized()
+				var side: Vector3 = warrens.call("marker", "vault") - den_at
+				side = (side - back * side.dot(back)).normalized()
+				legs.append(den_at + back * 10.5 + side * 1.2)
+				# Face the door itself (on the den's vault-side wall, 8 m from
+				# the den centre), not the vault's centre: from the threshold
+				# that line runs into the den's side wall.
+				var door_at := den_at + side * 8.0
+				# No stow: the guardian closes on a player who lingers here, and
+				# the stow's second is what let him fill the frame.
+				_leg_shots[legs.size() - 1] = {"label": "den-entry-guardian-and-vault-door",
+					"face": door_at}
 			legs.append(warrens.call("marker", leg))
 		# The optional branch: from the (already cleared) guardian's den, the
 		# passage to the lit vault. Frame the den looking down it, and the
 		# passage itself, so the branch being taken is on screen.
 		var den: Vector3 = warrens.call("marker", "den")
 		var vault_at: Vector3 = warrens.call("marker", "vault")
-		_leg_shots[legs.size() - 1] = {"label": "branch-den-toward-vault", "face": vault_at}
+		_leg_shots[legs.size() - 1] = {"label": "branch-den-toward-vault", "face": vault_at, "stow": true}
 		legs.append(den.lerp(vault_at, 0.5))
 		_leg_shots[legs.size() - 1] = {"label": "branch-passage", "face": vault_at}
 		legs.append(vault_at)
@@ -537,6 +567,14 @@ func _plan_route(start: Vector2, goal: Vector2) -> void:
 		if c < best_cost:
 			best_cost = c
 			best = i
+	if _via.x < INF:
+		# `--via`: leave the road at the node nearest a named road point (the
+		# road a player walks past the place), not at the cheapest exit.
+		best = 0
+		for i in nodes.size():
+			if nodes[i].distance_to(_via) < nodes[best].distance_to(_via):
+				best = i
+		_receipt["via_road_point"] = [snappedf(nodes[best].x, 0.1), snappedf(nodes[best].y, 0.1)]
 	var chain: Array[int] = []
 	var at := best
 	while at >= 0:
@@ -593,6 +631,8 @@ func _walk() -> void:
 	var seen := false
 	var readable := false
 	var looked := false
+	var glanced := false
+	var early_glanced := false
 	var approach_saved := false
 	var best_remaining := INF
 	var best_at := 0.0
@@ -602,6 +642,11 @@ func _walk() -> void:
 	## after real progress past it (best_remaining is reset to INF after an
 	## unstick, so it cannot be the reference).
 	var unstick_anchor := INF
+	## Engage prompts pressed when stuck beside a wild creature (at most two).
+	var engage_presses := 0
+	var stuck_recalled := false
+	var shot_deferred := false
+	var shot_deferred_at := 0.0
 	var frame := 0
 	while _clock < WALK_BUDGET_S:
 		await physics_frame
@@ -644,7 +689,20 @@ func _walk() -> void:
 					"camera_to_lure_m": vis.distance_m, "screen_px": vis.screen,
 					"while_on_road": seen_on_road, "after_deliberate_look": looked}
 				_release()
-				await _capture("lure-first-seen")
+				await _capture_lure("lure-first-seen")
+				if seen_on_road:
+					# Spotted from the road: look at it, as a player does, companion
+					# put away so it does not stand in the view.
+					var stowed_first := false
+					if _director != null and _director.call("ally_body") != null:
+						await _press("creature_recall")
+						for i in 60:
+							await physics_frame
+						stowed_first = _director.call("ally_body") == null
+					await _face_lure()
+					await _capture("road-glance-at-first-sighting")
+					if stowed_first:
+						await _ensure_companion_out("first-sighting glance; ")
 		if frame % 10 == 0 and seen and not readable:
 			var rvis := _lure_visible()
 			if not rvis.is_empty() and bool(rvis.get("readable", false)):
@@ -653,13 +711,17 @@ func _walk() -> void:
 					"camera_to_lure_m": rvis.distance_m, "height_px": rvis.height_px,
 					"while_on_road": cursor < _road_count() - 1, "after_deliberate_look": looked}
 				_release()
-				await _capture("lure-first-readable")
+				await _capture_lure("lure-first-readable")
 		if _prompt_offered():
 			_release()
 			_receipt["prompt"] = {"t_s": snappedf(_clock, 0.1), "walked_m": snappedf(_walked, 0.1),
 				"winner": str(_arbiter.call("winner"))}
 			await _face_lure()
-			await _capture("prompt-offered")
+			# An Engage prompt needs the companion out, so that frame keeps it.
+			if str(_arbiter.call("winner")).contains("\"Engage "):
+				await _capture("prompt-offered")
+			else:
+				await _capture_lure("prompt-offered")
 			if _act:
 				await _perform_action()
 			_finish("PASS", "lure seen and the activity's prompt was offered")
@@ -668,11 +730,13 @@ func _walk() -> void:
 		# Advance the cursor along the path.
 		while cursor < _path.size() - 1 and here.distance_to(_xz3(_path[cursor])) < 3.0:
 			if _leg_shots.has(cursor):
-				var shot: Dictionary = _leg_shots[cursor]
+				# A shot still waiting (deferred beside a creature) keeps its
+				# place; this one queues behind it rather than replacing it.
+				if _pending_shot.is_empty():
+					_pending_shot = _leg_shots[cursor]
+				else:
+					_queued_shots.append(_leg_shots[cursor])
 				_leg_shots.erase(cursor)
-				_release()
-				await _face_point(shot["face"])
-				await _capture(str(shot["label"]))
 			cursor += 1
 			if cursor == _road_count() and not seen and not looked:
 				# At the point the route leaves the road. Glance at the activity,
@@ -681,7 +745,70 @@ func _walk() -> void:
 				_release()
 				await _capture("left-road-lure-not-yet-on-screen")
 				await _face_lure()
+			if cursor == _road_count() - 2 and not early_glanced and _road_count() > 3:
+				# A second glance a couple of road points before the exit, so one
+				# post or trunk right at the exit cannot hide the whole view.
+				early_glanced = true
+				_release()
+				await _face_lure()
+				_receipt["road_glance_before_exit"] = {"t_s": snappedf(_clock, 0.1),
+					"camera_to_lure_m": snappedf(here.distance_to(_xz3(_lure.global_position)), 0.1)}
+				await _capture("road-glance-before-exit")
+			if cursor == _road_count() and not glanced:
+				# Always frame the glance from the road exit, companion put away
+				# with the ordinary key: the view a player has of the place from
+				# the road, whether or not the lure was already detected.
+				glanced = true
+				_release()
+				var stowed := false
+				if _director != null and _director.call("ally_body") != null:
+					await _press("creature_recall")
+					for i in 60:
+						await physics_frame
+					stowed = _director.call("ally_body") == null
+				await _face_lure()
+				_receipt["road_exit_glance"] = {"t_s": snappedf(_clock, 0.1),
+					"camera_to_lure_m": snappedf(here.distance_to(_xz3(_lure.global_position)), 0.1)}
+				await _capture("road-exit-glance-toward-lure")
+				if stowed:
+					await _ensure_companion_out("road-exit glance; ")
 				continue
+		# A leg shot is taken only while walking: a fight that starts on the
+		# same step would turn it into a combat close-up, so it waits for the
+		# walk to resume after the fight.
+		# A wild creature at the shoulder (its Engage prompt is up) puts the
+		# camera inside it: the shot waits, and the walk goes on, until the
+		# creature is off the player's shoulder.
+		if not _pending_shot.is_empty() and _arbiter != null \
+				and str(_arbiter.call("winner")).contains("\"Engage ") \
+				and (not shot_deferred or _clock - shot_deferred_at < SHOT_DEFER_S):
+			if not shot_deferred:
+				shot_deferred = true
+				shot_deferred_at = _clock
+				_notes.append("t=%.1fs leg shot %s deferred beside %s" % [
+					_clock, str(_pending_shot["label"]), str(_arbiter.call("winner"))])
+		elif not _pending_shot.is_empty():
+			shot_deferred = false
+			_release()
+			for i in 20:
+				await physics_frame
+			if _manager == null or not bool(_manager.call("is_fighting")):
+				# A big companion at the shoulder can fill the frame: put it away
+				# with the ordinary key for the shot, as `_capture_perch` does.
+				var stowed := false
+				if bool(_pending_shot.get("stow", false)) and _director != null \
+						and _director.call("ally_body") != null:
+					await _press("creature_recall")
+					for i in 60:
+						await physics_frame
+					stowed = _director.call("ally_body") == null
+				await _face_point(_pending_shot["face"])
+				if _manager == null or not bool(_manager.call("is_fighting")):
+					await _capture(str(_pending_shot["label"]))
+					_pending_shot = _queued_shots.pop_front() if not _queued_shots.is_empty() else {}
+				if stowed:
+					await _ensure_companion_out("leg shot; ")
+			continue
 		var lure_d := here.distance_to(_xz3(_lure.global_position))
 		if not near_checked and lure_d <= APPROACH_FRAME_M:
 			# Whatever happened on the road (stowed to get unstuck, a toggle that
@@ -694,7 +821,7 @@ func _walk() -> void:
 			approach_saved = true
 			_release()
 			await _face_lure()
-			await _capture("approach-30m")
+			await _capture_lure("approach-30m")
 		if cursor >= _path.size() - 1 and lure_d <= 2.0:
 			_release()
 			await _face_lure()
@@ -720,6 +847,28 @@ func _walk() -> void:
 					await _ensure_companion_out("t=%.1fs moving again; " % _clock)
 			best_remaining = remaining
 			best_at = _clock
+		elif _clock - best_at > STUCK_S and not stuck_recalled and _director != null \
+				and _director.call("ally_body") == null:
+			# Stuck with no companion out (a recall at the start that did not
+			# take): a blocking wild creature offers no Engage prompt without
+			# one. Call it out once before jumping at the obstacle.
+			stuck_recalled = true
+			_release()
+			await _ensure_companion_out("t=%.1fs stuck; " % _clock)
+			best_at = _clock
+			continue
+		elif _clock - best_at > STUCK_S and engage_presses < 2 and _arbiter != null \
+				and str(_arbiter.call("winner")).contains("\"Engage "):
+			# A wild creature standing in the way offers its Engage prompt; a
+			# player presses it rather than jumping at it. The fight that starts
+			# is handled like any other (`_handle_fight` runs from it), which
+			# is what gets the creature off the path.
+			engage_presses += 1
+			_notes.append("t=%.1fs blocked beside %s; pressed interact" % [_clock, str(_arbiter.call("winner"))])
+			_release()
+			await _press("interact")
+			best_at = _clock
+			continue
 		elif _clock - best_at > STUCK_S:
 			unstick += 1
 			_notes.append("t=%.1fs no progress at (%.1f,%.1f); unstick attempt %d (jump + strafe)" % [
@@ -1411,6 +1560,24 @@ func _release() -> void:
 
 
 ## --- receipts -------------------------------------------------------------------
+
+## A lure frame is about the place, not the companion at the player's
+## shoulder (judges read a big companion as the subject, e.g. over the herd).
+## Put it away with the ordinary key for the frame, and call it back out after,
+## as the road-exit glance does. The herd watch itself still needs it out, and
+## `_ensure_companion_out` restores it before anything is acted on.
+func _capture_lure(label: String) -> void:
+	var stowed := false
+	if _director != null and _director.call("ally_body") != null:
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+		stowed = _director.call("ally_body") == null
+	await _face_lure()
+	await _capture(label)
+	if stowed:
+		await _ensure_companion_out("%s frame; " % label)
+
 
 func _capture(label: String) -> void:
 	if _start_frame > 0:

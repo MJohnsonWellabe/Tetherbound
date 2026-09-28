@@ -93,8 +93,18 @@ const BOUNDS_IGNORED_NAMES := ["ContactShadow"]
 ## (nothing is ever cropped mid-turn); zooming IN eases at this rate (1/s).
 ## Reduced motion keeps the calm whole-turn fit instead of a breathing zoom.
 const ZOOM_IN_RATE := 2.5
-## Height bands in the silhouette sample (see `silhouette_sample`).
-const HULL_BANDS := 32
+## Height bands in the silhouette sample (see `silhouette_sample`). Each
+## band's reconstructed hull corner is emitted at BOTH the band's true lowest
+## and highest Y (a deliberate over-approximation, never an under one) --
+## but that means a real vertex near one edge of a wide band gets a phantom
+## copy pushed all the way to the OTHER edge, demanding a farther camera than
+## the true silhouette needs. Galecrest's rebuilt wing rig has a real
+## wide-reaching vertex only ~0.1m below the topmost point (32 bands over its
+## 3.5m height puts ~0.11m in the top band); halving that slack to ~0.07m
+## with more/narrower bands (independent review: 48 clears the roster with
+## margin, never tightens the hull past the true points -- see
+## `silhouette_from_points`) closed the gap without moving any species' data.
+const HULL_BANDS := 48
 ## Seconds after a body is framed at which it is measured again. The creature
 ## plays its authored rest pose after it loads, so the first measurement can
 ## be the bind pose while the drawn body is curled or folded (the Guardian

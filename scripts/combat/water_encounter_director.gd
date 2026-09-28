@@ -159,6 +159,25 @@ func setup(world: Node, bodies: Dictionary = {}, data: Dictionary = {}) -> void:
 	encounter_config = translated.encounter_config
 	trainer_specs = translated.trainer_specs
 
+## F14#0 C3 (Tidecoil): WATER named encounters authored `arena_mode:
+## "shallow_surface"` ("sweeps the visible surface at the reef edge") keep their
+## fight ring small, so it stays in the shallows where both fighters show above
+## the water. Without it the ring's 11 m drifted down the reef slope: Tidecoil
+## fought 5 m under the surface, hidden by it, for most of a captured fight
+## (r8tidecoil: enemy y -5.4 on the seabed). CombatManager asks every sibling
+## of the player for `combat_arena_bounds_at`, as the Warrens and stronghold
+## answer for their rooms; -1 means no opinion.
+func combat_arena_bounds_at(x: float, z: float) -> float:
+	for named: Dictionary in encounter_config.get("named_encounters", []):
+		if str(named.get("arena_mode", "")) != "shallow_surface" or not named.has("arena_radius_m"):
+			continue
+		var at: Variant = named.get("position")
+		var centre := Vector2(float(at[0]), float(at[2])) if at is Array else (Vector2(at.x, at.z) if at is Vector3 else Vector2.INF)
+		if Vector2(x, z).distance_to(centre) <= float(named.get("arena_capture_radius_m", 16.0)):
+			return float(named.arena_radius_m)
+	return -1.0
+
+
 func occupied_positions() -> Array[Vector3]:
 	var result: Array[Vector3] = []
 	var game := get_node_or_null("/root/Game")

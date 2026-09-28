@@ -1,0 +1,70 @@
+{
+  "frame_18": {
+    "triangles": 14840,
+    "vertices": 7648,
+    "degenerate_triangles": 0,
+    "bounds_min": [
+      -10.555000305175781,
+      0.0,
+      -2.200000047683716
+    ],
+    "bounds_max": [
+      10.555000305175781,
+      11.25,
+      1.9709999561309814
+    ],
+    "material_surfaces": 4,
+    "colliders": 0
+  },
+  "leaf_18": {
+    "triangles": 31368,
+    "vertices": 16380,
+    "degenerate_triangles": 0,
+    "bounds_min": [
+      -9.0,
+      -5.960464477539063e-08,
+      -0.6048000454902649
+    ],
+    "bounds_max": [
+      9.0,
+      7.0,
+      0.6048000454902649
+    ],
+    "material_surfaces": 4,
+    "colliders": 0
+  },
+  "frame_30": {
+    "triangles": 14840,
+    "vertices": 7648,
+    "degenerate_triangles": 0,
+    "bounds_min": [
+      -16.55500030517578,
+      0.0,
+      -2.200000047683716
+    ],
+    "bounds_max": [
+      16.55500030517578,
+      11.25,
+      1.9709999561309814
+    ],
+    "material_surfaces": 4,
+    "colliders": 0
+  },
+  "leaf_30": {
+    "triangles": 50120,
+    "vertices": 26180,
+    "degenerate_triangles": 0,
+    "bounds_min": [
+      -15.0,
+      -5.960464477539063e-08,
+      -0.6048000454902649
+    ],
+    "bounds_max": [
+      15.0,
+      7.0,
+      0.6048000454902649
+    ],
+    "material_surfaces": 4,
+    "colliders": 0
+  }
+}

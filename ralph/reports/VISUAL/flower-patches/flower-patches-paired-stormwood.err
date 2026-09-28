@@ -1,0 +1,15 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/stormwood_world.gd:89)
+       [1] _boot_region (res://tools/capture_visual_audit.gd:743)
+       [2] _boot_region (D:/tetherbound/visual-acceptance-local/capture_flower_patches.gd:31)
+       [3] _run_region (res://tools/capture_visual_audit.gd:480)
+       [4] _run (res://tools/capture_visual_audit.gd:115)
+       [5] _run (D:/tetherbound/visual-acceptance-local/capture_flower_patches.gd:17)
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+       [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+       [2] _ready (res://scripts/combat/encounter_director.gd:552)

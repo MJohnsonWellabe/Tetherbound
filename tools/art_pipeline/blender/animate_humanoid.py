@@ -61,6 +61,7 @@ import pathlib
 import sys
 
 import bpy
+import mathutils
 
 FPS = 24
 
@@ -109,6 +110,15 @@ BONES = {
 ## sine to read as a curve rather than as a triangle wave.
 STEP = 4
 
+## `--only` keeps the rig's imported clips, which the glTF importer keys as
+## `rotation_quaternion`. A pose bone evaluates only the channel its
+## rotation_mode names, so switching bones to XYZ for a new euler-keyed clip
+## silently freezes every imported clip: the sampled export then bakes them as
+## a static two-key pose. That shipped on grunt/warden/captain_a/captain_b in
+## the first defeated pass. When set, new keys are written as quaternions and
+## the rig's rotation mode is left alone.
+KEEP_QUATERNION = False
+
 
 def argv_after_double_dash() -> list[str]:
     return sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -138,6 +148,16 @@ def key(rig, slot: str, frame: int, euler=None, location=None) -> None:
     bone = rig.pose.bones.get(BONES[slot])
     if bone is None:
         return
+    if KEEP_QUATERNION:
+        bone.rotation_mode = "QUATERNION"
+        if euler is not None:
+            bone.rotation_quaternion = mathutils.Euler(
+                [math.radians(a) for a in euler], "XYZ").to_quaternion()
+            bone.keyframe_insert("rotation_quaternion", frame=frame)
+        if location is not None:
+            bone.location = location
+            bone.keyframe_insert("location", frame=frame)
+        return
     bone.rotation_mode = "XYZ"
     if euler is not None:
         bone.rotation_euler = [math.radians(a) for a in euler]
@@ -149,6 +169,11 @@ def key(rig, slot: str, frame: int, euler=None, location=None) -> None:
 
 def clear_pose(rig) -> None:
     for bone in rig.pose.bones:
+        if KEEP_QUATERNION:
+            bone.rotation_mode = "QUATERNION"
+            bone.rotation_quaternion = (1, 0, 0, 0)
+            bone.location = (0, 0, 0)
+            continue
         bone.rotation_mode = "XYZ"
         bone.rotation_euler = (0, 0, 0)
         bone.location = (0, 0, 0)
@@ -719,6 +744,8 @@ def add_only(rig, names: list[str], out: pathlib.Path) -> None:
     new clip. No unit normalisation here: a shipped *_lod0.glb is already in
     metres (main()'s transform_apply is for raw Meshy input).
     """
+    global KEEP_QUATERNION
+    KEEP_QUATERNION = True
     rig.animation_data_create()
     tracked = {strip.action.name for track in rig.animation_data.nla_tracks
                for strip in track.strips if strip.action}

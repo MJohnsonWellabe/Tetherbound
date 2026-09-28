@@ -85,6 +85,19 @@ static func unit_jitter(value: float, range_min: float, range_max: float) -> flo
 	return clampf(inverse_lerp(range_min, range_max, value), 0.0, 1.0)
 
 
+static func local_scale(at: Vector3, config: Dictionary) -> float:
+	var result := 1.0
+	for zone: Dictionary in config.get("grass_scale_zones", []):
+		var p: Array = zone.get("centre", [0.0, 0.0, 0.0])
+		if absf(at.y - float(p[1])) > float(zone.get("vertical_reach_m", 50.0)):
+			continue
+		var distance := Vector2(at.x - float(p[0]), at.z - float(p[2])).length()
+		var weight := 1.0 - smoothstep(float(zone.get("inner_radius_m", 55.0)),
+			float(zone.get("outer_radius_m", 130.0)), distance)
+		result = minf(result, lerpf(1.0, float(zone.get("scale", 0.55)), weight))
+	return result
+
+
 static func _ensure_noises(seed: int, frequency: float, jitter: float) -> void:
 	if _distance_noise != null and _value_noise != null and seed == _cached_seed \
 			and is_equal_approx(frequency, _cached_frequency) \

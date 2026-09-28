@@ -1,0 +1,21 @@
+{
+  "subject": "Galecrest rebuild, new-UV ordinary / shiny / alpha texture candidates",
+  "author": "Codex, original deterministic texture-region processing of the authorized Galecrest rebuild source",
+  "date": "2026-09-27",
+  "source": "../../models/creature_galecrest_lod0.glb; geometry and UVs equal the original candidate per export-equality.json.",
+  "source_provenance": "submission.json in this directory; inspected reference and Meshy task 01a0e4a9-3cfa-7210-b6d6-70f332337328.",
+  "inspected_inputs": [
+    "../thumbnail.png",
+    "ordinary.png decoded from the new GLB's actual baseColorTexture image",
+    "data/creatures/shiny_colourways.json Galecrest established storm-slate/electric-cyan shiny and darker blue wing alpha",
+    "tools/repaint_creature_textures.py and tools/creature_anatomy_maps.py"
+  ],
+  "method": "New mesh UV/position/skin-weight anatomy masks. Ordinary is decoded source-identical. Shiny protects the entire face and blends smoothly at throat/thigh boundaries; cyan remains on distal wing tips. Alpha deepens the broad wing field. No quantization, denoising or artificial noise.",
+  "deliberately_unused": "Legacy species-model lookup, old Galecrest atlas, old source-hue rules for the rust-red model, finish defaults, posterization, quantization, denoising, artificial noise and texture downsampling.",
+  "outputs": {
+    "ordinary.png": "Unaltered decoded source; ordinary presentation candidate.",
+    "shiny.png": "Storm slate feather field with anatomically confined electric-cyan distal wing tips; protected face/feet remain source.",
+    "alpha.png": "Ordinary source with broader darker blue wings; protected face/feet remain source."
+  },
+  "validation": "Native new-UV routing checked in variants-r2/routing.json; inspect current world-final frames and final verdict for acceptance."
+}

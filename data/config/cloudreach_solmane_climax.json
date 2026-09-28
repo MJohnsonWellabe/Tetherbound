@@ -1,0 +1,123 @@
+{
+  "_comment": "Solmane (owner ruling 2026-09-27, #356 5858140459): Cloudreach's freed legendary works exactly like the Meadows Veridian. This is a second instance of scripts/world/stronghold_climax.gd (mounted by cloudreach_world_runtime.gd), configured here. Captain Veyra's defeat opens the summit engine's tether chamber; the players shut the tether and free Solmane once per world; every actual Veyra participant (her per-participant reward journal, trainer:captain_veyra_storm_anchor:) receives their own once-only volunteer offer with the Veridian capacity rule. Solmane is never wild or catchable. No Stronghold node exists here, so every spot is the `fallback` [x, z] on Cloudreach's own ground. ALL NUMBERS TUNABLE.",
+  "site": {
+    "stronghold_node": "CloudreachNoStronghold",
+    "_comment": "Deliberately no building: the summit presentation's wall machine (cloudreach_summit_presentation.gd, arena-local (1.5, 0.15, 33) = world (101.5, 1160.15, 5483)) is the engine, and the spots below stand in front of it on the arena deck.",
+    "prompt_radius": 4.2
+  },
+  "receipts": {
+    "resolution_prefix": "cloudreach:legendary_resolution:",
+    "live_marker": "cloudreach:legendary_resolution:live",
+    "answer_world_prefix": "cloudreach:legendary_answer_world:"
+  },
+  "legendary": {
+    "species": "solmane",
+    "display_name": "Solmane",
+    "level": 34,
+    "_comment_level": "Above Captain Veyra's own team (L30-33 summit band), as Veridian is above the Warden's. TUNABLE.",
+    "fallback": [
+      101.5,
+      5476.0
+    ],
+    "facing_deg": 180.0,
+    "scale": 1.0,
+    "stage": {},
+    "bound": {
+      "_comment": "While it is held in the machine: drained, clamped, lit by somebody else's light. Two cold teal restraint rings (palette.json's reserved Tether teal) tight on the body -- `rings` are heights as fractions of the body's own height, the radius is the species' gameplay radius plus `ring_clearance` -- plus a slow pulse so it reads as machinery working rather than as scenery. The old 24-bar floor ring of radius 3.4 m is gone: it was the ring outside the machine.",
+      "colour": "#7fd8c4",
+      "energy": 1.3,
+      "range": 7.0,
+      "_comment_energy": "HALL-STAGING-0906 round 2: at 2.4/9 the cage light was a barred cell with blown-out white light, the single brightest object in the frame from the warden arena doorway, outshining the torch-lit archway beside it. 1.3/7 keeps the pulse legible inside the cage and lets the torches own the room.",
+      "pulse_seconds": 2.6,
+      "emission": 1.15,
+      "_comment_emission": "NOT higher. Above ~1.2 the teal clips to white and the ring stops reading as the reserved colour at all -- the same ceiling stronghold_occupation.gd's work-lamp lens found at 2.4 and fixed at 1.15, and the same finding a blind judge returned on these rings at 2.2 ('unlit white primitives').",
+      "rings": [
+        0.42,
+        0.74
+      ],
+      "ring_clearance": 0.25,
+      "ring_thickness": 0.08
+    },
+    "freed": {
+      "_comment": "The instant it is loose: the cage colour is gone and the light is its OWN -- warm, wide, and brighter than the machine ever was. This is the only moment in the chapter lit by something that is not Team Tether. It then STEPS OUT of the machine to the `mark` over `step_out_seconds` (down off the dais, then across), turns to the player, and on the join offer crosses to `approach_distance` from them over `approach_seconds`.",
+      "colour": "#e8d79a",
+      "energy": 5.5,
+      "range": 22.0,
+      "rise_seconds": 1.8,
+      "step_out_seconds": 2.4,
+      "approach_distance": 2.6,
+      "approach_seconds": 2.0,
+      "key_light": {
+        "colour": "#fff1cf",
+        "energy": 2.5,
+        "range": 9.0,
+        "offset": [
+          0.0,
+          3.2,
+          2.2
+        ]
+      },
+      "leave": {
+        "enabled": true,
+        "fallback": [
+          100.0,
+          5420.0
+        ],
+        "distance": 9.0,
+        "seconds": 4.0
+      }
+    }
+  },
+  "machine": {
+    "fallback": [
+      95.0,
+      5472.0
+    ],
+    "label": "Shut down the tether engine",
+    "chamber_conversation": "cloudreach_solmane_chamber",
+    "free_conversation": "cloudreach_solmane_free",
+    "join_conversation": "cloudreach_solmane_joins",
+    "failure_conversation": "cloudreach_solmane_engine_fails",
+    "height": 1.2,
+    "warden_trainer": "captain_veyra_storm_anchor"
+  },
+  "choice": {
+    "announce": "Step toward it to fly out together, or step back to leave it free. Only you can answer for yourself, and either answer is final.",
+    "conversation": "cloudreach_solmane_choice",
+    "refused_message": "Solmane lifts off the deck and turns into the open wind. It leaves free, and your team stays as it is.",
+    "hold_message": "It stands free on the deck and waits. It will offer itself to whoever fought Veyra for it once that can be told.",
+    "accept_label": "Fly out with Solmane (final)",
+    "refuse_label": "Leave Solmane free (final)",
+    "accept_offset": 2.4,
+    "refuse_offset": 2.4,
+    "radius": 1.6,
+    "height": 0.9,
+    "announce_delay": 1.0,
+    "message_hold": 2.4,
+    "near_offset": 1.9,
+    "min_separation": 2.8,
+    "offer_radius": 30.0,
+    "marker": {
+      "enabled": true,
+      "radius": 0.7,
+      "alpha": 0.55,
+      "accept_colour": "#f2d58a",
+      "refuse_colour": "#d9e2ec",
+      "accept_caption": "Fly out together",
+      "refuse_caption": "Leave it free",
+      "caption_height": 1.9,
+      "caption_font_size": 40,
+      "caption_pixel_size": 0.0012
+    },
+    "prompt_prefix": "Solmane"
+  },
+  "flags": {
+    "warden_defeated": "captain_veyra_defeated",
+    "legendary_freed": "cloudreach:legendary_freed",
+    "legendary_joined": "cloudreach:legendary_joined",
+    "legendary_refused": "cloudreach:legendary_refused",
+    "legendary_settled": "cloudreach:legendary_settled",
+    "gate": "captain_veyra_defeated",
+    "_comment_gate": "Owner ruling: captain_veyra_defeated opens the summit engine's tether chamber."
+  }
+}

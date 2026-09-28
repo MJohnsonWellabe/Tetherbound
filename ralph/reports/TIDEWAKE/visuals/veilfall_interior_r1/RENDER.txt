@@ -1,0 +1,2 @@
+Render: local xvfb + opengl3 (Mesa llvmpipe), 1920x1080, tools/capture_veilfall_interior.gd at 4bdda430~1 (dfbdf896 + interior tool; before the channel-water fix).
+Judge: code-blind sonnet subagent, visual-judge rubric, frames + references only.

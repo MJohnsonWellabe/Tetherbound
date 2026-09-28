@@ -1,0 +1,66 @@
+{
+  "ally": {
+    "camera_m": 6.1,
+    "in_frustum": true,
+    "pos": [
+      -283.0,
+      4.7,
+      6459.9
+    ]
+  },
+  "camera": [
+    -278.2,
+    6.8,
+    6456.8
+  ],
+  "fight": "captain_ridge",
+  "game_frame": 67489,
+  "hud_text": [
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 15",
+    "M A I N   S T O R Y",
+    "Defeat the Upper Meadows captains. 3/3",
+    "Day 9  ·  08:09",
+    "Captain Vess",
+    "That's the last of us, if you'd already stood down Halder and Oreth. The Hall road answers to three now — go see.",
+    "Close"
+  ],
+  "meta": {
+    "after_s": 5.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 3.4,
+    "in_frustum": true,
+    "pos": [
+      -279.3,
+      4.8,
+      6459.3
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_ridge-after-05s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 4.1,
+    "in_frustum": true,
+    "pos": [
+      -280.0,
+      4.9,
+      6460.0
+    ]
+  }
+}

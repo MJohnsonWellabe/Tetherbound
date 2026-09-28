@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/tidewake/sluice_gate/sluice_frame_18.glb" id="1"]
+[ext_resource type="PackedScene" path="res://assets/environment/tidewake/sluice_gate/sluice_leaf_18.glb" id="2"]
+
+[node name="SluiceGate18" type="Node3D"]
+metadata/authored_opening_width_m = 18.0
+metadata/authored_gate_height_m = 7.0
+metadata/open_pose = "Hide GateLeaf: articulated leaf winds into fixed receiving drum"
+
+[node name="FixedFrame" parent="." instance=ExtResource("1")]
+
+[node name="GateLeaf" parent="." instance=ExtResource("2")]

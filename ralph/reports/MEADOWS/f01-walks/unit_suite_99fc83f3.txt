@@ -1,0 +1,4 @@
+godot --headless --path . --script tests/run_tests.gd  (full suite, no shard, no skips) at 99fc83f3
+FAIL lines: 0
+5143 tests, 3890107 assertions, 0 failed
+rc=0

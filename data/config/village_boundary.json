@@ -230,6 +230,18 @@
       "label": "South Bridge",
       "points": [[14.0, 20.0], [-20.0, 80.0]],
       "_why": "F01 day-walk judge (through_day_015): TrailGate, the village exit toward the South Bridge, had nothing on screen saying it was the exit. One arm, 3m inside the gate, footing 2.5m west of the South Street/spine centreline (the east side is the tournament ground's bench) (paths.trailheads' OP21-18 standoff, so the post is not in the travel lane), aimed ~25 degrees off the spine's bearing so a player walking the road sees the plank's face, not its edge (the Rise trailhead's r2 lesson). TUNABLE."
+    },
+    {
+      "at": [-15.7, 19.2],
+      "label": "The Pond",
+      "points": [[-17.5, 17.5], [-31.2, 55.1]],
+      "_why": "F01#2/#3 code-blind judge (visits_day_097_end, visits_night_096): PondGate was an unlabelled arch identical to the other two leaves, so the frame could not say which gate it was. Same fingerpost as TrailGate's, 2.5m off The Pond's centreline so the post stays out of the travel lane, arm aimed ~25 degrees off the road's outward bearing so the plank's face shows. Round 2 (visits_day_095/097 at 34605735): first sited 3m inside on the road's north-west side, it stood at the right frame edge of the walk out, under the quick-bar panel, and behind the gate post from the gate itself; now 5m inside on the open south-east side, which an outbound player sees on the left, clear of the HUD. TUNABLE."
+    },
+    {
+      "at": [35.1, -21.3],
+      "label": "The Rise",
+      "points": [[36.0, -19.0], [64.8, -46.8]],
+      "_why": "F01#2/#3 code-blind judge (visits_day_055, visits_night_054): RoadGate was the same unlabelled arch as PondGate and TrailGate. Fingerpost 3m inside the leaf on The Rise's centreline, 2.5m off it along the wall, arm ~25 degrees off the road's outward bearing. TUNABLE."
     }
   ]
 }

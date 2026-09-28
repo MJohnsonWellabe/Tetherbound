@@ -96,6 +96,12 @@ func _case_realm_owned_begin_preserves_enemy_and_existing_authority_target() -> 
 	assert_ne(ally.global_position, ally_at,
 		"A stranded local follower is seated while the realm-owned opponent stays authoritative")
 	assert_eq(player.global_position, player_at)
+	# F14#0 C3 (Aquaryn): seated beside the trainer's line to the shared foe,
+	# not on it, so the ally does not open the fight between lens and target.
+	var line := Vector2(enemy.global_position.x - player_at.x, enemy.global_position.z - player_at.z).normalized()
+	var offset := Vector2(ally.global_position.x - player_at.x, ally.global_position.z - player_at.z)
+	assert_true(absf(offset.x * line.y - offset.y * line.x) >= 2.0,
+		"the ally sits >= 2 m beside the trainer-to-foe line (%.2f m)" % absf(offset.x * line.y - offset.y * line.x))
 	assert_true(ally.visible)
 	assert_eq(ally.arena, null, "The local presentation ring cannot block the shared surface route")
 	assert_eq(manager.throw_aim().armed_target, enemy)
@@ -132,7 +138,7 @@ func test_realm_owned_and_default_begin_in_initialized_tree() -> void:
 	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
 	assert_true(runner != null)
 	if runner == null: return
-	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_combat_realm_owned_begin.gd").new()\n\tfor method in ["_case_realm_owned_begin_preserves_enemy_and_existing_authority_target", "_case_default_begin_still_stages_and_engages_an_ordinary_wild_fight", "_case_repeated_begin_during_active_fight_cannot_restage_shared_enemy"]:\n\t\ttest._setup_fixture()\n\t\ttest.call(method)\n\t\ttest._free_fixture()\n\tprint("REALM_BEGIN_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 30 else 1)\n')
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_combat_realm_owned_begin.gd").new()\n\tfor method in ["_case_realm_owned_begin_preserves_enemy_and_existing_authority_target", "_case_default_begin_still_stages_and_engages_an_ordinary_wild_fight", "_case_repeated_begin_during_active_fight_cannot_restage_shared_enemy"]:\n\t\ttest._setup_fixture()\n\t\ttest.call(method)\n\t\ttest._free_fixture()\n\tprint("REALM_BEGIN_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 31 else 1)\n')
 	runner.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(runner_path)
@@ -146,5 +152,5 @@ func test_realm_owned_and_default_begin_in_initialized_tree() -> void:
 	for line: String in combined.split("\n"):
 		if line.begins_with("REALM_BEGIN_RESULT="):
 			result = JSON.parse_string(line.trim_prefix("REALM_BEGIN_RESULT="))
-	assert_eq(int(result.get("assertions", 0)), 30, "Child must complete all three begin paths")
+	assert_eq(int(result.get("assertions", 0)), 31, "Child must complete all three begin paths")
 	assert_eq(result.get("failures", ["missing result"]), [])

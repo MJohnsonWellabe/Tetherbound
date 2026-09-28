@@ -826,8 +826,8 @@ func _on_activated(provider: Object) -> void:
 	_activated_path = str((provider as Node).get_path()) if provider is Node and is_instance_valid(provider) else str(provider)
 
 
-## B8: the Warden victory's dialogue outlasts the Hall helper's 120-frame
-## input-return wait; read it with Interact as warden_accept.gd does.
+## B8: records the Warden victory's dialogue as it is read (the Hall helper's
+## `_fight_named` reads it; F04#6).
 func _receipt(beat: String, detail: Dictionary) -> void:
 	super._receipt(beat, detail)
 	if beat == "trainer_defeated" and str(detail.get("id", "")) == _warden_id():
@@ -840,14 +840,16 @@ func _read_post_victory_dialogue() -> void:
 		if bool(_panel.call("is_open")):
 			break
 		await _tree.physics_frame
-	var taps := 0
-	while bool(_panel.call("is_open")) and taps < POST_VICTORY_TAPS and not _fighting():
+	# F04#6: the Hall helper's `_fight_named` now reads a row's victory
+	# conversation with Interact at a reader's pace; this only records it.
+	var frames := 0
+	while bool(_panel.call("is_open")) and frames < VICTORY_READ_FRAMES * POST_VICTORY_TAPS and not _fighting():
 		var conversation := _current_conversation()
 		if read.is_empty() or read[-1] != conversation:
 			read.append(conversation)
-		await _input._tap("interact")
-		taps += 1
-	print("EARNED WARDEN — ", {"beat": "post_victory_dialogue_read", "conversations": read, "taps": taps})
+		await _tree.physics_frame
+		frames += 1
+	print("EARNED WARDEN — ", {"beat": "post_victory_dialogue_read", "conversations": read, "frames": frames})
 
 
 ## Not the Warden helper's retained-five/world watch: this piece changes worlds

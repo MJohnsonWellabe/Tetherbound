@@ -1060,7 +1060,10 @@ func _build_platform_retrofit() -> void:
 		if bounds.size.y <= 0.001:
 			scene.queue_free()
 			continue
-		_add_camera_occluder(scene, bounds)
+		# F04#1: a dressing may opt out (`camera_occluder: false`) where
+		# stopping the lens costs more than a view through its lattice.
+		if bool(spec.get("camera_occluder", true)):
+			_add_camera_occluder(scene, bounds)
 		var target_top := float(spec.get("top_y", 9.12))
 		var desired_scale := (target_top - ground) / bounds.size.y
 		var scale_min := float(spec.get("scale_min", 0.72))

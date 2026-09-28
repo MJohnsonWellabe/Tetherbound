@@ -82,6 +82,22 @@
       "z": 4168.0,
       "radius": 13.0,
       "_why": "FINAL-LONG-WATER-04. R3's production ordinary-route arrival at (-250,4165) regressed behind a wall of close trunks and canopy, reducing the river to a left-edge strip and the dirt route to a cropped fragment. This bounded clearing opens the player's immediate forward cone where the route meets the named water while overlapping the retained r6 camera lens. It keeps grass and flowers under the existing clearing exemption, ends south of the waterline, and remains more than 110m from Old Mill Crossing; the authored bank trees and east-bend tower framing remain outside it."
+    },
+    {
+      "order": 3010,
+      "id": "fight_glade_captain_riverwatch",
+      "x": -100.0,
+      "z": 4350.0,
+      "radius": 20.0,
+      "_why": "F04#7 fight glade. The named fight's arena opens where the player stands in front of this trainer, and the combat camera needs 8m of free arm behind the piloted creature anywhere inside the 11m arena (combat.json clear_orbit probe_length_m). tools/f04_fight_camera_probe.gd measured the Oreth arena with tree trunks 0.3-3m behind the ally, collapsing the arm to 2-5m and putting the lens inside the creature. A 20m clearing on the trainer's own spot keeps trunks and rocks out of that arm; grass and flowers keep the shared clearing exemption. Placement only, no new asset."
+    },
+    {
+      "order": 3011,
+      "id": "fight_glade_relay_captain",
+      "x": 352.0,
+      "z": 3757.0,
+      "radius": 20.0,
+      "_why": "F04#7 fight glade. The named fight's arena opens where the player stands in front of this trainer, and the combat camera needs 8m of free arm behind the piloted creature anywhere inside the 11m arena (combat.json clear_orbit probe_length_m). tools/f04_fight_camera_probe.gd measured the Oreth arena with tree trunks 0.3-3m behind the ally, collapsing the arm to 2-5m and putting the lens inside the creature. A 20m clearing on the trainer's own spot keeps trunks and rocks out of that arm; grass and flowers keep the shared clearing exemption. Placement only, no new asset."
     }
   ],
   "footprints": [

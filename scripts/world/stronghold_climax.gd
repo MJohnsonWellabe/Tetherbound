@@ -73,6 +73,15 @@ const RECEIPT_REFUSED_MAX_MS := 600000
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 
 var _config: Dictionary = {}
+## Solmane (owner ruling 2026-09-27, #356 5858140459): a second realm reuses this
+## node with its own config. Set before `build()`; Meadows keeps the default.
+var config_path := CONFIG_PATH
+## The receipt prefixes, from the config's optional `receipts` block. Defaults
+## are the Meadows constants above, so the Meadows world is unchanged.
+var _resolution_prefix := RESOLUTION_PREFIX
+var _live_marker := LIVE_MARKER
+var _answer_world_prefix := ANSWER_WORLD_PREFIX
+var _prompt_prefix := "Veridian"
 var _world: Node = null
 var _player: Node3D = null
 
@@ -161,8 +170,13 @@ func build(world: Node, player: Node3D) -> bool:
 	_player = player
 	_config = _load_config()
 	if _config.is_empty():
-		push_warning("stronghold_climax.json missing; the chapter has no ending")
+		push_warning("%s missing; the chapter has no ending" % config_path)
 		return false
+	var receipts: Dictionary = _config.get("receipts", {})
+	_resolution_prefix = str(receipts.get("resolution_prefix", RESOLUTION_PREFIX))
+	_live_marker = str(receipts.get("live_marker", LIVE_MARKER))
+	_answer_world_prefix = str(receipts.get("answer_world_prefix", ANSWER_WORLD_PREFIX))
+	_prompt_prefix = str((_config.get("choice", {}) as Dictionary).get("prompt_prefix", "Veridian"))
 
 	_stronghold = _find_stronghold()
 	_place_warden()
@@ -198,7 +212,7 @@ func garrison_withdrawal() -> Node:
 
 
 func _load_config() -> Dictionary:
-	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	var file := FileAccess.open(config_path, FileAccess.READ)
 	if file == null:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
@@ -1169,10 +1183,10 @@ func _open_choice() -> void:
 		(-side + toward).normalized()], float(spec.get("accept_offset", 2.0)), [])
 	var refuse_at := _clear_spot(here, [-toward, (-toward + side).normalized(),
 		(-toward - side).normalized(), -side, side], float(spec.get("refuse_offset", 2.0)), [accept_at])
-	_accept_prompt = _choice_prompt("VeridianAcceptPrompt", accept_at,
+	_accept_prompt = _choice_prompt(_prompt_prefix + "AcceptPrompt", accept_at,
 		str(spec.get("accept_label", "Walk out with the Veridian Stag")), radius)
 	_accept_prompt.connect("activated", accept_offer)
-	_refuse_prompt = _choice_prompt("VeridianRefusePrompt", refuse_at,
+	_refuse_prompt = _choice_prompt(_prompt_prefix + "RefusePrompt", refuse_at,
 		str(spec.get("refuse_label", "Leave the Veridian Stag free")), radius)
 	_refuse_prompt.connect("activated", refuse_offer)
 	print("[climax] choice prompts: accept %.2f m, refuse %.2f m from the player (reach %.2f m)" % [
@@ -1265,7 +1279,7 @@ func _mark_the_answer(anchor: Node3D, node_name: String) -> void:
 	var spec: Dictionary = (_config.get("choice", {}) as Dictionary).get("marker", {})
 	if spec.is_empty() or not bool(spec.get("enabled", true)):
 		return
-	var accept := node_name.begins_with("VeridianAccept")
+	var accept := node_name.begins_with(_prompt_prefix + "Accept")
 	var colour := Color(str(spec.get("accept_colour" if accept else "refuse_colour", "#e8d79a")))
 	var ring := MeshInstance3D.new()
 	ring.name = "AnswerMark"
@@ -1433,7 +1447,7 @@ func _record_resolution(accepted: bool) -> void:
 	_answered_here = true
 	_tag_answer_world()
 	_answered_live = true
-	_write_world_flag(LIVE_MARKER)
+	_write_world_flag(_live_marker)
 	_settle()
 	_reconcile_world_receipt()
 	var game := _game()
@@ -1461,8 +1475,8 @@ func _reconcile_world_receipt() -> void:
 		return
 	# What this peer settled is resubmitted until the world holds it: a client
 	# settle that was offline or lost is repaired here, not only on a rejoin.
-	if _answered_live and not _has_flag(LIVE_MARKER):
-		_retry_world_flag(LIVE_MARKER)
+	if _answered_live and not _has_flag(_live_marker):
+		_retry_world_flag(_live_marker)
 	if _answered_live and not _has_flag(_flag("legendary_settled")):
 		_retry_world_flag(_flag("legendary_settled"))
 	if _answered_here and not _answer_tagged:
@@ -1472,7 +1486,7 @@ func _reconcile_world_receipt() -> void:
 	var accepted := _has_player_flag(_flag("legendary_joined"))
 	if not accepted and not _has_player_flag(_flag("legendary_refused")):
 		return
-	var receipt := resolution_flag(accepted, _receipt_character_id())
+	var receipt := resolution_flag(accepted, _receipt_character_id(), _resolution_prefix)
 	if _has_flag(receipt) or _refused_recently(receipt):
 		return
 	# Throttled, not once-only: a host refusal, a drop or a lost verdict leaves
@@ -1501,8 +1515,8 @@ func _tag_answer_world() -> void:
 	if here.is_empty():
 		return
 	_answer_tagged = true
-	if not _has_player_flag(ANSWER_WORLD_PREFIX + here):
-		_set_player_flag(ANSWER_WORLD_PREFIX + here)
+	if not _has_player_flag(_answer_world_prefix + here):
+		_set_player_flag(_answer_world_prefix + here)
 
 
 ## The live marker, resubmitted on the receipt's throttle while it is missing.
@@ -1563,8 +1577,8 @@ func _answer_worlds() -> Array:
 	if store == null or not store.has_method("all_set"):
 		return out
 	for raw: Variant in (store.call("all_set") as Array):
-		if str(raw).begins_with(ANSWER_WORLD_PREFIX):
-			out.append(str(raw).trim_prefix(ANSWER_WORLD_PREFIX))
+		if str(raw).begins_with(_answer_world_prefix):
+			out.append(str(raw).trim_prefix(_answer_world_prefix))
 	return out
 
 
@@ -1600,8 +1614,8 @@ func warden_participants() -> Array:
 
 ## The world receipt id for one character's answer. Static so the herd display
 ## and tests read the exact same id this file writes.
-static func resolution_flag(accepted: bool, character_id: String) -> String:
-	return "%s%s:%s" % [RESOLUTION_PREFIX, "accepted" if accepted else "refused",
+static func resolution_flag(accepted: bool, character_id: String, prefix: String = RESOLUTION_PREFIX) -> String:
+	return "%s%s:%s" % [prefix, "accepted" if accepted else "refused",
 		character_id if not character_id.is_empty() else SOLO_CHARACTER]
 
 
@@ -1614,23 +1628,24 @@ static func resolution_flag(accepted: bool, character_id: String) -> String:
 ## least one answer is recorded and none of them accepted. Deliberately not
 ## keyed to the local character, so a host and a guest who joined later read
 ## the same world the same way. `solo_character` is kept for callers.
-static func all_refused(participants: Array, solo_character: String, world_flags: Array) -> bool:
+static func all_refused(participants: Array, solo_character: String, world_flags: Array,
+		prefix: String = RESOLUTION_PREFIX) -> bool:
 	var eligible: Array = participants.duplicate()
 	if eligible.is_empty():
 		var answered := false
 		for raw: Variant in world_flags:
 			var id := str(raw)
-			if id.begins_with(RESOLUTION_PREFIX + "accepted:"):
+			if id.begins_with(prefix + "accepted:"):
 				return false
-			if id.begins_with(RESOLUTION_PREFIX + "refused:"):
+			if id.begins_with(prefix + "refused:"):
 				answered = true
 		return answered
 	# Only an eligible participant's answer counts either way: a stranger's
 	# receipt can neither complete a full refusal nor veto one.
 	for raw: Variant in eligible:
-		if world_flags.has(resolution_flag(true, str(raw))):
+		if world_flags.has(resolution_flag(true, str(raw), prefix)):
 			return false
-		if not world_flags.has(resolution_flag(false, str(raw))):
+		if not world_flags.has(resolution_flag(false, str(raw), prefix)):
 			return false
 	return true
 
@@ -1642,7 +1657,7 @@ func full_refusal() -> bool:
 		return false
 	var progression := _progression()
 	var world_flags: Array = progression.call("all_set") if progression != null else []
-	return all_refused(_warden_participant_characters(), _local_character_id(), world_flags)
+	return all_refused(_warden_participant_characters(), _local_character_id(), world_flags, _resolution_prefix)
 
 
 ## Whether this peer's player is in the chamber with the freed creature.
@@ -1719,13 +1734,13 @@ func _offer_outstanding_after_settle() -> bool:
 ## different character loading this world must not be stamped as having
 ## answered. The once-only rule on such a world is `_pre_f05_settled_world()`.
 func _migrate_legacy_solo_answer() -> void:
-	if not _has_flag(_flag("legendary_settled")) or _has_flag(LIVE_MARKER) or _is_client():
+	if not _has_flag(_flag("legendary_settled")) or _has_flag(_live_marker) or _is_client():
 		return
 	var any_receipt := false
 	var progression := _progression()
 	if progression != null:
 		for raw: Variant in (progression.call("all_set") as Array):
-			if str(raw).begins_with(RESOLUTION_PREFIX):
+			if str(raw).begins_with(_resolution_prefix):
 				any_receipt = true
 	if not should_migrate(true, false, _is_client(), _multi_peer(),
 			_warden_participant_characters().is_empty(), any_receipt):
@@ -1737,7 +1752,7 @@ func _migrate_legacy_solo_answer() -> void:
 		for member: Variant in ((party as RefCounted).call("members") as Array):
 			if str((member as RefCounted).get("species_id")) == str((_config.get("legendary", {}) as Dictionary).get("species", "veridian")):
 				holds = true
-	_write_world_flag(resolution_flag(holds, _receipt_character_id()))
+	_write_world_flag(resolution_flag(holds, _receipt_character_id(), _resolution_prefix))
 	print("[climax] migrated a pre-F05 solo answer into this world: %s" % ("accepted" if holds else "refused"))
 
 
@@ -1761,7 +1776,7 @@ func _settle() -> void:
 	# carries the live marker -- otherwise a world settled by a no-offer lever
 	# pull would read as pre-F05 and never offer an unanswered participant.
 	_answered_live = true
-	_write_world_flag(LIVE_MARKER)
+	_write_world_flag(_live_marker)
 	# Through the ledger like every other world fact here (coordinator review,
 	# item 4): written straight into the local store, a client-only settle
 	# never reached the host's world.
@@ -1895,17 +1910,17 @@ func _participants_unknown_in_company() -> bool:
 
 func _every_participant_answered() -> bool:
 	for raw: Variant in _warden_participant_characters():
-		if not _has_flag(resolution_flag(true, str(raw))) and not _has_flag(resolution_flag(false, str(raw))):
+		if not _has_flag(resolution_flag(true, str(raw), _resolution_prefix)) and not _has_flag(resolution_flag(false, str(raw), _resolution_prefix)):
 			return false
 	return true
 
 
 ## Every recorded participant has an answer in the world. With no journal,
 ## true: a solo world's one answer is its settle. Pure, for the tests.
-static func all_answered(participants: Array, world_flags: Array) -> bool:
+static func all_answered(participants: Array, world_flags: Array, prefix: String = RESOLUTION_PREFIX) -> bool:
 	for raw: Variant in participants:
-		if not world_flags.has(resolution_flag(true, str(raw))) \
-				and not world_flags.has(resolution_flag(false, str(raw))):
+		if not world_flags.has(resolution_flag(true, str(raw), prefix)) \
+				and not world_flags.has(resolution_flag(false, str(raw), prefix)):
 			return false
 	return true
 
@@ -2006,7 +2021,7 @@ func _may_receive_now() -> bool:
 ## A world that settled its freeing before F05 existed: no offer is made on it
 ## again, on any path (build, a guest's late snapshot, a resume).
 func _pre_f05_settled_world() -> bool:
-	return _has_flag(_flag("legendary_settled")) and not _has_flag(LIVE_MARKER)
+	return _has_flag(_flag("legendary_settled")) and not _has_flag(_live_marker)
 
 
 ## --- owner decision: every participant keeps their own ----------------------

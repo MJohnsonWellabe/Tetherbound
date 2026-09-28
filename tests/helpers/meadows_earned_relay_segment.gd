@@ -321,9 +321,14 @@ func _press_prompt(prompt: Node3D) -> bool:
 				"approached_id": expected, "activated_id": _activated_id})
 			return true
 		for _frame in 30:
-			if _fighting():
+			if _fighting() or _activated_id == expected:
 				break
 			await _tree.physics_frame
+		if _activated_id == expected:
+			# The exact offered target, activated after the tap returned (seed 15,
+			# Captain Vance, full-run attempt 1): the same provider, just late.
+			_receipt("press_late_activation", {"path": expected_path, "id": expected})
+			return true
 		var wild_took_it := _fighting() and not _captain_active \
 				and not bool(_director.call("trainer_battle_active"))
 		if _activated_id != 0 and not wild_took_it:

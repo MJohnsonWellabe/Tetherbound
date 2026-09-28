@@ -1,0 +1,51 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+WARNING: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb': In external resource #0, invalid UID: 'uid://b3jqrrag74hwg' - using text path instead: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:561)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:532)
+       [2] setup (res://scripts/creatures/creature_body.gd:419)
+       [3] _spawn_creature (res://tools/_capture_creature_roster.gd:510)
+       [4] _run (res://tools/_tmp_eagle_variants.gd:15)
+WARNING: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb': In external resource #0, invalid UID: 'uid://b3jqrrag74hwg' - using text path instead: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:561)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:532)
+       [2] setup (res://scripts/creatures/creature_body.gd:419)
+       [3] _spawn_creature (res://tools/_capture_creature_roster.gd:510)
+       [4] _run (res://tools/_tmp_eagle_variants.gd:15)
+WARNING: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb': In external resource #0, invalid UID: 'uid://b3jqrrag74hwg' - using text path instead: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:561)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:532)
+       [2] setup (res://scripts/creatures/creature_body.gd:419)
+       [3] _spawn_creature (res://tools/_capture_creature_roster.gd:510)
+       [4] _run (res://tools/_tmp_eagle_variants.gd:15)
+WARNING: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb': In external resource #0, invalid UID: 'uid://b3jqrrag74hwg' - using text path instead: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:561)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:532)
+       [2] setup (res://scripts/creatures/creature_body.gd:419)
+       [3] _spawn_creature (res://tools/_capture_creature_roster.gd:510)
+       [4] _run (res://tools/_tmp_eagle_variants.gd:15)
+WARNING: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb': In external resource #0, invalid UID: 'uid://b3jqrrag74hwg' - using text path instead: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:561)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:532)
+       [2] setup (res://scripts/creatures/creature_body.gd:419)
+       [3] _spawn_creature (res://tools/_capture_creature_roster.gd:510)
+       [4] _run (res://tools/_tmp_eagle_variants.gd:15)
+WARNING: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb': In external resource #0, invalid UID: 'uid://b3jqrrag74hwg' - using text path instead: 'res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0_Image_0.jpg'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _build_model (res://scripts/creatures/creature_body.gd:561)
+       [1] _build_placeholder (res://scripts/creatures/creature_body.gd:532)
+       [2] setup (res://scripts/creatures/creature_body.gd:419)
+       [3] _spawn_creature (res://tools/_capture_creature_roster.gd:510)
+       [4] _run (res://tools/_tmp_eagle_variants.gd:15)

@@ -1,0 +1,1198 @@
+[
+  {
+    "ally": [
+      1366.08,
+      52.47,
+      3485.23,
+      52.46
+    ],
+    "camera": [
+      1360.27,
+      58.87,
+      3478.58,
+      52.18
+    ],
+    "enemy": [
+      1365.75,
+      52.88,
+      3489.97,
+      52.87
+    ],
+    "fight_s": 0.0,
+    "file": "res://shots/twvis/r5t/tess/t-000.00.png",
+    "gap_m": 4.75,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.15,
+      52.39,
+      3484.39,
+      52.37
+    ],
+    "camera": [
+      1360.64,
+      58.8,
+      3477.5,
+      52.0
+    ],
+    "enemy": [
+      1365.71,
+      52.87,
+      3489.78,
+      52.86
+    ],
+    "fight_s": 0.27,
+    "file": "res://shots/twvis/r5t/tess/tell-start-000.27.png",
+    "gap_m": 5.41,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.16,
+      52.39,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.6,
+      58.77,
+      3477.61,
+      52.02
+    ],
+    "enemy": [
+      1365.75,
+      52.84,
+      3489.38,
+      52.83
+    ],
+    "fight_s": 0.55,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-000.55.png",
+    "gap_m": 5.01,
+    "opponent": "water_mirejaw",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.92,
+      52.29,
+      3484.16,
+      52.27
+    ],
+    "camera": [
+      1362.45,
+      59.47,
+      3474.75,
+      51.45
+    ],
+    "enemy": [
+      1364.27,
+      53.01,
+      3489.81,
+      53.0
+    ],
+    "fight_s": 1.6,
+    "file": "res://shots/twvis/r5t/tess/tell-start-001.60.png",
+    "gap_m": 6.24,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1369.05,
+      51.67,
+      3480.77,
+      51.64
+    ],
+    "camera": [
+      1365.09,
+      59.5,
+      3470.29,
+      50.45
+    ],
+    "enemy": [
+      1364.47,
+      52.97,
+      3489.44,
+      52.96
+    ],
+    "fight_s": 1.88,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-001.88.png",
+    "gap_m": 9.81,
+    "opponent": "water_mirejaw",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1368.2,
+      52.01,
+      3482.88,
+      51.99
+    ],
+    "camera": [
+      1366.81,
+      59.29,
+      3472.79,
+      50.73
+    ],
+    "enemy": [
+      1362.89,
+      53.09,
+      3489.2,
+      53.08
+    ],
+    "fight_s": 3.07,
+    "file": "res://shots/twvis/r5t/tess/tell-start-003.07.png",
+    "gap_m": 8.25,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1368.54,
+      51.92,
+      3482.49,
+      51.9
+    ],
+    "camera": [
+      1366.7,
+      59.51,
+      3471.86,
+      50.57
+    ],
+    "enemy": [
+      1363.16,
+      53.05,
+      3488.88,
+      53.04
+    ],
+    "fight_s": 3.35,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-003.35.png",
+    "gap_m": 8.36,
+    "opponent": "water_mirejaw",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.64,
+      52.41,
+      3485.18,
+      52.4
+    ],
+    "camera": [
+      1365.32,
+      59.56,
+      3475.1,
+      51.26
+    ],
+    "enemy": [
+      1362.42,
+      53.22,
+      3490.55,
+      53.21
+    ],
+    "fight_s": 8.02,
+    "file": "res://shots/twvis/r5t/tess/t-008.02.png",
+    "gap_m": 6.83,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1364.33,
+      53.01,
+      3489.82,
+      53.0
+    ],
+    "camera": [
+      1362.21,
+      59.44,
+      3481.07,
+      52.36
+    ],
+    "enemy": [
+      1362.88,
+      53.37,
+      3494.64,
+      53.37
+    ],
+    "fight_s": 16.0,
+    "file": "res://shots/twvis/r5t/tess/t-016.00.png",
+    "gap_m": 5.03,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1365.1,
+      52.95,
+      3489.96,
+      52.94
+    ],
+    "camera": [
+      1364.18,
+      60.19,
+      3479.36,
+      51.98
+    ],
+    "enemy": [
+      1359.25,
+      53.27,
+      3495.81,
+      52.94
+    ],
+    "fight_s": 24.02,
+    "file": "res://shots/twvis/r5t/tess/t-024.02.png",
+    "gap_m": 8.28,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1364.57,
+      52.95,
+      3489.28,
+      52.94
+    ],
+    "camera": [
+      1363.49,
+      59.35,
+      3480.55,
+      52.19
+    ],
+    "enemy": [
+      1361.44,
+      53.46,
+      3497.06,
+      53.43
+    ],
+    "fight_s": 32.02,
+    "file": "res://shots/twvis/r5t/tess/t-032.02.png",
+    "gap_m": 8.38,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1365.69,
+      52.86,
+      3489.61,
+      52.85
+    ],
+    "camera": [
+      1366.03,
+      59.98,
+      3479.44,
+      51.81
+    ],
+    "enemy": [
+      1358.88,
+      53.26,
+      3495.37,
+      52.96
+    ],
+    "fight_s": 40.02,
+    "file": "res://shots/twvis/r5t/tess/t-040.02.png",
+    "gap_m": 8.92,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1363.66,
+      53.16,
+      3491.41,
+      53.16
+    ],
+    "camera": [
+      1364.63,
+      60.02,
+      3481.65,
+      52.22
+    ],
+    "enemy": [
+      1358.05,
+      52.94,
+      3495.2,
+      52.35
+    ],
+    "fight_s": 48.02,
+    "file": "res://shots/twvis/r5t/tess/t-048.02.png",
+    "gap_m": 6.77,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1363.82,
+      53.13,
+      3491.12,
+      53.13
+    ],
+    "camera": [
+      1365.36,
+      59.55,
+      3482.4,
+      52.24
+    ],
+    "enemy": [
+      1357.79,
+      52.92,
+      3494.93,
+      52.3
+    ],
+    "fight_s": 56.02,
+    "file": "res://shots/twvis/r5t/tess/t-056.02.png",
+    "gap_m": 7.13,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1363.67,
+      53.15,
+      3491.13,
+      53.14
+    ],
+    "camera": [
+      1366.36,
+      59.55,
+      3482.73,
+      52.18
+    ],
+    "enemy": [
+      1357.82,
+      52.92,
+      3494.96,
+      52.31
+    ],
+    "fight_s": 64.02,
+    "file": "res://shots/twvis/r5t/tess/t-064.02.png",
+    "gap_m": 6.99,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1362.35,
+      53.27,
+      3491.3,
+      53.26
+    ],
+    "camera": [
+      1368.92,
+      59.58,
+      3485.5,
+      52.17
+    ],
+    "enemy": [
+      1355.98,
+      53.34,
+      3491.63,
+      53.06
+    ],
+    "fight_s": 72.02,
+    "file": "res://shots/twvis/r5t/tess/t-072.02.png",
+    "gap_m": 6.39,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.08,
+      52.47,
+      3485.23,
+      52.46
+    ],
+    "camera": [
+      1360.22,
+      59.18,
+      3478.18,
+      52.13
+    ],
+    "enemy": [
+      1366.69,
+      52.77,
+      3489.73,
+      52.76
+    ],
+    "fight_s": 78.28,
+    "file": "res://shots/twvis/r5t/tess/tell-start-078.28.png",
+    "gap_m": 4.54,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.08,
+      52.47,
+      3485.23,
+      52.46
+    ],
+    "camera": [
+      1360.19,
+      59.24,
+      3478.14,
+      52.13
+    ],
+    "enemy": [
+      1366.69,
+      52.77,
+      3489.73,
+      52.76
+    ],
+    "fight_s": 78.38,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-078.38.png",
+    "gap_m": 4.54,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.2,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.49,
+      59.2,
+      3477.29,
+      51.98
+    ],
+    "enemy": [
+      1365.39,
+      52.95,
+      3490.44,
+      52.94
+    ],
+    "fight_s": 79.33,
+    "file": "res://shots/twvis/r5t/tess/tell-start-079.33.png",
+    "gap_m": 6.11,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.2,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.24,
+      59.28,
+      3477.27,
+      52.0
+    ],
+    "enemy": [
+      1365.45,
+      52.92,
+      3490.05,
+      52.91
+    ],
+    "fight_s": 79.62,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-079.62.png",
+    "gap_m": 5.72,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.2,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.21,
+      59.27,
+      3477.27,
+      52.0
+    ],
+    "enemy": [
+      1366.63,
+      52.86,
+      3491.14,
+      52.85
+    ],
+    "fight_s": 80.02,
+    "file": "res://shots/twvis/r5t/tess/t-080.02.png",
+    "gap_m": 6.77,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.2,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.14,
+      59.26,
+      3477.26,
+      52.0
+    ],
+    "enemy": [
+      1366.94,
+      52.84,
+      3491.35,
+      52.83
+    ],
+    "fight_s": 80.22,
+    "file": "res://shots/twvis/r5t/tess/tell-start-080.22.png",
+    "gap_m": 7.01,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.2,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.17,
+      59.24,
+      3477.27,
+      52.0
+    ],
+    "enemy": [
+      1366.9,
+      52.82,
+      3490.96,
+      52.81
+    ],
+    "fight_s": 80.52,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-080.52.png",
+    "gap_m": 6.62,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1367.2,
+      52.49,
+      3486.78,
+      52.48
+    ],
+    "camera": [
+      1359.55,
+      59.11,
+      3482.03,
+      52.66
+    ],
+    "enemy": [
+      1368.61,
+      52.8,
+      3494.82,
+      52.79
+    ],
+    "fight_s": 88.02,
+    "file": "res://shots/twvis/r5t/tess/t-088.02.png",
+    "gap_m": 8.17,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.96,
+      52.65,
+      3488.4,
+      52.63
+    ],
+    "camera": [
+      1363.07,
+      59.74,
+      3479.74,
+      52.13
+    ],
+    "enemy": [
+      1364.18,
+      53.27,
+      3494.98,
+      53.27
+    ],
+    "fight_s": 96.02,
+    "file": "res://shots/twvis/r5t/tess/t-096.02.png",
+    "gap_m": 7.15,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.29,
+      52.95,
+      3492.15,
+      52.94
+    ],
+    "camera": [
+      1361.8,
+      59.81,
+      3483.94,
+      52.72
+    ],
+    "enemy": [
+      1364.12,
+      53.35,
+      3497.99,
+      53.34
+    ],
+    "fight_s": 104.02,
+    "file": "res://shots/twvis/r5t/tess/t-104.02.png",
+    "gap_m": 6.23,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.94,
+      52.79,
+      3490.51,
+      52.78
+    ],
+    "camera": [
+      1365.73,
+      59.8,
+      3481.17,
+      52.06
+    ],
+    "enemy": [
+      1361.3,
+      53.43,
+      3497.2,
+      53.37
+    ],
+    "fight_s": 112.02,
+    "file": "res://shots/twvis/r5t/tess/t-112.02.png",
+    "gap_m": 8.75,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.78,
+      52.83,
+      3490.86,
+      52.82
+    ],
+    "camera": [
+      1367.63,
+      59.63,
+      3481.72,
+      51.92
+    ],
+    "enemy": [
+      1360.15,
+      53.3,
+      3496.84,
+      52.98
+    ],
+    "fight_s": 120.02,
+    "file": "res://shots/twvis/r5t/tess/t-120.02.png",
+    "gap_m": 8.93,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1363.49,
+      53.23,
+      3492.52,
+      53.23
+    ],
+    "camera": [
+      1369.39,
+      59.64,
+      3485.97,
+      52.15
+    ],
+    "enemy": [
+      1356.71,
+      53.01,
+      3493.43,
+      52.42
+    ],
+    "fight_s": 128.02,
+    "file": "res://shots/twvis/r5t/tess/t-128.02.png",
+    "gap_m": 6.84,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1362.86,
+      53.27,
+      3492.24,
+      53.27
+    ],
+    "camera": [
+      1370.26,
+      59.83,
+      3487.2,
+      52.15
+    ],
+    "enemy": [
+      1355.41,
+      53.43,
+      3490.22,
+      53.3
+    ],
+    "fight_s": 136.0,
+    "file": "res://shots/twvis/r5t/tess/t-136.00.png",
+    "gap_m": 7.72,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.15,
+      52.39,
+      3484.39,
+      52.37
+    ],
+    "camera": [
+      1360.82,
+      58.7,
+      3477.63,
+      52.01
+    ],
+    "enemy": [
+      1365.71,
+      52.87,
+      3489.77,
+      52.86
+    ],
+    "fight_s": 143.4,
+    "file": "res://shots/twvis/r5t/tess/tell-start-143.40.png",
+    "gap_m": 5.41,
+    "opponent": "water_sirenseal",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.16,
+      52.39,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.62,
+      58.76,
+      3477.61,
+      52.02
+    ],
+    "enemy": [
+      1365.75,
+      52.84,
+      3489.39,
+      52.83
+    ],
+    "fight_s": 143.72,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-143.72.png",
+    "gap_m": 5.03,
+    "opponent": "water_sirenseal",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.16,
+      52.39,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.57,
+      58.78,
+      3477.6,
+      52.02
+    ],
+    "enemy": [
+      1366.51,
+      52.81,
+      3490.04,
+      52.8
+    ],
+    "fight_s": 144.0,
+    "file": "res://shots/twvis/r5t/tess/t-144.00.png",
+    "gap_m": 5.67,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.16,
+      52.39,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.69,
+      58.8,
+      3477.45,
+      51.99
+    ],
+    "enemy": [
+      1367.33,
+      52.75,
+      3490.58,
+      52.74
+    ],
+    "fight_s": 144.38,
+    "file": "res://shots/twvis/r5t/tess/tell-start-144.38.png",
+    "gap_m": 6.3,
+    "opponent": "water_sirenseal",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.16,
+      52.39,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.71,
+      58.79,
+      3477.46,
+      51.99
+    ],
+    "enemy": [
+      1367.26,
+      52.74,
+      3490.21,
+      52.73
+    ],
+    "fight_s": 144.7,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-144.70.png",
+    "gap_m": 5.93,
+    "opponent": "water_sirenseal",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.16,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.41,
+      58.84,
+      3477.62,
+      52.04
+    ],
+    "enemy": [
+      1365.98,
+      52.92,
+      3491.03,
+      52.91
+    ],
+    "fight_s": 145.75,
+    "file": "res://shots/twvis/r5t/tess/tell-start-145.75.png",
+    "gap_m": 6.65,
+    "opponent": "water_sirenseal",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.16,
+      52.38,
+      3484.38,
+      52.37
+    ],
+    "camera": [
+      1360.44,
+      58.83,
+      3477.62,
+      52.03
+    ],
+    "enemy": [
+      1365.99,
+      52.9,
+      3490.66,
+      52.89
+    ],
+    "fight_s": 146.07,
+    "file": "res://shots/twvis/r5t/tess/tell-ended-146.07.png",
+    "gap_m": 6.27,
+    "opponent": "water_sirenseal",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1366.49,
+      52.41,
+      3485.04,
+      52.4
+    ],
+    "camera": [
+      1359.65,
+      58.81,
+      3479.54,
+      52.35
+    ],
+    "enemy": [
+      1368.39,
+      52.77,
+      3493.37,
+      52.76
+    ],
+    "fight_s": 152.0,
+    "file": "res://shots/twvis/r5t/tess/t-152.00.png",
+    "gap_m": 8.54,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1367.44,
+      52.64,
+      3489.02,
+      52.63
+    ],
+    "camera": [
+      1359.55,
+      58.95,
+      3485.93,
+      53.06
+    ],
+    "enemy": [
+      1373.3,
+      52.2,
+      3495.62,
+      52.19
+    ],
+    "fight_s": 160.0,
+    "file": "res://shots/twvis/r5t/tess/t-160.00.png",
+    "gap_m": 8.83,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1368.87,
+      52.58,
+      3490.59,
+      52.56
+    ],
+    "camera": [
+      1360.2,
+      58.96,
+      3489.18,
+      53.28
+    ],
+    "enemy": [
+      1373.65,
+      52.15,
+      3495.64,
+      52.14
+    ],
+    "fight_s": 168.0,
+    "file": "res://shots/twvis/r5t/tess/t-168.00.png",
+    "gap_m": 6.95,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1368.91,
+      52.57,
+      3490.65,
+      52.56
+    ],
+    "camera": [
+      1360.0,
+      59.05,
+      3489.6,
+      53.32
+    ],
+    "enemy": [
+      1373.41,
+      52.2,
+      3495.97,
+      52.18
+    ],
+    "fight_s": 176.0,
+    "file": "res://shots/twvis/r5t/tess/t-176.00.png",
+    "gap_m": 6.97,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1368.7,
+      52.58,
+      3490.32,
+      52.57
+    ],
+    "camera": [
+      1360.05,
+      58.94,
+      3489.26,
+      53.3
+    ],
+    "enemy": [
+      1372.79,
+      52.29,
+      3496.0,
+      52.27
+    ],
+    "fight_s": 184.0,
+    "file": "res://shots/twvis/r5t/tess/t-184.00.png",
+    "gap_m": 7.0,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1369.16,
+      52.55,
+      3490.78,
+      52.54
+    ],
+    "camera": [
+      1360.41,
+      58.93,
+      3491.27,
+      53.4
+    ],
+    "enemy": [
+      1375.27,
+      51.84,
+      3493.71,
+      51.82
+    ],
+    "fight_s": 192.0,
+    "file": "res://shots/twvis/r5t/tess/t-192.00.png",
+    "gap_m": 6.77,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1369.36,
+      52.53,
+      3490.75,
+      52.51
+    ],
+    "camera": [
+      1361.74,
+      58.89,
+      3494.96,
+      53.47
+    ],
+    "enemy": [
+      1375.74,
+      51.72,
+      3492.74,
+      51.7
+    ],
+    "fight_s": 200.0,
+    "file": "res://shots/twvis/r5t/tess/t-200.00.png",
+    "gap_m": 6.68,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1367.53,
+      52.66,
+      3489.44,
+      52.65
+    ],
+    "camera": [
+      1358.22,
+      59.39,
+      3491.45,
+      53.54
+    ],
+    "enemy": [
+      1374.42,
+      51.99,
+      3494.27,
+      51.97
+    ],
+    "fight_s": 208.0,
+    "file": "res://shots/twvis/r5t/tess/t-208.00.png",
+    "gap_m": 8.42,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1366.96,
+      52.57,
+      3487.44,
+      52.56
+    ],
+    "camera": [
+      1358.04,
+      59.16,
+      3485.8,
+      53.14
+    ],
+    "enemy": [
+      1372.85,
+      52.28,
+      3496.12,
+      52.27
+    ],
+    "fight_s": 216.0,
+    "file": "res://shots/twvis/r5t/tess/t-216.00.png",
+    "gap_m": 10.49,
+    "opponent": "water_sirenseal",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

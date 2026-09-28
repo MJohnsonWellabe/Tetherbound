@@ -9,13 +9,13 @@ The board is published as a private claude.ai artifact: https://claude.ai/artifa
 | File | Role |
 |---|---|
 | `dashboard/criteria.json` | Scoring data. The key is `rows[]`, one per F-row (F01 to F15). Each row has `criteria[]` holding `text`, `status` (`met` / `partial` / `in_progress` / `not_started` / `failing` / `blocked`), `evidence`, `gap`, and an optional `note`. Criteria are numbered from zero within a row: `F04#7` is `rows[F04].criteria[7]`. |
-| `dashboard/status.json` | The coordinator's notes: `headline[]` (the first line reads "Criteria met: N of 107 …"), `batches[]`, `lanes[]`, `decisions`, `owner_needs[]`. |
+| `dashboard/status.json` | The coordinator's notes: `headline[]` (the first line reads "Criteria met: N of 101 …"), `batches[]`, `lanes[]`, `decisions`, `owner_needs[]` and `wip[]`, the pickup list for unfinished work. |
 | `dashboard/build_dashboard.py` | Renders both JSON files into `dashboard/tetherbound_dashboard.html` (a self-contained page; paths are relative to the script). |
 | `dashboard/tetherbound_dashboard.html` | The last rendered page (2026-09-26 18:25 UTC). |
 
 To rebuild and republish:
 1. Edit `criteria.json` only for criteria that actually moved. The scoring rule:
-   - a criterion is MET when the batch holding its evidence merged to main after a green full CI run on that PR, with only docs or workflow-only files landing on main in between;
+   - a criterion is MET when the batch holding its evidence merges to main with a passing independent strict re-check (owner, 2026-09-27). The full CI run after each batch is a safety net: if it goes red, that batch's criteria return to landing until the fix lands (WORKFLOW §8);
    - verify the lane's evidence at its SHA yourself before counting it.
 2. Update `status.json` (headline, batches, lanes, owner needs).
 3. Run `python3 ralph/reports/COORDINATOR/dashboard/build_dashboard.py`.
@@ -24,23 +24,9 @@ To rebuild and republish:
 
 ## Lane scans
 
-- **`ready.py`:** lists every `READY FOR INTEGRATION: <branch> <sha>` line posted in PR comments since yesterday 12:00 UTC, and reports whether each SHA is on main (PENDING or MISSING otherwise). It uses `$GITHUB_TOKEN`; run it from the repository root.
+- **`ready.py`:** lists every `READY FOR INTEGRATION: <branch> <sha>` line posted in issue/PR comments since its hard-coded start time, and reports whether each SHA is on main (PENDING or MISSING otherwise). Lanes now post READY/FINAL on Lane channel issue #356; update the start time before use. It uses `$GITHUB_TOKEN`; run it from the repository root.
 - **`lanes.py <saved list_sessions output>`:** summarizes each lane's status, last update and status detail.
 
-## State at wind-down (2026-09-26)
+## Current state
 
-- **Met:** 44 of 107.
-- **Batch 25 (#283):** the final combined batch of every lane's READY work.
-- **Lane handoffs:** each lane's `## HANDOFF (final)` comment on its PR, as follows:
-
-  | Lane | PR |
-  |---|---|
-  | Meadows core | #270 |
-  | F05 | #257 |
-  | Cloudreach | #253 |
-  | Stormwood | #250 |
-  | Tidewake | #226 |
-  | Art X04 | #248 |
-  | X05 | #282 |
-  | X03 | #262 |
-  | VIS | #279 |
+STATE §0 holds the current counts, card results and open owner decisions; `dashboard/status.json` `wip[]` is the pickup list. The 2026-09-26 wind-down snapshot that stood here (44 of 107, per-lane PR handoffs) is superseded and lives in Git history.

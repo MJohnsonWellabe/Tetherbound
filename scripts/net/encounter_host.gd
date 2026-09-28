@@ -1061,11 +1061,12 @@ static func _opponent_row(opponent: Dictionary) -> Dictionary:
 		"position": opponent.get("position", [0.0, 0.0, 0.0]),
 		"samples": [],
 	}
-	# Shared-wild presentation is read-only client data. Preserve only its
-	# explicit schema; authority still reads the established fields above.
+	# Shared-wild presentation, and a trainer round's mirror identity (F14#1),
+	# are read-only client data. Preserve only their explicit schema; authority
+	# still reads the established fields above.
 	for key: String in ["card", "foot_position", "facing", "body_generation",
 			"presentation_seq", "cue_serial", "telegraph_count", "strike_count", "cue",
-			"body_scale", "alpha"]:
+			"body_scale", "alpha", "round"]:
 		if opponent.has(key):
 			out[key] = opponent[key].duplicate(true) if opponent[key] is Dictionary \
 				or opponent[key] is Array else opponent[key]

@@ -35,18 +35,19 @@ For the current four-chapter pass, ROADMAP §3 registers exactly **15 feature
 requests F01–F15** and seven supporting X01–X07 workstreams. Each F row,
 its owning design sections and ACCEPTANCE §6.1 are that feature's PRD; do
 not invent a parallel PRD file or use the 13 chapter cards/31 roadmap steps
-as feature-request IDs. Start concurrent sessions using ROADMAP §3's lane
-ownership; integrate chapter acceptance in earned route order. Split each active F
+as feature-request IDs. Start concurrent sessions from ROADMAP §3's lane
+layout; integrate chapter acceptance in earned route order. Split each active F
 into 30–90 minute work orders after checking current code and evidence. Each
 work order names its F/X ID, one criterion, baseline, exact owned paths,
 expected player result, proof, dependencies and exclusions. Put the ID and
-criterion in its draft PR's Anchor, update STATE with actual progress and
+criterion in its READY post (§8), update STATE with actual progress and
 revise estimates when evidence changes. A failed card names the next repair,
 not a request for routine owner review.
-ROADMAP §3 fixes concurrent lane ownership: Meadows core F01–F04, Meadows
-finale F05, Cloudreach F06–F08, Stormwood F09–F11 and Tidewake F12–F15 may
-work at the same time. The coordinating integrator assigns exact paths and
-serializes shared-file edits and local Godot writers. A session continues an
+Independent F rows may be worked at the same time in separate lanes. The
+coordinating integrator assigns each lane its F rows and exact paths and
+serializes shared-file edits and local Godot writers. All lanes of the
+2026-09-25..27 run are wound down; STATE names the unfinished work and where
+to pick it up. A session continues an
 unfinished F from STATE and current main; it does not declare that F accepted.
 Full chapter acceptance waits for the preceding chapter's earned saved handoff,
 even when regional implementation and focused proof finish earlier.
@@ -71,8 +72,9 @@ For any lane that changes the game, use this delivery chain:
    the player-visible result and what is out of scope. A new-area architecture
    decision goes in TECHNICAL or the owning design file, not a disposable
    parallel spec. Only an unresolved product decision returns to the owner.
-2. **Slice.** Make a bounded branch and draft PR from current main. The PR
-   carries a traceability table: requirement/criterion, named test or gameplay
+2. **Slice.** Work on the lane's `tb/<lane>` branch from current main (§8).
+   The lane's landing PR carries a traceability
+   table: requirement/criterion, named test or gameplay
    witness, expected result, observed result and build/commit. No `TBD` counts
    as coverage. Every changed behavior has a row; a Task names its invariant.
 3. **Build and prove.** Implement a small slice, run focused tests and the
@@ -82,12 +84,13 @@ For any lane that changes the game, use this delivery chain:
    mirrors a constant or a staged screenshot as player-path proof.
 4. **Independent agent review.** Inspect the PR's exact diff against the
    settled spec, hard rules, neighboring behavior, evidence and migration/
-   authority effects. Record findings in the PR; fix them and repeat affected
-   checks. This replaces routine human code-owner and post-merge QA review.
+   authority effects. Record findings in the landing PR; fix
+   them and repeat affected checks. This replaces routine human code-owner and post-merge QA review.
 5. **Integration gate.** Check CI's actual jobs, then verify the PR combined
    with current main. Re-run affected checks when either side changed. A skipped
    export, retried smoke, or green docs-only job is not a passing game build.
-   Land only the exact reviewed and verified head through a PR; confirm the
+   Land only the exact reviewed and verified head through the lane's own
+   PR; confirm the
    commit on main. Report a criterion as accepted only at the scope its evidence
    supports, and write the result and remaining gaps into STATE.
 
@@ -112,9 +115,9 @@ investigations, test writing, isolated bug fixes, small systems, asset cleanup,
 file moves, reference fixes, documentation drafts, regression runs, capture
 runs, blind visual critiques.
 
-Different dated documents in this repo have called the senior tier Fable, Astra
-or Opus and the implementation tier Sonnet, Sol or Haiku. **These are the same
-two-tier concept under different names**, not three systems.
+Different dated documents in this repo gave the senior and implementation tiers
+various product or code names. **These are the same two-tier concept under
+different names**, not several systems.
 
 | Task shape | Tier |
 |---|---|
@@ -341,36 +344,48 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 
 - **One reused branch per lane (owner, 2026-09-27).** Every branch uses the
   `tb/` prefix.
-  - **Lanes:** each lane works on one long-lived `tb/<lane>` branch
-    (`tb/meadows-core`, `tb/meadows-activities`, `tb/meadows-route`,
-    `tb/cloudreach`, `tb/cloudreach-b`, `tb/stormwood`, `tb/stormwood-b`,
-    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`). The lane opens no
-    PR: READY posts, SHARED-FILE REQUESTs and questions go on the single
-    Lane channel issue #356 (owner, 2026-09-27), with the READY SHA pushed to
-    origin first. The lane merges `origin/main` into its branch after each
-    landing and keeps going. It never opens a new branch per task.
-  - **Batches:** the coordinator reuses one `tb/integration` branch, reset to
-    `main` for each batch.
+  - **Lanes land their own work (owner, 2026-09-28).** Each lane works on one
+    long-lived `tb/<lane>` branch named for its scope. There is no coordinator
+    and no lane channel. When a criterion closes, the lane:
+    1. has it re-checked;
+    2. merges `origin/main`;
+    3. runs the unit suite once;
+    4. updates the board and STATE;
+    5. opens its own PR to `main` with auto-merge (`CLAUDE_START_HERE.md` §2).
+
+    After the merge it keeps working on the same branch. Questions for the owner
+    are asked in the lane's own session and recorded in STATE, and the lane keeps
+    working.
   - **No scratch branches:** dispatch `render.yml` with `checkout_ref` set to a
     commit SHA.
-  - **Codex** keeps its own branch practice.
+  - **Codex** lanes land the same way, from their own branches, with atomic
+    commits per catalog item (`CODEX_START_HERE.md`).
   - **Forbidden prefixes:** never create `ralph/` or `claude/` branches. Cloud
     sessions set their outcome branch to the lane's `tb/` name.
+- **Build the game, not proof machinery (owner, 2026-09-27).**
+  - Every work round produces a player-visible change.
+  - **Two-strike harness rule:** after two unsuccessful fixes to the same
+    harness or measurement, stop and change approach or re-scope (§12).
+  - Every landing PR carries a `Balance: game N / tests-tools M` line
+    counting the changed game files against test/tool files.
 - **Finish, then land (owner, 2026-09-27).** Lanes commit and push to their own
-  branch freely; that is backup, not landing. A lane posts READY only when:
+  branch freely; that is backup, not landing. A lane lands only when:
   - **a criterion fully closes.** State it as `closes F0x#n`. Partial progress
     and fixes other lanes need stay on the branch (other lanes merge it).
 
-  Rules for READY:
-  - **Attach an independent strict re-check.** Before READY, a read-only
+  Rules for landing:
+  - **Attach an independent strict re-check.** Before landing, a read-only
     subagent re-scores the claim against ACCEPTANCE §6.1 using the board's
-    strict rules, and its verdict is attached to the READY post.
+    strict rules, and its verdict goes in the PR.
     - **Fixtures and shortcuts are allowed (owner, 2026-09-27).** Fixture or
       declared start saves, position/teleport writes, flag/ledger/inventory/
       party writes, harness-driven fights and skipped sub-parts no longer make
-      a claim partial (ACCEPTANCE §6.1). The READY post and the re-check list
+      a claim partial (ACCEPTANCE §6.1). The PR and the re-check list
       each one; the board carries the disclosure.
-    - **Visual criteria** need a passing code-blind judge verdict.
+    - **Visual criteria** need a passing code-blind judge verdict. In Phase 1
+      (owner, 2026-09-28), a mixed row closes on its functional and
+      readability clauses, and its Bars A/B clause moves to the Phase 2
+      Codex catalog.
     - **Co-op criteria** need two-peer evidence.
   - **Earned checkpoints are allowed starts (coordinator, 2026-09-27).** A save
     written by a recorded run that itself used no fixtures, position writes,
@@ -382,18 +397,21 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **One criterion at a time.** A lane carries one criterion to closed before
     starting the next.
   - **Codex-queue IDs carry a lane prefix and are append-only**
-    (`V-MC-n`, `V-CR-n`, `V-SW-n`, `V-TW-n`, `V-VIS-n`, `V-X05-n`). Rows never
-    renumber, and existing `V1`–`V35` keep their IDs.
-  - **Main moves only when a criterion closes (owner, 2026-09-27).** The
-    coordinator lands `closes` READY heads in one batch about every 2 hours
-    and dispatches a full CI run on `main` after each batch. There are no
-    `unblocks` landings: a lane blocked on another lane's fix merges that
-    lane's `tb/<lane>` branch into its own and keeps going; the fix reaches
-    main with the first close that carries it. Docs, board data and Codex
-    work ride with the next close batch.
-- **CI runs only on `pull_request` events and on pushes to `main`.** A branch
-  with no pull request is **never verified** — open a draft PR early and batch
-  pushes to it (a newer push cancels the run in flight on the same ref).
+    (`ralph/reports/VISUAL/AUDIT.md`: `V-MC-n`, `V-MA-n`, `V-MR-n`, `V-CR-n`,
+    `V-SW-n`, `V-TW-n`, `V-VIS-n`, `V-X05-n`, `V-CX-n`). Rows never renumber,
+    and existing `V1`–`V35` keep their IDs.
+  - **Main moves only when a criterion closes.** There are no `unblocks`
+    landings: a lane blocked on another lane's fix merges that lane's branch
+    into its own and keeps going. Docs and board data ride with the next close.
+- **Wind-down.** When the owner winds lanes down, each lane finishes, pushes
+  everything including work in progress, and lands it through its own PR.
+  Unjudged visual work in progress lands behind a config flag that defaults to
+  off, or unwired. Each unfinished item is recorded in the board's `wip` list
+  with how to pick it up.
+- **CI runs only on `pull_request` events and on pushes to `main`.** Lane
+  branches get CI only through their landing PR. Before that, a lane verifies
+  with local tests and `render.yml` dispatches. A newer push cancels the run in
+  flight on the same ref.
 - **Never push to `main` directly.** Land through a pull request. A ready PR
   with a settled spec, filled proof mapping, independent agent review and the
   required CI/process checks is eligible for GitHub auto-merge without owner
@@ -408,16 +426,15 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   change touches net/authority, save/migration or a harness that fast CI does
   not run (adding the label starts a run; the two known-red jobs show red there
   by design and do not fail the gate). A criterion counts as MET when its batch merges to `main` with a passing
-  independent re-check (owner, 2026-09-27). The coordinator still dispatches
-  a FULL run after each batch as a safety net: if it goes red, that batch's
-  criteria return to landing until the fix lands. A red full run is the
-  coordinator's first job: bisect the batches merged since the last green
-  full run and hand the fix to the owning lane.
+  independent re-check (owner, 2026-09-27). The scheduled FULL run on `main`
+  is the safety net: if it goes red, the lane whose landing broke it fixes it
+  first. Any lane that sees red on `main` bisects the landings since the last
+  green full run and fixes it, or leaves a note in STATE for the owning lane.
 - **Offload long runs, never wait idle (coordinator, 2026-09-26).** Lane
   containers have 4 CPUs and no GPU; renders are software-rasterised. Start
   runs over ~2 minutes in the background and keep working; iterate captures
   with `VP_FAST=1`/`--fast` and take full-resolution evidence once; run only
-  the tests the diff touches (the integration batch runs the full tier); run
+  the tests the diff touches, plus the full unit suite once before landing; run
   up to 3 headless tests at once, each with its own `XDG_DATA_HOME`. To free
   the container entirely, dispatch `.github/workflows/render.yml` from `main`
   with `checkout_ref` = the lane branch, `script` = a `tests/` or `tools/`
@@ -426,11 +443,9 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   `tools/cloud_setup.sh` installs the pinned Godot, xvfb and a warm import
   cache in a fresh container (also usable as the environment setup script).
 - **GPU runs through Codex (owner, 2026-09-27).** Codex runs on the owner's
-  GPU machine and serves heavy visual renders after its art queue. A lane
-  posts on #356 `GPU RUN <label>: sha=<commit> script=<tests/ or tools/ .gd>
-  args=<...> mode=<render|headless>`; Codex answers `GPU DONE <label>` with
-  the output under `ralph/reports/GPU-RUNS/<label>/` on `tb/gpu-runs`. Lanes
-  fetch it from there. Headless logic runs stay on GitHub runners.
+  GPU machine and serves heavy visual renders when the owner has a Codex lane
+  open. Phase 1 lanes render locally (xvfb and `opengl3`) or through
+  `render.yml`. Headless logic runs stay on GitHub runners.
 - **A CI run under five minutes is not a verification.** CI skips every code
   job when the diff against the base is documentation-only — check the run
   duration **and** that code jobs actually ran.
@@ -517,8 +532,8 @@ A design target must name built/partial/not-built grounding, owning source/confi
 These apply to any session, and matter most in a long unsupervised window where
 nothing else will catch drift in real time.
 
-- **Two unsuccessful attempts at the same fix or the same measurement** is the
-  signal to change approach or move to the next-highest-value work — not to keep
+- **Two unsuccessful attempts at the same fix or the same measurement** (the
+  two-strike harness rule, §8) is the signal to change approach or move to the next-highest-value work — not to keep
   spinning.
 - **Two consecutive report-only turns** is the same signal. Change strategy or
   hand off for decomposition. Do not keep re-documenting the same finding hoping

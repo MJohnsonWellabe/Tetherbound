@@ -1174,8 +1174,15 @@ class Segment extends RefCounted:
 			if bedded >= 0:
 				break
 			await tree.physics_frame
-		if bool(panel.call("is_open")):
-			await _tap(&"ui_cancel")
+		# The bed panel closes over a few frames; walking before the world has
+		# input again sends the stick nowhere (run 1 of the Bryn witness).
+		for frame in 240:
+			var modal: Node = (load("res://scripts/ui/input_owner.gd") as GDScript).call("current", tree)
+			if not bool(panel.call("is_open")) and modal == null:
+				break
+			if frame % 30 == 0:
+				await _tap(&"ui_cancel")
+			await tree.physics_frame
 		if bedded < 0:
 			_fail("controller input on the bed panel did not rest a companion in the shelter bed")
 			return _result()

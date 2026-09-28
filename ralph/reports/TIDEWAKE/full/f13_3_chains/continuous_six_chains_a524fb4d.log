@@ -1,0 +1,235 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DRY RUN - does not count: declared fixture start (see header)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+WALK water_pell DIRECT (no baked-ground plan from (0.0, 1.931193, 162.0) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=53m legs=1
+TALK water_pell conversation=water_pell_lantern_lead hud='Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore.'
+WALK start of first_shore_to_lantern_cove_sheltered DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK start of first_shore_to_lantern_cove_sheltered island=first_shore walked=225m legs=2
+SWIM first_shore_to_lantern_cove_sheltered swum=95m min_stamina=29.1 rest_frames=285 health 100->100 dry=true elapsed_s=39
+WALK water:lantern_cove:pickup:002 island=lantern_cove walked=204m legs=34
+CLAIM water:lantern_cove:pickup:002 skill_candy_i 0->1
+WALK start of first_shore_to_lantern_cove_sheltered (reversed) island=lantern_cove walked=200m legs=33
+SWIM first_shore_to_lantern_cove_sheltered (reversed) swum=95m min_stamina=33.8 rest_frames=269 health 100->100 dry=true elapsed_s=38
+WALK water_pell DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK water_pell island=first_shore walked=226m legs=2
+TALK water_pell conversation=water_pell_lantern_return hud='Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse.'
+WALK water_pell island=first_shore walked=0m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+CHECKPOINT user://twfull_chains/ck_0/ slot=2 after lantern saved=true at (52.21504, 1.949787, 153.1759)
+WALK start of first_shore_to_reedhaven_sheltered DIRECT TO first_shore landing THEN PLANNED (attempt 1)
+WALK start of first_shore_to_reedhaven_sheltered island=first_shore walked=52m legs=2
+SWIM first_shore_to_reedhaven_sheltered swum=76m min_stamina=46.4 rest_frames=227 health 100->100 dry=true elapsed_s=33
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=442m legs=60
+SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=80.9 rest_frames=112 health 100->100 dry=true elapsed_s=35
+WALK water_adair island=brine_steps walked=456m legs=70
+TALK water_adair conversation=water_adair_gull_lead hud='Adair's request: recover the survey satchel left at Gull Rest, off Reedhaven's sheltered line.'
+WALK start of reedhaven_to_brine_steps_sheltered (reversed) island=brine_steps walked=453m legs=69
+SWIM reedhaven_to_brine_steps_sheltered (reversed) swum=55m min_stamina=81.9 rest_frames=109 health 100->100 dry=true elapsed_s=34
+WALK start of reedhaven_to_gull_rest_sheltered island=reedhaven walked=277m legs=42
+SWIM reedhaven_to_gull_rest_sheltered swum=151m min_stamina=0.0 rest_frames=383 health 100->96 dry=true elapsed_s=56
+WALK gull_research_satchel island=gull_rest walked=125m legs=21
+SITE gull_research_satchel hud='Survey satchel recovered: Adair's current observations. Carry them back on your next Brine Steps passage.'
+WALK water:gull_rest:pickup:002 island=gull_rest walked=4m legs=1
+CLAIM water:gull_rest:pickup:002 skill_candy_ii 0->1
+WALK start of reedhaven_to_gull_rest_sheltered (reversed) island=gull_rest walked=129m legs=21
+SWIM reedhaven_to_gull_rest_sheltered (reversed) swum=151m min_stamina=4.1 rest_frames=369 health 96->96 dry=true elapsed_s=54
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=277m legs=42
+SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=82.2 rest_frames=108 health 96->96 dry=true elapsed_s=35
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_return hud='Adair charts the safe Gull Rest crossing from the recovered observations.'
+WALK water_adair island=brine_steps walked=0m legs=1
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+CHECKPOINT user://twfull_chains/ck_1/ slot=2 after gull saved=true at (413.0947, 77.37976, 672.2563)
+WALK start of brine_steps_to_shellwatch_sheltered island=brine_steps walked=254m legs=35
+SWIM brine_steps_to_shellwatch_sheltered swum=41m min_stamina=86.7 rest_frames=93 health 96->96 dry=true elapsed_s=31
+WALK start of shellwatch_to_tidal_cradle_sheltered island=shellwatch walked=465m legs=61
+SWIM shellwatch_to_tidal_cradle_sheltered swum=60m min_stamina=80.8 rest_frames=112 health 96->96 dry=true elapsed_s=36
+WALK water_otto island=tidal_cradle walked=20m legs=4
+TALK water_otto conversation=water_otto_nest_lead hud='Otto's lead: the dry shell nest on Tidal Cradle's upper slope, with exposed Reef Stone.'
+WALK water:tidal_cradle:harvest:007 island=tidal_cradle walked=486m legs=69
+MINE water:tidal_cradle:harvest:007 reef_stone 0->4
+WALK water_otto island=tidal_cradle walked=485m legs=69
+TALK water_otto conversation=water_otto_nest_return hud='Otto shares 3 berries and marks where Mosshell, Riverdrake and Sirenseal swim.'
+WALK water_otto island=tidal_cradle walked=0m legs=1
+TALK water_otto conversation=water_otto_nest_thanks hud=''
+CHAIN side_water_cradle_care PASS reward=berries +3 reef_stone +4 ack=water_otto_nest_thanks
+CHECKPOINT user://twfull_chains/ck_2/ slot=2 after cradle saved=true at (554.0252, 5.909699, 1363.77)
+WALK start of tidal_cradle_to_salt_crown_sheltered island=tidal_cradle walked=697m legs=103
+SWIM tidal_cradle_to_salt_crown_sheltered swum=271m min_stamina=56.6 rest_frames=188 health 96->96 dry=true elapsed_s=125
+WALK water_edda island=salt_crown walked=478m legs=73
+TALK water_edda conversation=water_edda_garden_lead hud='Edda's request: copy the account on the Drowned Garden's exposed vault wall and bring it to Salt Crown.'
+WALK start of salt_crown_to_drowned_garden_sheltered island=salt_crown walked=827m legs=126
+SWIM salt_crown_to_drowned_garden_sheltered swum=344m min_stamina=63.4 rest_frames=167 health 96->96 dry=true elapsed_s=172
+WALK garden_records_wall island=drowned_garden walked=220m legs=35
+SITE garden_records_wall hud='Vault wall account copied: the old dock ledgers carved before the Tether. Bring it to Edda at Salt Crown.'
+WALK water:drowned_garden:pickup:002 island=drowned_garden walked=4m legs=1
+CLAIM water:drowned_garden:pickup:002 skill_candy_ii 1->2
+WALK start of salt_crown_to_drowned_garden_sheltered (reversed) island=drowned_garden walked=223m legs=35
+SWIM salt_crown_to_drowned_garden_sheltered (reversed) swum=344m min_stamina=68.0 rest_frames=149 health 96->96 dry=true elapsed_s=163
+WALK water_edda island=salt_crown walked=830m legs=126
+TALK water_edda conversation=water_edda_garden_return hud='Edda adds the vault's dock account to the Salt Crown records.'
+WALK water_edda island=salt_crown walked=0m legs=1
+TALK water_edda conversation=water_edda_garden_thanks hud=''
+CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks
+CHECKPOINT user://twfull_chains/ck_3/ slot=2 after garden saved=true at (157.5747, 94.89712, 2331.594)
+WALK start of salt_crown_to_sluice_isle_sheltered island=salt_crown walked=582m legs=88
+SWIM salt_crown_to_sluice_isle_sheltered swum=240m min_stamina=64.8 rest_frames=163 health 96->96 dry=true elapsed_s=116
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_pre hud=''
+WALK start of sluice_isle_to_deep_watch_sheltered island=sluice_isle walked=551m legs=80
+SWIM sluice_isle_to_deep_watch_sheltered swum=170m min_stamina=69.4 rest_frames=149 health 96->96 dry=true elapsed_s=87
+TIDECOIL { "won": true, "resolved": true, "outcome": "won", "engaged_by": "interact_engage", "step": "won", &"shore_kind": "cliff_plateau", &"shore": (1465.607, -0.440482, 3437.436), &"walked_to_shore_m": 367.0, &"engage_prompt": "[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Tidecoil, the Abyss Serpent", &"closest_approach_m": 3.3, &"swimming_at_engage": false, &"opponent": "water_deep_watch_tidecoil", &"timed_out": false, &"fight_frames": 3966, &"fight_seconds": 66.1, &"hits_dealt": 74, &"hits_taken": 10, &"charged": 15, &"quick": 66, &"switches": 3, &"fainted": "0/5" }
+TIDECOIL { "won": true, "resolved": true, "outcome": "won", "engaged_by": "interact_engage", "step": "won", &"shore_kind": "cliff_plateau", &"shore": (1465.607, -0.440482, 3437.436), &"walked_to_shore_m": 367.0, &"engage_prompt": "[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Tidecoil, the Abyss Serpent", &"closest_approach_m": 3.3, &"swimming_at_engage": false, &"opponent": "water_deep_watch_tidecoil", &"timed_out": false, &"fight_frames": 3966, &"fight_seconds": 66.1, &"hits_dealt": 74, &"hits_taken": 10, &"charged": 15, &"quick": 66, &"switches": 3, &"fainted": "0/5" }
+RETRY Tidecoil return to the engage stand: stalled at leg 1/3 player=(1482.522, 0.0968, 3428.951) goal=(1476.0, 0.0, 3432.0)
+POSE deep_watch arrival landing after the Tidecoil win (stranded below the cliff) -> (1260.318, 1.929, 3403.144)
+SWIM sluice_isle_to_deep_watch_sheltered (reversed) swum=170m min_stamina=73.5 rest_frames=133 health 95->95 dry=true elapsed_s=81
+WALK water_orsen island=sluice_isle walked=552m legs=80
+TALK water_orsen conversation=water_orsen_deep_watch_chart_lead hud=''
+WALK start of sluice_isle_to_deep_watch_sheltered island=sluice_isle walked=551m legs=80
+SWIM sluice_isle_to_deep_watch_sheltered swum=170m min_stamina=70.6 rest_frames=146 health 95->95 dry=true elapsed_s=87
+WALK water:deep_watch:pickup:002 island=deep_watch walked=233m legs=31
+CLAIM water:deep_watch:pickup:002 skill_candy_iii 0->1
+WALK deep_watch_chart island=deep_watch walked=218m legs=29
+WALK start of sluice_isle_to_deep_watch_sheltered (reversed) island=deep_watch walked=13m legs=2
+SWIM sluice_isle_to_deep_watch_sheltered (reversed) swum=170m min_stamina=74.6 rest_frames=131 health 95->95 dry=true elapsed_s=81
+WALK water_orsen island=sluice_isle walked=552m legs=80
+TALK water_orsen conversation=water_orsen_deep_watch_charted hud=''
+CHAIN side_water_deep_watch_chart PASS reward=Candy III +1 ack=water_orsen_deep_watch_charted
+CHECKPOINT user://twfull_chains/ck_4/ slot=2 after deep saved=true at (848.6334, 116.7125, 2984.549)
+WALK start of sluice_isle_to_veilfall_sheltered island=sluice_isle walked=259m legs=36
+SWIM sluice_isle_to_veilfall_sheltered swum=416m min_stamina=59.4 rest_frames=180 health 95->95 dry=true elapsed_s=187
+WALK water_halen island=veilfall walked=14m legs=2
+TALK water_halen conversation=water_halen_shelter_lead hud='Halen's request: 4 driftwood and 4 reed fiber to roof the creature bed at the landing camp beside Lastlight.'
+WALK water:veilfall:harvest:005 island=veilfall walked=51m legs=9
+MINE water:veilfall:harvest:005 reed_fiber 0->3
+WALK water:veilfall:harvest:007 island=veilfall walked=35m legs=6
+MINE water:veilfall:harvest:007 driftwood 0->3
+WALK water:veilfall:harvest:011 island=veilfall walked=29m legs=6
+MINE water:veilfall:harvest:011 driftwood 3->6
+WALK start of sluice_isle_to_veilfall_sheltered (reversed) island=veilfall walked=32m legs=5
+SWIM sluice_isle_to_veilfall_sheltered (reversed) swum=415m min_stamina=66.3 rest_frames=156 health 95->95 dry=true elapsed_s=170
+WALK water:sluice_isle:harvest:012 island=sluice_isle walked=774m legs=117
+MINE water:sluice_isle:harvest:012 reed_fiber 3->6
+WALK start of sluice_isle_to_veilfall_sheltered island=sluice_isle walked=773m legs=117
+SWIM sluice_isle_to_veilfall_sheltered swum=416m min_stamina=61.9 rest_frames=275 health 95->95 dry=true elapsed_s=188
+WALK lastlight_shelter_supply island=veilfall walked=19m legs=3
+SITE lastlight_shelter_supply hud='The creature bed at the Veilfall camp is sheltered now. Rest a companion there.'
+WALK water_halen island=veilfall walked=1m legs=1
+TALK water_halen conversation=water_halen_shelter_rest hud=''
+WALK veilfall_creature_bed island=veilfall walked=2m legs=1
+BED PANEL focus=  1.  Terrapup         HP 422 / 422
+WALK water_halen island=veilfall walked=2m legs=1
+TALK water_halen conversation=water_halen_shelter_thanks hud=''
+CHAIN side_water_lastlight_shelter PASS reward=shelter built=true ack=water_halen_shelter_thanks
+CHECKPOINT user://twfull_chains/ck_5/ slot=2 after lastlight saved=true at (375.9719, 5.660017, 3819.838)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+WALK start of sluice_isle_to_veilfall_sheltered (reversed) island=veilfall walked=16m legs=3
+SWIM sluice_isle_to_veilfall_sheltered (reversed) swum=415m min_stamina=67.2 rest_frames=156 health 95->95 dry=true elapsed_s=170
+WALK start of salt_crown_to_sluice_isle_sheltered (reversed) island=sluice_isle walked=809m legs=130
+SWIM salt_crown_to_sluice_isle_sheltered (reversed) swum=240m min_stamina=72.7 rest_frames=138 health 95->95 dry=true elapsed_s=109
+WALK start of tidal_cradle_to_salt_crown_sheltered (reversed) island=salt_crown walked=714m legs=109
+SWIM tidal_cradle_to_salt_crown_sheltered (reversed) swum=271m min_stamina=69.8 rest_frames=148 health 95->95 dry=true elapsed_s=117
+WALK start of shellwatch_to_tidal_cradle_sheltered (reversed) island=tidal_cradle walked=710m legs=105
+SWIM shellwatch_to_tidal_cradle_sheltered (reversed) swum=60m min_stamina=86.0 rest_frames=95 health 95->95 dry=true elapsed_s=35
+WALK start of brine_steps_to_shellwatch_sheltered (reversed) island=shellwatch walked=464m legs=62
+SWIM brine_steps_to_shellwatch_sheltered (reversed) swum=41m min_stamina=90.4 rest_frames=81 health 95->95 dry=true elapsed_s=30
+WALK start of reedhaven_to_brine_steps_sheltered (reversed) island=brine_steps walked=448m legs=70
+SWIM reedhaven_to_brine_steps_sheltered (reversed) swum=55m min_stamina=87.1 rest_frames=91 health 95->95 dry=true elapsed_s=34
+WALK start of first_shore_to_reedhaven_sheltered (reversed) island=reedhaven walked=442m legs=60
+SWIM first_shore_to_reedhaven_sheltered (reversed) swum=76m min_stamina=64.4 rest_frames=167 health 95->95 dry=true elapsed_s=32
+WALK water_pell DIRECT (no baked-ground plan from (-0.001811, 1.919446, 162.1153) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=53m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+WALK start of first_shore_to_reedhaven_sheltered DIRECT TO first_shore landing THEN PLANNED (attempt 1)
+WALK start of first_shore_to_reedhaven_sheltered island=first_shore walked=52m legs=2
+SWIM first_shore_to_reedhaven_sheltered swum=76m min_stamina=62.8 rest_frames=172 health 95->95 dry=true elapsed_s=33
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=443m legs=60
+SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=86.6 rest_frames=93 health 95->95 dry=true elapsed_s=35
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+WALK start of brine_steps_to_shellwatch_sheltered island=brine_steps walked=254m legs=35
+SWIM brine_steps_to_shellwatch_sheltered swum=41m min_stamina=89.9 rest_frames=82 health 95->95 dry=true elapsed_s=31
+WALK start of shellwatch_to_tidal_cradle_sheltered island=shellwatch walked=465m legs=61
+SWIM shellwatch_to_tidal_cradle_sheltered swum=60m min_stamina=85.4 rest_frames=97 health 95->95 dry=true elapsed_s=36
+WALK water_otto island=tidal_cradle walked=20m legs=4
+TALK water_otto conversation=water_otto_nest_thanks hud=''
+WALK start of tidal_cradle_to_salt_crown_sheltered island=tidal_cradle walked=696m legs=103
+SWIM tidal_cradle_to_salt_crown_sheltered swum=271m min_stamina=66.7 rest_frames=159 health 95->95 dry=true elapsed_s=124
+WALK water_edda island=salt_crown walked=478m legs=73
+TALK water_edda conversation=water_edda_garden_thanks hud=''
+WALK start of salt_crown_to_sluice_isle_sheltered island=salt_crown walked=583m legs=88
+SWIM salt_crown_to_sluice_isle_sheltered swum=240m min_stamina=69.8 rest_frames=148 health 95->95 dry=true elapsed_s=116
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_deep_watch_charted hud=''
+WALK start of sluice_isle_to_veilfall_sheltered island=sluice_isle walked=259m legs=36
+SWIM sluice_isle_to_veilfall_sheltered swum=416m min_stamina=61.9 rest_frames=176 health 95->95 dry=true elapsed_s=186
+WALK water_halen island=veilfall walked=14m legs=2
+TALK water_halen conversation=water_halen_shelter_thanks hud=''
+CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+CHAIN side_water_cradle_care PASS reward=berries +3 reef_stone +4 ack=water_otto_nest_thanks
+CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks
+CHAIN side_water_deep_watch_chart PASS reward=Candy III +1 ack=water_orsen_deep_watch_charted
+CHAIN side_water_lastlight_shelter PASS reward=shelter built=true ack=water_halen_shelter_thanks
+RELOAD lantern water_pell -> water_pell_lantern_thanks
+RELOAD gull water_adair -> water_adair_gull_thanks
+RELOAD cradle water_otto -> water_otto_nest_thanks
+RELOAD garden water_edda -> water_edda_garden_thanks
+RELOAD deep water_orsen -> water_orsen_deep_watch_charted
+RELOAD lastlight water_halen -> water_halen_shelter_thanks
+POSES (1 disclosed position writes):
+  deep_watch arrival landing after the Tidecoil win (stranded below the cliff) -> (1260.318, 1.929, 3403.144)
+Walked total 23184m with left-stick input
+SWIMS (35 inter-island crossings with real move_forward input):
+  SWIM first_shore_to_lantern_cove_sheltered swum=95m min_stamina=29.1 rest_frames=285 health 100->100 dry=true elapsed_s=39
+  SWIM first_shore_to_lantern_cove_sheltered (reversed) swum=95m min_stamina=33.8 rest_frames=269 health 100->100 dry=true elapsed_s=38
+  SWIM first_shore_to_reedhaven_sheltered swum=76m min_stamina=46.4 rest_frames=227 health 100->100 dry=true elapsed_s=33
+  SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=80.9 rest_frames=112 health 100->100 dry=true elapsed_s=35
+  SWIM reedhaven_to_brine_steps_sheltered (reversed) swum=55m min_stamina=81.9 rest_frames=109 health 100->100 dry=true elapsed_s=34
+  SWIM reedhaven_to_gull_rest_sheltered swum=151m min_stamina=0.0 rest_frames=383 health 100->96 dry=true elapsed_s=56
+  SWIM reedhaven_to_gull_rest_sheltered (reversed) swum=151m min_stamina=4.1 rest_frames=369 health 96->96 dry=true elapsed_s=54
+  SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=82.2 rest_frames=108 health 96->96 dry=true elapsed_s=35
+  SWIM brine_steps_to_shellwatch_sheltered swum=41m min_stamina=86.7 rest_frames=93 health 96->96 dry=true elapsed_s=31
+  SWIM shellwatch_to_tidal_cradle_sheltered swum=60m min_stamina=80.8 rest_frames=112 health 96->96 dry=true elapsed_s=36
+  SWIM tidal_cradle_to_salt_crown_sheltered swum=271m min_stamina=56.6 rest_frames=188 health 96->96 dry=true elapsed_s=125
+  SWIM salt_crown_to_drowned_garden_sheltered swum=344m min_stamina=63.4 rest_frames=167 health 96->96 dry=true elapsed_s=172
+  SWIM salt_crown_to_drowned_garden_sheltered (reversed) swum=344m min_stamina=68.0 rest_frames=149 health 96->96 dry=true elapsed_s=163
+  SWIM salt_crown_to_sluice_isle_sheltered swum=240m min_stamina=64.8 rest_frames=163 health 96->96 dry=true elapsed_s=116
+  SWIM sluice_isle_to_deep_watch_sheltered swum=170m min_stamina=69.4 rest_frames=149 health 96->96 dry=true elapsed_s=87
+  SWIM sluice_isle_to_deep_watch_sheltered (reversed) swum=170m min_stamina=73.5 rest_frames=133 health 95->95 dry=true elapsed_s=81
+  SWIM sluice_isle_to_deep_watch_sheltered swum=170m min_stamina=70.6 rest_frames=146 health 95->95 dry=true elapsed_s=87
+  SWIM sluice_isle_to_deep_watch_sheltered (reversed) swum=170m min_stamina=74.6 rest_frames=131 health 95->95 dry=true elapsed_s=81
+  SWIM sluice_isle_to_veilfall_sheltered swum=416m min_stamina=59.4 rest_frames=180 health 95->95 dry=true elapsed_s=187
+  SWIM sluice_isle_to_veilfall_sheltered (reversed) swum=415m min_stamina=66.3 rest_frames=156 health 95->95 dry=true elapsed_s=170
+  SWIM sluice_isle_to_veilfall_sheltered swum=416m min_stamina=61.9 rest_frames=275 health 95->95 dry=true elapsed_s=188
+  SWIM sluice_isle_to_veilfall_sheltered (reversed) swum=415m min_stamina=67.2 rest_frames=156 health 95->95 dry=true elapsed_s=170
+  SWIM salt_crown_to_sluice_isle_sheltered (reversed) swum=240m min_stamina=72.7 rest_frames=138 health 95->95 dry=true elapsed_s=109
+  SWIM tidal_cradle_to_salt_crown_sheltered (reversed) swum=271m min_stamina=69.8 rest_frames=148 health 95->95 dry=true elapsed_s=117
+  SWIM shellwatch_to_tidal_cradle_sheltered (reversed) swum=60m min_stamina=86.0 rest_frames=95 health 95->95 dry=true elapsed_s=35
+  SWIM brine_steps_to_shellwatch_sheltered (reversed) swum=41m min_stamina=90.4 rest_frames=81 health 95->95 dry=true elapsed_s=30
+  SWIM reedhaven_to_brine_steps_sheltered (reversed) swum=55m min_stamina=87.1 rest_frames=91 health 95->95 dry=true elapsed_s=34
+  SWIM first_shore_to_reedhaven_sheltered (reversed) swum=76m min_stamina=64.4 rest_frames=167 health 95->95 dry=true elapsed_s=32
+  SWIM first_shore_to_reedhaven_sheltered swum=76m min_stamina=62.8 rest_frames=172 health 95->95 dry=true elapsed_s=33
+  SWIM reedhaven_to_brine_steps_sheltered swum=55m min_stamina=86.6 rest_frames=93 health 95->95 dry=true elapsed_s=35
+  SWIM brine_steps_to_shellwatch_sheltered swum=41m min_stamina=89.9 rest_frames=82 health 95->95 dry=true elapsed_s=31
+  SWIM shellwatch_to_tidal_cradle_sheltered swum=60m min_stamina=85.4 rest_frames=97 health 95->95 dry=true elapsed_s=36
+  SWIM tidal_cradle_to_salt_crown_sheltered swum=271m min_stamina=66.7 rest_frames=159 health 95->95 dry=true elapsed_s=124
+  SWIM salt_crown_to_sluice_isle_sheltered swum=240m min_stamina=69.8 rest_frames=148 health 95->95 dry=true elapsed_s=116
+  SWIM sluice_isle_to_veilfall_sheltered swum=416m min_stamina=61.9 rest_frames=176 health 95->95 dry=true elapsed_s=186
+RIDES (0 crossings ridden on the owned swimmer):
+Tidewake-B chain route witness: 619 checks, 0 failures
+EXIT 0

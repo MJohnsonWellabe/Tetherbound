@@ -756,3 +756,57 @@ func test_arc_color_boundaries() -> void:
 	assert_eq(STAMINA_ARC.arc_color(0.30), mint)
 	assert_eq(STAMINA_ARC.arc_color(0.65), mint)
 	assert_eq(STAMINA_ARC.arc_color(1.0), mint)
+
+
+# --- F10#6: compact fight roster (coordinator HUD grant 5860240387) -----------
+
+
+func _fight_entries() -> Array:
+	return [
+		{"label": "Sparkit", "level": 42, "hp_fraction": 1.0, "bond_nodes": 0, "bond_total": 5},
+		{"label": "Mudsnout", "level": 42, "hp_fraction": 0.5, "bond_nodes": 1, "bond_total": 5},
+		{"label": "Bramblebun", "level": 42, "hp_fraction": 0.0, "fainted": true, "bond_nodes": 0, "bond_total": 5},
+	]
+
+
+## (a) The 7-inch device judge: "bond n/5  Lv n" fused into a grey smear. A
+## compact row is name + HP only, the name one step larger, the bar wider.
+func test_compact_roster_is_name_and_hp_only() -> void:
+	var strip := _make_strip()
+	strip.set_compact(true)
+	strip.update_from_party(_fight_entries(), 0)
+	for i in 3:
+		assert_false(strip._bond_labels[i].visible, "row %d hides the bond text" % i)
+		assert_false(strip._level_labels[i].visible, "row %d hides the level text" % i)
+		assert_true(strip._hp_bars[i].visible, "row %d keeps its HP bar" % i)
+		assert_eq(strip._name_labels[i].get_theme_font_size("font_size"), PARTY_STRIP.COMPACT_NAME_FONT_SIZE)
+		assert_true(PARTY_STRIP.COMPACT_NAME_FONT_SIZE > PARTY_STRIP.STRIP_READABLE_FONT_SIZE)
+		assert_true(strip._hp_bars[i].custom_minimum_size.x > PARTY_STRIP.HP_BAR_SIZE.x)
+	assert_eq(strip._name_labels[1].text, "Mudsnout")
+	strip.free()
+
+
+## (b) Translucent benched/fainted rows let the trainer standing behind the
+## roster read as a duplicate portrait on "TEAM 5/5". Compact rows stay fully
+## opaque and carry their state in the name colour instead.
+func test_compact_rows_are_opaque_and_state_moves_to_the_name() -> void:
+	var strip := _make_strip()
+	strip.set_compact(true)
+	strip.update_from_party(_fight_entries(), 0)
+	for i in 3:
+		assert_almost_eq(strip._rows[i].modulate.a, 1.0, 0.0001, "row %d is opaque" % i)
+	assert_eq(strip._name_labels[0].get_theme_color("font_color"), UI_TOKENS.TEXT_PRIMARY, "the active row reads brightest")
+	assert_eq(strip._name_labels[1].get_theme_color("font_color"), UI_TOKENS.TEXT_SECONDARY, "a benched row is dimmer")
+	assert_eq(strip._name_labels[2].get_theme_color("font_color"), UI_TOKENS.TEXT_MUTED, "a fainted row is dimmest")
+	strip.free()
+
+
+## Exploration keeps its full strip: the flag defaults off.
+func test_default_strip_keeps_bond_and_level() -> void:
+	var strip := _make_strip()
+	strip.update_from_party(_fight_entries(), 0)
+	assert_false(strip.compact)
+	assert_true(strip._bond_labels[0].visible)
+	assert_true(strip._level_labels[0].visible)
+	assert_almost_eq(strip._rows[1].modulate.a, PARTY_STRIP.UNSELECTED_MODULATE, 0.0001)
+	strip.free()

@@ -1,0 +1,29 @@
+[village-walk] OPENING title interactive
+[village-walk] OPENING answered the character-choice step
+[village-walk] OPENING confirmed the configured trainer-name prefill
+[village-walk] OPENING new game world entered
+[village-walk] OPENING wake/Get Up complete
+[village-walk] OPENING Grandpa briefing and pack complete
+[village-walk] OPENING starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+[village-walk] OPENING starter selected and named (terrapup, uid creature-7ce9f9092dd7b237aecdb49ee27397bd)
+[village-walk] OPENING Grandpa's first-catch supplies received (50 Basic Orbs)
+[village-walk] OPENING usable house/front doorway exited
+[village-walk] OPENING played: starter=terrapup at (-16.05986, 1.200843, -15.93375)
+[village-walk] OPENING companion put away: true
+[village-walk] START route=visits time=day capture_dir=res://shots/f01w/day headless=false path_m=2.5 road_arcs=[inf,-inf] events=0
+[village-walk] VISITS Grandpa, Mira, Oskar, Tam, Bram, Halda, the old key, Practice Meadow camp, gate RoadGate, gate PondGate, gate TrailGate
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.30 prompt="Talk to Grandpa"
+[village-walk] NOTE pressed interact on "Open Door" at (-2.8,-7.6)
+[village-walk] VISIT Bram kind=villager dist_m=1.85 prompt="Greet Bram"
+[village-walk] VISIT Tam kind=villager dist_m=1.08 prompt="Greet Tam"
+[village-walk] NOTE pressed interact on "Open Door" at (14.4,4.5)
+[village-walk] VISIT Mira kind=villager dist_m=2.24 prompt="Greet Mira"
+[village-walk] NOTE sidestep 1 at (15.6,4.3) -- bodies near: Spawned/Trainers/Trainer_1
+[village-walk] VISIT Oskar kind=villager dist_m=1.27 prompt="Greet Oskar"
+[village-walk] VISIT Halda kind=villager dist_m=1.50 prompt="Greet Halda"
+[village-walk] NOTE key-take: pressed interact on "Take the old key" at 1.29m; satchel has key=true
+[village-walk] VISIT the old key kind=key dist_m=1.29 prompt="Take the old key"
+[village-walk] NOTE pressed interact on "Try the gate" at gate RoadGate; road_gate_open=true
+[village-walk] VISIT gate RoadGate kind=gate dist_m=0.49 prompt="Try the gate"
+[village-walk] VISIT Practice Meadow camp kind=camp dist_m=2.55 prompt="-"
+[village-walk] VISIT gate TrailGate kind=gate dist_m=0.13 prompt="-"

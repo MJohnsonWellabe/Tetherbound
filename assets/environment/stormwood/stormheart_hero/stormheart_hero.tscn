@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/stormwood/stormheart_hero/stormheart_hero.glb" id="1"]
+
+[ext_resource type="Script" path="res://assets/environment/stormwood/stormheart_hero/stormheart_hero.gd" id="2"]
+
+[node name="StormheartHero" type="Node3D"]
+script = ExtResource("2")
+metadata/nominal_height_m = 300.0
+metadata/protected_hollow_radius_m = 44.0
+metadata/protected_hollow_height_m = Vector2(6, 174)
+metadata/front_axis = "-Z"
+metadata/integration = "Visual replacement for split bark shell, buttress roots and living crown only. Keep original rings, ascent, collision, wayfinding, braces and energy seam. Place at StormheartTree local identity."
+
+[node name="LivingStormSplitTree" parent="." instance=ExtResource("1")]

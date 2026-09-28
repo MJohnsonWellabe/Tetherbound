@@ -771,9 +771,29 @@ func _run_guardian_attacks() -> void:
 
 	var frames := 0
 	var moved_for_attack := -1
+	# F04#0 capture sequence (capture runs only): an engage frame, then each
+	# tell's midpoint and the frame just after its strike, labelled with the
+	# outcome CombatManager reported, so a judge sees tell -> strike -> result.
+	var sequence_saved := {}
+	if capture_dir != "":
+		await _guardian_capture(capture_dir, "guardian_00_engage")
 	while int(observed.strikes) < 4 and frames < GUARDIAN_ATTACK_FRAME_LIMIT and bool(manager.call("is_fighting")):
 		# Survival staging is explicit and cannot defeat or reward the guardian.
 		starter.set("hp", starter.get("max_hp"))
+		if capture_dir != "" and not attacks.is_empty():
+			var seq_n := attacks.size()
+			var seq: Dictionary = attacks.back()
+			var seq_move := str((seq.cfg as Dictionary).get("move_id", "quick"))
+			var seq_tell := int(ceil(float(seq.seconds) * physics_hz))
+			var seq_since := Engine.get_physics_frames() - int(seq.started_frame)
+			if not sequence_saved.has("%d_mid" % seq_n) and seq_since >= seq_tell / 2:
+				sequence_saved["%d_mid" % seq_n] = true
+				await _guardian_capture(capture_dir, "guardian_%02d_%s_tell_mid" % [seq_n, seq_move])
+			if seq.has("strike_frame") and not sequence_saved.has("%d_strike" % seq_n) \
+					and Engine.get_physics_frames() >= int(seq.strike_frame) + 3:
+				sequence_saved["%d_strike" % seq_n] = true
+				await _guardian_capture(capture_dir, "guardian_%02d_%s_strike_hits%d_misses%d" % [
+					seq_n, seq_move, int(observed.enemy_hits), int(observed.enemy_misses)])
 		if bool(observed.pending_capture):
 			await RenderingServer.frame_post_draw
 			var label := "quick" if attacks.size() == 1 else "charged"
@@ -944,6 +964,16 @@ func _grade_guardian_attacks(attacks: Array[Dictionary]) -> void:
 				index + 1, elapsed, expected_tell])
 	print("guardian attack sequence: %s" % ", ".join(attacks.map(func(a: Dictionary) -> String:
 		return "C" if str((a.cfg as Dictionary).get("move_id", "")) == "earth_fist" else "Q")))
+
+
+func _guardian_capture(capture_dir: String, label: String) -> void:
+	await RenderingServer.frame_post_draw
+	var image := root.get_viewport().get_texture().get_image()
+	var error := image.save_png(capture_dir.path_join("%s.png" % label))
+	if error != OK:
+		_fail("guardian attacks: could not save %s (%s)" % [label, error_string(error)])
+	else:
+		print("guardian capture %s" % label)
 
 
 func _guardian_capture_dir() -> String:

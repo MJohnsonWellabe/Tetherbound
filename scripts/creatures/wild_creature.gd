@@ -1138,6 +1138,13 @@ func _tick_poise(delta: float) -> void:
 ## this call starts a stagger, so presentation can announce the transition once.
 func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	_poise_quiet_left = float(_poise_config().get("regen_delay", 2.0))
+	# F10#2 (coordinator interim ruling 5860078626, option (a)): a body showing
+	# its route cue cannot be staggered, and hits during the cue do not drain
+	# its poise either (they still deal damage). Draining to a one-point floor
+	# was measured first and left the break one hit into the tell proper, so a
+	# masher still cancelled every dive (C2 ratio inf / 3.49).
+	if _route_cue_left > 0.0:
+		return false
 	if not force_stagger:
 		_poise = maxf(0.0, _poise - maxf(0.0, amount))
 	if _staggered or (not force_stagger and _poise > 0.0):

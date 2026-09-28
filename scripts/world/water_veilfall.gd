@@ -3,6 +3,7 @@ extends Node3D
 ## Same-realm cave residency: the Water shell retains outdoor terrain and this
 ## interior simultaneously. Controls are authenticated by the persistent host
 ## transport; only the querying player's entrance/exit moves their own rig.
+const INTERIOR_DRESSING := preload("res://scripts/world/water_veilfall_interior_dressing.gd")
 const INTERACT := preload("res://scripts/world/interactable.gd")
 const EXTERIOR_PRESENTATION := preload("res://scripts/world/water_veilfall_exterior.gd")
 const ROCK_MATERIAL := preload("res://scripts/world/water_veilfall_rock.gd")
@@ -110,6 +111,11 @@ func build(realm: Node3D) -> void:
 		_gates[str(gate.opens_with)] = barrier
 	_build_heart_chamber()
 	_build_guardian()
+	if not bool(world.get("simulation_only")):
+		var dressing := INTERIOR_DRESSING.new()
+		dressing.name = "VeilfallInteriorDressing"
+		add_child(dressing)
+		dressing.build(interior, rules)
 	_place_captain()
 	ready_for_intents = true
 	_refresh()
@@ -157,6 +163,7 @@ func _build_rooms() -> void:
 		_box(interior, center + Vector3.UP * wall_height,
 			Vector3(width + wall_thickness, wall_thickness, length), Color(rules.colours.stone), true)
 		var light := OmniLight3D.new()
+		light.name = "RoomFill_%s" % str(room.get("id", "room"))
 		interior.add_child(light)
 		light.position = center + Vector3.UP * 7
 		light.light_color = Color("c8dbc9")
@@ -237,22 +244,58 @@ func _build_distance_presentation() -> void:
 		flow.build(world.config, flow_config, _game.world.flags)
 
 func _build_heart_chamber() -> void:
-	var crystal := MeshInstance3D.new()
+	# Codex's reference-backed heart crystal (#356 5859533602; cherry-picked
+	# asset from tb/x04-cross-game-visual-sweep 0196a32e4, provenance in
+	# assets/environment/tidewake/heart_crystal/source/). `_crystal` stays the
+	# gameplay parent whose visibility the freed state owns; the authored
+	# crystal is base-origin and ten metres tall, so it sits 5 m below it.
+	var crystal := Node3D.new()
 	_crystal = crystal
 	crystal.name = "CaptiveHeartChamberCrystal"
-	var prism := PrismMesh.new()
-	prism.size = Vector3(5, 10, 5)
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(rules.colours.crystal)
-	material.emission_enabled = true
-	material.emission = material.albedo_color
-	material.emission_energy_multiplier = 0.3
-	prism.material = material
-	crystal.mesh = prism
+	var visual: Node3D = preload("res://assets/environment/tidewake/heart_crystal/heart_crystal.tscn").instantiate()
+	crystal.add_child(visual)
+	visual.position.y = -5.0
 	interior.add_child(crystal)
 	crystal.position = _v(rules.crystal_position)
+	if rules.has("crystal_light"):
+		var glow := OmniLight3D.new()
+		glow.name = "HeartCrystalLight"
+		glow.light_color = Color(rules.colours.crystal)
+		glow.light_energy = float(rules.crystal_light.get("energy", 2.0))
+		glow.omni_range = float(rules.crystal_light.get("range_m", 16.0))
+		interior.add_child(glow)
+		glow.position = crystal.position + Vector3(0, 1.0, -3.0)
+	# Banners hang flush on the chamber's side walls, facing the hall (the C3
+	# judge read the former free-standing 0.12 m board as a "stray blue slab").
+	var banner_x := float(rules.get("banner_x_m", 18.0))
 	for side in [-1, 1]:
-		_box(interior, Vector3(side * 18, 7, 105), Vector3(0.12, 6, 3), Color(rules.colours.banner), false)
+		_box(interior, Vector3(side * banner_x, 7, 105), Vector3(0.12, 6, 3), Color(rules.colours.banner), false)
+		if rules.has("banner_x_m"):
+			# The Tetherbound diamond sigil, not a blank square: the emblem
+			# turned 45 degrees in the banner's plane, with a smaller inset.
+			_box(interior, Vector3(side * (banner_x - 0.08), 7.4, 105), Vector3(0.06, 1.7, 1.7), Color(rules.colours.get("emblem", "#d8e6ea")), false)
+			var sigil: Node3D = interior.get_child(interior.get_child_count() - 1)
+			sigil.rotation.x = PI * 0.25
+			_box(interior, Vector3(side * (banner_x - 0.12), 7.4, 105), Vector3(0.06, 0.8, 0.8), Color(rules.colours.banner), false)
+			interior.get_child(interior.get_child_count() - 1).rotation.x = PI * 0.25
+			# A brass frame: side strips and a bottom bar, so the cloth reads
+			# as a hung, trimmed banner rather than a painted rectangle.
+			for edge in [-1, 1]:
+				_box(interior, Vector3(side * (banner_x - 0.1), 7, 105 + edge * 1.46), Vector3(0.1, 6, 0.1), Color(rules.colours.brass), false)
+			_box(interior, Vector3(side * (banner_x - 0.1), 4.05, 105), Vector3(0.12, 0.14, 3.2), Color(rules.colours.brass), false)
+			# The board's banner ends in a point below the bar, not a square hem.
+			var tip := MeshInstance3D.new()
+			var point := PrismMesh.new()
+			point.size = Vector3(3.0, 1.3, 0.1)
+			var cloth := StandardMaterial3D.new()
+			cloth.albedo_color = Color(rules.colours.banner)
+			cloth.roughness = 0.85
+			point.material = cloth
+			tip.mesh = point
+			interior.add_child(tip)
+			tip.position = Vector3(side * banner_x, 3.35, 105)
+			tip.rotation = Vector3(PI, PI * 0.5, 0.0)
+			_box(interior, Vector3(side * (banner_x - 0.1), 10.1, 105), Vector3(0.14, 0.14, 3.6), Color(rules.colours.brass), false)
 		_box(interior, Vector3(side * 7, 1, 113), Vector3(2, 2, 3), Color(rules.colours.metal), true)
 
 func _build_guardian() -> void:

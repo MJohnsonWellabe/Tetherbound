@@ -1,0 +1,1 @@
+Raw save homes and per-label save snapshots were pruned after the verdict (they are in commit d9460b45).

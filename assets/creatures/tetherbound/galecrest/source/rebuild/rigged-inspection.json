@@ -1,0 +1,160 @@
+{
+  "model": "D:\\tetherbound\\visual-acceptance\\assets_raw\\galecrest_rebuild\\rigged.glb",
+  "bounds": {
+    "min": [
+      -1.0634,
+      -0.5151,
+      -0.0155
+    ],
+    "max": [
+      0.9491,
+      0.7839,
+      1.559
+    ],
+    "size": [
+      2.0126,
+      1.299,
+      1.5745
+    ],
+    "height_m": 1.5745,
+    "longest_axis_m": 2.0126,
+    "sits_on_origin": true,
+    "centred_on_origin": false
+  },
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 44194,
+      "edges": 65239,
+      "faces": 29048,
+      "triangles": 29048,
+      "tris": 29048,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 43334,
+      "boundary_edges": 43334,
+      "loose_vertices": 0,
+      "duplicate_vertices": 29700,
+      "components": 8017,
+      "debris_components": 8017,
+      "flipped_normals": 3863,
+      "uv_layers": 1,
+      "stretched_uv_faces": 461,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 19
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [
+    {
+      "name": "Armature",
+      "bones": 19,
+      "bone_names": [
+        "root",
+        "pelvis",
+        "spine",
+        "neck",
+        "head",
+        "wing_upper_l",
+        "wing_fore_l",
+        "wing_tip_l",
+        "wing_upper_r",
+        "wing_fore_r",
+        "wing_tip_r",
+        "tail_1",
+        "tail_2",
+        "leg_upper_l",
+        "leg_lower_l",
+        "foot_l",
+        "leg_upper_r",
+        "leg_lower_r",
+        "foot_r"
+      ],
+      "roots": [
+        "root"
+      ],
+      "skinned_meshes": [
+        "Mesh_0"
+      ],
+      "max_depth": 5
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack_Armature",
+      "frames": [
+        1.0,
+        23.0
+      ],
+      "channels": 190
+    },
+    {
+      "name": "faint_Armature",
+      "frames": [
+        1.0,
+        37.0
+      ],
+      "channels": 190
+    },
+    {
+      "name": "hit_Armature",
+      "frames": [
+        1.0,
+        13.0
+      ],
+      "channels": 190
+    },
+    {
+      "name": "idle_Armature",
+      "frames": [
+        1.0,
+        73.0
+      ],
+      "channels": 190
+    },
+    {
+      "name": "run_Armature",
+      "frames": [
+        1.0,
+        19.0
+      ],
+      "channels": 190
+    },
+    {
+      "name": "walk_Armature",
+      "frames": [
+        1.0,
+        33.0
+      ],
+      "channels": 190
+    }
+  ],
+  "totals": {
+    "meshes": 1,
+    "triangles": 29048,
+    "vertices": 44194,
+    "materials": 1,
+    "animations": 6
+  },
+  "problems": [
+    "Mesh_0: 43334 non-manifold edges",
+    "Mesh_0: 29700 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 8017 microscopic disconnected components",
+    "Mesh_0: ~3863 inward-facing faces",
+    "Mesh_0: 461 faces with texel density 4.0x off the median",
+    "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "not centred on the origin in x/y"
+  ]
+}

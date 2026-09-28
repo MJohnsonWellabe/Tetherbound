@@ -1,0 +1,154 @@
+{
+  "disclosures": [
+    "bridge: the Meadows helper's 'gate must own the interact prompt' assertion was bypassed because ordinary play had already opened the South Bridge (south_bridge_open set, key spent); the stale 'south_bridge_grunt' battle offer ('offered a battle that could not start') remains an open Meadows defect"
+  ],
+  "failures": [],
+  "flags_gained": [
+    "alpha_pin_intro_seen",
+    "defeated_south_bridge_grunt",
+    "south_bridge_open"
+  ],
+  "flags_total": 97.0,
+  "free_build": false,
+  "game_clock_seconds": 850.806029333323,
+  "game_day": 4.0,
+  "helper_receipts": [
+    {
+      "passed": true,
+      "receipts": [
+        {
+          "beat": "guardian_admitted",
+          "depth": -11.5703125,
+          "trainer": "south_bridge_grunt"
+        },
+        {
+          "beat": "gate_prompt_assertion_bypassed",
+          "key_remaining": 0.0,
+          "reason": "south_bridge_open already set by ordinary play after the guardian win; the helper's 'gate must own the interact prompt' assertion is not applied",
+          "stale_offer_defect": "'south_bridge_grunt' offered a battle that could not start (Meadows defect, open)",
+          "winning_provider": "<null>"
+        },
+        {
+          "beat": "south_bridge_crossed",
+          "depth_after": 9.4345703125,
+          "depth_before": -11.5703125,
+          "hits": 40.0,
+          "key_remaining": 0.0,
+          "key_reward": 1.0,
+          "party_ids": [
+            -9223371908878170100.0,
+            -9223371908861392900.0,
+            -9223371908844615700.0,
+            -9223371908827838500.0,
+            -9223371908811061200.0
+          ],
+          "trainer": "south_bridge_grunt",
+          "wins": 2.0
+        }
+      ],
+      "segment": "bridge"
+    }
+  ],
+  "inventory": {
+    "axe": 1.0,
+    "berries": 5.0,
+    "coin": 140.0,
+    "hammer": 1.0,
+    "knife": 1.0,
+    "orb_basic": 48.0,
+    "pickaxe": 1.0,
+    "potion_small": 3.0,
+    "revive": 10.0,
+    "torch": 1.0,
+    "wood": 1.0
+  },
+  "key_items": {},
+  "location": {
+    "player": [
+      8.00162124633789,
+      -2.85544729232788,
+      1339.4345703125
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party_after": [
+    {
+      "hp": 108.0,
+      "level": 9.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 20.0,
+      "level": 8.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 135.0,
+      "level": 8.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 88.0,
+      "level": 7.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 86.0,
+      "level": 6.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "party_before": [
+    {
+      "hp": 58.0,
+      "level": 9.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 136.0,
+      "level": 7.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 129.0,
+      "level": 7.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 34.0,
+      "level": 6.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 82.0,
+      "level": 5.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "passed": true,
+  "saved_world_seed": 1393508821.0,
+  "segment": "bridge",
+  "wall_seconds": 790.647,
+  "world_seed_env": "4"
+}

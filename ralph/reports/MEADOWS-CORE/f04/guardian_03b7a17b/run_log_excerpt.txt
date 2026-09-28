@@ -1,0 +1,14 @@
+guardian camera control: seed_start=hall:(-372.5564, 4.1484, 2625.556) supported_y=4.15 guardian_distance=22.7; fixture teleport only
+guardian camera control: guardian naturally admitted after 19.0m input walk
+guardian capture guardian_00_engage
+guardian capture guardian_01_burrow_strike_tell_mid
+guardian capture guardian_01_burrow_strike_strike_hits1_misses0
+guardian capture guardian_02_earth_fist_tell_mid
+guardian capture guardian_02_earth_fist_strike_hits1_misses1
+guardian capture guardian_03_burrow_strike_tell_mid
+guardian capture guardian_03_burrow_strike_strike_hits2_misses1
+guardian capture guardian_04_earth_fist_tell_mid
+guardian attack sequence: Q, C, Q, C
+guardian attacks resolved through CombatManager: 2 hit(s), 2 miss(es)
+warrens guardian attack witness passed
+real	13m56.256s

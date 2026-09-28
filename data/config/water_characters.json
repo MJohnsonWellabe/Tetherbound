@@ -1300,8 +1300,9 @@
       "island_local_offset": [
         16.0,
         0.0,
-        -12.0
+        -20.0
       ],
+      "_why_offset_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): 8 m north of the crown stand below. Her fights form about 7.8 m in front of her (capture r2t/r4t arena centre (1366.0, 3495.8)), where the crown is flat only to a 6 m radius (worst deviation 1.25 m at 6 m, 14.8 m at 11 m), so the ring spilled over the crown's edge and the fight slid down the cliff with the camera against the rock. From here the ring forms on the crown's middle.",
       "_why_offset_0927": "F14#0 C3 (tb/tidewake-full): 13 m east onto the open crown of Deep Watch (1.8 m arena deviation, 0.9 m max rise). The old stand dropped 7.5 m inside the 11 m arena and in-world captures showed the fight sliding off the shoulder, the camera facing the cliff and the READER pilot wiping.",
       "critical": false,
       "ace_level": 54,

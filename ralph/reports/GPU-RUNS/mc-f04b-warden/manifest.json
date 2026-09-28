@@ -1,0 +1,503 @@
+{
+  "label": "mc-f04b-warden",
+  "sha": "7fe6e7037a37d5e68d4c6833dcc554fafadc1625",
+  "script": "tools/art_pipeline/capture_named_fight.gd",
+  "args": [
+    "--trainer=warden_aldis",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16"
+  ],
+  "mode": "render",
+  "comment_id": 5855250264,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/mc-f04b-warden",
+  "stage": "ready_to_publish",
+  "runner_pid": 9820,
+  "started_utc": "2026-09-27T13:47:23.318156+00:00",
+  "engine_pid": 3624,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\mc-f04b-warden",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tools/art_pipeline/capture_named_fight.gd",
+    "--",
+    "--trainer=warden_aldis",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T13:54:01.790624+00:00",
+  "output_worktree_files": [
+    "shots\\f04\\warden_aldis-00-before.png",
+    "shots\\f04\\warden_aldis-01.png",
+    "shots\\f04\\warden_aldis-02.png",
+    "shots\\f04\\warden_aldis-03.png",
+    "shots\\f04\\warden_aldis-04.png",
+    "shots\\f04\\warden_aldis-05.png",
+    "shots\\f04\\warden_aldis-06.png",
+    "shots\\f04\\warden_aldis-07.png",
+    "shots\\f04\\warden_aldis-08.png",
+    "shots\\f04\\warden_aldis-09.png",
+    "shots\\f04\\warden_aldis-10.png",
+    "shots\\f04\\warden_aldis-11.png",
+    "shots\\f04\\warden_aldis-12.png",
+    "shots\\f04\\warden_aldis-13.png",
+    "shots\\f04\\warden_aldis-14.png",
+    "shots\\f04\\warden_aldis-15.png",
+    "shots\\f04\\warden_aldis-16.png",
+    "shots\\f04\\warden_aldis-17.png",
+    "shots\\f04\\warden_aldis-18.png",
+    "shots\\f04\\warden_aldis-19.png",
+    "shots\\f04\\warden_aldis-20.png",
+    "shots\\f04\\warden_aldis-21.png",
+    "shots\\f04\\warden_aldis-22.png",
+    "shots\\f04\\warden_aldis-23.png",
+    "shots\\f04\\warden_aldis-24.png",
+    "shots\\f04\\warden_aldis-99-after.png",
+    "shots\\f04\\warden_aldis-a01.png",
+    "shots\\f04\\warden_aldis-a02.png",
+    "shots\\f04\\warden_aldis-a03.png",
+    "shots\\f04\\warden_aldis-a04.png",
+    "shots\\f04\\warden_aldis-a05.png",
+    "shots\\f04\\warden_aldis-a06.png",
+    "shots\\f04\\warden_aldis-a07.png",
+    "shots\\f04\\warden_aldis-a08.png",
+    "shots\\f04\\warden_aldis-a09.png",
+    "shots\\f04\\warden_aldis-a10.png",
+    "shots\\f04\\warden_aldis-a11.png",
+    "shots\\f04\\warden_aldis-a12.png",
+    "shots\\f04\\warden_aldis-a13.png",
+    "shots\\f04\\warden_aldis-a14.png",
+    "shots\\f04\\warden_aldis-a15.png",
+    "shots\\f04\\warden_aldis-a16.png",
+    "shots\\f04\\warden_aldis-r01.png",
+    "shots\\f04\\warden_aldis-r02.png",
+    "shots\\f04\\warden_aldis-r03.png",
+    "shots\\f04\\warden_aldis-r04.png",
+    "shots\\f04\\warden_aldis-r05.png",
+    "shots\\f04\\warden_aldis-r06.png",
+    "shots\\f04\\warden_aldis-r07.png",
+    "shots\\f04\\warden_aldis-r08.png",
+    "shots\\f04\\warden_aldis-r09.png",
+    "shots\\f04\\warden_aldis-r10.png",
+    "shots\\f04\\warden_aldis-r11.png",
+    "shots\\f04\\warden_aldis-r12.png",
+    "shots\\f04\\warden_aldis-r13.png",
+    "shots\\f04\\warden_aldis-r14.png",
+    "shots\\f04\\warden_aldis-r15.png",
+    "shots\\f04\\warden_aldis-r16.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "161e4d2526308cfb776f343d9e4cb168491f10e931c162892c23fb760ac00d25"
+    },
+    {
+      "path": "import.log",
+      "bytes": 2814,
+      "sha256": "67e2a1e5982b02ad0157c4cc5c51f6859106e3a42d08e9f2c6a328d4d5efbd2a"
+    },
+    {
+      "path": "run.log",
+      "bytes": 16696,
+      "sha256": "f3fe6c7e9302f093658eb5d3a73dc629cbca439ad52185a832f8372249e092e7"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 2676,
+      "sha256": "9e9cdb1ea794f4acf7b3b452f1969d2701a88a0fb7129fe2be3d98d8f853e4c5"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 916214,
+      "sha256": "c713ec481bec294e9567e211946035fc890a70dbf161a6ea7530725da006fd0f"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 16454,
+      "sha256": "83552bad8ae7bc43ed612fe87544c09c18b6b07e582c13d6395f9c1e28477f64"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/1c391b2d44274649404846aed0752d6dc54823a3.cache",
+      "bytes": 4589421,
+      "sha256": "10cc47d4ef18ebbef2d64169f425bef7342d12958a56ad861c949fd02a13704c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/312ad42a7fd06585fad3eca6bb0eef83490b1da7.cache",
+      "bytes": 5867890,
+      "sha256": "be0e4454e961d4ad19f6e4ec3f8ac7ee91e71e5d577c41630feeb118d4e6c308"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/435dbe1cde22e3e49fd517c472846f3136aae0d8.cache",
+      "bytes": 5956809,
+      "sha256": "cdc565b4322878856ca9711cff645938bc81645a1cfb26b86a940814a8cfcb6e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/5c713fc8d058958121c19e372afe99b4a4024856.cache",
+      "bytes": 2486101,
+      "sha256": "9b60fc84166427ee374c838d0bca779de86b533d254a0c32b1171dc9c916bf54"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/65ee8a64bce8864ce9523e0c7cae479097880bb2.cache",
+      "bytes": 2957527,
+      "sha256": "70025e992afb8c45eab3110a83ae94f033418b5b34dcfb9d1cd01d154d2b1548"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a2ddf2302bafb2503e1359bb4116cfc29d9c7985.cache",
+      "bytes": 2015202,
+      "sha256": "3c62619c1d278e3a487c1b8d1b18474e892acd6d2e5a596a8141fa5c290ad1d6"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a337fd395264406b70bc21432ea1a85b0fce4b96.cache",
+      "bytes": 5300133,
+      "sha256": "5ea196f5aec918c1000c74dd0aa9551dd68de014c961dc398eb0492554df1ae0"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a5e7449e2099bbcfafb2740fc8c93afbf6f49dfb.cache",
+      "bytes": 2403896,
+      "sha256": "bd071b5244c71bd37f639bd294e95ab0bfbfbbdcbf0d861e16c4992937060837"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a8777be15f781463e27cb3b841a738f050b8c925.cache",
+      "bytes": 5856060,
+      "sha256": "793bea6434a931924099849bff802a2b66855662ceb882d5c467b3a16656c52d"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f16cff13e68f2b5f44e139a61824910cf14e2508.cache",
+      "bytes": 2509392,
+      "sha256": "4641a67488a360632fa984ce1fb549db4d8521a14be17c66af80d54680d3c832"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3d38ef465c59bc9091bfc25876abd6e62e9b744.cache",
+      "bytes": 5294899,
+      "sha256": "20ba2df6db36817abb973cab0708d1b59431c173ce4c684e2078983e6c01aeb4"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f8ab93aeebbe5f7232a9778ed024a542819aa220.cache",
+      "bytes": 5988785,
+      "sha256": "132df24e7996978c92e6a81cdb786eae1f30bd7d2c54a16ab84f4d81eb1ebf03"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 76,
+      "sha256": "fe707b032e21c75a5b760db43eaecba905a50ac0c817a231a594a58e25810489"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-00-before.png",
+      "bytes": 2124995,
+      "sha256": "8867b141a6977a0b99ce27b3f2078c96386c127f38e86c2eb439732a70944f6c"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-01.png",
+      "bytes": 2960982,
+      "sha256": "f0a841b86be8a7b7992e617cf431733244ce2e24cdcaea457d601cf451871ccd"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-02.png",
+      "bytes": 2804374,
+      "sha256": "fc65af5bf5d883931e5939f7065bd2491fc459f7d4daa32982ab3a0317958203"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-03.png",
+      "bytes": 2908351,
+      "sha256": "7f8caaac8499c620492012c9e9f83c567209e42465819114219cf0b255118631"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-04.png",
+      "bytes": 2881688,
+      "sha256": "a462defc04b5a0d8bf2b34ed220c97d090b4646de9596a5e011c26cf34875e57"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-05.png",
+      "bytes": 2850068,
+      "sha256": "fe354a95a77f7b8b894744b94416fe71e3bab10414dc5b6a2b23d0e4b3d3618b"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-06.png",
+      "bytes": 2892032,
+      "sha256": "a6c8435803c849e9d78e966229ee8a6b450abb1b0b7810215b3c4721bcd12908"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-07.png",
+      "bytes": 2920741,
+      "sha256": "9188311abc265273f1c41a72b77a6eb61ad8c5985bc983f6fb27748603d9e0f3"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-08.png",
+      "bytes": 2864393,
+      "sha256": "8c10d32396771aee78b29512a8ddc26df850083d8bfd30b4b83d0121c88cc8b9"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-09.png",
+      "bytes": 2884512,
+      "sha256": "1155665d62f4e3877acc2234b4c3195f083ffb5f9ae40d08ea7b2595081795c5"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-10.png",
+      "bytes": 2941248,
+      "sha256": "536d539cff073de8a5e218d05ec41a1e1d65331007fff63cd865bba3bd0159fd"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-11.png",
+      "bytes": 179210,
+      "sha256": "198192b6e088335fd75459e686e1c0ac57de9bca97a1b1721469f124a3174d16"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-12.png",
+      "bytes": 2894602,
+      "sha256": "e4d65f87a7601c31fd26eaffd72283defcf4e37a58e71e04a45c2ee1ef26321a"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-13.png",
+      "bytes": 2948342,
+      "sha256": "01794db6964bc5af8d544af77b5f491bb019bac96a5e8f07f2addfe956845669"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-14.png",
+      "bytes": 2872021,
+      "sha256": "485b7ab857ea460667a03ee75f915605059673c74efd6548dca5e3ffabb229c4"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-15.png",
+      "bytes": 2633996,
+      "sha256": "c2b439832ffe5d8a9d4d1c2a7d9ae3e2709f5e89824a856b336184ff2509c68f"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-16.png",
+      "bytes": 2853169,
+      "sha256": "56f2dfdc0e7d9da9ce806ba90bbfe9317cc1ebcb1678356e1c2fff905556a153"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-17.png",
+      "bytes": 2831447,
+      "sha256": "99c864a1ec675781a3515747c6a97beb27f0f52a1c499c4f8ce017851c06171c"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-18.png",
+      "bytes": 2821273,
+      "sha256": "14bb800135c343488cb570b0dd674f94344c2cdffb461ecd5008ccc5286e9c0b"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-19.png",
+      "bytes": 2818708,
+      "sha256": "392e245d18ab97226b0a3645a8d689d8587d51879d1194a9a72ad9f24a4e78fe"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-20.png",
+      "bytes": 2774482,
+      "sha256": "406f84af31f2ea281252eb327a3ff9fa9ac0ca27008612ff32da4da9047c38f7"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-21.png",
+      "bytes": 3589280,
+      "sha256": "be77285bef5120be27e86ef86d1105fa595db091c683c962c3be2bd120f744cc"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-22.png",
+      "bytes": 3687778,
+      "sha256": "c231b5efd47fcac4f2b7aac9c928a79889bfd56bc25a924ac80b1902cb57ca5a"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-23.png",
+      "bytes": 3642416,
+      "sha256": "22e3c533778a6ea1f541e6ab376554d5c10ff6ba71467b5778d940f24526604e"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-24.png",
+      "bytes": 3508570,
+      "sha256": "8232b332042646bafd2c1c3247c0a39902d83b71143be4e51f425b4d0fcc4ef6"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-99-after.png",
+      "bytes": 2627914,
+      "sha256": "258d132fc1bf316538bb1377de86c192a1f48dc9503741bce23f7cbe65587603"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a01.png",
+      "bytes": 1606925,
+      "sha256": "0c9c3265da5d1c59ec4a71395a3b5617aaf41cc41ea52a4aecf5bd9e65313568"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a02.png",
+      "bytes": 1621826,
+      "sha256": "3f7cafc735a7469fc0a0f8fbc3af1c2687c0fc79f0422a1141e2e7313dfd5cd9"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a03.png",
+      "bytes": 1677181,
+      "sha256": "99949a488031c16233f74320e6825c803b434a808f0a9c5bfcab80991e607656"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a04.png",
+      "bytes": 1674084,
+      "sha256": "5aefbd5e916982ba5461578f2abdf5b3cdb1762204065c8d4da87560ea5d0717"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a05.png",
+      "bytes": 1656714,
+      "sha256": "715769b02f744cac6d9fbcf530e5db860dbc4c33442fce186c12b4866a21da6e"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a06.png",
+      "bytes": 1657698,
+      "sha256": "9f3575e9e9c5ab8ca5f5aba2623245e390712898b7a13791db428d249777f5f5"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a07.png",
+      "bytes": 2712719,
+      "sha256": "cfd04e761cceb99719531f379dd1bcf5ecbf6e7e47dd7097de5fe19a81e9b7dc"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a08.png",
+      "bytes": 2691445,
+      "sha256": "4582e0998bbd21d4cc1413bb2dade2d552b468a1473992d421dcba4a453dc891"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a09.png",
+      "bytes": 2641817,
+      "sha256": "593a2637dd9470502639d9a8d4625e60c2f7d8c087d26d9a4c2ed1d0e6d82fbf"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a10.png",
+      "bytes": 2666910,
+      "sha256": "df11ac09105b40362cc3fbfcb8962bdbcd9c4309651ec836658f935f7efd2e84"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a11.png",
+      "bytes": 2669053,
+      "sha256": "4fc1eff75ca498a1b97ecb32bcd672b095ddd3630226249725fb3b87aba568fc"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a12.png",
+      "bytes": 2673321,
+      "sha256": "ad48924f7ca5fa00186852b78da2b24ac583e2adc1e4b817451b86a70db54b00"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a13.png",
+      "bytes": 2656300,
+      "sha256": "2092410f6620a253acd706c2b7c57c01628897d5056f7cc1c409fad348adda7e"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a14.png",
+      "bytes": 2622651,
+      "sha256": "cafc261fb1da9f01f4f6130b853380640763b496edb4226881725ee1a01bf48d"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a15.png",
+      "bytes": 2656559,
+      "sha256": "b2cc7bcf535d5e27a51516f9d53a8df65e98d0447a151938b0092d21c31c3331"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-a16.png",
+      "bytes": 2675270,
+      "sha256": "257518ce2a8907b13ccc1b0a7c6605e557622d23e84e48372b02a8436ca9cbee"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r01.png",
+      "bytes": 3807492,
+      "sha256": "d9f6325e80764037dd2e4dfb8686abb9c84f192496f58792059ddcb1cfbfa0e4"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r02.png",
+      "bytes": 3772192,
+      "sha256": "f89533370db326d46bf1b68310b2121d27c1322dda40e1d67634bb9016d3abde"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r03.png",
+      "bytes": 2791284,
+      "sha256": "bf9908c365ee3256a0b069801cbd35db92b0bb235e5f5f017dd1b4179e1998db"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r04.png",
+      "bytes": 3107555,
+      "sha256": "31e0300027fd03df507eabd33923a3938a3a98a52ee646a6e8804fbe627977f4"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r05.png",
+      "bytes": 2909787,
+      "sha256": "f7726d3ccc95faa22fa4a8aee9c16db04c48451d090f2e82375a8f5415c1c6f1"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r06.png",
+      "bytes": 2901233,
+      "sha256": "c11f33c7e0d41b7b0323ae64600cfbe2f0004cee551b39e0ae508771c20aeaae"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r07.png",
+      "bytes": 2799463,
+      "sha256": "b2ff051e3ff4530ef146a9e5ef0d2eebedbd3947571b0249afd3429a277a87ee"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r08.png",
+      "bytes": 2829281,
+      "sha256": "d1c17c47b827de3ad23a1d16908e6bdcda12a65833ee6de77260f031baf3ab00"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r09.png",
+      "bytes": 2933751,
+      "sha256": "254066dbc248a14e85e42d654f09d149371ec1dff309c58ff44d4c013d0e9fa8"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r10.png",
+      "bytes": 2720680,
+      "sha256": "0022a30a103a838c5d6257f01e6ec461b38c506233fc687fb7b0223990853df8"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r11.png",
+      "bytes": 2966894,
+      "sha256": "99f9dbf8daf30afd80ddec2bc356f5d1adab8d7259bc888e88c791e2628d181c"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r12.png",
+      "bytes": 2836778,
+      "sha256": "8b67b132a43ccf027169d8d28bf3743f17babbf5d7c8aa0acaf18f87a7cdc571"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r13.png",
+      "bytes": 2828999,
+      "sha256": "da3f45359caa1905d478baa3f4d8b105e6ee93d73266c08fadd044e058d33e57"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r14.png",
+      "bytes": 2603830,
+      "sha256": "2557dab3d1ba78455399f531ce5cac5796231479443ce43326e18416d663115f"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r15.png",
+      "bytes": 2865312,
+      "sha256": "573a9985f384aa5031c1fb08510b09300ece81ffdda54685f6e6d86577563dcd"
+    },
+    {
+      "path": "worktree/shots/f04/warden_aldis-r16.png",
+      "bytes": 2955244,
+      "sha256": "398c678bac2d733731662099f0ac2a9d96f1db1c51ab2cba7137023cb018d2ff"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}

@@ -1,0 +1,2568 @@
+{
+  "baseline_commit": "dbb7a98feb3a2911141b1d77820fee6e3481d9f6",
+  "integrated_main": "94c63b1f221063c2cec7122136bb111f6805bfd7",
+  "engine": "Godot 4.7 stable 5b4e0cb0f; Compatibility/OpenGL 3.3; GTX1060 3GB driver560.94",
+  "fixture": "staged location, flags, party and clock; HUD hidden; companion parked; existing production scenes and CameraRig",
+  "candidate2_source_sha256": {
+    "scripts/world/coastal_rock_material.gd": "70f9b14515e98fa393488434b5bc034f31199ea399fc95fd3fb55853c6e2e3d2",
+    "scripts/world/water_world.gd": "54fbfbc17747f6866600806f3d3bc9dccfac408783cf8850cf8b44e4c2688395",
+    "data/config/water_visual.json": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09"
+  },
+  "runs": [
+    {
+      "region": "cloudreach",
+      "tag": "baseline",
+      "frames": [
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "001_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "b60bc13a17a44035e5be119e2130c485714d52467637ce93cc91640860305849",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "002_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "213c2c878f18f7cd044d8ce3b64e9ef639ef24d35dc4826b7bf01e25b051e5d3",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "003_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "0b64a025f0c0f4b01bf56e5dbd1864ef39e948f2e551d0e4fc0a4c32aa42d1e7",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "004_cloudreach_place_cliff_review_env_windscar_ravine_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "9ade62395d60429960fb25c6ef0a485f0fd216246ffc6de8da0e19f9c820bc9a",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "005_cloudreach_place_cliff_review_env_windscar_ravine_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "916f931838f3ac22f92307193c988663ddd4c6992d813ac46b4e367494d5e888",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "006_cloudreach_place_cliff_review_env_windscar_ravine_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "a786bb9183ca6699f6a7e92fa659a58cfcf09c87eb4c431a61036dcb62b13279",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "007_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "969be40040337b1396bafba9c507fefe1cc1af4ce4054196b54eaa41c7f4d244",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "008_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "3dbe5405abd98b98dfdba5cc80cbb504e5ac3219cfd0e4b5dd20b3d19d5d1fc9",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "009_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "3b0202745152effafc36df8bf6c19ad26ac5908b9cad38d63f1d4776dd377a96",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "010_cloudreach_place_cliff_review_place_cliffhold_settlement_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "74e4ebb2bf4f78875ea55ddbc08a2611964cbad3a7d7b2de633a38c57b530f36",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "011_cloudreach_place_cliff_review_place_cliffhold_settlement_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "dusk",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "736a93b2b2caf24c5f41921da9d733ff27859a4433f2bd269cde6ea6cc1ac552",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "012_cloudreach_place_cliff_review_place_cliffhold_settlement_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "8e4bbcdffeea45799187a5b920a0a025dc519883f59fe14f9603433ab100287e",
+          "size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "frame_count": 12,
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-baseline\\region\\cloudreach",
+      "manifest_sha256": "282fb3ca80aa5e5f8acdedbaf9972e1c2a33ba3a57164042a2f7a7b2fef878de",
+      "wrapper_exit": 1,
+      "engine_exit": 0,
+      "diagnostic": "Existing production unscoped fly_tutorial_completed flag; all frames captured."
+    },
+    {
+      "region": "cloudreach",
+      "tag": "candidate",
+      "frames": [
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "001_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "e97913602eec91e1ffe5ea10bceb9cef0d370cd16088cb3815d9558e5edf72f0",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "002_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "30200cfa0608f6e89d1cce802e457927438ff04839e876bbcd8cfe0ca31d8227",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "003_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "86bacbaecd702af35f34103c8ff442bf661851a25fd29267167ff459ff43e390",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "004_cloudreach_place_cliff_review_env_windscar_ravine_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "ae72789634981fdca6c3cdf60ddd6f56364e573cce83bd0e8732b49492ba9f5f",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "005_cloudreach_place_cliff_review_env_windscar_ravine_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "2fd8fa1e79aacb6bf53eacac88a402f0fea22a9fea23380cbcbdfe4a1fd59d70",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "006_cloudreach_place_cliff_review_env_windscar_ravine_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "3156198a5e8c9b6e0b823ef7872c71d185d97f7de664c52b7060993006717cfe",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "007_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "c15cfd7d8f3a538eed84e1ea89101ea304fcb14d2eea838f9daad4135879c6d6",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "008_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "6e03490e32947d7004dc97746b5c127231f130019315c410560a5f7aaf1c2d89",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "009_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "45eaf2dfbe1f8f7a836b52419f642f3cb3cb0c44e4513439519a8cf72cec9ea2",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "010_cloudreach_place_cliff_review_place_cliffhold_settlement_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "9ec0ee5e1267bf3f51c9f891d13e5a6462a63ed53475ccc01da9bed056296ed8",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "011_cloudreach_place_cliff_review_place_cliffhold_settlement_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "dusk",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "ebb9c268f2b573efb015d5c42c8d5c38d40901c53674c983bfd3cc838c95d91f",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "012_cloudreach_place_cliff_review_place_cliffhold_settlement_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "5d0863ab276e8ff19e5f5b27b5351f357f6e86c3facf316d6571e9d92e930c34",
+          "size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "frame_count": 12,
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-candidate\\region\\cloudreach",
+      "manifest_sha256": "282fb3ca80aa5e5f8acdedbaf9972e1c2a33ba3a57164042a2f7a7b2fef878de",
+      "wrapper_exit": 1,
+      "engine_exit": 0,
+      "diagnostic": "Existing production unscoped fly_tutorial_completed flag; all frames captured.",
+      "matched_recorded_camera_and_feet": true
+    },
+    {
+      "region": "tidewake",
+      "tag": "baseline",
+      "frames": [
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999599456787,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "001_tidewake_place_cliff_review_env_first_shore_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "d02152685c8da74a4fa1d85c56d4191c8adc8794e5b1ba3c7360a6390acc5315",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999647140503,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "002_tidewake_place_cliff_review_env_first_shore_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "7e8b2c02e35a7538c37c855a98bf5de08877065a2eddcd305a21796dc8ede7c2",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999647140503,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "003_tidewake_place_cliff_review_env_first_shore_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "98ea4e13d8fcc2fc26448f527c2ec7beb72a3bec41e981f32cc35abaf842e646",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "004_tidewake_place_cliff_review_env_brine_steps_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "3195185b61a06c79a9aac8ebfbab01b8e9dc73e012314c29d85222ed618190fc",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "005_tidewake_place_cliff_review_env_brine_steps_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "fac6f8b94ceb2099efd003ba08986a265fdc5c59018048bfc9aa499fee51e1fe",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "006_tidewake_place_cliff_review_env_brine_steps_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "ff1cf74c510bfc9053fcdc699095d86e6539b291900cdb3a79687ead6bae44ea",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "007_tidewake_place_cliff_review_env_shellwatch_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "da075a84e81aa374db008364690525f58f2aa7b3eb116b1c03881e6536dfa7c5",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "008_tidewake_place_cliff_review_env_shellwatch_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "50b558dfaf79ea9e976b48d256d0d2f2ccecdec3ba6b75dc7fbee8fbb0250c26",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "009_tidewake_place_cliff_review_env_shellwatch_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "4ea51538ba1d91911d02a894f47b84181866656c777dae683b66f5ed5c045414",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.20003509521484,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "010_tidewake_place_cliff_review_env_veilfall_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "4022605b6d86a7ee3c016b20bea70ed6ebf8f6b3da1887a3eb8b0416a295ed40",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.19951200485229,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "011_tidewake_place_cliff_review_env_veilfall_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "d9ba8507a374a0856add38cdf17708bf1bccfa44f00e8b61ee9182b2b1c57e37",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.2000150680542,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "012_tidewake_place_cliff_review_env_veilfall_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "bc46a7fc3cfc78ab76245d9aad0844aad21affd9ebc0852d0e7042fcbdd39498",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "013_tidewake_place_cliff_review_env_deep_watch_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "e1c916e40281adf221deb98c92ed4a7ad7c1842ce0758595f28ff22288196bbc",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "014_tidewake_place_cliff_review_env_deep_watch_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "bec1738eab9be27269e2143296e03fb7d7c6b59c219619d24bbd2947c8a00dcc",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "015_tidewake_place_cliff_review_env_deep_watch_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "474211736f1b33d54205d4d35e8e752f0a164fcfea0b3d9e23fef138aa4f48e3",
+          "size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "frame_count": 15,
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-baseline\\region\\tidewake",
+      "manifest_sha256": "e0b38c51662d65f13d2b58e56912d01734f587ae820a59ab16ea97ab9d125a96",
+      "wrapper_exit": 0,
+      "engine_exit": 0,
+      "diagnostic": "No errors; pre-existing interpolation deprecation warning."
+    },
+    {
+      "region": "tidewake",
+      "tag": "candidate",
+      "frames": [
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999599456787,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "001_tidewake_place_cliff_review_env_first_shore_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "c8b2fa78c41045db743e4bd8fa01ccbe66cff7434d3d18204774170956eeefc3",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999647140503,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "002_tidewake_place_cliff_review_env_first_shore_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "5a1b79c17bc3f8f784528c2bb88dd1d632fd9776a59921e65e853df27670b8fc",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999647140503,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "003_tidewake_place_cliff_review_env_first_shore_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "3a4e0130b639409673e3df53e43ad7705a18f95c2253fd831b2f1e6c892246a5",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "004_tidewake_place_cliff_review_env_brine_steps_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "5e4b1808b956dbf1c278efa8af7d6604d4ca612f9b96972d3fca8dccf8f788b9",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "005_tidewake_place_cliff_review_env_brine_steps_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "1d6132799034ef964277d68856847b454eb3d5a0e1456dda6bb81d6401cffa95",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "006_tidewake_place_cliff_review_env_brine_steps_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "1e7ce1af8d72447f214de7537bf9d6a0ca920f93c41ae51342bc7f19bc1ba188",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "007_tidewake_place_cliff_review_env_shellwatch_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "e11f22705d48753ea0d301c7260882dbb1fe0ee158b40873f6d00d9be9682c87",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "008_tidewake_place_cliff_review_env_shellwatch_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "e96e27b3777a2b6b0b0681dcb43d8aa0b410cb95fe5b73de5ce6c2410adf229c",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "009_tidewake_place_cliff_review_env_shellwatch_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "476331d0ab1c62329a5b51686d5af5479b2c9fe7ea29bbde16c518c2d42b7bed",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.20003509521484,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "010_tidewake_place_cliff_review_env_veilfall_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "038a095057b20402dad46349c956db01124e1e6d81b9ea768169b0fbb79d9878",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.19951200485229,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "011_tidewake_place_cliff_review_env_veilfall_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "3a1979b9479f7c407e8f4514767fd1c6584fa00fdae0a1278733916d97c18a97",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.2000150680542,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "012_tidewake_place_cliff_review_env_veilfall_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "0ceaeb50b50cab47f9599f6a558b09575af35ae1b2e42690b715d6ae5b84f33f",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "013_tidewake_place_cliff_review_env_deep_watch_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "52ba8b183934bdf9e01715ea722536e8ea6a758923524f35c788bd08c3dc4d80",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "014_tidewake_place_cliff_review_env_deep_watch_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "d0296e1ac348dd391db6fcaaee25a25bd08c64ee3092eb798627488d81a9d84d",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "015_tidewake_place_cliff_review_env_deep_watch_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "8e9438b5df4ae3632f3ce35dc6a91f05e82762c68c8cb43d1be37c269799b5b6",
+          "size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "frame_count": 15,
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-candidate\\region\\tidewake",
+      "manifest_sha256": "e0b38c51662d65f13d2b58e56912d01734f587ae820a59ab16ea97ab9d125a96",
+      "wrapper_exit": 0,
+      "engine_exit": 0,
+      "diagnostic": "No errors; pre-existing interpolation deprecation warning.",
+      "matched_recorded_camera_and_feet": true
+    },
+    {
+      "region": "tidewake",
+      "tag": "candidate2",
+      "frames": [
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999599456787,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "001_tidewake_place_cliff_review_env_first_shore_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "1fc6a2f798412eb2a1419dff4ae6b47024fda45632ea82d9b5ec6a6388ebfec2",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999647140503,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "002_tidewake_place_cliff_review_env_first_shore_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "bb937629e2e9a9b9ad5ef19710fe25871aa2de814126c6a9f356636660862973",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            40.7,
+            26.6,
+            99.2
+          ],
+          "camera_arm_m": 5.19999647140503,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            35.7,
+            23.7,
+            98.1
+          ],
+          "file": "003_tidewake_place_cliff_review_env_first_shore_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "first_shore / First Shore Welcome Beacon",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_first_shore_0",
+          "target": [
+            -63.6,
+            26.8,
+            75.8
+          ],
+          "target_dist_m": 101.8,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 77.4,
+          "sha256": "6c4b610690911c6b564706b0a35ff5ffc12614caf4ef78c168a2f41e137b6d17",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "004_tidewake_place_cliff_review_env_brine_steps_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "5d8ad42db0e61832d2e8f93a8c5c691d11763f01629e159fa8606bb72646a98b",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "005_tidewake_place_cliff_review_env_brine_steps_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "1bcb73f79b0f20235dba4eca8972efa35948eb2b357c29347afd665890528fab",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            386.2,
+            4.8,
+            823.8
+          ],
+          "camera_arm_m": 5.19999027252197,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            383.5,
+            1.9,
+            828.1
+          ],
+          "file": "006_tidewake_place_cliff_review_env_brine_steps_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "brine_steps / Brine Steps East Beach",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_brine_steps_1",
+          "target": [
+            267.0,
+            33.9,
+            1006.3
+          ],
+          "target_dist_m": 212.9,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 146.8,
+          "sha256": "35c253bef97caf43ad0b515a3df7f8a743ac62c8fc9cbbff8d6e2014a337b834",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "007_tidewake_place_cliff_review_env_shellwatch_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "cc4256df164530493843db7b69118a1311351e46269510be328f21ba6e9af127",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "008_tidewake_place_cliff_review_env_shellwatch_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "5e098aa7ea5a8cd0c954ef7feed1b37a69a6cbda107d91629f826b207af1d4db",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            264.1,
+            34.7,
+            1002.2
+          ],
+          "camera_arm_m": 5.19996309280396,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            267.0,
+            31.9,
+            1006.3
+          ],
+          "file": "009_tidewake_place_cliff_review_env_shellwatch_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "shellwatch / Shellwatch Rescue Jetty",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_shellwatch_0",
+          "target": [
+            436.9,
+            3.9,
+            1246.2
+          ],
+          "target_dist_m": 293.9,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -144.7,
+          "sha256": "36f54274f06da85dd1846ebcf4821e6e7f761bfb74e3d6fdac0c665656893bf9",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.20003509521484,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "010_tidewake_place_cliff_review_env_veilfall_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "1c25666fac25e85f65fb621073310db7eef4a825d252841effa7a39d593dd5a4",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.19951200485229,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "011_tidewake_place_cliff_review_env_veilfall_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "78137ffae5cde0fad6c39893fc9f33f25ca1de2182be89abab4d5e2c6e36a8ee",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            200.6,
+            622.8,
+            4145.0
+          ],
+          "camera_arm_m": 5.2000150680542,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            200.0,
+            620.0,
+            4140.0
+          ],
+          "file": "012_tidewake_place_cliff_review_env_veilfall_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "veilfall / Veilfall Mountain Crown",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_veilfall_1",
+          "target": [
+            -292.1,
+            19.1,
+            191.1
+          ],
+          "target_dist_m": 3979.5,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 7.1,
+          "sha256": "b4d72dbc43c133cb954f70b6a36f3bd2034b9c31d5643cd1a479aa07128a1218",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "013_tidewake_place_cliff_review_env_deep_watch_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "eb3bff5d0d5701da597dc36843d2eff512b5c1a5a7a5fb1d6d42835a5ecc4c64",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "014_tidewake_place_cliff_review_env_deep_watch_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "38a710de860eb8fcb95fb70a929fd38a94b7649f7fa6bbdbf1fcc6826d47fc03",
+          "size": [
+            1920,
+            1080
+          ]
+        },
+        {
+          "camera": [
+            1302.1,
+            24.9,
+            3494.6
+          ],
+          "camera_arm_m": 5.1996054649353,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1300.0,
+            22.1,
+            3490.0
+          ],
+          "file": "015_tidewake_place_cliff_review_env_deep_watch_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "deep_watch / Deep Watch Lookout",
+          "pitch_deg": -12.0,
+          "region": "tidewake",
+          "subject": "place_cliff_review_env_deep_watch_0",
+          "target": [
+            1260.3,
+            3.9,
+            3403.1
+          ],
+          "target_dist_m": 95.5,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 24.6,
+          "sha256": "5405c24fe2050b1ca5fff9d77d60fccbc72305cb408c4e495e5b3e79127289db",
+          "size": [
+            1920,
+            1080
+          ]
+        }
+      ],
+      "frame_count": 15,
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-candidate2\\region\\tidewake",
+      "manifest_sha256": "e0b38c51662d65f13d2b58e56912d01734f587ae820a59ab16ea97ab9d125a96",
+      "wrapper_exit": 0,
+      "engine_exit": 0,
+      "diagnostic": "No errors; pre-existing interpolation deprecation warning.",
+      "matched_recorded_camera_and_feet": true
+    }
+  ],
+  "total_native_frames": 69,
+  "limits": [
+    "No continuous walk or motion witness",
+    "No ROG Ally performance witness",
+    "Cloudreach execution has a disclosed production flag error",
+    "Only Windscar is a strong Cloudreach cliff-face witness; other views mostly regression controls",
+    "Contact sheets are summaries; native PNGs remain local at recorded paths"
+  ]
+}

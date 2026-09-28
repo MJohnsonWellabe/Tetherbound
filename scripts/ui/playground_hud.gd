@@ -2818,7 +2818,7 @@ func _update_minimap() -> void:
 	var dim := 1.0
 	if world != null:
 		var combat := world.get_node_or_null(^"CombatManager")
-		if combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting")):
+		if combat != null and _combat_is_running():
 			dim = 0.55
 	_minimap.call("set_dim", dim)
 
@@ -4308,6 +4308,10 @@ func _combat_is_running() -> bool:
 	if world == null:
 		return false
 	var combat := world.get_node_or_null(^"CombatManager")
+	# F14 C3: a trainer's held send-out beat still presents the fight, so the
+	# exploration layer (tracker, hotbar, legend) does not flash in mid-battle.
+	if combat != null and combat.has_method("presenting_fight"):
+		return bool(combat.call("presenting_fight"))
 	return combat != null and combat.has_method("is_fighting") and bool(combat.call("is_fighting"))
 
 

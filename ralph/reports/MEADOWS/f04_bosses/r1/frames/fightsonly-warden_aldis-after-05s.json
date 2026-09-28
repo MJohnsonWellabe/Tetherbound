@@ -1,0 +1,75 @@
+{
+  "ally": {
+    "camera_m": 7.2,
+    "in_frustum": false,
+    "pos": [
+      -2.1,
+      6.2,
+      7647.0
+    ]
+  },
+  "camera": [
+    -5.8,
+    9.2,
+    7652.5
+  ],
+  "fight": "warden_aldis",
+  "game_frame": 7483,
+  "hud_text": [
+    "30/40",
+    "31/40",
+    "24/40",
+    "40/40",
+    "x5",
+    "Map        Satchel        Build        Change Creature",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 17",
+    "KO",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 19",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 18",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 18",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15",
+    "KO",
+    "FOOD",
+    "98%",
+    "100 / 100",
+    "M A I N   S T O R Y",
+    "Shut down what Team Tether built under the Hall.",
+    "Day 9  ·  08:42",
+    "Put Bramblebun away"
+  ],
+  "meta": {
+    "after_s": 5.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 6.0,
+    "in_frustum": true,
+    "pos": [
+      -10.4,
+      6.2,
+      7650.1
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden/warden_aldis-after-05s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 15.3,
+    "in_frustum": false,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "status": "candidate; F08#4/C2 open",
+  "source_head": "e02080ecf8841c7f00337feead352dea5dc384a1",
+  "renderer": "Godot 4.7 Windows native Compatibility NVIDIA GTX 1060 3GB",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "reference": {
+    "path": "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png",
+    "sha256": "b3c24bf3a4a9d460b4528710a86683f842e0a2408afe17373b964392f9d21097",
+    "inspection": "Reference opened before volume work; vertical rock masses and soft lower cumulus guide original shader."
+  },
+  "asset_origin": "Original project procedural volume shader; no new external asset or Meshy task in this checkpoint. Existing Meshy buttress retains its prior provenance.",
+  "before": "before-cards uses prior turf-matched-v2 same camera views; Galecrest gaze and wild motion differ. Material diagnostic and palette groups share a running world and fixed camera; creatures continue animating.",
+  "validation": "6 native current camera frames and 9 palette comparison frames individually inspected. Source review corrected depth and bounding-edge defects. 4 tests / 31 assertions pass, existing detached-node warning retained.",
+  "limits": [
+    "Not a full C2 matrix; no motion or Ally telemetry.",
+    "Cloud bank terrain safety queried at five probes, not complete footprint.",
+    "World boot warnings preserved in logs.",
+    "HUD hidden, flags and party staged, teleport stands; no live journey or combat."
+  ],
+  "palette_selection": "Blind judge narrowly prefers S; no accepted pass. S is integrated into production config. A NO / B NO remains.",
+  "production_config_verification": "Three native normal-script frames at 01/12/30, 1920x1080, zero skipped, exit0; individually opened. No palette override fixture used. Matches chosen S treatment; no extra blind reroll.",
+  "source_sha256": {
+    "scripts/world/cloudreach_world.gd": "af7eb717443306d9b286a46c685c6ff991d8f2b8281657228558a587de3043a3",
+    "data/config/cloudreach_visual.json": "cebd4167f3fae687aaaf3204e34eb6398d1dba80890fbafc877a7580a766ae0e",
+    "shaders/cloudreach_cloud_volume.gdshader": "59d2f76289bda7b22738078afaf3cdbaf04e27469072e36be13560b3284b32e3",
+    "shaders/cloudreach_buttress.gdshader": "ab55a754285184fa5570fc9a391cb1629a383a8b1ad211ae841594e14ca35f43"
+  }
+}

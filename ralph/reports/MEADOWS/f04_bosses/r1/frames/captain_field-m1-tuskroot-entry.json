@@ -1,0 +1,83 @@
+{
+  "ally": {
+    "camera_m": 9.8,
+    "in_frustum": true,
+    "pos": [
+      165.5,
+      -3.3,
+      5586.2
+    ]
+  },
+  "camera": [
+    173.3,
+    2.7,
+    5585.7
+  ],
+  "enemy": {
+    "camera_m": 12.1,
+    "in_frustum": true,
+    "pos": [
+      163.4,
+      -3.9,
+      5583.9
+    ]
+  },
+  "fight": "captain_field",
+  "game_frame": 38533,
+  "hud_text": [
+    "Captain Halder · LEVEL 14",
+    "Tuskroot",
+    "GROUND",
+    "↯  it's open — hit it",
+    "Bramblebun",
+    "Lv 14",
+    "WIND",
+    "Energy",
+    "Orbs  54",
+    "Bramble Whip",
+    "Warren Charge\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 12",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "STAGGERED — punish now"
+  ],
+  "meta": {
+    "kind": "entry",
+    "shape": "CHARGER"
+  },
+  "player": {
+    "camera_m": 13.9,
+    "in_frustum": true,
+    "pos": [
+      162.4,
+      -3.4,
+      5591.7
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_field-m1-tuskroot-entry.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 6.8,
+    "in_frustum": false,
+    "pos": [
+      170.0,
+      -1.4,
+      5590.0
+    ]
+  }
+}

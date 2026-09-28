@@ -1,0 +1,128 @@
+[
+  {
+    "file": "fall_ribbons.obj",
+    "vertices": 16968,
+    "triangles": 32000,
+    "bounds_min": [
+      -7.4228,
+      -5.36,
+      -2.5509
+    ],
+    "bounds_max": [
+      7.267,
+      4.65,
+      -0.14
+    ],
+    "minimum_triangle_area_m2": 0.001499411578235263,
+    "unit_normals": true,
+    "sha256": "7272a082c5332acf471889678dc21aa65c69197f76fad1c88bb3acf173763fb5"
+  },
+  {
+    "file": "fall_threads.obj",
+    "vertices": 1515,
+    "triangles": 2400,
+    "bounds_min": [
+      -4.1115,
+      -5.36,
+      -2.5849
+    ],
+    "bounds_max": [
+      5.9815,
+      4.65,
+      -0.79
+    ],
+    "minimum_triangle_area_m2": 0.003361392915701906,
+    "unit_normals": true,
+    "sha256": "d1f1b0299c15f2dfb82e59fc0e095c862fbf5e6d093b79b9016fdb0580de9329"
+  },
+  {
+    "file": "plunge_crowns.obj",
+    "vertices": 5550,
+    "triangles": 10080,
+    "bounds_min": [
+      -7.5817,
+      -5.34,
+      -3.6548
+    ],
+    "bounds_max": [
+      7.6609,
+      -4.0482,
+      -1.692
+    ],
+    "minimum_triangle_area_m2": 0.0008784143295365153,
+    "unit_normals": true,
+    "sha256": "6aa4295913401f4a24bb2d37f849253fa16619cf09d49af21fd008cf74028708"
+  },
+  {
+    "file": "splash_arcs.obj",
+    "vertices": 1365,
+    "triangles": 1680,
+    "bounds_min": [
+      -6.2932,
+      -5.3,
+      -3.5493
+    ],
+    "bounds_max": [
+      7.1354,
+      -4.1,
+      -1.99
+    ],
+    "minimum_triangle_area_m2": 0.0005175765419998419,
+    "unit_normals": true,
+    "sha256": "0474bb7bc3d948d725314e5fa1cea9c247426cad5e0176610337b32501c7e90c"
+  },
+  {
+    "file": "plunge_mist.obj",
+    "vertices": 1170,
+    "triangles": 1920,
+    "bounds_min": [
+      -7.7,
+      -5.56,
+      -4.32
+    ],
+    "bounds_max": [
+      7.0327,
+      -2.96,
+      -3.12
+    ],
+    "minimum_triangle_area_m2": 0.023396831300712507,
+    "unit_normals": true,
+    "sha256": "ccee38bf9b1bbacb13152d645e6f52e3b47d7428da94090d8edd2fc4475158ee"
+  },
+  {
+    "file": "source_and_basin_stone.obj",
+    "vertices": 1152,
+    "triangles": 2160,
+    "bounds_min": [
+      -7.99,
+      -5.95,
+      -4.48
+    ],
+    "bounds_max": [
+      7.99,
+      5.905,
+      0.53
+    ],
+    "minimum_triangle_area_m2": 0.0024494399999999876,
+    "unit_normals": true,
+    "sha256": "bf3d20bf7810a173acd097fa2ceda324bcdad7d9423e108be8b67c8f960a0f62"
+  },
+  {
+    "file": "receiving_water.obj",
+    "vertices": 1625,
+    "triangles": 3072,
+    "bounds_min": [
+      -7.41,
+      -5.36,
+      -3.78
+    ],
+    "bounds_max": [
+      7.41,
+      -5.36,
+      -0.12
+    ],
+    "minimum_triangle_area_m2": 0.017656640624999977,
+    "unit_normals": true,
+    "sha256": "b64ab9922f338b7f1d0a788af6a3f8baf1ac633e174e0bb9004ef4a8c86b1660"
+  }
+]

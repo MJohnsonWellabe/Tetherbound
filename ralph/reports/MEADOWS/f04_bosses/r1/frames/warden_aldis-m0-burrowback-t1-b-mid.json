@@ -1,0 +1,84 @@
+{
+  "ally": {
+    "camera_m": 9.4,
+    "in_frustum": true,
+    "pos": [
+      7.2,
+      6.2,
+      7657.6
+    ]
+  },
+  "camera": [
+    2.0,
+    11.9,
+    7652.2
+  ],
+  "creatures_near_camera": [],
+  "enemy": {
+    "camera_m": 12.5,
+    "in_frustum": true,
+    "pos": [
+      8.2,
+      6.2,
+      7661.5
+    ]
+  },
+  "fight": "warden_aldis",
+  "game_frame": 1443,
+  "hud_text": [
+    "Warden Aldis · LEVEL 18",
+    "Burrowback",
+    "GROUND",
+    "!  incoming — move",
+    "Bramblebun",
+    "Lv 15",
+    "WIND",
+    "Energy",
+    "Orbs  58",
+    "Bramble Whip",
+    "Warren Charge\n100",
+    "Throw",
+    "Switch",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 3/5",
+    "Lv 16",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 18",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 16",
+    "Mudsnout",
+    "bond 3/5",
+    "Lv 17",
+    "Bramblebun",
+    "bond 3/5",
+    "Lv 15"
+  ],
+  "meta": {
+    "kind": "tell",
+    "shape": "WALL",
+    "tell_s": 0.85
+  },
+  "player": {
+    "camera_m": 9.7,
+    "in_frustum": true,
+    "pos": [
+      6.7,
+      6.2,
+      7658.5
+    ]
+  },
+  "png": "/tmp/claude-0/f04/warden2/warden_aldis-m0-burrowback-t1-b-mid.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 10.2,
+    "in_frustum": true,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ]
+  }
+}

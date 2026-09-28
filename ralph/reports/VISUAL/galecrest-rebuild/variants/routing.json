@@ -1,0 +1,50 @@
+[
+	{
+		"correct_uv_texture": true,
+		"textures": [
+			"res://assets/creatures/tetherbound/galecrest/models/galecrest_extracted_base_color_vivid.png"
+		],
+		"variant": "vivid",
+		"yaw": 0.0
+	},
+	{
+		"correct_uv_texture": true,
+		"textures": [
+			"res://assets/creatures/tetherbound/galecrest/models/galecrest_extracted_base_color_vivid.png"
+		],
+		"variant": "vivid",
+		"yaw": 135.0
+	},
+	{
+		"correct_uv_texture": true,
+		"textures": [
+			"res://assets/creatures/tetherbound/galecrest/models/galecrest_extracted_base_color_shiny.png"
+		],
+		"variant": "shiny",
+		"yaw": 0.0
+	},
+	{
+		"correct_uv_texture": true,
+		"textures": [
+			"res://assets/creatures/tetherbound/galecrest/models/galecrest_extracted_base_color_shiny.png"
+		],
+		"variant": "shiny",
+		"yaw": 135.0
+	},
+	{
+		"correct_uv_texture": true,
+		"textures": [
+			"res://assets/creatures/tetherbound/galecrest/models/galecrest_extracted_base_color_alpha.png"
+		],
+		"variant": "alpha",
+		"yaw": 0.0
+	},
+	{
+		"correct_uv_texture": true,
+		"textures": [
+			"res://assets/creatures/tetherbound/galecrest/models/galecrest_extracted_base_color_alpha.png"
+		],
+		"variant": "alpha",
+		"yaw": 135.0
+	}
+]

@@ -192,7 +192,7 @@
     },
     "captain_ridge_challenge": {
       "speaker": "Captain Vess",
-      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
       "lines": [
         "Careful. This crosswind's taken better-footed than you off it.",
         "They call the ridge line cruel. Up here, a wall's the kindest thing we've built.",
@@ -201,7 +201,7 @@
     },
     "captain_ridge_defeated": {
       "speaker": "Captain Vess",
-      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "portrait": "res://assets/ui/portraits/officer_b.png",
       "lines": [
         "You read the gusts. Most don't bother.",
         "The Ridge Sigil, then. I'd sooner it went to someone who watches the sky.",

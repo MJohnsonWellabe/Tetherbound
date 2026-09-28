@@ -1,0 +1,6 @@
+Tetherbound, Tidewake sea: one camera stand (S1), one fixed pose, day. Two world states, X and Y. Each state has two frames taken 0.5 s apart (t0 and t0+0.5 s). All four frames share the same pose and time of day.
+
+frames/S1_X_t0.jpg   state X, t0
+frames/S1_X_t1.jpg   state X, t0+0.5 s
+frames/S1_Y_t0.jpg   state Y, t0
+frames/S1_Y_t1.jpg   state Y, t0+0.5 s

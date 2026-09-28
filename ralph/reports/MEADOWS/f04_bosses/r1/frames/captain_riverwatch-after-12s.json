@@ -1,0 +1,73 @@
+{
+  "ally": {
+    "camera_m": 7.9,
+    "in_frustum": true,
+    "pos": [
+      -80.0,
+      -2.9,
+      4371.2
+    ]
+  },
+  "camera": [
+    -82.5,
+    0.7,
+    4364.6
+  ],
+  "fight": "captain_riverwatch",
+  "game_frame": 8552,
+  "hud_text": [
+    "30/40",
+    "30/40",
+    "36/40",
+    "40/40",
+    "x2",
+    "Map        Satchel        Build        Change Creature",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 12",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 12",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 10",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "FOOD",
+    "98%",
+    "100 / 100",
+    "M A I N   S T O R Y",
+    "Defeat the Upper Meadows captains. 1/3",
+    "Day 7  ·  16:51",
+    "Put Bramblebun away"
+  ],
+  "meta": {
+    "after_s": 12.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 6.0,
+    "in_frustum": true,
+    "pos": [
+      -78.2,
+      -2.3,
+      4367.5
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_riverwatch-after-12s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 22.9,
+    "in_frustum": false,
+    "pos": [
+      -100.0,
+      -2.1,
+      4350.0
+    ]
+  }
+}

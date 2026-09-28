@@ -50,6 +50,22 @@
       "z": 5023.5,
       "radius": 12.5,
       "_why": "IRONWOOD-GROVE-SIGHTLINE-R8-0911. R7 production still showed a bright decorative sapling screen competing with the elder at the ordinary 55m arrival. This minimally expands and shifts the existing R6 lens by 1.5m/0.7m; it contains the same four measured route-wedge trunks plus their immediate sapling cluster while retaining the opposite lateral framing tree at (-311.18,5027.80). The lens remains more than 35m from the preserved ordinary encounter and more than 39m from the nearest harvest seat. Shared clearing rules retain grass, flowers, drygrass and path stones. It removes only local decorative scatter, never actors, harvest trees, routes, or gameplay collision, and requires the canonical bake before production acceptance."
+    },
+    {
+      "order": 4007,
+      "id": "fight_glade_captain_field",
+      "x": 170.0,
+      "z": 5590.0,
+      "radius": 20.0,
+      "_why": "F04#7 fight glade. The named fight's arena opens where the player stands in front of this trainer, and the combat camera needs 8m of free arm behind the piloted creature anywhere inside the 11m arena (combat.json clear_orbit probe_length_m). tools/f04_fight_camera_probe.gd measured the Oreth arena with tree trunks 0.3-3m behind the ally, collapsing the arm to 2-5m and putting the lens inside the creature. A 20m clearing on the trainer's own spot keeps trunks and rocks out of that arm; grass and flowers keep the shared clearing exemption. Placement only, no new asset."
+    },
+    {
+      "order": 4008,
+      "id": "fight_glade_captain_ridge",
+      "x": -280.0,
+      "z": 6460.0,
+      "radius": 20.0,
+      "_why": "F04#7 fight glade. The named fight's arena opens where the player stands in front of this trainer, and the combat camera needs 8m of free arm behind the piloted creature anywhere inside the 11m arena (combat.json clear_orbit probe_length_m). tools/f04_fight_camera_probe.gd measured the Oreth arena with tree trunks 0.3-3m behind the ally, collapsing the arm to 2-5m and putting the lens inside the creature. A 20m clearing on the trainer's own spot keeps trunks and rocks out of that arm; grass and flowers keep the shared clearing exemption. Placement only, no new asset."
     }
   ],
   "footprints": [],

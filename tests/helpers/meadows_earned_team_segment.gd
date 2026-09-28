@@ -845,10 +845,19 @@ func _use_remedy(item: String, index: int) -> bool:
 	if not await _focus_slot(buttons, slot):
 		return _fail("Controller focus did not reach the carried " + item)
 	await _tap("interact")
+	# Under a real renderer the care picker can open a frame or two after the
+	# tap returns (seed4_hall xvfb render, 2026-09-27; headless opened at
+	# once). Wait for it before reading its rows.
+	for _frame in 30:
+		if int(backpack.get("_targeting")) >= 0:
+			break
+		await _tree.process_frame
 	var feeding := not str(backpack.get("_targeting_food")).is_empty()
 	var rows: Array = backpack.get("_target_rows")
 	if int(backpack.get("_targeting")) < 0 or index >= rows.size() or rows[index].disabled:
-		return _fail("The real Satchel refused the requested creature care target")
+		return _fail("The real Satchel refused the requested creature care target (item %s, targeting %d, index %d of %d rows, disabled %s, hp %.1f)" % [
+			item, int(backpack.get("_targeting")), index, rows.size(),
+			str(rows[index].disabled) if index < rows.size() else "n/a", old_hp])
 	for _step in rows.size():
 		if _focus() == rows[index]:
 			break
@@ -859,13 +868,22 @@ func _use_remedy(item: String, index: int) -> bool:
 	if _focus() != rows[index]:
 		return _fail("Controller focus did not reach the injured party member")
 	await _tap("ui_accept")
-	var improved := float(creature.get("hp")) > old_hp
-	if feeding:
-		improved = float(creature.get("nourishment")) > old_food \
-			or float(creature.get("happiness")) > old_mood
+	# As with the picker, the spend can land a few frames after the confirm
+	# under a real renderer; read the result once it has settled.
+	var improved := false
+	for _frame in 30:
+		improved = float(creature.get("hp")) > old_hp
+		if feeding:
+			improved = float(creature.get("nourishment")) > old_food \
+				or float(creature.get("happiness")) > old_mood
+		if improved and int(inventory.call("count", item)) == stock - 1:
+			break
+		await _tree.process_frame
 	if int(inventory.call("count", item)) != stock - 1 \
 			or not improved or bool(creature.get("fainted")):
-		return _fail("Satchel care did not consume one remedy and restore the selected creature")
+		return _fail("Satchel care did not consume one remedy and restore the selected creature (item %s, stock %d -> %d, hp %.1f -> %.1f, fainted %s, feeding %s)" % [
+			item, stock, int(inventory.call("count", item)), old_hp, float(creature.get("hp")),
+			str(creature.get("fainted")), str(feeding)])
 	await _tap("menu_cancel")
 	for _frame in 90:
 		if not bool(_menu.call("is_open")) and INPUT_OWNER.current(_tree) == null:

@@ -1,0 +1,308 @@
+{
+  "disclosures": [
+    "warrens: harvest order 16 rootstone (393,1802) skipped as physically unreachable (BLOCKERS.md B2, open Meadows defect); nothing later consumes rootstone, so no replacement gathering was needed",
+    "warrens: added an ordinary controller-walk detour east of the quarry pylon before the fourth rootstone (helper's direct leg stalls; BLOCKERS.md B2)",
+    "warrens: added an ordinary controller-walk detour west of the Warrens mound on the undertrail approach (BLOCKERS.md B3)"
+  ],
+  "failures": [],
+  "flags_gained": [
+    "harvest_node:order:12.0",
+    "harvest_node:order:13.0",
+    "harvest_node:order:14.0",
+    "harvest_node:order:15.0",
+    "harvest_node:order:2020.0",
+    "harvest_node:order:2021.0",
+    "reward:trainer:warrens_cleared:xp:1",
+    "warrens_cleared"
+  ],
+  "flags_total": 105.0,
+  "free_build": false,
+  "game_clock_seconds": 756.04674844444,
+  "game_day": 5.0,
+  "helper_receipts": [
+    {
+      "passed": true,
+      "receipts": [
+        {
+          "amount": 2.0,
+          "at": "(393.0, 1802.0)",
+          "beat": "unreachable_node_skipped",
+          "evidence": "5 ordinary-walk attempts (north, west, south) never within the 2.2 m prompt; BLOCKERS.md B2 (open Meadows defect)",
+          "item": "rootstone",
+          "later_need": "none: no later chain step consumes rootstone",
+          "order": 16.0,
+          "replacement_nodes": "none needed; remaining reachable stops still harvested"
+        },
+        {
+          "after": 2.0,
+          "at": "(394.0, 1797.0)",
+          "beat": "quarry_rootstone",
+          "before": 0.0,
+          "node_id": 60747027807094.0,
+          "yield": 2.0
+        },
+        {
+          "after": 4.0,
+          "at": "(399.0, 1792.0)",
+          "beat": "quarry_rootstone",
+          "before": 2.0,
+          "node_id": 60747162024828.0,
+          "yield": 2.0
+        },
+        {
+          "after": 6.0,
+          "at": "(406.0, 1800.0)",
+          "beat": "quarry_rootstone",
+          "before": 4.0,
+          "node_id": 60747296242562.0,
+          "yield": 2.0
+        },
+        {
+          "beat": "quarry_east_detour",
+          "from": "(404.4255, -0.500659, 1798.522)",
+          "reason": "helper's direct leg (406,1800)->(401,1809) stalls west of the foundation; ordinary walk around the pylon's east side",
+          "waypoints": "[(408.5, 1803.5), (406.5, 1809.5)]"
+        },
+        {
+          "after": 8.0,
+          "at": "(401.0, 1809.0)",
+          "beat": "quarry_rootstone",
+          "before": 6.0,
+          "node_id": 60747430460296.0,
+          "yield": 2.0
+        },
+        {
+          "after": 10.0,
+          "at": "(381.0, 1824.0)",
+          "beat": "quarry_rootstone",
+          "before": 8.0,
+          "node_id": 60761640762604.0,
+          "yield": 2.0
+        },
+        {
+          "after": 12.0,
+          "at": "(413.0, 1820.0)",
+          "beat": "quarry_rootstone",
+          "before": 10.0,
+          "node_id": 60761774980338.0,
+          "yield": 2.0
+        },
+        {
+          "beat": "undertrail_mound_detour",
+          "from": "(-419.1268, -3.890269, 2468.813)",
+          "reason": "helper's undertrail leg stalls against the Warrens mound at about (-406,2488); ordinary walk west of it",
+          "waypoints": "[(-432.0, 2492.0), (-418.0, 2528.0)]"
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223303447921324000.0,
+          "frames": 875.0,
+          "guardian": false,
+          "hits": 14.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223303447132793900.0,
+          "frames": 1242.0,
+          "guardian": false,
+          "hits": 21.0
+        },
+        {
+          "beat": "guardian_admitted",
+          "before": {
+            "items": {
+              "coin": 140.0,
+              "hide_vest": 0.0,
+              "orb_greater": 0.0,
+              "revive": 10.0,
+              "rootstone": 12.0
+            },
+            "xp": {
+              "-9223371908676843504": 967.0,
+              "-9223371908693620721": 1259.0,
+              "-9223371908710397938": 1867.0,
+              "-9223371908727175155": 1796.0,
+              "-9223371908743952372": 2300.0
+            }
+          },
+          "body_id": 68591617807095.0,
+          "creature_id": -9223303444549103600.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223303444549103600.0,
+          "frames": 1343.0,
+          "guardian": true,
+          "hits": 20.0
+        },
+        {
+          "beat": "warrens_cleared",
+          "hits": 20.0,
+          "items_after": {
+            "coin": 230.0,
+            "hide_vest": 1.0,
+            "orb_greater": 2.0,
+            "revive": 11.0,
+            "rootstone": 17.0
+          },
+          "items_before": {
+            "coin": 140.0,
+            "hide_vest": 0.0,
+            "orb_greater": 0.0,
+            "revive": 10.0,
+            "rootstone": 12.0
+          },
+          "kill_active": -9223371908710398000.0,
+          "party_ids": [
+            -9223371908743952400.0,
+            -9223371908727175200.0,
+            -9223371908710398000.0,
+            -9223371908693620700.0,
+            -9223371908676843500.0
+          ],
+          "survivors": [
+            -9223371908743952400.0,
+            -9223371908727175200.0,
+            -9223371908710398000.0,
+            -9223371908693620700.0,
+            -9223371908676843500.0
+          ],
+          "wins": 1.0,
+          "xp_after": {
+            "-9223371908676843504": 1234.0,
+            "-9223371908693620721": 1526.0,
+            "-9223371908710397938": 2261.0,
+            "-9223371908727175155": 2063.0,
+            "-9223371908743952372": 2567.0
+          },
+          "xp_before": {
+            "-9223371908676843504": 967.0,
+            "-9223371908693620721": 1259.0,
+            "-9223371908710397938": 1867.0,
+            "-9223371908727175155": 1796.0,
+            "-9223371908743952372": 2300.0
+          }
+        },
+        {
+          "beat": "warrens_exited",
+          "entrance": "(-355.5858, 4.1484, 2608.586)",
+          "outside": "(-349.929, 4.1484, 2602.929)",
+          "party_ids": [
+            -9223371908743952400.0,
+            -9223371908727175200.0,
+            -9223371908710398000.0,
+            -9223371908693620700.0,
+            -9223371908676843500.0
+          ],
+          "player": "(-353.0858, 4.561159, 2606.082)"
+        }
+      ],
+      "segment": "warrens"
+    }
+  ],
+  "inventory": {
+    "axe": 1.0,
+    "berries": 5.0,
+    "coin": 230.0,
+    "hammer": 1.0,
+    "hide_vest": 1.0,
+    "knife": 1.0,
+    "orb_basic": 48.0,
+    "orb_greater": 2.0,
+    "pickaxe": 1.0,
+    "potion_small": 3.0,
+    "revive": 11.0,
+    "rootstone": 17.0,
+    "torch": 1.0,
+    "wood": 1.0
+  },
+  "key_items": {},
+  "location": {
+    "player": [
+      -353.085754394531,
+      4.56115865707397,
+      2606.08227539062
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party_after": [
+    {
+      "hp": 112.0,
+      "level": 10.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 21.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 34.0,
+      "level": 9.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 92.0,
+      "level": 8.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 90.0,
+      "level": 7.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "party_before": [
+    {
+      "hp": 108.0,
+      "level": 9.0,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 20.0,
+      "level": 8.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 135.0,
+      "level": 8.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 88.0,
+      "level": 7.0,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 86.0,
+      "level": 6.0,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "passed": true,
+  "saved_world_seed": 1393508821.0,
+  "segment": "warrens",
+  "wall_seconds": 755.582,
+  "world_seed_env": "4"
+}

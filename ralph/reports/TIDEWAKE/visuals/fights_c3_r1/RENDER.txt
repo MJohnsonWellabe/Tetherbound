@@ -1,0 +1,7 @@
+Local render (owner PHASE 2 rule): xvfb-run + godot 4.7 --rendering-driver opengl3, Mesa llvmpipe, 1920x1080.
+tests/capture_tidewake_named_fights.gd --pilot=READER --level=43 --interval=8 --tells-per-opponent=3 --render-only-saves
+  Tess   : tb/tidewake-visuals dfbdf896 (r5t)   46 frames, READER won in 220.3 s
+  Calder : dfbdf896 (r5c) --flags=water_dock_salt_crown_landing_charted   41 frames, won 189.7 s
+  Venn   : dfbdf896 (r5v)   52 frames, won 268.6 s
+Shortcuts (disclosed): granted party (original five, L43, Ripplet lead); player placed at the trainer; Calder's charted-dock flag; READER harness pilot presses real inputs; software GL.
+Judge: code-blind sonnet subagent with the visual-judge rubric, frames + references only. Frames here are 1280x720 JPG copies of the judged 1920x1080 PNGs.

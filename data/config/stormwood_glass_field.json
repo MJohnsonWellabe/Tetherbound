@@ -23,6 +23,8 @@
     {"id":"broken_line", "at":[-48.0,83.0], "model":"dead_3", "height_m":18.0, "yaw_deg":51.0},
     {"id":"works_frame", "at":[46.0,132.0], "model":"dead_1", "height_m":20.0, "yaw_deg":-16.0}
   ],
+  "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Unjudged at wind-down, so it defaults off (5860506082); set true to build it instead of the legacy spire clusters.",
+  "scorched_scars": false,
   "tether_standards": [
     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}

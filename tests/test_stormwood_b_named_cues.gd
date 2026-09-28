@@ -158,16 +158,15 @@ func test_stormwood_data_opts_the_two_fights_in() -> void:
 
 func test_every_exit_from_a_tell_drops_the_cue_and_the_cone() -> void:
 	var override := {"route_cue_seconds": 1.1, "guard_stance": true, "telegraph": 0.8}
-	# Stagger mid-cue: no cone, no cue, and no late announcement.
+	# Stagger in the tell proper (a route cue cannot be staggered, coordinator
+	# interim ruling 5860078626 option (a)): no cone, no cue.
 	var staggered := _wild(override)
-	var tells := _tells(staggered)
 	staggered.call("_enter", AI.Intent.TELEGRAPH)
 	assert_true(staggered.find_child("GuardCone", true, false) != null, "precondition: cone drawn")
-	staggered.call("apply_poise_damage", 999.0, true)
+	staggered.call("_advance_route_cue", 2.0)
+	assert_true(bool(staggered.call("apply_poise_damage", 999.0, true)), "the tell proper can be staggered")
 	assert_eq(staggered.get("_guard_cone"), null, "a stagger drops the guard cone")
 	assert_almost_eq(float(staggered.call("route_cue_left")), 0.0, 0.0001, "and the route cue")
-	staggered.call("_advance_route_cue", 2.0)
-	assert_eq(tells.size(), 0, "a staggered cue never announces a tell")
 	staggered.free()
 	# Disengage (fight over, party wipe) mid-tell.
 	var released := _wild(override)
@@ -182,3 +181,30 @@ func test_every_exit_from_a_tell_drops_the_cue_and_the_cone() -> void:
 	fainted.call("notify_fainted")
 	assert_eq(fainted.get("_guard_cone"), null, "a faint drops the guard cone")
 	fainted.free()
+
+
+## F10#2 C2 (coordinator interim ruling 5860078626, option (a)): a masher must
+## not stagger the body out of its route cue before a reader can use it. Hits
+## during the cue drain no poise; the tell proper staggers as before.
+func test_a_route_cue_cannot_be_staggered() -> void:
+	var wild := _wild({"route_cue_seconds": 1.1, "telegraph": 0.8, "lunge": 5.5, "lunge_travels": true})
+	var tells := _tells(wild)
+	wild.call("_reset_poise")
+	wild.call("_enter", AI.Intent.TELEGRAPH)
+	assert_false(bool(wild.call("apply_poise_damage", 999.0)), "a heavy hit mid-cue does not stagger")
+	assert_false(bool(wild.call("apply_poise_damage", 999.0, true)), "nor does a forced stagger")
+	assert_false(bool(wild.call("is_staggered")))
+	assert_almost_eq(float(wild.get("_poise")), float(wild.call("_poise_max")), 0.0001, "hits during the cue drain no poise")
+	assert_almost_eq(float(wild.call("route_cue_left")), 1.1, 0.0001, "the cue keeps running")
+	wild.call("_advance_route_cue", 1.2)
+	assert_eq(tells.size(), 1, "the tell proper is announced after the cue")
+	assert_true(bool(wild.call("apply_poise_damage", 999.0)), "a breaking hit in the tell proper still staggers")
+	wild.free()
+
+
+func test_bodies_without_a_route_cue_stagger_as_before() -> void:
+	var wild := _wild({"telegraph": 0.8})
+	wild.call("_reset_poise")
+	wild.call("_enter", AI.Intent.TELEGRAPH)
+	assert_true(bool(wild.call("apply_poise_damage", 999.0)), "no cue: an ordinary tell still staggers")
+	wild.free()

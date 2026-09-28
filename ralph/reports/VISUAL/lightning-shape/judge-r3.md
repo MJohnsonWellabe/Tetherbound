@@ -1,0 +1,51 @@
+# Lightning visual review — r3
+
+Independent code-blind review of the supplied Windows GPU production-camera frames. No implementation, git diff, engine run, prior verdict or conversation was inspected. The visual-judge rubric and `docs/design/ART_DIRECTION.md` were read; the Meadows key art, all five Palworld comparison images, both Stormheart boards and the Stormwood creature board were viewed. Performance is outside this judgment.
+
+## Evidence
+
+All 19 PNGs were opened individually in each directory:
+
+- `D:/tetherbound/visual-acceptance/shots/vis_f10_3_motion/art-shape-normal`
+- `D:/tetherbound/visual-acceptance/shots/vis_f10_3_motion/art-shape-reduced`
+
+For both `art-shape-{mode}_h12_tNNN.png` sets, the reviewed suffixes are `000, 010, 020, 030, 040, 050, 060, 070, 080, 090, 100, 110, 120, 125, 130, 140, 150, 160, 170`. Contact sheets assembled only from those images were also viewed at small size. In the findings below, N120 means `art-shape-normal_h12_t120.png`; R120 means the corresponding reduced frame. Ranges name every supplied sample within that range, not uncaptured intervening frames.
+
+These are ordered still samples. They establish visible states and progression, not real-time smoothness, flash frequency, reaction time, damage accuracy or accessibility certification.
+
+## Scoped verdicts
+
+| Item | Verdict | Visible evidence |
+|---|---|---|
+| Warning presence and countdown progression | **PASS** | N000–N110 and R000–R110 retain an unmistakable magenta perimeter. Jagged magenta spokes lengthen inward from separated outer sections toward the trainer's feet. Compare 000, 050 and 110: the remaining center gaps visibly close. This communicates advancing charge without text. The yellow lines are brighter and compete with this cue, but the magenta growth remains distinguishable in both sets. This is a relative countdown, not evidence of an exact readable duration. |
+| Hazard footprint readability | **PASS** | N000, N060, N110 and their reduced equivalents show a large ellipse around the trainer with a consistent outer extent. The left/right/front limits survive rain and grass and remain identifiable in the small contact sheets. The interior is open enough to read the trainer. The strike uses the same area in N120/R120. This establishes the visible footprint only; collision/damage agreement is not visible. |
+| Hazard graphic finish | **FAIL** | N000/N110/N120 and R000/R110/R120 show blunt, straight-edged dark interruptions across the foreground rim. At the lower center and lower right, the luminous ring ends against conspicuously rectangular/trapezoidal ground-coloured wedges. They read as pieces cut out of a flat overlay, not convincing surface wear or a deliberately clean segmented warning. At N120/R120 the white spokes are also uniformly flat, hard-edged strips. The footprint is readable despite this defect. |
+| Sky-to-ground lightning silhouette | **PASS** | N120/N125/N130 and R120/R125/R130 show an asymmetrical main trunk entering from above the image, a large right fork and smaller side branches. The trunk can be followed through the trainer's silhouette to the marked center. It unmistakably reads as a branching lightning strike at small size, rather than a straight beam. |
+| Lightning material/shape finish | **FAIL** | In all six strike frames, especially the upper-left kink and the upper-middle fork, the main bolt reads as a hard, nearly constant-width pale strip with a separate sharply bounded violet border. Long straight polygon segments and squared-off turns make that upper section look like bent luminous trim. The finer offshoots are more convincing than the thick trunk. The Stormheart boards establish a hotter core, taper and less mechanically outlined energy silhouette; this verdict is about those visible design relationships, not matching painted detail. The existing bolt is identifiable but not finished enough. |
+| Ground contact localization | **PASS** | N120/N125/N130 and R120/R125/R130 carry the lower bolt down to the white spoke convergence between the trainer's boots. The formerly magenta ground mark becomes white; normal frames also show an obvious local rose light wash. There is no visible floating gap between the bolt endpoint and ground marker. The trainer obscures part of the endpoint, and the pre-existing yellow line runs through it, so the contact is less forceful than the sky silhouette, but its location is clear. |
+| Recovery | **PASS** | In N140/R140 the sky bolt has gone and the ground marker is a faint remnant. By N150/R150 it is gone, and it stays absent through 170. The normal local light wash also subsides. The yellow ground lines persist before and after the strike, so they are not counted as a failed lightning recovery. |
+| Reduced-motion retained information | **PASS** | R000–R110 retain the same footprint and inward warning progression. R120/R125/R130 retain the branching sky bolt, white impact footprint and center contact; R140–R170 retain the recovery distinction. The strong normal impact light wash is subdued. No essential warning/strike/recovery state disappears from these reduced samples. The same graphic-finish failures remain. The samples do not establish continuous motion or physiological comfort. |
+
+**Scoped overall: FAIL for visual finish.** The information sequence is legible in both modes. The failures are the visibly cut-up foreground ground graphic and the mechanical strip/border treatment of the thick sky bolt. This is not a claim that the whole sequence is unreadable.
+
+## Whole-frame rubric observations
+
+The central trainer is readable, with blue sleeves, a brown pack and separated limbs; their face is not visible. The left NPC has a narrow, detailed long-coat/adventurer silhouette beside a much chunkier trainer. N000/R000 and N170/R170 do not demonstrate a settled common character treatment. No nearby creature is identifiable enough in these views to judge face, species appeal, companion scale or parity with Palworld's featured creatures. That part of the bar remains unproven, not excused.
+
+Tree, shrub and grass categories remain distinguishable, but much of the tree/understory mass merges into near-black. Foreground flowers and blade clusters are clearer than the middle distance. The purple storm sky reads consistently; the shot does not read as ordinary daylight, nor should Stormwood need to. The terrain beyond the foreground vegetation collapses into a broad, nearly flat brown-purple band with isolated rocks. Large open sky occupies most of the composition and the forest has little visible depth behind the few framing trunks. The huge nearby trees establish scale, but not the layered, inhabited forest of the chapter boards.
+
+Ground is dark and blurred up close, interrupted by extremely bright, broad yellow zigzags. Those lines dominate the route, trainer feet and warning center. At N120 they are stronger visual highlights than most of the actual descending lightning. This makes authored danger hierarchy less clear. Broad square-edged changes across the ground/light graphics remain visible in the foreground across both sequences. No HUD is shown, so safe areas and interface hierarchy cannot be accepted from this set. Static views cannot establish popping or motion aliasing.
+
+## Three largest reference gaps, ranked
+
+1. **Missing depth and destination composition:** N000/R000 and N170/R170 present an almost empty, level distant band beneath an enormous sky. The Stormheart boards use overlapping forest masses, landform and a strong destination silhouette; the Palworld field/path and plateau shots have layered terrain and recognizable places. Scene repair: compose a middle-distance forest/landform and a destination or meaningful route reveal. A particular absent hero landmark would require suitable art; these frames cannot prove whether that art exists elsewhere.
+2. **Uneven material and VFX finish:** N120/N125 and R120/R125 juxtapose a hard outlined bolt and cut-up flat ground mark with heavily blurred ground and bright yellow channels. The references separate material surfaces from luminous events, and Palworld's fight effects clearly emphasize contact and subjects. Scene/material/effect repair: refine the bolt's core/edge/taper and foreground marker continuity, reduce competing route highlights and improve readable ground transitions. This defect does not inherently require a new creature or environment model.
+3. **Weak living-subject presentation and dark forest mass:** N000/R000 and N170/R170 show one back-facing trainer and a differently proportioned left NPC; there is no reviewable companion encounter. Near-black canopy and understory lose the board's lush layered forest character. Scene/light repair can expose useful foliage layers and stage a creature subject. Matching bespoke expressive creature/character silhouettes, faces and proportions requires appropriate character art; placement or tint cannot manufacture it. These captures do not establish which needed character assets are already available.
+
+## Whole-frame bars
+
+**Bar A — No.** The violet storm, large trees and electrical event provide chapter cues, but the flat empty distance, sky-heavy composition, black forest masses and dominant yellow ground stripes do not yet read as a convincing realization of the Stormwood world shown in its boards, within the shared natural world of the Meadows key art. The scene/light/material repairs above are actionable. Suitable landmark and living-subject art must be demonstrated separately.
+
+**Bar B — No.** The third-person trainer and natural route establish the genre, but beside the five Palworld gameplay references these shots do not reach the intended polished creature-adventure register. The near-empty distance, visibly primitive effect edges, weak terrain finish and lack of a reviewable creature subject sink the comparison. Scene composition, lighting and VFX/material work address much of the visible gap. Expressive creature/character art and coherent proportions remain an art requirement that this view cannot close.
+
+The whole-frame answers are separate from the scoped information passes. A readable lightning countdown does not certify the surrounding chapter, and a failed chapter bar does not erase the warning and recovery information visibly retained here.

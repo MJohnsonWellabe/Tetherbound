@@ -1,0 +1,73 @@
+{
+  "ally": {
+    "camera_m": 6.0,
+    "in_frustum": true,
+    "pos": [
+      167.1,
+      -1.8,
+      5596.0
+    ]
+  },
+  "camera": [
+    166.1,
+    2.1,
+    5591.4
+  ],
+  "fight": "captain_field",
+  "game_frame": 42107,
+  "hud_text": [
+    "30/40",
+    "30/40",
+    "36/40",
+    "40/40",
+    "x2",
+    "Map        Satchel        Build        Put Away        Change Creature",
+    "Greet Captain Halder",
+    "TEAM  5 / 5",
+    "Bud",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 14",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 11",
+    "Bramblebun",
+    "bond 2/5",
+    "Lv 13",
+    "FOOD",
+    "91%",
+    "100 / 100",
+    "M A I N   S T O R Y",
+    "Defeat the Upper Meadows captains. 2/3",
+    "Day 8  ·  15:14"
+  ],
+  "meta": {
+    "after_s": 8.0,
+    "kind": "aftermath"
+  },
+  "player": {
+    "camera_m": 5.9,
+    "in_frustum": true,
+    "pos": [
+      170.9,
+      -0.9,
+      5593.3
+    ]
+  },
+  "png": "/tmp/claude-0/f04/captains/captain_field-after-08s.png",
+  "saved": true,
+  "trainer": {
+    "camera_m": 5.5,
+    "in_frustum": true,
+    "pos": [
+      170.0,
+      -1.4,
+      5590.0
+    ]
+  }
+}

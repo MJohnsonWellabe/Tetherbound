@@ -1,0 +1,12 @@
+{
+  "fixture_seed": 20260927,
+  "cases": 100000,
+  "default_hash_cases": 400000,
+  "default_mismatches": 0,
+  "exact_seeded_xy_matches": 0,
+  "mean_cell2_seed_separation": 1.0429301000541202,
+  "rms_separation": 1.1544226715460468,
+  "same_rank_hash": 0,
+  "shader_float_cast_reproduced": true,
+  "scope": "CPU formula reproduction; not GDScript execution, GPU image equality, minimum spacing or mutually exclusive patches"
+}

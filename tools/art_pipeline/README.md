@@ -1,7 +1,7 @@
 # The character art pipeline
 
 Turns the reference sheets in `docs/art/reference/` into game-ready creatures.
-Implements `TETHERBOUND_3D_ART_PIPELINE.md`; see `docs/decisions/D11` for why it
+Implements the archived `archive/docs/art/TETHERBOUND_3D_ART_PIPELINE.md` under ART_DIRECTION §7; see `archive/docs/decisions/D11-art-pipeline-is-scripts-not-mcp.md` for why it
 is scripts rather than MCP servers.
 
 ## Once per machine
