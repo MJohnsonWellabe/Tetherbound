@@ -154,9 +154,13 @@ them in the catalog rather than trusting their old order.
 - Flat self-lit creature shading, and the static read of fights (Tidewake judges).
 - Galecrest polish: feather highlights and alpha-night wings.
 
-## 3. Handoffs
+## 3. Landing
 
-- **Each lane:** post READY with the catalog item IDs and frames. At wind-down,
-  post FINAL with a WIP list.
-- **The coordinator** consolidates, runs the unit suite once and CI once per batch,
-  and updates the board.
+Each Codex lane lands its own work (owner, 2026-09-28). There is no channel and
+no coordinator.
+1. Merge `origin/main`.
+2. Run the unit suite once, and fix any failures.
+3. Update the catalog status and the board rows it closes.
+4. Open a PR to `main` from the lane branch, with auto-merge on; CI runs once.
+5. At wind-down, push everything. Leave work in progress unwired or flagged off,
+   and list it in the catalog.

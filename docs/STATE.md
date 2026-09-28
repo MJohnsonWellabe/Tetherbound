@@ -4,7 +4,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 ## 0. Resume here
 
-**Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress, and posted FINAL on Lane channel issue #356. Batch 67 consolidates every lane head on `tb/integration`. The coordinator runs the unit suite once and CI once, then lands it through one PR. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
+**Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress. Batch 67 consolidated every lane head and every remaining branch, including the full Codex branch and Vess, onto `tb/integration`, and landed it through one PR after one unit run and one CI run. **Next is Phase 1 (`CLAUDE_START_HERE.md`):** one self-landing lane per biome. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
 
 **Criteria:** 82 of the 101 ACCEPTANCE §6.1 criteria are met once batch 67 lands. No chapter is accepted.
 
@@ -39,14 +39,12 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 **Reverted in batch 67.** Stormwood-B's F10#2 C3 commits `07bc9cad`, `45927814` and `85ba1c57` (the Elder cone and heading, and the guard cone) are reverted. Re-apply them when F10#2's C3 is re-captured.
 
-**Branches.** Check every `tb/<lane>` head with `git cherry` before deleting it. At consolidation, `tb/x05`, `tb/tidewake`, `tb/tidewake-f15-2`, `tb/cloudreach`, `tb/stormwood-b`, `tb/vis` and `tb/x04-first-shore-current-gate` still had commits that batch 67 did not take.
-
-Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliveries; its doc edits were not taken, and their facts are folded into ART_DIRECTION §7 and `ralph/reports/VISUAL/AUDIT.md`.
+**Branches.** Batch 67 took every branch head, older branches included. Where an older branch conflicted with newer landed work, the newer work won: Venn's move without the fight pad, Stormwood's judged r5 lightning, and the cleaned docs. Codex's doc edits were not taken; their facts are in ART_DIRECTION §7 and `ralph/reports/VISUAL/AUDIT.md`. Codex's unjudged Cloudreach towers and occupied terrace are merged but flagged off.
 
 **To resume work:**
 1. Pick an item from the `wip` list or an open criterion.
-2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8. Lanes open no PR.
-3. Post READY or FINAL on #356. The coordinator batches through `tb/integration`.
+2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8 and `CLAUDE_START_HERE.md`.
+3. Land each closed criterion through the lane's own PR (re-check, unit suite once, board and STATE, auto-merge). There is no coordinator and no channel.
 
 **Final step (owner, 2026-09-27).** After all 13 cards pass, make one checkpointed four-chapter earned run on one save, from a new game through Tidewake (`smoke_four_biome_continuous`). It retires the chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter.
 
@@ -70,7 +68,7 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 8. **Capacitor Alpha** does not stagger during the route cue (F10#2 option a). Kept by the owner. A Stormwood storm strike spares a trainer whose creature is in a fight (`stormwood_surge.json` `strike.spare_trainer_in_fight=true`). Also kept by the owner.
 9. **Process.**
    - Every branch uses the `tb/` prefix, with one reused `tb/<lane>` branch per lane and no lane PRs.
-   - Lanes post READY/FINAL on #356; the coordinator batches through `tb/integration`; VERIFIER lanes run the full suite.
+   - Lanes land their own work through their own PR, with a re-check and the unit suite once (owner, 2026-09-28). There is no coordinator and no lane channel.
    - **Wind-down:** lanes finish and push everything, work in progress included, and unjudged visual work in progress lands behind a config flag that defaults to off, or unwired. The coordinator consolidates, then runs the unit tests once and CI once.
    - READY means a criterion fully closes, with an attached strict re-check, one criterion at a time. Codex-queue IDs are lane-prefixed and append-only.
 10. **F04 split.** Meadows core had F04#0, #1 and #7; Meadows F04 bosses had F04#2, #3 and #6. Both lanes are wound down. The F04 bosses round-1 evidence is `ralph/reports/MEADOWS/f04_bosses/r1/`.

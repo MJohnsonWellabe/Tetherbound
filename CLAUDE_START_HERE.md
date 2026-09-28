@@ -23,11 +23,39 @@ the biomes (§6). Then the Codex phase starts.
   criterion, then the owning design spec.
 - **The board:** `ralph/reports/COORDINATOR/dashboard/criteria.json`. The IDs below
   are `F0x#n`, criteria numbered from zero. Evidence goes in `ralph/reports/<BIOME>/`.
-- **Channel:** post on lane channel issue #356 (reopen it, or use the channel the
-  owner names). Post only `READY FOR INTEGRATION: tb/<lane> <sha> closes F0x#n`,
-  shared-file requests, and questions with a recommended answer.
-- **Landing:** a coordinator session batches READY heads through `tb/integration`.
-  It runs the unit suite once per batch and CI once per PR. Lanes do not open PRs.
+- **No channel, no coordinator (owner, 2026-09-28).** Each lane lands its own work.
+  If a question needs the owner, ask it in your own session with a recommended
+  answer, record it in STATE, and keep working the next item.
+
+### Landing a closed criterion (each lane does all of this itself)
+
+1. **Re-check.** A read-only subagent re-scores the claim against the ACCEPTANCE
+   §6.1 wording and the relaxed-proof rule (STATE §1.1). The claim closes only
+   if it says MET.
+2. **Sync.** Merge `origin/main` into `tb/<biome>` and resolve conflicts. For
+   board files (`ralph/reports/COORDINATOR/dashboard/criteria.json`,
+   `status.json`), take main's version, then re-apply only your own rows.
+3. **Test once.** Run the full unit suite on the merged head:
+   `godot --headless --path . --script tests/run_tests.gd -- --shard=I/4`,
+   four shards in parallel, after an `--import` pass. Fix every failure, then
+   re-run only the failing files.
+4. **Board and STATE.**
+   - Set the criterion to `met`, with evidence, disclosed shortcuts and the batch
+     note.
+   - Run `python3 ralph/reports/COORDINATOR/dashboard/build_dashboard.py`.
+   - Update your biome's row in STATE §0.
+   - If the Artifact tool is available, republish the board to its existing
+     URL, which is recorded in `ralph/reports/COORDINATOR/README.md`.
+5. **PR.** Open one PR from `tb/<biome>` to `main`. Fill in
+   `.github/pull_request_template.md`, check it with
+   `tools/check_pr_traceability.mjs`, and enable auto-merge. CI runs once. If CI
+   goes red, fix it on the same PR.
+6. **Continue.** After the merge, keep working on the same branch; merge `main` in
+   again before the next landing.
+
+Shared files (combat, camera, HUD, `party_strip`, `flag_scopes`, the band
+baseline mirrors) may be edited when a criterion needs them. Keep the edit
+minimal and say so in the PR. Other lanes pick it up by merging `main`.
 
 ## 3. How a lane works its queue
 
@@ -39,7 +67,7 @@ the biomes (§6). Then the Codex phase starts.
 3. **The moment the blocked item can move again, switch back to it and finish it.**
    The earliest unfinished item always has priority.
 4. **Nothing outside the list.** If you find another defect or idea, write one line
-   in the lane's STATE row or on #356, give it an owner, and keep going. Don't fix it.
+   in the lane's STATE row, give it an owner, and keep going. Don't fix it.
 5. **Function, not beauty.** A criterion that mixes readability with Bars A/B
    closes in this phase on its functional and readability clauses. The Bars A/B
    clause is recorded as `Bars A/B → Phase 2 catalog` in the criterion's note.
@@ -53,7 +81,7 @@ the biomes (§6). Then the Codex phase starts.
 Standing rules:
 - Build the game, not proof machinery: every round must be player-visible.
 - Two strikes on the same harness fix, then change approach or disclose.
-- Put `Balance: game N / tests-tools M` on every READY.
+- Put `Balance: game N / tests-tools M` in every PR description.
 - Hand mechanical work (logs, mirrors, scripts) to lower-tier subagents with exact
   file ownership.
 - Keep a `tests/fixtures/band_split_baseline/*` mirror exact whenever you edit band data.
@@ -110,8 +138,8 @@ Then the card: **T2**.
 
 - **Card integrated runs.** Each card (ACCEPTANCE §6) needs one integrated run
   once all of its feeders are met.
-- **Then** post `BIOME COMPLETE: <biome>` on #356 with the board rows, and wind the
-  lane down: push everything, post FINAL with a WIP list, stop.
+- **Then** record `<biome> complete` in STATE §0 with the board rows, land that
+  through a PR, and stop.
 - **Final step, after all four biomes and the reorder:** one checkpointed
   four-chapter earned run on a single save (STATE §0), then a short human play pass.
 
@@ -146,7 +174,7 @@ before implementing.
 
 Expect more than a gates-and-levels change: fixtures, the ending location,
 ledgers and traversal assumptions all move. Scope it as its own feature, with a
-READY per numbered item.
+PR per numbered item.
 
 ## 7. Open owner items (not a lane's to decide)
 
