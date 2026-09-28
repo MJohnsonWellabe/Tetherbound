@@ -38,6 +38,20 @@ static func shiny_chance() -> float:
 	return float(config().get("shiny_chance", DEFAULT_SHINY_CHANCE))
 
 
+## P2-030: presentation-only regional repaints staged until production judging.
+## Keep previously authored shiny species outside this gate.
+const PHASE2_SHINY_SPECIES := [
+	"aquaryn", "cannonback", "riptusk", "tidecoil", "voltwig", "staticub",
+	"voltarach", "pebbik", "fulgocobra", "stormcapra", "solmane", "cliffspike",
+	"breezetail",
+]
+
+
+static func shiny_colourway_allowed(source_species: String) -> bool:
+	return source_species not in PHASE2_SHINY_SPECIES \
+		or bool(config().get("phase2_shiny_finish_enabled", false))
+
+
 ## CREATURE-PRESENTATION. Multiplier applied to a creature material's emission
 ## energy when its colourway texture is swapped in.
 ##

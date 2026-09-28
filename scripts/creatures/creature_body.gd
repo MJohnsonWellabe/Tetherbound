@@ -774,6 +774,21 @@ func _refresh_shiny_tint() -> void:
 		_apply_aspect_vfx()
 		_apply_alpha_presence()
 		return
+	# P2-030 candidates remain behind a local presentation gate. The old failed
+	# shiny lookup cleared vivid surface overrides before tinting the source;
+	# preserve that reset when candidate textures exist but are disabled.
+	if shiny and not VISUAL.shiny_colourway_allowed(_ordinary_colourway_species):
+		if _has_model:
+			var pending: Array[Node] = [_model]
+			while not pending.is_empty():
+				var node: Node = pending.pop_back()
+				if node is MeshInstance3D and node.mesh != null:
+					for surface in node.mesh.get_surface_count():
+						node.set_surface_override_material(surface, null)
+				pending.append_array(node.get_children())
+		_apply_variant_tint(_shiny_palette())
+		_apply_alpha_presence()
+		return
 	## OF28 (owner directive, quoted in docs/CURRENT_STATE.md): a colourway is a
 	## REPAINT, never a tint — "if our newt is blue, I want red. not blue
 	## with a red shade over it." tools/repaint_creature_textures.py writes
