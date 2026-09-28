@@ -43,6 +43,8 @@ const VALID_TIMES := ["day", "golden", "night"]
 const VALID_VIEWS := ["approach", "close"]
 const VALID_CHARACTERS := ["trainer", "kael", "sera", "lyra"]
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
+const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+const SWIM_CONFIG := "res://data/config/water_swimming.json"
 const BUILD_TIMEOUT_MSEC := 900000
 const BOOT_SETTLE_FRAMES := 24
 const ARRIVE_FRAMES := 20
@@ -415,6 +417,9 @@ func _capture_row(row: Dictionary) -> void:
 	var selected := false
 	var selected_offset := 0.0
 	var selected_lateral := 0.0
+	var observed_clock: Dictionary = {}
+	var selected_spec: Dictionary = {}
+	var rejected: Array[Dictionary] = []
 	var offsets: Array = row.get("stand_offsets_m",
 		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0])
 	var sideways := Vector2(-forward.y, forward.x)
@@ -424,14 +429,21 @@ func _capture_row(row: Dictionary) -> void:
 			at = target - forward * offset + sideways * lateral
 			var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
 			if not moved:
+				_reject_stand(row, at, offset, lateral, "travel", "debug travel failed", {}, rejected)
 				continue
 			for _frame in ARRIVE_FRAMES:
 				await physics_frame
 			terrain_ground = float(_world.call("ground_height_at", at.x, at.y))
-			if is_nan(terrain_ground):
+			if not is_finite(terrain_ground):
+				_reject_stand(row, at, offset, lateral, "ground", "non-finite terrain height", {}, rejected)
 				continue
 			resolved_ground = terrain_ground if bool(row.get("prefer_terrain_ground", false)) else resolve_capture_ground(_player, at.x, at.y, terrain_ground)
-			_player.global_position = Vector3(at.x, resolved_ground + TRAINER_CLEARANCE, at.y)
+			var spec := _capture_support_spec(at, terrain_ground, resolved_ground)
+			var failure := _capture_support_preflight(spec)
+			if not failure.is_empty():
+				_reject_stand(row, at, offset, lateral, "preflight", failure, spec, rejected)
+				continue
+			_player.global_position = spec.position
 			_player.velocity = Vector3.ZERO
 			_player.rotation.y = atan2(forward.x, forward.y)
 			_rig.call("set_target", _player)
@@ -450,36 +462,37 @@ func _capture_row(row: Dictionary) -> void:
 				await physics_frame
 			for _frame in 2:
 				await process_frame
-			if _camera.global_position.distance_to(_player.global_position) >= float(row.get("min_camera_player_distance_m", 3.5)):
-				selected = true
-				selected_offset = offset
-				selected_lateral = lateral
-				break
+			observed_clock = await _pin_time(str(row.time))
+			if observed_clock.is_empty():
+				_write_manifest()
+				return
+			for _frame in POSE_FRAMES:
+				await process_frame
+			failure = _capture_settled_failure(at, row, spec)
+			if not failure.is_empty():
+				_reject_stand(row, at, offset, lateral, "settled", failure, spec, rejected)
+				continue
+			_hide_hud()
+			await RenderingServer.frame_post_draw
+			# Physics stays live through rendering. A candidate is committed only
+			# after this final check, so a rejected stand still gets a bounded retry.
+			failure = _capture_settled_failure(at, row, spec)
+			if not failure.is_empty():
+				_reject_stand(row, at, offset, lateral, "draw", failure, spec, rejected)
+				continue
+			selected = true
+			selected_spec = spec
+			selected_offset = offset
+			selected_lateral = lateral
+			break
 		if selected:
 			break
 	if not selected:
-		_failures.append("%s: no unoccluded production-camera stand near destination" % str(row.frame_id))
-		_write_manifest()
-		return
-	var observed_clock := await _pin_time(str(row.time))
-	if observed_clock.is_empty():
-		_write_manifest()
-		return
-	for _frame in POSE_FRAMES:
-		await process_frame
-	_hide_hud()
-	await RenderingServer.frame_post_draw
-	var stand_failure := capture_stand_failure(at, _player.global_position,
-		_camera.global_position, float(row.get("min_camera_player_distance_m", 3.5)),
-		_rig.spring_length + 3.0)
-	if not stand_failure.is_empty():
-		_failures.append("%s: %s" % [str(row.frame_id), stand_failure])
+		_failures.append("%s: no supported production-camera stand among %d candidates" % [str(row.frame_id), rejected.size()])
 		if not _manifest.has("invalid_stands"):
 			_manifest["invalid_stands"] = []
 		_manifest["invalid_stands"].append({"frame_id": row.frame_id,
-			"reason": stand_failure, "selected_stand_xz": [at.x, at.y],
-			"player_position": _vec3(_player.global_position),
-			"camera_position": _vec3(_camera.global_position)})
+			"reason": "all bounded stand candidates rejected", "attempts": rejected.duplicate(true)})
 		_write_manifest()
 		return
 	var image := root.get_texture().get_image()
@@ -501,6 +514,11 @@ func _capture_row(row: Dictionary) -> void:
 		record["selected_stand_lateral_m"] = selected_lateral
 		record["terrain_ground_y"] = terrain_ground
 		record["resolved_ground_y"] = resolved_ground
+		record["selected_stand_xz"] = [at.x, at.y]
+		record["swimming_stand"] = selected_spec.swimming
+		record["water_surface_y"] = selected_spec.get("water_surface_y", null)
+		record["surface_state"] = _capture_surface_record()
+		record["rejected_stand_candidates"] = rejected.duplicate(true)
 		record["camera_rig_transform"] = _transform(_rig.global_transform)
 		record["camera_rig_spring_length"] = _rig.spring_length
 		record["camera_transform"] = _transform(_camera.global_transform)
@@ -519,6 +537,130 @@ func _capture_row(row: Dictionary) -> void:
 		_records.append(record)
 		print("CATALOGUE CAPTURE %s -> %s" % [str(row.frame_id), path])
 	_write_manifest()
+
+
+func _capture_support_spec(at: Vector2, terrain: float, ground: float) -> Dictionary:
+	var spec := {"position": Vector3(at.x, ground + TRAINER_CLEARANCE, at.y),
+		"ground_y": ground, "terrain_y": terrain, "swimming": false}
+	# Other realms keep their existing land staging and do not need Water APIs.
+	if _biome_id != "water":
+		return spec
+	var field: Object = _world.get("field")
+	if field == null or not field.has_method("water_level") or not _world.has_method("water_depth_at"):
+		spec["failure"] = "Water surface/depth query unavailable"
+		return spec
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SWIM_CONFIG))
+	if not parsed is Dictionary or not (parsed as Dictionary).get("human", null) is Dictionary:
+		spec["failure"] = "production human swim rules unavailable"
+		return spec
+	var rules: Dictionary = parsed.human
+	var sea := float(field.call("water_level"))
+	var depth := float(_world.call("water_depth_at", Vector3(at.x, ground, at.y)))
+	if not is_finite(sea) or not is_finite(depth):
+		spec["failure"] = "non-finite Water surface/depth"
+		return spec
+	var swimming := ground < sea and depth >= float(rules.get("entry_depth_m", 1.2))
+	spec["swimming"] = swimming
+	spec["water_surface_y"] = sea
+	spec["water_depth_m"] = depth
+	spec["swim_body_y"] = sea + float(rules.get("surface_body_offset_m", -0.7))
+	if swimming:
+		spec.position.y = spec.swim_body_y
+	return spec
+
+
+func _capture_support_preflight(spec: Dictionary) -> String:
+	if spec.has("failure"):
+		return str(spec.failure)
+	var at: Vector3 = spec.position
+	if not at.is_finite() or not is_finite(float(spec.ground_y)):
+		return "non-finite resolved stand"
+	var space := _world.get_world_3d().direct_space_state
+	if not bool(spec.swimming):
+		var ground := Vector3(at.x, float(spec.ground_y), at.z)
+		var ray := PhysicsRayQueryParameters3D.create(ground + Vector3.UP * 1.5,
+			ground - Vector3.UP, _player.collision_mask, [_player.get_rid()])
+		var failure := capture_floor_failure(float(spec.ground_y), space.intersect_ray(ray), _player.floor_max_angle)
+		if not failure.is_empty():
+			return failure
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or collision.shape == null or collision.disabled:
+		return "production player capsule unavailable for stand clearance"
+	var shape := PhysicsShapeQueryParameters3D.new()
+	shape.shape = collision.shape
+	shape.transform = Transform3D(_player.global_basis, at) * collision.transform
+	shape.collision_mask = _player.collision_mask
+	shape.exclude = [_player.get_rid()]
+	shape.margin = 0.0
+	if not space.intersect_shape(shape, 1).is_empty():
+		return "production player capsule overlaps solid geometry at staged stand"
+	return ""
+
+
+static func capture_floor_failure(ground: float, hit: Dictionary, floor_angle: float) -> String:
+	if hit.is_empty():
+		return "no physical floor supports the resolved land stand"
+	var position: Vector3 = hit.get("position", Vector3.INF)
+	var normal: Vector3 = hit.get("normal", Vector3.ZERO)
+	if not is_finite(ground) or not position.is_finite() or not normal.is_finite():
+		return "non-finite physical floor"
+	if absf(position.y - ground) > 0.20:
+		return "physical floor differs from the resolved terrain/built floor"
+	if normal.y < cos(floor_angle):
+		return "physical land slope exceeds the production player's floor limit"
+	return ""
+
+
+func _capture_surface_record() -> Dictionary:
+	var controller: Object = _player.get("swim_controller")
+	var state: Dictionary = controller.call("snapshot") if controller != null else {}
+	var vitals: Object = _player.get("vitals")
+	state["dead"] = bool(vitals.call("is_dead")) if vitals != null else false
+	state["on_floor"] = _player.is_on_floor()
+	state["floor_normal_y"] = _player.get_floor_normal().y if _player.is_on_floor() else 0.0
+	return state
+
+
+static func capture_surface_failure(spec: Dictionary, state: Dictionary, player_y: float,
+		floor_angle: float, current_camera: bool) -> String:
+	if not current_camera:
+		return "capture camera is not the current production camera"
+	if bool(state.get("dead", false)) or bool(state.get("drowning", false)):
+		return "fixture player died or began drowning under production physics"
+	if bool(spec.get("swimming", false)):
+		var expected_y := float(spec.get("swim_body_y", NAN))
+		if not is_finite(expected_y) or not is_finite(player_y) \
+				or int(state.get("mode", SWIM_STATE.Mode.LAND)) != SWIM_STATE.Mode.HUMAN \
+				or absf(player_y - expected_y) > 0.4:
+			return "player did not settle into the expected production human swim state/waterline"
+	elif int(state.get("mode", SWIM_STATE.Mode.LAND)) != SWIM_STATE.Mode.LAND \
+			or not bool(state.get("on_floor", false)) \
+			or float(state.get("floor_normal_y", 0.0)) < cos(floor_angle):
+		return "player lacks a supported production land state after settlement"
+	return ""
+
+
+func _capture_settled_failure(at: Vector2, row: Dictionary, spec: Dictionary) -> String:
+	var failure := capture_stand_failure(at, _player.global_position, _camera.global_position,
+		float(row.get("min_camera_player_distance_m", 3.5)), _rig.spring_length + 3.0)
+	if not failure.is_empty():
+		return failure
+	return capture_surface_failure(spec, _capture_surface_record(), _player.global_position.y,
+		_player.floor_max_angle, root.get_camera_3d() == _camera)
+
+
+func _reject_stand(row: Dictionary, at: Vector2, offset: float, lateral: float,
+		stage: String, reason: String, spec: Dictionary, rejected: Array[Dictionary]) -> void:
+	var receipt := {"frame_id": row.frame_id, "stage": stage, "reason": reason,
+		"stand_xz": [at.x, at.y], "offset_m": offset, "lateral_m": lateral,
+		"ground_y": spec.get("ground_y", null), "swimming": spec.get("swimming", false),
+		"water_surface_y": spec.get("water_surface_y", null),
+		"player_position": _vec3(_player.global_position),
+		"camera_position": _vec3(_camera.global_position), "surface_state": _capture_surface_record()}
+	rejected.append(receipt)
+	if not _manifest.has("rejected_stand_candidates"):
+		_manifest["rejected_stand_candidates"] = []
+	_manifest["rejected_stand_candidates"].append(receipt)
 
 
 func _hide_hud() -> void:
