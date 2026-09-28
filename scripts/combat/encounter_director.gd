@@ -5839,6 +5839,8 @@ func _finish_trainer_battle(won: bool) -> void:
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
 	_trainer_spec = {}
+	# F04#3: kept for the victory lines' camera, which opens a frame later.
+	var victory_speaker := _trainer_node
 	_trainer_node = null
 	_trainer_queue.clear()
 	_trainer_send_delay = 0.0
@@ -5851,7 +5853,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	_set_exploration_active(true)
 	if won:
 		_record_trainer_defeat(spec)
-		call_deferred("_present_trainer_victory", spec)
+		call_deferred("_present_trainer_victory", spec, victory_speaker)
 	# NOW the battle's one encounter record is over, and not one creature
 	# earlier. Cleared after the payout because §7 pays the people who fought
 	# it, and dropped from the joinable list because a fight nobody can join is
@@ -5863,7 +5865,7 @@ func _finish_trainer_battle(won: bool) -> void:
 ## ordinary reward toast; realm bosses can name what changed immediately after
 ## the fight instead of requiring the player to interact with the defeated NPC
 ## a second time and possibly miss a chapter-critical grant.
-func _present_trainer_victory(spec: Dictionary) -> void:
+func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 	var conversation := str(spec.get("victory_conversation", ""))
 	if conversation == "":
 		return
@@ -5874,6 +5876,11 @@ func _present_trainer_victory(spec: Dictionary) -> void:
 	if bool(panel.call("is_open")):
 		push_warning("trainer '%s' victory dialogue found the panel busy" % str(spec.get("id", "")))
 		return
+	# F04#3: frame the trainer with the wider `aftermath` shot. The panel's own
+	# push-in then finds the camera already in and leaves it.
+	var push_in := get_tree().get_first_node_in_group("conversation_camera")
+	if push_in != null and speaker != null and is_instance_valid(speaker) and speaker.is_inside_tree():
+		push_in.call("begin", speaker, "aftermath")
 	panel.call("start", conversation)
 
 

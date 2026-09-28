@@ -30,6 +30,11 @@
 
     "_comment_fallback": "Indoors -- Mira's cottage, Bram's inn -- there is often no 3.5m of room behind the trainer. When the arm's own sweep says the two-shot is blocked before `clearance_ratio` of its length, the shot is re-solved as a closer over-shoulder against whatever room is actually there.",
     "clearance_ratio": 0.82,
+    "_comment_profiles": "F04#3 (round-1 judge D): a trainer's post-fight lines opened on the villager push-in (3.5 m, fov 40), which crowded the Warden and his arena into a head-and-shoulders shot. `aftermath` frames the trainer and the player wider and higher so the place they fought in stays in shot; encounter_director.gd::_present_trainer_victory asks for it. TUNABLE.",
+    "profiles": {
+      "aftermath": {"distance": 5.2, "fov": 52.0, "elevation_deg": 13.0, "speaker_bias": 0.6, "shoulder_yaw_deg": 24.0,
+        "fallback": {"distance": 3.4, "fov": 54.0, "elevation_deg": 10.0, "speaker_bias": 0.6}}
+    },
     "fallback": {
       "distance": 2.1,
       "shoulder_yaw_deg": 11.0,

@@ -3692,10 +3692,16 @@ func _apply_presentation_priority() -> void:
 	if held and _hold_seen_at > 0.0 and _objective_hint_until > 0.0:
 		_objective_hint_until += now - _hold_seen_at
 	_hold_seen_at = now if held else 0.0
+	# F04#3 (round-1 judge D: "combat HUD stays up" in the Warden's victory
+	# dialogue). The roster strip -- five rows of names, bond and level, and the
+	# fight-end "Bud > Bramblebun 2/5" flash -- is not the conversation's
+	# business; while a story modal (dialogue, name prompt, starter picker) is
+	# open it stands down so the speaker owns the frame. Other menus keep it.
+	var party_shown: bool = mode.party and not _story_modal_is_open()
 	# This final pass owns visibility after all legacy polling/cache writers.
 	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
 		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
-		[_party_strip,mode.party],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
+		[_party_strip,party_shown],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
 		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt and not held]]:
 		_presentation_allow(entry[0],entry[1])
 	# During combat, enemy plate and telegraphs own the top. In the post-combat
