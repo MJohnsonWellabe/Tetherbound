@@ -1,0 +1,21 @@
+# tests/smoke_named_fight_hit_avoid.gd -- --trainer=relay_captain,relay_officer_dell (headless, local) at ccecb414c
+row relay_captain opponent=galecrest_L12 strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=33.4 gap_tell=4.77 gap_strike=4.75 moved=0.00 reach=7.51 cone=90 action=1 arena_off=3.47
+row relay_captain opponent=galecrest_L12 strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=5.89 gap_strike=9.07 moved=3.13 reach=7.51 cone=90 action=0 arena_off=3.72
+row relay_captain opponent=galecrest_L12 strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=35.2 gap_tell=6.95 gap_strike=6.48 moved=0.00 reach=7.51 cone=90 action=2 arena_off=7.82
+row relay_captain opponent=galecrest_L12 strike=4 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.63 gap_strike=7.99 moved=2.58 reach=7.51 cone=90 action=0 arena_off=7.91
+row relay_captain opponent=galecrest_L12 strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=35.1 gap_tell=6.96 gap_strike=6.51 moved=0.00 reach=7.51 cone=90 action=2 arena_off=10.82
+row relay_captain opponent=galecrest_L12 strike=6 move=quick tell=0.90s policy=dodge outcome=hit damage=34.7 gap_tell=6.74 gap_strike=7.10 moved=1.08 reach=7.51 cone=90 action=0 arena_off=11.00
+row relay_captain opponent=galecrest_L12 strike=7 move=quick tell=0.90s policy=stand outcome=hit damage=31.8 gap_tell=6.96 gap_strike=6.65 moved=0.00 reach=7.51 cone=90 action=1 arena_off=11.00
+row relay_captain opponent=galecrest_L12 strike=8 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.99 gap_strike=8.64 moved=2.50 reach=7.51 cone=90 action=0 arena_off=11.00
+row relay_officer_dell opponent=mosshell_L10 strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=20.4 gap_tell=5.42 gap_strike=5.42 moved=0.00 reach=7.39 cone=90 action=1 arena_off=3.47
+row relay_officer_dell opponent=mosshell_L10 strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.32 gap_strike=7.83 moved=1.51 reach=7.39 cone=90 action=0 arena_off=3.68
+row relay_officer_dell opponent=mosshell_L10 strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=19.4 gap_tell=6.89 gap_strike=6.61 moved=0.00 reach=7.39 cone=90 action=1 arena_off=5.08
+row relay_officer_dell opponent=mosshell_L10 strike=4 move=quick tell=0.90s policy=dodge outcome=hit damage=21.2 gap_tell=6.85 gap_strike=6.68 moved=0.99 reach=7.39 cone=90 action=0 arena_off=5.08
+row relay_officer_dell opponent=mosshell_L10 strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=21.0 gap_tell=6.89 gap_strike=6.63 moved=0.00 reach=7.39 cone=90 action=1 arena_off=5.07
+row relay_officer_dell opponent=mosshell_L10 strike=6 move=quick tell=0.90s policy=dodge outcome=hit damage=18.8 gap_tell=6.85 gap_strike=6.66 moved=0.60 reach=7.39 cone=90 action=0 arena_off=5.06
+row relay_officer_dell opponent=mosshell_L10 strike=7 move=quick tell=0.90s policy=stand outcome=hit damage=19.4 gap_tell=6.85 gap_strike=6.53 moved=0.00 reach=7.39 cone=90 action=2 arena_off=5.07
+row relay_officer_dell opponent=mosshell_L10 strike=8 move=quick tell=0.90s policy=dodge outcome=hit damage=21.0 gap_tell=6.88 gap_strike=6.57 moved=0.14 reach=7.39 cone=90 action=0 arena_off=5.06
+PASS relay_captain: player_hits=9 stand_strikes_landed=4 dodges_avoided=3/4 strikes=8
+PASS relay_officer_dell: player_hits=14 stand_strikes_landed=4 dodges_avoided=1/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving
+exit=0
