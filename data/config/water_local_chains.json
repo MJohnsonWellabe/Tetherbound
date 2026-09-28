@@ -153,6 +153,15 @@
       ]
     }
   ],
+  "_comment_lead_map_pins": "F13#3 lure (WORLD §11: each requester points to a place). While a chain's lead is held and its completion is not, the destination is a derived pin on the local Tidewake map (question icon), like Cloudreach's Three Bells landing pins: never saved, re-derived after a map load, removed on completion. lead_flag/done_flag mirror the chain's water_objectives.json local row revealed_by/flag_id (tests/test_water_lead_map_pins.gd).",
+  "lead_map_pins": [
+    {"objective": "side_water_lantern_return", "lead_flag": "water_claim:local:lantern_return:lead", "done_flag": "water_claim:local:lantern_return:complete", "at_xz": [-407.668, 210.38], "name": "Pell's lead: Lantern Cove's dry nook"},
+    {"objective": "side_water_gull_research", "lead_flag": "water_claim:local:gull_research:lead", "done_flag": "water_claim:local:gull_research:complete", "at_xz": [-22.34, 883.98], "name": "Adair's lead: Gull Rest satchel"},
+    {"objective": "side_water_cradle_care", "lead_flag": "water_claim:local:cradle_care:lead", "done_flag": "water_claim:local:cradle_care:complete", "at_xz": [815.824, 1645.824], "name": "Otto's lead: Tidal Cradle shell nest"},
+    {"objective": "side_water_garden_records", "lead_flag": "water_claim:local:garden_records:lead", "done_flag": "water_claim:local:garden_records:complete", "at_xz": [1204.5, 2337.6], "name": "Edda's lead: Drowned Garden vault wall"},
+    {"objective": "side_water_deep_watch_chart", "lead_flag": "water_named_deep_watch_tidecoil_resolved", "done_flag": "water_dock_deep_watch_current_charted", "at_xz": [1266.3, 3414.7], "name": "Orsen's lead: Deep Watch chart table"},
+    {"objective": "side_water_lastlight_shelter", "lead_flag": "water_claim:local:lastlight_shelter:lead", "done_flag": "water_claim:local:lastlight_shelter:rested", "at_xz": [374.161, 3822.923], "name": "Halen's lead: Lastlight shelter camp"}
+  ],
   "steps": [
     {
       "id": "lantern_return_lead",
