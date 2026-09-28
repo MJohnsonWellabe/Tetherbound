@@ -15,6 +15,8 @@ const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 ## announcement moved with the grant to `ledger_rpc.gd::_apply_player_ops()`,
 ## which is peer-scoped -- see `item_cache_pickup.gd`'s identical note.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+## F01#2/#3: where the Meadows gate key hangs. See `data/config/key_post.json`.
+const POST_CONFIG_PATH := "res://data/config/key_post.json"
 
 const FLAG_PREFIX := "pickup:"
 ## Compatibility for saves written before physical pickups recorded their own
@@ -36,6 +38,9 @@ var _realm_id: String = "meadows"
 ## `item_cache_pickup.gd`'s own field for what it is for.
 var _claiming := false
 var _taken := false
+## "ground" (lying in the grass, the original) or "post" (hanging from the peg
+## of a post `build_post()` stands at the same spot).
+var _mount: String = "ground"
 
 
 ## `shape` picks the primitive `_build_visual()` builds: "key" (default, the
@@ -49,11 +54,12 @@ var _taken := false
 ## room light that prop's DARK CHAMBER specifically needed and this one, sitting
 ## in open daylight, does not.
 func setup(item_id: String, label: String, shape: String = "key",
-		realm_id: String = "meadows") -> void:
+		realm_id: String = "meadows", mount: String = "ground") -> void:
 	_item_id = item_id
 	_label = label
 	_shape = shape
 	_realm_id = realm_id
+	_mount = mount if mount == "post" and bool(post_config().get("enabled", false)) else "ground"
 	add_to_group("progression_restore")
 	# The shaft lies along local +X with no yaw ever applied at the call
 	# site (`playground_world.gd` sets `position` only) — so on the road
@@ -68,6 +74,9 @@ func setup(item_id: String, label: String, shape: String = "key",
 	# "key" shape; "stone" is round and does not care.
 	rotation.y = deg_to_rad(50.0)
 	_build_visual()
+	var glow_height := -1.0
+	if _mount == "post":
+		glow_height = _hang_on_post()
 	# OP-0830-2/OP-0830-3. Four blind rounds of shape, scale, metallic and
 	# emission work on this prop (see `_build_visual()`'s own comments) each
 	# ended with a critic calling it a small smear at range -- because every one
@@ -76,7 +85,7 @@ func setup(item_id: String, label: String, shape: String = "key",
 	# and none of them had: it does not depend on the key's silhouette, its
 	# material, or the Compatibility renderer's ambient, and it is the SAME cue
 	# the player learns on every other pickup in the game.
-	PICKUP_GLOW.attach(self, _item_colour())
+	PICKUP_GLOW.attach(self, _item_colour(), glow_height)
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3.UP * 0.6
@@ -232,6 +241,76 @@ func _build_stone_visual() -> void:
 	gem.position = Vector3.UP * 0.16
 	_visual = gem
 	add_child(_visual)
+
+
+static func post_config() -> Dictionary:
+	var file := FileAccess.open(POST_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
+## F01#2/#3. The post the key hangs from: a plain weathered stake with a peg,
+## built from primitives like the key itself. It is the world's, not the key's,
+## so it stays standing (an empty peg) after the key node frees itself. `ground`
+## is the world position at the post's foot.
+static func build_post(parent: Node, ground: Vector3) -> Node3D:
+	var cfg := post_config()
+	var post := Node3D.new()
+	post.name = "GateKeyPost"
+	post.position = ground
+	post.rotation.y = deg_to_rad(float(cfg.get("facing_yaw_deg", -90.0)))
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(str(cfg.get("post_colour", "#6b5a45")))
+	wood.roughness = 0.9
+	var height := float(cfg.get("post_height_m", 1.45))
+	var width := float(cfg.get("post_width_m", 0.13))
+	var stake := MeshInstance3D.new()
+	var stake_box := BoxMesh.new()
+	stake_box.size = Vector3(width, height, width)
+	stake.mesh = stake_box
+	stake.material_override = wood
+	stake.position = Vector3(0.0, height * 0.5, -0.08)
+	post.add_child(stake)
+	var cap := MeshInstance3D.new()
+	var cap_box := BoxMesh.new()
+	cap_box.size = Vector3(width * 1.5, 0.05, width * 1.5)
+	cap.mesh = cap_box
+	cap.material_override = wood
+	cap.position = Vector3(0.0, height + 0.025, -0.08)
+	post.add_child(cap)
+	var peg := MeshInstance3D.new()
+	var peg_mesh := CylinderMesh.new()
+	peg_mesh.top_radius = 0.02
+	peg_mesh.bottom_radius = 0.02
+	peg_mesh.height = float(cfg.get("peg_length_m", 0.16))
+	peg.mesh = peg_mesh
+	peg.material_override = wood
+	peg.rotation.x = deg_to_rad(90.0)
+	peg.position = Vector3(0.0, float(cfg.get("peg_height_m", 1.3)), -0.08 + width * 0.5 + peg_mesh.height * 0.5)
+	post.add_child(peg)
+	parent.add_child(post)
+	return post
+
+
+## Turns the lying key upright, ring on the peg and shaft hanging down, at the
+## configured scale. Returns the height the shared glow should sit at: on the
+## key, not on the ground under it.
+func _hang_on_post() -> float:
+	var cfg := post_config()
+	rotation.y = deg_to_rad(float(cfg.get("facing_yaw_deg", -90.0)))
+	var key_scale := float(cfg.get("key_scale", 2.0))
+	var peg_y := float(cfg.get("peg_height_m", 1.3))
+	var tip_z := -0.08 + float(cfg.get("post_width_m", 0.13)) * 0.5 + float(cfg.get("peg_length_m", 0.16)) - 0.03
+	# The visual's shaft runs along local +X with the ring at x = -0.125; a
+	# -90 degree turn about Z hangs the ring on top and the teeth at the bottom.
+	# The ring (radius 0.06 before scaling) sits on the peg by its inner edge.
+	_visual.rotation = Vector3(0.0, 0.0, deg_to_rad(-90.0))
+	_visual.scale = Vector3.ONE * key_scale
+	var ring_centre_y := peg_y - 0.028 * key_scale
+	_visual.position = Vector3(0.0, ring_centre_y - 0.125 * key_scale, tip_z)
+	return ring_centre_y - 0.1 * key_scale
 
 
 func _item_colour() -> Color:

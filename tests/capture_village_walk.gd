@@ -1012,6 +1012,9 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 			_failed = "stood %.2fm from the old key but its prompt never won" % d
 			return
 		# The frame the reviewer needs: the key with its prompt up, before the take.
+		# Orbited off the approach bearing first: straight behind the trainer,
+		# the trainer's own body hid the key (judge, day 049 / night 049).
+		await _frame_for_photo(at, false)
 		await _capture("take %s" % t.label)
 		await _press("interact")
 		print("[village-walk] NOTE key-take: pressed interact on \"%s\" at %.2fm; satchel has key=%s" % [
