@@ -415,7 +415,8 @@ func _capture_row(row: Dictionary) -> void:
 	var selected := false
 	var selected_offset := 0.0
 	var selected_lateral := 0.0
-	var offsets: Array = [32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]
+	var offsets: Array = row.get("stand_offsets_m",
+		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0])
 	var sideways := Vector2(-forward.y, forward.x)
 	for offset: float in offsets:
 		for lateral: float in [0.0, -5.0, 5.0]:
@@ -434,7 +435,8 @@ func _capture_row(row: Dictionary) -> void:
 			_player.rotation.y = atan2(forward.x, forward.y)
 			_rig.call("set_target", _player)
 			var camera_yaw := capture_yaw(forward)
-			var camera_pitch := float(_rig.get("pitch"))
+			var camera_pitch := deg_to_rad(float(row.get("camera_pitch_deg", rad_to_deg(float(_rig.get("pitch"))))))
+			_rig.set("pitch", camera_pitch)
 			_rig.set("yaw", camera_yaw)
 			_rig.rotation = Vector3(camera_pitch, camera_yaw, 0.0)
 			# Snap the production pivot after a long debug teleport.
