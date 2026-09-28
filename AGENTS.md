@@ -6,6 +6,8 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Read and route
 
+**Current phase briefs (owner-authorized, 2026-09-28):** Claude lanes start at `CLAUDE_START_HERE.md` (Phase 1: finish every feature row, then the biome reorder). Codex lanes start at `CODEX_START_HERE.md` (Phase 2: visual inventory, catalog and fixes). These two briefs are part of the authorized live set.
+
 Read STATE first for baseline/status/current authority, then GAME_BIBLE for product, ACCEPTANCE for done, WORKFLOW for process and TECHNICAL for source/run map. Read PRODUCT/ROADMAP when choosing scope or priorities. Read the relevant `docs/design/` contract before implementation; do not reread all ten for a bounded task with a complete brief.
 
 | Contract | Owns |
