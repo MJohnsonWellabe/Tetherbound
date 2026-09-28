@@ -247,7 +247,13 @@ func _stick_away_from_opponent() -> Vector2:
 	# away stays on it (Vance's Tuskroot: 0/4 avoided by reach). BOSSES' answer
 	# is to step off the lane sideways, toward whichever side the creature
 	# already stands -- what capture_named_fight.gd's dodge also does.
+	# `_lunge_heading` is only set when the lunge begins, so during the
+	# wind-up it is empty or the previous lunge's; the creature already
+	# faces down the lane it is about to take.
 	var lane: Variant = (_body as Node3D).get("_lunge_heading")
+	if (_body as Node3D).has_method("lunge_travels") and bool((_body as Node3D).call("lunge_travels")) \
+			and (_body as Node3D).has_method("facing"):
+		lane = (_body as Node3D).call("facing")
 	if lane is Vector3 and (lane as Vector3).length() > 0.01:
 		var heading := Vector3((lane as Vector3).x, 0.0, (lane as Vector3).z).normalized()
 		var side := Vector3(-heading.z, 0.0, heading.x)

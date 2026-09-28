@@ -141,7 +141,8 @@ func test_the_aftermath_beats_happen_inside_the_victory_lines() -> void:
 	assert_true(cfg.has("strike_after_lines_open_s") and cfg.has("handover_after_last_line_s"), "both beats are tunable")
 	var npc := FileAccess.get_file_as_string("res://scripts/world/trainer_npc.gd")
 	assert_true(npc.contains("_strike_when_seen(body, id)"), "the strike waits for the lines to open")
-	assert_eq(npc.count("await _until_the_last_victory_line()"), 2, "both stand-down paths wait for the last line")
+	assert_eq(npc.count("await _until_the_last_victory_line(lines)"), 2, "both stand-down paths wait for the last line")
+	assert_true(npc.find("var lines := _watch_victory_lines()") < npc.find("await get_tree().create_timer(hold)"), "the last line is listened for from the defeat, not after the slump")
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
 	assert_true(director.contains("TRAINER_AFTERMATH.hand_over(shown, player)"), "the director hands the tokens over on the last line")
 	for id: String in ["captain_riverwatch", "captain_field", "captain_ridge"]:

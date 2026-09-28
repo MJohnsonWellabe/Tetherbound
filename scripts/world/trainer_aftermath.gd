@@ -272,20 +272,29 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	# the fallback for a speech that never reports its last line.
 	var seconds := float(show.get("seconds", 14.0))
 	node.get_tree().create_timer(seconds).timeout.connect(func() -> void:
-		hand_over(node, player))
+		if is_instance_valid(node):
+			hand_over(node, player))
 	return node
 
 
 ## The tokens drift to the player and shrink away. Once only.
-static func hand_over(node: Node3D, player: Node3D) -> void:
-	if node == null or not is_instance_valid(node) or not node.is_inside_tree() or node.has_meta(&"handed"):
+##
+## Untyped on purpose: two timers (the director's last line and the fallback
+## above) may both fire, and the first frees the node; a typed parameter
+## would raise on the freed instance before the guard below could run.
+static func hand_over(node_ref: Variant, player_ref: Variant) -> void:
+	if not is_instance_valid(node_ref) or not node_ref is Node3D:
 		return
+	var node := node_ref as Node3D
+	if not node.is_inside_tree() or node.has_meta(&"handed"):
+		return
+	var player: Node3D = player_ref as Node3D if is_instance_valid(player_ref) and player_ref is Node3D else null
 	node.set_meta(&"handed", true)
 	var spin: Variant = node.get_meta(&"spin") if node.has_meta(&"spin") else null
 	if spin is Tween and (spin as Tween).is_valid():
 		(spin as Tween).kill()
 	var to := node.global_position
-	if player != null and is_instance_valid(player):
+	if player != null and player.is_inside_tree():
 		to = player.global_position + Vector3.UP * 1.1
 	var hand := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	hand.tween_property(node, "global_position", to, 1.2)
