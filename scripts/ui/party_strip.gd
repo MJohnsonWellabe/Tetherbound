@@ -153,7 +153,9 @@ const ROW_MARGIN := 4  # 6 -> 4, alongside ROW_SIZE.y: a one-line row needs less
 ## Pinned rather than re-measured by hand next time:
 ## `smoke_combat_hud_left_column.gd` asserts the live stack against
 ## `TOTAL_HEIGHT` and fails naming the child that grew.
-const HEADER_HEIGHT := 40.0
+## F10#6 r6: at STRIP_READABLE_FONT_SIZE 28 the live header draws 43
+## (`smoke_combat_hud_left_column.gd` measured the stack 3 px past 40's total).
+const HEADER_HEIGHT := 43.0
 const HEADER_GAP := 4.0
 const TOTAL_HEIGHT := HEADER_HEIGHT + HEADER_GAP + SLOTS * ROW_SIZE.y + (SLOTS - 1) * ROW_SEPARATION
 ## HUD-SCALE: 40 -> 30. A species chip is recognised as a silhouette rather
@@ -177,7 +179,9 @@ const CHIP_SIZE := Vector2(30.0, 30.0)
 ## computed through a content scale the owner's 1920x1080 device does not
 ## have. 26 is `HUD_SCALE.GLANCE_CAP_ARCMIN`: a roster row is a name, a level
 ## and a tag, all recognised rather than read.
-const STRIP_READABLE_FONT_SIZE := 26
+## F10#6 device profile r6: UX section 8's raster floor (UITokens.FONT_READ,
+## 27) binds above the glance floor, so the strip takes the next token up.
+const STRIP_READABLE_FONT_SIZE := 28
 const RAIL_WIDTH := 4.0
 ## 72 -> 56 alongside the one-line row: the bar shares its line with the name
 ## now instead of sitting beside a two-line stack, and 16px of bar buys 16px of
@@ -193,7 +197,8 @@ const XP_BAR_SIZE := Vector2(44.0, 3.0)
 const BAR_GAP := 2
 ## The bond pip text ("bond 2/5") beside the level, one size down from the
 ## row so the level number stays the louder of the two.
-const BOND_FONT_SIZE := 19
+## r6: the 7-inch judge could not read "bond 0/5" at 19; UX section 8's floor.
+const BOND_FONT_SIZE := 27
 ## The name never shrinks below this, and the level/bond group never below
 ## its own content (both were being squeezed to illegibility, round 1).
 const NAME_MIN_WIDTH := 150.0
@@ -979,11 +984,60 @@ var progression_feedback_enabled := true
 ## row's alpha, so nothing in the world shows through the roster.
 const COMPACT_NAME_FONT_SIZE := STRIP_READABLE_FONT_SIZE + 2
 const COMPACT_HP_BAR_SIZE := Vector2(96.0, 8.0)
+## F10#6 device profile, round 6 (UX §1.4; code-blind 7-inch judges r2-r5:
+## the 420 px fight roster plus the active card filled a quarter of the fight
+## screen and covered the trainer and attack lanes). The fight roster is a
+## column of pips: rail, a larger portrait chip, KO/REST state and the HP bar.
+## Names and levels drop; the active creature is named on its own card below,
+## and each member is known by its portrait (owner choice 2026-09-28).
+const COMPACT_ROW_WIDTH := 232.0
+const COMPACT_CHIP_SIZE := Vector2(40.0, 40.0)
+## Compact rows' chip shade by state (the hidden name's colour, moved).
+const COMPACT_CHIP_BENCHED := 0.72
+const COMPACT_CHIP_MUTED := 0.45
 var compact := false
+
+
+## The header/list stack is not inside a Container, so nothing re-sorts it
+## when its rows' minimums shrink, and in the tree those minimums update a
+## frame late. Re-fit it on each roster update (every frame in a fight) until
+## it matches the pip column.
+func _fit_compact_width() -> void:
+	if not compact or get_child_count() == 0:
+		return
+	var nodes: Array = [get_child(0) as Control, _list]
+	nodes.append_array(_rows)
+	for node: Control in nodes:
+		if node != null and node.size.x > COMPACT_ROW_WIDTH + 0.5:
+			node.size = Vector2(COMPACT_ROW_WIDTH, node.size.y)
+
+
+## Tick plates sit just right of the rows, at whichever width they have.
+func _tick_x() -> float:
+	return (COMPACT_ROW_WIDTH if compact else ROW_SIZE.x) + 10.0
 
 
 func set_compact(enabled: bool) -> void:
 	compact = enabled
+	var width := COMPACT_ROW_WIDTH if compact else ROW_SIZE.x
+	size = Vector2(width, TOTAL_HEIGHT)
+	# `_build()` adds the header/list stack first; it is not inside a
+	# Container, so it keeps whatever width it was given until told otherwise.
+	var stack := get_child(0) as VBoxContainer if get_child_count() > 0 else null
+	if stack != null:
+		var header := stack.get_child(0) as Control
+		header.custom_minimum_size = Vector2(width, HEADER_HEIGHT)
+		stack.size = Vector2(width, TOTAL_HEIGHT)
+		if _list != null:
+			_list.size = Vector2(width, _list.size.y)
+	var chip_size := COMPACT_CHIP_SIZE if compact else CHIP_SIZE
+	for i in _rows.size():
+		_rows[i].custom_minimum_size = Vector2(width, ROW_SIZE.y)
+		_rows[i].size = _rows[i].custom_minimum_size
+		_chips[i].custom_minimum_size = chip_size
+		_portraits[i].size = chip_size - Vector2(4.0, 4.0)
+		_slot_labels[i].size = chip_size
+		_name_labels[i].visible = not compact
 	for i in _name_labels.size():
 		_name_labels[i].add_theme_font_size_override("font_size",
 			COMPACT_NAME_FONT_SIZE if compact else STRIP_READABLE_FONT_SIZE)
@@ -1018,6 +1072,7 @@ func set_compact(enabled: bool) -> void:
 ## rail rather than silently downgrading every selected row to "picked, not
 ## present."
 func update_from_party(entries: Array, active_index: int, active_out: bool = true) -> void:
+	_fit_compact_width()
 	_count_label.text = "TEAM  %d / %d" % [mini(entries.size(), SLOTS), SLOTS]
 	for i in SLOTS:
 		var has_creature: bool = i < entries.size()
@@ -1092,6 +1147,13 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 		_name_labels[i].add_theme_color_override("font_color",
 			UI_TOKENS.TEXT_MUTED if fainted or resting
 			else (UI_TOKENS.TEXT_PRIMARY if selected else UI_TOKENS.TEXT_SECONDARY))
+	# F10#6 review: compact rows hide their names, so the portrait chip carries
+	# the state the name colour did: the active one brightest, benched dimmer,
+	# fainted or resting dimmest (the KO/REST tags still name the state).
+	var chip_shade := (COMPACT_CHIP_MUTED if fainted or resting
+		else (1.0 if selected else COMPACT_CHIP_BENCHED)) if compact else 1.0
+	_chip_boxes[i].bg_color = tint * Color(chip_shade, chip_shade, chip_shade, 1.0)
+	_portraits[i].modulate = Color(chip_shade, chip_shade, chip_shade, 1.0)
 
 	_set_label(_name_labels[i], i, str(entry.get("label", "")))
 	var level := int(entry.get("level", 1))
@@ -1112,6 +1174,7 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 	var has_bond := entry.has("bond_nodes")
 	_bond_labels[i].visible = has_bond and not compact
 	_level_labels[i].visible = not compact
+	_name_labels[i].visible = not compact
 	if has_bond:
 		_bond_labels[i].text = "bond %d/%d" % [int(entry.get("bond_nodes", 0)), int(entry.get("bond_total", 5))]
 	_near[i] = bool(entry.get("bond_near", false)) or bool(entry.get("xp_near", false))
@@ -1288,7 +1351,7 @@ func _flick(i: int, event: Dictionary) -> void:
 	var bond := str(event.get("kind", "")) == "bond_credit"
 	_tick_labels[i].text = label
 	_tick_labels[i].add_theme_color_override("font_color", UI_TOKENS.WARNING if bond else UI_TOKENS.TEAL_SOFT)
-	_tick_plates[i].position = Vector2(TICK_X, _row_top(i) + TICK_PLATE_INSET_Y)
+	_tick_plates[i].position = Vector2(_tick_x(), _row_top(i) + TICK_PLATE_INSET_Y)
 	_tick_plates[i].modulate.a = 1.0
 	_tick_plates[i].visible = true
 	_tick_left[i] = FEED.seconds("tick_seconds", 0.9)
@@ -1308,7 +1371,7 @@ func _tick_ticks(timer_delta: float) -> void:
 		_tick_left[i] -= timer_delta
 		var t := clampf(1.0 - _tick_left[i] / maxf(total, 0.01), 0.0, 1.0)
 		# Rise a little and fade over the last half.
-		_tick_plates[i].position = Vector2(TICK_X, _row_top(i) + TICK_PLATE_INSET_Y - TICK_RISE * t)
+		_tick_plates[i].position = Vector2(_tick_x(), _row_top(i) + TICK_PLATE_INSET_Y - TICK_RISE * t)
 		_tick_plates[i].modulate.a = 1.0 if t < 0.5 else 1.0 - (t - 0.5) * 2.0
 		_bond_labels[i].scale = Vector2.ONE.lerp(Vector2(1.25, 1.25), maxf(0.0, 1.0 - t * 2.0))
 		if _tick_left[i] <= 0.0:
