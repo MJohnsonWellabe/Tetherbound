@@ -49,4 +49,3 @@ static func accepts_shelter(point: Vector2, centre: Vector2, radius: float,
 	var local := (point - centre) / maxf(radius, 1.0)
 	return local.length() <= float(shelter.get("max_radius_fraction", 0.78)) \
 		and local.dot(lee) >= float(shelter.get("min_projection", 0.04))
-
