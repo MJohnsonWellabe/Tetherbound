@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-28T14:25Z",
  "headline": [
-  "Criteria met: 89 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Nothing new has closed since F10#4 (08:42). Open: Meadows 8 (F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
+  "Criteria met: 90 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Nothing new has closed since F10#4 (08:42). Open: Meadows 7 (F01#2, F01#3, F04#1, F04#2, F04#3, F04#6, F04#7; F03#0 met by the Meadows lane), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
   "Main is green: CI passed on every merge since 10:57, including Codex's evidence compaction (#408, which cut about 3 GB of images from the tree) and Tidewake 2c tooling (#409). The auto-merge workflow now dispatches CI after each merge (#405).",
   "F04#7 (owner option c): harder five-member captains at the level ceiling. Bar: reader win ≥ 0.75; masher lead-faint = 1.00; reader median party cost ≤ 0.55× the masher's; a masher loses at least one Meadows named fight in ≥ 25% of seeded playthroughs. Per fight, Vance and Vess never beat a masher (disclosed). The Balance lane is running tests before it lands. The same bar applies to Tidewake F14#0.",
   "The owner has delegated lane decisions to the coordinator. Lanes land their own PRs and update this board and STATE."
