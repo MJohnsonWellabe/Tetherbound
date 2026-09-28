@@ -193,7 +193,15 @@
       "enabled": true,
       "left_column": {"right": 0.26, "top": 0.42},
       "margin": 0.02,
-      "min_shoulder": -1.5
+      "min_shoulder": -1.5,
+    "top_band": {
+      "_why": "F14#0 C3 (Aquaryn r2, ralph/reports/TIDEWAKE/f14_0_aquaryn_r2): a tall opponent uphill of the ally rode up under the boss panel (top 25% of a 1280x720 frame), head hidden in 9 of 18 code-blind frames. combat_manager.gd::_update_combat_top_band shifts the lens up (Camera3D.v_offset via camera_rig.gd::set_lens_lift; arm, pivot, yaw and look pitch unchanged) just enough that the opponent's live render top sits below `bottom` + `margin`, never so far that the ally's bounds drop below `ally_bottom_limit`, capped at `max_lift_m`, easing back to level. Fractions of the viewport height. Off for every fight except an opponent whose own camera block sets framing.top_band (combat_manager.gd::_opponent_camera), so already-judged fights elsewhere are unchanged. Presentation only. TUNABLE.",
+      "enabled": false,
+      "bottom": 0.25,
+      "margin": 0.02,
+      "ally_bottom_limit": 0.97,
+      "max_lift_m": 3.0
+    }
     },
     "body_clear": {
         "_why_ignore_lunging_foe": "F04#1 (tools/f04_fight_camera_probe.gd --live-member=relay_captain:2): a CHARGER's travelling lunge ends on the arm behind the ally, and the clamp put the lens on min_length_m inside the player's creature for every lunge. While the foe is mid-lunge the clamp stands down; the charging body crosses the shot instead. combat_manager.gd::_update_combat_body_clear.",

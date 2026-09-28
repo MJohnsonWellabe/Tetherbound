@@ -1,0 +1,1042 @@
+[
+  {
+    "ally": [
+      1809.0,
+      40.0,
+      4236.3,
+      40.0
+    ],
+    "camera": [
+      1803.43,
+      45.74,
+      4230.71,
+      40.0
+    ],
+    "enemy": [
+      1809.4,
+      40.0,
+      4241.28,
+      40.0
+    ],
+    "fight_s": 0.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-000.00.png",
+    "gap_m": 4.99,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.96,
+      40.0,
+      4235.96,
+      40.0
+    ],
+    "camera": [
+      1803.6,
+      46.26,
+      4229.53,
+      40.0
+    ],
+    "enemy": [
+      1809.48,
+      40.0,
+      4240.88,
+      40.0
+    ],
+    "fight_s": 0.45,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/tell-start-000.45.png",
+    "gap_m": 4.94,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1808.63,
+      40.0,
+      4232.72,
+      40.0
+    ],
+    "camera": [
+      1803.44,
+      46.41,
+      4226.04,
+      40.0
+    ],
+    "enemy": [
+      1809.48,
+      40.0,
+      4240.88,
+      40.0
+    ],
+    "fight_s": 1.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-001.00.png",
+    "gap_m": 8.2,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.19,
+      40.0,
+      4232.53,
+      40.0
+    ],
+    "camera": [
+      1803.02,
+      46.4,
+      4225.55,
+      40.0
+    ],
+    "enemy": [
+      1809.45,
+      40.0,
+      4240.63,
+      40.0
+    ],
+    "fight_s": 1.05,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/tell-late-001.05.png",
+    "gap_m": 8.2,
+    "opponent": "water_cannonback",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1808.16,
+      40.0,
+      4232.71,
+      40.0
+    ],
+    "camera": [
+      1802.74,
+      46.41,
+      4225.73,
+      40.0
+    ],
+    "enemy": [
+      1809.45,
+      40.0,
+      4240.59,
+      40.0
+    ],
+    "fight_s": 1.13,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/hit-001.13.png",
+    "gap_m": 7.99,
+    "opponent": "water_cannonback",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.17,
+      40.0,
+      4232.75,
+      40.0
+    ],
+    "camera": [
+      1802.71,
+      46.47,
+      4225.74,
+      40.0
+    ],
+    "enemy": [
+      1809.46,
+      40.0,
+      4240.66,
+      40.0
+    ],
+    "fight_s": 1.22,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/hit-001.22.png",
+    "gap_m": 8.02,
+    "opponent": "water_cannonback",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.23,
+      40.0,
+      4233.39,
+      40.0
+    ],
+    "camera": [
+      1802.7,
+      46.45,
+      4226.25,
+      40.0
+    ],
+    "enemy": [
+      1808.35,
+      40.0,
+      4241.97,
+      40.0
+    ],
+    "fight_s": 2.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-002.02.png",
+    "gap_m": 8.58,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.25,
+      40.0,
+      4233.46,
+      40.0
+    ],
+    "camera": [
+      1802.71,
+      46.39,
+      4226.75,
+      40.0
+    ],
+    "enemy": [
+      1808.11,
+      40.0,
+      4242.16,
+      40.0
+    ],
+    "fight_s": 2.22,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/tell-start-002.22.png",
+    "gap_m": 8.7,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1808.22,
+      40.0,
+      4232.54,
+      40.0
+    ],
+    "camera": [
+      1802.64,
+      46.41,
+      4225.7,
+      40.0
+    ],
+    "enemy": [
+      1808.11,
+      40.0,
+      4242.11,
+      40.0
+    ],
+    "fight_s": 2.82,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/tell-late-002.82.png",
+    "gap_m": 9.57,
+    "opponent": "water_cannonback",
+    "tag": "tell-late",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1808.21,
+      40.0,
+      4233.43,
+      40.0
+    ],
+    "camera": [
+      1802.9,
+      46.34,
+      4226.31,
+      40.0
+    ],
+    "enemy": [
+      1808.12,
+      40.0,
+      4241.87,
+      40.0
+    ],
+    "fight_s": 3.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-003.02.png",
+    "gap_m": 8.43,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.2,
+      40.0,
+      4234.51,
+      40.0
+    ],
+    "camera": [
+      1802.49,
+      46.47,
+      4227.65,
+      40.0
+    ],
+    "enemy": [
+      1807.11,
+      40.0,
+      4242.83,
+      40.0
+    ],
+    "fight_s": 4.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-004.02.png",
+    "gap_m": 8.39,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.14,
+      40.0,
+      4234.87,
+      40.0
+    ],
+    "camera": [
+      1802.29,
+      46.79,
+      4227.25,
+      40.0
+    ],
+    "enemy": [
+      1806.48,
+      40.0,
+      4243.14,
+      40.0
+    ],
+    "fight_s": 5.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-005.02.png",
+    "gap_m": 8.44,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.47,
+      40.0,
+      4232.64,
+      40.0
+    ],
+    "camera": [
+      1802.47,
+      46.91,
+      4224.88,
+      40.0
+    ],
+    "enemy": [
+      1807.52,
+      40.0,
+      4244.33,
+      40.0
+    ],
+    "fight_s": 6.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-006.02.png",
+    "gap_m": 11.72,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.44,
+      40.0,
+      4233.16,
+      40.0
+    ],
+    "camera": [
+      1803.27,
+      46.37,
+      4226.47,
+      40.0
+    ],
+    "enemy": [
+      1807.99,
+      40.0,
+      4242.31,
+      40.0
+    ],
+    "fight_s": 7.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-007.02.png",
+    "gap_m": 9.16,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.38,
+      40.0,
+      4234.12,
+      40.0
+    ],
+    "camera": [
+      1802.92,
+      46.45,
+      4227.13,
+      40.0
+    ],
+    "enemy": [
+      1808.0,
+      40.0,
+      4242.1,
+      40.0
+    ],
+    "fight_s": 8.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-008.02.png",
+    "gap_m": 7.99,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.34,
+      40.0,
+      4234.18,
+      40.0
+    ],
+    "camera": [
+      1803.29,
+      46.35,
+      4227.37,
+      40.0
+    ],
+    "enemy": [
+      1809.58,
+      40.0,
+      4243.24,
+      40.0
+    ],
+    "fight_s": 9.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-009.00.png",
+    "gap_m": 9.15,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.45,
+      40.0,
+      4235.03,
+      40.0
+    ],
+    "camera": [
+      1803.15,
+      46.4,
+      4227.91,
+      40.0
+    ],
+    "enemy": [
+      1809.54,
+      40.0,
+      4242.97,
+      40.0
+    ],
+    "fight_s": 10.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-010.00.png",
+    "gap_m": 8.01,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.48,
+      40.0,
+      4235.9,
+      40.0
+    ],
+    "camera": [
+      1802.97,
+      46.42,
+      4228.86,
+      40.0
+    ],
+    "enemy": [
+      1808.12,
+      40.0,
+      4244.36,
+      40.0
+    ],
+    "fight_s": 11.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-011.00.png",
+    "gap_m": 8.47,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.49,
+      40.0,
+      4235.74,
+      40.0
+    ],
+    "camera": [
+      1803.36,
+      46.34,
+      4228.36,
+      40.0
+    ],
+    "enemy": [
+      1808.13,
+      40.0,
+      4244.05,
+      40.0
+    ],
+    "fight_s": 12.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-012.00.png",
+    "gap_m": 8.32,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.51,
+      40.0,
+      4236.73,
+      40.0
+    ],
+    "camera": [
+      1803.01,
+      46.43,
+      4229.56,
+      40.0
+    ],
+    "enemy": [
+      1809.39,
+      40.0,
+      4245.2,
+      40.0
+    ],
+    "fight_s": 13.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-013.00.png",
+    "gap_m": 8.52,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.31,
+      40.0,
+      4235.39,
+      40.0
+    ],
+    "camera": [
+      1803.07,
+      46.42,
+      4228.29,
+      40.0
+    ],
+    "enemy": [
+      1809.72,
+      40.0,
+      4245.06,
+      40.0
+    ],
+    "fight_s": 14.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-014.00.png",
+    "gap_m": 9.77,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.55,
+      40.0,
+      4237.04,
+      40.0
+    ],
+    "camera": [
+      1803.24,
+      46.44,
+      4229.93,
+      40.0
+    ],
+    "enemy": [
+      1809.15,
+      40.0,
+      4245.63,
+      40.0
+    ],
+    "fight_s": 15.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-015.00.png",
+    "gap_m": 8.61,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.58,
+      40.0,
+      4237.78,
+      40.0
+    ],
+    "camera": [
+      1803.13,
+      46.42,
+      4230.8,
+      40.0
+    ],
+    "enemy": [
+      1808.21,
+      40.0,
+      4246.23,
+      40.0
+    ],
+    "fight_s": 16.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-016.00.png",
+    "gap_m": 8.46,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.54,
+      40.0,
+      4238.27,
+      40.0
+    ],
+    "camera": [
+      1803.1,
+      46.42,
+      4231.18,
+      40.0
+    ],
+    "enemy": [
+      1807.41,
+      40.0,
+      4246.82,
+      40.0
+    ],
+    "fight_s": 17.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-017.00.png",
+    "gap_m": 8.62,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.76,
+      40.0,
+      4237.5,
+      40.0
+    ],
+    "camera": [
+      1802.74,
+      47.07,
+      4229.22,
+      40.0
+    ],
+    "enemy": [
+      1806.56,
+      40.0,
+      4247.12,
+      40.0
+    ],
+    "fight_s": 18.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-018.00.png",
+    "gap_m": 9.86,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.39,
+      40.0,
+      4239.13,
+      40.0
+    ],
+    "camera": [
+      1802.82,
+      46.78,
+      4231.32,
+      40.0
+    ],
+    "enemy": [
+      1806.76,
+      40.0,
+      4247.12,
+      40.0
+    ],
+    "fight_s": 19.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-019.00.png",
+    "gap_m": 8.16,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.36,
+      40.0,
+      4238.32,
+      40.0
+    ],
+    "camera": [
+      1803.47,
+      46.39,
+      4231.22,
+      40.0
+    ],
+    "enemy": [
+      1808.03,
+      40.0,
+      4248.19,
+      40.0
+    ],
+    "fight_s": 20.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-020.00.png",
+    "gap_m": 9.87,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.31,
+      40.0,
+      4239.96,
+      40.0
+    ],
+    "camera": [
+      1803.0,
+      46.46,
+      4232.85,
+      40.0
+    ],
+    "enemy": [
+      1808.03,
+      40.0,
+      4247.97,
+      40.0
+    ],
+    "fight_s": 21.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-021.00.png",
+    "gap_m": 8.01,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.28,
+      40.0,
+      4240.35,
+      40.0
+    ],
+    "camera": [
+      1802.89,
+      46.63,
+      4232.89,
+      40.0
+    ],
+    "enemy": [
+      1806.34,
+      40.0,
+      4248.77,
+      40.0
+    ],
+    "fight_s": 22.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-022.00.png",
+    "gap_m": 8.63,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.22,
+      40.0,
+      4240.6,
+      40.0
+    ],
+    "camera": [
+      1802.49,
+      46.8,
+      4232.55,
+      40.0
+    ],
+    "enemy": [
+      1806.41,
+      40.0,
+      4248.46,
+      40.0
+    ],
+    "fight_s": 23.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-023.02.png",
+    "gap_m": 8.07,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.99,
+      40.0,
+      4241.33,
+      40.0
+    ],
+    "camera": [
+      1803.35,
+      46.75,
+      4232.92,
+      40.0
+    ],
+    "enemy": [
+      1804.83,
+      40.0,
+      4248.98,
+      40.0
+    ],
+    "fight_s": 24.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-024.02.png",
+    "gap_m": 8.28,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.31,
+      40.0,
+      4240.54,
+      40.0
+    ],
+    "camera": [
+      1803.91,
+      46.98,
+      4231.25,
+      40.0
+    ],
+    "enemy": [
+      1804.9,
+      40.0,
+      4248.7,
+      40.0
+    ],
+    "fight_s": 25.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-025.02.png",
+    "gap_m": 8.84,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.98,
+      40.0,
+      4241.35,
+      40.0
+    ],
+    "camera": [
+      1804.63,
+      46.73,
+      4232.47,
+      40.0
+    ],
+    "enemy": [
+      1803.84,
+      40.0,
+      4248.52,
+      40.0
+    ],
+    "fight_s": 26.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-026.02.png",
+    "gap_m": 8.28,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.98,
+      40.0,
+      4241.35,
+      40.0
+    ],
+    "camera": [
+      1805.46,
+      46.9,
+      4231.89,
+      40.0
+    ],
+    "enemy": [
+      1803.5,
+      40.0,
+      4248.26,
+      40.0
+    ],
+    "fight_s": 27.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-027.02.png",
+    "gap_m": 8.24,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.98,
+      40.0,
+      4241.35,
+      40.0
+    ],
+    "camera": [
+      1805.72,
+      46.55,
+      4232.52,
+      40.0
+    ],
+    "enemy": [
+      1804.66,
+      40.0,
+      4248.91,
+      40.0
+    ],
+    "fight_s": 28.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-028.02.png",
+    "gap_m": 8.26,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.28,
+      40.0,
+      4240.65,
+      40.0
+    ],
+    "camera": [
+      1806.33,
+      46.35,
+      4231.9,
+      40.0
+    ],
+    "enemy": [
+      1804.79,
+      40.0,
+      4248.64,
+      40.0
+    ],
+    "fight_s": 29.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-029.02.png",
+    "gap_m": 8.72,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.85,
+      40.0,
+      4241.64,
+      40.0
+    ],
+    "camera": [
+      1805.69,
+      46.47,
+      4233.01,
+      40.0
+    ],
+    "enemy": [
+      1803.77,
+      40.0,
+      4248.48,
+      40.0
+    ],
+    "fight_s": 30.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-030.02.png",
+    "gap_m": 7.96,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.94,
+      40.0,
+      4240.04,
+      40.0
+    ],
+    "camera": [
+      1806.41,
+      47.12,
+      4230.0,
+      40.0
+    ],
+    "enemy": [
+      1803.43,
+      40.0,
+      4248.11,
+      40.0
+    ],
+    "fight_s": 31.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-031.02.png",
+    "gap_m": 9.76,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.0,
+      40.0,
+      4241.42,
+      40.0
+    ],
+    "camera": [
+      1805.74,
+      46.88,
+      4231.88,
+      40.0
+    ],
+    "enemy": [
+      1803.88,
+      40.0,
+      4248.54,
+      40.0
+    ],
+    "fight_s": 32.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-032.02.png",
+    "gap_m": 8.22,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.71,
+      40.0,
+      4239.83,
+      40.0
+    ],
+    "camera": [
+      1806.89,
+      46.41,
+      4231.21,
+      40.0
+    ],
+    "enemy": [
+      1804.63,
+      40.0,
+      4248.89,
+      40.0
+    ],
+    "fight_s": 33.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_nerissa_main092/nerissa/t-033.02.png",
+    "gap_m": 9.93,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

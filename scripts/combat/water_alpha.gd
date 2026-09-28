@@ -81,6 +81,9 @@ func build(realm: Node3D, director: Node) -> void:
 	body.global_position.y = world.ground_height_at(body.position.x, body.position.z)
 	body.home = body.global_position
 	body.set_alpha(true)
+	# F14#0 C3: Aquaryn's own fight-camera block (combat_manager.gd::_opponent_camera).
+	if rules.get("combat_camera") is Dictionary:
+		body.set_meta("combat_camera", (rules.combat_camera as Dictionary).duplicate(true))
 	_retire_completed_body()
 	body.register_environment_velocity_modifier(&"water_alpha", body, body.apply_surface_velocity, 0, Vector3(1, 0, 1))
 	body.strike_ready.connect(_on_alpha_strike)

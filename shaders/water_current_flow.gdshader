@@ -6,7 +6,8 @@ render_mode blend_mix, cull_disabled, depth_draw_never, diffuse_burley, specular
 // in world space along the current's single physics flow vector, so the
 // streaks drift exactly the way the swimmer is pushed. COLOR.rg = flow
 // direction * 0.5 + 0.5, COLOR.b = relative strength, UV.x = across (0..1),
-// UV2.x = fraction along the route (end fades).
+// UV.y = metres along the route, UV2.x = fraction along it, UV2.y = its
+// length in metres (end fades).
 uniform vec4 foam_colour : source_color = vec4(0.90, 0.97, 0.97, 1.0);
 uniform float opacity = 0.5;
 // A faint lane of disturbed water under the foam, so the current reads as a
@@ -28,6 +29,16 @@ uniform float streak_density = 1.0;
 uniform float dash_fill = 0.5;
 uniform float fleck_amount = 0.5;
 uniform float brightness = 1.0;
+// F13#5 direction cue: foam comets on the flow lanes, a bright head
+// downstream and a tail fading upstream, all drifting with the physics flow,
+// so a still frame shows which way the current runs and two frames show them
+// all moving the same way. 0 = off.
+uniform float comet_opacity = 0.0;
+uniform float comet_length_m = 10.0;
+uniform float comet_fill = 0.6;
+// Ends fade over this many metres (0 = the old 12% of the route, which hid the
+// first tens of metres of a long crossing from a player standing at its dock).
+uniform float end_fade_m = 0.0;
 uniform float fade_start_m = 180.0;
 uniform float fade_end_m = 520.0;
 uniform float depth_pull_fraction = 0.003;
@@ -74,12 +85,28 @@ void fragment() {
 	float fleck = smoothstep(fleck_cut, fleck_cut + 0.08,
 		noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35))) * min(1.0, fleck_amount * 1.5);
 	float streak = max(line * dash * carried, fleck * 0.6);
+	float comet = 0.0;
+	if (comet_opacity > 0.0) {
+		// Per lane, one comet every comet_length_m (some skipped): its body
+		// ramps up along the flow and cuts off at the head.
+		float lane_id = floor(lane);
+		float phase = fract((along - TIME * speed) / comet_length_m + hash(vec2(lane_id, 1.37)));
+		float body = smoothstep(0.0, 0.8, phase) * (1.0 - smoothstep(0.9, 0.97, phase));
+		float profile = 1.0 - abs(fract(lane) * 2.0 - 1.0);
+		float taper = smoothstep(0.9 - 0.35 * phase, 0.98, profile);
+		float kept = step(hash(vec2(lane_id, floor((along - TIME * speed) / comet_length_m + hash(vec2(lane_id, 1.37))))), comet_fill);
+		comet = body * taper * kept * comet_opacity;
+	}
 	float across = abs(UV.x - 0.5) * 2.0;
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
 	float ends = smoothstep(0.0, 0.12, UV2.x) * (1.0 - smoothstep(0.88, 1.0, UV2.x));
+	if (end_fade_m > 0.0 && UV2.y > 0.0) {
+		ends = smoothstep(0.0, end_fade_m, UV.y) * (1.0 - smoothstep(UV2.y - end_fade_m, UV2.y, UV.y));
+	}
 	float fade = 1.0 - smoothstep(fade_start_m, fade_end_m, v_distance);
 	float mask = edge * ends * fade * mix(0.55, 1.0, calm_scale);
-	float foam = clamp(opacity * streak * mix(0.45, 1.0, strength), 0.0, 1.0);
+	// The comets say which way, not how hard: they are not dimmed by strength.
+	float foam = clamp(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), 0.0, 1.0);
 	float band = lane_opacity * mix(0.5, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
 	float alpha = foam + band * (1.0 - foam);

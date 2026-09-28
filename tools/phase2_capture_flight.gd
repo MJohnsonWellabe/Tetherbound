@@ -1,0 +1,177 @@
+extends SceneTree
+
+## Explicit unlocked aerie checkpoint. Actual double-Jump and flight-controller
+## inputs produce this airborne frame; no mid-flight pose writes or fake carrier.
+const SCENE:=preload("res://scenes/world/cloudreach_cliffs.tscn")
+const SPECIES:=preload("res://scripts/creatures/creature_species.gd")
+var output:="res://ralph/reports/VISUAL/phase2/cloudreach/flight_main"
+var _seed := 2042
+var _return_perch := false
+var _records: Array[Dictionary] = []
+
+func _save(name: String, player: CharacterBody3D, fly: Node) -> void:
+	await RenderingServer.frame_post_draw
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
+	var file := "%s/%s.png" % [output, name]
+	if root.get_texture().get_image().save_png(file) == OK:
+		_records.append({"id": name, "file": file, "state": str(fly.get("state")),
+			"player_position": str(player.global_position), "time": "day"})
+		_write_manifest(false)
+
+func _write_manifest(complete: bool) -> void:
+	var file := FileAccess.open(output + "/manifest.json", FileAccess.WRITE)
+	file.store_string(JSON.stringify({"biome": "cloudreach", "system": "flying",
+		"scene": "res://scenes/world/cloudreach_cliffs.tscn", "seed": _seed,
+		"display_server": DisplayServer.get_name(),
+		"rendering_method": RenderingServer.get_current_rendering_method(),
+		"resolution": [root.size.x, root.size.y], "frames": _records,
+		"complete": complete, "repro_args": (["--return-perch"] if _return_perch else []) + ["--seed=%d" % _seed]}, "\t") + "\n")
+	file.close()
+
+func _init() -> void:
+	_run.call_deferred()
+
+func _frames(count: int) -> void:
+	for frame in count:
+		await physics_frame
+
+func _action(name: String,pressed: bool) -> void:
+	var event:=InputEventAction.new()
+	event.action=name
+	event.pressed=pressed
+	Input.parse_input_event(event)
+
+func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			output = arg.trim_prefix("--output=")
+		elif arg.begins_with("--seed="):
+			_seed = int(arg.trim_prefix("--seed="))
+		elif arg == "--return-perch":
+			_return_perch = true
+	if not output.begins_with("res://ralph/reports/VISUAL/phase2/cloudreach/"):
+		push_error("Flight evidence must stay under Cloudreach Phase 2 reports")
+		quit(1)
+		return
+	seed(_seed)
+	root.size=Vector2i(1920,1080)
+	root.content_scale_size=Vector2i(1920,1080)
+	var game:=root.get_node("Game")
+	game.call("reset_for_new_game")
+	game.set("current_realm","cloudreach")
+	game.get("progression").call("set_flag","realm_key_cloudreach")
+	game.get("progression").call("set_flag","fly_traversal_unlocked")
+	game.get("party").call("add",SPECIES.spawn("galecrest"))
+	var world:=SCENE.instantiate()
+	root.add_child(world)
+	current_scene=world
+	await _frames(12)
+	var runtime:=world.get_node_or_null("CloudreachRuntime")
+	if runtime==null or not bool(runtime.get("_mounted")):
+		push_error("Refuse incomplete production Fly evidence")
+		quit(1)
+		return
+	var player:=world.get_node("Player") as CharacterBody3D
+	var rig:=world.get_node("CameraRig")
+	for layer: Node in world.find_children("*", "CanvasLayer", true, false):
+		(layer as CanvasLayer).visible = false
+	player.global_position=Vector3(400,610.25,3250)
+	player.velocity=Vector3.ZERO
+	rig.global_position=player.global_position+Vector3.UP*1.55
+	rig.set("yaw",atan2(-710.0,310.0))
+	await _frames(12)
+	_action("jump",true)
+	await _frames(3)
+	_action("jump",false)
+	await _frames(6)
+	_action("jump",true)
+	await _frames(3)
+	_action("jump",false)
+	var fly: Node=player.get("fly_controller")
+	if not fly.call("is_flying"):
+		push_error("Actual double Jump did not launch production Fly")
+		quit(1)
+		return
+	await _save("launch", player, fly)
+	# The authored launch ledge at 520,650,3300 is a real landing surface.
+	var target:=Vector3(400,620,3250) if _return_perch else Vector3(520,665,3300)
+	var reached:=false
+	var history: Array[Dictionary]=[]
+	for frame in 2400:
+		var offset:=target-player.global_position
+		if offset.length()<6.0:
+			reached=true
+			break
+		var flat:=Vector3(offset.x,0,offset.z)
+		var local: Vector3=(rig.call("planar_basis") as Basis).inverse()*flat.normalized()*clampf(flat.length()/12.0,0,1)
+		Input.action_press("move_right",maxf(local.x,0))
+		Input.action_press("move_left",maxf(-local.x,0))
+		Input.action_press("move_back",maxf(local.z,0))
+		Input.action_press("move_forward",maxf(-local.z,0))
+		# A zero-strength action_press still owns the pressed action. Release the
+		# real action once high enough so this fixture does not command endless lift.
+		if offset.y>2:
+			Input.action_press("jump")
+		else:
+			Input.action_release("jump")
+		await physics_frame
+		if frame == 100:
+			await _save("glide", player, fly)
+		if frame%60==0 or not fly.call("is_flying"):
+			var contacts: Array[String]=[]
+			for index in player.get_slide_collision_count():
+				var collision:=player.get_slide_collision(index)
+				contacts.append(str(collision.get_collider().get_path())+" normal="+str(collision.get_normal()))
+			var sample: Dictionary={"frame":frame,"position":str(player.global_position),"velocity":str(player.velocity),"state":fly.get("state"),"denial":fly.get("last_denial"),"stamina":player.get("vitals").get("stamina"),"contacts":contacts}
+			history.append(sample)
+			print("FLY TRACE ",JSON.stringify(sample))
+		if not fly.call("is_flying"):
+			break
+	for action in ["move_right","move_left","move_back","move_forward","jump"]:
+		Input.action_release(action)
+	if not reached or not fly.call("is_flying"):
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
+		var diagnostic:=FileAccess.open(output+"/fly-diagnostic.json",FileAccess.WRITE)
+		diagnostic.store_string(JSON.stringify({"target":str(target),"updrafts":str(fly.get("updrafts")),"history":history},"  "))
+		push_error("Production flight did not reach the actual airborne evidence stand")
+		quit(1)
+		return
+	var pad:=InputEventJoypadMotion.new()
+	pad.axis=JOY_AXIS_RIGHT_X
+	pad.axis_value=0.5
+	Input.parse_input_event(pad)
+	await _frames(1)
+	pad=InputEventJoypadMotion.new()
+	pad.axis=JOY_AXIS_RIGHT_X
+	pad.axis_value=0
+	Input.parse_input_event(pad)
+	var draws:=0.0
+	var primitives:=0.0
+	var started:=Time.get_ticks_usec()
+	for frame in 24:
+		await RenderingServer.frame_post_draw
+		draws+=Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
+		primitives+=Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
+	await _save("approach_perch", player, fly)
+	# Descend through the production controller onto the actual target shelf.
+	# Preserve an airborne approach frame if collision never resolves a landing.
+	_action("fly_descend", true)
+	var landed := false
+	for frame in 600:
+		await physics_frame
+		if frame == 35:
+			await _save("descent", player, fly)
+		if player.is_on_floor() and not fly.call("is_flying"):
+			landed = true
+			break
+	_action("fly_descend", false)
+	if landed:
+		await _frames(12)
+		await _save("landed_shelf", player, fly)
+		await _frames(30)
+		await _save("perch_rest", player, fly)
+	else:
+		print("FLY CAPTURE: shelf landing unresolved at ",player.global_position," state=",fly.get("state"))
+	_write_manifest(true)
+	print("CLOUDREACH REAL FLY VISUAL PASS at ",player.global_position)
+	quit(0)

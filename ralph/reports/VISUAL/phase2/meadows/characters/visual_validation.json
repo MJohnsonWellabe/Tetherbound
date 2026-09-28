@@ -1,0 +1,20 @@
+{
+  "review": "code-blind full-frame review",
+  "unverified_post_ids": [
+    "meadows__inventory__character__kell",
+    "meadows__inventory__character__corin",
+    "meadows__inventory__character__quarry_foreman",
+    "meadows__inventory__character__sela",
+    "meadows__inventory__character__garrick",
+    "meadows__inventory__trainer__old_champion_bram",
+    "meadows__inventory__trainer__stronghold_courtyard",
+    "meadows__inventory__trainer__stronghold_elite",
+    "meadows__inventory__trainer__warden_aldis",
+    "meadows__inventory__trainer__night_watch_farro",
+    "meadows__inventory__trainer__wanderer_trail_camp",
+    "meadows__inventory__trainer__tournament_quarter_mira",
+    "meadows__inventory__trainer__tournament_semi_tam",
+    "meadows__inventory__trainer__tournament_final_oskar"
+  ],
+  "reason": "Named subject is absent, obstructed, ambiguous, or duplicated in this authored-post camera fixture; reshoot or progress to the required state."
+}
