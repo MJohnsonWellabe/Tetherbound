@@ -150,9 +150,29 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	var height := float(placeholder.get("height", 2.0)) * scale_factor
 	var distance := maxf(7.0, height * 1.8)
 	var side := clampf(height * 0.7, 2.0, 5.0)
-	var subject_x := stage.x + side
-	var subject_z := stage.y + distance
-	var ground := float(_world.call("ground_height_at", subject_x, subject_z))
+	var subject_x := NAN
+	var subject_z := NAN
+	var ground := NAN
+	# Cliff shelves and narrow bridges can leave the first forward point over a
+	# void. Search nearby walkable presentation ground before placing a body;
+	# a NaN transform produces a plausible-looking image with no creature.
+	for candidate_distance: float in [distance, distance + 3.0, distance + 6.0, 5.0]:
+		for candidate_side: float in [side, -side, 0.0, side + 3.0, -side - 3.0]:
+			var x := stage.x + candidate_side
+			var z := stage.y + candidate_distance
+			var y := float(_world.call("ground_height_at", x, z))
+			if is_finite(y):
+				subject_x = x
+				subject_z = z
+				ground = y
+				side = candidate_side
+				distance = candidate_distance
+				break
+		if is_finite(ground):
+			break
+	if not is_finite(ground):
+		_failures.append("%s %s: no finite forward ground near trainer" % [species, pose])
+		return
 	var body := CREATURE_SCENE.instantiate() as Node3D
 	body.name = "Phase2_%s_%s" % [species, pose]
 	body.set_script(BODY)
