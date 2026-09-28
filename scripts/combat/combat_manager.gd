@@ -4332,6 +4332,22 @@ func enemy_windup_is_heavy() -> bool:
 	return float(cfg.get("telegraph", 0.0)) >= floor_s - 0.001
 
 
+## F04#1/#2: the named question the current wind-up asks, from the creature's
+## own authored attack: "charge" for a travelling lunge (a CHARGER's lane),
+## "dive" for one that also repositions far (a DIVER), else "". The HUD names
+## it, so Vance's and Halder's lane and Vess's dive stop sharing one warning.
+func enemy_windup_shape() -> String:
+	if not enemy_is_winding_up() or not _wild.has_method("combat_config"):
+		return ""
+	var cfg: Dictionary = _wild.call("combat_config")
+	if not bool(cfg.get("lunge_travels", false)) or float(cfg.get("lunge", 0.0)) <= 0.0:
+		return ""
+	var tell := MATH.config().get("telegraph", {}) as Dictionary
+	if float(cfg.get("reposition_distance", 0.0)) >= float(tell.get("dive_reposition_m", 5.0)):
+		return "dive"
+	return "charge"
+
+
 ## True while the enemy is rooted — winding up or recovering. The recovery half
 ## is the player's punish window.
 func enemy_is_rooted() -> bool:

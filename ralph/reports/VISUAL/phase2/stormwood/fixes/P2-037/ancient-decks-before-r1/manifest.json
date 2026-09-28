@@ -1,0 +1,837 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "5b4f093d3790abe310ed492e88259053e03d3dd8",
+  "repro": "Fresh isolated APPDATA. Temporarily enable master, canopy_atlas and branching_crown; ancient_trunk and built_detail=false. godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --position 0,0 --audio-driver Dummy --script tools/phase2_capture_stormheart_decks.gd -- --out=res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1 --label=decks-before-r1 --phases=calm,break --no-aftermath; restore original disabled config.",
+  "source_manifest_sha256": "1cade119f46d4e7324f157e61adffe5ded236ed7165d71f6ccf537893d62ddcb",
+  "capture_metadata": {
+    "failures": [],
+    "label": "decks-before-r1",
+    "source_engine_manifest_sha256": "2f1e3508fd4fd8156b8466232ac6594c7a77afa7ad171ca801fea728aabbc8a0",
+    "candidate_flags": {
+      "master": true,
+      "canopy_atlas": true,
+      "branching_crown": true,
+      "ancient_trunk": false,
+      "built_detail": false
+    },
+    "fixture_limits": "Debug staging in production scene/camera, weather/clock pins and healing; HUD hidden. Deck stands verify physical floor collider/height. Not earned progression, ascent or traversal proof."
+  },
+  "frames": [
+    {
+      "id": "entry_deck_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          0.0,
+          6.00032043457031,
+          -35.0
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -1.0,
+            0.0,
+            -1.50995802528087e-07
+          ],
+          [
+            4.1620083379712e-08,
+            0.961261689662933,
+            -0.275637358427048
+          ],
+          [
+            1.45146486829617e-07,
+            -0.275637358427048,
+            -0.961261689662933
+          ]
+        ],
+        "camera_pos": [
+          -100.000007629395,
+          118.375946044922,
+          5430.00146484375
+        ],
+        "description": "Stormheart actual raised entry_deck",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/entry_deck_calm.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/OuterWorks",
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "position": [
+            -100.0,
+            118.059112548828,
+            5435.0
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "entry_deck_calm",
+        "intended_local_floor": [
+          0.0,
+          6.0,
+          -35.0
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          118.059432983398,
+          5435.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.011,
+          "presentation_key": "calm",
+          "rain_amount_ratio": 0.300000011920929,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+        ],
+        "surge_elapsed": 2.5349445050505,
+        "surge_phase": "calm",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "946f995abaeef8d2c5e07b078c14b0ae21c581d5d97a0c98c513b1bde43905c8",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/entry_deck_calm.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "entry_deck_break",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          0.0,
+          6.00032043457031,
+          -35.0
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -1.0,
+            0.0,
+            -1.50995802528087e-07
+          ],
+          [
+            4.1620083379712e-08,
+            0.961261689662933,
+            -0.275637358427048
+          ],
+          [
+            1.45146486829617e-07,
+            -0.275637358427048,
+            -0.961261689662933
+          ]
+        ],
+        "camera_pos": [
+          -100.000007629395,
+          118.375946044922,
+          5430.00146484375
+        ],
+        "description": "Stormheart actual raised entry_deck",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/entry_deck_break.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/OuterWorks",
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "position": [
+            -100.0,
+            118.059112548828,
+            5435.0
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "entry_deck_break",
+        "intended_local_floor": [
+          0.0,
+          6.0,
+          -35.0
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          118.059432983398,
+          5435.0
+        ],
+        "presentation": {
+          "bolt_level": 0.623,
+          "cloud_flash_level": 0.098,
+          "flash_level": 0.0,
+          "phase_progress": 0.028,
+          "presentation_key": "break",
+          "rain_amount_ratio": 1.0,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 333.373208,
+        "surge_phase": "break",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "058935111fa92c91439f9d3f72797f633e92d728d3633f1a1d836f80d90c6f41",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/entry_deck_break.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "middle_ascent_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          -3.2586669921875,
+          60.7281646728516,
+          25.794921875
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            0.992114663124084,
+            5.00679213644162e-08,
+            0.125333651900291
+          ],
+          [
+            -0.0217640269547701,
+            0.984807729721069,
+            0.172279044985771
+          ],
+          [
+            -0.123429544270039,
+            -0.173648327589035,
+            0.977042198181152
+          ]
+        ],
+        "camera_pos": [
+          -103.71248626709,
+          173.898818969727,
+          5499.38720703125
+        ],
+        "description": "Stormheart actual raised middle_ascent",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/middle_ascent_calm.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/HollowTrunkAscent",
+          "normal": [
+            0.250040888786316,
+            0.967675566673279,
+            0.0329184532165527
+          ],
+          "position": [
+            -103.258666992188,
+            172.773620605469,
+            5495.794921875
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "middle_ascent_calm",
+        "intended_local_floor": [
+          -3.25866413116455,
+          60.7200012207031,
+          25.7949829101563
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -103.258666992188,
+          172.78727722168,
+          5495.794921875
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.011,
+          "presentation_key": "calm",
+          "rain_amount_ratio": 0.300000011920929,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 2.68731066666668,
+        "surge_phase": "calm",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "d656066b3ec73844777a645716833474707aaa2c8f5e477294bc698ccd778b78",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/middle_ascent_calm.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "middle_ascent_break",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          -3.2586669921875,
+          60.7281646728516,
+          25.794921875
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            0.992114663124084,
+            5.00679213644162e-08,
+            0.125333651900291
+          ],
+          [
+            -0.0217640269547701,
+            0.984807729721069,
+            0.172279044985771
+          ],
+          [
+            -0.123429544270039,
+            -0.173648327589035,
+            0.977042198181152
+          ]
+        ],
+        "camera_pos": [
+          -103.71248626709,
+          173.898818969727,
+          5499.38720703125
+        ],
+        "description": "Stormheart actual raised middle_ascent",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/middle_ascent_break.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/HollowTrunkAscent",
+          "normal": [
+            0.250040888786316,
+            0.967675566673279,
+            0.0329184532165527
+          ],
+          "position": [
+            -103.258666992188,
+            172.773620605469,
+            5495.794921875
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "middle_ascent_break",
+        "intended_local_floor": [
+          -3.25866413116455,
+          60.7200012207031,
+          25.7949829101563
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -103.258666992188,
+          172.78727722168,
+          5495.794921875
+        ],
+        "presentation": {
+          "bolt_level": 0.381,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.036,
+          "presentation_key": "break",
+          "rain_amount_ratio": 1.0,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 334.354808333334,
+        "surge_phase": "break",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "c334764ec56779361cc1c516bc44b763ee39c4d4712530538d056810617acbf2",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/middle_ascent_break.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "core_arena_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          0.0,
+          150.000274658203,
+          25.0
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            1.0,
+            5.15074844997798e-08,
+            1.10706368516844e-08
+          ],
+          [
+            -5.21542666831465e-08,
+            0.997564077377319,
+            0.0697565972805023
+          ],
+          [
+            -7.45068273744209e-09,
+            -0.0697566047310829,
+            0.997564077377319
+          ]
+        ],
+        "camera_pos": [
+          -100.0,
+          263.446685791016,
+          5500.1875
+        ],
+        "description": "Stormheart actual raised core_arena",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/core_arena_calm.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/DynamoCore",
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "position": [
+            -100.0,
+            262.059112548828,
+            5495.0
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "core_arena_calm",
+        "intended_local_floor": [
+          0.0,
+          150.0,
+          25.0
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          262.059387207031,
+          5495.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.011,
+          "presentation_key": "calm",
+          "rain_amount_ratio": 0.300000011920929,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 2.6459544074074,
+        "surge_phase": "calm",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "749a1054e80eec663c81ad0a57413f3705ba5685031ce8794338ee77a8507ba6",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/core_arena_calm.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "core_arena_break",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          0.0,
+          150.000274658203,
+          25.0
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            1.0,
+            5.15078397711477e-08,
+            1.1070707905958e-08
+          ],
+          [
+            -5.21546219545144e-08,
+            0.997564077377319,
+            0.0697565972805023
+          ],
+          [
+            -7.45072892271992e-09,
+            -0.0697566047310829,
+            0.997564077377319
+          ]
+        ],
+        "camera_pos": [
+          -100.0,
+          263.446685791016,
+          5500.1875
+        ],
+        "description": "Stormheart actual raised core_arena",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/core_arena_break.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/DynamoCore",
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "position": [
+            -100.0,
+            262.059112548828,
+            5495.0
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "core_arena_break",
+        "intended_local_floor": [
+          0.0,
+          150.0,
+          25.0
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -100.0,
+          262.059387207031,
+          5495.0
+        ],
+        "presentation": {
+          "bolt_level": 0.369,
+          "cloud_flash_level": 0.046,
+          "flash_level": 0.0,
+          "phase_progress": 0.032,
+          "presentation_key": "break",
+          "rain_amount_ratio": 1.0,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 333.858184666667,
+        "surge_phase": "break",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "d92aa246631b178503a20594de1f8cfa28ab1a9ffec1cf6d084db726da11f4f4",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/core_arena_break.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "crown_chamber_calm",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          12.0,
+          174.000274658203,
+          0.0
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -3.99169231002361e-08,
+            5.25473140555732e-08,
+            -1.0
+          ],
+          [
+            -0.0697565972805023,
+            0.997564077377319,
+            5.5203781101909e-08
+          ],
+          [
+            0.997564077377319,
+            0.0697566047310829,
+            -3.61541658833175e-08
+          ]
+        ],
+        "camera_pos": [
+          -82.8126678466797,
+          288.172180175781,
+          5470.0
+        ],
+        "description": "Stormheart actual raised crown_chamber",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/crown_chamber_calm.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/CrownChamber",
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "position": [
+            -88.0,
+            286.059112548828,
+            5470.0
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "crown_chamber_calm",
+        "intended_local_floor": [
+          12.0,
+          174.0,
+          0.0
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -88.0,
+          286.059387207031,
+          5470.0
+        ],
+        "presentation": {
+          "bolt_level": 0.0,
+          "cloud_flash_level": 0.0,
+          "flash_level": 0.0,
+          "phase_progress": 0.01,
+          "presentation_key": "calm",
+          "rain_amount_ratio": 0.300000011920929,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 2.50445742424243,
+        "surge_phase": "calm",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "b196e644c49f64eccdace15186e661aa9a4b7f6d2debd333b4aead79902f2cd2",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/crown_chamber_calm.jpg",
+      "tile_index": 6,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "crown_chamber_break",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/ancient-decks-before-r1/contact_sheet_01.jpg",
+      "capture": {
+        "actual_player_local": [
+          12.0,
+          174.000274658203,
+          0.0
+        ],
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_basis": [
+          [
+            -3.99169231002361e-08,
+            5.25473140555732e-08,
+            -1.0
+          ],
+          [
+            -0.0697565972805023,
+            0.997564077377319,
+            5.5203781101909e-08
+          ],
+          [
+            0.997564077377319,
+            0.0697566047310829,
+            -3.61541658833175e-08
+          ]
+        ],
+        "camera_pos": [
+          -82.8126754760742,
+          288.172149658203,
+          5470.0
+        ],
+        "description": "Stormheart actual raised crown_chamber",
+        "file": "res://.tmp/stormwood-phase2/p2037-ancient-decks-before-r1/crown_chamber_break.jpg",
+        "fixture_limit": "Debug placement on verified floor; not earned ascent/traversal proof.",
+        "floor_hit": {
+          "collider_path": "StormheartTree/CrownChamber",
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "position": [
+            -88.0,
+            286.059112548828,
+            5470.0
+          ]
+        },
+        "full_size_requested": true,
+        "hud": false,
+        "id": "crown_chamber_break",
+        "intended_local_floor": [
+          12.0,
+          174.0,
+          0.0
+        ],
+        "label": "decks-before-r1",
+        "long_storm_ended": false,
+        "player": [
+          -88.0,
+          286.059387207031,
+          5470.0
+        ],
+        "presentation": {
+          "bolt_level": 0.667,
+          "cloud_flash_level": 0.244,
+          "flash_level": 0.0,
+          "phase_progress": 0.023,
+          "presentation_key": "break",
+          "rain_amount_ratio": 1.0,
+          "rain_emitting": true,
+          "rain_visible": true,
+          "roofed": false,
+          "steam_level": 0.0
+        },
+        "region": "dynamo",
+        "renderer": "opengl3",
+        "size": [
+          1920,
+          1080
+        ],
+        "staged": [
+          "day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+          "world hour pinned; Stormwood has one always-purple look (owner canon), so the hour is cosmetic",
+          "debug placement on actual raised floor; not earned ascent or traversal proof",
+          "settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+          "Break frames timed on a decorative sky bolt (bolt_level >= 0.3) when one fires within ~20 s"
+        ],
+        "surge_elapsed": 332.718931333333,
+        "surge_phase": "break",
+        "tree_origin": [
+          -100.0,
+          112.059112548828,
+          5470.0
+        ]
+      },
+      "source_sha256": "0597850d0df11063ccf02ad51fa535f9c09ca04b5addbfc2dd65353d2fca07ba",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-ancient-decks-before-r1/crown_chamber_break.jpg",
+      "tile_index": 7,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

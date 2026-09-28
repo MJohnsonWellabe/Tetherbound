@@ -7,11 +7,11 @@
    "id": "F01",
    "title": "Village road topology and opening",
    "chapter": "Meadows",
-   "pct": 86,
+   "pct": 100,
    "counts": {
-    "met": 6,
+    "met": 7,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -37,9 +37,8 @@
     },
     {
      "text": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate",
-     "status": "in_progress",
-     "evidence": "Same capture tool on branch; no night result recorded",
-     "gap": "Run night walk and record"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS/f01-walks/night_d41ff2f0 (render 36439735704: tests/capture_village_walk.gd --route=visits --time=night --from-title, PASS visited=11 at 23:00, controller events only); the old key hangs glowing on its post by The Rise and reads in the world (key_post.json); code-blind verdict code_blind_judge_verdict_night_d41ff2f0.md PASS; strict re-check RECHECK_F01_3.md MET. Bars A/B → Phase 2 catalog."
     },
     {
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
@@ -912,7 +911,7 @@
   {
    "id": "M1",
    "status": "in_progress",
-   "note": "Road topology on ralph/f01-village-road-plan; one-starter earned bridge pass; two-peer opening/tournament pass with fixtures."
+   "note": "All F01 feeders met (F01#2 day walk and F01#3 night walk code-blind PASS at d41ff2f0); card integrated run next."
   },
   {
    "id": "M2",

@@ -3,6 +3,19 @@
   "_comment": "P2-037 candidate: ground the visual bark skirt without altering the tree's position, decks, ascent, rails, collision or entrance split. Full landmark identity and native comparison remain open.",
   "ground_shell_base": true,
   "bark_embed_m": 0.5,
+  "ancient_trunk": {
+    "enabled": false,
+    "_comment": "P2-037: articulated outer bark and split crown tips around the unchanged inner clearance. Visual geometry and UVs only; native comparison required.",
+    "lobe_depth_m": 8.0,
+    "bark_repeat_m": 4.0
+  },
+  "built_detail": {
+    "enabled": false,
+    "_comment": "P2-037: distinct installed-family cut wood on existing floors, supported deck fascia and hanging blue/gold cloth. No new floors, barriers or collision.",
+    "wood_tint": "#c4aa87",
+    "banner_colour": "#183e65",
+    "banner_trim": "#d5b466"
+  },
   "branching_crown": {
     "enabled": false,
     "_comment": "Reference-backed P2-037 geometry candidate: connected asymmetric branch tiers and overlapping installed-family leaf masses. Visual only; existing shell, entrance, platforms, ascent and collisions remain unchanged. Native exterior/interior review required.",
