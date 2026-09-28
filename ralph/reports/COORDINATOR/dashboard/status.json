@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T02:00Z",
+ "updated": "2026-09-28T03:15Z",
  "headline": [
-  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main (3dbec66b). Its first real CI is the full run 36367365900 on main (in progress).",
+  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main. Its first full CI (run 36367365900) found 2 real failures: the earned-aim eight-tick tap (fixed, #394) and the Cloudreach co-op forced dismount, where the guest lands 4.9 m above its mount (fix in progress). Fast CI on main is green at 7cb77fa7.",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
@@ -289,10 +289,22 @@
    "contents": "Every lane head consolidated, work in progress switched off or unwired; phase briefs CLAUDE_START_HERE/CODEX_START_HERE; self-landing process; docs cleanup; owner's 23:55 decisions"
   },
   {
-   "name": "CI gap fix (tb/integration PR)",
-   "sha": "pending",
-   "state": "PR open with auto-merge",
+   "name": "CI gap fix (PR #393)",
+   "sha": "6f0420d8",
+   "state": "Merged; the merge push got CI",
    "contents": "Main pushes diff against the last main commit CI ran on; publish-watch dispatches fast CI when main's tip has no CI run (GITHUB_TOKEN auto-merge pushes start none)"
+  },
+  {
+   "name": "Eight-tick tap fix (PR #394)",
+   "sha": "7cb77fa7",
+   "state": "Merged, fast CI green",
+   "contents": "gate_a_opening_drive counts tap ticks from the parse: full-run failure in verify-regions-shard"
+  },
+  {
+   "name": "Cloudreach riding forced-dismount fix",
+   "sha": "pending",
+   "state": "In progress",
+   "contents": "smoke_net_cloudreach_riding: a mounted guest who joins the host's fight is set down 4.9 m above its mount; then one full CI run on main"
   }
  ],
  "lanes": [
