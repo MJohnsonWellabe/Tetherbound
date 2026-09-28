@@ -46,8 +46,10 @@ does not mean a clean engine-error log.
 - P2-008 second dune diagnostic pass: four of four island views passed the new
   displacement checks, native Compatibility GTX 1060 3GB, actual root/image
   1920×1080, source `aaaa04a43bca987c36458c50efcbf9deae2a5c90`. Both dune gates
-  were enabled for capture and restored false. Warmth improves, but visible
-  banding/shading still needs controlled diagnosis and independent judgment.
+  were enabled for capture and restored false. Independent PARTIAL, limited
+  Bars A No/B No: palette and trainer readability pass; banding, jagged shading,
+  diffuse grass and weak sheltered woodland remain. See
+  `P2-008/dunes-02-visual-judge.md`. Controlled render ablation is the next step.
 
 Independent source reviews found no remaining issues in named-character grass
 clearance, Water offshore material isolation and decorative bedding. The current
