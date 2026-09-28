@@ -48,6 +48,37 @@ func test_real_island_peaks_and_full_shorelines_match_authored_mass() -> void:
 				_field.water_level(), 0.001, "%s shoreline %d" % [island["id"], n])
 
 
+func test_directional_dune_relief_changes_interior_without_moving_safe_coasts_or_veilfall() -> void:
+	var flat_config := _config.duplicate(true)
+	flat_config.terrain.dune_relief.enabled = false
+	var flat := FIELD.new(flat_config)
+	var varied := 0
+	for island: Dictionary in _config.islands:
+		var center: Array = island.center_xz_m
+		var cx := float(center[0])
+		var cz := float(center[1])
+		var radius := float(island.shore_radius_m)
+		assert_almost_eq(_field.height_at(cx, cz), flat.height_at(cx, cz), 0.001,
+			"summit remains fixed: " + str(island.id))
+		for n in 12:
+			var angle := TAU * float(n) / 12.0
+			var x := cx + cos(angle) * (radius - 8.0)
+			var z := cz + sin(angle) * (radius - 8.0)
+			assert_almost_eq(_field.height_at(x, z), flat.height_at(x, z), 0.001,
+				"beach remains fixed: " + str(island.id))
+			if str(island.id) == "veilfall":
+				x = cx + cos(angle) * radius * 0.5
+				z = cz + sin(angle) * radius * 0.5
+				assert_almost_eq(_field.height_at(x, z), flat.height_at(x, z), 0.001,
+					"Veilfall mountain remains fixed")
+			else:
+				x = cx + cos(angle) * radius * 0.5
+				z = cz + sin(angle) * radius * 0.5
+				if absf(_field.height_at(x, z) - flat.height_at(x, z)) > 0.1:
+					varied += 1
+	assert_true(varied > 24, "ordinary island interiors gain directional relief")
+
+
 func test_graded_main_approaches_and_veilfall_hike_have_walkable_centrelines() -> void:
 	# Four other exploratory spines have documented junction defects, so they
 	# deliberately earn no traversal acceptance from this focused assertion.

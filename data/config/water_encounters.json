@@ -4,7 +4,7 @@
   "status": "authored_data_not_runtime_spawned",
   "_comment": "240 named stable cluster sites, not 240 simultaneous creatures. Host streams around each peer; named optional encounters replace their reserved cluster rather than doubling it. Authoring measurements are not playable density or combat proof.",
   "_comment_roster": "Twelve owner species only. Aquaryn and Abyssal Guardian never random; Tidecoil named-only and never mount. First Shore uses Torrentoad and Mangrove Monitor to satisfy three roles; draft roster first_habitat metadata must follow this table or be renamed primary_habitat.",
-  "_comment_geometry": "Ground-site elevations and measured centre slopes follow the Phase 2d physical shore rebake. The single Brine Steps wild_008 point moved 7.6 m to supported terrain. Footprint and navigation admission still occur at runtime; authored 28-degree sampling target is exceeded at 21 unchanged sites (all below the 45-degree player floor angle), so the scene encounter smoke is required.",
+  "_comment_geometry": "Ground-site elevations and measured centre slopes follow the Phase 2d dune-relief rebake. The Brine Steps wild_008 site remains at its supported moved XZ. Runtime footprint and navigation admission remain authoritative; authored slope limits require fresh smoke checks.",
   "activation_distance_m": 100,
   "wild_respawn_seconds": 240,
   "minimum_cluster_spacing_m": 18,
@@ -784,18 +784,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -1.677,
-        35.9728,
+        35.9758,
         3.292
       ],
       "position": [
         -1.677,
-        35.9728,
+        35.9758,
         3.292
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 0.8453,
+      "terrain_slope_deg": 0.7204,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -909,18 +909,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -56.702,
-        21.074,
+        23.4035,
         -72.05
       ],
       "position": [
         -56.702,
-        21.074,
+        23.4035,
         -72.05
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 15.794,
+      "terrain_slope_deg": 15.2372,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -934,18 +934,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         70.662,
-        22.02,
+        24.3,
         -52.98
       ],
       "position": [
         70.662,
-        22.02,
+        24.3,
         -52.98
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 15.5718,
+      "terrain_slope_deg": 14.7529,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -959,18 +959,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -73.717,
-        20.4576,
+        18.1396,
         58.093
       ],
       "position": [
         -73.717,
-        20.4576,
+        18.1396,
         58.093
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 15.9143,
+      "terrain_slope_deg": 16.4683,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -984,18 +984,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         58.684,
-        18.5357,
+        16.1986,
         70.888
       ],
       "position": [
         58.684,
-        18.5357,
+        16.1986,
         70.888
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 17.868,
+      "terrain_slope_deg": 18.1579,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -1009,18 +1009,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -111.524,
-        15.0856,
+        17.4073,
         -14.139
       ],
       "position": [
         -111.524,
-        15.0856,
+        17.4073,
         -14.139
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 16.1001,
+      "terrain_slope_deg": 15.4499,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -1034,18 +1034,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         12.695,
-        16.5895,
+        14.426,
         -106.476
       ],
       "position": [
         12.695,
-        16.5895,
+        14.426,
         -106.476
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 16.2152,
+      "terrain_slope_deg": 16.4727,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -1059,18 +1059,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         115.471,
-        13.8187,
+        11.5026,
         17.799
       ],
       "position": [
         115.471,
-        13.8187,
+        11.5026,
         17.799
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 15.8825,
+      "terrain_slope_deg": 15.1287,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -1084,18 +1084,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -10.291,
-        15.2317,
+        15.8534,
         101.673
       ],
       "position": [
         -10.291,
-        15.2317,
+        15.8534,
         101.673
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.6728,
+      "terrain_slope_deg": 39.1537,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -1434,18 +1434,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         93.318,
-        10.2201,
+        11.3561,
         -74.44
       ],
       "position": [
         93.318,
-        10.2201,
+        11.3561,
         365.56
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 9.728,
+      "terrain_slope_deg": 11.8225,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1534,18 +1534,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         -34.037,
-        22.857,
+        22.454,
         0.324
       ],
       "position": [
         -34.037,
-        22.857,
+        22.454,
         440.324
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 7.4253,
+      "terrain_slope_deg": 6.054,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1634,18 +1634,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         -21.668,
-        7.3914,
+        8.9121,
         116.983
       ],
       "position": [
         -21.668,
-        7.3914,
+        8.9121,
         556.983
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 10.9041,
+      "terrain_slope_deg": 12.0302,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1659,18 +1659,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         63.485,
-        16.5463,
+        15.0467,
         36.886
       ],
       "position": [
         63.485,
-        16.5463,
+        15.0467,
         476.886
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 10.4977,
+      "terrain_slope_deg": 11.6708,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1684,18 +1684,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         3.131,
-        14.7903,
+        13.322,
         -82.526
       ],
       "position": [
         3.131,
-        14.7903,
+        13.322,
         357.474
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 11.1626,
+      "terrain_slope_deg": 10.5948,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1759,18 +1759,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         -110.973,
-        10.6406,
+        11.0784,
         36.848
       ],
       "position": [
         -110.973,
-        10.6406,
+        11.0784,
         476.848
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 9.8225,
+      "terrain_slope_deg": 6.0838,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1784,18 +1784,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         -106.269,
-        12.2081,
+        13.3917,
         -46.623
       ],
       "position": [
         -106.269,
-        12.2081,
+        13.3917,
         393.377
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.2906,
+      "terrain_slope_deg": 26.5809,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1809,18 +1809,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         -56.513,
-        8.8947,
+        10.2559,
         -114.516
       ],
       "position": [
         -56.513,
-        8.8947,
+        10.2559,
         325.484
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 11.9814,
+      "terrain_slope_deg": 12.4177,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -1834,18 +1834,18 @@
       "table_id": "water_reedhaven_land",
       "island_local_offset": [
         43.968,
-        20.8819,
+        22.4033,
         -27.724
       ],
       "position": [
         43.968,
-        20.8819,
+        22.4033,
         412.276
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 6.6007,
+      "terrain_slope_deg": 6.4415,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Reed root banks",
@@ -2184,18 +2184,18 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         10.748,
-        77.4825,
+        78.2159,
         -2.165
       ],
       "position": [
         430.748,
-        77.4825,
+        78.2159,
         657.835
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 5.3852,
+      "terrain_slope_deg": 1.2216,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
@@ -2359,18 +2359,18 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         -64.057,
-        43.7543,
+        43.2727,
         75.317
       ],
       "position": [
         355.943,
-        43.7543,
+        43.2727,
         735.317
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 13.3635,
+      "terrain_slope_deg": 27.206,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
@@ -2384,18 +2384,18 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         -16.497,
-        35.3634,
+        33.7931,
         -106.222
       ],
       "position": [
         403.503,
-        35.3634,
+        33.7931,
         553.778
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 33.0632,
+      "terrain_slope_deg": 27.2866,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
@@ -2435,12 +2435,12 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         53.6123,
-        39.6119,
+        38.9146,
         87.8559
       ],
       "position": [
         473.6123,
-        39.6119,
+        38.9146,
         747.8559
       ],
       "count": 1,
@@ -2451,7 +2451,8 @@
       "purpose": "Basalt basking steps",
       "requires_aquatic_combat": false,
       "placement_status": "native_all_table_species_supported_ordinary_spine_approach_and_exact_engage_verified",
-      "placement_why": "Measured supported shelf beside the Brine exploration spine. All three table species passed native footing; an ordinary grounded approach and physical Interact started the exact authored Riptusk encounter. Full combat completion and HUD presentation were not validated."
+      "placement_why": "Measured supported shelf beside the Brine exploration spine. All three table species passed native footing; an ordinary grounded approach and physical Interact started the exact authored Riptusk encounter. Full combat completion and HUD presentation were not validated.",
+      "terrain_slope_deg": 20.5546
     },
     {
       "id": "water_brine_steps_wild_012",
@@ -2460,18 +2461,18 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         76.625,
-        37.5796,
+        42.317,
         -70.445
       ],
       "position": [
         496.625,
-        37.5796,
+        42.317,
         589.555
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.9698,
+      "terrain_slope_deg": 34.1514,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
@@ -2510,18 +2511,18 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         131.347,
-        18.8749,
+        22.9214,
         24.411
       ],
       "position": [
         551.347,
-        18.8749,
+        22.9214,
         684.411
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 30.3135,
+      "terrain_slope_deg": 28.1476,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
@@ -2936,18 +2937,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         -0.952,
-        52.8728,
+        53.2038,
         -61.878
       ],
       "position": [
         319.048,
-        52.8728,
+        53.2038,
         1058.122
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 21.9717,
+      "terrain_slope_deg": 30.289,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3011,18 +3012,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         -112.695,
-        24.5335,
+        27.697,
         -36.536
       ],
       "position": [
         207.305,
-        24.5335,
+        27.697,
         1083.464
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 28.1858,
+      "terrain_slope_deg": 21.4601,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3061,18 +3062,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         -68.497,
-        39.0664,
+        35.0181,
         60.5
       ],
       "position": [
         251.503,
-        39.0664,
+        35.0181,
         1180.5
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 27.4422,
+      "terrain_slope_deg": 29.4953,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3086,18 +3087,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         94.613,
-        33.2703,
+        29.254,
         -38.955
       ],
       "position": [
         414.613,
-        33.2703,
+        29.254,
         1081.045
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 28.3192,
+      "terrain_slope_deg": 29.7427,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3136,18 +3137,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         114.061,
-        22.7659,
+        27.022,
         42.685
       ],
       "position": [
         434.061,
-        22.7659,
+        27.022,
         1162.685
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 27.9035,
+      "terrain_slope_deg": 26.7286,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3612,18 +3613,18 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         53.962,
-        73.0105,
+        80.1149,
         -104.754
       ],
       "position": [
         753.962,
-        73.0105,
+        80.1149,
         1425.246
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.7289,
+      "terrain_slope_deg": 34.382,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
@@ -3637,18 +3638,18 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         117.807,
-        73.0285,
+        79.5172,
         0.491
       ],
       "position": [
         817.807,
-        73.0285,
+        79.5172,
         1530.491
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.7255,
+      "terrain_slope_deg": 26.6929,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
@@ -3662,18 +3663,18 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         -100.523,
-        73.0126,
+        75.838,
         -61.479
       ],
       "position": [
         599.477,
-        73.0126,
+        75.838,
         1468.521
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.7285,
+      "terrain_slope_deg": 18.5162,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
@@ -3713,18 +3714,18 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         -98.662,
-        72.9585,
+        67.0354,
         64.577
       ],
       "position": [
         601.338,
-        72.9585,
+        67.0354,
         1594.577
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.7387,
+      "terrain_slope_deg": 30.5103,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
@@ -3738,18 +3739,18 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         29.523,
-        11.2976,
+        14.704,
         212.897
       ],
       "position": [
         729.523,
-        11.2976,
+        14.704,
         1742.897
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 21.7828,
+      "terrain_slope_deg": 34.4871,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Living shell clearings",
@@ -4088,18 +4089,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         -191.233,
-        18.2079,
+        12.084,
         -43.838
       ],
       "position": [
         -41.233,
-        18.2079,
+        12.084,
         2266.162
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 25.327,
+      "terrain_slope_deg": 22.0316,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4188,18 +4189,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         32.175,
-        92.4603,
+        90.5954,
         -16.508
       ],
       "position": [
         182.175,
-        92.4603,
+        90.5954,
         2293.492
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 10.9899,
+      "terrain_slope_deg": 25.4854,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4313,18 +4314,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         -53.738,
-        61.9976,
+        68.2103,
         103.591
       ],
       "position": [
         96.262,
-        61.9976,
+        68.2103,
         2413.591
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 27.7802,
+      "terrain_slope_deg": 27.3631,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4363,18 +4364,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         65.8287,
-        58.8285,
+        57.6829,
         103.468
       ],
       "position": [
         215.8287,
-        58.8285,
+        57.6829,
         2413.468
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 28.4968,
+      "terrain_slope_deg": 18.205,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4388,18 +4389,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         46.0785,
-        50.2185,
+        54.7658,
         -130.229
       ],
       "position": [
         196.0785,
-        50.2185,
+        54.7658,
         2179.771
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 29.5577,
+      "terrain_slope_deg": 34.506,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4463,18 +4464,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         138.763,
-        49.1178,
+        51.6277,
         19.152
       ],
       "position": [
         288.763,
-        49.1178,
+        51.6277,
         2329.152
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 29.6503,
+      "terrain_slope_deg": 40.2561,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4488,18 +4489,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         -100.351,
-        70.08,
+        69.7145,
         8.049
       ],
       "position": [
         49.649,
-        70.08,
+        69.7145,
         2318.049
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 25.6259,
+      "terrain_slope_deg": 12.725,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4513,18 +4514,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         -104.644,
-        10.2296,
+        12.8542,
         188.841
       ],
       "position": [
         45.356,
-        10.2296,
+        12.8542,
         2498.841
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 17.6924,
+      "terrain_slope_deg": 29.8042,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4538,18 +4539,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         -14.078,
-        10.4599,
+        12.3218,
         -214.722
       ],
       "position": [
         135.922,
-        10.4599,
+        12.3218,
         2095.278
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 18.0915,
+      "terrain_slope_deg": 25.1682,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -4788,18 +4789,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -170.962,
-        16.9377,
+        10.4083,
         150.987
       ],
       "position": [
         679.038,
-        16.9377,
+        10.4083,
         3110.987
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 24.8304,
+      "terrain_slope_deg": 12.4789,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -4888,18 +4889,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         8.615,
-        114.8771,
+        120.1835,
         -32.826
       ],
       "position": [
         858.615,
-        114.8771,
+        120.1835,
         2927.174
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 10.3697,
+      "terrain_slope_deg": 11.4216,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5013,18 +5014,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         46.44,
-        73.9297,
+        76.8633,
         124.891
       ],
       "position": [
         896.44,
-        73.9297,
+        76.8633,
         3084.891
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 30.7077,
+      "terrain_slope_deg": 16.2445,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5038,18 +5039,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -137.0,
-        71.6344,
+        78.7018,
         4.74
       ],
       "position": [
         713.0,
-        71.6344,
+        78.7018,
         2964.74
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 31.0718,
+      "terrain_slope_deg": 26.4548,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5063,18 +5064,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         134.583,
-        72.0765,
+        75.99,
         21.863
       ],
       "position": [
         984.583,
-        72.0765,
+        75.99,
         2981.863
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 31.0048,
+      "terrain_slope_deg": 43.218,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5088,18 +5089,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -84.681,
-        63.6492,
+        64.6526,
         -123.892
       ],
       "position": [
         765.319,
-        63.6492,
+        64.6526,
         2836.108
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.0345,
+      "terrain_slope_deg": 20.4673,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5113,18 +5114,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         110.027,
-        61.2839,
+        53.6236,
         -107.51
       ],
       "position": [
         960.027,
-        61.2839,
+        53.6236,
         2852.49
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.2324,
+      "terrain_slope_deg": 32.2644,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5888,18 +5889,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -0.929,
-        9.3374,
+        10.4922,
         -67.865
       ],
       "position": [
         -350.929,
-        9.3374,
+        10.4922,
         102.135
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 15.7818,
+      "terrain_slope_deg": 18.2719,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -5988,18 +5989,18 @@
       "table_id": "water_first_shore_land",
       "island_local_offset": [
         -9.541,
-        21.3917,
+        21.4053,
         17.666
       ],
       "position": [
         -359.541,
-        21.3917,
+        21.4053,
         187.666
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 9.6183,
+      "terrain_slope_deg": 10.5061,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Sunny shell shelf",
@@ -6089,18 +6090,18 @@
       "table_id": "water_brine_steps_land",
       "island_local_offset": [
         -9.171,
-        30.8186,
+        31.1997,
         -9.892
       ],
       "position": [
         -79.171,
-        30.8186,
+        31.1997,
         860.108
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 9.8521,
+      "terrain_slope_deg": 6.4247,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Basalt basking steps",
@@ -6290,18 +6291,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         131.904,
-        5.8236,
+        6.051,
         -20.447
       ],
       "position": [
         1331.904,
-        5.8236,
+        6.051,
         2219.553
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 11.4967,
+      "terrain_slope_deg": 15.3652,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -6390,18 +6391,18 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         -10.229,
-        47.5723,
+        47.6106,
         -3.71
       ],
       "position": [
         1189.771,
-        47.5723,
+        47.6106,
         2236.29
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 4.4865,
+      "terrain_slope_deg": 2.9712,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Saltbloom crown",
@@ -6491,18 +6492,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         43.358,
-        34.4414,
+        31.3639,
         -51.08
       ],
       "position": [
         1393.358,
-        34.4414,
+        31.3639,
         3448.92
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 27.6768,
+      "terrain_slope_deg": 28.4814,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -6818,12 +6819,12 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         89.528,
-        53.1994,
+        53.6159,
         118.29
       ],
       "position": [
         789.528,
-        53.1994,
+        53.6159,
         1648.29
       ],
       "count": 2,
@@ -6834,7 +6835,8 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre.",
+      "terrain_slope_deg": 12.3997
     },
     {
       "id": "road_visibility_tidal_cradle_exploration_spine_07",
@@ -6893,12 +6895,12 @@
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
         -83.442,
-        16.2213,
+        16.7023,
         166.46
       ],
       "position": [
         616.558,
-        16.2213,
+        16.7023,
         1696.46
       ],
       "count": 2,
@@ -6909,7 +6911,8 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre.",
+      "terrain_slope_deg": 40.9997
     },
     {
       "id": "road_visibility_salt_crown_exploration_spine_01",
@@ -7044,12 +7047,12 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         70.165,
-        69.3778,
+        69.1733,
         34.827
       ],
       "position": [
         220.165,
-        69.3778,
+        69.1733,
         2344.827
       ],
       "count": 2,
@@ -7060,7 +7063,8 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre.",
+      "terrain_slope_deg": 26.779
     },
     {
       "id": "road_visibility_salt_crown_exploration_spine_07",
@@ -7069,12 +7073,12 @@
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
         84.075,
-        38.2227,
+        38.5097,
         118.885
       ],
       "position": [
         234.075,
-        38.2227,
+        38.5097,
         2428.885
       ],
       "count": 2,
@@ -7085,7 +7089,8 @@
       "purpose": "roadside creature sightline pair",
       "requires_aquatic_combat": false,
       "placement_status": "route_surface_authored_runtime_grounding_required",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on a main land-spine shoulder. Uses the island's native land table; the runtime adapter regrounds the centre.",
+      "terrain_slope_deg": 36.2588
     },
     {
       "id": "road_visibility_sluice_isle_exploration_spine_01",

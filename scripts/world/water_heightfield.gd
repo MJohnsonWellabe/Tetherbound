@@ -22,6 +22,7 @@ var _peak := PackedFloat64Array()
 var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
+var _dune_relief: Dictionary = {}
 var _sectors: Array = []
 var _trail_cells: Dictionary = {}
 var _trail_pitch := 32.0
@@ -42,6 +43,7 @@ static func load_config(path: String = CONFIG_PATH) -> Dictionary:
 func _init(config: Dictionary = {}) -> void:
 	_config = (config if not config.is_empty() else load_config()).duplicate(true)
 	var terrain: Dictionary = _config.get("terrain", {})
+	_dune_relief = terrain.get("dune_relief", {})
 	_sea_level = float(terrain.get("sea_level_m", 0.0))
 	_seabed_depth = maxf(0.0, float(terrain.get("seabed_depth_m", 65.0)))
 	_outer_slope = maxf(0.0001, float(terrain.get("outer_shore_slope", 0.35)))
@@ -248,4 +250,19 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 	if r >= interior_radius:
 		return _sea_level + inner * (radius - r) / width
 	var factor := maxf(0.0, 1.0 - (r / interior_radius) * (r / interior_radius))
-	return _sea_level + inner + (_peak[index] - inner) * pow(factor, _power[index])
+	var height := _sea_level + inner + (_peak[index] - inner) * pow(factor, _power[index])
+	if bool(_dune_relief.get("enabled", false)) and _ids[index] != "veilfall" \
+			and not _ids[index].contains("_rest_"):
+		var inland := interior_radius - r
+		var fade := smoothstep(0.0, float(_dune_relief.get("shore_preserve_m", 36.0)), inland) \
+			* smoothstep(0.0, float(_dune_relief.get("summit_preserve_m", 45.0)), r)
+		var bearing := deg_to_rad(float(_dune_relief.get("bearing_deg", 25.0)))
+		var along := dx * cos(bearing) + dz * sin(bearing)
+		var across := -dx * sin(bearing) + dz * cos(bearing)
+		var wave := maxf(1.0, float(_dune_relief.get("wavelength_m", 130.0)))
+		var warp_wave := maxf(1.0, float(_dune_relief.get("warp_wavelength_m", 240.0)))
+		var phase := TAU * along / wave + sin(TAU * across / warp_wave + index * 0.61) * 0.75 + index * 0.37
+		var amplitude := minf(float(_dune_relief.get("max_amplitude_m", 8.0)),
+			_peak[index] * float(_dune_relief.get("peak_fraction", 0.065)))
+		height += amplitude * fade * sin(phase)
+	return height

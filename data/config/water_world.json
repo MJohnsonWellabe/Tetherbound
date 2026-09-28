@@ -3552,6 +3552,7 @@
     }
   },
   "terrain": {
+    "dune_relief": {"enabled": true, "bearing_deg": 25.0, "wavelength_m": 130.0, "warp_wavelength_m": 240.0, "shore_preserve_m": 36.0, "summit_preserve_m": 45.0, "max_amplitude_m": 8.0, "peak_fraction": 0.065},
     "_comment": "Separate aligned bake bounds pad authored world bounds without moving islands. Sparse island+shore regions avoid a giant empty seabed bake.",
     "collision_comment": "FULL_GAME on sparse island regions; measure memory/startup and two separated remote bodies. One averaged camera is insufficient.",
     "collision_mode": 3.0,
@@ -3560,8 +3561,8 @@
       "_comment": "Deterministic analytic base surface, highest finite island contribution. Trail grading later requires explicit modifier; not implied here.",
       "angular_profile": "For each landing sector angular distance d: w=1-smoothstep(half_width_deg,half_width_deg+feather_deg,d). Choose maximum weight and lerp default beach width and inner height toward its profile.",
       "id": "radial_landing_sectors_v1",
-      "land": "When R-beach_width<=r<=R: h=inner_height*(R-r)/beach_width. When r<R-beach_width: h=inner_height+(peak_height-inner_height)*pow(1-pow(r/(R-beach_width),2),peak_power).",
-      "noise": "Disabled until a shoreline-preserving mask exists. Future detail must be zero at shore and safe anchors.",
+      "land": "When R-beach_width<=r<=R: h=inner_height*(R-r)/beach_width. When r<R-beach_width: h=inner_height+(peak_height-inner_height)*pow(1-pow(r/(R-beach_width),2),peak_power) plus bounded directional dune relief. Relief fades to zero at the beach shoulder and summit; the authored trail grade follows it.",
+      "noise": "Directional interior dune relief is enabled for ordinary islands only. The coast and summit preservation masks retain safe landings and exact peak heights; Veilfall and route rest shoals remain on their original profiles.",
       "ocean": "When r>R: h=-min(seabed_depth,(r-R)*outer_shore_slope). Beyond sparse regions, depth queries return deep sea; no synthetic walkable floor.",
       "radius": "r=length(xz-center); R=shore_radius_m",
       "shore": "r=R gives h=0 exactly. Straight crossing gap=center_distance-R_from-R_to."
