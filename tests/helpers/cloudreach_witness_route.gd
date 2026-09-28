@@ -40,7 +40,8 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ##
 ## `--owned-carrier=<species>` (DISCLOSED PARTY WRITE, relaxed-proof ruling 1;
 ## needs `--from-save`): once the earned save has loaded through the title, ONE
-## member of the five that is not out and is not a starter is replaced by a
+## member of the five that is not out and is not a starter (a duplicated
+## species first, then the lowest level) is replaced by a
 ## freshly spawned `<species>` at that member's level, so the party is still
 ## exactly five and nothing else is written. Before the Fly unlock nothing
 ## changes (Maela's trial loaner). After it, before the first launch the
@@ -503,12 +504,20 @@ func _load_earned_handoff() -> bool:
 	if not await super._load_earned_handoff(): return false
 	if owned_carrier_species.is_empty(): return true
 	var starters: Array = (JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json")) as Dictionary).starters.species
+	# Of the members that are not out and not a starter, a duplicated species
+	# first, then the lowest level: the swap costs the earned five least.
 	var index := -1
-	for i in range(game.party.size() - 1, -1, -1):
+	var counts: Dictionary = {}
+	for member: RefCounted in game.party.members():
+		counts[str(member.species_id)] = int(counts.get(str(member.species_id), 0)) + 1
+	var best_key: Array = []
+	for i in game.party.size():
 		var member: RefCounted = game.party.at(i)
-		if i != game.party.active_index() and not starters.has(str(member.species_id)):
+		if i == game.party.active_index() or starters.has(str(member.species_id)): continue
+		var key: Array = [0 if int(counts[str(member.species_id)]) > 1 else 1, int(member.level), -i]
+		if index < 0 or key < best_key:
 			index = i
-			break
+			best_key = key
 	if index < 0 or not SPECIES.has(owned_carrier_species) or game.party.size() != 5:
 		print("CLOUDREACH WITNESS --owned-carrier cannot swap into this five")
 		return false
