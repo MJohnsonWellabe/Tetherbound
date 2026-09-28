@@ -185,3 +185,20 @@ func test_trainer_specs_are_schema_compatible_and_preserve_authored_3d_metadata(
 		for member: Dictionary in TRAINERS.team_of(spec):
 			assert_true(SPECIES.has(str(member["species"])))
 			assert_true(int(member["level"]) > 0)
+
+
+## F10#6 device profile: every named Stormwood wild carries its authored
+## combat camera block into the spawn, and each opts into the shared opponent
+## top band, so the boss panel never sits over the named foe's head.
+func test_named_wilds_carry_their_combat_camera_top_band() -> void:
+	var spawns: Array = CATALOGUE.wild_config("calm")["spawns"]
+	var named := 0
+	for spawn: Dictionary in spawns:
+		if not bool(spawn.get("fixed_encounter", false)):
+			assert_false(spawn.has("stormwood_combat_camera"), "ordinary clusters carry no camera block")
+			continue
+		named += 1
+		var camera: Dictionary = spawn.get("stormwood_combat_camera", {})
+		assert_true(bool((camera.get("framing", {}) as Dictionary).get("top_band", false)),
+			"%s opts into the opponent top band" % str(spawn.stormwood_named_id))
+	assert_eq(named, 6, "six named Stormwood wilds")

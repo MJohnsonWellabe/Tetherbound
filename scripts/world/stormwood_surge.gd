@@ -245,7 +245,10 @@ func _ready() -> void:
 		layer.name = "SurgeStatus"
 		add_child(layer)
 		_glyph = Label.new()
-		_glyph.position = Vector2(24, 150)
+		# F10#6 device profile (code-blind 7-inch judge r2: the tag read at
+		# about 4 px): the UX §8 body size inside the 32 px safe inset.
+		_glyph.position = Vector2(32, 150)
+		_glyph.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 		_glyph.add_theme_color_override("font_color", Color("c3ddff"))
 		_glyph.add_theme_color_override("font_outline_color", Color("14202a"))
 		_glyph.add_theme_constant_override("outline_size", 5)
