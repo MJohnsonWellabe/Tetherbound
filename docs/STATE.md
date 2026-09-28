@@ -54,6 +54,7 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 
 1. **Internet co-op resources:** a real Steam AppID with Steamworks partner access, and four Steam accounts, two or more on separate home networks, for the internet co-op proof. `steam_api64.dll` redistribution is approved. Packaging (`ship_steam_runtime`) stays off until an AppID exists.
 2. **Four decisions made by the owner at 23:55 and now in implementation (batch 68):** F04#7 difficulty (the Meadows named trainers get harder), F10#2 (starter parity), female officer Vess, and aerie art. See ruling 11 below.
+   - **Balance lane (`tb/balance`):** F10#2 C2 is met. Ripple Jab and Gale Peck timing plus Ripplet/Galewisp stats bring Capacitor Alpha to 0.42/0.50/0.41, and all 18 Stormwood named rows pass. **F04#7 is blocked on a new owner decision.** No Meadows tuning inside the tell ruling, the no-HP-sponge rule, the 0.5 hit ceiling, the band level pins and the five-creature cap reaches the 0.25 masher wipe for all three starters. Options (a)–(d) are in `ralph/reports/BALANCE/REPORT.md`. The Meadows harness now carries the BOSSES DIVER 0.4 s tell exemption.
 
 **Settled by the owner (2026-09-27, 23:55):** the Capacitor Alpha no-stagger ruling and the storm strike sparing a trainer in a fight are **kept**. They are no longer interim.
 

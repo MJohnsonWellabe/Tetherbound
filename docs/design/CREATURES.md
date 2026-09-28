@@ -115,8 +115,8 @@ These five families give the shared quick/charged rosters distinct jobs without 
 | Species id | Type | HP/ATK/DEF | Catch | Quick / charged | Best | Utility | Target role; Y |
 |---|---|---:|---:|---|---|---|---|
 | `terrapup` | ground | 120/22/20 | 0.30 | `pebble_toss` / `stone_rush` | S:15% | Ride | balanced bulwark; shove |
-| `ripplet` | water | 105/24/17 | 0.30 | `ripple_jab` / `undertow` | E:12% | — | current duelist; dash |
-| `galewisp` | air | 92/27/14 | 0.30 | `gale_peck` / `sky_rend` | E:15% | — | mobile ranged scout; veil |
+| `ripplet` | water | 110/23/18 | 0.30 | `ripple_jab` / `undertow` | E:12% | — | current duelist; dash |
+| `galewisp` | air | 105/24/17 | 0.30 | `gale_peck` / `sky_rend` | E:15% | — | mobile ranged scout; veil |
 | `bramblebun` | ground | 95/18/16 | 0.60 | `bramble_whip` / `warren_charge` | S:10% | — | route-denial trapper; snare |
 | `mudsnout` | ground | 100/17/18 | 0.55 | `root_nibble` / `rootquake` | E:10% | — | attrition tank; slow field |
 | `trailpup` | ground | 105/23/15 | 0.38 | `pack_bite` / `trailblaze_pounce` | E:14% | — | pursuit skirmisher; dash |

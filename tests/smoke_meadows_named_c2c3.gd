@@ -36,7 +36,10 @@ extends SceneTree
 ##     READER win >= 90%.
 ##   C3: no single incoming hit >= 50% of an entry creature's HP (worst seen, a
 ##     harsher bound than "neutral"), every tell >= 0.8 s, and a tell authored
-##     as heavy (>= 1.1 s) observed at >= 1.1 s.
+##     as heavy (>= 1.1 s) observed at >= 1.1 s. DIVER exemption (BOSSES 2:
+##     "telegraph .4 s only with long positional cue"): a tell from a body whose
+##     dive travels (the drawn ground lane) after a >= 7 m reposition is held to
+##     0.4 s instead, and reported separately as diver_tell.
 ## Not covered: terrain/arena geometry, manual switch/burst, co-op scaling,
 ## framing (rendered captures), an earned-save party.
 
@@ -66,6 +69,8 @@ const WILD_READER_WIN_MIN := 0.90
 const HIT_CEILING := 0.50
 const TELL_FLOOR := 0.8
 const HEAVY_TELL := 1.1
+const DIVER_TELL_FLOOR := 0.4
+const DIVER_REPOSITION_MIN := 7.0
 
 var _seeds := 24
 var _selection := ""
@@ -140,7 +145,7 @@ func _run() -> void:
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
 					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "min_tell": INF,
-					"max_tell": 0.0, "stalled": 0, "incoming_hits": 0, "hits": 0}
+					"max_tell": 0.0, "min_diver_tell": INF, "stalled": 0, "incoming_hits": 0, "hits": 0}
 				for seed_index in _seeds:
 					var party: Array[RefCounted] = []
 					for id in [starter] + RETAINED:
@@ -161,10 +166,14 @@ func _run() -> void:
 					var result: Dictionary = await PILOT.new().fight(self, party, foes, bool(entry.owned),
 						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
 					var tells: Array = []
+					var diver_tells: Array = []
 					for event: Dictionary in result.get("events", []):
-						if str(event.get("event", "")) == "telegraph": tells.append(float(event.seconds))
+						if str(event.get("event", "")) != "telegraph": continue
+						if _diver_cue(event.get("enemy_config", {})): diver_tells.append(float(event.seconds))
+						else: tells.append(float(event.seconds))
 					result.erase("events")
 					result["tells"] = tells
+					result["diver_tells"] = diver_tells
 					result["case"] = entry.id
 					result["starter"] = starter
 					result["policy"] = policy
@@ -182,6 +191,9 @@ func _run() -> void:
 					for t in tells:
 						s.min_tell = minf(float(s.min_tell), float(t))
 						s.max_tell = maxf(float(s.max_tell), float(t))
+					for t in diver_tells:
+						s.min_diver_tell = minf(float(s.min_diver_tell), float(t))
+						s.max_tell = maxf(float(s.max_tell), float(t))
 				var n := maxf(1.0, s.seconds.size())
 				var summary := {"runs": s.seconds.size(), "wins": s.wins,
 					"win_rate": float(s.wins) / n,
@@ -191,12 +203,13 @@ func _run() -> void:
 					"max_single_hit_frac": s.max_hit,
 					"min_tell_s": s.min_tell if is_finite(float(s.min_tell)) else -1.0,
 					"max_tell_s": s.max_tell, "stalled": s.stalled,
+					"min_diver_tell_s": s.min_diver_tell if is_finite(float(s.min_diver_tell)) else -1.0,
 					"incoming_hits": s.incoming_hits, "hits": s.hits}
 				row.pilots[policy] = summary
-				print("MEADOWS_C2C3 %s %s %s L%d runs=%d win=%.2f med_lead=%.3f lead_faint=%.2f wipe=%.2f max_hit=%.3f tell=[%.2f,%.2f] med_s=%.1f stalled=%d" % [
+				print("MEADOWS_C2C3 %s %s %s L%d runs=%d win=%.2f med_lead=%.3f lead_faint=%.2f wipe=%.2f max_hit=%.3f tell=[%.2f,%.2f] diver_tell=%.2f med_s=%.1f stalled=%d" % [
 					entry.id, starter, policy, party_level, summary.runs, summary.win_rate,
 					summary.median_lead_cost, summary.lead_faint_rate, summary.party_wipe_rate,
-					summary.max_single_hit_frac, summary.min_tell_s, summary.max_tell_s,
+					summary.max_single_hit_frac, summary.min_tell_s, summary.max_tell_s, summary.min_diver_tell_s,
 					summary.median_seconds, summary.stalled])
 			var verdict := _verdict(entry, row.pilots.get("MASHER", {}), row.pilots.get("READER", {}))
 			row["verdict"] = verdict
@@ -243,9 +256,21 @@ func _verdict(entry: Dictionary, m: Dictionary, r: Dictionary) -> Dictionary:
 		if float(p.min_tell_s) >= 0.0 and float(p.min_tell_s) < TELL_FLOOR - 0.001:
 			reasons.append("C3 tell %.2f < %.2f" % [p.min_tell_s, TELL_FLOOR])
 			break
+	for p: Dictionary in [m, r]:
+		if float(p.min_diver_tell_s) >= 0.0 and float(p.min_diver_tell_s) < DIVER_TELL_FLOOR - 0.001:
+			reasons.append("C3 diver tell %.2f < %.2f" % [p.min_diver_tell_s, DIVER_TELL_FLOOR])
+			break
 	if bool(entry.heavy) and maxf(float(m.max_tell_s), float(r.max_tell_s)) < HEAVY_TELL - 0.001:
 		reasons.append("C3 authored heavy never observed at >= %.1f s" % HEAVY_TELL)
 	return {"pass": reasons.is_empty(), "reasons": reasons}
+
+
+## BOSSES 2's DIVER: its short tell is lawful only with the long positional
+## cue, which in built data is the travelling dive (its ground lane is drawn
+## through the tell) entered from a >= 7 m reposition.
+static func _diver_cue(config: Dictionary) -> bool:
+	return bool(config.get("lunge_travels", false)) \
+		and float(config.get("reposition_distance", 0.0)) >= DIVER_REPOSITION_MIN - 0.001
 
 
 static func _median(values: Array) -> float:
