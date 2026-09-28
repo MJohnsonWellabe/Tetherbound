@@ -415,7 +415,7 @@ func _capture_row(row: Dictionary) -> void:
 	var selected := false
 	var selected_offset := 0.0
 	var selected_lateral := 0.0
-	var offsets: Array[float] = [32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]
+	var offsets: Array = [32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0]
 	var sideways := Vector2(-forward.y, forward.x)
 	for offset: float in offsets:
 		for lateral: float in [0.0, -5.0, 5.0]:
