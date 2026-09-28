@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2",
+  "repro": "At source471baef4c restore retained launcher/wrapper/metadata/proposal to .artifacts/phase2 without appended.txt. After authorizedGPUslot run p2103_victory_recipe.ps1 -Run -NegativeOnly -Size 1080 -Batch <fresh-name>. One nativeWindows Compatibility1920x1080 Venn fight with legallevel80 five-creaturefixture; stopsatfourfightframes, savesone diagnostic, expected engineexit1/frame_cap, no victory/lifecycle. Launcherexit0 validates this negative outcome only.",
+  "source_manifest_sha256": "cd1989aee6c0359dad2ae77297ea33d4ea8e16f015dbbb1b0bfdc6df137a1987",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "attempt": {
+      "args": [
+        "--trainer=water_trainer_venn",
+        "--out=res://ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative",
+        "--interval=0.2",
+        "--max-frames=4",
+        "--level=80",
+        "--pilot=MASHER",
+        "--cap-s=300",
+        "--tells-per-opponent=1",
+        "--hits-per-opponent=1",
+        "--seed=2042",
+        "--verified-victory-lifecycle",
+        "--expected-resolution=1920x1080",
+        "--source-commit=471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2",
+        "--support-base-sha256=8e37bf64d6628ff19e2e3890fad598547f5a00d5c9b98dc38ee83707da6aec6a",
+        "--support-wrapper-sha256=d67add54b299171945c51b15f7bd361a2758070e5c4f9143bd39886737350d26",
+        "--victory-config-disk-sha256=54313443483A369CF5AE5234E4FE0D55457E2C33DD1EC34958341922DC0AB1D6",
+        "--victory-pack-sha256=6825F691E90CEE76EDAC5E446719B02746D16801F4A601333524C838C1D71CF4",
+        "--victory-pack=res://.artifacts/phase2/p2103-negative-native01/before.zip",
+        "--victory-enabled=false"
+      ],
+      "defeat_after": false,
+      "defeat_before": false,
+      "feed_epoch": 1,
+      "feed_seq_before": 0,
+      "fixture": {
+        "approach_anchor": "",
+        "disclosure": "Fresh legal five-creature fixture; pre-set interior flags; staged proximity unless approach_anchor is supplied; real prompt activation and direct pre-fight dialogue.advance; combat uses production input pilot. Post-win dialogue uses Interact input. No earned-progression, co-op, balance or performance proof.",
+        "extra_flags": [],
+        "interior_flags": [
+          "water_veilfall_intake_stopped",
+          "water_veilfall_return_opened"
+        ],
+        "level": 80,
+        "party": [
+          "ripplet",
+          "bramblebun",
+          "mudsnout",
+          "pipwing",
+          "trailpup"
+        ],
+        "pilot": "MASHER"
+      },
+      "override_pack": "res://.artifacts/phase2/p2103-negative-native01/before.zip",
+      "override_pack_sha256": "6825f691e90cee76edac5e446719b02746d16801f4a601333524c838c1d71cf4",
+      "seed": 2042,
+      "source_commit": "471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2",
+      "terminal": {
+        "fight_counter_s": 0.45,
+        "ok": false,
+        "reason": "frame_cap",
+        "save_failures": 0,
+        "saved": 4,
+        "victory": {
+          "ok": false,
+          "outcomes": [],
+          "why": "fight/battle still running at the step boundary",
+          "xp_progress": []
+        }
+      },
+      "trainer": "water_trainer_venn",
+      "victory_config": {
+        "_comment": "P2-103: label persistent quick items and separate the exact victory receipt from team growth. Presentation only; native victory/aftermath comparison at controller 720p and 1080p is required before enabling.",
+        "enabled": false
+      },
+      "victory_config_sha256": "e31dd84fa7a108ba8539e08690a1ee4093388f54f529d8386d67298dba062f82"
+    },
+    "clock_disclosure": "fight_s counts pilot-loop physics ticks and omits save waits; lifecycle elapsed_since_win_ms uses the monotonic production wall clock. Neither is a performance measurement.",
+    "complete": false,
+    "display_server": "Windows",
+    "expected_resolution": [
+      1920,
+      1080
+    ],
+    "failures": [
+      "Production victory/defeat flag verification failed"
+    ],
+    "missing_phases": [
+      "win",
+      "aftermath",
+      "receipt-expired"
+    ],
+    "postwin_inputs": [],
+    "rendering_method": "gl_compatibility",
+    "schema_version": 1,
+    "trainer": "water_trainer_venn"
+  },
+  "frames": [
+    {
+      "id": "fight-observation-0000",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-103/negative-01/contact_sheet_01.jpg",
+      "capture": {
+        "ally": [
+          363.39,
+          2.42,
+          3799.73,
+          2.41
+        ],
+        "camera": [
+          358.53,
+          7.02,
+          3798.28,
+          2.5
+        ],
+        "enemy": [
+          365.65,
+          2.82,
+          3804.8,
+          2.8
+        ],
+        "fight_s": 0.0,
+        "file": "res://ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/t-000.00.png",
+        "gap_m": 5.55,
+        "id": "fight-observation-0000",
+        "opponent": "water_cannonback",
+        "phase": "fight-observation",
+        "tag": "t",
+        "tell_s": 0.0
+      },
+      "source_sha256": "c65e78bdf6f4a644da84074f344b96d882e18a79d2c5149d5b4b31cdd583bca3",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/t-000.00.png",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "fight-observation-0001",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-103/negative-01/contact_sheet_01.jpg",
+      "capture": {
+        "ally": [
+          363.46,
+          2.44,
+          3799.91,
+          2.43
+        ],
+        "camera": [
+          354.47,
+          8.93,
+          3799.94,
+          2.84
+        ],
+        "enemy": [
+          365.42,
+          2.83,
+          3804.83,
+          2.82
+        ],
+        "fight_s": 0.22,
+        "file": "res://ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/t-000.22.png",
+        "gap_m": 5.29,
+        "id": "fight-observation-0001",
+        "opponent": "water_cannonback",
+        "phase": "fight-observation",
+        "tag": "t",
+        "tell_s": 0.0
+      },
+      "source_sha256": "67748138c20e470756dfa74a27b56892a8e38c79cbcc6de816e1945410678e8f",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/t-000.22.png",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "fight-observation-0002",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-103/negative-01/contact_sheet_01.jpg",
+      "capture": {
+        "ally": [
+          363.49,
+          2.44,
+          3799.97,
+          2.43
+        ],
+        "camera": [
+          354.28,
+          9.24,
+          3799.97,
+          2.85
+        ],
+        "enemy": [
+          365.28,
+          2.82,
+          3804.68,
+          2.81
+        ],
+        "fight_s": 0.42,
+        "file": "res://ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/t-000.42.png",
+        "gap_m": 5.03,
+        "id": "fight-observation-0002",
+        "opponent": "water_cannonback",
+        "phase": "fight-observation",
+        "tag": "t",
+        "tell_s": 0.0
+      },
+      "source_sha256": "a6218b8624513031e700a90a73a8b20a082a0f52db4d6105fd2bf9a379570149",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/t-000.42.png",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "fight-observation-0003",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-103/negative-01/contact_sheet_01.jpg",
+      "capture": {
+        "ally": [
+          363.49,
+          2.44,
+          3799.97,
+          2.43
+        ],
+        "camera": [
+          353.73,
+          9.5,
+          3799.93,
+          2.87
+        ],
+        "enemy": [
+          365.23,
+          2.81,
+          3804.62,
+          2.8
+        ],
+        "fight_s": 0.43,
+        "file": "res://ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/hit-000.43.png",
+        "gap_m": 4.96,
+        "id": "fight-observation-0003",
+        "opponent": "water_cannonback",
+        "phase": "fight-observation",
+        "tag": "hit",
+        "tell_s": 0.0
+      },
+      "source_sha256": "f02af1e974264b203c65bc25289d41755d92952326c42c18e419bff314578c6e",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/venn/hit-000.43.png",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "fight-observation-0004",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-103/negative-01/contact_sheet_01.jpg",
+      "capture": {
+        "ally": [],
+        "camera": [
+          353.11,
+          9.78,
+          3800.03,
+          2.91
+        ],
+        "enemy": [],
+        "fight_s": 0.45,
+        "file": "res://ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/diagnostic-000.45.png",
+        "gap_m": -1.0,
+        "id": "fight-observation-0004",
+        "opponent": "",
+        "phase": "diagnostic",
+        "tag": "diagnostic",
+        "tell_s": 0.0
+      },
+      "source_sha256": "c064bd5809b2821c54470f017f0b49bc015146a3324581283694cfd108269073",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/repro/p2103-negative-native01/venn-cap-negative/diagnostic-000.45.png",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

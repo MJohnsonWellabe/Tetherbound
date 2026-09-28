@@ -358,6 +358,11 @@
  ],
  "lanes": [
   {
+   "lane": "Tidewake visual fixes (tb/x04-tidewake)",
+   "now": "Phase 2c active. P2-032 fixed/enabled by 8c5009e09 after six native map boots (24 frames, source 0930716ac), independent visual PASS and strict item recheck; actual enabled tests pass 8/36. Dunes-04 remains item PARTIAL, direction PASS, ecology/transitions PARTIAL, limited Bars A/B No/No; repaired paired stands documented. Dunes-05 e22fdbcb2 remains off, source review clean, focused 35/87970 pass, native pending. Victory hierarchy remains off, 99 lifecycle checks at 720p pass, native pending. No chapter acceptance.",
+   "next": "Capture and judge dune corrections and victory hierarchy; complete remaining owned impact>=12 fixes/dispositions, chapter matrix and independent Bars A/B, then land through CI-green PRs. See ralph/reports/VISUAL/phase2/tidewake/fixes/."
+  },
+  {
    "lane": "Meadows (tb/meadows)",
    "now": "Landed F03#0, F04#3, F01#2, F01#3. Queue: F04#1 (Dell/Vance tells), F04#6 aftermath, F04#2 and F04#7 C3 after combat spacing lands, then card M3. M1/M2 moved to the Cards lane.",
    "next": "Self-lands each criterion"

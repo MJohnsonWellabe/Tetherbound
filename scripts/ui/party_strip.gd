@@ -38,6 +38,7 @@ const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 ## or the combat HUD's own mount, with nothing routed through either HUD.
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const COMPACT_PIN_CONFIG := "res://data/config/combat_roster_visual.json"
 
 const SLOTS := 5
 ## A vacant row keeps its slot number, chip outline and legible alpha (UX: all five slots
@@ -320,6 +321,7 @@ const CYCLE_POSITION_FONT_SIZE := 26
 const CYCLE_BANNER_HEIGHT := 50.0
 
 var _pinned := false
+var _stable_compact_pin_reveal := false
 var _fade_timer := 0.0
 var _tween: Tween = null
 var _cycle_banner_timer := 0.0
@@ -423,6 +425,7 @@ func _set_reveal_offset(value: float) -> void:
 
 
 func _ready() -> void:
+	_stable_compact_pin_reveal = compact_pin_candidate_enabled()
 	add_to_group("progression_party_strips")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_rest_position = position
@@ -932,11 +935,25 @@ func flash_cycle(direction: int, previous_label: String, next_label: String,
 ## restarted, so a fight ending does not yank the strip off screen the instant
 ## the flag flips.
 func set_pinned(pinned: bool) -> void:
+	# P2-088: CombatHUD repeats its pin request every frame. Restarting the
+	# reveal each time holds the whole roster near zero alpha, even though
+	# compact rows themselves are opaque. Only this opted-in compact instance
+	# treats an already-visible pin as idempotent; unpin/re-pin still reveals.
+	if compact and _stable_compact_pin_reveal and pinned and _pinned and visible:
+		return
 	_pinned = pinned
 	if pinned:
 		_reveal()
 	else:
 		_fade_timer = UI_TOKENS.T_PARTY_FADE
+
+
+static func compact_pin_candidate_enabled() -> bool:
+	var file := FileAccess.open(COMPACT_PIN_CONFIG, FileAccess.READ)
+	if file == null:
+		return false
+	var raw: Variant = JSON.parse_string(file.get_as_text())
+	return raw is Dictionary and bool(raw.get("stable_compact_pin_reveal", false))
 
 
 ## OWNER-0902-HUD-TEAM-MENU (owner playtest 2026-09-02, finding #12: "the team

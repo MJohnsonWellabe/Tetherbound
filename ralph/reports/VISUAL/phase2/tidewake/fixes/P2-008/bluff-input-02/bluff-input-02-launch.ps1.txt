@@ -1,0 +1,80 @@
+param([string]$Round = 'bluff-input-02', [int]$TimeoutSeconds = 1800)
+$ErrorActionPreference = 'Stop'
+if ($Round -notmatch '^bluff-input-02[-a-zA-Z0-9]*$') { throw 'Round must start bluff-input-02 and use letters/digits/hyphens' }
+$captureRoot = 'D:\tetherbound\x04-tidewake'
+$captureEngine = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
+$captureLock = 'D:\tetherbound\RENDER_LOCK.json'
+$captureOwner = 'tb/x04-tidewake'
+$captureToken = [Guid]::NewGuid().ToString()
+$captureOut = Join-Path $captureRoot ('.artifacts\phase2\p2008-' + $Round)
+$captureAppdata = Join-Path $captureRoot ('.artifacts\phase2\' + $Round + '-appdata')
+$captureLog = Join-Path $captureRoot ('.artifacts\phase2\' + $Round + '.log')
+$captureErrors = Join-Path $captureRoot ('.artifacts\phase2\' + $Round + '-errors.log')
+$capturePack = Join-Path $captureRoot '.artifacts\phase2\dune05-runtime.zip'
+foreach ($path in @($captureOut,$captureAppdata,$captureLog,$captureErrors)) {
+    if (Test-Path -LiteralPath $path) { throw ('Fresh output required: ' + $path) }
+}
+if ((Get-FileHash -LiteralPath $capturePack -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12') { throw 'Review changed config pack before running' }
+foreach ($config in @('water_dune_terrain','water_dune_cover')) {
+    $captureConfig = Get-Content -LiteralPath (Join-Path $captureRoot ('data/config/' + $config + '.json')) -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($captureConfig.enabled) { throw 'Production dune gates must remain false' }
+}
+$captureSource = (& git -C $captureRoot rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0) { throw 'Could not record source commit' }
+# This launcher is for the queue owner's approved slot, never queue stealing.
+# The exclusive handle makes check+claim atomic. A same-lane existing hold is
+# still occupied: do not overwrite it.
+$captureHandle = [IO.File]::Open($captureLock,[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+try {
+    $captureReader = [IO.StreamReader]::new($captureHandle,[Text.Encoding]::UTF8,$true,1024,$true)
+    $captureLockText = $captureReader.ReadToEnd()
+    $captureReader.Dispose()
+    $captureState = if ([string]::IsNullOrWhiteSpace($captureLockText)) { @{} } else { $captureLockText | ConvertFrom-Json }
+    if ($captureState.held_by) { throw ('Render slot held by ' + $captureState.held_by) }
+    $captureBytes = [Text.Encoding]::UTF8.GetBytes((@{held_by=$captureOwner; token=$captureToken; since_utc=[DateTime]::UtcNow.ToString('o'); purpose=$Round} | ConvertTo-Json -Compress))
+    $captureHandle.SetLength(0)
+    $captureHandle.Write($captureBytes,0,$captureBytes.Length)
+    $captureHandle.Flush()
+} finally { $captureHandle.Dispose() }
+$capturePreviousAppdata = $env:APPDATA
+$capturePreviousSource = $env:BLUFF_INPUT_SOURCE_COMMIT
+$captureProcess = $null
+try {
+    $env:APPDATA = $captureAppdata
+    $env:BLUFF_INPUT_SOURCE_COMMIT = $captureSource
+    $captureArgs = @('--path',$captureRoot,'--rendering-driver','opengl3','--resolution','1920x1080','--fullscreen','--audio-driver','Dummy','--script','.artifacts/phase2/bluff-input-02-wrapper.gd','--','--biome=water','--seed=2042',('--output=res://.artifacts/phase2/p2008-' + $Round))
+    $captureProcess = Start-Process -FilePath $captureEngine -ArgumentList $captureArgs -WorkingDirectory $captureRoot -WindowStyle Hidden -RedirectStandardOutput $captureLog -RedirectStandardError $captureErrors -PassThru
+    if (-not $captureProcess.WaitForExit($TimeoutSeconds * 1000)) { throw 'Native diagnostic exceeded timeout' }
+    $captureProcess.WaitForExit()
+    if ($captureProcess.ExitCode -ne 0) { throw ('Native diagnostic failed: ' + $captureProcess.ExitCode) }
+    $captureManifest = Get-Content -LiteralPath (Join-Path $captureOut 'manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    if (-not $captureManifest.complete -or $captureManifest.failures.Count -ne 0 -or $captureManifest.frames.Count -ne 4) { throw 'Incomplete four-mask evidence; inspect manifest' }
+    foreach ($frame in $captureManifest.frames) {
+        $captureImage = Join-Path $captureRoot ($frame.file -replace '^res://','')
+        if (-not (Test-Path -LiteralPath $captureImage)) { throw ('Missing frame: ' + $captureImage) }
+    }
+    if (Select-String -LiteralPath @($captureLog,$captureErrors) -Pattern 'SCRIPT ERROR|Parse Error|Shader compilation failed|SHADER ERROR' -Quiet) { throw 'Engine errors in diagnostic logs' }
+    Write-Output ('Native diagnostic complete: ' + $captureOut)
+} finally {
+    $env:APPDATA = $capturePreviousAppdata
+    $env:BLUFF_INPUT_SOURCE_COMMIT = $capturePreviousSource
+    # On timeout/error, terminate only this launcher's child, then wait for its
+    # actual exit BEFORE releasing GPU ownership. Never kill another renderer.
+    if ($null -ne $captureProcess -and -not $captureProcess.HasExited) {
+        $captureProcess.Kill()
+        $captureProcess.WaitForExit()
+    }
+    $captureHandle = [IO.File]::Open($captureLock,[IO.FileMode]::Open,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+    try {
+        $captureReader = [IO.StreamReader]::new($captureHandle,[Text.Encoding]::UTF8,$true,1024,$true)
+        $captureState = $captureReader.ReadToEnd() | ConvertFrom-Json
+        $captureReader.Dispose()
+        if ($captureState.token -eq $captureToken -and $captureState.held_by -eq $captureOwner) {
+            $captureHandle.SetLength(0)
+            $captureBytes = [Text.Encoding]::UTF8.GetBytes('{}')
+            $captureHandle.Write($captureBytes,0,$captureBytes.Length)
+            $captureHandle.Flush()
+            Write-Output 'Released diagnostic render slot after terminal process exit.'
+        }
+    } finally { $captureHandle.Dispose() }
+}

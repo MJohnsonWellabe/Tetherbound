@@ -1,0 +1,571 @@
+diff --git a/tests/capture_tidewake_named_fights.gd b/tests/capture_tidewake_named_fights.gd
+--- a/tests/capture_tidewake_named_fights.gd
++++ b/tests/capture_tidewake_named_fights.gd
+@@ -2,8 +2,8 @@
+ 
+ ## F14#1 evidence: production-camera frames of the Veilfall named fights (BOSSES
+ ## §4.10 Officer Venn, §4.11 Captain Nerissa -- the owner's "Guardian C2/C3"
+-## fight) for a code-blind C3 framing/readability judge. Evidence only: nothing
+-## is asserted and no state is saved.
++## fight) for a code-blind C3 framing/readability judge. Evidence only: no state
++## is saved; a completed recording now requires observed production victory.
+ ##
+ ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+ ##     --resolution 1280x720 --script res://tests/capture_tidewake_named_fights.gd \
+@@ -25,6 +25,7 @@
+ ## captain smoke's close-and-tap loop.
+ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
++const VICTORY_RECEIPT := preload("res://tools/gate_f/fight_victory_receipt.gd")
+ const SAVE := preload("res://scripts/save/save_game.gd")
+ const SMOKE := preload("res://tests/smoke_tidewake_named_inworld_c2.gd")
+ const NAV := preload("res://tests/helpers/stick_navigator.gd")
+@@ -82,6 +83,8 @@
+ ## telegraph signal writes these for the capture loop to read.
+ var _tell: Dictionary = {}
+ var _fight_t := 0.0
++var _record_result: Dictionary = {}
++var _save_failures := 0
+ 
+ 
+ func _init() -> void:
+@@ -137,14 +140,31 @@
+ 	for id: String in ids:
+ 		if not await _capture(world, game, id):
+ 			failures += 1
++			break # A capped fight may still be active; never stage the next trainer.
+ 	for wild: String in _wilds:
++		if failures > 0:
++			break
+ 		if not await _capture_wild(world, game, wild):
+ 			failures += 1
+ 	var file := FileAccess.open(_out.path_join("frames.json"), FileAccess.WRITE)
+ 	if file != null:
+ 		file.store_string(JSON.stringify(_log, "  "))
++		file.flush()
++		if file.get_error() != OK:
++			failures += 1
++		file.close()
++	else:
++		failures += 1
++	if not _finalize_capture(failures):
++		failures += 1
+ 	print("TIDEWAKE C3 CAPTURE done: %d trainer(s), %d failure(s), %d frames" % [ids.size(), failures, _log.size()])
+ 	quit(1 if failures else 0)
++
++
++## Derived evidence tools can finalize their manifest after raw export errors
++## are known, before the process declares success. No scene or result mutation.
++func _finalize_capture(_failures: int) -> bool:
++	return true
+ 
+ 
+ func _capture(world: Node3D, game: Node, id: String) -> bool:
+@@ -318,6 +338,12 @@
+ func _record(world: Node3D, game: Node, dir: String, label: String, active: Callable) -> bool:
+ 	var director: Node = world.get_node("EncounterDirector")
+ 	var manager: Node = world.get_node("CombatManager")
++	_record_result = {}
++	_save_failures = 0
++	var receipt := VICTORY_RECEIPT.new()
++	if not receipt.begin(manager):
++		_record_result = {"ok": false, "reason": "victory observer unavailable"}
++		return false
+ 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
+ 	var saved := 0
+ 	_fight_t = 0.0
+@@ -406,10 +432,34 @@
+ 		_reader._release_move()
+ 	print("TIDEWAKE C3 CAPTURE %s: %d frames over %.1f s, fight active=%s" % [label, saved, _fight_t,
+ 		bool(active.call())])
+-	if bool(active.call()):
+-		manager.call("_begin_resolve", "fled")
+-		await _frames(30)
+-	return saved > 0
++	var still_active := bool(active.call())
++	_record_result = capture_terminal_result(still_active, _fight_t, _fight_cap_s,
++		saved, _max_frames, receipt.finish(still_active), _save_failures)
++	if not bool(_record_result.ok):
++		push_error("Capture rejected: %s" % str(_record_result.reason))
++	# A budget stop is evidence failure, never a synthetic combat result.
++	return bool(_record_result.ok)
++
++
++## Pure verdict shared by the recorder and CPU tests. Even a cap-boundary won
++## signal fails closed: the requested recording budget was exhausted.
++static func capture_terminal_result(active: bool, seconds: float, cap: float,
++		saved: int, frame_cap: int, receipt: Dictionary, save_failures: int) -> Dictionary:
++	var reason := ""
++	if seconds >= cap:
++		reason = "time_cap"
++	elif saved >= frame_cap:
++		reason = "frame_cap"
++	elif active:
++		reason = "combat_still_active"
++	elif not bool(receipt.get("ok", false)):
++		reason = str(receipt.get("why", "victory not verified"))
++		if reason.is_empty():
++			reason = "victory not verified"
++	elif saved == 0 or save_failures > 0:
++		reason = "missing_or_failed_fight_image"
++	return {"ok": reason.is_empty(), "reason": reason, "fight_counter_s": seconds,
++		"saved": saved, "save_failures": save_failures, "victory": receipt.duplicate(true)}
+ 
+ 
+ ## Grabs a frame rendered AFTER the requested moment. The viewport texture is
+@@ -430,7 +480,8 @@
+ 	var image := root.get_viewport().get_texture().get_image()
+ 	if _sparse:
+ 		RenderingServer.render_loop_enabled = false
+-	if image == null or image.save_png(dir.path_join(name)) != OK:
++	if image == null or image.is_empty() or image.save_png(dir.path_join(name)) != OK:
++		_save_failures += 1
+ 		return 0
+ 	var gap := -1.0
+ 	if is_instance_valid(enemy) and is_instance_valid(ally):
+diff --git a/tools/phase2_capture_tidewake_fights.gd b/tools/phase2_capture_tidewake_fights.gd
+--- a/tools/phase2_capture_tidewake_fights.gd
++++ b/tools/phase2_capture_tidewake_fights.gd
+@@ -1,34 +1,317 @@
+ extends "res://tests/capture_tidewake_named_fights.gd"
+ 
+-## Reuse the production named-fight capture with a fixed random seed and a
+-## Phase 2 evidence path. It keeps the test's legal party and ordinary prompt,
+-## fight, tell and hit recording path; fixture flags remain in its log.
++## The inherited party, interior flags, staged prompt entry and input-driven
++## pilot remain disclosed fixtures. Lifecycle evidence observes real rewards.
++const FEED := preload("res://scripts/creatures/progression_feed.gd")
++const VICTORY_CONFIG := "res://data/config/victory_hierarchy_visual.json"
++const LIFECYCLE_PHASES := ["win", "aftermath", "receipt-expired"]
++const LIFECYCLE_TIMEOUT_MS := 60000
++var _verified_lifecycle := false
++var _expected_resolution := Vector2i(1920, 1080)
++var _capture_seed := 2042
++var _lifecycle_frames: Array[Dictionary] = []
++var _lifecycle_failures: Array[String] = []
++var _attempt: Dictionary = {}
++var _postwin_inputs: Array[Dictionary] = []
++
+ 
+ func _run() -> void:
+ 	var target := ""
+-	var capture_seed := 2042
++	var trainer := ""
++	var source_commit := ""
++	var pack := ""
+ 	for arg: String in OS.get_cmdline_user_args():
+-		if arg.begins_with("--out="):
+-			target = arg.trim_prefix("--out=")
+-		elif arg.begins_with("--seed="):
+-			capture_seed = int(arg.trim_prefix("--seed="))
++		if arg.begins_with("--out="): target = arg.trim_prefix("--out=")
++		elif arg.begins_with("--trainer="): trainer = arg.trim_prefix("--trainer=")
++		elif arg.begins_with("--seed="): _capture_seed = int(arg.trim_prefix("--seed="))
++		elif arg == "--verified-victory-lifecycle": _verified_lifecycle = true
++		elif arg.begins_with("--source-commit="): source_commit = arg.trim_prefix("--source-commit=")
++		elif arg.begins_with("--victory-pack="): pack = arg.trim_prefix("--victory-pack=")
++		elif arg.begins_with("--expected-resolution="):
++			var parts := arg.trim_prefix("--expected-resolution=").split("x")
++			_expected_resolution = Vector2i(int(parts[0]), int(parts[1])) if parts.size() == 2 else Vector2i.ZERO
+ 	if not target.begins_with("res://ralph/reports/VISUAL/phase2/tidewake/"):
+ 		push_error("Tidewake fight frames must stay in the Phase 2 report")
+ 		quit(1)
+ 		return
+-	seed(capture_seed)
++	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(target)):
++		push_error("Choose a fresh fight capture output")
++		quit(1)
++		return
++	if _verified_lifecycle:
++		if trainer not in ["water_trainer_venn", "water_trainer_nerissa"] \
++				or _expected_resolution not in [Vector2i(1920, 1080), Vector2i(1280, 720)] \
++				or "--render-only-saves" in OS.get_cmdline_user_args():
++			push_error("Verified lifecycle needs one Venn/Nerissa trainer, 1080p or 720p, continuous rendering")
++			quit(1)
++			return
++		for arg: String in OS.get_cmdline_user_args():
++			if arg.begins_with("--wild="):
++				push_error("Verified trainer lifecycle does not accept wild fixtures")
++				quit(1)
++				return
++		for _frame in 3:
++			await process_frame
++		if DisplayServer.get_name() == "headless" or root.size != _expected_resolution \
++				or DisplayServer.window_get_size() != _expected_resolution:
++			push_error("Verified lifecycle needs the requested native window/viewport size")
++			quit(1)
++			return
++	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(target))
++	_out = target
++	_attempt = {"source_commit": source_commit, "seed": _capture_seed,
++		"args": OS.get_cmdline_user_args(), "override_pack": pack,
++		"override_pack_sha256": FileAccess.get_sha256(pack) if not pack.is_empty() else "",
++		"victory_config": JSON.parse_string(FileAccess.get_file_as_string(VICTORY_CONFIG)),
++		"victory_config_sha256": FileAccess.get_file_as_string(VICTORY_CONFIG).sha256_text()}
++	if _verified_lifecycle:
++		_attempt.trainer = trainer
++		if not _write_lifecycle_manifest():
++			quit(1)
++			return
++	seed(_capture_seed)
+ 	await super._run()
+ 
+ 
+-## The installed recorder stops its shutter when combat becomes inactive. Save
+-## the production camera at the resolved state and after the presentation has
+-## settled, so the Phase 2 sequence includes win and aftermath views.
++func _finalize_capture(failures: int) -> bool:
++	if not _verified_lifecycle:
++		return true
++	if failures > 0 and _lifecycle_failures.is_empty():
++		_lifecycle_failures.append("Inherited capture/raw frame export failed")
++	return _write_lifecycle_manifest()
++
++
++func _capture(world: Node3D, game: Node, id: String) -> bool:
++	if not _verified_lifecycle:
++		return await super._capture(world, game, id)
++	var director: Node = world.get_node("EncounterDirector")
++	_attempt.feed_seq_before = FEED.latest_seq()
++	_attempt.feed_epoch = FEED.epoch()
++	_attempt.defeat_before = bool(director.call("_host_holds_trainer_defeat", id))
++	_attempt.fixture = {"party": PARTY, "level": _level, "interior_flags": INTERIOR_FLAGS,
++		"extra_flags": _extra_flags, "pilot": _policy, "approach_anchor": _approach,
++		"disclosure": "Fresh legal five-creature fixture; pre-set interior flags; staged proximity unless approach_anchor is supplied; real prompt activation and direct pre-fight dialogue.advance; combat uses production input pilot. Post-win dialogue uses Interact input. No earned-progression, co-op, balance or performance proof."}
++	var captured := false
++	if bool(_attempt.defeat_before):
++		_lifecycle_failures.append("Trainer defeat flag was already present before the challenge")
++	else:
++		captured = await super._capture(world, game, id)
++	if not captured and _lifecycle_failures.is_empty():
++		_lifecycle_failures.append("Trainer approach/challenge/recording failed before lifecycle completion")
++	if not captured:
++		await _save(_out, "diagnostic", _fight_t, null, null, {})
++	return _write_lifecycle_manifest() and captured
++
++
+ func _record(world: Node3D, game: Node, dir: String, label: String, active: Callable) -> bool:
++	var director: Node = world.get_node("EncounterDirector")
++	if _verified_lifecycle and str(director.call("trainer_battle_id")) != str(_attempt.trainer):
++		_lifecycle_failures.append("Active trainer identity does not match requested trainer")
++		return false
++	var spec: Dictionary = director.call("_trainer_spec_by_id", label) if _verified_lifecycle else {}
+ 	var recorded := await super._record(world, game, dir, label, active)
+-	if recorded and not bool(active.call()):
+-		var manager: Node = world.get_node("CombatManager")
+-		var director: Node = world.get_node("EncounterDirector")
+-		await _save(dir, "win", _fight_t, manager.enemy_body(), director.ally_body(), {})
+-		await _frames(60)
+-		await _save(dir, "aftermath", _fight_t + 1.0, manager.enemy_body(), director.ally_body(), {})
+-	return recorded
++	if not _verified_lifecycle:
++		return recorded # Ordinary inventory never invents win/aftermath tags.
++	_attempt.terminal = _record_result.duplicate(true)
++	_attempt.defeat_after = bool(director.call("_host_holds_trainer_defeat", label))
++	if not recorded or bool(active.call()) or not bool(_attempt.defeat_after):
++		_lifecycle_failures.append("Production victory/defeat flag verification failed")
++		return false
++	if str(spec.get("name", "")).is_empty():
++		_lifecycle_failures.append("Authored trainer receipt identity is unavailable")
++		return false
++	_attempt.receipt_prefix = "%s's reward: " % str(spec.name)
++	return await _capture_verified_victory_lifecycle(world, dir)
++
++
++func _capture_verified_victory_lifecycle(world: Node3D, dir: String) -> bool:
++	var hud := world.get_node_or_null("PlaygroundHUD")
++	if hud == null or not hud.has_method("moment_visible"):
++		_lifecycle_failures.append("Production HUD unavailable")
++		return false
++	var deadline := Time.get_ticks_msec() + LIFECYCLE_TIMEOUT_MS
++	var receipt: Dictionary = {}
++	while Time.get_ticks_msec() < deadline:
++		await process_frame
++		var state := _receipt_state(hud)
++		if int(state.epoch) != int(_attempt.feed_epoch):
++			_lifecycle_failures.append("Progression feed reset during victory")
++			return false
++		if not (state.modals as Array).is_empty():
++			if not await _advance_postwin_dialogue(world):
++				return false
++			continue
++		receipt = fresh_receipt(state, int(_attempt.feed_seq_before), str(_attempt.receipt_prefix))
++		if not receipt.is_empty():
++			break
++	if receipt.is_empty():
++		_attempt.last_receipt_state = _receipt_state(hud)
++		_lifecycle_failures.append("Timed out waiting for the actual trainer reward receipt")
++		return false
++	if not await _save_lifecycle(world, hud, dir, "win", receipt, -1):
++		return false
++	var win_ms := int(_lifecycle_frames[-1].capture_ticks_ms)
++	while Time.get_ticks_msec() - win_ms < 1000:
++		await process_frame
++	if not await _save_lifecycle(world, hud, dir, "aftermath", receipt, win_ms):
++		return false
++	deadline = Time.get_ticks_msec() + LIFECYCLE_TIMEOUT_MS
++	while Time.get_ticks_msec() < deadline:
++		await process_frame
++		if naturally_expired(_receipt_state(hud)):
++			return await _save_lifecycle(world, hud, dir, "receipt-expired", receipt, win_ms)
++	_attempt.last_receipt_state = _receipt_state(hud)
++	_lifecycle_failures.append("Receipt did not expire naturally before the wall-clock timeout")
++	return false
++
++
++## Ordinary authored lines only: new decisions/pickers fail rather than being
++## silently accepted. Never call dialogue.advance or manufacture a receipt here.
++func _advance_postwin_dialogue(world: Node3D) -> bool:
++	await _frames(3)
++	var panel := world.get_node_or_null("DialoguePanel")
++	var modals := _open_story_modals()
++	if panel == null or modals.size() != 1 or modals[0] != str(panel.get_path()) \
++			or not bool(panel.call("is_open")) or _postwin_inputs.size() >= 60:
++		_lifecycle_failures.append("Unexpected or non-advancing post-win modal")
++		return false
++	var runner: RefCounted = panel.call("runner")
++	var line: Dictionary = runner.call("line")
++	if bool(line.get("confirmation", false)) or line.has("choices"):
++		_lifecycle_failures.append("Post-win dialogue requires a decision; no automatic choice made")
++		return false
++	_postwin_inputs.append({"action": "interact", "ticks_ms": Time.get_ticks_msec(),
++		"speaker": panel.call("current_speaker"), "line": line.duplicate(true)})
++	Input.action_press("interact")
++	await physics_frame
++	await physics_frame
++	Input.action_release("interact")
++	await _frames(3)
++	return true
++
++
++func _open_story_modals() -> Array[String]:
++	var opened: Array[String] = []
++	for node: Node in get_nodes_in_group("story_modal"):
++		if node.has_method("is_open") and bool(node.call("is_open")):
++			opened.append(str(node.get_path()))
++		elif not node.has_method("is_open") and node is CanvasItem and (node as CanvasItem).visible:
++			opened.append(str(node.get_path()))
++		elif not node.has_method("is_open") and node is CanvasLayer and (node as CanvasLayer).visible:
++			opened.append(str(node.get_path()))
++	return opened
++
++
++func _receipt_state(hud: Node) -> Dictionary:
++	var events: Array = hud.get("_moment_events")
++	return {"visible": bool(hud.call("moment_visible")), "hud_visible": bool(hud.get("visible")),
++		"banner": str(hud.call("moment_banner_text")), "events": events.duplicate(true),
++		"queued": int(hud.call("moments_queued")), "modals": _open_story_modals(),
++		"epoch": FEED.epoch(), "tree_paused": paused,
++		"pause_started": float(hud.get("_moment_pause_started")),
++		"moment_until": float(hud.get("_moment_until")), "ticks_ms": Time.get_ticks_msec()}
++
++
++static func fresh_receipt(state: Dictionary, after_seq: int, prefix: String) -> Dictionary:
++	if not bool(state.get("visible", false)) or not bool(state.get("hud_visible", false)) \
++			or bool(state.get("tree_paused", true)) or not (state.get("modals", []) as Array).is_empty():
++		return {}
++	for event: Dictionary in state.get("events", []):
++		var text := str(event.get("receipt", ""))
++		if str(event.get("kind", "")) == "reward_summary" and int(event.get("seq", 0)) > after_seq \
++				and not prefix.is_empty() and text.begins_with(prefix) and text.length() > prefix.length() \
++				and str(state.get("banner", "")).contains(text):
++			return event.duplicate(true)
++	return {}
++
++
++static func naturally_expired(state: Dictionary) -> bool:
++	return bool(state.get("hud_visible", false)) and not bool(state.get("visible", true)) \
++		and not bool(state.get("tree_paused", true)) and float(state.get("pause_started", 0.0)) < 0.0 \
++		and int(state.get("queued", -1)) == 0 and (state.get("events", []) as Array).is_empty() \
++		and (state.get("modals", []) as Array).is_empty()
++
++
++func _save_lifecycle(world: Node3D, hud: Node, dir: String, phase: String, receipt: Dictionary, win_ms: int) -> bool:
++	await RenderingServer.frame_post_draw
++	var state := _receipt_state(hud)
++	var current := fresh_receipt(state, int(_attempt.feed_seq_before), str(_attempt.receipt_prefix))
++	var same_receipt := not current.is_empty() and int(current.seq) == int(receipt.seq) \
++		and str(current.receipt) == str(receipt.receipt)
++	var director: Node = world.get_node("EncounterDirector")
++	var manager: Node = world.get_node("CombatManager")
++	var camera := root.get_camera_3d()
++	var elapsed_ms := int(state.ticks_ms) - win_ms if win_ms >= 0 else 0
++	if (phase == "receipt-expired" and not naturally_expired(state)) \
++			or (phase != "receipt-expired" and not same_receipt) \
++			or (phase == "aftermath" and elapsed_ms < 1000) \
++			or int(state.epoch) != int(_attempt.feed_epoch) \
++			or bool(director.call("trainer_battle_active")) or bool(manager.call("is_fighting")) \
++			or not bool(director.call("_host_holds_trainer_defeat", str(_attempt.trainer))) \
++			or camera == null or not camera.is_current() or not world.is_ancestor_of(camera) \
++			or not RenderingServer.render_loop_enabled or not is_equal_approx(Engine.time_scale, 1.0):
++		_attempt.rejected_phase = {"phase": phase, "receipt_state": state,
++			"same_receipt": same_receipt, "elapsed_since_win_ms": elapsed_ms}
++		_lifecycle_failures.append("%s state invalid after draw; no success frame saved" % phase)
++		return false
++	var image := root.get_texture().get_image()
++	if image == null or image.is_empty() or image.get_size() != _expected_resolution \
++			or DisplayServer.window_get_size() != _expected_resolution:
++		_lifecycle_failures.append("%s: native window/image resolution mismatch" % phase)
++		return false
++	var identity := "tidewake__fight__%s__%s" % [str(_attempt.trainer).trim_prefix("water_trainer_"), phase]
++	var path := dir.path_join(identity + ".png")
++	if image.save_png(path) != OK:
++		_lifecycle_failures.append("%s image save failed" % phase)
++		return false
++	_lifecycle_frames.append({"id": identity, "file": path, "phase": phase,
++		"capture_ticks_ms": state.ticks_ms, "elapsed_since_win_ms": elapsed_ms,
++		"receipt_state": state, "verified_receipt": receipt.duplicate(true),
++		"resolution": [image.get_width(), image.get_height()], "camera": _pose(camera),
++		"camera_rotation": [camera.global_rotation.x, camera.global_rotation.y, camera.global_rotation.z],
++		"player": _pose(world.call("local_rig")), "ally": _pose(director.call("ally_body")),
++		"enemy": _pose(manager.call("enemy_body")), "time_scale": Engine.time_scale,
++		"continuous_rendering": RenderingServer.render_loop_enabled})
++	return true
++
++
++## Earlier success images remain reviewable when a later phase fails.
++static func lifecycle_manifest(raw: Array, phases: Array, failures: Array, trainer: String) -> Dictionary:
++	var frames: Array = []
++	for index in raw.size():
++		var frame: Dictionary = raw[index].duplicate(true)
++		frame.id = "fight-observation-%04d" % index
++		frame.phase = "fight-observation" if str(frame.get("tag", "")) != "diagnostic" else "diagnostic"
++		frames.append(frame)
++	var missing: Array[String] = []
++	for phase: String in LIFECYCLE_PHASES:
++		var present := false
++		for frame: Dictionary in phases:
++			if str(frame.get("phase", "")) == phase:
++				present = true
++		if not present:
++			missing.append(phase)
++	frames.append_array(phases.duplicate(true))
++	return {"schema_version": 1, "trainer": trainer, "frames": frames,
++		"failures": failures.duplicate(true), "missing_phases": missing,
++		"complete": failures.is_empty() and missing.is_empty()}
++
++
++func _write_lifecycle_manifest() -> bool:
++	var manifest := lifecycle_manifest(_log, _lifecycle_frames, _lifecycle_failures, str(_attempt.get("trainer", "")))
++	manifest.merge({"attempt": _attempt.duplicate(true), "postwin_inputs": _postwin_inputs.duplicate(true),
++		"display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
++		"rendering_method": RenderingServer.get_current_rendering_method(),
++		"expected_resolution": [_expected_resolution.x, _expected_resolution.y],
++		"clock_disclosure": "fight_s counts pilot-loop physics ticks and omits save waits; lifecycle elapsed_since_win_ms uses the monotonic production wall clock. Neither is a performance measurement."})
++	var file := FileAccess.open(_out.path_join("manifest.json"), FileAccess.WRITE)
++	if file == null:
++		push_error("Could not write lifecycle manifest")
++		return false
++	file.store_string(JSON.stringify(manifest, "\t") + "\n")
++	file.flush()
++	var written := file.get_error() == OK
++	file.close()
++	if not written:
++		push_error("Lifecycle manifest write failed")
++	return written
+diff --git a/tests/test_phase2_fight_capture_lifecycle.gd b/tests/test_phase2_fight_capture_lifecycle.gd
+new file mode 100644
+--- /dev/null
++++ b/tests/test_phase2_fight_capture_lifecycle.gd
+@@ -0,0 +1,101 @@
++extends "res://tests/test_case.gd"
++
++const RECORDER := preload("res://tests/capture_tidewake_named_fights.gd")
++const CAPTURE := preload("res://tools/phase2_capture_tidewake_fights.gd")
++
++
++func test_budget_stop_never_becomes_victory_even_at_won_boundary() -> void:
++	var won := {"ok": true, "outcomes": ["won"], "xp_progress": [{"index": 0}]}
++	for active: bool in [false, true]:
++		var timed := RECORDER.capture_terminal_result(active, 300.0, 300.0, 20, 100, won, 0)
++		assert_false(timed.ok)
++		assert_eq(timed.reason, "time_cap")
++		var full := RECORDER.capture_terminal_result(active, 100.0, 300.0, 100, 100, won, 0)
++		assert_false(full.ok)
++		assert_eq(full.reason, "frame_cap")
++	assert_true(RECORDER.capture_terminal_result(false, 299.0, 300.0, 99, 100, won, 0).ok)
++
++
++func test_observer_rejection_and_image_failure_survive_terminal_export() -> void:
++	for outcome: String in ["lost", "fled", "no signal"]:
++		var result := RECORDER.capture_terminal_result(false, 20, 300, 10, 100,
++			{"ok": false, "why": outcome, "outcomes": [outcome]}, 0)
++		assert_false(result.ok)
++		assert_eq(result.reason, outcome)
++	assert_false(RECORDER.capture_terminal_result(false, 20, 300, 10, 100, {"ok": false, "why": ""}, 0).ok)
++	assert_false(RECORDER.capture_terminal_result(false, 20, 300, 10, 100, {"ok": true}, 1).ok)
++	assert_false(RECORDER.capture_terminal_result(false, 20, 300, 0, 100, {"ok": true}, 0).ok)
++
++
++func _shown_receipt() -> Dictionary:
++	return {"visible": true, "hud_visible": true, "tree_paused": false, "modals": [],
++		"banner": "Victory rewards | Venn's reward: 10 coins | Ripplet +XP",
++		"events": [{"kind": "reward_summary", "seq": 12, "receipt": "Venn's reward: 10 coins"}],
++		"queued": 0, "pause_started": -1.0}
++
++
++func test_receipt_must_be_new_visible_from_expected_trainer_and_in_banner() -> void:
++	var state := _shown_receipt()
++	var receipt := CAPTURE.fresh_receipt(state, 11, "Venn's reward: ")
++	assert_eq(receipt.seq, 12)
++	receipt.receipt = "changed copy"
++	assert_eq(state.events[0].receipt, "Venn's reward: 10 coins")
++	assert_eq(CAPTURE.fresh_receipt(state, 12, "Venn's reward: "), {})
++	assert_eq(CAPTURE.fresh_receipt(state, 11, "Nerissa's reward: "), {})
++	state.banner = "Victory rewards | +XP"
++	assert_eq(CAPTURE.fresh_receipt(state, 11, "Venn's reward: "), {})
++	state = _shown_receipt()
++	state.events = []
++	assert_eq(CAPTURE.fresh_receipt(state, 11, "Venn's reward: "), {})
++
++
++func test_hidden_paused_or_modal_receipt_is_not_a_captureable_receipt() -> void:
++	for key: String in ["visible", "hud_visible"]:
++		var state := _shown_receipt()
++		state[key] = false
++		assert_eq(CAPTURE.fresh_receipt(state, 11, "Venn's reward: "), {})
++	var paused_state := _shown_receipt()
++	paused_state.tree_paused = true
++	assert_eq(CAPTURE.fresh_receipt(paused_state, 11, "Venn's reward: "), {})
++	var modal_state := _shown_receipt()
++	modal_state.modals = ["/root/World/DialoguePanel"]
++	assert_eq(CAPTURE.fresh_receipt(modal_state, 11, "Venn's reward: "), {})
++
++
++func test_hidden_panel_is_expired_only_after_queue_and_pause_clear() -> void:
++	var state := _shown_receipt()
++	state.visible = false
++	assert_false(CAPTURE.naturally_expired(state), "hidden but still carrying receipt")
++	state.events = []
++	assert_true(CAPTURE.naturally_expired(state))
++	for override: Dictionary in [{"queued": 1}, {"pause_started": 1.0}, {"tree_paused": true},
++			{"hud_visible": false}, {"modals": ["dialogue"]}]:
++		var blocked := state.duplicate(true)
++		blocked.merge(override, true)
++		assert_false(CAPTURE.naturally_expired(blocked))
++
++
++func test_partial_failure_keeps_valid_images_without_claiming_lifecycle_complete() -> void:
++	var raw := [{"file": "res://shots/t.png", "tag": "t", "camera": [1, 2, 3]}]
++	var phases := [{"id": "venn-win", "file": "res://shots/win.png", "phase": "win",
++		"receipt_state": {"visible": true}}]
++	var manifest := CAPTURE.lifecycle_manifest(raw, phases, ["aftermath image save failed"], "water_trainer_venn")
++	assert_false(manifest.complete)
++	assert_eq(manifest.missing_phases, ["aftermath", "receipt-expired"])
++	assert_eq(manifest.frames.size(), 2)
++	assert_eq(manifest.frames[1].file, "res://shots/win.png")
++	manifest.frames[1].receipt_state.visible = false
++	assert_true(phases[0].receipt_state.visible, "manifest cannot alter prior frame state")
++	manifest.frames[0].camera[0] = 999
++	assert_eq(raw[0].camera[0], 1)
++	var diagnostic := CAPTURE.lifecycle_manifest([{"file": "res://shots/diagnostic.png", "tag": "diagnostic"}], [], ["time_cap"], "water_trainer_venn")
++	assert_eq(diagnostic.missing_phases, ["win", "aftermath", "receipt-expired"])
++	assert_false(diagnostic.complete)
++
++
++func test_complete_requires_all_three_saved_phases_and_no_failures() -> void:
++	var phases := []
++	for phase: String in ["win", "aftermath", "receipt-expired"]:
++		phases.append({"id": phase, "file": "res://shots/" + phase + ".png", "phase": phase})
++	assert_true(CAPTURE.lifecycle_manifest([], phases, [], "water_trainer_venn").complete)
++	assert_false(CAPTURE.lifecycle_manifest([], phases, ["manifest failure"], "water_trainer_venn").complete)

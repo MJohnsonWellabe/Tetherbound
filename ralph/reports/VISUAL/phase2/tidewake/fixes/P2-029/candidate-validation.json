@@ -1,0 +1,20 @@
+{
+  "status": "candidate_off",
+  "source_base": "e29714f6ecec81df52996d6287fd8e533484404b",
+  "source_sha256_lf": {
+    "scripts/creatures/water_rest_pose_visual.gd": "60ce97b7d571e7471ac66a72eb75c3062724a5bec88236b6edcd43b43fe0b8e9",
+    "data/config/water_creature_rest_visual.json": "938ecb7c8945f806fd61d185cc4c8c4ab5514f1b2c104c9a20a026f4f45e01dd",
+    "scripts/creatures/creature_body.gd": "7fe136e616945432d4f5f8bfd17e2b1b711bd0f30d4318155196e6906d5105aa",
+    "scripts/creatures/companion_presence.gd": "896adc5ac062298f2a4446444420298121d9273e7bf0b2443b399c2beb45c22c",
+    "tools/phase2_capture_creatures.gd": "b88d4a83a78849e04c952d7395847ce9aa4edaf53a40723fe620b29428d08482",
+    "tests/test_creature_rest_pose.gd": "6eaa82fa0e3ac5b830642db4032da476b12ab9c7c94ab324d012db9857b96648"
+  },
+  "command": "Godot_v4.7-stable_win64_console.exe --headless --path . --script tests/run_tests.gd -- --only=test_creature_rest_pose.gd,test_companion_presence.gd",
+  "appdata": ".local/rest-reviewed-test01",
+  "exit_code": 0,
+  "tests": 44,
+  "assertions": 709,
+  "failed": 0,
+  "log_sha256": "df5a4d6e3df3390ce69e59db353d15c82d884f5c33b4abe8da9ba462da91f8e3",
+  "limits": "Focused source/lifecycle tests only. Native endpoint, contact and natural resume comparison outstanding. Gate remains false. Prior full suite predates this implementation."
+}

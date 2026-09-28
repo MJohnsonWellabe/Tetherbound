@@ -1,0 +1,122 @@
+"""Scratch CPU/source checks. No Godot, image mutation, or production writes."""
+from pathlib import Path
+import copy
+import math
+import re
+import unittest
+
+P = Path(__file__).resolve().parent
+ROOT = P.parents[1]
+ANCHOR = "float bluff_patch = coast_noise(v_vertex.xz * 0.16 + vec2(v_vertex.y * 0.025));"
+MASK = "bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);"
+
+
+def camera_delta(a, b):
+    maximum, distance_sq = 0.0, 0.0
+    for key in ("basis_x", "basis_y", "basis_z", "origin"):
+        if key not in a or key not in b or len(a[key]) != 3 or len(b[key]) != 3:
+            return {"ok": False}
+        for x, y in zip(a[key], b[key]):
+            if not math.isfinite(x) or not math.isfinite(y):
+                return {"ok": False}
+            d = abs(x-y)
+            if key == "origin":
+                distance_sq += d*d
+            else:
+                maximum = max(maximum, d)
+    distance = math.sqrt(distance_sq)
+    return {"ok": maximum <= 1e-6 and distance <= 1e-6,
+            "basis_max_component_delta": maximum, "origin_distance_m": distance}
+
+
+def original_shader():
+    coast = (ROOT / "scripts/world/coastal_rock_material.gd").read_text(encoding="utf-8")
+    stock = (P / "terrain_generated.gdshader").read_text(encoding="utf-8")
+    uniforms = re.search(r'const UNIFORMS := """(.*?)"""', coast, re.S).group(1)
+    material = re.search(r'const MATERIAL := """(.*?)"""', coast, re.S).group(1)
+    return stock.replace("void vertex() {", uniforms+"\nvoid vertex() {").replace(
+        "mat.ao_strength *= weight_inv;", "mat.ao_strength *= weight_inv;"+material)
+
+
+def mask_shader(original, neutral):
+    code = original.replace(ANCHOR, "float bluff_patch = 0.5;") if neutral else original
+    code = code.replace("render_mode ", "render_mode unshaded, ")
+    code = code.replace("void fragment() {", "void fragment() {\nfloat diagnostic_final_bluff = 0.0;")
+    code = code.replace(MASK, MASK+"\ndiagnostic_final_bluff = bluff;")
+    end = code.rfind("}")
+    return code[:end]+"\nALBEDO = vec3(diagnostic_final_bluff);\nEMISSION = vec3(0.0);\n"+code[end:]
+
+
+class Checks(unittest.TestCase):
+    def setUp(self):
+        self.camera = {"basis_x": [1., 0., 0.], "basis_y": [0., 1., 0.],
+                       "basis_z": [0., 0., 1.], "origin": [0., 0., 0.]}
+
+    def test_tolerance_accepts_prior_round_noise_without_rounding(self):
+        changed = copy.deepcopy(self.camera)
+        changed["basis_y"][2] = 2.9802323e-8
+        result = camera_delta(self.camera, changed)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["basis_max_component_delta"], 2.9802323e-8)
+
+    def test_basis_boundary_and_euclidean_origin_limit(self):
+        changed = copy.deepcopy(self.camera)
+        changed["basis_y"][2] = 1e-6
+        self.assertTrue(camera_delta(self.camera, changed)["ok"])
+        changed["basis_y"][2] = 1.00001e-6
+        self.assertFalse(camera_delta(self.camera, changed)["ok"])
+        changed = copy.deepcopy(self.camera)
+        changed["origin"] = [.8e-6, .8e-6, 0.]
+        self.assertFalse(camera_delta(self.camera, changed)["ok"])
+
+    def test_nonfinite_and_missing_transform_fail_closed(self):
+        for bad in (math.nan, math.inf, -math.inf):
+            changed = copy.deepcopy(self.camera)
+            changed["origin"][0] = bad
+            self.assertFalse(camera_delta(self.camera, changed)["ok"])
+        self.assertFalse(camera_delta(self.camera, {})["ok"])
+
+    def test_current_anchors_and_single_changed_mask_input(self):
+        original = original_shader()
+        self.assertEqual(original.count(ANCHOR), 1)
+        self.assertEqual(original.count(MASK), 1)
+        base, neutral = mask_shader(original, False), mask_shader(original, True)
+        self.assertEqual(base.replace(ANCHOR, "float bluff_patch = 0.5;"), neutral)
+        self.assertEqual(original.count("texelFetch("), neutral.count("texelFetch("))
+        self.assertEqual(original.count("textureLod("), neutral.count("textureLod("))
+        vertex = lambda c: c[c.index("void vertex() {"):c.index("\n}", c.index("void vertex() {"))+2]
+        self.assertEqual(vertex(original), vertex(base))
+        self.assertEqual(vertex(original), vertex(neutral))
+        self.assertEqual(neutral.count("{"), neutral.count("}"))
+        self.assertGreater(neutral.rfind("ALBEDO = vec3(diagnostic_final_bluff);"), neutral.rfind("mat.albedo_height"))
+
+    def test_wrapper_live_guards_and_failed_io_terminal_exit_are_present(self):
+        s = (P / "bluff-noise03-wrapper.gd").read_text(encoding="utf-8")
+        self.assertIn("func _init() -> void:", s)
+        self.assertIn("\tsuper()", s)
+        self.assertIn("var code := _mask_original_code", s)
+        self.assertNotIn("bluff-input-02-", s)
+        for key in ("keep_aspect", "projection", "fov", "h_offset", "v_offset", "frustum_offset", "near", "far"):
+            self.assertIn('"'+key+'"', s)
+        for guard in ("measured.lens != baseline.lens", "camera_delta(baseline.camera_transform", "Image.load_from_file",
+                      "measured.terrain_lod != _mask_initial_lod", 'measured.get("sun") != baseline.get("sun")',
+                      "manifest.pending.json", "DirAccess.rename_absolute", "not _noise_io_failed", "quit(0 if accepted else 1)"):
+            self.assertIn(guard, s)
+        self.assertLess(s.index("DirAccess.copy_absolute"), s.index("DirAccess.rename_absolute"))
+        self.assertLess(s.index("FileAccess.get_sha256(checkpoint) != previous_hash"), s.index("DirAccess.rename_absolute"))
+        self.assertIn('"replacement_is_atomic": false', s)
+        self.assertIn('"engine_exit_authoritative": true', s)
+
+    def test_launcher_preflight_precedes_lock_and_process(self):
+        s = (P / "bluff-noise03-launch.ps1").read_text(encoding="utf-8")
+        self.assertLess(s.index("if ($StaticPreflight)"), s.index("$captureLease = Enter-RenderLease"))
+        self.assertLess(s.index("if ($StaticPreflight)"), s.index("$captureProcess = Start-Process"))
+        for contract in ("$state.held_by -or $state.token -or $state.run_token", "[IO.FileShare]::None", "$state.token -cne $Lease.Token",
+                         "Wait-CaptureChild $captureProcess ($TimeoutSeconds * 1000)", "-WindowStyle Hidden", "frames.Count -ne 2", "$frame.sha256"):
+            self.assertIn(contract, s)
+        self.assertNotIn(".WaitForExit()", s)
+        self.assertIn("throw $capturePrimaryError", s)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

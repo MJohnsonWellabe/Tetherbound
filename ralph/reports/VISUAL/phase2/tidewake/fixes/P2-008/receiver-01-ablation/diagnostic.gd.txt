@@ -1,0 +1,113 @@
+extends "res://.artifacts/phase2/dune_shadow_ablation.gd"
+
+## Local diagnostic only; the filename names the receiving-surface problem.
+## The terrain shader intervention changes its CASTER depth, not LIGHT_VERTEX.
+## Example: --biome=water --output=res://.artifacts/phase2/<fresh-output>
+## Source evidence and interpretation: shadow-source-notes.md beside this file.
+const RECEIVER_CASES := [
+	"baseline", "normal_bias_34", "normal_bias_68",
+	"terrain_shadow_push_002", "terrain_shadow_push_005", "terrain_shadow_push_010",
+]
+const VIEW_VERTEX_ASSIGNMENT := "VERTEX = (VIEW_MATRIX * vec4(v_vertex, 1.0)).xyz;"
+const TERRAIN_PUSHES := {
+	"terrain_shadow_push_002": 0.02,
+	"terrain_shadow_push_005": 0.05,
+	"terrain_shadow_push_010": 0.10,
+}
+
+var _push_codes: Dictionary = {}
+
+
+func _parse_args() -> bool:
+	if not super._parse_args():
+		return false
+	if _output_dir == "res://.artifacts/phase2/dune-shadow-ablation":
+		_output_dir = "res://.artifacts/phase2/dune-shadow-receiver-ablation"
+	return true
+
+
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	var original := _planned[0].duplicate(true)
+	var base_id := str(original.frame_id).trim_suffix("__baseline")
+	_planned.clear()
+	for variant: String in RECEIVER_CASES:
+		var row := original.duplicate(true)
+		row["ablation_variant"] = variant
+		row["frame_id"] = base_id + "__" + variant
+		_planned.append(row)
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	if _original_code.count(VIEW_VERTEX_ASSIGNMENT) != 1:
+		_failures.append("Receiver ablation requires exactly one final view-space VERTEX assignment")
+		return false
+	var hashes := {"baseline": _original_code.sha256_text()}
+	for variant: String in TERRAIN_PUSHES:
+		var push := float(TERRAIN_PUSHES[variant])
+		# Original normals, geometry displacement and fragment shader remain exact.
+		# The light camera faces -Z: a negative Z offset increases caster depth.
+		var code := _original_code.replace(VIEW_VERTEX_ASSIGNMENT,
+			VIEW_VERTEX_ASSIGNMENT + "\n\tif (IN_SHADOW_PASS) { VERTEX.z -= %.4f; }" % push)
+		_push_codes[variant] = code
+		hashes[variant] = code.sha256_text()
+	_manifest["shader_hashes"] = hashes
+	_manifest["shadow_case_order"] = RECEIVER_CASES
+	_manifest["shadow_source_notes"] = "res://.artifacts/phase2/shadow-source-notes.md"
+	_manifest["ablation_disclosure"] = "Six local diagnostic cases at the same validated Gull Rest Beach day/close stand. Dunes enabled locally throughout. Original vertex/fragment normals remain unchanged in EVERY case; prior corrected-normal experiment is not applied. Normal-bias cases set Sun.shadow_normal_bias to 3.4 or 6.8. Terrain cases retain baseline Sun settings and add only IN_SHADOW_PASS VERTEX.z subtraction of 0.02/0.05/0.10 metres after conversion to light-view space. This changes terrain caster depth, not visible terrain geometry or collision. Character/vegetation/prop shaders and shadow casters remain unchanged; contact-shadow preservation and shifted cliff shadows still require visual judgment. No shadow disable/opacity reduction. Shader and modified parameters reset before every case and original resources restored at finish. Stationary stills, not traversal/performance proof."
+	return true
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	# Parents restore source code/uniforms and frozen-day shadow settings before
+	# every case, then enforce the same ordinary-camera capture validations.
+	var observed := await super._pin_time(time_name)
+	if observed.is_empty():
+		return observed
+	_restore_shadow(_shadow_baseline)
+	var changes := {}
+	var expected_bias := float(_shadow_baseline.shadow_normal_bias)
+	var push := 0.0
+	match _variant:
+		"normal_bias_34":
+			expected_bias = 3.4
+			_sun.shadow_normal_bias = expected_bias
+			changes["Sun.shadow_normal_bias"] = expected_bias
+		"normal_bias_68":
+			expected_bias = 6.8
+			_sun.shadow_normal_bias = expected_bias
+			changes["Sun.shadow_normal_bias"] = expected_bias
+	if TERRAIN_PUSHES.has(_variant):
+		push = float(TERRAIN_PUSHES[_variant])
+		_diagnostic_shader.code = str(_push_codes[_variant])
+		changes["terrain_shadow_pass_push_m"] = push
+	_ablation_state = {"variant": _variant, "changes_from_dune_baseline": changes,
+		"baseline_shadow_settings": _shadow_baseline.duplicate(true), "original_normals_preserved": true,
+		"terrain_shadow_pass_push_m": push, "visible_terrain_displacement_m": 0.0}
+	for frame in 6:
+		await process_frame
+	var measured := _measure()
+	_ablation_state["measured_after_apply"] = measured
+	var expected_code: String = str(_push_codes.get(_variant, _original_code))
+	if str(measured.active_override_code_sha256) != expected_code.sha256_text() or not bool(measured.active_override_is_diagnostic):
+		_failures.append(_variant + ": active shader hash differs from requested diagnostic case")
+		return {}
+	if not is_equal_approx(_sun.shadow_normal_bias, expected_bias) or not is_equal_approx(_sun.shadow_bias, float(_shadow_baseline.shadow_bias)):
+		_failures.append(_variant + ": shadow bias readback differs from requested case")
+		return {}
+	if not _sun.shadow_enabled or _sun.shadow_opacity <= 0.0 or not is_equal_approx(_sun.shadow_opacity, float(_shadow_baseline.shadow_opacity)):
+		_failures.append(_variant + ": shadow enabled/opacity changed from baseline")
+		return {}
+	return observed
+
+
+func _measure() -> Dictionary:
+	var measured := super._measure()
+	measured.erase("corrected_vertex_normals")
+	measured["original_normals_preserved"] = not _diagnostic_shader.code.contains("diagnostic_world_normal")
+	measured["shadow_pass_push_present"] = _diagnostic_shader.code.contains("if (IN_SHADOW_PASS) { VERTEX.z -= ")
+	return measured

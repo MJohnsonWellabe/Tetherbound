@@ -1,0 +1,685 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "75042158127633e778649d6a4d91571d838db9d1",
+  "repro": "From source 75042158127633e778649d6a4d91571d838db9d1, restore the two dune config entries with enabled=true into .artifacts/phase2/dune05-runtime.zip as retained in dunes-05-pilot-repro/. Production JSON gates stay false. Use the retained wrappers with explicit super() and launch capture_dunes05_pilot.ps1 -Round dunes-05-pilot-retry, isolated APPDATA=.local/appdata; seed 2042; native Windows Compatibility OpenGL3 fullscreen 1920x1080. This entry is the locations boot of the three-view pilot.",
+  "source_manifest_sha256": "8ba0faf829f92c7dfcbd3d5daaf7fcbbfa944823ad67e2b4870e6e06b6001f4c",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "water",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 245819770742,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "candidate_override": {
+      "cover": {
+        "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
+        "_comment_colonies": "Unjudged rooted-tussock candidate: pointed ribbons fan out from a shared root with varied arcs, leaf-specific olive/straw gradients and smaller pockets within each colony. Existing terrain and gameplay clearances remain enforced. Source profiles and other realms are unchanged.",
+        "enabled": true,
+        "grass_palette": {
+          "sage": "#92966a",
+          "straw": "#c4b782"
+        },
+        "grass_texture": "res://assets/environment/stylized_nature/derived/Grass_C_dune_sage_straw.png",
+        "ground_cover": {
+          "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+          "bend": 0.16,
+          "blade_arc_angle": 0.95,
+          "blade_segments": 4.0,
+          "blade_width": 0.85,
+          "blades_per_tuft": 5.0,
+          "clump_contrast": 1.0,
+          "clump_patch_full": 0.68,
+          "clump_patch_start": 0.52,
+          "clump_scale": 0.065,
+          "cover_tiers": [
+            {
+              "count": 280.0,
+              "density_gain": 0.16,
+              "ground_blend": 0.16,
+              "item_size": 0.58,
+              "name": "strand_bushes",
+              "tint_base": "#5b6545",
+              "tint_tip": "#89916a"
+            },
+            {
+              "count": 100.0,
+              "density_gain": 0.1,
+              "item_size": 0.4,
+              "name": "strand_flowers",
+              "tint_tip": "#c8c0a0"
+            }
+          ],
+          "density_gain": 0.95,
+          "dune_colony_shape": true,
+          "dune_gap_full": 0.65,
+          "dune_gap_offset": [
+            43.7,
+            -17.9
+          ],
+          "dune_gap_scale": 0.025,
+          "dune_gap_start": 0.48,
+          "dune_gap_warp_m": 12.0,
+          "dune_gap_warp_scale": 0.013,
+          "dune_pioneer_ground": [
+            "shore"
+          ],
+          "dune_pioneer_probability": 0.045,
+          "dune_pioneer_start": 0.36,
+          "dune_shore_dry_full_y": 3.0,
+          "dune_shore_dry_start_y": 1.0,
+          "dune_shore_probability": 0.07,
+          "dune_stabilized_height_y": 6.0,
+          "dune_tussock": true,
+          "ground_blend": 0.16,
+          "height_far": 0.8,
+          "height_jitter": 0.38,
+          "height_near": 0.65,
+          "shade_jitter": 0.26,
+          "tint_base": "#596344",
+          "tint_jitter": 0.13,
+          "tint_tip": "#aaa16c",
+          "translucency": 0.16,
+          "tuft_count": 54000.0
+        },
+        "layers": {
+          "groundcover": {
+            "cluster_radius_m": [
+              1.8,
+              4.0
+            ],
+            "clusters": 12.0,
+            "models": [
+              "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"
+            ],
+            "per_cluster": [
+              12.0,
+              24.0
+            ],
+            "scale": [
+              0.42,
+              0.68
+            ]
+          },
+          "shrubs": {
+            "_dune_sheltered": true,
+            "cluster_radius_m": [
+              5.0,
+              11.0
+            ],
+            "clusters": 9.0,
+            "models": [
+              "res://assets/environment/stylized_nature/Bush_Common.gltf"
+            ],
+            "per_cluster": [
+              3.0,
+              6.0
+            ],
+            "scale": [
+              0.45,
+              0.85
+            ]
+          },
+          "trees": {
+            "_dune_sheltered": true,
+            "cluster_radius_m": [
+              7.0,
+              17.0
+            ],
+            "clusters": 12.0,
+            "per_cluster": [
+              4.0,
+              8.0
+            ]
+          }
+        },
+        "preserve_islands": [
+          "veilfall"
+        ],
+        "shelter": {
+          "_comment": "Canopy and understory share deterministic centres accepted by both original ground/slope/clearance rules. Existing lee bounds remain unchanged. An upwind ridge must rise at least ridge_relief_m above the centre; bounded unsuccessful searches report zero groves with no fallback placement.",
+          "grove_search_attempts": 256.0,
+          "grove_spacing_m": 20.0,
+          "lee_direction_xz": [
+            1.0,
+            0.35
+          ],
+          "max_radius_fraction": 0.78,
+          "min_projection": 0.04,
+          "ridge_relief_m": 3.0,
+          "shared_groves": true,
+          "upwind_samples_m": [
+            12.0,
+            24.0,
+            40.0
+          ]
+        }
+      },
+      "mechanism": "process-local resource ZIP; production JSON files remain disabled",
+      "pack": "res://.artifacts/phase2/dune05-runtime.zip",
+      "pack_sha256": "f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12",
+      "scope": "three-view pilot; not full catalog or chapter acceptance",
+      "source_commit": "75042158127633e778649d6a4d91571d838db9d1",
+      "terrain": {
+        "_comment": "Owner-directed Lake Michigan dune islands, 2026-09-28. Presentation-only surface replacement outside Veilfall's separate mountain treatment; no height, collision, control-map, route or water-depth changes. Pair with water_dune_cover.json. Default off until production review.",
+        "_comment_bluff": "Painted rocky banks blend out the dune replacement between normal Y 0.90 and 0.70, retaining installed mineral albedo, normals and roughness at full coverage. Gentle ground stays sand. Verified baked Sluice bank samples span 34-74 degrees; no terrain geometry or collision changes.",
+        "_comment_shadow": "Gated terrain-only shadow caster offset in metres, limited to 0..0.10 and faded out at Veilfall. Native Gull Rest controlled receiver-01 comparison removed fine self-shadow bands at 0.05 while retaining the trainer contact shadow. Visual terrain/collision and global Sun bias are unchanged. Cross-island/day-night review remains required.",
+        "_reference": "Inspected NPS Sleeping Bear Dunes photo: https://www.nps.gov/slbe/learn/photosmultimedia/index.htm (pale quartz sand, sparse sage/straw beach grass, dark damp waterline); direction only, no photographic pixels shipped.",
+        "bluff_full_y": 0.38,
+        "bluff_start_y": 0.72,
+        "enabled": true,
+        "painted_bluff_full_y": 0.7,
+        "painted_bluff_start_y": 0.9,
+        "patch_scale": 0.022,
+        "ripple_scale": 16.0,
+        "ripple_strength": 0.012,
+        "sand_colour": "#b9a078",
+        "shadow_push_m": 0.05,
+        "wet_colour": "#827969"
+      },
+      "wrapper_sha256": "fb89f3f91b6c3f8138004c50aa40bc2ce39ce809caadd64fedb3685e2d3f23e4"
+    },
+    "capture_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 245836547962,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T16:05:04",
+    "capture_started_utc": "2026-09-28T16:04:29",
+    "captured_frame_count": 2,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 2,
+    "planned_frame_ids": [
+      "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+      "water__gull_rest__20__gull_rest_beach__day__close"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 245836547962,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day"
+    ],
+    "requested_views": [
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/water_archipelago.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "water__gull_rest__20__gull_rest_beach",
+      "water__sluice_isle__13__sluice_isle_twin_pumps"
+    ]
+  },
+  "frames": [
+    {
+      "id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/dunes-05-pilot-after-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 7 \u2014 Sluice Isle",
+        "band_id": "sluice_isle",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 294665,
+        "camera_player_distance_m": 5.82155227661133,
+        "camera_position": [
+          908.172424316406,
+          96.0343780517578,
+          2854.95654296875
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.952485024929047,
+            0.0,
+            -0.304585516452789
+          ],
+          "basis_y": [
+            -0.063326895236969,
+            0.978147625923157,
+            0.198032796382904
+          ],
+          "basis_z": [
+            0.297929584980011,
+            0.207911714911461,
+            -0.931670963764191
+          ],
+          "origin": [
+            906.622924804688,
+            94.9531478881836,
+            2859.80151367188
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.952485024929047,
+            1.45755354452604e-08,
+            -0.304585516452789
+          ],
+          "basis_y": [
+            -0.0633268877863884,
+            0.978147625923157,
+            0.198032796382904
+          ],
+          "basis_z": [
+            0.297929555177689,
+            0.207911714911461,
+            -0.931670904159546
+          ],
+          "origin": [
+            908.172424316406,
+            96.0343780517578,
+            2854.95654296875
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sluice Isle Twin Pumps",
+        "destination_index": 13,
+        "file": "res://.artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations/water__sluice_isle__13__sluice_isle_twin_pumps__day__close.jpg",
+        "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+        "identity": "water__sluice_isle__13__sluice_isle_twin_pumps",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              819.385986328125,
+              70.6675720214844,
+              2865.81494140625
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              822.385986328125,
+              71.4611663818359,
+              2865.81494140625
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              921.89501953125,
+              74.9038696289063,
+              2952.43188476563
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              924.011352539063,
+              74.3920516967773,
+              2954.55322265625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "water_sluice_isle_wild_005_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              858.614990234375,
+              115.563949584961,
+              2927.17407226563
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "water_sluice_isle_wild_014_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              960.026977539063,
+              72.4899520874023,
+              2852.48999023438
+            ],
+            "species_id": "water_mirejaw"
+          }
+        ],
+        "nearby_creatures_160m": 6,
+        "observed_clock": {
+          "elapsed_seconds": 200.201363636364,
+          "hour": 8.00805454545455,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          906.622924804688,
+          93.2031631469727,
+          2859.80151367188
+        ],
+        "position_xz": [
+          905.1,
+          2864.564
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 93.1971740722656,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          906.622924804688,
+          2859.80151367188
+        ],
+        "spot_index_in_band": 1,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.991998732089996,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          905.099975585938,
+          2864.56396484375
+        ],
+        "terrain_ground_y": 93.1971740722656,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.304585486650467,
+          0.952485084533691
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "9b7f20999c7ebc8fc1e90e1e739e0779c2cd94b1152b9af866294ebf53b03777",
+      "source_frame_path": ".artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations/water__sluice_isle__13__sluice_isle_twin_pumps__day__close.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/dunes-05-pilot-after-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 269255,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655383110046,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130899995565414,
+            0.978147625923157,
+            0.161531582474709
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.207911670207977,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations/water__gull_rest__20__gull_rest_beach__day__close.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -75.3280029296875,
+              12.2938575744629,
+              777.859985351563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -79.1709976196289,
+              31.3581428527832,
+              860.107971191406
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              15.371000289917,
+              12.2092885971069,
+              833.093994140625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -152.680114746094,
+              -0.77353036403656,
+              809.522888183594
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -15.7110004425049,
+              -0.612642168998718,
+              783.672973632813
+            ],
+            "species_id": "water_cragclaw"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.206271,
+          "hour": 8.00825084,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          -59.972972869873,
+          785.180358886719
+        ],
+        "spot_index_in_band": 2,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.994300246238709,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "cc84a6fdd858ae31c9c0e441797dc69692921c711f1771ded55600e95bec4e8b",
+      "source_frame_path": ".artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations/water__gull_rest__20__gull_rest_beach__day__close.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

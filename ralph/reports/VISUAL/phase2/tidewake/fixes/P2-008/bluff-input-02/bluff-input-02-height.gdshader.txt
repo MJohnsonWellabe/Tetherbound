@@ -1,0 +1,6 @@
+if (bi_valid) {
+	vec4 bi_h = vec4(h[0], 0.0, h[2], h[3]);
+	if (bilerp) { bi_h.y = h[1]; }
+	else { bi_h.y = texelFetch(_height_maps, bi_index[1], 0).r; }
+	if (!any(isnan(bi_h)) && !any(isinf(bi_h))) { bi_height = dot(bi_h, weights); }
+}

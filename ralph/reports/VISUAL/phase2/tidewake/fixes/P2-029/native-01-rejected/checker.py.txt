@@ -1,0 +1,179 @@
+"""CPU preflight and optional fail-closed postcapture pair validation. No engine."""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+import math
+import zipfile
+import copy
+
+ROOT = Path(__file__).resolve().parents[2]
+HERE = Path(__file__).resolve().parent
+CONFIG = "data/config/water_creature_rest_visual.json"
+REST = (.1, .35, 1., 3.)
+RESUME = (.1, .35, .75)
+SPECIES = ("riptusk", "torrentoad")
+MAX_LATENESS = .15
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def camera_delta(a, b):
+    delta = {
+        "origin_m": math.dist(a["transform"]["origin"], b["transform"]["origin"]),
+        "basis_max": max(abs(x-y) for aa, bb in zip(a["transform"]["basis"], b["transform"]["basis"]) for x, y in zip(aa, bb)),
+        "lens_equal": {k:v for k,v in a.items() if k != "transform"} == {k:v for k,v in b.items() if k != "transform"},
+    }
+    assert delta["origin_m"] <= 1e-6 and delta["basis_max"] <= 1e-6 and delta["lens_equal"], delta
+    return delta
+
+def sample_window(target, elapsed, observed, previous):
+    assert target <= elapsed <= target + MAX_LATENESS, (target, elapsed)
+    assert observed > previous, (observed, previous)
+
+def pair_window(a, b):
+    assert abs(a-b) <= .15, (a,b)
+
+def probe_guards():
+    a = {"transform":{"origin":[0.,0.,0.],"basis":[[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]},"fov":70.}
+    assert camera_delta(a,a)["origin_m"] == 0
+    b = copy.deepcopy(a)
+    b["transform"]["basis"][0][0] += 2.98e-8
+    camera_delta(a,b)
+    for change in ("basis", "origin", "fov"):
+        b = copy.deepcopy(a)
+        if change == "basis":
+            b["transform"]["basis"][0][0] += 2e-6
+        elif change == "origin":
+            b["transform"]["origin"][1] += 2e-6
+        else:
+            b["fov"] += .001
+        try:
+            camera_delta(a,b)
+        except AssertionError:
+            continue
+        raise AssertionError(f"Failed to reject {change} mutation")
+    sample_window(.1,.25,2,1)
+    sample_window(.35,.5,3,2)
+    pair_window(.1,.25)
+    for args in ((.1,.250001,2,1), (.1,.099,2,1), (.1,.15,1,1), (.35,.35,1,2)):
+        try:
+            sample_window(*args)
+        except AssertionError:
+            continue
+        raise AssertionError(f"Accepted invalid sample {args}")
+    try:
+        pair_window(.1,.250001)
+    except AssertionError:
+        return
+    raise AssertionError("Accepted invalid paired elapsed delta")
+
+def preflight():
+    metadata = json.loads((HERE / "rest-native-source-hashes.json").read_text())
+    for name, expected in metadata["sources"].items():
+        assert sha(ROOT / name) == expected, f"Prepared source changed: {name}"
+    assert json.loads((ROOT / CONFIG).read_text(encoding="utf-8-sig"))["enabled"] is False
+    configs = {}
+    for variant in ("before", "after"):
+        archive = HERE / f"rest-native-{variant}.zip"
+        assert sha(archive) == metadata["packs"][variant]
+        with zipfile.ZipFile(archive) as z:
+            assert z.namelist() == [CONFIG], "Pack contains non-config mutations"
+            payload = z.read(CONFIG)
+            assert hashlib.sha256(payload).hexdigest() == metadata["packed_config_sha256"][variant]
+            configs[variant] = json.loads(payload)
+    assert configs["before"].pop("enabled") is False
+    assert configs["after"].pop("enabled") is True
+    assert configs["before"] == configs["after"], "Variant differs beyond enabled"
+    wrapper = (HERE / "rest-native-wrapper.gd").read_text()
+    assert wrapper.index("load_resource_pack") < wrapper.index("\n\tsuper()")
+    assert wrapper.index('game.set("save_system"') < wrapper.index("await super._run()")
+    assert 'body.call("stop_rest")' in wrapper and "body.queue_free(" not in wrapper
+    for forbidden in (".seek(", ".pause(", 'call("_on_rest_animation_finished"', 'call("play_rest")',
+                      "apply_size_multiplier", "body.global_position =", "body.scale ="):
+        assert forbidden not in wrapper, forbidden
+    assert "Time.get_ticks_usec()" in wrapper and "RenderingServer.frame_post_draw" in wrapper
+    assert len(SPECIES) * (len(REST) + len(RESUME)) * 2 == 28
+    return metadata
+
+def validate_boot(folder, variant, metadata):
+    from PIL import Image
+    baseline = json.loads((folder / "manifest.json").read_text())
+    final = json.loads((folder / "rest-final-manifest.json").read_text())
+    assert baseline["complete"] and not baseline["failures"], "Parent capture failed"
+    assert final["complete"] and not final["failures"], "Lifecycle capture failed"
+    assert baseline["frames"] == final["frames"]
+    frames = final["frames"]
+    assert len(frames) == 14
+    expected = {f"water__{s}__{phase}__t{int(t*1000):04d}" for s in SPECIES for phase, times in (("resting", REST), ("resume", RESUME)) for t in times}
+    assert {f["id"] for f in frames} == expected
+    assert len(list(folder.glob("*.jpg"))) == 14
+    prov = final["rest_diagnostic"]
+    assert prov["variant"] == variant and prov["gate_enabled"] == (variant == "after")
+    assert prov["pack_sha256"] == metadata["packs"][variant]
+    assert prov["live_config_sha256"] == metadata["packed_config_sha256"][variant]
+    assert len(prov["lifecycles"]) == 2
+    latest = json.loads(sorted(folder.glob("rest-checkpoint-*.json"))[-1].read_text())
+    assert latest["final"] and latest["complete"] and not latest["failures"]
+    for life in prov["lifecycles"]:
+        assert life["complete"]
+        assert life["endpoint_receipt"]["active"] and not life["endpoint_receipt"]["pending"]
+        assert not life["immediate_resume_receipt"]["active"] and not life["immediate_resume_receipt"]["pending"]
+        assert life["initial_rest_receipt"]["config"]["mode"] == ("authored" if variant == "after" else "roll")
+        if variant == "after":
+            assert life["initial_rest_receipt"]["pending"] and not life["initial_rest_receipt"]["active"]
+        rows = [f for f in frames if f["species"] == life["species"]]
+        assert len(rows) == 7 and all(f["body_instance_id"] == life["body_instance_id"] for f in rows)
+        assert life["camera_convergence_before_rest"]["stable_frames"] == 5
+        previous = {}
+        for f in rows:
+            path = ROOT / f["path"].removeprefix("res://")
+            assert path.parent.resolve() == folder.resolve()
+            assert sha(path) == f["sha256"]
+            with Image.open(path) as im:
+                assert im.size == (1920,1080)
+            assert f["resolution"] == [1920,1080] and f["live_gate"] == (variant == "after")
+            assert f["physical"] == life["pre_rest"]["physical"]
+            sample_window(f["sample_seconds"], f["elapsed_seconds"], f["observed_monotonic_usec"], previous.get(f["pose"],0))
+            assert f["sample_window_valid"]
+            previous[f["pose"]] = f["observed_monotonic_usec"]
+            camera_delta(f["camera"], life["camera_at_entry"])
+            assert f["sun"] == life["sun_at_entry"] and "missing" not in f["sun"]
+            if f["pose"] == "resume":
+                assert not f["rest_receipt"]["active"] and not f["rest_receipt"]["pending"]
+                assert f["model_pivot"] == life["pre_rest"]["model_pivot"]
+                assert f["animation"] == "idle" and f["animation_playing"]
+            if f["pose"] == "resting" and f["sample_seconds"] == 3.:
+                assert f["rest_receipt"]["active"] and not f["rest_receipt"]["pending"]
+    return final
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--round", help="Validate already-created p2029-<round>-before/after folders; never launch")
+    args = parser.parse_args()
+    metadata = preflight()
+    probe_guards()
+    print("CPU preflight PASS: source hashes, two single-config ZIPs, only enabled differs, 28 planned frames; no engine")
+    if args.round:
+        assert args.round.startswith("rest-native-") and all(c.isalnum() or c == "-" for c in args.round)
+        results = {v:validate_boot(HERE / f"p2029-{args.round}-{v}", v, metadata) for v in ("before", "after")}
+        for before, after in zip(results["before"]["rest_diagnostic"]["lifecycles"], results["after"]["rest_diagnostic"]["lifecycles"]):
+            assert before["species"] == after["species"]
+            assert before["declared_model_path"] == after["declared_model_path"]
+            for field in ("physical", "model_pivot", "stand_ground_y"):
+                assert before["pre_rest"][field] == after["pre_rest"][field]
+        pairs = []
+        for before, after in zip(results["before"]["frames"], results["after"]["frames"]):
+            assert before["id"] == after["id"] and before["physical"] == after["physical"]
+            assert before["sun"] == after["sun"]
+            pair_window(before["elapsed_seconds"], after["elapsed_seconds"])
+            pairs.append({"id": before["id"], "camera_delta": camera_delta(before["camera"], after["camera"]),
+                          "before_elapsed_seconds": before["elapsed_seconds"], "after_elapsed_seconds": after["elapsed_seconds"]})
+        assert results["before"]["rest_diagnostic"]["source_commit"] == results["after"]["rest_diagnostic"]["source_commit"]
+        receipt = HERE / f"{args.round}-comparison.json"
+        assert not receipt.exists(), "Fresh comparison receipt required"
+        receipt.write_text(json.dumps({"complete":True,"frames":28,"pairs":pairs,"visual_acceptance":False}, indent=2)+"\n")
+        print(f"Pair validation PASS: 28 native frames; no visual acceptance. {receipt}")
+
+if __name__ == "__main__":
+    main()

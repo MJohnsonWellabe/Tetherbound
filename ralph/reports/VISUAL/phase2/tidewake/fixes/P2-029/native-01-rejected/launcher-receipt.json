@@ -1,0 +1,24 @@
+{
+  "complete": false,
+  "source_commit": "c2110feba1ac31ccc981434599ee7f844b86c499",
+  "render_token": "dea88f1b-a710-4198-bef9-8453e33303f7",
+  "children": [
+    {
+      "variant": "before",
+      "pid": 16704,
+      "output": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\p2029-rest-native-01-before",
+      "appdata": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\rest-native-01-before-appdata",
+      "log": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\rest-native-01-before.log",
+      "errors": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\rest-native-01-before-errors.log",
+      "started_utc": "2026-09-28T17:53:06.7479909Z",
+      "exit_code": 1,
+      "terminal": true
+    }
+  ],
+  "error": "Native rest before failed: 1",
+  "cleanup_errors": [],
+  "last_child_terminal_verified": true,
+  "partial_evidence_retained": true,
+  "visual_acceptance": false,
+  "process_exit_authoritative": true
+}

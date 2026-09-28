@@ -67,11 +67,21 @@ var _riding_leg_fit: Node3D = null
 var _gait_feel: Dictionary = {}
 var _fly_hang := false
 var _fly_pose: Dictionary = {}
+const HUMAN_SWIM_CONFIG := "res://data/config/human_swim_visual.json"
+const HUMAN_SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+var _human_swim_visual: Dictionary = {}
+var _human_swim_active := false
+var _human_swim_phase := 0.0
+var _human_swim_art_before := Transform3D.IDENTITY
+var _human_swim_tilt_before := Vector2.ZERO
+var _human_swim_bones_before: Array[Transform3D] = []
+var _human_swim_animation_active := true
 
 
 func _ready() -> void:
 	_player = get_node_or_null(player_path) as CharacterBody3D
 	_gait_feel = _load_gait_feel()
+	_human_swim_visual = load_human_swim_visual()
 	var chosen := resolved_appearance_id(appearance_id, get_node_or_null(^"/root/Game"))
 	if chosen.is_empty() or not build(chosen):
 		if chosen != "trainer":
@@ -80,6 +90,7 @@ func _ready() -> void:
 			# The scene's capsule stays visible, so a missing trainer is a
 			# trainer that looks wrong rather than a trainer who is not there.
 			push_error("no trainer model; falling back to the placeholder capsule")
+	preload("res://scripts/player/human_water_contact_view.gd").attach(self, _player)
 
 
 static func resolved_appearance_id(explicit_id: String, game: Object) -> String:
@@ -113,6 +124,10 @@ static func _load_gait_feel() -> Dictionary:
 # slow-motion in play and to trip smoke_input's cadence streak in CI.
 func _physics_process(delta: float) -> void:
 	if animation_player() == null or _player == null:
+		return
+	if _update_human_swim_visual(delta):
+		_throwing_for = maxf(0.0, _throwing_for - delta)
+		_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
 		return
 	# W14-RIDING: a seated rider is posed, not animated. Everything below drives
 	# the body from the trainer's OWN locomotion -- gait role, cadence, momentum
@@ -357,6 +372,8 @@ const RIDE_POSE := [
 ## failure mode `build()` already has.
 func set_riding(riding: bool, thigh_spread_override_deg: float = -1.0,
 		rider_leg_fit: Dictionary = {}) -> void:
+	if riding:
+		_end_human_swim_visual()
 	if _riding == riding:
 		# A repeated live/network riding fact may arrive after its visual fit.
 		# Preserve idempotence for the pose and seat drop while repairing only a
@@ -630,6 +647,8 @@ func _restore_ride_pose(skeleton_node: Skeleton3D) -> void:
 ## because final species-specific Fly clips remain deferred. Keep the trainer
 ## visible and retain the ordinary player collision shape throughout.
 func set_fly_hang(enabled: bool, pose: Dictionary = {}) -> void:
+	if enabled:
+		_end_human_swim_visual()
 	_fly_hang = enabled
 	_fly_pose = pose
 	if animation_player() != null:
@@ -670,3 +689,138 @@ func _aim_hang_bone(rig: Skeleton3D, bone_name: String, child_name: String, dire
 		# additive delta. Preserve rest roll while aiming the actual limb axis.
 		var aim := Quaternion((rest_basis * rest_axis).normalized(), target)
 		rig.set_bone_pose_rotation(bone, aim * rest_basis.get_rotation_quaternion())
+
+
+## P2-071 candidate. Presentation reads the same existing owner/remote packet;
+## it never changes the swimmer, resource simulation, camera or collider.
+static func load_human_swim_visual() -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(HUMAN_SWIM_CONFIG))
+	return raw if raw is Dictionary else {}
+
+
+static func human_swim_snapshot(player: Node) -> Dictionary:
+	if player == null:
+		return {}
+	var local := player.get_node_or_null("SwimController")
+	if local != null and local.has_method("snapshot"):
+		return local.call("snapshot")
+	# RemoteTrainer exposes animation_state and already applies the validated
+	# aquatic packet. No new network field or locally inferred floor state.
+	if player.has_method("animation_state"):
+		var aquatic: Variant = player.get("aquatic")
+		if aquatic is Object and aquatic.has_method("snapshot"):
+			return aquatic.call("snapshot")
+	return {}
+
+
+static func human_swim_pose_requested(packet: Dictionary, enabled: bool,
+		riding: bool, flying: bool, lying: bool) -> bool:
+	if not enabled or riding or flying or lying:
+		return false
+	var mode := int(packet.get("mode", HUMAN_SWIM_STATE.Mode.LAND))
+	return mode == HUMAN_SWIM_STATE.Mode.HUMAN or (
+		mode == HUMAN_SWIM_STATE.Mode.COMBAT_PAUSED
+		and int(packet.get("resume_mode", HUMAN_SWIM_STATE.Mode.LAND)) == HUMAN_SWIM_STATE.Mode.HUMAN)
+
+
+func _update_human_swim_visual(delta: float) -> bool:
+	# Off is an exact no-op: do not even sample gameplay or touch the rig.
+	if not bool(_human_swim_visual.get("pose_enabled", false)) and not _human_swim_active:
+		return false
+	var packet := human_swim_snapshot(_player)
+	var rig := skeleton()
+	if not human_swim_pose_requested(packet, bool(_human_swim_visual.get("pose_enabled", false)),
+			_riding, _fly_hang, is_lying()) or _art == null or rig == null:
+		_end_human_swim_visual()
+		return false
+	if not _human_swim_active:
+		_human_swim_art_before = _art.transform
+		# Walking owns Model pitch/roll. Its updates pause while swimming, so
+		# do not carry the entry slope or turn bank through the whole stroke.
+		_human_swim_tilt_before = Vector2(rotation.x, rotation.z)
+		rotation.x = 0.0
+		rotation.z = 0.0
+		_human_swim_bones_before.clear()
+		for index in rig.get_bone_count():
+			_human_swim_bones_before.append(rig.get_bone_pose(index))
+		_human_swim_animation_active = animation_player().active
+		animation_player().active = false
+		_human_swim_phase = 0.0
+		_human_swim_active = true
+	var paused := int(packet.get("mode", 0)) == HUMAN_SWIM_STATE.Mode.COMBAT_PAUSED
+	if not paused:
+		_human_swim_phase = fposmod(_human_swim_phase + delta * TAU
+			/ maxf(0.1, float(_human_swim_visual.get("stroke_seconds", 1.8))), TAU)
+	_apply_human_swim_pose(rig, float(packet.get("surface_y", 0.0)))
+	return true
+
+
+func _apply_human_swim_pose(rig: Skeleton3D, surface_y: float) -> void:
+	rig.reset_bone_poses()
+	# Model yaw faces +Z in PlayerController._face. Pitch the fitted art
+	# toward that heading, leaving Model and the CharacterBody untouched.
+	_art.transform = _human_swim_art_before
+	_art.basis = Basis(Vector3.RIGHT, deg_to_rad(float(_human_swim_visual.get("body_pitch_deg", 68.0)))) \
+		* _human_swim_art_before.basis
+	_swim_flex(rig, "neck", float(_human_swim_visual.get("neck_lift_deg", -18.0)))
+	_swim_flex(rig, "Head", float(_human_swim_visual.get("head_lift_deg", -25.0)))
+	for side: String in ["Left", "Right"]:
+		var sign_side := 1.0 if side == "Left" else -1.0
+		var stroke := _human_swim_phase + (0.0 if side == "Left" else PI)
+		var reach := cos(stroke)
+		var lateral := float(_human_swim_visual.get("arm_lateral", 0.45))
+		# Aim in the installed skeleton's frame, preserving each bone's rest
+		# roll. Positive Y extends toward the head; negative Y draws past hips.
+		_aim_hang_bone(rig, side + "Arm", side + "ForeArm",
+			Vector3(sign_side * lateral, reach, float(_human_swim_visual.get("arm_depth", -0.25))))
+		_aim_hang_bone(rig, side + "ForeArm", side + "Hand",
+			Vector3(sign_side * lateral * float(_human_swim_visual.get("forearm_lateral_scale", 0.55)),
+			maxf(float(_human_swim_visual.get("forearm_minimum_reach", 0.15)), reach),
+			float(_human_swim_visual.get("forearm_depth", -0.45))))
+		_swim_flex(rig, side + "UpLeg", sin(stroke) * float(_human_swim_visual.get("kick_deg", 9.0)))
+		_swim_flex(rig, side + "Leg", float(_human_swim_visual.get("knee_deg", 14.0))
+			+ maxf(0.0, -sin(stroke)) * float(_human_swim_visual.get("kick_deg", 9.0)))
+	# Fit the visible chest against the already-simulated surface. A fitted
+	# art translation cannot move the capsule, feet anchor, camera or stamina.
+	var chest := rig.find_bone("Spine02")
+	if chest >= 0 and is_inside_tree():
+		var chest_world := rig.global_transform * rig.get_bone_global_pose(chest).origin
+		var target := Vector3(_player.global_position.x,
+			surface_y + float(_human_swim_visual.get("chest_above_surface_m", 0.10)),
+			_player.global_position.z)
+		_art.position += global_basis.inverse() * (target - chest_world)
+
+
+static func _swim_flex(rig: Skeleton3D, bone_name: String, degrees: float) -> void:
+	var index := rig.find_bone(bone_name)
+	if index >= 0:
+		var rest := rig.get_bone_rest(index).basis.get_rotation_quaternion()
+		rig.set_bone_pose_rotation(index, rest * Quaternion(Vector3.RIGHT, deg_to_rad(degrees)))
+
+
+func set_lying(lying: bool) -> void:
+	if lying:
+		_end_human_swim_visual()
+	super.set_lying(lying)
+
+
+func _end_human_swim_visual() -> void:
+	if not _human_swim_active:
+		return
+	# Return only the axes we borrowed; facing may have changed in the water.
+	rotation.x = _human_swim_tilt_before.x
+	rotation.z = _human_swim_tilt_before.y
+	if is_instance_valid(_art):
+		_art.transform = _human_swim_art_before
+	var rig := skeleton()
+	if rig != null:
+		for index in mini(rig.get_bone_count(), _human_swim_bones_before.size()):
+			var before := _human_swim_bones_before[index]
+			rig.set_bone_pose_position(index, before.origin)
+			rig.set_bone_pose_rotation(index, before.basis.get_rotation_quaternion())
+			rig.set_bone_pose_scale(index, before.basis.get_scale())
+	if animation_player() != null:
+		animation_player().active = _human_swim_animation_active
+	_current = "" # force play() to resume the ordinary gait after our override
+	_human_swim_bones_before.clear()
+	_human_swim_active = false

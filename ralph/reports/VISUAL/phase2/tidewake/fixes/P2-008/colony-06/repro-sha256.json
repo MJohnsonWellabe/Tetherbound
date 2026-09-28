@@ -1,0 +1,18 @@
+{
+  "runner-receipt.json": "6e37c796386c7a6219b9e6a754e10d0b4e09c0fbe206700d33088b64bc8e2dee",
+  "root-preflight.json": "f1385dcfb9ac8a8cafcd34ea7cb950f3134f4a50630b88ce892b3de133ebf76c",
+  "native.log.txt": "3259d28e9d31975ab3fb7e0155ebb812c2d49c20f29fce84678b367211aa86c7",
+  "native-errors.log.txt": "b166b7545c9ec5377c4302715f5ace6a7496f6c77d78e5bddb6c8d5b81cf2c2f",
+  "gdscript-parser.log.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+  "proposal.patch.txt": "3a9abf069a1f331f79df0a55ab1a513f6fe29974bb1ee193a260693c4a13caca",
+  "terrain-probability-study.json": "d85ff2f67a75532960b50fcded47f157e55122c191efc3ec15aa5edca4880b56",
+  "colony06-locations.gd.txt": "c4a3bd67b0318729505669e17d657c480558e8e15f6a3c3b096b5c660806ea60",
+  "colony06-capture.ps1.txt": "51523d3d53dacc80f483ba0f409246f5c10e27ee3fa517187314d1fa79f3a030",
+  "colony06-baseline.gdshader.txt": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9",
+  "colony06-candidate.gdshader.txt": "2b48b3cea48da27afa440fb93a97841a2e829782fac5d5e56596fffc1845922e",
+  "colony06-review.json": "3dc59d4f759897ab153a2ed078e669b428a978b256eafcfd45a7b728229df26c",
+  "colony06-file-hashes.json": "ae2d2c460c2c9e71fd88ec5af5188609746c5f9548c37a926eb90f13b2618945",
+  "colony06-final-review.md.txt": "841bfd937d0f1fdc973aa3835eddf2ce9af0f976ebe25a36b5363f096dd6a708",
+  "colony06-build.ps1.txt": "e87e9b90ea918d675e95aa04278c1ff866e11b940406712223f4345f647f1da6",
+  "colony06-README.md.txt": "10786d8767e315aa8cd0cd54f4fa8f6e697177963593f61e8c4ef95b0e7625af"
+}

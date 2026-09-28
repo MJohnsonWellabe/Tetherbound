@@ -38,7 +38,7 @@ func build(config: Dictionary, visual: Dictionary) -> void:
 	material.set_shader_parameter("wave_normal_a", _noise(11, 0.05, true))
 	material.set_shader_parameter("wave_normal_b", _noise(12, 0.09, true))
 	material.set_shader_parameter("foam_noise", _noise(13, 0.11, false))
-	material_override = material
+	material_override = preload("res://scripts/world/water_offshore_material.gd").apply(material)
 
 
 func _noise(seed_value: int, frequency: float, normal: bool) -> NoiseTexture2D:

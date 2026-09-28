@@ -1,0 +1,141 @@
+diff --git a/data/config/water_dune_cover.json b/data/config/water_dune_cover.json
+index 503a27be2..f792aec85 100644
+--- a/data/config/water_dune_cover.json
++++ b/data/config/water_dune_cover.json
+@@ -1,18 +1,23 @@
+ {
+   "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
+   "enabled": false,
++  "_comment_colonies": "Unjudged colony candidate: grass-only thresholds create bare gaps and dense cores, with the existing blade arc made upright through a Water profile override. Full contrast keeps the threshold's zero-density gaps. Static wispy accents use fewer, tighter colonies at approximately the same requested instance count. Shelter masks and woodland placement remain unchanged pending a terrain-relief proposal.",
+   "preserve_islands": ["veilfall"],
+   "ground_cover": {
+-    "tuft_count": 26000,
++    "tuft_count": 54000,
+     "blades_per_tuft": 5,
++    "blade_segments": 3,
++    "blade_arc_angle": 0.20,
+     "blade_width": 0.85,
+     "height_near": 0.68,
+     "height_far": 0.88,
+     "height_jitter": 0.28,
+     "bend": 0.12,
+-    "density_gain": 0.58,
+-    "clump_scale": 0.018,
++    "density_gain": 0.95,
++    "clump_scale": 0.065,
+     "clump_contrast": 1.0,
++    "clump_patch_start": 0.52,
++    "clump_patch_full": 0.68,
+     "tint_base": "#777a4d",
+     "tint_tip": "#c4b782",
+     "tint_jitter": 0.13,
+@@ -25,7 +30,7 @@
+   "layers": {
+     "trees": {"clusters": 12, "per_cluster": [4, 8], "cluster_radius_m": [7.0, 17.0], "_dune_sheltered": true},
+     "shrubs": {"models": ["res://assets/environment/stylized_nature/Bush_Common.gltf"], "clusters": 9, "per_cluster": [3, 6], "cluster_radius_m": [5.0, 11.0], "scale": [0.45, 0.85], "_dune_sheltered": true},
+-    "groundcover": {"models": ["res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"], "clusters": 28, "per_cluster": [5, 10], "cluster_radius_m": [3.0, 8.0], "scale": [0.42, 0.68]}
++    "groundcover": {"models": ["res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"], "clusters": 12, "per_cluster": [12, 24], "cluster_radius_m": [1.8, 4.0], "scale": [0.42, 0.68]}
+   },
+   "shelter": {"lee_direction_xz": [1.0, 0.35], "min_projection": 0.04, "max_radius_fraction": 0.78},
+   "grass_texture": "res://assets/environment/stylized_nature/derived/Grass_C_dune_sage_straw.png",
+diff --git a/scripts/world/grass_field.gd b/scripts/world/grass_field.gd
+index 71c20f4d3..31aa9456b 100644
+--- a/scripts/world/grass_field.gd
++++ b/scripts/world/grass_field.gd
+@@ -1612,6 +1612,7 @@ func _apply_config(cfg: Dictionary) -> void:
+ 	for key: String in [
+ 		"field_radius", "fade_start", "blade_width", "height_near", "height_far",
+ 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
++		"clump_patch_start", "clump_patch_full", "blade_arc_angle",
+ 		"ground_blend", "translucency", "wind_strength", "wind_scale",
+ 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
+ 		"lens_clear_m", "lens_clear_band",
+diff --git a/shaders/grass_field.gdshader b/shaders/grass_field.gdshader
+index cfda608ad..c17f686d2 100644
+--- a/shaders/grass_field.gdshader
++++ b/shaders/grass_field.gdshader
+@@ -118,6 +118,12 @@ uniform float shade_jitter : hint_range(0.0, 1.0) = 0.22;
+ uniform float density_gain : hint_range(0.0, 1.0) = 0.82;
+ uniform float clump_scale = 0.035;
+ uniform float clump_contrast : hint_range(0.0, 1.0) = 0.55;
++// Optional colonies, using the same threshold idiom as cover_tier's patches.
++// Equal defaults keep the original linear drift exactly. With full contrast,
++// the enabled ramp makes truly empty sand below start and dense cores above
++// full; density_gain then sets the within-colony tuft population.
++uniform float clump_patch_start : hint_range(0.0, 1.0) = 0.0;
++uniform float clump_patch_full : hint_range(0.0, 1.0) = 0.0;
+ 
+ // Colour. `tint_base`/`tint_tip` are the base-to-tip gradient a blind critic
+ // named as missing from the scattered tufts ("flat two-tone polygon, no
+@@ -516,6 +522,9 @@ void vertex() {
+ 	// so the field reads as drifts with open ground between them rather than a
+ 	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
+ 	float drift = value_noise(world_xz * clump_scale);
++	if (clump_patch_full > clump_patch_start) {
++		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
++	}
+ 	drift = mix(1.0, drift, clump_contrast);
+ 	// The bush tier's drift, evaluated with the bush tier's own numbers. Same
+ 	// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
+diff --git a/tests/test_water_dune_cover.gd b/tests/test_water_dune_cover.gd
+index 6650f5041..03f16504f 100644
+--- a/tests/test_water_dune_cover.gd
++++ b/tests/test_water_dune_cover.gd
+@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
+ 
+ const DUNES := preload("res://scripts/world/water_dune_cover.gd")
+ const VEGETATION := preload("res://scripts/world/water_vegetation.gd")
++const GRASS := preload("res://scripts/world/grass_field.gd")
+ 
+ 
+ func test_disabled_profile_and_veilfall_preserve_original_inputs() -> void:
+@@ -25,7 +26,7 @@ func test_enabled_copies_preserve_clearances_and_unrelated_layers() -> void:
+ 		"res://data/config/water_ground_cover.json"))
+ 	var original := source.duplicate(true)
+ 	var candidate := DUNES.ground_profile(source, settings)
+-	assert_true(candidate.tuft_count < source.tuft_count)
++	assert_true(candidate.tuft_count <= source.tuft_count, "colony cores stay within the source profile's requested tuft count")
+ 	assert_true(candidate.height_near > source.height_near)
+ 	assert_eq(candidate.anchor_clear_radius_m, source.anchor_clear_radius_m)
+ 	assert_eq(candidate.forbidden_ground, source.forbidden_ground)
+@@ -41,6 +42,40 @@ func test_enabled_copies_preserve_clearances_and_unrelated_layers() -> void:
+ 	assert_eq(dune_grass.min_height_m, grass.min_height_m)
+ 
+ 
++func test_colony_and_arc_overrides_bind_only_to_the_candidate_material() -> void:
++	var settings := DUNES.config()
++	assert_false(bool(settings.enabled), "native-unjudged candidate remains off")
++	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
++		"res://data/config/water_ground_cover.json"))
++	var original := source.duplicate(true)
++	settings.enabled = true
++	var candidate := DUNES.ground_profile(source, settings)
++	var ordinary := GRASS.new()
++	var dunes := GRASS.new()
++	for field in [ordinary, dunes]:
++		field.configure_profile(source, ["grass", "shore", "rock"])
++		field._material = ShaderMaterial.new()
++		field._material.shader = load(GRASS.SHADER_PATH)
++	ordinary._apply_config(source)
++	dunes._apply_config(candidate)
++	for key: String in ["clump_patch_start", "clump_patch_full"]:
++		assert_almost_eq(float(ordinary._material.get_shader_parameter(key)), 0.0,
++			0.0001, "ordinary profile keeps the disabled shader default: " + key)
++		assert_almost_eq(float(dunes._material.get_shader_parameter(key)), float(candidate[key]))
++	var original_arc := float(ordinary._material.get_shader_parameter("blade_arc_angle"))
++	assert_almost_eq(original_arc, 1.047198, 0.0001, "existing grass curvature remains unchanged")
++	assert_almost_eq(float(dunes._material.get_shader_parameter("blade_arc_angle")), float(candidate.blade_arc_angle))
++	assert_true(float(candidate.blade_arc_angle) < original_arc)
++	assert_true(float(candidate.clump_patch_full) > float(candidate.clump_patch_start))
++	assert_almost_eq(float(dunes._material.get_shader_parameter("clump_contrast")), 1.0,
++		0.0001, "threshold gaps retain zero keep probability")
++	assert_eq(source, original)
++	assert_false(source.has("clump_patch_start"))
++	assert_false(source.has("blade_arc_angle"))
++	ordinary.free()
++	dunes.free()
++
++
+ func test_shelter_leaves_windward_ground_open_without_affecting_ordinary_layers() -> void:
+ 	var settings := {"enabled": true}
+ 	var sheltered := {"_dune_sheltered": true}

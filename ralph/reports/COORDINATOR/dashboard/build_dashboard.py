@@ -11,8 +11,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).parent
-crit = json.loads((HERE / "criteria.json").read_text())
-status = json.loads((HERE / "status.json").read_text())
+crit = json.loads((HERE / "criteria.json").read_text(encoding="utf-8"))
+status = json.loads((HERE / "status.json").read_text(encoding="utf-8"))
 
 E = html.escape
 ORDER = ["met", "partial", "in_progress", "failing", "blocked", "not_started"]
@@ -303,5 +303,5 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <p class="note">Status is strict: fixture-only proof counts as partial, visual criteria need a passing code-blind judge verdict, and co-op criteria need two-peer evidence. Percentages are the coordinator's evidence audit, not a measured play-through.</p>
 </main>
 """
-(HERE / "tetherbound_dashboard.html").write_text(page)
+(HERE / "tetherbound_dashboard.html").write_text(page, encoding="utf-8")
 print("wrote", HERE / "tetherbound_dashboard.html", "overall", overall, "counts", counts)

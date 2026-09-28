@@ -1,0 +1,44 @@
+// Bilinear reconstruction of UNNORMALIZED forward gradients; normalize once.
+// Independent of stock region_mip switch. This is not a metre-radius blur.
+if (bi_valid) {
+	vec2 bi_offsets[4] = vec2[4](vec2(1.0, 2.0), vec2(2.0, 1.0), vec2(2.0, 0.0), vec2(0.0, 2.0));
+	ivec3 bi_extra[4];
+	for (int bi_i = 0; bi_i < 4; bi_i++) {
+		bi_extra[bi_i] = bi_coord(index_id + bi_offsets[bi_i]);
+		if (bi_extra[bi_i].z < 0) { bi_valid = false; }
+	}
+	if (bi_valid) {
+		for (int bi_i = 0; bi_i < 4; bi_i++) {
+			// These coordinates are in bounds before the stock helper is called.
+			bi_valid = bi_valid && all(equal(bi_extra[bi_i], get_index_coord(index_id + bi_offsets[bi_i], FRAGMENT_PASS)));
+			uint bi_c = floatBitsToUint(texelFetch(_control_maps, bi_extra[bi_i], 0).r);
+			bi_valid = bi_valid && !DECODE_HOLE(bi_c);
+		}
+	}
+	if (bi_valid) {
+		vec2 bi_gradient = vec2(0.0);
+		if (bilerp) {
+			// Stock normals already contain these 8 heights. Recover raw gradients
+			// by dividing x/z by positive normal Y, then interpolate gradients.
+			for (int bi_i = 0; bi_i < 4; bi_i++) {
+				vec3 bi_n = index_normal[bi_i];
+				if (any(isnan(bi_n)) || any(isinf(bi_n)) || bi_n.y <= 0.0) { bi_valid = false; }
+				else { bi_gradient += (-bi_n.xz / bi_n.y) * weights[bi_i]; }
+			}
+		} else {
+			float bi_h1 = texelFetch(_height_maps, bi_index[1], 0).r;
+			vec4 bi_hx = vec4(texelFetch(_height_maps, bi_extra[0], 0).r,
+				texelFetch(_height_maps, bi_extra[1], 0).r,
+				texelFetch(_height_maps, bi_extra[2], 0).r,
+				texelFetch(_height_maps, bi_extra[3], 0).r);
+			vec4 bi_h = vec4(h[0], bi_h1, h[2], h[3]);
+			bi_valid = !any(isnan(bi_h)) && !any(isinf(bi_h)) && !any(isnan(bi_hx)) && !any(isinf(bi_hx));
+			vec4 bi_gx = vec4(bi_h1 - h[0], bi_hx.y - bi_h1, bi_hx.z - h[2], h[2] - h[3]);
+			vec4 bi_gz = vec4(bi_hx.w - h[0], bi_hx.x - bi_h1, bi_h1 - h[2], h[0] - h[3]);
+			bi_gradient = vec2(dot(bi_gx, weights), dot(bi_gz, weights)) / _vertex_spacing;
+		}
+		if (bi_valid && !any(isnan(bi_gradient)) && !any(isinf(bi_gradient))) {
+			bi_slope = inversesqrt(1.0 + dot(bi_gradient, bi_gradient));
+		}
+	}
+}

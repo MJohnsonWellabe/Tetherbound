@@ -1,0 +1,17 @@
+{
+  "enabled": false,
+  "_comment": "Owner-directed Lake Michigan dune islands, 2026-09-28. Presentation-only surface replacement outside Veilfall's separate mountain treatment; no height, collision, control-map, route or water-depth changes. Pair with water_dune_cover.json. Default off until production review.",
+  "_reference": "Inspected NPS Sleeping Bear Dunes photo: https://www.nps.gov/slbe/learn/photosmultimedia/index.htm (pale quartz sand, sparse sage/straw beach grass, dark damp waterline); direction only, no photographic pixels shipped.",
+  "sand_colour": "#b9a078",
+  "wet_colour": "#827969",
+  "bluff_start_y": 0.72,
+  "bluff_full_y": 0.38,
+  "_comment_bluff": "Painted rocky banks blend out the dune replacement between normal Y 0.90 and 0.70, retaining installed mineral albedo, normals and roughness at full coverage. Gentle ground stays sand. Verified baked Sluice bank samples span 34-74 degrees; no terrain geometry or collision changes.",
+  "patch_scale": 0.022,
+  "ripple_scale": 16.0,
+  "ripple_strength": 0.012,
+  "shadow_push_m": 0.05,
+  "_comment_shadow": "Gated terrain-only shadow caster offset in metres, limited to 0..0.10 and faded out at Veilfall. Native Gull Rest controlled receiver-01 comparison removed fine self-shadow bands at 0.05 while retaining the trainer contact shadow. Visual terrain/collision and global Sun bias are unchanged. Cross-island/day-night review remains required.",
+  "painted_bluff_start_y": 0.9,
+  "painted_bluff_full_y": 0.7
+}

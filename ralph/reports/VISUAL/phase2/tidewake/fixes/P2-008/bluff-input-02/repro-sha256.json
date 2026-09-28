@@ -1,0 +1,14 @@
+{
+  "bluff-input-02-wrapper.gd.txt": "e87891940e1b22e7deabfe7a4e6228a4646b2f73ee064ee62645fbac33f9ad75",
+  "dune_bluff_mask_ablation.gd.txt": "6ebb9f36f5ea7ee37ce8a011334c6e6d04a676c685076b113e024afe6c331598",
+  "bluff-input-02-launch.ps1.txt": "1766d92f8155ebd5f4a2114ac3f6c75248a0c0aff12fdb5d3244d28649a6de5f",
+  "prepared-description.md": "eba3aee74263c11c75f1f5ed041be7f0e9d43a49537ecda1ce8bd515bb5930c2",
+  "bluff-input-02-check.py.txt": "33b56c2083239c1899b38cff7f5c7c3579ddfbc4aec065d740c1fb9201ee5d34",
+  "native.log.txt": "ebedb0619e4da2c88a05a36b8522c7cf198da0705e47b2e11dbaaa7d4f944a0a",
+  "native-errors.log.txt": "24426757117a465a2321383a5d57f533519205c64528d1fc40aa8f7f3d6a73bf",
+  "gdscript-parser.log.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+  "bluff-input-02-common.gdshader.txt": "9cffd811bb303f6a4121f15c1c01c38c6fa4d8a5cb117638bc205e0ff6bd4703",
+  "bluff-input-02-height.gdshader.txt": "7c1b88ddb4d343591b2dc43b151bfd405abf292cd55c465e7fd88cd1238a8410",
+  "bluff-input-02-control.gdshader.txt": "250d7fe6fe7ad65234157297b835869b963e0cf5a580af1993813b22d432aad5",
+  "bluff-input-02-slope.gdshader.txt": "a60ba0ebd2cb2a64abf8f2065d702dcaa1e9ac5e9232e6ff61386e345b474cda"
+}

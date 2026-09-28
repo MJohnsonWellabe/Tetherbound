@@ -1,0 +1,18 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+DUNE_RUNTIME_PACK mounted; terrain=true cover=true
+CATALOGUE BOOT water load begin t=4700
+CATALOGUE BOOT water instantiate begin t=11635
+CATALOGUE BOOT water attach begin t=11730
+CATALOGUE BOOT water attached t=12403
+[water vegetation] 4243 instances in 566 model batches; layers={"groundcover":2815,"rocks":656,"shrubs":346,"trees":426} islands={"brine_steps":314,"deep_watch":231,"drowned_garden":412,"first_shore":435,"gull_rest":234,"lantern_cove":284,"reedhaven":486,"salt_crown":399,"shellwatch":488,"sluice_isle":415,"tidal_cradle":538,"veilfall":7}
+[water vegetation] sheltered grove counts={"brine_steps":{"accepted":6,"attempts":113,"requested":6,"shrubs":30,"trees":34},"deep_watch":{"accepted":5,"attempts":20,"requested":5,"shrubs":24,"trees":30},"drowned_garden":{"accepted":7,"attempts":30,"requested":7,"shrubs":31,"trees":43},"first_shore":{"accepted":11,"attempts":73,"requested":11,"shrubs":49,"trees":64},"gull_rest":{"accepted":6,"attempts":131,"requested":6,"shrubs":26,"trees":35},"lantern_cove":{"accepted":3,"attempts":256,"requested":5,"shrubs":13,"trees":23},"reedhaven":{"accepted":8,"attempts":141,"requested":8,"shrubs":40,"trees":48},"salt_crown":{"accepted":7,"attempts":256,"requested":8,"shrubs":29,"trees":37},"shellwatch":{"accepted":12,"attempts":92,"requested":12,"shrubs":57,"trees":73},"sluice_isle":{"accepted":4,"attempts":256,"requested":9,"shrubs":21,"trees":22},"tidal_cradle":{"accepted":4,"attempts":256,"requested":16,"shrubs":19,"trees":17}}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2024 instances over 1 lattice layers (count 280)
+[grass_field] cover tier strand_flowers 1868 instances over 1 lattice layers (count 100)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+CATALOGUE CAPTURE water__sluice_isle__13__sluice_isle_twin_pumps__day__close -> res://.artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations/water__sluice_isle__13__sluice_isle_twin_pumps__day__close.jpg
+CATALOGUE CAPTURE water__gull_rest__20__gull_rest_beach__day__close -> res://.artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations/water__gull_rest__20__gull_rest_beach__day__close.jpg
+CATALOGUE SURVEY OK: 2/2 frames in res://.artifacts/phase2/p2008-dunes-05-pilot-retry-after-locations

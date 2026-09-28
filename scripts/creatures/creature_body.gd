@@ -22,6 +22,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
+const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
@@ -792,6 +793,21 @@ func _refresh_shiny_tint() -> void:
 		if _has_model:
 			_swap_colourway_textures(aspect_variant, texture_species)
 		_apply_aspect_vfx()
+		_apply_alpha_presence()
+		return
+	# P2-030 candidates remain behind a local presentation gate. The old failed
+	# shiny lookup cleared vivid surface overrides before tinting the source;
+	# preserve that reset when candidate textures exist but are disabled.
+	if shiny and not VISUAL.shiny_colourway_allowed(_ordinary_colourway_species):
+		if _has_model:
+			var pending: Array[Node] = [_model]
+			while not pending.is_empty():
+				var node: Node = pending.pop_back()
+				if node is MeshInstance3D and node.mesh != null:
+					for surface in node.mesh.get_surface_count():
+						node.set_surface_override_material(surface, null)
+				pending.append_array(node.get_children())
+		_apply_variant_tint(_shiny_palette())
 		_apply_alpha_presence()
 		return
 	## OF28 (owner directive, quoted in docs/CURRENT_STATE.md): a colourway is a
@@ -2044,7 +2060,7 @@ const REST_SINK_METERS := 0.12
 func play_rest() -> void:
 	if _rest_pose_active or _rest_pose_pending:
 		return
-	var look := SPECIES.placeholder(species_id)
+	var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 	var authored: Variant = look.get("rest_pose", {})
 	if authored is Dictionary and not (authored as Dictionary).is_empty():
 		_begin_authored_rest_pose(authored as Dictionary, look)

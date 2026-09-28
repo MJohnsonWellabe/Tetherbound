@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "variants": {},
+  "_comment": "P2-055 shared presentation pipeline only. Local/static scope; no save, network or gameplay effect. No regional identity mappings or new art are supplied. A named record requires expected_base_profile, expected_model, a dedicated portrait under res://assets/ui/portraits/, and body_albedo_override and/or body_emission_override. Existing model, rank palette, badges, names and gender remain unchanged. Keep disabled until authored derivatives, matching portraits and production visual review pass."
+}

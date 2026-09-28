@@ -1,0 +1,169 @@
+extends "res://.artifacts/phase2/dune_bluff_mask_ablation.gd"
+
+## Scratch only. All four images are unshaded masks, not beauty evidence.
+const INPUT_CASES := ["mask_baseline", "height_only", "control_only", "slope_only"]
+const INPUT_PREFIX := "res://.artifacts/phase2/bluff-input-02-"
+const INPUT_HELPER := """
+ivec3 bi_coord(vec2 lattice) {
+	ivec2 cell = ivec2(floor(lattice / _region_size)) + ivec2(_region_map_size / 2);
+	if (any(lessThan(cell, ivec2(0))) || any(greaterThanEqual(cell, ivec2(_region_map_size)))) {
+		return ivec3(0, 0, -1);
+	}
+	int layer = _region_map[cell.y * _region_map_size + cell.x] - 1;
+	return ivec3(ivec2(mod(lattice, _region_size)), layer);
+}
+"""
+const INPUT_COSTS := {
+	"mask_baseline": {"bilerp_height": 0, "bilerp_control": 0, "nearest_height": 0, "nearest_control": 0},
+	"height_only": {"bilerp_height": 0, "bilerp_control": 0, "nearest_height": 1, "nearest_control": 3},
+	"control_only": {"bilerp_height": 0, "bilerp_control": 0, "nearest_height": 0, "nearest_control": 3},
+	"slope_only": {"bilerp_height": 0, "bilerp_control": 4, "nearest_height": 5, "nearest_control": 7},
+}
+var _input_codes: Dictionary = {}
+var _input_io_failed := false
+
+
+func _init() -> void:
+	# Explicit parent constructor: mounts CONFIG_PACK, then explicitly invokes
+	# the base SceneTree constructor to schedule _run. Never omit this super().
+	super()
+
+
+func _parse_args() -> bool:
+	if not super._parse_args():
+		return false
+	if _output_dir == "res://.artifacts/phase2/p2008-bluff-mask-01":
+		_output_dir = "res://.artifacts/phase2/p2008-bluff-input-02"
+	return true
+
+
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	var source := _planned[0].duplicate(true)
+	var base_id := str(source.frame_id).trim_suffix("__baseline")
+	_planned.clear()
+	for variant: String in INPUT_CASES:
+		var row := source.duplicate(true)
+		row["frame_id"] = base_id + "__" + variant
+		row["ablation_variant"] = variant
+		_planned.append(row)
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	var common := FileAccess.get_file_as_string(INPUT_PREFIX + "common.gdshader.txt")
+	if common.is_empty() or _mask_original_code.count("float bluff_patch =") != 1:
+		_failures.append("Input diagnostic: current material/fragment anchors missing")
+		return false
+	var anchors := ["void vertex() {", "float painted_bluff = coast_painted *", "abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12", "abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08"]
+	for anchor: String in anchors:
+		if _mask_original_code.count(anchor) != 1:
+			_failures.append("Input diagnostic anchor changed: " + anchor)
+			return false
+	for anchor: String in ["bool bilerp = region_mip < 0.0 && region_uv.z > -1.;", "h[0] - h[1] + u, _vertex_spacing, h[0] - h_7 + v", "h[1] - h_5 + u, _vertex_spacing, h[1] - h_4 + v", "h[2] - h_6 + u, _vertex_spacing, h[2] - h[1] + v", "h[3] - h[2] + u, _vertex_spacing, h[3] - h[0] + v", "float u = 0.0;", "float v = 0.0;"]:
+		if _mask_original_code.count(anchor) != 1:
+			_failures.append("Input diagnostic generated-normal contract changed: " + anchor)
+			return false
+	var hashes := {}
+	var snippets := {}
+	for variant: String in INPUT_CASES:
+		# Each case starts from exact original code; cases never accumulate.
+		var code := _mask_original_code
+		if variant != "mask_baseline":
+			var kind := variant.trim_suffix("_only")
+			var path := INPUT_PREFIX + kind + ".gdshader.txt"
+			var snippet := FileAccess.get_file_as_string(path)
+			if snippet.is_empty():
+				_failures.append("Input diagnostic snippet missing: " + path)
+				return false
+			snippets[path] = FileAccess.get_sha256(path)
+			code = code.replace("void vertex() {", INPUT_HELPER + "\nvoid vertex() {")
+			code = code.replace("float bluff_patch =", common + "\n" + snippet + "\nfloat bluff_patch =")
+			match variant:
+				"height_only":
+					code = code.replace(MASK_ANCHOR, MASK_ANCHOR.replace("v_vertex.y", "bi_height"))
+				"control_only":
+					code = code.replace("float painted_bluff = coast_painted *", "float painted_bluff = bi_paint *")
+				"slope_only":
+					code = code.replace("abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12", "bi_slope + (bluff_patch - 0.5) * 0.12")
+					code = code.replace("abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08", "bi_slope + (bluff_patch - 0.5) * 0.08")
+		var exact_mask := MASK_ANCHOR.replace("v_vertex.y", "bi_height") if variant == "height_only" else MASK_ANCHOR
+		code = code.replace("render_mode ", "render_mode unshaded, ")
+		code = code.replace(FRAGMENT_ANCHOR, FRAGMENT_ANCHOR + "\nfloat diagnostic_final_bluff = 0.0;")
+		code = code.replace(exact_mask, exact_mask + "\ndiagnostic_final_bluff = bluff;")
+		code = code.insert(code.rfind("}"), "\nALBEDO = vec3(diagnostic_final_bluff);\nEMISSION = vec3(0.0);\n")
+		_input_codes[variant] = code
+		hashes[variant] = code.sha256_text()
+	_manifest["source_commit"] = OS.get_environment("BLUFF_INPUT_SOURCE_COMMIT")
+	_manifest["shader_hashes"] = hashes
+	_manifest["original_shader_code_sha256"] = _mask_original_code.sha256_text()
+	snippets[INPUT_PREFIX + "common.gdshader.txt"] = FileAccess.get_sha256(INPUT_PREFIX + "common.gdshader.txt")
+	_manifest["snippet_hashes"] = snippets
+	_manifest["parent_wrapper_sha256"] = FileAccess.get_sha256("res://.artifacts/phase2/dune_bluff_mask_ablation.gd")
+	_manifest["additional_texture_fetches_max"] = INPUT_COSTS
+	_manifest["ablation_disclosure"] = "Four unshaded final-bluff masks at the same Gull Rest day/close fixture. Every case rebuilds from original shader. Baseline retains all inputs; height_only changes final height fade alone; control_only changes painted-bluff control weight alone; slope_only changes both bluff slope arguments using continuously interpolated raw height gradients, leaving actual lighting normals unchanged. Safe-region/hole/nonfinite checks retain original inputs on invalid footprints. No compound mixing, palette/threshold/geometry/LOD/Sun/collision changes. No beauty, performance, traversal or item acceptance claim. Fog and tonemapping remain; grayscale is not calibrated numeric data."
+	return true
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	_mask_code = str(_input_codes[_mask_variant])
+	return await super._pin_time(time_name)
+
+
+func _mask_measure() -> Dictionary:
+	var measured := super._mask_measure()
+	var sun := _world.get_node_or_null("Sun") as DirectionalLight3D
+	measured["camera_transform"] = _transform(_camera.global_transform)
+	measured["player_position"] = _vec3(_player.global_position)
+	measured["viewport_size"] = [root.size.x, root.size.y]
+	if sun != null:
+		measured["sun"] = {"transform": _transform(sun.global_transform), "shadow_enabled": sun.shadow_enabled, "shadow_opacity": sun.shadow_opacity, "bias": sun.shadow_bias, "normal_bias": sun.shadow_normal_bias, "mode": sun.directional_shadow_mode, "max_distance": sun.directional_shadow_max_distance, "energy": sun.light_energy}
+	return measured
+
+
+func _capture_row(row: Dictionary) -> void:
+	var previous := _records.size()
+	await super._capture_row(row)
+	if _records.size() <= previous:
+		return
+	var record := _records[-1]
+	var measured: Dictionary = record.ablation
+	if measured.viewport_size != [1920, 1080]:
+		_failures.append(_mask_variant + ": viewport changed during native capture")
+	if str(measured.shader_code_sha256) != str(_input_codes[_mask_variant]).sha256_text() or measured.terrain_lod != _mask_initial_lod:
+		_failures.append(_mask_variant + ": post-capture shader/LOD mismatch")
+	if not measured.has("sun") or measured.sun != _mask_baseline.ablation.sun:
+		_failures.append(_mask_variant + ": Sun state changed or absent")
+	for key: String in ["camera_transform", "player_position"]:
+		if measured[key] != _mask_baseline.ablation[key]:
+			_failures.append(_mask_variant + ": exact comparison " + key + " changed; inspect before using pair")
+	_write_manifest()
+
+
+func _write_manifest() -> void:
+	_manifest["frames"] = _records
+	_manifest["failures"] = _failures
+	var file := FileAccess.open(_output_dir.path_join("manifest.json"), FileAccess.WRITE)
+	if file == null:
+		_input_io_failed = true
+		_failures.append("Input diagnostic manifest open failed")
+		push_error(_failures[-1])
+		return
+	file.store_string(JSON.stringify(_manifest, "\t") + "\n")
+	file.flush()
+	var failure := file.get_error()
+	file.close()
+	if failure != OK:
+		_input_io_failed = true
+		_failures.append("Input diagnostic manifest store failed: " + str(failure))
+
+
+func _finish(complete: bool) -> void:
+	# Parent restores the shader and writes final manifest. Override its quit
+	# result if that final write fails; no successful exit on missing evidence.
+	super._finish(complete and not _input_io_failed and _failures.is_empty())
+	if _input_io_failed:
+		quit(1)

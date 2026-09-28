@@ -1,0 +1,28 @@
+{
+  "completed_utc": "2026-09-28T17:26:37.7536408Z",
+  "production_gates": {
+    "data/config/water_dune_terrain.json": {
+      "sha256": "21253bb62ba36b4195d83d1a8f079159e3354ff7eed5d3ab1fa71093125ff8e5",
+      "enabled": false
+    },
+    "data/config/water_dune_cover.json": {
+      "sha256": "bdbe87f081ef3a338984d994fc07d4492aac37d9ba37c64c505ff4e13b27dba6",
+      "enabled": false
+    }
+  },
+  "source_commit": "471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2",
+  "run": "colony06-native01",
+  "exit_code": 0,
+  "capture_script_sha256": "51523d3d53dacc80f483ba0f409246f5c10e27ee3fa517187314d1fa79f3a030",
+  "token": "ac431dc6e33f425ba906b95411eb1427",
+  "wrapper_sha256": "c4a3bd67b0318729505669e17d657c480558e8e15f6a3c3b096b5c660806ea60",
+  "scope": "native capture receipt only; art/performance unjudged",
+  "source_anchors": {
+    "scripts/world/water_world.gd": "3efa0f5360776a9a4b2899441bcaaf78335e92bade4c244814889c92a57280b4",
+    "tools/phase2_capture_locations.gd": "fcd3bd8dfb1a527dc86dbdf827270b0f498de15ffb09c85dbc2687a9865589dc",
+    "data/config/debug_teleport_spots.json": "6c964ce0922ad3a73ac9ede369ec58a6389951f8ca70f19976347a244a7ab8f1",
+    "data/config/water_ground_cover.json": "e5e601918b4bb7f674e1d9d0b29c613408421dc7b7c33aecbbb6573d7dc9c490",
+    "scripts/world/grass_field.gd": "9f805bcc8b4a32e3c5a91762a534d47850a8c4a71d53ade6ef2ae03e4a1b35b9",
+    "shaders/grass_field.gdshader": "aca83f9afec27156636d57aa4cea26060c04ed5fef82dafc2f406d8be0d56043"
+  }
+}

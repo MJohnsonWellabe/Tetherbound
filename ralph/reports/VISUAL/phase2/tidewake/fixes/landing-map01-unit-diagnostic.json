@@ -1,0 +1,90 @@
+{
+  "source_commit": "264d3f53c907413276a3861ee48f30bf6f6f779e",
+  "docs_only_head_during_run": "75042158127633e778649d6a4d91571d838db9d1",
+  "command": "Godot_v4.7-stable_win64_console.exe --headless --path . --script tests/run_tests.gd -- --shard=I/2",
+  "appdata": ".local/landing-map01-unit-I",
+  "session": 2809,
+  "session_exit_code": 0,
+  "total_files": 642,
+  "total_tests": 5290,
+  "total_assertions": 3961658,
+  "total_failed": 0,
+  "shards": [
+    {
+      "shard": "1/2",
+      "files": 321,
+      "exit_code": 0,
+      "tests": 2510,
+      "assertions": 1316235,
+      "failed": 0,
+      "logs": [
+        {
+          "path": ".local/phase2/landing-map01-unit-1.log",
+          "sha256": "3a51fabe43b2c09c17a34bc91d53d0c57ff537ada4dd38813464c89b8c71a4d4"
+        },
+        {
+          "path": ".local/phase2/landing-map01-unit-1-errors.log",
+          "sha256": "8e05d58e18d06a408e8c7cfa4954c45c6d36c7fe225b491a436e47469a2603a9"
+        }
+      ],
+      "engine_error_categories": {
+        "ERROR: 1 RID allocations of type 'N16RendererViewport8ViewportE' were leaked at exit.": 1,
+        "ERROR: 1 RID allocations of type 'N26RendererEnvironmentStorage11EnvironmentE' were leaked at exit.": 1,
+        "ERROR: 2 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.": 1,
+        "ERROR: 2 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.": 1,
+        "ERROR: 2 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.": 1,
+        "ERROR: 1 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.": 1,
+        "ERROR: 4 RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.": 1,
+        "ERROR: 1 RID allocations of type 'N17RendererSceneCull8ScenarioE' were leaked at exit.": 1,
+        "ERROR: 1 RID allocations of type 'N17RendererSceneCull6CameraE' were leaked at exit.": 1,
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()": 67,
+        "ERROR: unknown species 'does_not_exist'; known: terrapup, ripplet, galewisp, bramblebun, mudsnout, trailpup, burrowback, meadowhart, tuskroot, paddlenewt, mosshell, brooktail, galecrest, duskhush, pipwing, reedwing, veridian, nightburrow, stormtrail, riftfrill, ashtusk, sparkit, cindercub, shadelet, frostclaw, cannonback, riptusk, mirejaw, aquaryn, torrentoad, cragclaw, riverdrake, sirenseal, mangrove_monitor, tidecoil, abyssal_guardian, voltwig, mosshock, staticub, voltarach, fulgocobra, stormraven, pebbik, craghorn, stormbrush, tanglevolt, thundertunnel, glimmermoth, stormcapra, skyrill, aeriex, ribbonray, breezetail, cloudfang, cliffspike, tempestwing, solmane, water_cannonback, water_riptusk, water_aquaryn, water_tidecoil, water_mirejaw, water_torrentoad, water_cragclaw, water_riverdrake, water_sirenseal, water_mangrove_monitor, water_mosshell, water_abyssal_guardian": 1,
+        "ERROR: Parse JSON failed. Error at line 0: Expected key": 1,
+        "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.": 39,
+        "ERROR: Parameter \"data.tree\" is null.": 19,
+        "ERROR: Parameter \"material\" is null.": 2,
+        "ERROR: unscoped flag: a_flag_nobody_ever_declared": 1,
+        "ERROR: Pages in use exist at exit in PagedAllocator: N20RasterizerSceneDummy21GeometryInstanceDummyE": 1,
+        "ERROR: 1 resources still in use at exit (run with --verbose for details).": 1
+      },
+      "script_parse_compile_errors": 0
+    },
+    {
+      "shard": "2/2",
+      "files": 321,
+      "exit_code": 0,
+      "tests": 2780,
+      "assertions": 2645423,
+      "failed": 0,
+      "logs": [
+        {
+          "path": ".local/phase2/landing-map01-unit-2.log",
+          "sha256": "fa491b38c209ebe0967c298296e3eb4d222c4913fedaac3c88f1c2fbf969d422"
+        },
+        {
+          "path": ".local/phase2/landing-map01-unit-2-errors.log",
+          "sha256": "8ef08585da5c182ef6771c7e36484036e9e871b075dbe0ce9c731d09c4783d4c"
+        }
+      ],
+      "engine_error_categories": {
+        "ERROR: 4 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.": 1,
+        "ERROR: 4 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.": 1,
+        "ERROR: 3 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.": 1,
+        "ERROR: 8 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.": 1,
+        "ERROR: 9 RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.": 1,
+        "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.": 119,
+        "ERROR: Parameter \"data.tree\" is null.": 79,
+        "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()": 15,
+        "ERROR: unknown conversation 'no_such_conversation'; known: grandpa_house, grandpa_waiting, grandpa_first_catch, grandpa_encounter_hint, grandpa_after_first_catch, grandpa_tournament, cloudreach_aila_arrival, cloudreach_aila_anchor_reminder, cloudreach_aila_act_two, cloudreach_aila_after_restoration, cloudreach_aila_final_reward, cloudreach_iven_waycamp, cloudreach_iven_after_restoration, cloudreach_orrin_bridge, cloudreach_orrin_three_bells, cloudreach_orrin_bells_complete, cloudreach_orrin_route_open, cloudreach_neri_stranded, cloudreach_neri_pack_return, cloudreach_neri_delivery_report, cloudreach_iven_waycamp_shelter, cloudreach_rusk_observatory_latch, cloudreach_neri_home, cloudreach_maela_aerie, cloudreach_maela_flight_trial, cloudreach_maela_trial_reminder, cloudreach_maela_fly_unlocked, cloudreach_maela_after_restoration, cloudreach_sora_shrine, cloudreach_sora_storm_engine_truth, cloudreach_sora_aeries, cloudreach_sora_aeries_complete, cloudreach_kelm_cliffhold, cloudreach_kelm_resource_tier, cloudreach_kelm_after_restoration, cloudreach_tavi_circuit, cloudreach_tavi_challenge, cloudreach_tavi_defeated, cloudreach_tavi_rematch_complete, cloudreach_bridge_courier, cloudreach_bridge_traveler, cloudreach_shelter_traveler, cloudreach_shelter_courier, cloudreach_shelter_pair_home, cloudreach_shelter_courier_home, cloudreach_upper_traveler, cloudreach_upper_courier, cloudreach_waycamp_carter, cloudreach_waycamp_mender, cloudreach_cliffhold_ropewright, cloudreach_cliffhold_porter, cloudreach_rusk_observatory, cloudreach_rusk_upper_anchor_warning, cloudreach_rusk_after_restoration, cloudreach_voss_challenge, cloudreach_voss_defeated, cloudreach_veyra_prebattle, cloudreach_veyra_phase_change, cloudreach_veyra_defeated, cloudreach_solmane_chamber, cloudreach_solmane_free, cloudreach_solmane_joins, cloudreach_solmane_choice, cloudreach_solmane_engine_fails, village_mira, village_mira_shop_intro, village_mira_shop, village_mira_challenge, village_mira_beaten, village_bram, village_bram_shop_intro, village_bram_shop, village_oskar, village_oskar_trade_intro, village_oskar_trade, village_oskar_challenge, village_oskar_beaten, village_tam, village_tam_tools, village_tam_challenge, village_tam_beaten, village_quarry_foreman, village_quarry_foreman_hammer, village_rescued_ranger, village_rescued_ranger_home, road_gate_locked, road_gate_unlocked, hall_approach_sealed, hall_approach_opened, village_innkeeper, village_inn_helper, village_trader, village_craftsperson, village_creature_caretaker, village_farmer, village_local_historian, village_lost_traveler, village_field_researcher, village_alpha_tracker, village_courier, village_former_tether_member, village_mira_road, village_oskar_bridge, village_tam_hall, grandpa_tournament_won, grandpa_south_bridge, grandpa_relay_rescue, grandpa_hall_approach, trainer_too_low, trainer_no_usable_creature, trainer_no_ally_deployed, trainer_already_beaten, trainer_practice_challenge, trainer_practice_defeated, relay_hess_challenge, relay_hess_defeated, relay_orrin_challenge, relay_orrin_defeated, relay_dell_challenge, relay_dell_defeated, relay_captain_challenge, relay_captain_defeated_greeting, stronghold_patrol_challenge, stronghold_patrol_defeated, stronghold_courtyard_challenge, stronghold_courtyard_defeated, stronghold_elite_challenge, stronghold_elite_defeated, captain_field_challenge, captain_field_defeated, captain_ridge_challenge, captain_ridge_defeated, captain_riverwatch_challenge, captain_riverwatch_defeated, patrol_ridgeline_challenge, patrol_ridgeline_defeated, pasture_drover_juno_challenge, pasture_drover_juno_defeated, pasture_drover_juno_reunited_challenge, pasture_drover_juno_reunited_defeated, relay_captive_held, relay_captive_freed, stronghold_duty_board, stronghold_reveal, stronghold_warden_challenge, stronghold_warden_defeated, stronghold_warden_realm_reward, stronghold_chamber, stronghold_free_legendary, stronghold_legendary_joins, veridian_choice, stronghold_machinery_fails, village_mira_freed, village_oskar_freed, village_tam_freed, village_quarry_foreman_freed, grandpa_freed, spoke_traveller_storm_road, tournament_halda, tournament_halda_closed, tournament_halda_register, tournament_halda_train, tournament_halda_condition, tournament_halda_camp, tournament_halda_signup, tournament_halda_champion, tournament_quarter, tournament_quarter_begin, tournament_quarter_beaten, tournament_semi, tournament_semi_begin, tournament_semi_beaten, tournament_final, tournament_final_begin, tournament_final_beaten, south_bridge_grunt_challenge, south_bridge_grunt_beaten, old_champion_challenge, old_champion_beaten, meadowhart_herd_sighting, meadowhart_herd_found, meadowhart_herd_greeting, village_south_bridge_team_prompt, village_nessa_overlook_gift, village_nessa_overlook, broken_cart_broken, broken_cart_repaired, shepherd_the_rise_challenge, shepherd_the_rise_defeated, wanderer_trail_camp_challenge, wanderer_trail_camp_defeated, pond_fisher_greeting, quarry_dorn_challenge, quarry_dorn_defeated, warrens_pell_challenge, warrens_pell_defeated, band2_kest_challenge, band2_kest_defeated, night_watch_farro_challenge, night_watch_farro_defeated, river_nest_doss_challenge, river_nest_doss_defeated, river_nest_doss_satchel_full, lost_creature_rue_challenge, lost_creature_rue_returned, lost_creature_rue_defeated, stronghold_outer_watch_challenge, stronghold_outer_watch_defeated, stronghold_checkpoint_challenge, stronghold_checkpoint_defeated, regional_homecoming_0, regional_homecoming_1, regional_homecoming_2, regional_homecoming_3, regional_homecoming_4, regional_homecoming_5, regional_homecoming_repeat": 1,
+        "ERROR: Parse JSON failed. Error at line 0: Expected '}'": 1,
+        "ERROR: Parameter \"material\" is null.": 5,
+        "ERROR: Game.party has no add(); the opening cannot use the real party and is falling back to its own list. Fix the call in scripts/story/party_seam.gd.": 1,
+        "ERROR: unscoped flag: upper_open": 1,
+        "ERROR: Pages in use exist at exit in PagedAllocator: N20RasterizerSceneDummy21GeometryInstanceDummyE": 1,
+        "ERROR: 32 resources still in use at exit (run with --verbose for details).": 1
+      },
+      "script_parse_compile_errors": 0
+    }
+  ],
+  "scope": "Complete two-shard unit diagnostic on frozen integrated source. Retain fixture/tree, negative-path and teardown errors; not an error-free log claim. Four-shard suite after import on final merged landing source remains required."
+}

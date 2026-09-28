@@ -1,0 +1,9 @@
+{
+  "method": "Reverse only current owned telemetry/before-only edits; three recovered code byte hashes equal original reviewed preflight. Metadata copied unchanged and checked against embedded native prepared_source.",
+  "files_sha256": {
+    "checker.py": "8a76a22183b437ce9f4ccd7acda9ff608eac28217b099f074bfcb48257f8e981",
+    "launcher.ps1": "5db66d403cdd31b2f8bbe5afc94839c26390660fe42bca6db2a1dcbbef8f6a6d",
+    "source-hashes.json": "989cf36f285df4f0b2aa04f53ff464acc8aac3173832aa7c39d8f983742e28ff",
+    "wrapper.gd": "b31e2cd3b4090ea5c6cb367366c02f665793394ea6bc2a02bb6c95708170412c"
+  }
+}

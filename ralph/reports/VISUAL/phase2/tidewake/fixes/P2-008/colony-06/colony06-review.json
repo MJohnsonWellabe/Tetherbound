@@ -1,0 +1,27 @@
+{
+  "patch_sha256": "3a9abf069a1f331f79df0a55ab1a513f6fe29974bb1ee193a260693c4a13caca",
+  "source_anchors": {
+    "scripts/world/water_world.gd": "3efa0f5360776a9a4b2899441bcaaf78335e92bade4c244814889c92a57280b4",
+    "tools/phase2_capture_locations.gd": "fcd3bd8dfb1a527dc86dbdf827270b0f498de15ffb09c85dbc2687a9865589dc",
+    "data/config/debug_teleport_spots.json": "6c964ce0922ad3a73ac9ede369ec58a6389951f8ca70f19976347a244a7ab8f1",
+    "data/config/water_ground_cover.json": "e5e601918b4bb7f674e1d9d0b29c613408421dc7b7c33aecbbb6573d7dc9c490",
+    "scripts/world/grass_field.gd": "9f805bcc8b4a32e3c5a91762a534d47850a8c4a71d53ade6ef2ae03e4a1b35b9",
+    "shaders/grass_field.gdshader": "aca83f9afec27156636d57aa4cea26060c04ed5fef82dafc2f406d8be0d56043"
+  },
+  "pack_sha256": "f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12",
+  "prepared_only": true,
+  "production_gates": {
+    "data/config/water_dune_terrain.json": {
+      "sha256": "21253bb62ba36b4195d83d1a8f079159e3354ff7eed5d3ab1fa71093125ff8e5",
+      "enabled": false
+    },
+    "data/config/water_dune_cover.json": {
+      "sha256": "bdbe87f081ef3a338984d994fc07d4492aac37d9ba37c64c505ff4e13b27dba6",
+      "enabled": false
+    }
+  },
+  "candidate_text_sha256": "2b48b3cea48da27afa440fb93a97841a2e829782fac5d5e56596fffc1845922e",
+  "expected_uniform": 0.18,
+  "baseline_text_sha256": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9",
+  "source_commit": "ebd5c6258fdfbabcc0bcb1b4b1b6b93dbf19df66"
+}

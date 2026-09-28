@@ -1,0 +1,89 @@
+param([switch]$PreflightOnly, [string]$Round = ('colony06-' + [DateTime]::UtcNow.ToString('yyyyMMddTHHmmssfff')))
+$ErrorActionPreference = 'Stop'
+$root = 'D:\tetherbound\x04-tidewake'
+$engine = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
+$lockPath = 'D:\tetherbound\RENDER_LOCK.json'
+if ($Round -notmatch '^colony06-[a-zA-Z0-9-]+$') { throw 'Round must be a safe colony06-* identifier' }
+$scratch = Join-Path $root '.artifacts/phase2'
+$review = Get-Content -Raw (Join-Path $scratch 'colony06-review.json') | ConvertFrom-Json -AsHashtable
+$destination = Join-Path $scratch $Round
+$appData = Join-Path $root ('.local/appdata-' + $Round)
+$logs = Join-Path $root ('.local/phase2/' + $Round)
+foreach ($target in @($destination,$appData,$logs)) { if (Test-Path -LiteralPath $target) { throw ('Fresh run path required: ' + $target) } }
+function Assert-Production {
+    foreach ($relative in $review.source_anchors.Keys) {
+        if ((Get-FileHash -Algorithm SHA256 (Join-Path $root $relative)).Hash.ToLowerInvariant() -cne $review.source_anchors[$relative]) { throw ('Source anchor changed: ' + $relative) }
+    }
+    foreach ($relative in $review.production_gates.Keys) {
+        $path = Join-Path $root $relative
+        if ((Get-FileHash -Algorithm SHA256 $path).Hash.ToLowerInvariant() -cne $review.production_gates[$relative].sha256 -or (Get-Content -Raw $path | ConvertFrom-Json).enabled -ne $false) { throw ('Production gate/hash changed: ' + $relative) }
+    }
+}
+Assert-Production
+if ((Get-FileHash -Algorithm SHA256 (Join-Path $scratch 'dune05-runtime.zip')).Hash.ToLowerInvariant() -cne $review.pack_sha256) { throw '05 pack changed' }
+if ((Get-FileHash -Algorithm SHA256 (Join-Path $scratch 'coastal-colony-proposal/proposal.patch')).Hash.ToLowerInvariant() -cne $review.patch_sha256) { throw 'Reviewed patch changed' }
+foreach ($variant in @('baseline','candidate')) {
+    $text = [IO.File]::ReadAllText((Join-Path $scratch ('colony06-' + $variant + '.gdshader.txt'))).Replace("`r`n","`n")
+    $hash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($text))).ToLowerInvariant()
+    if ($hash -cne $review[($variant + '_text_sha256')]) { throw ('Shader text changed: ' + $variant) }
+}
+if ($PreflightOnly) { Write-Output 'PASS static source/hash/gate preflight only; Godot syntax, shader compilation, live binding and capture remain unrun.'; return }
+if (-not (Test-Path -LiteralPath $engine)) { throw 'Pinned engine unavailable' }
+$token = [Guid]::NewGuid().ToString('N')
+$owned = $false; $process = $null; $previousAppData = $env:APPDATA
+try {
+    $handle = [IO.File]::Open($lockPath,[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+    try {
+        $reader = [IO.StreamReader]::new($handle,[Text.Encoding]::UTF8,$true,1024,$true)
+        try { $raw = $reader.ReadToEnd() } finally { $reader.Dispose() }
+        $state = if ([string]::IsNullOrWhiteSpace($raw)) { @{} } else { $raw | ConvertFrom-Json -AsHashtable }
+        if ($state.held_by) { throw ('Render lock held by ' + $state.held_by + '; no queue slot claimed') }
+        $bytes = [Text.Encoding]::UTF8.GetBytes((@{held_by='tb/x04-tidewake';token=$token;since_utc=[DateTime]::UtcNow.ToString('o');purpose=$Round} | ConvertTo-Json -Compress))
+        $handle.SetLength(0); $handle.Position=0; $handle.Write($bytes,0,$bytes.Length); $handle.Flush(); $owned=$true
+    } finally { $handle.Dispose() }
+    Assert-Production
+    New-Item -ItemType Directory -Path $appData,$logs | Out-Null
+    $env:APPDATA=$appData
+    $captureArgs = @('--path',$root,'--rendering-driver','opengl3','--resolution','1920x1080','--fullscreen','--audio-driver','Dummy','--script','.artifacts/phase2/colony06-locations.gd','--','--biome=water','--seed=2042','--times=day','--views=close','--subset=water__gull_rest__20__gull_rest_beach','--subset=water__sluice_isle__13__sluice_isle_twin_pumps','--subset=water__first_shore__01__first_shore_welcome_beacon',('--output=res://.artifacts/phase2/' + $Round))
+    $process = Start-Process -FilePath $engine -ArgumentList $captureArgs -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput (Join-Path $logs 'stdout.log') -RedirectStandardError (Join-Path $logs 'stderr.log') -PassThru
+    $deadline = [DateTime]::UtcNow.AddMinutes(30)
+    while (-not $process.WaitForExit(1000)) { if ([DateTime]::UtcNow -gt $deadline) { throw 'One-boot capture exceeded 30-minute deadline' } }
+    if ($process.ExitCode -ne 0) { throw ('Capture failed with exit ' + $process.ExitCode) }
+    $errors = Get-Content -Raw (Join-Path $logs 'stderr.log')
+    if ($errors -match 'SCRIPT ERROR|SHADER ERROR|Parse Error|Shader compilation failed|(?m)^ERROR:') { throw 'Native errors; inspect retained logs' }
+    $manifest = Get-Content -Raw (Join-Path $destination 'manifest.json') | ConvertFrom-Json
+    if (-not $manifest.complete -or $manifest.frames.Count -ne 6 -or $manifest.failures.Count -ne 0) { throw 'Incomplete six-frame manifest' }
+    if ($manifest.restored_shader_text_sha256 -cne $review.baseline_text_sha256) { throw 'Runtime shader restoration missing' }
+    Assert-Production
+    $receipt = @{run=$Round;token=$token;exit_code=$process.ExitCode;source_commit=(& git -C $root rev-parse HEAD);production_gates=$review.production_gates;source_anchors=$review.source_anchors;wrapper_sha256=(Get-FileHash (Join-Path $scratch 'colony06-locations.gd') -Algorithm SHA256).Hash.ToLowerInvariant();capture_script_sha256=(Get-FileHash $PSCommandPath -Algorithm SHA256).Hash.ToLowerInvariant();completed_utc=[DateTime]::UtcNow.ToString('o');scope='native capture receipt only; art/performance unjudged'}
+    $receipt | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath (Join-Path $destination 'runner-receipt.json') -Encoding utf8
+} finally {
+    try {
+        if ($null -ne $process -and -not $process.HasExited) {
+            try { Stop-Process -Id $process.Id -Force -ErrorAction Stop } catch {
+                # An exit between HasExited and Stop-Process is successful cleanup.
+                $process.Refresh()
+                if (-not $process.HasExited) { throw }
+            }
+            if (-not $process.WaitForExit(10000)) { throw 'Owned process did not terminate; render token must remain held' }
+        }
+    } finally {
+        $env:APPDATA=$previousAppData
+        try { Assert-Production } finally {
+            $canRelease = $null -eq $process
+            if ($null -ne $process) {
+                try { $process.Refresh(); $canRelease = $process.HasExited } catch { $canRelease = $false }
+            }
+            if ($owned -and -not $canRelease) {
+                Write-Error 'Owned process is alive or exit cannot be verified; APPDATA restored and render token retained.' -ErrorAction Continue
+            } elseif ($owned) {
+                $handle = [IO.File]::Open($lockPath,[IO.FileMode]::Open,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+                try {
+                    $reader=[IO.StreamReader]::new($handle,[Text.Encoding]::UTF8,$true,1024,$true)
+                    try { $state=$reader.ReadToEnd() | ConvertFrom-Json -AsHashtable } finally { $reader.Dispose() }
+                    if ($state.token -ceq $token) { $bytes=[Text.Encoding]::UTF8.GetBytes('{}');$handle.SetLength(0);$handle.Position=0;$handle.Write($bytes,0,$bytes.Length);$handle.Flush() }
+                } finally { $handle.Dispose() }
+            }
+        }
+    }
+}

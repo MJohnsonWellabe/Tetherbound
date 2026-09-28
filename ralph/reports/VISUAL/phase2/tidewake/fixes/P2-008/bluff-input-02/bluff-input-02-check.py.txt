@@ -1,0 +1,106 @@
+"""Scratch CPU/source review only. Never launches Godot or writes production."""
+from pathlib import Path
+import math,random,re,unittest,hashlib,json,difflib
+P=Path(__file__).resolve().parent
+ROOT=P.parents[1]
+
+def gradients(h,extra,spacing=1):
+    a,b,c,d=h;h4,h5,h6,h7=extra
+    return [(b-a,h7-a),(h5-b,h4-b),(h6-c,b-c),(c-d,a-d)] if spacing==1 else [(x/spacing,z/spacing) for x,z in gradients(h,extra)]
+
+def weighted(gs,w):
+    x=sum(g[0]*k for g,k in zip(gs,w));z=sum(g[1]*k for g,k in zip(gs,w))
+    return 1/math.sqrt(1+x*x+z*z)
+
+def stencil(x,z,height):
+    ix,iz=math.floor(x),math.floor(z);u,v=x-ix,z-iz
+    h=[height(ix,iz+1),height(ix+1,iz+1),height(ix+1,iz),height(ix,iz)]
+    extra=[height(ix+1,iz+2),height(ix+2,iz+1),height(ix+2,iz),height(ix,iz+2)]
+    return h,extra,[(1-u)*v,u*v,u*(1-v),(1-u)*(1-v)]
+
+class Checks(unittest.TestCase):
+    def test_recovered_stock_normals_match_direct_raw_gradient(self):
+        rng=random.Random(2042)
+        for _ in range(100):
+            h=[rng.uniform(-10,30) for _ in range(4)];extra=[rng.uniform(-10,30) for _ in range(4)]
+            gs=gradients(h,extra);w=[rng.random() for _ in range(4)];w=[k/sum(w) for k in w]
+            recovered=[]
+            for x,z in gs:
+                length=math.sqrt(1+x*x+z*z);n=(-x/length,1/length,-z/length)
+                recovered.append((-n[0]/n[1],-n[2]/n[1]))
+            self.assertAlmostEqual(weighted(gs,w),weighted(recovered,w),places=12)
+
+    def test_affine_slopes_unchanged_all_orientations(self):
+        for a,b in [(0,0),(.5,0),(0,.5),(-.8,.6),(.8,-.6)]:
+            h,e,w=stencil(-.4,7.7,lambda x,z:a*x+b*z+5)
+            self.assertAlmostEqual(weighted(gradients(h,e),w),1/math.sqrt(1+a*a+b*b))
+
+    def test_slope_continuity_at_lattice_and_region_boundaries(self):
+        hfun=lambda x,z:.03*x*x+.07*z*z+.01*x*z
+        for boundary in (-512,0,1,512):
+            samples=[]
+            for offset in (-1e-6,1e-6):
+                h,e,w=stencil(boundary+offset,.7,hfun);samples.append(weighted(gradients(h,e),w))
+            self.assertLess(abs(samples[0]-samples[1]),1e-6)
+
+    def test_height_and_control_bilinear_continuity(self):
+        for x in (-1e-6,1e-6,511.999999,512.000001):
+            h,e,w=stencil(x,.5,lambda a,b:a+2*b)
+            self.assertAlmostEqual(sum(a*b for a,b in zip(h,w)),x+1)
+            values=[1,1,0,0]
+            self.assertAlmostEqual(sum(a*b for a,b in zip(values,w)),.5)
+
+    def test_normalize_after_interpolation_is_distinct_signal(self):
+        gs=[(0,0),(4,0),(4,0),(0,0)];w=[.25]*4
+        normals=[(-x/math.sqrt(1+x*x+z*z),1/math.sqrt(1+x*x+z*z),-z/math.sqrt(1+x*x+z*z)) for x,z in gs]
+        n=[sum(t[k]*q for t,q in zip(normals,w)) for k in range(3)]
+        old=n[1]/math.sqrt(sum(a*a for a in n))
+        self.assertGreater(abs(weighted(gs,w)-old),.1)
+
+    def test_strict_region_mapping_and_hole_fallback(self):
+        def coord(x,z):
+            cell=(math.floor(x/512)+16,math.floor(z/512)+16)
+            if not all(0<=v<32 for v in cell):return None
+            return (x%512,z%512,cell)
+        self.assertEqual(coord(-1,-1),(511,511,(15,15)))
+        self.assertEqual(coord(512,0),(0,0,(17,16)))
+        self.assertIsNone(coord(8192,0));self.assertIsNone(coord(-8193,0))
+        for name in ('common','slope'):
+            source=(P/f'bluff-input-02-{name}.gdshader.txt').read_text(encoding='utf-8')
+            self.assertIn('DECODE_HOLE',source)
+            self.assertIn('bi_valid',source)
+
+    def test_source_isolation_and_current_shader_assembly(self):
+        coast=(ROOT/'scripts/world/coastal_rock_material.gd').read_text(encoding='utf-8')
+        stock=(P/'terrain_generated.gdshader').read_text(encoding='utf-8')
+        uniforms=re.search(r'const UNIFORMS := """(.*?)"""',coast,re.S).group(1)
+        material=re.search(r'const MATERIAL := """(.*?)"""',coast,re.S).group(1)
+        base=stock.replace('void vertex() {',uniforms+'\nvoid vertex() {').replace('mat.ao_strength *= weight_inv;','mat.ao_strength *= weight_inv;'+material)
+        wrapper=(P/'bluff-input-02-wrapper.gd').read_text(encoding='utf-8')
+        helper=re.search(r'const INPUT_HELPER := """(.*?)"""',wrapper,re.S).group(1)
+        common=(P/'bluff-input-02-common.gdshader.txt').read_text(encoding='utf-8')
+        mask='bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);'
+        vertex=lambda code:code[code.index('void vertex() {'):code.index('\n}',code.index('void vertex() {'))+2]
+        variants={}
+        for name in ('mask_baseline','height_only','control_only','slope_only'):
+            code=base
+            if name!='mask_baseline':
+                kind=name.removesuffix('_only');snippet=(P/f'bluff-input-02-{kind}.gdshader.txt').read_text(encoding='utf-8')
+                self.assertNotRegex(snippet,r'(?m)^\s*(?:NORMAL|w_normal|dune_normal|coast_painted|v_vertex|h\[|control\[|index\[).*?=')
+                code=code.replace('void vertex() {',helper+'\nvoid vertex() {').replace('float bluff_patch =',common+'\n'+snippet+'\nfloat bluff_patch =')
+                if name=='height_only':code=code.replace(mask,mask.replace('v_vertex.y','bi_height'))
+                elif name=='control_only':code=code.replace('float painted_bluff = coast_painted *','float painted_bluff = bi_paint *')
+                else:
+                    for n in ('0.12','0.08'):code=code.replace('abs(dune_normal.y) + (bluff_patch - 0.5) * '+n,'bi_slope + (bluff_patch - 0.5) * '+n)
+            self.assertEqual(vertex(base),vertex(code))
+            self.assertEqual(code.count('{'),code.count('}'))
+            variants[name]=code
+        self.assertEqual(variants['height_only'].count('bi_height);'),1)
+        self.assertIn('float painted_bluff = coast_painted *',variants['height_only'])
+        self.assertIn(mask,variants['control_only']);self.assertIn(mask,variants['slope_only'])
+        self.assertIn('abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12',variants['control_only'])
+        self.assertIn('float painted_bluff = coast_painted *',variants['slope_only'])
+        self.assertIn('super()',wrapper)
+
+if __name__=='__main__':
+    unittest.main(verbosity=2)
