@@ -102,6 +102,8 @@
       "_why_here": "At the gate opening, local (s=-13,t=0.6) -- 0.6m off the walk-through centreline, facing back down the approach bearing (145.6, the same reciprocal Sela's own facing already uses) so he is the first thing the player sees framed by the piers. The yard and Vance stand past him.",
       "challenge": "relay_dell_challenge",
       "defeated": "relay_dell_defeated",
+      "victory_conversation": "relay_dell_defeated",
+      "_why_victory_conversation_f04_6": "F04#1/#6 (judge r3 3b6f965a): without victory lines the relay fight ended on the exploration camera pointed at the player, and the struck standard and stand-down happened off-frame. The same defeated lines play as the fight resolves, framed by the aftermath shot. Data only; no new lines.",
       "team": [
         {
           "species": "mosshell",
@@ -161,6 +163,8 @@
       "_why_here": "At the console end of the site, 3.6m past centre on the bearing, so he is between the player and the captive -- the fight cannot be walked around. Ground -2.31m, 1.05m spread.",
       "challenge": "relay_captain_challenge",
       "defeated": "relay_captain_defeated_greeting",
+      "victory_conversation": "relay_captain_defeated_greeting",
+      "_why_victory_conversation_f04_6": "F04#1/#6 (judge r3 3b6f965a): without victory lines the relay fight ended on the exploration camera pointed at the player, and the struck standard and stand-down happened off-frame. The same defeated lines play as the fight resolves, framed by the aftermath shot. Data only; no new lines.",
       "_why_v2_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md V-2, G3-BAND3-0903: was tuskroot(11), galecrest(11), duskhush(12), sent out in that order -- Tuskroot, the first Tuskroot the player has ever seen (D20/D17: it never spawns wild, and no trainer before this one fields one), was sent out FIRST and fell first, contradicting Vance's own challenge line ('I don't send the weakest out first'). Reordered so the line is true and the new species is the one the player has to beat last. Same three creatures, same levels, same total (34) -- only send order moved.",
       "team": [
         {

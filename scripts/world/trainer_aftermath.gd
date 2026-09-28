@@ -60,7 +60,7 @@ static func attach(placer: Node3D, body: Node3D, id: String, beaten: bool) -> vo
 ## The after state, instantly.
 static func settle(body: Node3D, id: String) -> void:
 	var entry := for_trainer(id)
-	var standard := body.get_meta(STANDARD_META, null) as Node3D
+	var standard: Node3D = body.get_meta(STANDARD_META) as Node3D if body.has_meta(STANDARD_META) else null
 	if standard != null and is_instance_valid(standard):
 		for material: StandardMaterial3D in _cloth_materials(standard):
 			material.albedo_color.a = 0.0
@@ -76,7 +76,9 @@ static func settle(body: Node3D, id: String) -> void:
 ## cloth fades from the frame, leaving the bare post); the captain steps aside
 ## once the slump (`trainer_npc.gd::_play_defeat_reaction`) has played out.
 static func begin_fall(body: Node3D, id: String) -> void:
-	var standard := body.get_meta(STANDARD_META, null) as Node3D
+	if not body.has_meta(STANDARD_META):
+		return
+	var standard := body.get_meta(STANDARD_META) as Node3D
 	if standard == null or not is_instance_valid(standard):
 		return
 	var tween := standard.create_tween().set_parallel(true)

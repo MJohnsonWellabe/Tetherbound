@@ -15,6 +15,7 @@ func test_every_captain_has_a_standard_and_a_stand_down_and_the_warden_a_show() 
 		assert_true(entry.has("standard"), "%s plants a standard" % id)
 		assert_true(entry.has("stand_down"), "%s stands down" % id)
 	assert_true(AFTERMATH.for_trainer("warden_aldis").has("victory_show"), "the Warden shows the key and heart")
+	assert_true(AFTERMATH.for_trainer("relay_officer_dell").has("stand_down"), "Dell steps aside from his post")
 	assert_true(AFTERMATH.for_trainer("quarry_picket_dorn").is_empty(), "an ordinary trainer changes nothing")
 
 
