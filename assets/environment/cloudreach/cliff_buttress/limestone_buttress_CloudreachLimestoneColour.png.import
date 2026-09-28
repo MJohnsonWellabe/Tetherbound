@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bmt3u8pvs2wgx"
-path="res://.godot/imported/limestone_buttress_CloudreachLimestoneColour.png-8016ff8d45f02a60c92b1a04eb49af2b.ctex"
+path.s3tc="res://.godot/imported/limestone_buttress_CloudreachLimestoneColour.png-8016ff8d45f02a60c92b1a04eb49af2b.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "d26f2a7fc59e2b5cc282bc9a8507317d"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/environment/cloudreach/cliff_buttress/limestone_buttress_CloudreachLimestoneColour.png"
-dest_files=["res://.godot/imported/limestone_buttress_CloudreachLimestoneColour.png-8016ff8d45f02a60c92b1a04eb49af2b.ctex"]
+dest_files=["res://.godot/imported/limestone_buttress_CloudreachLimestoneColour.png-8016ff8d45f02a60c92b1a04eb49af2b.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
