@@ -5908,6 +5908,11 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 	var push_in := get_tree().get_first_node_in_group("conversation_camera")
 	if push_in != null and speaker != null and is_instance_valid(speaker) and speaker.is_inside_tree():
 		_step_ally_out_of_the_victory_shot(speaker)
+		# F04#3 (render 36416504796 a01-a03): the fallen ace's linger beat
+		# overlapped the cut and its back filled a third of the Warden's
+		# shot. The cut to the victory lines is where it leaves.
+		_clear_fallen_bodies()
+		_trainer_cleanup_delay = 0.0
 		push_in.call("begin", speaker, "aftermath")
 		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
 		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
