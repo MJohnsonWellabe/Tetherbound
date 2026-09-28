@@ -238,9 +238,12 @@ const REGION_BANNER_HEIGHT := 48.0
 ## already crowd the screen, and this is a NEW element, so it goes in the one
 ## authored-space lane nothing else occupies at rest: top-centre, above where
 ## the transient region banner draws.
-const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_LABEL
+## F10#6 device profile (code-blind 7-inch judge r3: "Day/time" unreadable):
+## the glance floor (`hud_scale.gd`, 26 px) with the HUD's outline so the
+## muted text holds against a bright or violet sky.
+const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_BODY
 const DAYTIME_READOUT_TOP := UITokens.HUD_INSET
-const DAYTIME_READOUT_HEIGHT := 32.0
+const DAYTIME_READOUT_HEIGHT := 36.0
 
 ## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
@@ -3615,6 +3618,8 @@ func _build_daytime_readout() -> void:
 	_daytime_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_daytime_label.add_theme_font_size_override("font_size", DAYTIME_READOUT_FONT_SIZE)
 	_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_daytime_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	_daytime_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_daytime_label.text = daytime_readout_text(1, 0.0)
 	_root.add_child(_daytime_label)
 
