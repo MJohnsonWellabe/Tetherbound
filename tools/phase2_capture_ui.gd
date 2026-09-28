@@ -15,6 +15,7 @@ const MENU_DATA := "res://data/config/menu.json"
 var _biome := ""
 var _output := ""
 var _seed := 2042
+var _map_cycle := false
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 
@@ -35,6 +36,8 @@ func _run() -> void:
 			_output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg == "--map-cycle":
+			_map_cycle = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -84,6 +87,8 @@ func _run() -> void:
 		if not raw_tab is Dictionary:
 			continue
 		var tab_id := str((raw_tab as Dictionary).get("id", ""))
+		if _map_cycle and tab_id != "map":
+			continue
 		if tab_id.is_empty():
 			continue
 		menu.call("close")
@@ -93,6 +98,8 @@ func _run() -> void:
 		for frame in 6:
 			await process_frame
 		await _shoot("menu_%s" % tab_id, "Menu %s" % tab_id, world)
+		if _map_cycle and tab_id == "map":
+			await _shoot_map_cycle(menu, world)
 		if tab_id == "settings":
 			await _shoot_settings_sections(menu, world)
 	menu.call("close")
@@ -110,6 +117,34 @@ func _run() -> void:
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	file.close()
 	quit(0 if _failures.is_empty() else 1)
+
+
+func _shoot_map_cycle(menu: Node, world: Node) -> void:
+	var bodies: Array = menu.get("_bodies")
+	var tab: Node = bodies[int(menu.get("_index"))]
+	var buttons: Dictionary = tab.get("_realm_buttons")
+	var destinations: Array = buttons.keys()
+	# Switch away first, then explicitly select the production realm.
+	destinations.erase(_biome)
+	destinations.append(_biome)
+	for realm: String in destinations:
+		if not buttons.has(realm):
+			_failures.append("No map region button for %s" % realm)
+			continue
+		var button := buttons[realm] as Button
+		if not button.disabled:
+			button.pressed.emit()
+		for frame in 8:
+			await process_frame
+		var displayed := str(tab.call("_display_realm"))
+		if displayed != realm:
+			_failures.append("Map selection %s displayed %s" % [realm, displayed])
+		var previous_count := _records.size()
+		await _shoot("map_selected_%s" % realm, "Explicit map region selection: %s" % realm, world)
+		if _records.size() > previous_count:
+			_records[-1]["selected_realm"] = displayed
+			_records[-1]["selected_button_disabled"] = button.disabled
+			_records[-1]["available_realms"] = buttons.keys()
 
 
 func _shoot_settings_sections(menu: Node, world: Node) -> void:
