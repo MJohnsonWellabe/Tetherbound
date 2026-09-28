@@ -7,6 +7,10 @@ var _capture_seed := 2042
 
 func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
+		if argument == "--motion":
+			push_error("Phase 2 JSON wrapper supports stills only; use capture_cloudreach_frame_matrix.gd for motion receipts.")
+			quit(2)
+			return
 		if argument.begins_with("--seed="):
 			_capture_seed = int(argument.trim_prefix("--seed="))
 	seed(_capture_seed)
@@ -32,7 +36,16 @@ func _finish(written: int) -> void:
 		"stand_receipt": OUT.path_join("manifest.txt"),
 	}
 	var file := FileAccess.open(OUT.path_join("manifest.json"), FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify(receipt, "\t") + "\n")
-		file.close()
+	if file == null:
+		push_error("Cannot open Phase 2 capture receipt: %s" % error_string(FileAccess.get_open_error()))
+		quit(1)
+		return
+	file.store_string(JSON.stringify(receipt, "\t") + "\n")
+	file.flush()
+	var write_error := file.get_error()
+	file.close()
+	if write_error != OK:
+		push_error("Cannot write Phase 2 capture receipt: %s" % error_string(write_error))
+		quit(1)
+		return
 	super._finish(written)

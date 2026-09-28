@@ -35,3 +35,46 @@ Baseline checks: texture policy `--apply` changed zero sidecars; `--check` passe
 RID/resource leaks during teardown; these are not described as a clean engine log.
 Native captures also warned about unresolved physical pickup/wild placements;
 their gameplay ownership remains outside this presentation item.
+
+## Paired skyline comparison
+
+Source `f2d43c7f8f85cf85a17def379746c280f09afa08` produced nine baseline
+chapter-matrix views, six candidate location views, five candidate route views
+and nine candidate matrix views. All four processes exited zero and all four
+engine manifests report complete, 1920×1080, seed 2042, native Compatibility.
+Only `skyline_profile.enabled` was temporarily set to true for the three
+candidate rounds. It was restored to false after capture; the shared GPU lock
+was released and independently checked empty. The earlier location/route
+baseline runtime is identical with respect to game source; the intervening
+commits add evidence and the matrix wrapper only.
+
+Each round was retained and verified using `phase2_compact_evidence.py`.
+Its manifest contains the exact reproduction command and candidate flag
+disclosure. The two matrix rounds also retain `stand-receipt.txt` with actual
+trainer and camera coordinates. Original native images remain local.
+
+The matrix resolves an important limitation of its authored stand descriptions:
+rows 17 and 18 start with a 1050 m candidate but actually seat the trainer at
+1020.03 m. Row 16 seats at 1020.13 m and its camera is largely obstructed;
+row 18 faces a wall. These completed captures are not proof of a usable shrine
+approach. They cannot certify intended composition, route traversal, collision,
+or an unobstructed camera. No gameplay or camera changes were made to hide this.
+Other rows remain useful paired presentation evidence. Source inspection shows
+the fixture resolves registered ground before seating: the height mismatch is
+not observed falling or proof of a gameplay collision defect.
+
+Independent `paired-visual-judge.md` inspected all 20 native matched pairs and
+returned FAIL, Bar A No, Bar B No. It found useful distant skyline improvement
+but no resolution of the broad grass fields and sparse trees dominating the
+critical shrine route views. The colder, brighter distant peaks also remain
+visually separate from local rock. No clear persistent new foreground or
+architecture regression was established. The candidate remains disabled and
+P2-021 remains open. Further work must address the middle ground and ground
+hierarchy; increasing only the distant peaks again would repeat this failure.
+
+The JSON wrapper now explicitly rejects `--motion`; its parent tool owns motion
+receipts using a different frame collection. The wrapper's GDScript check passed.
+Independent wrapper review found a receipt-write failure could falsely exit zero;
+the wrapper now fails on open or flushed-write errors. The reviewer verified the
+correction. A headless failure-injection probe using a nonexistent receipt parent
+exited 1 as expected, and a motion invocation exited 2 before world capture.

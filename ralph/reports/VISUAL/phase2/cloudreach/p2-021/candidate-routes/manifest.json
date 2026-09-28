@@ -1,0 +1,660 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "f2d43c7f8f85cf85a17def379746c280f09afa08",
+  "repro": "Set data/config/cloudreach_visual.json skyline_profile.enabled=true; isolate APPDATA under .artifacts/cloudreach-phase2/profile; Godot_v4.7-stable_win64_console.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --script tools/phase2_capture_routes.gd -- --biome=cloudreach --subset=cloudreach__high_roost_sky_shrine__07__sky_shrine --seed=2042 --output=res://.artifacts/cloudreach-phase2/p2-021/candidate-routes; restore skyline_profile.enabled=false afterward.",
+  "source_manifest_sha256": "36277511d9bfb1e728b2c1c6381ea02099ff4b176e09433b1646cd148fd1e1df",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "cloudreach",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 296235304792,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 296252082012,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T13:03:03",
+    "capture_started_utc": "2026-09-28T13:00:10",
+    "captured_frame_count": 5,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 5,
+    "planned_frame_ids": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__route_day",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_01_day",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_02_day",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_03_day",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__vista_dusk"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 296252082012,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day",
+      "golden",
+      "night"
+    ],
+    "requested_views": [
+      "approach",
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine"
+    ]
+  },
+  "frames": [
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/candidate-routes/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach",
+        "biome_id": "cloudreach",
+        "bytes": 591953,
+        "camera_player_distance_m": 5.82143259048462,
+        "camera_position": [
+          1110.0,
+          1022.86102294922,
+          2895.08666992188
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1110.0,
+            1021.77984619141,
+            2890.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78834421907638e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1110.0,
+            1022.86102294922,
+            2895.08666992188
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "cloudreach / high roost sky shrine / 07 / sky shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__route_day.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__route_day",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.195648555556,
+          "hour": 8.00782594222222,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1110.0,
+          1020.02996826172,
+          2890.0
+        ],
+        "position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "resolved_ground_y": 1020.0,
+        "route_class": "main",
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ],
+        "walk_offset_xz": [
+          0.0,
+          0.0
+        ],
+        "walk_seed": 2583373005,
+        "walk_step": 0
+      },
+      "source_sha256": "34d30acc0fd8ae2d6f693d7d7c79ae2d0353b11e44145bf07abe6a41741acd1e",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__route_day.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_01_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/candidate-routes/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach",
+        "biome_id": "cloudreach",
+        "bytes": 550628,
+        "camera_player_distance_m": 5.82140350341797,
+        "camera_position": [
+          1120.69067382813,
+          1022.86096191406,
+          2874.126953125
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1120.69067382813,
+            1021.77984619141,
+            2869.04028320313
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78835794101013e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1120.69067382813,
+            1022.86096191406,
+            2874.126953125
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "cloudreach / high roost sky shrine / 07 / sky shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_01_day.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_01_day",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.20312650505,
+          "hour": 8.00812506020202,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1120.69067382813,
+          1020.02996826172,
+          2869.04028320313
+        ],
+        "position_xz": [
+          1120.69062042236,
+          2864.04034996033
+        ],
+        "resolved_ground_y": 1020.0,
+        "route_class": "off",
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1120.69067382813,
+          2864.04028320313
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ],
+        "walk_angle_rad": -1.09913539886475,
+        "walk_distance_m": 23.5286273956299,
+        "walk_offset_xz": [
+          10.6906204223633,
+          -20.9596500396729
+        ],
+        "walk_seed": 2583373005,
+        "walk_step": 1
+      },
+      "source_sha256": "31777b445a760feb5279b2f7b89287f033fc717ee7ea2a1b6962690ab6b6b79a",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_01_day.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_02_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/candidate-routes/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach",
+        "biome_id": "cloudreach",
+        "bytes": 415130,
+        "camera_player_distance_m": 5.82143259048462,
+        "camera_position": [
+          1148.15173339844,
+          1022.86108398438,
+          2874.47412109375
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1148.15173339844,
+            1021.77990722656,
+            2869.38745117188
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78837166294387e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1148.15173339844,
+            1022.86108398438,
+            2874.47412109375
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "cloudreach / high roost sky shrine / 07 / sky shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_02_day.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_02_day",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.210255,
+          "hour": 8.0084102,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1148.15173339844,
+          1020.03002929688,
+          2869.38745117188
+        ],
+        "position_xz": [
+          1148.15167617798,
+          2864.38739013672
+        ],
+        "resolved_ground_y": 1020.0,
+        "route_class": "off",
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1148.15173339844,
+          2864.38745117188
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ],
+        "walk_angle_rad": 0.0126368999481201,
+        "walk_distance_m": 27.463249206543,
+        "walk_offset_xz": [
+          38.1516761779785,
+          -20.6126098632813
+        ],
+        "walk_seed": 2583373005,
+        "walk_step": 2
+      },
+      "source_sha256": "87133c85cab7ec5afe51831325346d425d2b43426545520f3c74de1654e20673",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_02_day.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_03_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/candidate-routes/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach",
+        "biome_id": "cloudreach",
+        "bytes": 619941,
+        "camera_player_distance_m": 5.82143259048462,
+        "camera_position": [
+          1155.00378417969,
+          1022.86102294922,
+          2856.20092773438
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1155.00378417969,
+            1021.77990722656,
+            2851.1142578125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78838521547103e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1155.00378417969,
+            1022.86102294922,
+            2856.20092773438
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "cloudreach / high roost sky shrine / 07 / sky shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_03_day.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_03_day",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.201049666667,
+          "hour": 8.00804198666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1155.00378417969,
+          1020.02996826172,
+          2851.1142578125
+        ],
+        "position_xz": [
+          1155.0037689209,
+          2846.11416625977
+        ],
+        "resolved_ground_y": 1020.0,
+        "route_class": "off",
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1155.00378417969,
+          2846.1142578125
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ],
+        "walk_angle_rad": -1.21204328536987,
+        "walk_distance_m": 19.5156803131104,
+        "walk_offset_xz": [
+          45.0037689208984,
+          -38.8858337402344
+        ],
+        "walk_seed": 2583373005,
+        "walk_step": 3
+      },
+      "source_sha256": "23324749c1c188165f5b0665ab48aacd086deb887c45974da888382fbb02146e",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__walk_03_day.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__vista_dusk",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/candidate-routes/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach",
+        "biome_id": "cloudreach",
+        "bytes": 673037,
+        "camera_player_distance_m": 5.82143259048462,
+        "camera_position": [
+          1110.0,
+          1022.86102294922,
+          2895.08666992188
+        ],
+        "camera_purpose": "vista",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1110.0,
+            1021.77984619141,
+            2890.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78839876799819e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1110.0,
+            1022.86102294922,
+            2895.08666992188
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "cloudreach / high roost sky shrine / 07 / sky shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__vista_dusk.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__vista_dusk",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 450.199755428572,
+          "hour": 18.0079902171429,
+          "requested": "golden",
+          "time_of_day": "golden"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1110.0,
+          1020.02996826172,
+          2890.0
+        ],
+        "position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "resolved_ground_y": 1020.0,
+        "route_class": "main",
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "golden",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "vista",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ],
+        "walk_offset_xz": [
+          0.0,
+          0.0
+        ],
+        "walk_seed": 2583373005,
+        "walk_step": 0
+      },
+      "source_sha256": "2ff4de4baa83be9003585e29d9d25a648c606c38a077ea12ad84fc6c6a383987",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/candidate-routes/cloudreach__high_roost_sky_shrine__07__sky_shrine__vista_dusk.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}
