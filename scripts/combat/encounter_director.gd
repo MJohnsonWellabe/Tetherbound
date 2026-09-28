@@ -5914,6 +5914,7 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 		_clear_fallen_bodies()
 		_trainer_cleanup_delay = 0.0
 		push_in.call("begin", speaker, "aftermath")
+		_step_ally_behind_the_lens(push_in.get_parent())
 		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
 		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
 	panel.call("start", conversation)
@@ -5945,6 +5946,31 @@ func _step_ally_out_of_the_victory_shot(speaker: Node3D) -> void:
 		ally.global_position = spot
 	if ally.has_method("face_towards"):
 		ally.call("face_towards", speaker.global_position)
+
+
+## F04#3/#6 (render 36422108408 a01: beside the player a large ally still
+## filled a third of Halder's shot). Once the rig has solved the aftermath
+## shot, the ally stands `camera.json` conversation.profiles.aftermath
+## `ally_behind_lens_m` behind the lens along the shot, so no creature size or
+## swing puts it in the frame. No shot solved: the side step above stands.
+func _step_ally_behind_the_lens(rig: Node) -> void:
+	var ally := ally_body()
+	if ally == null or not is_instance_valid(ally) or rig == null or not rig.has_method("conversation_shot"):
+		return
+	var shot: Dictionary = rig.call("conversation_shot")
+	if not shot.has("pivot") or not shot.has("dir"):
+		return
+	var dir: Vector3 = shot["dir"]
+	dir.y = 0.0
+	if dir.length_squared() < 0.0001:
+		return
+	var eye: Vector3 = (shot["pivot"] as Vector3) + (shot["dir"] as Vector3) * float(shot.get("distance", 0.0))
+	var behind := float((CONVERSATION_CAMERA.profile_config("aftermath")).get("ally_behind_lens_m", 2.2))
+	var spot := eye + dir.normalized() * behind
+	if ally.has_method("place_on_ground"):
+		ally.call("place_on_ground", spot)
+	else:
+		ally.global_position = Vector3(spot.x, ally.global_position.y, spot.z)
 
 
 ## SB9's flag, and SC15's payout hook.

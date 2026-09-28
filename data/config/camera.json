@@ -32,7 +32,7 @@
     "clearance_ratio": 0.82,
     "_comment_profiles": "F04#3 (round-1 judge D): a trainer's post-fight lines opened on the villager push-in (3.5 m, fov 40), which crowded the Warden and his arena into a head-and-shoulders shot. `aftermath` frames the trainer and the player wider and higher so the place they fought in stays in shot; encounter_director.gd::_present_trainer_victory asks for it. TUNABLE.",
     "profiles": {
-      "aftermath": {"distance": 5.2, "fov": 52.0, "elevation_deg": 13.0, "speaker_bias": 0.6, "shoulder_yaw_deg": 24.0, "ally_back_m": -0.6, "ally_side_m": 2.6,
+      "aftermath": {"distance": 5.2, "fov": 52.0, "elevation_deg": 13.0, "speaker_bias": 0.6, "shoulder_yaw_deg": 24.0, "ally_back_m": -0.6, "ally_side_m": 2.6, "ally_behind_lens_m": 2.2, "_why_ally_behind_lens_m": "F04#3/#6 (render 36422108408 a01): beside the player a large ally still filled a third of the shot. After the shot is solved the ally stands this far behind the lens (encounter_director.gd _step_ally_behind_the_lens). TUNABLE.",
         "fallback": {"distance": 3.4, "fov": 54.0, "elevation_deg": 10.0, "speaker_bias": 0.6}}
     },
     "fallback": {
