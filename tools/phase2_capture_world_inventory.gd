@@ -47,5 +47,7 @@ func _load_plan() -> bool:
 			"family_type": str(item.get("family_type", "")),
 			"authored_source": str(item.get("source", "")),
 			"authored_id": str(item.get("authored_id", "")),
+			"stand_offsets_m": [2.0, 3.0, 5.0] if str(item.get("family_type", "")) != "prop" else [5.0, 8.0, 12.0],
+			"camera_pitch_deg": -25.0 if str(item.get("family_type", "")) != "prop" else -12.0,
 		})
 	return not _planned.is_empty()
