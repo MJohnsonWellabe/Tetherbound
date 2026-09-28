@@ -2029,7 +2029,10 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	occluder.collision_mask = 0
 	var occluder_shape := CollisionShape3D.new()
 	var occluder_box := BoxShape3D.new()
-	occluder_box.size = Vector3(0.3, height, width)
+	# Deep enough to cover the cloth's folds (a folded banner's render bounds
+	# measured 0.46 m deep), not just the flat panel: at 0.3 m the Warden
+	# fight's lens still ended inside a fold (lens probe, frame 08).
+	occluder_box.size = Vector3(0.7, height, width)
 	occluder_shape.shape = occluder_box
 	occluder.position = panel.position
 	occluder.add_child(occluder_shape)
