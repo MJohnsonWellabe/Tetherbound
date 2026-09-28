@@ -112,6 +112,7 @@ func build(realm: Node3D) -> void:
 		_gates[str(gate.opens_with)] = barrier
 		_place_sluice_gate(barrier, gate)
 	_build_heart_chamber()
+	_build_camera_occluders()
 	_build_guardian()
 	if not bool(world.get("simulation_only")):
 		var dressing := INTERIOR_DRESSING.new()
@@ -808,3 +809,24 @@ func _collision_box(parent: StaticBody3D, at: Vector3, size: Vector3) -> void:
 
 func _v(raw: Array) -> Vector3:
 	return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+
+
+## F14#1 C3 (Nerissa r4): the Heart Chamber's big visual props (the containment
+## crystal, the balcony ledges' railings) had no collider, so the fight camera's
+## arm stood behind them and they filled a third to half of 5 of 40 judged
+## frames. Camera-only boxes on the rig's OCCLUSION_ONLY_LAYER stop the lens
+## short of them, the Warrens/relay pattern; traversal, fights and gates never
+## see them. `camera_occluders` in water_veilfall.json, interior-local metres.
+func _build_camera_occluders() -> void:
+	var boxes: Array = rules.get("camera_occluders", [])
+	if boxes.is_empty():
+		return
+	var body := StaticBody3D.new()
+	body.name = "CameraOccluders"
+	body.collision_layer = preload("res://scripts/player/camera_rig.gd").OCCLUSION_ONLY_LAYER
+	body.collision_mask = 0
+	interior.add_child(body)
+	for raw: Variant in boxes:
+		var box := raw as Dictionary
+		_collision_box(body, _v(box.get("at", [0.0, 0.0, 0.0])), _v(box.get("size", [1.0, 1.0, 1.0])))
+

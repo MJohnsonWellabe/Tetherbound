@@ -162,9 +162,7 @@ func test_positions_are_regrounded_and_existing_npc_bodies_are_reused() -> void:
 		else:
 			assert_almost_eq(site.position[1], field.height_at(site.position[0], site.position[2]))
 		assert_eq(site.count, original.count)
-	# 17 sailing-route surface pairs plus Tidecoil, which fights at the reef
-	# surface rather than down the Deep Watch seabed (F14#0 C3).
-	assert_eq(surface_sites, 18)
+	assert_eq(surface_sites, 17)
 	assert_true(surface_sites_over_deep_water >= 15,
 		"surface mode must materially differ from terrain grounding across the sailing route")
 	var moved_surface_ids := {

@@ -93,6 +93,8 @@ func _case_generated_geometry_and_controls() -> void:
 	var boxes: Array[AABB] = []
 	for body in cave.interior.get_children():
 		if not body is StaticBody3D or body in cave._gates.values(): continue
+		# Camera-only occluders (camera_rig.gd OCCLUSION_ONLY_LAYER) never block a walker.
+		if ((body as StaticBody3D).collision_layer & 1) == 0: continue
 		for child in body.get_children():
 			if child is CollisionShape3D and child.shape is BoxShape3D:
 				var size: Vector3 = child.shape.size
