@@ -358,8 +358,8 @@
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
-   "now": "Done: Phase 1 complete, owned-carrier Fly landed (#411), lane-done recorded (#415). Session archived.",
-   "next": "-"
+   "now": "Lane done. Phase 1 complete; owned-carrier Fly debt closed (#411) (ralph/reports/CLOUDREACH/owned-carrier-fly/): the five's own healthy active carrier flies, the Galewisp starter gains Fly at the unlock, Maela's loaner only for the trial and a five with no healthy carrier; the follower is recalled for the flight. Session archived.",
+   "next": "Stopped. tb/cloudreach can be deleted."
   },
   {
    "lane": "Stormwood (tb/stormwood)",
