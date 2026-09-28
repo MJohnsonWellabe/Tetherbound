@@ -40,6 +40,7 @@ const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const TRAINER_AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
+const CONVERSATION_CAMERA := preload("res://scripts/player/conversation_camera.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## WORLD-LIFE-0903. Pure `RefCounted`, offline-constructible (no live
@@ -5881,10 +5882,39 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 	# push-in then finds the camera already in and leaves it.
 	var push_in := get_tree().get_first_node_in_group("conversation_camera")
 	if push_in != null and speaker != null and is_instance_valid(speaker) and speaker.is_inside_tree():
+		_step_ally_out_of_the_victory_shot(speaker)
 		push_in.call("begin", speaker, "aftermath")
 		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
 		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
 	panel.call("start", conversation)
+
+
+## F04#3/#6 (judge r2 17a80aa4: the player's own creature hid Vess, crowded
+## Oreth's and the Warden's victory shots). Once the fight is won the creature
+## comes back to stand beside the player (2.6 m to the side, a little toward
+## the trainer: clear of the lens behind the player and of the line to the
+## trainer), so the aftermath shot frames trainer and player. `camera.json`
+## conversation.profiles.aftermath `ally_back_m` (negative: toward the
+## trainer)/`ally_side_m`.
+func _step_ally_out_of_the_victory_shot(speaker: Node3D) -> void:
+	var ally := ally_body()
+	if ally == null or not is_instance_valid(ally) or _player == null:
+		return
+	var profile: Dictionary = (CONVERSATION_CAMERA.profile_config("aftermath"))
+	var away := _player.global_position - speaker.global_position
+	away.y = 0.0
+	if away.length_squared() < 0.0001:
+		return
+	away = away.normalized()
+	var side := Vector3(-away.z, 0.0, away.x)
+	var spot := _player.global_position + away * float(profile.get("ally_back_m", -0.6)) \
+		+ side * float(profile.get("ally_side_m", 2.6))
+	if ally.has_method("place_on_ground"):
+		ally.call("place_on_ground", spot)
+	else:
+		ally.global_position = spot
+	if ally.has_method("face_towards"):
+		ally.call("face_towards", speaker.global_position)
 
 
 ## SB9's flag, and SC15's payout hook.

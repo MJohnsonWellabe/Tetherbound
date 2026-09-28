@@ -217,8 +217,17 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	node.global_position = speaker.global_position + toward * float(show.get("toward_player_m", 1.3)) \
 		+ Vector3.UP * float(show.get("height_m", 1.55))
 	node.rotation.y = atan2(toward.x, toward.z)
-	_build_heart(node, Vector3(-0.28, 0.0, 0.0))
-	_build_key(node, Vector3(0.3, 0.02, 0.0))
+	var tokens: Array = show.get("tokens", ["heart", "key"]) as Array
+	var spacing := 0.58
+	for i in tokens.size():
+		var at := Vector3((float(i) - (tokens.size() - 1) * 0.5) * spacing, 0.0, 0.0)
+		var token: Variant = tokens[i]
+		if token is Dictionary and str((token as Dictionary).get("kind", "")) == "sigil":
+			_build_sigil(node, at, _item_colour(world, str((token as Dictionary).get("item", ""))))
+		elif str(token) == "heart":
+			_build_heart(node, at)
+		elif str(token) == "key":
+			_build_key(node, at + Vector3(0.0, 0.02, 0.0))
 	var light := OmniLight3D.new()
 	light.light_color = Color("f3e6a8")
 	light.light_energy = 1.8
@@ -228,11 +237,65 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	var spin := node.create_tween().set_loops()
 	spin.tween_property(node, "position:y", node.position.y + 0.08, 0.9).set_trans(Tween.TRANS_SINE)
 	spin.tween_property(node, "position:y", node.position.y, 0.9).set_trans(Tween.TRANS_SINE)
+	# Handed over, not vanished (judge r2: "they vanish at a25 with no
+	# handover"): at the end the tokens drift to the player and shrink away.
 	var seconds := float(show.get("seconds", 14.0))
 	node.get_tree().create_timer(seconds).timeout.connect(func() -> void:
-		if is_instance_valid(node):
-			node.queue_free())
+		if not is_instance_valid(node):
+			return
+		spin.kill()
+		var to := node.global_position
+		if player != null and is_instance_valid(player):
+			to = player.global_position + Vector3.UP * 1.1
+		var hand := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		hand.tween_property(node, "global_position", to, 0.9)
+		hand.tween_property(node, "scale", Vector3.ONE * 0.15, 0.9)
+		hand.chain().tween_callback(node.queue_free))
 	return node
+
+
+static func _item_colour(world: Node, item_id: String) -> Color:
+	var game := world.get_node_or_null(^"/root/Game") if world != null else null
+	var items: RefCounted = game.get("items") if game != null else null
+	if items != null and item_id != "":
+		return items.call("colour", item_id) as Color
+	return Color("c9a227")
+
+
+## A captain's Sigil: a faceted medallion in the item's own colour, rim-lit,
+## the same primitive language as the key and heart.
+static func _build_sigil(parent: Node3D, at: Vector3, colour: Color) -> void:
+	var sigil := Node3D.new()
+	sigil.name = "Sigil"
+	sigil.position = at
+	parent.add_child(sigil)
+	var face := MeshInstance3D.new()
+	var disc := CylinderMesh.new()
+	disc.top_radius = 0.24
+	disc.bottom_radius = 0.24
+	disc.height = 0.05
+	disc.radial_segments = 8
+	face.mesh = disc
+	face.rotation.x = deg_to_rad(90.0)
+	face.material_override = _glow(colour, 0.9)
+	sigil.add_child(face)
+	var rim := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.23
+	torus.outer_radius = 0.29
+	torus.ring_segments = 8
+	rim.mesh = torus
+	rim.rotation.x = deg_to_rad(90.0)
+	rim.material_override = _glow(Color("e8d9a0"), 0.7)
+	sigil.add_child(rim)
+	var gem := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(0.12, 0.12, 0.08)
+	gem.mesh = box
+	gem.rotation.z = deg_to_rad(45.0)
+	gem.position.z = 0.04
+	gem.material_override = _glow(Color("f6efd0"), 1.1)
+	sigil.add_child(gem)
 
 
 static func _glow(colour: Color, energy: float) -> StandardMaterial3D:
