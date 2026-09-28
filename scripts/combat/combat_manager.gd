@@ -889,7 +889,28 @@ func _place_fighters() -> void:
 		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
 		var right := _staging_reach(ally_spot, side, lateral)
 		var left := _staging_reach(ally_spot, -side, lateral)
-		ally_spot += side * right if right >= left else -side * left
+		# Only onto real ground at the seat's own level, as the realm seat
+		# does. The South Bridge guardian forms on the carved crossing
+		# approach, where 2.4 m sideways is the cut slope; seated there the
+		# earned five lost the gatekeeper on seed 15 (cards M2
+		# BRIDGE_GUARDIAN_REGRESSION). No such side keeps the in-line seat.
+		var base_level := _ground_height(ally_spot.x, ally_spot.z)
+		var sides: Array[Vector3] = [side * right, -side * left]
+		if right < left:
+			sides.reverse()
+		var _diag_before := ally_spot
+		for shift: Vector3 in sides:
+			if _realm_seat_stands(ally_spot + shift, base_level):
+				ally_spot += shift
+				break
+		if OS.has_environment("TB_SEAT_DIAG"):
+			var _lv: Array = []
+			for shift: Vector3 in sides:
+				var p := _diag_before + shift
+				_lv.append([snappedf(_ground_height(p.x, p.z), 0.01), _realm_seat_stands(p, base_level)])
+			print("SEAT DIAG trainer base=", _diag_before, " base_level=", snappedf(base_level, 0.01),
+				" sides=", _lv, " chosen=", ally_spot, " wild=", wild_spot, " wild_level=",
+				snappedf(_ground_height(wild_spot.x, wild_spot.z), 0.01))
 
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
