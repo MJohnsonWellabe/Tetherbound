@@ -93,6 +93,17 @@
         "blocks_ground_route": false,
         "visible_from_region_ids": ["gate_lower_cliffs"]
       },
+      "crown_cut": {
+        "_comment": "F08#4 (code-blind judge r1: the causeway route 'stops dead at a steep grass slope'). broken_causeway_main's climb from the Three Bells landing ((-450,342,1360) -> (-260,390,1560)) enters this region's drawn crown (top y 390) at its rim and runs up to ~20 m under it for its last ~100 m: from outside the road ends at a grass wall, and inside it the player walks under the crown with its grass cover floating overhead. Same carve as summit_final_stronghold (see its comment for every parameter): the crown is cut down to each road under it and the one carved surface is drawn and collided, so the road reads as a cutting climbing onto the plateau.",
+        "floor_half_width_m": 10.0,
+        "floor_drop_m": 0.25,
+        "bank_slope": 2.5,
+        "bank_normal_y": 0.64,
+        "min_lowering_m": 0.3,
+        "min_raise_m": 0.05,
+        "fill_clearance_m": 8.9,
+        "cell_m": 3.5
+      },
       "purpose": "Shattered stone roads, bridge choices, resource pockets and previews of inaccessible high terrain."
     },
     {
