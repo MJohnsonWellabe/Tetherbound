@@ -51,22 +51,26 @@
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 889,
+      "frames": 910,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 249,
+        "systems": 270,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 689,
+        "day": 710,
         "dusk": 114,
         "night": 86
       },
       "systems": {
+        "bed": 3,
+        "camp": 3,
+        "catching": 12,
+        "crafting": 3,
         "current_states": 16,
         "fights": 210,
         "riding": 10,
@@ -74,11 +78,7 @@
       },
       "expected_systems_without_indexed_frames": [
         "flying",
-        "catching",
-        "camp",
-        "bed",
-        "building",
-        "crafting"
+        "building"
       ],
       "dialogue_frames": 66,
       "defeated_frames": 48,
@@ -102,18 +102,18 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 392,
+      "frames": 433,
       "categories": {
         "characters": 34,
         "creatures": 98,
         "named_locations": 144,
         "route_and_terrain": 39,
-        "systems": 53,
+        "systems": 94,
         "ui": 12,
         "world_items": 12
       },
       "times": {
-        "day": 281,
+        "day": 322,
         "dusk": 57,
         "night": 54
       },
@@ -121,15 +121,15 @@
         "bed": 1,
         "building": 1,
         "camp": 1,
+        "catching": 12,
         "crafting": 1,
+        "fights": 29,
         "flying": 16,
         "flying_return": 5,
         "riding": 28
       },
       "expected_systems_without_indexed_frames": [
-        "swimming",
-        "catching",
-        "fights"
+        "swimming"
       ],
       "dialogue_frames": 16,
       "defeated_frames": 6,
@@ -153,19 +153,19 @@
       "missing_repro_or_render_path": []
     },
     "stormwood": {
-      "frames": 626,
+      "frames": 728,
       "categories": {
         "characters": 142,
         "creatures": 98,
         "named_locations": 186,
         "route_and_terrain": 60,
-        "systems": 86,
+        "systems": 188,
         "time_and_weather": 12,
         "ui": 12,
         "world_items": 30
       },
       "times": {
-        "day": 490,
+        "day": 592,
         "dusk": 74,
         "night": 62
       },
@@ -173,14 +173,14 @@
         "bed": 1,
         "building": 1,
         "camp": 1,
+        "catching": 12,
         "crafting": 1,
-        "fights": 82
+        "fights": 172
       },
       "expected_systems_without_indexed_frames": [
         "flying",
         "riding",
-        "swimming",
-        "catching"
+        "swimming"
       ],
       "dialogue_frames": 71,
       "defeated_frames": 52,

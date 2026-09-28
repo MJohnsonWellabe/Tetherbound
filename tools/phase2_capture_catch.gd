@@ -26,11 +26,18 @@ extends SceneTree
 ## until its next physics tick, and without pausing, physics outruns the
 ## software renderer and the moment is gone before the shutter opens.
 
-const SCENE := "res://scenes/world/meadows_playground.tscn"
+const MEADOWS_SCENE := "res://scenes/world/meadows_playground.tscn"
+const TIDEWAKE_SCENE := "res://scenes/world/water_archipelago.tscn"
+const STORMWOOD_SCENE := "res://scenes/world/stormwood.tscn"
+const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 var _out_dir := "res://ralph/reports/VISUAL/phase2/meadows/catch_raw_main"
 var _seed := 2042
+var _biome := "meadows"
+var _scene := MEADOWS_SCENE
 
 const SETTLE_FRAMES := 240
 const POSE_FRAMES := 2
@@ -58,7 +65,7 @@ var _resolved := []  # appended [success] per resolution
 
 
 func _init() -> void:
-	_run()
+	_run.call_deferred()
 
 
 func _run() -> void:
@@ -67,27 +74,59 @@ func _run() -> void:
 			_out_dir = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
-	if not _out_dir.begins_with("res://ralph/reports/VISUAL/phase2/meadows/"):
+		elif arg.begins_with("--biome="):
+			_biome = arg.trim_prefix("--biome=")
+	if _biome == "tidewake":
+		_scene = TIDEWAKE_SCENE
+	elif _biome == "stormwood":
+		_scene = STORMWOOD_SCENE
+	elif _biome == "cloudreach":
+		_scene = CLOUDREACH_SCENE
+	if _biome not in ["meadows", "tidewake", "stormwood", "cloudreach"] or not _out_dir.begins_with("res://ralph/reports/VISUAL/phase2/%s/" % _biome):
 		push_error("Catch capture output must stay in Meadows Phase 2 evidence")
 		quit(1)
 		return
 	seed(_seed)
 	_start_ms = Time.get_ticks_msec()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	if _biome in ["tidewake", "stormwood", "cloudreach"]:
+		var game := root.get_node(^"Game")
+		game.call("reset_for_new_game")
+		game.set("current_realm", "water" if _biome == "tidewake" else _biome)
+		if _biome == "cloudreach":
+			game.progression.set_flag("realm_key_cloudreach")
+			for species: String in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
+				var member: RefCounted = SPECIES.spawn(species)
+				member.set_level(25, PROGRESSION.config())
+				game.party.add(member)
 
-	var packed: PackedScene = load(SCENE)
+	var packed: PackedScene = load(_scene)
 	if packed == null:
-		push_error("could not load %s" % SCENE)
+		push_error("could not load %s" % _scene)
 		quit(1)
 		return
 	_world = packed.instantiate()
 	root.add_child(_world)
 	for i in SETTLE_FRAMES:
 		await physics_frame
+	if _biome in ["tidewake", "stormwood", "cloudreach"]:
+		for i in 600:
+			if bool(_world.call("shell_build_complete")):
+				break
+			await physics_frame
+		if not bool(_world.call("shell_build_complete")):
+			_failures.append("Tidewake shell did not build")
+			_finish()
+			return
 	_log("settled")
 
 	await _ensure_ally()
 	_leave_the_farmhouse()
+	if _biome == "tidewake":
+		# Water streams ordinary wilds around the player. This dry First Shore
+		# site is outside the default spawn neighborhood.
+		for i in 300:
+			await physics_frame
 	_seed_orbs()
 	if not _collect_nodes():
 		_finish()
@@ -307,7 +346,12 @@ func _capture_chance_frame(hp_fraction: float, frame_name: String) -> void:
 
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
+	if director == null and _biome == "cloudreach":
+		director = _world.get_node(^"CloudreachRuntime").get("director")
 	if director == null or director.call("ally_instance") != null:
+		return
+	if _biome == "cloudreach":
+		await director.call("summon_active_creature")
 		return
 	await director.call("adopt_starter", "terrapup")
 
@@ -317,6 +361,34 @@ func _leave_the_farmhouse() -> void:
 	if player == null:
 		return
 	var start := Vector3(48.0, 0.0, -58.0)
+	if _biome == "tidewake":
+		start = Vector3(-90.024, 0.0, 147.573)
+	elif _biome == "stormwood":
+		var director := _world.get_node_or_null(^"EncounterDirector")
+		if director != null:
+			var nearest := INF
+			for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+				if candidate.has_meta("stormwood_named_encounter"):
+					continue
+				var distance := candidate.global_position.distance_to(player.global_position)
+				if distance < nearest:
+					nearest = distance
+					_wild = candidate
+			if _wild != null:
+				start = _wild.global_position + Vector3(0.0, 0.0, 5.0)
+	elif _biome == "cloudreach":
+		var director: Node = _world.get_node(^"CloudreachRuntime").get("director")
+		var nearest := INF
+		for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+			var ground := float(_world.call("ground_height_at", candidate.global_position.x, candidate.global_position.z))
+			if not is_finite(ground) or absf(ground - candidate.global_position.y) > 4.0:
+				continue
+			var distance := candidate.global_position.distance_to(player.global_position)
+			if distance < nearest:
+				nearest = distance
+				_wild = candidate
+		if _wild != null:
+			start = _wild.global_position + Vector3(0.0, 0.0, 5.0)
 	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
 	player.global_position = start
 	player.velocity = Vector3.ZERO
@@ -347,10 +419,23 @@ func _collect_nodes() -> bool:
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
+	if _biome == "cloudreach":
+		var runtime := _world.get_node_or_null(^"CloudreachRuntime")
+		if runtime != null:
+			_manager = runtime.get("manager")
+			_director = runtime.get("director")
 	if _player == null or _manager == null or _director == null or _rig == null:
 		_failures.append("scene is missing the player, camera rig, combat manager or director")
 		return false
-	_wild = _director.call("wild_creature") as Node3D
+	if _wild == null:
+		_wild = _director.call("wild_creature") as Node3D
+	if _wild == null and _biome == "tidewake":
+		var nearest := INF
+		for candidate: Node3D in (_director.call("wild_creatures") as Array[Node3D]):
+			var distance := candidate.global_position.distance_to(_player.global_position)
+			if distance < nearest:
+				nearest = distance
+				_wild = candidate
 	if _wild == null:
 		_failures.append("the encounter director never spawned a wild creature")
 		return false
@@ -474,8 +559,8 @@ func _finish() -> void:
 	var records: Array[Dictionary] = []
 	for path: String in _written:
 		records.append({"id": path.get_file().get_basename(), "file": path})
-	var manifest := {"biome": "meadows", "category": "systems", "system": "catch",
-		"seed": _seed, "scene": SCENE, "display_server": DisplayServer.get_name(),
+	var manifest := {"biome": _biome, "category": "systems", "system": "catch",
+		"seed": _seed, "scene": _scene, "display_server": DisplayServer.get_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y], "frames": records,

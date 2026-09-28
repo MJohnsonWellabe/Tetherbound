@@ -26,6 +26,7 @@ def main() -> None:
     parser.add_argument("--camera", choices=("normal", "close", "ui"), default="normal")
     parser.add_argument("--render-path", default="native GPU Compatibility")
     parser.add_argument("--allow-partial", action="store_true")
+    parser.add_argument("--repro-extra", action="append", default=[], help="Additional pinned capture argument")
     args = parser.parse_args()
     if len(args.commit) != 40:
         raise SystemExit("A full pinned commit SHA is required")
@@ -47,7 +48,8 @@ def main() -> None:
         source_id = str(frame.get("id", frame.get("frame", "")))
         if not source_id:
             raise SystemExit("System frame has no ID")
-        frame_id = f"{args.biome}__{args.system}__{source_id}"
+        frame_system = str(frame.get("system", args.system))
+        frame_id = f"{args.biome}__{frame_system}__{source_id}"
         src = source / Path(frame["file"]).name
         if not src.is_file():
             raise SystemExit(f"Missing {src}")
@@ -55,7 +57,7 @@ def main() -> None:
             image.verify()
         dst = frames_dir / f"{frame_id}{src.suffix.lower()}"
         shutil.copy2(src, dst)
-        replay_args = engine.get("repro_args", [f"--seed={args.seed}"])
+        replay_args = args.repro_extra + engine.get("repro_args", [f"--seed={args.seed}"])
         output_option = engine.get("output_option", "--output")
         repro = (
             "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
@@ -64,7 +66,7 @@ def main() -> None:
         )
         existing[frame_id] = {
             "id": frame_id, "biome": args.biome, "category": "systems",
-            "subject": args.system, "location_id": str(engine.get("named_location", "")),
+            "subject": frame_system, "location_id": str(engine.get("named_location", "")),
             "route": "main", "time_of_day": frame.get("time", "day"),
             "weather_or_phase": "clear", "pose_or_state": frame.get("state", source_id),
             "camera": args.camera, "frame_path": dst.relative_to(repo).as_posix(),

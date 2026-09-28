@@ -26,6 +26,10 @@ def main() -> None:
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
     parser.add_argument("--seed", type=int, default=2042)
+    parser.add_argument("--label", default="", help="Unique run label to avoid replacing earlier fight frames")
+    parser.add_argument("--seconds", type=float, default=18.0)
+    parser.add_argument("--interval", type=float, default=1.0)
+    parser.add_argument("--only-tags", default="", help="Comma-separated frame tags to index from a run")
     args = parser.parse_args()
     repo = args.repo.resolve()
     if len(args.commit) != 40 or subprocess.run(
@@ -35,6 +39,9 @@ def main() -> None:
         raise SystemExit("Pinned commit must resolve in the report repository")
     source = args.source.resolve()
     frames = sorted(source.glob("*.png"))
+    if args.only_tags:
+        selected = set(args.only_tags.split(","))
+        frames = [frame for frame in frames if frame.stem.partition("-")[2] in selected]
     if not frames or not (source / "capture_log.json").is_file():
         raise SystemExit("Missing source frames or capture log")
     base = repo / "ralph/reports/VISUAL/phase2/stormwood"
@@ -49,7 +56,7 @@ def main() -> None:
         named, _, tag = origin.stem.partition("-")
         if not tag:
             raise SystemExit(f"Unrecognized fight filename: {origin.name}")
-        frame_id = f"stormwood__fight__{origin.stem}"
+        frame_id = f"stormwood__fight__{args.label + '__' if args.label else ''}{origin.stem}"
         output = dest / f"{frame_id}.png"
         with Image.open(origin) as image:
             image.verify()
@@ -64,7 +71,7 @@ def main() -> None:
                 "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
                 "--script tools/phase2_capture_stormwood_fights.gd -- "
                 f"--out={repo.as_posix()}/ralph/reports/VISUAL/phase2/stormwood/repro/{named} "
-                f"--ids={named} --seconds=18 --interval=1.0 --seed={args.seed}"
+                f"--ids={named} --seconds={args.seconds:g} --interval={args.interval:g} --seed={args.seed}"
             ),
             "commit": args.commit, "render_path": args.render_path,
         }
@@ -85,7 +92,8 @@ def main() -> None:
             y = index // 4 * 245
             sheet.paste(thumb, (x, y))
             draw.text((x + 3, y + 206), frame_id[-48:], fill="white")
-        sheet.save(base / f"contact_sheet_systems_stormfight_{start // 20 + 1:02}.jpg", quality=87)
+        suffix = f"_{args.label}" if args.label else ""
+        sheet.save(base / f"contact_sheet_systems_stormfight{suffix}_{start // 20 + 1:02}.jpg", quality=87)
     print(f"Indexed {len(frames)} Stormwood fight frames; {len(existing)} biome frames total")
 
 

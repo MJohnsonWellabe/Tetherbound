@@ -19,3 +19,15 @@ func _run() -> void:
 		return
 	seed(capture_seed)
 	await super._run()
+
+
+## The default level-42 footage party loses the long Hollows duel before
+## reaching the requested win/aftermath beats. Raise only this in-memory
+## capture party to 80, keeping the normal input fight and five-creature cap.
+func _capture(id: String) -> Dictionary:
+	for member: RefCounted in (_game.get("party").call("members") as Array):
+		member.call("set_level", 80, PROGRESSION.config())
+	var row: Dictionary = await super._capture(id)
+	if bool(row.get("started", false)) and not bool(_manager.call("is_fighting")):
+		await _save("100-aftermath")
+	return row
