@@ -418,8 +418,9 @@ func _capture_row(row: Dictionary) -> void:
 	var offsets: Array = row.get("stand_offsets_m",
 		[32.0, 24.0, 40.0, 16.0, 48.0] if str(row.view) == "approach" else [5.0, 8.0, 12.0])
 	var sideways := Vector2(-forward.y, forward.x)
+	var laterals: Array = row.get("stand_laterals_m", [0.0, -5.0, 5.0])
 	for offset: float in offsets:
-		for lateral: float in [0.0, -5.0, 5.0]:
+		for lateral: float in laterals:
 			at = target - forward * offset + sideways * lateral
 			var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
 			if not moved:
