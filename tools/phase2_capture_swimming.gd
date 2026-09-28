@@ -10,6 +10,7 @@ var world: Node3D
 var player: CharacterBody3D
 var rig: Node3D
 var swimming: Node
+var _entry_saved := false
 
 func _init() -> void:
 	_run.call_deferred()
@@ -65,8 +66,9 @@ func _move_to(target: Vector3, tolerance: float, limit: int) -> bool:
 		rig.set("yaw", atan2(-offset.x, -offset.z))
 		_action(true)
 		await physics_frame
-		if frame == 10 and swimming.is_swimming():
+		if frame == 10 and swimming.is_swimming() and not _entry_saved:
 			await _save("entry")
+			_entry_saved = true
 		if frame == 180 and swimming.is_swimming():
 			await _save("surface_mid")
 		if frame == 360 and swimming.is_swimming():
