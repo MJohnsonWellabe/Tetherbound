@@ -252,6 +252,9 @@ func _build_horizon_ranges() -> void:
 	var root := Node3D.new()
 	root.name = "DistantHighlandRanges"
 	add_child(root)
+	var skyline: Dictionary = _visual_config.get("skyline_profile", {})
+	var peak_heights: Array = skyline.get("height_fractions", [])
+	var use_profile := bool(skyline.get("enabled", false)) and not peak_heights.is_empty()
 	for range_spec: Dictionary in _visual_config.get("horizon_ranges", []):
 		var at := _vec3(range_spec.get("position", []))
 		var size := _vec3(range_spec.get("size", []))
@@ -261,7 +264,13 @@ func _build_horizon_ranges() -> void:
 		for cluster in 7:
 			var angle := float(cluster) * 2.399 + float(range_spec.get("seed", 0))
 			var portion := 0.34 + 0.09 * float(cluster % 3)
-			var cluster_size := Vector3(size.x*portion,size.y*(0.34+0.11*(cluster%4)),size.z*portion)
+			var height_fraction := 0.34 + 0.11 * float(cluster % 4)
+			if use_profile:
+				# The ranges share a base half their configured height below `at`.
+				# Short peaks disappear beneath the upper crowns. Use the full
+				# authored height envelope for varied, visible distant summits.
+				height_fraction = clampf(float(peak_heights[cluster % peak_heights.size()]), 0.1, 1.0)
+			var cluster_size := Vector3(size.x * portion, size.y * height_fraction, size.z * portion)
 			var base:=at+Vector3(cos(angle)*size.x*0.34,-size.y*0.5,sin(angle)*size.z*0.34)
 			# Installed asymmetrical closed rock geometry, overlapping down to the
 			# common range base. No kilometre-high tabletop perimeter or new floor.

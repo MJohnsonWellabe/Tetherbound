@@ -114,6 +114,11 @@
     "ruin_position": [-40.0, 117.5, -110.0],
     "description": "The weathered marker overlooks the sheltered road toward Galefoot Waycamp. Cloudberries and wind-bent fiber grow along its planted margins."
   },
+  "skyline_profile": {
+    "enabled": false,
+    "_disposition": "P2-021 unjudged candidate: distant collisionless range peaks fill their existing authored height envelope. Retain disabled until matched native captures pass independent visual review.",
+    "height_fractions": [0.70, 0.88, 1.0, 0.80, 0.94, 0.76, 0.86]
+  },
   "horizon_ranges": [
     {"id": "SouthwestFoothills", "position": [-1100, -20, -700], "size": [1000, 500, 750], "seed": 302},
     {"id": "SouthEastCrags", "position": [980, 30, -600], "size": [780, 600, 800], "seed": 317},
