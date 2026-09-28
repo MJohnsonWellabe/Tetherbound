@@ -265,6 +265,8 @@
       "_why_here": "At the gate opening, local (s=-13,t=0.6) -- 0.6m off the walk-through centreline, facing back down the approach bearing (145.6, the same reciprocal Sela's own facing already uses) so he is the first thing the player sees framed by the piers. The yard and Vance stand past him.",
       "challenge": "relay_dell_challenge",
       "defeated": "relay_dell_defeated",
+      "victory_conversation": "relay_dell_defeated",
+      "_why_victory_conversation_f04_6": "F04#1/#6 (judge r3 3b6f965a): without victory lines the relay fight ended on the exploration camera pointed at the player, and the struck standard and stand-down happened off-frame. The same defeated lines play as the fight resolves, framed by the aftermath shot. Data only; no new lines.",
       "team": [
         {
           "species": "mosshell",
@@ -316,14 +318,14 @@
       "_authority_not_menace": "See data/dialogue/trainers.json for the lines. He is the most articulate of the four; Tether personnel believe the barriers are necessary work and that the player is interfering with it.",
       "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
       "rank": "captain",
-      "position": [
-        352.0,
-        3757.0
-      ],
+      "position": [353.0, 3764.5],
+      "_why_position_f04": "F04#1 (tools/f04_fight_camera_probe.gd; code-blind judge 2026-09-27): at (352,3757) the fight opened 2.5m from the yard_service_frame scaffold (relay-local (2.55,-4.15)), so the combat camera either collapsed onto the ally against its camera box or parked behind its timbers. Moved 5m to the yard's open east side at relay-local (-2,5): the fight opens ~11.6m from the scaffold, the captive stays further along the approach bearing (smoke_relay's gate check) and the facing is unchanged. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
       "facing_deg": -34.4,
       "_why_here": "At the console end of the site, 3.6m past centre on the bearing, so he is between the player and the captive -- the fight cannot be walked around. Ground -2.31m, 1.05m spread.",
       "challenge": "relay_captain_challenge",
       "defeated": "relay_captain_defeated_greeting",
+      "victory_conversation": "relay_captain_defeated_greeting",
+      "_why_victory_conversation_f04_6": "F04#1/#6 (judge r3 3b6f965a): without victory lines the relay fight ended on the exploration camera pointed at the player, and the struck standard and stand-down happened off-frame. The same defeated lines play as the fight resolves, framed by the aftermath shot. Data only; no new lines.",
       "_why_v2_gate3_encounters": "GATE3_ENCOUNTER_CONTRACTS.md V-2, G3-BAND3-0903: was tuskroot(11), galecrest(11), duskhush(12), sent out in that order -- Tuskroot, the first Tuskroot the player has ever seen (D20/D17: it never spawns wild, and no trainer before this one fields one), was sent out FIRST and fell first, contradicting Vance's own challenge line ('I don't send the weakest out first'). Reordered so the line is true and the new species is the one the player has to beat last. Same three creatures, same levels, same total (34) -- only send order moved.",
       "team": [
         {
@@ -379,6 +381,8 @@
             "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
             "_why_lunge_travels_f04": "F04: this CHARGER's lunge really travels. At the end of its tell the body runs `lunge` metres down the heading it locked at mid-tell, shown on the ground as a lane of exactly that length while it winds up, and the blow lands only if the body reaches its target on the way (combat.json `charger_lunge`; scripts/creatures/wild_creature.gd). Before this the 7.0 was an impulse that moved the body under a metre and hit or missed by a cone test at range, so the distance BOSSES makes the cue was never seen. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "open_separation": 8.5,
+            "_why_open_separation_f04": "F04#2: CHARGER opens outside its own 7 m reach; see captain_field's note (combat_manager.gd::_open_separation). Staging only. Mirrored in tests/fixtures/band_split_baseline/trainers.json where the trainer is in the baseline.",
             "lunge_travels": true,
             "telegraph": 0.8,
             "recovery": 0.9,
@@ -637,6 +641,8 @@
             "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
             "_why_lunge_travels_f04": "F04: this CHARGER's lunge really travels. At the end of its tell the body runs `lunge` metres down the heading it locked at mid-tell, shown on the ground as a lane of exactly that length while it winds up, and the blow lands only if the body reaches its target on the way (combat.json `charger_lunge`; scripts/creatures/wild_creature.gd). Before this the 7.0 was an impulse that moved the body under a metre and hit or missed by a cone test at range, so the distance BOSSES makes the cue was never seen. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "open_separation": 8.5,
+            "_why_open_separation_f04": "F04#2 (round-1 judge B1): at the 5 m default gap this 7 m CHARGER opened inside its own reach, so the charge fired point-blank and its lane was a stub under the HUD. The fight forms 8.5 m apart (combat_manager.gd::_open_separation; inside the 11 m ring), so the first charge runs its whole lane in view. Staging only; timings and power unchanged. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge_travels": true,
             "telegraph": 0.8,
             "recovery": 0.9,
@@ -1015,6 +1021,8 @@
             "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
             "_why_lunge_travels_f04": "F04: this CHARGER's lunge really travels. At the end of its tell the body runs `lunge` metres down the heading it locked at mid-tell, shown on the ground as a lane of exactly that length while it winds up, and the blow lands only if the body reaches its target on the way (combat.json `charger_lunge`; scripts/creatures/wild_creature.gd). Before this the 7.0 was an impulse that moved the body under a metre and hit or missed by a cone test at range, so the distance BOSSES makes the cue was never seen. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "open_separation": 8.5,
+            "_why_open_separation_f04": "F04#2: CHARGER opens outside its own 7 m reach; see captain_field's note (combat_manager.gd::_open_separation). Staging only. Mirrored in tests/fixtures/band_split_baseline/trainers.json where the trainer is in the baseline.",
             "lunge_travels": true,
             "telegraph": 0.8,
             "recovery": 0.9,

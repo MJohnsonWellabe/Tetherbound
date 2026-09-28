@@ -121,8 +121,8 @@
         {
           "model": "Bag",
           "at": [
-            24.9,
-            -27.3
+            30.7,
+            -25.9
           ],
           "yaw_deg": 15.0,
           "scale": 1.0,
@@ -131,8 +131,8 @@
         {
           "model": "Crate_Wooden",
           "at": [
-            26.4,
-            -28.9
+            31.2,
+            -27.6
           ],
           "yaw_deg": 165.0,
           "sink_m": 0.08,
@@ -142,12 +142,58 @@
         {
           "model": "Barrel",
           "at": [
-            26.62,
-            -28.1
+            30.62,
+            -28.2
           ],
           "yaw_deg": 80.0,
           "scale": 1.0,
           "_why": "EV7-clusters-fix: touching the crate's side (0.83m centre-to-centre, matching the two footprints' combined radius) so the pair reads as one pile someone set down together, not a scatter -- distinct spacing from the pack 1.9m away, breaking the old even 3-way spacing the critic named as 'placed by script.' Still the plain supply barrel, not the farmhouse's apple-branded one."
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [26.8, -26.6],
+          "yaw_deg": 0.0,
+          "scale": 0.7,
+          "_why_f01_camp_r3": "F01#2 day judge b9ad225e (day_069): at 0.45 the flame read as a small orange cone, even as a tent, and the crate, barrel and pack in front of it made the stop a supply cache. The fire grows to 0.7 inside a 1.5 ring, the tent to 1.4 with the bedroll at its mouth, and the pile moves to the tent's side, so fire, seat, tent and bed lead the arrival view. TUNABLE.",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "F01#3 code-blind judge (visits_night_072): the practice-meadow trainer camp read as 'an open flower meadow' at night -- a pack, crate and barrel carry no light, so nothing in the frame said camp. A one-person firepit, same Bonfire_Fire+ignite()+campfire_glow recipe and 0.3 scale as pond_fisher_camp, 1.5-2.3m from the pack/crate/barrel so the four read as one stop, and ~5.5m off route 2's centreline ([18,-24]->[30,-40]), clear of the painted road. TUNABLE."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [26.8, -26.6],
+          "yaw_deg": 0.0,
+          "scale": 1.5,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "The fire's stone ring, as pond_fisher_camp pairs them."
+        },
+        {
+          "model": "camp_tent",
+          "at": [24.4, -23.0],
+          "yaw_deg": 215.0,
+          "scale": 1.4,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": -0.85,
+          "_why": "F01#2/#3 code-blind walk judge (day_070/night_070): the practice-meadow trainer camp read as 'a supply cache, not a camp' -- crate, barrel, sack and a small fire with no shelter or bedding. The trail camp's own accepted generated_camp tent (same model and seating ratio), 8.2 m off route 2's centreline ([18,-24]->[30,-40]), its door turned toward the fire. TUNABLE."
+        },
+        {
+          "model": "camp_bed",
+          "at": [25.3, -24.3],
+          "yaw_deg": 215.0,
+          "scale": 1.1,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": -0.23,
+          "_why": "A bedroll between the tent mouth and the fire, as trail_camp pairs them."
+        },
+        {
+          "model": "tree-log",
+          "at": [28.7, -25.6],
+          "yaw_deg": 120.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "A log seat on the fire's village side, so the camp reads as somewhere a trainer sits."
         }
       ]
     },
@@ -1563,6 +1609,41 @@
             979.2
           ],
           "yaw_deg": 30.0
+        }
+      ]
+    },
+    {
+      "order": 1058,
+      "name": "meadowhart_watch_fire",
+      "_why": "F03#0 herd night cue (lure judge set F: at the 123 m night road glance nothing reads; the pair reads from 55 m). A herd-watcher's small fire and seat at the grazing ground's south edge, 14.6 m from the herd centre (-70,1310) -- outside its 12 m scatter and the 12 m visit circle. Sited by tests/probe_lure_road_visibility.gd --at=herd:x,z: here 14 hard-clear road samples reach out to 135 m (the first try at (-56,1296) sat behind a boulder, clear only to 43 m). The same Bonfire_Fire + campfire_glow + stone-ring recipe as pond_fisher_camp: at night a warm point in the road's sightline says someone watches something here; by day a small fire and seat beside the herd. glow_scale 1.3 carries the light. TUNABLE.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [-74.0, 1296.0],
+          "yaw_deg": 30.0,
+          "scale": 0.65,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "glow_scale": 2.4,
+          "_why_night_size": "Night cue views (render 36419344502, tests/capture_lure_cue_views.gd --cue=herd --time=night): at 0.3/1.3 the fire was a ~10 px speck at 41 m and gone by 71 m. The halo scales with the prop, so the fire doubles (Doss's signal fire is 0.6) and the light's reach grows with glow_scale."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [-74.0, 1296.0],
+          "yaw_deg": 0.0,
+          "scale": 1.2,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04
+        },
+        {
+          "name": "HerdWatchSeat",
+          "model": "Bench",
+          "at": [-72.3, 1297.2],
+          "yaw_deg": 120.0,
+          "scale": 0.9,
+          "sink_m": 0.03,
+          "_why": "The watcher's seat, turned toward the herd."
         }
       ]
     }

@@ -740,7 +740,7 @@ const CONTAIN_STEP_M := 0.5
 ## disagree about where the fight is.
 func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 	var deploy := float(cfg.get("deploy_offset", 2.6))
-	var separation := float(cfg.get("separation", 5.0))
+	var separation := _open_separation(cfg)
 	var full := deploy + separation
 	var forward := _staging_axis(full)
 	var scale := 1.0
@@ -750,6 +750,50 @@ func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 		_player.global_position + forward * (deploy * scale),
 		_player.global_position + forward * (full * scale),
 	]
+
+
+## F04#2 (round-1 judge B1: Halder's CHARGER opened point-blank, its lane a
+## stub under the HUD). A named opponent may author `open_separation` in its
+## trainer `combat` block: the fight then forms at least that far apart, so a
+## 7 m charge starts outside its own reach and the lane reads before it closes.
+## Only ever widens the configured gap; `_staging_reach` still clamps indoors.
+const OPEN_SEPARATION_RAY_HEIGHT_M := 1.0
+const OPEN_SEPARATION_CLEARANCE_M := 1.6
+
+
+func _open_separation(cfg: Dictionary) -> float:
+	var separation := float(cfg.get("separation", 5.0))
+	if _wild == null or not is_instance_valid(_wild):
+		return separation
+	var override: Variant = _wild.get("combat_override")
+	if not override is Dictionary:
+		return separation
+	var wanted := float((override as Dictionary).get("open_separation", 0.0))
+	if wanted <= separation:
+		return separation
+	# Only the WIDENED part is negotiable, and it gives way to solid geometry:
+	# at Vance's relay yard an 8.5 m gap put the Tuskroot inside the arched
+	# tunnel behind the yard wall, where it never reached the ally (render
+	# mw-f04-vance-17a80aa4: no charge in 12 s). A chest-high ray from the
+	# ally's spot along the staging line stops the gap short of the first
+	# solid thing, less a body's clearance.
+	var deploy := float(cfg.get("deploy_offset", 2.6))
+	var forward := _staging_axis(deploy + wanted)
+	var world := _player.get_world_3d() if _player != null and _player.is_inside_tree() else null
+	if world == null:
+		return wanted
+	var from := _player.global_position + forward * deploy + Vector3.UP * OPEN_SEPARATION_RAY_HEIGHT_M
+	var query := PhysicsRayQueryParameters3D.create(from, from + forward * wanted)
+	var exclude: Array[RID] = []
+	for body: Variant in [_player, _wild, _ally_body]:
+		if body is CollisionObject3D and is_instance_valid(body):
+			exclude.append((body as CollisionObject3D).get_rid())
+	query.exclude = exclude
+	var hit := world.direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return wanted
+	var room := from.distance_to(hit["position"] as Vector3) - OPEN_SEPARATION_CLEARANCE_M
+	return clampf(room, separation, wanted)
 
 
 ## Prefer the direction the encounter was taken up in, except when a built
@@ -831,11 +875,21 @@ func _place_fighters() -> void:
 	var cfg: Dictionary = MATH.config().get("arena", {})
 	# Taken BEFORE anything is placed: `_forward_axis()` reads the opponent's
 	# current position, and `_place()` below moves it.
-	var full := float(cfg.get("deploy_offset", 2.6)) + float(cfg.get("separation", 5.0))
+	var full := float(cfg.get("deploy_offset", 2.6)) + _open_separation(cfg)
 	var forward := _staging_axis(full)
 	var spots := _staging_spots(cfg)
 	var ally_spot: Vector3 = spots[0]
 	var wild_spot: Vector3 = spots[1]
+	# F04#2 (round-1 judge B1/D: the player's own creature hid the captain's).
+	# A trainer fight seats the ally beside the player->opponent line, on the
+	# side with room, the same treatment `_place_realm_owned_ally` gives realm
+	# fights (F14#0 C3). 0 keeps the in-line formation.
+	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
+	if _enemy_owned and lateral > 0.0:
+		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
+		var right := _staging_reach(ally_spot, side, lateral)
+		var left := _staging_reach(ally_spot, -side, lateral)
+		ally_spot += side * right if right >= left else -side * left
 
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
