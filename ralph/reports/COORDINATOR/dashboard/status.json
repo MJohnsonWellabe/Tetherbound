@@ -2,7 +2,7 @@
  "updated": "2026-09-28T18:35Z",
  "headline": [
   "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429); Stormwood landed card S1 and F10#2 (#425).",
-  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M2, M3, S2, T2. Cards lane: M1 met; M2 blocked on a South Bridge guardian regression from trainer_ally_lateral_m (3f04ece8, Meadows lane).",
+  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M2, M3, S2, T2. Cards lane: M1 met (#435). M2 blocked: South Bridge guardian regression (3f04ece8) and the harder captains (b20d23ab) beat the harness-piloted earned five, which cannot heal and retry (Meadows lane).",
   "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2 and F04#7. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
   "Main CI is green on each merge. Meadows render jobs are capped at about 3 at a time so CI isn't starved. The owner has delegated lane decisions to the coordinator."
  ],
@@ -384,8 +384,8 @@
   },
   {
    "lane": "Cards (tb/cards)",
-   "now": "M1 met (integrated run, strict re-check). M2 blocked: fresh runs fail the South Bridge guardian 0/3 on main; lateral 0.0 diagnostic passes 2/2 (owner Meadows lane). T2 and S2 notes re-scored: T2 device profile fails 7-inch (current direction, small HUD text); S2 audio has no Stormwood assets.",
-   "next": "Re-run M2 when the bridge fix lands"
+   "now": "Done. M1 met (#435). M2 blocked (ROUTE_FINDINGS.md): bridge regression 3f04ece8, then Keeper Hald 0/3 after b20d23ab; relay harness fixed. T2 and S2 notes current.",
+   "next": "Stopped. M2 re-run after the Meadows lane fixes the bridge and picks retry or reader pilot"
   },
   {
    "lane": "Codex (Phase 2)",
