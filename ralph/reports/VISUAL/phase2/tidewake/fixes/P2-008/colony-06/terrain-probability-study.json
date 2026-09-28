@@ -1,0 +1,81 @@
+{
+  "scope": "Current analytic terrain/baker source inputs; candidate probability only, not rendered coverage. Omits built/anchor/camp/drain, clearing, actual world lattice and GPU float precision, camera clipping, occlusion and LOD. No visual/performance acceptance.",
+  "correction": "The initial synthetic-grid study accidentally reversed the two location labels. They now come from exact native frame IDs: Sluice at y93.203 and Gull at y1.5666. No production change used the mistaken names.",
+  "samples_sha256": "79f289a69c3a9fceb6dc5cd6ab7303440ccd082d80ffd7b2eccb075b95268e74",
+  "visual_hash_mismatch_resolution": {
+    "matching_bake_visual_source_commit": "9fc53908fe59c2d1ee055ab6f6e49bf11824ee60",
+    "method": "Verified normalized source SHA matches manifest visual_sha256; compared both classification inputs consumed by the baker against current config.",
+    "rock_gradient": 0.65,
+    "shore_band_height_m": 3.0,
+    "classification_matches_current": true,
+    "later_change": "b9cecc17f adds runtime cliff_material settings, unused by the control-map bake. Whole-file provenance mismatch retained above; not silently treated as a matching hash."
+  },
+  "bake_provenance": {
+    "config_sha256": {
+      "matches_bake_manifest": true,
+      "actual": "dc85f20ce9f87ef801eacead1f40fc224a89a4b2a53c206c8076ddd227d3de88",
+      "manifest": "dc85f20ce9f87ef801eacead1f40fc224a89a4b2a53c206c8076ddd227d3de88"
+    },
+    "visual_sha256": {
+      "matches_bake_manifest": false,
+      "actual": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09",
+      "manifest": "7a315245da2af08a27cedd5cdcd4f5e1bec9380e3fafceb8eecadd44eb489b97"
+    },
+    "heightfield_sha256": {
+      "matches_bake_manifest": true,
+      "actual": "a259bef1e716f2ae4ab389175074e5b73e2af1686d652af9e0a755b68483d261",
+      "manifest": "a259bef1e716f2ae4ab389175074e5b73e2af1686d652af9e0a755b68483d261"
+    },
+    "builder_sha256": {
+      "matches_bake_manifest": true,
+      "actual": "db271c6c7b934e215ca2842b3b6c14cdfd3faba2ce796de762407cad1b10f483",
+      "manifest": "db271c6c7b934e215ca2842b3b6c14cdfd3faba2ce796de762407cad1b10f483"
+    }
+  },
+  "results": [
+    {
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+      "recorded_player": [
+        906.622924804688,
+        93.2031631469727,
+        2859.80151367188
+      ],
+      "source_height_at_player_xz": 93.2063911335638,
+      "eligible_samples": 3511,
+      "eligible_below_6m": 0,
+      "eligible_at_least_6m": 3511,
+      "zero_gap_eligible": 1341,
+      "mean_baseline_probability_on_eligible": 0.19559040056955843,
+      "mean_candidate_probability_on_eligible": 0.19559040056955843,
+      "max_abs_change_at_least_6m": 0.0,
+      "samples_probability_changed": 0,
+      "ground_counts": {
+        "grass": 3511,
+        "rock": 585,
+        "shore": 0
+      }
+    },
+    {
+      "frame_id": "water__gull_rest__20__gull_rest_beach__day__close",
+      "recorded_player": [
+        -59.972972869873,
+        1.56655406951904,
+        785.180358886719
+      ],
+      "source_height_at_player_xz": 1.56318625396053,
+      "eligible_samples": 2107,
+      "eligible_below_6m": 736,
+      "eligible_at_least_6m": 1371,
+      "zero_gap_eligible": 4,
+      "mean_baseline_probability_on_eligible": 0.3402349610313598,
+      "mean_candidate_probability_on_eligible": 0.33025952056166774,
+      "max_abs_change_at_least_6m": 0.0,
+      "samples_probability_changed": 311,
+      "ground_counts": {
+        "grass": 1571,
+        "rock": 659,
+        "shore": 1866
+      }
+    }
+  ]
+}
