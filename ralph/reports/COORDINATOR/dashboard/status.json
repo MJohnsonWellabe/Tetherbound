@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-28T00:05Z",
+ "updated": "2026-09-28T01:40Z",
  "headline": [
-  "Criteria met: 82 of 101 once batch 67 lands. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 consolidates every lane's work, partial work included, with the docs cleanup and the owner's 23:55 decisions.",
-  "Lanes wound down (owner, 22:30). Partial work lands switched off or unwired; the list below says how to pick each item up.",
-  "Documentation cleaned up in batch 67: every live doc is current and consistent with today's rulings; dated handoffs moved to archive/."
+  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main (3dbec66b): every lane's work, partial work included.",
+  "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
+  "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
  "batches": [
   {
@@ -277,88 +277,53 @@
    "contents": "Cloudreach card C1 earned flight-route run (card complete); F13#2 eight pockets walked and paid (dd9f504a)"
   },
   {
-   "name": "Batch 66",
-   "sha": "pending",
-   "state": "PR open with auto-merge",
+   "name": "Batch 66 (PR #390)",
+   "sha": "84b0f479",
+   "state": "Merged",
    "contents": "Owner ruling: return route exempt from A7; interim Capacitor Alpha ruling; heightfield cost test robust under parallel load"
   },
   {
-   "name": "Batch 67 (consolidation)",
-   "sha": "pending",
-   "state": "Consolidated; unit tests once (VERIFIER 1), then one PR",
-   "contents": "Every lane head, including work in progress (switched off or unwired)"
+   "name": "Batch 67 (PR #391)",
+   "sha": "3dbec66b",
+   "state": "Merged",
+   "contents": "Every lane head consolidated, work in progress switched off or unwired; phase briefs CLAUDE_START_HERE/CODEX_START_HERE; self-landing process; docs cleanup; owner's 23:55 decisions"
   }
  ],
  "lanes": [
   {
-   "lane": "Full Tidewake run",
-   "now": "FINAL b6b148c0, archived",
-   "next": "T3 and T1 cards; F13#2 logs; WIP: F13#3 chains and lures, Tess C3"
+   "lane": "Meadows (tb/meadows)",
+   "now": "Phase 1 queue: F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7 (C3), then M1–M3",
+   "next": "Self-lands each criterion"
   },
   {
-   "lane": "Cloudreach-B (full Cloudreach run)",
-   "now": "FINAL 45ef17fd, archived",
-   "next": "F08#5 Solmane; C3 Solmane rerun; open: F08#3 environment art, owned-carrier Fly debt"
+   "lane": "Cloudreach (tb/cloudreach)",
+   "now": "Phase 1 queue: F08#3, F08#4, then C2 and C3",
+   "next": "Self-lands each criterion"
   },
   {
-   "lane": "Meadows core (F04 readability)",
-   "now": "FINAL 229f70d4, archived",
-   "next": "F04#0; camera and HEAVY-tell fixes, fight glades; WIP: Vance camera (flag off); F04#7 needs a trainer-difficulty ruling"
+   "lane": "Stormwood (tb/stormwood)",
+   "now": "Phase 1 queue: F09#3, F10#2 (C3), F10#3, F10#4, F10#6, then S1 and S2",
+   "next": "Self-lands each criterion"
   },
   {
-   "lane": "Meadows run (M1–M4)",
-   "now": "FINAL 9434e1e2, archived",
-   "next": "Harness and evidence only; M2 needs a ruling on the 326 m Hall-exit window"
+   "lane": "Tidewake (tb/tidewake)",
+   "now": "Phase 1 queue: F13#3, F13#5, F14#0, F14#1, then T2",
+   "next": "Self-lands each criterion"
   },
   {
-   "lane": "F01 walks",
-   "now": "FINAL f62aa5bd, archived",
-   "next": "Fingerposts land; WIP: camp firepit (unwired); F01#2/#3 need render plus judge"
+   "lane": "Codex capture/catalog",
+   "now": "CODEX_START_HERE.md 2a/2b",
+   "next": "Self-lands"
   },
   {
-   "lane": "Tidewake visuals",
-   "now": "FINAL 5c04a594, archived",
-   "next": "Send-out hold, tunnel guard, telegraph over water, ally seating, Veilfall dressing; WIP: Pump Hall kitbash (flag off)"
+   "lane": "Balance (tb/balance)",
+   "now": "Meadows named trainers harder; galewisp and ripplet tuned to terrapup (C2 halves of F04#7 and F10#2)",
+   "next": "Lands its own PR, then archived"
   },
   {
-   "lane": "Stormwood visuals",
-   "now": "FINAL 7cddbc95, archived",
-   "next": "HUD compact roster, Deepwood forest, surge tuning, rod line, route-cue ruling; WIP: scorched Glass Field (flag off)"
-  },
-  {
-   "lane": "VERIFIER 2",
-   "now": "FINAL, archived",
+   "lane": "Earlier lanes, VERIFIER 1 and 2, Vess officer",
+   "now": "All merged in batch 67 and archived",
    "next": "-"
-  },
-  {
-   "lane": "Full Stormwood run",
-   "now": "Winding down; FINAL due 23:10",
-   "next": "-"
-  },
-  {
-   "lane": "F03 lures",
-   "now": "Winding down; FINAL due 23:10",
-   "next": "Its head must re-apply the lure work reverted by 6dafb23f3"
-  },
-  {
-   "lane": "Meadows F04 bosses",
-   "now": "Winding down; FINAL due 23:10",
-   "next": "Captain victory conversations, objective beam hidden in fights"
-  },
-  {
-   "lane": "Cloudreach aerie art",
-   "now": "Winding down; FINAL due 23:10",
-   "next": "Aerie dressing lands switched off"
-  },
-  {
-   "lane": "VERIFIER 1",
-   "now": "Solmane solo rerun; then one full suite on the consolidated branch",
-   "next": "-"
-  },
-  {
-   "lane": "Codex",
-   "now": "Pump and banner assets pass (37336cb9); Stormheart, waterfall and sluice being reworked",
-   "next": "Cherry-pick atomic deliveries only"
   }
  ],
  "decisions": [
@@ -377,8 +342,7 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "CI queue: allow draft PRs to skip CI (ci.yml/process.yml edit was blocked by the auto-mode classifier). Otherwise lane-PR runs starve the runners.",
-  "Branch cleanup: after #316 merges, a list of deletable branches will be posted.",
+  "Branch cleanup: every merged lane branch is contained in main; see the coordinator's list.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
  ],
  "four_chapter_run": null,
@@ -396,11 +360,11 @@
   "Galecrest rebuild (Codex 4dea7705c) is on main; the companion_presence head-tracking override was not taken because main lacks its code.",
   "Stormwood F10#2: route-cue option (a) kept by the owner. Starter parity (galewisp and ripplet to terrapup) is in progress in lane tb/balance. Stormwood-B commits 07bc9cad, 45927814 and 85ba1c57 (Elder cone and heading, guard cone) are NOT on main; cherry-pick them when F10#2 C3 is re-captured.",
   "Meadows F04#7: named trainers made harder until C2 passes; in progress in lane tb/balance. The DIVER 0.4 s tell needs a harness exemption.",
-  "Vess (captain_ridge) switches to the female officer body and portrait, with a defeated clip for officer_b; in progress in lane tb/vess-officer.",
+  "Vess (captain_ridge) wears the female officer body and portrait, with a defeated clip for officer_b: merged in batch 67.",
   "Stormwood F10#3: telegraph PASS on all five questions (r5, bfddbb6c); phase naming from a single still is PARTIAL. Next: a Break-only cue that reads in a still. Codex bolt art: static for 0.1 s, no ground burst.",
   "Meadows F03#0: lure read PASS (judge F), but Bars A/B are NO on chapter look (night exposure, haze and saturation, prop density). Hall alpha no_depth_test is OFF (move the pack to a road sightline instead). The herd needs a night-legible cue. The walker's companion stow is unreliable (tests/capture_activity_lures.gd).",
   "Cloudreach F08#3 aerie art (dome, towers, banners, rock, cloud floor): Codex, once the owner reopens the Codex lane.",
-  "Codex branch tb/x04-cross-game-visual-sweep holds unmerged, untested script work: Cloudreach towers and terrace (flags off), ground cover, rock, Windwatch, foliage fade, lightning, lure dressing, and the Galecrest companion_presence head-tracking code. Integrate it deliberately with tests. Codex's later waterfall r4 commit 2fa4fb20c was never pushed.",
+  "Codex branch tb/x04-cross-game-visual-sweep is merged in batch 67. Cloudreach towers and terrace flags are OFF; Stormwood's judged r5 lightning won over Codex's bolt; the Stormheart hero candidate is unwired and .gdignored; Codex's joined current-wave surfaces (1560de9e) were not kept (Tidewake's b0ce38fc script is), so their stale test was removed. Phase 2 may revisit.",
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run."
  ]
 }
