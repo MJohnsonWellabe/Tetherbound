@@ -43,8 +43,9 @@ the biomes (§6). Then the Codex phase starts.
 5. **Function, not beauty.** A criterion that mixes readability with Bars A/B
    closes in this phase on its functional and readability clauses. The Bars A/B
    clause is recorded as `Bars A/B → Phase 2 catalog` in the criterion's note.
-   Don't spend rounds on art, materials or lighting polish. Owner direction for
-   this phase: "not beautification, just function and completeness".
+   Don't spend rounds on art, materials or lighting polish. **Owner ruling
+   (2026-09-28):** Phase 1 is function and completeness. The full visual bar moves
+   to the Phase 2 Codex catalog.
 6. **The biome is done** when every listed criterion is met and then the biome's
    chapter cards pass an integrated run (§5). The dashboard bars for that
    biome then read complete.
@@ -59,8 +60,8 @@ Standing rules:
 
 ## 4. Queues (in order)
 
-Status was taken from the board after batch 67. Re-read the board before you
-start, because batch 68 (the Balance lane) may already have closed items.
+Status was taken from the board after batch 67. Criteria already met (F04#0, F08#5) are left out.
+The Balance lane (batch 68) closes the C2 difficulty halves of F04#7 and F10#2, so those rows list only what remains.
 
 ### Meadows — `tb/meadows`
 | # | Criterion | What is open |
@@ -68,12 +69,11 @@ start, because batch 68 (the Balance lane) may already have closed items.
 | 1 | **F01#2** Day walk reaches every opening NPC, camp and gate | Render the day walk on current main, then a code-blind readability verdict on the three gate frames, the camp and the key. Signposts are in; the firepit is unwired WIP (re-apply 631b8390). |
 | 2 | **F01#3** Night walk, same | Same at night. The key reads only by its UI prompt; making the key read in the world is the fix. |
 | 3 | **F03#0** Six activities show a visible lure | The lure read passes (judge F). Remaining: an unstaged ordinary-discovery witness, a night cue at the herd, and moving the Hall pack to a road sightline (the nameplate draw-through stays off). |
-| 4 | **F04#0** Warrens guardian | Already **met** (batch 67). Skip it. |
-| 5 | **F04#1** Relay officers: readable tell and tactical question | The Vance placement and `ignore_lunging_foe` camera flag are WIP, currently off. Re-apply, render, judge readability. |
-| 6 | **F04#2** Three captains: tactical question at normal distance | Round-1 verdict: Oreth and Vess PARTLY, Halder FAIL. Fix the ally occluding the foe, the point-blank CHARGER open and wilds inside arenas. |
-| 7 | **F04#3** Warden: tactical question at normal distance | PARTLY. Fix the dialogue camera crowding him and the combat HUD staying up in the victory dialogue. |
-| 8 | **F04#6** Distinct aftermath per fight | Captain handover dialogue is in. Each post still needs a staged world change (Sigil standard lowered, captain stands down), and the Warden's key and heart shown. |
-| 9 | **F04#7** Varied-size framing and C2/C3 pass | The difficulty half is with the Balance lane (batch 68). This lane owns the C3 framing and the DIVER 0.4 s harness exemption. |
+| 4 | **F04#1** Relay officers: readable tell and tactical question | The Vance placement and `ignore_lunging_foe` camera flag are WIP, currently off. Re-apply, render, judge readability. |
+| 5 | **F04#2** Three captains: tactical question at normal distance | Round-1 verdict: Oreth and Vess PARTLY, Halder FAIL. Fix the ally occluding the foe, the point-blank CHARGER open and wilds inside arenas. |
+| 6 | **F04#3** Warden: tactical question at normal distance | PARTLY. Fix the dialogue camera crowding him and the combat HUD staying up in the victory dialogue. |
+| 7 | **F04#6** Distinct aftermath per fight | Captain handover dialogue is in. Each post still needs a staged world change (Sigil standard lowered, captain stands down), and the Warden's key and heart shown. |
+| 8 | **F04#7** Varied-size framing and C3 | Only the C3 framing at every body size, and the DIVER 0.4 s harness exemption (BOSSES allows it with a long positional cue). The C2 difficulty half is done by the Balance lane. |
 
 Then the cards (§5): **M1, M2, M3**. M2's 326 m Hall-exit walk is exempt (owner).
 
@@ -82,7 +82,6 @@ Then the cards (§5): **M1, M2, M3**. M2's 326 m Hall-exit walk is exempt (owner
 |---|---|---|
 | 1 | **F08#3** Correct high-perch production camera | The camera and readability verdict already PASS (`ralph/reports/CLOUDREACH/b/f08-3-c3-judge/`). Close it on function. Aerie environment art → Phase 2 (Codex). |
 | 2 | **F08#4** Settlements and cliff identity pass the C2 matrix | Function: each settlement is occupied and reads as its place from the approach (people, activity, navigable layout); cliffs read as routes and landmarks. Codex's towers and terrace candidates are merged but **off**; turn them on only if they serve function. Material and look → Phase 2. |
-| 3 | **F08#5** Solmane | Already **met** (batch 67). Skip it. |
 
 Then the cards: **C2, C3**. Card C3 waits on F08#3 and F08#4. Open debt: owned-carrier Fly, since every flight uses Maela's loaner.
 
@@ -90,7 +89,7 @@ Then the cards: **C2, C3**. Card C3 waits on F08#3 and F08#4. Open debt: owned-c
 | # | Criterion | What is open |
 |---|---|---|
 | 1 | **F09#3** Loops, shortcuts, pockets and alternate routes traversable | Pocket lures aren't visible from the road; needs an ordinary walk witness. |
-| 2 | **F10#2** Named fights pass C2/C3 | C2 starter parity is with the Balance lane (batch 68). This lane re-captures C3 from the ordinary route on the new fight camera. Stormwood-B commits 07bc9cad, 45927814 and 85ba1c57 (Elder cone and heading, guard cone) are in history but reverted; cherry-pick them if the footage needs them. Capacitor Alpha no-stagger is owner-confirmed. |
+| 2 | **F10#2** Named fights pass C3 | Only C3: re-capture it from the ordinary route on the new fight camera. Stormwood-B commits 07bc9cad, 45927814 and 85ba1c57 (Elder cone and heading, guard cone) are in history but reverted; cherry-pick them if the footage needs them. Capacitor Alpha no-stagger is owner-confirmed. |
 | 3 | **F10#3** Readable lightning and phase cues without HUD | The telegraph passes all five questions (r5). Open: a Break-only cue readable in a single still. |
 | 4 | **F10#4** Forest, rod line and restored sky pass the matrix | Close on readability (forest reads YES). The scorched Glass Field (flag off) and the Stormheart hero tree → Phase 2. |
 | 5 | **F10#6** Device profile | Computer capture at 1920×1080, `opengl3`, code-blind 7-inch readability. The compact fight roster is in; re-judge. |
@@ -152,6 +151,3 @@ READY per numbered item.
 ## 7. Open owner items (not a lane's to decide)
 
 - Internet co-op resources: Steam AppID, partner access, four accounts.
-- Whether Phase 1 may close a mixed criterion with its Bars A/B clause moved to
-  Phase 2 (§3.5). This file assumes yes, following the owner's "function now,
-  beauty next".
