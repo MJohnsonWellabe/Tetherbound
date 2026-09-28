@@ -1,6 +1,19 @@
 {
-  "_comment": "P2-081 trainer conversations use enabled; P2-084 NPC openings use their separate nested flag. Presentation candidates remain off until the same authored posts and panels pass independent native review. No encounter, reward, input, camera or progression changes.",
+  "_comment": "P2-081 trainer conversations use enabled; P2-082 NPC portraits and P2-084 NPC openings each use a separate nested flag. Presentation candidates remain off until the same authored posts and panels pass independent native review. No encounter, reward, input, camera or progression changes.",
   "enabled": false,
+  "npc_portraits": {
+    "enabled": false,
+    "_comment": "P2-082: match installed portrait plates to each named speaker's unchanged world body profile, including side conversations and the generated Wen refusal. Separate presentation gate; native paired identity review required.",
+    "plates_by_profile": {
+      "local_historian": "res://assets/ui/portraits/old_perrin.png",
+      "young_trainer": "res://assets/ui/portraits/bryn.png",
+      "trader": "res://assets/ui/portraits/corin.png",
+      "craftsperson": "res://assets/ui/portraits/ada.png",
+      "field_researcher": "res://assets/ui/portraits/maren.png",
+      "creature_caretaker": "res://assets/ui/portraits/fenn.png",
+      "rival_trainer": "res://assets/ui/portraits/juno.png"
+    }
+  },
   "npc_openings": {
     "enabled": false,
     "_comment": "P2-084: distinct openings for four existing speakers. Only line zero changes; route guidance, portraits, conversation IDs, state requirements and completion events remain authored. Bryn's progression briefing is already distinct and is omitted. Native panel review required.",
