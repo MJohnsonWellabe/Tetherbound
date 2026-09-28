@@ -1,0 +1,11 @@
+{
+  "review": "Code-blind full-resolution review of 60 named-fight frames for south_bridge_grunt and warden_aldis",
+  "confirmed_findings": [
+    "P2-062: combat camera often crowded or clipped by large ally and opponent geometry",
+    "P2-063: tell and hit effects rely on text and flat overlays",
+    "P2-064: thick turquoise Warden arena floor rails",
+    "P2-065: trainer defeated state weakly differentiated from pre-fight post"
+  ],
+  "unusable_frame": ["meadows__fights__warden_aldis-a01"],
+  "notes": "The full victory dialogue remains legible in later Warden frames. The Camera nickname on the ally may be intentional and was not scored. Stills do not establish animation timing or sound."
+}
