@@ -572,10 +572,10 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 36,
+   "pct": 57,
    "counts": {
-    "met": 3,
-    "partial": 3,
+    "met": 4,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
@@ -603,9 +603,10 @@
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
-     "status": "partial",
-     "evidence": "Surge readability: 4 blind judges, final 9/9 day/night phase grouping (visual/surge/JUDGE.md, main fe07d0d2)",
-     "gap": "Telegraph reads as zone; night merge; reduced-motion flashes"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f10_3/r6/ @ tb/stormwood 9adc99f1 (Break-only crawler lightning, out during ground warnings): code-blind phase judge names Break from a single still (both Break stills YES; 8/8 grouped and named); strike judges at 9adc99f1 PASS zone, impact, reduced motion, no competition during the warning (FAIL->PASS after the warning hold) and photosensitivity; test_stormwood_surge_presentation +2 tests. Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Phase stills: surge clock pinned, hour frozen, trainer teleported, HUD hidden, rendered before the hold existed. Strikes: one staged no-damage warning through the client path, schedule pushed out, fixed 60 fps, llvmpipe. Recorded, not fixed: Q2 PARTIAL on one r6 judge (other r6 judges and r4/r5 PASS on unchanged telegraph code; the last-moment cue lands late); crawler veins fade back in 0.4-0.5 s after impact and can read as a second bolt; Calm/Fading moderately confusable from a single still; both r6 judges' overall lines PARTIAL; fixed 2D-looking vein shape -> Bars A/B Phase 2 catalog. Landed by the Stormwood Phase 1 lane."
     },
     {
      "text": "Forest, rod line and restored-sky views pass visual matrix / Bars A/B",
