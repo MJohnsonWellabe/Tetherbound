@@ -107,7 +107,7 @@ def main() -> None:
             "category": "named_locations",
             "subject": frame["destination_display_name"],
             "location_id": frame["identity"],
-            "route": "main",
+            "route": "off",
             "time_of_day": "dusk" if time == "golden" else time,
             "weather_or_phase": "clear",
             "pose_or_state": view,
