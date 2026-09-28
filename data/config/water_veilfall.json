@@ -95,8 +95,8 @@
     {"id": "intake_grille", "z": 30.0, "width_m": 18.0, "height_m": 7.0, "opens_with": "water_veilfall_intake_stopped"},
     {"id": "return_grille", "z": 79.0, "width_m": 30.0, "height_m": 7.0, "opens_with": "water_veilfall_return_opened"}
   ],
-  "captain_position": [3.0, 0.0, 100.0],
-  "_why_captain_position": "F14#1 C2: her fights form about 8 m in front of her, between the two fighters (combat_manager.gd _open_arena), with the 11 m combat.json arena. From (9, 0, 91) the ring was centred 3 m inside the Heart Chamber lip (z 80) and reached south into the Sluice Crossing, whose channel beside the bridge lies 1 m below the floors. After dbe43195 gave her Riptusk its travelling lane, a sidestepping ally dropped into that channel and was pinned against the bridge side (render bisect and local trace, ralph/reports/TIDEWAKE/phase1/f14_1/). From (3, 0, 100) the ring sits about 12 m inside the lip, clear of the 21 m side walls and short of the Guardian at z 108.",
+  "captain_position": [9.0, 0.0, 100.0],
+  "_why_captain_position": "F14#1 C2: her fights form about 8 m in front of her, between the two fighters (combat_manager.gd _open_arena), with the 11 m combat.json arena. From (9, 0, 91) the ring was centred 3 m inside the Heart Chamber lip (z 80) and reached south into the Sluice Crossing, whose channel beside the bridge lies 1 m below the floors. After dbe43195 gave her Riptusk its travelling lane, a sidestepping ally dropped into that channel and was pinned against the bridge side (render bisect and local trace, ralph/reports/TIDEWAKE/phase1/f14_1/). From (9, 0, 100) the ring (centre about (9, 92)) sits 12 m inside the lip and 1 m short of the east wall, and short of the Guardian at z 108. Her x stays 9, not 0-3, so a camera behind an ally on the north side of the fight looks past the central crystal (x 0, z 113) instead of through it: at (3, 0, 100) a code-blind C3 judge failed 8 of 53 frames on the crystal hiding the opponent (ralph/reports/TIDEWAKE/phase1/f14_1/nerissa_r6/).",
   "captain_npc_id": "water_nerissa",
   "captain_encounter_id": "water_trainer_nerissa",
   "captain_defeat_flag": "water_captain_nerissa_defeated",
