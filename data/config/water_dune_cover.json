@@ -1,12 +1,12 @@
 {
   "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
   "enabled": false,
-  "_comment_colonies": "Unjudged rooted-tussock candidate: pointed ribbons fan out from a shared root with varied arcs, leaf-specific olive/straw gradients and smaller pockets within each colony. Existing terrain and gameplay clearances remain enforced. Source profiles and other realms are unchanged.",
+  "_comment_colonies": "Unjudged fuller dune tuft candidate: eight pointed leaves, three short wider basal leaves and three closely grouped stem bases. Compare against zero-shift coverage with the existing five-leaf mesh. Default-off; ordinary profiles, terrain and gameplay remain unchanged.",
   "preserve_islands": [
     "veilfall"
   ],
   "ground_cover": {
-    "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+    "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. The unjudged zero-shift candidate retains the existing colony ramp at low elevation while removing its coastal probability ceiling. Sparse pioneers retain the coastal probability ceiling. The same 1-3m dry-height fade applies to all eligible ground, avoiding a shore/grass paint-density edge; forbidden-ground and clearance rules remain unchanged. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map changes. The separate dune_tuft_shape recipe changes only the grass mesh and tuft count.",
     "dune_colony_shape": true,
     "dune_gap_scale": 0.025,
     "dune_gap_warp_scale": 0.013,
@@ -26,8 +26,9 @@
     "dune_shore_dry_start_y": 1.0,
     "dune_shore_dry_full_y": 3.0,
     "dune_stabilized_height_y": 6.0,
-    "tuft_count": 54000,
-    "blades_per_tuft": 5,
+    "dune_coastal_colony_shift": 0.0,
+    "tuft_count": 36000,
+    "blades_per_tuft": 8,
     "blade_segments": 4,
     "blade_arc_angle": 0.95,
     "blade_width": 0.85,
@@ -64,7 +65,19 @@
     ],
     "dune_tussock": true,
     "shade_jitter": 0.26,
-    "translucency": 0.16
+    "translucency": 0.16,
+    "dune_tuft_shape": {
+      "basal_blades": [
+        0,
+        3,
+        6
+      ],
+      "basal_height_scale": 0.6,
+      "basal_half_width_m": 0.026,
+      "stem_count": 3,
+      "stem_radius_m": 0.045,
+      "stem_jitter_m": 0.012
+    }
   },
   "layers": {
     "trees": {

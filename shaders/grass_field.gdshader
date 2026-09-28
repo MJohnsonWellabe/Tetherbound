@@ -142,6 +142,7 @@ uniform float dune_shore_probability = 0.0;
 uniform float dune_shore_dry_start_y = 0.0;
 uniform float dune_shore_dry_full_y = 0.0;
 uniform float dune_stabilized_height_y = 0.0;
+uniform float dune_coastal_colony_shift = 0.0;
 
 // Colour. `tint_base`/`tint_tip` are the base-to-tip gradient a blind critic
 // named as missing from the scattered tufts ("flat two-tone polygon, no
@@ -582,14 +583,28 @@ void vertex() {
 			pioneer = dune_pioneer_probability
 				* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
 		}
-		// One density ceiling crosses the painted shore/grass boundary. Lift
-		// it gradually inland instead of jumping to full colonies at 3m.
+		// A common coastal transition crosses the painted shore/grass boundary.
+		// Its ceiling now limits only pioneers; colony area grows inland.
 		float coast_ceiling = mix(dune_shore_probability, 1.0,
 			smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
-		// Margin pioneers never fill the independent blowout's zero core.
-		keep = min(max(drift * density_gain, pioneer), coast_ceiling)
+		// Low coastal colonies occupy smaller areas with intact dense centres.
+		// Invalid/linear patch thresholds retain the original density expression.
+		float coastal_keep = min(max(drift * density_gain, pioneer), coast_ceiling);
+		bool valid_coastal_patch = clump_patch_full > clump_patch_start
+			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+		if (valid_coastal_patch) {
+			float coastal_shift = max(dune_coastal_colony_shift, 0.0) * (1.0 - smoothstep(
+				dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+			float coastal_colony = smoothstep(clump_patch_start + coastal_shift,
+				clump_patch_full + coastal_shift, colony_noise);
+			coastal_colony = mix(1.0, coastal_colony, clump_contrast);
+			coastal_keep = max(coastal_colony * density_gain, min(pioneer, coast_ceiling));
+		}
+		// Pioneers remain sparse and no vegetation fills the blowout's zero core.
+		keep = coastal_keep
 			* gap_keep * (1.0 - clearing);
-		if (dune_shore) {
+		if (dune_shore || valid_coastal_patch) {
+			// Match density across shore/grass paint at the same low dry height.
 			keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
 		}
 	}

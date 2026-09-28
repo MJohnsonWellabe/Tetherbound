@@ -117,6 +117,32 @@ func test_rooted_tussocks_have_pointed_tips_and_stable_lod_roots() -> void:
 	field.free()
 
 
+func test_json_basal_indices_shorten_only_the_selected_dune_leaves() -> void:
+	# Godot's JSON numbers are floats; Array.has does not match them to ints.
+	var recipe: Dictionary = JSON.parse_string(
+		'{"basal_blades":[0,3,6],"basal_height_scale":0.6}')
+	var field := GRASS.new()
+	var plain := field._tuft_mesh(8, 4, -1, true).surface_get_arrays(0)
+	var shaped := field._tuft_mesh(8, 4, -1, true, recipe).surface_get_arrays(0)
+	var integer_recipe := recipe.duplicate(true)
+	integer_recipe.basal_blades = [0, 3, 6]
+	assert_eq(shaped, field._tuft_mesh(8, 4, -1, true, integer_recipe).surface_get_arrays(0),
+		"JSON and native integer recipes generate identical meshes")
+	for blade in 8:
+		var factor := 0.6 if blade in [0, 3, 6] else 1.0
+		var first := blade * 10
+		assert_almost_eq(shaped[Mesh.ARRAY_TEX_UV2][first].y,
+			plain[Mesh.ARRAY_TEX_UV2][first].y * factor, 0.000001,
+			"shader receives the requested leaf height")
+		assert_almost_eq(shaped[Mesh.ARRAY_VERTEX][first + 8].y,
+			plain[Mesh.ARRAY_VERTEX][first + 8].y * factor, 0.000001,
+			"mesh tip follows the same height as the shader")
+	assert_eq(field._tuft_mesh(8, 4, -1, false, recipe).surface_get_arrays(0),
+		field._tuft_mesh(8, 4, -1, false).surface_get_arrays(0),
+		"a dune recipe never alters ordinary grass")
+	field.free()
+
+
 func test_shelter_leaves_windward_ground_open_without_affecting_ordinary_layers() -> void:
 	var settings := {"enabled": true}
 	var sheltered := {"_dune_sheltered": true}
