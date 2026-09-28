@@ -1,0 +1,51 @@
+{
+  "source_commit": "832a8ebdca5cbf2e80df90167a38ef0ab307fdbf",
+  "baseline_commit": "ecb7a8515edeaab90bb13c1d895a5f453cfd57f7",
+  "baseline_manifest_sha256": "7c7f378b382f9c4f25091b4d846d4612d374b2d28cc201f74edcb40491d30b4a",
+  "flags_restored_off": true,
+  "frames": [
+    {
+      "id": "stormheart400_calm",
+      "camera_position_delta_m": 0.0,
+      "phase": "calm",
+      "aftermath": false,
+      "sha256": "f1c03d6bf2248ed915ab4f57a29a715a9abb6cb50030484414968730cbe355bc"
+    },
+    {
+      "id": "stormheart400_break",
+      "camera_position_delta_m": 0.0,
+      "phase": "break",
+      "aftermath": false,
+      "sha256": "cb2d350f3053a22aad6ce56dbac9e8e0ac51535ec0d96700d5595224e68a695f"
+    },
+    {
+      "id": "stormheart100_calm",
+      "camera_position_delta_m": 0.0,
+      "phase": "calm",
+      "aftermath": false,
+      "sha256": "b539a5f3509720300ed6fa0402975b33fc80ca5bf2596be08182adf8ae1a7813"
+    },
+    {
+      "id": "stormheart100_break",
+      "camera_position_delta_m": 0.0,
+      "phase": "break",
+      "aftermath": false,
+      "sha256": "96429a1d2c7d6441556f71ca0fab60fed29a4cf7856a67a48135fce752f02bb5"
+    },
+    {
+      "id": "stormheart400_aftermath_calm",
+      "camera_position_delta_m": 0.0,
+      "phase": "calm",
+      "aftermath": true,
+      "sha256": "e52a9872219c45c3d89fb5bbc162190a7e3023ab66b12aa4caf5c571533a3525"
+    },
+    {
+      "id": "stormheart100_aftermath_calm",
+      "camera_position_delta_m": 0.0,
+      "phase": "calm",
+      "aftermath": true,
+      "sha256": "d722e9e191bb9d5ecb195c46214f7224dc3c5b8242faf5d3ddd3830a6028c8b5"
+    }
+  ],
+  "orientation_limit": "Legacy exterior fixture does not record basis; do not claim numerical orientation equivalence."
+}

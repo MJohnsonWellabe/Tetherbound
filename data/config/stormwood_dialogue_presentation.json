@@ -1,6 +1,23 @@
 {
-  "_comment": "P2-081: presentation-only trainer conversation candidates. Default off until the same authored posts and post-win text fixtures pass an independent visual review. No encounter, reward, input, camera or progression changes.",
+  "_comment": "P2-081 trainer conversations use enabled; P2-084 NPC openings use their separate nested flag. Presentation candidates remain off until the same authored posts and panels pass independent native review. No encounter, reward, input, camera or progression changes.",
   "enabled": false,
+  "npc_openings": {
+    "enabled": false,
+    "_comment": "P2-084: distinct openings for four existing speakers. Only line zero changes; route guidance, portraits, conversation IDs, state requirements and completion events remain authored. Bryn's progression briefing is already distinct and is omitted. Native panel review required.",
+    "lines": {
+      "stormwood_warden_elect_bryn_arrival": "Warden-Elect Bryn: A road is a promise to the people at the other end. Rodline Post still has promises to keep.",
+      "stormwood_warden_elect_bryn_post_storm": "Warden-Elect Bryn: The Long Storm has ended. Keeping these roads open is our work now.",
+      "stormwood_trader_oswin_arrival": "Oswin: I keep my supplies close to the rod crews. A repair is no use if the tools cannot reach it.",
+      "stormwood_trader_oswin_in_progress": "Oswin: Before you leave Rodline Post, think about the crossing ahead. The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+      "stormwood_trader_oswin_post_storm": "Oswin: Lighter rain makes it easier to mind a stall. There are still travellers to supply.",
+      "stormwood_elder_maud_arrival": "Elder Maud: Listen a moment under the canopy. The Rodfolk learned to read the storm before they laid these roads.",
+      "stormwood_elder_maud_in_progress": "Elder Maud: A familiar shortcut still deserves care. Root bridges shorten the way, but the Blackwater edge is exposed.",
+      "stormwood_elder_maud_post_storm": "Elder Maud: I can hear the rain between the leaves again. I had nearly forgotten that sound beneath the thunder.",
+      "stormwood_trader_fenn_arrival": "Fenn: Going beyond Lantern Hollow? Count your recovery supplies before you count on finding more.",
+      "stormwood_trader_fenn_in_progress": "Fenn: Supplies first, shortcuts second. The root bridges save a walk, but the Blackwater edge is exposed.",
+      "stormwood_trader_fenn_post_storm": "Fenn: The Long Storm has ended; the walk to the Fallen Giant is still a walk. Make room for supplies before you leave."
+    }
+  },
   "trainers": {
     "tamsin_surge_lesson": {"speaker": "Tamsin", "challenge": ["Watch the shelter, then watch your companion. The storm makes you read both.", "Let's see how you move together."], "defeated": ["A good battle. Keep an eye on your companion when the rain thickens."]},
     "rodfolk_pathfinder_elin": {"speaker": "Elin", "challenge": ["This ash lane leaves little room for a careless step.", "Keep your team close and show me your footing."], "defeated": ["Well fought. Take care on the ash lane ahead."]},
