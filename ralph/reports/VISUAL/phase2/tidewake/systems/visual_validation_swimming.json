@@ -1,0 +1,12 @@
+{
+  "source": "code-blind review of seven unique clean swim frames",
+  "confirmed": [
+    "P2-071",
+    "P2-072"
+  ],
+  "unscored_coverage_question": "No dive action is exposed by the current swim controller; dive frame remains open. Current swimming frame needs a separate traversal capture.",
+  "limitations": [
+    "Still images cannot establish animation timing or movement speed",
+    "capture has no HUD, uses production player and camera and actual movement input"
+  ]
+}

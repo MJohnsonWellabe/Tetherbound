@@ -1,0 +1,116 @@
+{
+	"biome": "tidewake",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S1_live_t0.png",
+			"id": "S1_live_t0",
+			"state": "live_t0",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S1_live_t1.png",
+			"id": "S1_live_t1",
+			"state": "live_t1",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S1_restored_t0.png",
+			"id": "S1_restored_t0",
+			"state": "restored_t0",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S1_restored_t1.png",
+			"id": "S1_restored_t1",
+			"state": "restored_t1",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S2_live_t0.png",
+			"id": "S2_live_t0",
+			"state": "live_t0",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S2_live_t1.png",
+			"id": "S2_live_t1",
+			"state": "live_t1",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S2_restored_t0.png",
+			"id": "S2_restored_t0",
+			"state": "restored_t0",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S2_restored_t1.png",
+			"id": "S2_restored_t1",
+			"state": "restored_t1",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S3_live_t0.png",
+			"id": "S3_live_t0",
+			"state": "live_t0",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S3_live_t1.png",
+			"id": "S3_live_t1",
+			"state": "live_t1",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S3_restored_t0.png",
+			"id": "S3_restored_t0",
+			"state": "restored_t0",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S3_restored_t1.png",
+			"id": "S3_restored_t1",
+			"state": "restored_t1",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S4_live_t0.png",
+			"id": "S4_live_t0",
+			"state": "live_t0",
+			"time": "dusk"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S4_live_t1.png",
+			"id": "S4_live_t1",
+			"state": "live_t1",
+			"time": "dusk"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S4_restored_t0.png",
+			"id": "S4_restored_t0",
+			"state": "restored_t0",
+			"time": "dusk"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/currents_main062/S4_restored_t1.png",
+			"id": "S4_restored_t1",
+			"state": "restored_t1",
+			"time": "dusk"
+		}
+	],
+	"output_option": "--out",
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "current_states"
+}

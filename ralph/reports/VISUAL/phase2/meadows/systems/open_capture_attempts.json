@@ -1,0 +1,24 @@
+{
+  "attempts": [
+    {
+      "source": "build_systems_main084",
+      "commit": "f2adb28da260d3e210c026901c8180144a2aa7e6",
+      "result": "Engine saved four files, but normal camera remained inside an existing house and did not show the fixture pieces. Not indexed as build-system coverage."
+    },
+    {
+      "source": "build_systems_main086",
+      "commit": "14f902686a2e9117f3053b73d2b0a8d00057a86d",
+      "result": "Outdoor fixture made four frames but foliage hid placed pieces; not indexed."
+    },
+    {
+      "source": "build_systems_main089",
+      "commit": "6b9d6719a9c950ef65f818597620f2e741959d71",
+      "result": "Closer outdoor view still hid camp and bed; not indexed."
+    },
+    {
+      "source": "build_systems_main097",
+      "commit": "d39b4a4eac2376d3c46dcbee5f593f87eaefb247",
+      "result": "Tent/camp cleared before bed frame, but bed remained too small or hidden by the tent in normal camera; not indexed."
+    }
+  ]
+}

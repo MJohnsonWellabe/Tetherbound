@@ -1,0 +1,43 @@
+{
+	"biome": "meadows",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "In-memory Fly unlock and one Galecrest carrier; actual Jump, glide and descend input at realm stands. Meadows adds 60 m fixture height above a grounded safe anchor for clearance/airtime. No campaign progression proof",
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/flight_main139/01-launch.png",
+			"id": "launch",
+			"position": "(-25.02129, 53.55657, 1299.994)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/flight_main139/02-glide.png",
+			"id": "glide",
+			"position": "(-25.02129, 50.88994, 1299.994)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/flight_main139/03-landed.png",
+			"id": "landed",
+			"position": "(-25.02129, -5.069694, 1299.994)",
+			"state": "grounded",
+			"time": "day"
+		}
+	],
+	"output_option": "--output",
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--biome=meadows",
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"seed": 2042,
+	"system": "flying"
+}

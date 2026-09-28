@@ -1,0 +1,19 @@
+{
+  "review": "Code-blind inspection of all ten full-resolution Cloudreach item frames",
+  "confirmed_findings": [
+    "P2-033: potion_large and revive read as small glowing plants rather than their named item functions",
+    "P2-054: speed_mushroom and wild_mushroom share an indistinguishable pale yellow cluster"
+  ],
+  "subject_not_isolated": [
+    "cloudreach__inventory__pickup__potion_small",
+    "cloudreach__inventory__pickup__rare_candy",
+    "cloudreach__inventory__pickup__tm_aerial_flash",
+    "cloudreach__inventory__pickup__tm_heavenfall",
+    "cloudreach__inventory__pickup__stamina_mushroom"
+  ],
+  "engine_capture_failures": [
+    "cloudreach__inventory__pickup__great_candy",
+    "cloudreach__inventory__pickup__tm_wind_blade"
+  ],
+  "notes": "Unisolated frames and failed camera stands do not establish missing runtime objects. Retry from another normal-camera stand."
+}

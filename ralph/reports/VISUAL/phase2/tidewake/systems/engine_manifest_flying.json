@@ -1,0 +1,43 @@
+{
+	"biome": "tidewake",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "In-memory Fly unlock and one Galecrest carrier; actual double-Jump, glide and descend input at clear realm stands; no campaign progression proof",
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/flight_main136/01-launch.png",
+			"id": "launch",
+			"position": "(35.707, 24.95057, 98.104)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/flight_main136/02-glide.png",
+			"id": "glide",
+			"position": "(35.707, 23.89173, 98.104)",
+			"state": "glide",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/flight_main136/03-landed.png",
+			"id": "landed",
+			"position": "(35.707, 23.72743, 98.104)",
+			"state": "grounded",
+			"time": "day"
+		}
+	],
+	"output_option": "--output",
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--biome=tidewake",
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "flying"
+}

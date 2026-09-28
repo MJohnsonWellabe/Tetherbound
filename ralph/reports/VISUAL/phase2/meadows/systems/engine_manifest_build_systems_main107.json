@@ -1,0 +1,141 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "meadows",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 243554846550,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 3.12593531608582
+	},
+	"capture_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 243571623767,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T06:18:50",
+	"capture_started_utc": "2026-09-28T06:16:06",
+	"captured_frame_count": 4,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof.",
+	"frames": [
+		{
+			"camera_position": [
+				-25.0,
+				-2.23417282104492,
+				1294.91345214844
+			],
+			"destination_display_name": "camp",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/build_systems_main107/meadows__system__camp.jpg",
+			"frame_id": "meadows__system__camp",
+			"identity": "meadows__system__build_suite",
+			"note": "placed camp tent and campfire visual fixture",
+			"player_position": [
+				-25.0,
+				-5.065354347229,
+				1300.0
+			],
+			"system": "camp",
+			"time": "day",
+			"view": "normal"
+		},
+		{
+			"camera_position": [
+				-25.0,
+				-2.23417282104492,
+				1294.91345214844
+			],
+			"destination_display_name": "bed",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/build_systems_main107/meadows__system__bed.jpg",
+			"frame_id": "meadows__system__bed",
+			"identity": "meadows__system__build_suite",
+			"note": "placed bedroll visual fixture",
+			"player_position": [
+				-25.0,
+				-5.065354347229,
+				1300.0
+			],
+			"system": "bed",
+			"time": "day",
+			"view": "normal"
+		},
+		{
+			"camera_position": [
+				-25.0,
+				-2.23417282104492,
+				1294.91345214844
+			],
+			"destination_display_name": "building",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/build_systems_main107/meadows__system__building.jpg",
+			"frame_id": "meadows__system__building",
+			"identity": "meadows__system__build_suite",
+			"note": "placed floor and wall visual fixture",
+			"player_position": [
+				-25.0,
+				-5.065354347229,
+				1300.0
+			],
+			"system": "building",
+			"time": "day",
+			"view": "normal"
+		},
+		{
+			"camera_position": [
+				-25.0,
+				-2.23417282104492,
+				1294.91345214844
+			],
+			"destination_display_name": "crafting",
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/build_systems_main107/meadows__system__crafting.jpg",
+			"frame_id": "meadows__system__crafting",
+			"identity": "meadows__system__build_suite",
+			"note": "workbench and production CraftPanel directly opened",
+			"player_position": [
+				-25.0,
+				-5.065354347229,
+				1300.0
+			],
+			"system": "crafting",
+			"time": "day",
+			"view": "ui"
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"meadows__system__build_suite"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 243571623767,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}

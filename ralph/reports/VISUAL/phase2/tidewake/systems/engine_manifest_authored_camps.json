@@ -1,0 +1,111 @@
+{
+	"biome": "tidewake",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "Player repositioned beside three built-in camp, creature-bed and workbench props. No rest, recipe, placement, cost or save action shown.",
+	"frames": [
+		{
+			"camp": "water_camp_first_shore",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_first_shore__camp.png",
+			"id": "water_camp_first_shore__camp",
+			"player_position": "(11.0, 8.307468, 137.0)",
+			"state": "authored camp station",
+			"system": "camp",
+			"target_position": "(7.0, 6.576686, 142.0)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_first_shore",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_first_shore__bed.png",
+			"id": "water_camp_first_shore__bed",
+			"player_position": "(7.0, 7.483556, 137.0)",
+			"state": "authored bed station",
+			"system": "bed",
+			"target_position": "(3.0, 6.116811, 142.0)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_first_shore",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_first_shore__crafting.png",
+			"id": "water_camp_first_shore__crafting",
+			"player_position": "(11.0, 9.255296, 141.0)",
+			"state": "authored crafting station",
+			"system": "crafting",
+			"target_position": "(7.0, 5.242541, 146.0)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_brine_steps",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_brine_steps__camp.png",
+			"id": "water_camp_brine_steps__camp",
+			"player_position": "(296.3535, 8.921747, 584.4711)",
+			"state": "authored camp station",
+			"system": "camp",
+			"target_position": "(292.3535, 7.982147, 589.4711)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_brine_steps",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_brine_steps__bed.png",
+			"id": "water_camp_brine_steps__bed",
+			"player_position": "(292.3535, 7.358941, 584.4711)",
+			"state": "authored bed station",
+			"system": "bed",
+			"target_position": "(288.3535, 6.519559, 589.4711)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_brine_steps",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_brine_steps__crafting.png",
+			"id": "water_camp_brine_steps__crafting",
+			"player_position": "(296.2694, 9.613693, 588.3869)",
+			"state": "authored crafting station",
+			"system": "crafting",
+			"target_position": "(292.3535, 8.655917, 593.4711)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_salt_crown",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_salt_crown__camp.png",
+			"id": "water_camp_salt_crown__camp",
+			"player_position": "(288.9327, 3.43696, 2123.569)",
+			"state": "authored camp station",
+			"system": "camp",
+			"target_position": "(284.9327, 5.272403, 2128.569)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_salt_crown",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_salt_crown__bed.png",
+			"id": "water_camp_salt_crown__bed",
+			"player_position": "(284.9327, 4.296781, 2123.569)",
+			"state": "authored bed station",
+			"system": "bed",
+			"target_position": "(280.9327, 5.823936, 2128.569)",
+			"time": "day"
+		},
+		{
+			"camp": "water_camp_salt_crown",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/camps_main130/water_camp_salt_crown__crafting.png",
+			"id": "water_camp_salt_crown__crafting",
+			"player_position": "(288.9327, 4.135061, 2127.569)",
+			"state": "authored crafting station",
+			"system": "crafting",
+			"target_position": "(284.9327, 5.50837, 2132.569)",
+			"time": "day"
+		}
+	],
+	"output_option": "--output",
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "authored_camps"
+}

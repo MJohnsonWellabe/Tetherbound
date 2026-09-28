@@ -1,0 +1,577 @@
+extends SceneTree
+
+## OF1's blind-judge frames: the whole catch sequence, both outcomes.
+##
+##   xvfb-run -a -s "-screen 0 1280x720x24" \
+##     godot --path . --rendering-driver opengl3 --resolution 1280x720 \
+##       --script tools/capture_catch_sequence.gd
+##
+## NOT --headless: that swaps in a no-op renderer and the run silently hangs
+## (survey_combat.sh's own header). Same honest limits as every combat capture:
+## software rendering, so composition/colour/readability are trustworthy and
+## lighting quality is not.
+##
+## survey_combat.gd stops at "08-orb-in-flight" — it has never photographed the
+## resolution, which is exactly the half of catching OF1 exists to redo. This
+## walks: aim -> flight -> strike/absorb -> the orb at rest under the resolve
+## camera -> a shake mid-rock -> the verdict, and it does it twice, because the
+## feel of failure matters as much as success:
+##   sequence A, full-health target  -> expect a breakout
+##   sequence B, target at a sliver  -> expect a catch
+## Each sequence retries until the dice actually produce its outcome, since a
+## frame named "breakout" showing a seal would make the whole critique a lie.
+##
+## Beat frames use the pause-after-the-effect-draws trick from
+## survey_combat._capture_the_impact: a node added mid-frame has drawn nothing
+## until its next physics tick, and without pausing, physics outruns the
+## software renderer and the moment is gone before the shutter opens.
+
+const MEADOWS_SCENE := "res://scenes/world/meadows_playground.tscn"
+const TIDEWAKE_SCENE := "res://scenes/world/water_archipelago.tscn"
+const STORMWOOD_SCENE := "res://scenes/world/stormwood.tscn"
+const CLOUDREACH_SCENE := "res://scenes/world/cloudreach_cliffs.tscn"
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
+var _out_dir := "res://ralph/reports/VISUAL/phase2/meadows/catch_raw_main"
+var _seed := 2042
+var _biome := "meadows"
+var _scene := MEADOWS_SCENE
+
+const SETTLE_FRAMES := 240
+const POSE_FRAMES := 2
+## Physics frames between a beat's signal and its shutter, so the effect it
+## names has actually drawn something.
+const BEAT_FRAMES := 5
+## Attempts allowed per sequence before giving up on the dice.
+const MAX_ATTEMPTS := 6
+
+var _world: Node = null
+var _player: CharacterBody3D = null
+var _rig: Node3D = null
+var _manager: Node = null
+var _director: Node = null
+var _wild: Node3D = null
+var _ally: Node3D = null
+
+var _written: Array[String] = []
+var _failures: Array[String] = []
+var _start_ms: int = 0
+
+var _struck_flag := [false]
+var _shook_flag := [false]
+var _resolved := []  # appended [success] per resolution
+
+
+func _init() -> void:
+	_run.call_deferred()
+
+
+func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			_out_dir = arg.trim_prefix("--output=")
+		elif arg.begins_with("--seed="):
+			_seed = int(arg.trim_prefix("--seed="))
+		elif arg.begins_with("--biome="):
+			_biome = arg.trim_prefix("--biome=")
+	if _biome == "tidewake":
+		_scene = TIDEWAKE_SCENE
+	elif _biome == "stormwood":
+		_scene = STORMWOOD_SCENE
+	elif _biome == "cloudreach":
+		_scene = CLOUDREACH_SCENE
+	if _biome not in ["meadows", "tidewake", "stormwood", "cloudreach"] or not _out_dir.begins_with("res://ralph/reports/VISUAL/phase2/%s/" % _biome):
+		push_error("Catch capture output must stay in Meadows Phase 2 evidence")
+		quit(1)
+		return
+	seed(_seed)
+	_start_ms = Time.get_ticks_msec()
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
+	if _biome in ["tidewake", "stormwood", "cloudreach"]:
+		var game := root.get_node(^"Game")
+		game.call("reset_for_new_game")
+		game.set("current_realm", "water" if _biome == "tidewake" else _biome)
+		if _biome == "cloudreach":
+			game.progression.set_flag("realm_key_cloudreach")
+			for species: String in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
+				var member: RefCounted = SPECIES.spawn(species)
+				member.set_level(25, PROGRESSION.config())
+				game.party.add(member)
+
+	var packed: PackedScene = load(_scene)
+	if packed == null:
+		push_error("could not load %s" % _scene)
+		quit(1)
+		return
+	_world = packed.instantiate()
+	root.add_child(_world)
+	for i in SETTLE_FRAMES:
+		await physics_frame
+	if _biome in ["tidewake", "stormwood", "cloudreach"]:
+		for i in 600:
+			if bool(_world.call("shell_build_complete")):
+				break
+			await physics_frame
+		if not bool(_world.call("shell_build_complete")):
+			_failures.append("Tidewake shell did not build")
+			_finish()
+			return
+	_log("settled")
+
+	await _ensure_ally()
+	_leave_the_farmhouse()
+	if _biome == "tidewake":
+		# Water streams ordinary wilds around the player. This dry First Shore
+		# site is outside the default spawn neighborhood.
+		for i in 300:
+			await physics_frame
+	_seed_orbs()
+	if not _collect_nodes():
+		_finish()
+		return
+
+	var debug_hud: CanvasLayer = _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	if debug_hud != null:
+		debug_hud.visible = false
+
+	await _walk_to_the_wild_creature()
+	await _engage()
+	if not bool(_manager.call("is_fighting")):
+		_failures.append("could not enter combat; nothing captured")
+		_finish()
+		return
+	_ally = _director.call("ally_body") as Node3D
+	_log("fighting")
+
+	# The capture-reticle pass (spec §10.2, D31): two aim-state stills at a
+	# low and a high chance, taken BEFORE sequence A below starts stacking
+	# `chance.min`/`chance.max` for the dice — these two only need real,
+	# unclamped odds on screen, and by the far end of sequence B the fight
+	# has usually already resolved and ended.
+	await _capture_chance_frames()
+
+	# The dice are stacked per sequence THROUGH THE CLAMPS the formula already
+	# has (`chance.min`/`chance.max`), because a frame named "breakout" showing
+	# a seal would make the whole critique a lie: a full-health throw can still
+	# roll its ~5-10%, and a catch in sequence A ends the fight the entire run
+	# depends on. The resolution path being photographed is untouched — only
+	# the roll's odds are pinned, and only inside this process.
+	var chance_cfg: Dictionary = CATCH.config().get("chance", {})
+	var real_min: float = float(chance_cfg.get("min", 0.02))
+	var real_max: float = float(chance_cfg.get("max", 0.95))
+
+	# --- sequence A: full health, expect a breakout -------------------------
+	chance_cfg["max"] = 0.001
+	chance_cfg["min"] = 0.0
+	var got_failure := false
+	for attempt in MAX_ATTEMPTS:
+		if not bool(_manager.call("is_fighting")):
+			break
+		_top_up()
+		var foe: RefCounted = _manager.call("enemy")
+		foe.hp = foe.max_hp
+		var first := attempt == 0
+		var outcome := await _one_throw("01-aiming-full-health" if first else "",
+			"02-orb-in-flight" if first else "", "03-strike" if first else "",
+			"04-orb-resting" if first else "", "05-orb-shakes" if first else "",
+			"06-breakout")
+		if outcome == "failure":
+			got_failure = true
+			break
+	if not got_failure:
+		_failures.append("sequence A never produced a breakout to photograph")
+
+	# --- sequence B: a sliver of health, expect a catch ---------------------
+	chance_cfg["max"] = real_max
+	chance_cfg["min"] = 0.999
+	if bool(_manager.call("is_fighting")):
+		var got_catch := false
+		for attempt in MAX_ATTEMPTS:
+			if not bool(_manager.call("is_fighting")):
+				break
+			_top_up()
+			var foe: RefCounted = _manager.call("enemy")
+			foe.hp = foe.max_hp * 0.06
+			var outcome := await _one_throw("07-aiming-weakened" if attempt == 0 else "",
+				"", "", "", "", "08-caught-verdict")
+			if outcome == "success":
+				got_catch = true
+				for i in 30:
+					await physics_frame
+				await _capture("09-caught-banner")
+				break
+		if not got_catch:
+			_failures.append("sequence B never produced a catch to photograph")
+	else:
+		_failures.append("the fight ended before sequence B could run")
+	chance_cfg["min"] = real_min
+
+	_finish()
+
+
+## One aimed throw, capturing whichever beat frames were asked for ("" skips).
+## Returns "success", "failure", or "" when the throw never resolved.
+func _one_throw(aim_frame: String, flight_frame: String,
+		strike_frame: String, rest_frame: String, shake_frame: String,
+		verdict_frame: String) -> String:
+	if not await _open_aim():
+		return ""
+	# Let the aim camera glide in before reading its eye or its frame.
+	for i in 15:
+		await physics_frame
+	_aim_at_the_target()
+	for i in 4:
+		await physics_frame
+	if aim_frame != "":
+		await _capture(aim_frame)
+		_aim_at_the_target()
+		for i in 4:
+			await physics_frame
+
+	_struck_flag[0] = false
+	_shook_flag[0] = false
+	var resolutions_before := _resolved.size()
+	await _press("combat_throw")
+
+	if flight_frame != "":
+		# Past the release windup (0.18s ~ 11 ticks) with the trail drawn.
+		for i in 16:
+			await physics_frame
+		await _capture(flight_frame)
+
+	# The strike: flash + the creature shrinking toward the hanging orb.
+	var waited := 0
+	while not _struck_flag[0] and waited < 300 and bool(_manager.call("is_fighting")):
+		await physics_frame
+		waited += 1
+	if not _struck_flag[0]:
+		# The orb went wide; no resolution follows.
+		for i in 60:
+			await physics_frame
+		return ""
+	# Two beats, photographed separately, because they cannot share a still:
+	# the flash peaks in the first tenth of a second and the shrink only READS
+	# once the creature is well under size — round 2 captured "strike-absorb"
+	# at 0.18s and showed a full-size creature next to a spent flash.
+	if strike_frame != "":
+		for i in BEAT_FRAMES:
+			await physics_frame
+		await _capture_paused(strike_frame)
+		for i in 14:
+			await physics_frame
+		await _capture_paused(strike_frame.replace("-strike", "-absorbing"))
+
+	# The orb at rest under the resolve camera, before the first shake.
+	if rest_frame != "":
+		var orb := _resting_orb()
+		waited = 0
+		while waited < 300:
+			orb = _resting_orb()
+			if orb != null and bool(orb.call("is_resting")):
+				break
+			await physics_frame
+			waited += 1
+		for i in 6:
+			await physics_frame
+		await _capture(rest_frame)
+
+	# A shake, mid-rock. The rock is ~0.45s; shoot a third of the way in.
+	if shake_frame != "":
+		waited = 0
+		while not _shook_flag[0] and waited < 300:
+			await physics_frame
+			waited += 1
+		if _shook_flag[0]:
+			for i in 8:
+				await physics_frame
+			await _capture_paused(shake_frame)
+		else:
+			_failures.append("%s: the orb never shook" % shake_frame)
+
+	# The verdict.
+	waited = 0
+	while _resolved.size() == resolutions_before and waited < 900:
+		await physics_frame
+		waited += 1
+	if _resolved.size() == resolutions_before:
+		_failures.append("a struck orb never resolved")
+		return ""
+	if verdict_frame != "":
+		for i in BEAT_FRAMES:
+			await physics_frame
+		await _capture_paused(verdict_frame)
+	# Let the aftermath (breakout pop, camera handback, cooldown) play out.
+	for i in 70:
+		await physics_frame
+	return "success" if bool(_resolved[-1]) else "failure"
+
+
+## Two aim-state stills (spec §10.2, D31): the capture reticle's ring +
+## explicit percentage at a low chance (full-health target) and a high one
+## (a sliver of health), so the reticle work has real numbers on real frames
+## rather than a theoretical curve. Neither throw is ever released — both
+## stills only need the AIM state, and releasing one would spend an orb and
+## drag the fight into a resolution neither still is named for.
+func _capture_chance_frames() -> void:
+	await _capture_chance_frame(1.0, "catch_low")
+	await _capture_chance_frame(0.05, "catch_high")
+
+
+func _capture_chance_frame(hp_fraction: float, frame_name: String) -> void:
+	if not bool(_manager.call("is_fighting")):
+		_failures.append("%s: fight already over" % frame_name)
+		return
+	_top_up()
+	var foe: RefCounted = _manager.call("enemy")
+	foe.hp = clampf(foe.max_hp * hp_fraction, 1.0, foe.max_hp)
+	if not await _open_aim():
+		_failures.append("%s: could not open aim" % frame_name)
+		return
+	# Let the aim camera glide in and the reticle catch up before shooting.
+	for i in 15:
+		await physics_frame
+	_aim_at_the_target()
+	for i in 6:
+		await physics_frame
+	await _capture(frame_name)
+	# Cancel rather than release: this throw was never meant to fly.
+	await _press("combat_run")
+	for i in 20:
+		await physics_frame
+
+
+## --- plumbing, same shapes as capture_combat_actions.gd ---------------------
+
+func _ensure_ally() -> void:
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	if director == null and _biome == "cloudreach":
+		director = _world.get_node(^"CloudreachRuntime").get("director")
+	if director == null or director.call("ally_instance") != null:
+		return
+	if _biome == "cloudreach":
+		await director.call("summon_active_creature")
+		return
+	await director.call("adopt_starter", "terrapup")
+
+
+func _leave_the_farmhouse() -> void:
+	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null:
+		return
+	var start := Vector3(48.0, 0.0, -58.0)
+	if _biome == "tidewake":
+		start = Vector3(-90.024, 0.0, 147.573)
+	elif _biome == "stormwood":
+		var director := _world.get_node_or_null(^"EncounterDirector")
+		if director != null:
+			var nearest := INF
+			for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+				if candidate.has_meta("stormwood_named_encounter"):
+					continue
+				var distance := candidate.global_position.distance_to(player.global_position)
+				if distance < nearest:
+					nearest = distance
+					_wild = candidate
+			if _wild != null:
+				start = _wild.global_position + Vector3(0.0, 0.0, 5.0)
+	elif _biome == "cloudreach":
+		var director: Node = _world.get_node(^"CloudreachRuntime").get("director")
+		var nearest := INF
+		for candidate: Node3D in (director.call("wild_creatures") as Array[Node3D]):
+			var ground := float(_world.call("ground_height_at", candidate.global_position.x, candidate.global_position.z))
+			if not is_finite(ground) or absf(ground - candidate.global_position.y) > 4.0:
+				continue
+			var distance := candidate.global_position.distance_to(player.global_position)
+			if distance < nearest:
+				nearest = distance
+				_wild = candidate
+		if _wild != null:
+			start = _wild.global_position + Vector3(0.0, 0.0, 5.0)
+	start.y = float(_world.call("ground_height_at", start.x, start.z)) + 1.0
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+
+
+func _seed_orbs(count: int = 20) -> void:
+	var game := root.get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var short: int = count - int(inventory.call("count", "orb_basic"))
+	if short > 0:
+		inventory.call("add", "orb_basic", short)
+
+
+## Keep the ally standing and the satchel stocked between attempts, the same
+## reasoning smoke_catching.gd already carries: aiming genuinely abandons the
+## creature, and a capture run that throws repeatedly would otherwise end "lost".
+func _top_up() -> void:
+	_seed_orbs()
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature != null:
+		creature.hp = creature.max_hp
+
+
+func _collect_nodes() -> bool:
+	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
+	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
+	_manager = _world.get_node_or_null(^"CombatManager")
+	_director = _world.get_node_or_null(^"EncounterDirector")
+	if _biome == "cloudreach":
+		var runtime := _world.get_node_or_null(^"CloudreachRuntime")
+		if runtime != null:
+			_manager = runtime.get("manager")
+			_director = runtime.get("director")
+	if _player == null or _manager == null or _director == null or _rig == null:
+		_failures.append("scene is missing the player, camera rig, combat manager or director")
+		return false
+	if _wild == null:
+		_wild = _director.call("wild_creature") as Node3D
+	if _wild == null and _biome == "tidewake":
+		var nearest := INF
+		for candidate: Node3D in (_director.call("wild_creatures") as Array[Node3D]):
+			var distance := candidate.global_position.distance_to(_player.global_position)
+			if distance < nearest:
+				nearest = distance
+				_wild = candidate
+	if _wild == null:
+		_failures.append("the encounter director never spawned a wild creature")
+		return false
+
+	var throw: Node = _manager.call("throw_aim")
+	throw.connect("orb_struck", func(_t: Node3D, _o: float) -> void: _struck_flag[0] = true)
+	_manager.connect("orb_shook", func(_i: int) -> void: _shook_flag[0] = true)
+	_manager.connect("catch_resolved", func(success: bool, _shakes: int) -> void: _resolved.append(success))
+	return true
+
+
+func _resting_orb() -> Node3D:
+	var throw: Node = _manager.call("throw_aim")
+	return throw.call("resting_orb") as Node3D
+
+
+func _walk_to_the_wild_creature() -> void:
+	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
+	for i in 1800:
+		var to := _wild.global_position - _player.global_position
+		to.y = 0.0
+		if to.length() <= engage_range * 0.6:
+			break
+		_rig.set("yaw", atan2(-to.x, -to.z))
+		Input.action_press("move_forward")
+		await physics_frame
+	Input.action_release("move_forward")
+	for i in 10:
+		await physics_frame
+
+
+func _engage() -> void:
+	Input.action_press("interact")
+	await physics_frame
+	await physics_frame
+	Input.action_release("interact")
+	for i in 30:
+		await physics_frame
+
+
+func _open_aim() -> bool:
+	for i in 240:
+		if not bool(_manager.call("is_fighting")):
+			return false
+		if not bool(_manager.call("player_is_committed")):
+			break
+		await physics_frame
+	var cooldown := float(CATCH.config().get("throw", {}).get("cooldown", 0.9))
+	var budget := int(ceil(cooldown * float(Engine.physics_ticks_per_second))) + 120
+	while budget > 0:
+		await _press("combat_throw")
+		budget -= 4
+		for i in 6:
+			await physics_frame
+			budget -= 1
+		if bool(_manager.call("is_aiming")):
+			return true
+	return false
+
+
+## smoke_catching.gd's proven aim: straight at the leaded centre from the
+## camera's eye, letting `_aim_direction`'s snap window and ballistic solve do
+## the rest.
+func _aim_at_the_target() -> void:
+	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null:
+		return
+	var eye := camera.global_position
+	var velocity := Vector3.ZERO
+	if _wild is CharacterBody3D:
+		velocity = (_wild as CharacterBody3D).velocity
+	var release_windup := float(CATCH.config().get("throw", {}).get("release_windup", 0.18))
+	var lead_time := 8.0 / float(Engine.physics_ticks_per_second) + release_windup
+	var predicted: Vector3 = (_wild.call("centre") as Vector3) + velocity * lead_time
+	var to := predicted - eye
+	_rig.set("yaw", atan2(-to.x, -to.z))
+	var flat := Vector2(to.x, to.z).length()
+	_rig.set("pitch", atan2(to.y, maxf(flat, 0.01)))
+
+
+func _press(action: String) -> void:
+	Input.action_press(action)
+	await physics_frame
+	await physics_frame
+	Input.action_release(action)
+	await physics_frame
+
+
+func _log(label: String) -> void:
+	print("  [phase] %-28s +%.1fs" % [label, (Time.get_ticks_msec() - _start_ms) / 1000.0])
+
+
+func _capture(name: String) -> void:
+	for i in POSE_FRAMES:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	var image := root.get_texture().get_image()
+	if image == null:
+		_failures.append("%s: viewport returned no image" % name)
+		return
+	var path := "%s/%s.png" % [_out_dir, name]
+	if image.save_png(path) != OK:
+		_failures.append("%s: save_png failed" % name)
+		return
+	_written.append(path)
+	print("  %-26s -> %s  (+%.1fs)" % [name, path, (Time.get_ticks_msec() - _start_ms) / 1000.0])
+
+
+## Freeze physics for the shutter so a sub-second beat is not gone before the
+## software renderer produces a frame.
+func _capture_paused(name: String) -> void:
+	paused = true
+	await _capture(name)
+	paused = false
+
+
+func _finish() -> void:
+	print("")
+	print("%d frames -> %s" % [_written.size(), _out_dir])
+	print("Software rendering: composition, readability and colour only.")
+	var records: Array[Dictionary] = []
+	for path: String in _written:
+		records.append({"id": path.get_file().get_basename(), "file": path})
+	var manifest := {"biome": _biome, "category": "systems", "system": "catch",
+		"seed": _seed, "scene": _scene, "display_server": DisplayServer.get_name(),
+		"rendering_method": RenderingServer.get_current_rendering_method(),
+		"adapter": RenderingServer.get_video_adapter_name(),
+		"resolution": [root.size.x, root.size.y], "frames": records,
+		"failures": _failures, "complete": _failures.is_empty()}
+	var manifest_file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
+	manifest_file.store_string(JSON.stringify(manifest, "\t") + "\n")
+	manifest_file.close()
+	if not _failures.is_empty():
+		for line in _failures:
+			print("FAIL: %s" % line)
+		quit(1)
+		return
+	quit(0)
+

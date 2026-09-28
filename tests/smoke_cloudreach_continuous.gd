@@ -1057,8 +1057,17 @@ func _deploy() -> bool:
 	if not _require(fly.is_flying(),"Double-jump input deployed Fly"): return false
 	var roster_ids: Array[int] = []
 	for member: RefCounted in game.party.members(): roster_ids.append(member.get_instance_id())
-	if not _require(roster_ids == initial_party_ids and fly.last_flight_used_mentor_loaner(),"Maela loaner carries the unchanged five-non-Fly team without a sixth slot"): return false
-	_log("flight_launch", {"carrier":fly.eligible_creature().species_id,"loaner":true,"stamina":player.vitals.stamina,"party_size":roster_ids.size()})
+	# WORLD §4.2: a healthy active carrier of the five flies; Maela's loaner
+	# serves her trial and, after the unlock, only a five that holds none.
+	var own: RefCounted = fly.owned_carrier()
+	var active: RefCounted = game.party.active()
+	var owned_flies: bool = active != null and own == active
+	var loaner_expected: bool = not owned_flies and (not _has("fly_traversal_unlocked") or own == null)
+	if not _require(roster_ids == initial_party_ids and fly.last_flight_used_mentor_loaner() == loaner_expected \
+			and (loaner_expected or fly.eligible_creature() == active), \
+			("Maela loaner carries the unchanged team without a sixth slot" if loaner_expected else "The five's own active carrier flies, not the loaner, without a sixth slot")): return false
+	_log("flight_launch", {"carrier":fly.eligible_creature().species_id,"loaner":fly.last_flight_used_mentor_loaner(),"owned_carrier":owned_flies,
+		"fly_unlocked":_has("fly_traversal_unlocked"),"stamina":player.vitals.stamina,"party_size":roster_ids.size()})
 	return true
 
 

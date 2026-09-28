@@ -1,0 +1,20 @@
+{
+  "review": "Code-blind inspection of all 42 full-resolution Tidewake NPC and trainer post frames",
+  "confirmed_findings": [
+    "P2-055: repeated same-looking bodies and outfits across distinct named people, especially trainers",
+    "P2-057: pale grass hides much of many character silhouettes"
+  ],
+  "subject_not_isolated": [
+    "tidewake__inventory__character__water_nalia",
+    "tidewake__inventory__character__water_nerissa",
+    "tidewake__inventory__trainer__water_trainer_nerissa",
+    "tidewake__inventory__trainer__water_trainer_rune",
+    "tidewake__inventory__trainer__water_trainer_venn"
+  ],
+  "subject_uncertain_or_poorly_isolated": [
+    "tidewake__inventory__trainer__water_trainer_tovin",
+    "tidewake__inventory__trainer__water_trainer_solm",
+    "tidewake__inventory__trainer__water_trainer_odan"
+  ],
+  "notes": "Five frames face cliff or grass and do not show the named person; three show a tiny or cropped possible subject. These remain camera-stand gaps, not proof of missing runtime bodies. Only post state has been judged."
+}

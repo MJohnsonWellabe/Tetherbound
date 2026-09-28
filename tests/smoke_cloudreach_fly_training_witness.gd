@@ -150,6 +150,7 @@ func _finish() -> void:
 		"stage": stage, "attempts": attempts, "sealed_attempt": sealed_attempt, "exhausted_fall": exhausted_fall, "landings": landings, "recoveries": recoveries,
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,
 		"upper_violations": upper_violations,
+		"owned_carrier": owned_carrier_record, "owned_carrier_refusal": owned_carrier_refusal, "owned_carrier_switches": owned_carrier_switches, "owned_flights": owned_flight_rows, "owned_mid_air_cycle": owned_mid_air_cycle,
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))
 	file.close()
 	verdict_written = true

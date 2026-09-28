@@ -131,7 +131,7 @@ Tess r4 on the ordinary route (`tess_route_r4/`, walked 317 m by stick): judge A
    - Under it, Tidecoil passes (`../../f14_confirm_main/` addendum: ratios 0.05-0.07, reader win 1.00).
    - Aquaryn passes with all three starters (`aquaryn_c2_3starters/`: ratios 0.54, 0.32 and 0.29; reader win 1.00).
 3. **Aquaryn C3 on the ordinary route: PASS at r6** (`aquaryn_route_r6/`). The approach is a 152 m stick walk from the Tidal Cradle landing, then `creature_recall` and the Challenge prompt pressed. Under `../C3_RUBRIC.md`, judge A gives 20/20 and judge B 20/20; tells 4/4.
-4. **Tess C3** is about 86% under a strict reading: the ally hides the opponent's head at contact after a strike.
+4. **Tess C3: blocked.** r5 under the fixed rubric scored 97% / 84% (`tess_route_r5/`). Every one of judge B's failures is the ally in front of the opponent's head at contact range (4.7-6.6 m); frames with a gap over 7 m all pass. This needs a shared combat contact-spacing rule, the same as Nerissa.
 5. **Tells observed:** `tests/smoke_tidewake_named_inworld_c2.gd` now measures physics frames from each tell's start to its strike, for uninterrupted tells.
    - A Nerissa MASHER run observed 42 completed tells of 0.80-0.90 s, against 0.8 s declared.
    - The heavy is measured in the READER runs of the Nerissa C2 rerun.
