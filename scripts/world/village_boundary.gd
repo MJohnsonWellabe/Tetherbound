@@ -305,7 +305,11 @@ func _build_gates(world: Node3D) -> void:
 		# ROADS-V2 measurement behind it.
 		gate.set("vault_guard_m", vault_guard)
 		if dressing is Dictionary:
-			gate.set("village_dressing", (dressing as Dictionary).duplicate(true))
+			var gate_dressing := (dressing as Dictionary).duplicate(true)
+			# F01#2/#3: each leaf names its own road on a hung board.
+			if entry.has("name_board"):
+				gate_dressing["name_board"] = str(entry.get("name_board"))
+			gate.set("village_dressing", gate_dressing)
 		add_child(gate)
 		gate.call("build", world, Vector2(float(at[0]), float(at[1])), float(entry.get("yaw_deg", 0.0)))
 		_gates.append(gate)

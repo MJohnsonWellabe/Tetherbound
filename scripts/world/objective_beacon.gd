@@ -190,7 +190,25 @@ func _set_active(active: bool) -> void:
 func _apply_visibility() -> void:
 	if _visual != null:
 		_visual.visible = _has_target and not (is_inside_tree() and PRESENTATION_HOLD.active(get_tree())) \
-			and not _fight_on_screen()
+			and not _fight_on_screen() and not _camera_inside_beam()
+
+
+## F01#2/#3 (code-blind walk judge, day_070/night_070): arriving at the
+## Practice Meadow put the lens inside the beam, and a cyan slab covered the
+## left of the frame. Within `camera_clear_m` (horizontal) of the beam's axis
+## the player is already there; the beam stands down until the camera leaves.
+func _camera_inside_beam() -> bool:
+	if not is_inside_tree():
+		return false
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return false
+	var clear := float(_config.get("camera_clear_m", 0.0))
+	if clear <= 0.0:
+		return false
+	var offset := camera.global_position - global_position
+	offset.y = 0.0
+	return offset.length() < clear
 
 
 ## F04: a live fight owns the screen. The beam (whose target is often that very

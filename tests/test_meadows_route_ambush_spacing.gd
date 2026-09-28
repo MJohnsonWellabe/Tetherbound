@@ -24,7 +24,7 @@ const ROLLED_SEEDS_FROM := 1
 const ROLLED_SEEDS_TO := 200
 const A7_WALK_WINDOW_M := 600.0
 const BAND5_ENTRY_M := 3400.0  # chainage of (0,7000) on the band4+band5 route
-const HALL_ALPHA_CENTRE := Vector2(-30.0, 7295.0)
+const HALL_ALPHA_CENTRE := Vector2(-36.0, 7290.0)
 
 
 func _rolled_seeds() -> Array:

@@ -125,7 +125,7 @@ func _on_interaction_activated(provider: Object) -> void:
 ## Left alone is the correct answer more often than it looks: a road gate's lock
 ## message and a cart repair both open the dialogue panel with nobody to frame,
 ## and a push-in onto a fence post is worse than no push-in.
-func begin(speaker: Node3D = null) -> bool:
+func begin(speaker: Node3D = null, profile: String = "") -> bool:
 	if _active:
 		return false
 	var rig := _rig()
@@ -134,8 +134,36 @@ func begin(speaker: Node3D = null) -> bool:
 	var who := speaker if speaker != null else current_speaker()
 	if who == null:
 		return false
-	_active = bool(rig.call("enter_conversation", who, config()))
+	_active = bool(rig.call("enter_conversation", who, profile_config(profile)))
 	return _active
+
+
+## F04#3 (round-1 judge D: the Warden's victory dialogue crowded him at 4.2 m
+## with the player 1.3 m away). `camera.json` conversation.profiles.<name>
+## overrides the villager push-in for a named kind of shot -- `aftermath`, a
+## trainer's post-fight lines, frames wider and higher. Unknown or empty name:
+## the ordinary push-in. `fallback` merges key by key, as in `config()`.
+static func profile_config(profile: String) -> Dictionary:
+	var base := config()
+	if profile == "":
+		return base
+	var profiles: Variant = base.get("profiles", {})
+	if not profiles is Dictionary or not (profiles as Dictionary).has(profile):
+		return base
+	var merged := base.duplicate(true)
+	var overrides: Dictionary = (profiles as Dictionary)[profile] as Dictionary
+	for key: String in overrides:
+		if key.begins_with("_"):
+			continue
+		if key == "fallback" and overrides[key] is Dictionary:
+			var inner: Dictionary = (merged["fallback"] as Dictionary).duplicate()
+			for k: String in (overrides[key] as Dictionary):
+				if not k.begins_with("_"):
+					inner[k] = (overrides[key] as Dictionary)[k]
+			merged["fallback"] = inner
+			continue
+		merged[key] = overrides[key]
+	return merged
 
 
 ## The conversation came down. Safe to call when nothing pushed in.
