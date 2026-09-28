@@ -100,10 +100,22 @@ static func _cloth_materials(standard: Node3D) -> Array[StandardMaterial3D]:
 				continue
 			var own := mesh_node.get_surface_override_material(i) as StandardMaterial3D
 			if own == null or not own.has_meta("aftermath_cloth"):
-				var active := mesh_node.get_active_material(i) as StandardMaterial3D
-				if active == null:
-					continue
-				own = active.duplicate() as StandardMaterial3D
+				# The roadside retint turns the cloth into props' dimensional-cloth
+				# ShaderMaterial, which has no alpha; the struck cloth gets a plain
+				# transparent material in the same oxblood to fade out on.
+				var active := mesh_node.get_active_material(i)
+				if active is StandardMaterial3D:
+					own = (active as StandardMaterial3D).duplicate() as StandardMaterial3D
+				else:
+					own = StandardMaterial3D.new()
+					var colour := Color("7a2430")
+					if active is ShaderMaterial:
+						var uniform: Variant = (active as ShaderMaterial).get_shader_parameter("cloth_colour")
+						if uniform is Color:
+							colour = uniform
+					own.albedo_color = colour
+					own.roughness = 0.9
+				own.cull_mode = BaseMaterial3D.CULL_DISABLED
 				own.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 				own.set_meta("aftermath_cloth", true)
 				mesh_node.set_surface_override_material(i, own)

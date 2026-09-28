@@ -699,8 +699,8 @@ func _build_village_name_board(wood: StandardMaterial3D, post_h: float, beam_h: 
 	var text := str(village_dressing.get("name_board", ""))
 	if text.is_empty():
 		return
-	var width := minf(half * 2.0 - 0.3, float(village_dressing.get("name_board_width_m", 1.7)))
-	var height := float(village_dressing.get("name_board_height_m", 0.42))
+	var width := minf(half * 2.0 - 0.3, float(village_dressing.get("name_board_width_m", 2.0)))
+	var height := float(village_dressing.get("name_board_height_m", 0.48))
 	var drop := float(village_dressing.get("name_board_drop_m", 0.3))
 	var centre_y := post_h - beam_h - drop - height * 0.5
 	var board := MeshInstance3D.new()
@@ -727,7 +727,7 @@ func _build_village_name_board(wood: StandardMaterial3D, post_h: float, beam_h: 
 		label.name = "VillageGateName%s" % ("Out" if face < 0.0 else "In")
 		label.text = text
 		label.font_size = 96
-		label.pixel_size = float(village_dressing.get("name_board_pixel_size", 0.0032))
+		label.pixel_size = float(village_dressing.get("name_board_pixel_size", 0.0042))
 		label.outline_size = 18
 		label.modulate = Color(str(village_dressing.get("name_board_ink", "#f2e6c4")))
 		label.outline_modulate = Color(0.08, 0.05, 0.03, 1.0)
