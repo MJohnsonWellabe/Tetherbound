@@ -911,13 +911,14 @@
  "chapter_cards": [
   {
    "id": "M1",
-   "status": "in_progress",
-   "note": "All F01 feeders met (F01#2 day walk and F01#3 night walk code-blind PASS at d41ff2f0); card integrated run next."
+   "status": "met",
+   "note": "Integrated run passed independent strict re-check (Cards lane); all F01 feeders met, so M1 is complete.",
+   "integrated_run": "ralph/reports/CARDS/m1/ @ main e35e2611 (Cards lane): fresh seed-15 new game, tests/smoke_four_biome_continuous.gd --reload-at-transitions --through-tournament, exit 0, failures [], 1159 s: title, starter picked and named in the real picker, live practice fight and physical catch, earned village key and gate, earned team by live catches, paid campsite with bedroll and 3 creature beds, three entrants bedded and cared for, production save/reload (flags 59->59, party/inventory/condition identical), then quarter/semi/final won by real fights (Mira, Tam, Oskar). Composite with F01#0-#6 (road plan, side lane, day/night walks 11/11 code-blind PASS, three starters, reload, two-peer). RECHECK_M1.md: VERDICT MET. Shortcuts disclosed: harness controller input and fights, headless, one seed/one starter (other starters from F01#4, which grants the third member), walk gates counted by proximity, consent inferred from marshal/beds/bracket entry, two-peer opening witness predates the road rebuild."
   },
   {
    "id": "M2",
    "status": "partial",
-   "note": "Earned route passed to South Bridge once; later spine only as segments/two-peer fixture legs; practice-wild solvency owner question."
+   "note": "Blocked on a South Bridge guardian regression (Cards lane, main e35e2611): three fresh seed-15 continuous runs win the tournament and then fail the bridge gatekeeper 0/3 (two past the 9000-frame bound, one lost). A local diagnostic with combat.json trainer_ally_lateral_m 0.0 (3f04ece8, F04#2) passes 2/2 and crosses (ralph/reports/CARDS/m2/BRIDGE_GUARDIAN_REGRESSION.md). Owner: Meadows lane (F04#2). Stale items retired: practice-wild solvency is ruled (supply raised, level 5 at the bridge); the 326 m Hall-exit walk is exempt (owner). Left: the bridge regression fix, then one continuous earned run on a single save from new game through the bridge, Warrens, relay, three Sigils, Hall, Warden and Veridian into Cloudreach (tools/earned_saves, smoke_four_biome_continuous --reload-at-transitions --route-ledger --m4-finale --through-meadows); fight feeders F04#1, #2, #6, #7 (Meadows lane)."
   },
   {
    "id": "M3",
@@ -957,7 +958,7 @@
   {
    "id": "S2",
    "status": "partial",
-   "note": "Surge phase grouping 9/9 blind (main fe07d0d2); night phases merge; no Bars A/B, audio or device pass; Bryn chain untouched."
+   "note": "Cards lane re-score on main e35e2611. Met: six activities cover all regions (F10#0, including Glass for Bryn: STORMWOOD/b/f10_0/CLOSE.md; the Bryn chain is built and counted); lightning 1.2 s/3 m telegraph and phase cues without HUD (F10#3); night phase merge retired: the Stormwood look is hour-invariant (test_look_is_identical_at_every_hour, test_stormwood_surge_presentation 51/716/0) and P2-042 (#412) passes four-phase identity code-blind at native and small size. Audio: the Surge observer fires each phase bed and the strike chain on time (smoke_stormwood_surge_audio 19/0, CARDS/s2/), but all nine assets/audio/stormwood/*.wav are missing, so no phase is audible; the audio witness cannot pass until those assets exist (asset gap, owner decision; the config forbids placeholders). Left: that audio gap; F10#2 C3 and F10#6 device profile (Stormwood lane); Bars A/B -> Phase 2 catalog. Note: normal play shows a HUD phase label; the no-HUD reads come from F10#3."
   },
   {
    "id": "S3",
@@ -974,7 +975,7 @@
   {
    "id": "T2",
    "status": "failing",
-   "note": "Tide-race shader on main fe07d0d2 still blind-fails surf read; six chains unbuilt; no C2/C3 fight verdicts."
+   "note": "Cards lane re-score on main e35e2611. Met on disclosed relaxed proofs: six island groups (f13_0_six_groups), four loops and three shortcuts (RUN8, 74/0), eight pockets (full/f13_2_pockets, 53/0), six local chains one per group (phase1/f13_3, 619/0), four-character ledger with no catch or repeated wild (b/f13_4, 598/0); on function, currents, inhabited docks and Veilfall distance read (phase1/f13_5) and restoration (b/f14_2 blind A/B, 77/0). Device profile FAILS (CARDS/t2_device/JUDGE.md: 1920x1080 opengl3 computer capture, no Ally hardware, code-blind 7-inch): docks 7/7 inhabited, Veilfall read and restoration YES, but current flow direction is unreadable at 7 inches and small HUD text (clock, hotbar numbers, key glyphs, FOOD) is illegible. Left: (1) F14#0 Tess and F14#1 Nerissa C3 (Tidewake lane, after tb/combat-spacing); (2) device profile: current direction cue (Tidewake lane) and small HUD text at 7 inches (HUD owner; shared with F10#6's handheld HUD work); (3) Bars A/B -> Phase 2 catalog."
   },
   {
    "id": "T3",
