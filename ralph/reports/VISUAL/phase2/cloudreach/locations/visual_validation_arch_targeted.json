@@ -1,0 +1,22 @@
+{
+  "review": "Full-resolution inspection of six targeted Broken Skyroad Arch frames using the production CameraRig camera",
+  "arch_visible": [
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__day__close",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__night__close"
+  ],
+  "fully_framed": [
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__day__approach",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__approach",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__night__approach"
+  ],
+  "needs_composition_retry": [
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__day__close",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__golden__close",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__night__close"
+  ],
+  "notes": "The engine's gateway-center screen test emits six failures, but the installed gateway is visible in the saved pixels. The three close frames crop its left side and need a better angle. The earlier lower-shelf frames were entirely rock-obscured and remain in the engine provenance; current manifest paths point to this targeted run."
+}

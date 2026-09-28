@@ -1,0 +1,16 @@
+{
+  "subject": "Glass Sink",
+  "judgment": "No distinct sink or glass feature recognizable in third rim survey",
+  "evidence_ids": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach",
+    "stormwood__landmark__glass_sink__golden__close"
+  ],
+  "limitations": [
+    "authored marker lies in nonwalkable terrain",
+    "two walkable rim camera positions reach an unmarked void edge",
+    "visual appearance needs design confirmation"
+  ],
+  "catalog_item": "P2-070"
+}

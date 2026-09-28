@@ -1,0 +1,125 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome": "water",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "Stocked party and satchel in production scene; no save or progression proof",
+	"frames": [
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "exploration_hud",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/exploration_hud.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "HUD in exploration",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_backpack",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_backpack.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu backpack",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_creatures",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_creatures.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu creatures",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_map",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_map.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu map",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_skills",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_skills.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu skills",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_quest_log",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_quest_log.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu quest_log",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_build",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_build.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu build",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_players",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_players.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu players",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_save",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_save.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu save",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "menu_settings",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/menu_settings.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu settings",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "settings_controls",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/settings_controls.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Controls",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "quick_bindings",
+			"path": "res://ralph/reports/VISUAL/phase2/water/ui_full_main062/quick_bindings.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Quick items",
+			"ui": true
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042
+}

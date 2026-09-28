@@ -1,0 +1,66 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome": "tidewake",
+	"category": "systems",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/catch_low.png",
+			"id": "catch_low"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/catch_high.png",
+			"id": "catch_high"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/01-aiming-full-health.png",
+			"id": "01-aiming-full-health"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/02-orb-in-flight.png",
+			"id": "02-orb-in-flight"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/03-strike.png",
+			"id": "03-strike"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/03-absorbing.png",
+			"id": "03-absorbing"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/04-orb-resting.png",
+			"id": "04-orb-resting"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/05-orb-shakes.png",
+			"id": "05-orb-shakes"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/06-breakout.png",
+			"id": "06-breakout"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/07-aiming-weakened.png",
+			"id": "07-aiming-weakened"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/08-caught-verdict.png",
+			"id": "08-caught-verdict"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/catch_main129/09-caught-banner.png",
+			"id": "09-caught-banner"
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "catch"
+}

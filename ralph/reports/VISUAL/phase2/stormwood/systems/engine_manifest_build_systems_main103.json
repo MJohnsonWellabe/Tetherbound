@@ -1,0 +1,141 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "stormwood",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 263435847535,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 263452624753,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T06:07:09",
+	"capture_started_utc": "2026-09-28T06:05:40",
+	"captured_frame_count": 4,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof.",
+	"frames": [
+		{
+			"camera_position": [
+				-320.0,
+				34.3792915344238,
+				234.913619995117
+			],
+			"destination_display_name": "camp",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/build_systems_main103/stormwood__system__camp.jpg",
+			"frame_id": "stormwood__system__camp",
+			"identity": "stormwood__system__build_suite",
+			"note": "placed camp tent and campfire visual fixture",
+			"player_position": [
+				-320.0,
+				31.5481491088867,
+				240.0
+			],
+			"system": "camp",
+			"time": "day",
+			"view": "normal"
+		},
+		{
+			"camera_position": [
+				-320.0,
+				34.3792915344238,
+				234.913619995117
+			],
+			"destination_display_name": "bed",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/build_systems_main103/stormwood__system__bed.jpg",
+			"frame_id": "stormwood__system__bed",
+			"identity": "stormwood__system__build_suite",
+			"note": "placed bedroll visual fixture",
+			"player_position": [
+				-320.0,
+				31.5481491088867,
+				240.0
+			],
+			"system": "bed",
+			"time": "day",
+			"view": "normal"
+		},
+		{
+			"camera_position": [
+				-320.0,
+				34.3792915344238,
+				234.913619995117
+			],
+			"destination_display_name": "building",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/build_systems_main103/stormwood__system__building.jpg",
+			"frame_id": "stormwood__system__building",
+			"identity": "stormwood__system__build_suite",
+			"note": "placed floor and wall visual fixture",
+			"player_position": [
+				-320.0,
+				31.5481491088867,
+				240.0
+			],
+			"system": "building",
+			"time": "day",
+			"view": "normal"
+		},
+		{
+			"camera_position": [
+				-320.0,
+				34.3792915344238,
+				234.913619995117
+			],
+			"destination_display_name": "crafting",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/build_systems_main103/stormwood__system__crafting.jpg",
+			"frame_id": "stormwood__system__crafting",
+			"identity": "stormwood__system__build_suite",
+			"note": "workbench and production CraftPanel directly opened",
+			"player_position": [
+				-320.0,
+				31.5481491088867,
+				240.0
+			],
+			"system": "crafting",
+			"time": "day",
+			"view": "ui"
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"stormwood__system__build_suite"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 263452624753,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}

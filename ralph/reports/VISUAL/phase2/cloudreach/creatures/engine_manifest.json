@@ -1,0 +1,1883 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome": "cloudreach",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "Production scene, trainer and camera; direct visual pose fixture, not combat or traversal proof",
+	"frames": [
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galewisp__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galewisp__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "galewisp",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__glimmermoth__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__glimmermoth__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "glimmermoth",
+			"subject_stand_xz": [
+				-16.67,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.32863561653873,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__stormcapra__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__stormcapra__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "stormcapra",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__skyrill__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__skyrill__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "skyrill",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__aeriex__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__aeriex__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "aeriex",
+			"subject_stand_xz": [
+				-17.3,
+				-199.8
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__ribbonray__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__ribbonray__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "ribbonray",
+			"subject_stand_xz": [
+				-17.09,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__breezetail__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__breezetail__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "breezetail",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cloudfang__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cloudfang__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "cloudfang",
+			"subject_stand_xz": [
+				-17.195,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__cliffspike__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__cliffspike__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "cliffspike",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__tempestwing__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__tempestwing__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "tempestwing",
+			"subject_stand_xz": [
+				-17.405,
+				-199.53
+			],
+			"trainer_to_subject_xz_m": 8.01498128506861,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__solmane__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__solmane__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "solmane",
+			"subject_stand_xz": [
+				-19.19,
+				-194.94
+			],
+			"trainer_to_subject_xz_m": 12.9398493036047,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__craghorn__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__craghorn__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "craghorn",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__pebbik__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__pebbik__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "pebbik",
+			"subject_stand_xz": [
+				-16.775,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "cloudreach__galecrest__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/cloudreach/creatures_near_main062b/cloudreach__galecrest__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "galecrest",
+			"subject_stand_xz": [
+				-16.95,
+				-200.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
+			"trainer_visible_intent": true
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"seed": 2042,
+	"stage_xz": [
+		-14.5,
+		-207.0
+	]
+}

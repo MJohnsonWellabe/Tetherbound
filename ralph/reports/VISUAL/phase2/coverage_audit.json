@@ -1,0 +1,234 @@
+{
+  "biomes": {
+    "meadows": {
+      "frames": 617,
+      "categories": {
+        "characters": 152,
+        "creatures": 126,
+        "named_locations": 114,
+        "route_and_terrain": 50,
+        "systems": 85,
+        "ui": 12,
+        "world_items": 78
+      },
+      "times": {
+        "day": 528,
+        "dusk": 48,
+        "night": 41
+      },
+      "systems": {
+        "bed": 1,
+        "building": 1,
+        "camp": 1,
+        "catching": 12,
+        "crafting": 1,
+        "fights": 60,
+        "flying": 3,
+        "riding": 6
+      },
+      "expected_systems_without_indexed_frames": [
+        "swimming"
+      ],
+      "dialogue_frames": 76,
+      "defeated_frames": 56,
+      "ui_ids": [
+        "meadows__exploration_hud",
+        "meadows__menu_backpack",
+        "meadows__menu_build",
+        "meadows__menu_creatures",
+        "meadows__menu_map",
+        "meadows__menu_players",
+        "meadows__menu_quest_log",
+        "meadows__menu_save",
+        "meadows__menu_settings",
+        "meadows__menu_skills",
+        "meadows__quick_bindings",
+        "meadows__settings_controls"
+      ],
+      "missing_files": [],
+      "missing_planned_frames": {},
+      "bad_commits": [],
+      "missing_repro_or_render_path": []
+    },
+    "tidewake": {
+      "frames": 913,
+      "categories": {
+        "characters": 132,
+        "creatures": 91,
+        "named_locations": 258,
+        "route_and_terrain": 120,
+        "systems": 273,
+        "ui": 12,
+        "world_items": 27
+      },
+      "times": {
+        "day": 713,
+        "dusk": 114,
+        "night": 86
+      },
+      "systems": {
+        "bed": 3,
+        "camp": 3,
+        "catching": 12,
+        "crafting": 3,
+        "current_states": 16,
+        "fights": 210,
+        "flying": 3,
+        "riding": 10,
+        "swimming": 13
+      },
+      "expected_systems_without_indexed_frames": [
+        "building"
+      ],
+      "dialogue_frames": 66,
+      "defeated_frames": 48,
+      "ui_ids": [
+        "tidewake__exploration_hud",
+        "tidewake__menu_backpack",
+        "tidewake__menu_build",
+        "tidewake__menu_creatures",
+        "tidewake__menu_map",
+        "tidewake__menu_players",
+        "tidewake__menu_quest_log",
+        "tidewake__menu_save",
+        "tidewake__menu_settings",
+        "tidewake__menu_skills",
+        "tidewake__quick_bindings",
+        "tidewake__settings_controls"
+      ],
+      "missing_files": [],
+      "missing_planned_frames": {},
+      "bad_commits": [],
+      "missing_repro_or_render_path": []
+    },
+    "cloudreach": {
+      "frames": 435,
+      "categories": {
+        "characters": 34,
+        "creatures": 98,
+        "named_locations": 144,
+        "route_and_terrain": 39,
+        "systems": 94,
+        "ui": 12,
+        "world_items": 14
+      },
+      "times": {
+        "day": 324,
+        "dusk": 57,
+        "night": 54
+      },
+      "systems": {
+        "bed": 1,
+        "building": 1,
+        "camp": 1,
+        "catching": 12,
+        "crafting": 1,
+        "fights": 29,
+        "flying": 16,
+        "flying_return": 5,
+        "riding": 28
+      },
+      "expected_systems_without_indexed_frames": [
+        "swimming"
+      ],
+      "dialogue_frames": 16,
+      "defeated_frames": 6,
+      "ui_ids": [
+        "cloudreach__exploration_hud",
+        "cloudreach__menu_backpack",
+        "cloudreach__menu_build",
+        "cloudreach__menu_creatures",
+        "cloudreach__menu_map",
+        "cloudreach__menu_players",
+        "cloudreach__menu_quest_log",
+        "cloudreach__menu_save",
+        "cloudreach__menu_settings",
+        "cloudreach__menu_skills",
+        "cloudreach__quick_bindings",
+        "cloudreach__settings_controls"
+      ],
+      "missing_files": [],
+      "missing_planned_frames": {
+        "items": [
+          "cloudreach__inventory__pickup__potion_small",
+          "cloudreach__inventory__pickup__potion_small__h0",
+          "cloudreach__inventory__pickup__potion_small__h270",
+          "cloudreach__inventory__pickup__potion_small__h90",
+          "cloudreach__inventory__pickup__rare_candy",
+          "cloudreach__inventory__pickup__rare_candy__h0",
+          "cloudreach__inventory__pickup__rare_candy__h180",
+          "cloudreach__inventory__pickup__rare_candy__h90",
+          "cloudreach__inventory__pickup__stamina_mushroom",
+          "cloudreach__inventory__pickup__stamina_mushroom__h180",
+          "cloudreach__inventory__pickup__stamina_mushroom__h270",
+          "cloudreach__inventory__pickup__stamina_mushroom__h90",
+          "cloudreach__inventory__pickup__tm_aerial_flash",
+          "cloudreach__inventory__pickup__tm_aerial_flash__h180",
+          "cloudreach__inventory__pickup__tm_aerial_flash__h270",
+          "cloudreach__inventory__pickup__tm_aerial_flash__h90",
+          "cloudreach__inventory__pickup__tm_heavenfall",
+          "cloudreach__inventory__pickup__tm_heavenfall__h180",
+          "cloudreach__inventory__pickup__tm_heavenfall__h270",
+          "cloudreach__inventory__pickup__tm_heavenfall__h90"
+        ]
+      },
+      "bad_commits": [],
+      "missing_repro_or_render_path": []
+    },
+    "stormwood": {
+      "frames": 728,
+      "categories": {
+        "characters": 142,
+        "creatures": 98,
+        "named_locations": 186,
+        "route_and_terrain": 60,
+        "systems": 191,
+        "time_and_weather": 12,
+        "ui": 12,
+        "world_items": 27
+      },
+      "times": {
+        "day": 592,
+        "dusk": 74,
+        "night": 62
+      },
+      "systems": {
+        "bed": 1,
+        "building": 1,
+        "camp": 1,
+        "catching": 12,
+        "crafting": 1,
+        "fights": 172,
+        "flying": 3
+      },
+      "expected_systems_without_indexed_frames": [
+        "riding",
+        "swimming"
+      ],
+      "dialogue_frames": 71,
+      "defeated_frames": 52,
+      "ui_ids": [
+        "stormwood__exploration_hud",
+        "stormwood__menu_backpack",
+        "stormwood__menu_build",
+        "stormwood__menu_creatures",
+        "stormwood__menu_map",
+        "stormwood__menu_players",
+        "stormwood__menu_quest_log",
+        "stormwood__menu_save",
+        "stormwood__menu_settings",
+        "stormwood__menu_skills",
+        "stormwood__quick_bindings",
+        "stormwood__settings_controls"
+      ],
+      "missing_files": [],
+      "missing_planned_frames": {},
+      "bad_commits": [],
+      "missing_repro_or_render_path": []
+    }
+  },
+  "notes": [
+    "Counts confirm indexed files, not successful framing or gameplay access.",
+    "Open visual and checklist gaps are tracked in the catalog notes and validation reports."
+  ]
+}

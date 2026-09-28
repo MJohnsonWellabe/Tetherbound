@@ -1,0 +1,475 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 263721060187,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 263737837407,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T05:45:17",
+	"capture_started_utc": "2026-09-28T05:44:21",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"defeated_fixture": "Authored post-win text opened in production DialoguePanel at the trainer post. No battle was won and no defeat flag was changed; world-body aftermath remains a separate capture.",
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "water_trainer_odan",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "salt_crown",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 543512,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76725482940674,
+			"camera_position": [
+				143.999984741211,
+				96.3832168579102,
+				2272.87915039063
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					144.0,
+					95.4802551269531,
+					2278.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.00000000000000699746623220986,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262202277667711,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.00000014870182951654,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					143.999984741211,
+					96.3832168579102,
+					2272.87915039063
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "water_trainer_odan_win",
+			"destination_display_name": "Odan",
+			"destination_index": 32,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/defeated_odan_main094/water__inventory__trainer__water_trainer_odan__defeated.jpg",
+			"frame_id": "water__inventory__trainer__water_trainer_odan__defeated",
+			"identity": "water__inventory__trainer__water_trainer_odan",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_03_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						74.0849990844727,
+						56.7360076904297,
+						2263.15795898438
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_salt_crown_exploration_spine_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						77.0849990844727,
+						57.0390281677246,
+						2263.15795898438
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_05_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						149.537002563477,
+						66.3461456298828,
+						2300.69604492188
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_05_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						149.537002563477,
+						66.5035781860352,
+						2303.69604492188
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "water_salt_crown_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						182.175003051758,
+						93.2662200927734,
+						2293.49194335938
+					],
+					"species_id": "water_sirenseal"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.201981,
+				"hour": 8.00807924,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				144.0,
+				93.7302703857422,
+				2278.0
+			],
+			"position_xz": [
+				144.0,
+				2280.0
+			],
+			"resolved_ground_y": 93.7292251586914,
+			"route_class": "main",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				0.0,
+				-2.0,
+				2.0,
+				-5.0,
+				5.0,
+				-9.0,
+				9.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0,
+				12.0
+			],
+			"target_position_xz": [
+				144.0,
+				2280.0
+			],
+			"terrain_ground_y": 93.7292251586914,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "water_trainer_odan",
+			"authored_source": "data/config/water_characters.json",
+			"band_display_name": "",
+			"band_id": "salt_crown",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 543512,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76725482940674,
+			"camera_position": [
+				143.999984741211,
+				96.3832168579102,
+				2272.87915039063
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					144.0,
+					95.4802551269531,
+					2278.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.00000000000000699746623220986,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262202277667711,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.00000014870182951654,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					143.999984741211,
+					96.3832168579102,
+					2272.87915039063
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "water_trainer_odan_win",
+			"destination_display_name": "Odan",
+			"destination_index": 32,
+			"dialogue_id": "water_trainer_odan_win",
+			"dialogue_visual_only": true,
+			"family_type": "trainer",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/defeated_odan_main094/water__inventory__trainer__water_trainer_odan__defeated__dialogue.jpg",
+			"frame_id": "water__inventory__trainer__water_trainer_odan__defeated__dialogue",
+			"identity": "water__inventory__trainer__water_trainer_odan__defeated__dialogue",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_03_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						74.0849990844727,
+						56.7360076904297,
+						2263.15795898438
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_salt_crown_exploration_spine_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						77.0849990844727,
+						57.0390281677246,
+						2263.15795898438
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_05_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						149.537002563477,
+						66.3461456298828,
+						2300.69604492188
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_05_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						149.537002563477,
+						66.5035781860352,
+						2303.69604492188
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "water_salt_crown_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						182.175003051758,
+						93.2662200927734,
+						2293.49194335938
+					],
+					"species_id": "water_sirenseal"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.201981,
+				"hour": 8.00807924,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				144.0,
+				93.7302703857422,
+				2278.0
+			],
+			"position_xz": [
+				144.0,
+				2280.0
+			],
+			"resolved_ground_y": 93.7292251586914,
+			"route_class": "main",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				0.0,
+				-2.0,
+				2.0,
+				-5.0,
+				5.0,
+				-9.0,
+				9.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0,
+				12.0
+			],
+			"target_position_xz": [
+				144.0,
+				2280.0
+			],
+			"terrain_ground_y": 93.7292251586914,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"water__inventory__trainer__water_trainer_odan__defeated"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 263737837407,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}
