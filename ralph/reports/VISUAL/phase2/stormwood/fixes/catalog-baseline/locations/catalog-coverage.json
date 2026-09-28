@@ -1,0 +1,41 @@
+{
+  "source_commit": "04ca924248421de076bc6827d5014d2933f591e7",
+  "capture_frames": 48,
+  "native_size": [
+    1920,
+    1080
+  ],
+  "required_sightings": {
+    "P2-037": [
+      "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+      "stormwood__dynamo__12__the_stormheart_tree__day__close",
+      "stormwood__landmark__dynamo_core__day__close"
+    ],
+    "P2-038": [
+      "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+      "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+      "stormwood__deepwood__10__the_fallen_giant__day__close",
+      "stormwood__landmark__crown_heartstone__day__close",
+      "stormwood__landmark__old_rodfolk_hall__day__close"
+    ],
+    "P2-039": [
+      "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+      "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+      "stormwood__landmark__crown_heartstone__day__close"
+    ],
+    "P2-040": [
+      "stormwood__deepwood__09__lantern_hollow__day__close",
+      "stormwood__landmark__glass_field__day__close",
+      "stormwood__landmark__lantern_hollow__night__close"
+    ],
+    "P2-041": [
+      "stormwood__landmark__crown_arch__day__close"
+    ]
+  },
+  "all_required_sightings_present": true,
+  "observed_phases": {
+    "calm": 48
+  },
+  "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "scope": "Current production baseline; accepted P2-042 weather enabled and all other presentation candidates disabled. Not a fix or acceptance claim."
+}

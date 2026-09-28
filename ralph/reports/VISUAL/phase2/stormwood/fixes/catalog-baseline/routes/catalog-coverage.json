@@ -1,0 +1,37 @@
+{
+  "source_commit": "04ca924248421de076bc6827d5014d2933f591e7",
+  "capture_frames": 30,
+  "native_size": [
+    1920,
+    1080
+  ],
+  "required_sightings": {
+    "P2-037": [
+      "stormwood__dynamo__12__the_stormheart_tree__route_day",
+      "stormwood__dynamo__12__the_stormheart_tree__walk_02_day",
+      "stormwood__dynamo__12__the_stormheart_tree__vista_dusk"
+    ],
+    "P2-038": [
+      "stormwood__hollow_crown__08__the_crown_heartstone__route_day",
+      "stormwood__hollow_crown__08__the_crown_heartstone__walk_02_day"
+    ],
+    "P2-039": [
+      "stormwood__glowmoss_hollows__04__crown_overlook__route_day",
+      "stormwood__glowmoss_hollows__04__crown_overlook__walk_01_day",
+      "stormwood__glowmoss_hollows__04__crown_overlook__vista_dusk"
+    ],
+    "P2-040": [
+      "stormwood__cinder_verge__02__verge_rod_station__route_day",
+      "stormwood__deepwood__10__the_fallen_giant__vista_dusk"
+    ],
+    "P2-043": [
+      "stormwood__dynamo__11__the_glass_field__walk_03_day"
+    ]
+  },
+  "all_required_sightings_present": true,
+  "observed_phases": {
+    "calm": 30
+  },
+  "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "scope": "Current production baseline; accepted P2-042 weather enabled and all other presentation candidates disabled. Not a fix or acceptance claim."
+}
