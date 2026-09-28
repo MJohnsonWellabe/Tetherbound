@@ -105,6 +105,8 @@ func _run() -> void:
 	player = world.get_node("Player")
 	rig = world.get_node("CameraRig")
 	swimming = player.get("swim_controller")
+	for layer: Node in world.find_children("*", "CanvasLayer", true, false):
+		(layer as CanvasLayer).visible = false
 	var config: Dictionary = world.get("config")
 	var lesson: Dictionary = config.swim_lesson
 	var west := _anchor(config,str(lesson.start_anchor))

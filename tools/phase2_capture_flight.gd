@@ -70,6 +70,8 @@ func _run() -> void:
 		return
 	var player:=world.get_node("Player") as CharacterBody3D
 	var rig:=world.get_node("CameraRig")
+	for layer: Node in world.find_children("*", "CanvasLayer", true, false):
+		(layer as CanvasLayer).visible = false
 	player.global_position=Vector3(400,610.25,3250)
 	player.velocity=Vector3.ZERO
 	rig.global_position=player.global_position+Vector3.UP*1.55
