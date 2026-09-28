@@ -41,6 +41,16 @@ func _config() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_surge.json"))
 
 
+func _phase_rows() -> Dictionary:
+	var presentation: Dictionary = _config().presentation
+	var rows: Dictionary = presentation.phases.duplicate(true)
+	var candidate: Dictionary = presentation.get("phase_readability_candidate", {})
+	if bool(candidate.get("enabled", false)):
+		for phase: String in candidate.get("phases", {}):
+			rows[phase].merge(candidate.phases[phase], true)
+	return rows
+
+
 func _art() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
 
@@ -101,7 +111,7 @@ func _assert_not_red(colour: Color, label: String) -> void:
 
 func test_every_phase_delta_overrides_sky_fog_and_light_from_config() -> void:
 	var surge := SURGE.new()
-	var rows: Dictionary = _config().presentation.phases
+	var rows: Dictionary = _phase_rows()
 	var shadows: Dictionary = _config().presentation.shadow_opacity
 	for phase: String in PHASES:
 		var delta: Dictionary = surge.light_delta_for_phase(phase)
@@ -181,7 +191,7 @@ func test_cross_fade_between_phases_has_no_dip_at_any_hour() -> void:
 ## exceeds the storm base's ambient value, at any hour.
 func test_storm_ambient_never_exceeds_the_storm_base() -> void:
 	var surge := SURGE.new()
-	var rows: Dictionary = _config().presentation.phases
+	var rows: Dictionary = _phase_rows()
 	for hour: float in [0.0, 12.0]:
 		var base := _real_base(surge, hour)
 		for phase: String in PHASES:
@@ -202,7 +212,7 @@ func test_rain_is_visible_and_scaled_per_phase() -> void:
 	surge.add_child(surge._rain)
 	assert_false(surge._rain.visible, "precondition: world_weather builds its emitter hidden")
 	surge._style_rain()
-	var rows: Dictionary = _config().presentation.phases
+	var rows: Dictionary = _phase_rows()
 	for phase: String in PHASES:
 		surge.phase = phase
 		surge.call("_apply_phase_light")
@@ -262,7 +272,7 @@ func test_ceiling_builds_and_stays_in_the_aftermath() -> void:
 func test_advance_presentation_cross_fades_over_real_deltas() -> void:
 	var parts := _world_with_look()
 	var sun: DirectionalLight3D = parts.sun
-	var rows: Dictionary = _config().presentation.phases
+	var rows: Dictionary = _phase_rows()
 	var seconds := float(_config().presentation.transition_seconds)
 	var surge := SURGE.new()
 	surge.world = parts.world
@@ -464,7 +474,7 @@ func test_aftermath_flag_lightens_rain_in_production_path() -> void:
 func test_production_phase_application_reaches_world_look_and_live_sun() -> void:
 	var parts := _world_with_look()
 	var sun: DirectionalLight3D = parts.sun
-	var rows: Dictionary = _config().presentation.phases
+	var rows: Dictionary = _phase_rows()
 	var surge := SURGE.new()
 	surge.world = parts.world
 	surge.phase = "calm"
