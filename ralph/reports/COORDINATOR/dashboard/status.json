@@ -334,6 +334,11 @@
  ],
  "lanes": [
   {
+   "lane": "Tidewake visual fixes (tb/x04-tidewake)",
+   "now": "Phase 2c in progress. Owner Lake Michigan dune direction implemented as default-off candidate; first native dune round rejected (P2-008 FAIL, Bars A/B No/No). Two Salt Crown respawned-player frames are invalid comparison evidence; capture displacement checks now reject them. Shared and Water-only visual candidates remain off; no new chapter acceptance.",
+   "next": "Capture corrected dune material, complete owned impact>=12 fixes/dispositions and paired reviews, chapter frame matrix and independent Bars A/B; update evidence and self-land through CI-green PRs. Evidence: ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/."
+  },
+  {
    "lane": "Meadows (tb/meadows)",
    "now": "Open: F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7 (C3), then cards M1–M3. Work on tb/meadows (gate road boards, captain stand-down aftermath) is not landed yet.",
    "next": "Self-lands each criterion"

@@ -9,6 +9,9 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 **Criteria:** 89 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3, F10#3 and F10#4, Cloudreach F08#3 and F08#4, Tidewake F13#3 and F13#5). No chapter is accepted.
 
 **The board is the source of truth.**
+
+**Tidewake Phase 2c (`tb/x04-tidewake`) is in progress.** The owner requests Lake Michigan sand dunes and sage/straw dune grass across the islands. The first native dune round is rejected (P2-008 item FAIL, Bars A/B No/No); a warmer material/cover iteration remains default-off. Two Salt Crown views were invalidated by player respawn during capture; the capture tool now rejects displaced-player/stale-camera evidence. See `ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/`. Additional shared shiny, human swim/contact, NPC appearance/grass clearance, combat roster, catch readout, Veilfall silhouette, offshore and current-foam candidates remain off pending their own native comparisons. Catalog rows retain those limits. The chapter matrix, regional Bars A/B acceptance, remaining dispositions and CI landings are still outstanding; no Tidewake visual criterion is newly accepted.
+
 - `ralph/reports/COORDINATOR/dashboard/criteria.json` holds every criterion and card, with its evidence and gap.
 - `status.json` holds the batches, the lane FINAL SHAs and the **`wip` list**. The `wip` list is the authoritative pickup list for unfinished work: each item says where the work is and the next step.
 - `ralph/reports/COORDINATOR/README.md` gives the scoring rule and how to rebuild and republish the board.
