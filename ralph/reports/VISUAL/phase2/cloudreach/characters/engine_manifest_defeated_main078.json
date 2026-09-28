@@ -1,0 +1,809 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 297443264346,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 297460041566,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T05:10:01",
+	"capture_started_utc": "2026-09-28T05:07:12",
+	"captured_frame_count": 6,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"defeated_fixture": "Authored post-win text opened in production DialoguePanel at the trainer post. No battle was won and no defeat flag was changed; world-body aftermath remains a separate capture.",
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "young_trainer_tavi",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 674746,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				-181.0,
+				852.682861328125,
+				4092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					-181.0,
+					851.779968261719,
+					4098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000146747765938926,
+					-0.000000176871836288228
+				],
+				"basis_y": [
+					-0.000000175231889443239,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.000000148702198998762,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					-181.0,
+					852.682861328125,
+					4092.87890625
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_tavi_defeated",
+			"destination_display_name": "Tavi",
+			"destination_index": 8,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/defeated_main078/cloudreach__inventory__character__young_trainer_tavi__defeated.jpg",
+			"frame_id": "cloudreach__inventory__character__young_trainer_tavi__defeated",
+			"identity": "cloudreach__inventory__character__young_trainer_tavi",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.218252,
+				"hour": 8.00873008,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-181.0,
+				850.030029296875,
+				4098.0
+			],
+			"position_xz": [
+				-180.0,
+				4100.0
+			],
+			"resolved_ground_y": 850.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-180.0,
+				4100.0
+			],
+			"terrain_ground_y": 850.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "young_trainer_tavi",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 674746,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				-181.0,
+				852.682861328125,
+				4092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					-181.0,
+					851.779968261719,
+					4098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000146747765938926,
+					-0.000000176871836288228
+				],
+				"basis_y": [
+					-0.000000175231889443239,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.000000148702198998762,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					-181.0,
+					852.682861328125,
+					4092.87890625
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_tavi_defeated",
+			"destination_display_name": "Tavi",
+			"destination_index": 8,
+			"dialogue_id": "cloudreach_tavi_defeated",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/defeated_main078/cloudreach__inventory__character__young_trainer_tavi__defeated__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__young_trainer_tavi__defeated__dialogue",
+			"identity": "cloudreach__inventory__character__young_trainer_tavi__defeated__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.218252,
+				"hour": 8.00873008,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-181.0,
+				850.030029296875,
+				4098.0
+			],
+			"position_xz": [
+				-180.0,
+				4100.0
+			],
+			"resolved_ground_y": 850.0,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				-180.0,
+				4100.0
+			],
+			"terrain_ground_y": 850.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "officer_voss",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 693901,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				299.0,
+				1082.68347167969,
+				5092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999999046325684,
+					0.0,
+					-0.000000150995660419539
+				],
+				"basis_y": [
+					-0.0000000262200732237261,
+					0.98480498790741,
+					0.173647686839104
+				],
+				"basis_z": [
+					0.000000148701445823463,
+					0.173647731542587,
+					-0.984805226325989
+				],
+				"origin": [
+					299.0,
+					1081.78051757813,
+					5098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000161074950710827,
+					0.0000000853947170753599
+				],
+				"basis_y": [
+					-0.000000143799269380906,
+					0.984807848930359,
+					0.173647701740265
+				],
+				"basis_z": [
+					-0.000000112067688462503,
+					0.173647701740265,
+					-0.984807848930359
+				],
+				"origin": [
+					299.0,
+					1082.68347167969,
+					5092.87890625
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_voss_defeated",
+			"destination_display_name": "Officer Voss",
+			"destination_index": 10,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/defeated_main078/cloudreach__inventory__character__officer_voss__defeated.jpg",
+			"frame_id": "cloudreach__inventory__character__officer_voss__defeated",
+			"identity": "cloudreach__inventory__character__officer_voss",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.207119962963,
+				"hour": 8.00828479851852,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				299.0,
+				1080.03063964844,
+				5098.0
+			],
+			"position_xz": [
+				300.0,
+				5100.0
+			],
+			"resolved_ground_y": 1080.08996582031,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				300.0,
+				5100.0
+			],
+			"terrain_ground_y": 1080.08996582031,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "officer_voss",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 693901,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				299.0,
+				1082.68347167969,
+				5092.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999999046325684,
+					0.0,
+					-0.000000150995660419539
+				],
+				"basis_y": [
+					-0.0000000262200732237261,
+					0.98480498790741,
+					0.173647686839104
+				],
+				"basis_z": [
+					0.000000148701445823463,
+					0.173647731542587,
+					-0.984805226325989
+				],
+				"origin": [
+					299.0,
+					1081.78051757813,
+					5098.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000161074950710827,
+					0.0000000853947170753599
+				],
+				"basis_y": [
+					-0.000000143799269380906,
+					0.984807848930359,
+					0.173647701740265
+				],
+				"basis_z": [
+					-0.000000112067688462503,
+					0.173647701740265,
+					-0.984807848930359
+				],
+				"origin": [
+					299.0,
+					1082.68347167969,
+					5092.87890625
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_voss_defeated",
+			"destination_display_name": "Officer Voss",
+			"destination_index": 10,
+			"dialogue_id": "cloudreach_voss_defeated",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/defeated_main078/cloudreach__inventory__character__officer_voss__defeated__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__officer_voss__defeated__dialogue",
+			"identity": "cloudreach__inventory__character__officer_voss__defeated__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.207119962963,
+				"hour": 8.00828479851852,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				299.0,
+				1080.03063964844,
+				5098.0
+			],
+			"position_xz": [
+				300.0,
+				5100.0
+			],
+			"resolved_ground_y": 1080.08996582031,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				300.0,
+				5100.0
+			],
+			"terrain_ground_y": 1080.08996582031,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "captain_veyra",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 470670,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				99.0,
+				1162.78393554688,
+				5342.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999999046325684,
+					0.0,
+					-0.000000150995660419539
+				],
+				"basis_y": [
+					-0.0000000262200732237261,
+					0.98480498790741,
+					0.173647686839104
+				],
+				"basis_z": [
+					0.000000148701445823463,
+					0.173647731542587,
+					-0.984805226325989
+				],
+				"origin": [
+					99.0,
+					1161.88098144531,
+					5348.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000161074950710827,
+					0.0000000853947170753599
+				],
+				"basis_y": [
+					-0.000000143799269380906,
+					0.984807848930359,
+					0.173647701740265
+				],
+				"basis_z": [
+					-0.000000112067688462503,
+					0.173647701740265,
+					-0.984807848930359
+				],
+				"origin": [
+					99.0,
+					1162.78393554688,
+					5342.87890625
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_veyra_defeated",
+			"destination_display_name": "Captain Veyra",
+			"destination_index": 11,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/defeated_main078/cloudreach__inventory__character__captain_veyra__defeated.jpg",
+			"frame_id": "cloudreach__inventory__character__captain_veyra__defeated",
+			"identity": "cloudreach__inventory__character__captain_veyra",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.206624333333,
+				"hour": 8.00826497333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				99.0,
+				1160.13110351563,
+				5348.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"resolved_ground_y": 1160.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				100.0,
+				5350.0
+			],
+			"terrain_ground_y": 1160.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "captain_veyra",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 470670,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76741886138916,
+			"camera_position": [
+				99.0,
+				1162.78393554688,
+				5342.87890625
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999999046325684,
+					0.0,
+					-0.000000150995660419539
+				],
+				"basis_y": [
+					-0.0000000262200732237261,
+					0.98480498790741,
+					0.173647686839104
+				],
+				"basis_z": [
+					0.000000148701445823463,
+					0.173647731542587,
+					-0.984805226325989
+				],
+				"origin": [
+					99.0,
+					1161.88098144531,
+					5348.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000161074950710827,
+					0.0000000853947170753599
+				],
+				"basis_y": [
+					-0.000000143799269380906,
+					0.984807848930359,
+					0.173647701740265
+				],
+				"basis_z": [
+					-0.000000112067688462503,
+					0.173647701740265,
+					-0.984807848930359
+				],
+				"origin": [
+					99.0,
+					1162.78393554688,
+					5342.87890625
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_veyra_defeated",
+			"destination_display_name": "Captain Veyra",
+			"destination_index": 11,
+			"dialogue_id": "cloudreach_veyra_defeated",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/defeated_main078/cloudreach__inventory__character__captain_veyra__defeated__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+			"identity": "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.206624333333,
+				"hour": 8.00826497333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				99.0,
+				1160.13110351563,
+				5348.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"resolved_ground_y": 1160.03,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"target_position_xz": [
+				100.0,
+				5350.0
+			],
+			"terrain_ground_y": 1160.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		}
+	],
+	"planned_frame_count": 3,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__young_trainer_tavi__defeated",
+		"cloudreach__inventory__character__officer_voss__defeated",
+		"cloudreach__inventory__character__captain_veyra__defeated"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 297460041566,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}
