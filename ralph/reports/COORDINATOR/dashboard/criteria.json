@@ -207,10 +207,10 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 47,
+   "pct": 78,
    "counts": {
-    "met": 4,
-    "partial": 5,
+    "met": 5,
+    "partial": 4,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -238,9 +238,10 @@
     },
     {
      "text": "Warden: named tactical question visible at normal distance",
-     "status": "partial",
-     "evidence": "Profile pinned in data test; two-peer Warden fight in handoff leg (fixture)",
-     "gap": "Normal-camera capture and blind verdict"
+     "status": "met",
+     "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f04/warden_3b6f965a/ (render 36427399935), JUDGE_r3_3b6f965a.md (Warden PASS), RECHECK_F04_3.md. \"!! HEAVY — get clear\" on every 1.10 s tell with Tuskroot in frame; victory lines frame Aldis head to foot with no ally or fallen ace in front (fallen bodies clear at the cut; ally stands behind the lens) and the combat HUD gone. Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Disclosed: capture_named_fight.gd harness (teleport to the stand; real challenge prompt), --live-member resolves members 1-4 as won, --resolve=won, level-3 fixture creature with scripted dodge, --keep-alive available. Outside this row: creature hides the Warden after the dialogue (F04#6/#7), ring hugs the feet (tell clause). Bars A/B → Phase 2 catalog."
     },
     {
      "text": "Real hit/avoidance witness per fight",

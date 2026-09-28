@@ -5938,7 +5938,7 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 		_clear_fallen_bodies()
 		_trainer_cleanup_delay = 0.0
 		push_in.call("begin", speaker, "aftermath")
-		_step_ally_behind_the_lens(push_in.get_parent())
+		_step_ally_behind_the_lens(push_in.get_parent(), panel)
 		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
 		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
 	panel.call("start", conversation)
@@ -5977,7 +5977,7 @@ func _step_ally_out_of_the_victory_shot(speaker: Node3D) -> void:
 ## shot, the ally stands `camera.json` conversation.profiles.aftermath
 ## `ally_behind_lens_m` behind the lens along the shot, so no creature size or
 ## swing puts it in the frame. No shot solved: the side step above stands.
-func _step_ally_behind_the_lens(rig: Node) -> void:
+func _step_ally_behind_the_lens(rig: Node, panel: Node = null) -> void:
 	var ally := ally_body()
 	if ally == null or not is_instance_valid(ally) or rig == null or not rig.has_method("conversation_shot"):
 		return
@@ -5995,6 +5995,14 @@ func _step_ally_behind_the_lens(rig: Node) -> void:
 		ally.call("place_on_ground", spot)
 	else:
 		ally.global_position = Vector3(spot.x, ally.global_position.y, spot.z)
+	# Render 36439358952 a01: exploration had just resumed following, so the
+	# ally walked straight back to the player's side. It holds its place until
+	# the victory lines finish, then follows again.
+	if ally.has_method("set_following") and panel != null and panel.has_signal("finished"):
+		ally.call("set_following", false)
+		panel.connect("finished", func(_id: String) -> void:
+			if is_instance_valid(ally) and not trainer_battle_active():
+				ally.call("set_following", true), CONNECT_ONE_SHOT)
 
 
 ## SB9's flag, and SC15's payout hook.

@@ -15,6 +15,7 @@ const MENU_DATA := "res://data/config/menu.json"
 var _biome := ""
 var _output := ""
 var _seed := 2042
+var _map_zoom_samples := false
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 
@@ -35,6 +36,8 @@ func _run() -> void:
 			_output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--seed="):
 			_seed = int(arg.trim_prefix("--seed="))
+		elif arg == "--map-zoom-samples":
+			_map_zoom_samples = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -93,6 +96,8 @@ func _run() -> void:
 		for frame in 6:
 			await process_frame
 		await _shoot("menu_%s" % tab_id, "Menu %s" % tab_id, world)
+		if tab_id == "map" and _map_zoom_samples:
+			await _shoot_map_zoom_samples(menu, world)
 		if tab_id == "settings":
 			await _shoot_settings_sections(menu, world)
 	menu.call("close")
@@ -103,6 +108,7 @@ func _run() -> void:
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
 		"fixture": "Stocked party and satchel in production scene; no save or progression proof",
+		"map_zoom_samples": _map_zoom_samples,
 		"frames": _records, "failures": _failures,
 		"complete": _failures.is_empty(),
 	}
@@ -110,6 +116,32 @@ func _run() -> void:
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	file.close()
 	quit(0 if _failures.is_empty() else 1)
+
+
+## Observe the existing map at each supported zoom without changing survey
+## data, discovered landmarks or the remembered player zoom. Direct view-state
+## adjustment is disclosed; these images do not prove controller navigation.
+func _shoot_map_zoom_samples(menu: Node, world: Node) -> void:
+	var bodies: Array = menu.get("_bodies")
+	var index := int(menu.get("_index"))
+	if index < 0 or index >= bodies.size():
+		_failures.append("Map tab body unavailable")
+		return
+	var tab := bodies[index] as Node
+	var canvas := tab.get("_canvas") as Control
+	if canvas == null:
+		_failures.append("Map canvas unavailable")
+		return
+	var original_zoom := float(tab.get("_zoom"))
+	for zoom_level: float in [4.0, 8.0, 16.0]:
+		tab.set("_zoom", zoom_level)
+		tab.call("_clamp_pan")
+		canvas.queue_redraw()
+		await _shoot("menu_map_zoom_%d" % int(zoom_level),
+			"Map at %dx; direct view-state fixture, original fog and discoveries" % int(zoom_level), world)
+	tab.set("_zoom", original_zoom)
+	tab.call("_clamp_pan")
+	canvas.queue_redraw()
 
 
 func _shoot_settings_sections(menu: Node, world: Node) -> void:

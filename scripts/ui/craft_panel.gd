@@ -29,6 +29,7 @@ const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## D102: pausing the tree is a solo-only act. See local_pause.gd.
 const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
+const PRESENTATION_CONFIG := "res://data/config/craft_presentation.json"
 
 const STATUS_SECONDS := 2.4
 const ROW_ICON_PX := 40
@@ -74,10 +75,18 @@ var _status_left: float = 0.0
 var _open: bool = false
 var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
 var _paused_before: bool = false
+var _presentation: Dictionary = {}
+var _readable_recipe_rows := false
+var _readable_action_hints := false
 
 
 func _ready() -> void:
 	game = get_node_or_null(^"/root/Game")
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_CONFIG))
+	if presentation is Dictionary:
+		_presentation = presentation
+	_readable_recipe_rows = bool(_presentation.get("readable_recipe_rows", false))
+	_readable_action_hints = bool(_presentation.get("readable_action_hints", false))
 	_build()
 	visible = false
 	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
@@ -190,7 +199,7 @@ func _build() -> void:
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", box)
-	panel.custom_minimum_size = Vector2(880, 0)
+	panel.custom_minimum_size = Vector2(float(_presentation.get("panel_width", 1080)) if _readable_recipe_rows else 880.0, 0)
 	center.add_child(panel)
 
 	var outer := VBoxContainer.new()
@@ -213,8 +222,8 @@ func _build() -> void:
 
 	var hint := Label.new()
 	hint.text = "Leave: %s" % _cancel_glyph()
-	hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if _readable_action_hints else UITokens.FONT_TINY)
+	hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	outer.add_child(hint)
 
 	UITokens.make_text_legible(_root)
@@ -230,7 +239,8 @@ func _build() -> void:
 ## an orb recipe the player has never been told exists has nothing to say yet.
 func _build_list_zone() -> Control:
 	var side := VBoxContainer.new()
-	side.custom_minimum_size = Vector2(300, 0)
+	var list_width := float(_presentation.get("list_width", 480)) if _readable_recipe_rows else 300.0
+	side.custom_minimum_size = Vector2(list_width, 0)
 
 	# Bounded scroll, not an unbounded VBoxContainer directly in `side`: with
 	# every unlocked-by-default recipe known from the start, this list is
@@ -241,7 +251,11 @@ func _build_list_zone() -> Control:
 	# alongside this) had been leaving `_rows` empty, so nothing was tall
 	# enough to notice.
 	_list_scroll = ScrollContainer.new()
-	_list_scroll.custom_minimum_size = Vector2(300, LIST_VISIBLE_HEIGHT)
+	var list_height := float(LIST_VISIBLE_HEIGHT)
+	if _readable_recipe_rows:
+		var visible_rows := maxi(1, int(_presentation.get("visible_rows", 4)))
+		list_height = visible_rows * float(_presentation.get("row_height", 128)) + (visible_rows - 1) * 8.0
+	_list_scroll.custom_minimum_size = Vector2(list_width, list_height)
 	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	side.add_child(_list_scroll)
 
@@ -280,6 +294,8 @@ func _build_list_zone() -> Control:
 func _make_row(id: String, recipe: Dictionary) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = Vector2(300, ROW_HEIGHT)
+	if _readable_recipe_rows:
+		button.custom_minimum_size = Vector2(float(_presentation.get("list_width", 480)), float(_presentation.get("row_height", 128)))
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = ""
 	button.add_theme_stylebox_override("normal", UITokens.slot_box(false))
@@ -337,6 +353,9 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	name.autowrap_mode = TextServer.AUTOWRAP_OFF
 	name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	name.clip_text = true
+	if _readable_recipe_rows:
+		name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		name.max_lines_visible = 2
 	name.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	name.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	text_col.add_child(name)
@@ -356,6 +375,9 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	cost_label.clip_text = true
+	if _readable_recipe_rows:
+		cost_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		cost_label.max_lines_visible = 2
 	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
@@ -388,6 +410,8 @@ func _build_center_zone() -> Control:
 
 	_center_name = Label.new()
 	_center_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	if _readable_recipe_rows:
+		_center_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_center_name.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
 	_center_name.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	side.add_child(_center_name)
@@ -427,8 +451,8 @@ func _build_right_zone() -> Control:
 
 	_craft_hint = Label.new()
 	_craft_hint.text = "Craft: A / Enter"
-	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if _readable_action_hints else UITokens.FONT_TINY)
+	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	side.add_child(_craft_hint)
 
 	return side
@@ -549,7 +573,9 @@ func _cost_line(recipe: Dictionary) -> String:
 		var need := int(requirement.get("n", 0))
 		var have: int = int(inventory.call("count", id)) if inventory != null else 0
 		var name := str(db.call("item_name", id)) if db != null else id
-		parts.append("%d %s (have %d)" % [need, name, have])
+		# Ownership counts remain in the selected recipe's ingredient panel.
+		# The list needs a short, distinguishable preview of every requirement.
+		parts.append("%d %s" % [need, name] if _readable_recipe_rows else "%d %s (have %d)" % [need, name, have])
 	return ", ".join(parts)
 
 
