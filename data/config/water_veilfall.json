@@ -67,6 +67,12 @@
     "sluice_gates": {"enabled": true, "by_width": {"18": "res://assets/environment/tidewake/sluice_gate/sluice_gate_18.tscn", "30": "res://assets/environment/tidewake/sluice_gate/sluice_gate_30.tscn"}},
     "heart_banner": {"enabled": true, "scene": "res://assets/environment/tidewake/heart_banner/heart_banner.tscn", "placements": [[-18.0, 3.5, 105.0, -90.0], [18.0, 3.5, 105.0, 90.0]]}
   },
+  "arena_bounds": {
+    "_why": "F14#1 C3 (ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md, Nerissa r13): the 11 m fight ring reached a metre short of the Heart Chamber's east wall; a READER stepping out of Riptusk's lane there put the camera pivot inside the camera-only banner liner (x 17-21) and the lens in the banner cloth. water_veilfall.gd::combat_arena_bounds_at shrinks the ring (CombatManager's room contract, never grows it) to side_margin_m inside the side walls, 1 m inside the liners, and end_margin_m inside the ends. TUNABLE.",
+    "rooms": ["heart_chamber"],
+    "side_margin_m": 5.0,
+    "end_margin_m": 1.0
+  },
   "_why_camera_occluders": "F14#1 C3 (Nerissa r4, ralph/reports/TIDEWAKE/phase1/f14_1): camera-only boxes (camera_rig.gd OCCLUSION_ONLY_LAYER) so the fight camera stops short of the containment crystal and the balcony railings instead of standing behind them. Interior-local metres: the crystal (crystal_position, about 10 m tall) and the two side walls from 3 m up (x 17-21: the heart banners hung at x 18 (nerissa_r9 had the camera inside the east banner for five frames), the ledges, their railings and the hanging vines and lanterns below them; nerissa_r7 had the camera on the east ledge walkway and inside the vines for five frames after the Riptusk heavy). Starting at 3 m, above any fighter's pivot, so the arm never starts inside one. Traversal never sees them.",
   "camera_occluders": [
     {"at": [0.0, 5.0, 113.0], "size": [5.0, 10.0, 5.0]},
@@ -95,8 +101,8 @@
     {"id": "intake_grille", "z": 30.0, "width_m": 18.0, "height_m": 7.0, "opens_with": "water_veilfall_intake_stopped"},
     {"id": "return_grille", "z": 79.0, "width_m": 30.0, "height_m": 7.0, "opens_with": "water_veilfall_return_opened"}
   ],
-  "captain_position": [9.0, 0.0, 100.0],
-  "_why_captain_position": "F14#1 C2: her fights form about 8 m in front of her, between the two fighters (combat_manager.gd _open_arena), with the 11 m combat.json arena. From (9, 0, 91) the ring was centred 3 m inside the Heart Chamber lip (z 80) and reached south into the Sluice Crossing, whose channel beside the bridge lies 1 m below the floors. After dbe43195 gave her Riptusk its travelling lane, a sidestepping ally dropped into that channel and was pinned against the bridge side (render bisect and local trace, ralph/reports/TIDEWAKE/phase1/f14_1/). From (9, 0, 100) the ring (centre about (9, 92)) sits 12 m inside the lip and 1 m short of the east wall, and short of the Guardian at z 108. Her x stays 9, not 0-3, so a camera behind an ally on the north side of the fight looks past the central crystal (x 0, z 113) instead of through it: at (3, 0, 100) a code-blind C3 judge failed 8 of 53 frames on the crystal hiding the opponent (ralph/reports/TIDEWAKE/phase1/f14_1/nerissa_r6/).",
+  "captain_position": [7.0, 0.0, 100.0],
+  "_why_captain_position": "F14#1 C2: her fights form about 8 m in front of her, between the two fighters (combat_manager.gd _open_arena), with the 11 m combat.json arena. From (9, 0, 91) the ring was centred 3 m inside the Heart Chamber lip (z 80) and reached south into the Sluice Crossing, whose channel beside the bridge lies 1 m below the floors. After dbe43195 gave her Riptusk its travelling lane, a sidestepping ally dropped into that channel and was pinned against the bridge side (render bisect and local trace, ralph/reports/TIDEWAKE/phase1/f14_1/). From (9, 0, 100) the ring (centre about (9, 92)) sits 12 m inside the lip and 1 m short of the east wall, and short of the Guardian at z 108. Her x stays 9, not 0-3, so a camera behind an ally on the north side of the fight looks past the central crystal (x 0, z 113) instead of through it: at (3, 0, 100) a code-blind C3 judge failed 8 of 53 frames on the crystal hiding the opponent (ralph/reports/TIDEWAKE/phase1/f14_1/nerissa_r6/). F14#1 C3 r14: x moves from 9 to 7. arena_bounds (below) caps the ring 5 m inside the side walls, which at x 9 left a 7 m ring (READER party cost 0.31-0.48 in local C2 seeds, against 0.07-0.24 at 11 m); at x 7 the ring is 9 m and still 2 m clear of the crystal's x.",
   "captain_npc_id": "water_nerissa",
   "captain_encounter_id": "water_trainer_nerissa",
   "captain_defeat_flag": "water_captain_nerissa_defeated",

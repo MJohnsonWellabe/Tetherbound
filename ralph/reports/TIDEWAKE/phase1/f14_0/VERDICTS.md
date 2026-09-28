@@ -77,6 +77,18 @@ cause is staging, not the camera:
 Next step: a stand-off for the trainer in a large-wild fight, or surface staging for
 `shallow_surface` bodies. Both are shared combat behaviour.
 
+| Round | Change (none kept unless noted) | Framing | Main failure |
+|---|---|---|---|
+| r9 | the human trainer steps aside from a large wild | 19/23 (83%) | the ally still hides the serpent (3) |
+| r10 | shared head-occlusion test (kept, see Tess r2) | 18-19/25 (72-76%, two judges) | the serpent sinks after each wind-up; the ally in line |
+| r11 | `water_surface` placement for the serpent | 13-14/24 (54-58%, two judges) | the serpent under the ally from above |
+| **r12** | main's setup plus the shared head-occlusion test (swing only, no dither) and the arrival-bay stand | judge A 24/24, judge B 21/24; **adjudicated 23/24 (95.8%)** | t-044: the ally's head and the trainer cover the serpent's head |
+
+Tidecoil r12: judge A 24/24, judge B 21/24, adjudicated 23/24, tells 4/4 (`tidecoil_r12/`).
+- The strict re-check (`RECHECK_F14_0.md`) upheld the adjudicated rulings on the frames it sampled.
+- The adjudication rubric was written after both scores were known, so this is **not yet counted as a pass**.
+- It is re-judged under the fixed `../C3_RUBRIC.md`.
+
 ## Tess on the ordinary route (`tess_route_r1/`)
 The brief asks for an ordinary-route witness.
 `capture_tidewake_named_fights.gd --approach=sluice_isle_to_deep_watch_arrival`:
@@ -99,11 +111,22 @@ in 13 frames, 5 of them tell-ended. This is the shared combat-camera composition
 line with the opponent at 5-7 m gaps), the same residue as Tidecoil r8. The ring-at-feet
 tell is the combat-wide ordinary telegraph.
 
-## F14#0 status
-Open.
-- Aquaryn: C3 PASS (r5).
-- Tidecoil: moved to the arrival bay; framing 21/24 (88%) against the 90% bar, tells 4/4.
-- Tess: reached on the ordinary route, but framing is 62% from that approach.
+| Tess round | Change | Framing | Tells |
+|---|---|---|---|
+| r1 | ordinary route, main's camera | 23/37 (62%) | 0/6 (the judge wanted the landing spot) |
+| r2 | + the shared head-occlusion test (the camera swings when the ally hides the opponent's head; the dither also fired) | 32/36 (89%) | the dithered ally fused into the opponent's head |
+| r3 | head test swings only, no dither for a hidden head | 30/37 (81%) | 4/6; 6 of 7 failures are "tell-ended" frames: each strike carries the opponent to contact, its head behind the ally |
+| **r4** | + `tell_camera_swing` on her three members: a strike tell starts the camera's wider occlusion swing (`combat_manager.gd::_wild_tell_swing`), so the contact is seen from the side | judge A 35/36, judge B 29/36; **adjudicated 34/35 (97.1%)** | **6/6** |
 
-The remaining failures are the fight camera's composition when the ally stands between
-it and the opponent. That is shared combat-camera work, not Tidewake placement.
+Tess r4 on the ordinary route (`tess_route_r4/`, walked 317 m by stick): judge A 35/36, judge B 29/36, adjudicated 34/35.
+- **Not counted as a pass.** The strict re-check found the adjudication soft. Its rubric was written after the scores and passed frames where the ally fully hides the opponent's head (tell-ended-072.33, 134.85).
+- Counting those as failures gives about 30/35 (86%).
+- The contact-range head occlusion after a strike remains the open defect.
+
+## F14#0 status
+**Open.** The strict re-check (`RECHECK_F14_0.md`) returned NOT MET. Its gaps:
+1. **Aquaryn C2** used only the Ripplet starter; the three-starter rerun is in progress.
+2. **Named-wild C2 tier.** Tidecoil and Aquaryn pass only on the reader/masher cost ratio. ACCEPTANCE §3 has no such tier, and both mashers never wipe. This needs an owner ruling or tuning; it is recorded in STATE.
+3. **Aquaryn C3** was captured from a placed start with a direct engage call, judged once, with no archived verdict. It needs an ordinary-route recapture.
+4. **Tess C3** is about 86% under a strict reading: the ally hides the opponent's head at contact after a strike.
+5. **Tells** are declared at 0.8 s (1.25-1.70 s for Aquaryn). No capture observes a full uninterrupted tell.

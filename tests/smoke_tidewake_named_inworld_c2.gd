@@ -144,6 +144,8 @@ func _run() -> void:
 	if not (director.trainer_battle_id() == trainer_id and manager.is_fighting()):
 		_finish(out, result, "challenge did not start the fight")
 		return
+	var arena: Variant = manager.get("_arena")
+	result.arena_radius = snappedf(float((arena as Node).get("radius")), 0.01) if arena is Node else -1.0
 	var pilot := WorldPilot.new()
 	pilot.rig = world.get_node("CameraRig")
 	pilot._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "events": [],

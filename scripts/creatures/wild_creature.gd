@@ -442,6 +442,9 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# this body's own range and cone. Presentation only: no block, no damage
 	# change (COMBAT: no shields). Absent or false, nothing is drawn.
 	"guard_stance",
+	# F14#0 C3: this body's strike tell starts the fight camera's wider swing
+	# (combat_manager.gd::_wild_tell_swing). Presentation only.
+	"tell_camera_swing",
 ]
 
 
@@ -801,6 +804,10 @@ func lunge_travels() -> bool:
 
 func is_lunging() -> bool:
 	return _lunge_active
+
+
+func tell_camera_swing() -> bool:
+	return bool(_combat_cfg.get("tell_camera_swing", false))
 
 
 ## --- F10#2 named-fight cues ------------------------------------------------

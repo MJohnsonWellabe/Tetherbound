@@ -59,9 +59,14 @@ stick through the camera's yaw either way.
 | r8 | + camera-only side liners (x 18.2-21, y 3-12) | 46/53 (87%): collapses inside the ally and banner after the heavy lunge; the ally hides the opponent (2) | 11/12 | YES |
 | r9 | + Riptusk opt-in `body_clear.ignore_lunging_foe` | 45/55 (82%): the camera swings into the east heart banner | 11/12 | YES |
 | r10 | r9's opt-in reverted; liners widened to x 17-21 over the banners | **45/53 (85%)**: 7 of 8 failures fall in the Riptusk lane-lunge moments (259-262 s, 288 s) | 12/12 | YES |
+| r11 | + a side-on "lane view" while Riptusk winds up its lane (reverted) | worse than r10 on the same failures | | |
+| r12 | lane view reverted; the shared head-occlusion test (the camera swings when the ally hides the opponent's head, no dither) | **45/53 (85%)**: 6 consecutive failures 253.97-256.08 s through the heavy lunge (camera inside the ally, then facing walls and banners), plus t-288 (a crate) | 11/12 | YES |
+| r13 | + a camera hold through Riptusk's travelling lunge, then a cut (reverted) | 37/47 (79%): the READER steps out of the lane to the east wall and the lens stands in the banner cloth | 10/12 | YES |
+| r14 | lunge hold reverted. The Heart Chamber answers CombatManager's arena contract (`water_veilfall.gd::combat_arena_bounds_at`, `arena_bounds`): the ring stops 5 m inside the side walls, 1 m inside the liners, giving 7 m at x 9 | judge A 62/62, judge B 40/62; **adjudicated 50/61 (82%)**. No wall or banner frames. Failures: Bramblebun under Mirejaw's jaw (5); Riptusk at contact range, swinging and under the skill HUD (6) | 12/12 | YES |
 
-**C3 is still open.** Framing sits at 82-87% across four rounds at the new stand (bar
-90%). Tells pass (12/12, heavy distinct). The remaining failures cluster where
+**C3 is still open.** Framing sits at 82-87% across six rounds at the new stand (bar
+90%, COMBAT.md camera: both combatants' facing and the actionable tell in 90% of active
+combat samples). Tells pass (12/12, heavy distinct). The remaining failures cluster where
 Riptusk's 7 m travelling lunge runs through the ally: the fight camera clips into the
 ally or loses a fighter. That is the shared CHARGER-lunge camera behaviour:
 - Meadows' F04#1 `body_clear.ignore_lunging_foe` (1179a331) was switched off in batch 67

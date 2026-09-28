@@ -236,6 +236,9 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 	var nav: RefCounted = NAV.new(self, player, rig, drive)
 	var walked := 0.0
 	var prompt: Node3D = null
+	# --render-only-saves: nothing is saved during the walk, so draw nothing.
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
 	for index in route.size():
 		var point: Vector2 = route[index]
 		var before := player.global_position
@@ -247,6 +250,7 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 			break
 		if not ok:
 			drive.call(0.0, 0.0)
+			RenderingServer.render_loop_enabled = true
 			push_error("approach walk stalled at leg %d/%d at %s" % [index + 1, route.size(), player.global_position])
 			return false
 	# Deploy the lead by input, as a player does before challenging: a Water
@@ -285,6 +289,8 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 				drive.call(0.0, 0.0)
 		await physics_frame
 	drive.call(0.0, 0.0)
+	if _sparse:
+		RenderingServer.render_loop_enabled = true
 	_approach_log = {"approach": _approach, "start": start, "walked_m": snappedf(walked, 1.0),
 		"legs": route.size(), "prompt_at": player.global_position}
 	print("TIDEWAKE C3 APPROACH %s -> %s walked=%.0fm legs=%d prompt_at=%s" % [_approach, id, walked, route.size(), player.global_position])
