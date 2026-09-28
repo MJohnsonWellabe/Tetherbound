@@ -1,0 +1,146 @@
+[
+ {
+  "fight_s": 0.0,
+  "file": "t-000.00.png",
+  "gap_m": 8.26,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 0.68,
+  "file": "tell-start-000.68.png",
+  "gap_m": 10.89,
+  "opponent": "water_aquaryn",
+  "tag": "tell-start",
+  "tell_s": 1.25
+ },
+ {
+  "fight_s": 1.33,
+  "file": "tell-ended-001.33.png",
+  "gap_m": 11.41,
+  "opponent": "water_aquaryn",
+  "tag": "tell-ended",
+  "tell_s": 1.25
+ },
+ {
+  "fight_s": 3.05,
+  "file": "hit-003.05.png",
+  "gap_m": 8.05,
+  "opponent": "water_aquaryn",
+  "tag": "hit",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 3.13,
+  "file": "hit-003.13.png",
+  "gap_m": 9.29,
+  "opponent": "water_aquaryn",
+  "tag": "hit",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 4.02,
+  "file": "t-004.02.png",
+  "gap_m": 7.41,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 4.12,
+  "file": "tell-start-004.12.png",
+  "gap_m": 10.03,
+  "opponent": "water_aquaryn",
+  "tag": "tell-start",
+  "tell_s": 1.25
+ },
+ {
+  "fight_s": 4.53,
+  "file": "tell-ended-004.53.png",
+  "gap_m": 10.56,
+  "opponent": "water_aquaryn",
+  "tag": "tell-ended",
+  "tell_s": 1.25
+ },
+ {
+  "fight_s": 8.02,
+  "file": "t-008.02.png",
+  "gap_m": 7.37,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 12.0,
+  "file": "t-012.00.png",
+  "gap_m": 11.6,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 16.0,
+  "file": "t-016.00.png",
+  "gap_m": 8.35,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 20.0,
+  "file": "t-020.00.png",
+  "gap_m": 7.95,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 24.02,
+  "file": "t-024.02.png",
+  "gap_m": 7.83,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 28.02,
+  "file": "t-028.02.png",
+  "gap_m": 8.3,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 32.02,
+  "file": "t-032.02.png",
+  "gap_m": 13.1,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 36.02,
+  "file": "t-036.02.png",
+  "gap_m": 7.59,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 40.02,
+  "file": "t-040.02.png",
+  "gap_m": 7.98,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ },
+ {
+  "fight_s": 44.02,
+  "file": "t-044.02.png",
+  "gap_m": 7.46,
+  "opponent": "water_aquaryn",
+  "tag": "t",
+  "tell_s": 0.0
+ }
+]
