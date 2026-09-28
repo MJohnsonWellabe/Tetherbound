@@ -1,9 +1,9 @@
 {
   "biomes": {
     "meadows": {
-      "frames": 533,
+      "frames": 541,
       "categories": {
-        "characters": 75,
+        "characters": 83,
         "creatures": 126,
         "named_locations": 114,
         "route_and_terrain": 50,
@@ -12,7 +12,7 @@
         "world_items": 78
       },
       "times": {
-        "day": 444,
+        "day": 452,
         "dusk": 48,
         "night": 41
       },
@@ -29,7 +29,7 @@
         "building",
         "crafting"
       ],
-      "dialogue_frames": 27,
+      "dialogue_frames": 35,
       "defeated_frames": 0,
       "ui_ids": [
         "meadows__exploration_hud",
@@ -46,6 +46,7 @@
         "meadows__settings_controls"
       ],
       "missing_files": [],
+      "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },
@@ -96,6 +97,7 @@
         "tidewake__settings_controls"
       ],
       "missing_files": [],
+      "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },
@@ -146,6 +148,15 @@
         "cloudreach__settings_controls"
       ],
       "missing_files": [],
+      "missing_planned_frames": {
+        "characters": [
+          "cloudreach__inventory__character__healer_iven"
+        ],
+        "items": [
+          "cloudreach__inventory__pickup__great_candy",
+          "cloudreach__inventory__pickup__tm_wind_blade"
+        ]
+      },
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },
@@ -194,6 +205,11 @@
         "stormwood__settings_controls"
       ],
       "missing_files": [],
+      "missing_planned_frames": {
+        "characters": [
+          "stormwood__inventory__trainer__circuit_orin_blacktidewake__defeated"
+        ]
+      },
       "bad_commits": [],
       "missing_repro_or_render_path": []
     }

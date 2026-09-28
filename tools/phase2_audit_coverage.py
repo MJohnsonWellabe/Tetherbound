@@ -33,6 +33,23 @@ def main() -> None:
         ui_ids = sorted(row["id"] for row in rows if row["category"] == "ui")
         dialogue = sum(row["id"].endswith("__dialogue") for row in rows)
         defeated = sum("__defeated" in row["id"] for row in rows)
+        indexed = {row["id"] for row in rows}
+        planned: dict[str, set[str]] = {}
+        for source in (ROOT / biome).glob("*/engine_manifest_*.json"):
+            data = json.loads(source.read_text(encoding="utf-8"))
+            ids = data.get("planned_frame_ids", [])
+            if not ids:
+                continue
+            category = source.parent.name
+            planned.setdefault(category, set()).update(
+                "tidewake__" + str(frame_id)[len("water__") :]
+                if str(frame_id).startswith("water__") else str(frame_id)
+                for frame_id in ids
+            )
+        missing_planned = {
+            category: sorted(ids - indexed)
+            for category, ids in planned.items() if ids - indexed
+        }
         output["biomes"][biome] = {
             "frames": len(rows), "categories": dict(sorted(category_counts.items())),
             "times": dict(sorted(times.items())),
@@ -40,6 +57,7 @@ def main() -> None:
             "expected_systems_without_indexed_frames": [state for state in SYSTEM_STATES if not systems[state]],
             "dialogue_frames": dialogue, "defeated_frames": defeated,
             "ui_ids": ui_ids, "missing_files": missing_files,
+            "missing_planned_frames": missing_planned,
             "bad_commits": bad_commits, "missing_repro_or_render_path": missing_repro,
         }
     (ROOT / "coverage_audit.json").write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
