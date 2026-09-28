@@ -57,6 +57,7 @@ func build(owner_world: Node3D) -> void:
 		add_child(bed)
 		bed.global_position = _grounded(at + _offset(tuning.creature_bed_offset_xz))
 		bed.build_real(false)
+		preload("res://scripts/world/water_camp_bed_presentation.gd").attach(bed)
 		bed.set_build_index(int(row.creature_bed_index))
 	if world.simulation_only:
 		visible = false
