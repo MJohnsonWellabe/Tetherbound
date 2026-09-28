@@ -104,11 +104,12 @@ const EVENT_NEAR_M := 6.0
 const VILLAGE_RADIUS_M := 70.0
 const WELL := Vector2(10.0, -10.0)
 ## The Practice Meadow's authored `trainer_camp` cluster (band1 props.json:
-## a travelling trainer's pack -- Bag (24.9,-27.3), Crate (26.4,-28.9),
-## Barrel (26.62,-28.1)) inside the clearing map_landmarks.json names at
+## its fire at (26.8,-26.6), the tent and bedroll behind it, the pack, crate
+## and barrel at its side) inside the clearing map_landmarks.json names at
 ## (30,-40). The walk used to stop at the clearing's centre, where a judge
-## saw only the objective beam and no camp.
-const CAMP_AT := Vector2(26.0, -28.1)
+## saw only the objective beam and no camp; the visit now aims just short of
+## the fire on the road side, so the arrival frame holds fire, tent and bed.
+const CAMP_AT := Vector2(26.3, -27.7)
 const CAMP_ARRIVAL_M := 4.0
 ## Stop this far short of the pack: its crate and barrel are solid, and the
 ## trainer who owns it stands beside them.
