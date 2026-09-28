@@ -31,3 +31,9 @@ conversation/state/flag and cast placement contracts, not execution of the
 enabled overlay or panel appearance. Native arrival comparisons for all four
 catalog sightings, plus in-progress/aftermath panels for the additional lines,
 remain required. P2-084 stays open and the candidate stays off.
+
+The shared `phase2_capture_stormwood_people.gd` matrix includes all eleven
+changed openings plus Bryn's unchanged in-progress briefing as a control.
+It also compares the installed portrait candidate. Its direct-start panels
+isolate chapter progression/arrival callbacks and record unchanged flag
+snapshots; they cannot establish earned progression or ordinary interaction.

@@ -29,3 +29,19 @@ the post frame's camera metadata. The production camera and panel behavior
 are unchanged. Native baseline/candidate post and dialogue pairs, side/state
 panel checks and independent identity review remain required. P2-082 remains
 open, and the candidate is off.
+
+`tools/phase2_capture_stormwood_people.gd` prepares 24 explicit conversation
+rows, each with a post and panel image: eleven arrivals, eight progress/aftermath
+rows and five synthetic Wen/Bryn panels. A baseline/candidate pair is 96 images
+across two production-world boots. The plan probe verifies 24 unique rows.
+The fixture disconnects the chapter's dialogue-finished progression callback
+and disables its arrival polling, while preserving panel/camera callbacks.
+Every row records progression flags before and after close and fails on a
+change. Direct starts bypass earned story prerequisites; these are presentation
+fixtures only. Portrait and opening gates toggle together for this comparison,
+and the trainer gate stays off.
+The people fixture waits for any active production conversation-camera blend
+to finish before saving, with a bounded failure instead of a partial-blend
+image. A legitimately inactive push-in remains possible; active/blend/fallback
+and shot metadata record what actually happened. These changes affect capture
+timing only, not the production camera's target, lens or behavior.
