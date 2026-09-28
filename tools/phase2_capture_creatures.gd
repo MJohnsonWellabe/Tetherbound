@@ -173,13 +173,11 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		(animator as Object).call("tick", 0.0, 0.0, 8.0)
 	for frame in 5:
 		await process_frame
-	var players := body.find_children("*", "AnimationPlayer", true, false)
-	if not players.is_empty():
-		var player := players[0] as AnimationPlayer
-		if not str(player.current_animation).is_empty():
-			var length := player.get_animation(player.current_animation).length
-			player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
-			player.pause()
+	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
+	if player != null and not str(player.current_animation).is_empty():
+		var length := player.get_animation(player.current_animation).length
+		player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
+		player.pause()
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
 	var frame_id := "%s__%s__%s" % [_biome, species, pose]
@@ -191,7 +189,7 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	else:
 		_records.append({"id": frame_id, "species": species, "pose": pose,
 			"shiny": shiny, "alpha_scale": scale_factor, "path": path,
-			"animation": str((players[0] as AnimationPlayer).current_animation) if not players.is_empty() else "",
+			"animation": str(player.current_animation) if player != null else "",
 			"trainer_visible_intent": true, "camera": "production CameraRig/Camera3D"})
 		print("PHASE2 CREATURE %s -> %s" % [frame_id, path])
 	body.queue_free()
