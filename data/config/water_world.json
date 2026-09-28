@@ -1337,13 +1337,13 @@
   },
   "islands": [
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         0.0,
         0.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 20.0,
+      "coast_inner_height_m": 5.0,
       "id": "first_shore",
       "landing_sectors": [
         {
@@ -1393,13 +1393,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         0.0,
         440.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 18.0,
+      "coast_inner_height_m": 5.0,
       "id": "reedhaven",
       "landing_sectors": [
         {
@@ -1440,13 +1440,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         420.0,
         660.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 24.0,
+      "coast_inner_height_m": 6.0,
       "id": "brine_steps",
       "landing_sectors": [
         {
@@ -1478,13 +1478,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         320.0,
         1120.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 24.0,
+      "coast_inner_height_m": 6.0,
       "id": "shellwatch",
       "landing_sectors": [
         {
@@ -1516,13 +1516,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         700.0,
         1530.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 28.0,
+      "coast_inner_height_m": 7.0,
       "id": "tidal_cradle",
       "landing_sectors": [
         {
@@ -1554,13 +1554,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         150.0,
         2310.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 28.0,
+      "coast_inner_height_m": 7.0,
       "id": "salt_crown",
       "landing_sectors": [
         {
@@ -1601,13 +1601,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         850.0,
         2960.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 32.0,
+      "coast_inner_height_m": 8.0,
       "id": "sluice_isle",
       "landing_sectors": [
         {
@@ -1648,7 +1648,7 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         200.0,
         4140.0
@@ -1677,13 +1677,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         -350.0,
         170.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 16.0,
+      "coast_inner_height_m": 4.0,
       "id": "lantern_cove",
       "landing_sectors": [
         {
@@ -1706,13 +1706,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         -70.0,
         870.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 16.0,
+      "coast_inner_height_m": 4.0,
       "id": "gull_rest",
       "landing_sectors": [
         {
@@ -1735,13 +1735,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         1200.0,
         2240.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 20.0,
+      "coast_inner_height_m": 5.0,
       "id": "drowned_garden",
       "landing_sectors": [
         {
@@ -1764,13 +1764,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         1350.0,
         3500.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 20.0,
+      "coast_inner_height_m": 5.0,
       "id": "deep_watch",
       "landing_sectors": [
         {

@@ -4,7 +4,7 @@ const SEGMENT := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const RUNTIME := preload("res://scripts/world/water_encounter_runtime_data.gd")
 
 
-func test_solm_path_avoids_unwalkable_landing_sector_flank() -> void:
+func test_solm_path_and_former_diagonal_remain_walkable_with_graded_shore() -> void:
 	var field := preload("res://scripts/world/water_heightfield.gd").new()
 	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
 	var start := Vector2.ZERO
@@ -12,13 +12,13 @@ func test_solm_path_avoids_unwalkable_landing_sector_flank() -> void:
 		if route.id == "shellwatch_exploration_spine":
 			start = Vector2(route.polyline[2][0], route.polyline[2][2])
 	var stance := Vector2(342.0, 1090.0)
-	assert_true(_maximum_slope(field, [start, stance]) > 45.0,
-		"negative control: former direct diagonal exceeds player floor angle")
+	assert_true(_maximum_slope(field, [start, stance]) < 45.0,
+		"broader physical shore shoulder brings the former diagonal below player floor angle")
 	var points: Array = [start]
 	points.append_array(SEGMENT.SOLM_APPROACH)
 	points.append(stance)
 	assert_true(_maximum_slope(field, points) < 45.0,
-		"production analytic terrain supports the detour; baked runtime still required")
+		"production analytic terrain still supports the authored detour; baked runtime still required")
 
 
 func _maximum_slope(field: RefCounted, points: Array) -> float:
