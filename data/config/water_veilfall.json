@@ -67,11 +67,11 @@
     "sluice_gates": {"enabled": true, "by_width": {"18": "res://assets/environment/tidewake/sluice_gate/sluice_gate_18.tscn", "30": "res://assets/environment/tidewake/sluice_gate/sluice_gate_30.tscn"}},
     "heart_banner": {"enabled": true, "scene": "res://assets/environment/tidewake/heart_banner/heart_banner.tscn", "placements": [[-18.0, 3.5, 105.0, -90.0], [18.0, 3.5, 105.0, 90.0]]}
   },
-  "_why_camera_occluders": "F14#1 C3 (Nerissa r4, ralph/reports/TIDEWAKE/phase1/f14_1): camera-only boxes (camera_rig.gd OCCLUSION_ONLY_LAYER) so the fight camera stops short of the containment crystal and the balcony railings instead of standing behind them. Interior-local metres: the crystal (crystal_position, about 10 m tall) and the two side walls from 3 m up (x 18.2-21: the ledges, their railings and the hanging vines and lanterns below them; nerissa_r7 had the camera on the east ledge walkway and inside the vines for five frames after the Riptusk heavy). Starting at 3 m, above any fighter's pivot, so the arm never starts inside one. Traversal never sees them.",
+  "_why_camera_occluders": "F14#1 C3 (Nerissa r4, ralph/reports/TIDEWAKE/phase1/f14_1): camera-only boxes (camera_rig.gd OCCLUSION_ONLY_LAYER) so the fight camera stops short of the containment crystal and the balcony railings instead of standing behind them. Interior-local metres: the crystal (crystal_position, about 10 m tall) and the two side walls from 3 m up (x 17-21: the heart banners hung at x 18 (nerissa_r9 had the camera inside the east banner for five frames), the ledges, their railings and the hanging vines and lanterns below them; nerissa_r7 had the camera on the east ledge walkway and inside the vines for five frames after the Riptusk heavy). Starting at 3 m, above any fighter's pivot, so the arm never starts inside one. Traversal never sees them.",
   "camera_occluders": [
     {"at": [0.0, 5.0, 113.0], "size": [5.0, 10.0, 5.0]},
-    {"at": [-19.6, 7.5, 102.0], "size": [2.8, 9.0, 44.0]},
-    {"at": [19.6, 7.5, 102.0], "size": [2.8, 9.0, 44.0]}
+    {"at": [-19.0, 7.5, 102.0], "size": [4.0, 9.0, 44.0]},
+    {"at": [19.0, 7.5, 102.0], "size": [4.0, 9.0, 44.0]}
   ],
   "interior_origin": [1800.0, 40.0, 4140.0],
   "interact_radius_m": 4.2,

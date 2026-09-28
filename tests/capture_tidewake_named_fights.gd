@@ -249,6 +249,22 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 			drive.call(0.0, 0.0)
 			push_error("approach walk stalled at leg %d/%d at %s" % [index + 1, route.size(), player.global_position])
 			return false
+	# Deploy the lead by input, as a player does before challenging: a Water
+	# trainer's Challenge prompt is enabled only while the player has an ally
+	# out (encounter_director.gd can_challenge).
+	drive.call(0.0, 0.0)
+	if director.call("ally_body") == null:
+		for pressed in [true, false]:
+			var event := InputEventAction.new()
+			event.action = &"creature_recall"
+			event.pressed = pressed
+			event.strength = 1.0 if pressed else 0.0
+			Input.parse_input_event(event)
+			await _frames(6)
+		await _frames(30)
+	if director.call("ally_body") == null:
+		push_error("creature_recall did not deploy the lead before %s" % id)
+		return false
 	# Close the last metres on the trainer itself by stick until the prompt offers.
 	var trainer: Node3D = director.trainer_nodes.get(id)
 	for _frame in 900:
@@ -274,10 +290,6 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 	print("TIDEWAKE C3 APPROACH %s -> %s walked=%.0fm legs=%d prompt_at=%s" % [_approach, id, walked, route.size(), player.global_position])
 	if prompt == null or prompt.interaction_offer(player.global_position).is_empty():
 		push_error("the walk from %s never reached %s's challenge prompt" % [_approach, id])
-		return false
-	await _frames(20)
-	if not await director.summon_active_creature():
-		push_error("summon failed before %s" % id)
 		return false
 	await _frames(12)
 	prompt.interaction_activate()

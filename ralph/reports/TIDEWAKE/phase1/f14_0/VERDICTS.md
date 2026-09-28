@@ -45,10 +45,34 @@ meets the cliff, and the serpent is large enough that close gaps stack the two b
 It likely needs a different authored fight stand (a reef flat, or an ordinary approach
 that puts the ally beside rather than landward of the serpent), not more camera tuning.
 
-**Candidate stand (probed, not applied):** the Deep Watch arrival landing
-(`sluice_isle_to_deep_watch` arrival, about (1260, 3403)) has a broad beach rising 0-3 m
-over about 24 m, with shallows falling about 1 m per 4 m to the west and south-west and
-the cliff 20 m or more to the east. A Tidecoil fight in those shallows would put the
-camera behind the ally over open beach. Moving it changes where the F13#2/F13#3
-harnesses fight Tidecoil (`TIDECOIL_SHORE`, `tidewake_b_tidecoil_fight.gd`), so it is
-recorded as the next step, not done in this pass.
+**Candidate stand, now applied (268a792b):** the Deep Watch arrival bay's shallows,
+(1262, -0.43, 3377). This is 26 m from the `sluice_isle_to_deep_watch` landing; the
+probe is `tools/probe_tidewake_tidecoil_stand.gd`. The reserved site moved with the
+named body.
+
+The `--continuous` Deep Watch chain passes at the new stand
+(`deep_watch_chain_tidecoil_bay.log`: 115 checks, 0 failures). The fight is won,
+engaged through the ordinary Engage prompt from the beach. The walk back to the landing
+now succeeds by stick, with **0 disclosed position writes** (at the cliff foot it was 1).
+
+## Tidecoil at the arrival bay
+| Round | Change | Framing | Tells |
+|---|---|---|---|
+| r7 | new stand; player placed on the first ground above 1 m and `_start_fight` | 19/25 (76%) | 4/4 |
+| r8 | Aquaryn's camera block on the named body (`combat_camera`, passed by `water_encounter_director.gd`); the player walks down the beach and engages through the Engage prompt | **21/24 (88%)**, the same by two independent judges on the same frames | 4/4 |
+
+r8's three failures are the same for both judges:
+- **t-000:** the ally's head covers the serpent's head.
+- **t-016:** the ally, wading in the surf, washes out.
+- **t-048:** the human trainer stands in front of the serpent's head.
+
+The r8 prompt told the judges that a brief stagger tint does not count while the shape
+and facing still read. r7's judge had failed two stagger frames on it.
+
+**Still failing (two rounds at this stand, per the two-strike rule).** The remaining
+cause is staging, not the camera:
+- the human trainer stands inside the serpent's space and tell ring;
+- the serpent lies at the waterline instead of rearing at the surface.
+
+Next step: a stand-off for the trainer in a large-wild fight, or surface staging for
+`shallow_surface` bodies. Both are shared combat behaviour.
