@@ -35,6 +35,15 @@ var _vegetation: Node = null
 var _hidden_occluders := PackedInt32Array()
 ## Authored nodes built from the same models (`harvest_node.gd`'s group).
 var _hidden_nodes: Array = []
+## F04#1 (C3 judge 257839f5: a relay grunt stood inside Vance's charging
+## Tuskroot). Set-dressing people -- a body with nothing to say, placed by
+## village_npcs.gd -- join this group; a fight that opens around them walks
+## them out to the ring's edge and back when it closes. The people who fight,
+## talk or matter to a quest never join it.
+const BYSTANDER_GROUP := "fight_ring_bystander"
+## [body, where it stood] for each bystander this fight moved.
+var _stepped_aside: Array = []
+var _bystander_walk_mps := 2.6
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
@@ -45,6 +54,36 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	_build_boundary()
 	if bool(cfg.get("clear_soft_occluders", false)):
 		_clear_soft_occluders(radius + maxf(float(cfg.get("occluder_clear_margin", 0.0)), 0.0))
+	if bool(cfg.get("clear_bystanders", false)):
+		_bystander_walk_mps = maxf(0.5, float(cfg.get("bystander_walk_mps", _bystander_walk_mps)))
+		_clear_bystanders(radius + maxf(float(cfg.get("bystander_edge_m", 1.0)), 0.0))
+
+
+## Bystanders inside the ring walk straight out to `reach` and turn to watch.
+## Presentation only, like the scatter above: each peer moves its own copy and
+## nothing is saved.
+func _clear_bystanders(reach: float) -> void:
+	for node: Node in get_tree().get_nodes_in_group(BYSTANDER_GROUP):
+		var body := node as Node3D
+		if body == null or not body.is_inside_tree() or not body.has_method("walk_to"):
+			continue
+		var offset := body.global_position - global_position
+		offset.y = 0.0
+		if offset.length() > reach:
+			continue
+		var outward := offset.normalized() if offset.length() > 0.01 else Vector3.FORWARD
+		var home := body.global_position
+		var edge := global_position + outward * reach
+		var target := Vector3(edge.x, home.y, edge.z)
+		if body.has_method("stand_at") and bool(body.call("stand_at", edge.x, edge.z, home.y)):
+			target = body.global_position
+			body.global_position = home
+		_stepped_aside.append([body, home])
+		var centre := global_position
+		body.call("walk_to", target, _bystander_walk_mps, func() -> void:
+			if is_instance_valid(body):
+				var to := centre - body.global_position
+				body.rotation.y = atan2(to.x, to.z))
 
 
 ## Bushes and standing dead trees inside the ring stand aside for the fight
@@ -70,6 +109,11 @@ func _clear_soft_occluders(reach: float) -> void:
 
 
 func _exit_tree() -> void:
+	for pair: Array in _stepped_aside:
+		var body: Variant = pair[0]
+		if is_instance_valid(body) and (body as Node).is_inside_tree():
+			(body as Node).call("walk_to", pair[1] as Vector3, _bystander_walk_mps)
+	_stepped_aside.clear()
 	for node: Variant in _hidden_nodes:
 		if is_instance_valid(node):
 			(node as Node).call("set_fight_hidden", false)
