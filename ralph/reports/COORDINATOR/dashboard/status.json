@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-28T12:55Z",
+ "updated": "2026-09-28T14:22Z",
  "headline": [
-  "Criteria met: 89 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Cloudreach is complete for Phase 1. Open: Meadows 8 (F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
-  "Owner decision 2026-09-28 (F04#7, option c): the Meadows captains get harder (five members, levels at the pin ceiling), and the top-fight bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio instead of a masher team wipe. The same bar applies to Tidewake F14#0. The Balance lane is implementing it with F10#2 starter parity and will land tb/balance itself.",
-  "CI on main: GITHUB_TOKEN auto-merges start no push run, so #397, #403 and #404 reached main without CI. Fast CI run 36412797891 was dispatched on b920be23 to cover them (queued). #405 now makes the auto-merge workflow dispatch fast CI after every merge; #402 stops counting cancelled runs. The last full run was green (33/33 at d971d248).",
-  "Phase 1 lanes land their own PRs and update this board and STATE. Work outside the open lanes is in STATE's after-list."
+  "Criteria met: 89 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Nothing new has closed since F10#4 (08:42). Open: Meadows 8 (F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
+  "Main is green: CI passed on every merge since 10:57, including Codex's evidence compaction (#408, which cut about 3 GB of images from the tree) and Tidewake 2c tooling (#409). The auto-merge workflow now dispatches CI after each merge (#405).",
+  "F04#7 (owner option c): harder five-member captains at the level ceiling. Bar: reader win ≥ 0.75; masher lead-faint = 1.00; reader median party cost ≤ 0.55× the masher's; a masher loses at least one Meadows named fight in ≥ 25% of seeded playthroughs. Per fight, Vance and Vess never beat a masher (disclosed). The Balance lane is running tests before it lands. The same bar applies to Tidewake F14#0.",
+  "The owner has delegated lane decisions to the coordinator. Lanes land their own PRs and update this board and STATE."
  ],
  "batches": [
   {
@@ -330,37 +330,49 @@
    "sha": "61b78f33",
    "state": "Merged",
    "contents": "auto-merge.yml waits for each merge and dispatches fast CI on main when no push run started"
+  },
+  {
+   "name": "Codex evidence compaction (PR #408)",
+   "sha": "8a91b67e",
+   "state": "Merged, CI green",
+   "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB → 78 MB tree); unblocks lane pushes"
+  },
+  {
+   "name": "Codex Tidewake 2c tooling (PR #409)",
+   "sha": "2e13ba43",
+   "state": "Merged, CI green",
+   "contents": "Compact capture rounds for Phase 2c"
   }
  ],
  "lanes": [
   {
    "lane": "Meadows (tb/meadows)",
-   "now": "Open: F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7 (C3), then cards M1–M3. Work on tb/meadows (gate road boards, captain stand-down aftermath) is not landed yet.",
+   "now": "31 commits unlanded on tb/meadows (F01 gate road boards, beacon stands down for the arrival camera, captain stand-down aftermath). Open: F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7 (C3), then M1–M3.",
    "next": "Self-lands each criterion"
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
-   "now": "Complete for Phase 1: F08#3, F08#4, C2, C3 landed; every Cloudreach row and card met (Bars A/B clauses → Phase 2 catalog)",
-   "next": "Owned-carrier Fly debt closed (ralph/reports/CLOUDREACH/owned-carrier-fly/: the five's own active carrier flies; the Galewisp starter gains Fly at the unlock; loaner only for the trial and a five with no healthy carrier; the follower is recalled for the flight). Lane done; stops."
+   "now": "Phase 1 complete. Owned-carrier Fly debt closed (ralph/reports/CLOUDREACH/owned-carrier-fly/): the five's own healthy active carrier flies, the Galewisp starter gains Fly at the unlock, Maela's loaner only for the trial and a five with no healthy carrier; the follower is recalled for the flight.",
+   "next": "Lands it, records 'Cloudreach lane done' in STATE, stops"
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "Landed F09#3 (#398), F10#3 (#400), F10#4 (#404). Open: F10#2 (C3), F10#6 (device profile), then cards S1 and S2.",
+   "now": "Landed F09#3, F10#3, F10#4. Working F10#6 (device profile round 3: 7-inch legibility fixes; fight-framing experiments backed out). Then F10#2 (C3), cards S1 and S2.",
    "next": "Self-lands each criterion"
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "Landed F13#3 and F13#5 (#403). Open: F14#1 next (Nerissa C2: the Riptusk lane traps the ally in the sluice channel at the chamber door), then F14#0 (Tidecoil stand; now under the owner's option-(c) bar), then card T2.",
+   "now": "PR #407 (Nerissa's new stand passes C2, Tidecoil moved to the Deep Watch bay, Heart Chamber camera liners) told to land now (coordinator, 14:12). Then F14#1 and F14#0 C3 framing (82–88% vs 90%, shared fight camera) and F14#0 under the option-(c) bar; then T2.",
    "next": "Self-lands each criterion"
   },
   {
-   "lane": "Codex capture/catalog",
-   "now": "Phase 2 capture and scored defect catalog landed (#397)",
-   "next": "Phase 2c fix lanes start after Phase 1 per CODEX_START_HERE.md"
+   "lane": "Codex (Phase 2)",
+   "now": "Capture and scored catalog on main (116 items); evidence compacted (#408). The Phase 2c Tidewake fix lane started (#409 tooling).",
+   "next": "The other 2c lanes start as each Claude biome lane completes (Cloudreach can start now)"
   },
   {
    "lane": "Balance (tb/balance)",
-   "now": "F10#2 starter parity met on tb/balance; implementing the owner's F04#7 option (c) (harder captains, restated bar)",
+   "now": "F10#2 starter parity met; F04#7 harder captains and the restated bar committed; unit shards and Meadows runs before its PR",
    "next": "Lands its own PR, then archived"
   },
   {
@@ -370,6 +382,7 @@
   }
  ],
  "decisions": [
+  "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
   "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
   "Owner 2026-09-28: fix the auto-merge CI gap. A merge pushed by GITHUB_TOKEN auto-merge starts no CI run, so batch 67 reached main untested and the next docs-only run skipped every job. Fixed by chaining main CI to the last run and a 30-minute CI reconciler.",
   "Owner 21:20: the homeward return route after Tidewake is exempt from A7 (T3/F15).",
