@@ -1,0 +1,16 @@
+frame_01.jpg f13_5_r2/veilfall_1_first_shore
+frame_02.jpg f13_5_r2/veilfall_2_tidal_cradle
+frame_03.jpg f13_5_r2/veilfall_3_sluice_isle
+frame_04.jpg f13_5_r2/dock_first_shore
+frame_05.jpg f13_5_r2/dock_reedhaven
+frame_06.jpg f13_5_r2/dock_brine_steps
+frame_07.jpg f13_5_r2/dock_shellwatch
+frame_08.jpg f13_5_r2/dock_tidal_cradle
+frame_09.jpg f13_5_r2/dock_salt_crown
+frame_10.jpg f13_5_r2/dock_sluice_isle
+frame_11.jpg f13_5_cur/current_first_shore_to_reedhaven
+frame_12.jpg f13_5_cur/current_first_shore_to_reedhaven_b
+frame_13.jpg f13_5_cur/current_brine_steps_to_shellwatch
+frame_14.jpg f13_5_cur/current_brine_steps_to_shellwatch_b
+frame_15.jpg f13_5_cur/current_salt_crown_to_sluice_isle
+frame_16.jpg f13_5_cur/current_salt_crown_to_sluice_isle_b
