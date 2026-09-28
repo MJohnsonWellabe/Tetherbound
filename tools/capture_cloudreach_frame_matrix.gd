@@ -87,8 +87,9 @@ const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
-const OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
-const MOTION_OUT := OUT + "/motion"
+const DEFAULT_OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
+## `--output=<res:// dir>` renders a round into its own folder (F08#4 rounds).
+var OUT := DEFAULT_OUT
 
 const DAY_HOUR := 10.0
 const NIGHT_HOUR := 23.0
@@ -325,6 +326,8 @@ func _parse_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--motion":
 			_motion = true
+		elif arg.begins_with("--output="):
+			OUT = arg.substr("--output=".length()).strip_edges().trim_suffix("/")
 		elif arg.begins_with("--only="):
 			for part: String in arg.substr("--only=".length()).split(",", false):
 				_only[int(part)] = true
@@ -763,8 +766,8 @@ func _finish(written: int) -> void:
 ## half second, the camera steered by yaw toward the road ahead the way a player
 ## eases the stick, pitch at the rig's rest.
 func _run_motion() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(MOTION_OUT))
-	_manifest = FileAccess.open(MOTION_OUT + "/manifest.txt", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path((OUT + "/motion")))
+	_manifest = FileAccess.open((OUT + "/motion") + "/manifest.txt", FileAccess.WRITE)
 	_manifest_line("# Cloudreach 30 s motion witness -- arrival_gate_road, real move input, production CameraRig")
 	_pin_hour(DAY_HOUR)
 	var seat: Dictionary = await _seat(MOTION_START)
@@ -827,7 +830,7 @@ func _run_motion() -> void:
 			shot += 1
 			var t := float(Engine.get_physics_frames() - start) / float(hz)
 			var name := "m%02d_gate_lower_cliffs_walk_day" % shot
-			var path: String = LANE.save_frame(self, MOTION_OUT, name, motion_frames)
+			var path: String = LANE.save_frame(self, (OUT + "/motion"), name, motion_frames)
 			_set_render(false)
 			if not path.is_empty():
 				# Keep a small copy for the sheet; the full frame is on disk.
