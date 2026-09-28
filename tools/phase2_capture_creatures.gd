@@ -44,6 +44,8 @@ var _output := ""
 var _seed := 2042
 var _only := ""
 var _poses: PackedStringArray = []
+var _live_transitions := false
+var _paired_transitions := false
 var _world: Node3D
 var _player: CharacterBody3D
 var _rig: SpringArm3D
@@ -72,6 +74,10 @@ func _run() -> void:
 			_only = arg.trim_prefix("--only=")
 		elif arg.begins_with("--poses="):
 			_poses = arg.trim_prefix("--poses=").split(",", false)
+		elif arg == "--live-transitions":
+			_live_transitions = true
+		elif arg == "--paired-transitions":
+			_paired_transitions = true
 	if not SCENES.has(_biome) or not (_output.begins_with("res://ralph/reports/VISUAL/phase2/") or _output.begins_with("res://.artifacts/phase2/")):
 		push_error("Use --biome and a Phase 2 evidence output")
 		quit(1)
@@ -83,6 +89,12 @@ func _run() -> void:
 			return
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output)):
 		push_error("Choose a fresh creature capture output: " + _output)
+		quit(1)
+		return
+	for _frame in 3:
+		await process_frame
+	if root.size != Vector2i(1920, 1080):
+		push_error("Capture viewport is %s, expected 1920x1080; on Windows use --fullscreen" % str(root.size))
 		quit(1)
 		return
 	seed(_seed)
@@ -148,6 +160,14 @@ func _run() -> void:
 		for pose: String in POSES:
 			if _poses.is_empty() or pose in _poses:
 				await _capture_pose(species, pose, false, 1.0)
+		if _paired_transitions and not _live_transitions:
+			_live_transitions = true
+			for pose: String in POSES:
+				if _poses.is_empty() or pose in _poses:
+					await _capture_pose(species, pose, false, 1.0)
+			_live_transitions = false
+		if _live_transitions:
+			continue
 		if _poses.is_empty() or "shiny_idle" in _poses:
 			await _capture_pose(species, "shiny_idle", true, 1.0)
 		var alpha_scale := _alpha_scale(species)
@@ -162,6 +182,8 @@ func _run() -> void:
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
 		"fixture": "Production scene, trainer and camera; direct visual pose fixture, not combat or traversal proof",
+		"live_transitions": _live_transitions,
+		"paired_transitions": _paired_transitions,
 		"frames": _records, "failures": _failures, "complete": _failures.is_empty()}
 	var file := FileAccess.open("%s/manifest.json" % _output, FileAccess.WRITE)
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
@@ -226,6 +248,11 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		body.call("play_faint")
 	elif animator is Object:
 		(animator as Object).call("tick", 0.0, 0.0, 8.0)
+	if _live_transitions:
+		await _capture_transition(body, species, pose)
+		body.queue_free()
+		await process_frame
+		return
 	for frame in 5:
 		await process_frame
 	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
@@ -257,6 +284,38 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 		print("PHASE2 CREATURE %s -> %s" % [frame_id, path])
 	body.queue_free()
 	await process_frame
+
+
+## Let the production AnimationPlayer and animation_finished callbacks run.
+## The body remains parked at the manifest stand: this witnesses a visual
+## transition, not an earned fight, walking trajectory or bed interaction.
+func _capture_transition(body: Node3D, species: String, pose: String) -> void:
+	var animator: Variant = body.get("_animator")
+	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
+	var elapsed := 0.0
+	for sample_time: float in [0.1, 0.35, 1.0, 3.0]:
+		while elapsed < sample_time:
+			await process_frame
+			var delta := root.get_process_delta_time()
+			elapsed += delta
+			if animator is Object:
+				(animator as Object).call("tick", delta, 4.0 if pose == "moving" else 0.0, 8.0)
+		await RenderingServer.frame_post_draw
+		var frame_id := "%s__%s__%s__t%04d" % [_biome, species, pose, int(sample_time * 1000.0)]
+		var path := "%s/%s.jpg" % [_output, frame_id]
+		var image := root.get_texture().get_image()
+		if image == null or image.is_empty() or image.get_width() != 1920 or image.get_height() != 1080:
+			_failures.append("%s: wrong-sized or empty image" % frame_id)
+		elif image.save_jpg(path, 0.87) != OK:
+			_failures.append("%s: save failed" % frame_id)
+		else:
+			_records.append({"id": frame_id, "species": species, "pose": pose, "path": path,
+				"sample_seconds": sample_time, "elapsed_seconds": elapsed,
+				"animation": str(player.assigned_animation) if player != null else "",
+				"animation_playing": player.is_playing() if player != null else false,
+				"rest_receipt": body.call("rest_pose_receipt"),
+				"camera": "production CameraRig/Camera3D", "body_parked": true})
+			print("PHASE2 LIVE POSE %s -> %s" % [frame_id, path])
 
 
 func _seat(body: Node3D, ground: float) -> void:

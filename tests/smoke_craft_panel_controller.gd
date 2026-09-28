@@ -30,6 +30,9 @@ func _run() -> void:
 
 	_panel = CRAFT_PANEL.new()
 	root.add_child(_panel)
+	if OS.get_cmdline_user_args().has("--readable-recipe-rows"):
+		_panel.set("_readable_recipe_rows", true)
+		_panel.call("_build")
 	for i in 8:
 		await physics_frame
 	_panel.call("open")

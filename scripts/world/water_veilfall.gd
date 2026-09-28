@@ -592,6 +592,41 @@ func contains_interior(at: Vector3) -> bool:
 	var local := at - interior.position
 	return absf(local.x) <= 24 and local.z >= -2 and local.z <= 126 and absf(local.y) < 20
 
+## F14#1 C3 (Nerissa r13): CombatManager's room contract (`_arena_bounds`, as
+## `stronghold.gd::combat_arena_bounds_at`): the most ring radius the Heart
+## Chamber affords around (x, z). Its 11 m ring reached a metre short of the
+## east wall, and a READER stepping out of Riptusk's lane there put the fight
+## camera's pivot inside the banner wall's camera-only liner, so the lens stood
+## in the banner cloth. The ring now stops `side_margin_m` short of the side
+## walls and `end_margin_m` short of the ends (`arena_bounds` in
+## water_veilfall.json). -1.0, no opinion, unless the local trainer is inside
+## the interior, so fights on the island above it are unchanged.
+func combat_arena_bounds_at(x: float, z: float) -> float:
+	var cfg: Dictionary = rules.get("arena_bounds", {}) as Dictionary
+	var rig: Node3D = world.local_rig() if world != null else null
+	if interior == null or cfg.is_empty() or rig == null or not contains_interior(rig.global_position):
+		return -1.0
+	var local := Vector2(x - interior.position.x, z - interior.position.z)
+	for room: Dictionary in rules.rooms:
+		if not (cfg.get("rooms", []) as Array).has(room.id):
+			continue
+		var bound := room_arena_bound(local, room, float(cfg.get("side_margin_m", 1.0)),
+			float(cfg.get("end_margin_m", 1.0)))
+		if bound > 0.0:
+			return bound
+	return -1.0
+
+
+## Pure form: the ring radius a room rect affords at interior-local `local`
+## (x, z), or -1.0 outside it; never below 0.5.
+static func room_arena_bound(local: Vector2, room: Dictionary, side_margin: float, end_margin: float) -> float:
+	var center := Vector2(float(room.center_xz[0]), float(room.center_xz[1]))
+	var half := Vector2(float(room.size_xz[0]), float(room.size_xz[1])) * 0.5
+	var off := local - center
+	if absf(off.x) > half.x or absf(off.y) > half.y:
+		return -1.0
+	return maxf(0.5, minf(half.x - absf(off.x) - side_margin, half.y - absf(off.y) - end_margin))
+
 func built_floor_height_at(x: float, z: float) -> float:
 	if interior == null:
 		return NAN

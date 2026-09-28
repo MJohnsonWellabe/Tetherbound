@@ -144,6 +144,8 @@ func _run() -> void:
 	if not (director.trainer_battle_id() == trainer_id and manager.is_fighting()):
 		_finish(out, result, "challenge did not start the fight")
 		return
+	var arena: Variant = manager.get("_arena")
+	result.arena_radius = snappedf(float((arena as Node).get("radius")), 0.01) if arena is Node else -1.0
 	var pilot := WorldPilot.new()
 	pilot.rig = world.get_node("CameraRig")
 	pilot._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "events": [],
@@ -155,6 +157,8 @@ func _run() -> void:
 	(manager.get("_rng") as RandomNumberGenerator).seed = seed_value
 	var seeded: Dictionary = {}
 	var tells: Array = []
+	var observed: Array = []
+	var tell_began: Array = [-1]
 	var fight_s := 0.0
 	var opponents := 0
 	while director.trainer_battle_active() and fight_s < FIGHT_CAP_S:
@@ -164,7 +168,15 @@ func _run() -> void:
 			seeded[enemy.get_instance_id()] = true
 			opponents += 1
 			(enemy.get("_rng") as RandomNumberGenerator).seed = seed_value + opponents
-			enemy.telegraph_started.connect(func(seconds: float) -> void: tells.append(seconds))
+			enemy.telegraph_started.connect(func(seconds: float) -> void:
+				tells.append(seconds)
+				tell_began[0] = Engine.get_physics_frames())
+			# Observed, not declared: physics frames from the tell's start to its
+			# strike, for every tell the pilot did not interrupt (F14 re-check).
+			enemy.strike_ready.connect(func() -> void:
+				if tell_began[0] >= 0:
+					observed.append(snappedf((Engine.get_physics_frames() - tell_began[0]) / 60.0, 0.01))
+				tell_began[0] = -1)
 		pilot.bind(manager, ally, enemy)
 		if manager.is_fighting():
 			pilot.step(policy)
@@ -190,6 +202,9 @@ func _run() -> void:
 	result.hits = pilot._tally.hits
 	result.min_tell_s = tells.min() if not tells.is_empty() else -1.0
 	result.max_tell_s = tells.max() if not tells.is_empty() else -1.0
+	result.observed_tells = observed.size()
+	result.min_observed_tell_s = observed.min() if not observed.is_empty() else -1.0
+	result.max_observed_tell_s = observed.max() if not observed.is_empty() else -1.0
 	result.capped = fight_s >= FIGHT_CAP_S
 	_finish(out, result, "")
 

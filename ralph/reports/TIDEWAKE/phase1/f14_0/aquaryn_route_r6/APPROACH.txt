@@ -1,0 +1,4 @@
+TIDEWAKE C3 APPROACH shellwatch_to_tidal_cradle_arrival -> aquaryn walked=152m legs=24 prompt_at=(597.459, 34.04754, 1392.777)
+TIDEWAKE C3 AQUARYN engaged_by=challenge_prompt
+TIDEWAKE C3 CAPTURE aquaryn: 21 frames over 40.1 s, fight active=false
+TIDEWAKE C3 CAPTURE done: 0 trainer(s), 0 failure(s), 21 frames

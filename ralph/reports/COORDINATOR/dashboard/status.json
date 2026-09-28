@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-28T14:25Z",
+ "updated": "2026-09-28T15:45Z",
  "headline": [
-  "Criteria met: 90 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Nothing new has closed since F10#4 (08:42). Open: Meadows 7 (F01#2, F01#3, F04#1, F04#2, F04#3, F04#6, F04#7; F03#0 met by the Meadows lane), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
-  "Main is green: CI passed on every merge since 10:57, including Codex's evidence compaction (#408, which cut about 3 GB of images from the tree) and Tidewake 2c tooling (#409). The auto-merge workflow now dispatches CI after each merge (#405).",
+  "Criteria met: 91 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Since 14:15: Meadows landed F03#0 and F04#3 (#417, #419); Balance landed F10#2 starter parity and the F04#7 C2 half (#413); Cloudreach landed owned-carrier Fly (#411) and finished. Open: Meadows 6 (F01#2, F01#3, F04#1, F04#2, F04#6, F04#7 C3), Stormwood 2 (F10#2 C3, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
+  "Main is green: CI passed on every merge through #417, and the runs for #418 and #419 are going. The auto-merge workflow dispatches CI after each merge.",
   "F04#7 (owner option c): harder five-member captains at the level ceiling. Bar: reader win ≥ 0.75; masher lead-faint = 1.00; reader median party cost ≤ 0.55× the masher's; a masher loses at least one Meadows named fight in ≥ 25% of seeded playthroughs. Per fight, Vance and Vess never beat a masher (disclosed). The Balance lane is running tests before it lands. The same bar applies to Tidewake F14#0.",
   "The owner has delegated lane decisions to the coordinator. Lanes land their own PRs and update this board and STATE."
  ],
@@ -342,6 +342,12 @@
    "sha": "2e13ba43",
    "state": "Merged, CI green",
    "contents": "Compact capture rounds for Phase 2c"
+  },
+  {
+   "name": "Phase 1 landings 14:24–15:36",
+   "sha": "4b02032b",
+   "state": "Merged, CI green",
+   "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
   }
  ],
  "lanes": [
@@ -352,13 +358,13 @@
   },
   {
    "lane": "Meadows (tb/meadows)",
-   "now": "31 commits unlanded on tb/meadows (F01 gate road boards, beacon stands down for the arrival camera, captain stand-down aftermath). Open: F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7 (C3), then M1–M3.",
+   "now": "Landing per criterion now: F03#0 and F04#3 met (#417, #419). Open: F01#2/#3 (camp framing), F04#1, F04#2, F04#6, F04#7 C3, then cards M1–M3.",
    "next": "Self-lands each criterion"
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
-   "now": "Lane done. Phase 1 complete; owned-carrier Fly debt closed (#411) (ralph/reports/CLOUDREACH/owned-carrier-fly/): the five's own healthy active carrier flies, the Galewisp starter gains Fly at the unlock, Maela's loaner only for the trial and a five with no healthy carrier; the follower is recalled for the flight.",
-   "next": "Stopped. Delete tb/cloudreach after this landing."
+   "now": "Lane done. Phase 1 complete; owned-carrier Fly debt closed (#411) (ralph/reports/CLOUDREACH/owned-carrier-fly/): the five's own healthy active carrier flies, the Galewisp starter gains Fly at the unlock, Maela's loaner only for the trial and a five with no healthy carrier; the follower is recalled for the flight. Session archived.",
+   "next": "Stopped. tb/cloudreach can be deleted."
   },
   {
    "lane": "Stormwood (tb/stormwood)",
@@ -367,18 +373,18 @@
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "PR #407 (Nerissa's new stand passes C2, Tidecoil moved to the Deep Watch bay, Heart Chamber camera liners) told to land now (coordinator, 14:12). Then F14#1 and F14#0 C3 framing (82–88% vs 90%, shared fight camera) and F14#0 under the option-(c) bar; then T2.",
+   "now": "#407 is out of draft but conflicts with main after today's merges; told to merge main and land (15:42). Then F14#1 and F14#0 (C3 framing, option-(c) bar), then T2.",
    "next": "Self-lands each criterion"
   },
   {
    "lane": "Codex (Phase 2)",
-   "now": "Capture and scored catalog on main (116 items); evidence compacted (#408). The Phase 2c Tidewake fix lane started (#409 tooling).",
+   "now": "2c lanes running for all four biomes. Stormwood: four weather phases read apart (#412), landmark evidence (#418). Cloudreach #414 and Meadows #416 open.",
    "next": "The other 2c lanes start as each Claude biome lane completes (Cloudreach can start now)"
   },
   {
    "lane": "Balance (tb/balance)",
-   "now": "F10#2 starter parity met; F04#7 harder captains and the restated bar committed; unit shards and Meadows runs before its PR",
-   "next": "Lands its own PR, then archived"
+   "now": "Done: F10#2 starter parity and the F04#7 C2 half landed (#413), with the option-(c) bar written into COMBAT §7, BOSSES §9 and ACCEPTANCE. Session archived.",
+   "next": "-"
   },
   {
    "lane": "Earlier lanes, VERIFIER 1 and 2, Vess officer",
@@ -410,7 +416,7 @@
  ],
  "four_chapter_run": null,
  "wip": [
-  "Stormwood Phase 2c (tb/x04-stormwood): P2-042 fixed by 1ed0259e5 after fresh native/small-size four-phase identity and preservation PASS at both original stands; accepted weather enabled, actual enabled tests 55 / 762 pass. Regional Bars A/B remain NO. P2-037: 19 native pairs confirm wall grounding improvement, but full landmark and Bars A/B remain NO (cylindrical form, sparse crown, construction); candidate remains off. Current 78-frame landmark baseline establishes P2-041 open. P2-043 native five-pair review is partial: old cones/bar removed, but dark patch integration and glass identity fail; candidate stays off. P2-045 candy tiers, P2-081 trainer dialogue and P2-110 roster-vitals refresh remain off pending native acceptance. P2-092 deferred to tb/stormwood gameplay for collision/contact/lunge separation. Remaining owned impact>=12 rows need capture/fix or final disposition; see phase2/catalog.csv and stormwood/fixes/. No Phase 2c completion claimed.",
+  "Stormwood Phase 2c (tb/x04-stormwood): P2-042 fixed by 1ed0259e5 after fresh native/small-size four-phase identity and preservation PASS at both original stands; accepted weather enabled, actual enabled tests 55 / 762 pass. Regional Bars A/B remain NO. P2-037: 19 native pairs confirm wall grounding improvement, but full landmark and Bars A/B remain NO (cylindrical form, sparse crown, construction); candidate remains off. Disabled canopy-atlas correction: six native pairs show a small distant contrast gain with a flat-cutout tradeoff, unchanged near views and Bars A/B NO/NO; it remains off. P2-084 distinct NPC openings are separately disabled after source review and NPC contract checks; native panels remain required. Current 78-frame landmark baseline establishes P2-041 open. P2-043 native five-pair review is partial: old cones/bar removed, but dark patch integration and glass identity fail; candidate stays off. P2-045 candy tiers, P2-081 trainer dialogue and P2-110 roster-vitals refresh remain off pending native acceptance. P2-092 deferred to tb/stormwood gameplay for collision/contact/lunge separation. Remaining owned impact>=12 rows need capture/fix or final disposition; see phase2/catalog.csv and stormwood/fixes/. No Phase 2c completion claimed.",
   "Stormwood Glass Field scorched scars: flag stormwood_glass_field.json scorched_scars=false. P2-043 five native route pairs independently reviewed: partial improvement, full item and Bars A/B fail. Revise smooth patch margins, straight white fissures, dark chunks and lost glass-field identity before another native review; see phase2/stormwood/fixes/P2-043/pair-verdict.md.",
   "Stormwood F10#4 round 5 and F10#6 re-judge: tools at 7cddbc95. Next: render with capture_stormwood_f10_matrix.gd and run the f10_6 judge.",
   "Tidewake Pump Hall/Sluice kitbash: flag water_veilfall.json interior_dressing.machines.enabled=false. Codex pump, banner and sluice assets are on main but unplaced (assets/environment/tidewake/pump_station, heart_banner, sluice_gate); placement contracts are in each source/integration.md.",
