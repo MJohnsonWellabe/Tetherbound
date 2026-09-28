@@ -207,23 +207,29 @@ func _flight_stamina_multiplier() -> float:
 	return stamina_cost_multiplier(_active_realm_power())
 
 
-## Prefer the party's existing active carrier. If a valid five-member Meadows
-## team has no Fly species, Maela's transient story carrier prevents a chapter
-## deadlock. It is never added to Party, saved, caught, or treated as a sixth
-## owned creature.
+## The healthy ACTIVE member of the five carries when its species can carry
+## and its promise has opened (WORLD §4.2 "a healthy active carrier"; the
+## Galewisp starter "gains Fly at the Cloudreach unlock", CREATURES §7, via
+## the capability's `requires_flag`). Maela's transient story carrier serves
+## her flight trial, and after the unlock only a five that holds no carrier at
+## all ("prevents a full non-flying team from deadlocking the chapter"). A
+## five with its own carrier that is not out, or not well, gets no loaner:
+## `launch_blockers()` says which companion to send out or let recover. The
+## loaner is never added to Party, saved, caught, or treated as a sixth owned
+## creature.
 func eligible_creature() -> RefCounted:
 	var party: Variant = _game.get("party") if is_instance_valid(_game) else null
 	if party != null:
 		var active: RefCounted = party.call("active")
 		if active != null and not bool(active.get("fainted")) and not bool(active.get("resting")) \
-				and (party.call("members") as Array).has(active):
-			var capability := SPECIES.fly_capability(str(active.get("species_id")))
-			if bool(capability.get("can_carry", false)):
-				return active
+				and (party.call("members") as Array).has(active) and carrier_qualifies(str(active.get("species_id"))):
+			return active
 	var loaner: Dictionary = config.get("mentor_loaner", {})
 	var ends_at := str(loaner.get("ends_at_flag", ""))
 	if not mentor_loaner_available(loaner, _trial_enabled, _unlocked(), not ends_at.is_empty() and _has_flag(ends_at)) \
 			or _realm() != str(loaner.get("realm_id", "cloudreach")):
+		return null
+	if not _trial_enabled and owned_carrier() != null:
 		return null
 	var species_id := str(loaner.get("species_id", ""))
 	if species_id.is_empty() or not bool(SPECIES.fly_capability(species_id).get("can_carry", false)):
@@ -231,6 +237,29 @@ func eligible_creature() -> RefCounted:
 	if _mentor_loaner == null or str(_mentor_loaner.get("species_id")) != species_id:
 		_mentor_loaner = SPECIES.spawn(species_id)
 	return _mentor_loaner
+
+
+## Whether `species_id` can carry the trainer now: its `capabilities` entry
+## says `can_carry`, and any `requires_flag` (the Galewisp starter's
+## `fly_traversal_unlocked`) holds.
+func carrier_qualifies(species_id: String) -> bool:
+	var capability := SPECIES.fly_capability(species_id)
+	return bool(capability.get("can_carry", false)) and _has_flag(str(capability.get("requires_flag", "")))
+
+
+## The first member of the five whose species qualifies as a carrier now,
+## whether or not it is out or well; null when the five hold none.
+func owned_carrier() -> RefCounted:
+	var party: Variant = _game.get("party") if is_instance_valid(_game) else null
+	if party == null:
+		return null
+	var active: RefCounted = party.call("active")
+	if active != null and carrier_qualifies(str(active.get("species_id"))):
+		return active
+	for member: RefCounted in party.call("members"):
+		if member != null and carrier_qualifies(str(member.get("species_id"))):
+			return member
+	return null
 
 
 ## Maela's Galecrest is a temporary trial and routed-transport carrier
@@ -271,7 +300,13 @@ func launch_blockers() -> String:
 	if not _unlocked() and not (_trial_enabled and _trial.has_point(_player.global_position)):
 		return "Complete the Windscar flight trial to unlock Fly."
 	if eligible_creature() == null:
-		return "No healthy Fly carrier is available here."
+		var own := owned_carrier()
+		if own == null:
+			return "No healthy Fly carrier is available here."
+		var party: Variant = _game.get("party")
+		if party == null or party.call("active") != own:
+			return "Send out %s to fly." % str(own.call("label"))
+		return "%s needs to recover before it can carry you." % str(own.call("label"))
 	var active_power := _active_realm_power()
 	var minimum_stamina := adjusted_stamina_cost(float(config.get("minimum_launch_stamina", 18.0)), active_power)
 	if minimum_stamina > 0.0 and float(_player.get("vitals").get("stamina")) < minimum_stamina:
@@ -977,6 +1012,9 @@ static func pose_carrier_wings(rig: Skeleton3D, capability: Dictionary, seconds:
 		for section: String in ["upper", "fore"]:
 			var bone := rig.find_bone("wing_%s_%s" % [section, side])
 			var next := rig.find_bone("wing_%s_%s" % ["fore" if section == "upper" else "tip", side])
+			# A two-segment wing (Galewisp: upper -> tip) aims its upper bone at the tip.
+			if section == "upper" and next < 0:
+				next = rig.find_bone("wing_tip_%s" % side)
 			if bone < 0 or next < 0:
 				continue
 			var side_sign := signf(rig.get_bone_global_rest(bone).origin.x)

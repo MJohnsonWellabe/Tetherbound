@@ -77,6 +77,7 @@ func test_owned_active_healthy_carrier_is_preferred_without_sixth_slot() -> void
 	var bird: RefCounted = SPECIES.spawn("galecrest")
 	assert_true(game.party.add(bird))
 	assert_eq(fly.eligible_creature(), null, "owned but inactive bird is ineligible")
+	assert_eq(fly.owned_carrier(), bird, "the five's carrier is known even while it is not out")
 	assert_true(game.party.set_active(4))
 	assert_eq(fly.eligible_creature(), bird)
 	assert_eq(game.party.size(), 5)
@@ -84,6 +85,7 @@ func test_owned_active_healthy_carrier_is_preferred_without_sixth_slot() -> void
 	bird.fainted = true
 	game.progression.set_flag("fly_traversal_unlocked")
 	assert_ne(fly.eligible_creature(), bird, "a fainted owned carrier is never used")
+	assert_eq(fly.eligible_creature(), null, "and a five that holds a carrier gets no loaner in its place")
 	assert_false((game.party.members() as Array).has(fly.eligible_creature()), "mentor loaner is not secretly owned")
 	bird.fainted = false
 	bird.resting = true
@@ -214,3 +216,93 @@ func test_flight_stamina_multiplier_reads_only_this_players_active_relic() -> vo
 	assert_almost_eq(fly._flight_stamina_multiplier(), 0.0, 0.0001)
 	hearts.power = {}
 	assert_almost_eq(fly._flight_stamina_multiplier(), 1.0, 0.0001, "switching away restores ordinary Fly costs")
+
+
+
+## Owned-carrier Fly (Cloudreach follow-on): the Galewisp starter gains Fly at
+## the Cloudreach unlock (CREATURES §7), never before; Maela's trial keeps her
+## loaner for it; after the unlock the Galewisp carries and no loaner stands in.
+func test_galewisp_starter_gains_fly_at_the_unlock_without_a_sixth_slot() -> void:
+	var wisp: RefCounted = SPECIES.spawn("galewisp")
+	assert_true(game.party.add(wisp))
+	for species: String in ["bramblebun", "mudsnout", "terrapup", "brooktail"]:
+		assert_true(game.party.add(SPECIES.spawn(species)))
+	assert_true(game.party.set_active(0))
+	assert_false(fly.carrier_qualifies("galewisp"), "no Fly before the Cloudreach unlock")
+	assert_eq(fly.eligible_creature(), null, "and no carrier at all outside the trial")
+	fly.set_trial_authorization(AABB(Vector3(-10, 0, -10), Vector3(20, 40, 20)))
+	var trial_carrier: RefCounted = fly.eligible_creature()
+	assert_ne(trial_carrier, null, "Maela's trial still has her loaner")
+	assert_ne(trial_carrier, wisp, "the starter does not carry before its promise opens")
+	assert_false((game.party.members() as Array).has(trial_carrier), "the loaner is never owned")
+	fly.set_trial_authorization(AABB())
+	game.progression.set_flag("fly_traversal_unlocked")
+	assert_true(fly.carrier_qualifies("galewisp"))
+	assert_eq(fly.eligible_creature(), wisp, "after the unlock the owned Galewisp carries")
+	assert_true(fly.eligible_creature() != fly.get("_mentor_loaner") or fly.get("_mentor_loaner") == null)
+	assert_eq(game.party.size(), 5, "no sixth creature appears")
+	game.progression.set_flag("cloudreach_chapter_complete")
+	assert_eq(fly.eligible_creature(), wisp, "the promise outlives the loaner's chapter")
+
+
+## After the unlock a five holding a qualifying carrier that is not out gets no
+## loaner: the player sends their own carrier out (launch_blockers names it).
+## Maela's trial is the one place the loaner still serves such a five.
+func test_an_owned_carrier_that_is_not_out_gets_no_loaner_after_the_unlock() -> void:
+	for species: String in ["bramblebun", "mudsnout", "terrapup", "brooktail"]:
+		assert_true(game.party.add(SPECIES.spawn(species)))
+	var bird: RefCounted = SPECIES.spawn("galecrest")
+	assert_true(game.party.add(bird))
+	assert_true(game.party.set_active(0))
+	game.progression.set_flag("fly_traversal_unlocked")
+	assert_eq(fly.owned_carrier(), bird)
+	assert_eq(fly.eligible_creature(), null, "no loaner while the five hold their own carrier")
+	fly.set_trial_authorization(AABB(Vector3(-10, 0, -10), Vector3(20, 40, 20)))
+	var trial_carrier: RefCounted = fly.eligible_creature()
+	assert_ne(trial_carrier, null, "the trial keeps Maela's loaner")
+	assert_false((game.party.members() as Array).has(trial_carrier))
+	fly.set_trial_authorization(AABB())
+	assert_true(game.party.set_active(4))
+	assert_eq(fly.eligible_creature(), bird, "sent out, the owned bird carries")
+	assert_eq(game.party.size(), 5)
+
+
+## A five with no qualifying carrier still gets the loaner after the unlock
+## (the design's deadlock guard), and the Galewisp starter before the unlock
+## does not count as a carrier for that rule.
+func test_a_five_without_a_carrier_keeps_the_loaner_until_the_chapter_ends() -> void:
+	for species: String in ["galewisp", "bramblebun", "mudsnout", "brooktail", "sparkit"]:
+		assert_true(game.party.add(SPECIES.spawn(species)))
+	assert_eq(fly.owned_carrier(), null, "before the unlock the Galewisp is not yet a carrier")
+	game.progression.set_flag("fly_traversal_unlocked")
+	assert_ne(fly.owned_carrier(), null, "after it, it is")
+	var others := PARTY.new()
+	game.party = others
+	for species: String in ["bramblebun", "mudsnout", "terrapup", "brooktail", "sparkit"]:
+		assert_true(game.party.add(SPECIES.spawn(species)))
+	var loaner: RefCounted = fly.eligible_creature()
+	assert_ne(loaner, null, "a non-flying five keeps Maela's loaner after the unlock")
+	assert_false((game.party.members() as Array).has(loaner))
+	game.progression.set_flag("cloudreach_chapter_complete")
+	assert_eq(fly.eligible_creature(), null, "until the chapter completes")
+
+
+## Galewisp's carrier art grips the trainer with its lower legs and flaps its
+## two-segment wings (upper -> tip), the same shared builder remotes use.
+func test_galewisp_carrier_art_builds_with_grip_bones_and_flapping_wings() -> void:
+	var capability: Dictionary = SPECIES.fly_capability("galewisp")
+	assert_true(bool(capability.get("can_carry", false)))
+	var art: Node3D = FLY.make_carrier_art(capability)
+	assert_ne(art, null, "the Galewisp model loads as a carrier")
+	if art == null:
+		return
+	var rig: Skeleton3D = FLY.carrier_skeleton(art)
+	assert_ne(rig, null)
+	if rig != null:
+		for bone: String in capability.get("grip_bones", []):
+			assert_true(rig.find_bone(bone) >= 0, "grip bone " + bone)
+		var upper := rig.find_bone("wing_upper_l")
+		var before := rig.get_bone_pose_rotation(upper)
+		FLY.pose_carrier_wings(rig, capability, 0.1)
+		assert_false(rig.get_bone_pose_rotation(upper).is_equal_approx(before), "the upper wing moves")
+	art.free()

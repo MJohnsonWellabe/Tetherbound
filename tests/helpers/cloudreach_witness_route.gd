@@ -38,6 +38,17 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## A resumed run is a debugging dry run, never `closes` evidence: the proof is
 ## one uninterrupted run from the earned handoff.
 ##
+## `--owned-carrier=<species>` (DISCLOSED PARTY WRITE, relaxed-proof ruling 1;
+## needs `--from-save`): once the earned save has loaded through the title, ONE
+## member of the five that is not out and is not a starter is replaced by a
+## freshly spawned `<species>` at that member's level, so the party is still
+## exactly five and nothing else is written. Before the Fly unlock nothing
+## changes (Maela's trial loaner). After it, before the first launch the
+## witness tries a real Jump, Jump with the carrier still in the five but not
+## out and requires the refusal to name it (no loaner for a five that holds a
+## carrier); then, before every launch, it sends the carrier out with the real
+## exploration `party_cycle` press. `_deploy` requires the owned carrier to fly.
+##
 ## Precedent: smoke_cloudreach_floor_loop_return.gd / aerie_services.gd use the
 ## same declared flags-before-build plus single placement fixture.
 const ACT_ONE_FLAGS: Array[String] = ["cloudreach_chapter_started", "cloudreach_crisis_learned",
@@ -72,6 +83,10 @@ var checkpoint_regions: Dictionary = {}
 var checkpoint_world: Dictionary = {}
 var export_flight_dir := ""
 var flight_export: Dictionary = {}
+var owned_carrier_species := ""
+var owned_carrier_record: Dictionary = {}
+var owned_carrier_refusal: Dictionary = {}
+var owned_carrier_switches: Array[Dictionary] = []
 const CHECKPOINT_ROOT := "user://cloudreach_witness_checkpoints/"
 const MAP_STATE_SCRIPT := preload("res://scripts/world/cloudreach_map_state.gd")
 
@@ -82,6 +97,7 @@ func _run() -> void:
 		elif arg == "--checkpoints": write_checkpoints = true
 		elif arg == "--resume": resume_mode = true
 		elif arg.begins_with("--export-flight-trained="): export_flight_dir = arg.trim_prefix("--export-flight-trained=")
+		elif arg.begins_with("--owned-carrier="): owned_carrier_species = arg.trim_prefix("--owned-carrier=")
 	checkpoint_world = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
 	if resume_mode: skipping_to_aerie = false
 	if start_point == "aerie":
@@ -475,7 +491,83 @@ func _rest(id: String) -> bool:
 ## already flown in the loaded save.
 func _deploy() -> bool:
 	if _resume_skip("deploy", ""): return true
+	if not owned_carrier_species.is_empty() and _has("fly_traversal_unlocked"):
+		if owned_carrier_refusal.is_empty() and not await _owned_carrier_not_out_refusal(): return false
+		if not await _send_out_owned_carrier(): return false
 	return await super._deploy()
+
+
+## `--owned-carrier`: see the header. The swap happens after the title load, so
+## the base route's party-identity checks are taken from the five it flies with.
+func _load_earned_handoff() -> bool:
+	if not await super._load_earned_handoff(): return false
+	if owned_carrier_species.is_empty(): return true
+	var starters: Array = (JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json")) as Dictionary).starters.species
+	var index := -1
+	for i in range(game.party.size() - 1, -1, -1):
+		var member: RefCounted = game.party.at(i)
+		if i != game.party.active_index() and not starters.has(str(member.species_id)):
+			index = i
+			break
+	if index < 0 or not SPECIES.has(owned_carrier_species) or game.party.size() != 5:
+		print("CLOUDREACH WITNESS --owned-carrier cannot swap into this five")
+		return false
+	var before := _team_snapshot()
+	var replaced: RefCounted = game.party.at(index)
+	var carrier: RefCounted = SPECIES.spawn(owned_carrier_species)
+	carrier.set_level(int(replaced.level), PROGRESSION.config())
+	var active_uid := str(game.party.active().uid)
+	game.party.remove_at(index)
+	game.party.add(carrier)
+	for i in game.party.size():
+		if str(game.party.at(i).uid) == active_uid: game.party.set_active(i)
+	initial_party_ids.clear()
+	for member: RefCounted in game.party.members(): initial_party_ids.append(member.get_instance_id())
+	expected_party_size = initial_party_ids.size()
+	owned_carrier_record = {"species": owned_carrier_species, "replaced": {"species_id": replaced.species_id, "level": replaced.level, "slot": index},
+		"level": carrier.level, "team_before": before, "team_after": _team_snapshot(), "party_size": expected_party_size,
+		"note": "Declared party write after the earned title load: one non-active, non-starter member replaced by a same-level carrier; party stays five"}
+	_log("witness_owned_carrier", owned_carrier_record)
+	return expected_party_size == 5
+
+
+## After the unlock, with the carrier in the five but not out: a real Jump,
+## Jump must not deploy Fly and the refusal must say to send the carrier out.
+func _owned_carrier_not_out_refusal() -> bool:
+	var own: RefCounted = fly.owned_carrier()
+	if not _require(own != null and own.species_id == owned_carrier_species, "Owned carrier: the five hold the %s carrier after the unlock" % owned_carrier_species): return false
+	if game.party.active() == own:
+		owned_carrier_refusal = {"skipped": "carrier already out"}
+		return true
+	_release()
+	for tick in 600:
+		if player.is_on_floor(): break
+		await _frames(1)
+	var previous_clock := await _normal_input_clock("owned-carrier refusal double jump")
+	await _tap("jump")
+	await _tap("jump")
+	await _restore_route_clock(previous_clock)
+	owned_carrier_refusal = {"flying": fly.is_flying(), "last_denial": fly.last_denial, "blocker": fly.launch_blockers(),
+		"active": game.party.active().species_id, "position": str(player.global_position)}
+	_log("witness_owned_carrier_refusal", owned_carrier_refusal)
+	for tick in 600:
+		if player.is_on_floor(): break
+		await _frames(1)
+	if not _require(not fly.is_flying(), "Owned carrier not out: Jump, Jump does not deploy a loaner"): return false
+	return _require(str(fly.last_denial) == "Send out %s to fly." % own.label(), "Owned carrier not out: the refusal names the carrier to send out")
+
+
+## Send the owned carrier out with the real exploration `party_cycle` press.
+func _send_out_owned_carrier() -> bool:
+	var own: RefCounted = fly.owned_carrier()
+	var presses := 0
+	while own != null and game.party.active() != own and presses < 5:
+		await _tap("party_cycle")
+		presses += 1
+	if presses > 0:
+		owned_carrier_switches.append({"stage": stage, "presses": presses, "active": game.party.active().species_id})
+		_log("witness_owned_carrier_send_out", owned_carrier_switches[-1])
+	return _require(own != null and game.party.active() == own, "Owned carrier sent out by party_cycle before launch")
 
 
 func _fly_to(target: Vector3, radius: float = 5.0, expected_landing: Vector3 = Vector3.INF) -> bool:
@@ -767,7 +859,7 @@ func _start_state_label() -> String:
 	if start_point == "aerie":
 		return "DRY RUN — does not count (owner rule 2026-09-27, WORKFLOW §8): DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward"
 	if not from_save.is_empty():
-		return "earned save " + from_save
+		return "earned save " + from_save + ("" if owned_carrier_species.is_empty() else " + DISCLOSED party write: one non-active member replaced by a same-level owned " + owned_carrier_species + " carrier (--owned-carrier)")
 	return "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)"
 
 
@@ -775,6 +867,7 @@ func _start_state_label() -> String:
 func _witness_dir(base: String) -> String:
 	if resume_mode: return base + "/resume-dry-run"
 	if start_point == "aerie": return base + "/aerie-start"
+	if not owned_carrier_species.is_empty(): return base + "/owned-carrier/latest-run"
 	# Earned runs land in a git-ignored scratch folder; a passing run is copied
 	# into a named evidence folder (earned*/) with its run.txt.
 	if not from_save.is_empty(): return base + "/latest-run"
