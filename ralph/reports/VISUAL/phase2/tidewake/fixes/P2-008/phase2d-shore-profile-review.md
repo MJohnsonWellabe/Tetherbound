@@ -50,3 +50,20 @@ Three Veilfall shape/fall probes were discarded. Small extra outer crowns barely
 The Sluice route comparison also exposed a neon-magenta rare shiny Riptusk from the older placeholder tint. Four Tidewake species with reviewed authored repaints (`aquaryn`, `cannonback`, `riptusk`, `tidecoil`) now use those repaints while the other Phase 2 shiny species remain behind the global gate. Matched ordinary/shiny captures for all four are in `.artifacts/phase2/p2008-water-shiny02-contact.jpg`; a forced production Riptusk shiny with the selective gate is in `.artifacts/phase2/p2008-riptusk-shiny03/water__riptusk__shiny_idle.jpg`. The latest eight-view gallery was recaptured with the selective gate, with no frame failures or shader/script errors. `test_phase2_shiny_finish.gd` passes 3 tests/43 assertions. The observed magenta placeholder is corrected for these four species; this does not accept the wider P2-030 shiny queue item.
 
 **Current whole-scene verdict after the latest eight pairs:** the broad gray skirts are gone at the recorded sightings. The First Shore and Gull Rest dune views carry the intended sand and beach-grass direction. Sluice Isle still shows a very large, largely undressed cream flank; Shellwatch lacks the references' natural layered relief; Veilfall is still a narrow dark cone in the First Shore route; and the coast lacks enough ecological and landmark detail at gameplay distance. The supplied-photo match remains **PARTIAL**, Bar A remains **NO**, Bar B / Palworld-quality remains **NO**, and **P2-008 remains open**.
+
+### Current eight-view visual audit
+
+The local-defect column asks only whether the recorded gray skirt/green-carpet symptom has cleared. The full-bar column asks whether the entire visible game frame satisfies the two supplied photos, the Tidewake identity board and the Bar B gameplay comparison. A local pass does not count as acceptance of the view.
+
+| Catalogue sighting | Local defect | Full visual bar | Visible reason for the full-bar verdict |
+|---|---|---|---|
+| First Shore welcome beacon, close | PASS | FAIL | Sand crest and sea direction read, but sparse props and uniform dune sides lack the references' natural layering. |
+| Gull Rest beach, close | PASS | FAIL | Foreground ripples and grass are clearer; distant space and habitat detail remain thin. |
+| Shellwatch rescue jetty, close | PASS | FAIL | Former gray bank is sand, but the hill remains a broad clean mound with a repeated grass band. |
+| Sluice Isle twin pumps, close | PASS | FAIL | The huge near-white flank overwhelms the frame with little relief, vegetation or destination detail. |
+| Brine Steps east beach, walk03 | PASS | FAIL | Opposite dune is simplified and the trainer stands in water in this fixed catalogue frame; this is not a traversal acceptance shot. |
+| First Shore horizon stones, route | PASS | FAIL | Dune grass and open water improve; the far Veilfall landmark is still a small dark cone and the midground lacks depth. |
+| Salt Crown tide shrine, walk01 | PASS | FAIL | Sand ridge improves, while low island silhouettes and sparse shoreline dressing remain below the board. |
+| Sluice Isle twin pumps, route | PASS | FAIL | Broad blank dune face and weak destination staging dominate despite the corrected creature palette. |
+
+**Pass report: 8/8 local symptom checks pass; 0/8 complete visual-bar checks pass.** The first queue item cannot be signed off from these side-by-sides.
