@@ -46,6 +46,13 @@ def main() -> None:
                 if str(frame_id).startswith("water__") else str(frame_id)
                 for frame_id in ids
             )
+        for category, ids in planned.items():
+            suite = f"{biome}__system__build_suite"
+            if category == "systems" and suite in ids and all(
+                f"{biome}__system__{state}" in indexed
+                for state in ("camp", "bed", "building", "crafting")
+            ):
+                ids.remove(suite)
         missing_planned = {
             category: sorted(ids - indexed)
             for category, ids in planned.items() if ids - indexed

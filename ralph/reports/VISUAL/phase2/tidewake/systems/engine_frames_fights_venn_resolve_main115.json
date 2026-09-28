@@ -1,0 +1,756 @@
+[
+  {
+    "ally": [
+      365.79,
+      2.31,
+      3799.73,
+      2.3
+    ],
+    "camera": [
+      359.6,
+      8.57,
+      3793.41,
+      1.97
+    ],
+    "enemy": [
+      366.2,
+      2.79,
+      3804.71,
+      2.77
+    ],
+    "fight_s": 0.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-000.00.png",
+    "gap_m": 5.0,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.81,
+      2.33,
+      3799.97,
+      2.32
+    ],
+    "camera": [
+      359.76,
+      9.18,
+      3792.94,
+      1.92
+    ],
+    "enemy": [
+      366.32,
+      2.75,
+      3804.38,
+      2.73
+    ],
+    "fight_s": 0.25,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/hit-000.25.png",
+    "gap_m": 4.44,
+    "opponent": "water_cannonback",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.84,
+      2.35,
+      3800.21,
+      2.35
+    ],
+    "camera": [
+      359.9,
+      9.24,
+      3793.01,
+      1.92
+    ],
+    "enemy": [
+      366.33,
+      2.75,
+      3804.41,
+      2.74
+    ],
+    "fight_s": 0.38,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/tell-start-000.38.png",
+    "gap_m": 4.23,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      365.87,
+      2.37,
+      3800.43,
+      2.37
+    ],
+    "camera": [
+      359.91,
+      9.32,
+      3793.0,
+      1.92
+    ],
+    "enemy": [
+      366.31,
+      2.73,
+      3804.23,
+      2.72
+    ],
+    "fight_s": 0.88,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/tell-ended-000.88.png",
+    "gap_m": 3.83,
+    "opponent": "water_cannonback",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      366.73,
+      2.47,
+      3801.88,
+      2.46
+    ],
+    "camera": [
+      357.69,
+      9.3,
+      3799.91,
+      2.69
+    ],
+    "enemy": [
+      369.98,
+      2.91,
+      3806.82,
+      2.89
+    ],
+    "fight_s": 8.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-008.02.png",
+    "gap_m": 5.92,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      367.22,
+      2.63,
+      3803.7,
+      2.62
+    ],
+    "camera": [
+      358.65,
+      10.68,
+      3797.32,
+      2.4
+    ],
+    "enemy": [
+      368.94,
+      3.98,
+      3811.12,
+      3.89
+    ],
+    "fight_s": 16.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-016.00.png",
+    "gap_m": 7.63,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      367.26,
+      2.82,
+      3805.43,
+      2.81
+    ],
+    "camera": [
+      358.55,
+      11.43,
+      3798.49,
+      2.52
+    ],
+    "enemy": [
+      367.13,
+      4.91,
+      3813.15,
+      4.76
+    ],
+    "fight_s": 24.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-024.02.png",
+    "gap_m": 7.72,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      367.5,
+      3.0,
+      3806.81,
+      2.98
+    ],
+    "camera": [
+      359.13,
+      10.89,
+      3800.71,
+      2.71
+    ],
+    "enemy": [
+      369.97,
+      4.28,
+      3812.23,
+      4.19
+    ],
+    "fight_s": 32.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-032.02.png",
+    "gap_m": 5.96,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      368.14,
+      3.22,
+      3808.28,
+      3.2
+    ],
+    "camera": [
+      359.31,
+      11.12,
+      3802.68,
+      2.89
+    ],
+    "enemy": [
+      368.64,
+      4.47,
+      3812.48,
+      4.37
+    ],
+    "fight_s": 40.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-040.02.png",
+    "gap_m": 4.24,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.78,
+      2.33,
+      3799.96,
+      2.33
+    ],
+    "camera": [
+      359.58,
+      9.5,
+      3792.63,
+      1.9
+    ],
+    "enemy": [
+      365.34,
+      2.8,
+      3804.54,
+      2.79
+    ],
+    "fight_s": 47.28,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/hit-047.28.png",
+    "gap_m": 4.6,
+    "opponent": "water_riptusk",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.78,
+      2.33,
+      3799.96,
+      2.33
+    ],
+    "camera": [
+      359.58,
+      9.49,
+      3792.62,
+      1.9
+    ],
+    "enemy": [
+      365.31,
+      2.78,
+      3804.37,
+      2.77
+    ],
+    "fight_s": 47.55,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/tell-start-047.55.png",
+    "gap_m": 4.43,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      365.78,
+      2.33,
+      3799.96,
+      2.33
+    ],
+    "camera": [
+      359.56,
+      9.54,
+      3792.6,
+      1.9
+    ],
+    "enemy": [
+      365.31,
+      2.78,
+      3804.37,
+      2.77
+    ],
+    "fight_s": 47.62,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/tell-ended-047.62.png",
+    "gap_m": 4.43,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      365.76,
+      2.36,
+      3800.18,
+      2.35
+    ],
+    "camera": [
+      359.56,
+      9.53,
+      3792.83,
+      1.92
+    ],
+    "enemy": [
+      364.93,
+      2.83,
+      3804.64,
+      2.82
+    ],
+    "fight_s": 48.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-048.02.png",
+    "gap_m": 4.54,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.07,
+      2.52,
+      3801.55,
+      2.51
+    ],
+    "camera": [
+      360.93,
+      9.71,
+      3792.81,
+      1.86
+    ],
+    "enemy": [
+      364.62,
+      2.99,
+      3806.08,
+      2.98
+    ],
+    "fight_s": 56.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-056.02.png",
+    "gap_m": 4.55,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.73,
+      2.64,
+      3803.13,
+      2.63
+    ],
+    "camera": [
+      356.44,
+      9.43,
+      3803.58,
+      3.12
+    ],
+    "enemy": [
+      370.12,
+      2.64,
+      3804.95,
+      2.62
+    ],
+    "fight_s": 64.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-064.02.png",
+    "gap_m": 4.75,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      368.06,
+      2.6,
+      3803.73,
+      2.59
+    ],
+    "camera": [
+      361.53,
+      9.06,
+      3809.78,
+      4.27
+    ],
+    "enemy": [
+      372.31,
+      2.22,
+      3801.99,
+      2.21
+    ],
+    "fight_s": 72.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-072.02.png",
+    "gap_m": 4.59,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      370.64,
+      2.37,
+      3802.75,
+      2.36
+    ],
+    "camera": [
+      365.31,
+      8.87,
+      3809.82,
+      3.72
+    ],
+    "enemy": [
+      373.78,
+      2.19,
+      3802.42,
+      2.18
+    ],
+    "fight_s": 80.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-080.02.png",
+    "gap_m": 3.16,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      373.29,
+      2.18,
+      3802.13,
+      2.17
+    ],
+    "camera": [
+      371.58,
+      7.93,
+      3809.37,
+      3.28
+    ],
+    "enemy": [
+      376.55,
+      1.7,
+      3798.71,
+      1.69
+    ],
+    "fight_s": 88.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-088.02.png",
+    "gap_m": 4.72,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.8,
+      2.32,
+      3799.91,
+      2.32
+    ],
+    "camera": [
+      360.58,
+      8.57,
+      3793.98,
+      1.99
+    ],
+    "enemy": [
+      366.3,
+      2.75,
+      3804.45,
+      2.74
+    ],
+    "fight_s": 89.77,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/hit-089.77.png",
+    "gap_m": 4.56,
+    "opponent": "water_riverdrake",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      365.83,
+      2.34,
+      3800.1,
+      2.34
+    ],
+    "camera": [
+      360.22,
+      8.63,
+      3794.29,
+      2.03
+    ],
+    "enemy": [
+      366.33,
+      2.74,
+      3804.37,
+      2.73
+    ],
+    "fight_s": 89.97,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/tell-start-089.97.png",
+    "gap_m": 4.3,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      365.83,
+      2.35,
+      3800.18,
+      2.34
+    ],
+    "camera": [
+      360.26,
+      8.67,
+      3794.27,
+      2.03
+    ],
+    "enemy": [
+      366.31,
+      2.72,
+      3804.17,
+      2.71
+    ],
+    "fight_s": 90.52,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/tell-ended-090.52.png",
+    "gap_m": 4.01,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      366.65,
+      2.51,
+      3802.27,
+      2.51
+    ],
+    "camera": [
+      358.79,
+      8.8,
+      3800.03,
+      2.65
+    ],
+    "enemy": [
+      368.8,
+      2.96,
+      3806.85,
+      2.94
+    ],
+    "fight_s": 96.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-096.02.png",
+    "gap_m": 5.06,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      368.32,
+      2.79,
+      3805.53,
+      2.78
+    ],
+    "camera": [
+      360.93,
+      9.18,
+      3801.88,
+      2.74
+    ],
+    "enemy": [
+      369.89,
+      3.37,
+      3809.24,
+      3.34
+    ],
+    "fight_s": 104.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-104.02.png",
+    "gap_m": 4.02,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      369.81,
+      2.94,
+      3807.03,
+      2.93
+    ],
+    "camera": [
+      361.55,
+      9.36,
+      3806.27,
+      3.16
+    ],
+    "enemy": [
+      372.8,
+      3.58,
+      3810.71,
+      3.53
+    ],
+    "fight_s": 112.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-112.02.png",
+    "gap_m": 4.74,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      370.64,
+      3.26,
+      3808.95,
+      3.24
+    ],
+    "camera": [
+      366.11,
+      10.25,
+      3801.38,
+      2.45
+    ],
+    "enemy": [
+      369.18,
+      4.34,
+      3812.29,
+      4.26
+    ],
+    "fight_s": 120.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-120.02.png",
+    "gap_m": 3.65,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      368.97,
+      3.66,
+      3810.28,
+      3.63
+    ],
+    "camera": [
+      370.58,
+      10.71,
+      3801.41,
+      2.24
+    ],
+    "enemy": [
+      364.85,
+      4.84,
+      3812.16,
+      4.69
+    ],
+    "fight_s": 128.02,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-128.02.png",
+    "gap_m": 4.53,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      367.67,
+      4.06,
+      3811.27,
+      4.02
+    ],
+    "camera": [
+      368.68,
+      11.03,
+      3802.41,
+      2.42
+    ],
+    "enemy": [
+      364.88,
+      5.09,
+      3812.71,
+      4.93
+    ],
+    "fight_s": 136.0,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/t-136.00.png",
+    "gap_m": 3.15,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      366.23,
+      3.98,
+      3810.64,
+      3.92
+    ],
+    "camera": [
+      357.92,
+      6.38,
+      3793.73,
+      2.08
+    ],
+    "enemy": [
+      361.83,
+      4.14,
+      3809.27,
+      4.0
+    ],
+    "fight_s": 141.53,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/win-141.53.png",
+    "gap_m": 4.61,
+    "opponent": "water_riverdrake",
+    "tag": "win",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      362.91,
+      2.97,
+      3805.28,
+      2.97
+    ],
+    "camera": [
+      358.5,
+      5.72,
+      3796.15,
+      2.29
+    ],
+    "enemy": [
+      361.83,
+      4.14,
+      3809.27,
+      4.0
+    ],
+    "fight_s": 142.53,
+    "file": "res://ralph/reports/VISUAL/phase2/tidewake/fights_venn_resolve_main115/venn/aftermath-142.53.png",
+    "gap_m": 4.13,
+    "opponent": "water_riverdrake",
+    "tag": "aftermath",
+    "tell_s": 0.0
+  }
+]

@@ -18,3 +18,17 @@ func _run() -> void:
 		return
 	seed(capture_seed)
 	await super._run()
+
+
+## The installed recorder stops its shutter when combat becomes inactive. Save
+## the production camera at the resolved state and after the presentation has
+## settled, so the Phase 2 sequence includes win and aftermath views.
+func _record(world: Node3D, game: Node, dir: String, label: String, active: Callable) -> bool:
+	var recorded := await super._record(world, game, dir, label, active)
+	if recorded and not bool(active.call()):
+		var manager: Node = world.get_node("CombatManager")
+		var director: Node = world.get_node("EncounterDirector")
+		await _save(dir, "win", _fight_t, manager.enemy_body(), director.ally_body(), {})
+		await _frames(60)
+		await _save(dir, "aftermath", _fight_t + 1.0, manager.enemy_body(), director.ally_body(), {})
+	return recorded

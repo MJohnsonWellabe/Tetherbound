@@ -34,6 +34,7 @@ def main() -> None:
     parser.add_argument("--tells-per-opponent", type=int, default=2)
     parser.add_argument("--hits-per-opponent", type=int, default=2)
     parser.add_argument("--run-suffix", default="")
+    parser.add_argument("--only-tags", default="")
     args = parser.parse_args()
     if len(args.commit) != 40 or subprocess.run(
         ["git", "-C", str(args.repo), "cat-file", "-e", f"{args.commit}^{{commit}}"],
@@ -51,7 +52,10 @@ def main() -> None:
         reader = csv.DictReader(stream)
         existing = {row["id"]: row for row in reader}
     thumbnails = []
+    selected_tags = {tag.strip() for tag in args.only_tags.split(",") if tag.strip()}
     for record in log:
+        if selected_tags and str(record["tag"]) not in selected_tags:
+            continue
         recorded = str(record["file"]).replace("\\", "/")
         relative = "/".join(Path(recorded).parts[-2:])
         origin = source / relative

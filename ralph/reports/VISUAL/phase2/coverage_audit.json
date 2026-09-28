@@ -1,9 +1,9 @@
 {
   "biomes": {
     "meadows": {
-      "frames": 606,
+      "frames": 614,
       "categories": {
-        "characters": 144,
+        "characters": 152,
         "creatures": 126,
         "named_locations": 114,
         "route_and_terrain": 50,
@@ -12,7 +12,7 @@
         "world_items": 78
       },
       "times": {
-        "day": 517,
+        "day": 525,
         "dusk": 48,
         "night": 41
       },
@@ -29,8 +29,8 @@
         "flying",
         "swimming"
       ],
-      "dialogue_frames": 72,
-      "defeated_frames": 48,
+      "dialogue_frames": 76,
+      "defeated_frames": 56,
       "ui_ids": [
         "meadows__exploration_hud",
         "meadows__menu_backpack",
@@ -46,33 +46,29 @@
         "meadows__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {
-        "systems": [
-          "meadows__system__build_suite"
-        ]
-      },
+      "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     },
     "tidewake": {
-      "frames": 804,
+      "frames": 833,
       "categories": {
         "characters": 132,
         "creatures": 91,
         "named_locations": 258,
         "route_and_terrain": 120,
-        "systems": 164,
+        "systems": 193,
         "ui": 12,
         "world_items": 27
       },
       "times": {
-        "day": 604,
+        "day": 633,
         "dusk": 114,
         "night": 86
       },
       "systems": {
         "current_states": 16,
-        "fights": 141,
+        "fights": 170,
         "swimming": 7
       },
       "expected_systems_without_indexed_frames": [
@@ -106,18 +102,18 @@
       "missing_repro_or_render_path": []
     },
     "cloudreach": {
-      "frames": 353,
+      "frames": 354,
       "categories": {
         "characters": 24,
         "creatures": 98,
         "named_locations": 144,
         "route_and_terrain": 39,
-        "systems": 24,
+        "systems": 25,
         "ui": 12,
         "world_items": 12
       },
       "times": {
-        "day": 242,
+        "day": 243,
         "dusk": 57,
         "night": 54
       },
@@ -126,7 +122,7 @@
         "building": 1,
         "camp": 1,
         "crafting": 1,
-        "flying": 15,
+        "flying": 16,
         "flying_return": 5
       },
       "expected_systems_without_indexed_frames": [
@@ -155,9 +151,6 @@
       "missing_planned_frames": {
         "characters": [
           "cloudreach__inventory__character__healer_iven"
-        ],
-        "systems": [
-          "cloudreach__system__build_suite"
         ]
       },
       "bad_commits": [],
@@ -210,11 +203,7 @@
         "stormwood__settings_controls"
       ],
       "missing_files": [],
-      "missing_planned_frames": {
-        "systems": [
-          "stormwood__system__build_suite"
-        ]
-      },
+      "missing_planned_frames": {},
       "bad_commits": [],
       "missing_repro_or_render_path": []
     }
