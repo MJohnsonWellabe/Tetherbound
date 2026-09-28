@@ -75,8 +75,34 @@ func test_colony_and_arc_overrides_bind_only_to_the_candidate_material() -> void
 	assert_eq(source, original)
 	assert_false(source.has("clump_patch_start"))
 	assert_false(source.has("blade_arc_angle"))
+	assert_true(bool(dunes._material.get_shader_parameter("dune_tussock")))
+	var ordinary_tussock: Variant = ordinary._material.get_shader_parameter("dune_tussock")
+	assert_true(ordinary_tussock == null or ordinary_tussock == false)
 	ordinary.free()
 	dunes.free()
+
+
+func test_rooted_tussocks_have_pointed_tips_and_stable_lod_roots() -> void:
+	var field := GRASS.new()
+	var near: ArrayMesh = field._tuft_mesh(5, 4, -1, true)
+	var far: ArrayMesh = field._tuft_mesh(5, 2, 3, true)
+	var near_arrays := near.surface_get_arrays(0)
+	var near_vertices: PackedVector3Array = near_arrays[Mesh.ARRAY_VERTEX]
+	var far_vertices: PackedVector3Array = far.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	for blade in 5:
+		var first := blade * 10
+		assert_true(near_vertices[first].length() < 0.07, "roots form a compact tussock")
+		assert_eq(near_vertices[first + 8], near_vertices[first + 9], "each leaf ends in one point")
+		if blade < 3:
+			assert_eq(far_vertices[blade * 6], near_vertices[first], "LOD preserves each root")
+			assert_eq(far_vertices[blade * 6 + 4], near_vertices[first + 8], "LOD preserves each tip")
+	var indices: PackedInt32Array = near_arrays[Mesh.ARRAY_INDEX]
+	for triangle in indices.size() / 3:
+		var a := near_vertices[indices[triangle * 3]]
+		var b := near_vertices[indices[triangle * 3 + 1]]
+		var c := near_vertices[indices[triangle * 3 + 2]]
+		assert_true((b - a).cross(c - a).length() > 0.000001, "pointed tips retain only nondegenerate triangles")
+	field.free()
 
 
 func test_shelter_leaves_windward_ground_open_without_affecting_ordinary_layers() -> void:

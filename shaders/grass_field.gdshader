@@ -107,6 +107,8 @@ uniform float height_jitter = 0.45;
 uniform float bend = 0.18;
 // Maximum static circular centerline arc in radians. Zero preserves legacy geometry.
 uniform float blade_arc_angle : hint_range(0.0, 1.0472, 0.0174533) = 1.047198;
+// Water dune profile only. Paired with the rooted, pointed ribbon mesh.
+uniform bool dune_tussock = false;
 // Per-blade value spread. One flat green over a whole field reads as a
 // texture; this is the cheapest way to give it depth without a second tint.
 uniform float shade_jitter : hint_range(0.0, 1.0) = 0.22;
@@ -192,6 +194,7 @@ varying float v_blade_t;
 varying vec3 v_ground_colour;
 varying float v_fade;
 varying float v_shade;
+varying float v_leaf_straw;
 
 // ---------------------------------------------------------------------------
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader. Do not "clean up".
@@ -449,6 +452,10 @@ vec2 grass_blade_arc(float blade_length, float t, vec2 blade_seed) {
 	}
 	float magnitude = blade_arc_angle * mix(0.625, 1.0, hash12(blade_seed * 7.31));
 	float arc_sign = hash12(blade_seed * 13.17) < 0.5 ? -1.0 : 1.0;
+	if (dune_tussock) {
+		magnitude = blade_arc_angle * mix(0.30, 1.0, hash12(blade_seed * 7.31));
+		arc_sign = 1.0;
+	}
 	float radius = blade_length / magnitude;
 	float angle = magnitude * t;
 	return vec2(radius * sin(angle), arc_sign * radius * (1.0 - cos(angle)));
@@ -522,6 +529,11 @@ void vertex() {
 	// so the field reads as drifts with open ground between them rather than a
 	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
 	float drift = value_noise(world_xz * clump_scale);
+	if (dune_tussock) {
+		// Smaller pockets break up the broad colony's boundary without
+		// changing world-stable placement or terrain/landmark clearances.
+		drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
+	}
 	if (clump_patch_full > clump_patch_start) {
 		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
 	}
@@ -543,6 +555,7 @@ void vertex() {
 			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
 
 	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
+	v_leaf_straw = dune_tussock ? mix(0.38, 1.0, hash12(blade_seed * 9.43)) : 1.0;
 
 	if (culled) {
 		// Collapse to a point. The cheapest cull available in a vertex shader,
@@ -610,6 +623,9 @@ void vertex() {
 			local.y = t * h * UV2.y;
 		} else {
 			vec2 blade_side = normalize(vec2(NORMAL.z, -NORMAL.x));
+			if (dune_tussock) {
+				blade_side = normalize(NORMAL.xz);
+			}
 			vec2 arc = grass_blade_arc(h * UV2.y, t, blade_seed);
 			local.y = arc.x;
 			local.xz += blade_side * arc.y;
@@ -649,6 +665,9 @@ void fragment() {
 	// destroying the tint.
 	vec3 root = tint_base * mix(vec3(1.0), v_ground_colour, ground_blend);
 	vec3 col = mix(root, tint_tip, smoothstep(0.0, 0.85, v_blade_t));
+	if (dune_tussock) {
+		col = mix(root, tint_tip, smoothstep(0.12, 1.0, v_blade_t) * v_leaf_straw);
+	}
 	col = mix(col, drain_tint * mix(0.75, 1.1, v_blade_t), v_drain);
 	ALBEDO = col * v_shade;
 	ROUGHNESS = 0.95;
@@ -656,6 +675,9 @@ void fragment() {
 	// has no subsurface scattering, so this lifts the tip toward the tint
 	// rather than pretending to be transmission.
 	BACKLIGHT = mix(tint_tip, drain_tint, v_drain) * translucency * v_blade_t;
+	if (dune_tussock) {
+		BACKLIGHT *= v_leaf_straw;
+	}
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 }

@@ -38,6 +38,9 @@ uniform float coast_dune_patch_scale = 0.022;
 uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
 uniform float coast_dune_shadow_push_m = 0.0;
+uniform float coast_dune_bluff_start_y = 0.72;
+uniform float coast_dune_bluff_full_y = 0.38;
+uniform float coast_dune_bluff_detail = 0.65;
 
 float coast_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -145,14 +148,24 @@ const MATERIAL := """
 		float ripple = sin(phase) * (1.0 - smoothstep(0.3, 0.9, fwidth(phase)))
 			* smoothstep(0.8, 0.98, abs(dune_normal.y));
 		vec3 sand = coast_dune_sand_colour * (mix(0.70, 0.88, patch) + (grain - 0.5) * 0.065 + ripple * coast_dune_ripple_strength);
-		float bluff = 1.0 - smoothstep(0.15, 0.72, abs(dune_normal.y));
-		sand = mix(sand, coast_dune_bluff_colour * mix(0.71, 0.87, patch), bluff * 0.24);
+		// Sand caps the gentle ground; required steep banks expose the
+		// installed mineral material beneath it. This keeps those fixed
+		// landforms from reading as vertical piles of uniformly pale sand.
+		float bluff_patch = coast_noise(v_vertex.xz * 0.16 + vec2(v_vertex.y * 0.025));
+		float bluff = 1.0 - smoothstep(coast_dune_bluff_full_y, coast_dune_bluff_start_y,
+			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.12);
+		bluff *= smoothstep(1.3, 3.5, v_vertex.y);
+		float mineral_value = dot(mat.albedo_height.rgb, vec3(0.299, 0.587, 0.114));
+		vec3 mineral = coast_dune_bluff_colour * mix(0.55, 1.0, clamp(mineral_value * 2.0, 0.0, 1.0));
+		sand = mix(sand, mineral, bluff);
 		float wet = 1.0 - smoothstep(0.15, 1.25, v_vertex.y + (patch - 0.5) * 0.4);
 		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * 0.8);
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, outside);
-		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), outside);
+		vec3 dune_detail = mix(vec3(0.0, 1.0, 0.0), mat.normal_rough.rgb,
+			bluff * coast_dune_bluff_detail);
+		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, dune_detail, outside);
 		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), outside);
-		mat.normal_map_depth = mix(mat.normal_map_depth, 0.0, outside);
+		mat.normal_map_depth *= mix(1.0, bluff * coast_dune_bluff_detail, outside);
 	}
 """
 
@@ -216,7 +229,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	var dune: Variant = JSON.parse_string(FileAccess.get_file_as_string(DUNE_CONFIG))
 	if dune is Dictionary:
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
-		for key: String in ["sand_colour", "wet_colour", "bluff_colour", "patch_scale", "ripple_scale", "ripple_strength", "shadow_push_m"]:
+		for key: String in ["sand_colour", "wet_colour", "bluff_colour", "patch_scale", "ripple_scale", "ripple_strength", "shadow_push_m", "bluff_start_y", "bluff_full_y", "bluff_detail"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))

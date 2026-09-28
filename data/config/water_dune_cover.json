@@ -1,46 +1,123 @@
 {
   "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
   "enabled": false,
-  "_comment_colonies": "Unjudged colony candidate: grass-only thresholds create bare gaps and dense cores, with the existing blade arc made upright through a Water profile override. Full contrast keeps the threshold's zero-density gaps. Static wispy accents use fewer, tighter colonies at approximately the same requested instance count.",
-  "preserve_islands": ["veilfall"],
+  "_comment_colonies": "Unjudged rooted-tussock candidate: pointed ribbons fan out from a shared root with varied arcs, leaf-specific olive/straw gradients and smaller pockets within each colony. Existing terrain and gameplay clearances remain enforced. Source profiles and other realms are unchanged.",
+  "preserve_islands": [
+    "veilfall"
+  ],
   "ground_cover": {
     "tuft_count": 54000,
     "blades_per_tuft": 5,
-    "blade_segments": 3,
-    "blade_arc_angle": 0.20,
+    "blade_segments": 4,
+    "blade_arc_angle": 0.95,
     "blade_width": 0.85,
-    "height_near": 0.68,
-    "height_far": 0.88,
-    "height_jitter": 0.28,
-    "bend": 0.12,
+    "height_near": 0.65,
+    "height_far": 0.8,
+    "height_jitter": 0.38,
+    "bend": 0.16,
     "density_gain": 0.95,
     "clump_scale": 0.065,
     "clump_contrast": 1.0,
     "clump_patch_start": 0.52,
     "clump_patch_full": 0.68,
-    "tint_base": "#777a4d",
-    "tint_tip": "#c4b782",
+    "tint_base": "#596344",
+    "tint_tip": "#aaa16c",
     "tint_jitter": 0.13,
     "ground_blend": 0.16,
     "cover_tiers": [
-      {"name": "strand_bushes", "count": 280, "density_gain": 0.16, "item_size": 0.58, "tint_base": "#5b6545", "tint_tip": "#89916a", "ground_blend": 0.16},
-      {"name": "strand_flowers", "count": 100, "density_gain": 0.10, "item_size": 0.40, "tint_tip": "#c8c0a0"}
-    ]
+      {
+        "name": "strand_bushes",
+        "count": 280,
+        "density_gain": 0.16,
+        "item_size": 0.58,
+        "tint_base": "#5b6545",
+        "tint_tip": "#89916a",
+        "ground_blend": 0.16
+      },
+      {
+        "name": "strand_flowers",
+        "count": 100,
+        "density_gain": 0.1,
+        "item_size": 0.4,
+        "tint_tip": "#c8c0a0"
+      }
+    ],
+    "dune_tussock": true,
+    "shade_jitter": 0.26,
+    "translucency": 0.16
   },
   "layers": {
-    "trees": {"clusters": 12, "per_cluster": [4, 8], "cluster_radius_m": [7.0, 17.0], "_dune_sheltered": true},
-    "shrubs": {"models": ["res://assets/environment/stylized_nature/Bush_Common.gltf"], "clusters": 9, "per_cluster": [3, 6], "cluster_radius_m": [5.0, 11.0], "scale": [0.45, 0.85], "_dune_sheltered": true},
-    "groundcover": {"models": ["res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"], "clusters": 12, "per_cluster": [12, 24], "cluster_radius_m": [1.8, 4.0], "scale": [0.42, 0.68]}
+    "trees": {
+      "clusters": 12,
+      "per_cluster": [
+        4,
+        8
+      ],
+      "cluster_radius_m": [
+        7.0,
+        17.0
+      ],
+      "_dune_sheltered": true
+    },
+    "shrubs": {
+      "models": [
+        "res://assets/environment/stylized_nature/Bush_Common.gltf"
+      ],
+      "clusters": 9,
+      "per_cluster": [
+        3,
+        6
+      ],
+      "cluster_radius_m": [
+        5.0,
+        11.0
+      ],
+      "scale": [
+        0.45,
+        0.85
+      ],
+      "_dune_sheltered": true
+    },
+    "groundcover": {
+      "models": [
+        "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"
+      ],
+      "clusters": 12,
+      "per_cluster": [
+        12,
+        24
+      ],
+      "cluster_radius_m": [
+        1.8,
+        4.0
+      ],
+      "scale": [
+        0.42,
+        0.68
+      ]
+    }
   },
   "shelter": {
     "_comment": "Canopy and understory share deterministic centres accepted by both original ground/slope/clearance rules. Existing lee bounds remain unchanged. An upwind ridge must rise at least ridge_relief_m above the centre; bounded unsuccessful searches report zero groves with no fallback placement.",
-    "lee_direction_xz": [1.0, 0.35], "min_projection": 0.04, "max_radius_fraction": 0.78,
+    "lee_direction_xz": [
+      1.0,
+      0.35
+    ],
+    "min_projection": 0.04,
+    "max_radius_fraction": 0.78,
     "shared_groves": true,
-    "upwind_samples_m": [12.0, 24.0, 40.0],
+    "upwind_samples_m": [
+      12.0,
+      24.0,
+      40.0
+    ],
     "ridge_relief_m": 3.0,
     "grove_search_attempts": 256,
     "grove_spacing_m": 20.0
   },
   "grass_texture": "res://assets/environment/stylized_nature/derived/Grass_C_dune_sage_straw.png",
-  "grass_palette": {"sage": "#92966a", "straw": "#c4b782"}
+  "grass_palette": {
+    "sage": "#92966a",
+    "straw": "#c4b782"
+  }
 }
