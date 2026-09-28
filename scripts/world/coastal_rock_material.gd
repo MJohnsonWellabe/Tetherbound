@@ -39,6 +39,9 @@ uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
 uniform float coast_dune_texture_scale = 0.30;
 uniform float coast_dune_texture_strength = 0.65;
+uniform float coast_dune_face_shade_strength = 0.0;
+uniform float coast_dune_face_shade_start_y = 0.98;
+uniform float coast_dune_face_shade_full_y = 0.72;
 uniform float coast_dune_shadow_push_m = 0.0;
 uniform float coast_dune_bluff_start_y = 0.72;
 uniform float coast_dune_bluff_full_y = 0.38;
@@ -159,6 +162,11 @@ const MATERIAL := """
 			+ dot(texture(coast_dune_albedo, v_vertex.xz * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.y
 			+ dot(texture(coast_dune_albedo, v_vertex.xy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.z;
 		sand *= clamp(1.0 + (dune_tex - 0.70) * coast_dune_texture_strength, 0.68, 1.22);
+		// Long dune flanks need a broad value break at gameplay distance. Keep
+		// level paths and crests bright while softly shading inclined sand.
+		float face_shade = 1.0 - smoothstep(coast_dune_face_shade_full_y,
+			coast_dune_face_shade_start_y, abs(dune_normal.y) + (patch - 0.5) * 0.06);
+		sand *= 1.0 - face_shade * coast_dune_face_shade_strength;
 		// Sand caps the gentle ground; required steep banks expose the
 		// installed mineral material beneath it. This keeps those fixed
 		// landforms from reading as vertical piles of uniformly pale sand.
@@ -245,7 +253,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	if dune is Dictionary:
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
 		material.call("set_shader_param", "coast_dune_albedo", load("res://assets/environment/terrain/tidewake_dune_sand_v1.png"))
-		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
+		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
