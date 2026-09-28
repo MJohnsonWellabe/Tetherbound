@@ -57,6 +57,11 @@ func mount(owner_world: Node3D) -> void:
 	# Register this realm's authored conversations without changing another
 	# chapter's ids or introducing a separate dialogue implementation.
 	var conversations: Dictionary = _read("res://data/dialogue/stormwood.json").get("conversations", {})
+	var openings: Dictionary = _read("res://data/config/stormwood_dialogue_presentation.json").get("npc_openings", {})
+	if bool(openings.get("enabled", false)):
+		for id: String in openings.get("lines", {}):
+			if conversations.has(id) and not conversations[id].get("lines", []).is_empty():
+				conversations[id]["lines"][0] = str(openings.lines[id])
 	for id: String in conversations:
 		RUNNER.table()[id] = conversations[id].duplicate(true)
 	RUNNER.table()[WEN_REFUSAL_CONVERSATION] = wen_refusal_conversation()
