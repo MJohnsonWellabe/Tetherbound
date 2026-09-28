@@ -61,8 +61,9 @@ jobs:
         run: |
           set -euo pipefail
           main_sha=$(gh api "repos/$REPO/commits/main" --jq '.sha')
+          # A cancelled run (replaced while pending) built nothing; it does not count.
           count=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$main_sha&per_page=30" \
-            --jq '[.workflow_runs[] | select(.event != "pull_request")] | length')
+            --jq '[.workflow_runs[] | select(.event != "pull_request" and .conclusion != "cancelled" and .conclusion != "skipped")] | length')
           if [ "$count" != "0" ]; then
             echo "CI already ran (or is running) on main $main_sha"
             exit 0

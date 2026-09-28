@@ -167,9 +167,9 @@ const ROWS := [
 		"target": Vector3(-485.0, 345.0, 1320.0),
 		"why": "lower_cliff_road final climb (t=0.7) toward Three Bells Bridge, the causeway's first landmark."},
 	{"n": 7, "region": "broken_causeways", "row": "route", "time": "day", "sheet": "regions",
-		"stands": [Vector3(-365.9, 363.6, 1451.4), Vector3(-364.5, 363.6, 1450.0)],
+		"stands": [Vector3(-336.0, 370.8, 1480.0), Vector3(-365.9, 363.6, 1451.4)],
 		"target": Vector3(-260.0, 391.5, 1560.0),
-		"why": "broken_causeway_main past the rope bridge (t=0.45), looking up the causeway toward the stone viaduct."},
+		"why": "broken_causeway_main past the rope bridge (t=0.6, on the centreline), looking up the causeway toward the stone viaduct. F08#4: the t=0.45 stand 2 m off the centreline framed only the grass bank beside the road."},
 	{"n": 8, "region": "broken_causeways", "row": "reverse", "time": "day", "sheet": "regions",
 		"stands": [Vector3(-365.9, 363.6, 1451.4), Vector3(-364.5, 363.6, 1450.0)],
 		"target": Vector3(-450.0, 343.5, 1360.0),
@@ -243,7 +243,7 @@ const ROWS := [
 		"target": Vector3(430.0, 932.0, 4500.0),
 		"why": "Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd."},
 	{"n": 25, "region": "upper_cloudreach", "row": "settlement-cliffhold", "time": "day", "sheet": "hero",
-		"stands": [Vector3(-309.2, 830.0, 3991.2), Vector3(-352.0, 830.0, 3954.0)],
+		"stands": [Vector3(-315.4, 830.0, 3987.1), Vector3(-309.2, 830.0, 3991.2), Vector3(-352.0, 830.0, 3954.0)],
 		"target": Vector3(-340.0, 838.0, 3970.0),
 		"why": "Key settlement Cliffhold from its east arrival; production-integration `08-upper-cliffhold-east-arrival` / `12-cliffhold-ground-connection`."},
 	# --- Summit / Stronghold ------------------------------------------------------------
@@ -269,7 +269,7 @@ const ROWS := [
 		"target": Vector3(-24.0, 130.0, -159.0),
 		"why": "Night arrival route cue: row 01 at 23:00."},
 	{"n": 31, "region": "broken_causeways", "row": "route", "time": "night", "sheet": "night", "twin": 7,
-		"reuse_stand_of": 7, "stands": [Vector3(-365.9, 363.6, 1451.4), Vector3(-364.5, 363.6, 1450.0)],
+		"reuse_stand_of": 7, "stands": [Vector3(-336.0, 370.8, 1480.0), Vector3(-365.9, 363.6, 1451.4)],
 		"target": Vector3(-260.0, 391.5, 1560.0),
 		"why": "Night causeway route cue: row 07 at 23:00."},
 	{"n": 32, "region": "upper_cloudreach", "row": "approach", "time": "night", "sheet": "night", "twin": 21,
@@ -297,6 +297,12 @@ const ROWS := [
 		"stands": [Vector3(-286.0, 180.0, 535.0), Vector3(-280.0, 180.0, 496.0)],
 		"target": Vector3(-276.0, 186.0, 518.0),
 		"why": "Post-finale Galefoot: returning travelers (Aila, Neri, Orrin) against row 05."},
+	# F08#4 (Phase 1): row 05 stands inside the terrace; this is Galefoot from the
+	# road a player arrives on, before its terrace edge (z 502).
+	{"n": 37, "region": "gate_lower_cliffs", "row": "settlement-galefoot-approach", "time": "day", "sheet": "hero",
+		"stands": [Vector3(-280.0, 179.0, 484.0), Vector3(-279.0, 178.5, 475.0)],
+		"target": Vector3(-278.0, 184.0, 518.0),
+		"why": "Galefoot Waycamp from arrival_gate_road's last segment, ~36 m out below the terrace edge, toward the arrival lane and yard."},
 ]
 
 var _game: Node
@@ -316,6 +322,9 @@ var _rest_pitch_deg := -12.0
 var _only: Dictionary = {}
 var _motion := false
 var _force_night := false
+## `--active=<species>`: which party member is out (default galecrest). The
+## earned five carry no flier, so F08#4 settlement rows also render with one.
+var _active_species := "galecrest"
 var _flag_state := ""
 
 
@@ -330,6 +339,8 @@ func _parse_args() -> void:
 			_motion = true
 		elif arg == "--night":
 			_force_night = true
+		elif arg.begins_with("--active="):
+			_active_species = arg.substr("--active=".length()).strip_edges()
 		elif arg.begins_with("--output="):
 			OUT = arg.substr("--output=".length()).strip_edges().trim_suffix("/")
 		elif arg.begins_with("--only="):
@@ -368,7 +379,7 @@ func _boot() -> bool:
 		party.call("add", SPECIES.spawn(species))
 	for index in (party.call("members") as Array).size():
 		var member: RefCounted = party.call("at", index)
-		if member != null and str(member.get("species_id")) == "galecrest":
+		if member != null and str(member.get("species_id")) == _active_species:
 			party.call("set_active", index)
 			break
 	var flags: RefCounted = _game.get("progression")
