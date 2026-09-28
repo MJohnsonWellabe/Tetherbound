@@ -13,7 +13,7 @@ Each witness is `tests/capture_activity_lures.gd` driving ordinary input only: m
 | Activity | Render (commit) | Save (disclosed, not earned) | Receipt |
 |---|---|---|---|
 | Bram | 36413136705 (122a8efb) `walks_122a8efb/bram` | S04-exit-pose-on-road | PASS, first seen 74.5 m on the road |
-| Doss | 36413141253 (122a8efb) `walks_122a8efb/doss` | S07-exit-band3 | PASS |
+| Doss | `ralph/reports/MEADOWS-PAYOFFS/six-activities/earned/lure0/doss-f` (same walker, same save, `--off-road-cost=10`) | S07-exit-band3 | PASS; its 60 m on-road glance shows pennant, smoke and perch (judge F). The 122a8efb Doss walk (`walks_122a8efb/doss`) reached the prompt but first saw Doss at 24 m off the road after a deliberate look (judge r12 PARTLY), so it is not the witness. |
 | Juno | 36413144937 (122a8efb) `walks_122a8efb/juno` | S07-exit-band4 | PASS |
 | Herd (night) | 36426783755 (8fc88f20) `herd_night_walk_8fc88f20` | S04-exit-pose-on-road | PASS, first seen 63 m on the road at 23:31 |
 | Vault | 36418251618 (36d88a84) `vault_cleared_36d88a84` | S06-exit-band3 | PASS (prompt "Engage Elder Trailpup") |
@@ -32,7 +32,7 @@ Each witness is `tests/capture_activity_lures.gd` driving ordinary input only: m
 
 - **The move:** band5 spawns order 5001 moves to (-45,7300), with an 8 m disc and 5 m wander. It is west of approach pylon 8 and scores 13 hard-clear road samples on `tests/probe_lure_road_visibility.gd`. `no_depth_test` stays false.
 - **Walk from the south:** `hall_south_14e917a3`. Judge r13 finds the alpha's body "in the open field right beside the road path … unobstructed by any structure or terrain … in direct line of sight from the road" at 58 m (hall_13). The name reads from 112 m.
-- **Optionality:** `smoke_alpha_pins.gd --hall-decline` OK. The closest pack member is 44.4 m from the road walker, and no fight starts.
+- **Optionality:** `smoke_alpha_pins.gd --hall-decline` OK. The closest pack member is 44.4 m from the road walker, and no fight starts (`hall_decline_smoke.txt`).
 
 ## 5. Judges this round
 
@@ -42,3 +42,15 @@ Each witness is `tests/capture_activity_lures.gd` driving ordinary input only: m
 - **No watcher figure** stands at the herd fire.
 
 None of these contradicts the visible-lure read in §1. The Bars A/B clause goes to the Phase 2 catalog.
+
+## 6. Strict re-check: MET (`RECHECK.md`)
+
+Disclosed shortcuts:
+- **Start saves:** these are fixtures, not earned play. The vault witness uses the cleared save; the uncleared walks stall behind the required guardian.
+- **The walker:** it plans on the road graph to a known lure, sets the camera rig's yaw and pitch directly, makes deliberate glance turns, flees fights, unsticks by jumping and strafing, and toggles the companion. Doss-f and the herd walks use `--off-road-cost=10`.
+- **The walker's "first seen":** this is a raycast plus a frustum test that non-colliding foliage does not block. Readability comes from the judged frames.
+- **Vault:** the receipt has no `lure_first_seen`, because the lure is inside the den.
+- **Hall end frame:** hall_16 shows "You backed off." after the walker's Engage. The Engage prompt ("Engage Alpha Galecrest", 4.2 m) is in the receipt. Open note: why the walker's engage fled.
+- **Herd:** no watcher figure stands at the fire. Nothing reads at 110–160 m at night. At 40 m the fire sits 53 degrees off the road axis.
+- **Judges r12/r13** returned PARTLY for Doss, herd and Hall. The re-check overrides them: r13 took the player's own Gale for the alpha and missed the alpha's body at 48 m, and the Doss witness is doss-f.
+- **Bars A/B:** go to the Phase 2 catalog (judge F: NO).
