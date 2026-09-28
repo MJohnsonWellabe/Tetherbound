@@ -3,6 +3,8 @@ extends SceneTree
 ## Phase 2 creature pose inventory in the production biome, with the trainer
 ## as a scale ruler and the production camera. This is a visual fixture: pose
 ## calls do not claim that a combat or traversal path was played.
+## Optional --poses=idle,shiny_idle narrows a paired material review while
+## retaining the same stage, camera and pose timings as the full inventory.
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
@@ -41,6 +43,7 @@ var _biome := ""
 var _output := ""
 var _seed := 2042
 var _only := ""
+var _poses: PackedStringArray = []
 var _world: Node3D
 var _player: CharacterBody3D
 var _rig: SpringArm3D
@@ -67,8 +70,19 @@ func _run() -> void:
 			_seed = int(arg.trim_prefix("--seed="))
 		elif arg.begins_with("--only="):
 			_only = arg.trim_prefix("--only=")
+		elif arg.begins_with("--poses="):
+			_poses = arg.trim_prefix("--poses=").split(",", false)
 	if not SCENES.has(_biome) or not (_output.begins_with("res://ralph/reports/VISUAL/phase2/") or _output.begins_with("res://.artifacts/phase2/")):
 		push_error("Use --biome and a Phase 2 evidence output")
+		quit(1)
+		return
+	for pose: String in _poses:
+		if pose not in POSES and pose not in ["shiny_idle", "alpha_idle"]:
+			push_error("Unknown creature pose filter: " + pose)
+			quit(1)
+			return
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output)):
+		push_error("Choose a fresh creature capture output: " + _output)
 		quit(1)
 		return
 	seed(_seed)
@@ -132,12 +146,17 @@ func _run() -> void:
 		if not _only.is_empty() and species not in _only.split(",", false):
 			continue
 		for pose: String in POSES:
-			await _capture_pose(species, pose, false, 1.0)
-		await _capture_pose(species, "shiny_idle", true, 1.0)
+			if _poses.is_empty() or pose in _poses:
+				await _capture_pose(species, pose, false, 1.0)
+		if _poses.is_empty() or "shiny_idle" in _poses:
+			await _capture_pose(species, "shiny_idle", true, 1.0)
 		var alpha_scale := _alpha_scale(species)
-		if alpha_scale > 1.0:
+		if alpha_scale > 1.0 and (_poses.is_empty() or "alpha_idle" in _poses):
 			await _capture_pose(species, "alpha_idle", false, alpha_scale)
+	if _records.is_empty():
+		_failures.append("No creature frames matched the species/pose selection")
 	var manifest := {"biome": _biome, "scene": SCENES[_biome], "seed": _seed,
+		"species_filter": _only, "pose_filter": _poses,
 		"stage_xz": [stage.x, stage.y], "display_server": DisplayServer.get_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
