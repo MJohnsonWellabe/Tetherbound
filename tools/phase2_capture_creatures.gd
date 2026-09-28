@@ -159,6 +159,9 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	body.set_physics_process(false)
 	_seat(body, ground)
 	var animator: Variant = body.get("_animator")
+	if pose == "idle":
+		print("PHASE2 POSE RIG %s model=%s animator=%s" % [species,
+			str(body.get("_has_model")), str(animator != null)])
 	if pose == "moving" and animator is Object:
 		(animator as Object).call("tick", 0.0, 4.0, 8.0)
 	elif pose == "attacking":
@@ -174,6 +177,9 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	for frame in 5:
 		await process_frame
 	var player: AnimationPlayer = (animator as Object).get("_player") as AnimationPlayer if animator is Object else null
+	if pose == "idle":
+		print("PHASE2 POSE PLAYER %s player=%s active=%s" % [species,
+			str(player != null), str(player.current_animation) if player != null else ""])
 	if player != null and not str(player.current_animation).is_empty():
 		var length := player.get_animation(player.current_animation).length
 		player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
@@ -189,6 +195,9 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	else:
 		_records.append({"id": frame_id, "species": species, "pose": pose,
 			"shiny": shiny, "alpha_scale": scale_factor, "path": path,
+			"model_loaded": bool(body.get("_has_model")),
+			"animator_present": animator != null,
+			"animation_player_present": player != null,
 			"animation": str(player.current_animation) if player != null else "",
 			"trainer_visible_intent": true, "camera": "production CameraRig/Camera3D"})
 		print("PHASE2 CREATURE %s -> %s" % [frame_id, path])
