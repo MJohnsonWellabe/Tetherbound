@@ -13,7 +13,45 @@ No pocket, spur, lure or route data changed in this round. Everything below re-r
 
 Judge history on these same frames: r7b 3/5, r7c 3/5, r7d 4/5, r8 2/5 YES (plus 1 PROBABLY). Every judge found every lure visible from the road. They differ only on whether a lure reads as a side place, and the r8 prompt probed that harder. Lure presentation has had seven rounds (r1–r7), and earlier rounds swung between "a gold spur reads as another road" and "no spur visible". This round therefore stops tuning (two-strikes rule) and records the variance, not a new cosmetic round.
 
-**Disclosed shortcuts:**
+## Loops, far-side shortcuts and alternate routes walked (re-check r8a said NOT MET without this)
+
+`route_walks_from_4_core.txt` (warnings stripped):
+
+```
+godot --headless --path . --script tests/smoke_stormwood_route_walks.gd -- --from-save=user://swcp_a/4_core
+```
+
+- **Result:** "Stormwood route walks smoke: 72 checks, 0 failures", EXIT 0, 0 SCRIPT ERROR.
+- **Start:** the title Load of the earned `4_core` checkpoint (`../full_run/checkpoints/4_core.tgz`), with the Rootgate released.
+
+| Route (WORLD §5.1) | Walk |
+|---|---|
+| Loops (rule: at least 4) | All five `kind: loop` routes walked vertex by vertex, back to the start, by stick. Walked vs authored length: pools_west 2728/2728 m, crown_sightline 2997/3010, conductor_west 3194/3206, hall 2760/2761, blackwater 3099/3101. Fights on the way were fought live; 0 lightning hits and 0 deaths. |
+| Alternate 5→6 | dynamo_west_approach end to end, 1112 of 1114 m. |
+| Alternate 3→5 | Arch pair C (the next row). |
+| Far-side shortcut C | c_rodline ↔ c_lantern. Both ends relit through their own "Relight … · 3 Stormglass" prompts, then walked through both ways. The trainer lands 2.5 m and 4.5 m from the twin. |
+| Far-side shortcut D | d_hall ↔ d_giant. Relit the same way and walked both ways; lands 4.5 m from each twin. |
+| Far-side shortcut Raise a Road | Two optional footings (verge_road b2, hollows_road b3) chosen through their prompts. Both arches raised by ordinary Build input (build_shortcut, pad catalogue navigation, build_place), linked, exact cost charged, then walked both ways. |
+
+**Game defect found and fixed in this round (`autoload/game_state.gd`, `tests/test_register_building.gd`).**
+- **Symptom:** after a title Load, the first building placed reused the Crown arch's uid "b1".
+- **Consequence:** its arch link rewrote the Crown pair's twin and footing.
+- **Before the fix:** the smoke printed `collision=true`.
+- **After the fix:** `ROAD uid counter after title Load: next minted uid=b2 live uids=["b1"] collision=false`.
+
+**FINDINGs (traversal still passes; recorded in STATE with an owner):**
+1. **pools_west_loop runs through the lit b_pools arch.** The authored line passes 0.9 m from the centre of the Lantern Pools North arch. A player who keeps walking straight is carried to Rodline Post, so the walk steps round the frame.
+2. **Verge Road footing:** a curb on the landing side of the slab, up to 1.11 m. A trainer who arrives at b2 and turns round cannot step straight back through the opening and must walk round to its approach side.
+3. **d_giant rear:** a 0.40–0.67 m slab step on the rear side. The trip works from the front.
+
+**Additional disclosed seams:**
+- **Start:** the earned `4_core` checkpoint, copied to a scratch save before loading.
+- **Teleports:** one per route start, one per dark arch before its relight, and one per road footing.
+- **Material grants:** 3 Stormglass per relight, and each road arch's exact recipe shortfall.
+- **Clock:** time_scale 8 with 480 Hz physics. Fights, conductor roads and Build run at 1×.
+- **Waypoints:** intermediate waypoints are linear interpolation along the authored polylines, every 40 m or less.
+
+**Disclosed shortcuts (pocket walks and frames):**
 - **Walk witness:** one teleport per pocket onto its road, 32 m before the junction, then waiting for Calm at time_scale 8. Its start is the continuous run's earned `3_rootgate` checkpoint, which itself starts at the Cloudreach-boundary fixture (see `../full_run/README.md`).
 - **Frames:** teleport to the stand, day pinned, Surge at Calm, and the Rootgate flag set.
 - **Unit and walk runs:** both ran on e88a0204 plus this branch's uncommitted Surge-presentation change (F10#3 ceiling crawlers and Fading steam). It touches no pocket, route or movement data.
