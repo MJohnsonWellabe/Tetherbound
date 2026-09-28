@@ -1,0 +1,38 @@
+{
+  "scope": "Capture support only; no native victory or visual acceptance",
+  "base_commit": "5824653caef55c2e94a1233c642385ad3b9d3128",
+  "source_state": "Uncommitted installed support patch over base; exact LF source hashes below",
+  "source_lf_sha256": {
+    "tests/capture_tidewake_named_fights.gd": "8e37bf64d6628ff19e2e3890fad598547f5a00d5c9b98dc38ee83707da6aec6a",
+    "tools/phase2_capture_tidewake_fights.gd": "d67add54b299171945c51b15f7bd361a2758070e5c4f9143bd39886737350d26",
+    "tests/test_phase2_fight_capture_lifecycle.gd": "246c921ab6a86a0a95382a1763dd21c06486a1488c30f4226ee127fe1b6f11b4"
+  },
+  "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+  "command": "--headless --path D:/tetherbound/x04-tidewake --script tests/run_tests.gd -- --only=test_phase2_fight_capture_lifecycle.gd,test_gate_f_fight_victory_receipt.gd",
+  "appdata": ".local/p2103-support-test01",
+  "session_id": 64790,
+  "exit_code": 0,
+  "files": 2,
+  "tests": 12,
+  "assertions": 63,
+  "failed": 0,
+  "log_sha256": "a7dd65d2e45689827302bdb8d8dcface384ce349428a3beac39bc9b131225e0f",
+  "log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\n\nonly test_phase2_fight_capture_lifecycle.gd,test_gate_f_fight_victory_receipt.gd: 2 of 648 test files\n  ok    test_gate_f_fight_victory_receipt.gd :: test_all_capped_roster_does_not_require_impossible_level_increase\n  ok    test_gate_f_fight_victory_receipt.gd :: test_live_fight_at_budget_end_and_win_without_xp_fail\n  ok    test_gate_f_fight_victory_receipt.gd :: test_loss_catch_flee_and_missing_exit_fail_even_if_xp_changed\n  ok    test_gate_f_fight_victory_receipt.gd :: test_real_signal_and_live_gain_xp_verify_win_including_level_rollover\n  ok    test_gate_f_fight_victory_receipt.gd :: test_roster_replacement_and_mixed_win_loss_do_not_pass\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_budget_stop_never_becomes_victory_even_at_won_boundary\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_complete_requires_all_three_saved_phases_and_no_failures\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_hidden_panel_is_expired_only_after_queue_and_pause_clear\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_hidden_paused_or_modal_receipt_is_not_a_captureable_receipt\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_observer_rejection_and_image_failure_survive_terminal_export\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_partial_failure_keeps_valid_images_without_claiming_lifecycle_complete\n  ok    test_phase2_fight_capture_lifecycle.gd :: test_receipt_must_be_new_visible_from_expected_trainer_and_in_banner\n\n12 tests, 63 assertions, 0 failed\n",
+  "pack_parser": {
+    "command": "--headless --path D:/tetherbound/x04-tidewake --script .artifacts/phase2/p2103_victory_pack.gd --check-only",
+    "exit_code": 0,
+    "log_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "log": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\n\n"
+  },
+  "native_required": [
+    "four-frame capped fight rejects victory",
+    "Venn/Nerissa before-after at actual1080 and720",
+    "production won exits and live party XP",
+    "absent-to-present authored defeat flag",
+    "new literal trainer reward receipt in HUD",
+    "same receipt at measured >=1000ms aftermath",
+    "natural expiry with empty queue and no modal"
+  ],
+  "production_gate_enabled": false,
+  "independent_review": "capture-support-independent-review.md"
+}
