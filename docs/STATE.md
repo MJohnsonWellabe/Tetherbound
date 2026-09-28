@@ -54,6 +54,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
     - This lane's prep is on main for it to use: `tests/card_t2_tidewake_islands.sh`, and `phase1/card_t2/device/` with a first 7-inch read of FAIL 2/4.
     - The dock and current capture stands missed their subjects.
   - Other defects, recorded, not fixed:
+    - The travelling-lane "locked" visual (`wild_creature.gd:853/972`) reads the global `charger_lunge.face_lock_fraction` (0.5), while a per-body `face_lock_fraction` (Venn 0.25; the Stormwood CHARGERs) freezes the heading earlier. The lane shows as locked later than it is. Owner: shared combat.
     - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
     - the ordinary tell ring marks the attacker's feet, not a landing spot.
 
