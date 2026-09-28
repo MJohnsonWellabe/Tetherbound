@@ -8,8 +8,7 @@ const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
 const ROOM_FRAMES := 600  # smoke_stronghold's existing chamber-hop budget.
-## A player reading a victory line before pressing on (F04#6 Sigil handover).
-const VICTORY_READ_FRAMES := 120
+## VICTORY_READ_FRAMES (a player reading a victory line, F04#6) is inherited from the relay segment.
 const ENTRANCE_FRAMES := 950  # Its separate authored 40m ramp budget.
 var _hold: Node3D
 var _sigil_gate: Node3D

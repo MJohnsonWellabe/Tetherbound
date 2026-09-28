@@ -1,0 +1,21 @@
+RESUMED FROM EARNED CHECKPOINT relay_disabled_and_mill_crossed (user://four_biome_checkpoints/relay_disabled_and_mill_crossed_19623) — debug only, not closes proof
+EARNED HALL — { "guardian": false, "hits": 11, "switches": 0, "enemy_id": -9223371140682988625, "frames": 760, "beat": "wild_victory" }
+EARNED HALL — { "party": ["L11 57/192", "L11 45/160", "L11 53/141", "L9 64/148", "L10 67/161"], "beat": "care_between_fights" }
+EARNED HALL — { "guardian": false, "hits": 11, "switches": 0, "enemy_id": -9223371139173039147, "frames": 849, "beat": "wild_victory" }
+EARNED HALL — { "party": ["L11 57/192", "L11 45/160", "L11 53/141", "L9 51/148", "L10 67/161"], "beat": "care_between_fights" }
+EARNED HALL — { "party": ["L11 57/192", "L11 45/160", "L11 53/141", "L9 51/148", "L10 67/161"], "potions_left": 0, "beat": "trainer_top_up" }
+EARNED HALL — { "id": "captain_riverwatch", "rounds": 5, "wins": 5, "hits": 101, "items_before": { "coin": 400, "river_sigil": 0, "orb_greater": 5, "elixir_vigour": 0 }, "items_after": { "coin": 450, "river_sigil": 1, "orb_greater": 7, "elixir_vigour": 1 }, "xp_before": { -9223371741575771614: 3208, -9223371741525440930: 3072, -9223371741508662749: 3127, -9223371741491885532: 2339, -9223371741475108315: 2688 }, "xp_after": { -9223371741575771614: 3208, -9223371741525440930: 4296, -9223371741508662749: 3127, -9223371741491885532: 2911, -9223371741475108315: 3483 }, "expected_xp": { -922337174
+EARNED HALL — { "guardian": false, "hits": 9, "switches": 0, "enemy_id": -9223371075436394057, "frames": 604, "beat": "wild_victory" }
+EARNED HALL — { "party": ["L11 0/192 fainted", "L13 12/172", "L11 0/141 fainted", "L11 0/160 fainted", "L12 72/173"], "beat": "care_between_fights" }
+EARNED HALL — { "guardian": false, "hits": 11, "switches": 0, "enemy_id": -9223371076577244772, "frames": 1362, "beat": "wild_victory" }
+EARNED HALL — { "party": ["L11 70/192", "L13 12/172", "L11 71/141", "L11 80/160", "L12 72/173"], "beat": "care_between_fights" }
+EARNED HALL — { "guardian": false, "hits": 11, "switches": 0, "enemy_id": -9223370819466403292, "frames": 1045, "beat": "wild_victory" }
+EARNED HALL — { "guardian": false, "hits": 14, "switches": 0, "enemy_id": -9223371062803150005, "frames": 960, "beat": "wild_victory" }
+EARNED HALL — { "party": ["L12 73/199", "L13 12/172", "L12 57/147", "L11 80/160", "L12 72/173"], "beat": "care_between_fights" }
+EARNED HALL — { "guardian": false, "hits": 11, "switches": 0, "enemy_id": -9223370816463281552, "frames": 759, "beat": "wild_victory" }
+EARNED HALL — { "guardian": false, "hits": 12, "switches": 0, "enemy_id": -9223370814970109290, "frames": 819, "beat": "wild_victory" }
+EARNED HALL — { "party": ["L12 73/199", "L14 12/178", "L12 57/147", "L12 83/166", "L12 72/173"], "potions_left": 0, "beat": "trainer_top_up" }
+EARNED HALL FAIL — The actual captain encounter ended without victory: lost
+EARNED HALL FAIL — Required trainer lacks exact admitted opponents, killing hits, configured rewards/XP and retained-five receipts: captain_field
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":[],"counts_as_proof":false,"cumulative_elapsed_seconds":988.458,"dry_run":false,"elapsed_seconds":988.458,"failures":["The actual captain encounter ended without victory: lost","Required trainer lacks exact admitted opponents, killing hits, configured rewards/XP and retained-five receipts: captain_field"],"local_chains":[],"reached":"relay_disabled_and_mill_crossed","requested_prefix_passed":false,"resume":{"boundary":"relay_disabled_and_mill_crossed","source":"user://four_biome_checkpoints/relay_disabled_and_mill_crossed_19623","s
+EXIT 1
