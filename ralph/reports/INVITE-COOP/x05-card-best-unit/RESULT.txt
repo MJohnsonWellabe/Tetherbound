@@ -1,0 +1,8 @@
+  ok    test_director_card_best_survivability.gd :: test_card_defence_matches_solo_best_creature_survivability
+  ok    test_director_join_snapshot.gd :: test_deployment_announced_before_any_session_is_sent_once_the_session_is_multi_peer
+  ok    test_director_join_snapshot.gd :: test_initial_join_and_reconnect_hold_then_resume_deployed_creature_announcement
+  ok    test_director_join_snapshot.gd :: test_solo_deployment_that_becomes_a_host_records_once_and_stops_holding
+  ok    test_livewire_cooldowns.gd :: test_host_ignores_numbers_and_requires_a_placed_known_cooldown_relic
+  ok    test_livewire_cooldowns.gd :: test_profile_multiplier_shortens_only_cooldown_and_is_clamped
+  ok    test_livewire_cooldowns.gd :: test_solo_profile_and_deployed_card_refresh_in_initialized_tree
+7 tests, 42 assertions, 0 failed

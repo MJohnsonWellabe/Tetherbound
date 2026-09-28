@@ -1,0 +1,22 @@
+PASS: #1 peer 0 host -> PASS -- hosting udp/28041 as peer 1
+PASS: #2 peer 1 join -> PASS -- joined 127.0.0.1:28041 as peer 1310249472 after 4 frames; snapshot applied; 2 peer(s) in registry
+PASS: #3 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #3 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #4 peer 0 party_grant (setup: host party (L55, survives the sampling windows)) -> PASS -- 'terrapup' at level 55 joined the party (1 member(s))
+PASS: #5 peer 0 party_grant (setup: host party (L55, survives the sampling windows)) -> PASS -- 'mosshell' at level 55 joined the party (2 member(s))
+PASS: #6 peer 0 party_grant (setup: host party (L55, survives the sampling windows)) -> PASS -- 'galewisp' at level 55 joined the party (3 member(s))
+PASS: #7 peer 1 party_grant (setup: guest party (L55)) -> PASS -- 'ripplet' at level 55 joined the party (1 member(s))
+PASS: #8 peer 1 party_grant (setup: guest party (L55)) -> PASS -- 'bramblebun' at level 55 joined the party (2 member(s))
+PASS: #9 peer 1 party_grant (setup: guest party (L55)) -> PASS -- 'meadowhart' at level 55 joined the party (3 member(s))
+PASS: #10 peer 0 deploy_creature (each player sends its first companion out) -> PASS -- deployed AllyCreature
+PASS: #10 peer 1 deploy_creature (each player sends its first companion out) -> PASS -- deployed AllyCreature
+PASS: #11 peer 0 guardian_fixture (setup: the Veilfall chain up to Nerissa (her fight itself is real)) -> PASS -- Veilfall prerequisites committed ["water_dock_sluice_isle_both_controls_disabled", "water_veilfall_intake_stopped", "water_veilfall_return_opened"]; Nerissa left to be fought
+PASS: #12 peer 0 wait_flag -> PASS -- flag water_veilfall_return_opened (world) set after 0 frames
+PASS: #12 peer 1 wait_flag -> PASS -- flag water_veilfall_return_opened (world) set after 0 frames
+PASS: #13 peer 0 nerissa_challenge (the HOST challenges Captain Nerissa (production begin_trainer_battle)) -> PASS -- prerequisites committed []; challenged Nerissa (defeat flag 'water_captain_nerissa_defeated') with multi_peer=true; 3 creatures to come
+PASS: #14 peer 0 trainer_foe_numbers (SOLO BASELINE: one participant -- Nerissa's first creature equals the solo build exactly (identity row)) -> PASS -- host view of water_trainer_nerissa's water_cannonback L55 at 1 participant(s): {"attack":70.3,"attack_cooldown_multiplier":1.0,"attack_matches_solo_x_row":true,"cooldown_matches_solo_x_row":true,"defence":99.9,"defence_matches_solo_x_row":true,"failed_checks":[],"hp":593.6,"level":55,"live_attack_co
+PASS: #15 peer 1 join_running_fight (the guest joins the host's fight in progress (production join_encounter)) -> PASS -- joined 1:1 beside 'water_cannonback' at (1804.0, 4226.0)
+PASS: #16 peer 0 trainer_foe_numbers (TWO PEERS, foe on field at the join: host's foe = solo x declared 2-participant row (atk/def x1.10, cooldown x0.85, HP/telegraph/power unchanged)) -> PASS -- host view of water_trainer_nerissa's water_cannonback L55 at 2 participant(s): {"attack":77.33,"attack_cooldown_multiplier":0.85,"attack_matches_solo_x_row":true,"cooldown_matches_solo_x_row":true,"defence":109.89,"defence_matches_solo_x_row":true,"failed_checks":[],"hp":593.6,"level":55,"live_attac
+FAIL: #17 peer 1 trainer_foe_numbers (TWO PEERS, guest's view of the same foe: species/level/max HP/moves equal the solo build) -> FAIL -- water_cannonback L44 is not a member of water_trainer_nerissa's authored team
+FAIL: #17 peer 1 trainer_foe_numbers (TWO PEERS, guest's view of the same foe: species/level/max HP/moves equal the solo build) -> FAIL -- water_cannonback L44 is not a member of water_trainer_nerissa's authored team
+FAILURES:
