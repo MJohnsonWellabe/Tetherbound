@@ -17,3 +17,25 @@ The re-checker read ACCEPTANCE §6.1 F03, STATE §1.1, CLAUDE_START_HERE §3.5 a
 **VERDICT: MET**
 
 Disclosures to record: the README's section 6 lists them. The re-checker asked for the Hall decline smoke output to be committed; it is in `hall_decline_smoke.txt`.
+
+## Addendum: Hall item at the pinned centre (re-check after the site change, 28d5928b)
+
+**MET** (independent read-only re-checker).
+
+**Config:** order 5001 centre (-36,7290), radius 18, `alpha.stand_at_centre` true, nameplate `no_depth_test` false. The encounter_director branch places member 0 on the centre, and the disc pick still draws.
+
+**Frames, `hall_south_28d5928b`:**
+- **Name:** reads from the road at 103 m; the pylon clips it, so the depth test is on.
+- **Body:** visible from the road at 51 m (hall_14, beside pylon 7, not hidden by it) and at 41 m (hall_15, in open ground before the road exit). At 30 m the pack reads; at 7.6 m three Galecrest are present.
+
+**Decline smoke:** 39.0 m, no fights.
+
+**Corrections applied to README §4–6:**
+- The body does not read at 103 m.
+- Pylon 7 stands near the 51 m line.
+- The alpha keeps its default wander.
+- Frame numbering and prompt wording fixed.
+- Camera vs player distances stated.
+- The smoke's commit and exit recorded.
+
+The full unit suite at 28d5928b (after an import pass) passes, apart from one local-only file (a stale untracked stormheart `.import` in a `.gdignore` folder).
