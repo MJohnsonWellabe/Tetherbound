@@ -15,6 +15,7 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/art.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const APPEARANCE_VARIANTS := preload("res://scripts/characters/appearance_variants.gd")
 
 var _art: Node3D = null
 var _body: MeshInstance3D = null
@@ -152,7 +153,8 @@ func config() -> Dictionary:
 	return _cfg if not _cfg.is_empty() else config_for(_config_key)
 
 
-static func config_for(key: String) -> Dictionary:
+static func config_for(key: String, appearance_variant: String = "",
+		variant_settings: Dictionary = {}) -> Dictionary:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
 		return {}
@@ -160,7 +162,15 @@ static func config_for(key: String) -> Dictionary:
 	if not parsed is Dictionary:
 		return {}
 	var entry: Variant = (parsed as Dictionary).get(key, {})
-	return entry if entry is Dictionary else {}
+	return with_appearance_variant(entry, key, appearance_variant, variant_settings) \
+		if entry is Dictionary else {}
+
+
+## Apply after rank/base dressing so its palette and badges remain intact.
+## The returned portrait belongs to exactly the same resolved appearance.
+static func with_appearance_variant(cfg: Dictionary, base_profile: String,
+		appearance_variant: String, variant_settings: Dictionary = {}) -> Dictionary:
+	return APPEARANCE_VARIANTS.resolve(cfg, base_profile, appearance_variant, variant_settings)
 
 
 func has_model() -> bool:
