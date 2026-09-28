@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28T11:10Z",
+ "updated": "2026-09-28T12:55Z",
  "headline": [
   "Criteria met: 89 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Cloudreach is complete for Phase 1. Open: Meadows 8 (F01#2, F01#3, F03#0, F04#1, F04#2, F04#3, F04#6, F04#7), Stormwood 2 (F10#2, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
   "Owner decision 2026-09-28 (F04#7, option c): the Meadows captains get harder (five members, levels at the pin ceiling), and the top-fight bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio instead of a masher team wipe. The same bar applies to Tidewake F14#0. The Balance lane is implementing it with F10#2 starter parity and will land tb/balance itself.",
@@ -341,7 +341,7 @@
   {
    "lane": "Cloudreach (tb/cloudreach)",
    "now": "Complete for Phase 1: F08#3, F08#4, C2, C3 landed; every Cloudreach row and card met (Bars A/B clauses → Phase 2 catalog)",
-   "next": "Stops. Open debt outside the queue: owned-carrier Fly (every flight uses Maela's loaner)"
+   "next": "Owned-carrier Fly debt closed (ralph/reports/CLOUDREACH/owned-carrier-fly/: the five's own active carrier flies; the Galewisp starter gains Fly at the unlock; loaner only for the trial and a carrier-less five). Lane done; stops."
   },
   {
    "lane": "Stormwood (tb/stormwood)",
@@ -401,7 +401,7 @@
   "Meadows Vance relay: camera.body_clear.ignore_lunging_foe=false; the Vance move is reverted. Next: re-apply both, render and judge (F04#1).",
   "Meadows F04#2/#3/#6: captain victory conversations and the objective-beam fight hide are in; aftermath frames need a judge.",
   "Meadows F01#2/#3: signposts in; the camp firepit is unwired (re-apply 631b8390). Next: render day and night and judge. Meadows core's claim via 562c9924 conflicts with the F01 walks judge FAIL, so it is not credited.",
-  "Cloudreach owned-carrier Fly debt; Solmane solo sixth case rerun; unscoped fly_tutorial_completed flag.",
+  "Cloudreach: Solmane solo sixth case rerun; unscoped fly_tutorial_completed flag. (Owned-carrier Fly closed.)",
   "Galecrest rebuild (Codex 4dea7705c) is on main; the companion_presence head-tracking override was not taken because main lacks its code.",
   "Stormwood F10#2: route-cue option (a) kept by the owner. Starter parity (galewisp and ripplet to terrapup) is in progress in lane tb/balance. Stormwood-B commits 07bc9cad, 45927814 and 85ba1c57 (Elder cone and heading, guard cone) are NOT on main; cherry-pick them when F10#2 C3 is re-captured.",
   "Meadows F04#7: named trainers made harder until C2 passes; in progress in lane tb/balance. The DIVER 0.4 s tell needs a harness exemption.",
