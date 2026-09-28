@@ -1,0 +1,1 @@
+Additional generated PNG inspected: user/cache/map_meadows.png is a 512x2048 map cache texture, not a production-camera frame. It shows a green/brown topographic surface with route and water lines. Preserved as run output; it is not aftermath evidence.

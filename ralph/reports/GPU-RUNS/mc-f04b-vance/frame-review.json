@@ -1,0 +1,308 @@
+[
+  {
+    "file": "relay_captain-00-before.png",
+    "shows": "Shows trainer, nearby people and stone-armored companion at the Relay with Challenge Captain Vance prompt; daylight and exploration HUD readable.",
+    "pass": true,
+    "problem": "Companion lower body is partly covered by tutorial HUD; adequate pre-fight context."
+  },
+  {
+    "file": "relay_captain-01.png",
+    "shows": "Shows stone-armored companion facing blue Galecrest, Captain Vance level 11 boss bar, incoming cue, weakness feedback and attack controls.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or lighting failure; no obvious placeholder subject meshes."
+  },
+  {
+    "file": "relay_captain-02.png",
+    "shows": "Shows both combat creatures and white wind/impact effect over companion, open-to-attack cue and reduced health bars.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or lighting failure; VFX remains translucent."
+  },
+  {
+    "file": "relay_captain-03.png",
+    "shows": "Shows companion left and Galecrest right, weakness feedback and falling boss health in the relay courtyard.",
+    "pass": true,
+    "problem": "Foreground roof intrudes on left edge and slightly occludes companion silhouette, but both subjects remain readable."
+  },
+  {
+    "file": "relay_captain-04.png",
+    "shows": "Shows companion turning toward camera and Galecrest behind it, incoming cue, full combat HUD and courtyard.",
+    "pass": true,
+    "problem": "Foreground beam crosses lower image but does not hide combat subjects."
+  },
+  {
+    "file": "relay_captain-05.png",
+    "shows": "Shows companion foreground and Galecrest behind, stagger/open cues and reduced boss health.",
+    "pass": true,
+    "problem": "Companion partially overlaps Galecrest; head and wing silhouette remain readable."
+  },
+  {
+    "file": "relay_captain-06.png",
+    "shows": "Shows companion facing camera, Galecrest partly behind its head, incoming cue and fight controls.",
+    "pass": true,
+    "problem": "Galecrest head/body partly occluded by companion, but creature/wing remains identifiable; foreground beam below feet."
+  },
+  {
+    "file": "relay_captain-07.png",
+    "shows": "Shows companion side-on and Galecrest separated behind it with incoming cue and attack HUD.",
+    "pass": true,
+    "problem": "Foreground beam hides lower feet; creatures' main silhouettes remain readable."
+  },
+  {
+    "file": "relay_captain-08.png",
+    "shows": "Shows combat HUD above a massive horizontal foreground beam, with only top of companion and portions of Galecrest wings visible.",
+    "pass": false,
+    "problem": "Camera obstruction: beam masks both combatants across the central action area."
+  },
+  {
+    "file": "relay_captain-09.png",
+    "shows": "Shows Galecrest flashing pale under an impact and weakness feedback, while companion is cut through by horizontal foreground beam.",
+    "pass": false,
+    "problem": "Camera obstruction: beam cuts across companion torso and Galecrest lower body, hiding contact/action area."
+  },
+  {
+    "file": "relay_captain-10.png",
+    "shows": "Shows Galecrest with pale circular impact effect and incoming cue behind beam crossing companion face/torso.",
+    "pass": false,
+    "problem": "Camera obstruction: broad foreground beam conceals central combat action and companion face."
+  },
+  {
+    "file": "relay_captain-11.png",
+    "shows": "Shows translucent wind rings and particles over the creatures, open cue, reduced health and a beam across mid-frame.",
+    "pass": false,
+    "problem": "Camera obstruction masks central combat action; wind VFX visible but cannot recover subject clarity."
+  },
+  {
+    "file": "relay_captain-12.png",
+    "shows": "Shows stagger cue and Galecrest under pale hit VFX with companion facing it behind foreground beam.",
+    "pass": false,
+    "problem": "Beam conceals companion torso and the center of the fight."
+  },
+  {
+    "file": "relay_captain-13.png",
+    "shows": "Shows Galecrest wing raised under circular impact VFX, companion rear and boss health below half.",
+    "pass": false,
+    "problem": "Beam hides companion lower torso; cyan untextured cube-shaped prop prominent at bottom center, placeholder-like appearance."
+  },
+  {
+    "file": "relay_captain-14.png",
+    "shows": "Shows Galecrest recoiling in pale hit flash with companion rear facing it, incoming cue and boss health below half.",
+    "pass": true,
+    "problem": "Foreground beam occludes companion legs, but upper-body action and opponent remain readable; no scene-wide exposure failure."
+  },
+  {
+    "file": "relay_captain-15.png",
+    "shows": "Shows Galecrest rearing, defensive feedback, companion behind foreground structure and reduced player health.",
+    "pass": false,
+    "problem": "Broad diagonal beam masks most companion torso and action area."
+  },
+  {
+    "file": "relay_captain-16.png",
+    "shows": "Shows tops of companion and Galecrest around beam, weakness cue and remaining boss health.",
+    "pass": false,
+    "problem": "Camera obstruction: beam and roof hide central bodies and combat contact; action controls dim but present."
+  },
+  {
+    "file": "relay_captain-17.png",
+    "shows": "Shows partial creature heads/wings above beam and missed-attack feedback near bottom.",
+    "pass": false,
+    "problem": "Beam and roof obstruct central combat; move panel absent while missed feedback appears, leaving combat controls less readable."
+  },
+  {
+    "file": "relay_captain-18.png",
+    "shows": "Shows Galecrest recoiling in hit flash and circular VFX above foreground beam, incoming cue and low boss health.",
+    "pass": false,
+    "problem": "Beam conceals both creatures' central action/body area."
+  },
+  {
+    "file": "relay_captain-19.png",
+    "shows": "Shows unobstructed companion foreground and Galecrest rearing behind, open cue and restored green companion health.",
+    "pass": true,
+    "problem": "No capture-blocking clipping, exposure failure or obvious placeholder subject meshes."
+  },
+  {
+    "file": "relay_captain-20.png",
+    "shows": "Shows companion and Galecrest fully framed with impact ring, weakness feedback and low boss health.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure; impact VFX visible."
+  },
+  {
+    "file": "relay_captain-21.png",
+    "shows": "Shows Galecrest leaning backward under hit ring and companion facing it, incoming cue and full fight HUD.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-22.png",
+    "shows": "Shows separated companion and rearing Galecrest, open cue and defensive feedback.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-23.png",
+    "shows": "Shows Galecrest in pale hit flash, stagger cue and companion left, boss health near empty.",
+    "pass": true,
+    "problem": "Localized flash is readable attack feedback rather than scene-wide blowout."
+  },
+  {
+    "file": "relay_captain-24.png",
+    "shows": "Shows companion facing low-health Galecrest with circular impact VFX and complete fight HUD.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-99-after.png",
+    "shows": "Shows trainer, white-haired captain, companion and Greet Captain Vance prompt in exploration mode.",
+    "pass": true,
+    "problem": "Companion lower body partly covered by quickbar; reward toast is no longer visible, but postfight greet state is readable."
+  },
+  {
+    "file": "relay_captain-a01.png",
+    "shows": "Shows Captain Vance defeated reward toast, trainer and bowed white-haired captain in distance, with enormous Tuskroot body filling right foreground.",
+    "pass": false,
+    "problem": "Transition framing failure: defeated Tuskroot is clipped by top/right edges and dominates aftermath; captain remains small but visible."
+  },
+  {
+    "file": "relay_captain-a02.png",
+    "shows": "Shows defeated reward toast and greet prompt, trainer/captain centered, companion face behind enormous cropped Tuskroot body.",
+    "pass": false,
+    "problem": "Large cropped Tuskroot and close NPC head obscure right side and dominate aftermath framing."
+  },
+  {
+    "file": "relay_captain-a03.png",
+    "shows": "Shows defeated reward toast, trainer, bowed captain and companion right, with residual cropped Tuskroot body at extreme right.",
+    "pass": true,
+    "problem": "Residual defeated Tuskroot body clipped at right edge; central aftermath subjects are now readable."
+  },
+  {
+    "file": "relay_captain-a04.png",
+    "shows": "Shows defeated reward toast, bowed captain left of trainer and companion right with greet prompt.",
+    "pass": true,
+    "problem": "Quickbar overlays companion lower body; defeat aftermath and subjects remain readable."
+  },
+  {
+    "file": "relay_captain-a05.png",
+    "shows": "Shows bowed captain, trainer and companion with Captain Vance defeated reward toast and greet prompt.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; captain and result remain visible."
+  },
+  {
+    "file": "relay_captain-a06.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion at right and Greet Captain Vance exploration prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a07.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion at right and Greet Captain Vance exploration prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a08.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion at right and Greet Captain Vance exploration prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a09.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion at right and Greet Captain Vance exploration prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a10.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion at right and Greet Captain Vance exploration prompt; reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a11.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion right and persistent Greet Captain Vance prompt in the courtyard.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a12.png",
+    "shows": "Shows bowed white-haired captain behind trainer, companion right and persistent Greet Captain Vance prompt in the courtyard.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; central aftermath subjects remain visible with usable exposure."
+  },
+  {
+    "file": "relay_captain-a13.png",
+    "shows": "Shows captain upright behind trainer, companion right and Greet Captain Vance prompt after the reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; no capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-a14.png",
+    "shows": "Shows captain upright behind trainer, companion right and Greet Captain Vance prompt after the reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; no capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-a15.png",
+    "shows": "Shows captain upright behind trainer, companion right and Greet Captain Vance prompt after the reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; no capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-a16.png",
+    "shows": "Shows captain upright behind trainer, companion right and Greet Captain Vance prompt after the reward toast has cleared.",
+    "pass": true,
+    "problem": "Quickbar covers companion lower body; no capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-r01.png",
+    "shows": "Shows companion and Galecrest facing each other with low Galecrest health and readable combat HUD.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-r02.png",
+    "shows": "Shows Galecrest standing opposite companion with unchanged low boss health and combat controls.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure."
+  },
+  {
+    "file": "relay_captain-r03.png",
+    "shows": "Shows trainer and captain behind collapsed Galecrest in courtyard with exploration HUD, between creature bouts.",
+    "pass": true,
+    "problem": "Companion absent during visible bout transition; defeated opponent remains visible and no lighting/clipping failure."
+  },
+  {
+    "file": "relay_captain-r04.png",
+    "shows": "Shows Duskhush full-health boss header, extreme close-up companion face and partial purple owl at lower right.",
+    "pass": false,
+    "problem": "Camera too close: companion feet clipped below frame; most owl body below frame/covered by move panel."
+  },
+  {
+    "file": "relay_captain-r05.png",
+    "shows": "Shows companion left and full purple Duskhush right with Captain Vance level 11 header and full boss bar.",
+    "pass": true,
+    "problem": "Both creatures readable; foreground rail only enters bottom edge."
+  },
+  {
+    "file": "relay_captain-r06.png",
+    "shows": "Shows collapsed Duskhush foreground, trainer and captain behind, exploration HUD and Relay building.",
+    "pass": true,
+    "problem": "No capture-blocking clipping or exposure failure; companion absent during bout transition."
+  },
+  {
+    "file": "relay_captain-r07.png",
+    "shows": "Shows trainer and captain in exploration view with only purple creature feather tips at bottom edge.",
+    "pass": false,
+    "problem": "Defeated opponent is almost entirely below frame during bout transition; companion absent."
+  },
+  {
+    "file": "relay_captain-r08.png",
+    "shows": "Shows stone-armored companion left and large tusked Tuskroot right, full boss health and Captain Vance level 12 header.",
+    "pass": true,
+    "problem": "Both creatures framed and readable; no capture-blocking exposure or placeholder subject meshes."
+  },
+  {
+    "file": "relay_captain-r09.png",
+    "shows": "Shows extreme close-up of companion flank and Tuskroot face with full boss HUD and a nearby guard.",
+    "pass": false,
+    "problem": "Companion head off left edge and limbs clipped at bottom; Tuskroot upper body clipped at top. Camera too close to assess action."
+  }
+]

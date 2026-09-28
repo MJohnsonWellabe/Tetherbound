@@ -1,0 +1,49 @@
+{
+  "ally": {
+    "camera_m": 5.4,
+    "in_frustum": true,
+    "pos": [
+      8.4,
+      6.2,
+      7651.5
+    ],
+    "visible": true
+  },
+  "camera": [
+    12.9,
+    9.2,
+    7651.9
+  ],
+  "fight": "warden_aldis",
+  "game_frame": 7787,
+  "image_size": [
+    1920,
+    1080
+  ],
+  "player": {
+    "camera_m": 5.8,
+    "in_frustum": true,
+    "pos": [
+      8.1,
+      6.2,
+      7653.2
+    ],
+    "visible": true
+  },
+  "png": "user://aftermath/warden_aldis-a1.png",
+  "saved": true,
+  "size": [
+    1920.0,
+    1080.0
+  ],
+  "trainer": {
+    "camera_m": 8.5,
+    "in_frustum": true,
+    "pos": [
+      8.0,
+      6.2,
+      7658.2
+    ],
+    "visible": true
+  }
+}

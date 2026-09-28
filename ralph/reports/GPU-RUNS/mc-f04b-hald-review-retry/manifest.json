@@ -1,0 +1,406 @@
+{
+  "label": "mc-f04b-hald-review-retry",
+  "sha": "7fe6e7037a37d5e68d4c6833dcc554fafadc1625",
+  "script": "tools/art_pipeline/capture_named_fight.gd",
+  "args": [
+    "--trainer=stronghold_elite",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16",
+    "--face-trainer"
+  ],
+  "mode": "render",
+  "comment_id": 5855250750,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/mc-f04b-hald",
+  "followup_of": "mc-f04b-hald",
+  "visual_retry_attempt": 1,
+  "adjustment": "Owner-authorized single capture retry: use supported --face-trainer for aftermath framing. Original production source, script, fight inputs and other args unchanged. Fight-camera obstructions remain lane-owned if they recur.",
+  "stage": "ready_to_publish",
+  "runner_pid": 4976,
+  "started_utc": "2026-09-27T14:15:54.606424+00:00",
+  "engine_pid": 14868,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\mc-f04b-hald",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tools/art_pipeline/capture_named_fight.gd",
+    "--",
+    "--trainer=stronghold_elite",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16",
+    "--face-trainer"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T14:21:30.086424+00:00",
+  "output_worktree_files": [
+    "shots\\f04\\stronghold_elite-00-before.png",
+    "shots\\f04\\stronghold_elite-01.png",
+    "shots\\f04\\stronghold_elite-02.png",
+    "shots\\f04\\stronghold_elite-03.png",
+    "shots\\f04\\stronghold_elite-04.png",
+    "shots\\f04\\stronghold_elite-05.png",
+    "shots\\f04\\stronghold_elite-06.png",
+    "shots\\f04\\stronghold_elite-07.png",
+    "shots\\f04\\stronghold_elite-08.png",
+    "shots\\f04\\stronghold_elite-09.png",
+    "shots\\f04\\stronghold_elite-10.png",
+    "shots\\f04\\stronghold_elite-11.png",
+    "shots\\f04\\stronghold_elite-12.png",
+    "shots\\f04\\stronghold_elite-13.png",
+    "shots\\f04\\stronghold_elite-14.png",
+    "shots\\f04\\stronghold_elite-15.png",
+    "shots\\f04\\stronghold_elite-16.png",
+    "shots\\f04\\stronghold_elite-17.png",
+    "shots\\f04\\stronghold_elite-18.png",
+    "shots\\f04\\stronghold_elite-19.png",
+    "shots\\f04\\stronghold_elite-20.png",
+    "shots\\f04\\stronghold_elite-21.png",
+    "shots\\f04\\stronghold_elite-22.png",
+    "shots\\f04\\stronghold_elite-23.png",
+    "shots\\f04\\stronghold_elite-24.png",
+    "shots\\f04\\stronghold_elite-99-after.png",
+    "shots\\f04\\stronghold_elite-a01.png",
+    "shots\\f04\\stronghold_elite-a02.png",
+    "shots\\f04\\stronghold_elite-a03.png",
+    "shots\\f04\\stronghold_elite-a04.png",
+    "shots\\f04\\stronghold_elite-a05.png",
+    "shots\\f04\\stronghold_elite-a06.png",
+    "shots\\f04\\stronghold_elite-a07.png",
+    "shots\\f04\\stronghold_elite-a08.png",
+    "shots\\f04\\stronghold_elite-a09.png",
+    "shots\\f04\\stronghold_elite-a10.png",
+    "shots\\f04\\stronghold_elite-a11.png",
+    "shots\\f04\\stronghold_elite-a12.png",
+    "shots\\f04\\stronghold_elite-a13.png",
+    "shots\\f04\\stronghold_elite-a14.png",
+    "shots\\f04\\stronghold_elite-a15.png",
+    "shots\\f04\\stronghold_elite-a16.png",
+    "shots\\f04\\stronghold_elite-r01.png",
+    "shots\\f04\\stronghold_elite-r02.png",
+    "shots\\f04\\stronghold_elite-r03.png",
+    "shots\\f04\\stronghold_elite-r04.png",
+    "shots\\f04\\stronghold_elite-r05.png",
+    "shots\\f04\\stronghold_elite-r06.png",
+    "shots\\f04\\stronghold_elite-r07.png",
+    "shots\\f04\\stronghold_elite-r08.png",
+    "shots\\f04\\stronghold_elite-r09.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "c6aad046b1b05c105d0ed2c8727e2c7b5535ffbf1b5d215552e2b88ecb355dc9"
+    },
+    {
+      "path": "import.log",
+      "bytes": 14294,
+      "sha256": "8832c33d31960cd40492b543b59be14ae4e30d8dc82c9b5fa9312f7e30ab4ea6"
+    },
+    {
+      "path": "run.log",
+      "bytes": 15320,
+      "sha256": "272eef2259c9daa73543390f42dbff037cae30607525c8164dd562cd04d5a5d5"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 2676,
+      "sha256": "f52c4532692737e67a95a539270de806640462a118eb7e0b6f1e773ef01c547d"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 916214,
+      "sha256": "c713ec481bec294e9567e211946035fc890a70dbf161a6ea7530725da006fd0f"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 15102,
+      "sha256": "6290df2aa055c55740423a6a4e18acdd76dcab469d8a3eada861ee515f5f7c99"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 77,
+      "sha256": "ef3bd8269c1f4fd9e467bb9af10870358b23b50271632fa779d91e390ad0c8e4"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-00-before.png",
+      "bytes": 2734415,
+      "sha256": "d32eb1ee7f1b5e644648c9341fb930de36e8021043a415caca324267d360a2a7"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-01.png",
+      "bytes": 971589,
+      "sha256": "f1efd52257cfa0fbdc6f2b43d7e9cf4448cce1c8f0df5e9aea2a2982bed5d30c"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-02.png",
+      "bytes": 2924720,
+      "sha256": "c643f5bb8b3d66f8e495188d2c906f8a131feaddc268662a24ad7925062602c9"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-03.png",
+      "bytes": 2909028,
+      "sha256": "32581990683e28f69c1df5a12b3b434e3f9b8d93c4f60aba59ff9ecf0bc90922"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-04.png",
+      "bytes": 2856713,
+      "sha256": "95a91725625c8e84941c1bf9ff477aa38b79fc80988d821c3a1cc55b79efa821"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-05.png",
+      "bytes": 2830255,
+      "sha256": "0a9b7608c981197baa35046600479f0f6c93e97e3cdd8ce9b1a29d8648521c07"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-06.png",
+      "bytes": 2474464,
+      "sha256": "5d0b1cf78c9782d76d743fc2c253566a120984b2c9d02989da0b91c662cd6359"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-07.png",
+      "bytes": 953939,
+      "sha256": "bcd632646483e95b717542865e356d705288f30ec43fed9d0467d627a9f0fb59"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-08.png",
+      "bytes": 2732542,
+      "sha256": "c035bb7c6f36f49be43f7752f7c46488a4e9fddaae283db60d698edcd6d188b6"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-09.png",
+      "bytes": 2711449,
+      "sha256": "7c848485f0f0461899f0730b00d560963c3ab7648775496bd26b3a241b8ed318"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-10.png",
+      "bytes": 2587825,
+      "sha256": "af2a1c99ce34aca1b52d67cf9073cf3b170379f1028e84266f5b831444863b6e"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-11.png",
+      "bytes": 2698766,
+      "sha256": "395bcb2555177f840aef9dbd1d9f40e240bed5fe980a6d2651fce9bc8e066bea"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-12.png",
+      "bytes": 2780498,
+      "sha256": "51173ba965ac52ea5b0a4803d5c497d091f55d0c88598780761206a75c42adad"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-13.png",
+      "bytes": 3079524,
+      "sha256": "d3c84de021364bb72fe673a7455eb085498eae148977293f6250bc2375a7f9e0"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-14.png",
+      "bytes": 2748370,
+      "sha256": "514d4c05bbc396c5f6ee7ec949c627d65283f17b7f0034a14ecc2df77d6da8fa"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-15.png",
+      "bytes": 3041747,
+      "sha256": "670114ed52723de1ed3b6281cc60b18689ef543d3835468b56c8e1fc0b476333"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-16.png",
+      "bytes": 3026659,
+      "sha256": "14aa54a6efbe451ad8248509fab9c6f63b745f35e730b4f0c04585ad3f4c6133"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-17.png",
+      "bytes": 2959364,
+      "sha256": "39b0368701cabc9eaf981566ae9b90b0743bbfe234554102c583947f922abd5f"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-18.png",
+      "bytes": 3007483,
+      "sha256": "1e0b887ac1c8215b3336976bfe1b15395bc774682f851f9f212ffb6eb9529c1b"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-19.png",
+      "bytes": 2777423,
+      "sha256": "d9e2b5a75613307ac9c12eb7a33b7f5a68d128c040ac145e8931fa0808e585d3"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-20.png",
+      "bytes": 2779637,
+      "sha256": "a22a70e697efa735b9f8b7243043af26afecba194fbceeae47f1283d5f9e65d7"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-21.png",
+      "bytes": 3038103,
+      "sha256": "e295a65f52307feef494f8bbec64fc888012e2656932e35eee7a616ccf93b587"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-22.png",
+      "bytes": 3163352,
+      "sha256": "3262273f4fb43d17b3c671847f27b8aec5f9faf9206079658a77acf54a75d159"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-23.png",
+      "bytes": 3071360,
+      "sha256": "f5cb5228d9c1a2918a5fc06e6136d52d51c225c9db22f712e40959fedf1c8e8b"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-24.png",
+      "bytes": 2744823,
+      "sha256": "31025b8a9e301615c965dcb2e0877f05337ca1e938910136b4c5857b27c08d31"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-99-after.png",
+      "bytes": 2834308,
+      "sha256": "1cc8cf47924aa054099afd16b62943cbeb7d8a27828e3b5bf2f6cea598b34474"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a01.png",
+      "bytes": 2288506,
+      "sha256": "83c080b1a463a0d30e531bbfa1b4731d10f566d7f44389dfde4e41d2f8cf2bd5"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a02.png",
+      "bytes": 2286330,
+      "sha256": "c937c69dace5cc57507c83ae0aad99094233607948b32d80dc86f0b50308c099"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a03.png",
+      "bytes": 2256719,
+      "sha256": "9b20cd3224db8317a55d07fec08019d390753daee44bf1b1c7f684a12a6304f7"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a04.png",
+      "bytes": 2797744,
+      "sha256": "988625ec4af392ced2100242bfe697acd092b2f8ee734dbd1641bd75d78e7873"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a05.png",
+      "bytes": 2815220,
+      "sha256": "b34e99b5c9bff555aa5f93b1b0b42f1ca004ff11cb41df325f60efce459f4128"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a06.png",
+      "bytes": 2847093,
+      "sha256": "ae8ad68f1eead410fa87ce618d4e1be3bc75d864cfa9e703122374ca44214e44"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a07.png",
+      "bytes": 2853140,
+      "sha256": "bb1e3d7d01e4113c4f20ed24b48c2b3bdce5ed5da622aee0c6955ab62eca37a7"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a08.png",
+      "bytes": 2827031,
+      "sha256": "b2702c64cbc12ad4a2f6a486bca0e34f35334d4b1a3b181609e5c179f36b5478"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a09.png",
+      "bytes": 2816753,
+      "sha256": "3557e57796e99022706cdb6118bc80084e2a52e51bedcd5cc34a0751a956c76c"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a10.png",
+      "bytes": 2830700,
+      "sha256": "5b7aef35a528992ec2c9b5d59f71ee34826480352d17f2d73923d0d9910f0d25"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a11.png",
+      "bytes": 2855105,
+      "sha256": "717ef29ba8dcc0b91a731f50007423f58a31e46f7ced6c972d96bd82e7700c6f"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a12.png",
+      "bytes": 2843990,
+      "sha256": "c90c8478dd0a878e0066b7d90e53bd324190a005f694d5ba9759de0680e628eb"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a13.png",
+      "bytes": 2811320,
+      "sha256": "2dc8e4e1ab141c6b0da54a6893dc26b31d5568d490002699e99a92d128859565"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a14.png",
+      "bytes": 2825222,
+      "sha256": "aebdc6d5f8e7e626f1f8336d18dd33ad0d5bec51182d2852c82428cd47e2b04b"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a15.png",
+      "bytes": 2846652,
+      "sha256": "3c9713e1f9a60bdec48f2719f3975babd89b8ee6c750ca58a4b864ca26e83ccd"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-a16.png",
+      "bytes": 2848284,
+      "sha256": "304cbb59e75a7142c656b5227d608567f86d003993c38dd8ed9f5a38fd73b34a"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r01.png",
+      "bytes": 2848822,
+      "sha256": "7ee72b9c6a00f98aef0d65e21aa1df6553ea318bc82f2a9d6932b16689e1e46f"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r02.png",
+      "bytes": 2788501,
+      "sha256": "19673492eb00fb19888415f45d010bb3069b90a5e099369ece884022d3b2fe9f"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r03.png",
+      "bytes": 2494598,
+      "sha256": "9e2343b3ee60f3104ed9afc24004dd46e91499ac8bbbb8d8c5e3a8fc3b18d397"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r04.png",
+      "bytes": 3096104,
+      "sha256": "7c5bede47ed124f2d536e2357d8dd1f12a9a493334bc75f5ebd63fb4bf6493cb"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r05.png",
+      "bytes": 2556025,
+      "sha256": "a6809381a37b2f600d0058565f287fa4264a4b401a486ec710a70566bbad3bb8"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r06.png",
+      "bytes": 2364785,
+      "sha256": "334cbeccc01d8bee3581f440a5b272eba7854f34adf9f460f57842c9332d510a"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r07.png",
+      "bytes": 2194396,
+      "sha256": "d3a70b6416dbab7f016dd95d1fc3a413243ecd65d50a3becbc4c6f029a099caf"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r08.png",
+      "bytes": 2779719,
+      "sha256": "9a1c7e82c86d731bdcd47c6a16d5f9a3c0398ebc462feccd65fbd083d0563db8"
+    },
+    {
+      "path": "worktree/shots/f04/stronghold_elite-r09.png",
+      "bytes": 2599303,
+      "sha256": "b20bf7b6e6b1474b7abf55894f8c2dc625ddc5773f28562c28fba93cec5a536a"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}
