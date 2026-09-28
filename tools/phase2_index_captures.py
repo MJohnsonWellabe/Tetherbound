@@ -30,7 +30,7 @@ def main() -> None:
     parser.add_argument("--biome", required=True)
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
-    parser.add_argument("--category", choices=("locations", "ui"), default="locations")
+    parser.add_argument("--category", choices=("locations", "ui", "creatures"), default="locations")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     repo = args.repo.resolve()
@@ -59,6 +59,30 @@ def main() -> None:
         with csv_path.open(newline="", encoding="utf-8") as stream:
             existing = {row["id"]: row for row in csv.DictReader(stream)}
     for frame in manifest["frames"]:
+        if args.category == "creatures":
+            frame_id = frame["id"]
+            src = source / f"{frame_id}.jpg"
+            if not src.is_file():
+                raise SystemExit(f"Missing {src}")
+            with Image.open(src) as image:
+                image.verify()
+            dst = frames_dir / src.name
+            shutil.copy2(src, dst)
+            existing[frame_id] = {
+                "id": frame_id, "biome": args.biome, "category": "creatures",
+                "subject": frame["species"], "location_id": "capture_stage",
+                "route": "off", "time_of_day": "day", "weather_or_phase": "clear",
+                "pose_or_state": frame["pose"], "camera": "normal",
+                "frame_path": dst.relative_to(repo).as_posix(),
+                "repro": (
+                    "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
+                    "--script tools/phase2_capture_creatures.gd -- "
+                    f"--biome={args.biome} --only={frame['species']} --seed={manifest['seed']} "
+                    f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/creature_repro_{frame['species']}"
+                ),
+                "commit": args.commit, "render_path": args.render_path,
+            }
+            continue
         if args.category == "ui":
             frame_id = f"{args.biome}__{frame['id']}"
             src = source / f"{frame['id']}.jpg"
@@ -121,7 +145,8 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(existing[key] for key in sorted(existing))
-    build_sheet(repo, base, list(existing.values()), "ui" if args.category == "ui" else "named_locations")
+    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations"}[args.category]
+    build_sheet(repo, base, list(existing.values()), sheet_category)
     print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
 
 
