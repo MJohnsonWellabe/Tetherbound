@@ -11,6 +11,7 @@ import argparse
 import csv
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -39,6 +40,12 @@ def main() -> None:
     source = args.source.resolve()
     if len(args.commit) != 40 or any(c not in "0123456789abcdef" for c in args.commit):
         raise SystemExit("--commit must be a full Git SHA")
+    known_commit = subprocess.run(
+        ["git", "-C", str(repo), "cat-file", "-e", f"{args.commit}^{{commit}}"],
+        capture_output=True,
+    )
+    if known_commit.returncode != 0:
+        raise SystemExit("--commit must resolve to a local Git commit")
     manifest = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
     if (not manifest.get("complete") or manifest.get("failures")) and not args.allow_partial:
         raise SystemExit("Capture manifest is incomplete; inspect its failures")
