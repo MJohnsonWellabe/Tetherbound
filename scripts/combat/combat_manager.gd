@@ -906,7 +906,8 @@ func _place_fighters() -> void:
 	# side with room, the same treatment `_place_realm_owned_ally` gives realm
 	# fights (F14#0 C3). 0 keeps the in-line formation.
 	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
-	if _enemy_owned and lateral > 0.0:
+	if _enemy_owned and lateral > 0.0 \
+			and trainer_seats_aside(cfg, _wild.get_meta(&"trainer_rank", null)):
 		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
 		var right := _staging_reach(ally_spot, side, lateral)
 		var left := _staging_reach(ally_spot, -side, lateral)
@@ -918,6 +919,22 @@ func _place_fighters() -> void:
 	_place(_wild, wild_spot)
 	_wild.call("face_towards", ally_spot)
 	_stand_the_trainer_aside(forward)
+
+
+## Cards M2 (BRIDGE_GUARDIAN_REGRESSION): the lateral seat is F04#2's answer
+## for the NAMED fights (the ally hid a captain's creature). Seating every
+## trainer fight aside cost the earned five the South Bridge gatekeeper on
+## seed 15 (0/3 with it, 2/2 in line), a grunt on the carved crossing slope.
+## The director tags each trainer body with its trainer's `rank`; only the
+## ranks in `trainer_ally_lateral_ranks` sit aside, so a grunt or an unranked
+## tournament round keeps the in-line seat. An untagged body (a peer's
+## snapshot, a headless fight fixture) and a config without the list keep the
+## lateral seat as before.
+static func trainer_seats_aside(cfg: Dictionary, rank: Variant) -> bool:
+	var ranks: Variant = cfg.get("trainer_ally_lateral_ranks", null)
+	if rank == null or not ranks is Array:
+		return true
+	return (ranks as Array).has(str(rank))
 
 
 ## Shared encounters retain the host-owned opponent's transform, but a local
