@@ -18,13 +18,18 @@ SYSTEM_STATES = (
 
 def main() -> None:
     output: dict[str, object] = {"biomes": {}, "notes": [
-        "Counts confirm indexed files, not successful framing or gameplay access.",
+        "Each indexed capture is retained as a 320x180 contact-sheet tile, not a full-resolution image.",
+        "Counts confirm indexed previews, not successful framing or gameplay access.",
         "Open visual and checklist gaps are tracked in the catalog notes and validation reports.",
     ]}
     for biome in BIOMES:
         with (ROOT / biome / "manifest.csv").open(newline="", encoding="utf-8") as stream:
             rows = list(csv.DictReader(stream))
         missing_files = [row["id"] for row in rows if not (ROOT.parents[3] / row["frame_path"]).is_file()]
+        bad_tiles = [row["id"] for row in rows if row.get("evidence_format") != "contact_sheet_tile_320x180"
+                     or not row.get("tile_index", "").isdigit() or not 0 <= int(row["tile_index"]) < 24]
+        retained_raw = [row["id"] for row in rows if (ROOT.parents[3] / row["source_frame_path"]).exists()]
+        sheets = {row["frame_path"] for row in rows}
         bad_commits = [row["id"] for row in rows if len(row["commit"]) != 40]
         missing_repro = [row["id"] for row in rows if not row["repro"] or not row["render_path"]]
         category_counts = Counter(row["category"] for row in rows)
@@ -64,6 +69,8 @@ def main() -> None:
             "expected_systems_without_indexed_frames": [state for state in SYSTEM_STATES if not systems[state]],
             "dialogue_frames": dialogue, "defeated_frames": defeated,
             "ui_ids": ui_ids, "missing_files": missing_files,
+            "bad_tiles": bad_tiles, "retained_raw_frames": retained_raw,
+            "contact_sheets": len(sheets),
             "missing_planned_frames": missing_planned,
             "bad_commits": bad_commits, "missing_repro_or_render_path": missing_repro,
         }
