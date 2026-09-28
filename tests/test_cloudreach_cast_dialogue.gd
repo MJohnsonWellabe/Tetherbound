@@ -4,6 +4,7 @@ const NPCS := preload("res://scripts/world/village_npcs.gd")
 const FLAGS := preload("res://autoload/progression_state.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const LOGIC := preload("res://scripts/world/realm_chapter_progression.gd")
+const WORLD_PAYOFFS := preload("res://scripts/world/cloudreach_world_payoffs.gd")
 const RUNTIME_PATH := "res://data/config/cloudreach_npc_runtime.json"
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const DIALOGUE_PATH := "res://data/dialogue/cloudreach.json"
@@ -16,6 +17,9 @@ const RENDER_BODY_BY_PLATE := {
 	"corin": "trader", "bryn": "young_trainer", "ren": "former_tether_member",
 	"officer_b": "officer_b", "captain_b": "captain_b",
 	"tobin": "lost_traveler", "garrick": "farmer",
+	# Oskar's plate is his villager_male body's (test_dialogue_portraits); the
+	# female plate is the same render of the villager_female body.
+	"villager_male": "villager_keeper", "villager_female": "villager_farmer",
 }
 
 
@@ -238,3 +242,27 @@ func test_topics_and_aftermath_preserve_ordinary_npc_roles() -> void:
 	assert_eq(NPCS.greeting_for(_entry("young_trainer_tavi"), _flags(["side_cliff_circuit_complete"])), "cloudreach_tavi_defeated")
 	assert_eq(NPCS.greeting_for(_entry("officer_voss"), _flags(["defeated_cloudreach_voss"])), "cloudreach_voss_defeated")
 	assert_eq(NPCS.greeting_for(_entry("captain_veyra"), _flags(["captain_veyra_defeated"])), "cloudreach_veyra_defeated")
+
+
+## F08#4: both inhabited settlements have people at work from the first visit,
+## not only after the finale: at least two walking residents at Galefoot on
+## arrival and at Cliffhold once the upper route opens.
+func test_each_settlement_is_occupied_on_its_first_visit() -> void:
+	var payoffs: Dictionary = _read(RUNTIME_PATH)["world_payoffs"]
+	var world := _read("res://data/config/cloudreach_world.json")
+	var centres: Dictionary = {}
+	for landmark: Dictionary in world["landmarks"]:
+		centres[landmark["id"]] = Vector3(landmark["position"][0], landmark["position"][1], landmark["position"][2])
+	var visits := {"lower_cliffs_waycamp": ["realm_key_cloudreach", "cloudreach_chapter_started"],
+		"cliffhold_settlement": ["realm_key_cloudreach", "cloudreach_chapter_started", "cloudreach_upper_route_unlocked"]}
+	for landmark_id: String in visits:
+		var state := WORLD_PAYOFFS.state_for(_flags(visits[landmark_id]), payoffs)
+		var working := 0
+		for traveler: Dictionary in payoffs["travelers"]:
+			if not state["people"].has(traveler["id"]) or not traveler.has("walk_to"):
+				continue
+			var at: Array = state["people"][traveler["id"]]["position"]
+			var offset := Vector3(at[0], at[1], at[2]) - (centres[landmark_id] as Vector3)
+			if Vector2(offset.x, offset.z).length() <= 25.0 and absf(offset.y) <= 5.0:
+				working += 1
+		assert_true(working >= 2, "%s has %d residents at work on its first visit" % [landmark_id, working])
