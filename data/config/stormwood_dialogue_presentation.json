@@ -1,9 +1,9 @@
 {
-  "_comment": "P2-081 trainer conversations use enabled; P2-082 NPC portraits and P2-084 NPC openings each use a separate nested flag. Presentation candidates remain off until the same authored posts and panels pass independent native review. No encounter, reward, input, camera or progression changes.",
+  "_comment": "P2-081 trainer conversations use enabled and remain off pending native acceptance. P2-082 NPC portraits and P2-084 NPC openings use independent gates accepted by the 96-frame people comparison and fresh blind review. No encounter, reward, input, camera or progression changes.",
   "enabled": false,
   "npc_portraits": {
-    "enabled": false,
-    "_comment": "P2-082: match installed portrait plates to each named speaker's unchanged world body profile, including side conversations and the generated Wen refusal. Separate presentation gate; native paired identity review required.",
+    "enabled": true,
+    "_comment": "P2-082: installed plates match all eleven unchanged world speaker profiles, including side conversations and generated Wen/Bryn panels. Native paired identity review passed; see fixes/P2-082/people-blind-verdict.md.",
     "plates_by_profile": {
       "local_historian": "res://assets/ui/portraits/old_perrin.png",
       "young_trainer": "res://assets/ui/portraits/bryn.png",
@@ -15,8 +15,8 @@
     }
   },
   "npc_openings": {
-    "enabled": false,
-    "_comment": "P2-084: distinct openings for four existing speakers. Only line zero changes; route guidance, portraits, conversation IDs, state requirements and completion events remain authored. Bryn's progression briefing is already distinct and is omitted. Native panel review required.",
+    "enabled": true,
+    "_comment": "P2-084: eleven distinct openings for four existing speakers passed native panel review. Only line zero changes; later guidance, conversation IDs, state requirements and completion events remain authored. Bryn's unchanged progression briefing was the comparison control. See fixes/P2-082/people-blind-verdict.md.",
     "lines": {
       "stormwood_warden_elect_bryn_arrival": "Warden-Elect Bryn: A road is a promise to the people at the other end. Rodline Post still has promises to keep.",
       "stormwood_warden_elect_bryn_post_storm": "Warden-Elect Bryn: The Long Storm has ended. Keeping these roads open is our work now.",
