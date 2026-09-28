@@ -1,6 +1,6 @@
 # Phase 2 capture coverage disposition
 
-The per-biome `manifest.csv` files are the frame inventory; `coverage_audit.json` checks their counts, pinned commits, reproduction commands, render paths, and file existence. Each category in each biome has a contact sheet. Capture fixtures and their limits are disclosed in the copied `systems/engine_manifest_*.json` files. Unsuccessful attempts have no frame row.
+The per-biome `manifest.csv` files are the frame inventory; `coverage_audit.json` checks their counts, pinned commits, reproduction commands, render paths, and contact-sheet tiles. Individual full-resolution frames have been removed from the current tree; see `COMPACT_EVIDENCE.md` for the page and tile mapping. Each category in each biome has paginated contact sheets. Capture fixtures and their limits are disclosed in the copied `systems/engine_manifest_*.json` files. Unsuccessful attempts have no frame row.
 
 | Checklist row | Meadows | Tidewake | Cloudreach | Stormwood |
 | --- | --- | --- | --- | --- |
