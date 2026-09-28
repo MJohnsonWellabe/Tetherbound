@@ -243,6 +243,15 @@ func _stick_away_from_opponent() -> Vector2:
 	if away.length() < 0.01:
 		return Vector2.ZERO
 	away = away.normalized()
+	# A CHARGER's travelling lunge runs 7 m down its locked lane, so backing
+	# away stays on it (Vance's Tuskroot: 0/4 avoided by reach). BOSSES' answer
+	# is to step off the lane sideways, toward whichever side the creature
+	# already stands -- what capture_named_fight.gd's dodge also does.
+	var lane: Variant = (_body as Node3D).get("_lunge_heading")
+	if lane is Vector3 and (lane as Vector3).length() > 0.01:
+		var heading := Vector3((lane as Vector3).x, 0.0, (lane as Vector3).z).normalized()
+		var side := Vector3(-heading.z, 0.0, heading.x)
+		away = side if away.dot(side) >= 0.0 else -side
 	var right := _camera.global_transform.basis.x
 	right.y = 0.0
 	var forward := -_camera.global_transform.basis.z
