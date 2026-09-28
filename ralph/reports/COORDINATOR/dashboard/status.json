@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28T01:40Z",
+ "updated": "2026-09-28T02:00Z",
  "headline": [
-  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main (3dbec66b): every lane's work, partial work included.",
+  "Criteria met: 82 of 101. Chapter cards complete: M4, C1, T3, S3 and T1 (5 of 13). Batch 67 is on main (3dbec66b). Its first real CI is the full run 36367365900 on main (in progress).",
   "Phase 1 is running: four biome lanes (tb/meadows, tb/cloudreach, tb/stormwood, tb/tidewake) work CLAUDE_START_HERE.md and land their own PRs. Codex capture/catalog works CODEX_START_HERE.md. The Balance lane (tb/balance) lands its own PR.",
   "No channel and no coordinator: lanes update this board and STATE when they land. Work not covered by the open lanes is listed in STATE's after-list."
  ],
@@ -287,6 +287,12 @@
    "sha": "3dbec66b",
    "state": "Merged",
    "contents": "Every lane head consolidated, work in progress switched off or unwired; phase briefs CLAUDE_START_HERE/CODEX_START_HERE; self-landing process; docs cleanup; owner's 23:55 decisions"
+  },
+  {
+   "name": "CI gap fix (tb/integration PR)",
+   "sha": "pending",
+   "state": "PR open with auto-merge",
+   "contents": "Main pushes diff against the last main commit CI ran on; publish-watch dispatches fast CI when main's tip has no CI run (GITHUB_TOKEN auto-merge pushes start none)"
   }
  ],
  "lanes": [
@@ -327,6 +333,7 @@
   }
  ],
  "decisions": [
+  "Owner 2026-09-28: fix the auto-merge CI gap. A merge pushed by GITHUB_TOKEN auto-merge starts no CI run, so batch 67 reached main untested and the next docs-only run skipped every job. Fixed by chaining main CI to the last run and a 30-minute CI reconciler.",
   "Owner 21:20: the homeward return route after Tidewake is exempt from A7 (T3/F15).",
   "Healed Meadows: runtime regreen, herd returns, pylons fall; no re-bake.",
   "Bramblebun: sheet 06 approved for one Meshy redo with rust/ochre thorns.",
