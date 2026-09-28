@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-28T15:45Z",
+ "updated": "2026-09-28T18:35Z",
  "headline": [
-  "Criteria met: 92 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Since 14:15: Meadows landed F03#0 and F04#3 (#417, #419) and F01#2 (the day walk); Balance landed F10#2 starter parity and the F04#7 C2 half (#413); Cloudreach landed owned-carrier Fly (#411) and finished. Open: Meadows 5 (F01#3, F04#1, F04#2, F04#6, F04#7 C3), Stormwood 2 (F10#2 C3, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
-  "Main is green: CI passed on every merge through #417, and the runs for #418 and #419 are going. The auto-merge workflow dispatches CI after each merge.",
-  "F04#7 (owner option c): harder five-member captains at the level ceiling. Bar: reader win ≥ 0.75; masher lead-faint = 1.00; reader median party cost ≤ 0.55× the masher's; a masher loses at least one Meadows named fight in ≥ 25% of seeded playthroughs. Per fight, Vance and Vess never beat a masher (disclosed). The Balance lane is running tests before it lands. The same bar applies to Tidewake F14#0.",
-  "The owner has delegated lane decisions to the coordinator. Lanes land their own PRs and update this board and STATE."
+  "Criteria met: 94 of 101. Chapter cards complete: 8 of 13 (M4, C1, C2, C3, S1, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429); Stormwood landed card S1 and F10#2 (#425).",
+  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M1, M2, M3, S2, T2.",
+  "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2 and F04#7. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
+  "Main CI is green on each merge. Meadows render jobs are capped at about 3 at a time so CI isn't starved. The owner has delegated lane decisions to the coordinator."
  ],
  "batches": [
   {
@@ -348,12 +348,18 @@
    "sha": "4b02032b",
    "state": "Merged, CI green",
    "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
+  },
+  {
+   "name": "Phase 1 landings 16:52–18:26",
+   "sha": "6b85e6b0",
+   "state": "Merged",
+   "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
   }
  ],
  "lanes": [
   {
    "lane": "Meadows (tb/meadows)",
-   "now": "Landing per criterion now: F03#0 and F04#3 met (#417, #419). Open: F01#2/#3 (camp framing), F04#1, F04#2, F04#6, F04#7 C3, then cards M1–M3.",
+   "now": "Landed F03#0, F04#3, F01#2, F01#3. Queue: F04#1 (Dell/Vance tells), F04#6 aftermath, F04#2 and F04#7 C3 after combat spacing lands, then card M3. M1/M2 moved to the Cards lane.",
    "next": "Self-lands each criterion"
   },
   {
@@ -363,13 +369,23 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "Landed F09#3, F10#3, F10#4. Working F10#6 (device profile round 3: 7-inch legibility fixes; fight-framing experiments backed out). Then F10#2 (C3), cards S1 and S2.",
+   "now": "Landed card S1 and F10#2 (#425). Open: F10#6 (handheld HUD: fight column covers trainer and attack lanes; plate fade hides the punish line). S2's non-F10 parts moved to the Cards lane.",
    "next": "Self-lands each criterion"
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "#407 is out of draft but conflicts with main after today's merges; told to merge main and land (15:42). Then F14#1 and F14#0 (C3 framing, option-(c) bar), then T2.",
+   "now": "Landed #407 (Nerissa stand, Tidecoil bay, camera liners) and #429 (F14 C2 met under option c: Venn lane lock, Nerissa at the 9 m ring). Open: F14#0/#1 C3, re-judged once combat spacing lands. T2's non-fight clauses moved to the Cards lane.",
    "next": "Self-lands each criterion"
+  },
+  {
+   "lane": "Combat Spacing (tb/combat-spacing)",
+   "now": "Shared contact-spacing rule committed; after-runs pass, C2 baselines running; then Tess/Nerissa C3 re-capture under the two-judge rubric",
+   "next": "Lands its own PR; the biome lanes then re-judge C3"
+  },
+  {
+   "lane": "Cards (tb/cards)",
+   "now": "M1 integrated run (all feeders met), then M2 continuous earned route, then re-scoring T2 and S2's non-fight clauses",
+   "next": "Lands each card as it passes"
   },
   {
    "lane": "Codex (Phase 2)",
@@ -388,6 +404,7 @@
   }
  ],
  "decisions": [
+  "Coordinator 2026-09-28 (delegated): new Combat Spacing lane owns contact-range body separation; new Cards lane owns M1/M2 integrated runs and T2/S2 non-fight clauses; biome lanes keep only their F rows (Meadows also M3).",
   "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
   "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
   "Owner 2026-09-28: fix the auto-merge CI gap. A merge pushed by GITHUB_TOKEN auto-merge starts no CI run, so batch 67 reached main untested and the next docs-only run skipped every job. Fixed by chaining main CI to the last run and a 30-minute CI reconciler.",
@@ -411,7 +428,7 @@
  ],
  "four_chapter_run": null,
  "wip": [
-  "Stormwood Phase 2c (tb/x04-stormwood): P2-042 fixed by 1ed0259e5 after fresh native/small-size four-phase identity and preservation PASS at both original stands; accepted weather enabled, actual enabled tests 55 / 762 pass. Regional Bars A/B remain NO. P2-037: 19 native pairs confirm wall grounding improvement, but full landmark and Bars A/B remain NO (cylindrical form, sparse crown, construction); candidate remains off. Disabled canopy-atlas correction: six native pairs show a small distant contrast gain with a flat-cutout tradeoff, unchanged near views and Bars A/B NO/NO; it remains off. P2-084 distinct NPC openings are separately disabled after source review and NPC contract checks; native panels remain required. Current 78-frame landmark baseline establishes P2-041 open. P2-043 native five-pair review is partial: old cones/bar removed, but dark patch integration and glass identity fail; candidate stays off. P2-045 candy tiers, P2-081 trainer dialogue and P2-110 roster-vitals refresh remain off pending native acceptance. P2-092 deferred to tb/stormwood gameplay for collision/contact/lunge separation. Remaining owned impact>=12 rows need capture/fix or final disposition; see phase2/catalog.csv and stormwood/fixes/. No Phase 2c completion claimed. A new branching-crown geometry candidate remains off after 7 tests / 166 assertions and independent source review; native comparison is still required. The current chapter environment batch has 30 verified native1920 frames, three compact pages and ten reviewed derived720 stress views. Fresh blind Bars A/B are NO/NO for creature material/readability, landscape depth and Stormheart architecture. Ordinary combat/HUD, adequate key-settlement coverage and complete chapter acceptance remain open; see stormwood/fixes/chapter-matrix/.",
+  "Stormwood Phase 2c (tb/x04-stormwood): P2-042 fixed by 1ed0259e5 after fresh native/small-size four-phase identity and preservation PASS at both original stands; accepted weather enabled, actual enabled tests 55 / 762 pass. Regional Bars A/B remain NO. P2-037: 19 native pairs confirm wall grounding improvement, but full landmark and Bars A/B remain NO (cylindrical form, sparse crown, construction); candidate remains off. Disabled canopy-atlas correction: six native pairs show a small distant contrast gain with a flat-cutout tradeoff, unchanged near views and Bars A/B NO/NO; it remains off. P2-084 distinct NPC openings are separately disabled after source review and NPC contract checks; native panels remain required. Current 78-frame landmark baseline establishes P2-041 open. P2-043 native five-pair review is partial: old cones/bar removed, but dark patch integration and glass identity fail; candidate stays off. P2-045 candy tiers, P2-081 trainer dialogue and P2-110 roster-vitals refresh remain off pending native acceptance. P2-092 deferred to tb/stormwood gameplay for collision/contact/lunge separation. Remaining owned impact>=12 rows need capture/fix or final disposition; see phase2/catalog.csv and stormwood/fixes/. No Phase 2c completion claimed. The disabled branching-crown geometry candidate passes 7 tests / 166 assertions and source review. Fourteen native pairs confirm stronger distant tree recognition, but crude joins, pale fragmented canopy and the full landmark still fail; Bars A/B remain NO/NO. Ground-level interior pairs do not prove upper-arena visibility. The current chapter environment batch has 30 verified native1920 frames, three compact pages and ten reviewed derived720 stress views. Fresh blind Bars A/B are NO/NO for creature material/readability, landscape depth and Stormheart architecture. Ordinary combat/HUD, adequate key-settlement coverage and complete chapter acceptance remain open; see stormwood/fixes/chapter-matrix/. The further disabled articulated-trunk/platform candidate at417739037 landed through PR424. Clean geometry11/188 and mounted-scene4/0 checks plus22 native frames and14 eligible pairs verify the candidate and actual raised-deck coverage. Fresh blind review prefers its constructed routes, but crown/core/arena presentation still fails the complete landmark: scoped Bar A YES / Bar B NO. It remains off; this does not close the chapter bars. See stormwood/fixes/P2-037/ancient-pair-verdict.md. P2-082 has a separately disabled installed-portrait mapping candidate covering nine catalogued speakers plus the same-profile Fenn/Neri and synthetic side conversations; independent source review and7 tests/613 assertions pass. Actual paired identity/panel review is still required; see stormwood/fixes/P2-082/candidate-review.md.",
   "Stormwood Glass Field scorched scars: flag stormwood_glass_field.json scorched_scars=false. P2-043 five native route pairs independently reviewed: partial improvement, full item and Bars A/B fail. Revise smooth patch margins, straight white fissures, dark chunks and lost glass-field identity before another native review; see phase2/stormwood/fixes/P2-043/pair-verdict.md.",
   "Stormwood chapter environment matrix at 8d73955a1: 27 chapter +3 pocket native1920 frames, all source hashes and three compact pages verified. Fresh blind native/small/derived720 review: Bars A/B NO/NO. Combat/HUD, adequate key-settlement coverage, native720 UI and complete chapter acceptance remain open. See phase2/stormwood/fixes/chapter-matrix/README.md.",
   "Tidewake Pump Hall/Sluice kitbash: flag water_veilfall.json interior_dressing.machines.enabled=false. Codex pump, banner and sluice assets are on main but unplaced (assets/environment/tidewake/pump_station, heart_banner, sluice_gate); placement contracts are in each source/integration.md.",

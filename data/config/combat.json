@@ -128,6 +128,21 @@
     "_comment_power": "1.3x the wild baseline, before `damage_scale`. Profile members author their own absolute power and are unaffected.",
     "power": 10.4
   },
+  "hud_subject_fade": {
+    "_why": "F10#6 device profile (UX section 1.4: the HUD supports direction, team state and danger without covering the trainer, the active creature, the target or the attack geometry). combat_hud.gd::_update_subject_fade: a fight panel (target plate, move grid, ally card, orbs plate, team list) that covers at least min_overlap of the trainer's, the active creature's or the target's projected screen rect eases to alpha at rate per second, and back to opaque once clear. TUNABLE.",
+    "enabled": true,
+    "alpha": 0.3,
+    "rate": 6.0,
+    "min_overlap": 0.1
+  },
+  "trainer_aside": {
+    "_why": "combat_manager.gd::_stand_the_trainer_aside offsets: side_m metres to the side (side_fraction of the arena radius when side_m is absent) and forward_m along the fight's forward (negative = back toward the lens). F10#6 device profile (UX section 1.4: the HUD must not cover the trainer; code-blind 7-inch judges r2-r4): 0.55 x an 8 m radius = 4.4 m stood the trainer at the frame's edge under the move grid or the left column. 2.4 m at the ally's depth keeps them beside the fight, clear of a Voltarach-wide charge lane, in the frame's clear middle band. forward 0.8 stood them in charge lanes (r3 experiment). TUNABLE.",
+    "side_fraction": 0.55,
+    "side_m": 2.4,
+    "forward_m": -1.2
+  },
+
+
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
@@ -296,6 +311,10 @@
   "telegraph": {
     "_comment_heavy_tell_s": "F04#0: a wind-up authored at or above this reads as a HEAVY on the HUD (combat_hud.gd, combat_manager.gd::enemy_windup_is_heavy). BOSSES/C3 name 1.1s as the heavy tell: Earth Fist and the ACE. TUNABLE.",
     "heavy_tell_s": 1.1,
+    "_comment_shape_text": "F04#1/#2 (judge r4 7121d40c: every captain's tell read the same '! incoming -- move', and Vess's DIVER looked like Halder's CHARGER). A wind-up whose authored attack travels (`lunge_travels`) names the question: a DIVER (it also repositions at least `dive_reposition_m`) says where to go, a CHARGER says to leave the lane. Read by combat_manager.gd::enemy_windup_shape and combat_hud.gd. TUNABLE.",
+    "dive_reposition_m": 5.0,
+    "charge_text": "!  CHARGE — step off the lane",
+    "dive_text": "!  DIVE — step out of its line",
     "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
     "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Round 1 of this lane tried the HUD's own WARNING amber (#ffbe47, hue 39); a blind judge found it three degrees from the reward gold the orb band, the catch sparkle and the level-up rings all use, at a value inside the sunlit-grass band -- 'a dropped coin', a buff, not a warning. This is magenta on purpose: hue 308, the complement of the meadow's green, a colour nothing in the world or the reward layer carries, 44 degrees of hue from the nearest painted oxblood and 31 from the palette's near-black tether_oxblood, and the genre's established colour for an attack you cannot block and must MOVE off -- which, with no shields in this game, is every wind-up. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched. tests/test_telegraph_glow.gd holds the ring at least 25 degrees of hue from every reserved oxblood.",
     "enabled": true,
