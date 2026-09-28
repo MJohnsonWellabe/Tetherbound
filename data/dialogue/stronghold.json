@@ -12,12 +12,12 @@
 
   "conversations": {
     "stronghold_duty_board": {
-      "_comment": "R-2 (GATE3_ENCOUNTER_CONTRACTS.md sec7.2): the garrison's numbers at band 5's waystop. Team sizes match data/config/bands/band5_stronghold_approach/trainers.json (Verrick 2, Solene 3, Hald 3, Warden Aldis 5). Names ONLY the draw; never what chamber five holds.",
+      "_comment": "R-2 (GATE3_ENCOUNTER_CONTRACTS.md sec7.2): the garrison's numbers at band 5's waystop. Team sizes match data/config/bands/band5_stronghold_approach/trainers.json (Verrick 2, Solene 3, Hald 5, Warden Aldis 5). Names ONLY the draw; never what chamber five holds.",
       "speaker": "Tether Duty Board",
       "portrait": "res://assets/ui/portraits/trainer.png",
       "lines": [
         "GARRISON DUTY BOARD — HALL APPROACH.",
-        "VERRICK — 2. SOLENE — 3. HALD — 3. WARDEN — 5.",
+        "VERRICK — 2. SOLENE — 3. HALD — 5. WARDEN — 5.",
         "Each post stands until relieved. None stand down early.",
         "NO RELIEF UNTIL THE DRAW IS STABLE."
       ]

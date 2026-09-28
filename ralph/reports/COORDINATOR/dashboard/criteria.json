@@ -210,11 +210,11 @@
    "pct": 47,
    "counts": {
     "met": 4,
-    "partial": 4,
+    "partial": 5,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -263,9 +263,10 @@
     },
     {
      "text": "Varied-size framing and C2/C3 results pass",
-     "status": "failing",
-     "evidence": "Blind verdicts 'partly'; Meadows R7 key-art 'no'; guardian camera fix unlanded",
-     "gap": "Passing C2/C3 blind fight-footage verdict"
+     "status": "partial",
+     "evidence": "C2 half MET under STATE ruling 12 (owner 2026-09-28, option c; coordinator agreed): tests/smoke_meadows_named_c2c3.gd --seeds=24 per starter, all 21 rows PASS (reader win 1.00; masher lead faint 1.00; reader/masher party-cost ratio <= 0.49); chapter masher-loses-a-named-fight 1 - Pi 1.00/0.97/0.94, observed 24/24, 24/24, 22/24. Per-fight masher loss: Oreth 100/96/83%, Halder 8/25/29%, Warden 0/4/33%, Hald 0/0/25%, Vance 0%, Vess 0% (Vance L12 pin, Vess DIVER ending never beat a masher). Measurable C3: worst hit 0.448 < 0.5. ralph/reports/BALANCE/f04_7/RUN_meadows_after_24seeds.txt @ tb/balance.",
+     "gap": "Varied-size framing and the C3 blind fight-footage verdict",
+     "note": "Chapter-level 25% is the Balance lane's reading of the owner's intent, not the owner's words; owner option: raise the Band 3 pin for Vance for per-fight 25%. Shortcuts disclosed: flat-collider harness fights, fixed retained five at band entry level ending on Trailpup (conservative), no items/switching; per-fight seeds independent. C3 half (framing at every body size, blind fight footage) stays with the Meadows lane."
     },
     {
      "text": "No ordinary wild inherits a boss override",
@@ -600,8 +601,8 @@
     {
      "text": "Named fights pass C2/C3",
      "status": "partial",
-     "evidence": "Named profiles, Dynamo Break faint 17/0 (batch 2); no blind fight verdict",
-     "gap": "C2/C3 blind fight footage"
+     "evidence": "C2 half MET (F10#2 starter parity, owner 2026-09-27): smoke_stormwood_b_named_c2c3 --seeds=24, 18/18 rows pass; Capacitor Alpha ratio 0.42/0.50/0.41 (was 0.42/0.98/0.71). ripple_jab/gale_peck timing and Ripplet/Galewisp stats. ralph/reports/BALANCE/f10_2/ @ tb/balance.",
+     "gap": "C3 blind fight-footage verdict"
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",

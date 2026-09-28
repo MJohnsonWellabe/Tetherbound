@@ -52,7 +52,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8 and `CLAUDE_START_HERE.md`.
 3. Land each closed criterion through the lane's own PR (re-check, unit suite once, board and STATE, auto-merge). There is no coordinator and no channel.
 
-**Open lanes (2026-09-28).** Three Phase 1 biome lanes (`tb/meadows`, `tb/tidewake`, `tb/stormwood`; `CLAUDE_START_HERE.md`; the Cloudreach lane is done) and one Codex capture-and-catalog lane (`tb/x04-capture`; `CODEX_START_HERE.md` §2a–2b). The Balance lane (`tb/balance`: harder Meadows trainers, starter parity) lands itself, then stops. Meadows F04#7 and Stormwood F10#2 wait on it.
+**Open lanes (2026-09-28).** Three Phase 1 biome lanes (`tb/meadows`, `tb/tidewake`, `tb/stormwood`; `CLAUDE_START_HERE.md`; the Cloudreach lane is done) and one Codex capture-and-catalog lane (`tb/x04-capture`; `CODEX_START_HERE.md` §2a–2b). The Balance lane lands the F04#7 and F10#2 C2 halves through PR #413, then stops; the C3 halves stay with the Meadows and Stormwood lanes.
 
 **Not covered by the open lanes; do these after:**
 1. **Biome reorder (Phase 1b).** Once all four biome lanes are complete, start one lane on `CLAUDE_START_HERE.md` §6: order Meadows → Tidewake → Cloudreach → Stormwood, gates and keys, levels, ending after Stormwood, swim-before-Fly, ledgers, regenerated checkpoint saves, and save migration. Nothing outside Cloudreach requires Fly (Tidewake's water seals and Stormwood's canopy only register no-fly volumes). Old-order assumptions to fix in the reorder:
@@ -78,6 +78,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 1. **Internet co-op resources:** a real Steam AppID with Steamworks partner access, and four Steam accounts, two or more on separate home networks, for the internet co-op proof. `steam_api64.dll` redistribution is approved. Packaging (`ship_steam_runtime`) stays off until an AppID exists.
 2. **Four decisions made by the owner at 23:55 and now in implementation (batch 68):** F04#7 difficulty (the Meadows named trainers get harder), F10#2 (starter parity), female officer Vess, and aerie art. See ruling 11 below.
+   - **Balance lane:** F10#2 and F04#7 C2 halves met (ruling 12; `ralph/reports/BALANCE/`). C3 halves stay open.
 
 **Settled by the owner (2026-09-27, 23:55):** the Capacitor Alpha no-stagger ruling and the storm strike sparing a trainer in a fight are **kept**. They are no longer interim.
 
@@ -99,11 +100,12 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
    - READY means a criterion fully closes, with an attached strict re-check, one criterion at a time. Codex-queue IDs are lane-prefixed and append-only.
 10. **F04 split.** Meadows core had F04#0, #1 and #7; Meadows F04 bosses had F04#2, #3 and #6. Both lanes are wound down. The F04 bosses round-1 evidence is `ralph/reports/MEADOWS/f04_bosses/r1/`.
 11. **Owner decisions, 23:55.**
-   - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7).
+   - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7). The bar is restated by ruling 12.
    - **Galewisp and ripplet are tuned to match terrapup in skill and strength**, so starter C2 difficulty is even (F10#2, CREATURES).
    - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
    - **Codex does the Cloudreach aerie art** (F08#3). The Codex lane is shut down; the owner assigns this when the next round of work starts.
    - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
+12. **Meadows top-fight bar (owner 2026-09-28, F04#7 option c; delegated to the Balance lane, coordinator agreed).** Per top fight and starter, 24 seeds: reader win ≥75%, masher loses its lead every run, reader party cost ≤55% of the masher's. Chapter reading (the lane's reading of the owner's intent, not the owner's words): a masher loses ≥1 named trainer fight in ≥25% of playthroughs; measured 1.00/0.97/0.94, observed 24/24, 24/24, 22/24. Per-fight masher loss: Oreth 100/96/83%, Halder 8/25/29%, Warden 0/4/33%, Hald 0/0/25%, Vance and Vess 0% (L12 pin; DIVER ending). Fixed harness party ends on Trailpup (conservative bias). Owner option: raise the Band 3 pin for Vance for a per-fight 25%. The form applies to Tidewake F14#0 (Tidewake lane measures). COMBAT §7, BOSSES §9, ACCEPTANCE C2.
 
 **Owner, 2026-09-26 (still in force):**
 - The tournament creature grant is a non-starter species; starters stay player-exclusive.

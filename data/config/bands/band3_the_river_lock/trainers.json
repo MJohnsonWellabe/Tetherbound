@@ -167,18 +167,46 @@
       "team": [
         {
           "species": "galecrest",
-          "level": 11,
+          "level": 12,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
-            "telegraph": 0.9
+            "telegraph": 0.9,
+            "power": 18.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
           "species": "duskhush",
-          "level": 11,
+          "level": 12,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
-            "telegraph": 0.9
+            "telegraph": 0.9,
+            "power": 28.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "burrowback",
+          "level": 12,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 20.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "mosshell",
+          "level": 12,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 20.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
@@ -247,35 +275,62 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 13,
+          "level": 16,
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
             "chase_speed": 3.4,
             "reposition_distance": 2.5,
-            "power": 12.0,
+            "power": 18.5,
             "poise_max": 60.0,
-            "stagger_seconds": 0.85
+            "stagger_seconds": 0.85,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
           "species": "trailpup",
-          "level": 14,
+          "level": 16,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
-            "telegraph": 0.9
+            "telegraph": 0.9,
+            "power": 17.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "burrowback",
+          "level": 16,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 19.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "duskhush",
+          "level": 16,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 26.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         },
         {
           "species": "brooktail",
-          "level": 15,
+          "level": 16,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
             "reposition_time": 0.5,
             "reposition_distance": 2.0,
-            "power": 6.4,
-            "poise_max": 28.0
+            "power": 27.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
           }
         }
       ],
