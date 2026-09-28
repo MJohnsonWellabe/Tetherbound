@@ -15,18 +15,20 @@ all re-captured on the current fight camera and HUD, as `CLAUDE_START_HERE.md` �
 
 - **Post-processing:** `ralph/reports/STORMWOOD/b/f10_2/make_sheets.py` turned the frames into 960x540 JPGs and per-fight sheets. They were renamed to neutral letters from a shuffled key, which was kept outside the packet while judging.
 - **Logs:** `capture_log.json` (per-fight summary) and `capture_stdout.txt`.
+- **Later change:** main's a8aafa0d (merged after this capture) rewords the CHARGER and DIVER wind-up text to "CHARGE — step off the lane" and "DIVE — step out of its line". The frames show the earlier "incoming — move" wording; fight camera, timing and AI are unchanged.
+- **Independent strict re-check: MET.** It spot-checked five cited frames and matched the judge's hit and miss claims against the log.
 
 ## Tells and hits (from `capture_log.json`)
 | Fight | Engaged by | Tells (authored -> measured s) | Enemy hits on ally | Enemy misses | Frames |
 |---|---|---|---|---|---|
 | hollows_alpha | Engage press | 0.8->0.85, 0.8->0.85, 0.8->0.80, 0.8->0.85 | 2 | 2 | 36 |
 | capacitor_alpha | aggressive named wild initiated | 0.8->0.87, 0.8->0.87 | 1 | 1 | 24 |
-| crown_guardian | Engage press | 0.8->0.90, 0.8->0.85, 0.8->0.90, 0.8->0.90 | 2 | 2 | 36 |
+| crown_guardian | Engage press | 0.85->0.90, 0.85->0.85, 0.85->0.90, 0.85->0.90 | 2 | 2 | 36 |
 | old_rodfolk_hall_guardian | aggressive named wild initiated | 1.1->1.10, 1.1->1.10 | 0 | 2 | 28 |
 | blackwater_elder | Engage press | 0.8->0.85, 0.8->0.85, 0.8->0.85, 0.8->0.80 | 2 | 2 | 33 |
 | glass_field_alpha | aggressive named wild initiated | 0.8->0.85, 0.8->0.80, 0.8->0.80, 0.8->0.85 | 2 | 2 | 36 |
 
-Capacitor Alpha's 0.8 s strike tell follows its 1.1 s route cue (BOSSES §7). No measured tell is shorter than its authored value; the extra 0.05 s is frame quantisation at 10 fps.
+Capacitor Alpha's 0.8 s strike tell follows its 1.1 s route cue (BOSSES §7). This capture measures only the strike tell, not the route cue; the strike tell meets the 0.8 s floor on its own. Crown Guardian's 0.85 s at x1.5 power is authored explicitly in BOSSES §7. No measured tell is shorter than its authored value; the extra 0.05 s is frame quantisation at 10 fps.
 
 ## Code-blind judge (`JUDGE_ANSWERS.md`)
 The judge could open only `judge_packet/` and `frames/<letter>/`. The prompt is `judge_packet/JUDGE_PROMPT.txt`: the C3 bar and questions (a)–(d) from the accepted `b/f10_2/c3_close/final` round, with the HUD description updated for the top-right target plate and the panel fade.
