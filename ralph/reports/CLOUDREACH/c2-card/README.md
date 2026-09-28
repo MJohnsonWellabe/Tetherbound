@@ -28,3 +28,11 @@ Feeders: F07#0-#4 met; F08#3 and F08#4 closed on this branch (strict re-checks M
 - **Six activities:** fixture start (Act I-II flags, level-30 five, no flier), teleports to each prompt, 4 Gale Fiber
   granted, Tavi through the mechanics-mode lethal seam, accelerated clock.
 - **Frame matrix:** as disclosed in the two feeder READMEs.
+
+## Independent re-check: PASS
+Disclosed with it: `run-1/head.txt` and `six-activities/head.txt` were written from the run script's
+`git rev-parse` at launch (the harness artifacts themselves carry no commit); the card is a composite of the
+earned chapter run (A7 and ledger; side activities skipped), the fixture six-activities run (not the earned
+five) and the feeders' fixture frame captures; the longest raw interval is 98.9 s inside the Veyra fight
+(98.18 s is the longest travel interval); coins 875 → 1300 over the chapter, Gale Fiber 5 gathered and 3 spent;
+the settlements read was marginal (Cliffhold PARTLY) and Bars A/B are deferred to Phase 2, not passed.
