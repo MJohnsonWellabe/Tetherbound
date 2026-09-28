@@ -1408,8 +1408,11 @@ func _update_combat_body_clear(clear: Dictionary) -> void:
 	# lens on body_clear's 2m floor, inside the player's creature (probe at
 	# the relay, every lunge). A charging body briefly crossing the shot reads
 	# as the charge; the lens inside your own creature reads as nothing.
-	if bool(clear.get("ignore_lunging_foe", false)) and _wild.has_method("is_lunging") \
-			and bool(_wild.call("is_lunging")):
+	# F14#1: one body can opt in (`camera_ignore_lunge`, Nerissa's Riptusk)
+	# while the shared flag stays off for F04#1 to judge.
+	var ignore := bool(clear.get("ignore_lunging_foe", false)) \
+		or (_wild.has_method("camera_ignores_lunge") and bool(_wild.call("camera_ignores_lunge")))
+	if ignore and _wild.has_method("is_lunging") and bool(_wild.call("is_lunging")):
 		_camera_rig.call("set_body_limit", INF)
 		return
 	var pivot: Vector3 = (_camera_rig as Node3D).global_position

@@ -56,15 +56,7 @@ func test_an_opponent_camera_block_can_opt_in_too() -> void:
 func test_a_far_opponent_does_not_start_the_swing() -> void:
 	_foe.winding = true
 	_foe.tell_swing = true
-	var world := Node3D.new()
-	world.add_child(_ally)
-	world.add_child(_foe)
-	(Engine.get_main_loop() as SceneTree).root.add_child(world)
-	_foe.global_position = Vector3(0.0, 0.0, -6.0)
+	_foe.position = Vector3(0.0, 0.0, -6.0)
 	assert_true(bool(_manager.call("_wild_tell_swing", 7.0)), "within reach of contact")
-	_foe.global_position = Vector3(0.0, 0.0, -10.0)
+	_foe.position = Vector3(0.0, 0.0, -10.0)
 	assert_false(bool(_manager.call("_wild_tell_swing", 7.0)), "a far opponent would leave the frame")
-	world.remove_child(_ally)
-	world.remove_child(_foe)
-	(Engine.get_main_loop() as SceneTree).root.remove_child(world)
-	world.free()

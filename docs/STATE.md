@@ -29,7 +29,20 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 - **Meadows:** F01#2, F01#3; F03#0; F04#1, #2, #3, #6, #7.
 - **Cloudreach: complete for Phase 1** (every row and card C1-C3 met). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Open debt outside the queue: owned-carrier Fly; Cliffhold reads thin (Phase 2).
 - **Stormwood:** F10#2, #4, #6. F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
-- **Tidewake:** F14#0, #1 open. F13#3 and F13#5 are met (`ralph/reports/TIDEWAKE/phase1/f13_3/`, `f13_5/`). The F14 rows' C3 stops on shared fight-camera composition; the next step is a combat-camera rule, shared with Meadows F04#1. T2 waits on both rows.
+- **Tidewake:** F14#0 and F14#1 are open; T2 waits on both.
+  - F13#3 and F13#5 are met (`ralph/reports/TIDEWAKE/phase1/f13_3/`, `f13_5/`).
+  - **Rubric.** C3 framing is judged under a rubric fixed before judging (`ralph/reports/TIDEWAKE/phase1/C3_RUBRIC.md`). Two code-blind judges score each round, and both must reach 90%.
+  - **Passed under it:**
+    - Aquaryn on the ordinary route, r6: 100% / 100%.
+    - Tidecoil r12: 100% / 91.7%.
+    - Aquaryn C2 with all three starters, under the named-wild ruling.
+  - **Still open:**
+    - Tess on the ordinary route: about 86% strict at r4; r5 is being judged.
+    - Nerissa r17: 98% / 83%.
+  - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
+  - **Blocked** on a shared combat contact-spacing rule (bodies interpenetrate today). That rule changes C2 balance and is shared with the other lanes' named fights.
+  - **Uncommitted to main:** the lane's Heart Chamber arena bound, the tell/head camera swings and Riptusk's lunge opt-in are on `tb/tidewake`.
+  - **C2 to rerun:** Nerissa's ring is now 9 m, so her 144-fight in-world C2 must be rerun. Local seeds: READER wins 5/5 at 24-33% party cost, and the MASHER wipes.
   - **F14#1** (`phase1/f14_1/VERDICTS.md`):
     - C2 passes at a3269be7 (144 fights: reader win 1.00, party cost 0.07-0.24 of the masher's). The regression since dbe43195's Riptusk lane was the ring reaching the 1 m Sluice Crossing channel; Nerissa now stands 9 m deeper in the Heart Chamber.
     - C3 tells pass (12/12, heavy distinct). Framing is 82-87% over four rounds. It is blocked on the shared CHARGER-lunge camera behaviour: the camera clips into the ally while Riptusk's 7 m charge runs through it (F04#1's `body_clear.ignore_lunging_foe`, off since batch 67).
@@ -157,7 +170,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
 | Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), forest readability (F10#4), device profile (F10#6). Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
-| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Named-fight C3 framing (F14#0/#1) waits on shared fight-camera composition; Bars A/B looks go to Phase 2. |
+| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Named-fight C3 framing: Aquaryn and Tidecoil pass. Tess and Nerissa are blocked on contact-range occlusion, which needs a shared combat spacing rule. Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |

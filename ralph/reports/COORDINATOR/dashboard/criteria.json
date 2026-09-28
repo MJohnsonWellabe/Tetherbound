@@ -812,16 +812,16 @@
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md (tb/tidewake Phase 1): Aquaryn C3 PASS r5 (17/18, tells 2/2; authored combat_camera framing). Tidecoil moved to the Deep Watch arrival bay (the reef-edge cliff failed six rounds): Deep Watch chain passes there (115/0, walk back by stick, 0 poses), C3 r8 21/24 (88%) by two independent judges, tells 4/4. Tess reached on the ordinary route by stick from the Deep Watch landing (317 m, creature_recall, prompt), fight completed.",
-     "gap": "C3 framing below 90%: Tidecoil 88% (the ally in line with the serpent; the serpent lies at the waterline), Tess 62% from the landing approach (the ally hides the opponent at 5-7 m; ordinary ring shows no landing spot). Residue is the shared fight-camera composition.",
-     "note": "Two-strike rule reached for Tidewake placement/camera fixes; next is shared combat-camera composition (ally in line with the opponent). Tidewake lane (Phase 1)."
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md (tb/tidewake Phase 1). C3 under the fixed rubric (phase1/C3_RUBRIC.md: two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 152 m stick walk from the Tidal Cradle landing, creature_recall, Challenge prompt; 100%/100%, tells 4/4); Tidecoil PASS (tidecoil_r12: 100%/91.7%, tells 4/4; engaged by walking down the arrival bay and the Engage prompt). C2: f14_confirm_main (Tess top-fight pass; Tidecoil named-wild ratios 0.05-0.07) plus aquaryn_c2_3starters (ratios 0.54/0.32/0.29, reader win 1.00), under the STATE named-wild ruling. Tells observed 0.80-0.90 s in the in-world smoke.",
+     "gap": "Tess on the ordinary route (317 m walk, prompt): about 86% under the strict rubric (r4). The ally hides the opponent's head at contact after each strike. Blocked on a shared combat contact-spacing rule (bodies interpenetrate); the camera cannot separate touching bodies.",
+     "note": "Strict re-check (phase1/f14_0/RECHECK_F14_0.md) NOT MET before the fixes; gaps 1, 2, 3 and 5 are now addressed and gap 4 (Tess) remains. Tidewake lane (Phase 1)."
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "partial",
      "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (tb/tidewake Phase 1): C2 PASS at a3269be7 in the actual Heart Chamber, 144 fights: READER win 1.00 x3, party cost 0.12/0.07/0.24 of the masher's, masher wipe 1.00, max single hit 18%, tells 0.8/1.1 s. The regression since dbe43195 (render bisect) was the ring reaching the Sluice Crossing channel; Nerissa's stand moved 9 m deeper. C3 tells 12/12 with the heavy distinct (orange HEAVY banner plus chevron lane). Veilfall interior route readable in every frame (room identity WEAK, Phase 2).",
-     "gap": "C3 framing 82-87% over four rounds (bar 90%): the camera clips into the ally or loses a fighter while Riptusk's 7 m lane lunge runs through the ally. Shared CHARGER-lunge camera behaviour (F04#1 body_clear.ignore_lunging_foe, off since batch 67).",
-     "note": "Blocked on the shared lunge-camera rule (with F04#1). Tidewake lane (Phase 1)."
+     "gap": "C3 blocked after r17 (two-strike rule): judge A 98%, judge B 83%. The ring bound (water_veilfall arena_bounds), the tell swing and Riptusk's camera_ignore_lunge removed the banner-wall, edge-crop and camera-in-ally failures. What remains is contact-range head occlusion, which needs the shared combat spacing rule. Her ring is now 9 m, so the 144-fight in-world C2 must be rerun (local seeds: READER 5/5, cost 0.24-0.33, MASHER wipes).",
+     "note": "Blocked on the shared contact-spacing rule (with Tess). Tidewake lane (Phase 1)."
     },
     {
      "text": "Water/current network visibly changes and persists",

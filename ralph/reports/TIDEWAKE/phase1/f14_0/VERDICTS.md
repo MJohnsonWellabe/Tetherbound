@@ -125,8 +125,13 @@ Tess r4 on the ordinary route (`tess_route_r4/`, walked 317 m by stick): judge A
 
 ## F14#0 status
 **Open.** The strict re-check (`RECHECK_F14_0.md`) returned NOT MET. Its gaps:
-1. **Aquaryn C2** used only the Ripplet starter; the three-starter rerun is in progress.
-2. **Named-wild C2 tier.** Tidecoil and Aquaryn pass only on the reader/masher cost ratio. ACCEPTANCE §3 has no such tier, and both mashers never wipe. This needs an owner ruling or tuning; it is recorded in STATE.
-3. **Aquaryn C3** was captured from a placed start with a direct engage call, judged once, with no archived verdict. It needs an ordinary-route recapture.
+1. **Aquaryn C2, all three starters: done** (`aquaryn_c2_3starters/`, 144 runs, 0 errors).
+2. **Named-wild C2 tier: resolved.**
+   - STATE's "Coordinator rulings (owner-delegated, still in force)" for Tidewake reads: "F14 named wilds are judged by the named-wild rule". The re-check had missed that ruling.
+   - Under it, Tidecoil passes (`../../f14_confirm_main/` addendum: ratios 0.05-0.07, reader win 1.00).
+   - Aquaryn passes with all three starters (`aquaryn_c2_3starters/`: ratios 0.54, 0.32 and 0.29; reader win 1.00).
+3. **Aquaryn C3 on the ordinary route: PASS at r6** (`aquaryn_route_r6/`). The approach is a 152 m stick walk from the Tidal Cradle landing, then `creature_recall` and the Challenge prompt pressed. Under `../C3_RUBRIC.md`, judge A gives 20/20 and judge B 20/20; tells 4/4.
 4. **Tess C3** is about 86% under a strict reading: the ally hides the opponent's head at contact after a strike.
-5. **Tells** are declared at 0.8 s (1.25-1.70 s for Aquaryn). No capture observes a full uninterrupted tell.
+5. **Tells observed:** `tests/smoke_tidewake_named_inworld_c2.gd` now measures physics frames from each tell's start to its strike, for uninterrupted tells.
+   - A Nerissa MASHER run observed 42 completed tells of 0.80-0.90 s, against 0.8 s declared.
+   - The heavy is measured in the READER runs of the Nerissa C2 rerun.
