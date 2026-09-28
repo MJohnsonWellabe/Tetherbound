@@ -5594,6 +5594,9 @@ func _send_out_next_creature() -> bool:
 	# G-2, before the fight can open. A trainer creature with no `combat` block
 	# in trainers.json carries an empty dictionary and fights exactly as it did.
 	body.set("combat_override", creature.get("combat_override"))
+	# Cards M2: which trainer fights seat the ally aside
+	# (`combat_manager.gd::trainer_seats_aside`).
+	body.set_meta(&"trainer_rank", str(_trainer_spec.get("rank", "")))
 	# W23-DIFFICULTY (D77): a trainer's body fights off `combat.json`'s
 	# `enemy_trainer` baseline under its own `combat` block; a wild never does.
 	body.set("trainer_owned", true)
