@@ -3387,8 +3387,47 @@ static func resolve_cluster_spot(preferred: Vector3, centre: Vector3, cluster_ra
 
 
 func _cluster_spacing_candidate_clear(candidate: Vector3, body_radius: float) -> bool:
+	if not _clear_of_named_trainer_grounds(candidate):
+		return false
 	return _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near",
 		candidate, maxf(CLEAR_MARGIN, body_radius)))
+
+
+## F04#2: the stands of the named trainers whose fights must hold only the
+## fight (`combat.json` arena.named_trainer_ranks), read once.
+var _named_trainer_stands: Array[Vector2] = []
+var _named_trainer_stands_read := false
+
+
+func _named_trainer_grounds() -> Array[Vector2]:
+	if _named_trainer_stands_read:
+		return _named_trainer_stands
+	_named_trainer_stands_read = true
+	var arena: Dictionary = MATH.config().get("arena", {}) as Dictionary
+	var ranks: Array = arena.get("named_trainer_ranks", []) as Array
+	for raw: Variant in TRAINERS.trainers():
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var at: Array = spec.get("position", []) as Array
+		if at.size() >= 2 and str(spec.get("rank", "")) in ranks:
+			_named_trainer_stands.append(Vector2(float(at[0]), float(at[1])))
+	return _named_trainer_stands
+
+
+## F04#2 (round-1 judge B1). A wild body neither spawns nor picks a wander
+## destination on a named trainer's fight ground, so the captain's and the
+## Warden's fights frame the two fighters and nothing else.
+func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
+		"named_trainer_wild_clear_m", 0.0))
+	if clear <= 0.0:
+		return true
+	var here := Vector2(pos.x, pos.z)
+	for stand: Vector2 in _named_trainer_grounds():
+		if here.distance_to(stand) < clear:
+			return false
+	return true
 
 ## WORLD-LIFE-0903. True when `pos` is clear of every authored road/trail --
 ## `playground_heightfield.gd::path_factor()`, the same road geometry the
@@ -3399,12 +3438,16 @@ func _cluster_spacing_candidate_clear(candidate: Vector3, body_radius: float) ->
 ## wide wander disc can visibly cross the road without ever settling a
 ## destination standing on it.
 func _wander_target_clear_of_road(pos: Vector3) -> bool:
+	if not _clear_of_named_trainer_grounds(pos):
+		return false
 	if _road_field == null:
 		_road_field = HEIGHTFIELD.new()
 	return float(_road_field.call("path_factor", pos.x, pos.z)) <= 0.0
 
 
 func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool) -> bool:
+	if not _clear_of_named_trainer_grounds(pos):
+		return false
 	if avoid_road and not _wander_target_clear_of_road(pos):
 		return false
 	var cluster: Dictionary = _wild_cluster.get(wild, {})
@@ -3426,6 +3469,8 @@ func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator
 		var angle := rng.randf_range(0.0, TAU)
 		var distance := radius * sqrt(rng.randf())
 		spot = centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
+		if not _clear_of_named_trainer_grounds(spot):
+			continue
 		if _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near", spot, CLEAR_MARGIN)):
 			return spot
 	return spot
