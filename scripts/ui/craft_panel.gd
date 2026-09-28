@@ -77,6 +77,7 @@ var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
 var _paused_before: bool = false
 var _presentation: Dictionary = {}
 var _readable_recipe_rows := false
+var _readable_action_hints := false
 
 
 func _ready() -> void:
@@ -85,6 +86,7 @@ func _ready() -> void:
 	if presentation is Dictionary:
 		_presentation = presentation
 	_readable_recipe_rows = bool(_presentation.get("readable_recipe_rows", false))
+	_readable_action_hints = bool(_presentation.get("readable_action_hints", false))
 	_build()
 	visible = false
 	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
@@ -220,8 +222,8 @@ func _build() -> void:
 
 	var hint := Label.new()
 	hint.text = "Leave: %s" % _cancel_glyph()
-	hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if _readable_action_hints else UITokens.FONT_TINY)
+	hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	outer.add_child(hint)
 
 	UITokens.make_text_legible(_root)
@@ -449,8 +451,8 @@ func _build_right_zone() -> Control:
 
 	_craft_hint = Label.new()
 	_craft_hint.text = "Craft: A / Enter"
-	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if _readable_action_hints else UITokens.FONT_TINY)
+	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	side.add_child(_craft_hint)
 
 	return side

@@ -102,12 +102,18 @@ func _capture_row(_row: Dictionary) -> void:
 	if _craft_panel == null:
 		_failures.append("craft capture requires the production CraftPanel")
 		return
-	if OS.get_cmdline_user_args().has("--craft-readable-preview"):
+	var readable_rows := OS.get_cmdline_user_args().has("--craft-readable-preview")
+	var readable_hints := OS.get_cmdline_user_args().has("--craft-hints-preview")
+	if readable_rows or readable_hints:
 		_craft_panel.call("close")
-		_craft_panel.set("_readable_recipe_rows", true)
+		if readable_rows:
+			_craft_panel.set("_readable_recipe_rows", true)
+		if readable_hints:
+			_craft_panel.set("_readable_action_hints", true)
 		_craft_panel.call("_build")
 		_craft_panel.call("open")
-		_manifest["craft_readable_preview"] = true
+		_manifest["craft_readable_preview"] = readable_rows
+		_manifest["craft_hints_preview"] = readable_hints
 	await _settle()
 	await _shoot("crafting", "crafting", "workbench and production CraftPanel directly opened")
 	_write_manifest()
