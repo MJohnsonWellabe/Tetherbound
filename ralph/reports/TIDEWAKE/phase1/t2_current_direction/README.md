@@ -15,8 +15,10 @@ All four rounds were local and uncommitted. Each was reverted.
 | rocks r1 | Marker rocks at the direct lane's edges 18-32 m from each dock, each with a 16 m foam V wake trailing downstream | WEAK | The long V arms read as perspective lines converging on the far island. |
 | rocks r2 | Low rocks with a round foam pillow upstream and a tapering tail downstream | WEAK | Seen end-on, the foam around each rock spreads sideways and muddles even the axis. |
 | darts r1 | Filled foam darts (wide base upstream, point downstream), 6 m long, on sparse lanes; comets off | WEAK | At full size the nearest dart "clearly points down, toward the camera", which is correct. At 7 inches the darts are white flecks. |
-| darts r2 (`darts_r2_sheet_7inch.jpg`) | Darts 14 m long and 6 m wide; dashes dimmed | not judged | By eye the darts still flatten into slivers, and the dimmer dashes made the lane harder to find. |
+| darts r2 (`darts_r2_sheet_7inch.jpg`) | Darts 14 m long and 6 m wide; dashes dimmed | WEAK | The darts are 15-25 px shards at sheet size, and their points read as "left" about as often as "toward the camera". Only one Salt Crown frame hints at direction, and its partner frame loses it. |
 
-**Reading:** each crossing is seen end-on from a low beach camera, so any flat mark on the water is foreshortened about tenfold. Four flat cues have now failed at 7 inches: chevrons (F13#5 r2), comets (F13#5 r3), rock wakes and darts. Two strikes on each approach.
+**Reading:** each crossing is seen end-on from a low beach camera, so any flat mark on the water is foreshortened about tenfold.
+- Rock wakes and darts each scored WEAK twice at 7 inches.
+- Earlier flat cues: chevrons (F13#5 r2, WEAK at normal size: "read as crosses"); comets (F13#5 r3, WEAK on still-frame ambiguity at normal size, and the shipped look is the Cards T2 Q1 WEAK at 7 inches).
 
 **Untried next approach:** a vertical cue that reads in profile, such as standing-wave ridges whose foam spills down the downstream face. That means a finer displaced ribbon mesh with lit normals and an opaque ridge body. It is a larger change, with no evidence yet that it reads.
