@@ -147,6 +147,25 @@ func _run() -> void:
 		draws+=Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		primitives+=Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
 	await _save("approach_perch", player, fly)
+	# Descend through the production controller onto the actual target shelf.
+	# Preserve an airborne approach frame if collision never resolves a landing.
+	_action("fly_descend", true)
+	var landed := false
+	for frame in 600:
+		await physics_frame
+		if frame == 35:
+			await _save("descent", player, fly)
+		if player.is_on_floor() and not fly.call("is_flying"):
+			landed = true
+			break
+	_action("fly_descend", false)
+	if landed:
+		await _frames(12)
+		await _save("landed_shelf", player, fly)
+		await _frames(30)
+		await _save("perch_rest", player, fly)
+	else:
+		print("FLY CAPTURE: shelf landing unresolved at ",player.global_position," state=",fly.get("state"))
 	_write_manifest(true)
 	print("CLOUDREACH REAL FLY VISUAL PASS at ",player.global_position)
 	quit(0)
