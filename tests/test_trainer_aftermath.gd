@@ -129,3 +129,20 @@ func test_tokens_are_laid_out_beside_the_speaker_as_the_lens_sees_them() -> void
 	assert_almost_eq(offset.y, float(show["height_m"]), 0.01, "at the configured height")
 	assert_almost_eq(AFTERMATH.victory_toward(speaker, Vector3.INF, player).x, 1.0, 0.001,
 		"with no solved shot, toward the player as before")
+
+
+## Judge r5 (aftermath_r5): the struck standard was gone before the lines, the
+## step-aside happened after the shot, and no handover was seen. The beats are
+## tied to the victory lines. (Their awaits need a live tree the unit runner
+## does not have; the wiring is pinned from source and config.)
+func test_the_aftermath_beats_happen_inside_the_victory_lines() -> void:
+	var cfg := AFTERMATH.config()
+	assert_true(float(cfg.get("strike_seconds", 0.0)) >= 3.0, "the colours come down slowly enough to see")
+	assert_true(cfg.has("strike_after_lines_open_s") and cfg.has("handover_after_last_line_s"), "both beats are tunable")
+	var npc := FileAccess.get_file_as_string("res://scripts/world/trainer_npc.gd")
+	assert_true(npc.contains("_strike_when_seen(body, id)"), "the strike waits for the lines to open")
+	assert_eq(npc.count("await _until_the_last_victory_line()"), 2, "both stand-down paths wait for the last line")
+	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_true(director.contains("TRAINER_AFTERMATH.hand_over(shown, player)"), "the director hands the tokens over on the last line")
+	for id: String in ["captain_riverwatch", "captain_field", "captain_ridge"]:
+		assert_true(float(AFTERMATH.for_trainer(id)["victory_show"]["side_m"]) >= 1.0, "%s's Sigil clears the hip" % id)

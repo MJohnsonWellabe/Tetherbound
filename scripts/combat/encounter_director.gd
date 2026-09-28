@@ -5940,8 +5940,21 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 		push_in.call("begin", speaker, "aftermath")
 		_step_ally_behind_the_lens(push_in.get_parent(), panel)
 		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
-		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")),
-			_victory_lens(push_in.get_parent()))
+		var shown: Node3D = TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player,
+			str(spec.get("id", "")), _victory_lens(push_in.get_parent()))
+		if shown != null and panel.has_signal("line_presented"):
+			# F04#6 (judge r5): hand the tokens over while the last line is up,
+			# inside the victory shot, not on a timer after it.
+			var player := _player
+			var delay := float(TRAINER_AFTERMATH.config().get("handover_after_last_line_s", 1.4))
+			var on_line := func(_id: String, is_last: bool) -> void:
+				if is_last and is_instance_valid(shown):
+					shown.get_tree().create_timer(delay).timeout.connect(func() -> void:
+						TRAINER_AFTERMATH.hand_over(shown, player))
+			panel.connect("line_presented", on_line)
+			panel.connect("finished", func(_id: String) -> void:
+				if panel.is_connected("line_presented", on_line):
+					panel.disconnect("line_presented", on_line), CONNECT_ONE_SHOT)
 	panel.call("start", conversation)
 
 

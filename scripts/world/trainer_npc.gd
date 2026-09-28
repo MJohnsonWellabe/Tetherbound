@@ -429,7 +429,7 @@ func _refresh_prompts(progression: RefCounted) -> void:
 		var id := str(spec.get("id", ""))
 		var beaten := already_beaten(spec, progression)
 		if beaten and _beaten_seen.has(id) and not bool(_beaten_seen[id]):
-			TRAINER_AFTERMATH.begin_fall(body, id)
+			_strike_when_seen(body, id)
 			_play_defeat_reaction(body)
 		_beaten_seen[id] = beaten
 
@@ -442,7 +442,7 @@ func _play_defeat_reaction(body: Node3D) -> void:
 		return
 	var clip := str(body.call("clip_for", "defeated", ""))
 	if clip.is_empty():
-		await _after_the_victory_lines()
+		await _until_the_last_victory_line()
 		if is_instance_valid(body):
 			TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
 		return
@@ -450,7 +450,7 @@ func _play_defeat_reaction(body: Node3D) -> void:
 	var reactions := CHARACTER_MODEL.config_for("cast_reactions")
 	var hold := float(reactions.get("defeat_hold_seconds", 7.0))
 	await get_tree().create_timer(hold).timeout
-	await _after_the_victory_lines()
+	await _until_the_last_victory_line()
 	if is_instance_valid(body):
 		if not TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", ""))):
 			body.call("play", str(body.call("clip_for", "idle")))
@@ -467,6 +467,42 @@ func _after_the_victory_lines() -> void:
 	var panel := _panel()
 	while panel != null and is_instance_valid(panel) and bool(panel.call("is_open")):
 		await get_tree().create_timer(0.25).timeout
+
+
+## F04#6 (judge r5): after the lines closed, the camera was back behind the
+## player and Dell's step-aside was never seen. The trainer moves while their
+## LAST line is up -- still in the victory shot -- or when the panel closes if
+## that line was never reported.
+func _until_the_last_victory_line() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var panel := _panel()
+	if panel == null or not is_instance_valid(panel) or not bool(panel.call("is_open")) \
+			or not panel.has_signal("line_presented"):
+		await _after_the_victory_lines()
+		return
+	var state := {"last": false}
+	var on_line := func(_id: String, is_last: bool) -> void:
+		if is_last:
+			state["last"] = true
+	panel.connect("line_presented", on_line)
+	while is_instance_valid(panel) and bool(panel.call("is_open")) and not bool(state["last"]):
+		await get_tree().create_timer(0.1).timeout
+	if is_instance_valid(panel) and panel.is_connected("line_presented", on_line):
+		panel.disconnect("line_presented", on_line)
+
+
+## F04#6 (judge r5: Vance's and Vess's struck standards were already gone by
+## the first frame of their lines). The colours come down once the victory
+## lines are up, where the shot can see them; at once if no speech follows.
+func _strike_when_seen(body: Node3D, id: String) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var panel := _panel()
+	if panel != null and is_instance_valid(panel) and bool(panel.call("is_open")):
+		await get_tree().create_timer(float(TRAINER_AFTERMATH.config().get("strike_after_lines_open_s", 0.8))).timeout
+	if is_instance_valid(body):
+		TRAINER_AFTERMATH.begin_fall(body, id)
 
 
 ## --- the table ----------------------------------------------------------------

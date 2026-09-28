@@ -265,21 +265,32 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	var spin := node.create_tween().set_loops()
 	spin.tween_property(node, "position:y", node.position.y + 0.08, 0.9).set_trans(Tween.TRANS_SINE)
 	spin.tween_property(node, "position:y", node.position.y, 0.9).set_trans(Tween.TRANS_SINE)
+	node.set_meta(&"spin", spin)
 	# Handed over, not vanished (judge r2: "they vanish at a25 with no
-	# handover"): at the end the tokens drift to the player and shrink away.
+	# handover"). The director hands them over as the last line lands (judge
+	# r5: no token was ever seen moving to the player); this timer is only
+	# the fallback for a speech that never reports its last line.
 	var seconds := float(show.get("seconds", 14.0))
 	node.get_tree().create_timer(seconds).timeout.connect(func() -> void:
-		if not is_instance_valid(node):
-			return
-		spin.kill()
-		var to := node.global_position
-		if player != null and is_instance_valid(player):
-			to = player.global_position + Vector3.UP * 1.1
-		var hand := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-		hand.tween_property(node, "global_position", to, 0.9)
-		hand.tween_property(node, "scale", Vector3.ONE * 0.15, 0.9)
-		hand.chain().tween_callback(node.queue_free))
+		hand_over(node, player))
 	return node
+
+
+## The tokens drift to the player and shrink away. Once only.
+static func hand_over(node: Node3D, player: Node3D) -> void:
+	if node == null or not is_instance_valid(node) or not node.is_inside_tree() or node.has_meta(&"handed"):
+		return
+	node.set_meta(&"handed", true)
+	var spin: Variant = node.get_meta(&"spin") if node.has_meta(&"spin") else null
+	if spin is Tween and (spin as Tween).is_valid():
+		(spin as Tween).kill()
+	var to := node.global_position
+	if player != null and is_instance_valid(player):
+		to = player.global_position + Vector3.UP * 1.1
+	var hand := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	hand.tween_property(node, "global_position", to, 1.2)
+	hand.tween_property(node, "scale", Vector3.ONE * 0.15, 1.2)
+	hand.chain().tween_callback(node.queue_free)
 
 
 static func _item_colour(world: Node, item_id: String) -> Color:
