@@ -29,6 +29,8 @@ These checks establish implementation invariants, not visual acceptance.
 | Art smoke | Models loaded, sized and dressed; exit 0 |
 | Dune atlas derivation | Offline deterministic derivation check passed; source alpha/neutral pixels retained, source atlas unchanged |
 | Capture scripts | Parser checks passed for dialogue interaction, filtered creature poses and location stand validation |
+| Rooted dune mesh, grass profiles and supported capture stands | 34 tests, 87947 assertions, 0 failed; no script errors in `.local/phase2/dune-shape-support-focused.log` |
+| Victory hierarchy candidate | Root confirmation at 720p: 99 headless HUD lifecycle checks, PASS; `.local/phase2/victory-hierarchy-720-confirm.log`. Independent source review clean; native comparison pending |
 
 The full shard run totals 5249 test methods and 3961065 assertions. The single
 missing-evidence failure was confirmed resolved by its targeted rerun; this is
@@ -50,7 +52,8 @@ does not mean a clean engine-error log.
   were enabled for capture and restored false. Independent PARTIAL, limited
   Bars A No/B No: palette and trainer readability pass; banding, jagged shading,
   diffuse grass and weak sheltered woodland remain. See
-  `P2-008/dunes-02-visual-judge.md`. Controlled render ablation is the next step.
+  `P2-008/dunes-02-visual-judge.md`. Subsequent controlled render ablation is
+  recorded below.
 - Three controlled surface/shadow rounds completed 5/5, 6/6 and 6/6 native
   frames with exact camera matches. Texture-detail removal did not fix bands;
   terrain-only 0.05 m caster-depth offset did at Gull Rest while retaining the
@@ -60,7 +63,9 @@ does not mean a clean engine-error log.
 - Shared grove placement uses actual upwind terrain relief with unchanged
   gameplay clearances. A placement-only probe and native scene report 73 groves
   across eleven candidate islands, 426 trees and 339 shrubs. Counts establish
-  placement, not art acceptance; Veilfall remains on its original path.
+  placement, not art acceptance. Veilfall's static mountain vegetation/authored
+  groves and separate terrain treatment remain excluded; the shared
+  camera-relative grass profile can affect eligible flat Veilfall grass.
 
 - Dunes-03 source `8f4cb049d`: four location and three route images passed
   native validation, seven of eight required sightings. Brine Steps walk03
@@ -70,12 +75,29 @@ does not mean a clean engine-error log.
   the direction, but item acceptance remains incomplete and limited Bars A/B
   are No/No: sand-coated sheer banks, rigid pale grass strips, jagged shading
   and weak destination/creature composition remain.
+- Dunes-04 source `0930716ac`: all sixteen native 1920×1080 images complete,
+  eight fresh before/after pairs covering all eight required sightings. Raw and
+  compact manifest metadata and SHA-256 hashes match; all four compact rounds
+  verify. Player positions match exactly; maximum camera drift is 0.000011445 m.
+  Brine Steps walk03 rejects six candidates in each run and selects the same
+  supported shallow-water land stand at offset 12 m/lateral 0 m. The fresh pair
+  replaces its invalid old baseline; optional Salt Crown walk02/03 remain
+  excluded. Independent item PARTIAL, surface direction PASS, ecology/transitions
+  PARTIAL, limited Bars A/B No/No. Angular bank boundaries, smooth steep forms,
+  regular grass colonies and weak midground/ecological layering remain. Both
+  gates are off. See `P2-008/dunes-04-{capture-validation,visual-judge}.md`.
 - P2-032 selected-realm styling candidate `d68213708` remains off. Existing
   realm-selection tests pass 8 methods / 36 assertions with no script errors
   (`.local/phase2/map-realm-selection-focused.log`). Native explicit map
   selection comparisons in all three affected realms remain outstanding.
   Independent source review found no actionable issues; normal theme margins,
   radii and input semantics are preserved without per-frame style allocation.
+- P2-103 victory hierarchy candidate `0930716ac` remains off. It identifies the
+  persistent five-slot bar as QUICK ITEMS, separates exact reward receipts from
+  growth rows and keeps receipt-bearing cards gold. TEAM counts remain occupied
+  roster slots, including KO members, rather than available-fighter counts.
+  Root-confirmed headless 720p lifecycle passes 99 checks and independent source
+  review is clean; native Venn/Nerissa win/aftermath comparison is outstanding.
 
 Independent source reviews found no remaining issues in named-character grass
 clearance, Water offshore material isolation and decorative bedding. The current
@@ -88,3 +110,5 @@ No new visual candidate is accepted or enabled by this report. The full chapter
 matrix, native paired item reviews, 720p stress rasters and CI landing remain
 separate outstanding requirements. Device evidence is computer capture, no Ally
 hardware; fixed-frame recording cannot establish real-time performance.
+
+Scoped independent review at `0930716ac` found no actionable source findings in trainer swim posing, human water contact, creature shiny overrides, compact party strip and capture reticle, including their five disabled config gates. Disabled paths preserve prior rendering; enabled paths contain no gameplay-state, velocity, collision, input, catch-chance, save or network mutations. These shared component flags are not restricted to Tidewake. Native acceptance remains outstanding.

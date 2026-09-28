@@ -1,0 +1,985 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "0930716acaf88f4827576b050e782c32fb46269e",
+  "repro": "Native Windows Godot4.7 --path . --rendering-driver opengl3 --resolution1920x1080 --fullscreen --audio-driver Dummy --script tools/phase2_capture_locations.gd -- --biome=water --seed=2042 --times=day --views=close --subset=water__first_shore__01__first_shore_welcome_beacon --subset=water__gull_rest__20__gull_rest_beach --subset=water__shellwatch__07__shellwatch_rescue_jetty --subset=water__sluice_isle__13__sluice_isle_twin_pumps --output=res://.artifacts/phase2/p2008-dunes-04-after-locations. Both water_dune_terrain.json and water_dune_cover.json enabled=true (only dirty source values, restored false afterward). Source0930716ac; supported candidate selection active. Other visual gates remain committed false. Complete4/4; ordinary camera and production physics, teleport/time-pinned audit fixture, not campaign traversal or performance proof.",
+  "source_manifest_sha256": "ecb32f080e97e7559b89b313430ef30f5aa1c159607c798c31298f8174ebe71b",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "water",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 265012905817,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 265029683037,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T15:10:55",
+    "capture_started_utc": "2026-09-28T15:10:29",
+    "captured_frame_count": 4,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 4,
+    "planned_frame_ids": [
+      "water__first_shore__01__first_shore_welcome_beacon__day__close",
+      "water__shellwatch__07__shellwatch_rescue_jetty__day__close",
+      "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+      "water__gull_rest__20__gull_rest_beach__day__close"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 265029683037,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day"
+    ],
+    "requested_views": [
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/water_archipelago.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "water__first_shore__01__first_shore_welcome_beacon",
+      "water__gull_rest__20__gull_rest_beach",
+      "water__shellwatch__07__shellwatch_rescue_jetty",
+      "water__sluice_isle__13__sluice_isle_twin_pumps"
+    ]
+  },
+  "frames": [
+    {
+      "id": "water__first_shore__01__first_shore_welcome_beacon__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/dunes-04-after-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 1 \u2014 First Shore",
+        "band_id": "first_shore",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 244566,
+        "camera_player_distance_m": 5.821204662323,
+        "camera_position": [
+          45.5491790771484,
+          26.3359775543213,
+          100.309944152832
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.218706175684929,
+            0.0,
+            -0.975789487361908
+          ],
+          "basis_y": [
+            -0.202878281474113,
+            0.978147625923157,
+            -0.0454716235399246
+          ],
+          "basis_z": [
+            0.954467356204987,
+            0.207911685109138,
+            0.213927194476128
+          ],
+          "origin": [
+            40.5859527587891,
+            25.2548370361328,
+            99.1975250244141
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.21870619058609,
+            2.07552979247794e-08,
+            -0.975790798664093
+          ],
+          "basis_y": [
+            -0.202877268195152,
+            0.978147864341736,
+            -0.0454713180661201
+          ],
+          "basis_z": [
+            0.95446765422821,
+            0.207910612225533,
+            0.213926985859871
+          ],
+          "origin": [
+            45.5491790771484,
+            26.3359775543213,
+            100.309944152832
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "First Shore Welcome Beacon",
+        "destination_index": 1,
+        "file": "res://.artifacts/phase2/p2008-dunes-04-after-locations/water__first_shore__01__first_shore_welcome_beacon__day__close.jpg",
+        "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day__close",
+        "identity": "water__first_shore__01__first_shore_welcome_beacon",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.73114262,
+            "node_path": "water_first_shore_wild_002_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -90.0240020751953,
+              12.0997314453125,
+              147.572998046875
+            ],
+            "species_id": "water_cannonback"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_009_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              40.1590003967285,
+              1.65415966510773,
+              159.664001464844
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.73114262,
+            "node_path": "water_first_shore_wild_013_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              58.6839981079102,
+              18.6234321594238,
+              70.8880004882813
+            ],
+            "species_id": "water_cannonback"
+          },
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.73114262,
+            "node_path": "water_first_shore_wild_017_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -10.2910003662109,
+              11.2481641769409,
+              101.672996520996
+            ],
+            "species_id": "water_cannonback"
+          },
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.73114262,
+            "node_path": "water_first_shore_wild_021_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -27.4179992675781,
+              -0.404536426067352,
+              179.365997314453
+            ],
+            "species_id": "water_cannonback"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_025_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              101.346000671387,
+              -0.423745363950729,
+              150.509002685547
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_026_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              131.421005249023,
+              -0.424137622117996,
+              125.111000061035
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 7,
+        "observed_clock": {
+          "elapsed_seconds": 200.191915666667,
+          "hour": 8.00767662666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          40.5859527587891,
+          23.5048408508301,
+          99.1975250244141
+        ],
+        "position_xz": [
+          35.707,
+          98.104
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 23.5053939819336,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          40.5859527587891,
+          99.1975250244141
+        ],
+        "spot_index_in_band": 1,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.990587174892426,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          35.7070007324219,
+          98.1039962768555
+        ],
+        "terrain_ground_y": 23.5053939819336,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.975790739059448,
+          -0.21870644390583
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "6e9c9a5de8f97008db7bec47fb3cde6b7826281ea2a155728f316a579276929e",
+      "source_frame_path": ".artifacts/phase2/p2008-dunes-04-after-locations/water__first_shore__01__first_shore_welcome_beacon__day__close.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__shellwatch__07__shellwatch_rescue_jetty__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/dunes-04-after-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 4 \u2014 Shellwatch",
+        "band_id": "shellwatch",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 226936,
+        "camera_player_distance_m": 5.82120752334595,
+        "camera_position": [
+          261.172515869141,
+          34.583324432373,
+          998.119262695313
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.815932095050812,
+            0.0,
+            0.578145623207092
+          ],
+          "basis_y": [
+            0.120203398168087,
+            0.978147625923157,
+            0.169642046093941
+          ],
+          "basis_z": [
+            -0.565512478351593,
+            0.207911714911461,
+            -0.798103034496307
+          ],
+          "origin": [
+            264.113250732422,
+            33.5021820068359,
+            1002.26934814453
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.815932929515839,
+            -3.66037422594445e-09,
+            0.578146576881409
+          ],
+          "basis_y": [
+            0.120202593505383,
+            0.978147923946381,
+            0.169640809297562
+          ],
+          "basis_z": [
+            -0.565512895584106,
+            0.207910239696503,
+            -0.798103094100952
+          ],
+          "origin": [
+            261.172515869141,
+            34.583324432373,
+            998.119262695313
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Shellwatch Rescue Jetty",
+        "destination_index": 7,
+        "file": "res://.artifacts/phase2/p2008-dunes-04-after-locations/water__shellwatch__07__shellwatch_rescue_jetty__day__close.jpg",
+        "frame_id": "water__shellwatch__07__shellwatch_rescue_jetty__day__close",
+        "identity": "water__shellwatch__07__shellwatch_rescue_jetty",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_shellwatch_wild_002_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              211.345993041992,
+              12.1906833648682,
+              972.703002929688
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_shellwatch_wild_007_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              319.048004150391,
+              56.5529022216797,
+              1058.12194824219
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.38212951162791,
+            "node_path": "water_shellwatch_wild_008_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              320.946014404297,
+              13.0203132629395,
+              942.452026367188
+            ],
+            "species_id": "water_riverdrake"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_shellwatch_wild_010_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              207.304992675781,
+              35.0049247741699,
+              1083.46398925781
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "water_shellwatch_wild_022_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              259.988922119141,
+              -0.749203085899353,
+              937.259887695313
+            ],
+            "species_id": "water_mirejaw"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.202222222222,
+          "hour": 8.00808888888889,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          264.113250732422,
+          31.7521896362305,
+          1002.26934814453
+        ],
+        "position_xz": [
+          267.004,
+          1006.349
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 31.7523498535156,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          264.113250732422,
+          1002.26934814453
+        ],
+        "spot_index_in_band": 1,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.995435297489166,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          267.003997802734,
+          1006.34899902344
+        ],
+        "terrain_ground_y": 31.7523498535156,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.578146398067474,
+          0.815933048725128
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "ddcb227065090a8c2f62a73b5641c92951f49c77e383e54c1201eb1a68680ec2",
+      "source_frame_path": ".artifacts/phase2/p2008-dunes-04-after-locations/water__shellwatch__07__shellwatch_rescue_jetty__day__close.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/dunes-04-after-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 7 \u2014 Sluice Isle",
+        "band_id": "sluice_isle",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 210966,
+        "camera_player_distance_m": 5.82125568389893,
+        "camera_position": [
+          908.172241210938,
+          96.0342864990234,
+          2854.95678710938
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.952483832836151,
+            0.0,
+            -0.304585129022598
+          ],
+          "basis_y": [
+            -0.063326895236969,
+            0.978147625923157,
+            0.198032796382904
+          ],
+          "basis_z": [
+            0.297929584980011,
+            0.207911714911461,
+            -0.931670963764191
+          ],
+          "origin": [
+            906.622924804688,
+            94.9531555175781,
+            2859.80151367188
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.952485263347626,
+            -2.13930618997438e-07,
+            -0.304584950208664
+          ],
+          "basis_y": [
+            -0.0633262246847153,
+            0.97814816236496,
+            0.198030427098274
+          ],
+          "basis_z": [
+            0.297929137945175,
+            0.207909256219864,
+            -0.931671619415283
+          ],
+          "origin": [
+            908.172241210938,
+            96.0342864990234,
+            2854.95678710938
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sluice Isle Twin Pumps",
+        "destination_index": 13,
+        "file": "res://.artifacts/phase2/p2008-dunes-04-after-locations/water__sluice_isle__13__sluice_isle_twin_pumps__day__close.jpg",
+        "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close",
+        "identity": "water__sluice_isle__13__sluice_isle_twin_pumps",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              819.385986328125,
+              70.6675720214844,
+              2865.81494140625
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              822.385986328125,
+              71.4664993286133,
+              2865.81494140625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              921.89501953125,
+              74.9070892333984,
+              2952.43188476563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              924.005493164063,
+              74.3889694213867,
+              2954.55322265625
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "water_sluice_isle_wild_005_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              858.614990234375,
+              115.563949584961,
+              2927.17407226563
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_sluice_isle_wild_014_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              960.026977539063,
+              72.5105056762695,
+              2852.48999023438
+            ],
+            "species_id": "water_cragclaw"
+          }
+        ],
+        "nearby_creatures_160m": 6,
+        "observed_clock": {
+          "elapsed_seconds": 200.216666666667,
+          "hour": 8.00866666666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          906.622924804688,
+          93.2031631469727,
+          2859.80151367188
+        ],
+        "position_xz": [
+          905.1,
+          2864.564
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 93.1971740722656,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          906.622924804688,
+          2859.80151367188
+        ],
+        "spot_index_in_band": 1,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.991998732089996,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          905.099975585938,
+          2864.56396484375
+        ],
+        "terrain_ground_y": 93.1971740722656,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.304585486650467,
+          0.952485084533691
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "625047e8a873fc70c434916df469566ffea554dcc05f4b1d0c5f398a42ffcb52",
+      "source_frame_path": ".artifacts/phase2/p2008-dunes-04-after-locations/water__sluice_isle__13__sluice_isle_twin_pumps__day__close.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/dunes-04-after-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 210231,
+        "camera_player_distance_m": 5.82123136520386,
+        "camera_position": [
+          -63.1752815246582,
+          4.39769744873047,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923000812531,
+            0.0,
+            0.629593729972839
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655359268188,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923537254334,
+            -1.25755263979954e-07,
+            0.629595100879669
+          ],
+          "basis_y": [
+            0.130898684263229,
+            0.978148102760315,
+            0.161529824137688
+          ],
+          "basis_z": [
+            -0.615837216377258,
+            0.207909449934959,
+            -0.75994610786438
+          ],
+          "origin": [
+            -63.1752815246582,
+            4.39769744873047,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-dunes-04-after-locations/water__gull_rest__20__gull_rest_beach__day__close.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -75.3280029296875,
+              12.2938575744629,
+              777.859985351563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -79.1709976196289,
+              31.3591976165771,
+              860.107971191406
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              15.371000289917,
+              12.2092885971069,
+              833.093994140625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -152.680114746094,
+              -0.758330106735229,
+              809.522888183594
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -15.7110004425049,
+              -0.612642168998718,
+              783.672973632813
+            ],
+            "species_id": "water_cragclaw"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.206787666667,
+          "hour": 8.00827150666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          -59.972972869873,
+          785.180358886719
+        ],
+        "spot_index_in_band": 2,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.994300246238709,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "e88128783db079d62a47df7afa78076c51d57aa5b04f8e217d1c22a3ccb9dbd0",
+      "source_frame_path": ".artifacts/phase2/p2008-dunes-04-after-locations/water__gull_rest__20__gull_rest_beach__day__close.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

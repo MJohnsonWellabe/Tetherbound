@@ -347,8 +347,8 @@
  "lanes": [
   {
    "lane": "Tidewake visual fixes (tb/x04-tidewake)",
-   "now": "Phase 2c in progress. Dunes-02 independent PARTIAL, limited Bars A/B No/No; palette/readability pass. Three native ablations isolate terrain self-shadow striping and support a gated 0.05 m caster-depth correction at Gull Rest. Upright grass colonies and terrain-sheltered shared groves populate all eleven dune islands; focused confirmation15/129 clean. Candidates remain off pending island/route judgment. Full unit suite completed with sparse-evidence failure resolved by targeted confirmation; main throughcf0a3b974 merged. No new chapter acceptance.",
-   "next": "Re-capture all dune sightings and obtain independent review; complete owned impact>=12 fixes/dispositions and paired reviews, full chapter matrix and Bars A/B, then self-land through CI-green PRs. Evidence: ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/ and fixes/validation.md."
+   "now": "Phase 2c active. Dunes-04 has all eight fresh matched native sightings (16 frames), including repaired Brine Steps stand; independent item PARTIAL, direction PASS, ecology/transitions PARTIAL, limited Bars A/B No/No. Gates remain off. Rooted grass/capture support tests pass 34/87947; victory hierarchy off candidate passes 99 lifecycle checks at 720p. P2-032 three-realm native comparison is in progress. Full unit suite and resolved sparse-evidence failure recorded in fixes/validation.md. No chapter acceptance.",
+   "next": "Preserve exposed bank substrate and break contour-bound grass ecology; complete map and victory native reviews, remaining owned impact>=12 fixes/dispositions, chapter matrix and independent Bars A/B, then land through CI-green PRs. See ralph/reports/VISUAL/phase2/tidewake/fixes/."
   },
   {
    "lane": "Meadows (tb/meadows)",
