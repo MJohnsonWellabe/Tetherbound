@@ -297,6 +297,12 @@ const ROWS := [
 		"stands": [Vector3(-286.0, 180.0, 535.0), Vector3(-280.0, 180.0, 496.0)],
 		"target": Vector3(-276.0, 186.0, 518.0),
 		"why": "Post-finale Galefoot: returning travelers (Aila, Neri, Orrin) against row 05."},
+	# F08#4 (Phase 1): row 05 stands inside the terrace; this is Galefoot from the
+	# road a player arrives on, before its terrace edge (z 502).
+	{"n": 37, "region": "gate_lower_cliffs", "row": "settlement-galefoot-approach", "time": "day", "sheet": "hero",
+		"stands": [Vector3(-280.0, 176.5, 461.0), Vector3(-279.0, 178.5, 475.0)],
+		"target": Vector3(-278.0, 184.0, 518.0),
+		"why": "Galefoot Waycamp from arrival_gate_road's last segment (t~0.9), ~57 m out, toward the hearth and yard."},
 ]
 
 var _game: Node
