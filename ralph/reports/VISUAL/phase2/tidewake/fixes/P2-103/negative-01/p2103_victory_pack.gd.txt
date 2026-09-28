@@ -1,0 +1,72 @@
+extends "res://tools/phase2_capture_tidewake_fights.gd"
+
+## Scratch process-only override. Compare the physical production JSON BEFORE
+## mounting, and require the reviewed support hashes independently of the launcher.
+func _init() -> void:
+	var args := {}
+	for arg: String in OS.get_cmdline_user_args():
+		var split := arg.find("=")
+		if split > 0:
+			args[arg.substr(0, split)] = arg.substr(split + 1)
+	for method: String in ["_finalize_capture", "_capture_verified_victory_lifecycle",
+			"_advance_postwin_dialogue", "_save_lifecycle", "_write_lifecycle_manifest"]:
+		if not has_method(method):
+			_refuse("Reviewed lifecycle method missing: " + method)
+			return
+	for source: Dictionary in [
+		{"path": "res://tests/capture_tidewake_named_fights.gd", "arg": "--support-base-sha256"},
+		{"path": "res://tools/phase2_capture_tidewake_fights.gd", "arg": "--support-wrapper-sha256"},
+	]:
+		var actual := FileAccess.get_file_as_string(ProjectSettings.globalize_path(source.path)).replace("\r\n", "\n").sha256_text()
+		if str(args.get(source.arg, "")).to_lower() != actual:
+			_refuse("Reviewed lifecycle source hash mismatch: " + str(source.path))
+			return
+	var pack := str(args.get("--victory-pack", ""))
+	var expected := str(args.get("--victory-enabled", ""))
+	var commit := str(args.get("--source-commit", ""))
+	if pack.is_empty() or expected not in ["true", "false"] or commit.length() != 40 \
+			or "--verified-victory-lifecycle" not in OS.get_cmdline_user_args():
+		_refuse("Missing pinned commit, pack, gate or verified-lifecycle arguments")
+		return
+	if FileAccess.get_sha256(pack) != str(args.get("--victory-pack-sha256", "")).to_lower():
+		_refuse("Process override ZIP hash mismatch")
+		return
+	var disk_path := ProjectSettings.globalize_path("res://data/config/victory_hierarchy_visual.json")
+	if FileAccess.get_sha256(disk_path) != str(args.get("--victory-config-disk-sha256", "")).to_lower():
+		_refuse("Physical production config changed since planning")
+		return
+	var production: Variant = JSON.parse_string(FileAccess.get_file_as_string(disk_path))
+	if not production is Dictionary or typeof(production.get("enabled")) != TYPE_BOOL:
+		_refuse("Physical production config is not the expected object")
+		return
+	var intended: Dictionary = production.duplicate(true)
+	intended.enabled = expected == "true"
+	var zip := ZIPReader.new()
+	if zip.open(ProjectSettings.globalize_path(pack)) != OK:
+		_refuse("Override ZIP cannot be opened")
+		return
+	var entries := zip.get_files()
+	if entries.size() != 1 or entries[0] != "data/config/victory_hierarchy_visual.json":
+		zip.close()
+		_refuse("ZIP must contain ONLY victory_hierarchy_visual.json")
+		return
+	var packed: Variant = JSON.parse_string(zip.read_file(entries[0]).get_string_from_utf8())
+	zip.close()
+	if not packed is Dictionary or packed != intended:
+		_refuse("ZIP differs from physical production JSON beyond enabled")
+		return
+	if not ProjectSettings.load_resource_pack(pack, true):
+		_refuse("Override ZIP mount failed")
+		return
+	var mounted: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/victory_hierarchy_visual.json"))
+	if not mounted is Dictionary or mounted != intended:
+		_refuse("Mounted config readback differs from the verified pack")
+		return
+	print("P2103_PROCESS_OVERRIDE enabled=%s pack=%s source_commit=%s" % [mounted.enabled, pack, commit])
+	# Godot 4.7 does not automatically call this inherited SceneTree initializer.
+	super()
+
+
+func _refuse(reason: String) -> void:
+	push_error("P2-103 capture blocked: " + reason)
+	quit(1)

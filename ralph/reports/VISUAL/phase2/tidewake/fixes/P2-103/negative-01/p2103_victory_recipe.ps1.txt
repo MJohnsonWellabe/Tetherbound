@@ -1,0 +1,388 @@
+param(
+    [switch]$Run,
+    [switch]$NegativeOnly,
+    [ValidateSet('1080', '720', 'both')][string]$Size = 'both',
+    [string]$Batch = 'p2103-victory-pair',
+    [string]$Godot = 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe'
+)
+$ErrorActionPreference = 'Stop'
+
+function Get-CaptureCases([string]$RequestedSize, [bool]$OnlyNegative) {
+    $resolutions = @(if ($RequestedSize -eq 'both') { '1080'; '720' } else { $RequestedSize })
+    $cases = @([ordered]@{ id='venn-cap-negative'; trainer='venn'; size=$resolutions[0]; variant='before'; kind='negative_frame_cap' })
+    if (-not $OnlyNegative) {
+        foreach ($resolution in $resolutions) {
+            foreach ($trainer in @('venn','nerissa')) {
+                foreach ($variant in @('before','after')) {
+                    $cases += [ordered]@{ id="$trainer-$resolution-$variant"; trainer=$trainer; size=$resolution; variant=$variant; kind='comparison' }
+                }
+            }
+        }
+    }
+    return $cases
+}
+
+function Read-RenderLeaseState([IO.Stream]$Stream) {
+    $Stream.Position = 0
+    $reader = [IO.StreamReader]::new($Stream, [Text.Encoding]::UTF8, $true, 1024, $true)
+    try { $text = $reader.ReadToEnd() } finally { $reader.Dispose() }
+    if ([string]::IsNullOrWhiteSpace($text)) { return @{} }
+    $state = $text | ConvertFrom-Json
+    if ($null -eq $state -or $state -isnot [pscustomobject]) { throw 'Render lock has an invalid state; no claim made.' }
+    return $state
+}
+
+function Claim-RenderLeaseStream([IO.Stream]$Stream, [string]$Token, [string]$Purpose) {
+    $state = Read-RenderLeaseState $Stream
+    if ($state.held_by -or $state.token -or $state.run_token) { throw 'Render lock is occupied; no queue slot claimed.' }
+    $bytes = [Text.Encoding]::UTF8.GetBytes((@{ held_by='tb/x04-tidewake'; token=$Token; run_token=$Token;
+        since_utc=[DateTime]::UtcNow.ToString('o'); purpose=$Purpose; launcher_pid=$PID } | ConvertTo-Json -Compress))
+    $Stream.Position = 0
+    $Stream.SetLength(0)
+    $Stream.Write($bytes, 0, $bytes.Length)
+    $Stream.Flush()
+}
+
+function Open-RenderLeaseStream([string]$Path) {
+    return [IO.File]::Open($Path, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
+}
+
+function Enter-RenderLease([string]$Path, [string]$Token, [string]$Purpose) {
+    $handle = Open-RenderLeaseStream $Path
+    try {
+        Claim-RenderLeaseStream $handle $Token $Purpose
+        # Keep FileShare.None through the whole batch, including child cleanup.
+        return [pscustomobject]@{ Stream=$handle; Token=$Token; Path=$Path }
+    } catch {
+        try { $handle.Dispose() } catch { Write-Warning "Render lock handle cleanup failed: $($_.Exception.Message)" }
+        throw
+    }
+}
+
+function Release-RenderLease($Lease, [bool]$ChildTerminal) {
+    if (-not $ChildTerminal) { throw 'Owned child is not verified terminal; render token retained.' }
+    $state = Read-RenderLeaseState $Lease.Stream
+    if ($state.token -cne $Lease.Token -or $state.run_token -cne $Lease.Token -or $state.held_by -cne 'tb/x04-tidewake') {
+        throw 'Render lock ownership changed; no token cleared.'
+    }
+    $bytes = [Text.Encoding]::UTF8.GetBytes('{}')
+    $Lease.Stream.Position = 0
+    $Lease.Stream.SetLength(0)
+    $Lease.Stream.Write($bytes, 0, $bytes.Length)
+    $Lease.Stream.Flush()
+}
+
+function Wait-CaptureChild($Process, [int]$TimeoutMilliseconds = 1800000) {
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    try {
+        while ($true) {
+            $remaining = $TimeoutMilliseconds - [int]$timer.ElapsedMilliseconds
+            if ($remaining -le 0) { throw [TimeoutException]::new('Owned capture exceeded its 30-minute process deadline.') }
+            if ($Process.WaitForExit([Math]::Min(1000, $remaining))) {
+                $Process.Refresh()
+                if (-not $Process.HasExited) { throw 'Child wait completed without a verified terminal process.' }
+                return
+            }
+        }
+    } finally { $timer.Stop() }
+}
+
+function Stop-OwnedCaptureChild($Process) {
+    # Only the Process object returned by our Start-Process, never a PID/name search.
+    Stop-Process -InputObject $Process -Force -ErrorAction Stop
+}
+
+function Resolve-OwnedCaptureChild($Process) {
+    if ($null -eq $Process) { return [pscustomobject]@{ Terminal=$true; Error='' } }
+    try {
+        $Process.Refresh()
+        if (-not $Process.HasExited) {
+            try { Stop-OwnedCaptureChild $Process } catch {
+                $stopError = $_.Exception.Message
+                # A natural exit between HasExited and Stop-Process is successful cleanup.
+                $Process.Refresh()
+                if (-not $Process.HasExited) { return [pscustomobject]@{ Terminal=$false; Error=$stopError } }
+            }
+            if (-not $Process.WaitForExit(10000)) {
+                return [pscustomobject]@{ Terminal=$false; Error='Owned child did not terminate within the 10-second cleanup bound.' }
+            }
+        }
+        $Process.Refresh()
+        if (-not $Process.HasExited) { return [pscustomobject]@{ Terminal=$false; Error='Owned child terminal state cannot be verified.' } }
+        return [pscustomobject]@{ Terminal=$true; Error='' }
+    } catch { return [pscustomobject]@{ Terminal=$false; Error=$_.Exception.Message } }
+}
+
+function Get-LfHash([string]$Path) {
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try {
+        $bytes = [Text.Encoding]::UTF8.GetBytes([IO.File]::ReadAllText($Path).Replace("`r`n", "`n"))
+        return ([BitConverter]::ToString($sha.ComputeHash($bytes))).Replace('-', '').ToLowerInvariant()
+    } finally { $sha.Dispose() }
+}
+
+function Get-LifecycleSupportReceipt([string]$Root, [string]$MetadataPath) {
+    $metadata = Get-Content -LiteralPath $MetadataPath -Raw | ConvertFrom-Json
+    # Independent completeness anchors AND exact reviewed proposal hashes.
+    # These checks establish installed source identity, never runtime success.
+    $anchors = @{
+        'tests/capture_tidewake_named_fights.gd' = @(
+            'const VICTORY_RECEIPT := preload("res://tools/gate_f/fight_victory_receipt.gd")',
+            'var receipt := VICTORY_RECEIPT.new()', 'if not receipt.begin(manager):',
+            'receipt.finish(still_active)', 'capture_terminal_result(still_active',
+            'reason = "time_cap"', 'reason = "frame_cap"', 'save_failures > 0',
+            'break # A capped fight may still be active', 'if not _finalize_capture(failures):')
+        'tools/phase2_capture_tidewake_fights.gd' = @(
+            'arg == "--verified-victory-lifecycle"', 'arg.begins_with("--source-commit=")',
+            '"--render-only-saves" in OS.get_cmdline_user_args()',
+            'DisplayServer.window_get_size() != _expected_resolution',
+            '_attempt.feed_seq_before = FEED.latest_seq()', '_attempt.feed_epoch = FEED.epoch()',
+            '_attempt.defeat_before = bool(director.call("_host_holds_trainer_defeat", id))',
+            'director.call("trainer_battle_id")', '_attempt.defeat_after',
+            'func _capture_verified_victory_lifecycle(', 'Timed out waiting for the actual trainer reward receipt',
+            'Time.get_ticks_msec() - win_ms < 1000', 'naturally_expired(_receipt_state(hud))',
+            'Input.action_press("interact")', 'Input.action_release("interact")',
+            'Post-win dialogue requires a decision', 'int(event.get("seq", 0)) > after_seq',
+            'str(state.get("banner", "")).contains(text)', 'await RenderingServer.frame_post_draw',
+            'current.seq) == int(receipt.seq)', 'phase == "aftermath" and elapsed_ms < 1000',
+            'image.get_size() != _expected_resolution', 'if image.save_png(path) != OK:',
+            'func lifecycle_manifest(', '"missing_phases": missing',
+            'func _finalize_capture(failures: int)', 'Inherited capture/raw frame export failed')
+        'tests/test_phase2_fight_capture_lifecycle.gd' = @(
+            'func test_budget_stop_never_becomes_victory_even_at_won_boundary()',
+            'func test_partial_failure_keeps_valid_images_without_claiming_lifecycle_complete()')
+    }
+    $checks = @()
+    foreach ($relative in $anchors.Keys | Sort-Object) {
+        $path = Join-Path $Root $relative
+        $exists = Test-Path -LiteralPath $path
+        $source = if ($exists) { [IO.File]::ReadAllText($path) } else { '' }
+        $missing = @($anchors[$relative] | Where-Object { -not $source.Contains($_) })
+        $expected = $metadata.files.PSObject.Properties[$relative].Value.proposal_lf_sha256
+        $actual = if ($exists) { Get-LfHash $path } else { '' }
+        $checks += [ordered]@{ path=$relative; exists=$exists; missing_anchors=$missing;
+            expected_lf_sha256=$expected; actual_lf_sha256=$actual; hash_matches=($actual -eq $expected) }
+    }
+    return [ordered]@{ complete=(@($checks | Where-Object { -not $_.hash_matches -or $_.missing_anchors.Count -gt 0 }).Count -eq 0);
+        review_base_commit=$metadata.base_commit; checks=$checks }
+}
+
+function Assert-OverridePack([string]$Path, [string]$OriginalJson, [bool]$Enabled) {
+    $archive = [IO.Compression.ZipFile]::OpenRead($Path)
+    try {
+        if ($archive.Entries.Count -ne 1 -or $archive.Entries[0].FullName -cne 'data/config/victory_hierarchy_visual.json') {
+            throw 'Override pack scope is not exactly the victory config.'
+        }
+        $reader = [IO.StreamReader]::new($archive.Entries[0].Open())
+        try { $packed = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+        $expected = $OriginalJson | ConvertFrom-Json
+        $expected.enabled = $Enabled
+        if (($packed | ConvertTo-Json -Depth 30 -Compress) -cne ($expected | ConvertTo-Json -Depth 30 -Compress)) {
+            throw 'Override config differs from current production config beyond enabled.'
+        }
+    } finally { $archive.Dispose() }
+}
+
+function Assert-CaptureResult($Plan, [int]$ExitCode, [string]$Project, [string]$Logs) {
+    $directory = Join-Path $Project $Plan.output.Substring(6)
+    $manifest = Get-Content -LiteralPath (Join-Path $directory 'manifest.json') -Raw | ConvertFrom-Json
+    if ($manifest.attempt.source_commit -cne $Plan.source_head -or
+        $manifest.attempt.override_pack_sha256 -ine $Plan.override_zip_sha256 -or
+        $manifest.attempt.victory_config.enabled -ne ($Plan.variant -eq 'after')) { throw 'Manifest source/pack/gate identity mismatch.' }
+    $errors = @($Logs -split "`n" | Where-Object { $_ -match '^\s*(SCRIPT ERROR|ERROR):|Parse Error|Parser Error' })
+    if ($Plan.kind -eq 'negative_frame_cap') {
+        $unexpected = @($errors | Where-Object { $_ -notmatch '^\s*ERROR: Capture rejected: frame_cap\s*$' })
+        if ($ExitCode -ne 1 -or $manifest.complete -ne $false -or
+            $manifest.attempt.terminal.reason -cne 'frame_cap' -or $manifest.attempt.terminal.ok -ne $false -or
+            ($manifest.missing_phases -join '|') -cne 'win|aftermath|receipt-expired' -or
+            $manifest.attempt.defeat_before -ne $false -or $manifest.attempt.defeat_after -ne $false -or
+            @($manifest.frames | Where-Object { $_.phase -in @('win','aftermath','receipt-expired') }).Count -gt 0 -or
+            @($manifest.frames | Where-Object { $_.phase -eq 'fight-observation' }).Count -eq 0 -or $unexpected.Count -gt 0) {
+            throw 'Negative control did not fail specifically and cleanly at frame_cap; stop before comparison.'
+        }
+    } else {
+        if ($ExitCode -ne 0 -or $errors.Count -gt 0 -or $manifest.complete -ne $true -or
+            @($manifest.failures).Count -gt 0 -or @($manifest.missing_phases).Count -gt 0 -or
+            $manifest.attempt.terminal.ok -ne $true -or $manifest.attempt.defeat_before -ne $false -or
+            $manifest.attempt.defeat_after -ne $true) { throw 'Capture failed its verified lifecycle or engine error checks.' }
+        foreach ($phase in @('win','aftermath','receipt-expired')) {
+            $matching = @($manifest.frames | Where-Object { $_.phase -eq $phase })
+            if ($matching.Count -ne 1) { throw "Expected one $phase frame." }
+            $frame = $matching[0]
+            if (($frame.resolution -join 'x') -cne $Plan.resolution) { throw 'Lifecycle image metadata has wrong resolution.' }
+            $imagePath = Join-Path $Project $frame.file.Substring(6)
+            $stream = [IO.File]::OpenRead($imagePath)
+            try { $header = [byte[]]::new(24); $read = $stream.Read($header, 0, 24) } finally { $stream.Dispose() }
+            if ($read -ne 24 -or [BitConverter]::ToString($header, 0, 8) -cne '89-50-4E-47-0D-0A-1A-0A') { throw 'Lifecycle image is not a PNG.' }
+            $width = [Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($header, 16))
+            $height = [Net.IPAddress]::NetworkToHostOrder([BitConverter]::ToInt32($header, 20))
+            if ("${width}x${height}" -cne $Plan.resolution) { throw 'Actual PNG dimensions do not match the requested native raster.' }
+            if ($phase -eq 'aftermath' -and $frame.elapsed_since_win_ms -lt 1000) { throw 'Aftermath was captured before one real second.' }
+        }
+    }
+    return [ordered]@{ id=$Plan.id; kind=$Plan.kind; expected_exit=$Plan.expected_exit; actual_exit=$ExitCode;
+        checked=$true; native_visual_acceptance=$false; manifest_sha256=(Get-FileHash -LiteralPath (Join-Path $directory 'manifest.json') -Algorithm SHA256).Hash }
+}
+
+$project = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+if ($Batch -notmatch '^[a-zA-Z0-9_-]+$') { throw 'Batch must be a simple directory name.' }
+$metadataPath = Join-Path $PSScriptRoot 'p2103-support-metadata.json'
+$supportReceipt = Get-LifecycleSupportReceipt $project $metadataPath
+if ($Run -and -not $supportReceipt.complete) { throw 'Blocked: complete reviewed lifecycle support is not installed. No engine launched.' }
+$configPath = Join-Path $project 'data/config/victory_hierarchy_visual.json'
+$baseConfig = [IO.File]::ReadAllText($configPath)
+$configHash = (Get-FileHash -LiteralPath $configPath -Algorithm SHA256).Hash
+$sourceHead = (& git -C $project rev-parse HEAD).Trim()
+if ($sourceHead -notmatch '^[a-f0-9]{40}$') { throw 'Full source commit could not be pinned.' }
+$reviewed = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
+$baseHash = $reviewed.files.'tests/capture_tidewake_named_fights.gd'.proposal_lf_sha256
+$wrapperHash = $reviewed.files.'tools/phase2_capture_tidewake_fights.gd'.proposal_lf_sha256
+$scope = @('tests/capture_tidewake_named_fights.gd','tools/phase2_capture_tidewake_fights.gd',
+    'tests/test_phase2_fight_capture_lifecycle.gd','tools/gate_f/fight_victory_receipt.gd',
+    'scripts/ui/playground_hud.gd','scripts/ui/dialogue_panel.gd','scripts/story/dialogue_runner.gd',
+    'scripts/creatures/progression_feed.gd','data/config/progression_feedback.json','data/config/victory_hierarchy_visual.json',
+    'scripts/combat/combat_manager.gd','scripts/combat/encounter_director.gd','scripts/combat/cloudreach_encounter_director.gd',
+    'scripts/combat/water_encounter_director.gd','data/config/water_characters.json','data/config/water_veilfall.json',
+    'data/config/camera.json','data/config/combat.json','scenes/world/water_archipelago.tscn')
+$scopeHashes = [ordered]@{}
+foreach ($relative in $scope) {
+    $path = Join-Path $project $relative
+    $scopeHashes[$relative] = if (Test-Path -LiteralPath $path) { (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash } else { $null }
+}
+if ($Run) {
+    & git -C $project diff --quiet HEAD -- @scope
+    if ($LASTEXITCODE -ne 0) { throw 'Scoped capture inputs are not committed at the pinned SHA.' }
+}
+Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$artifactDir = Join-Path $PSScriptRoot $Batch
+if (Test-Path -LiteralPath $artifactDir) { throw 'Use a fresh Batch to preserve prior evidence.' }
+New-Item -ItemType Directory -Path $artifactDir | Out-Null
+$packs = @{}
+$packVariants = @(if ($NegativeOnly) { 'before' } else { 'before'; 'after' })
+foreach ($variant in $packVariants) {
+    $cfg = $baseConfig | ConvertFrom-Json
+    if ($cfg.enabled -isnot [bool]) { throw 'Production enabled must be boolean.' }
+    $cfg.enabled = ($variant -eq 'after')
+    $packPath = Join-Path $artifactDir "$variant.zip"
+    $stream = [IO.File]::Open($packPath, [IO.FileMode]::CreateNew)
+    $zip = [IO.Compression.ZipArchive]::new($stream, [IO.Compression.ZipArchiveMode]::Create)
+    try {
+        $entry = $zip.CreateEntry('data/config/victory_hierarchy_visual.json')
+        $writer = [IO.StreamWriter]::new($entry.Open(), [Text.UTF8Encoding]::new($false))
+        try { $writer.Write(($cfg | ConvertTo-Json -Depth 30)) } finally { $writer.Dispose() }
+    } finally { $zip.Dispose(); $stream.Dispose() }
+    Assert-OverridePack $packPath $baseConfig ($variant -eq 'after')
+    $packs[$variant] = "res://.artifacts/phase2/$Batch/$variant.zip"
+}
+$cases = @(Get-CaptureCases $Size ([bool]$NegativeOnly))
+$plans = @()
+foreach ($case in $cases) {
+    $pixels = if ($case.size -eq '1080') { '1920x1080' } else { '1280x720' }
+    $windowMode = if ($case.size -eq '1080') { '--fullscreen' } else { '--windowed' }
+    $negative = $case.kind -eq 'negative_frame_cap'
+    $interval = if ($negative) { '0.2' } else { '8.0' }
+    $frameCap = if ($negative) { '4' } else { '100' }
+    $output = "res://ralph/reports/VISUAL/phase2/tidewake/repro/$Batch/$($case.id)"
+    $packHash = (Get-FileHash -LiteralPath (Join-Path $artifactDir "$($case.variant).zip") -Algorithm SHA256).Hash
+    $argv = @('--path', $project, '--rendering-driver', 'opengl3', '--resolution', $pixels,
+        $windowMode, '--script', 'res://.artifacts/phase2/p2103_victory_pack.gd', '--',
+        "--trainer=water_trainer_$($case.trainer)", "--out=$output", "--interval=$interval", "--max-frames=$frameCap",
+        '--level=80', '--pilot=MASHER', '--cap-s=300', '--tells-per-opponent=1', '--hits-per-opponent=1',
+        '--seed=2042', '--verified-victory-lifecycle', "--expected-resolution=$pixels", "--source-commit=$sourceHead",
+        "--support-base-sha256=$baseHash", "--support-wrapper-sha256=$wrapperHash",
+        "--victory-config-disk-sha256=$configHash", "--victory-pack-sha256=$packHash",
+        "--victory-pack=$($packs[$case.variant])", "--victory-enabled=$($case.variant -eq 'after')".ToLowerInvariant())
+    $plans += [ordered]@{ id=$case.id; kind=$case.kind; expected_exit=$(if ($negative) { 1 } else { 0 });
+        source_head=$sourceHead; executable=$Godot; args=$argv; config_disk_sha256=$configHash; override_zip_sha256=$packHash;
+        APPDATA=(Join-Path $project ".local/p2103-$Batch-$($case.id)-appdata"); output=$output; resolution=$pixels; variant=$case.variant;
+        fixture='Legal five-creature level80 fresh-save fixture; interior flags and staged proximity; direct initial prompt/dialogue calls; input-driven MASHER combat; input-driven ordinary post-win lines. No earned-route, balance, co-op, performance or native visual acceptance claim.' }
+}
+ConvertTo-Json -InputObject @($plans) -Depth 30 | Set-Content -LiteralPath (Join-Path $artifactDir 'launch-plan.json') -Encoding UTF8
+[ordered]@{ source_head=$sourceHead; source_completeness=$supportReceipt; scoped_source_sha256=$scopeHashes;
+    launcher_sha256=(Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash;
+    wrapper_sha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'p2103_victory_pack.gd') -Algorithm SHA256).Hash;
+    proposal_sha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'p2103-support-proposal.patch') -Algorithm SHA256).Hash;
+    negative_only=[bool]$NegativeOnly;
+    receipt_kind='prelaunch_source_snapshot'; engine_launched_at_snapshot=$false } | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $artifactDir 'scope-receipt.json') -Encoding UTF8
+if (-not $Run) { Write-Output "Prepared $($plans.Count) launches; negative-only=$([bool]$NegativeOnly). Negative control expects failure, not visual acceptance. No engine started. $artifactDir"; return }
+# The external render queue authorizes the slot. An empty lock is only a
+# race safeguard; this script never grants itself queue permission.
+$renderPath = [IO.Path]::GetFullPath((Join-Path $project '../RENDER_LOCK.json'))
+$renderToken = [Guid]::NewGuid().ToString('N')
+$renderLease = $null
+$process = $null
+$activePlan = $null
+$primaryError = $null
+$cleanupErrors = [Collections.Generic.List[string]]::new()
+$previousAppData = $env:APPDATA
+$results = @()
+try {
+    # -Run only, after source checks and all launch artifacts have been prepared.
+    $renderLease = Enter-RenderLease $renderPath $renderToken ("P2-103 verified victory batch " + $Batch)
+    foreach ($plan in $plans) {
+        $activePlan = $plan
+        if ((& git -C $project rev-parse HEAD).Trim() -ne $sourceHead) { throw 'Source commit changed during batch.' }
+        foreach ($relative in $scopeHashes.Keys) {
+            if ((Get-FileHash -LiteralPath (Join-Path $project $relative) -Algorithm SHA256).Hash -ne $scopeHashes[$relative]) { throw "Scoped source changed: $relative" }
+        }
+        $packPath = Join-Path $artifactDir "$($plan.variant).zip"
+        Assert-OverridePack $packPath ([IO.File]::ReadAllText($configPath)) ($plan.variant -eq 'after')
+        if ((Get-FileHash -LiteralPath $packPath -Algorithm SHA256).Hash -ne $plan.override_zip_sha256) { throw 'Override ZIP changed.' }
+        if (Test-Path -LiteralPath (Join-Path $project $plan.output.Substring(6))) { throw 'Capture output already exists.' }
+        if (Test-Path -LiteralPath $plan.APPDATA) { throw 'Capture APPDATA must be fresh.' }
+        New-Item -ItemType Directory -Path $plan.APPDATA | Out-Null
+        $process = $null
+        try {
+            $env:APPDATA = $plan.APPDATA
+            $argumentLine = ($plan.args | ForEach-Object { if ($_ -match '"') { throw 'Unexpected quote in argument' }; '"' + $_ + '"' }) -join ' '
+            $stdout = Join-Path $artifactDir "$($plan.id).stdout.log"
+            $stderr = Join-Path $artifactDir "$($plan.id).stderr.log"
+            $process = Start-Process -FilePath $Godot -ArgumentList $argumentLine -WorkingDirectory $project -WindowStyle Hidden -PassThru `
+                -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+            Wait-CaptureChild $process
+            foreach ($relative in $scopeHashes.Keys) {
+                if ((Get-FileHash -LiteralPath (Join-Path $project $relative) -Algorithm SHA256).Hash -ne $scopeHashes[$relative]) { throw "Scoped source changed during capture: $relative" }
+            }
+            $logs = [IO.File]::ReadAllText($stdout) + "`n" + [IO.File]::ReadAllText($stderr)
+            $results += Assert-CaptureResult $plan $process.ExitCode $project $logs
+            $results | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $artifactDir 'checked-results.json') -Encoding UTF8
+        } finally { $env:APPDATA = $previousAppData }
+        $process.Dispose()
+        $process = $null
+    }
+    if ((Get-FileHash -LiteralPath $configPath -Algorithm SHA256).Hash -ne $configHash) { throw 'Production config changed.' }
+} catch {
+    $primaryError = $_
+} finally {
+    # No cleanup error may mask the original capture/validation failure.
+    try { $terminal = Resolve-OwnedCaptureChild $process } catch {
+        $terminal = [pscustomobject]@{ Terminal=$false; Error=$_.Exception.Message }
+    } finally { $env:APPDATA = $previousAppData }
+    if (-not $terminal.Terminal) { $cleanupErrors.Add("Owned child unverified; render token retained: " + $terminal.Error) }
+    if ($null -ne $renderLease) {
+        try {
+            if ($terminal.Terminal) { Release-RenderLease $renderLease $true }
+            # When cleanup cannot verify exit, retain the JSON token even after
+            # this launcher's OS handle closes. Later claimants must reject it.
+        } catch { $cleanupErrors.Add($_.Exception.Message) }
+        finally {
+            try { $renderLease.Stream.Dispose() } catch { $cleanupErrors.Add($_.Exception.Message) }
+        }
+    }
+    if ($null -ne $process -and $terminal.Terminal) {
+        try { $process.Dispose() } catch { $cleanupErrors.Add($_.Exception.Message) }
+    }
+}
+if ($null -ne $primaryError -or $cleanupErrors.Count -gt 0) {
+    $message = if ($null -ne $primaryError) { $primaryError.Exception.Message } else { 'Capture cleanup failed.' }
+    try {
+        [ordered]@{ id=$(if ($null -ne $activePlan) { $activePlan.id } else { $Batch }); stopped=$true;
+            error=$message; cleanup_errors=$cleanupErrors.ToArray(); child_terminal_verified=$terminal.Terminal;
+            render_token=$renderToken; partial_evidence_retained=$true } |
+            ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $artifactDir 'failed-result.json') -Encoding UTF8
+    } catch { Write-Warning "Could not write failure receipt; original error: $message; receipt error: $($_.Exception.Message)" }
+    foreach ($cleanupError in $cleanupErrors) { Write-Warning $cleanupError }
+    if ($null -ne $primaryError) { throw $primaryError }
+    throw ($cleanupErrors -join '; ')
+}

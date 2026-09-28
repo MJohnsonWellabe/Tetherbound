@@ -1,0 +1,29 @@
+P2-103 scratch launcher final review — 2026-09-28
+
+Scope: only .artifacts/phase2/p2103_victory_recipe.ps1 and this receipt changed in this task. No production files, production gates, wrapper, old CPU receipts, engines, imports, GPU captures, or real render lock were changed/executed.
+Observed HEAD: 471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2
+Reviewed launcher SHA256: 5E18C90872B6AA05C54ADD3ED914DB56755B7A83910A5103FFF14C98953E9AA2
+
+Implemented safeguards
+- -Run acquires D:/tetherbound/RENDER_LOCK.json only after the existing source-completeness, pinned-source, config-pack, and launch-artifact preparation checks. Dry preparation never opens the lock.
+- Atomic OpenOrCreate/ReadWrite/FileShare.None handle remains open throughout the batch and child cleanup. Occupied held_by, token, or run_token fails closed, including this lane's stale token. Malformed non-object lock state also fails closed.
+- Each claim writes a new GUID token into both token and run_token. Release checks exact owner plus both exact tokens; it only clears after no child was started or our returned Process object is verified terminal. The slot is externally authorized: an empty lock is only a race safeguard.
+- Each hidden child has a monotonic 30-minute deadline. Wait calls are bounded to at most one second; cleanup waits at most ten seconds after stopping our exact Process object. No PID/name enumeration, external-process termination, or unbounded WaitForExit remains.
+- Stop-Process's natural-exit race is accepted only after refreshing and verifying HasExited. Failed stop/refresh/terminal verification retains the JSON token, including after disposing the exclusive OS handle. This intentionally blocks later compliant claimants until an external owner resolves the actual child state.
+- Nested and outer finally blocks restore APPDATA. Original capture/validation errors are rethrown; cleanup/receipt-write errors are additional diagnostics. Existing evidence is retained, and failed-result.json records original failure, cleanup failures, and actual terminal-verification state when writable.
+- -NegativeOnly prepares and runs exactly the first Venn four-frame negative control, with only the before override pack. It preserves the same source/config/receipt checks and expected exit 1; no comparison or visual acceptance follows it. Default remains nine cases (or five for one requested raster).
+- Single-case launch-plan.json remains a JSON array. A CPU plan test exposed the prior single-resolution scalar-indexing issue; resolution selection now explicitly remains an array, so -Size 720 correctly yields 1280x720 windowed for its control.
+
+Verification executed: 82 fresh CPU checks passed; all commands exited 0 on final source.
+1. Parser and helper checks: 26. Parsed the actual launcher AST and loaded function definitions only. In-memory MemoryStreams covered empty claim, occupied other/same owner, token-only/run_token-only claims, malformed JSON, ownership mismatch, nonterminal release, terminal release, and a mocked exclusive-open collision. Mock Process objects covered no/already-exited child, successful stop, natural-exit Stop-Process race, denied stop, cleanup timeout, process deadline, successful bounded wait, and dishonest completed wait. These tests used no real lock or actual process.
+2. Actual launcher execution-tail mocks: 39. Executed the actual source tail (not a rewritten cleanup algorithm) with process, filesystem-writing, Git, hash, and lease entry mocked. Six scenarios: timeout cleanup, stop race, denied stop, failed start, occupied lock, and failure-receipt write failure. Verified original error preservation, unconditional APPDATA restoration, hidden own-child launch, exact own-child stop, accurate token retention/release, truthful terminal receipt, and partial-evidence retention. Real config was read only; no files were written and no processes spawned.
+3. Actual plan-construction checks: 17. Executed the source's actual case/argv construction and pack-selection statement with hash lookup mocked. Tested NegativeOnly at both/1080/720: one expected-failure case, before pack only, four-frame cap, pinned source, disabled process-local override, correct fullscreen/windowed raster, JSON-array schema. Also verified default nine-case/two-pack recipe and all source-commit argv pins.
+No old checks were relabeled or overwritten. Historical 15-check receipt remains historical:
+  p2103-support-launcher-checks.json SHA256 EFAEC94603D5B91AE71D0255A1D9CB4806D4770EDED41ED853EB2BE93628C5B9
+  p2103-support-launcher-checks.ps1 SHA256 14476D2CBD771D28D70B8C2A836826F53C29F570125605D8FDC1D17ACFD86125
+
+Queued usage, only after external slot authorization:
+  & ./.artifacts/phase2/p2103_victory_recipe.ps1 -Run -NegativeOnly -Size 1080 -Batch <fresh-negative-batch>
+Preparation without -Run is CPU-only but consumes its fresh Batch directory; use a different fresh name for the eventual -Run invocation. A negative control succeeds as a validator only when the capture itself fails cleanly at frame_cap with no lifecycle frames. It is not victory or visual proof.
+
+Remaining limits: no native process or Windows file-lock contention experiment was run; FileShare.None API use was source-reviewed, contention was mocked. An externally forced launcher termination cannot guarantee finally execution; the persisted token intentionally prevents automatic reuse. Native negative-control proof, then approved full victory comparisons, remain pending. Historical prepared source receipts must not be presented as receipts for this new launcher hash.
