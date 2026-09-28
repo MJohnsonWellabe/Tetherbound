@@ -1,0 +1,122 @@
+{
+  "biomes": {
+    "meadows": {
+      "frames": 506,
+      "categories": {
+        "named_locations": 114,
+        "route_and_terrain": 50,
+        "creatures": 126,
+        "systems": 78,
+        "ui": 12,
+        "characters": 48,
+        "world_items": 78
+      },
+      "systems": [
+        "catching",
+        "fights",
+        "riding"
+      ],
+      "ui_ids": [
+        "meadows__exploration_hud",
+        "meadows__menu_backpack",
+        "meadows__menu_build",
+        "meadows__menu_creatures",
+        "meadows__menu_map",
+        "meadows__menu_players",
+        "meadows__menu_quest_log",
+        "meadows__menu_save",
+        "meadows__menu_settings",
+        "meadows__menu_skills",
+        "meadows__quick_bindings",
+        "meadows__settings_controls"
+      ]
+    },
+    "tidewake": {
+      "frames": 573,
+      "categories": {
+        "creatures": 91,
+        "named_locations": 258,
+        "route_and_terrain": 120,
+        "systems": 23,
+        "ui": 12,
+        "characters": 42,
+        "world_items": 27
+      },
+      "systems": [
+        "current_states",
+        "swimming"
+      ],
+      "ui_ids": [
+        "tidewake__exploration_hud",
+        "tidewake__menu_backpack",
+        "tidewake__menu_build",
+        "tidewake__menu_creatures",
+        "tidewake__menu_map",
+        "tidewake__menu_players",
+        "tidewake__menu_quest_log",
+        "tidewake__menu_save",
+        "tidewake__menu_settings",
+        "tidewake__menu_skills",
+        "tidewake__quick_bindings",
+        "tidewake__settings_controls"
+      ]
+    },
+    "cloudreach": {
+      "frames": 316,
+      "categories": {
+        "creatures": 98,
+        "named_locations": 144,
+        "route_and_terrain": 39,
+        "ui": 12,
+        "systems": 3,
+        "characters": 10,
+        "world_items": 10
+      },
+      "systems": [
+        "flying"
+      ],
+      "ui_ids": [
+        "cloudreach__exploration_hud",
+        "cloudreach__menu_backpack",
+        "cloudreach__menu_build",
+        "cloudreach__menu_creatures",
+        "cloudreach__menu_map",
+        "cloudreach__menu_players",
+        "cloudreach__menu_quest_log",
+        "cloudreach__menu_save",
+        "cloudreach__menu_settings",
+        "cloudreach__menu_skills",
+        "cloudreach__quick_bindings",
+        "cloudreach__settings_controls"
+      ]
+    },
+    "stormwood": {
+      "frames": 443,
+      "categories": {
+        "named_locations": 186,
+        "time_and_weather": 12,
+        "route_and_terrain": 60,
+        "creatures": 98,
+        "ui": 12,
+        "characters": 45,
+        "world_items": 30
+      },
+      "systems": [],
+      "ui_ids": [
+        "stormwood__exploration_hud",
+        "stormwood__menu_backpack",
+        "stormwood__menu_build",
+        "stormwood__menu_creatures",
+        "stormwood__menu_map",
+        "stormwood__menu_players",
+        "stormwood__menu_quest_log",
+        "stormwood__menu_save",
+        "stormwood__menu_settings",
+        "stormwood__menu_skills",
+        "stormwood__quick_bindings",
+        "stormwood__settings_controls"
+      ]
+    }
+  },
+  "manifest_errors": []
+}
