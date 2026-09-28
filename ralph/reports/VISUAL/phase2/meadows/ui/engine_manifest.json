@@ -9,7 +9,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "exploration_hud",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/exploration_hud.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/exploration_hud.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "HUD in exploration",
@@ -18,7 +18,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_backpack",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_backpack.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_backpack.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu backpack",
@@ -27,7 +27,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_creatures",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_creatures.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_creatures.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu creatures",
@@ -36,7 +36,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_map",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_map.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_map.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu map",
@@ -45,7 +45,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_skills",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_skills.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_skills.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu skills",
@@ -54,7 +54,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_quest_log",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_quest_log.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_quest_log.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu quest_log",
@@ -63,7 +63,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_build",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_build.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_build.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu build",
@@ -72,7 +72,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_players",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_players.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_players.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu players",
@@ -81,7 +81,7 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_save",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_save.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_save.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu save",
@@ -90,10 +90,28 @@
 		{
 			"camera": "production CameraRig/Camera3D",
 			"id": "menu_settings",
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_raw/menu_settings.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/menu_settings.jpg",
 			"player_present": true,
 			"scene": "res://scenes/world/meadows_playground.tscn",
 			"subject": "Menu settings",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "settings_controls",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/settings_controls.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/meadows_playground.tscn",
+			"subject": "Controls",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"id": "quick_bindings",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/ui_full_main84_v2/quick_bindings.jpg",
+			"player_present": true,
+			"scene": "res://scenes/world/meadows_playground.tscn",
+			"subject": "Quick items",
 			"ui": true
 		}
 	],
