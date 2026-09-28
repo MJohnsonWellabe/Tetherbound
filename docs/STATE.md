@@ -44,9 +44,10 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
     - Tess on the ordinary route: r5 scored 97% / 84% (r4 about 86% strict).
     - Nerissa r17: 98% / 83%.
   - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
-  - **Blocked** on a shared combat contact-spacing rule (bodies interpenetrate today). That rule changes C2 balance and is shared with the other lanes' named fights.
+  - **Blocked** on the shared contact-spacing rule, now owned by the COMBAT SPACING lane (`tb/combat-spacing`, coordinator 16:28). When it lands on main, Tidewake merges it and re-judges Tess and Nerissa C3 under `C3_RUBRIC.md`. This lane builds no spacing fix of its own.
   - **Landed as progress:** the Heart Chamber arena bound, the tell and head camera swings, and Riptusk's lunge opt-in. All are presentation-only, apart from the smaller ring.
   - **C2 to rerun:** Nerissa's ring is now 9 m, so her 144-fight in-world C2 must be rerun. Local seeds: READER wins 5/5 at 24-33% party cost, and the MASHER wipes.
+  - **Card T2 prep:** `tests/card_t2_tidewake_islands.sh` runs every non-C3 feeder at one SHA: islands, loops, pockets, chains, ledgers, currents, Guardian units and named C2. It writes to `ralph/reports/TIDEWAKE/phase1/card_t2/`. The 1920x1080 opengl3 device-profile capture follows Stormwood F10#6's 7-inch method.
   - Other defects, recorded, not fixed:
     - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
     - the ordinary tell ring marks the attacker's feet, not a landing spot.
