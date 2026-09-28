@@ -23,6 +23,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const OCCLUSION_FADE := preload("res://scripts/combat/ally_occlusion_fade.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
@@ -611,6 +612,7 @@ func begin(
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
 	_ally_body.set("arena", null if realm_owned_opponent else _arena)
+	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
 
@@ -620,6 +622,25 @@ func begin(
 	entered.emit()
 	state_changed.emit()
 	return true
+
+
+## COMBAT §5 contact spacing (`contact_spacing.gd`). The piloted ally yields;
+## the opponent holds. A realm-owned opponent is simulated by the host, so this
+## participant binds only its own ally against it and never writes the
+## opponent's transform.
+func _bind_contact_spacing(realm_owned_opponent: bool) -> void:
+	if _ally_body != null and _ally_body.has_method("set_contact_partner"):
+		_ally_body.call("set_contact_partner", _wild, CONTACT_SPACING.ROLE_ALLY)
+	if not realm_owned_opponent and _wild != null and _wild.has_method("set_contact_partner"):
+		_wild.call("set_contact_partner", _ally_body, CONTACT_SPACING.ROLE_FOE)
+
+
+func _release_contact_spacing() -> void:
+	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("set_contact_partner"):
+		_ally_body.call("set_contact_partner", null)
+	if not _realm_owned_opponent and _wild != null and is_instance_valid(_wild) \
+			and _wild.has_method("set_contact_partner") and _wild.get("contact_partner") == _ally_body:
+		_wild.call("set_contact_partner", null)
 
 
 ## End only the presentation fight whose realm-owned body is being withdrawn.
@@ -4060,6 +4081,7 @@ func _begin_resolve(outcome: String) -> void:
 		else float(flow.get("faint_pause", 1.6))
 	if _wild != null and not _realm_owned_opponent:
 		_wild.call("set_engaged", false)
+	_release_contact_spacing()
 	state_changed.emit()
 
 
@@ -4087,6 +4109,7 @@ func _finish() -> void:
 		if not hold:
 			_ally_body.visible = false
 		_ally_body.set("arena", null)
+	_release_contact_spacing()
 	# Freed with the arena it was parented to; only the stale reference needs
 	# clearing here.
 	_target_marker = null

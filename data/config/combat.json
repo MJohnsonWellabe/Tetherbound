@@ -56,6 +56,21 @@
     "_comment_impulse": "How fast an attack lunge or a knockback decays, in units per second. High enough that an impulse is a punch rather than a shove.",
     "impulse_damping": 9.0
   },
+  "contact_spacing": {
+    "_why": "COMBAT §5 contact spacing (scripts/combat/contact_spacing.gd, applied in creature_body.gd::_hold_contact_spacing). Tidewake F14#0/#1 (Tess judge B 84%, Nerissa 83%), Meadows F04#2/#7 and Stormwood F10#2 failed C3 on one defect: after a strike the capsules touch but the RENDERED bodies overlap at 4.7-6.6 m, the ally stands in front of the opponent's head, and no camera can separate them. At contact range the pair now keeps the two directional rendered half-extents plus a visible clearance apart, floored at the colliders' sum and capped at the spacing the opponent already walks to ((r_a + r_b) x enemy.body_clearance), which every reach is floored 0.5 m beyond, so no strike that would have reached can be carried out of reach. The ally yields at once; the host-authoritative opponent holds and yields only a deficit older than foe_yield_after_s (the ally is pinned). Bodies in a combat burst or travelling lunge are exempt until it ends. Swept with move_and_collide, never a teleport; the arena hold runs after it. Same numbers solo, host and guest.",
+    "enabled": true,
+    "_why_visible_clearance_m": "COMBAT §5's target: 'measured directional rendered half-extents plus 0.6m visible clearance'. TUNABLE.",
+    "visible_clearance_m": 0.6,
+    "_why_cap_fraction": "Fraction of the opponent's own spacing floor ((r_a + r_b) x enemy.body_clearance) the separation may reach. 1.0 = the full floor; reach stays 0.5 m beyond it. Lowering it only reduces the hold-apart; raising above 1.0 is refused (clamped) because it would open a dodge.",
+    "cap_fraction": 1.0,
+    "_why_push_speed_mps": "Soft correction speed. Faster than creature_movement.speed (5.6) is not needed because walking INTO the partner is always cancelled in full (the closing speed is added to the step), so this only settles a lunge's overshoot: 6 m/s clears a typical 0.5-1 m overlap in about a tenth of a second, which reads as a bump rather than a snap. TUNABLE.",
+    "push_speed_mps": 6.0,
+    "_why_foe_yield_after_s": "The opponent's position is host-authoritative and stays put while the ally resolves the overlap. Only when a deficit outlives this (the ally is pinned by terrain or the ring) does the opponent step back itself. Longer than the ally's own settle time at push_speed_mps. TUNABLE.",
+    "foe_yield_after_s": 0.35,
+    "foe_yield_share": 1.0,
+    "_why_tolerance_m": "Deficits below this are ignored so the rule does not jitter a body by millimetres.",
+    "tolerance_m": 0.01
+  },
   "player_quick": {
     "_comment": "The bread-and-butter attack. Short wind-up, short recovery, wide arc: it should be usable under pressure without feeling like a commitment.",
     "power": 9.0,
