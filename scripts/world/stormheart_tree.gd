@@ -11,6 +11,7 @@ const RAMP_TURNS := 4.0
 const RAMP_SEGMENTS := 384
 const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
+const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -481,6 +482,19 @@ func _green_canopy(node: Node) -> void:
 		for i in visual.mesh.get_surface_count():
 			var source := visual.mesh.surface_get_material(i) as StandardMaterial3D
 			if source != null and source.resource_name == "Leaves_TwistedTree":
+				var canopy: Dictionary = _presentation.get("canopy_atlas", {})
+				if bool(_presentation.get("enabled", false)) and bool(canopy.get("enabled", false)):
+					# Keep the atlas authored for these leaf UVs. Multiplication cannot
+					# turn its red leaves green; swapping another tree's alpha mask
+					# cuts through the original leaves and fills different regions.
+					var corrected := ShaderMaterial.new()
+					corrected.shader = CANOPY_SHADER
+					corrected.set_shader_parameter("leaf_atlas", source.albedo_texture)
+					corrected.set_shader_parameter("leaf_colour", Color(str(canopy.get("leaf_colour", "#75924d"))))
+					corrected.set_shader_parameter("alpha_cutoff", source.alpha_scissor_threshold)
+					corrected.set_shader_parameter("leaf_roughness", float(canopy.get("roughness", 0.91)))
+					visual.set_surface_override_material(i, corrected)
+					continue
 				var green := source.duplicate() as StandardMaterial3D
 				green.albedo_texture = load("res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png")
 				green.albedo_color = Color("a6c4a3")
