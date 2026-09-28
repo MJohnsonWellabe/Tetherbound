@@ -627,9 +627,9 @@
     },
     {
      "text": "Device profile",
-     "status": "not_started",
-     "evidence": "No Ally GPU profile (lane report)",
-     "gap": "Computer capture per owner ruling 2026-09-27 (#356 5857144944): 1920x1080 opengl3, handheld profile if present, code-blind 7-inch readability verdict; no Ally hardware needed."
+     "status": "in_progress",
+     "evidence": "ralph/reports/STORMWOOD/f10_6/r2-r5 (computer capture, no Ally hardware; 1920x1080 opengl3; no handheld profile exists). Code-blind 7-inch judges: r2 FAIL, r3 FAIL, r4 YES x4 but strict re-check NOT MET (its prompt had exempted the trainer; UX 1.4 forbids covering trainer, active creature, target or attack geometry), r5 FAIL. Landed improvements: combat HUD text held to hud_scale.gd floors (test_combat_hud_handheld_floors), dimmed-cell contrast, move grid kept in the punish window, translucent vitals chip, Day/time at the glance floor, target plate top-right, subject fade, trainer aside 2.4 m.",
+     "gap": "UX 1.4 in fights: the left fight column (team list + active card, about a quarter of the screen) covers the trainer and attack lanes (r5 Hi/H2b); the plate fade hides the punish line (C2f; take the plate out of the fade); Voltarach tell legibility and the tell sunburst bleaching the foe (F10#2/C3 territory); FB trainer dark on dark. Judge variance: identical explore frames read legible (r4) and illegible (r5). Next approach: compact fight column (active creature plus four pips)."
     }
    ]
   },
@@ -951,9 +951,9 @@
   },
   {
    "id": "S1",
-   "status": "partial",
-   "note": "Integrated run passed review in batch 64; F09#3 met (route and pocket walks, f09_3_r8). Card run recorded after the landing.",
-   "integrated_run": "ralph/reports/STORMWOOD/full_run/run_a.txt + s1/ @ tb/stormwood 9dc96424 (batch 64): one continuous chapter run passes prefix, Crown arch, Rootgate, core, Marrow and aftermath with live fights; route unit tests 101/0; closed-arch bypass 15/0; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: Cloudreach-boundary fixture start (no earned C3 save), fresh L44 party with granted tools, 8x clock, harness input and fights, helper routing B1-B8, one teleport per pocket for the walk witness."
+   "status": "met",
+   "note": "Integrated run passed independent strict re-check (MET) after F09#3 landed (Stormwood Phase 1 landing); all feeders met (F09, F11).",
+   "integrated_run": "ralph/reports/STORMWOOD/s1/phase1_rerun/ @ tb/stormwood 0068c542: run 4 of smoke_stormwood_continuous --through-aftermath passes EXIT 0 and its reload EXIT 0; six witness steps PASS (prefix, paid Crown arch, Crown guardian/Wen/Rootgate, Deepwood/rods/core, Marrow five rounds and the four-conduit Break, Stormheart and aftermath); a production Break witnessed sheltered, rods disabled, Crown glass gathered in live Break/Fading windows, no Stormwood flag/position/party writes. Loops, shortcuts, pockets, alternate routes: f09_3_r8 (shortcuts both ways 72/0, pockets 102/0), re-walked on the dense bake in f10_4/r7; closed-arch bypass 15/0; route suites 101/0. Runs 1-3 failed on harness gaps and CPU contention, recorded with causes (harness now fights out a wild engaged at a stance and retries a displaced press; neither writes state). Shortcuts disclosed: Cloudreach-boundary fixture start (no C3 save), fresh L44 party with granted tools, 8x clock (fights and presses 1x), harness input and fights, helper routing B1-B8; route walks from an earlier run's earned checkpoint with teleports to each route start, dark arch and footing and Stormglass/recipe grants; one teleport per pocket."
   },
   {
    "id": "S2",

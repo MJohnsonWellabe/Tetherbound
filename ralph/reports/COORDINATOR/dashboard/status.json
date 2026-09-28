@@ -1,7 +1,7 @@
 {
  "updated": "2026-09-28T15:45Z",
  "headline": [
-  "Criteria met: 91 of 101. Chapter cards complete: 7 of 13 (M4, C1, C2, C3, S3, T1, T3). Since 14:15: Meadows landed F03#0 and F04#3 (#417, #419); Balance landed F10#2 starter parity and the F04#7 C2 half (#413); Cloudreach landed owned-carrier Fly (#411) and finished. Open: Meadows 6 (F01#2, F01#3, F04#1, F04#2, F04#6, F04#7 C3), Stormwood 2 (F10#2 C3, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S1, S2, T2.",
+  "Criteria met: 91 of 101. Chapter cards complete: 8 of 13 (M4, C1, C2, C3, S1, S3, T1, T3). Stormwood landed card S1 (integrated re-run at 0068c542, strict re-check MET). Since 14:15: Meadows landed F03#0 and F04#3 (#417, #419); Balance landed F10#2 starter parity and the F04#7 C2 half (#413); Cloudreach landed owned-carrier Fly (#411) and finished. Open: Meadows 6 (F01#2, F01#3, F04#1, F04#2, F04#6, F04#7 C3), Stormwood 2 (F10#2 C3, F10#6), Tidewake 2 (F14#0, F14#1); cards M1–M3, S2, T2.",
   "Main is green: CI passed on every merge through #417, and the runs for #418 and #419 are going. The auto-merge workflow dispatches CI after each merge.",
   "F04#7 (owner option c): harder five-member captains at the level ceiling. Bar: reader win ≥ 0.75; masher lead-faint = 1.00; reader median party cost ≤ 0.55× the masher's; a masher loses at least one Meadows named fight in ≥ 25% of seeded playthroughs. Per fight, Vance and Vess never beat a masher (disclosed). The Balance lane is running tests before it lands. The same bar applies to Tidewake F14#0.",
   "The owner has delegated lane decisions to the coordinator. Lanes land their own PRs and update this board and STATE."
@@ -363,7 +363,7 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "Landed F09#3, F10#3, F10#4. Working F10#6 (device profile round 3: 7-inch legibility fixes; fight-framing experiments backed out). Then F10#2 (C3), cards S1 and S2.",
+   "now": "Landed F09#3, F10#3, F10#4 and card S1. F10#6 open after device rounds r2-r5 (UX 1.4: the left fight column covers the trainer and attack lanes; next approach a compact fight column). F10#2 C3 unblocked by Balance #413. Then card S2.",
    "next": "Self-lands each criterion"
   },
   {
