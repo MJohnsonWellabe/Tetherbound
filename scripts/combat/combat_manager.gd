@@ -757,14 +757,43 @@ func _staging_spots(cfg: Dictionary) -> Array[Vector3]:
 ## trainer `combat` block: the fight then forms at least that far apart, so a
 ## 7 m charge starts outside its own reach and the lane reads before it closes.
 ## Only ever widens the configured gap; `_staging_reach` still clamps indoors.
+const OPEN_SEPARATION_RAY_HEIGHT_M := 1.0
+const OPEN_SEPARATION_CLEARANCE_M := 1.6
+
+
 func _open_separation(cfg: Dictionary) -> float:
 	var separation := float(cfg.get("separation", 5.0))
 	if _wild == null or not is_instance_valid(_wild):
 		return separation
 	var override: Variant = _wild.get("combat_override")
-	if override is Dictionary:
-		separation = maxf(separation, float((override as Dictionary).get("open_separation", 0.0)))
-	return separation
+	if not override is Dictionary:
+		return separation
+	var wanted := float((override as Dictionary).get("open_separation", 0.0))
+	if wanted <= separation:
+		return separation
+	# Only the WIDENED part is negotiable, and it gives way to solid geometry:
+	# at Vance's relay yard an 8.5 m gap put the Tuskroot inside the arched
+	# tunnel behind the yard wall, where it never reached the ally (render
+	# mw-f04-vance-17a80aa4: no charge in 12 s). A chest-high ray from the
+	# ally's spot along the staging line stops the gap short of the first
+	# solid thing, less a body's clearance.
+	var deploy := float(cfg.get("deploy_offset", 2.6))
+	var forward := _staging_axis(deploy + wanted)
+	var world := _player.get_world_3d() if _player != null and _player.is_inside_tree() else null
+	if world == null:
+		return wanted
+	var from := _player.global_position + forward * deploy + Vector3.UP * OPEN_SEPARATION_RAY_HEIGHT_M
+	var query := PhysicsRayQueryParameters3D.create(from, from + forward * wanted)
+	var exclude: Array[RID] = []
+	for body: Variant in [_player, _wild, _ally_body]:
+		if body is CollisionObject3D and is_instance_valid(body):
+			exclude.append((body as CollisionObject3D).get_rid())
+	query.exclude = exclude
+	var hit := world.direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return wanted
+	var room := from.distance_to(hit["position"] as Vector3) - OPEN_SEPARATION_CLEARANCE_M
+	return clampf(room, separation, wanted)
 
 
 ## Prefer the direction the encounter was taken up in, except when a built
