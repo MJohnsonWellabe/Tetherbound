@@ -26,13 +26,14 @@ func _load_plan() -> bool:
 			continue
 		var item := entry as Dictionary
 		var position: Array = item.get("position_xz", [])
-		if position.size() != 2:
+		if position.size() != 2 and position.size() != 3:
 			continue
 		var identity := "%s__inventory__%s__%s" % [
 			_biome_id, str(item.get("family_type", "item")), str(item.get("slug", "unknown"))]
 		if not _matches_subset(identity.to_lower()):
 			continue
-		var target := [float(position[0]), float(position[1])]
+		# Character authoring stores XYZ; pickup plans store XZ.
+		var target := [float(position[0]), float(position[2] if position.size() == 3 else position[1])]
 		_planned.append({
 			"frame_id": identity,
 			"identity": identity,
