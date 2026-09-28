@@ -493,6 +493,9 @@ func _capture_row(row: Dictionary) -> void:
 		record["camera_transform"] = _transform(_camera.global_transform)
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
 		record["observed_clock"] = observed_clock
+		var surge := _world.get_node_or_null(^"StormwoodSurge")
+		if surge != null:
+			record["phase"] = str(surge.get("phase"))
 		record["trainer_visible_intent"] = true
 		record["player_character"] = _character_id
 		record["trainer_visibility_limit"] = "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame."

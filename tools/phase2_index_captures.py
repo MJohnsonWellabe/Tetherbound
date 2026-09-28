@@ -149,7 +149,7 @@ def main() -> None:
             "location_id": frame["identity"],
             "route": frame.get("route_class", "off"),
             "time_of_day": "dusk" if time == "golden" else time,
-            "weather_or_phase": frame.get("phase", "clear"),
+            "weather_or_phase": frame.get("phase", "unmeasured" if args.biome == "stormwood" else "clear"),
             "pose_or_state": frame.get("family_type", view) if args.category == "items" else view,
             "camera": "vista" if view == "vista" else ("close" if view == "close" else "normal"),
             "frame_path": rel,
