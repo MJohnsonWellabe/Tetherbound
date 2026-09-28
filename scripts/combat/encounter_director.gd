@@ -39,6 +39,8 @@ const BUILD_HOLD := preload("res://scripts/build/build_hold.gd")
 ## R8.1: the trainer table's own reader. `trainer_npc.gd` places the people;
 ## this only ever asks it for numbers and teams.
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const TRAINER_AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
+const CONVERSATION_CAMERA := preload("res://scripts/player/conversation_camera.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## WORLD-LIFE-0903. Pure `RefCounted`, offline-constructible (no live
@@ -763,6 +765,15 @@ func _spawn_creatures() -> void:
 			wild.set_script(WILD_SCRIPT)
 			get_parent().add_child(wild)
 			var spot := _pick_clear_spot(centre, radius, rng)
+			# F03#0: an alpha whose block sets `stand_at_centre` stands on its
+			# cluster's authored centre (a probed sightline) while the rest of
+			# the pack keeps the disc. The pick above still draws, so every
+			# other member's placement is unchanged.
+			var centre_alpha: Variant = spawn.get("alpha", {})
+			if n == 0 and centre_alpha is Dictionary \
+					and bool((centre_alpha as Dictionary).get("stand_at_centre", false)) \
+					and _clear_of_named_trainer_grounds(centre):
+				spot = centre
 			var declared_radius := _declared_spawn_body_radius(species, spawn, n)
 			var occupied: Array[Dictionary] = []
 			for prior: Node3D in (cluster["members"] as Array[Node3D]):
@@ -780,6 +791,10 @@ func _spawn_creatures() -> void:
 				if not bool(resolved["feasible"]):
 					push_warning("wild cluster %d member %d cannot fit %.2fm body spacing inside its authored %.2fm radius; kept the best deterministic candidate" % [
 						int(spawn.get("order", index)), n + 1, gap, radius])
+			# F04#2: a cluster whose disc overlaps a named trainer's ground can
+			# run out of clear candidates (order 4002 beside captain_field); the
+			# fallback must still not stand on the fight ground.
+			spot = _out_of_named_trainer_grounds(spot)
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
@@ -3387,8 +3402,68 @@ static func resolve_cluster_spot(preferred: Vector3, centre: Vector3, cluster_ra
 
 
 func _cluster_spacing_candidate_clear(candidate: Vector3, body_radius: float) -> bool:
+	if not _clear_of_named_trainer_grounds(candidate):
+		return false
 	return _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near",
 		candidate, maxf(CLEAR_MARGIN, body_radius)))
+
+
+## F04#2: the stands of the named trainers whose fights must hold only the
+## fight (`combat.json` arena.named_trainer_ranks), read once.
+var _named_trainer_stands: Array[Vector2] = []
+var _named_trainer_stands_read := false
+
+
+func _named_trainer_grounds() -> Array[Vector2]:
+	if _named_trainer_stands_read:
+		return _named_trainer_stands
+	_named_trainer_stands_read = true
+	var arena: Dictionary = MATH.config().get("arena", {}) as Dictionary
+	var ranks: Array = arena.get("named_trainer_ranks", []) as Array
+	for raw: Variant in TRAINERS.trainers():
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		var at: Array = spec.get("position", []) as Array
+		if at.size() >= 2 and str(spec.get("rank", "")) in ranks:
+			_named_trainer_stands.append(Vector2(float(at[0]), float(at[1])))
+	return _named_trainer_stands
+
+
+## F04#2 (round-1 judge B1). A wild body neither spawns nor picks a wander
+## destination on a named trainer's fight ground, so the captain's and the
+## Warden's fights frame the two fighters and nothing else.
+func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
+		"named_trainer_wild_clear_m", 0.0))
+	if clear <= 0.0:
+		return true
+	var here := Vector2(pos.x, pos.z)
+	for stand: Vector2 in _named_trainer_grounds():
+		if here.distance_to(stand) < clear:
+			return false
+	return true
+
+## `pos` moved radially to just outside any named trainer's ground it stands
+## on (unchanged when it is already clear). The last resort after every
+## placement attempt landed inside one.
+func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
+		"named_trainer_wild_clear_m", 0.0))
+	if clear <= 0.0:
+		return pos
+	var out := pos
+	for stand: Vector2 in _named_trainer_grounds():
+		var here := Vector2(out.x, out.z)
+		if here.distance_to(stand) >= clear:
+			continue
+		var away := here - stand
+		if away.length() < 0.01:
+			away = Vector2(1.0, 0.0)
+		var moved := stand + away.normalized() * (clear + 1.0)
+		out = Vector3(moved.x, out.y, moved.y)
+	return out
+
 
 ## WORLD-LIFE-0903. True when `pos` is clear of every authored road/trail --
 ## `playground_heightfield.gd::path_factor()`, the same road geometry the
@@ -3399,12 +3474,16 @@ func _cluster_spacing_candidate_clear(candidate: Vector3, body_radius: float) ->
 ## wide wander disc can visibly cross the road without ever settling a
 ## destination standing on it.
 func _wander_target_clear_of_road(pos: Vector3) -> bool:
+	if not _clear_of_named_trainer_grounds(pos):
+		return false
 	if _road_field == null:
 		_road_field = HEIGHTFIELD.new()
 	return float(_road_field.call("path_factor", pos.x, pos.z)) <= 0.0
 
 
 func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool) -> bool:
+	if not _clear_of_named_trainer_grounds(pos):
+		return false
 	if avoid_road and not _wander_target_clear_of_road(pos):
 		return false
 	var cluster: Dictionary = _wild_cluster.get(wild, {})
@@ -3426,6 +3505,8 @@ func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator
 		var angle := rng.randf_range(0.0, TAU)
 		var distance := radius * sqrt(rng.randf())
 		spot = centre + Vector3(sin(angle), 0.0, cos(angle)) * distance
+		if not _clear_of_named_trainer_grounds(spot):
+			continue
 		if _vegetation == null or not bool(_vegetation.call("has_solid_scatter_near", spot, CLEAR_MARGIN)):
 			return spot
 	return spot
@@ -3513,6 +3594,11 @@ func _wild_of_species(id: String) -> Node3D:
 
 func ally_body() -> Node3D:
 	return _ally_body
+
+
+func _player_is_flying() -> bool:
+	var fly: Variant = _player.get("fly_controller") if _player != null else null
+	return fly is Node and is_instance_valid(fly) and bool((fly as Node).call("is_flying"))
 
 
 ## The trainer's creature currently ON THE FIELD, or null between rounds.
@@ -3671,6 +3757,16 @@ func _read_creature_control_input() -> void:
 	# is PROCESS_MODE_PAUSABLE like the rest of the world, so it has already
 	# stopped running while one of those is up.
 	if INPUT_OWNER.current(get_tree()) != null:
+		return
+
+	# Fly: an owned carrier overhead IS the active companion, its follower
+	# recalled for the flight (fly_controller.gd `_recall_carrier_follower`).
+	# Changing or recalling it mid-air would drop the trainer or draw it twice,
+	# so both verbs wait for touchdown.
+	if (Input.is_action_just_pressed("party_cycle") or Input.is_action_just_pressed("creature_recall")) and _player_is_flying():
+		var flying_game := get_node_or_null(^"/root/Game")
+		if flying_game != null:
+			flying_game.call("push_world_message", "Land before changing or recalling your companion.")
 		return
 
 	# CONTROLLER-MAP: one verb, one button. "Cycle party member" and "switch
@@ -5794,6 +5890,8 @@ func _finish_trainer_battle(won: bool) -> void:
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
 	_trainer_spec = {}
+	# F04#3: kept for the victory lines' camera, which opens a frame later.
+	var victory_speaker := _trainer_node
 	_trainer_node = null
 	_trainer_queue.clear()
 	_trainer_send_delay = 0.0
@@ -5806,7 +5904,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	_set_exploration_active(true)
 	if won:
 		_record_trainer_defeat(spec)
-		call_deferred("_present_trainer_victory", spec)
+		call_deferred("_present_trainer_victory", spec, victory_speaker)
 	# NOW the battle's one encounter record is over, and not one creature
 	# earlier. Cleared after the payout because §7 pays the people who fought
 	# it, and dropped from the joinable list because a fight nobody can join is
@@ -5818,7 +5916,7 @@ func _finish_trainer_battle(won: bool) -> void:
 ## ordinary reward toast; realm bosses can name what changed immediately after
 ## the fight instead of requiring the player to interact with the defeated NPC
 ## a second time and possibly miss a chapter-critical grant.
-func _present_trainer_victory(spec: Dictionary) -> void:
+func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 	var conversation := str(spec.get("victory_conversation", ""))
 	if conversation == "":
 		return
@@ -5829,7 +5927,82 @@ func _present_trainer_victory(spec: Dictionary) -> void:
 	if bool(panel.call("is_open")):
 		push_warning("trainer '%s' victory dialogue found the panel busy" % str(spec.get("id", "")))
 		return
+	# F04#3: frame the trainer with the wider `aftermath` shot. The panel's own
+	# push-in then finds the camera already in and leaves it.
+	var push_in := get_tree().get_first_node_in_group("conversation_camera")
+	if push_in != null and speaker != null and is_instance_valid(speaker) and speaker.is_inside_tree():
+		_step_ally_out_of_the_victory_shot(speaker)
+		# F04#3 (render 36416504796 a01-a03): the fallen ace's linger beat
+		# overlapped the cut and its back filled a third of the Warden's
+		# shot. The cut to the victory lines is where it leaves.
+		_clear_fallen_bodies()
+		_trainer_cleanup_delay = 0.0
+		push_in.call("begin", speaker, "aftermath")
+		_step_ally_behind_the_lens(push_in.get_parent(), panel)
+		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
+		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
 	panel.call("start", conversation)
+
+
+## F04#3/#6 (judge r2 17a80aa4: the player's own creature hid Vess, crowded
+## Oreth's and the Warden's victory shots). Once the fight is won the creature
+## comes back to stand beside the player (2.6 m to the side, a little toward
+## the trainer: clear of the lens behind the player and of the line to the
+## trainer), so the aftermath shot frames trainer and player. `camera.json`
+## conversation.profiles.aftermath `ally_back_m` (negative: toward the
+## trainer)/`ally_side_m`.
+func _step_ally_out_of_the_victory_shot(speaker: Node3D) -> void:
+	var ally := ally_body()
+	if ally == null or not is_instance_valid(ally) or _player == null:
+		return
+	var profile: Dictionary = (CONVERSATION_CAMERA.profile_config("aftermath"))
+	var away := _player.global_position - speaker.global_position
+	away.y = 0.0
+	if away.length_squared() < 0.0001:
+		return
+	away = away.normalized()
+	var side := Vector3(-away.z, 0.0, away.x)
+	var spot := _player.global_position + away * float(profile.get("ally_back_m", -0.6)) \
+		+ side * float(profile.get("ally_side_m", 2.6))
+	if ally.has_method("place_on_ground"):
+		ally.call("place_on_ground", spot)
+	else:
+		ally.global_position = spot
+	if ally.has_method("face_towards"):
+		ally.call("face_towards", speaker.global_position)
+
+
+## F04#3/#6 (render 36422108408 a01: beside the player a large ally still
+## filled a third of Halder's shot). Once the rig has solved the aftermath
+## shot, the ally stands `camera.json` conversation.profiles.aftermath
+## `ally_behind_lens_m` behind the lens along the shot, so no creature size or
+## swing puts it in the frame. No shot solved: the side step above stands.
+func _step_ally_behind_the_lens(rig: Node, panel: Node = null) -> void:
+	var ally := ally_body()
+	if ally == null or not is_instance_valid(ally) or rig == null or not rig.has_method("conversation_shot"):
+		return
+	var shot: Dictionary = rig.call("conversation_shot")
+	if not shot.has("pivot") or not shot.has("dir"):
+		return
+	var dir: Vector3 = shot["dir"]
+	dir.y = 0.0
+	if dir.length_squared() < 0.0001:
+		return
+	var eye: Vector3 = (shot["pivot"] as Vector3) + (shot["dir"] as Vector3) * float(shot.get("distance", 0.0))
+	var behind := float((CONVERSATION_CAMERA.profile_config("aftermath")).get("ally_behind_lens_m", 2.2))
+	var spot := eye + dir.normalized() * behind
+	if ally.has_method("place_on_ground"):
+		ally.call("place_on_ground", spot)
+	else:
+		ally.global_position = Vector3(spot.x, ally.global_position.y, spot.z)
+	# Render 36439358952 a01: exploration had just resumed following, so the
+	# ally walked straight back to the player's side. It holds its place until
+	# the victory lines finish, then follows again.
+	if ally.has_method("set_following") and panel != null and panel.has_signal("finished"):
+		ally.call("set_following", false)
+		panel.connect("finished", func(_id: String) -> void:
+			if is_instance_valid(ally) and not trainer_battle_active():
+				ally.call("set_following", true), CONNECT_ONE_SHOT)
 
 
 ## SB9's flag, and SC15's payout hook.

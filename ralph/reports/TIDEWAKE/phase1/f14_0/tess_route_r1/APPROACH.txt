@@ -1,0 +1,3 @@
+TIDEWAKE C3 APPROACH sluice_isle_to_deep_watch_arrival -> water_trainer_tess walked=317m legs=42 prompt_at=(1365.452, 51.88572, 3479.47)
+TIDEWAKE C3 CAPTURE water_trainer_tess: 37 frames over 221.6 s, fight active=false
+TIDEWAKE C3 CAPTURE done: 1 trainer(s), 0 failure(s), 37 frames

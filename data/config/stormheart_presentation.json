@@ -1,0 +1,12 @@
+{
+  "enabled": false,
+  "_comment": "P2-037 candidate: ground the visual bark skirt without altering the tree's position, decks, ascent, rails, collision or entrance split. Full landmark identity and native comparison remain open.",
+  "ground_shell_base": true,
+  "bark_embed_m": 0.5,
+  "canopy_atlas": {
+    "enabled": false,
+    "_comment": "P2-037 candidate: preserve the installed TwistedTree leaf UV/alpha atlas and recolour it in a shader. Native crown review is required; no geometry, scale, placement or collision changes.",
+    "leaf_colour": "#75924d",
+    "roughness": 0.91
+  }
+}

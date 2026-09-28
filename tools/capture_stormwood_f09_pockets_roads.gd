@@ -12,6 +12,8 @@ extends "res://tools/catalogue_survey.gd"
 ##     [--frames=pocket_verge_ash_hollow_a_approach,dynamo_west_mid,...] [--hud=off]
 ##
 ## --hud=off hides every CanvasLayer (HUD, minimap, banners) before each frame.
+## --native-size preserves the viewport raster; otherwise legacy 1280x720 output
+## is retained. Both source and saved dimensions are recorded in the manifest.
 ##
 ## Groups `current_night` (the two road stretches under the art.json "night"
 ## preset, the darker look this branch can show) and `current_motion` (one
@@ -87,6 +89,7 @@ var _staged_flags: Array[String] = []
 var _t0 := 0
 var _scatter_fresh := false
 var _hud_off := false
+var _native_size := false
 var _time_name := "day"
 
 
@@ -112,6 +115,8 @@ func _run() -> void:
 				_pocket_filter.append(part.strip_edges())
 		elif arg == "--hud=off":
 			_hud_off = true
+		elif arg == "--native-size":
+			_native_size = true
 		elif arg.begins_with("--frames="):
 			for part: String in arg.trim_prefix("--frames=").split(",", false):
 				_frame_filter.append(part.strip_edges())
@@ -280,7 +285,8 @@ func _capture(frame_id: String, description: String, extra: Dictionary = {}) -> 
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
 		return
-	if image.get_width() != FRAME_W or image.get_height() != FRAME_H:
+	var source_size := [image.get_width(), image.get_height()]
+	if not _native_size and (image.get_width() != FRAME_W or image.get_height() != FRAME_H):
 		image.resize(FRAME_W, FRAME_H, Image.INTERPOLATE_LANCZOS)
 	var path := "%s/%s.jpg" % [_output_dir, frame_id]
 	if image.save_jpg(ProjectSettings.globalize_path(path), 0.8) != OK:
@@ -289,7 +295,12 @@ func _capture(frame_id: String, description: String, extra: Dictionary = {}) -> 
 	var combat := _world.get_node_or_null(^"CombatManager")
 	var record := {
 		"id": frame_id, "file": path.get_file(), "label": _label, "description": description,
+		"source_size": source_size, "size": [image.get_width(), image.get_height()],
+		"native_size_requested": _native_size,
+		"renderer": RenderingServer.get_current_rendering_driver_name(),
+		"adapter": RenderingServer.get_video_adapter_name(),
 		"camera": "player camera (production CameraRig/Camera3D)",
+		"camera_basis": [_vec3(_camera.global_basis.x), _vec3(_camera.global_basis.y), _vec3(_camera.global_basis.z)],
 		"player": _vec3(_player.global_position), "camera_pos": _vec3(_camera.global_position),
 		"camera_player_m": _camera.global_position.distance_to(_player.global_position),
 		"prompt": str(_arbiter.call("prompt")) if _arbiter != null else "",

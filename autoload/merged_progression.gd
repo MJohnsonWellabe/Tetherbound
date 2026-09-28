@@ -147,6 +147,12 @@ func load_data(data: Dictionary) -> void:
 				if scope == "":
 					push_error("unscoped flag: %s" % id)
 				world_ids.append(id)
+	# One flat store behind both halves (`Game.progression`'s setter hands a
+	# single store to both): load it once, or the player half's replace would
+	# wipe every world id just loaded into the same object.
+	if world_flags != null and world_flags == player_flags:
+		world_flags.call("load_data", {"flags": world_ids + player_ids})
+		return
 	if world_flags != null:
 		world_flags.call("load_data", {"flags": world_ids})
 	if player_flags != null:

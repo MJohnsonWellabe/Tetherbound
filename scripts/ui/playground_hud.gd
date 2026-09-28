@@ -884,6 +884,8 @@ var _party_strip: Control = null
 var _party_strip_script: Script = null
 var _party_strip_last_index := -999
 var _party_strip_last_revision := -999
+var _party_vitals_refresh_candidate := false
+var _party_strip_last_vitals: Array = []
 ## OP21-12: the last active creature's name, so a later cycle can say "Willow
 ## → Ashcap" instead of just lighting up a new row.
 var _party_strip_last_active_label := ""
@@ -2026,6 +2028,7 @@ func _reflow_left_stack() -> void:
 ## reveal the strip only when either actually changed, per the task spec --
 ## polling every frame but writing only on a real change, the same discipline
 ## the widget's own per-row cache already uses internally.
+## The optional vitals refresh updates existing rows without revealing them.
 ##
 ## OP21-12: also decides whether this change was a genuine cycle (the active
 ## index landed on the slot immediately before/after where it just was, with
@@ -2052,10 +2055,16 @@ func _update_party_strip() -> void:
 	# entries built below -- so without this they would sit stale until the
 	# next catch or faint.
 	var feed_revision := PROGRESSION_FEED.revision()
+	var vitals: Array = []
+	if _party_vitals_refresh_candidate:
+		for creature: RefCounted in _party.call("members"):
+			vitals.append([creature.call("hp_fraction"), creature.get("fainted"), creature.get("resting")])
 	if index == _party_strip_last_index and revision == _party_strip_last_revision \
 			and active_out == _party_strip_last_active_out \
-			and feed_revision == _party_strip_last_feed_revision:
+			and feed_revision == _party_strip_last_feed_revision \
+			and vitals == _party_strip_last_vitals:
 		return
+	_party_strip_last_vitals = vitals
 	var roster_changed := index != _party_strip_last_index or revision != _party_strip_last_revision \
 			or active_out != _party_strip_last_active_out
 	_party_strip_last_feed_revision = feed_revision
@@ -2083,7 +2092,7 @@ func _update_party_strip() -> void:
 		entries.append(entry)
 	_party_strip.call("update_from_party", entries, index, active_out)
 	if not roster_changed:
-		# A feed-only refresh: the rows are current, and the strip's own
+		# A feed/vitals-only refresh: the rows are current, and the strip's own
 		# `_poll_feed` decides whether the event was worth revealing for.
 		return
 	# GF-B-006: an EMPTY roster does not reveal.
@@ -2559,6 +2568,7 @@ func _load_hud_config() -> void:
 
 
 func _apply_hud_config(config: Dictionary) -> void:
+	_party_vitals_refresh_candidate = config.get("party_vitals_refresh_candidate", false) == true
 	_hotbar_message_seconds = hud_config_number(config, "toasts", "hotbar_message_seconds", HOTBAR_MESSAGE_SECONDS)
 	_region_banner_seconds = hud_config_number(config, "toasts", "region_banner_seconds", REGION_BANNER_SECONDS)
 	var cue: Variant = config.get("drowning_cue", {})
@@ -3705,10 +3715,16 @@ func _apply_presentation_priority() -> void:
 	if held and _hold_seen_at > 0.0 and _objective_hint_until > 0.0:
 		_objective_hint_until += now - _hold_seen_at
 	_hold_seen_at = now if held else 0.0
+	# F04#3 (round-1 judge D: "combat HUD stays up" in the Warden's victory
+	# dialogue). The roster strip -- five rows of names, bond and level, and the
+	# fight-end "Bud > Bramblebun 2/5" flash -- is not the conversation's
+	# business; while a story modal (dialogue, name prompt, starter picker) is
+	# open it stands down so the speaker owns the frame. Other menus keep it.
+	var party_shown: bool = mode.party and not _story_modal_is_open()
 	# This final pass owns visibility after all legacy polling/cache writers.
 	for entry: Array in [[_region_banner,mode.location],[_daytime_label,mode.location],
 		[_objective_block,mode.task],[_hotbar_panel,mode.hotbar],[_exploration_legend,mode.exploration],
-		[_party_strip,mode.party],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
+		[_party_strip,party_shown],[_creature_block,mode.exploration],[_health_bar_cluster,mode.human_vitals],
 		[_vitals_cluster,mode.human_vitals],[_minimap,mode.minimap],[_prompt_label,mode.prompt and not held]]:
 		_presentation_allow(entry[0],entry[1])
 	# During combat, enemy plate and telegraphs own the top. In the post-combat

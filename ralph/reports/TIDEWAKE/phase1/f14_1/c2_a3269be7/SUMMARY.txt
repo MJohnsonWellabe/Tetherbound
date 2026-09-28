@@ -1,0 +1,7 @@
+starter pilot n win wipe med_lead_lost med_party_lost max_hit tells_min-max reached_all err
+galewisp MASHER 24 0.0 1.0 1.0 1.0 0.166 0.8 1.1 23 0
+galewisp READER 24 1.0 0.0 0.609 0.119 0.181 0.8 1.1 24 0
+ripplet MASHER 24 0.0 1.0 1.0 1.0 0.165 0.8 1.1 1 0
+ripplet READER 24 1.0 0.0 0.324 0.07 0.117 0.8 1.1 24 0
+terrapup MASHER 24 0.0 1.0 1.0 1.0 0.166 0.8 0.8 0 0
+terrapup READER 24 1.0 0.0 1.0 0.241 0.134 0.8 1.1 24 0

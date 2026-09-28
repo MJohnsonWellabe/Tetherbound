@@ -1,0 +1,49 @@
+{
+  "_comment": "P2-081 trainer conversations use enabled; P2-084 NPC openings use their separate nested flag. Presentation candidates remain off until the same authored posts and panels pass independent native review. No encounter, reward, input, camera or progression changes.",
+  "enabled": false,
+  "npc_openings": {
+    "enabled": false,
+    "_comment": "P2-084: distinct openings for four existing speakers. Only line zero changes; route guidance, portraits, conversation IDs, state requirements and completion events remain authored. Bryn's progression briefing is already distinct and is omitted. Native panel review required.",
+    "lines": {
+      "stormwood_warden_elect_bryn_arrival": "Warden-Elect Bryn: A road is a promise to the people at the other end. Rodline Post still has promises to keep.",
+      "stormwood_warden_elect_bryn_post_storm": "Warden-Elect Bryn: The Long Storm has ended. Keeping these roads open is our work now.",
+      "stormwood_trader_oswin_arrival": "Oswin: I keep my supplies close to the rod crews. A repair is no use if the tools cannot reach it.",
+      "stormwood_trader_oswin_in_progress": "Oswin: Before you leave Rodline Post, think about the crossing ahead. The Still Grove is a quiet clearing beyond the Capacitor Grove.",
+      "stormwood_trader_oswin_post_storm": "Oswin: Lighter rain makes it easier to mind a stall. There are still travellers to supply.",
+      "stormwood_elder_maud_arrival": "Elder Maud: Listen a moment under the canopy. The Rodfolk learned to read the storm before they laid these roads.",
+      "stormwood_elder_maud_in_progress": "Elder Maud: A familiar shortcut still deserves care. Root bridges shorten the way, but the Blackwater edge is exposed.",
+      "stormwood_elder_maud_post_storm": "Elder Maud: I can hear the rain between the leaves again. I had nearly forgotten that sound beneath the thunder.",
+      "stormwood_trader_fenn_arrival": "Fenn: Going beyond Lantern Hollow? Count your recovery supplies before you count on finding more.",
+      "stormwood_trader_fenn_in_progress": "Fenn: Supplies first, shortcuts second. The root bridges save a walk, but the Blackwater edge is exposed.",
+      "stormwood_trader_fenn_post_storm": "Fenn: The Long Storm has ended; the walk to the Fallen Giant is still a walk. Make room for supplies before you leave."
+    }
+  },
+  "trainers": {
+    "tamsin_surge_lesson": {"speaker": "Tamsin", "challenge": ["Watch the shelter, then watch your companion. The storm makes you read both.", "Let's see how you move together."], "defeated": ["A good battle. Keep an eye on your companion when the rain thickens."]},
+    "rodfolk_pathfinder_elin": {"speaker": "Elin", "challenge": ["This ash lane leaves little room for a careless step.", "Keep your team close and show me your footing."], "defeated": ["Well fought. Take care on the ash lane ahead."]},
+    "lieutenant_dace_hollows_rod": {"speaker": "Lieutenant Dace", "challenge": ["The Hollows rod stays under Tether control.", "Your team will have to get past mine."], "defeated": ["My team is beaten. These woods are harder to hold than I thought."]},
+    "traveller_ivo_lantern_pools": {"speaker": "Ivo", "challenge": ["I watch the pool edge when a fight starts. Wet ground punishes a rushed turn.", "Care for a bout?"], "defeated": ["Well fought. I could use a quiet moment by the pools."]},
+    "lieutenant_varga_rodline_bridge": {"speaker": "Lieutenant Varga", "challenge": ["This bridge carries the rod line. I decide who crosses.", "Bring your team forward."], "defeated": ["My team is beaten. I have nothing more to say."]},
+    "officer_maren_verge_rod": {"speaker": "Officer Maren", "challenge": ["You can watch the discharge or watch my team. You'll need to do both.", "Take your position."], "defeated": ["The bout is yours. I have my own team to look after."]},
+    "archwright_senn_crown_footing": {"speaker": "Senn", "challenge": ["I build with Stormglass. Spacing matters as much in a fight as in a footing.", "Show me the room you leave your companion."], "defeated": ["Well fought. I had best get back to my Stormglass work."]},
+    "archivist_wen_crown_trial": {"speaker": "Wen", "challenge": ["The Crown's records reward patience. So does a well-read opponent.", "Let us put that patience to the test."], "defeated": ["A battle worth remembering. There is always more to learn."]},
+    "crown_wayfarer_nell": {"speaker": "Nell", "challenge": ["I used to watch the teeth and miss the feet. The first movement tells you more.", "Ready to try?"], "defeated": ["Well fought. I still have plenty of watching to do."]},
+    "officer_nysa_deepwood_rod": {"speaker": "Officer Nysa", "challenge": ["The Deepwood rod is guarded. Don't mistake these trees for cover from us.", "My team is ready."], "defeated": ["My team is beaten. Let me see to them."]},
+    "rodfolk_guard_bram": {"speaker": "Bram", "challenge": ["Under this canopy, the first surprise isn't always the last.", "Let's see how your team recovers."], "defeated": ["Well fought. Under this canopy, it pays to stay ready."]},
+    "outerworks_lieutenant_sera": {"speaker": "Lieutenant Sera", "challenge": ["You're at the outer works now. Every step brings you closer to the current.", "My team will hold this lane."], "defeated": ["My team cannot hold this lane. I will see to them."]},
+    "officer_kestrel_outer_works": {"speaker": "Officer Kestrel", "challenge": ["Cross a discharge lane at the wrong moment and you've already lost ground.", "Show me your timing."], "defeated": ["The bout is yours. I need a moment with my team."]},
+    "captain_marrow_dynamo_core": {"speaker": "Captain Marrow", "challenge": ["The Dynamo holds this forest in order. I won't let your team tear that order apart.", "Stand ready."], "defeated": ["My team is beaten. Leave me a moment with them."]},
+    "tamsin_ash_ring": {"speaker": "Tamsin", "challenge": ["Out here in the ash ring, you've room to notice the whole fight.", "Show me what you've learned."], "defeated": ["A good battle. Rest your companions before you leave the ash ring."]},
+    "ranger_pax_sentinel": {"speaker": "Ranger Pax", "challenge": ["A pursuer shows its path before it reaches you. Watch where it commits.", "Let's put those tracking eyes to work."], "defeated": ["Well fought. I will keep watching the trail."]},
+    "courier_pim_pool_loop": {"speaker": "Pim", "challenge": ["I've carried enough parcels round these pools to know every awkward turn.", "Think your team can keep up?"], "defeated": ["The bout is yours. I still have a long loop round these pools."]},
+    "traveller_ivo_moss_detour": {"speaker": "Ivo", "challenge": ["The moss hides the pool edge here. I keep my eyes on where a step will land.", "A bout on the detour?"], "defeated": ["Well fought. Mind the moss by the pool edge."]},
+    "rodline_scout_kael": {"speaker": "Kael", "challenge": ["Up on the ridge, there's nowhere to hide a change of pace.", "Let me see yours."], "defeated": ["Well fought. I will think on that as I walk the ridge."]},
+    "rodline_keeper_fenn": {"speaker": "Fenn", "challenge": ["I spend my days watching this conduit. The current always has a route.", "Where will your team make its stand?"], "defeated": ["The bout is yours. I have a conduit to watch."]},
+    "rodline_duelist_ren": {"speaker": "Ren", "challenge": ["Don't rush to answer the wind-up. Read where the dive is going.", "Ready?"], "defeated": ["Well fought. Every bout gives me something to practise."]},
+    "rook_circuit_lantern": {"speaker": "Rook", "challenge": ["The circuit asks more than strength. I want to see how your companions work together.", "Show me the team you've brought this far."], "defeated": ["A good battle. Give your companions a rest before the next stop."]},
+    "circuit_lena_giant": {"speaker": "Lena", "challenge": ["The Fallen Giant makes a fine place to practise watching a tell.", "Let's see who blinks first."], "defeated": ["Well fought. I like the quiet here beside the Fallen Giant."]},
+    "circuit_orin_blackwater": {"speaker": "Orin", "challenge": ["Blackwater leaves little room to drift. Keep an eye on the ravine as well as my team.", "Shall we begin?"], "defeated": ["The bout is yours. Good travelling along Blackwater."]},
+    "circuit_mira_lantern": {"speaker": "Mira", "challenge": ["Knowing when your companion needs room to recover is part of caring for them.", "Let's take this one carefully."], "defeated": ["A good battle. Let us see to our companions."]},
+    "circuit_tavi_rodline": {"speaker": "Tavi", "challenge": ["There's the rod station, and here's our lane. Watch both when the charge builds.", "Your team ready?"], "defeated": ["Well fought. Keep an eye on the rod station as you go."]}
+  }
+}

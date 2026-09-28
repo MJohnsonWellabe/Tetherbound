@@ -138,10 +138,10 @@
    "id": "F03",
    "title": "Meadows optional activities",
    "chapter": "Meadows",
-   "pct": 81,
+   "pct": 100,
    "counts": {
-    "met": 7,
-    "partial": 1,
+    "met": 8,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -150,10 +150,10 @@
    "criteria": [
     {
      "text": "At least six activities show a visible lure",
-     "status": "partial",
-     "evidence": "F03 record (MEADOWS-PAYOFFS REPORT, main): 4 outright + 2 conditional; lures file-checked; runtime staged",
-     "gap": "Unstaged ordinary-discovery witness",
-     "note": "r6 lure judge in progress. Meadows activities (#289)."
+     "status": "met",
+     "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f03/ (README, RECHECK). Lure read: judge F (MEADOWS-PAYOFFS/six-activities/earned/LURE-JUDGE-earned-f.md). Unstaged ordinary-input walks to each prompt: Bram, Juno (walks_122a8efb), Doss (earned/lure0/doss-f), herd at night (herd_night_walk_8fc88f20, fire 0.65/glow 2.4), vault (vault_cleared_36d88a84), Hall from the south (hall_south_14e917a3, pack at (-45,7300) r8 wander 5, nameplate depth-tested; --hall-decline OK 44.4 m). Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Disclosed: start saves are fixtures (tests/fixtures/f03_lure_saves/README.md), vault uses the guardian-cleared save; the walker plans on the road graph, sets the rig yaw/pitch, glances, flees fights, unsticks and toggles the companion (doss-f/herd --off-road-cost=10); judges r12/r13 PARTLY (Doss/herd/Hall), overridden by the re-check (r13 took the player's Gale for the alpha; Doss witness is doss-f). Open: no watcher figure at the herd fire; hall_16 shows \"You backed off.\" after the walker's Engage. Bars A/B → Phase 2 catalog."
     },
     {
      "text": "Each is a distinct optional action",
@@ -207,14 +207,14 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 47,
+   "pct": 78,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 4,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -238,9 +238,10 @@
     },
     {
      "text": "Warden: named tactical question visible at normal distance",
-     "status": "partial",
-     "evidence": "Profile pinned in data test; two-peer Warden fight in handoff leg (fixture)",
-     "gap": "Normal-camera capture and blind verdict"
+     "status": "met",
+     "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f04/warden_3b6f965a/ (render 36427399935), JUDGE_r3_3b6f965a.md (Warden PASS), RECHECK_F04_3.md. \"!! HEAVY — get clear\" on every 1.10 s tell with Tuskroot in frame; victory lines frame Aldis head to foot with no ally or fallen ace in front (fallen bodies clear at the cut; ally stands behind the lens) and the combat HUD gone. Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Disclosed: capture_named_fight.gd harness (teleport to the stand; real challenge prompt), --live-member resolves members 1-4 as won, --resolve=won, level-3 fixture creature with scripted dodge, --keep-alive available. Outside this row: creature hides the Warden after the dialogue (F04#6/#7), ring hugs the feet (tell clause). Bars A/B → Phase 2 catalog."
     },
     {
      "text": "Real hit/avoidance witness per fight",
@@ -263,9 +264,10 @@
     },
     {
      "text": "Varied-size framing and C2/C3 results pass",
-     "status": "failing",
-     "evidence": "Blind verdicts 'partly'; Meadows R7 key-art 'no'; guardian camera fix unlanded",
-     "gap": "Passing C2/C3 blind fight-footage verdict"
+     "status": "partial",
+     "evidence": "C2 half MET under STATE ruling 12 (owner 2026-09-28, option c; coordinator agreed): tests/smoke_meadows_named_c2c3.gd --seeds=24 per starter, all 21 rows PASS (reader win 1.00; masher lead faint 1.00; reader/masher party-cost ratio <= 0.49); chapter masher-loses-a-named-fight 1 - Pi 1.00/0.97/0.94, observed 24/24, 24/24, 22/24. Per-fight masher loss: Oreth 100/96/83%, Halder 8/25/29%, Warden 0/4/33%, Hald 0/0/25%, Vance 0%, Vess 0% (Vance L12 pin, Vess DIVER ending never beat a masher). Measurable C3: worst hit 0.448 < 0.5. ralph/reports/BALANCE/f04_7/RUN_meadows_after_24seeds.txt @ tb/balance.",
+     "gap": "Varied-size framing and the C3 blind fight-footage verdict",
+     "note": "Chapter-level 25% is the Balance lane's reading of the owner's intent, not the owner's words; owner option: raise the Band 3 pin for Vance for per-fight 25%. Shortcuts disclosed: flat-collider harness fights, fixed retained five at band entry level ending on Trailpup (conservative), no items/switching; per-fight seeds independent. C3 half (framing at every body size, blind fight footage) stays with the Meadows lane."
     },
     {
      "text": "No ordinary wild inherits a boss override",
@@ -600,8 +602,8 @@
     {
      "text": "Named fights pass C2/C3",
      "status": "partial",
-     "evidence": "Named profiles, Dynamo Break faint 17/0 (batch 2); no blind fight verdict",
-     "gap": "C2/C3 blind fight footage"
+     "evidence": "C2 half MET (F10#2 starter parity, owner 2026-09-27): smoke_stormwood_b_named_c2c3 --seeds=24, 18/18 rows pass; Capacitor Alpha ratio 0.42/0.50/0.41 (was 0.42/0.98/0.71). ripple_jab/gale_peck timing and Ripplet/Galewisp stats. ralph/reports/BALANCE/f10_2/ @ tb/balance.",
+     "gap": "C3 blind fight-footage verdict"
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
@@ -813,15 +815,16 @@
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "partial",
-     "evidence": "smoke_water_named_c2c3 (batch 23): 1,488 fights; named wilds, floor and ladder pass C2 and measured C3",
-     "gap": "Top fights: Aquaryn/Ripplet 0.61 ratio; Calder/Tess need the authorized damage tunable",
-     "note": "Damage tunable for Calder, Tess, Venn and Nerissa; 24-seed run. Tidewake lane (#296)."
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md (tb/tidewake Phase 1). C3 under the fixed rubric (phase1/C3_RUBRIC.md: two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 152 m stick walk from the Tidal Cradle landing, creature_recall, Challenge prompt; 100%/100%, tells 4/4); Tidecoil PASS (tidecoil_r12: 100%/91.7%, tells 4/4; engaged by walking down the arrival bay and the Engage prompt). C2: f14_confirm_main (Tess top-fight pass; Tidecoil named-wild ratios 0.05-0.07) plus aquaryn_c2_3starters (ratios 0.54/0.32/0.29, reader win 1.00), under the STATE named-wild ruling. Tells observed 0.80-0.90 s in the in-world smoke.",
+     "gap": "Tess on the ordinary route (317 m walk, prompt): r5 judge A 97%, judge B 84% under the fixed rubric (both must reach 90%). All of judge B's failures are the ally in front of the opponent's head at contact range (4.7-6.6 m). Blocked on a shared combat contact-spacing rule (bodies interpenetrate); the camera cannot separate touching bodies.",
+     "note": "Strict re-check (phase1/f14_0/RECHECK_F14_0.md) NOT MET before the fixes; gaps 1, 2, 3 and 5 are now addressed and gap 4 (Tess) remains. Tidewake lane (Phase 1)."
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "partial",
-     "evidence": "Veilfall interior 31-check functional smoke only",
-     "gap": "Nerissa C2/C3 simulated by harness, not played on the ordinary route; no C3 framing captures; Veilfall interior has no verdict. (strict re-score 23:40)"
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (tb/tidewake Phase 1): C2 PASS at a3269be7 in the actual Heart Chamber, 144 fights: READER win 1.00 x3, party cost 0.12/0.07/0.24 of the masher's, masher wipe 1.00, max single hit 18%, tells 0.8/1.1 s. The regression since dbe43195 (render bisect) was the ring reaching the Sluice Crossing channel; Nerissa's stand moved 9 m deeper. C3 tells 12/12 with the heavy distinct (orange HEAVY banner plus chevron lane). Veilfall interior route readable in every frame (room identity WEAK, Phase 2).",
+     "gap": "C3 blocked after r17 (two-strike rule): judge A 98%, judge B 83%. The ring bound (water_veilfall arena_bounds), the tell swing and Riptusk's camera_ignore_lunge removed the banner-wall, edge-crop and camera-in-ally failures. What remains is contact-range head occlusion, which needs the shared combat spacing rule. Her ring is now 9 m, so the 144-fight in-world C2 must be rerun (local seeds: READER 5/5, cost 0.24-0.33, MASHER wipes).",
+     "note": "Blocked on the shared contact-spacing rule (with Tess). Tidewake lane (Phase 1)."
     },
     {
      "text": "Water/current network visibly changes and persists",

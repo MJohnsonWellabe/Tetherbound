@@ -1,0 +1,9 @@
+render 36423081467 at 8fc88f20: tests/capture_lure_cue_views.gd --cue=herd --time=night --distances=160,110,70,40
+[cue-view] herd d=161m at=(75.0,1235.0) cue_off_road_heading=-4deg res://shots/cue_herd/herd_night_160m_road.png
+[cue-view] herd d=161m at=(75.0,1235.0) cue_off_road_heading=-4deg res://shots/cue_herd/herd_night_160m_glance.png
+[cue-view] herd d=113m at=(9.3,1372.0) cue_off_road_heading=-10deg res://shots/cue_herd/herd_night_110m_road.png
+[cue-view] herd d=113m at=(9.3,1372.0) cue_off_road_heading=-10deg res://shots/cue_herd/herd_night_110m_glance.png
+[cue-view] herd d=71m at=(-5.0,1280.0) cue_off_road_heading=28deg res://shots/cue_herd/herd_night_070m_road.png
+[cue-view] herd d=71m at=(-5.0,1280.0) cue_off_road_heading=28deg res://shots/cue_herd/herd_night_070m_glance.png
+[cue-view] herd d=41m at=(-34.2,1305.0) cue_off_road_heading=53deg res://shots/cue_herd/herd_night_040m_road.png
+[cue-view] herd d=41m at=(-34.2,1305.0) cue_off_road_heading=53deg res://shots/cue_herd/herd_night_040m_glance.png

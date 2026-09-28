@@ -1,0 +1,3 @@
+F06#2 WITNESS PASS attempts=[{"attempt":"trial_escape","directions_tried":["(0.0, 0.0, -1.0)"],"end":"(426.2079, 641.0496, 3215.784)","from":"(417.3262, 627.3305, 3249.792)","inside_trial":true,"refused":true,"still_flying":true,"trial_active":true}] landings=4
+CLOUDREACH CONTINUOUS LEG PASS leg=flight live from_save=res://tests/fixtures/earned_saves/c1_arrival stage=leg_complete_flight distance_m=9629.6 dead_travel_max_s=95.0
+EXIT 0

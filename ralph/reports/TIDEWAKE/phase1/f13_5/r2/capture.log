@@ -1,0 +1,65 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+libpulse.so.0: cannot open shared object file: No such file or directory
+libpulse.so.0: cannot open shared object file: No such file or directory
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5204:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5204:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5204:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5727:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+   at: init_output_device (drivers/alsa/audio_driver_alsa.cpp:97)
+WARNING: All audio drivers failed, falling back to the dummy driver.
+     at: initialize (servers/audio/audio_server.cpp:258)
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _run (res://tools/capture_tidewake_f13_5.gd:120)
+[water vegetation] 10439 instances in 1346 model batches; layers={"groundcover":6211,"rocks":656,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":537,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+frame veilfall_1_first_shore.jpg: Veilfall from First Shore's authored sightline eye player=(0.0, 1.93154, 162.0)
+frame veilfall_2_tidal_cradle.jpg: Veilfall from the Tidal Cradle departure dock (mid-journey) player=(560.542, 1.931604, 1727.776)
+frame veilfall_3_sluice_isle.jpg: Veilfall from the Sluice Isle departure dock (last crossing) player=(718.763, 1.931604, 3198.245)
+frame dock_first_shore.jpg: first_shore dock (first_shore_to_reedhaven_dock) from 20 m inland player=(0.0, 6.001042, 142.0)
+  people within 30 m of first_shore dock: water_mara, water_elin, first_shore_to_reedhaven_dock_resident_0, first_shore_to_reedhaven_dock_resident_1
+frame dock_reedhaven.jpg: reedhaven dock (reedhaven_to_brine_steps_dock) from 20 m inland player=(125.7884, 5.992305, 505.8889)
+  people within 30 m of reedhaven dock: reedhaven_to_brine_steps_dock_resident_0, reedhaven_to_brine_steps_dock_resident_1
+frame dock_brine_steps.jpg: brine_steps dock (brine_steps_to_shellwatch_dock) from 20 m inland player=(387.7106, 5.999027, 808.5305)
+  people within 30 m of brine_steps dock: water_tovin, brine_steps_to_shellwatch_dock_resident_0, brine_steps_to_shellwatch_dock_resident_1
+frame dock_shellwatch.jpg: shellwatch dock (shellwatch_to_tidal_cradle_dock) from 20 m inland player=(423.3247, 6.020869, 1231.481)
+  people within 30 m of shellwatch dock: shellwatch_to_tidal_cradle_dock_resident_0, shellwatch_to_tidal_cradle_dock_resident_1
+frame dock_tidal_cradle.jpg: tidal_cradle dock (tidal_cradle_to_salt_crown_dock) from 20 m inland player=(572.0674, 5.993173, 1711.431)
+  people within 30 m of tidal_cradle dock: tidal_cradle_to_salt_crown_dock_resident_0, tidal_cradle_to_salt_crown_dock_resident_1
+frame dock_salt_crown.jpg: salt_crown dock (salt_crown_to_sluice_isle_dock) from 20 m inland player=(312.6801, 6.027707, 2461.06)
+  people within 30 m of salt_crown dock: salt_crown_to_sluice_isle_dock_resident_0, salt_crown_to_sluice_isle_dock_resident_1
+frame dock_sluice_isle.jpg: sluice_isle dock (sluice_isle_to_veilfall_dock) from 20 m inland player=(728.4128, 6.002743, 3180.727)
+  people within 30 m of sluice_isle dock: sluice_isle_to_veilfall_dock_resident_0, sluice_isle_to_veilfall_dock_resident_1
+frame current_first_shore_to_reedhaven.jpg: first_shore_to_reedhaven_direct_current (0.3 m/s adverse) from its start player=(0.0, 1.502604, 166.0)
+frame current_brine_steps_to_shellwatch.jpg: brine_steps_to_shellwatch_direct_current (0.3 m/s adverse) from its start player=(382.6119, 1.502474, 831.9835)
+frame current_salt_crown_to_sluice_isle.jpg: salt_crown_to_sluice_isle_direct_current (1.3 m/s adverse) from its start player=(330.2669, 1.502607, 2477.391)
+F13#5 CAPTURE OK frames=13
+veilfall_1_first_shore.jpg: Veilfall from First Shore's authored sightline eye player=(0.0, 1.93154, 162.0)
+veilfall_2_tidal_cradle.jpg: Veilfall from the Tidal Cradle departure dock (mid-journey) player=(560.542, 1.931604, 1727.776)
+veilfall_3_sluice_isle.jpg: Veilfall from the Sluice Isle departure dock (last crossing) player=(718.763, 1.931604, 3198.245)
+dock_first_shore.jpg: first_shore dock (first_shore_to_reedhaven_dock) from 20 m inland player=(0.0, 6.001042, 142.0)
+dock_reedhaven.jpg: reedhaven dock (reedhaven_to_brine_steps_dock) from 20 m inland player=(125.7884, 5.992305, 505.8889)
+dock_brine_steps.jpg: brine_steps dock (brine_steps_to_shellwatch_dock) from 20 m inland player=(387.7106, 5.999027, 808.5305)
+dock_shellwatch.jpg: shellwatch dock (shellwatch_to_tidal_cradle_dock) from 20 m inland player=(423.3247, 6.020869, 1231.481)
+dock_tidal_cradle.jpg: tidal_cradle dock (tidal_cradle_to_salt_crown_dock) from 20 m inland player=(572.0674, 5.993173, 1711.431)
+dock_salt_crown.jpg: salt_crown dock (salt_crown_to_sluice_isle_dock) from 20 m inland player=(312.6801, 6.027707, 2461.06)
+dock_sluice_isle.jpg: sluice_isle dock (sluice_isle_to_veilfall_dock) from 20 m inland player=(728.4128, 6.002743, 3180.727)
+current_first_shore_to_reedhaven.jpg: first_shore_to_reedhaven_direct_current (0.3 m/s adverse) from its start player=(0.0, 1.502604, 166.0)
+current_brine_steps_to_shellwatch.jpg: brine_steps_to_shellwatch_direct_current (0.3 m/s adverse) from its start player=(382.6119, 1.502474, 831.9835)
+current_salt_crown_to_sluice_isle.jpg: salt_crown_to_sluice_isle_direct_current (1.3 m/s adverse) from its start player=(330.2669, 1.502607, 2477.391)
+exit 0

@@ -236,6 +236,13 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 	# prompt."
 	if has_anything_to_say(spec):
 		var prompt: Node3D = npc.call("add_prompt", "Greet %s" % display_name)
+		# F01#2: a shopkeeper behind a counter. The prompt's line-of-sight ray
+		# runs from the prompt point to the player's eye; at the default waist
+		# height it grazed Mira's counter from 2.3 m, her greeting dropped out
+		# and the shop door's "Close Door" won (village walk, day r2).
+		# `prompt_height_m` lifts the point over the counter.
+		if spec.has("prompt_height_m"):
+			prompt.position.y = float(spec.get("prompt_height_m"))
 		prompt.connect("activated", _on_greeted.bind(spec))
 	_placed += 1
 

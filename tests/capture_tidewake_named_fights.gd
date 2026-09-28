@@ -27,6 +27,8 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SMOKE := preload("res://tests/smoke_tidewake_named_inworld_c2.gd")
+const NAV := preload("res://tests/helpers/stick_navigator.gd")
+const WALK := preload("res://tests/smoke_water_pocket_walk_claim.gd")
 const PARTY := ["ripplet", "bramblebun", "mudsnout", "pipwing", "trailpup"]
 ## Nerissa stands in the Heart Chamber; these upstream pump flags let the
 ## interior body stand up, exactly as smoke_water_veilfall_captain.gd prepares.
@@ -45,15 +47,27 @@ var _reader: RefCounted
 var _sparse := false
 ## --wild=aquaryn,tidecoil: F14#0's named wilds. Aquaryn is engaged through
 ## WaterAlpha.request_engage() (smoke_water_alpha_runtime.gd); Tidecoil by the
-## ordinary interact prompt beside its Deep Watch reef shore, the stand
+## ordinary interact prompt from the Deep Watch arrival bay's beach, the stand
 ## tidewake_b_tidecoil_fight.gd walks to. Fixture (disclosed): placement.
 var _wilds: PackedStringArray = []
+## --approach=<water_world anchor id>: F14#0 ordinary-route witness. The player
+## starts on that anchor's safe position (e.g. a landing) and walks to the
+## trainer by left-stick input over a baked-ground route plan
+## (smoke_water_pocket_walk_claim.plan_route + stick_navigator), then challenges
+## through the prompt from where the walk ended. No placement beside the
+## trainer; a stalled walk fails the capture.
+var _approach := ""
+var _approach_log: Dictionary = {}
 ## --hits-per-opponent=N: also save a frame HIT_LAG_S after a landed hit (each
 ## way), so impact VFX and hit reactions are on record, not only wind-ups.
 var _hits_per_opponent := 2
 const HIT_LAG_S := 0.08
 var _hit_at := -1.0
-const TIDECOIL_SHORE := Vector3(1465.6, 0.0, 3437.4)
+## Tidecoil's stand is the Deep Watch arrival bay (water_encounters.json
+## _why_position_f14_0); the ordinary approach comes down the beach from the
+## sluice_isle_to_deep_watch landing.
+const TIDECOIL_SHORE := Vector3(1262.0, 0.0, 3390.0)
+const DEEP_WATCH_LANDING := Vector3(1260.318, 0.0, 3403.144)
 const SPARSE_WARM_FRAMES := 3
 
 var _out := ""
@@ -89,6 +103,7 @@ func _run() -> void:
 		elif arg == "--render-only-saves": _sparse = true
 		elif arg.begins_with("--hits-per-opponent="): _hits_per_opponent = maxi(0, int(arg.trim_prefix("--hits-per-opponent=")))
 		elif arg.begins_with("--wild="): _wilds = arg.trim_prefix("--wild=").split(",", false)
+		elif arg.begins_with("--approach="): _approach = arg.trim_prefix("--approach=")
 	if (ids.is_empty() and _wilds.is_empty()) or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
@@ -139,6 +154,8 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 	# Water trainers stand up only inside a peer's activation range
 	# (water_combat.json activation_distance_m), so go to the authored spot first.
 	var spec: Dictionary = director.trainer_specs.get(id, {})
+	if not _approach.is_empty():
+		return await _capture_walked(world, game, id, spec)
 	if spec.has("position"):
 		var at: Array = spec.position
 		var near := Vector3(float(at[0]), 0.0, float(at[2]) + 6.0)
@@ -167,6 +184,120 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 	if prompt == null or prompt.interaction_offer(player.global_position).is_empty():
 		push_error("no challenge prompt in reach for %s" % id)
 		return false
+	prompt.interaction_activate()
+	await _frames(3)
+	var dialogue: Node = world.get_node_or_null("DialoguePanel")
+	for step in 30:
+		if manager.is_fighting() or dialogue == null or not dialogue.is_open():
+			break
+		dialogue.advance()
+		await _frames(3)
+	if not (director.trainer_battle_id() == id and manager.is_fighting()):
+		push_error("challenge did not start the %s fight" % id)
+		return false
+	var dir := _out.path_join(id.trim_prefix("water_trainer_"))
+	return await _record(world, game, dir, id, director.trainer_battle_active)
+
+
+## --approach: walk from an authored anchor to the trainer by stick, then
+## challenge through the prompt from wherever the walk stopped.
+func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) -> bool:
+	var director: Node = world.get_node("EncounterDirector")
+	var manager: Node = world.get_node("CombatManager")
+	var player: CharacterBody3D = world.local_rig()
+	var rig: Node3D = world.get_node("CameraRig")
+	var anchor: Dictionary = {}
+	for row: Dictionary in (world.get("config") as Dictionary).get("anchors", []):
+		if str(row.get("id", "")) == _approach:
+			anchor = row
+	if anchor.is_empty() or not spec.has("position"):
+		push_error("unknown --approach anchor %s or trainer %s has no position" % [_approach, id])
+		return false
+	var start_at: Array = anchor.safe_position
+	var start := Vector3(float(start_at[0]), 0.0, float(start_at[2]))
+	start.y = float(world.ground_height_at(start.x, start.z)) + 0.2
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	await _frames(30)
+	var at: Array = spec.position
+	var goal := Vector2(float(at[0]), float(at[2]))
+	# End the walked route 3 m in front of her, on the landing side.
+	var back := Vector2(start.x, start.z) - goal
+	if back.length() > 3.0:
+		goal += back.normalized() * 3.0
+	var plan: Dictionary = WALK.plan_route(world, Vector2(start.x, start.z), goal)
+	var route: Array = plan.get("points", [])
+	var drive := func(x: float, y: float) -> void:
+		for axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+			var event := InputEventJoypadMotion.new()
+			event.axis = axis
+			event.axis_value = x if axis == JOY_AXIS_LEFT_X else y
+			Input.parse_input_event(event)
+	var nav: RefCounted = NAV.new(self, player, rig, drive)
+	var walked := 0.0
+	var prompt: Node3D = null
+	# --render-only-saves: nothing is saved during the walk, so draw nothing.
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
+	for index in route.size():
+		var point: Vector2 = route[index]
+		var before := player.global_position
+		var budget := maxi(900, int(Vector2(before.x, before.z).distance_to(point) * 90.0))
+		var ok: bool = await nav.walk_to(Vector3(point.x, 0.0, point.y), budget, 1.8)
+		walked += Vector2(before.x, before.z).distance_to(Vector2(player.global_position.x, player.global_position.z))
+		prompt = director.trainer_prompts.get(id)
+		if prompt != null and not prompt.interaction_offer(player.global_position).is_empty():
+			break
+		if not ok:
+			drive.call(0.0, 0.0)
+			RenderingServer.render_loop_enabled = true
+			push_error("approach walk stalled at leg %d/%d at %s" % [index + 1, route.size(), player.global_position])
+			return false
+	# Deploy the lead by input, as a player does before challenging: a Water
+	# trainer's Challenge prompt is enabled only while the player has an ally
+	# out (encounter_director.gd can_challenge).
+	drive.call(0.0, 0.0)
+	if director.call("ally_body") == null:
+		for pressed in [true, false]:
+			var event := InputEventAction.new()
+			event.action = &"creature_recall"
+			event.pressed = pressed
+			event.strength = 1.0 if pressed else 0.0
+			Input.parse_input_event(event)
+			await _frames(6)
+		await _frames(30)
+	if director.call("ally_body") == null:
+		push_error("creature_recall did not deploy the lead before %s" % id)
+		return false
+	# Close the last metres on the trainer itself by stick until the prompt offers.
+	var trainer: Node3D = director.trainer_nodes.get(id)
+	for _frame in 900:
+		prompt = director.trainer_prompts.get(id)
+		trainer = director.trainer_nodes.get(id)
+		if prompt != null and not prompt.interaction_offer(player.global_position).is_empty():
+			break
+		# Close on the challenge prompt beside her (not her body: pushing into
+		# the trainer's own collider puts it between the prompt and the player,
+		# and the prompt's line-of-sight check then refuses the offer).
+		var target: Node3D = prompt if prompt != null else trainer
+		if target != null:
+			var flat := target.global_position - player.global_position
+			flat.y = 0.0
+			if flat.length() > 1.0:
+				nav.push_once(flat.normalized() * 0.8)
+			else:
+				drive.call(0.0, 0.0)
+		await physics_frame
+	drive.call(0.0, 0.0)
+	if _sparse:
+		RenderingServer.render_loop_enabled = true
+	_approach_log = {"approach": _approach, "start": start, "walked_m": snappedf(walked, 1.0),
+		"legs": route.size(), "prompt_at": player.global_position}
+	print("TIDEWAKE C3 APPROACH %s -> %s walked=%.0fm legs=%d prompt_at=%s" % [_approach, id, walked, route.size(), player.global_position])
+	if prompt == null or prompt.interaction_offer(player.global_position).is_empty():
+		push_error("the walk from %s never reached %s's challenge prompt" % [_approach, id])
+		return false
+	await _frames(12)
 	prompt.interaction_activate()
 	await _frames(3)
 	var dialogue: Node = world.get_node_or_null("DialoguePanel")
@@ -350,12 +481,107 @@ func _pose(node: Node3D) -> Array:
 
 
 
+## F14#0 ordinary-route Aquaryn (strict re-check gap 3): from the --approach
+## anchor (the Tidal Cradle arrival landing), walk by stick to the basin,
+## deploy the lead by `creature_recall`, close on the "Challenge Aquaryn"
+## prompt and press `interact` -- the same inputs a player uses, no placement
+## and no direct engage call.
+func _walk_to_aquaryn(world: Node3D, body: Node3D) -> bool:
+	var director: Node = world.get_node("EncounterDirector")
+	var manager: Node = world.get_node("CombatManager")
+	var player: CharacterBody3D = world.local_rig()
+	var rig: Node3D = world.get_node("CameraRig")
+	var prompt: Node3D = (world.get_node("WaterAlpha") as Node).get("_challenge_prompt")
+	var anchor: Dictionary = {}
+	for row: Dictionary in (world.get("config") as Dictionary).get("anchors", []):
+		if str(row.get("id", "")) == _approach:
+			anchor = row
+	if anchor.is_empty() or body == null or prompt == null:
+		push_error("unknown --approach anchor %s, or no Aquaryn body/prompt" % _approach)
+		return false
+	var start_at: Array = anchor.safe_position
+	var start := Vector3(float(start_at[0]), 0.0, float(start_at[2]))
+	start.y = float(world.ground_height_at(start.x, start.z)) + 0.2
+	player.global_position = start
+	player.velocity = Vector3.ZERO
+	await _frames(30)
+	var goal := Vector2(body.global_position.x, body.global_position.z)
+	var back := Vector2(start.x, start.z) - goal
+	if back.length() > 6.0:
+		goal += back.normalized() * 6.0
+	var route: Array = WALK.plan_route(world, Vector2(start.x, start.z), goal).get("points", [])
+	var drive := func(x: float, y: float) -> void:
+		for axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+			var event := InputEventJoypadMotion.new()
+			event.axis = axis
+			event.axis_value = x if axis == JOY_AXIS_LEFT_X else y
+			Input.parse_input_event(event)
+	var tap := func(action: StringName) -> void:
+		for pressed in [true, false]:
+			var event := InputEventAction.new()
+			event.action = action
+			event.pressed = pressed
+			event.strength = 1.0 if pressed else 0.0
+			Input.parse_input_event(event)
+			await _frames(6)
+	var nav: RefCounted = NAV.new(self, player, rig, drive)
+	var walked := 0.0
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
+	for index in route.size():
+		var point: Vector2 = route[index]
+		var before := player.global_position
+		var budget := maxi(900, int(Vector2(before.x, before.z).distance_to(point) * 90.0))
+		var ok: bool = await nav.walk_to(Vector3(point.x, 0.0, point.y), budget, 1.8)
+		walked += Vector2(before.x, before.z).distance_to(Vector2(player.global_position.x, player.global_position.z))
+		if not prompt.interaction_offer(player.global_position).is_empty() or manager.is_fighting():
+			break
+		if not ok:
+			drive.call(0.0, 0.0)
+			RenderingServer.render_loop_enabled = true
+			push_error("Aquaryn approach stalled at leg %d/%d at %s" % [index + 1, route.size(), player.global_position])
+			return false
+	drive.call(0.0, 0.0)
+	if not manager.is_fighting() and director.call("ally_body") == null:
+		await tap.call(&"creature_recall")
+		await _frames(30)
+	for _frame in 900:
+		if manager.is_fighting() or not prompt.interaction_offer(player.global_position).is_empty():
+			break
+		var flat := prompt.global_position - player.global_position
+		flat.y = 0.0
+		if flat.length() > 1.0:
+			nav.push_once(flat.normalized() * 0.8)
+		await physics_frame
+	drive.call(0.0, 0.0)
+	if _sparse:
+		RenderingServer.render_loop_enabled = true
+	_approach_log = {"approach": _approach, "start": start, "walked_m": snappedf(walked, 1.0),
+		"legs": route.size(), "prompt_at": player.global_position}
+	print("TIDEWAKE C3 APPROACH %s -> aquaryn walked=%.0fm legs=%d prompt_at=%s" % [_approach, walked, route.size(), player.global_position])
+	if not manager.is_fighting():
+		if prompt.interaction_offer(player.global_position).is_empty():
+			push_error("the walk from %s never reached Aquaryn's challenge prompt" % _approach)
+			return false
+		await tap.call(&"interact")
+		for _frame in 120:
+			if manager.is_fighting():
+				break
+			await physics_frame
+	print("TIDEWAKE C3 AQUARYN engaged_by=%s" % ("challenge_prompt" if manager.is_fighting() else "none"))
+	return true
+
+
 func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 	var director: Node = world.get_node("EncounterDirector")
 	var manager: Node = world.get_node("CombatManager")
 	var player: Node3D = world.local_rig()
 	var body: Node3D = null
-	if wild == "aquaryn":
+	if wild == "aquaryn" and not _approach.is_empty():
+		body = (world.get_node("WaterAlpha") as Node).get("body")
+		if not await _walk_to_aquaryn(world, body):
+			return false
+	elif wild == "aquaryn":
 		var alpha: Node = world.get_node("WaterAlpha")
 		body = alpha.get("body")
 		# The ordinary route reaches the basin from the Tidal Cradle arrival
@@ -372,10 +598,9 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 		await _frames(12)
 		alpha.call("request_engage")
 	elif wild == "tidecoil":
-		# Two-strike rule (owner, 18:46): the walked approach failed twice in
-		# this harness, so the disclosed shortcut is a placement on the first
-		# dry ground (>1 m) between the body and the island centre, and the
-		# director's own fight start once the lead is out.
+		# Disclosed shortcut: the player is placed on the first dry ground
+		# (>1 m) between the body and the arrival landing, then walks down the
+		# beach by stick and engages through the ordinary prompt.
 		var shore := TIDECOIL_SHORE
 		shore.y = float(world.ground_height_at(shore.x, shore.z)) + 0.2
 		player.global_position = shore
@@ -389,7 +614,7 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 		if body == null:
 			push_error("named Tidecoil body never resident")
 			return false
-		var inland := Vector3(1350.0, 0.0, 3500.0) - body.global_position
+		var inland := DEEP_WATCH_LANDING - body.global_position
 		inland.y = 0.0
 		inland = inland.normalized()
 		var stand := body.global_position
@@ -405,7 +630,43 @@ func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
 			push_error("summon failed before Tidecoil at %s" % stand)
 			return false
 		await _frames(12)
-		director.call("_start_fight", body)
+		# The ordinary approach: walk down the beach toward the serpent by
+		# stick until the director's Engage prompt is the actionable winner,
+		# then press interact (as tidewake_b_tidecoil_fight.gd engages). The
+		# fight then forms in front of where a player really stands.
+		var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+		var rig: Node3D = world.get_node("CameraRig")
+		var drive := func(x: float, y: float) -> void:
+			for axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+				var event := InputEventJoypadMotion.new()
+				event.axis = axis
+				event.axis_value = x if axis == JOY_AXIS_LEFT_X else y
+				Input.parse_input_event(event)
+		var nav: RefCounted = NAV.new(self, player, rig, drive)
+		for _frame in 1800:
+			if manager.is_fighting():
+				break
+			if arbiter != null and arbiter.call("winning_provider") == director \
+					and bool((arbiter.call("winner") as Dictionary).get("actionable", false)):
+				drive.call(0.0, 0.0)
+				for pressed in [true, false]:
+					var event := InputEventAction.new()
+					event.action = &"interact"
+					event.pressed = pressed
+					event.strength = 1.0 if pressed else 0.0
+					Input.parse_input_event(event)
+					await _frames(6)
+				continue
+			var flat := body.global_position - player.global_position
+			flat.y = 0.0
+			if flat.length() > 1.5:
+				nav.push_once(flat.normalized() * 0.8)
+			await physics_frame
+		drive.call(0.0, 0.0)
+		print("TIDEWAKE C3 TIDECOIL engaged from %s (%.1f m from the body, ground %.2f)" % [
+			player.global_position, Vector2(body.global_position.x - player.global_position.x,
+			body.global_position.z - player.global_position.z).length(),
+			float(world.ground_height_at(player.global_position.x, player.global_position.z))])
 	else:
 		push_error("unknown --wild=%s" % wild)
 		return false

@@ -653,6 +653,19 @@ func _end_fight_if_running() -> void:
 		await _press("combat_run")
 		for n in 10:
 			await physics_frame
+	# A trainer battle cannot be left through Run (smoke_trainer_battle.gd's own
+	# assertion), so the stronghold case only cleared when the elite's round
+	# happened to end inside the 30 s above -- 1 run in 3 failed on the batch-67
+	# head. Close it through the manager's own resolve, the same call
+	# capture_named_fight.gd makes; this case's claims are already proven.
+	if bool(_manager.call("is_fighting")) and bool(_director.call("trainer_battle_active")):
+		_manager.call("_begin_resolve", "lost")
+		for i in 600:
+			if not bool(_manager.call("is_fighting")) and not bool(_director.call("trainer_battle_active")):
+				break
+			if _panel != null and bool(_panel.call("is_open")):
+				await _press("interact")
+			await physics_frame
 	if bool(_manager.call("is_fighting")):
 		_fail("could not leave the fight through Run to set up the next case")
 	else:

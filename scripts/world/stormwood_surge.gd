@@ -351,6 +351,9 @@ func _pres_cfg() -> Dictionary:
 func presentation_for(for_phase: String, aftermath: bool = false) -> Dictionary:
 	var block := _pres_cfg()
 	var row: Dictionary = (block.get("phases", {}).get(for_phase, {}) as Dictionary).duplicate(true)
+	var candidate: Dictionary = block.get("phase_readability_candidate", {})
+	if bool(candidate.get("enabled", false)) and not aftermath:
+		row.merge(candidate.get("phases", {}).get(for_phase, {}), true)
 	if aftermath:
 		# `all` applies to every aftermath phase, then the phase's own row.
 		for over: Dictionary in [block.get("aftermath", {}).get("all", {}), block.get("aftermath", {}).get(for_phase, {})]:
@@ -1179,7 +1182,10 @@ func _advance_flash(delta: float) -> void:
 ## generated radial-gradient texture, no texture art. Only a row with
 ## `steam` > 0 shows it: Calm, Building, Break and the aftermath carry 0.
 func _build_steam() -> void:
-	var cfg: Dictionary = _pres_cfg().get("steam", {})
+	var cfg: Dictionary = (_pres_cfg().get("steam", {}) as Dictionary).duplicate(true)
+	var candidate: Dictionary = _pres_cfg().get("phase_readability_candidate", {})
+	if bool(candidate.get("enabled", false)):
+		cfg.merge(candidate.get("steam", {}), true)
 	if cfg.is_empty():
 		return
 	_steam = GPUParticles3D.new()
