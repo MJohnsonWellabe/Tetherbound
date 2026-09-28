@@ -57,6 +57,9 @@ const VIEWS := [
 
 const CONFIG := "res://data/config/water_world.json"
 const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
+const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
+const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+const SWIM_CONFIG := "res://data/config/water_swimming.json"
 const SIZE := Vector2i(1920, 1080)
 const ROUTE_REGIONS := {
 	"first_shore": "first-shores", "reedhaven": "marsh-channels",
@@ -82,6 +85,7 @@ var _failures: Array[String] = []
 var _started := ""
 var _seed_environment_before: Variant = null
 var _seed_environment_applied := false
+var _swim_rules: Dictionary = {}
 
 
 func _init() -> void:
@@ -172,6 +176,12 @@ func _run() -> void:
 		_failures.append("production Player, CameraRig/Camera3D or WorldLook missing")
 		_finish()
 		return
+	var swimming: Variant = JSON.parse_string(FileAccess.get_file_as_string(SWIM_CONFIG))
+	if not swimming is Dictionary or not swimming.get("human") is Dictionary:
+		_failures.append("production swimming configuration missing")
+		_finish()
+		return
+	_swim_rules = swimming.human
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director == null or not director.has_method("world_seed") or int(director.call("world_seed")) != _seed:
 		_failures.append("production EncounterDirector did not resolve the requested world seed")
@@ -283,8 +293,52 @@ func _xyz(value: Vector3) -> Array:
 
 
 func _stand_at(stand: Vector2) -> Vector3:
-	var ground := float(_world.call("ground_height_at", stand.x, stand.y))
-	return Vector3(stand.x, 0.15 if ground < 0.0 else ground + 0.15, stand.y)
+	return _stand_spec(stand).position
+
+
+func _stand_spec(stand: Vector2) -> Dictionary:
+	var terrain := float(_world.call("ground_height_at", stand.x, stand.y))
+	# Same built-floor resolver used by phase2_capture_locations. Its height
+	# still needs a matching physical surface; an authored claim alone is not proof.
+	var ground := BUILT_FLOOR.resolve(_world, stand.x, stand.y, terrain)
+	var field: Object = _world.get("field")
+	var sea := float(field.call("water_level"))
+	var depth := float(_world.call("water_depth_at", Vector3(stand.x, ground, stand.y)))
+	var swimming := ground < sea and depth >= float(_swim_rules.get("entry_depth_m", 1.2))
+	var y := sea + float(_swim_rules.get("surface_body_offset_m", -0.7)) if swimming else ground + 0.25
+	return {"position": Vector3(stand.x, y, stand.y), "ground_y": ground,
+		"terrain_y": terrain, "water_surface_y": sea, "water_depth_m": depth,
+		"swimming": swimming}
+
+
+func _stand_failure(spec: Dictionary) -> String:
+	var at: Vector3 = spec.position
+	if not at.is_finite() or not is_finite(float(spec.ground_y)) or not is_finite(float(spec.water_surface_y)):
+		return "non-finite terrain, built floor or water surface"
+	var space := _world.get_world_3d().direct_space_state
+	if not bool(spec.swimming):
+		var ground := Vector3(at.x, float(spec.ground_y), at.z)
+		var ray := PhysicsRayQueryParameters3D.create(ground + Vector3.UP * 1.5,
+			ground - Vector3.UP * 1.0, _player.collision_mask, [_player.get_rid()])
+		var hit := space.intersect_ray(ray)
+		if hit.is_empty():
+			return "no physical floor supports the resolved land stand"
+		if absf(float(hit.position.y) - float(spec.ground_y)) > 0.20:
+			return "physical floor differs from the resolved terrain/built floor"
+		if float(hit.normal.y) < cos(_player.floor_max_angle):
+			return "physical land slope exceeds the production player's floor limit"
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or collision.shape == null or collision.disabled:
+		return "production player capsule unavailable for stand clearance"
+	var shape := PhysicsShapeQueryParameters3D.new()
+	shape.shape = collision.shape
+	shape.transform = Transform3D(_player.global_basis, at) * collision.transform
+	shape.collision_mask = _player.collision_mask
+	shape.exclude = [_player.get_rid()]
+	shape.margin = 0.0
+	if not space.intersect_shape(shape, 1).is_empty():
+		return "production player capsule overlaps solid geometry at staged stand"
+	return ""
 
 
 func _pose(at: Vector3, target: Vector3, view: Dictionary) -> void:
@@ -305,30 +359,40 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 		return {"frame_id": name, "status": "failed"}
 	if target.y < -999.0:
 		target.y = float(_world.call("ground_height_at", target.x, target.z)) + 4.0
-	var ground := float(_world.call("ground_height_at", stand.x, stand.y))
-	var at := _stand_at(stand)
+	var spec := _stand_spec(stand)
+	var ground := float(spec.ground_y)
+	var at: Vector3 = spec.position
 	if not is_finite(ground) or not at.is_finite() or not target.is_finite():
 		_failures.append(name + ": non-finite terrain-resolved stand or target")
 		return {"frame_id": name, "status": "failed"}
 	var record := {"frame_id": name, "frame": name, "file": name + ".png", "what": view.what,
 		"time": time_name, "requested_player": _xyz(at), "target": _xyz(target), "ground_y": ground,
-		"swimming_stand": ground < 0.0, "source": view.get("source", {"file": get_script().resource_path, "view": view.name}),
+		"swimming_stand": spec.swimming, "water_surface_y": spec.water_surface_y,
+		"water_depth_m": spec.water_depth_m,
+		"source": view.get("source", {"file": get_script().resource_path, "view": view.name}),
 		"status": "failed", "hold_seconds_requested": _hold_seconds}
+	var stand_failure := _stand_failure(spec)
+	if not stand_failure.is_empty():
+		record["stand_failure"] = stand_failure
+		_failures.append(name + ": " + stand_failure)
+		return record
 	_look.call("apply_time", time_name)
+	# Stage exactly once. Native physics must then support the body and own
+	# currents, buoyancy and any drift throughout settlement and optional holds.
+	_pose(at, target, view)
 	for i in SETTLE_FRAMES:
-		_pose(at, target, view)
 		await physics_frame
 	for i in 6:
-		_pose(at, target, view)
 		await process_frame
 	await RenderingServer.frame_post_draw
-	if not _capture_valid(at, name):
+	if not _capture_valid(at, name, spec):
 		return record
 	record["observed_clock"] = _clock_record(time_name, name)
 	if record.observed_clock.is_empty():
 		return record
 	record["seed_context"] = _seed_record()
 	record["player"] = _xyz(_player.global_position)
+	record["surface_state"] = _surface_record()
 	record["distance_m"] = _player.global_position.distance_to(target)
 	record["horizontal_distance_m"] = Vector2(_player.global_position.x, _player.global_position.z).distance_to(Vector2(target.x, target.z))
 	record["camera"] = _camera_record()
@@ -344,17 +408,16 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 	record["hold_start_physics_frame"] = Engine.get_physics_frames()
 	var elapsed := 0.0
 	while elapsed < _hold_seconds:
-		_pose(at, target, view)
 		await physics_frame
 		elapsed += root.get_physics_process_delta_time()
-		if not _capture_valid(at, name):
+		if not _capture_valid(at, name, spec):
 			return record
 	record["hold_seconds_simulated"] = elapsed
 	record["hold_end_process_frame"] = Engine.get_process_frames()
 	record["hold_end_physics_frame"] = Engine.get_physics_frames()
 	if _hold_seconds > 0.0:
 		await RenderingServer.frame_post_draw
-		if not _capture_valid(at, name):
+		if not _capture_valid(at, name, spec):
 			return record
 		record["hold_end_observed_clock"] = _clock_record(time_name, name)
 		if record.hold_end_observed_clock.is_empty():
@@ -364,6 +427,7 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 			return record
 		record["hold_end_camera"] = _camera_record()
 		record["hold_end_player"] = _xyz(_player.global_position)
+		record["hold_end_surface_state"] = _surface_record()
 	record.status = "captured"
 	print("frame %s player=%s distance=%.2f stationary_hold=%.2fs" % [name, _player.global_position, record.distance_m, elapsed])
 	return record
@@ -383,7 +447,7 @@ func _display_valid() -> bool:
 	return true
 
 
-func _capture_valid(at: Vector3, name: String) -> bool:
+func _capture_valid(at: Vector3, name: String, spec: Dictionary) -> bool:
 	if not _display_valid():
 		return false
 	if not at.is_finite() or not _player.global_position.is_finite() or not _camera.global_position.is_finite() or not _rig.global_position.is_finite() or not _camera.global_rotation.is_finite():
@@ -395,10 +459,36 @@ func _capture_valid(at: Vector3, name: String) -> bool:
 		_failures.append(name + ": invalid production spring length")
 		return false
 	# Match the installed location recorder's ordinary-camera bounds.
-	if _player.global_position.distance_to(at) > 1.0 or root.get_camera_3d() != _camera or distance < 3.5 or distance > spring_length + 3.0:
+	var drift := Vector2(_player.global_position.x - at.x, _player.global_position.z - at.z).length()
+	if drift > 2.0 or root.get_camera_3d() != _camera or distance < 3.5 or distance > spring_length + 3.0:
 		_failures.append(name + ": displaced player or stale/non-production camera")
 		return false
+	var surface := _surface_record()
+	if bool(surface.get("dead", false)) or bool(surface.get("drowning", false)):
+		_failures.append(name + ": fixture player died or began drowning under production physics")
+		return false
+	if bool(spec.swimming):
+		var expected_y := float(spec.water_surface_y) + float(_swim_rules.surface_body_offset_m)
+		if int(surface.get("mode", SWIM_STATE.Mode.LAND)) != SWIM_STATE.Mode.HUMAN \
+				or absf(_player.global_position.y - expected_y) > 0.4:
+			_failures.append(name + ": player did not settle into the expected production human swim state/waterline")
+			return false
+	elif int(surface.get("mode", SWIM_STATE.Mode.LAND)) != SWIM_STATE.Mode.LAND \
+			or not _player.is_on_floor() or _player.get_floor_normal().y < cos(_player.floor_max_angle):
+		_failures.append(name + ": player lacks a supported production land state after settlement")
+		return false
 	return true
+
+
+func _surface_record() -> Dictionary:
+	var controller: Object = _player.get("swim_controller")
+	var state: Dictionary = controller.call("snapshot") if controller != null else {}
+	var vitals: Object = _player.get("vitals")
+	state["dead"] = bool(vitals.call("is_dead")) if vitals != null else false
+	state["health"] = float(vitals.get("health")) if vitals != null else -1.0
+	state["stamina"] = float(vitals.get("stamina")) if vitals != null else -1.0
+	state["on_floor"] = _player.is_on_floor()
+	return state
 
 
 func _clock_record(requested: String, name: String) -> Dictionary:
@@ -469,7 +559,8 @@ func _write_manifest(complete: bool) -> bool:
 		"camera": "production CameraRig/Camera3D, HUD on",
 		"fixture": {"save_origin": "fresh reset_for_new_game", "isolated_save_dir": _save_dir,
 			"party_or_flags_injected": false, "current_realm_set": "water", "teleported_stands": true,
-			"clock_frozen": true, "player_pose_pinned": true, "stationary_hold_not_walk": true,
+			"clock_frozen": true, "player_pose_pinned": false, "single_initial_stage_then_production_physics": true,
+			"stationary_hold_not_walk": true, "max_horizontal_stand_drift_m": 2.0,
 			"continuous_movie_requires_engine_write_movie": true,
 			"device_claim": "computer capture, no Ally hardware", "performance_claim": false},
 		"expected_frame_ids": _expected, "missing_or_failed_frame_ids": missing,
