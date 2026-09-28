@@ -1,0 +1,24 @@
+// Diagnostic-local mask inputs only; original terrain variables never assigned.
+float bi_height = v_vertex.y;
+float bi_paint = coast_painted;
+float bi_slope = abs(dune_normal.y);
+bool bi_valid = outside > 0.0;
+ivec3 bi_index[4];
+bi_index[0] = bi_coord(index_id + vec2(0.0, 1.0));
+bi_index[1] = bi_coord(index_id + vec2(1.0, 1.0));
+bi_index[2] = bi_coord(index_id + vec2(1.0, 0.0));
+bi_index[3] = bi_coord(index_id);
+for (int bi_i = 0; bi_i < 4; bi_i++) {
+	bi_valid = bi_valid && bi_index[bi_i].z >= 0 && all(equal(bi_index[bi_i], index[bi_i]));
+}
+uvec4 bi_control = control;
+if (bi_valid) {
+	if (!bilerp) {
+		bi_control[0] = floatBitsToUint(texelFetch(_control_maps, bi_index[0], 0).r);
+		bi_control[1] = floatBitsToUint(texelFetch(_control_maps, bi_index[1], 0).r);
+		bi_control[2] = floatBitsToUint(texelFetch(_control_maps, bi_index[2], 0).r);
+	}
+	for (int bi_i = 0; bi_i < 4; bi_i++) {
+		bi_valid = bi_valid && !DECODE_HOLE(bi_control[bi_i]);
+	}
+}
