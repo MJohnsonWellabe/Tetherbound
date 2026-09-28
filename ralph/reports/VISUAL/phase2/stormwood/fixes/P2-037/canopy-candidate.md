@@ -34,18 +34,32 @@ The broader log SHA256 is
 Texture import policy passed all 424 runtime 3D sidecars in mode 2.
 
 Independent source review found no imported-material mutation or changes to
-bark, geometry, placements or collision. Native Compatibility shader compilation,
-cutout appearance, crown identity and preservation still require rendered proof.
+bark, geometry, placements or collision. The native Compatibility capture
+completed six frames with no shader/script errors in its error log; existing
+interpolation-deprecation, shared-model-retint and wild-cluster spacing warnings remain. Cutout
+appearance, crown identity and preservation were independently reviewed below.
 
 ## Native comparison scope
 
-The prepared comparison repeats the six exterior frames at 400 m and 100 m,
+The completed comparison repeats the six exterior frames at 400 m and 100 m,
 Calm, Break and aftermath, using `capture_stormwood_f10_matrix.gd`. Compare with
 `after-exterior-r1`, which already enables the grounding candidate, to isolate
 the canopy material change. Capture metadata must disclose the current source
 commit and temporary presentation flags. The fixture uses debug travel, pinned
 weather and aftermath state; it is not earned progression proof.
 
-P2-037 remains open. Even a successful leaf-mask correction cannot establish
-that the cylindrical trunk, sparse crown architecture, dark bands and landmark
-construction now meet the reference bar. No Bars A/B pass is claimed here.
+`after-canopy-r1` retains the six native-source hashes and one compact page from
+commit `832a8ebdca5cbf2e80df90167a38ef0ab307fdbf`. Every source image is
+1920x1080, with identical camera positions, phase names and aftermath states to
+the grounded baseline at `ecb7a8515edeaab90bb13c1d895a5f453cfd57f7`.
+`canopy-comparison-coverage.json` records the comparisons. The legacy exterior
+fixture does not record orientation; the repeated command is supporting evidence,
+not numerical proof of equal camera basis. Rain, lightning and light animation
+are not synchronized between the runs. Both candidate flags were restored off.
+
+`canopy-pair-verdict.md` records the fresh blind review of all twelve native
+images. The correction gives a small distant crown-contrast improvement but
+also makes pale flat cutouts more apparent. Near views are essentially unchanged.
+P2-037 remains open: cylindrical trunk, sparse branching/canopy architecture,
+dark bands and construction detail still fail. Bars A/B remain NO/NO, and both
+candidate flags remain off.
