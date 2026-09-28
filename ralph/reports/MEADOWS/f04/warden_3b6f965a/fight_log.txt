@@ -1,0 +1,132 @@
+         [0] _build_terrain (res://scripts/world/playground_world.gd:1145)
+         [1] _ready (res://scripts/world/playground_world.gd:797)
+[playground] spawned at 0.0, 2.9, 0.0
+[playground] scattered 373499 props in 36 batches (57241 harvestable, 0 already chopped, 389/52118 collision resident)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+         [2] _place_band_pickups (res://scripts/world/playground_world.gd:2004)
+         [3] _build_settlement (res://scripts/world/playground_world.gd:1715)
+         [4] _ready (res://scripts/world/playground_world.gd:854)
+WARNING: band pickup 'b4_candy_wind_ridge_saddle' authored at 345, 6095 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+         [2] _place_band_pickups (res://scripts/world/playground_world.gd:2004)
+         [3] _build_settlement (res://scripts/world/playground_world.gd:1715)
+         [4] _ready (res://scripts/world/playground_world.gd:854)
+[playground] placed 146 band pickups (0 already taken, 39 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] hero clearing: removed 667 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] planted 20 pieces of ground cover around the site
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+ground under warden_aldis after 0 frames at y=6.17 (trainer y=6.17)
+frame res://shots/f04/warden_aldis/warden_aldis-00-before.png fighting=false panel=false
+challenge: settle frame 0 at 1 ms, paused=false
+challenge: settle frame 10 at 3461 ms, paused=false
+challenge: settle frame 20 at 6872 ms, paused=false
+challenge: settle frame 30 at 10267 ms, paused=false
+challenge: settle frame 40 at 16963 ms, paused=false
+challenge: settle frame 50 at 20334 ms, paused=false
+challenge: settled in 23655 ms
+challenge: press 1 at 23674 ms, panel open=true
+challenge: press 2 at 30041 ms, panel open=true
+challenge: press 3 at 32633 ms, panel open=true
+challenge: press 4 at 35045 ms, panel open=true
+challenge: press 5 at 39765 ms, panel open=false
+challenge: 5 presses, fighting=true
+fight live vs warden_aldis
+live member 4 (tuskroot) out vs warden_aldis after 131 steps (earlier members resolved: disclosed)
+frame res://shots/f04/warden_aldis/warden_aldis-01.png fighting=true panel=false
+tell 1: 1.10s, policy stand
+frame res://shots/f04/warden_aldis/warden_aldis-02.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t01-stand-start.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t01-stand-mid.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-03.png fighting=true panel=false
+strike 1 policy=stand outcome=hit 38.8
+frame res://shots/f04/warden_aldis/warden_aldis-t01-stand-strike.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-04.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-05.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-06.png fighting=true panel=false
+tell 2: 1.10s, policy dodge
+frame res://shots/f04/warden_aldis/warden_aldis-07.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t02-dodge-start.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t02-dodge-mid.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-08.png fighting=true panel=false
+strike 2 policy=dodge outcome=hit 39.6
+frame res://shots/f04/warden_aldis/warden_aldis-t02-dodge-strike.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-09.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-10.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-11.png fighting=true panel=false
+tell 3: 1.10s, policy stand
+frame res://shots/f04/warden_aldis/warden_aldis-t03-stand-start.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t03-stand-mid.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-12.png fighting=true panel=false
+strike 3 policy=stand outcome=hit 37.3
+frame res://shots/f04/warden_aldis/warden_aldis-t03-stand-strike.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-13.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-14.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-15.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-16.png fighting=true panel=false
+tell 4: 1.10s, policy dodge
+frame res://shots/f04/warden_aldis/warden_aldis-t04-dodge-start.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-17.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t04-dodge-mid.png fighting=true panel=false
+strike 4 policy=dodge outcome=miss
+frame res://shots/f04/warden_aldis/warden_aldis-18.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-t04-dodge-strike.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-19.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-20.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-21.png fighting=true panel=false
+tell 5: 1.10s, policy stand
+frame res://shots/f04/warden_aldis/warden_aldis-22.png fighting=true panel=false
+strike 5 policy=stand outcome=hit 37.3
+frame res://shots/f04/warden_aldis/warden_aldis-23.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-24.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-r01.png fighting=true panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-r02.png fighting=true panel=false
+ERROR: The object does not have any 'meta' values with the key 'aftermath_standard'.
+       [0] begin_fall (res://scripts/world/trainer_aftermath.gd:79)
+resolved warden_aldis after 4 steps: beaten=true fighting=false
+frame res://shots/f04/warden_aldis/warden_aldis-a01.png fighting=false panel=true
+frame res://shots/f04/warden_aldis/warden_aldis-a02.png fighting=false panel=true
+frame res://shots/f04/warden_aldis/warden_aldis-a03.png fighting=false panel=true
+frame res://shots/f04/warden_aldis/warden_aldis-a04.png fighting=false panel=true
+frame res://shots/f04/warden_aldis/warden_aldis-a05.png fighting=false panel=true
+frame res://shots/f04/warden_aldis/warden_aldis-a06.png fighting=false panel=true
+frame res://shots/f04/warden_aldis/warden_aldis-a07.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a08.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a09.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a10.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a11.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a12.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a13.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a14.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a15.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a16.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a17.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a18.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a19.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a20.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a21.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a22.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a23.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a24.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a25.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a26.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a27.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-a28.png fighting=false panel=false
+frame res://shots/f04/warden_aldis/warden_aldis-99-after.png fighting=false panel=false
