@@ -154,6 +154,12 @@ def build_sheet(repo: Path, base: Path, rows: list[dict], category: str) -> None
     rows = [r for r in rows if r["category"] == category]
     if not rows:
         return
+    render_sheet(repo, rows, base / f"contact_sheet_{category}.jpg")
+    for page, start in enumerate(range(0, len(rows), 24), 1):
+        render_sheet(repo, rows[start:start + 24], base / f"contact_sheet_{category}_{page:02d}.jpg")
+
+
+def render_sheet(repo: Path, rows: list[dict], path: Path) -> None:
     width, height, label_h, columns = 320, 180, 35, 4
     count_rows = (len(rows) + columns - 1) // columns
     sheet = Image.new("RGB", (width * columns, (height + label_h) * count_rows), "#15202b")
@@ -165,7 +171,7 @@ def build_sheet(repo: Path, base: Path, rows: list[dict], category: str) -> None
             x, y = (index % columns) * width, (index // columns) * (height + label_h)
             sheet.paste(image, (x + (width - image.width) // 2, y))
             draw.text((x + 5, y + height + 3), row["id"][:44], fill="white")
-    sheet.save(base / f"contact_sheet_{category}.jpg", quality=90)
+    sheet.save(path, quality=90)
 
 
 if __name__ == "__main__":
