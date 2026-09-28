@@ -23,7 +23,7 @@ const SPECIES := {
 	"meadows": ["terrapup", "bramblebun", "mudsnout", "trailpup", "burrowback",
 		"meadowhart", "paddlenewt", "mosshell", "brooktail", "galecrest", "duskhush",
 		"pipwing", "reedwing", "nightburrow", "stormtrail", "riftfrill", "veridian"],
-	"water": ["ripplet", "cannonback", "riptusk", "mirejaw", "aquaryn", "torrentoad",
+	"water": ["ripplet", "cannonback", "riptusk", "mirejaw", "aquaryn", "torrentoad", "mosshell",
 		"cragclaw", "riverdrake", "sirenseal", "mangrove_monitor", "tidecoil", "abyssal_guardian"],
 	"cloudreach": ["galewisp", "glimmermoth", "stormcapra", "skyrill", "aeriex",
 		"ribbonray", "breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane"],
