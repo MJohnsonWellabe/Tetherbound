@@ -697,7 +697,7 @@ func _draw_enemy() -> void:
 			_telegraph.text = "!!  HEAVY — get clear"
 			_telegraph.add_theme_color_override("font_color", UITokens.DANGER)
 		else:
-			_telegraph.text = "!  incoming — move"
+			_telegraph.text = _windup_text()
 			_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
 	elif bool(_manager.call("enemy_is_rooted")) and not bool(_manager.call("player_is_staggered")):
 		# Not while your own creature is staggered: it cannot act on "hit it",
@@ -706,6 +706,19 @@ func _draw_enemy() -> void:
 		_telegraph.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
 	else:
 		_telegraph.text = ""
+
+
+## The ordinary wind-up's words: a named CHARGER or DIVER says what to do about
+## it (combat.json telegraph.charge_text / dive_text), anything else the plain
+## warning.
+func _windup_text() -> String:
+	var shape := str(_manager.call("enemy_windup_shape")) if _manager.has_method("enemy_windup_shape") else ""
+	var tell := COMBAT_MATH.config().get("telegraph", {}) as Dictionary
+	if shape == "charge":
+		return str(tell.get("charge_text", "!  incoming — move"))
+	if shape == "dive":
+		return str(tell.get("dive_text", "!  incoming — move"))
+	return "!  incoming — move"
 
 
 func _draw_ally() -> void:

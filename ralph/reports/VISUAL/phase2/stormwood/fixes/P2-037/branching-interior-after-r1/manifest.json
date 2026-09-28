@@ -1,0 +1,4234 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "d0f5151c6a4b15086001da78d17ee14311710167",
+  "repro": "Fresh isolated APPDATA. Temporarily enable master and canopy_atlas; branching_crown=true. godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --position 0,0 --audio-driver Dummy --script tools/phase2_capture_stormheart_views.gd -- --biome=stormwood --output=res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1 --times=day,night --seed=2042; restore original disabled config.",
+  "source_manifest_sha256": "7897f5e3cdd0d216753c967024386b1608f19b7ef5adf98921cd82fc801bb11c",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "stormwood",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 265147123595,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 9000.0,
+      "fov": 70.0,
+      "instance_id": 265163900813,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T16:30:58",
+    "capture_started_utc": "2026-09-28T16:29:10",
+    "captured_frame_count": 8,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 8,
+    "planned_frame_ids": [
+      "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+      "stormwood__dynamo__12__the_stormheart_tree__day__close",
+      "stormwood__dynamo__12__the_stormheart_tree__night__approach",
+      "stormwood__dynamo__12__the_stormheart_tree__night__close",
+      "stormwood__landmark__dynamo_core__day__approach",
+      "stormwood__landmark__dynamo_core__day__close",
+      "stormwood__landmark__dynamo_core__night__approach",
+      "stormwood__landmark__dynamo_core__night__close"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 9000.0,
+      "fov": 70.0,
+      "instance_id": 265163900813,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day",
+      "night"
+    ],
+    "requested_views": [
+      "approach",
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/stormwood.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [],
+    "source_engine_manifest_sha256": "aaee8fad8e00da65430808ec0ec4a3bce24d9e11e621e1d6d17b5fd315f074cf",
+    "candidate_flags": {
+      "master": true,
+      "canopy_atlas": true,
+      "branching_crown": true
+    },
+    "fixture_limits": "Staged debug placement in production scene/camera. Full catalogue neighbours retained for interior selection. Exterior phase/day/aftermath pins and healing; interior clock pins. Not earned progression, traversal or motion proof.",
+    "hud_disclosure_correction": "The inherited engine fixture_disclosure says ordinary gameplay HUD, but parent _capture_row calls _hide_hud before saving. These frames hide the HUD and do not establish interface acceptance. Original engine metadata/hash retained unchanged."
+  },
+  "frames": [
+    {
+      "id": "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 The Dynamo",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 465923,
+        "camera_player_distance_m": 5.82137012481689,
+        "camera_position": [
+          -98.4413299560547,
+          112.430168151855,
+          5507.0537109375
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.99911493062973,
+            0.0,
+            -0.0420277751982212
+          ],
+          "basis_y": [
+            -0.00873807910829782,
+            0.978147625923157,
+            -0.207727998495102
+          ],
+          "basis_z": [
+            0.0411094315350056,
+            0.2079117000103,
+            0.977283358573914
+          ],
+          "origin": [
+            -98.6551055908203,
+            111.348983764648,
+            5501.9716796875
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.999116480350494,
+            3.82649076868802e-08,
+            -0.0420277677476406
+          ],
+          "basis_y": [
+            -0.00873811542987823,
+            0.978147566318512,
+            -0.207728326320648
+          ],
+          "basis_z": [
+            0.041109349578619,
+            0.207912027835846,
+            0.977283298969269
+          ],
+          "origin": [
+            -98.4413299560547,
+            112.430168151855,
+            5507.0537109375
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 12,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+        "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+        "identity": "stormwood__dynamo__12__the_stormheart_tree",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -60.1679801940918,
+              111.110740661621,
+              5394.291015625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.0658493041992,
+              112.757247924805,
+              5410.37060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525048_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -207.481521606445,
+              102.670677185059,
+              5590.40087890625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -62.0733909606934,
+              110.501525878906,
+              5510.16064453125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -70.7141494750977,
+              109.788467407227,
+              5518.53759765625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              32.5505561828613,
+              106.266479492188,
+              5552.79052734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              35.6788940429688,
+              101.82283782959,
+              5579.1201171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -65.5284957885742,
+              102.515335083008,
+              5622.353515625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.7691497802734,
+              101.370544433594,
+              5633.3671875
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.3636016845703,
+              102.415283203125,
+              5621.8798828125
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 24,
+        "observed_clock": {
+          "elapsed_seconds": 200.195833333333,
+          "hour": 8.00783333333333,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -98.6551055908203,
+          109.598983764648,
+          5501.9716796875
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 109.602630566496,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 109.602630566496,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.0420278422534466,
+          -0.999116480350494
+        ]
+      },
+      "source_sha256": "17edcd56a34ca6c72725fd2d956621334701e12cae4bd25b90270f2d7d41b997",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__day__approach.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__dynamo__12__the_stormheart_tree__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 The Dynamo",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 363461,
+        "camera_player_distance_m": 5.82184410095215,
+        "camera_position": [
+          -99.5760955810547,
+          114.638450622559,
+          5480.078125
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.999113261699677,
+            0.0,
+            -0.0420277044177055
+          ],
+          "basis_y": [
+            -0.00873807910829782,
+            0.978147625923157,
+            -0.207727998495102
+          ],
+          "basis_z": [
+            0.0411094315350056,
+            0.2079117000103,
+            0.977283358573914
+          ],
+          "origin": [
+            -99.7898635864258,
+            113.557167053223,
+            5474.99560546875
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.999116480350494,
+            3.57084140034658e-08,
+            -0.0420278757810593
+          ],
+          "basis_y": [
+            -0.0087381387129426,
+            0.978147566318512,
+            -0.207728371024132
+          ],
+          "basis_z": [
+            0.0411094538867474,
+            0.20791207253933,
+            0.977283298969269
+          ],
+          "origin": [
+            -99.5760955810547,
+            114.638450622559,
+            5480.078125
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 12,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+        "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day__close",
+        "identity": "stormwood__dynamo__12__the_stormheart_tree",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -120.054718017578,
+              107.934181213379,
+              5333.6318359375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -60.1679801940918,
+              111.110740661621,
+              5394.291015625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.0658493041992,
+              112.757247924805,
+              5410.37060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525048_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -207.481521606445,
+              102.670677185059,
+              5590.40087890625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -92.0112228393555,
+              105.94652557373,
+              5315.7685546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -89.9779815673828,
+              107.529518127441,
+              5335.5830078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              10.6701335906982,
+              113.818977355957,
+              5379.5927734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.999999940395355,
+              1.0,
+              0.999999940395355
+            ],
+            "position": [
+              -61.9305648803711,
+              110.515281677246,
+              5510.18408203125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998927116394,
+              1.0,
+              0.999998927116394
+            ],
+            "position": [
+              -70.8679962158203,
+              109.820747375488,
+              5517.1806640625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              32.5505561828613,
+              106.266479492188,
+              5552.79052734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -65.5284957885742,
+              102.515335083008,
+              5622.353515625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -203.822769165039,
+              111.380096435547,
+              5378.81005859375
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.7691497802734,
+              101.370544433594,
+              5633.3671875
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.3636016845703,
+              102.415283203125,
+              5621.8798828125
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 28,
+        "observed_clock": {
+          "elapsed_seconds": 200.198470296296,
+          "hour": 8.00793881185185,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -99.7898635864258,
+          111.807167053223,
+          5474.99560546875
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 111.820180867133,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 111.820180867133,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.0420278422534466,
+          -0.999116480350494
+        ]
+      },
+      "source_sha256": "ab2715bc151f5039e296ecbec3b8172477931cf46b108ae2b9d576d8ae0df699",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__day__close.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__dynamo__12__the_stormheart_tree__night__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 The Dynamo",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 467023,
+        "camera_player_distance_m": 5.82137012481689,
+        "camera_position": [
+          -98.4413299560547,
+          112.430168151855,
+          5507.0537109375
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.999111473560333,
+            0.0,
+            -0.0420276299118996
+          ],
+          "basis_y": [
+            -0.00873807910829782,
+            0.978147625923157,
+            -0.207727998495102
+          ],
+          "basis_z": [
+            0.0411094315350056,
+            0.2079117000103,
+            0.977283358573914
+          ],
+          "origin": [
+            -98.6551055908203,
+            111.348983764648,
+            5501.9716796875
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.999116480350494,
+            7.40574179758369e-08,
+            -0.0420279391109943
+          ],
+          "basis_y": [
+            -0.00873818900436163,
+            0.978147566318512,
+            -0.207728371024132
+          ],
+          "basis_z": [
+            0.0411095097661018,
+            0.20791207253933,
+            0.977283298969269
+          ],
+          "origin": [
+            -98.4413299560547,
+            112.430168151855,
+            5507.0537109375
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 12,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__night__approach.jpg",
+        "frame_id": "stormwood__dynamo__12__the_stormheart_tree__night__approach",
+        "identity": "stormwood__dynamo__12__the_stormheart_tree",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -60.1679801940918,
+              111.110740661621,
+              5394.291015625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.0658493041992,
+              112.757247924805,
+              5410.37060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525048_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -207.481521606445,
+              102.670677185059,
+              5590.40087890625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.999997794628143,
+              1.0,
+              0.999997794628143
+            ],
+            "position": [
+              -60.0994644165039,
+              110.689682006836,
+              5510.4853515625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998807907104,
+              1.0,
+              0.999998807907104
+            ],
+            "position": [
+              -70.8869934082031,
+              109.820526123047,
+              5517.0146484375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              32.5505561828613,
+              106.266479492188,
+              5552.79052734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              35.6788940429688,
+              101.82283782959,
+              5579.1201171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -65.5284957885742,
+              102.515335083008,
+              5622.353515625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.7691497802734,
+              101.370544433594,
+              5633.3671875
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.3636016845703,
+              102.415283203125,
+              5621.8798828125
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 24,
+        "observed_clock": {
+          "elapsed_seconds": 575.207926,
+          "hour": 23.00831704,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -98.6551055908203,
+          109.598983764648,
+          5501.9716796875
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 109.602630566496,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 109.602630566496,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.0420278422534466,
+          -0.999116480350494
+        ]
+      },
+      "source_sha256": "8afce251bb9751217660f461d9555827323b4f40c6e15528144f7a0fb3cd56c9",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__night__approach.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__dynamo__12__the_stormheart_tree__night__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 The Dynamo",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 363764,
+        "camera_player_distance_m": 5.82184553146362,
+        "camera_position": [
+          -99.5760650634766,
+          114.638450622559,
+          5480.078125
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.999109745025635,
+            0.0,
+            -0.0420275554060936
+          ],
+          "basis_y": [
+            -0.00873807817697525,
+            0.978147625923157,
+            -0.207727998495102
+          ],
+          "basis_z": [
+            0.0411094278097153,
+            0.2079117000103,
+            0.977283358573914
+          ],
+          "origin": [
+            -99.7898635864258,
+            113.557167053223,
+            5474.99560546875
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.99911642074585,
+            8.16180474316752e-08,
+            -0.0420279465615749
+          ],
+          "basis_y": [
+            -0.0087382048368454,
+            0.978147506713867,
+            -0.207728534936905
+          ],
+          "basis_z": [
+            0.0411095134913921,
+            0.207912236452103,
+            0.977283239364624
+          ],
+          "origin": [
+            -99.5760650634766,
+            114.638450622559,
+            5480.078125
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 12,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__night__close.jpg",
+        "frame_id": "stormwood__dynamo__12__the_stormheart_tree__night__close",
+        "identity": "stormwood__dynamo__12__the_stormheart_tree",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -120.054718017578,
+              107.934181213379,
+              5333.6318359375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -60.1679801940918,
+              111.110740661621,
+              5394.291015625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.0658493041992,
+              112.757247924805,
+              5410.37060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525048_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -207.481521606445,
+              102.670677185059,
+              5590.40087890625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -92.0112228393555,
+              105.94652557373,
+              5315.7685546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -89.9779815673828,
+              107.529518127441,
+              5335.5830078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              10.6701335906982,
+              113.818977355957,
+              5379.5927734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.999997794628143,
+              1.0,
+              0.999997794628143
+            ],
+            "position": [
+              -59.2678680419922,
+              110.83194732666,
+              5510.62548828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998688697815,
+              1.0,
+              0.999998688697815
+            ],
+            "position": [
+              -70.4224090576172,
+              109.820373535156,
+              5516.6455078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              32.5505561828613,
+              106.266479492188,
+              5552.79052734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -65.5284957885742,
+              102.515335083008,
+              5622.353515625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -203.822769165039,
+              111.380096435547,
+              5378.81005859375
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.7691497802734,
+              101.370544433594,
+              5633.3671875
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.3636016845703,
+              102.415283203125,
+              5621.8798828125
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 28,
+        "observed_clock": {
+          "elapsed_seconds": 575.193361619048,
+          "hour": 23.0077344647619,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -99.7898635864258,
+          111.807167053223,
+          5474.99560546875
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 111.820180867133,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 111.820180867133,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.0420278422534466,
+          -0.999116480350494
+        ]
+      },
+      "source_sha256": "8b8821d2d7e4376525526a44a6c0ade20331d8cb05ebc84e03ce2ac9d54cfe3f",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__dynamo__12__the_stormheart_tree__night__close.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__landmark__dynamo_core__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 50867,
+        "camera_player_distance_m": 5.82174634933472,
+        "camera_position": [
+          -100.0,
+          115.045860290527,
+          5432.9130859375
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.999993145465851,
+            0.0,
+            -1.50994765135692e-07
+          ],
+          "basis_y": [
+            -3.13937924545371e-08,
+            0.978147625923157,
+            0.2079117000103
+          ],
+          "basis_z": [
+            1.47696184171764e-07,
+            0.2079117000103,
+            -0.978147625923157
+          ],
+          "origin": [
+            -100.0,
+            113.964576721191,
+            5438.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -1.0,
+            9.15022866365689e-08,
+            -4.39505356553127e-08
+          ],
+          "basis_y": [
+            8.03648418923331e-08,
+            0.978147387504578,
+            0.207912728190422
+          ],
+          "basis_z": [
+            6.20145925722682e-08,
+            0.207912728190422,
+            -0.978147387504578
+          ],
+          "origin": [
+            -100.0,
+            115.045860290527,
+            5432.9130859375
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 31,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__day__approach.jpg",
+        "frame_id": "stormwood__landmark__dynamo_core__day__approach",
+        "identity": "stormwood__landmark__dynamo_core",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -120.054718017578,
+              107.934181213379,
+              5333.6318359375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -60.1679801940918,
+              111.049575805664,
+              5394.291015625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.0658493041992,
+              112.72135925293,
+              5410.37060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -92.0112228393555,
+              105.94652557373,
+              5315.7685546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -89.9779815673828,
+              107.529518127441,
+              5335.5830078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              10.6701335906982,
+              113.818977355957,
+              5379.5927734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              16.3616409301758,
+              109.439971923828,
+              5341.71435546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.999997794628143,
+              1.0,
+              0.999997794628143
+            ],
+            "position": [
+              -59.2678680419922,
+              110.83194732666,
+              5510.62548828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998688697815,
+              1.0,
+              0.999998688697815
+            ],
+            "position": [
+              -70.2745971679688,
+              109.820320129395,
+              5516.5283203125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524977_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.354675292969,
+              109.060928344727,
+              5348.74951171875
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -203.822769165039,
+              111.380096435547,
+              5378.81005859375
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 25,
+        "observed_clock": {
+          "elapsed_seconds": 200.193145666667,
+          "hour": 8.00772582666666,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -100.0,
+          112.214599609375,
+          5438.0
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 112.21121407394,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 112.21121407394,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.0,
+          1.0
+        ]
+      },
+      "source_sha256": "689b6ae14c6a1d3553964c8b516bbaef8462eb6e8e1d0358349d666562899c95",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__day__approach.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__landmark__dynamo_core__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 374519,
+        "camera_player_distance_m": 5.82079696655273,
+        "camera_position": [
+          -100.0,
+          115.107284545898,
+          5459.9140625
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.999993145465851,
+            0.0,
+            -1.50994765135692e-07
+          ],
+          "basis_y": [
+            -3.13937924545371e-08,
+            0.978147625923157,
+            0.2079117000103
+          ],
+          "basis_z": [
+            1.47696184171764e-07,
+            0.2079117000103,
+            -0.978147625923157
+          ],
+          "origin": [
+            -100.0,
+            114.026206970215,
+            5465.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -1.0,
+            9.15023008474236e-08,
+            -4.39505356553127e-08
+          ],
+          "basis_y": [
+            8.03648561031878e-08,
+            0.978147387504578,
+            0.207912728190422
+          ],
+          "basis_z": [
+            6.20145925722682e-08,
+            0.207912728190422,
+            -0.978147387504578
+          ],
+          "origin": [
+            -100.0,
+            115.107284545898,
+            5459.9140625
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 31,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__day__close.jpg",
+        "frame_id": "stormwood__landmark__dynamo_core__day__close",
+        "identity": "stormwood__landmark__dynamo_core",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -120.054718017578,
+              107.934181213379,
+              5333.6318359375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -60.1679801940918,
+              111.049575805664,
+              5394.291015625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.0658493041992,
+              112.72135925293,
+              5410.37060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -92.0112228393555,
+              105.94652557373,
+              5315.7685546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -89.9779815673828,
+              107.529518127441,
+              5335.5830078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              10.6701335906982,
+              113.818977355957,
+              5379.5927734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.99999737739563,
+              1.0,
+              0.99999737739563
+            ],
+            "position": [
+              -59.7085952758789,
+              110.741119384766,
+              5510.69091796875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998688697815,
+              1.0,
+              0.999998688697815
+            ],
+            "position": [
+              -69.8807830810547,
+              109.816246032715,
+              5516.22119140625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              32.5505561828613,
+              106.266479492188,
+              5552.79052734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -203.822769165039,
+              111.380096435547,
+              5378.81005859375
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.3636016845703,
+              102.415283203125,
+              5621.8798828125
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 25,
+        "observed_clock": {
+          "elapsed_seconds": 200.202912481481,
+          "hour": 8.00811649925926,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -100.0,
+          112.276222229004,
+          5465.0
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 112.289238088292,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 112.289238088292,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.0,
+          1.0
+        ]
+      },
+      "source_sha256": "756eb70342dc0be85862b29eeabb538b1fb4765f382fb64378ff257a3194dd25",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__day__close.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__landmark__dynamo_core__night__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 50830,
+        "camera_player_distance_m": 5.82169055938721,
+        "camera_position": [
+          -100.0,
+          115.045745849609,
+          5432.9130859375
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.999993145465851,
+            0.0,
+            -1.50994765135692e-07
+          ],
+          "basis_y": [
+            -3.13937924545371e-08,
+            0.978147625923157,
+            0.2079117000103
+          ],
+          "basis_z": [
+            1.47696184171764e-07,
+            0.2079117000103,
+            -0.978147625923157
+          ],
+          "origin": [
+            -100.0,
+            113.964584350586,
+            5438.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -1.0,
+            9.15023008474236e-08,
+            -4.3950521444458e-08
+          ],
+          "basis_y": [
+            8.03648632086151e-08,
+            0.978147387504578,
+            0.207912728190422
+          ],
+          "basis_z": [
+            6.20145783614134e-08,
+            0.207912728190422,
+            -0.978147387504578
+          ],
+          "origin": [
+            -100.0,
+            115.045745849609,
+            5432.9130859375
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 31,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__night__approach.jpg",
+        "frame_id": "stormwood__landmark__dynamo_core__night__approach",
+        "identity": "stormwood__landmark__dynamo_core",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -120.054718017578,
+              107.934181213379,
+              5333.6318359375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              0.999999225139618,
+              1.0,
+              0.999999225139618
+            ],
+            "position": [
+              -59.0814170837402,
+              111.159362792969,
+              5393.99169921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              0.999999642372131,
+              1.0,
+              0.999999642372131
+            ],
+            "position": [
+              -54.0930976867676,
+              112.74405670166,
+              5410.93212890625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -92.0112228393555,
+              105.94652557373,
+              5315.7685546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -89.9779815673828,
+              107.529518127441,
+              5335.5830078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              10.6701335906982,
+              113.818977355957,
+              5379.5927734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              16.3616409301758,
+              109.439971923828,
+              5341.71435546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.999997437000275,
+              1.0,
+              0.999997437000275
+            ],
+            "position": [
+              -59.9316291809082,
+              110.702850341797,
+              5510.72216796875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998688697815,
+              1.0,
+              0.999998688697815
+            ],
+            "position": [
+              -69.8807830810547,
+              109.816246032715,
+              5516.22119140625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524977_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.354675292969,
+              109.060928344727,
+              5348.74951171875
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -203.822769165039,
+              111.380096435547,
+              5378.81005859375
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 25,
+        "observed_clock": {
+          "elapsed_seconds": 575.198592666666,
+          "hour": 23.0079437066667,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -100.0,
+          112.214599609375,
+          5438.0
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 112.21121407394,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 112.21121407394,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.0,
+          1.0
+        ]
+      },
+      "source_sha256": "1cf4e4ead659a264a68bfd62a7e6026e6f2286180003df8e477d96348eccf9f6",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__night__approach.jpg",
+      "tile_index": 6,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "stormwood__landmark__dynamo_core__night__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/stormwood/fixes/P2-037/branching-interior-after-r1/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "dynamo",
+        "biome_display_name": "The Stormwood",
+        "biome_id": "stormwood",
+        "bytes": 373790,
+        "camera_player_distance_m": 5.82079267501831,
+        "camera_position": [
+          -100.0,
+          115.107276916504,
+          5459.9140625
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.999993145465851,
+            0.0,
+            -1.50994765135692e-07
+          ],
+          "basis_y": [
+            -3.13937924545371e-08,
+            0.978147625923157,
+            0.2079117000103
+          ],
+          "basis_z": [
+            1.47696184171764e-07,
+            0.2079117000103,
+            -0.978147625923157
+          ],
+          "origin": [
+            -100.0,
+            114.02619934082,
+            5465.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -1.0,
+            9.15023008474236e-08,
+            -4.39505072336033e-08
+          ],
+          "basis_y": [
+            8.03648632086151e-08,
+            0.978147387504578,
+            0.207912728190422
+          ],
+          "basis_z": [
+            6.20145641505587e-08,
+            0.207912728190422,
+            -0.978147387504578
+          ],
+          "origin": [
+            -100.0,
+            115.107276916504,
+            5459.9140625
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "The Stormheart Tree",
+        "destination_index": 31,
+        "file": "res://.tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__night__close.jpg",
+        "frame_id": "stormwood__landmark__dynamo_core__night__close",
+        "identity": "stormwood__landmark__dynamo_core",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -138.847534179688,
+              108.667373657227,
+              5351.96044921875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524978_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -120.054718017578,
+              107.934181213379,
+              5333.6318359375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_1",
+            "node_scale": [
+              0.999999344348907,
+              1.0,
+              0.999999344348907
+            ],
+            "position": [
+              -58.1747894287109,
+              111.221313476563,
+              5393.71826171875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284524983_2",
+            "node_scale": [
+              0.999998390674591,
+              1.0,
+              0.999998390674591
+            ],
+            "position": [
+              -54.1716690063477,
+              112.799140930176,
+              5412.71728515625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.286422729492,
+              108.523765563965,
+              5422.7119140625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525010_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -235.237503051758,
+              109.144866943359,
+              5448.4990234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -177.076690673828,
+              110.951332092285,
+              5483.33056640625
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525015_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -229.869171142578,
+              108.442756652832,
+              5504.2060546875
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 1.95,
+            "body_radius_m": 0.660706,
+            "node_path": "Wild_sparkit_284525040_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              45.4966125488281,
+              110.484703063965,
+              5482.1240234375
+            ],
+            "species_id": "sparkit"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -92.0112228393555,
+              105.94652557373,
+              5315.7685546875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524950_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -89.9779815673828,
+              107.529518127441,
+              5335.5830078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284524979_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              10.6701335906982,
+              113.818977355957,
+              5379.5927734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -154.580764770508,
+              111.965019226074,
+              5453.4794921875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525011_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -201.764190673828,
+              110.200325012207,
+              5453.62451171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              25.3470039367676,
+              113.460655212402,
+              5434.3984375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525012_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              17.9909858703613,
+              113.613349914551,
+              5454.3486328125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_1",
+            "node_scale": [
+              0.999997556209564,
+              1.0,
+              0.999997556209564
+            ],
+            "position": [
+              -61.8134841918945,
+              110.483711242676,
+              5510.99951171875
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525016_2",
+            "node_scale": [
+              0.999998688697815,
+              1.0,
+              0.999998688697815
+            ],
+            "position": [
+              -69.8807830810547,
+              109.816246032715,
+              5516.22119140625
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -119.935417175293,
+              104.103759765625,
+              5577.4423828125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525044_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -97.4793319702148,
+              107.572853088379,
+              5550.07080078125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525045_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              32.5505561828613,
+              106.266479492188,
+              5552.79052734375
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 3.4,
+            "body_radius_m": 1.19,
+            "node_path": "Wild_tanglevolt_284525049_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -63.6811218261719,
+              106.547515869141,
+              5574.392578125
+            ],
+            "species_id": "tanglevolt"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -203.822769165039,
+              111.380096435547,
+              5378.81005859375
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284524982_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -225.310333251953,
+              109.183441162109,
+              5410.78515625
+            ],
+            "species_id": "thundertunnel"
+          },
+          {
+            "body_height_m": 2.8,
+            "body_radius_m": 0.98,
+            "node_path": "Wild_thundertunnel_284525077_2",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -99.3636016845703,
+              102.415283203125,
+              5621.8798828125
+            ],
+            "species_id": "thundertunnel"
+          }
+        ],
+        "nearby_creatures_160m": 25,
+        "observed_clock": {
+          "elapsed_seconds": 575.188333333334,
+          "hour": 23.0075333333333,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "phase": "calm",
+        "player_character": "trainer",
+        "player_position": [
+          -100.0,
+          112.276222229004,
+          5465.0
+        ],
+        "position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "resolved_ground_y": 112.289238088292,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          -100.0,
+          5470.0
+        ],
+        "terrain_ground_y": 112.289238088292,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.0,
+          1.0
+        ]
+      },
+      "source_sha256": "58251a66c2f30abc21d0c244fe809b89af1bd7e2cf8ee7de3ac297f2cd6fa00c",
+      "source_frame_path": ".tmp/stormwood-phase2/p2037-branching-interior-after-r1/stormwood__landmark__dynamo_core__night__close.jpg",
+      "tile_index": 7,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}
