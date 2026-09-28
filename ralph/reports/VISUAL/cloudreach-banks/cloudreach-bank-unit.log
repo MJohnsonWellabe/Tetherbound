@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only cloudreach_environment,cloudreach_cliff_strata_contract,cloudreach_aviary_architecture: 3 of 598 test files
+  ok    test_cloudreach_aviary_architecture.gd :: test_architecture_preserves_ground_boxes_footing_inputs_and_pylon_anchor
+  ok    test_cloudreach_aviary_architecture.gd :: test_curved_stone_arches_preserve_the_entire_existing_clear_height
+  ok    test_cloudreach_aviary_architecture.gd :: test_dome_has_primary_ribs_and_entry_lamps_mount_from_jamb_feet
+  ok    test_cloudreach_cliff_strata_contract.gd :: test_cloudreach_strata_are_warped_and_spatially_intermittent
+  ok    test_cloudreach_cliff_strata_contract.gd :: test_cloudreach_strata_preserve_ledge_and_crevice_material_roles
+  ok    test_cloudreach_environment.gd :: test_cliff_walls_face_outward
+  ok    test_cloudreach_environment.gd :: test_cloud_sea_uses_clustered_banks_instead_of_independent_white_ovals
+  ok    test_cloudreach_environment.gd :: test_generated_ground_faces_upward
+  ok    test_cloudreach_environment.gd :: test_terrain_wear_is_true_coverage_and_route_joints_do_not_restart_fades
+
+9 tests, 149 assertions, 0 failed

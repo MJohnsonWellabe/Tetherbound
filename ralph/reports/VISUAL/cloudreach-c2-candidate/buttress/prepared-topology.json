@@ -1,0 +1,24 @@
+{
+  "source": "assets_raw\\cloudreach_cliff_buttress\\model.glb",
+  "vertices_before": 17433,
+  "vertices_prepared": 6002,
+  "repair": "voxel_320_decimate_12000_colour_bake_2048",
+  "original_welded_nonmanifold": 61,
+  "triangles": 12000,
+  "components": [
+    6002
+  ],
+  "non_manifold_edges": 0,
+  "boundary_edges": 0,
+  "degenerate_faces": 0,
+  "edge_face_counts": {
+    "0": 0,
+    "1": 0,
+    "2": 18000,
+    "3": 0,
+    "4": 0
+  },
+  "signed_volume": 0.7841241526778586,
+  "uv_layers": 1,
+  "material_count": 1
+}

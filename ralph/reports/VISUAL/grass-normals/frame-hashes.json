@@ -1,0 +1,545 @@
+{
+  "baseline_commit": "b1b2b4254aad076fb1389a9352bd4e487c8f2981",
+  "frames": [
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/001_cloudreach_place_grass_review_env_gate_lower_cliffs_1_day_baseline.png",
+      "sha256": "71a5f864eb58dcc2fe9f76dcf31385a41d27303fa7d9ddd930ef6289096ddae2",
+      "size": 2881799,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/002_cloudreach_place_grass_review_env_gate_lower_cliffs_1_day_candidate.png",
+      "sha256": "22fa86255d12ace491b05b1e8bd5a3b9024ca62f372dd64038507bf65144cafc",
+      "size": 2881432,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/003_cloudreach_place_grass_review_env_gate_lower_cliffs_1_night_baseline.png",
+      "sha256": "649346205bd0fb2ab357376b13fea160416b7bc8c6d275ab0c32f796caaf389d",
+      "size": 2835609,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/004_cloudreach_place_grass_review_env_gate_lower_cliffs_1_night_candidate.png",
+      "sha256": "42e6da0e858f8887e38ae88cd39bc71ceb3f18136bc427690ace786459acb0a3",
+      "size": 2874762,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/005_cloudreach_place_grass_review_env_windscar_ravine_0_day_baseline.png",
+      "sha256": "eec21d9347ca2432192095d696601309b4e97aff24d22bbc51c4507bc491a719",
+      "size": 3038985,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/006_cloudreach_place_grass_review_env_windscar_ravine_0_day_candidate.png",
+      "sha256": "559caa734411d988ff8d94c8339e307aff8a088b2e94ea9f58509e434dccd41d",
+      "size": 3109887,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/007_cloudreach_place_grass_review_env_windscar_ravine_0_night_baseline.png",
+      "sha256": "8cbbbd89c542ec3055499a25544ed1481acd6218943aa859748ed0389b1f2295",
+      "size": 2668972,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/008_cloudreach_place_grass_review_env_windscar_ravine_0_night_candidate.png",
+      "sha256": "92daf29d5d7c528c3468a264851e9a354e0e3dad71025c5c905226b340352c58",
+      "size": 2635294,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/009_cloudreach_place_grass_review_env_high_roost_sky_shrine_1_day_baseline.png",
+      "sha256": "69651e841f9c76869c6d56cfa054a9a529865e60d5fba51e93f5e478905998d8",
+      "size": 2803984,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/010_cloudreach_place_grass_review_env_high_roost_sky_shrine_1_day_candidate.png",
+      "sha256": "7bec0f0a251213a773fdd7a89c55b29e4a6b5e5f2e4799c6e3b1f12490f7b428",
+      "size": 2802804,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/011_cloudreach_place_grass_review_env_high_roost_sky_shrine_1_night_baseline.png",
+      "sha256": "42564b1c7d61d35a056bc11cbba3006fcac524dd55f50dee73007327bbb1aba0",
+      "size": 2589741,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "cloudreach",
+      "file": "shots/grass-normals-paired/region/cloudreach/012_cloudreach_place_grass_review_env_high_roost_sky_shrine_1_night_candidate.png",
+      "sha256": "f896fb4f76a23ed148e498ce7bdd3ceeed3d176eb555b003bcdff3034238b90f",
+      "size": 2590703,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/001_meadows_place_grass_review_env_band1_lower_meadows_0_day_baseline.png",
+      "sha256": "980df1af0b23d5317cfc70a9f12533124a6005faadc89d0a4c34f1eb0d256d6f",
+      "size": 3858378,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/002_meadows_place_grass_review_env_band1_lower_meadows_0_day_candidate.png",
+      "sha256": "c6d97b3cbda339170ec92e358e04b56d085dc5af83e1aae06df5512d4c07bfbf",
+      "size": 3897443,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/003_meadows_place_grass_review_env_band1_lower_meadows_0_night_baseline.png",
+      "sha256": "060b6a09861955479270d15c971ccea5a96440b6cd1c7b497c73b60838018bd5",
+      "size": 2854603,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/004_meadows_place_grass_review_env_band1_lower_meadows_0_night_candidate.png",
+      "sha256": "a12e398e10ecf397b6dc867b360942da4f77d826c8965fe628ac58d827ebf227",
+      "size": 2892811,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/005_meadows_place_grass_review_env_band2_stone_and_root_0_day_baseline.png",
+      "sha256": "93ec470d2c93d2072c05d115151671406e34918b23113976e3215a5eefcceb25",
+      "size": 3554762,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/006_meadows_place_grass_review_env_band2_stone_and_root_0_day_candidate.png",
+      "sha256": "89eaf48a1d053997929b1dbb890944c14ebf788f60b26a9740f6a18f7eeb33c0",
+      "size": 3565549,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/007_meadows_place_grass_review_env_band2_stone_and_root_0_night_baseline.png",
+      "sha256": "069c968d228168bcd90b84c4cc185edebebc3af70dd76561a957e2b5e3579570",
+      "size": 2609295,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/008_meadows_place_grass_review_env_band2_stone_and_root_0_night_candidate.png",
+      "sha256": "d1e2d2095471f042c0f3dcd8fb36663c65ce1f5a236d238b45402dcfc9dfbaea",
+      "size": 2622741,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/009_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_day_baseline.png",
+      "sha256": "f3d3f066be693d8c98c25c4310d6f6cf89a3ec2652b804a43d2f711ff45c0fca",
+      "size": 4309090,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/010_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_day_candidate.png",
+      "sha256": "e0d6034cc0ff368cf39d77e5faddfaca3907ca0376c980c449284cf220008444",
+      "size": 4360064,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/011_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_night_baseline.png",
+      "sha256": "bb138b70f9d89fda9107d9feaaaad480a48c1220a1f1fdd34526ea88a166f72d",
+      "size": 2837382,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "meadows",
+      "file": "shots/grass-normals-paired/region/meadows/012_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_night_candidate.png",
+      "sha256": "7011700ddbc61a34b35eb81e89e5aeb2598aa5f1e90b63e75561cc70caa94a1c",
+      "size": 2879788,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/001_stormwood_place_grass_review_env_cinder_verge_0_calm_baseline.png",
+      "sha256": "e23cb0fa8de70438d857427c2ed49eb4e205bc415419d3d55210b886428dd57c",
+      "size": 3334375,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/002_stormwood_place_grass_review_env_cinder_verge_0_calm_candidate.png",
+      "sha256": "fae16d993de5f259fa2395ad6c5aaadc5c537a064a9041678db9e9a4432107f1",
+      "size": 3392744,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/003_stormwood_place_grass_review_env_cinder_verge_0_break_baseline.png",
+      "sha256": "8ab8c4f00115cab880d380cb9187edb8eea64505710a3be835dc4f36c80dfaf1",
+      "size": 2964520,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/004_stormwood_place_grass_review_env_cinder_verge_0_break_candidate.png",
+      "sha256": "22ad1168abaae2a12ae4aa2c4cf5d40fbb3e5fd72ac89481c46931c392c67a2a",
+      "size": 3012400,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/005_stormwood_place_grass_review_env_glowmoss_hollows_0_calm_baseline.png",
+      "sha256": "37d838ac61197d790d43a0861a87f8c6cfd0f18ae7f7fc5c5a31ba5ad5b9305e",
+      "size": 3055034,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/006_stormwood_place_grass_review_env_glowmoss_hollows_0_calm_candidate.png",
+      "sha256": "e8c45d9ab9404b9e3beee162dba189ec2df97bfc381b293c1f1e85e2bf2757af",
+      "size": 3088018,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/007_stormwood_place_grass_review_env_glowmoss_hollows_0_break_baseline.png",
+      "sha256": "41a71f06ed730906273d496b3ab96cea885251938e765ee6e7336292aa465213",
+      "size": 2430591,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/008_stormwood_place_grass_review_env_glowmoss_hollows_0_break_candidate.png",
+      "sha256": "29a0d3d60bf7a71aa07fe03d961bc1ab4b9ddbd3f06175f5cc4767855c296f37",
+      "size": 2444361,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/009_stormwood_place_grass_review_env_conductor_run_1_calm_baseline.png",
+      "sha256": "13654ca9f50b0ed3adb9e00103adb59405c0812eeef8dc4c39f4fb6bb58d2936",
+      "size": 2947324,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/010_stormwood_place_grass_review_env_conductor_run_1_calm_candidate.png",
+      "sha256": "61c1b9b1d8bac55fc7f8a5d7bddae3432447ab6b438150e92df2fa737d9ca835",
+      "size": 2972284,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/011_stormwood_place_grass_review_env_conductor_run_1_break_baseline.png",
+      "sha256": "3695b231b9a3c204a1bd944d05d705b2750f01a56b103639c69f50c0c09db832",
+      "size": 2455652,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "stormwood",
+      "file": "shots/grass-normals-paired/region/stormwood/012_stormwood_place_grass_review_env_conductor_run_1_break_candidate.png",
+      "sha256": "73ed69169b3d6103c2d134234bb23f188f7c1d395be7f58ed5cb29a30b6e6b03",
+      "size": 2453428,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/001_tidewake_place_grass_review_env_first_shore_0_day_baseline.png",
+      "sha256": "0f9cd7988e3476bad3f21f2cb53529eb28bac77621da7405a6f3c1dc582bd533",
+      "size": 3744777,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/002_tidewake_place_grass_review_env_first_shore_0_day_candidate.png",
+      "sha256": "17432f741ef94e2c0a3551a985fe921146f5ab7ebbde1719ddd332a188c2835e",
+      "size": 3750813,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/003_tidewake_place_grass_review_env_first_shore_0_night_baseline.png",
+      "sha256": "0337af6c0fd1419de90fab8e08928f90e752e4a0a4911a662cf6ab4ce647aaf2",
+      "size": 3176359,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/004_tidewake_place_grass_review_env_first_shore_0_night_candidate.png",
+      "sha256": "3f71b00307679cf554fd141af309b4df085c9e91a24250cfa2370e5e2563fb56",
+      "size": 3253258,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/005_tidewake_place_grass_review_env_brine_steps_1_day_baseline.png",
+      "sha256": "61fb01112a46361f732529b5537f42ae445306100c05ec2624269a8bbe7fa40f",
+      "size": 3095106,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/006_tidewake_place_grass_review_env_brine_steps_1_day_candidate.png",
+      "sha256": "b861076aa7078c3a5f543d001fc1b5af49d1d9eb3320c72667be348738d2e567",
+      "size": 3094726,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/007_tidewake_place_grass_review_env_brine_steps_1_night_baseline.png",
+      "sha256": "368cdaa6f5f97e464ecf99323080bf92ecc3d50bec1c8f072e22fbf28545536c",
+      "size": 2757814,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/008_tidewake_place_grass_review_env_brine_steps_1_night_candidate.png",
+      "sha256": "465fdfe860a0b4d80baa5788daac7be506d18ede7deab61ae0c4cb5218313f21",
+      "size": 2760982,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/009_tidewake_place_grass_review_env_deep_watch_0_day_baseline.png",
+      "sha256": "43efdc8d9db14376f366255533d41b5365223e92b2e935fe0786f2ba49601e3c",
+      "size": 3964150,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/010_tidewake_place_grass_review_env_deep_watch_0_day_candidate.png",
+      "sha256": "aab43898b128f8dd6655b6bdb4466c88262b0d504024fd55b7f66e8c7afffbd2",
+      "size": 3975226,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/011_tidewake_place_grass_review_env_deep_watch_0_night_baseline.png",
+      "sha256": "1f2f54943432b43a579f461296ebb183502d23a68ba9c9d77709c77db5e87483",
+      "size": 3572644,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "paired",
+      "region": "tidewake",
+      "file": "shots/grass-normals-paired/region/tidewake/012_tidewake_place_grass_review_env_deep_watch_0_night_candidate.png",
+      "sha256": "d4d125336806c6ecaf422dd6bad5e49e8a6fde8c6e86fb30e5460c9fc06158f9",
+      "size": 3636500,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/001_meadows_place_grass_review_env_band1_lower_meadows_0_day_baseline.png",
+      "sha256": "ba52845a71c2198f3eefb3998de7c8613e513afb308a1f65583ee70bab3053e5",
+      "size": 3858354,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/002_meadows_place_grass_review_env_band1_lower_meadows_0_day_candidate.png",
+      "sha256": "fc8e419500a509e6a032c7544b4d2b4d4828eb0fca1821a48958d3c5dbd6e4d0",
+      "size": 3803871,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/003_meadows_place_grass_review_env_band1_lower_meadows_0_night_baseline.png",
+      "sha256": "8541a2bd80c68043df27288137f76cbc981f6d5e268939394bb265d9c58c8641",
+      "size": 2854628,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/004_meadows_place_grass_review_env_band1_lower_meadows_0_night_candidate.png",
+      "sha256": "d8e46b1cfd7b048fdd49df4c98f7bd198535115b66b7ea186bc8897dd771c81a",
+      "size": 2696584,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/005_meadows_place_grass_review_env_band2_stone_and_root_0_day_baseline.png",
+      "sha256": "2249d97d4a8451d4a8395464efd15b0f5a9e404ca3979ef9a7b90705d7908447",
+      "size": 3552788,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/006_meadows_place_grass_review_env_band2_stone_and_root_0_day_candidate.png",
+      "sha256": "8035605abbf00cc5ced4bb96a9abd68506166d037d40bd3b8ee824c4844a422e",
+      "size": 3552369,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/007_meadows_place_grass_review_env_band2_stone_and_root_0_night_baseline.png",
+      "sha256": "93b10c9fc660641b14d96016e758c9257c9bdaf2b45e74309bcf370b8df677a8",
+      "size": 2608504,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/008_meadows_place_grass_review_env_band2_stone_and_root_0_night_candidate.png",
+      "sha256": "6d0a3398e70a5779d1af0f22a5646b6cf5711f8e4c45369bbdf63974b443c660",
+      "size": 2600796,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/009_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_day_baseline.png",
+      "sha256": "c486f1fd00e054011136bc91d38365c7698798619cbbec3ec7ec3b5d625428a5",
+      "size": 4309098,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/010_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_day_candidate.png",
+      "sha256": "10ec85c689cc6f41cf0c4c110fac7ef3cd5e67832961a2809a391858e0c94c8c",
+      "size": 4234998,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/011_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_night_baseline.png",
+      "sha256": "e27140dac491c5e1c0b42b5874c3f016f436b6fe2811f94216a3daa66340a1cf",
+      "size": 2837425,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "capture": "balanced",
+      "region": "meadows",
+      "file": "shots/grass-normals-balanced/region/meadows/012_meadows_place_grass_review_env_band4_upper_meadows_ironwood_0_night_candidate.png",
+      "sha256": "420c578461ebca39d281b281d2589ab5e41c351c3acfb67139a64bbd0254eaee",
+      "size": 2619461,
+      "width": 1920,
+      "height": 1080
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ROCK_SECTIONS_NATIVE (59.8, 1198.0, 80.5) count=8 bounds=[P: (-29.22029, 0.0, -39.299), S: (57.62265, 1198.0, 76.43715)]
+ROCK_SECTIONS_NATIVE (173.6, 1048.0, 105.0) count=5 bounds=[P: (-81.92969, 0.0, -50.95728), S: (165.0916, 1048.0, 99.96169)]
+ROCK_SECTIONS_NATIVE (60.0, 200.0, 60.0) count=2 bounds=[P: (-25.66863, 0.0, -28.7134), S: (54.18201, 200.0, 55.34613)]
+ROCK_SECTIONS_NATIVE (100.0, 2000.0, 90.0) count=8 bounds=[P: (-46.73642, 0.0, -43.97338), S: (94.5165, 2000.0, 84.88075)]
+ROCK_SECTIONS_RESULT {"checks":22,"failures":[]}

@@ -1,0 +1,15 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_cloudreach_environment.gd: 1 of 603 test files
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _mesa (res://scripts/world/cloudreach_world.gd:5312)
+       [1] test_cliff_walls_face_outward (res://tests/test_cloudreach_environment.gd:25)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_cloudreach_environment.gd :: test_cliff_walls_face_outward
+  ok    test_cloudreach_environment.gd :: test_cloud_sea_uses_clustered_banks_instead_of_independent_white_ovals
+  ok    test_cloudreach_environment.gd :: test_generated_ground_faces_upward
+  ok    test_cloudreach_environment.gd :: test_route_joints_do_not_restart_fades
+
+4 tests, 12 assertions, 0 failed

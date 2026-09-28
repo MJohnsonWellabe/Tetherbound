@@ -1,0 +1,16 @@
+diff --git a/scripts/world/stormheart_tree.gd b/scripts/world/stormheart_tree.gd
+index f2352506f..6e96001d9 100644
+--- a/scripts/world/stormheart_tree.gd
++++ b/scripts/world/stormheart_tree.gd
+@@ -38,9 +38,8 @@ func build() -> void:
+ 	_bark = _wood.duplicate() as StandardMaterial3D
+ 	_bark.albedo_color = Color("bca58a")
+ 	_bark.uv1_scale = Vector3.ONE
+-	_split_bark_shell()
+-	_buttress_roots()
+-	_living_crown()
++	var hero := (load("res://assets/environment/stormwood/stormheart_hero/stormheart_hero.tscn") as PackedScene).instantiate()
++	add_child(hero)
+ 	_ascent_dressing()
+ 	_ascent_wayfinding()
+ 	_energy_seam()

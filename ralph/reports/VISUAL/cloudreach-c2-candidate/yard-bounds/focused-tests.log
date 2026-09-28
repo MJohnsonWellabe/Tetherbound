@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only cloudreach_grass_roles: 1 of 615 test files
+  ok    test_cloudreach_grass_roles.gd :: test_live_catalogue_neighborhoods_are_low_led_with_accents
+  ok    test_cloudreach_grass_roles.gd :: test_real_ellipse_and_segment_keep_caps_and_emit_role_scaled_tufts
+  ok    test_cloudreach_grass_roles.gd :: test_role_field_config_switches_and_switches_back_deterministically
+  ok    test_cloudreach_grass_roles.gd :: test_role_ranges_widths_and_tall_demotion
+  ok    test_cloudreach_grass_roles.gd :: test_settlement_yard_discards_roots_beyond_its_supporting_floor
+  ok    test_cloudreach_grass_roles.gd :: test_world_field_has_low_led_hierarchy_and_one_metre_coherent_clumps
+
+6 tests, 587 assertions, 0 failed

@@ -1,0 +1,14 @@
+{
+  "base": "5e2695bcc77012a3fb55dcf85efeaa5c7d29c2ab",
+  "files": {
+    "scripts/world/cloudreach_world.gd": "e48d6baff0d219c0cb42decedd0110e1d220b80f4f74029b95504b00314a9af3",
+    "scripts/world/cloudreach_aviary.gd": "d9b3c09a17287cbeccec5035dc2680a69f9e5e78fbdfab9486f9e486bd5cc6d1",
+    "scripts/world/cloudreach_aviary_towers.gd": "11add3b70f22268b88d56b33f523526253c65ea020292dac2f0e2f114fce7976",
+    "data/config/cloudreach_visual.json": "29cfd0b39d7059b796a9a324206b92d2d73d1a1c023a35ababd3a742a4c0f7fa",
+    "data/config/cloudreach_aviary.json": "027773e7271ba47c7ff431cc04d0ea663fd07d17b31b7b251901f0c6984f74e8",
+    "shaders/cloudreach_cloud_deck.gdshader": "68175b2ab07ba73eaf96d0351c2f5db748b3101a529445499dece1327aca3649",
+    "tools/capture_cloudreach_frame_matrix.gd": "da0c6ac67c286fe43517107d8349c9b978aac03af1e55540858b2e683f2f117f"
+  },
+  "native_capture": "Windows NVIDIA GTX1060, Compatibility, 1920x1080",
+  "towers_v2_postcapture_equivalent_cleanup": "Only cloud comments/dead unused allocation and config extraction of existing 100m offset/#a6b4bc constant changed after capture; tower source unchanged."
+}

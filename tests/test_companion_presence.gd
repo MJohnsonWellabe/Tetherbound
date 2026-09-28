@@ -693,3 +693,43 @@ func test_the_head_turns_toward_a_near_trainer_and_not_a_far_one() -> void:
 	_leader.position += Vector3(0.0, 0.0, -20.0)
 	_presence.call("tick", TICK)
 	assert_false(bool(_presence.call("is_looking")), "out of range, the head is the idle's own again")
+
+
+func test_galecrest_gaze_uses_an_upright_axis_and_tracks_upper_body() -> void:
+	var bird: Node3D = CREATURE_SCENE.instantiate()
+	bird.set_script(FOLLOWER)
+	_root.add_child(bird)
+	for field: String in ["_collision:Collision", "_model:Model", "_body:Body", "_head:Head"]:
+		var pair := field.split(":")
+		bird.set(pair[0], bird.get_node(NodePath(pair[1])))
+	bird.set("species_id", "galecrest")
+	bird.call("_ready")
+	bird.position = Vector3(2, 0, 3)
+	bird.rotation.y = 0.7
+	var presence: Node = bird.call("presence")
+	presence.call("_update_look", _leader)
+	var look := presence.get("_look") as LookAtModifier3D
+	assert_true(look != null, "the shipped Galecrest rig supports head tracking")
+	if look == null:
+		return
+	assert_eq(look.forward_axis, SkeletonModifier3D.BONE_AXIS_PLUS_Y)
+	assert_eq(look.primary_rotation_axis, Vector3.AXIS_Z,
+		"the installed bird's upright scan axis is Z, not its forward Y")
+	assert_almost_eq(rad_to_deg(look.primary_limit_angle), 55.0, 0.001)
+	var target := look.get_node(look.target_node) as Node3D
+	assert_true((bird.transform * target.position).is_equal_approx(_leader.position + Vector3(0, 1.55, 0)),
+		"the gaze meets the trainer above their feet despite the bird's rotation")
+	_leader.position += Vector3(1, 2, -1)
+	presence.call("_update_look", _leader)
+	assert_true((bird.transform * target.position).is_equal_approx(_leader.position + Vector3(0, 1.55, 0)),
+		"the existing target follows a moving trainer, including elevation")
+	assert_eq(bird.find_children("CompanionGazeTarget", "Node3D", false, false).size(), 1)
+	presence.set("_hurt", true)
+	presence.set("_camp", false)
+	presence.set("_state", "")
+	presence.call("_update_look", _leader)
+	assert_eq(look.get_node(look.target_node), presence.get("_droop_target"),
+		"injury still targets the low droop marker")
+	presence.set("_hurt", false)
+	presence.call("_update_look", _leader)
+	assert_eq(look.get_node(look.target_node), target, "healing restores the trainer gaze")

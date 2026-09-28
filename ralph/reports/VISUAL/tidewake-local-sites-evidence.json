@@ -1,0 +1,2343 @@
+{
+  "base": "ce1a3c6e576c5e0bf99c5ee543258794be302b00",
+  "proof": "DRY RUN — does not count",
+  "engine": "Godot4.7 5b4e0cb0f Compatibility, GTX1060 3GB",
+  "native_frames": 46,
+  "final_run": "final-mips",
+  "production_sha256": {
+    "scripts/world/water_local_lure_dressing.gd": "ae99b17ff23e1c3c6d7f2f6cc3678c0c4e36acfce564bae255950ec630d2f311",
+    "scripts/world/water_world.gd": "fb801deec6c46f16bb68bdd7efbb1fe5755c04d4a700589da04723e742c86d97",
+    "scripts/world/water_dock_actions.gd": "40aedeb3922b9ce806463a4f4375b4d0d7274e3f595690bbd0a5f29001a42bfd",
+    "data/config/water_local_lure_dressing.json": "d76f4edadd535ee828f46061644a19089db34c80a52c52928e65e7b8cd1c27d1",
+    "assets/props/quaternius_fantasy/survey_cloth.gdshader": "42999f889213c6833cbc2a650b94b0a44e437cec896dfd0de1648e1755e87e82",
+    "assets/props/quaternius_fantasy/tidewake_chart.svg": "fbe98c326f93211dbca9597eb91964ded46c56d02e8931b9e906e713a1737f3f",
+    "assets/props/quaternius_fantasy/tidewake_chart.svg.import": "850301e4356915d4a070a1291e515c0fea4811280a09bdb2a562f8c604127cbe",
+    "tools/capture_water_chain_lures_native.gd": "8bca56a902a0cd204f5b84d36f88089b59cf39484227946ffa02f563efe485d5"
+  },
+  "records": [
+    {
+      "camera": [
+        -262.833251953125,
+        4.76274728775024,
+        127.273513793945
+      ],
+      "camera_rotation": [
+        -12.0,
+        119.847290039063,
+        0.0
+      ],
+      "feet": [
+        -267.244995117188,
+        1.93160426616669,
+        129.804992675781
+      ],
+      "file": "lantern_1_landing.png",
+      "fov": 70.0,
+      "label": "Lantern Cove rock arch / dry nook cache from lantern_cove arrival landing (162 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/lantern_1_landing.png",
+      "sha256": "b7111b53066c29fa59989a1f5cf9b090c032a2470a150a889802bed80c4285e4",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -340.06591796875,
+        24.3655033111572,
+        171.589767456055
+      ],
+      "camera_rotation": [
+        -12.0,
+        119.847297668457,
+        0.0
+      ],
+      "feet": [
+        -344.477661132813,
+        21.5343627929688,
+        174.121246337891
+      ],
+      "file": "lantern_2_approach.png",
+      "fov": 70.0,
+      "label": "Lantern Cove rock arch / dry nook cache mid-approach (73 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/lantern_2_approach.png",
+      "sha256": "1185581202e27558048d771438648d9ee8583a762ec9cacc52af828d59ef01c4",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -58.5619277954102,
+        4.76274824142456,
+        784.284240722656
+      ],
+      "camera_rotation": [
+        -11.9999990463257,
+        -160.032638549805,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -56.8250007629395,
+        1.93160426616669,
+        789.065002441406
+      ],
+      "file": "gull_1_landing.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel from gull_rest arrival landing (101 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/gull_1_landing.png",
+      "sha256": "7972882c337e0f870a13a22766292dfe051ef9ab0c8a3e1d6cee2fd02f6a8cf6",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -37.8709259033203,
+        27.4346256256104,
+        841.233215332031
+      ],
+      "camera_rotation": [
+        -12.0,
+        -160.032653808594,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -36.1339988708496,
+        24.6034717559814,
+        846.013977050781
+      ],
+      "file": "gull_2_approach.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel mid-approach (40 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/gull_2_approach.png",
+      "sha256": "bed6982edf968f6519c22b05ad7582be8b394428813b6ac2ffc03ce0c3748bbd",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        531.955383300781,
+        4.76278638839722,
+        1348.85864257813
+      ],
+      "camera_rotation": [
+        -12.0001554489136,
+        -135.87336730957,
+        -1.94262588593119e-06
+      ],
+      "feet": [
+        535.497009277344,
+        1.93160426616669,
+        1352.51000976563
+      ],
+      "file": "cradle_1_landing.png",
+      "fov": 70.0,
+      "label": "Tidal Cradle shell nest Reef Stone seam from tidal_cradle arrival landing (406 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/cradle_1_landing.png",
+      "sha256": "03738e41ecca0f1663c4d184c940a08174e775e150da7a3fd74972600da5cafd",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        727.158325195313,
+        74.7528762817383,
+        1554.44604492188
+      ],
+      "camera_rotation": [
+        -12.0001554489136,
+        -135.87336730957,
+        -2.35077578736309e-07
+      ],
+      "feet": [
+        730.413146972656,
+        69.7674331665039,
+        1558.30078125
+      ],
+      "file": "cradle_2_approach.png",
+      "fov": 70.0,
+      "label": "Tidal Cradle shell nest Reef Stone seam mid-approach (122 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/cradle_2_approach.png",
+      "sha256": "818cbbbe86cff2a739c7c71b0972db9363204d19c96274fa15f022aafec49933",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1053.958984375,
+        4.76276016235352,
+        2246.81884765625
+      ],
+      "camera_rotation": [
+        -12.0001487731934,
+        -121.091255187988,
+        3.77804735762766e-06
+      ],
+      "feet": [
+        1058.31494140625,
+        1.93160426616669,
+        2249.44604492188
+      ],
+      "file": "garden_1_landing.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall from drowned_garden arrival landing (171 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/garden_1_landing.png",
+      "sha256": "86984ec6b09e5d98a75e69806457fbd0c95c983cb48ce9d977dc6fc3d64f77f7",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1141.67016601563,
+        35.8176612854004,
+        2299.71118164063
+      ],
+      "camera_rotation": [
+        -12.000150680542,
+        -121.091339111328,
+        3.41509644385951e-06
+      ],
+      "feet": [
+        1146.02600097656,
+        32.9865684509277,
+        2302.33837890625
+      ],
+      "file": "garden_2_approach.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall mid-approach (68 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/garden_2_approach.png",
+      "sha256": "093b8eb1e1813b7ae310ae7aa0009deb4aeb896c53d9310a5510a78c09c441d1",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1257.14050292969,
+        4.76268482208252,
+        3399.171875
+      ],
+      "camera_rotation": [
+        -12.000150680542,
+        -141.340179443359,
+        3.41509644385951e-06
+      ],
+      "feet": [
+        1260.31799316406,
+        1.93160426616669,
+        3403.14404296875
+      ],
+      "file": "deep_1_landing.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control from deep_watch arrival landing (13 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/deep_1_landing.png",
+      "sha256": "71bfc3496363627cca590ad04949a2766ccfedebfa32789f46b131ae429ec20c",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1261.9404296875,
+        5.82325649261475,
+        3405.17163085938
+      ],
+      "camera_rotation": [
+        -12.000129699707,
+        -141.340026855469,
+        -0.000256121769780293
+      ],
+      "feet": [
+        1265.11804199219,
+        2.99207425117493,
+        3409.14404296875
+      ],
+      "file": "deep_2_approach.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control mid-approach (5 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/deep_2_approach.png",
+      "sha256": "be487a272c1613afc21c6a742032c193942c51927539ee41674445f7a3b5e733",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        386.545623779297,
+        4.76268482208252,
+        3800.83569335938
+      ],
+      "camera_rotation": [
+        -12.0001316070557,
+        153.938125610352,
+        -0.000234002465731464
+      ],
+      "feet": [
+        384.311004638672,
+        1.93160426616669,
+        3805.40502929688
+      ],
+      "file": "lastlight_1_landing.png",
+      "fov": 70.0,
+      "label": "Lastlight lamp post from veilfall arrival landing (14 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/lastlight_1_landing.png",
+      "sha256": "f0cf9343b28337b7895b187d5519c21db83007679c32e3816d7b5ab66b2bde3c",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        401.435852050781,
+        2.13146877288818,
+        3770.96313476563
+      ],
+      "camera_rotation": [
+        -12.0001316070557,
+        153.938125610352,
+        -0.000234002465731464
+      ],
+      "feet": [
+        399.228271484375,
+        -0.699838221073151,
+        3775.48266601563
+      ],
+      "file": "lastlight_2_approach.png",
+      "fov": 70.0,
+      "label": "Lastlight lamp post mid-approach (42 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "baseline",
+      "path": "shots/lures-baseline/lastlight_2_approach.png",
+      "sha256": "5aece3e2e511bb5ce9d745f0c3e7a95d28ce07fbed09348cbea3a3751b635bc2",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -58.5619125366211,
+        4.76274728775024,
+        784.284240722656
+      ],
+      "camera_rotation": [
+        -11.9999990463257,
+        -160.032638549805,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -56.8250007629395,
+        1.93160426616669,
+        789.065002441406
+      ],
+      "file": "gull_1_landing.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel from gull_rest arrival landing (101 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate1",
+      "path": "shots/lures-candidate1/gull_1_landing.png",
+      "sha256": "5171c702052704ef98d9a916e424f5d422d2dfd6df42be0233218a3e6d4298e5",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -37.8709259033203,
+        27.4346256256104,
+        841.233215332031
+      ],
+      "camera_rotation": [
+        -12.0,
+        -160.032653808594,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -36.1339988708496,
+        24.6034717559814,
+        846.013977050781
+      ],
+      "file": "gull_2_approach.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel mid-approach (40 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate1",
+      "path": "shots/lures-candidate1/gull_2_approach.png",
+      "sha256": "383c3923c5f179b26c2b2af270f6d82fc5797333d8fb200d201dddf3497fe322",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1053.958984375,
+        4.76276016235352,
+        2246.81884765625
+      ],
+      "camera_rotation": [
+        -11.9999990463257,
+        -121.091255187988,
+        3.77804531126458e-06
+      ],
+      "feet": [
+        1058.31494140625,
+        1.93160426616669,
+        2249.44604492188
+      ],
+      "file": "garden_1_landing.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall from drowned_garden arrival landing (171 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate1-other",
+      "path": "shots/lures-candidate1-other/garden_1_landing.png",
+      "sha256": "2859ad9434b0d87b710ab9dcae4e7b7fc88e6894819f300f28452a77050d5ead",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1141.67016601563,
+        35.8176612854004,
+        2299.71118164063
+      ],
+      "camera_rotation": [
+        -12.0000162124634,
+        -121.091339111328,
+        3.41509485224378e-06
+      ],
+      "feet": [
+        1146.02600097656,
+        32.9865684509277,
+        2302.33837890625
+      ],
+      "file": "garden_2_approach.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall mid-approach (68 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate1-other",
+      "path": "shots/lures-candidate1-other/garden_2_approach.png",
+      "sha256": "679aa2d3cb9bc69e00c0b803acb19a6585c9b5c2bb67a2151a840d44bbb19c40",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1257.14050292969,
+        4.76268482208252,
+        3399.171875
+      ],
+      "camera_rotation": [
+        -12.0000162124634,
+        -141.340179443359,
+        3.41509485224378e-06
+      ],
+      "feet": [
+        1260.31799316406,
+        1.93160426616669,
+        3403.14404296875
+      ],
+      "file": "deep_1_landing.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control from deep_watch arrival landing (13 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate1-other",
+      "path": "shots/lures-candidate1-other/deep_1_landing.png",
+      "sha256": "ef1f83e0e1963701155ddb7ddeb0be89b503ac4502478b6da41d99e1598120cd",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1261.9404296875,
+        5.82325649261475,
+        3405.17163085938
+      ],
+      "camera_rotation": [
+        -12.0000143051147,
+        -141.340026855469,
+        -0.000256121624261141
+      ],
+      "feet": [
+        1265.11804199219,
+        2.99207425117493,
+        3409.14404296875
+      ],
+      "file": "deep_2_approach.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control mid-approach (5 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate1-other",
+      "path": "shots/lures-candidate1-other/deep_2_approach.png",
+      "sha256": "87091aa9e0d08d41984fb1371cbf37adec707568bd5834d01f205956b97c1393",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -58.5619125366211,
+        4.76274728775024,
+        784.284240722656
+      ],
+      "camera_rotation": [
+        -11.9999990463257,
+        -160.032638549805,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -56.8250007629395,
+        1.93160426616669,
+        789.065002441406
+      ],
+      "file": "gull_1_landing.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel from gull_rest arrival landing (101 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/gull_1_landing.png",
+      "sha256": "d5a3de12a6cf6556ec9c3106a18aada3d22b248a9bbf678075cd8ab48636ec13",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -37.8709259033203,
+        27.4346256256104,
+        841.233215332031
+      ],
+      "camera_rotation": [
+        -12.0,
+        -160.032653808594,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -36.1339988708496,
+        24.6034717559814,
+        846.013977050781
+      ],
+      "file": "gull_2_approach.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel mid-approach (40 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/gull_2_approach.png",
+      "sha256": "5ff5222704339da8d02ad07782bd23164129579f9cd4c31ebcbf4fb70b98b286",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -27.4917755126953,
+        28.2679691314697,
+        869.800354003906
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -160.032592773438,
+        -1.68687893165043e-06
+      ],
+      "feet": [
+        -25.7548484802246,
+        25.4368286132813,
+        874.581115722656
+      ],
+      "file": "gull_3_near.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/gull_3_near.png",
+      "sha256": "0603ece357305fa1464bc017e499f62aaec8e1c702894abf5a822854228ad876",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -27.4917755126953,
+        28.2679691314697,
+        869.800354003906
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -160.032592773438,
+        -1.68687893165043e-06
+      ],
+      "feet": [
+        -25.7548484802246,
+        25.4368286132813,
+        874.581115722656
+      ],
+      "file": "gull_4_night.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/gull_4_night.png",
+      "sha256": "23afa5fec86e9c0cbb9dad623c47a95e0a1254c0928657e1c7e73ea0f78d819c",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "gull",
+      "terrain_profile": [
+        [
+          -55.1007499694824,
+          2.39970302581787,
+          793.810729980469
+        ],
+        [
+          -53.3764991760254,
+          3.22873377799988,
+          798.556518554688
+        ],
+        [
+          -51.6522521972656,
+          4.38339042663574,
+          803.30224609375
+        ],
+        [
+          -49.9280014038086,
+          7.91970539093018,
+          808.047973632813
+        ],
+        [
+          -48.2037506103516,
+          13.7631950378418,
+          812.793762207031
+        ],
+        [
+          -46.4794998168945,
+          15.5303421020508,
+          817.539489746094
+        ],
+        [
+          -44.7552490234375,
+          17.2742156982422,
+          822.285217285156
+        ],
+        [
+          -43.0309982299805,
+          18.9868030548096,
+          827.031005859375
+        ],
+        [
+          -41.3067512512207,
+          20.5875015258789,
+          831.776733398438
+        ],
+        [
+          -39.5825004577637,
+          22.0666160583496,
+          836.5224609375
+        ],
+        [
+          -37.8582496643066,
+          23.3916854858398,
+          841.268249511719
+        ],
+        [
+          -36.1339988708496,
+          24.4961795806885,
+          846.013977050781
+        ],
+        [
+          -34.4097518920898,
+          25.3321113586426,
+          850.759765625
+        ],
+        [
+          -32.6855010986328,
+          25.9172897338867,
+          855.505493164063
+        ],
+        [
+          -30.9612503051758,
+          26.2398128509521,
+          860.251220703125
+        ],
+        [
+          -29.2369995117188,
+          26.2192192077637,
+          864.997009277344
+        ],
+        [
+          -27.5127487182617,
+          25.930061340332,
+          869.742736816406
+        ],
+        [
+          -25.788501739502,
+          25.4334259033203,
+          874.488464355469
+        ],
+        [
+          -24.0642509460449,
+          24.7653942108154,
+          879.234252929688
+        ],
+        [
+          -22.3400001525879,
+          23.9611644744873,
+          883.97998046875
+        ]
+      ],
+      "run": "candidate2"
+    },
+    {
+      "camera": [
+        1053.958984375,
+        4.76276111602783,
+        2246.81884765625
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -121.091285705566,
+        6.59704346617218e-06
+      ],
+      "feet": [
+        1058.31494140625,
+        1.93160426616669,
+        2249.44604492188
+      ],
+      "file": "garden_1_landing.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall from drowned_garden arrival landing (171 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/garden_1_landing.png",
+      "sha256": "f113ab0de43577ccf5ee408d45e8faa47751052635409a261a81b7d4ebd5d502",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1141.67016601563,
+        35.8176612854004,
+        2299.71118164063
+      ],
+      "camera_rotation": [
+        -12.0000066757202,
+        -121.091377258301,
+        1.76114972418873e-05
+      ],
+      "feet": [
+        1146.02600097656,
+        32.9865684509277,
+        2302.33837890625
+      ],
+      "file": "garden_2_approach.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall mid-approach (68 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/garden_2_approach.png",
+      "sha256": "ea1b8c84e6f525698baf3b06516cd83f232c079f3a8cc7b0a5a5cccccb341721",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1191.58044433594,
+        32.4591751098633,
+        2329.80883789063
+      ],
+      "camera_rotation": [
+        -12.0000047683716,
+        -121.091423034668,
+        1.76114954228979e-05
+      ],
+      "feet": [
+        1195.9365234375,
+        29.6279907226563,
+        2332.43603515625
+      ],
+      "file": "garden_3_near.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/garden_3_near.png",
+      "sha256": "b8aa6498f75e37116a2dddebd868e7adca65b6fefaed02d7d630c98a77e0cd26",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1191.58044433594,
+        32.4591751098633,
+        2329.80883789063
+      ],
+      "camera_rotation": [
+        -12.0000047683716,
+        -121.091423034668,
+        1.76114954228979e-05
+      ],
+      "feet": [
+        1195.9365234375,
+        29.6279907226563,
+        2332.43603515625
+      ],
+      "file": "garden_4_night.png",
+      "fov": 70.0,
+      "label": "Drowned Garden vault wall diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/garden_4_night.png",
+      "sha256": "4afaaf3d5d096fac72ab8bb01b4d03ef23f59babe8c0283adeba9dfd1d0c6585",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "garden",
+      "terrain_profile": [
+        [
+          1065.62414550781,
+          2.80769801139832,
+          2253.85375976563
+        ],
+        [
+          1072.93347167969,
+          4.21223831176758,
+          2258.26147460938
+        ],
+        [
+          1080.24267578125,
+          5.44876956939697,
+          2262.66918945313
+        ],
+        [
+          1087.55200195313,
+          17.3490028381348,
+          2267.07690429688
+        ],
+        [
+          1094.86120605469,
+          22.2793350219727,
+          2271.48461914063
+        ],
+        [
+          1102.17041015625,
+          25.1107749938965,
+          2275.89233398438
+        ],
+        [
+          1109.47973632813,
+          27.3057613372803,
+          2280.30004882813
+        ],
+        [
+          1116.78894042969,
+          28.9433879852295,
+          2284.70776367188
+        ],
+        [
+          1124.09826660156,
+          30.3243656158447,
+          2289.11547851563
+        ],
+        [
+          1131.40747070313,
+          31.46706199646,
+          2293.52294921875
+        ],
+        [
+          1138.71667480469,
+          32.3526382446289,
+          2297.9306640625
+        ],
+        [
+          1146.02600097656,
+          32.9652137756348,
+          2302.33837890625
+        ],
+        [
+          1153.33520507813,
+          33.2946434020996,
+          2306.74609375
+        ],
+        [
+          1160.64453125,
+          33.336254119873,
+          2311.15380859375
+        ],
+        [
+          1167.95373535156,
+          33.0891494750977,
+          2315.5615234375
+        ],
+        [
+          1175.26293945313,
+          32.5569763183594,
+          2319.96923828125
+        ],
+        [
+          1182.572265625,
+          31.7484245300293,
+          2324.376953125
+        ],
+        [
+          1189.88146972656,
+          30.6778831481934,
+          2328.78466796875
+        ],
+        [
+          1197.19079589844,
+          29.3629531860352,
+          2333.1923828125
+        ],
+        [
+          1204.5,
+          27.8279037475586,
+          2337.60009765625
+        ]
+      ],
+      "run": "candidate2"
+    },
+    {
+      "camera": [
+        1257.14050292969,
+        4.76268482208252,
+        3399.171875
+      ],
+      "camera_rotation": [
+        -12.0000028610229,
+        -141.340225219727,
+        1.40685287988163e-05
+      ],
+      "feet": [
+        1260.31799316406,
+        1.93160426616669,
+        3403.14404296875
+      ],
+      "file": "deep_1_landing.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control from deep_watch arrival landing (13 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/deep_1_landing.png",
+      "sha256": "ddc408ad677f1d99d1ff5c1920334674d24ceb93b097c8daf2e3d2c405ed0c6c",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1261.9404296875,
+        5.82325649261475,
+        3405.17163085938
+      ],
+      "camera_rotation": [
+        -11.9999923706055,
+        -141.340072631836,
+        -0.000246385898208246
+      ],
+      "feet": [
+        1265.11804199219,
+        2.99207425117493,
+        3409.14404296875
+      ],
+      "file": "deep_2_approach.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control mid-approach (5 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/deep_2_approach.png",
+      "sha256": "52f090db19fcdffbed13d8d22f1a6d2d5c240aea5e9206126c932023686599f8",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1258.89404296875,
+        5.06209945678711,
+        3401.36450195313
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -141.339324951172,
+        -0.000246621028054506
+      ],
+      "feet": [
+        1262.07104492188,
+        2.23101902008057,
+        3405.33544921875
+      ],
+      "file": "deep_3_near.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/deep_3_near.png",
+      "sha256": "6df2136eb148b8bbc99656d5d06d5a65710449d48b8545694b67a717399ae04f",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1258.89404296875,
+        5.06209945678711,
+        3401.36450195313
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -141.339324951172,
+        -0.000246621028054506
+      ],
+      "feet": [
+        1262.07104492188,
+        2.23101902008057,
+        3405.33544921875
+      ],
+      "file": "deep_4_night.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "candidate2",
+      "path": "shots/lures-candidate2/deep_4_night.png",
+      "sha256": "a7a80afb1fde76f7f089a7da6171361126e74ec9315404beeeb52c7d2232d8f7",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "deep",
+      "terrain_profile": [
+        [
+          1260.71801757813,
+          1.99693584442139,
+          3403.64404296875
+        ],
+        [
+          1261.11804199219,
+          2.06540203094482,
+          3404.14404296875
+        ],
+        [
+          1261.51794433594,
+          2.13376402854919,
+          3404.64404296875
+        ],
+        [
+          1261.91796875,
+          2.2022442817688,
+          3405.14404296875
+        ],
+        [
+          1262.31799316406,
+          2.27061176300049,
+          3405.64404296875
+        ],
+        [
+          1262.71801757813,
+          2.33961629867554,
+          3406.14404296875
+        ],
+        [
+          1263.11804199219,
+          2.41264867782593,
+          3406.64404296875
+        ],
+        [
+          1263.51794433594,
+          2.49583721160889,
+          3407.14404296875
+        ],
+        [
+          1263.91796875,
+          2.59213638305664,
+          3407.64404296875
+        ],
+        [
+          1264.31799316406,
+          2.70450878143311,
+          3408.14404296875
+        ],
+        [
+          1264.71801757813,
+          2.83392095565796,
+          3408.64404296875
+        ],
+        [
+          1265.11804199219,
+          2.97670960426331,
+          3409.14404296875
+        ],
+        [
+          1265.51794433594,
+          3.13971471786499,
+          3409.64404296875
+        ],
+        [
+          1265.91796875,
+          3.31314134597778,
+          3410.14404296875
+        ],
+        [
+          1266.31799316406,
+          3.50417995452881,
+          3410.64404296875
+        ],
+        [
+          1266.71801757813,
+          3.70386433601379,
+          3411.14404296875
+        ],
+        [
+          1267.11804199219,
+          3.92197012901306,
+          3411.64404296875
+        ],
+        [
+          1267.51794433594,
+          4.1624002456665,
+          3412.14404296875
+        ],
+        [
+          1267.91796875,
+          4.41909599304199,
+          3412.64404296875
+        ],
+        [
+          1268.31799316406,
+          4.67782163619995,
+          3413.14404296875
+        ]
+      ],
+      "run": "candidate2"
+    },
+    {
+      "camera": [
+        -58.5619125366211,
+        4.76274728775024,
+        784.284240722656
+      ],
+      "camera_rotation": [
+        -11.9999990463257,
+        -160.032638549805,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -56.8250007629395,
+        1.93160426616669,
+        789.065002441406
+      ],
+      "file": "gull_1_landing.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel from gull_rest arrival landing (101 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/gull_1_landing.png",
+      "sha256": "5d7e4928ce894dd669c8a1e24b6c9a83bd0fa4617c100861bdd9a39bcb769b1e",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -37.8709259033203,
+        27.4346256256104,
+        841.233215332031
+      ],
+      "camera_rotation": [
+        -12.0,
+        -160.032653808594,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -36.1339988708496,
+        24.6034717559814,
+        846.013977050781
+      ],
+      "file": "gull_2_approach.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel mid-approach (40 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/gull_2_approach.png",
+      "sha256": "dcccdb1112924066f1016912ed013a915c73de37d369a05260d3ffbf38ac0199",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -27.4917755126953,
+        28.2679691314697,
+        869.800354003906
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -160.032592773438,
+        -1.68687893165043e-06
+      ],
+      "feet": [
+        -25.7548484802246,
+        25.4368286132813,
+        874.581115722656
+      ],
+      "file": "gull_3_near.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/gull_3_near.png",
+      "sha256": "0b6ea674b5d1d1aa371c50b454a8b286763abefa68c3fbc498677f1575641e58",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -27.4917755126953,
+        28.2679691314697,
+        869.800354003906
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -160.032592773438,
+        -1.68687893165043e-06
+      ],
+      "feet": [
+        -25.7548484802246,
+        25.4368286132813,
+        874.581115722656
+      ],
+      "file": "gull_4_night.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/gull_4_night.png",
+      "sha256": "7aab5d1ab32fb20ecb4f56f23c531bd607a1d5b5a00287eb2fe11c246957a4f2",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "gull",
+      "terrain_profile": [
+        [
+          -55.1007499694824,
+          2.39970302581787,
+          793.810729980469
+        ],
+        [
+          -53.3764991760254,
+          3.22873377799988,
+          798.556518554688
+        ],
+        [
+          -51.6522521972656,
+          4.38339042663574,
+          803.30224609375
+        ],
+        [
+          -49.9280014038086,
+          7.91970539093018,
+          808.047973632813
+        ],
+        [
+          -48.2037506103516,
+          13.7631950378418,
+          812.793762207031
+        ],
+        [
+          -46.4794998168945,
+          15.5303421020508,
+          817.539489746094
+        ],
+        [
+          -44.7552490234375,
+          17.2742156982422,
+          822.285217285156
+        ],
+        [
+          -43.0309982299805,
+          18.9868030548096,
+          827.031005859375
+        ],
+        [
+          -41.3067512512207,
+          20.5875015258789,
+          831.776733398438
+        ],
+        [
+          -39.5825004577637,
+          22.0666160583496,
+          836.5224609375
+        ],
+        [
+          -37.8582496643066,
+          23.3916854858398,
+          841.268249511719
+        ],
+        [
+          -36.1339988708496,
+          24.4961795806885,
+          846.013977050781
+        ],
+        [
+          -34.4097518920898,
+          25.3321113586426,
+          850.759765625
+        ],
+        [
+          -32.6855010986328,
+          25.9172897338867,
+          855.505493164063
+        ],
+        [
+          -30.9612503051758,
+          26.2398128509521,
+          860.251220703125
+        ],
+        [
+          -29.2369995117188,
+          26.2192192077637,
+          864.997009277344
+        ],
+        [
+          -27.5127487182617,
+          25.930061340332,
+          869.742736816406
+        ],
+        [
+          -25.788501739502,
+          25.4334259033203,
+          874.488464355469
+        ],
+        [
+          -24.0642509460449,
+          24.7653942108154,
+          879.234252929688
+        ],
+        [
+          -22.3400001525879,
+          23.9611644744873,
+          883.97998046875
+        ]
+      ],
+      "run": "final"
+    },
+    {
+      "camera": [
+        1257.14050292969,
+        4.76273536682129,
+        3399.17163085938
+      ],
+      "camera_rotation": [
+        -11.9999980926514,
+        -141.34016418457,
+        -9.60978354669351e-07
+      ],
+      "feet": [
+        1260.31799316406,
+        1.93160426616669,
+        3403.14404296875
+      ],
+      "file": "deep_1_landing.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control from deep_watch arrival landing (13 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/deep_1_landing.png",
+      "sha256": "7b3fb442aded1af9e14cafa5281efcb719a50c86870c2607e698ed78d67cd231",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1261.9404296875,
+        5.82325649261475,
+        3405.17163085938
+      ],
+      "camera_rotation": [
+        -11.9999942779541,
+        -141.34001159668,
+        -0.000262483605183661
+      ],
+      "feet": [
+        1265.11804199219,
+        2.99207425117493,
+        3409.14404296875
+      ],
+      "file": "deep_2_approach.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control mid-approach (5 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/deep_2_approach.png",
+      "sha256": "09683b1556edcb14f03415fa65036f564bd2682a5b81891b6c9950c31b9d819d",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1263.26586914063,
+        6.41664886474609,
+        3406.8291015625
+      ],
+      "camera_rotation": [
+        -11.9999942779541,
+        -141.337646484375,
+        -0.000283386209048331
+      ],
+      "feet": [
+        1266.44384765625,
+        3.58546829223633,
+        3410.80151367188
+      ],
+      "file": "deep_3_near.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/deep_3_near.png",
+      "sha256": "cdfc6fccee1d7fdb7eaa542b3962334d0cff4d767e45229c386ae5e290c4d22b",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1263.26586914063,
+        6.41664886474609,
+        3406.8291015625
+      ],
+      "camera_rotation": [
+        -11.9999942779541,
+        -141.337646484375,
+        -0.000283386209048331
+      ],
+      "feet": [
+        1266.44384765625,
+        3.58546829223633,
+        3410.80151367188
+      ],
+      "file": "deep_4_night.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final",
+      "path": "shots/lures-final/deep_4_night.png",
+      "sha256": "044162a56d4409ff5358e6f552d014ee900b6e31eaeedc42c7323f9679cf4163",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "deep",
+      "terrain_profile": [
+        [
+          1260.71801757813,
+          1.99693584442139,
+          3403.64404296875
+        ],
+        [
+          1261.11804199219,
+          2.06540203094482,
+          3404.14404296875
+        ],
+        [
+          1261.51794433594,
+          2.13376402854919,
+          3404.64404296875
+        ],
+        [
+          1261.91796875,
+          2.2022442817688,
+          3405.14404296875
+        ],
+        [
+          1262.31799316406,
+          2.27061176300049,
+          3405.64404296875
+        ],
+        [
+          1262.71801757813,
+          2.33961629867554,
+          3406.14404296875
+        ],
+        [
+          1263.11804199219,
+          2.41264867782593,
+          3406.64404296875
+        ],
+        [
+          1263.51794433594,
+          2.49583721160889,
+          3407.14404296875
+        ],
+        [
+          1263.91796875,
+          2.59213638305664,
+          3407.64404296875
+        ],
+        [
+          1264.31799316406,
+          2.70450878143311,
+          3408.14404296875
+        ],
+        [
+          1264.71801757813,
+          2.83392095565796,
+          3408.64404296875
+        ],
+        [
+          1265.11804199219,
+          2.97670960426331,
+          3409.14404296875
+        ],
+        [
+          1265.51794433594,
+          3.13971471786499,
+          3409.64404296875
+        ],
+        [
+          1265.91796875,
+          3.31314134597778,
+          3410.14404296875
+        ],
+        [
+          1266.31799316406,
+          3.50417995452881,
+          3410.64404296875
+        ],
+        [
+          1266.71801757813,
+          3.70386433601379,
+          3411.14404296875
+        ],
+        [
+          1267.11804199219,
+          3.92197012901306,
+          3411.64404296875
+        ],
+        [
+          1267.51794433594,
+          4.1624002456665,
+          3412.14404296875
+        ],
+        [
+          1267.91796875,
+          4.41909599304199,
+          3412.64404296875
+        ],
+        [
+          1268.31799316406,
+          4.67782163619995,
+          3413.14404296875
+        ]
+      ],
+      "run": "final"
+    },
+    {
+      "check": "two sites; repeated build is idempotent",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "presentation build does not change flags",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "dressing adds no collision, area or navigation",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "unoffered satchel hidden; survey site persists",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "heard lead reveals original satchel",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "recovered satchel hidden; survey site persists",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "satchel transform preserved through state changes",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "restored chart interaction stays at original transform",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "progression restoration neither loses nor duplicates dressing/equipment",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "chart shelter remains after progression restoration",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "check": "fixture restores original flags",
+      "pass": true,
+      "run": "final"
+    },
+    {
+      "camera": [
+        -58.5619125366211,
+        4.76274728775024,
+        784.284240722656
+      ],
+      "camera_rotation": [
+        -11.9999990463257,
+        -160.032638549805,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -56.8250007629395,
+        1.93160426616669,
+        789.065002441406
+      ],
+      "file": "gull_1_landing.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel from gull_rest arrival landing (101 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/gull_1_landing.png",
+      "sha256": "f39437760b91d15ec8dbb21ed78a57c1d38cf41969b84613f1ec4ab5fcf899c6",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -37.8709259033203,
+        27.4346256256104,
+        841.233215332031
+      ],
+      "camera_rotation": [
+        -12.0,
+        -160.032653808594,
+        -2.00656131710275e-06
+      ],
+      "feet": [
+        -36.1339988708496,
+        24.6034717559814,
+        846.013977050781
+      ],
+      "file": "gull_2_approach.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel mid-approach (40 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/gull_2_approach.png",
+      "sha256": "943a44af79bd1660949653f0eaa18b0f38da194c5ad1980171d5c152465ef9d4",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -27.4917755126953,
+        28.2679691314697,
+        869.800354003906
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -160.032592773438,
+        -1.68687893165043e-06
+      ],
+      "feet": [
+        -25.7548484802246,
+        25.4368286132813,
+        874.581115722656
+      ],
+      "file": "gull_3_near.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/gull_3_near.png",
+      "sha256": "fc8fad46919580b7bd3e0a39925a02e1324a3b6596b3f9665b729920a4278fb8",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -27.4917755126953,
+        28.2679691314697,
+        869.800354003906
+      ],
+      "camera_rotation": [
+        -12.0000009536743,
+        -160.032592773438,
+        -1.68687893165043e-06
+      ],
+      "feet": [
+        -25.7548484802246,
+        25.4368286132813,
+        874.581115722656
+      ],
+      "file": "gull_4_night.png",
+      "fov": 70.0,
+      "label": "Gull Rest survey satchel diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/gull_4_night.png",
+      "sha256": "a92a812963dde0b4afcf5e157a8fbc2523c6af3e270a42a1274768391614071b",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "gull",
+      "terrain_profile": [
+        [
+          -55.1007499694824,
+          2.39970302581787,
+          793.810729980469
+        ],
+        [
+          -53.3764991760254,
+          3.22873377799988,
+          798.556518554688
+        ],
+        [
+          -51.6522521972656,
+          4.38339042663574,
+          803.30224609375
+        ],
+        [
+          -49.9280014038086,
+          7.91970539093018,
+          808.047973632813
+        ],
+        [
+          -48.2037506103516,
+          13.7631950378418,
+          812.793762207031
+        ],
+        [
+          -46.4794998168945,
+          15.5303421020508,
+          817.539489746094
+        ],
+        [
+          -44.7552490234375,
+          17.2742156982422,
+          822.285217285156
+        ],
+        [
+          -43.0309982299805,
+          18.9868030548096,
+          827.031005859375
+        ],
+        [
+          -41.3067512512207,
+          20.5875015258789,
+          831.776733398438
+        ],
+        [
+          -39.5825004577637,
+          22.0666160583496,
+          836.5224609375
+        ],
+        [
+          -37.8582496643066,
+          23.3916854858398,
+          841.268249511719
+        ],
+        [
+          -36.1339988708496,
+          24.4961795806885,
+          846.013977050781
+        ],
+        [
+          -34.4097518920898,
+          25.3321113586426,
+          850.759765625
+        ],
+        [
+          -32.6855010986328,
+          25.9172897338867,
+          855.505493164063
+        ],
+        [
+          -30.9612503051758,
+          26.2398128509521,
+          860.251220703125
+        ],
+        [
+          -29.2369995117188,
+          26.2192192077637,
+          864.997009277344
+        ],
+        [
+          -27.5127487182617,
+          25.930061340332,
+          869.742736816406
+        ],
+        [
+          -25.788501739502,
+          25.4334259033203,
+          874.488464355469
+        ],
+        [
+          -24.0642509460449,
+          24.7653942108154,
+          879.234252929688
+        ],
+        [
+          -22.3400001525879,
+          23.9611644744873,
+          883.97998046875
+        ]
+      ],
+      "run": "final-mips"
+    },
+    {
+      "camera": [
+        1257.14050292969,
+        4.76273536682129,
+        3399.17163085938
+      ],
+      "camera_rotation": [
+        -11.9999980926514,
+        -141.34016418457,
+        -9.60978354669351e-07
+      ],
+      "feet": [
+        1260.31799316406,
+        1.93160426616669,
+        3403.14404296875
+      ],
+      "file": "deep_1_landing.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control from deep_watch arrival landing (13 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/deep_1_landing.png",
+      "sha256": "2f90bacb15de46317ddec8f3996cc3750fab720e76500385ffbccda61a468e9c",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1261.9404296875,
+        5.82325649261475,
+        3405.17163085938
+      ],
+      "camera_rotation": [
+        -11.9999942779541,
+        -141.34001159668,
+        -0.000262483605183661
+      ],
+      "feet": [
+        1265.11804199219,
+        2.99207425117493,
+        3409.14404296875
+      ],
+      "file": "deep_2_approach.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control mid-approach (5 m)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/deep_2_approach.png",
+      "sha256": "9d8369bfa06734272b3071541109bb00efdd524bcd4cdcbcc528f13491a1bb5b",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1263.26586914063,
+        6.41664886474609,
+        3406.8291015625
+      ],
+      "camera_rotation": [
+        -11.9999942779541,
+        -141.337646484375,
+        -0.000283386209048331
+      ],
+      "feet": [
+        1266.44384765625,
+        3.58546829223633,
+        3410.80151367188
+      ],
+      "file": "deep_3_near.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control diagnostic near stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/deep_3_near.png",
+      "sha256": "b7a92654f3f316e75bece2d41ead6456f362a5fa3ba805ed01eccb3ba7d49e0c",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        1263.26586914063,
+        6.41664886474609,
+        3406.8291015625
+      ],
+      "camera_rotation": [
+        -11.9999942779541,
+        -141.337646484375,
+        -0.000283386209048331
+      ],
+      "feet": [
+        1266.44384765625,
+        3.58546829223633,
+        3410.80151367188
+      ],
+      "file": "deep_4_night.png",
+      "fov": 70.0,
+      "label": "Deep Watch chart control diagnostic near night stand (teleport fixture)",
+      "proof": "DRY RUN — does not count",
+      "size": [
+        1920,
+        1080
+      ],
+      "run": "final-mips",
+      "path": "shots/lures-final-mips/deep_4_night.png",
+      "sha256": "a71436825bdab985fb953a93203d389454340c0a031cc260a3f63211228bb989",
+      "actual_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "site": "deep",
+      "terrain_profile": [
+        [
+          1260.71801757813,
+          1.99693584442139,
+          3403.64404296875
+        ],
+        [
+          1261.11804199219,
+          2.06540203094482,
+          3404.14404296875
+        ],
+        [
+          1261.51794433594,
+          2.13376402854919,
+          3404.64404296875
+        ],
+        [
+          1261.91796875,
+          2.2022442817688,
+          3405.14404296875
+        ],
+        [
+          1262.31799316406,
+          2.27061176300049,
+          3405.64404296875
+        ],
+        [
+          1262.71801757813,
+          2.33961629867554,
+          3406.14404296875
+        ],
+        [
+          1263.11804199219,
+          2.41264867782593,
+          3406.64404296875
+        ],
+        [
+          1263.51794433594,
+          2.49583721160889,
+          3407.14404296875
+        ],
+        [
+          1263.91796875,
+          2.59213638305664,
+          3407.64404296875
+        ],
+        [
+          1264.31799316406,
+          2.70450878143311,
+          3408.14404296875
+        ],
+        [
+          1264.71801757813,
+          2.83392095565796,
+          3408.64404296875
+        ],
+        [
+          1265.11804199219,
+          2.97670960426331,
+          3409.14404296875
+        ],
+        [
+          1265.51794433594,
+          3.13971471786499,
+          3409.64404296875
+        ],
+        [
+          1265.91796875,
+          3.31314134597778,
+          3410.14404296875
+        ],
+        [
+          1266.31799316406,
+          3.50417995452881,
+          3410.64404296875
+        ],
+        [
+          1266.71801757813,
+          3.70386433601379,
+          3411.14404296875
+        ],
+        [
+          1267.11804199219,
+          3.92197012901306,
+          3411.64404296875
+        ],
+        [
+          1267.51794433594,
+          4.1624002456665,
+          3412.14404296875
+        ],
+        [
+          1267.91796875,
+          4.41909599304199,
+          3412.64404296875
+        ],
+        [
+          1268.31799316406,
+          4.67782163619995,
+          3413.14404296875
+        ]
+      ],
+      "run": "final-mips"
+    },
+    {
+      "check": "two sites; repeated build is idempotent",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "presentation build does not change flags",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "dressing adds no collision, area or navigation",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "unoffered satchel hidden; survey site persists",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "heard lead reveals original satchel",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "recovered satchel hidden; survey site persists",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "satchel transform preserved through state changes",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "restored chart interaction stays at original transform",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "progression restoration neither loses nor duplicates dressing/equipment",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "chart shelter remains after progression restoration",
+      "pass": true,
+      "run": "final-mips"
+    },
+    {
+      "check": "fixture restores original flags",
+      "pass": true,
+      "run": "final-mips"
+    }
+  ]
+}

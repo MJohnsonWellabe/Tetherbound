@@ -1,0 +1,205 @@
+{
+  "baseline_commit": "f122f5b0d6f01f645cfed25d3d0bfe332142f971",
+  "scope": "Six matched before/after production-camera frames. Visual asset replacement only; no gameplay acceptance or performance claim.",
+  "renderer": "gl_compatibility",
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "source_asset_sha256": "b9fdc6cdc588ddaa869391c81f17b271dc9197196760f81e1990a7f257df8890",
+  "appearance_files": {
+    "stormheart_bark.gdshader": "5da8aa36b6ed502f03a3cfac69666cddf9f87609873060e71fb529542e7fbad7",
+    "stormheart_hero.gd": "bd09323a5b0b5529e7e0f344c1e207765e3a302e01786dacdb1da2efee3906a4",
+    "stormheart_hero.tscn": "d11a8fd1b7931bd61a2573200577dfe0c1cdc0cd114b2f25507d478b6a8c2fbd",
+    "stormheart_leaves.gdshader": "3f3683aa60a831d35ca58a3e76e99ce04e99635502678310256ecf53972227bb"
+  },
+  "fixed_fps": 60,
+  "seed": 44719,
+  "tree_gameplay_contract_unchanged": true,
+  "tree_gameplay_contract": {
+    "collision_shape_count": 775,
+    "outer_deck_radius_m": 44.0,
+    "outer_deck_radius_source": "stormheart_tree.gd::OUTER_WORKS_OUTER_RADIUS",
+    "path": "/root/Stormwood/StormheartTree",
+    "position": [
+      -100.0,
+      112.059112548828,
+      5470.0
+    ],
+    "static_body_count": 9
+  },
+  "frames": [
+    {
+      "frame": "stormheart_road_320m",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_320m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "8b693e764125ef0fb60554207b6588c96abae2370ed7acdf139ca6f7950d3e60"
+        },
+        {
+          "variant": "living-corrected1080",
+          "file": "living-corrected1080\\stormheart_road_320m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "13e18286da5e97a3594032c9e93026327103d6cf3a502cba21b7205b4a313c46"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_road_220m",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_220m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "b9ca5b4aeda5897f6c067dc52cb19b66a8ff2e8f2df1d77bc2c71a386efb2cc0"
+        },
+        {
+          "variant": "living-corrected1080",
+          "file": "living-corrected1080\\stormheart_road_220m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "d8891f8ea0569c5d0fd8aa2ab4b1049c5bad12f587609af090ff1cc9089db7e8"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_road_120m",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_120m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "691bea9c1b29681d7fec85ed232bac9601b9c06b37325cc88cb81bb8331b6b3c"
+        },
+        {
+          "variant": "living-corrected1080",
+          "file": "living-corrected1080\\stormheart_road_120m.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "62a1c3014a53d9acb85521c0accc20922088e1cbad4fb6a069c64fa4806aa89c"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_road_120m_verge",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_road_120m_verge.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "8d3ba31dab37c6592f444f1a01816a88deceb11f399919a63240f9aa4d5259c8"
+        },
+        {
+          "variant": "living-corrected1080",
+          "file": "living-corrected1080\\stormheart_road_120m_verge.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "0bfc6ba50979a3eddc6429601cbd5dc3345add501f7e000ada48a174ac0b243f"
+        }
+      ]
+    },
+    {
+      "frame": "stormwood__dynamo__11__the_glass_field__day",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormwood__dynamo__11__the_glass_field__day.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "f75031ff4c456f6cde9b4d2b4353b1be53bd55e7b060b2547a14c58961a866c8"
+        },
+        {
+          "variant": "living-corrected1080",
+          "file": "living-corrected1080\\stormwood__dynamo__11__the_glass_field__day.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "8005cb48039d19893f8bc9d50ac3a4a8ab63d25630caf351d41fe1af1b5c7e20"
+        }
+      ]
+    },
+    {
+      "frame": "stormheart_glass_field_look",
+      "player_position_delta_m": 0.0,
+      "camera_position_delta_m": 0.0,
+      "camera_transform_component_max_delta": 0.0,
+      "before_phase": "calm",
+      "after_phase": "calm",
+      "images": [
+        {
+          "variant": "before1080",
+          "file": "before1080\\stormheart_glass_field_look.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "b91d55f16dbd45c25ae8c54cea61f866d4583ac8fade555ef1c48264452094cc"
+        },
+        {
+          "variant": "living-corrected1080",
+          "file": "living-corrected1080\\stormheart_glass_field_look.png",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "sha256": "a84e77989191ac089fba7bc11a2347e430f5d4a1a8fc26d41b8da2faa58885bf"
+        }
+      ]
+    }
+  ],
+  "operator_inspection": "All six corrected1920x1080 frames inspected individually. Split and root arch retained; bark warmer with clearer grain; living leaf masses are visible at320m andGlassField. Canopy remains pale/patchy and original angular crown fragments remain; close bark is still faceted and vertically streaked. Independent art judgment required. Existing pylon blocks120m centerline; verge exposes unchanged abstract dark rings. Lane architecture, electrical VFX and environment palette are unchanged.",
+  "capture_correction": "Initial1920x1061 windowed baseline retained separately as diagnostic. Matched accepted-raster pair uses native fullscreen1920x1080; no image resizing.",
+  "blind_visual_verdict": "Not yet performed by this preparation agent."
+}

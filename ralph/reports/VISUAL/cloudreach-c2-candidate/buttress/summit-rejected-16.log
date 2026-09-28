@@ -1,0 +1,331 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:429)
+       [6] _run (res://tests/smoke_cloudreach_summit_crown.gd:159)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [4] _run (res://tests/smoke_cloudreach_summit_crown.gd:159)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [4] _run (res://tests/smoke_cloudreach_summit_crown.gd:159)
+SUMMIT CROWN: CarvedCrown 34613 triangles
+SUMMIT CROWN: carved crown build 281.6 ms (carve 189.3 ms, mesh + collider 92.2 ms)
+SUMMIT CROWN (a): grid 642 drawn XZ probed, 402 undrawn skipped
+SUMMIT CROWN (a) INFO: 29 drawn XZ where ground_height_at differs by > 1.5 m (pre-existing index shape): (-30,5290) index=1160.00 drawn=1156.82, (-30,5300) index=1160.00 drawn=1155.37, (-30,5310) index=1160.00 drawn=1154.75, (-20,5290) index=1160.00 drawn=1158.09, (-20,5300) index=1160.00 drawn=1157.78, (10,5270) index=1160.00 drawn=1157.98, (20,5270) index=1160.00 drawn=1158.20, (30,5270) index=1160.00 drawn=1158.30
+SUMMIT CROWN (a): 27188 CarvedCrown centroids probed, 12180 under another surface, 49 near-vertical rim strips skipped
+SUMMIT CROWN INFO: excluded person body /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Captain Veyra/Body
+SUMMIT CROWN (b): 797 road points under the crown checked
+SUMMIT CROWN (b) INFO: pre-existing collider /root/CloudreachCliffs/AuthoredRoutes/UpperSummitRoadCliffShoulders/Ridge003/Collision (overlaps the capsule at the road edge)
+SUMMIT CROWN (b) INFO: pre-existing collider /root/CloudreachCliffs/Landmarks/SummitEyrieStronghold/@Node3D@4532/Collision, lowest 1.58 m over the road
+SUMMIT CROWN (b) INFO: pre-existing collider /root/CloudreachCliffs/Landmarks/SummitEyrieStronghold/@Node3D@4532/Collision (overlaps the capsule at the road edge)
+SUMMIT CROWN (b) INFO: pre-existing collider /root/CloudreachCliffs/Landmarks/SummitEyrieStronghold/@Node3D@4536/Collision (overlaps the capsule at the road edge)
+SUMMIT CROWN (c): trainer on the crown at (100.0, 1160.03, 5290.0) after 14 frames
+SUMMIT CROWN (d) arena ring: 33793 cells with ground probed round (100, 5450) r 35.5-48.0 in 967 ms
+SUMMIT CROWN (d) arena ring: trainer (45 deg) escape routes 0
+SUMMIT CROWN (d) INFO: arena ring at a creature's 55 deg floor angle: 0 escape routes
+SUMMIT CROWN (e) INFO: @Node3D@5368/PerimeterWatchTower at (140.0, 5460.5) has no exterior face in a trainer's band (its top overhangs its base)
+SUMMIT CROWN (e) INFO: @Node3D@5371/PerimeterWatchTower at (69.5, 5477.5) has no exterior face in a trainer's band (its top overhangs its base)
+SUMMIT CROWN (e) masonry: { "RearCourtyardArcade": 2, "RetainedMasonry": 18, "PerimeterWatchTower": 4 } pieces swept
+SUMMIT CROWN (f) road boxes: 1046 samples beside ribbons over the crown, 0 wall runs
+SUMMIT CROWN (h) stronghold: 66 pieces at crown level within 25 m of a carved road checked
+SUMMIT CROWN (i) crown: 100499 short edges, 6 steeper than 2.00/m; 266 road centreline points over the crown, 0 hollow
+[cloudreach] simulation-only shell for realm 'cloudreach': no cloud sea, horizon, ground cover, arrival beats, HUD, sun or environment
+[shell_build] CloudreachCliffs begin:shell total=0ms slice=0ms
+[shell_build] CloudreachCliffs materials:begin total=24ms slice=24ms
+[shell_build] CloudreachCliffs complete:materials total=76ms slice=76ms
+[shell_build] CloudreachCliffs regions:begin total=113ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:mesa:begin total=139ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:strata:begin total=272ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:satellites:begin total=298ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:vegetation:begin total=324ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:mesa:begin total=366ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:strata:begin total=486ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:satellites:begin total=507ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:vegetation:begin total=534ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:mesa:begin total=559ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:strata:begin total=674ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:satellites:begin total=698ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:vegetation:begin total=724ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:mesa:begin total=749ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:strata:begin total=871ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:satellites:begin total=899ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:vegetation:begin total=926ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:mesa:begin total=951ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:strata:begin total=1071ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:satellites:begin total=1099ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:vegetation:begin total=1124ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:mesa:begin total=1151ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:strata:begin total=2474ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:satellites:begin total=2502ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:vegetation:begin total=2524ms slice=0ms
+[shell_build] CloudreachCliffs complete:regions total=2549ms slice=25ms
+[shell_build] CloudreachCliffs complete:ledges total=2619ms slice=45ms
+[shell_build] CloudreachCliffs routes:begin total=2640ms slice=0ms
+[shell_build] CloudreachCliffs routes:arrival_gate_road:begin total=2666ms slice=0ms
+[shell_build] CloudreachCliffs routes:arrival_gate_road:geological_shoulders:deferred total=2690ms slice=24ms
+[shell_build] CloudreachCliffs routes:lower_cliff_road:begin total=2829ms slice=3ms
+[shell_build] CloudreachCliffs routes:lower_cliff_road:geological_shoulders:deferred total=2857ms slice=31ms
+[shell_build] CloudreachCliffs routes:lower_overlook_loop:begin total=2955ms slice=2ms
+[shell_build] CloudreachCliffs routes:lower_overlook_loop:geological_shoulders:deferred total=2982ms slice=29ms
+[shell_build] CloudreachCliffs routes:broken_causeway_main:begin total=3055ms slice=5ms
+[shell_build] CloudreachCliffs routes:broken_causeway_main:geological_shoulders:deferred total=3082ms slice=32ms
+[shell_build] CloudreachCliffs routes:causeway_west_loop:begin total=3279ms slice=5ms
+[shell_build] CloudreachCliffs routes:causeway_west_loop:geological_shoulders:deferred total=3307ms slice=33ms
+[shell_build] CloudreachCliffs routes:windscar_floor_loop:begin total=3395ms slice=5ms
+[shell_build] CloudreachCliffs routes:windscar_floor_loop:geological_shoulders:deferred total=3415ms slice=25ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_pass:begin total=3544ms slice=4ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_pass:geological_shoulders:deferred total=3565ms slice=25ms
+[shell_build] CloudreachCliffs routes:upper_plateau_circuit:begin total=3702ms slice=6ms
+[shell_build] CloudreachCliffs routes:upper_plateau_circuit:geological_shoulders:deferred total=3723ms slice=27ms
+[shell_build] CloudreachCliffs routes:upper_summit_road:begin total=3859ms slice=7ms
+[shell_build] CloudreachCliffs routes:upper_summit_road:geological_shoulders:deferred total=3882ms slice=30ms
+[shell_build] CloudreachCliffs routes:summit_overlook_loop:begin total=4025ms slice=5ms
+[shell_build] CloudreachCliffs routes:summit_overlook_loop:geological_shoulders:deferred total=4047ms slice=27ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_return:begin total=4165ms slice=0ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_return:geological_shoulders:deferred total=4189ms slice=24ms
+[shell_build] CloudreachCliffs routes:observatory_summit_link:begin total=4218ms slice=3ms
+[shell_build] CloudreachCliffs routes:observatory_summit_link:geological_shoulders:deferred total=4239ms slice=24ms
+[shell_build] CloudreachCliffs routes:observatory_latch_descent:begin total=4267ms slice=1ms
+[shell_build] CloudreachCliffs routes:observatory_latch_descent:geological_shoulders:deferred total=4289ms slice=23ms
+[shell_build] CloudreachCliffs complete:routes total=4335ms slice=0ms
+[shell_build] CloudreachCliffs complete:gates total=4361ms slice=5ms
+[shell_build] CloudreachCliffs complete:bridges total=4424ms slice=42ms
+[shell_build] CloudreachCliffs landmarks:multiplayer_placeholders=12 total=4449ms slice=1ms
+[shell_build] CloudreachCliffs complete:landmarks total=4473ms slice=25ms
+[shell_build] CloudreachCliffs complete:return_gate total=4500ms slice=2ms
+WARNING: Cloudreach detail ArrivalTravelersLayby/wagon has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _ready (res://scripts/world/cloudreach_world.gd:395)
+       [2] _build_step (res://scripts/world/cloudreach_world.gd:480)
+WARNING: Cloudreach detail ArrivalTravelersLayby/fence has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ArrivalTravelersLayby/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ArrivalStoneGarden/rock has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ArrivalStoneGarden/rock_low has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ArrivalStoneGarden/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ArrivalStoneGarden/flowers has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ArrivalStoneGarden/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ThreeBellsBridgeRepair/fence has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ThreeBellsBridgeRepair/crate has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ThreeBellsBridgeRepair/barrel has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ThreeBellsBridgeRepair/rock has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail ThreeBellsBridgeRepair/paving has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/fence has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/fence has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/barrel has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/crate has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/rock has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/rock_low has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/flowers has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail RoostWatchRest/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail AerieApproachRockShelter/rock has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail AerieApproachRockShelter/rock_low has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail AerieApproachRockShelter/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail AerieApproachRockShelter/flowers has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+WARNING: Cloudreach detail AerieApproachRockShelter/bush has no supporting surface
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_authored_route_details (res://scripts/world/cloudreach_world.gd:3002)
+       [1] _build_breathe (res://scripts/world/cloudreach_world.gd:472)
+[shell_build] CloudreachCliffs complete:route_details total=6677ms slice=2ms
+[shell_build] CloudreachCliffs complete:resource_patches total=6734ms slice=3ms
+[shell_build] CloudreachCliffs complete:environment total=6843ms slice=81ms
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:429)
+       [6] _build_step (res://scripts/world/cloudreach_world.gd:480)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [4] _build_step (res://scripts/world/cloudreach_world.gd:480)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [4] _build_step (res://scripts/world/cloudreach_world.gd:480)
+[shell_build] CloudreachCliffs complete:mount total=7569ms slice=703ms
+[cloudreach] shell build 8.5 s wall, 255 yields at 8 ms/frame, 2 indivisible slices given a heartbeat window each, worst held slice 703 ms (in the step following 'environment'); steps (ms wall, yields included): materials=76 regions=2436 ledges=45 routes=1695 gates=5 bridges=42 landmarks=25 return_gate=2 route_details=2154 resource_patches=36 environment=81 mount=703
+SUMMIT CROWN (g): co-op shell built in 8666 ms
+SUMMIT CROWN: CarvedCrown 34613 triangles
+SUMMIT CROWN: carved crown build 295.1 ms (carve 193.7 ms, mesh + collider 101.4 ms)
+SUMMIT CROWN (a): grid 642 drawn XZ probed, 402 undrawn skipped
+SUMMIT CROWN (a) INFO: 28 drawn XZ where ground_height_at differs by > 1.5 m (pre-existing index shape): (-30,5290) index=1160.00 drawn=1156.82, (-30,5300) index=1160.00 drawn=1155.37, (-30,5310) index=1160.00 drawn=1154.75, (-20,5290) index=1160.00 drawn=1158.09, (-20,5300) index=1160.00 drawn=1157.78, (10,5270) index=1160.00 drawn=1157.98, (20,5270) index=1160.00 drawn=1158.20, (30,5270) index=1160.00 drawn=1158.30
+SUMMIT CROWN (a): 27188 CarvedCrown centroids probed, 4558 under another surface, 49 near-vertical rim strips skipped
+SUMMIT CROWN (b): 797 road points under the crown checked
+SUMMIT CROWN (c): trainer on the crown at (100.0, 1160.03, 5290.0) after 14 frames
+SUMMIT CROWN (d) arena ring: 33793 cells with ground probed round (100, 5450) r 35.5-48.0 in 857 ms
+SUMMIT CROWN (d) arena ring: trainer (45 deg) escape routes 0
+SUMMIT CROWN (d) INFO: arena ring at a creature's 55 deg floor angle: 0 escape routes
+SUMMIT CROWN (e) INFO: @Node3D@7669/PerimeterWatchTower at (140.0, 5460.5) has no exterior face in a trainer's band (its top overhangs its base)
+SUMMIT CROWN (e) INFO: @Node3D@7672/PerimeterWatchTower at (69.5, 5477.5) has no exterior face in a trainer's band (its top overhangs its base)
+SUMMIT CROWN (e) masonry: { "RetainedMasonry": 18, "PerimeterWatchTower": 4 } pieces swept
+SUMMIT CROWN (f) road boxes: 1046 samples beside ribbons over the crown, 1 wall runs
+SUMMIT CROWN (i) crown: 100499 short edges, 6 steeper than 2.00/m; 266 road centreline points over the crown, 0 hollow
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] _physics_process (res://scripts/world/cloudreach_physical_runtime.gd:140)
+SUMMIT CROWN (g) walk: upper_summit_road reached the pad join (105.1, 1160.0, 5343.6) from (123.2253, 1152.66, 5320.948) in 373 frames, at (105.9852, 1159.679, 5342.502) on_floor=true
+SUMMIT CROWN (g) walk: summit_overlook_loop west leg reached the pad join (93.7, 1160.0, 5349.5) from (64.05154, 1156.395, 5347.108) in 357 frames, at (92.34324, 1159.883, 5349.392) on_floor=true
+SUMMIT CROWN FAIL: (h) stronghold piece Paving100 floats: 5 of 15 base points have no ground within 0.5 m (worst 1.18 m at (101.0462, 1160.164, 5323.142))
+SUMMIT CROWN FAIL: (i) crown steps 0.68 m over 0.06 m between (113.399, 1160.395, 5350.191) and (113.4202, 1159.717, 5350.136) (limit 0.52 m)
+SUMMIT CROWN FAIL: (i) crown steps 0.68 m over 0.06 m between (113.4202, 1159.717, 5350.136) and (113.399, 1160.395, 5350.191) (limit 0.52 m)
+SUMMIT CROWN FAIL: (i) crown steps 1.51 m over 0.11 m between (122.8319, 1159.727, 5346.233) and (122.9444, 1161.233, 5346.247) (limit 0.63 m)
+SUMMIT CROWN FAIL: (i) crown steps 1.51 m over 0.11 m between (122.9444, 1161.233, 5346.247) and (122.8319, 1159.727, 5346.233) (limit 0.63 m)
+SUMMIT CROWN FAIL: (i) crown steps 0.93 m over 0.17 m between (124.7543, 1159.621, 5344.415) and (124.9232, 1160.551, 5344.436) (limit 0.74 m)
+SUMMIT CROWN FAIL: (i) crown steps 0.93 m over 0.17 m between (124.9232, 1160.551, 5344.436) and (124.7543, 1159.621, 5344.415) (limit 0.74 m)
+SUMMIT CROWN FAIL: (g) (f) summit_overlook_loop: the hidden 7 m road box stands up to 0.88 m over walkable crown from (114.3, 5351.6) to (115.2, 5351.9), worst at (115.1978, 1160.032, 5351.944)
+SUMMIT CROWN FAIL: (g) (i) crown steps 0.68 m over 0.06 m between (113.399, 1160.395, 5350.191) and (113.4202, 1159.717, 5350.136) (limit 0.52 m)
+SUMMIT CROWN FAIL: (g) (i) crown steps 0.68 m over 0.06 m between (113.4202, 1159.717, 5350.136) and (113.399, 1160.395, 5350.191) (limit 0.52 m)
+SUMMIT CROWN FAIL: (g) (i) crown steps 1.51 m over 0.11 m between (122.8319, 1159.727, 5346.233) and (122.9444, 1161.233, 5346.247) (limit 0.63 m)
+SUMMIT CROWN FAIL: (g) (i) crown steps 1.51 m over 0.11 m between (122.9444, 1161.233, 5346.247) and (122.8319, 1159.727, 5346.233) (limit 0.63 m)
+SUMMIT CROWN FAIL: (g) (i) crown steps 0.93 m over 0.17 m between (124.7543, 1159.621, 5344.415) and (124.9232, 1160.551, 5344.436) (limit 0.74 m)
+SUMMIT CROWN FAIL: (g) (i) crown steps 0.93 m over 0.17 m between (124.9232, 1160.551, 5344.436) and (124.7543, 1159.621, 5344.415) (limit 0.74 m)
+SUMMIT CROWN (a) PASS (0 failures)
+SUMMIT CROWN (b) PASS (0 failures)
+SUMMIT CROWN (c) PASS (0 failures)
+SUMMIT CROWN (d) PASS (0 failures)
+SUMMIT CROWN (e) PASS (0 failures)
+SUMMIT CROWN (f) PASS (0 failures)
+SUMMIT CROWN (h) FAIL (1 failures)
+SUMMIT CROWN (i) FAIL (6 failures)
+SUMMIT CROWN (g) FAIL (7 failures)
+CLOUDREACH SUMMIT CROWN FAIL (14 failures)

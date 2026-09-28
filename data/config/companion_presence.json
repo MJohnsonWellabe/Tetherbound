@@ -103,6 +103,16 @@
     "radius": 7.0,
     "limit_deg": 55.0,
     "duration_s": 0.35,
-    "influence": 0.75
+    "influence": 0.75,
+    "species_overrides": {
+      "galecrest": {
+        "_comment": "V30 rebuilt raptor: preserve the alert head pose while acknowledging the trainer. A restrained pitch and partial influence keep the brow from covering the eyes at the production camera; the upright turn axis still prevents neck roll.",
+        "align_to_body_up": true,
+        "primary_limit_deg": 55.0,
+        "secondary_limit_deg": 15.0,
+        "influence": 0.4,
+        "target_height_m": 1.55
+      }
+    }
   }
 }
