@@ -136,6 +136,8 @@ func _ready() -> void:
 	add_child(docks)
 	docks.build(self)
 	var dock_dressing: Node3D = preload("res://scripts/world/water_dock_dressing.gd").new(); dock_dressing.name = "WaterDockDressing"; add_child(dock_dressing); dock_dressing.call("build", self)
+	# F13#5: two installed-cast dock hands at every mandatory dock (presentation only).
+	var dock_residents: Node3D = preload("res://scripts/world/water_dock_residents.gd").new(); dock_residents.name = "WaterDockResidents"; add_child(dock_residents); dock_residents.call("build", self)
 	# F13 physical_ramp return shortcuts: built from the replicated dock flag.
 	var return_ramps := RETURN_RAMPS.new()
 	return_ramps.name = "WaterReturnRamps"

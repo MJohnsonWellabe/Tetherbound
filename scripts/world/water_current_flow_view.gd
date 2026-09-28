@@ -121,8 +121,8 @@ func _ribbon(surface: SurfaceTool, line: PackedVector2Array, half: float, y: flo
 		var side := Vector2(-tangent.y, tangent.x) * half
 		var along := travelled / maxf(total, 0.001)
 		rows.append([
-			{"at": Vector3(line[index].x - side.x, y, line[index].y - side.y), "uv": Vector2(0.0, travelled), "uv2": Vector2(along, 0.0)},
-			{"at": Vector3(line[index].x + side.x, y, line[index].y + side.y), "uv": Vector2(1.0, travelled), "uv2": Vector2(along, 0.0)},
+			{"at": Vector3(line[index].x - side.x, y, line[index].y - side.y), "uv": Vector2(0.0, travelled), "uv2": Vector2(along, total)},
+			{"at": Vector3(line[index].x + side.x, y, line[index].y + side.y), "uv": Vector2(1.0, travelled), "uv2": Vector2(along, total)},
 		])
 	for index in range(1, rows.size()):
 		var a: Array = rows[index - 1]
