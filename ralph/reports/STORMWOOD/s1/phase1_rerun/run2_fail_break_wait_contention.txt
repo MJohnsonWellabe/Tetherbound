@@ -1,0 +1,124 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_started
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_i_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_ii_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact captain_veyra_defeated
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_winds_restored
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_heart_cloudreach_earned
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_key_stormwood
+  PASS: chapter-entry fixture accepted completed Cloudreach fact stormward_route_revealed
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_complete
+  PASS: chapter-entry fixture carries sparkit in the completed Cloudreach party
+  PASS: chapter-entry fixture carries mudsnout in the completed Cloudreach party
+  PASS: chapter-entry fixture carries bramblebun in the completed Cloudreach party
+  PASS: chapter-entry fixture carries terrapup in the completed Cloudreach party
+  PASS: chapter-entry fixture carries brooktail in the completed Cloudreach party
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_started)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_i_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_ii_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (captain_veyra_defeated)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_winds_restored)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_heart_cloudreach_earned)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_key_stormwood)
+  PASS: chapter-entry fixture contains no Stormwood progress (stormward_route_revealed)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_complete)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:90)
+STORMWOOD BUILD shell=false elapsed_ms=230 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=561 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=834 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=839 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=855 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=865 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=865 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=865 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=879 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=880 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1234 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1262 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1263 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 43161 placements, 0 skipped]=183 reorder[8 layers]=55
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+WARNING: TwistedTree_2.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _warn_about_shared_models (res://scripts/world/vegetation.gd:756)
+         [1] build (res://scripts/world/vegetation.gd:649)
+         [2] _ready (res://scripts/world/stormwood_world.gd:107)
+WARNING: TwistedTree_4.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _warn_about_shared_models (res://scripts/world/vegetation.gd:756)
+         [1] build (res://scripts/world/vegetation.gd:649)
+         [2] _ready (res://scripts/world/stormwood_world.gd:107)
+[vegetation] boot phases (ms): placements=278 mark_harvestable=36 group_by_model=48 register_mesh_assets=45 build_batches_total=1484 (of which harvest_points[15940 nodes]=1248, initial_collision_stream[16002 solid]=60) update_mmis=190
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 1365603512 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:781)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:562)
+WARNING: wild cluster 1365603540 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:781)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:562)
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:781)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:562)
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: production router accepted the completed-Cloudreach Stormwood entry
+  PASS: production Stormwood scene became current
+  PASS: production router settled in Stormwood
+  PASS: authored Stormwood arrival settled its pending entry
+  PASS: wrote the chapter-entry save to disk at the Stormwood arrival
+ENTRY SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_s1/slot_0.json sha256=fed33b87deb06bffd56affe33f94a2d45dd5425e31cdab5188babf71ced65c12
+ENTRY SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_s1/worlds/slot-0/world.json sha256=771c4af89913406b5ffd2e5159ed34ff174f920c4a56b24a99be3933387638ce
+ENTRY SAVE /root/.local/share/godot/app_userdata/Tetherbound/swrun_s1/characters/stormwood-continuous-solo/character.json sha256=b98e8b5e47aea32c8867cc05cdff3f4881bb6f6f9684b8376a4674f9e38961bd
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot Waycamp arrival from=(-300.0, 32.27173, 180.0) target=(-350.0, 30.16094, 450.0) distance_m=274.6 budget_frames=21967
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot Waycamp arrival elapsed_ms=10701 walked_frames=3284 player=(-349.6701, 30.12788, 448.2445)
+STORMWOOD CONTINUOUS — CHECKPOINT: ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Hesk's Long Storm account stance from=(-349.6701, 30.12788, 448.2445) target=(-350.0, 30.18008, 447.5) distance_m=0.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Hesk's Long Storm account stance elapsed_ms=124 walked_frames=29 player=(-349.9818, 30.15767, 448.1821)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Tamsin's Break lesson stance from=(-350.5107, 30.25167, 447.5796) target=(-300.0, 26.42247, 347.5) distance_m=112.1 budget_frames=8968
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Tamsin's Break lesson stance elapsed_ms=5164 walked_frames=1425 player=(-300.3139, 26.41877, 348.0732)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot lightning shelter from=(-299.7029, 26.48334, 346.9593) target=(-325.0, 29.25002, 466.0) distance_m=121.7 budget_frames=9735
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot lightning shelter elapsed_ms=4451 walked_frames=1459 player=(-324.6984, 29.22718, 464.5472)
+ERROR: STORMWOOD CONTINUOUS SEGMENT: waiting under Ashfoot shelter through the production cycle did not witness the tutorial Break
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/smoke_stormwood_continuous.gd:1697)
+       [1] run (res://tests/smoke_stormwood_continuous.gd:649)
+STORMWOOD CONTINUOUS — ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — HEARD Tamsin through her ordinary NPC prompt
+F11 WITNESS STEP FAIL prefix: arrival through Ondra's arch recipe wall=151.2s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+F11 WITNESS TOOLS after prefix: knife x1 axe x1 pickaxe x1 hotbar=["knife", "axe", "pickaxe", "", ""]
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=0 warnings=0 damage=0.0
+stormwood continuous FAIL: waiting under Ashfoot shelter through the production cycle did not witness the tutorial Break
+EXIT 1

@@ -10,9 +10,6 @@ extends "res://tools/capture_stormwood_reduced_motion.gd"
 ##   render.yml: script=tools/vis_capture_strike_motion.gd
 ##     args="--motion=normal --hours=12 --out=res://shots/vis_f10_3_motion/seqA --label=seqA --only=quick"
 ##
-## `--hud` keeps the HUD CanvasLayers visible with pad glyphs (F10#6 device
-## profile: the ring read at 1920x1080 under the real HUD).
-##
 ## `--motion=normal|reduced` sets Settings -> Accessibility -> Reduced motion
 ## (motion_prefs.gd) before any staging (base tool). `--hours=H` sets the
 ## WorldLook clock to that exact hour and freezes it.
@@ -45,7 +42,6 @@ const STRIKE_ID := 910001
 const SKY_SEED := 20260927
 
 var _vis_hours: Array[float] = [12.0]
-var _vis_hud := false
 var _ticks := 0
 
 
@@ -55,8 +51,6 @@ func _run() -> void:
 		_launch_child(args)
 		return
 	for arg: String in args:
-		if arg == "--hud":
-			_vis_hud = true
 		if arg.begins_with("--hours="):
 			_vis_hours.clear()
 			for part: String in arg.trim_prefix("--hours=").split(",", false):
@@ -106,12 +100,7 @@ func _quick() -> void:
 		await _enter_phase("break", false)
 		for _frame in 60:
 			await physics_frame
-		if _vis_hud:
-			var game := root.get_node_or_null(^"Game")
-			if game != null:
-				game.set("_last_input_was_gamepad", true)
-		else:
-			_hud_visible(false)
+		_hud_visible(false)
 		await _sequence(hour)
 	physics_frame.disconnect(_count_tick)
 
