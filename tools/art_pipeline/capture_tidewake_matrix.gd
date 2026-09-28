@@ -365,7 +365,7 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 	if not is_finite(ground) or not at.is_finite() or not target.is_finite():
 		_failures.append(name + ": non-finite terrain-resolved stand or target")
 		return {"frame_id": name, "status": "failed"}
-	var record := {"frame_id": name, "frame": name, "file": name + ".png", "what": view.what,
+	var record := {"frame_id": name, "frame": name, "file": _out.path_join(name + ".png"), "what": view.what,
 		"time": time_name, "requested_player": _xyz(at), "target": _xyz(target), "ground_y": ground,
 		"swimming_stand": spec.swimming, "water_surface_y": spec.water_surface_y,
 		"water_depth_m": spec.water_depth_m,
@@ -402,14 +402,16 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 		if absf(float(record.distance_m) - float(view.nominal_distance_m)) > float(view.nominal_distance_m) * 0.1:
 			_failures.append(name + ": actual finale range outside 10 percent tolerance")
 			return record
-	if not _save_png(str(record.file)):
+	if not _save_png(name + ".png"):
 		return record
+	record["start_captured"] = true
 	record["hold_start_process_frame"] = Engine.get_process_frames()
 	record["hold_start_physics_frame"] = Engine.get_physics_frames()
 	var elapsed := 0.0
 	while elapsed < _hold_seconds:
 		await physics_frame
 		elapsed += root.get_physics_process_delta_time()
+		record["hold_seconds_simulated"] = elapsed
 		if not _capture_valid(at, name, spec):
 			return record
 	record["hold_seconds_simulated"] = elapsed
@@ -422,12 +424,18 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 		record["hold_end_observed_clock"] = _clock_record(time_name, name)
 		if record.hold_end_observed_clock.is_empty():
 			return record
-		record["hold_end_file"] = name + "-hold-end.png"
-		if not _save_png(str(record.hold_end_file)):
-			return record
+		record["hold_end_file"] = _out.path_join(name + "-hold-end.png")
 		record["hold_end_camera"] = _camera_record()
 		record["hold_end_player"] = _xyz(_player.global_position)
 		record["hold_end_surface_state"] = _surface_record()
+		record["hold_end_render"] = _render_record()
+		record["hold_end_distance_m"] = _player.global_position.distance_to(target)
+		record["hold_end_horizontal_distance_m"] = Vector2(_player.global_position.x, _player.global_position.z).distance_to(Vector2(target.x, target.z))
+		record["hold_end_process_frame"] = Engine.get_process_frames()
+		record["hold_end_physics_frame"] = Engine.get_physics_frames()
+		if not _save_png(name + "-hold-end.png"):
+			return record
+		record["hold_end_captured"] = true
 	record.status = "captured"
 	print("frame %s player=%s distance=%.2f stationary_hold=%.2fs" % [name, _player.global_position, record.distance_m, elapsed])
 	return record
@@ -539,20 +547,66 @@ func _render_record() -> Dictionary:
 		"adapter": RenderingServer.get_video_adapter_name(), "os": OS.get_name(), "engine": Engine.get_version_info()}
 
 
+## Pure export seam: one internal record still accounts for one requested
+## view/time. Only successfully saved images become compactable frame rows.
+## A later hold failure cannot erase the already validated start image.
+static func export_image_records(records: Array, expected_views: Array, hold_seconds: float) -> Dictionary:
+	var frames: Array[Dictionary] = []
+	var failed_views: Array[Dictionary] = []
+	var expected: Array[String] = []
+	var missing: Array[String] = []
+	var captured: Dictionary = {}
+	for id: String in expected_views:
+		expected.append(id)
+		if hold_seconds > 0.0:
+			expected.append(id + "-hold-end")
+	for record: Dictionary in records:
+		var id := str(record.frame_id)
+		if str(record.get("status", "failed")) != "captured":
+			failed_views.append(record.duplicate(true))
+		if bool(record.get("start_captured", false)):
+			var start := record.duplicate(true)
+			start["view_status"] = record.get("status", "failed")
+			start["status"] = "captured"
+			start["capture_phase"] = "hold_start" if hold_seconds > 0.0 else "settled"
+			start["capture_elapsed_hold_seconds"] = 0.0
+			start["capture_process_frame"] = record.hold_start_process_frame
+			start["capture_physics_frame"] = record.hold_start_physics_frame
+			if hold_seconds > 0.0:
+				start["paired_frame_id"] = id + "-hold-end"
+			frames.append(start)
+			captured[id] = true
+		if bool(record.get("hold_end_captured", false)):
+			var endpoint := record.duplicate(true)
+			endpoint["frame_id"] = id + "-hold-end"
+			endpoint["frame"] = endpoint.frame_id
+			endpoint["file"] = record.hold_end_file
+			endpoint["view_status"] = record.get("status", "failed")
+			endpoint["status"] = "captured"
+			endpoint["capture_phase"] = "hold_end"
+			endpoint["paired_frame_id"] = id
+			endpoint["capture_elapsed_hold_seconds"] = record.hold_seconds_simulated
+			endpoint["capture_process_frame"] = record.hold_end_process_frame
+			endpoint["capture_physics_frame"] = record.hold_end_physics_frame
+			for key: String in ["player", "camera", "surface_state", "observed_clock", "render",
+					"distance_m", "horizontal_distance_m"]:
+				endpoint[key] = endpoint["hold_end_" + key]
+			frames.append(endpoint)
+			captured[str(endpoint.frame_id)] = true
+	for id: String in expected:
+		if not captured.has(id):
+			missing.append(id)
+	return {"frames": frames, "failed_views": failed_views,
+		"expected_frame_ids": expected, "missing_or_failed_frame_ids": missing}
+
+
 func _write_manifest(complete: bool) -> bool:
 	var file := FileAccess.open(_out.path_join("frames.json"), FileAccess.WRITE)
 	if file == null:
 		_failures.append("could not write frames.json")
 		return false
-	var missing: Array[String] = []
-	for id: String in _expected:
-		var found := false
-		for row: Dictionary in _records:
-			if row.frame_id == id and row.status == "captured":
-				found = true
-		if not found:
-			missing.append(id)
-	file.store_string(JSON.stringify({"schema_version": 2, "complete": complete,
+	var exported := export_image_records(_records, _expected, _hold_seconds)
+	file.store_string(JSON.stringify({"schema_version": 3, "complete": complete,
 		"scene": SCENE, "started_utc": _started, "seed": _seed, "seed_context": _seed_record(), "source_metadata": _source_metadata,
 		"source_metadata_path": _metadata_path, "script": get_script().resource_path, "engine_args": OS.get_cmdline_args(),
 		"user_args": OS.get_cmdline_user_args(), "render": _render_record(),
@@ -563,8 +617,10 @@ func _write_manifest(complete: bool) -> bool:
 			"stationary_hold_not_walk": true, "max_horizontal_stand_drift_m": 2.0,
 			"continuous_movie_requires_engine_write_movie": true,
 			"device_claim": "computer capture, no Ally hardware", "performance_claim": false},
-		"expected_frame_ids": _expected, "missing_or_failed_frame_ids": missing,
-		"failures": _failures, "frames": _records}, "\t"))
+		"expected_view_ids": _expected, "expected_frame_ids": exported.expected_frame_ids,
+		"missing_or_failed_frame_ids": exported.missing_or_failed_frame_ids,
+		"failed_views": exported.failed_views, "captured_frame_count": exported.frames.size(),
+		"failures": _failures, "frames": exported.frames}, "\t"))
 	file.flush()
 	var write_error := file.get_error()
 	file.close()
@@ -578,6 +634,7 @@ func _finish() -> void:
 	var complete := _failures.is_empty() and not _expected.is_empty() and _records.size() == _expected.size()
 	for row: Dictionary in _records:
 		complete = complete and row.status == "captured"
+	complete = complete and export_image_records(_records, _expected, _hold_seconds).missing_or_failed_frame_ids.is_empty()
 	if not _write_manifest(complete):
 		complete = false
 	if not complete:

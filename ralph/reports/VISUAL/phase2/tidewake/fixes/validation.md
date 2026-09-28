@@ -136,3 +136,13 @@ RID/ObjectDB/resource leaks remain disclosed; this is not an error-free-log
 claim. Exact counts, commands, error categories and log SHA-256 values are in
 `landing-map01-unit-diagnostic.json`. The specified four-shard suite after
 import on the final merged landing source is still outstanding.
+
+Chapter-matrix export now gives each successfully saved hold endpoint its own
+frame ID/path and actual endpoint metadata. A failed hold preserves a valid
+start image while listing the missing endpoint and failed view. This repairs
+compact-evidence accounting only; stationary captures still do not prove walks
+or performance. The initial focused run caught a nested-dictionary alias;
+copying endpoint fields from the already deep-copied record fixed it. Confirmed
+4 tests / 38 assertions / 0 failures in `.local/phase2/matrix-export-confirm.log`;
+independent source review by `compact_review` found no actionable issues. Native
+chapter capture and export remain outstanding.
