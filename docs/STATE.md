@@ -26,7 +26,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | S2 | Partial (Cards lane re-score). Met: six activities (F10#0, Bryn's chain included), lightning and phase cues without HUD (F10#3), night phase merge retired (hour-invariant look test plus P2-042). Audio: the phase beds and strike chain fire on time (19/0), but no Stormwood audio asset exists, so no phase is audible (asset gap, owner decision). Open: F10#6 (Stormwood lane); Bars A/B → Phase 2. |
 | C2, C3 | **Complete (Cloudreach Phase 1 landing).** C2: earned chapter run (longest travel gap 98 s, same five, no new catch) plus the six-activities witness, frame matrix by the F08#3/#4 code-blind verdicts; C3: two-peer co-op and Solmane aftermath, ALL CHECKS PASSED. Evidence `ralph/reports/CLOUDREACH/c2-card/`, `c3-card/`. |
 | M3 | Failing: named-fight framing and Bars A/B. |
-| T2 | Failing (Cards lane re-score). Islands, loops, shortcuts, pockets, six chains, four-character ledgers, currents/docks/Veilfall on function and restoration are met. Device profile FAILS at 7 inches (`ralph/reports/CARDS/t2_device/`): current direction unreadable (owner: Tidewake lane) and small HUD text illegible (owner: HUD, with F10#6). Tess and Nerissa C3 (F14#0/#1): contact spacing is on main; the Tidewake lane re-judges. |
+| T2 | Failing (Cards lane re-score). Islands, loops, shortcuts, pockets, six chains, four-character ledgers, currents/docks/Veilfall on function and restoration are met. Device profile FAILS at 7 inches (`ralph/reports/CARDS/t2_device/`): current direction unreadable (owner: Tidewake lane) and small HUD text illegible (owner: HUD, with F10#6). Tess and Nerissa C3 (F14#0/#1) wait on contact spacing landing (`tb/combat-spacing`). |
 
 **Open criteria (10):**
 - **Meadows:** F04#1, #2, #6, #7. F01#2 and F01#3 are met (`ralph/reports/MEADOWS/f01-walks/day_d41ff2f0`, `night_d41ff2f0`, `RECHECK_F01_2.md`, `RECHECK_F01_3.md`: the controller day and night walks reach all 11 targets; code-blind PASS on the gates, the lived-in camp and the key, which hangs glowing on its post at night). F04#3 is met (`ralph/reports/MEADOWS/f04/RECHECK_F04_3.md`: the Warden's HEAVY question reads at the normal camera; victory lines frame him clear with the HUD down). F03#0 is met (`ralph/reports/MEADOWS/f03/`: six ordinary-input lure walks to each prompt, the herd's night fire, the Hall pack on a road sightline with its nameplate depth-tested; strict re-check MET).
@@ -47,7 +47,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
     - Tess on the ordinary route: r5 scored 97% / 84% (r4 about 86% strict).
     - Nerissa r17: 98% / 83%.
   - **The residue in both** is contact-range occlusion. After a strike the two bodies overlap, and the ally stands in front of the opponent's head. The camera cannot separate touching bodies.
-  - **Contact spacing is on main** (Combat Spacing lane, `ralph/reports/COMBAT_SPACING/REPORT.md`). Fighters are held apart by their rendered extents. The opponent's spacing and every reach floor at that separation, so C2 still passes. The Tidewake lane re-judges its C3 rows on main.
+  - **Contact spacing is on `tb/combat-spacing`, not yet on main** (see the Combat spacing handoff below; `ralph/reports/COMBAT_SPACING/REPORT.md`). Fighters are held apart by their rendered extents. The opponent's spacing and every reach floor at that separation, so C2 still passes. Once it lands, the Tidewake lane re-judges its C3 rows on main.
     - The lane's own capture: judge A gives Tess r7 92% and Nerissa r19 91%; judge B gives them 82% and 87%.
     - Nerissa: no ally-over-head failures remain for either judge.
     - Tess: judge B still fails 4 Mirejaw frames at the full 8 m separation. That is camera composition along a long body, not interpenetration.
@@ -81,7 +81,41 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8 and `CLAUDE_START_HERE.md`.
 3. Land each closed criterion through the lane's own PR (re-check, unit suite once, board and STATE, auto-merge). There is no coordinator and no channel.
 
-**Combat spacing lane done** (2026-09-28). The shared contact-spacing rule is on main (`scripts/combat/contact_spacing.gd`, `combat.json` `contact_spacing`, evidence `ralph/reports/COMBAT_SPACING/`). The Tidewake (F14#0/#1), Meadows (F04#2, F04#7 C3) and Stormwood lanes can re-judge their C3 rows on main. No criterion was marked met by this lane. C2 moved: Oreth's masher now wins more often (ripplet 0.04 → 0.46), but the F04#7 chapter bar still passes at 0.68. The Capacitor Alpha ratio improved to 0.21–0.28. Nerissa's reader cost rose by 0.03–0.06, with the ratio still at most 0.30.
+**Combat spacing lane: handed off to the serial lane (2026-09-28, owner). Not landed, no PR yet.**
+- **Where it is.** Branch `tb/combat-spacing`, head `0b42ec91`: round-2 code `b2ce4df6`, merged with main `c68af1c1`, plus evidence and this STATE. Evidence and numbers: `ralph/reports/COMBAT_SPACING/REPORT.md`.
+- **The rule.**
+  - Code: `scripts/combat/contact_spacing.gd`, `creature_body.gd::_hold_contact_spacing`, `combat.json` `contact_spacing`.
+  - Separation = the two directional rendered half-extents + 0.6 m. The ally yields; the opponent holds.
+  - The opponent's `preferred_range` floors at the separation. Every reach floors at the longest separation + 0.5 m: `floor_reach_for_bodies`, `host_move_profile` with its 3 host call sites, and `spaced_config_for`.
+  - Round 1 (`9b3d0cca`) capped the separation at 2.75 × radii and was superseded.
+- **Verified on `b2ce4df6`** (before the merge with main):
+  - Full unit suite, 4 shards: 5,274 tests, 0 failed.
+  - Net smokes `shared_wild_fight` and `cloudreach_riding`: ALL CHECKS PASSED.
+  - C2 before/after (before = rule disabled, main's path):
+    - Capacitor Alpha ratios 0.42/0.50/0.41 → 0.22/0.28/0.21, reader win 1.00.
+    - Oreth: every row passes. Masher win: ripplet 0.04 → 0.46, galewisp 0.17 → 0.67, terrapup 0.00 → 0.00.
+    - All seven Meadows fights for **ripplet only**: every row passes, chapter bar 0.68 (was 0.97; bar 0.25).
+    - Nerissa in-world, 12 seeds per cell: reader win 1.00, masher wipe 1.00. Reader party cost 0.18/0.26/0.24 on main → 0.21/0.30/0.30 at the new reach (bar ≤ 0.55).
+  - Reader check at the new reach: the reader passes in all three harnesses above.
+  - Independent code review PASS (round 1 code; round 2 not re-reviewed).
+- **Unverified.**
+  - The combat subset after merging main `c68af1c1`; that run was interrupted.
+  - All seven Meadows fights for terrapup and galewisp at round 2.
+  - A code review of the round-2 diff.
+  - CI on a PR.
+- **C3 (evidence only).**
+  - Judge A: Tess r7 92.1%, Nerissa r19 91.3%.
+  - Judge B: Tess r7 81.6% (4 Mirejaw ally-over-head frames at the full 8.0 m separation, which is camera composition); Nerissa r19 87.0% (0 ally-over-head; failures are crates, a Riptusk crop and the trainer).
+  - Judge B round 2 is **complete**. Its Tess pass ran in two parts because images failed to load.
+  - Verdicts: `ralph/reports/COMBAT_SPACING/c3/ROUND{1,2}_JUDGES.md`. Frames: `c3/tess_route_r7/`, `c3/nerissa_r19/`. The prompt is the fixed `ralph/reports/TIDEWAKE/phase1/C3_RUBRIC.md` text, frames-only and code-blind.
+- **Runs in flight: none.** Every dispatched render.yml run finished and was harvested: C3 36483953554 and 36483957865; Nerissa C2 cells 36483962218–36483985793, plus the round-1 and before cells.
+- **Single next step.** Run the combat test subset on `0b42ec91`. Then open the PR `tb/combat-spacing` → main: fill in the template, check it with `tools/check_pr_traceability.mjs`, mark it as a shared combat file edit, and enable auto-merge.
+- **Open defects, not this lane's.**
+  - Tess/Mirejaw: ally over the opponent's head at full separation. Fight-camera composition against long opponents (camera owner, with Tidewake).
+  - Heart Chamber crates hide heads (Tidewake).
+  - Riptusk is cropped after its heavy (camera).
+  - The trainer stands between the fighters (camera or placement).
+  - Low-severity review notes: the guest ally is not exempt during the host's lunge; the tunnel-undo ray uses the full collision mask.
 
 **Open lanes (2026-09-28).** Three Phase 1 biome lanes (`tb/meadows`, `tb/tidewake`, `tb/stormwood`; `CLAUDE_START_HERE.md`; the Cloudreach lane is done) and one Codex capture-and-catalog lane (`tb/x04-capture`; `CODEX_START_HERE.md` §2a–2b). The Balance lane lands the F04#7 and F10#2 C2 halves through PR #413, then stops; the C3 halves stay with the Meadows and Stormwood lanes.
 
