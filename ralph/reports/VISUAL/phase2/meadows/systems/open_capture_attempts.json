@@ -1,0 +1,9 @@
+{
+  "attempts": [
+    {
+      "source": "build_systems_main084",
+      "commit": "f2adb28da260d3e210c026901c8180144a2aa7e6",
+      "result": "Engine saved four files, but normal camera remained inside an existing house and did not show the fixture pieces. Not indexed as build-system coverage."
+    }
+  ]
+}

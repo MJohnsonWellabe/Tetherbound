@@ -7,5 +7,10 @@
     "P2-073: Tovin small at right edge"
   ],
   "content": "Visible post-win text lines are locally distinct.",
-  "caveat": "No battle won, defeated ledger or world-body aftermath created by this direct-start fixture."
+  "caveat": "No battle won, defeated ledger or world-body aftermath created by this direct-start fixture.",
+  "odan_reshoot": {
+    "source": "defeated_odan_main085",
+    "commit": "9b16ccd53d84744b4126dc6934f1a6f4151ea417",
+    "result": "Single-post rerun still shows a very dark cliff face; portrait/text are barely visible. Do not count as usable Odan speaker or dialogue UI evidence. Alternate stand needed."
+  }
 }
