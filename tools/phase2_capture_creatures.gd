@@ -17,7 +17,9 @@ const SCENES := {
 const STAGES := {
 	"meadows": Vector2(-430.0, 470.0),
 	"water": Vector2(35.0, 110.0),
-	"cloudreach": Vector2(-286.0, 535.0),
+	# A verified walkable shelf beside Realm Gate Crag. The earlier Gatefoot
+	# position had no finite ground in front of the trainer.
+	"cloudreach": Vector2(-14.5, -207.0),
 	"stormwood": Vector2(-350.0, 450.0),
 }
 const SPECIES := {
@@ -104,6 +106,10 @@ func _run() -> void:
 		quit(1)
 		return
 	var ground := float(_world.call("ground_height_at", stage.x, stage.y))
+	if not is_finite(ground):
+		push_error("Creature stage has no finite ground")
+		quit(1)
+		return
 	_player.global_position = Vector3(stage.x, ground + 0.3, stage.y)
 	_player.velocity = Vector3.ZERO
 	_rig.call("set_target", _player)
