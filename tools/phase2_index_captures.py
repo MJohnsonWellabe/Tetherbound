@@ -173,6 +173,8 @@ def main() -> None:
         selection_identity = str(frame["identity"])
         if view == "dialogue" and selection_identity.endswith("__dialogue"):
             selection_identity = selection_identity.removesuffix("__dialogue")
+        if selection_identity.endswith("__defeated"):
+            selection_identity = selection_identity.removesuffix("__defeated")
         selection = f"--biome={args.biome} --subset={selection_identity} "
         if args.category == "locations":
             selection += f"--times={time} --views={view} "

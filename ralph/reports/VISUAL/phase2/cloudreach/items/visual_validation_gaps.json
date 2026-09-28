@@ -1,0 +1,8 @@
+{
+  "review": "Code-blind view of two previously missing Cloudreach pickups after first wider-stand pass",
+  "not_isolated": [
+    "cloudreach__inventory__pickup__great_candy",
+    "cloudreach__inventory__pickup__tm_wind_blade"
+  ],
+  "notes": "Both frames put the trainer directly on top of the pickup. The candy silhouette and technique pickup cannot be judged at ordinary camera distance. A second pass excludes zero-offset stands."
+}

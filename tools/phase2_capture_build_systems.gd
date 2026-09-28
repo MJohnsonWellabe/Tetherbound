@@ -6,7 +6,7 @@ extends "res://tools/phase2_capture_locations.gd"
 ## validation, sleep, recipe execution, save or progression are demonstrated.
 
 const OPEN_STANDS := {
-	"meadows": Vector2(9.0, 1300.0),
+	"meadows": Vector2(-25.0, 1300.0),
 	"water": Vector2(35.707, 98.104),
 	"cloudreach": Vector2(-15.5, -202.0),
 	"stormwood": Vector2(-320.0, 240.0),
