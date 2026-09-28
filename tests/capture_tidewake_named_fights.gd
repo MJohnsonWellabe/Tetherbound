@@ -221,6 +221,10 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 	await _frames(30)
 	var at: Array = spec.position
 	var goal := Vector2(float(at[0]), float(at[2]))
+	# End the walked route 3 m in front of her, on the landing side.
+	var back := Vector2(start.x, start.z) - goal
+	if back.length() > 3.0:
+		goal += back.normalized() * 3.0
 	var plan: Dictionary = WALK.plan_route(world, Vector2(start.x, start.z), goal)
 	var route: Array = plan.get("points", [])
 	var drive := func(x: float, y: float) -> void:
@@ -252,10 +256,17 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 		trainer = director.trainer_nodes.get(id)
 		if prompt != null and not prompt.interaction_offer(player.global_position).is_empty():
 			break
-		if trainer != null:
-			var flat := trainer.global_position - player.global_position
+		# Close on the challenge prompt beside her (not her body: pushing into
+		# the trainer's own collider puts it between the prompt and the player,
+		# and the prompt's line-of-sight check then refuses the offer).
+		var target: Node3D = prompt if prompt != null else trainer
+		if target != null:
+			var flat := target.global_position - player.global_position
 			flat.y = 0.0
-			nav.push_once(flat.normalized() * 0.8)
+			if flat.length() > 1.0:
+				nav.push_once(flat.normalized() * 0.8)
+			else:
+				drive.call(0.0, 0.0)
 		await physics_frame
 	drive.call(0.0, 0.0)
 	_approach_log = {"approach": _approach, "start": start, "walked_m": snappedf(walked, 1.0),
