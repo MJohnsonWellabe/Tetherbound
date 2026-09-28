@@ -26,6 +26,7 @@ var _field: RefCounted
 var _exclusion_points: Array[Dictionary] = []
 var _route_segments: Array[Dictionary] = []
 var _dune_settings: Dictionary = {}
+var _grove_receipts: Dictionary = {}
 
 
 func build(world_config: Dictionary, field: RefCounted) -> void:
@@ -48,6 +49,15 @@ func build(world_config: Dictionary, field: RefCounted) -> void:
 	print("[water vegetation] %d instances in %d model batches; layers=%s islands=%s" % [
 		_total_placed(), batches.size(), JSON.stringify(placed_by_layer),
 		JSON.stringify(placed_by_island)])
+	if not _grove_receipts.is_empty():
+		var summary := {}
+		for id: String in _grove_receipts:
+			var receipt: Dictionary = _grove_receipts[id]
+			summary[id] = {"requested": receipt.requested, "accepted": receipt.accepted,
+				"attempts": receipt.attempts,
+				"trees": int(rendered_by_island_layer.get(id + "/trees", 0)),
+				"shrubs": int(rendered_by_island_layer.get(id + "/shrubs", 0))}
+		print("[water vegetation] sheltered grove counts=%s" % JSON.stringify(summary))
 
 
 ## Veilfall's radial mountain has almost no naturally flat samples. Its exterior
@@ -136,19 +146,23 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 	var centre := Vector2(float(centre_raw[0]), float(centre_raw[1]))
 	var profile := str((_rules.get("island_profiles", {}) as Dictionary).get(island_id, "green"))
 	var layers: Dictionary = _rules.get("layers", {})
+	var shared := DUNE_COVER.shared_groves_enabled(island_id, _dune_settings) \
+		and layers.has("trees") and layers.has("shrubs")
+	var groves: Array[Dictionary] = []
+	if shared:
+		groves = _sample_groves(island, centre, radius, profile, layers)
 	for layer_name: String in layers:
-		var layer: Dictionary = DUNE_COVER.layer_profile(layers[layer_name], layer_name,
-			island_id, _dune_settings)
+		var layer := _island_layer(layers[layer_name], layer_name, island_id, profile)
 		var profile_scale := float((layer.get("profile_scale", {}) as Dictionary).get(profile, 1.0))
-		layer = layer.duplicate()
-		layer["max_slope_deg"] = float((layer.get("profile_max_slope_deg", {}) as Dictionary).get(
-			profile, layer.get("max_slope_deg", 30.0)))
 		var area_scale := clampf(radius / 180.0, 0.55, 1.75)
 		var cluster_count := maxi(1, roundi(float(layer.get("clusters", 1)) * profile_scale * area_scale))
+		var grove_layer := shared and layer_name in ["trees", "shrubs"]
+		if grove_layer:
+			cluster_count = groves.size()
 		var rng := RandomNumberGenerator.new()
 		rng.seed = int(island.get("scatter_seed", 1)) + abs(hash(layer_name))
 		for _cluster in cluster_count:
-			var cluster := _sample_cluster_centre(rng, centre, radius, layer)
+			var cluster := groves[_cluster] if grove_layer else _sample_cluster_centre(rng, centre, radius, layer)
 			if not cluster.valid:
 				continue
 			var count_range: Array = layer.get("per_cluster", [1, 1])
@@ -165,7 +179,7 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 				var model_path := str(models[rng.randi_range(0, models.size() - 1)])
 				var scale_range: Array = layer.get("scale", [1.0, 1.0])
 				var model_scale := float((layer.get("model_scale", {}) as Dictionary).get(model_path, 1.0))
-				_append_batch(by_model, model_path, island_id, point.position, {
+				var placement := {
 					"position": point.position,
 					"normal": point.normal,
 					"yaw": rng.randf_range(-PI, PI),
@@ -174,7 +188,73 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 					"visibility_range_m": float(layer.get("visibility_range_m", 250.0)),
 					"layer": layer_name,
 					"island_id": island_id,
-				})
+				}
+				if grove_layer:
+					placement["grove_index"] = _cluster
+					var accepted: Dictionary = _grove_receipts[island_id].centres[_cluster].accepted_members
+					accepted[layer_name] = int(accepted.get(layer_name, 0)) + 1
+				_append_batch(by_model, model_path, island_id, point.position, placement)
+
+
+func _island_layer(source: Dictionary, layer_name: String, island_id: String, profile: String) -> Dictionary:
+	var layer := DUNE_COVER.layer_profile(source, layer_name, island_id, _dune_settings)
+	layer = layer.duplicate()
+	layer["max_slope_deg"] = float((layer.get("profile_max_slope_deg", {}) as Dictionary).get(
+		profile, layer.get("max_slope_deg", 30.0)))
+	return layer
+
+
+## Canopy and understory must compose one grove, not two unrelated scatter
+## fields. A separate random stream makes accepted centres independent of model
+## selection/member retries. Both layers validate each centre before sharing it.
+func _sample_groves(island: Dictionary, centre: Vector2, radius: float,
+		profile: String, layers: Dictionary) -> Array[Dictionary]:
+	var island_id := str(island.id)
+	var woodland: Array[Dictionary] = []
+	var requested := 2147483647
+	for name: String in ["trees", "shrubs"]:
+		var layer := _island_layer(layers[name], name, island_id, profile)
+		woodland.append(layer)
+		var profile_scale := float((layer.get("profile_scale", {}) as Dictionary).get(profile, 1.0))
+		var count := maxi(1, roundi(float(layer.get("clusters", 1)) * profile_scale * clampf(radius / 180.0, 0.55, 1.75)))
+		requested = mini(requested, count)
+	var shelter: Dictionary = _dune_settings.get("shelter", {})
+	var budget := clampi(int(shelter.get("grove_search_attempts", 256)), 1, 4096)
+	var spacing := maxf(0.0, float(shelter.get("grove_spacing_m", 20.0)))
+	var receipt := {"requested": requested, "accepted": 0, "attempts": 0,
+		"rejected_ground_or_clearance": 0, "rejected_relief": 0, "rejected_spacing": 0,
+		"centres": []}
+	_grove_receipts[island_id] = receipt
+	var out: Array[Dictionary] = []
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(island.get("scatter_seed", 1)) + abs(hash("dune_shared_groves"))
+	for attempt in budget:
+		if out.size() >= requested:
+			break
+		receipt.attempts = attempt + 1
+		var angle := rng.randf_range(-PI, PI)
+		var point := centre + Vector2(cos(angle), sin(angle)) * radius * sqrt(rng.randf_range(0.04, 0.72))
+		if not bool(_accept(point, centre, radius, woodland[0]).get("valid", false)) \
+				or not bool(_accept(point, centre, radius, woodland[1]).get("valid", false)):
+			receipt.rejected_ground_or_clearance += 1
+			continue
+		var relief := DUNE_COVER.ridge_shelter(point, Callable(_field, "height_at"), _dune_settings)
+		if not bool(relief.valid):
+			receipt.rejected_relief += 1
+			continue
+		var crowded := false
+		for existing: Dictionary in out:
+			if point.distance_to(existing.point) < spacing:
+				crowded = true
+				break
+		if crowded:
+			receipt.rejected_spacing += 1
+			continue
+		out.append({"valid": true, "point": point})
+		receipt.centres.append({"point_xz": [point.x, point.y], "relief_m": relief.relief_m,
+			"upwind_distance_m": relief.upwind_distance_m, "accepted_members": {"trees": 0, "shrubs": 0}})
+	receipt.accepted = out.size()
+	return out
 
 
 func _append_batch(batches: Dictionary, model_path: String, island_id: String,
@@ -369,4 +449,5 @@ func diagnostic_receipt() -> Dictionary:
 		"material_textures": material_textures.duplicate(true),
 		"exclusion_point_count": _exclusion_points.size(),
 		"route_segment_count": _route_segments.size(),
+		"sheltered_groves": _grove_receipts.duplicate(true),
 	}

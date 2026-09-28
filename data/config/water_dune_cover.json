@@ -1,7 +1,7 @@
 {
   "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
   "enabled": false,
-  "_comment_colonies": "Unjudged colony candidate: grass-only thresholds create bare gaps and dense cores, with the existing blade arc made upright through a Water profile override. Full contrast keeps the threshold's zero-density gaps. Static wispy accents use fewer, tighter colonies at approximately the same requested instance count. Shelter masks and woodland placement remain unchanged pending a terrain-relief proposal.",
+  "_comment_colonies": "Unjudged colony candidate: grass-only thresholds create bare gaps and dense cores, with the existing blade arc made upright through a Water profile override. Full contrast keeps the threshold's zero-density gaps. Static wispy accents use fewer, tighter colonies at approximately the same requested instance count.",
   "preserve_islands": ["veilfall"],
   "ground_cover": {
     "tuft_count": 54000,
@@ -32,7 +32,15 @@
     "shrubs": {"models": ["res://assets/environment/stylized_nature/Bush_Common.gltf"], "clusters": 9, "per_cluster": [3, 6], "cluster_radius_m": [5.0, 11.0], "scale": [0.45, 0.85], "_dune_sheltered": true},
     "groundcover": {"models": ["res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"], "clusters": 12, "per_cluster": [12, 24], "cluster_radius_m": [1.8, 4.0], "scale": [0.42, 0.68]}
   },
-  "shelter": {"lee_direction_xz": [1.0, 0.35], "min_projection": 0.04, "max_radius_fraction": 0.78},
+  "shelter": {
+    "_comment": "Canopy and understory share deterministic centres accepted by both original ground/slope/clearance rules. Existing lee bounds remain unchanged. An upwind ridge must rise at least ridge_relief_m above the centre; bounded unsuccessful searches report zero groves with no fallback placement.",
+    "lee_direction_xz": [1.0, 0.35], "min_projection": 0.04, "max_radius_fraction": 0.78,
+    "shared_groves": true,
+    "upwind_samples_m": [12.0, 24.0, 40.0],
+    "ridge_relief_m": 3.0,
+    "grove_search_attempts": 256,
+    "grove_spacing_m": 20.0
+  },
   "grass_texture": "res://assets/environment/stylized_nature/derived/Grass_C_dune_sage_straw.png",
   "grass_palette": {"sage": "#92966a", "straw": "#c4b782"}
 }

@@ -49,3 +49,43 @@ static func accepts_shelter(point: Vector2, centre: Vector2, radius: float,
 	var local := (point - centre) / maxf(radius, 1.0)
 	return local.length() <= float(shelter.get("max_radius_fraction", 0.78)) \
 		and local.dot(lee) >= float(shelter.get("min_projection", 0.04))
+
+
+## Only the candidate's woodland layers share centres. Ordinary and preserved
+## islands retain their original per-layer random streams and placement path.
+static func shared_groves_enabled(island_id: String, settings: Dictionary) -> bool:
+	return applies_to_island(island_id, settings) \
+		and bool((settings.get("shelter", {}) as Dictionary).get("shared_groves", false))
+
+
+## A lee-side coordinate is not itself shelter. Require an actual higher ridge
+## upwind of a grove centre; members still pass the production ground/slope and
+## clearance checks. Empty/invalid samples never stand in for a real ridge.
+static func ridge_shelter(point: Vector2, height_at: Callable, settings: Dictionary) -> Dictionary:
+	var rejected := {"valid": false, "relief_m": 0.0, "upwind_distance_m": 0.0}
+	if not height_at.is_valid():
+		return rejected
+	var shelter: Dictionary = settings.get("shelter", {})
+	var direction: Array = shelter.get("lee_direction_xz", [1.0, 0.35])
+	if direction.size() != 2:
+		return rejected
+	var lee := Vector2(float(direction[0]), float(direction[1]))
+	if not lee.is_finite() or lee.length_squared() < 0.0001:
+		return rejected
+	lee = lee.normalized()
+	var ground := float(height_at.call(point.x, point.y))
+	var required := float(shelter.get("ridge_relief_m", 3.0))
+	if not is_finite(ground) or not is_finite(required) or required <= 0.0:
+		return rejected
+	var best := 0.0
+	var best_distance := 0.0
+	for raw: Variant in shelter.get("upwind_samples_m", [12.0, 24.0, 40.0]):
+		var distance := float(raw)
+		if not is_finite(distance) or distance <= 0.0:
+			continue
+		var at := point - lee * distance
+		var height := float(height_at.call(at.x, at.y))
+		if is_finite(height) and height - ground > best:
+			best = height - ground
+			best_distance = distance
+	return {"valid": best >= required, "relief_m": best, "upwind_distance_m": best_distance}
