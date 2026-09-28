@@ -1,0 +1,18 @@
+{
+  "review": "Code-blind inspection of all 45 full-resolution Stormwood character and trainer post frames",
+  "confirmed_findings": [
+    "P2-055: several distinct named roles share the same elder, caretaker, or trader silhouette",
+    "P2-056: multiple dark uniformed officers have weak separation from the rainy purple forest"
+  ],
+  "subject_not_isolated": [
+    "stormwood__inventory__character__captain_marrow",
+    "stormwood__inventory__trainer__archivist_wen_crown_trial",
+    "stormwood__inventory__trainer__archwright_senn_crown_footing",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core",
+    "stormwood__inventory__trainer__officer_nysa_deepwood_rod"
+  ],
+  "subject_uncertain": [
+    "stormwood__inventory__trainer__circuit_tavi_rodline"
+  ],
+  "notes": "Five frames are blocked by dark structure or nearby creature geometry; one more is uncertain behind birds. These are capture gaps and do not establish runtime absence. Dialogue and defeated states remain to capture."
+}

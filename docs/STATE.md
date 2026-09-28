@@ -6,7 +6,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 **Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress. Batch 67 consolidated every lane head and every remaining branch, including the full Codex branch and Vess, onto `tb/integration`, and landed it through one PR after one unit run and one CI run. **Next is Phase 1 (`CLAUDE_START_HERE.md`):** one self-landing lane per biome. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
 
-**Criteria:** 86 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3 and F10#3, Cloudreach F08#3 and F08#4). No chapter is accepted.
+**Criteria:** 89 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3, F10#3 and F10#4, Cloudreach F08#3 and F08#4, Tidewake F13#3 and F13#5). No chapter is accepted.
 
 **The board is the source of truth.**
 - `ralph/reports/COORDINATOR/dashboard/criteria.json` holds every criterion and card, with its evidence and gap.
@@ -20,22 +20,26 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | M4, C1, T3, S3, T1 | **Complete.** M4, C1 and T3 in batches 59, 65 and 67. S3 and T1 had their integrated runs in batch 63 and all feeders (F11, F12) met, and are recorded as complete in batch 67. |
 | S1 | Integrated run passed (batch 64); F09#3 is met, so every feeder is met. |
 | M1 | In progress: F01#2/#3 day and night walks need a render and a judge. |
-| M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#3/#4/#6. |
+| M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#6. |
 | C2, C3 | **Complete (Cloudreach Phase 1 landing).** C2: earned chapter run (longest travel gap 98 s, same five, no new catch) plus the six-activities witness, frame matrix by the F08#3/#4 code-blind verdicts; C3: two-peer co-op and Solmane aftermath, ALL CHECKS PASSED. Evidence `ralph/reports/CLOUDREACH/c2-card/`, `c3-card/`. |
-| M3, T2 | Failing: named-fight framing, Bars A/B, and the F13#5 art row. |
+| M3 | Failing: named-fight framing and Bars A/B. |
+| T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function). |
 
-**Open criteria (17):**
+**Open criteria (14):**
 - **Meadows:** F01#2, F01#3; F03#0; F04#1, #2, #3, #6, #7.
 - **Cloudreach: complete for Phase 1** (every row and card C1-C3 met). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Open debt outside the queue: owned-carrier Fly; Cliffhold reads thin (Phase 2).
-- **Stormwood:** F10#2, #4, #6. F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
-- **Tidewake:** F13#3, F13#5; F14#0, #1.
+- **Stormwood:** F10#2, #6. F10#4 met (`ralph/reports/STORMWOOD/f10_4/r7/`: denser Deepwood reads as deep forest at every judged stand). F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
+- **Tidewake:** F14#0, #1.
+  - F13#3 is met (`ralph/reports/TIDEWAKE/phase1/f13_3/`): six chains in one real-swim run (619/0), and a lead now pins its destination on the map.
+  - F13#5 is met on function (`phase1/f13_5/`): dock residents at every mandatory dock, current comets, and the Veilfall distance read.
+  - F14#1 next. Nerissa's C2 regressed with dbe43195's Riptusk lane (render bisect in `phase1/f14_1/c2_bisect/`). Her ring spills south of the Heart Chamber lip into the 1 m sluice channel, and a sidestepping ally is pinned there.
+  - F14#0: Tidecoil still fails C3 at the cliff foot; a Deep Watch arrival-beach stand is probed.
+  - Other defects: after Tidecoil, a swimmer-less player may be left in the cliff-foot shallows (harness pose).
 
 **Switched off or unwired in batch 67.** This is unjudged visual work, landed as the wind-down rule requires. Flip each item on only after a code-blind Bars A/B pass.
 - `stormwood_glass_field.json` `scorched_scars=false`.
-- `water_veilfall.json` `interior_dressing.machines.enabled=false`.
 - `camera.body_clear.ignore_lunging_foe=false`. The Vance move is reverted.
 - The Meadows camp firepit is unwired (re-apply `631b8390`).
-- Codex's pump, banner and sluice assets are on main but not placed.
 
 **Reverted in batch 67.** Stormwood-B's F10#2 C3 commits `07bc9cad`, `45927814` and `85ba1c57` (the Elder cone and heading, and the guard cone) are reverted. Re-apply them when F10#2's C3 is re-captured.
 
@@ -51,7 +55,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 **Not covered by the open lanes; do these after:**
 1. **Biome reorder (Phase 1b).** Once all four biome lanes are complete, start one lane on `CLAUDE_START_HERE.md` §6: order Meadows → Tidewake → Cloudreach → Stormwood, gates and keys, levels, ending after Stormwood, swim-before-Fly, ledgers, regenerated checkpoint saves, and save migration.
 2. **Four-chapter earned run** in the new order, then a **human play pass** per chapter.
-3. **Codex Phase 2c.** Four biome fix lanes (`CODEX_START_HERE.md` §2c), started after the reorder. Re-shoot the top catalog items first, since the baseline catalog predates Phase 1 and the reorder. Each biome closes with a regional Bars A/B verdict, which clears the `Bars A/B → Phase 2` notes. Known items: aerie art, the Stormheart tree, the waterfall, the Glass Field (flag off), the Pump Hall (flag off), and the Cloudreach towers and terrace (off).
+3. **Codex Phase 2c.** Four biome fix lanes (`CODEX_START_HERE.md` §2c), started after the reorder. Re-shoot the top catalog items first, since the baseline catalog predates Phase 1 and the reorder. Each biome closes with a regional Bars A/B verdict, which clears the `Bars A/B → Phase 2` notes. Known items: aerie art, the Stormheart tree, the waterfall, the Glass Field (flag off), the Pump Hall (machinery placed; room identity WEAK), and the Cloudreach towers and terrace (off).
 4. **Debt that no queue covers:**
    - owned-carrier Fly (every proof flight uses Maela's loaner);
    - Stormwood-B's reverted 07bc9cad, 45927814 and 85ba1c57, if F10#2 C3 needs them.
@@ -147,8 +151,8 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | Creatures | 57 base species, individual IVs and bond, and limited evolution. Galecrest was rebuilt from a reference; its `companion_presence` head-tracking override did not land because main lacks that code. | Creature finish for Bars A/B, and attack-pose clipping (AUDIT §A). |
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
-| Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), forest readability (F10#4), device profile (F10#6). Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
-| Tidewake | Human swim route (F12 met), eight pockets, dock exchange, return, Grandpa and credits (F15 met, T3 complete). | Local chains (F13#3), currents/docks/Veilfall art (F13#5), Veilfall and named-fight C2/C3. |
+| Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), device profile (F10#6). Open risk (owner: Stormwood lane): the denser Deepwood bake (3d5fb0e6) has no perf measurement. Phase 2: aftermath under the canopy is brighter than the owner's 'only lighter rain, no lightning, scars' ruling. Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
+| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Veilfall and named-fight C2/C3 (F14#0/#1); Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |

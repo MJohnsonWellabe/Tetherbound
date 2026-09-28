@@ -1,0 +1,508 @@
+{
+	"biome": "meadows",
+	"complete": true,
+	"display_server": "Windows",
+	"fixture": "Installed real named-fight prompt and combat path; see capture args for any disclosed resolve or keep-alive option",
+	"frames": [
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-00-before.png",
+			"id": "south_bridge_grunt-00-before",
+			"panel_open": false,
+			"state": "00-before",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-01.png",
+			"id": "south_bridge_grunt-01",
+			"panel_open": false,
+			"state": "01",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-02.png",
+			"id": "south_bridge_grunt-02",
+			"panel_open": false,
+			"state": "02",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-03.png",
+			"id": "south_bridge_grunt-03",
+			"panel_open": false,
+			"state": "03",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-04.png",
+			"id": "south_bridge_grunt-04",
+			"panel_open": false,
+			"state": "04",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-05.png",
+			"id": "south_bridge_grunt-05",
+			"panel_open": false,
+			"state": "05",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-06.png",
+			"id": "south_bridge_grunt-06",
+			"panel_open": false,
+			"state": "06",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-07.png",
+			"id": "south_bridge_grunt-07",
+			"panel_open": false,
+			"state": "07",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-08.png",
+			"id": "south_bridge_grunt-08",
+			"panel_open": false,
+			"state": "08",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r01.png",
+			"id": "south_bridge_grunt-r01",
+			"panel_open": false,
+			"state": "r01",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r02.png",
+			"id": "south_bridge_grunt-r02",
+			"panel_open": false,
+			"state": "r02",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r03.png",
+			"id": "south_bridge_grunt-r03",
+			"panel_open": false,
+			"state": "r03",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r04.png",
+			"id": "south_bridge_grunt-r04",
+			"panel_open": false,
+			"state": "r04",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r05.png",
+			"id": "south_bridge_grunt-r05",
+			"panel_open": false,
+			"state": "r05",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r06.png",
+			"id": "south_bridge_grunt-r06",
+			"panel_open": false,
+			"state": "r06",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-r07.png",
+			"id": "south_bridge_grunt-r07",
+			"panel_open": false,
+			"state": "r07",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-a01.png",
+			"id": "south_bridge_grunt-a01",
+			"panel_open": false,
+			"state": "a01",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-a02.png",
+			"id": "south_bridge_grunt-a02",
+			"panel_open": false,
+			"state": "a02",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-a03.png",
+			"id": "south_bridge_grunt-a03",
+			"panel_open": false,
+			"state": "a03",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-a04.png",
+			"id": "south_bridge_grunt-a04",
+			"panel_open": false,
+			"state": "a04",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-a05.png",
+			"id": "south_bridge_grunt-a05",
+			"panel_open": false,
+			"state": "a05",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-a06.png",
+			"id": "south_bridge_grunt-a06",
+			"panel_open": false,
+			"state": "a06",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/south_bridge_grunt-99-after.png",
+			"id": "south_bridge_grunt-99-after",
+			"panel_open": false,
+			"state": "99-after",
+			"trainer": "south_bridge_grunt"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-00-before.png",
+			"id": "warden_aldis-00-before",
+			"panel_open": false,
+			"state": "00-before",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-01.png",
+			"id": "warden_aldis-01",
+			"panel_open": false,
+			"state": "01",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-02.png",
+			"id": "warden_aldis-02",
+			"panel_open": false,
+			"state": "02",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-03.png",
+			"id": "warden_aldis-03",
+			"panel_open": false,
+			"state": "03",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-04.png",
+			"id": "warden_aldis-04",
+			"panel_open": false,
+			"state": "04",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-05.png",
+			"id": "warden_aldis-05",
+			"panel_open": false,
+			"state": "05",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-06.png",
+			"id": "warden_aldis-06",
+			"panel_open": false,
+			"state": "06",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-07.png",
+			"id": "warden_aldis-07",
+			"panel_open": false,
+			"state": "07",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-08.png",
+			"id": "warden_aldis-08",
+			"panel_open": false,
+			"state": "08",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r01.png",
+			"id": "warden_aldis-r01",
+			"panel_open": false,
+			"state": "r01",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r02.png",
+			"id": "warden_aldis-r02",
+			"panel_open": false,
+			"state": "r02",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r03.png",
+			"id": "warden_aldis-r03",
+			"panel_open": false,
+			"state": "r03",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r04.png",
+			"id": "warden_aldis-r04",
+			"panel_open": false,
+			"state": "r04",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r05.png",
+			"id": "warden_aldis-r05",
+			"panel_open": false,
+			"state": "r05",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r06.png",
+			"id": "warden_aldis-r06",
+			"panel_open": false,
+			"state": "r06",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r07.png",
+			"id": "warden_aldis-r07",
+			"panel_open": false,
+			"state": "r07",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r08.png",
+			"id": "warden_aldis-r08",
+			"panel_open": false,
+			"state": "r08",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r09.png",
+			"id": "warden_aldis-r09",
+			"panel_open": false,
+			"state": "r09",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r10.png",
+			"id": "warden_aldis-r10",
+			"panel_open": false,
+			"state": "r10",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r11.png",
+			"id": "warden_aldis-r11",
+			"panel_open": false,
+			"state": "r11",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r12.png",
+			"id": "warden_aldis-r12",
+			"panel_open": false,
+			"state": "r12",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r13.png",
+			"id": "warden_aldis-r13",
+			"panel_open": false,
+			"state": "r13",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r14.png",
+			"id": "warden_aldis-r14",
+			"panel_open": false,
+			"state": "r14",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r15.png",
+			"id": "warden_aldis-r15",
+			"panel_open": false,
+			"state": "r15",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r16.png",
+			"id": "warden_aldis-r16",
+			"panel_open": false,
+			"state": "r16",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r17.png",
+			"id": "warden_aldis-r17",
+			"panel_open": false,
+			"state": "r17",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r18.png",
+			"id": "warden_aldis-r18",
+			"panel_open": false,
+			"state": "r18",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r19.png",
+			"id": "warden_aldis-r19",
+			"panel_open": false,
+			"state": "r19",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r20.png",
+			"id": "warden_aldis-r20",
+			"panel_open": false,
+			"state": "r20",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-r21.png",
+			"id": "warden_aldis-r21",
+			"panel_open": false,
+			"state": "r21",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-a01.png",
+			"id": "warden_aldis-a01",
+			"panel_open": true,
+			"state": "a01",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-a02.png",
+			"id": "warden_aldis-a02",
+			"panel_open": true,
+			"state": "a02",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-a03.png",
+			"id": "warden_aldis-a03",
+			"panel_open": true,
+			"state": "a03",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-a04.png",
+			"id": "warden_aldis-a04",
+			"panel_open": true,
+			"state": "a04",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-a05.png",
+			"id": "warden_aldis-a05",
+			"panel_open": true,
+			"state": "a05",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-a06.png",
+			"id": "warden_aldis-a06",
+			"panel_open": true,
+			"state": "a06",
+			"trainer": "warden_aldis"
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/meadows/fights_main062/warden_aldis-99-after.png",
+			"id": "warden_aldis-99-after",
+			"panel_open": false,
+			"state": "99-after",
+			"trainer": "warden_aldis"
+		}
+	],
+	"output_option": "--out",
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--trainer=south_bridge_grunt,warden_aldis",
+		"--frames=8",
+		"--interval=0.35",
+		"--resolve=won",
+		"--after-frames=6",
+		"--attack",
+		"--tell-frames",
+		"--keep-alive",
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"seed": 2042,
+	"system": "fight"
+}

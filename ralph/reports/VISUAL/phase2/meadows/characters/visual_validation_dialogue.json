@@ -1,0 +1,43 @@
+{
+  "review": "Code-blind inspection of ten Meadows dialogue frames",
+  "findings": [
+    "P2-078: creature hides Kell and Corin",
+    "P2-079: rock-face view hides quarry foreman",
+    "P2-080: Bram and Sela edge obstruction"
+  ],
+  "well_framed": [
+    "halda",
+    "mira",
+    "oskar",
+    "tam",
+    "wilhelm"
+  ],
+  "text_panel": "Readable in all ten frames.",
+  "caveat": "Direct-start at authored post; these do not establish normal interaction camera defects.",
+  "followup_review": {
+    "frames": 9,
+    "findings": [
+      "P2-079: Garrick rock obstruction",
+      "P2-085: Nessa, Perrin, Lark small in frame"
+    ],
+    "well_framed": [
+      "ada",
+      "tobin",
+      "maren",
+      "sorrel",
+      "ren"
+    ],
+    "rae": "not yet captured",
+    "text_panel": "All nine legible"
+  },
+  "trainer_followup_review": {
+    "frames": 15,
+    "text_panel": "All readable and unclipped; individual lines distinct.",
+    "findings": [
+      "P2-086: tournament actor identity unproven in shared stand",
+      "P2-087: Old Bram out of view",
+      "P2-080: Farro and Wanderer/Gil hidden by trees"
+    ],
+    "caveat": "Direct-start fixture; normal triggers and fight progression unverified."
+  }
+}

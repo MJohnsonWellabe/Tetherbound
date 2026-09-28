@@ -1,0 +1,1750 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome": "water",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture": "Production scene, trainer and camera; direct visual pose fixture, not combat or traversal proof",
+	"frames": [
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__ripplet__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__ripplet__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "ripplet",
+			"subject_stand_xz": [
+				37.52,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.4397849431284,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cannonback__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cannonback__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "cannonback",
+			"subject_stand_xz": [
+				37.59,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.46378590261002,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riptusk__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riptusk__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "riptusk",
+			"subject_stand_xz": [
+				37.975,
+				117.65
+			],
+			"trainer_to_subject_xz_m": 8.20811336422689,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mirejaw__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mirejaw__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "mirejaw",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__aquaryn__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__aquaryn__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "aquaryn",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__torrentoad__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__torrentoad__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "torrentoad",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mosshell__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mosshell__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "mosshell",
+			"subject_stand_xz": [
+				37.0,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__cragclaw__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__cragclaw__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "cragclaw",
+			"subject_stand_xz": [
+				37.065,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__riverdrake__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__riverdrake__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "riverdrake",
+			"subject_stand_xz": [
+				37.8,
+				117.2
+			],
+			"trainer_to_subject_xz_m": 7.72528316633119,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__sirenseal__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__sirenseal__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "sirenseal",
+			"subject_stand_xz": [
+				37.275,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.36040929568458,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__mangrove_monitor__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__mangrove_monitor__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "mangrove_monitor",
+			"subject_stand_xz": [
+				37.38,
+				117.0
+			],
+			"trainer_to_subject_xz_m": 7.3935377188461,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__tidecoil__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__tidecoil__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "tidecoil",
+			"subject_stand_xz": [
+				38.85,
+				119.9
+			],
+			"trainer_to_subject_xz_m": 10.6222643537054,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__idle.jpg",
+			"pose": "idle",
+			"shiny": false,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__moving",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__moving.jpg",
+			"pose": "moving",
+			"shiny": false,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__attacking",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__attacking.jpg",
+			"pose": "attacking",
+			"shiny": false,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__hurt",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__hurt.jpg",
+			"pose": "hurt",
+			"shiny": false,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__resting",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__resting.jpg",
+			"pose": "resting",
+			"shiny": false,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__fainted",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__fainted.jpg",
+			"pose": "fainted",
+			"shiny": false,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		},
+		{
+			"alpha_scale": 1.0,
+			"animation": "",
+			"animation_player_present": true,
+			"animator_present": true,
+			"camera": "production CameraRig/Camera3D",
+			"id": "water__abyssal_guardian__shiny_idle",
+			"model_loaded": true,
+			"path": "res://ralph/reports/VISUAL/phase2/water/creatures_near_main062/water__abyssal_guardian__shiny_idle.jpg",
+			"pose": "shiny_idle",
+			"shiny": true,
+			"species": "abyssal_guardian",
+			"subject_stand_xz": [
+				40.0,
+				122.96
+			],
+			"trainer_to_subject_xz_m": 13.8910618744573,
+			"trainer_visible_intent": true
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"stage_xz": [
+		35.0,
+		110.0
+	]
+}

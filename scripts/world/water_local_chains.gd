@@ -21,6 +21,12 @@ var _sites: Dictionary = {}
 var _last_revision := -1
 const REST_POLL_S := 0.5
 var _rest_poll_left := 0.0
+## F13#3 lure: a requester's lead pins its destination on the Tidewake map.
+const LEAD_MAP_PREFIX := "water_lead_"
+const LEAD_MAP_ICON := "question"
+const MAP_CHECK_S := 1.0
+var _map_check_left := 0.0
+var _data: Dictionary = {}
 
 
 func build(world: Node3D) -> void:
@@ -31,6 +37,7 @@ func build(world: Node3D) -> void:
 	if ledger != null and not ledger.intent_refused.is_connected(_on_refused):
 		ledger.intent_refused.connect(_on_refused)
 	var data := RULES.load_data()
+	_data = data
 	for lamp: Variant in data.get("landmark_lamps", []):
 		if lamp is Dictionary:
 			_build_landmark_lamp(lamp)
@@ -289,10 +296,62 @@ func _process(delta: float) -> void:
 		return
 	if int(_game.world.flags.revision) != _last_revision:
 		_refresh()
+		_map_check_left = 0.0
+	_map_check_left -= delta
+	if _map_check_left <= 0.0:
+		_map_check_left = MAP_CHECK_S
+		_sync_lead_map()
 	_rest_poll_left -= delta
 	if _rest_poll_left <= 0.0:
 		_rest_poll_left = REST_POLL_S
 		_watch_rests()
+
+
+## Pins owed on the local map: each chain whose lead is held and whose
+## completion is not (`lead_map_pins`). Derived, never saved.
+static func lead_map_markers(flags: Variant, data: Dictionary) -> Dictionary:
+	var out := {}
+	if flags == null:
+		return out
+	for raw: Variant in data.get("lead_map_pins", []):
+		if not raw is Dictionary:
+			continue
+		var pin := raw as Dictionary
+		if not bool(flags.call("has", str(pin.get("lead_flag", "")))) \
+				or bool(flags.call("has", str(pin.get("done_flag", "")))):
+			continue
+		var at: Array = pin.get("at_xz", [0.0, 0.0])
+		out[LEAD_MAP_PREFIX + str(pin.get("objective", ""))] = {
+			"at": Vector3(float(at[0]), 0.0, float(at[1])), "name": str(pin.get("name", ""))}
+	return out
+
+
+## Adds owed lead pins and removes stale ones; returns whether the map changed.
+## Idempotent, so it also restores the pins after a map load clears them.
+static func sync_lead_map(map: RefCounted, flags: Variant, data: Dictionary) -> bool:
+	if map == null:
+		return false
+	var wanted := lead_map_markers(flags, data)
+	var present := {}
+	for entry: Dictionary in map.call("landmarks"):
+		if bool(entry.get("dynamic", false)) and str(entry.get("id", "")).begins_with(LEAD_MAP_PREFIX):
+			present[str(entry.id)] = true
+	var changed := false
+	for id: String in present:
+		if not wanted.has(id):
+			map.call("remove_dynamic_marker", id)
+			changed = true
+	for id: String in wanted:
+		if not present.has(id):
+			map.call("add_dynamic_marker", id, LEAD_MAP_ICON, wanted[id].at, str(wanted[id].name))
+			changed = true
+	return changed
+
+
+func _sync_lead_map() -> void:
+	if _world == null or _world.simulation_only or not _game.has_method("bind_realm_map"):
+		return
+	sync_lead_map(_game.call("bind_realm_map", "water"), _game.get("progression"), _data)
 
 
 ## A rest step is wanted once its prerequisites hold, it is unrecorded, and one

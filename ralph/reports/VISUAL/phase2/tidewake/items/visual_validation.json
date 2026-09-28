@@ -1,0 +1,19 @@
+{
+  "review": "Code-blind inspection of all 27 full-resolution item captures on the pinned main build",
+  "confirmed_findings": [
+    "P2-033: the same glowing crate silhouette appears across unrelated named pickups and harvest families",
+    "P2-045: candy tiers share the same green wrapped silhouette; skill I/II labels are very small"
+  ],
+  "clearly_identifiable": [
+    "tidewake__inventory__harvest__reed_fiber",
+    "tidewake__inventory__harvest__tide_bloom"
+  ],
+  "subject_not_isolated": [
+    "tidewake__inventory__harvest__driftwood",
+    "tidewake__inventory__pickup__potion_large",
+    "tidewake__inventory__pickup__revive",
+    "tidewake__inventory__pickup__orb_prime",
+    "tidewake__inventory__pickup__skill_candy_iii"
+  ],
+  "notes": "Unisolated frames are capture gaps; they do not establish whether a runtime object is absent. The authored water item list is planned, so these captures alone do not prove placement state."
+}

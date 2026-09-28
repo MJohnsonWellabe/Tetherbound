@@ -1,0 +1,20 @@
+{
+  "review": "Code-blind inspection of all 42 Tidewake dialogue frames at production posts",
+  "confirmed_findings": [
+    "P2-055: named character identity repeats across outfits and faces"
+  ],
+  "fixture_qualified_findings": [
+    "P2-073: wide frames leave speakers too small beside panels",
+    "P2-074: named speakers absent or uncertain in several captured conversations",
+    "P2-075: trainer body obscures some speaker faces"
+  ],
+  "text_panel": "Readable in all 42 reviewed dialogue frames; no clipping seen.",
+  "well_framed": [
+    "water_sella",
+    "water_jessa",
+    "water_pell",
+    "water_venn",
+    "water_trainer_calder"
+  ],
+  "caveat": "DialoguePanel was started directly at each authored post. The frame is visual evidence for that state, not proof of ordinary interaction or progress. Camera observations need normal interaction reproduction."
+}

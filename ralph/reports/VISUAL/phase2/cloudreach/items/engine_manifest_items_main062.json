@@ -1,0 +1,1581 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 296218527575,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296235304795,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T03:48:09",
+	"capture_started_utc": "2026-09-28T03:45:13",
+	"captured_frame_count": 10,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": false,
+	"display_server": "Windows",
+	"failures": [
+		"cloudreach__inventory__pickup__great_candy: no unoccluded production-camera stand near destination",
+		"cloudreach__inventory__pickup__tm_wind_blade: no unoccluded production-camera stand near destination"
+	],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "cr_pickup_lower_good_candy",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 515193,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14768505096436,
+			"camera_position": [
+				-284.000030517578,
+				183.976760864258,
+				502.787200927734
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-284.0,
+					181.779144287109,
+					507.5
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					-284.000030517578,
+					183.976760864258,
+					502.787200927734
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "good_candy",
+			"destination_index": 1,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__good_candy.jpg",
+			"frame_id": "cloudreach__inventory__pickup__good_candy",
+			"identity": "cloudreach__inventory__pickup__good_candy",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.083333,
+					"node_path": "road_visibility_arrival_gate_road_07_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-285.416137695313,
+						167.828094482422,
+						386.816802978516
+					],
+					"species_id": "galecrest"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_07_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-285.416137695313,
+						168.205596923828,
+						389.816802978516
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_08_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.434112548828,
+						455.017822265625
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_08_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-280.712615966797,
+						176.811279296875,
+						458.017822265625
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-254.515243530273,
+						183.197052001953,
+						546.982849121094
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_arrival_gate_road_09_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-257.5,
+						183.007690429688,
+						547.0
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-210.765869140625,
+						190.500503540039,
+						595.20068359375
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-208.644546508789,
+						190.834518432617,
+						597.322021484375
+					],
+					"species_id": "pebbik"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.200489555556,
+				"hour": 8.00801958222222,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-284.0,
+				180.029159545898,
+				507.5
+			],
+			"position_xz": [
+				-281.5,
+				509.5
+			],
+			"resolved_ground_y": 180.0,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				-281.5,
+				509.5
+			],
+			"terrain_ground_y": 180.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_lower_potion",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 306050,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14776468276978,
+			"camera_position": [
+				-126.5,
+				209.01708984375,
+				697.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-126.5,
+					206.819442749023,
+					702.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					-126.5,
+					209.01708984375,
+					697.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "potion_small",
+			"destination_index": 2,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__potion_small.jpg",
+			"frame_id": "cloudreach__inventory__pickup__potion_small",
+			"identity": "cloudreach__inventory__pickup__potion_small",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "lower_cliff_foragers_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-188.237823486328,
+						194.288772583008,
+						620.544738769531
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "lower_cliff_foragers_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-192.237823486328,
+						193.909622192383,
+						619.544738769531
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-210.765869140625,
+						190.500503540039,
+						595.20068359375
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-208.644546508789,
+						190.834518432617,
+						597.322021484375
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-144.405853271484,
+						209.54866027832,
+						717.959228515625
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-147.405853271484,
+						210.05061340332,
+						717.959228515625
+					],
+					"species_id": "skyrill"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.199705777778,
+				"hour": 8.00798823111111,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-126.5,
+				205.069473266602,
+				702.0
+			],
+			"position_xz": [
+				-124.0,
+				704.0
+			],
+			"resolved_ground_y": 205.03,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				-124.0,
+				704.0
+			],
+			"terrain_ground_y": 205.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_lower_revive",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 659560,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.1476616859436,
+			"camera_position": [
+				-322.5,
+				303.978637695313,
+				1033.28723144531
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-322.5,
+					301.781036376953,
+					1038.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					-322.5,
+					303.978637695313,
+					1033.28723144531
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "revive",
+			"destination_index": 3,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__revive.jpg",
+			"frame_id": "cloudreach__inventory__pickup__revive",
+			"identity": "cloudreach__inventory__pickup__revive",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_01_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-387.827056884766,
+						309.142333984375,
+						1116.52795410156
+					],
+					"species_id": "craghorn"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_01_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-389.948364257813,
+						309.434173583984,
+						1118.64929199219
+					],
+					"species_id": "ribbonray"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_05_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-301.484741210938,
+						282.810211181641,
+						971.112243652344
+					],
+					"species_id": "skyrill"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_05_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-303.606048583984,
+						283.493103027344,
+						973.233581542969
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_06_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-315.268005371094,
+						300.029998779297,
+						1043.13000488281
+					],
+					"species_id": "pebbik"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "road_visibility_lower_cliff_road_06_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-318.268005371094,
+						300.029998779297,
+						1043.13000488281
+					],
+					"species_id": "skyrill"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.208126939394,
+				"hour": 8.00832507757576,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-322.5,
+				300.031036376953,
+				1038.0
+			],
+			"position_xz": [
+				-320.0,
+				1040.0
+			],
+			"resolved_ground_y": 300.03,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				-320.0,
+				1040.0
+			],
+			"terrain_ground_y": 300.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_arch_large_potion",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 505407,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14773988723755,
+			"camera_position": [
+				343.5,
+				484.078460693359,
+				1938.28723144531
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					343.5,
+					481.880706787109,
+					1943.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					343.5,
+					484.078460693359,
+					1938.28723144531
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "potion_large",
+			"destination_index": 5,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__potion_large.jpg",
+			"frame_id": "cloudreach__inventory__pickup__potion_large",
+			"identity": "cloudreach__inventory__pickup__potion_large",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.202653555556,
+				"hour": 8.00810614222222,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				343.5,
+				480.130737304688,
+				1943.0
+			],
+			"position_xz": [
+				346.0,
+				1945.0
+			],
+			"resolved_ground_y": 480.0,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				346.0,
+				1945.0
+			],
+			"terrain_ground_y": 480.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_aerie_stamina",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "windscar_ravine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 543431,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14746999740601,
+			"camera_position": [
+				406.5,
+				614.062561035156,
+				3238.28735351563
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					406.5,
+					611.864990234375,
+					3243.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					406.5,
+					614.062561035156,
+					3238.28735351563
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "stamina_mushroom",
+			"destination_index": 7,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__stamina_mushroom.jpg",
+			"frame_id": "cloudreach__inventory__pickup__stamina_mushroom",
+			"identity": "cloudreach__inventory__pickup__stamina_mushroom",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.3475,
+					"node_path": "road_visibility_windscar_floor_loop_14_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						312.912994384766,
+						590.260864257813,
+						3288.42797851563
+					],
+					"species_id": "cloudfang"
+				},
+				{
+					"body_height_m": 4.0,
+					"body_radius_m": 1.4,
+					"node_path": "road_visibility_windscar_floor_loop_14_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						312.120086669922,
+						589.489807128906,
+						3292.13500976563
+					],
+					"species_id": "aeriex"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.191422,
+				"hour": 8.00765687999999,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				406.5,
+				610.115112304688,
+				3243.0
+			],
+			"position_xz": [
+				409.0,
+				3245.0
+			],
+			"resolved_ground_y": 610.0,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				409.0,
+				3245.0
+			],
+			"terrain_ground_y": 610.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_shrine_rare_candy",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "high_roost_sky_shrine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 436858,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14750909805298,
+			"camera_position": [
+				1113.5,
+				1055.24768066406,
+				2939.28735351563
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					1113.5,
+					1053.05004882813,
+					2944.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					1113.5,
+					1055.24768066406,
+					2939.28735351563
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "rare_candy",
+			"destination_index": 8,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__rare_candy.jpg",
+			"frame_id": "cloudreach__inventory__pickup__rare_candy",
+			"identity": "cloudreach__inventory__pickup__rare_candy",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.197724867725,
+				"hour": 8.00790899470899,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1113.5,
+				1051.30017089844,
+				2944.0
+			],
+			"position_xz": [
+				1116.0,
+				2946.0
+			],
+			"resolved_ground_y": 1050.0,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				1116.0,
+				2946.0
+			],
+			"terrain_ground_y": 1050.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_perches_heavenfall",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "high_roost_sky_shrine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 375549,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14750909805298,
+			"camera_position": [
+				892.5,
+				1024.07824707031,
+				2698.28735351563
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					892.5,
+					1021.88067626953,
+					2703.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					892.5,
+					1024.07824707031,
+					2698.28735351563
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tm_heavenfall",
+			"destination_index": 9,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__tm_heavenfall.jpg",
+			"frame_id": "cloudreach__inventory__pickup__tm_heavenfall",
+			"identity": "cloudreach__inventory__pickup__tm_heavenfall",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.206495666667,
+				"hour": 8.00825982666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				892.5,
+				1020.13073730469,
+				2703.0
+			],
+			"position_xz": [
+				895.0,
+				2705.0
+			],
+			"resolved_ground_y": 1020.0,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				895.0,
+				2705.0
+			],
+			"terrain_ground_y": 1020.0,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_pickup_upper_aerial_tm",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "upper_cloudreach",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 479114,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14765739440918,
+			"camera_position": [
+				-752.5,
+				853.978515625,
+				4558.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-752.5,
+					851.780944824219,
+					4563.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					-752.5,
+					853.978515625,
+					4558.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tm_aerial_flash",
+			"destination_index": 10,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__tm_aerial_flash.jpg",
+			"frame_id": "cloudreach__inventory__pickup__tm_aerial_flash",
+			"identity": "cloudreach__inventory__pickup__tm_aerial_flash",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.186709424242,
+				"hour": 8.0074683769697,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-752.5,
+				850.031066894531,
+				4563.0
+			],
+			"position_xz": [
+				-755.0,
+				4565.0
+			],
+			"resolved_ground_y": 850.03,
+			"route_class": "off",
+			"selected_stand_lateral_m": -2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				-755.0,
+				4565.0
+			],
+			"terrain_ground_y": 850.03,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_recovery_gate_detour_speed_01",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "gate_lower_cliffs",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 512434,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14771604537964,
+			"camera_position": [
+				298.399993896484,
+				265.061126708984,
+				647.687133789063
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					298.399993896484,
+					262.863555908203,
+					652.400024414063
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					298.399993896484,
+					265.061126708984,
+					647.687133789063
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "speed_mushroom",
+			"destination_index": 11,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__speed_mushroom.jpg",
+			"frame_id": "cloudreach__inventory__pickup__speed_mushroom",
+			"identity": "cloudreach__inventory__pickup__speed_mushroom",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.193505222222,
+				"hour": 8.00774020888889,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				298.399993896484,
+				261.113586425781,
+				652.400024414063
+			],
+			"position_xz": [
+				300.9,
+				654.4
+			],
+			"resolved_ground_y": 261.082052262851,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				300.899993896484,
+				654.400024414063
+			],
+			"terrain_ground_y": 261.082052262851,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "cr_recovery_broken_detour_wild_01",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 547123,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14764213562012,
+			"camera_position": [
+				-936.5,
+				349.600494384766,
+				1285.68725585938
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-936.5,
+					347.402893066406,
+					1290.40002441406
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.000000135050356675492,
+					-0.00000021397092098141
+				],
+				"basis_y": [
+					-0.000000212825227663416,
+					0.906307816505432,
+					0.422618329524994
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618329524994,
+					-0.906307816505432
+				],
+				"origin": [
+					-936.5,
+					349.600494384766,
+					1285.68725585938
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "wild_mushroom",
+			"destination_index": 12,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/items_main062/cloudreach__inventory__pickup__wild_mushroom.jpg",
+			"frame_id": "cloudreach__inventory__pickup__wild_mushroom",
+			"identity": "cloudreach__inventory__pickup__wild_mushroom",
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.198591666667,
+				"hour": 8.00794366666666,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-936.5,
+				345.652923583984,
+				1290.40002441406
+			],
+			"position_xz": [
+				-939.0,
+				1292.4
+			],
+			"resolved_ground_y": 345.625422420561,
+			"route_class": "off",
+			"selected_stand_lateral_m": -2.5,
+			"selected_stand_offset_m": 2.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"target_position_xz": [
+				-939.0,
+				1292.40002441406
+			],
+			"terrain_ground_y": 345.625422420561,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		}
+	],
+	"planned_frame_count": 12,
+	"planned_frame_ids": [
+		"cloudreach__inventory__pickup__good_candy",
+		"cloudreach__inventory__pickup__potion_small",
+		"cloudreach__inventory__pickup__revive",
+		"cloudreach__inventory__pickup__great_candy",
+		"cloudreach__inventory__pickup__potion_large",
+		"cloudreach__inventory__pickup__tm_wind_blade",
+		"cloudreach__inventory__pickup__stamina_mushroom",
+		"cloudreach__inventory__pickup__rare_candy",
+		"cloudreach__inventory__pickup__tm_heavenfall",
+		"cloudreach__inventory__pickup__tm_aerial_flash",
+		"cloudreach__inventory__pickup__speed_mushroom",
+		"cloudreach__inventory__pickup__wild_mushroom"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296235304795,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}

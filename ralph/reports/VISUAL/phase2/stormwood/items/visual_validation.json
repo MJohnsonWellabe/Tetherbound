@@ -1,0 +1,25 @@
+{
+  "review": "code-blind full-frame review",
+  "unverified_pickup_subject_ids": [
+    "stormwood__inventory__pickup__potion_large",
+    "stormwood__inventory__pickup__revive",
+    "stormwood__inventory__pickup__speed_mushroom",
+    "stormwood__inventory__pickup__stamina_mushroom",
+    "stormwood__inventory__pickup__wild_mushroom",
+    "stormwood__inventory__pickup__swift_tonic",
+    "stormwood__inventory__pickup__attack_tonic",
+    "stormwood__inventory__pickup__stoneguard_brew",
+    "stormwood__inventory__pickup__orb_basic",
+    "stormwood__inventory__pickup__orb_greater",
+    "stormwood__inventory__pickup__orb_prime",
+    "stormwood__inventory__pickup__tm_voltaic_whip",
+    "stormwood__inventory__pickup__tm_thunder_break",
+    "stormwood__inventory__pickup__tm_stormfall",
+    "stormwood__inventory__pickup__insulated_leggings",
+    "stormwood__inventory__pickup__insulated_boots",
+    "stormwood__inventory__pickup__rootgate_release_key",
+    "stormwood__inventory__pickup__dynamo_core_key",
+    "stormwood__inventory__pickup__spark_of_stormwood"
+  ],
+  "reason": "Named subject cannot be isolated in normal-camera frame; placement or camera stand requires targeted verification."
+}

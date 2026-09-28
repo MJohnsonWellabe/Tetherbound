@@ -1,0 +1,9 @@
+{
+  "review": "Code-blind inspection of sixteen fixed-camera live/restored current frames across four stands and two sampled times",
+  "confirmed_findings": [
+    "P2-066: live currents have rigid long parallel white streaks",
+    "P2-067: surrounding shore and water color show little change between states"
+  ],
+  "visible_state_change": "The live streaks vanish in the restored frames at each stand.",
+  "limits": "t0 and t1 are too similar in stills to judge animation timing. Four fixed views may omit changes elsewhere on the route."
+}

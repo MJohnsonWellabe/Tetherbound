@@ -240,6 +240,8 @@ jobs:
           # `before` = 3dbec66b, skipped every job and reported success with
           # batch 67's code never executed. Chaining each main run to the last
           # one that ran means code anywhere in between still builds.
+          # A cancelled run built nothing (a newer queued run on main replaces a
+          # pending one), so it is not a base.
           # `before` stays the fallback when the run list is unreadable.
           base=""
           if [ -n "${BASE_SHA:-}" ]; then
@@ -248,7 +250,7 @@ jobs:
             git fetch --no-tags --depth=0 origin main 2>/dev/null || true
             base="$(git merge-base origin/main HEAD 2>/dev/null || true)"
           elif last="$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?branch=main&per_page=30" \
-                  --jq "[.workflow_runs[] | select(.id != $RUN_ID and .event != \"pull_request\" and .head_sha != \"$GITHUB_SHA\")][0].head_sha // empty" 2>/dev/null)" \
+                  --jq "[.workflow_runs[] | select(.id != $RUN_ID and .event != \"pull_request\" and .head_sha != \"$GITHUB_SHA\" and .conclusion != \"cancelled\" and .conclusion != \"skipped\")][0].head_sha // empty" 2>/dev/null)" \
                && [ -n "$last" ] \
                && git merge-base --is-ancestor "$last" HEAD 2>/dev/null; then
             echo "Last main commit with a CI run: $last"

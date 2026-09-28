@@ -1,0 +1,251 @@
+{
+	"biome": "cloudreach",
+	"category": "systems",
+	"complete": true,
+	"display_server": "Windows",
+	"failure": false,
+	"fixture": "In-memory summit progression flags and five level-25 creatures; production captain challenge and live controller-input combat pilot",
+	"frames": [
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-1350.png",
+			"id": "live-1350",
+			"simulated_seconds": 22.25,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/battle_captain_veyra_storm_anchor.png",
+			"id": "battle_captain_veyra_storm_anchor",
+			"simulated_seconds": 22.7166666666667,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-1530.png",
+			"id": "live-1530",
+			"simulated_seconds": 25.1499999999999,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-1710.png",
+			"id": "live-1710",
+			"simulated_seconds": 28.1499999999997,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-1890.png",
+			"id": "live-1890",
+			"simulated_seconds": 31.1666666666662,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-2070.png",
+			"id": "live-2070",
+			"simulated_seconds": 34.1499999999993,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-2250.png",
+			"id": "live-2250",
+			"simulated_seconds": 37.1666666666658,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-2430.png",
+			"id": "live-2430",
+			"simulated_seconds": 40.149999999999,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-2610.png",
+			"id": "live-2610",
+			"simulated_seconds": 43.1499999999988,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-2790.png",
+			"id": "live-2790",
+			"simulated_seconds": 46.1499999999987,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-2970.png",
+			"id": "live-2970",
+			"simulated_seconds": 49.1499999999985,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-3150.png",
+			"id": "live-3150",
+			"simulated_seconds": 52.1499999999983,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-3330.png",
+			"id": "live-3330",
+			"simulated_seconds": 55.1499999999982,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-3510.png",
+			"id": "live-3510",
+			"simulated_seconds": 58.1666666666646,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-3690.png",
+			"id": "live-3690",
+			"simulated_seconds": 61.1666666666645,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-3870.png",
+			"id": "live-3870",
+			"simulated_seconds": 64.1499999999976,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-4050.png",
+			"id": "live-4050",
+			"simulated_seconds": 67.1833333333308,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-4230.png",
+			"id": "live-4230",
+			"simulated_seconds": 70.1499999999973,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-4410.png",
+			"id": "live-4410",
+			"simulated_seconds": 73.1666666666638,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-4590.png",
+			"id": "live-4590",
+			"simulated_seconds": 76.1666666666636,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-4770.png",
+			"id": "live-4770",
+			"simulated_seconds": 79.1666666666635,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-4950.png",
+			"id": "live-4950",
+			"simulated_seconds": 82.1499999999966,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-5130.png",
+			"id": "live-5130",
+			"simulated_seconds": 85.1499999999965,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-5310.png",
+			"id": "live-5310",
+			"simulated_seconds": 88.1499999999963,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-5490.png",
+			"id": "live-5490",
+			"simulated_seconds": 91.1499999999961,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-5670.png",
+			"id": "live-5670",
+			"simulated_seconds": 94.1499999999959,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-5850.png",
+			"id": "live-5850",
+			"simulated_seconds": 97.1499999999958,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": true,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/live-6030.png",
+			"id": "live-6030",
+			"simulated_seconds": 100.166666666662,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": true
+		},
+		{
+			"fighting": false,
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/fight_live_main125/aftermath.png",
+			"id": "aftermath",
+			"simulated_seconds": 101.299999999996,
+			"stage": "battle_captain_veyra_storm_anchor",
+			"trainer_battle_active": false
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"seed": 2042,
+	"system": "fight",
+	"victory": true
+}

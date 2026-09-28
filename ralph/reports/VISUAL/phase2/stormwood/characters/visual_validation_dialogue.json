@@ -1,0 +1,11 @@
+{
+  "review": "Code-blind inspection of all 45 Stormwood dialogue frames",
+  "findings": [
+    "P2-081: 26 named trainers repeat generic line and lack portrait",
+    "P2-082: nine named portrait and world-person identity mismatches",
+    "P2-083: direct-start views blocked by creatures or geometry",
+    "P2-084: named civilian dialogue lines reused"
+  ],
+  "text_panel": "Readable in all reviewed frames.",
+  "caveat": "Production DialoguePanel opened directly at authored posts; does not prove normal interaction framing or progression."
+}

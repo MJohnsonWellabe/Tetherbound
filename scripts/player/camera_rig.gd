@@ -258,6 +258,7 @@ func _load_config() -> void:
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_impact_nudge_left = 0.0
 	rotation.z = 0.0
+	set_lens_lift(0.0)
 	# A fight, a mount or a thrown orb taking the camera outranks a conversation
 	# push-in that is still blending: whoever calls this is about to overwrite
 	# every value the push-in is interpolating, and a half-finished blend left
@@ -421,6 +422,21 @@ func _unhandled_input(event: InputEvent) -> void:
 var _impact_nudge_left := 0.0
 var _impact_nudge_duration := 0.16
 var _impact_nudge_radians := 0.0
+
+
+## F14#0 C3: the fight may shift the lens up (Camera3D.v_offset, metres) so a
+## tall opponent standing uphill keeps its head out of the boss-panel band
+## (combat.json `camera.hud_safe.top_band`,
+## combat_manager.gd::_update_combat_top_band). The arm, pivot, yaw and look
+## pitch are unchanged, so it cannot push the lens into the slope below; the
+## aim reticle stays the lens's own centre. 0 outside fights.
+func set_lens_lift(metres: float) -> void:
+	if _camera != null:
+		_camera.v_offset = metres
+
+
+func lens_lift() -> float:
+	return _camera.v_offset if _camera != null else 0.0
 
 
 ## Presentation roll only: preserves aim yaw/pitch and spring-arm position.
