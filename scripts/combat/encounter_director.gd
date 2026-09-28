@@ -5941,7 +5941,22 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 		push_in.call("begin", speaker, "aftermath")
 		_step_ally_behind_the_lens(push_in.get_parent(), panel)
 		# F04#6: the Warden's Realm Key and Heart hang in the shot while he speaks.
-		TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player, str(spec.get("id", "")))
+		var shown: Node3D = TRAINER_AFTERMATH.show_victory(speaker.get_parent(), speaker, _player,
+			str(spec.get("id", "")), _victory_lens(push_in.get_parent()))
+		if shown != null and panel.has_signal("line_presented"):
+			# F04#6 (judge r5): hand the tokens over while the last line is up,
+			# inside the victory shot, not on a timer after it.
+			var player := _player
+			var delay := float(TRAINER_AFTERMATH.config().get("handover_after_last_line_s", 1.4))
+			var on_line := func(_id: String, is_last: bool) -> void:
+				if is_last and is_instance_valid(shown):
+					shown.get_tree().create_timer(delay).timeout.connect(func() -> void:
+						if is_instance_valid(shown):
+							TRAINER_AFTERMATH.hand_over(shown, player))
+			panel.connect("line_presented", on_line)
+			panel.connect("finished", func(_id: String) -> void:
+				if panel.is_connected("line_presented", on_line):
+					panel.disconnect("line_presented", on_line), CONNECT_ONE_SHOT)
 	panel.call("start", conversation)
 
 
@@ -5978,6 +5993,19 @@ func _step_ally_out_of_the_victory_shot(speaker: Node3D) -> void:
 ## shot, the ally stands `camera.json` conversation.profiles.aftermath
 ## `ally_behind_lens_m` behind the lens along the shot, so no creature size or
 ## swing puts it in the frame. No shot solved: the side step above stands.
+## Where the victory shot's lens stands, or INF with no solved shot. The
+## handover tokens are laid out across THIS line so they sit beside the speaker
+## on screen (aftermath render af3 b0b922d9: laid out across Vess's own
+## shoulder line, her Sigil landed on her from the swung camera).
+func _victory_lens(rig: Node) -> Vector3:
+	if rig == null or not rig.has_method("conversation_shot"):
+		return Vector3.INF
+	var shot: Dictionary = rig.call("conversation_shot")
+	if not shot.has("pivot") or not shot.has("dir"):
+		return Vector3.INF
+	return (shot["pivot"] as Vector3) + (shot["dir"] as Vector3) * float(shot.get("distance", 0.0))
+
+
 func _step_ally_behind_the_lens(rig: Node, panel: Node = null) -> void:
 	var ally := ally_body()
 	if ally == null or not is_instance_valid(ally) or rig == null or not rig.has_method("conversation_shot"):

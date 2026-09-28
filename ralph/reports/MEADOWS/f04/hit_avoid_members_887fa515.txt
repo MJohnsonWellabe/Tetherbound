@@ -1,0 +1,21 @@
+# tests/smoke_named_fight_hit_avoid.gd (headless, local) at 887fa515: the charger lane is read from facing() during the wind-up.
+## --trainer=relay_captain,captain_field --live-member=relay_captain:4,captain_field:1 (Tuskroot CHARGERs)
+row relay_captain opponent=tuskroot_L12 strike=1 move=quick tell=0.80s policy=stand outcome=hit damage=21.5 gap_tell=4.17 gap_strike=3.12 moved=0.00 reach=8.07 cone=90 action=1 arena_off=3.87
+row relay_captain opponent=tuskroot_L12 strike=2 move=quick tell=0.80s policy=dodge outcome=hit damage=23.4 gap_tell=4.85 gap_strike=3.14 moved=2.19 reach=8.07 cone=90 action=0 arena_off=4.24
+row relay_captain opponent=tuskroot_L12 strike=3 move=quick tell=0.80s policy=stand outcome=hit damage=20.0 gap_tell=3.98 gap_strike=3.13 moved=0.00 reach=8.07 cone=90 action=2 arena_off=5.62
+row relay_captain opponent=tuskroot_L12 strike=4 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.70 gap_strike=5.19 moved=4.64 reach=8.07 cone=90 action=0 arena_off=5.95
+row relay_captain opponent=tuskroot_L12 strike=5 move=quick tell=0.80s policy=stand outcome=hit damage=21.5 gap_tell=6.47 gap_strike=3.09 moved=0.00 reach=8.07 cone=90 action=1 arena_off=6.81
+row relay_captain opponent=tuskroot_L12 strike=6 move=quick tell=0.80s policy=dodge outcome=hit damage=24.0 gap_tell=4.46 gap_strike=3.22 moved=1.99 reach=8.07 cone=90 action=0 arena_off=6.81
+row relay_captain opponent=tuskroot_L12 strike=7 move=quick tell=0.80s policy=stand outcome=hit damage=20.7 gap_tell=5.12 gap_strike=3.10 moved=0.00 reach=8.07 cone=90 action=2 arena_off=8.48
+row relay_captain opponent=tuskroot_L12 strike=8 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.52 gap_strike=4.54 moved=2.28 reach=8.07 cone=90 action=0 arena_off=8.61
+row captain_field opponent=tuskroot_L16 strike=1 move=quick tell=0.80s policy=stand outcome=hit damage=22.5 gap_tell=4.20 gap_strike=3.17 moved=0.00 reach=8.07 cone=90 action=2 arena_off=5.36
+row captain_field opponent=tuskroot_L16 strike=2 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.93 gap_strike=5.35 moved=5.09 reach=8.07 cone=90 action=0 arena_off=5.83
+row captain_field opponent=tuskroot_L16 strike=3 move=quick tell=0.80s policy=stand outcome=hit damage=21.3 gap_tell=7.26 gap_strike=3.06 moved=0.00 reach=8.07 cone=90 action=2 arena_off=8.93
+row captain_field opponent=tuskroot_L16 strike=4 move=quick tell=0.80s policy=dodge outcome=hit damage=25.0 gap_tell=4.81 gap_strike=3.27 moved=3.15 reach=8.07 cone=90 action=0 arena_off=9.08
+row captain_field opponent=tuskroot_L16 strike=5 move=quick tell=0.80s policy=stand outcome=hit damage=22.5 gap_tell=5.00 gap_strike=3.26 moved=0.00 reach=8.07 cone=90 action=2 arena_off=5.54
+row captain_field opponent=tuskroot_L16 strike=6 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.68 gap_strike=5.35 moved=4.97 reach=8.07 cone=90 action=0 arena_off=5.42
+row captain_field opponent=tuskroot_L16 strike=7 move=quick tell=0.80s policy=stand outcome=hit damage=22.1 gap_tell=7.51 gap_strike=3.05 moved=0.00 reach=8.07 cone=90 action=2 arena_off=10.03
+row captain_field opponent=tuskroot_L16 strike=8 move=quick tell=0.80s policy=dodge outcome=hit damage=21.5 gap_tell=4.05 gap_strike=3.30 moved=2.01 reach=8.07 cone=90 action=0 arena_off=10.41
+PASS relay_captain: player_hits=16 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS captain_field: player_hits=17 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving

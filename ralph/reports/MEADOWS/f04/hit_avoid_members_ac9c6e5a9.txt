@@ -1,0 +1,40 @@
+# tests/smoke_named_fight_hit_avoid.gd (headless, local), named members. Charger rows use the lane sidestep (this commit).
+## --trainer=relay_captain,captain_field --live-member=relay_captain:4,captain_field:1 (Tuskroot CHARGERs)
+row relay_captain opponent=tuskroot_L12 strike=1 move=quick tell=0.80s policy=stand outcome=hit damage=22.5 gap_tell=4.78 gap_strike=3.08 moved=0.00 reach=8.07 cone=90 action=1 arena_off=3.87
+row relay_captain opponent=tuskroot_L12 strike=2 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.66 gap_strike=4.29 moved=4.82 reach=8.07 cone=90 action=0 arena_off=4.26
+row relay_captain opponent=tuskroot_L12 strike=3 move=quick tell=0.80s policy=stand outcome=hit damage=21.4 gap_tell=5.99 gap_strike=3.16 moved=0.00 reach=8.07 cone=90 action=1 arena_off=5.71
+row relay_captain opponent=tuskroot_L12 strike=4 move=quick tell=0.80s policy=dodge outcome=hit damage=23.9 gap_tell=4.66 gap_strike=3.29 moved=2.74 reach=8.07 cone=90 action=0 arena_off=5.74
+row relay_captain opponent=tuskroot_L12 strike=5 move=quick tell=0.80s policy=stand outcome=hit damage=20.9 gap_tell=5.01 gap_strike=3.21 moved=0.00 reach=8.07 cone=90 action=2 arena_off=8.89
+row relay_captain opponent=tuskroot_L12 strike=6 move=quick tell=0.80s policy=dodge outcome=hit damage=23.9 gap_tell=4.57 gap_strike=3.17 moved=0.52 reach=8.07 cone=90 action=0 arena_off=8.96
+row relay_captain opponent=tuskroot_L12 strike=7 move=quick tell=0.80s policy=stand outcome=hit damage=20.9 gap_tell=3.92 gap_strike=3.13 moved=0.00 reach=8.07 cone=90 action=1 arena_off=7.94
+row relay_captain opponent=tuskroot_L12 strike=8 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.63 gap_strike=5.37 moved=2.45 reach=8.07 cone=90 action=0 arena_off=8.08
+row captain_field opponent=tuskroot_L16 strike=1 move=quick tell=0.80s policy=stand outcome=hit damage=23.7 gap_tell=4.20 gap_strike=3.17 moved=0.00 reach=8.07 cone=90 action=2 arena_off=5.36
+row captain_field opponent=tuskroot_L16 strike=2 move=quick tell=0.80s policy=dodge outcome=hit damage=24.9 gap_tell=4.93 gap_strike=3.16 moved=1.41 reach=8.07 cone=90 action=0 arena_off=5.83
+row captain_field opponent=tuskroot_L16 strike=3 move=quick tell=0.80s policy=stand outcome=hit damage=20.8 gap_tell=3.69 gap_strike=3.11 moved=0.00 reach=8.07 cone=90 action=2 arena_off=6.31
+row captain_field opponent=tuskroot_L16 strike=4 move=quick tell=0.80s policy=dodge outcome=miss damage=0.0 gap_tell=4.08 gap_strike=5.03 moved=4.92 reach=8.07 cone=90 action=0 arena_off=6.71
+row captain_field opponent=tuskroot_L16 strike=5 move=quick tell=0.80s policy=stand outcome=hit damage=23.3 gap_tell=6.56 gap_strike=3.07 moved=0.00 reach=8.07 cone=90 action=1 arena_off=7.85
+row captain_field opponent=tuskroot_L16 strike=6 move=quick tell=0.80s policy=dodge outcome=hit damage=20.7 gap_tell=4.82 gap_strike=3.29 moved=3.13 reach=8.07 cone=90 action=0 arena_off=7.80
+row captain_field opponent=tuskroot_L16 strike=7 move=quick tell=0.80s policy=stand outcome=hit damage=21.1 gap_tell=5.01 gap_strike=3.08 moved=0.00 reach=8.07 cone=90 action=1 arena_off=4.50
+row captain_field opponent=tuskroot_L16 strike=8 move=quick tell=0.80s policy=dodge outcome=hit damage=23.1 gap_tell=4.55 gap_strike=3.21 moved=3.58 reach=8.07 cone=90 action=0 arena_off=4.36
+PASS relay_captain: player_hits=16 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS captain_field: player_hits=15 stand_strikes_landed=4 dodges_avoided=1/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving
+## --trainer=relay_officer_dell --live-member=relay_officer_dell:1 (Burrowback), before the sidestep change (quicks only)
+row relay_officer_dell opponent=burrowback_L10 strike=1 move=quick tell=0.90s policy=stand outcome=hit damage=18.9 gap_tell=6.76 gap_strike=6.82 moved=0.00 reach=7.47 cone=90 action=2 arena_off=3.70
+row relay_officer_dell opponent=burrowback_L10 strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.94 gap_strike=8.50 moved=2.01 reach=7.47 cone=90 action=0 arena_off=3.92
+row relay_officer_dell opponent=burrowback_L10 strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=17.5 gap_tell=6.94 gap_strike=6.57 moved=0.00 reach=7.47 cone=90 action=1 arena_off=6.17
+row relay_officer_dell opponent=burrowback_L10 strike=4 move=quick tell=0.90s policy=dodge outcome=hit damage=19.1 gap_tell=6.94 gap_strike=7.08 moved=1.22 reach=7.47 cone=90 action=0 arena_off=6.23
+row relay_officer_dell opponent=burrowback_L10 strike=5 move=quick tell=0.90s policy=stand outcome=hit damage=17.1 gap_tell=6.96 gap_strike=6.93 moved=0.00 reach=7.47 cone=90 action=1 arena_off=7.45
+row relay_officer_dell opponent=burrowback_L10 strike=6 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.94 gap_strike=7.93 moved=1.76 reach=7.47 cone=90 action=0 arena_off=7.52
+PASS relay_officer_dell: player_hits=32 stand_strikes_landed=3 dodges_avoided=2/3 strikes=6
+## --trainer=relay_officer_dell --live-member=relay_officer_dell:2 (Galecrest)
+row relay_officer_dell opponent=galecrest_L10 strike=1 move=quick tell=0.90s policy=stand outcome=none damage=0.0 gap_tell=6.49 gap_strike=-1.00 moved=-1.00 reach=7.51 cone=90 action=2 arena_off=3.54
+row relay_officer_dell opponent=galecrest_L10 strike=2 move=quick tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.97 gap_strike=9.75 moved=3.17 reach=7.51 cone=90 action=0 arena_off=3.54
+row relay_officer_dell opponent=galecrest_L10 strike=3 move=quick tell=0.90s policy=stand outcome=hit damage=18.2 gap_tell=6.96 gap_strike=6.65 moved=0.00 reach=7.51 cone=90 action=1 arena_off=7.15
+row relay_officer_dell opponent=galecrest_L10 strike=4 move=quick tell=0.90s policy=dodge outcome=hit damage=19.7 gap_tell=6.99 gap_strike=6.42 moved=0.71 reach=7.51 cone=90 action=0 arena_off=7.15
+row relay_officer_dell opponent=galecrest_L10 strike=5 move=quick tell=0.90s policy=stand outcome=none damage=0.0 gap_tell=6.96 gap_strike=-1.00 moved=-1.00 reach=7.51 cone=90 action=2 arena_off=6.47
+row relay_officer_dell opponent=galecrest_L10 strike=6 move=quick tell=0.90s policy=dodge outcome=hit damage=16.7 gap_tell=6.96 gap_strike=7.14 moved=1.34 reach=7.51 cone=90 action=0 arena_off=6.47
+row relay_officer_dell opponent=galecrest_L10 strike=7 move=quick tell=0.90s policy=stand outcome=none damage=0.0 gap_tell=6.95 gap_strike=-1.00 moved=-1.00 reach=7.51 cone=90 action=1 arena_off=6.56
+row relay_officer_dell opponent=galecrest_L10 strike=8 move=quick tell=0.90s policy=dodge outcome=hit damage=17.0 gap_tell=6.94 gap_strike=6.83 moved=0.28 reach=7.51 cone=90 action=0 arena_off=6.56
+PASS relay_officer_dell: player_hits=16 stand_strikes_landed=1 dodges_avoided=1/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving

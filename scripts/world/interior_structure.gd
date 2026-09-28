@@ -1,5 +1,8 @@
 extends RefCounted
 
+## camera_rig.gd::OCCLUSION_ONLY_LAYER: stops the camera's arm, nothing else.
+const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
+
 ## CONTENT-0828B -- the constructed-interior method.
 ##
 ## The owner localised "some locations still look lame" to a CLASS rather than
@@ -446,6 +449,21 @@ func _member(size: Vector3, at: Vector3, role: String) -> void:
 	mesh.name = "%s_%d" % [role, _placed]
 	_holder.add_child(mesh)
 	_placed += 1
+	# Never solid, but the fight camera must not park inside it either (lens
+	# probe, Warden arena: shafts and courses). Camera-only, like the Hall's
+	# own decoration boxes (`stronghold.gd::add_camera_occluder`).
+	var occluder := StaticBody3D.new()
+	occluder.name = "%s_%d_CameraOccluder" % [role, _placed - 1]
+	occluder.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+	occluder.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var box_shape := BoxShape3D.new()
+	box_shape.size = size * mesh.scale
+	shape.shape = box_shape
+	occluder.add_child(shape)
+	occluder.position = mesh.position
+	occluder.rotation = mesh.rotation
+	_holder.add_child(occluder)
 
 
 ## A small random offset along the wall, for the rock vocabulary only. Zero at

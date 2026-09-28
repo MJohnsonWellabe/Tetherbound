@@ -10,16 +10,18 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 class WindingUp:
 	extends Node3D
 	var cfg := {}
+	var combat_override := {}
 	func is_winding_up() -> bool:
 		return true
 	func combat_config() -> Dictionary:
 		return cfg
 
 
-func _shape(cfg: Dictionary) -> String:
+func _shape(cfg: Dictionary, authored: Dictionary = {}) -> String:
 	var manager := MANAGER.new()
 	var wild := WindingUp.new()
 	wild.cfg = cfg
+	wild.combat_override = authored
 	manager.set("_wild", wild)
 	var shape := str(manager.call("enemy_windup_shape"))
 	wild.free()
@@ -29,8 +31,15 @@ func _shape(cfg: Dictionary) -> String:
 
 func test_a_travelling_lunge_is_a_charge_and_a_far_reposition_makes_it_a_dive() -> void:
 	# Halder's and Vance's Tuskroot, Vess's Galecrest, as authored in band data.
-	assert_eq(_shape({"lunge": 7.0, "lunge_travels": true, "preferred_range": 4.5}), "charge")
-	assert_eq(_shape({"lunge": 5.5, "lunge_travels": true, "reposition_distance": 7.0}), "dive")
+	var tuskroot := {"lunge": 7.0, "lunge_travels": true, "preferred_range": 4.5}
+	var galecrest := {"lunge": 5.5, "lunge_travels": true, "reposition_distance": 7.0}
+	assert_eq(_shape(tuskroot, tuskroot), "charge")
+	assert_eq(_shape(galecrest, galecrest), "dive")
+	# Render 5e8c3de3: the merged config carries the species' base movement,
+	# which read a Tuskroot CHARGER as a dive. Only the authored shape counts.
+	var merged := tuskroot.duplicate()
+	merged["reposition_distance"] = 6.0
+	assert_eq(_shape(merged, tuskroot), "charge", "a species' base reposition is not a DIVER")
 	assert_eq(_shape({"lunge": 6.5, "cone_degrees": 72}), "", "the Warden's HEAVY does not travel")
 	assert_eq(_shape({"telegraph": 0.9}), "", "a baseline slot has no named question")
 

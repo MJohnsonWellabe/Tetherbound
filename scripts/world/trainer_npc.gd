@@ -429,7 +429,7 @@ func _refresh_prompts(progression: RefCounted) -> void:
 		var id := str(spec.get("id", ""))
 		var beaten := already_beaten(spec, progression)
 		if beaten and _beaten_seen.has(id) and not bool(_beaten_seen[id]):
-			TRAINER_AFTERMATH.begin_fall(body, id)
+			_strike_when_seen(body, id)
 			_play_defeat_reaction(body)
 		_beaten_seen[id] = beaten
 
@@ -440,17 +440,82 @@ func _refresh_prompts(progression: RefCounted) -> void:
 func _play_defeat_reaction(body: Node3D) -> void:
 	if not body.has_method("clip_for") or not body.has_method("play"):
 		return
+	# Listening starts now, not after the hold: a last line shown during the
+	# slump must still count (review: it was missed and the stand-down fell to
+	# the panel closing, outside the shot).
+	var lines := _watch_victory_lines()
 	var clip := str(body.call("clip_for", "defeated", ""))
 	if clip.is_empty():
-		TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
+		await _until_the_last_victory_line(lines)
+		if is_instance_valid(body):
+			TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", "")))
 		return
 	body.call("play", clip, false)
 	var reactions := CHARACTER_MODEL.config_for("cast_reactions")
 	var hold := float(reactions.get("defeat_hold_seconds", 7.0))
 	await get_tree().create_timer(hold).timeout
+	await _until_the_last_victory_line(lines)
 	if is_instance_valid(body):
 		if not TRAINER_AFTERMATH.begin_stand_down(body, str(body.get_meta("trainer_id", ""))):
 			body.call("play", str(body.call("clip_for", "idle")))
+
+
+## F04#6 (judge r5): after the lines closed, the camera was back behind the
+## player and Dell's step-aside was never seen. The trainer moves while their
+## LAST line is up -- still in the victory shot -- or when the panel closes if
+## that line was never reported. The watch connects at once, before the
+## deferred panel opens, so even a one-line speech is heard.
+func _watch_victory_lines() -> Dictionary:
+	var state := {"done": false}
+	var panel := _panel()
+	if panel == null or not is_instance_valid(panel) or not panel.has_signal("line_presented"):
+		_close_watch_when_the_lines_close(panel, Callable(), state)
+		return state
+	var on_line := func(_id: String, is_last: bool) -> void:
+		if is_last:
+			state["done"] = true
+	panel.connect("line_presented", on_line)
+	_close_watch_when_the_lines_close(panel, on_line, state)
+	return state
+
+
+func _close_watch_when_the_lines_close(panel: Node, on_line: Callable, state: Dictionary) -> void:
+	await _after_the_victory_lines_or(state)
+	state["done"] = true
+	if on_line.is_valid() and panel != null and is_instance_valid(panel) \
+			and panel.is_connected("line_presented", on_line):
+		panel.disconnect("line_presented", on_line)
+
+
+## F04#6 (aftermath render af2, 03e7486c): a trainer without a `defeated` clip
+## stepped aside the instant the fight ended and walked out of their own
+## victory shot mid-line (Dell). The stand-down waits for the lines to close:
+## the victory panel opens on a deferred call after the fight, so give it a
+## frame to open, then wait while it is.
+func _after_the_victory_lines_or(state: Dictionary) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var panel := _panel()
+	while not bool(state["done"]) and panel != null and is_instance_valid(panel) and bool(panel.call("is_open")):
+		await get_tree().create_timer(0.1).timeout
+
+
+func _until_the_last_victory_line(state: Dictionary) -> void:
+	while not bool(state["done"]):
+		await get_tree().create_timer(0.1).timeout
+
+
+## F04#6 (judge r5: Vance's and Vess's struck standards were already gone by
+## the first frame of their lines). The colours come down once the victory
+## lines are up, where the shot can see them; at once if no speech follows.
+func _strike_when_seen(body: Node3D, id: String) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var panel := _panel()
+	if panel != null and is_instance_valid(panel) and bool(panel.call("is_open")):
+		await get_tree().create_timer(float(TRAINER_AFTERMATH.config().get("strike_after_lines_open_s", 0.8))).timeout
+	if is_instance_valid(body):
+		TRAINER_AFTERMATH.begin_fall(body, id)
 
 
 ## --- the table ----------------------------------------------------------------
