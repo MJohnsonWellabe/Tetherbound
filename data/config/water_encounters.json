@@ -8482,7 +8482,7 @@
       "arena_capture_radius_m": 16.0,
       "_why_position_f14_0": "F14#0 C3 (Phase 1, tb/tidewake): moved from the reef edge at the foot of Deep Watch's 12 m sea cliff (1483.2, 3427.9), where six capture rounds failed framing: any fight camera behind the landward ally met the cliff, and the seabed fell away with no shallow flat within 40 m. The stand is now the arrival bay's shallows (tools/probe_tidewake_tidecoil_stand.gd: ground 0.43 m under the surface, the 5 m ring between 2.2 m deep and 0.6 m dry, the landward side no higher than 1.3 m for 18 m). The ordinary approach from the sluice_isle_to_deep_watch landing, 26 m away, puts the camera over open beach. Tidecoil is non-aggressive: it fights only when a player engages it. The reserved site water_deep_watch_wild_008 moved with it, since its 100 m activation stands the body up. A loss still returns to the Deep Watch landing.",
       "_why_arena_radius_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): the shallow_surface mode was data only; the default 11 m ring let the fight drift down the reef slope and Tidecoil fought 5 m under the water surface, hidden, for most of the capture. A 5 m ring keeps it in the reef-edge shallows (water_encounter_director.combat_arena_bounds_at).",
-      "combat_intent": "A late apex sweeps the visible surface at the reef edge; prepare on the island and punish recovery between broad lateral attacks.",
+      "combat_intent": "A late apex sweeps the visible surface of the arrival bay's shallows; prepare on the island and punish recovery between broad lateral attacks.",
       "completion_flag": "water_named_deep_watch_tidecoil_resolved",
       "resolution": "host_confirms_catch_or_defeat_once",
       "reward_role": "skill_candy_iii",

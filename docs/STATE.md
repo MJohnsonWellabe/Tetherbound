@@ -23,18 +23,23 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#3/#4/#6. |
 | C2, C3 | **Complete (Cloudreach Phase 1 landing).** C2: earned chapter run (longest travel gap 98 s, same five, no new catch) plus the six-activities witness, frame matrix by the F08#3/#4 code-blind verdicts; C3: two-peer co-op and Solmane aftermath, ALL CHECKS PASSED. Evidence `ralph/reports/CLOUDREACH/c2-card/`, `c3-card/`. |
 | M3 | Failing: named-fight framing and Bars A/B. |
-| T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function). |
+| T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function; F14#1 C2 passes; both C3s wait on shared fight-camera composition). |
 
 **Open criteria (15):**
 - **Meadows:** F01#2, F01#3; F03#0; F04#1, #2, #3, #6, #7.
 - **Cloudreach: complete for Phase 1** (every row and card C1-C3 met). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Open debt outside the queue: owned-carrier Fly; Cliffhold reads thin (Phase 2).
 - **Stormwood:** F10#2, #4, #6. F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
-- **Tidewake:** F14#0, #1.
-  - F13#3 is met (`ralph/reports/TIDEWAKE/phase1/f13_3/`): six chains in one real-swim run (619/0), and a lead now pins its destination on the map.
-  - F13#5 is met on function (`phase1/f13_5/`): dock residents at every mandatory dock, current comets, and the Veilfall distance read.
-  - F14#1 next. Nerissa's C2 regressed with dbe43195's Riptusk lane (render bisect in `phase1/f14_1/c2_bisect/`). Her ring spills south of the Heart Chamber lip into the 1 m sluice channel, and a sidestepping ally is pinned there.
-  - F14#0: Tidecoil still fails C3 at the cliff foot; a Deep Watch arrival-beach stand is probed.
-  - Other defects: after Tidecoil, a swimmer-less player may be left in the cliff-foot shallows (harness pose).
+- **Tidewake:** F14#0, #1 open. F13#3 and F13#5 are met (`ralph/reports/TIDEWAKE/phase1/f13_3/`, `f13_5/`). The F14 rows' C3 stops on shared fight-camera composition; the next step is a combat-camera rule, shared with Meadows F04#1. T2 waits on both rows.
+  - **F14#1** (`phase1/f14_1/VERDICTS.md`):
+    - C2 passes at a3269be7 (144 fights: reader win 1.00, party cost 0.07-0.24 of the masher's). The regression since dbe43195's Riptusk lane was the ring reaching the 1 m Sluice Crossing channel; Nerissa now stands 9 m deeper in the Heart Chamber.
+    - C3 tells pass (12/12, heavy distinct). Framing is 82-87% over four rounds. It is blocked on the shared CHARGER-lunge camera behaviour: the camera clips into the ally while Riptusk's 7 m charge runs through it (F04#1's `body_clear.ignore_lunging_foe`, off since batch 67).
+  - **F14#0** (`phase1/f14_0/VERDICTS.md`):
+    - Aquaryn C3 passes.
+    - Tidecoil moved to the Deep Watch arrival bay. The chain passes with no pose, and the old cliff-foot stranding is gone. C3 is 21/24 (88%) by two judges.
+    - Tess is reached on the ordinary route by stick, but C3 from the landing approach is 62%. Both failures are the ally standing in line with the opponent.
+  - Other defects, recorded, not fixed:
+    - the fight HUD's move panel drops out while "it missed you" or "it's open" shows;
+    - the ordinary tell ring marks the attacker's feet, not a landing spot.
 
 **Switched off or unwired in batch 67.** This is unjudged visual work, landed as the wind-down rule requires. Flip each item on only after a code-blind Bars A/B pass.
 - `stormwood_glass_field.json` `scorched_scars=false`.
@@ -152,7 +157,7 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
 | Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), forest readability (F10#4), device profile (F10#6). Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
-| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Veilfall and named-fight C2/C3 (F14#0/#1); Bars A/B looks go to Phase 2. |
+| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Named-fight C3 framing (F14#0/#1) waits on shared fight-camera composition; Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |

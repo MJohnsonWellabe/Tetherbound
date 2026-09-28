@@ -47,7 +47,7 @@ var _reader: RefCounted
 var _sparse := false
 ## --wild=aquaryn,tidecoil: F14#0's named wilds. Aquaryn is engaged through
 ## WaterAlpha.request_engage() (smoke_water_alpha_runtime.gd); Tidecoil by the
-## ordinary interact prompt beside its Deep Watch reef shore, the stand
+## ordinary interact prompt from the Deep Watch arrival bay's beach, the stand
 ## tidewake_b_tidecoil_fight.gd walks to. Fixture (disclosed): placement.
 var _wilds: PackedStringArray = []
 ## --approach=<water_world anchor id>: F14#0 ordinary-route witness. The player

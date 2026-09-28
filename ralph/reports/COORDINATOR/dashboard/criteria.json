@@ -812,15 +812,16 @@
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "partial",
-     "evidence": "smoke_water_named_c2c3 (batch 23): 1,488 fights; named wilds, floor and ladder pass C2 and measured C3",
-     "gap": "Top fights: Aquaryn/Ripplet 0.61 ratio; Calder/Tess need the authorized damage tunable",
-     "note": "Damage tunable for Calder, Tess, Venn and Nerissa; 24-seed run. Tidewake lane (#296)."
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md (tb/tidewake Phase 1): Aquaryn C3 PASS r5 (17/18, tells 2/2; authored combat_camera framing). Tidecoil moved to the Deep Watch arrival bay (the reef-edge cliff failed six rounds): Deep Watch chain passes there (115/0, walk back by stick, 0 poses), C3 r8 21/24 (88%) by two independent judges, tells 4/4. Tess reached on the ordinary route by stick from the Deep Watch landing (317 m, creature_recall, prompt), fight completed.",
+     "gap": "C3 framing below 90%: Tidecoil 88% (the ally in line with the serpent; the serpent lies at the waterline), Tess 62% from the landing approach (the ally hides the opponent at 5-7 m; ordinary ring shows no landing spot). Residue is the shared fight-camera composition.",
+     "note": "Two-strike rule reached for Tidewake placement/camera fixes; next is shared combat-camera composition (ally in line with the opponent). Tidewake lane (Phase 1)."
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "partial",
-     "evidence": "Veilfall interior 31-check functional smoke only",
-     "gap": "Nerissa C2/C3 simulated by harness, not played on the ordinary route; no C3 framing captures; Veilfall interior has no verdict. (strict re-score 23:40)"
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (tb/tidewake Phase 1): C2 PASS at a3269be7 in the actual Heart Chamber, 144 fights: READER win 1.00 x3, party cost 0.12/0.07/0.24 of the masher's, masher wipe 1.00, max single hit 18%, tells 0.8/1.1 s. The regression since dbe43195 (render bisect) was the ring reaching the Sluice Crossing channel; Nerissa's stand moved 9 m deeper. C3 tells 12/12 with the heavy distinct (orange HEAVY banner plus chevron lane). Veilfall interior route readable in every frame (room identity WEAK, Phase 2).",
+     "gap": "C3 framing 82-87% over four rounds (bar 90%): the camera clips into the ally or loses a fighter while Riptusk's 7 m lane lunge runs through the ally. Shared CHARGER-lunge camera behaviour (F04#1 body_clear.ignore_lunging_foe, off since batch 67).",
+     "note": "Blocked on the shared lunge-camera rule (with F04#1). Tidewake lane (Phase 1)."
     },
     {
      "text": "Water/current network visibly changes and persists",
