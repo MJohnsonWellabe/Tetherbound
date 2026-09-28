@@ -14,10 +14,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -28,10 +33,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -42,10 +52,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -56,10 +71,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -70,10 +90,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -84,10 +109,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -98,10 +128,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__terrapup__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__terrapup__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__terrapup__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "terrapup",
+			"subject_stand_xz": [
+				-427.305,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.5008682830723,
 			"trainer_visible_intent": true
 		},
 		{
@@ -112,10 +147,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -126,10 +166,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -140,10 +185,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -154,10 +204,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -168,10 +223,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -182,10 +242,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -196,10 +261,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__bramblebun__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__bramblebun__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__bramblebun__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "bramblebun",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -210,10 +280,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -224,10 +299,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -238,10 +318,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -252,10 +337,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -266,10 +356,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -280,10 +375,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -294,10 +394,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mudsnout__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mudsnout__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mudsnout__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "mudsnout",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -308,10 +413,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -322,10 +432,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -336,10 +451,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -350,10 +470,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -364,10 +489,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -378,10 +508,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -392,10 +527,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -406,10 +546,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__trailpup__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__trailpup__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__trailpup__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "trailpup",
+			"subject_stand_xz": [
+				-427.907,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.30620619747349,
 			"trainer_visible_intent": true
 		},
 		{
@@ -420,10 +565,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -434,10 +584,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -448,10 +603,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -462,10 +622,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -476,10 +641,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -490,10 +660,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -504,10 +679,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.935,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.29823437551851,
 			"trainer_visible_intent": true
 		},
 		{
@@ -518,10 +698,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__burrowback__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__burrowback__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__burrowback__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "burrowback",
+			"subject_stand_xz": [
+				-427.3155,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.49710212348745,
 			"trainer_visible_intent": true
 		},
 		{
@@ -532,10 +717,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -546,10 +736,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -560,10 +755,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -574,10 +774,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -588,10 +793,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -602,10 +812,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -616,10 +831,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-427.585,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.40487845950222,
 			"trainer_visible_intent": true
 		},
 		{
@@ -630,10 +850,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__meadowhart__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__meadowhart__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__meadowhart__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "meadowhart",
+			"subject_stand_xz": [
+				-426.8605,
+				478.073
+			],
+			"trainer_to_subject_xz_m": 8.66197375024884,
 			"trainer_visible_intent": true
 		},
 		{
@@ -644,10 +869,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -658,10 +888,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -672,10 +907,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -686,10 +926,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -700,10 +945,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -714,10 +964,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -728,10 +983,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__paddlenewt__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__paddlenewt__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__paddlenewt__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "paddlenewt",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -742,10 +1002,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -756,10 +1021,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -770,10 +1040,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -784,10 +1059,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -798,10 +1078,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -812,10 +1097,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -826,10 +1116,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -840,10 +1135,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__mosshell__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__mosshell__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__mosshell__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "mosshell",
+			"subject_stand_xz": [
+				-427.6375,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.38792299973409,
 			"trainer_visible_intent": true
 		},
 		{
@@ -854,10 +1154,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -868,10 +1173,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -882,10 +1192,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -896,10 +1211,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -910,10 +1230,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -924,10 +1249,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -938,10 +1268,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -952,10 +1287,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__brooktail__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__brooktail__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__brooktail__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "brooktail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -966,10 +1306,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -980,10 +1325,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -994,10 +1344,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1008,10 +1363,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1022,10 +1382,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1036,10 +1401,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1050,10 +1420,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1064,10 +1439,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__galecrest__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__galecrest__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__galecrest__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "galecrest",
+			"subject_stand_xz": [
+				-426.815,
+				478.19
+			],
+			"trainer_to_subject_xz_m": 8.78750960170172,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1078,10 +1458,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1092,10 +1477,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1106,10 +1496,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1120,10 +1515,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1134,10 +1534,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1148,10 +1553,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1162,10 +1572,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1176,10 +1591,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__duskhush__alpha_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__duskhush__alpha_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__duskhush__alpha_idle.jpg",
 			"pose": "alpha_idle",
 			"shiny": false,
 			"species": "duskhush",
+			"subject_stand_xz": [
+				-427.907,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.30620619747349,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1190,10 +1610,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1204,10 +1629,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1218,10 +1648,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1232,10 +1667,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1246,10 +1686,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1260,10 +1705,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1274,10 +1724,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__pipwing__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__pipwing__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__pipwing__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "pipwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1288,10 +1743,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1302,10 +1762,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1316,10 +1781,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1330,10 +1800,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1344,10 +1819,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1358,10 +1838,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1372,10 +1857,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__reedwing__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__reedwing__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__reedwing__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "reedwing",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1386,10 +1876,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1400,10 +1895,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1414,10 +1914,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1428,10 +1933,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1442,10 +1952,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1456,10 +1971,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1470,10 +1990,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__nightburrow__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__nightburrow__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__nightburrow__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "nightburrow",
+			"subject_stand_xz": [
+				-427.55,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.41636703514598,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1484,10 +2009,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1498,10 +2028,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1512,10 +2047,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1526,10 +2066,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1540,10 +2085,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1554,10 +2104,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1568,10 +2123,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__stormtrail__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__stormtrail__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__stormtrail__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "stormtrail",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1582,10 +2142,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1596,10 +2161,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1610,10 +2180,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1624,10 +2199,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1638,10 +2218,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1652,10 +2237,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1666,10 +2256,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__riftfrill__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__riftfrill__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__riftfrill__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "riftfrill",
+			"subject_stand_xz": [
+				-428.0,
+				477.0
+			],
+			"trainer_to_subject_xz_m": 7.28010988928052,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1680,10 +2275,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__idle.jpg",
 			"pose": "idle",
 			"shiny": false,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1694,10 +2294,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__moving",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__moving.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__moving.jpg",
 			"pose": "moving",
 			"shiny": false,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1708,10 +2313,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__attacking",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__attacking.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__attacking.jpg",
 			"pose": "attacking",
 			"shiny": false,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1722,10 +2332,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__hurt",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__hurt.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__hurt.jpg",
 			"pose": "hurt",
 			"shiny": false,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1736,10 +2351,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__resting",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__resting.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__resting.jpg",
 			"pose": "resting",
 			"shiny": false,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1750,10 +2370,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__fainted",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__fainted.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__fainted.jpg",
 			"pose": "fainted",
 			"shiny": false,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		},
 		{
@@ -1764,10 +2389,15 @@
 			"camera": "production CameraRig/Camera3D",
 			"id": "meadows__veridian__shiny_idle",
 			"model_loaded": true,
-			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_full_main84/meadows__veridian__shiny_idle.jpg",
+			"path": "res://ralph/reports/VISUAL/phase2/meadows/creatures_near_main84/meadows__veridian__shiny_idle.jpg",
 			"pose": "shiny_idle",
 			"shiny": true,
 			"species": "veridian",
+			"subject_stand_xz": [
+				-425.94,
+				480.44
+			],
+			"trainer_to_subject_xz_m": 11.2016605911802,
 			"trainer_visible_intent": true
 		}
 	],
