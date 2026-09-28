@@ -26,10 +26,11 @@ const SPECIES := {
 	"water": ["ripplet", "cannonback", "riptusk", "mirejaw", "aquaryn", "torrentoad", "mosshell",
 		"cragclaw", "riverdrake", "sirenseal", "mangrove_monitor", "tidecoil", "abyssal_guardian"],
 	"cloudreach": ["galewisp", "glimmermoth", "stormcapra", "skyrill", "aeriex",
-		"ribbonray", "breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane"],
+		"ribbonray", "breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane",
+		"craghorn", "pebbik", "galecrest"],
 	"stormwood": ["stormtrail", "voltwig", "mosshock", "staticub", "voltarach",
 		"fulgocobra", "stormraven", "pebbik", "craghorn", "stormbrush",
-		"tanglevolt", "thundertunnel"],
+		"tanglevolt", "thundertunnel", "sparkit", "glimmermoth"],
 }
 const POSES := ["idle", "moving", "attacking", "hurt", "resting", "fainted"]
 
