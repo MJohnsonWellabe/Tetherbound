@@ -30,7 +30,7 @@ def main() -> None:
     parser.add_argument("--biome", required=True)
     parser.add_argument("--commit", required=True)
     parser.add_argument("--render-path", required=True)
-    parser.add_argument("--category", choices=("locations", "ui", "creatures"), default="locations")
+    parser.add_argument("--category", choices=("locations", "routes", "ui", "creatures"), default="locations")
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()
     repo = args.repo.resolve()
@@ -118,24 +118,27 @@ def main() -> None:
         rel = dst.relative_to(repo).as_posix()
         view = frame.get("view", "normal")
         time = frame["time"]
+        capture_script = "phase2_capture_routes.gd" if args.category == "routes" else "phase2_capture_locations.gd"
+        selection = f"--biome={args.biome} --subset={frame['identity']} "
+        if args.category != "routes":
+            selection += f"--times={time} --views={view} "
         repro = (
             "godot --path . --rendering-driver opengl3 --resolution 1920x1080 "
-            "--script tools/phase2_capture_locations.gd -- "
-            f"--biome={args.biome} --subset={frame['identity']} "
-            f"--times={time} --views={view} --seed={manifest.get('seed', 2042)} "
+            f"--script tools/{capture_script} -- "
+            f"{selection}--seed={manifest.get('seed', 2042)} "
             f"--output=res://ralph/reports/VISUAL/phase2/{args.biome}/repro/{frame_id}"
         )
         existing[frame_id] = {
             "id": frame_id,
             "biome": args.biome,
-            "category": "named_locations",
+            "category": "route_and_terrain" if args.category == "routes" else "named_locations",
             "subject": frame["destination_display_name"],
             "location_id": frame["identity"],
-            "route": "off",
+            "route": frame.get("route_class", "off"),
             "time_of_day": "dusk" if time == "golden" else time,
             "weather_or_phase": "clear",
             "pose_or_state": view,
-            "camera": "close" if view == "close" else "normal",
+            "camera": "vista" if view == "vista" else ("close" if view == "close" else "normal"),
             "frame_path": rel,
             "repro": repro,
             "commit": args.commit,
@@ -145,7 +148,7 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(existing[key] for key in sorted(existing))
-    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations"}[args.category]
+    sheet_category = {"ui": "ui", "creatures": "creatures", "locations": "named_locations", "routes": "route_and_terrain"}[args.category]
     build_sheet(repo, base, list(existing.values()), sheet_category)
     print(f"Indexed {len(manifest['frames'])} captures; {len(existing)} total in {csv_path}")
 
