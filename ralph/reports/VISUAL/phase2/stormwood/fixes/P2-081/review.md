@@ -38,3 +38,17 @@ similar file names are not proof of identical dressing. The next candidate
 can reuse the19 exact recipes and render four plates from the unchanged world
 configs before native panel judgment. This audit does not establish appearance
 acceptance and does not modify the trainer candidate.
+
+Wind-down checkpoint: `tools/phase2_capture_stormwood_trainer_plates.gd` at
+`e0c5866ac` prepares those four raw-profile plates through the existing512-pixel
+portrait stage and256-pixel output. It checks exact world configuration equality
+for all seven affected trainers, writes only scratch outputs and records a
+manifest. Godot check-only and independent helper/launcher preflight passed.
+The native job was cancelled before launch at the owner's wind-down request;
+no plates were rendered or installed and no trainer acceptance is claimed.
+Reproduction after a future explicit render handoff: native Compatibility Godot
+`--path . --rendering-driver opengl3 --audio-driver Dummy --script
+tools/phase2_capture_stormwood_trainer_plates.gd --
+--output=res://.tmp/stormwood-phase2/trainer-plates-r1`. Require a fresh output
+directory. The inherited helper also writes uniquely named intermediate scratch
+copies under `shots/portraits/phase2_stormwood_raw_*.png`.
