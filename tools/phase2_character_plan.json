@@ -1,0 +1,724 @@
+{
+  "meadows": [
+    {
+      "family_type": "character",
+      "slug": "mira",
+      "subject": "Mira",
+      "position_xz": [
+        19.4,
+        4.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Mira",
+      "heading_deg": 90.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "oskar",
+      "subject": "Oskar",
+      "position_xz": [
+        25.0,
+        4.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Oskar",
+      "heading_deg": 90.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "tam",
+      "subject": "Tam",
+      "position_xz": [
+        8.0,
+        12.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Tam",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "quarry_foreman",
+      "subject": "Quarry Foreman",
+      "position_xz": [
+        392.0,
+        1792.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Quarry Foreman",
+      "heading_deg": 206.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "sela",
+      "subject": "Sela",
+      "position_xz": [
+        -348.0,
+        505.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Sela",
+      "heading_deg": 255.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "kell",
+      "subject": "Kell",
+      "position_xz": [
+        184.2,
+        52.6
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Kell",
+      "heading_deg": 195.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "bram",
+      "subject": "Bram",
+      "position_xz": [
+        -1.5,
+        2.39
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Bram",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "halda",
+      "subject": "Halda",
+      "position_xz": [
+        23.5,
+        11.5
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Halda",
+      "heading_deg": 35.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "wilhelm",
+      "subject": "Wilhelm",
+      "position_xz": [
+        341.0,
+        932.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Wilhelm",
+      "heading_deg": 20.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "corin",
+      "subject": "Corin",
+      "position_xz": [
+        -150.0,
+        4232.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Corin",
+      "heading_deg": 192.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "ada",
+      "subject": "Ada",
+      "position_xz": [
+        -262.0,
+        2258.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Ada",
+      "heading_deg": 215.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "garrick",
+      "subject": "Garrick",
+      "position_xz": [
+        -45.0,
+        185.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Garrick",
+      "heading_deg": 200.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "old_perrin",
+      "subject": "Old Perrin",
+      "position_xz": [
+        -378.0,
+        352.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Old Perrin",
+      "heading_deg": 245.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "tobin",
+      "subject": "Tobin",
+      "position_xz": [
+        -28.0,
+        1298.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Tobin",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "nessa",
+      "subject": "Nessa",
+      "position_xz": [
+        102.2,
+        177.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Nessa",
+      "heading_deg": 330.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "maren",
+      "subject": "Maren",
+      "position_xz": [
+        -343.0,
+        501.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Maren",
+      "heading_deg": 108.4,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "sorrel",
+      "subject": "Sorrel",
+      "position_xz": [
+        -390.0,
+        524.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Sorrel",
+      "heading_deg": 121.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "lark",
+      "subject": "Lark",
+      "position_xz": [
+        -32.0,
+        4062.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Lark",
+      "heading_deg": 195.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "ren",
+      "subject": "Ren",
+      "position_xz": [
+        334.0,
+        5704.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Ren",
+      "heading_deg": 100.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "character",
+      "slug": "rae",
+      "subject": "Rae",
+      "position_xz": [
+        -205.0,
+        1185.0
+      ],
+      "band": "meadows",
+      "source": "data/config/village_npcs.json",
+      "authored_id": "Rae",
+      "heading_deg": 250.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "practice_trainer",
+      "subject": "Bryn",
+      "position_xz": [
+        13.0,
+        9.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "practice_trainer",
+      "heading_deg": 8.900000000000006,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "south_bridge_grunt",
+      "subject": "Tether Grunt",
+      "position_xz": [
+        14.0,
+        1314.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "south_bridge_grunt",
+      "heading_deg": 210.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tournament_quarter_mira",
+      "subject": "Mira",
+      "position_xz": [
+        20.0,
+        12.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "tournament_quarter_mira",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tournament_semi_tam",
+      "subject": "Tam",
+      "position_xz": [
+        20.0,
+        12.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "tournament_semi_tam",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "tournament_final_oskar",
+      "subject": "Oskar",
+      "position_xz": [
+        20.0,
+        12.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "tournament_final_oskar",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "shepherd_the_rise",
+      "subject": "Dara",
+      "position_xz": [
+        -305.0,
+        360.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "shepherd_the_rise",
+      "heading_deg": 250.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "wanderer_trail_camp",
+      "subject": "Gil",
+      "position_xz": [
+        328.3,
+        905.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "wanderer_trail_camp",
+      "heading_deg": 30.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "old_champion_bram",
+      "subject": "Old Bram",
+      "position_xz": [
+        300.0,
+        983.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/trainers.json",
+      "authored_id": "old_champion_bram",
+      "heading_deg": 307.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "quarry_picket_dorn",
+      "subject": "Dorn",
+      "position_xz": [
+        317.5,
+        1666.4
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "quarry_picket_dorn",
+      "heading_deg": 44.30000000000001,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "warrens_watch_pell",
+      "subject": "Pell",
+      "position_xz": [
+        -332.0,
+        2585.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "warrens_watch_pell",
+      "heading_deg": 46.80000000000001,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "band2_outrider_kest",
+      "subject": "Kest",
+      "position_xz": [
+        0.0,
+        2980.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "band2_outrider_kest",
+      "heading_deg": 37.599999999999994,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "night_watch_farro",
+      "subject": "Tether Grunt",
+      "position_xz": [
+        95.0,
+        2900.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/trainers.json",
+      "authored_id": "night_watch_farro",
+      "heading_deg": 20.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_picket_hess",
+      "subject": "Hess",
+      "position_xz": [
+        241.3,
+        3680.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_picket_hess",
+      "heading_deg": 53.099999999999994,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_picket_orrin",
+      "subject": "Orrin",
+      "position_xz": [
+        284.0,
+        3710.5
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_picket_orrin",
+      "heading_deg": 53.099999999999994,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_officer_dell",
+      "subject": "Officer Dell",
+      "position_xz": [
+        343.2,
+        3771.1
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_officer_dell",
+      "heading_deg": 325.6,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "relay_captain",
+      "subject": "Captain Vance",
+      "position_xz": [
+        352.0,
+        3757.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "relay_captain",
+      "heading_deg": 145.6,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_riverwatch",
+      "subject": "Captain Oreth",
+      "position_xz": [
+        -100.0,
+        4350.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/trainers.json",
+      "authored_id": "captain_riverwatch",
+      "heading_deg": 19.5,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_field",
+      "subject": "Captain Halder",
+      "position_xz": [
+        170.0,
+        5590.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "captain_field",
+      "heading_deg": 159.4,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "captain_ridge",
+      "subject": "Captain Vess",
+      "position_xz": [
+        -280.0,
+        6460.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "captain_ridge",
+      "heading_deg": 155.1,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "patrol_ridgeline",
+      "subject": "Tether Patrol",
+      "position_xz": [
+        -235.0,
+        6470.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "patrol_ridgeline",
+      "heading_deg": 155.1,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "pasture_drover_juno",
+      "subject": "Juno",
+      "position_xz": [
+        -225.0,
+        5400.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "pasture_drover_juno",
+      "heading_deg": 58.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "lost_creature_rue",
+      "subject": "Tether Patrol",
+      "position_xz": [
+        -175.0,
+        5470.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "authored_id": "lost_creature_rue",
+      "heading_deg": 340.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_patrol",
+      "subject": "Patrolman Verrick",
+      "position_xz": [
+        6.0,
+        7560.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_patrol",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_courtyard",
+      "subject": "Warder Solene",
+      "position_xz": [
+        36.0,
+        7564.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_courtyard",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_elite",
+      "subject": "Keeper Hald",
+      "position_xz": [
+        69.0,
+        7557.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_elite",
+      "heading_deg": 270.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "warden_aldis",
+      "subject": "Warden Aldis",
+      "position_xz": [
+        90.2,
+        7569.4
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "warden_aldis",
+      "heading_deg": 0.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_outer_watch",
+      "subject": "Watchman Corr",
+      "position_xz": [
+        -68.0,
+        7140.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_outer_watch",
+      "heading_deg": 340.0,
+      "route": "main",
+      "view": "post"
+    },
+    {
+      "family_type": "trainer",
+      "slug": "stronghold_checkpoint",
+      "subject": "Warder Ness",
+      "position_xz": [
+        45.0,
+        7440.0
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "authored_id": "stronghold_checkpoint",
+      "heading_deg": 345.0,
+      "route": "main",
+      "view": "post"
+    }
+  ]
+}
