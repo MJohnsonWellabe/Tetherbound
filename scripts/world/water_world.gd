@@ -136,6 +136,8 @@ func _ready() -> void:
 	add_child(docks)
 	docks.build(self)
 	var dock_dressing: Node3D = preload("res://scripts/world/water_dock_dressing.gd").new(); dock_dressing.name = "WaterDockDressing"; add_child(dock_dressing); dock_dressing.call("build", self)
+	# F13#5: two installed-cast dock hands at every mandatory dock (presentation only).
+	var dock_residents: Node3D = preload("res://scripts/world/water_dock_residents.gd").new(); dock_residents.name = "WaterDockResidents"; add_child(dock_residents); dock_residents.call("build", self)
 	# F13 physical_ramp return shortcuts: built from the replicated dock flag.
 	var return_ramps := RETURN_RAMPS.new()
 	return_ramps.name = "WaterReturnRamps"
@@ -145,6 +147,10 @@ func _ready() -> void:
 	local_chains.name = "WaterLocalChains"
 	add_child(local_chains)
 	local_chains.build(self)
+	var lure_dressing := preload("res://scripts/world/water_local_lure_dressing.gd").new()
+	lure_dressing.name = "WaterLocalLureDressing"
+	add_child(lure_dressing)
+	lure_dressing.build(self)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"
@@ -330,6 +336,9 @@ func _build_materials() -> void:
 	material.set("show_checkered", false)
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
+	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	preload("res://scripts/world/coastal_rock_material.gd").install(terrain,
+		_visual.terrain.get("cliff_material", {}), veilfall.get("rock_material", {}))
 
 
 func _stand_up_ground_cover() -> void:

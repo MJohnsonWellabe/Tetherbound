@@ -11,6 +11,7 @@ const DEBIT := preload("res://scripts/net/water_dock_debit.gd")
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const RECONCILE_EVERY_FRAMES := 60
 const FIRST_SHORE_DOCK := "first_shore_to_reedhaven_dock"
+const FIRST_SHORE_NOTICE := preload("res://scripts/world/water_first_shore_current_notice.gd")
 const FENCE_SCENES: Array[PackedScene] = [
 	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf"),
 	preload("res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension1.gltf"),
@@ -60,6 +61,15 @@ func build(world: Node3D) -> void:
 		prompt.activated.connect(_activate.bind(action))
 		_prompts[str(action.flag)] = prompt
 	for dock: Dictionary in world.config.docks:
+		if str(dock.id) == FIRST_SHORE_DOCK:
+			# A beach-wide route is closed by the existing adverse current and
+			# Reedhaven tide race. The old freestanding fence could be walked
+			# around; retire its misleading visual AND redundant collision.
+			var notice := FIRST_SHORE_NOTICE.new()
+			notice.name = "FirstShoreCurrentNotice"
+			add_child(notice)
+			notice.build(world, _game)
+			continue
 		if str(dock.unlock_flag).is_empty():
 			continue
 		var anchor: Dictionary = {}
@@ -368,6 +378,10 @@ func _refresh() -> void:
 			_barriers.erase(flag)
 
 func _build_equipment(parent: Node3D, kind: String) -> void:
+	# This station's persistent installed awning and chart live beside WaterDocks,
+	# so loading progression can rebuild its prompt without duplicating scenery.
+	if kind == "chart" and parent.name == "deep_watch_chart":
+		return
 	_box(parent, Vector3(0, 0.2, 0), Vector3(2.0, 0.4, 1.5), Color("736044"))
 	if kind in ["pump", "sluice"]:
 		_box(parent, Vector3(0, 0.9, 0), Vector3(1.0, 1.0, 0.8), Color("67736d"))

@@ -9,8 +9,10 @@ const ART := "res://data/config/art.json"
 const TRAINER_NPC := "res://scripts/world/trainer_npc.gd"
 ## The rigs every named Meadows trainer resolves to: the three grunt-family
 ## captain bodies (npc_ranks.gd `captain` -> grunt, plus captain_a/b site
-## bases) and the Warden's own rebuild.
-const RIGS := ["grunt", "captain_a", "captain_b", "warden"]
+## bases), Vess's female officer body and the Warden's own rebuild.
+const RIGS := ["grunt", "captain_a", "captain_b", "officer_b", "warden"]
+const BAND4_TRAINERS := "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json"
+const DIALOGUE := "res://data/dialogue/trainers.json"
 
 
 func _json(path: String) -> Dictionary:
@@ -31,6 +33,28 @@ func _glb_clip_names(path: String) -> Array:
 	return names
 
 
+## Most keyframes on any channel of each clip. The first `--only defeated`
+## pass re-exported every imported clip as a static two-key pose (a bone left
+## in XYZ mode ignores its quaternion curves), and a name check alone passed.
+func _glb_clip_key_counts(path: String) -> Dictionary:
+	var bytes := FileAccess.get_file_as_bytes(path)
+	if bytes.size() < 20:
+		return {}
+	var json_length := bytes.decode_u32(12)
+	var parsed: Variant = JSON.parse_string(bytes.slice(20, 20 + json_length).get_string_from_utf8())
+	var counts := {}
+	if not parsed is Dictionary:
+		return counts
+	var accessors := (parsed as Dictionary).get("accessors", []) as Array
+	for animation: Variant in (parsed as Dictionary).get("animations", []):
+		var most := 0
+		for sampler: Variant in (animation as Dictionary).get("samplers", []):
+			var accessor := accessors[int((sampler as Dictionary).get("input", 0))] as Dictionary
+			most = maxi(most, int(accessor.get("count", 0)))
+		counts[str((animation as Dictionary).get("name", ""))] = most
+	return counts
+
+
 func test_named_trainer_rigs_carry_and_map_the_defeated_clip() -> void:
 	var art := _json(ART)
 	for rig: String in RIGS:
@@ -39,8 +63,25 @@ func test_named_trainer_rigs_carry_and_map_the_defeated_clip() -> void:
 		assert_eq(str(clips.get("defeated", "")), "defeated", "%s maps the defeated role" % rig)
 		var names := _glb_clip_names(str(block.get("model", "")))
 		assert_true(names.has("defeated"), "%s's model carries a defeated animation (%s)" % [rig, names])
-		for kept: String in ["idle", "walk", "sprint", "jump", "throw"]:
+		var keys := _glb_clip_key_counts(str(block.get("model", "")))
+		for kept: String in ["idle", "walk", "sprint", "jump", "throw", "defeated"]:
 			assert_true(names.has(kept), "%s keeps its shipped %s clip" % [rig, kept])
+			assert_true(int(keys.get(kept, 0)) > 2,
+				"%s's %s clip still animates (%d keys, not a frozen pose)" % [rig, kept, int(keys.get(kept, 0))])
+
+
+func test_vess_wears_the_female_officer_body_and_portrait() -> void:
+	var vess := {}
+	for entry: Variant in _json(BAND4_TRAINERS).get("trainers", []):
+		if entry is Dictionary and str((entry as Dictionary).get("id", "")) == "captain_ridge":
+			vess = entry as Dictionary
+	assert_eq(str(vess.get("base", "")), "officer_b", "Vess stands on the female officer body")
+	var lines := _json(DIALOGUE).get("conversations", _json(DIALOGUE)) as Dictionary
+	for key: String in ["captain_ridge_challenge", "captain_ridge_defeated"]:
+		var convo := lines.get(key, {}) as Dictionary
+		assert_eq(str(convo.get("portrait", "")), "res://assets/ui/portraits/officer_b.png",
+			"%s shows Vess's own portrait" % key)
+	assert_true(ResourceLoader.exists("res://assets/ui/portraits/officer_b.png"), "the officer_b portrait is installed")
 
 
 func test_reaction_is_tunable_and_only_plays_on_a_witnessed_flip() -> void:

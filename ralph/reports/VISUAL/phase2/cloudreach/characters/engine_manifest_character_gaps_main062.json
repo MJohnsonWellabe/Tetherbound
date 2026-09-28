@@ -1,0 +1,378 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 296503740249,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296520517469,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-28T04:18:06",
+	"capture_started_utc": "2026-09-28T04:15:23",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": false,
+	"display_server": "Windows",
+	"failures": [
+		"cloudreach__inventory__character__healer_iven: no unoccluded production-camera stand near destination"
+	],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "bridgekeeper_orrin",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 369536,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76735258102417,
+			"camera_position": [
+				-515.0,
+				339.113220214844,
+				1294.87902832031
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					-515.0,
+					338.210266113281,
+					1300.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.0000001467478369932,
+					-0.000000176871466806006
+				],
+				"basis_y": [
+					-0.000000175231903654094,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.00000014870182951654,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					-515.0,
+					339.113220214844,
+					1294.87902832031
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Orrin",
+			"destination_index": 3,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/character_gaps_main062/cloudreach__inventory__character__bridgekeeper_orrin.jpg",
+			"frame_id": "cloudreach__inventory__character__bridgekeeper_orrin",
+			"identity": "cloudreach__inventory__character__bridgekeeper_orrin",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-461.843109130859,
+						319.802154541016,
+						1197.27282714844
+					],
+					"species_id": "ribbonray"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-463.964416503906,
+						320.093566894531,
+						1199.39416503906
+					],
+					"species_id": "craghorn"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.295,
+					"node_path": "road_visibility_broken_causeway_main_04_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-446.5,
+						342.029998779297,
+						1358.0
+					],
+					"species_id": "ribbonray"
+				},
+				{
+					"body_height_m": 3.5,
+					"body_radius_m": 1.225,
+					"node_path": "road_visibility_broken_causeway_main_04_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-448.0,
+						342.029998779297,
+						1361.0
+					],
+					"species_id": "craghorn"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.216666666667,
+				"hour": 8.00866666666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-515.0,
+				336.460296630859,
+				1300.0
+			],
+			"position_xz": [
+				-500.0,
+				1300.0
+			],
+			"resolved_ground_y": 336.446208543882,
+			"route_class": "main",
+			"selected_stand_lateral_m": 15.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				0.0,
+				-4.0,
+				4.0,
+				-8.0,
+				8.0,
+				-15.0,
+				15.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				2.0,
+				5.0,
+				9.0,
+				14.0,
+				20.0
+			],
+			"target_position_xz": [
+				-500.0,
+				1300.0
+			],
+			"terrain_ground_y": 336.446208543882,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		},
+		{
+			"authored_id": "courier_neri",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "broken_causeways",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 335535,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76746082305908,
+			"camera_position": [
+				-774.998962402344,
+				403.012512207031,
+				2034.87976074219
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000262200945400082,
+					0.984805822372437,
+					0.173647835850716
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647835850716,
+					-0.984805822372437
+				],
+				"origin": [
+					-774.998962402344,
+					402.109558105469,
+					2040.00073242188
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.0000001467478369932,
+					-0.000000176871466806006
+				],
+				"basis_y": [
+					-0.000000175231903654094,
+					0.984807729721069,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.00000014870182951654,
+					0.173648670315742,
+					-0.984807729721069
+				],
+				"origin": [
+					-774.998962402344,
+					403.012512207031,
+					2034.87976074219
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Neri",
+			"destination_index": 4,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/character_gaps_main062/cloudreach__inventory__character__courier_neri.jpg",
+			"frame_id": "cloudreach__inventory__character__courier_neri",
+			"identity": "cloudreach__inventory__character__courier_neri",
+			"min_camera_player_distance_m": 1.5,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.200013666667,
+				"hour": 8.00800054666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-774.998901367188,
+				400.359588623047,
+				2040.00085449219
+			],
+			"position_xz": [
+				-790.0,
+				2040.0
+			],
+			"resolved_ground_y": 400.360170610994,
+			"route_class": "main",
+			"selected_stand_lateral_m": -15.0,
+			"selected_stand_offset_m": 0.0,
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				0.0,
+				-4.0,
+				4.0,
+				-8.0,
+				8.0,
+				-15.0,
+				15.0
+			],
+			"stand_offsets_m": [
+				0.0,
+				2.0,
+				5.0,
+				9.0,
+				14.0,
+				20.0
+			],
+			"target_position_xz": [
+				-790.0,
+				2040.0
+			],
+			"terrain_ground_y": 400.360170610994,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			]
+		}
+	],
+	"planned_frame_count": 3,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__healer_iven",
+		"cloudreach__inventory__character__bridgekeeper_orrin",
+		"cloudreach__inventory__character__courier_neri"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 296520517469,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}

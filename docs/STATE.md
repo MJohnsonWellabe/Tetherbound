@@ -4,9 +4,9 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 ## 0. Resume here
 
-**Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress, and posted FINAL on Lane channel issue #356. Batch 67 consolidates every lane head on `tb/integration`. The coordinator runs the unit suite once and CI once, then lands it through one PR. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
+**Where the game is.** All lanes of the 2026-09-25..27 concurrent run are wound down (owner, 2026-09-27 22:30). Each lane pushed everything, including work in progress. Batch 67 consolidated every lane head and every remaining branch, including the full Codex branch and Vess, onto `tb/integration`, and landed it through one PR after one unit run and one CI run. **Next is Phase 1 (`CLAUDE_START_HERE.md`):** one self-landing lane per biome. **Check that batch 67 is on `main` before you start** (`git merge-base --is-ancestor <sha> origin/main`). If it is not, landing it is the first job.
 
-**Criteria:** 82 of the 101 ACCEPTANCE §6.1 criteria are met once batch 67 lands. No chapter is accepted.
+**Criteria:** 89 of the 101 ACCEPTANCE §6.1 criteria are met (batch 67 plus Stormwood F09#3, F10#3 and F10#4, Cloudreach F08#3 and F08#4, Tidewake F13#3 and F13#5). No chapter is accepted.
 
 **The board is the source of truth.**
 - `ralph/reports/COORDINATOR/dashboard/criteria.json` holds every criterion and card, with its evidence and gap.
@@ -18,37 +18,57 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 | Card | State |
 |---|---|
 | M4, C1, T3, S3, T1 | **Complete.** M4, C1 and T3 in batches 59, 65 and 67. S3 and T1 had their integrated runs in batch 63 and all feeders (F11, F12) met, and are recorded as complete in batch 67. |
-| S1 | Integrated run passed (batch 64); the card waits only on F09#3. |
-| C3 | The Solmane two-peer rerun passed (batch 67). The card waits on F08#3 and F08#4. |
+| S1 | Integrated run passed (batch 64); F09#3 is met, so every feeder is met. |
 | M1 | In progress: F01#2/#3 day and night walks need a render and a judge. |
-| M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#3/#4/#6. |
-| M3, C2, T2 | Failing: named-fight framing, Bars A/B, and the F08#3/#4 and F13#5 art rows. |
+| M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#6. |
+| C2, C3 | **Complete (Cloudreach Phase 1 landing).** C2: earned chapter run (longest travel gap 98 s, same five, no new catch) plus the six-activities witness, frame matrix by the F08#3/#4 code-blind verdicts; C3: two-peer co-op and Solmane aftermath, ALL CHECKS PASSED. Evidence `ralph/reports/CLOUDREACH/c2-card/`, `c3-card/`. |
+| M3 | Failing: named-fight framing and Bars A/B. |
+| T2 | Failing: waits on F14#0 and F14#1 (F13#3 and F13#5 met on function). |
 
-**Open criteria (19):**
+**Open criteria (14):**
 - **Meadows:** F01#2, F01#3; F03#0; F04#1, #2, #3, #6, #7.
-- **Cloudreach:** F08#3, F08#4.
-- **Stormwood:** F09#3; F10#2, #3, #4, #6.
-- **Tidewake:** F13#3, F13#5; F14#0, #1.
+- **Cloudreach: complete for Phase 1** (every row and card C1-C3 met). F08#3 (`ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/`) and F08#4 (`f08-4-settlements/`) closed on function; their Bars A/B clauses → Phase 2 catalog. F08#4 changed the game: working residents at Galefoot and Cliffhold, Cliffhold's settlement ambience on Cliffhold, and the Broken Causeways crown carved down to the causeway climb (it ran inside the crown). Open debt outside the queue: owned-carrier Fly; Cliffhold reads thin (Phase 2).
+- **Stormwood:** F10#2, #6. F10#4 met (`ralph/reports/STORMWOOD/f10_4/r7/`: denser Deepwood reads as deep forest at every judged stand). F10#3 met (`ralph/reports/STORMWOOD/f10_3/r6/`: Break-only crawler lightning named from a single still). F09#3 met (`ralph/reports/STORMWOOD/f09_3_r8/`: loops, shortcuts and alternate road walked 72/0, pockets 102/0).
+- **Tidewake:** F14#0, #1.
+  - F13#3 is met (`ralph/reports/TIDEWAKE/phase1/f13_3/`): six chains in one real-swim run (619/0), and a lead now pins its destination on the map.
+  - F13#5 is met on function (`phase1/f13_5/`): dock residents at every mandatory dock, current comets, and the Veilfall distance read.
+  - F14#1 next. Nerissa's C2 regressed with dbe43195's Riptusk lane (render bisect in `phase1/f14_1/c2_bisect/`). Her ring spills south of the Heart Chamber lip into the 1 m sluice channel, and a sidestepping ally is pinned there.
+  - F14#0: Tidecoil still fails C3 at the cliff foot; a Deep Watch arrival-beach stand is probed.
+  - Other defects: after Tidecoil, a swimmer-less player may be left in the cliff-foot shallows (harness pose).
 
 **Switched off or unwired in batch 67.** This is unjudged visual work, landed as the wind-down rule requires. Flip each item on only after a code-blind Bars A/B pass.
 - `stormwood_glass_field.json` `scorched_scars=false`.
-- `water_veilfall.json` `interior_dressing.machines.enabled=false`.
 - `camera.body_clear.ignore_lunging_foe=false`. The Vance move is reverted.
 - The Meadows camp firepit is unwired (re-apply `631b8390`).
-- Codex's pump, banner and sluice assets are on main but not placed.
 
 **Reverted in batch 67.** Stormwood-B's F10#2 C3 commits `07bc9cad`, `45927814` and `85ba1c57` (the Elder cone and heading, and the guard cone) are reverted. Re-apply them when F10#2's C3 is re-captured.
 
-**Branches.** Check every `tb/<lane>` head with `git cherry` before deleting it. At consolidation, `tb/x05`, `tb/tidewake`, `tb/tidewake-f15-2`, `tb/cloudreach`, `tb/stormwood-b`, `tb/vis` and `tb/x04-first-shore-current-gate` still had commits that batch 67 did not take.
-
-Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliveries; its doc edits were not taken, and their facts are folded into ART_DIRECTION §7 and `ralph/reports/VISUAL/AUDIT.md`.
+**Branches.** Batch 67 took every branch head, older branches included. Where an older branch conflicted with newer landed work, the newer work won: Venn's move without the fight pad, Stormwood's judged r5 lightning, and the cleaned docs. Codex's doc edits were not taken; their facts are in ART_DIRECTION §7 and `ralph/reports/VISUAL/AUDIT.md`. Codex's unjudged Cloudreach towers and occupied terrace are merged but flagged off.
 
 **To resume work:**
 1. Pick an item from the `wip` list or an open criterion.
-2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8. Lanes open no PR.
-3. Post READY or FINAL on #356. The coordinator batches through `tb/integration`.
+2. Work on a `tb/<lane>` branch from current main, following WORKFLOW §8 and `CLAUDE_START_HERE.md`.
+3. Land each closed criterion through the lane's own PR (re-check, unit suite once, board and STATE, auto-merge). There is no coordinator and no channel.
 
-**Final step (owner, 2026-09-27).** After all 13 cards pass, make one checkpointed four-chapter earned run on one save, from a new game through Tidewake (`smoke_four_biome_continuous`). It retires the chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter.
+**Open lanes (2026-09-28).** Four Phase 1 biome lanes (`tb/meadows`, `tb/tidewake`, `tb/cloudreach`, `tb/stormwood`; `CLAUDE_START_HERE.md`) and one Codex capture-and-catalog lane (`tb/x04-capture`; `CODEX_START_HERE.md` §2a–2b). The Balance lane (`tb/balance`: harder Meadows trainers, starter parity) lands itself, then stops. Meadows F04#7 and Stormwood F10#2 wait on it.
+
+**Not covered by the open lanes; do these after:**
+1. **Biome reorder (Phase 1b).** Once all four biome lanes are complete, start one lane on `CLAUDE_START_HERE.md` §6: order Meadows → Tidewake → Cloudreach → Stormwood, gates and keys, levels, ending after Stormwood, swim-before-Fly, ledgers, regenerated checkpoint saves, and save migration.
+2. **Four-chapter earned run** in the new order, then a **human play pass** per chapter.
+3. **Codex Phase 2c.** Four biome fix lanes (`CODEX_START_HERE.md` §2c), started after the reorder. Re-shoot the top catalog items first, since the baseline catalog predates Phase 1 and the reorder. Each biome closes with a regional Bars A/B verdict, which clears the `Bars A/B → Phase 2` notes. Known items: aerie art, the Stormheart tree, the waterfall, the Glass Field (flag off), the Pump Hall (machinery placed; room identity WEAK), and the Cloudreach towers and terrace (off).
+4. **Debt that no queue covers:**
+   - owned-carrier Fly (every proof flight uses Maela's loaner);
+   - Stormwood-B's reverted 07bc9cad, 45927814 and 85ba1c57, if F10#2 C3 needs them.
+5. **Release (owner).**
+   - Internet co-op by invite: Steam AppID, partner access and four accounts.
+   - Download, install, launch and update.
+   - Licence, provenance and credits audit, and store-claim accuracy.
+   None of these is on the board.
+6. **Housekeeping.**
+   - Republish the board to its link in `ralph/reports/COORDINATOR/README.md`. Lanes rebuild the HTML, but the owner's account holds the link.
+   - Delete each lane branch after its last landing.
+
+**Final step (owner, 2026-09-27).** After all 13 cards pass and the reorder has landed, make one checkpointed four-chapter earned run on one save, from a new game through the last chapter (`smoke_four_biome_continuous`). It retires the chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter.
 
 ### Open owner decisions
 
@@ -64,14 +84,14 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 1. **Counting and proofs.** Criteria count at merge; the full CI after a batch is a safety net. Relaxed proofs are allowed if disclosed: fixture or declared starts, teleports, flag and party writes, harness fights, and skipped sub-parts (ACCEPTANCE §6.1, WORKFLOW §8). Earned checkpoints are allowed starts. Held Fly input is lawful; the tap pulse is optional.
 2. **Solmane.** Solmane is Cloudreach's freed legendary, handled like Meadows' Veridian. It is freed after Veyra, and each participant gets a once-only offer. It is never wild or catchable, and the summit wild tables use tempestwing. This is **implemented** (F08#5 met; C3 rerun passed).
 3. **Device profile.** A computer capture at 1920×1080 on Compatibility/`opengl3`, judged code-blind for 7-inch readability. No Ally hardware (#356 5857144944; ACCEPTANCE §6.1).
-4. **Visual bar.** The full visual bar (Bars A/B) applies to every visual row. "Beauty matters."
+4. **Visual bar.** The full visual bar (Bars A/B) applies to every visual row. "Beauty matters." **Updated by the owner (2026-09-28):** in Phase 1 (`CLAUDE_START_HERE.md`), a mixed row closes on its functional and readability clauses, and its Bars A/B clause moves to the Phase 2 Codex catalog (`CODEX_START_HERE.md`), which closes it with a regional Bars A/B verdict.
 5. **Build the game, not proof machinery.** Every round is player-visible. The two-strike harness rule applies, and each READY/FINAL post carries a `Balance: game N / tests-tools M` line (WORKFLOW §8).
 6. **Return route.** The homeward return after Tidewake is exempt from A7 (T3/F15).
 7. **Art split.** Claude lanes may do scene-level art from installed asset families: kitbash, materials, shaders, lighting and dressing. New meshes and Meshy work stay with Codex. This partly supersedes the 2026-09-26 "all art to Codex" ruling.
 8. **Capacitor Alpha** does not stagger during the route cue (F10#2 option a). Kept by the owner. A Stormwood storm strike spares a trainer whose creature is in a fight (`stormwood_surge.json` `strike.spare_trainer_in_fight=true`). Also kept by the owner.
 9. **Process.**
    - Every branch uses the `tb/` prefix, with one reused `tb/<lane>` branch per lane and no lane PRs.
-   - Lanes post READY/FINAL on #356; the coordinator batches through `tb/integration`; VERIFIER lanes run the full suite.
+   - Lanes land their own work through their own PR, with a re-check and the unit suite once (owner, 2026-09-28). There is no coordinator and no lane channel.
    - **Wind-down:** lanes finish and push everything, work in progress included, and unjudged visual work in progress lands behind a config flag that defaults to off, or unwired. The coordinator consolidates, then runs the unit tests once and CI once.
    - READY means a criterion fully closes, with an attached strict re-check, one criterion at a time. Codex-queue IDs are lane-prefixed and append-only.
 10. **F04 split.** Meadows core had F04#0, #1 and #7; Meadows F04 bosses had F04#2, #3 and #6. Both lanes are wound down. The F04 bosses round-1 evidence is `ralph/reports/MEADOWS/f04_bosses/r1/`.
@@ -79,7 +99,7 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
    - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7).
    - **Galewisp and ripplet are tuned to match terrapup in skill and strength**, so starter C2 difficulty is even (F10#2, CREATURES).
    - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
-   - **Codex does the Cloudreach aerie art** (F08#3).
+   - **Codex does the Cloudreach aerie art** (F08#3). The Codex lane is shut down; the owner assigns this when the next round of work starts.
    - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
 
 **Owner, 2026-09-26 (still in force):**
@@ -132,8 +152,8 @@ Codex keeps `tb/x04-cross-game-visual-sweep`. Take only its atomic asset deliver
 | Creatures | 57 base species, individual IVs and bond, and limited evolution. Galecrest was rebuilt from a reference; its `companion_presence` head-tracking override did not land because main lacks that code. | Creature finish for Bars A/B, and attack-pose clipping (AUDIT §A). |
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex), owned-carrier Fly debt. |
-| Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F11 is met; the S1 and S3 runs passed. | Pocket lures (F09#3), named-fight C2/C3 and lightning cues, forest and rod-line art, device profile. |
-| Tidewake | Human swim route (F12 met), eight pockets, dock exchange, return, Grandpa and credits (F15 met, T3 complete). | Local chains (F13#3), currents/docks/Veilfall art (F13#5), Veilfall and named-fight C2/C3. |
+| Stormwood | Earned six-region route, Arches, Dynamo, Stormheart and aftermath. F09 and F11 are met; the S1 and S3 runs passed. | Named-fight C3 (F10#2), device profile (F10#6). Open risk (owner: Stormwood lane): the denser Deepwood bake (3d5fb0e6) has no perf measurement. Phase 2: aftermath under the canopy is brighter than the owner's 'only lighter rain, no lightning, scars' ruling. Findings (owner: Stormwood lane, after S2): pools_west_loop runs through the lit b_pools arch; a 1.11 m curb on b2's (verge_road footing) landing side; a 0.4–0.67 m step behind d_giant. |
+| Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Veilfall and named-fight C2/C3 (F14#0/#1); Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |

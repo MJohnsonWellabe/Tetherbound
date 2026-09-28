@@ -1,0 +1,155 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ROUTE WALKS loading a copy of user://swcp_a/4_core from user://route_walks_6612_2944604
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:90)
+STORMWOOD BUILD shell=false elapsed_ms=197 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=452 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=714 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=719 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=720 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=721 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=722 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=722 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=723 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=723 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=968 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=987 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=987 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 43161 placements, 0 skipped]=107 reorder[8 layers]=49
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+WARNING: TwistedTree_2.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _warn_about_shared_models (res://scripts/world/vegetation.gd:756)
+         [1] build (res://scripts/world/vegetation.gd:649)
+         [2] _ready (res://scripts/world/stormwood_world.gd:107)
+WARNING: TwistedTree_4.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _warn_about_shared_models (res://scripts/world/vegetation.gd:756)
+         [1] build (res://scripts/world/vegetation.gd:649)
+         [2] _ready (res://scripts/world/stormwood_world.gd:107)
+[vegetation] boot phases (ms): placements=190 mark_harvestable=25 group_by_model=45 register_mesh_assets=17 build_batches_total=1346 (of which harvest_points[15940 nodes]=1128, initial_collision_stream[16002 solid]=57) update_mmis=176
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+ROUTE WALKS earned start user://swcp_a/4_core rootgate_released=true party=5 placed_buildings=1
+DISCLOSED SEAM 1 earned start: title Load of user://swcp_a/4_core (4_core of the continuous full run, which began at the Cloudreach-boundary fixture)
+WARNING: wild cluster 1365603512 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:781)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:562)
+WARNING: wild cluster 1365603540 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:781)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:562)
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:781)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:562)
+STORMWOOD ENCOUNTERS READY wild=806
+DISCLOSED SEAM 4 clock: Engine.time_scale=8 physics=480 Hz (fights/conductor roads/Build at 1x)
+ROUTE WALKS start ALTERNATE dynamo_west_approach: 4 vertices, 30 waypoints, 1114 m authored, requires=stormwood:rootgate_released
+DISCLOSED SEAM 2 teleport: dynamo_west_approach start (-890.0,4490.0) accepted=true
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 1/30 from=(-883.7522, 51.54675, 4486.425) target=(-871.0, 49.63681, 4523.0) distance_m=38.7 budget_frames=3098
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during dynamo_west_approach waypoint 1/30 (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 1/30 elapsed_ms=55032 walked_frames=440 player=(-871.8154, 49.73679, 4520.65)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 2/30 from=(-871.8154, 49.73679, 4520.65) target=(-852.0, 50.33717, 4556.0) distance_m=40.5 budget_frames=3241
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 2/30 elapsed_ms=998 walked_frames=457 player=(-853.2302, 50.31842, 4553.825)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 3/30 from=(-853.2302, 50.31842, 4553.825) target=(-833.0, 47.01536, 4589.0) distance_m=40.6 budget_frames=3246
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 3/30 elapsed_ms=934 walked_frames=463 player=(-834.2081, 47.11814, 4586.896)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 4/30 from=(-834.2081, 47.11814, 4586.896) target=(-814.0, 45.70504, 4622.0) distance_m=40.5 budget_frames=3240
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 4/30 elapsed_ms=949 walked_frames=458 player=(-815.2052, 45.73159, 4619.901)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 5/30 from=(-815.2052, 45.73159, 4619.901) target=(-795.0, 47.59025, 4655.0) distance_m=40.5 budget_frames=3239
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 5/30 elapsed_ms=976 walked_frames=457 player=(-796.2397, 47.38097, 4652.849)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 6/30 from=(-796.2397, 47.38097, 4652.849) target=(-776.0, 49.12388, 4688.0) distance_m=40.6 budget_frames=3244
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 6/30 elapsed_ms=1019 walked_frames=462 player=(-777.2188, 49.2107, 4685.875)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 7/30 from=(-777.2188, 49.2107, 4685.875) target=(-757.0, 47.72549, 4721.0) distance_m=40.5 budget_frames=3242
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 7/30 elapsed_ms=985 walked_frames=457 player=(-758.2397, 48.05863, 4718.838)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 8/30 from=(-758.2397, 48.05863, 4718.838) target=(-738.0, 48.36135, 4754.0) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 8/30 elapsed_ms=1012 walked_frames=464 player=(-739.2428, 48.21284, 4751.848)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 9/30 from=(-739.2428, 48.21284, 4751.848) target=(-719.0, 48.33477, 4787.0) distance_m=40.6 budget_frames=3245
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 9/30 elapsed_ms=956 walked_frames=458 player=(-720.2349, 48.47029, 4784.859)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 10/30 (vertex 1) from=(-720.2349, 48.47029, 4784.859) target=(-700.0, 44.75236, 4820.0) distance_m=40.6 budget_frames=3244
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 10/30 (vertex 1) elapsed_ms=927 walked_frames=459 player=(-701.2408, 44.90429, 4817.834)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 11/30 from=(-701.2408, 44.90429, 4817.834) target=(-678.0, 43.25583, 4850.0) distance_m=39.7 budget_frames=3174
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 11/30 elapsed_ms=956 walked_frames=448 player=(-679.4334, 43.27491, 4848.015)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 12/30 from=(-679.4334, 43.27491, 4848.015) target=(-656.0, 41.63918, 4880.0) distance_m=39.7 budget_frames=3172
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 12/30 elapsed_ms=1025 walked_frames=447 player=(-657.4709, 41.72528, 4877.989)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 13/30 from=(-657.4709, 41.72528, 4877.989) target=(-634.0, 38.12802, 4910.0) distance_m=39.7 budget_frames=3175
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 13/30 elapsed_ms=964 walked_frames=453 player=(-635.4348, 38.07559, 4908.033)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 14/30 from=(-635.4348, 38.07559, 4908.033) target=(-612.0, 40.05422, 4940.0) distance_m=39.6 budget_frames=3170
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 14/30 elapsed_ms=915 walked_frames=447 player=(-613.4598, 39.94318, 4938.007)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 15/30 from=(-613.4598, 39.94318, 4938.007) target=(-590.0, 41.31834, 4970.0) distance_m=39.7 budget_frames=3173
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 15/30 elapsed_ms=933 walked_frames=448 player=(-591.4265, 41.28156, 4968.048)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 16/30 from=(-591.4265, 41.28156, 4968.048) target=(-568.0, 43.36856, 5000.0) distance_m=39.6 budget_frames=3169
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 16/30 elapsed_ms=919 walked_frames=448 player=(-569.4353, 43.307, 4998.042)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 17/30 from=(-569.4353, 43.307, 4998.042) target=(-546.0, 46.60543, 5030.0) distance_m=39.6 budget_frames=3170
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 17/30 elapsed_ms=938 walked_frames=447 player=(-547.4824, 46.23165, 5027.988)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 18/30 from=(-547.4824, 46.23165, 5027.988) target=(-524.0, 50.58644, 5060.0) distance_m=39.7 budget_frames=3176
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 18/30 elapsed_ms=960 walked_frames=453 player=(-525.4568, 50.5606, 5058.025)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 19/30 from=(-525.4568, 50.5606, 5058.025) target=(-502.0, 54.18116, 5090.0) distance_m=39.7 budget_frames=3172
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 19/30 elapsed_ms=952 walked_frames=449 player=(-503.4438, 53.90034, 5088.037)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 20/30 (vertex 2) from=(-503.4438, 53.90034, 5088.037) target=(-480.0, 59.58835, 5120.0) distance_m=39.6 budget_frames=3171
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 20/30 (vertex 2) elapsed_ms=984 walked_frames=452 player=(-481.4446, 59.04449, 5118.048)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 21/30 from=(-481.4446, 59.04449, 5118.048) target=(-446.0, 64.86992, 5132.2) distance_m=38.2 budget_frames=3053
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 21/30 elapsed_ms=935 walked_frames=436 player=(-448.261, 64.6573, 5131.3)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 22/30 from=(-448.261, 64.6573, 5131.3) target=(-412.0, 70.81678, 5144.4) distance_m=38.6 budget_frames=3084
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 22/30 elapsed_ms=911 walked_frames=440 player=(-414.2774, 70.47948, 5143.577)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 23/30 from=(-414.2774, 70.47948, 5143.577) target=(-378.0, 76.42962, 5156.6) distance_m=38.5 budget_frames=3083
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 23/30 elapsed_ms=912 walked_frames=439 player=(-380.2863, 75.94815, 5155.782)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 24/30 from=(-380.2863, 75.94815, 5155.782) target=(-344.0, 81.68628, 5168.8) distance_m=38.6 budget_frames=3084
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 24/30 elapsed_ms=920 walked_frames=439 player=(-346.2795, 81.43356, 5167.972)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 25/30 from=(-346.2795, 81.43356, 5167.972) target=(-310.0, 87.70537, 5181.0) distance_m=38.5 budget_frames=3083
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 25/30 elapsed_ms=906 walked_frames=443 player=(-312.338, 87.34485, 5180.168)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 26/30 from=(-312.338, 87.34485, 5180.168) target=(-276.0, 93.4436, 5193.2) distance_m=38.6 budget_frames=3088
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 26/30 elapsed_ms=937 walked_frames=443 player=(-278.2991, 93.13225, 5192.377)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 27/30 from=(-278.2991, 93.13225, 5192.377) target=(-242.0, 96.93854, 5205.4) distance_m=38.6 budget_frames=3085
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 27/30 elapsed_ms=1031 walked_frames=439 player=(-244.347, 96.82355, 5204.55)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 28/30 from=(-244.347, 96.82355, 5204.55) target=(-208.0, 99.11267, 5217.6) distance_m=38.6 budget_frames=3089
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 28/30 elapsed_ms=1635 walked_frames=438 player=(-210.325, 98.98291, 5216.757)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 29/30 from=(-210.325, 98.98291, 5216.757) target=(-174.0, 100.3328, 5229.8) distance_m=38.6 budget_frames=3087
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 29/30 elapsed_ms=1322 walked_frames=435 player=(-176.3349, 100.53, 5228.959)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to dynamo_west_approach waypoint 30/30 (vertex 3) from=(-176.3349, 100.53, 5228.959) target=(-140.0, 99.37754, 5242.0) distance_m=38.6 budget_frames=3088
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to dynamo_west_approach waypoint 30/30 (vertex 3) elapsed_ms=1199 walked_frames=435 player=(-142.2776, 99.36445, 5241.176)
+ALTERNATE dynamo_west_approach vertices=3/3 waypoints=30/30 walked=1112m authored=1114m wall=84s fights=1 lightning_hits=0 deaths=0 jumps=0 result=PASS
+
+==== STORMWOOD ROUTE WALKS SUMMARY ====
+ALTERNATE dynamo_west_approach vertices=3/3 waypoints=30/30 walked=1112m authored=1114m wall=84s fights=1 lightning_hits=0 deaths=0 jumps=0 result=PASS
+---- details ----
+---- disclosed seams used ----
+SEAM 1 earned start: title Load of user://swcp_a/4_core (4_core of the continuous full run, which began at the Cloudreach-boundary fixture)
+SEAM 4 clock: Engine.time_scale=8 physics=480 Hz (fights/conductor roads/Build at 1x)
+SEAM 2 teleport: dynamo_west_approach start (-890.0,4490.0) accepted=true
+SAFETY {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+Stormwood route walks smoke: 8 checks, 0 failures
+EXIT 0

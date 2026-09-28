@@ -90,6 +90,13 @@ uniform float drift_contrast : hint_range(0.0, 1.0) = 0.85;
 // keep the same number of plants, because pow() lowers the mask's mean -- see
 // grass_field.json's own note for the arithmetic.
 uniform float drift_gate : hint_range(1.0, 6.0) = 1.0;
+// Opt-in flower patches. A zero seed and disabled threshold preserve existing
+// bushes/litter exactly. Seed changes within-cell position, yaw and fade rank;
+// world-cell identity and camera-relative lattice scheduling stay unchanged.
+uniform int placement_seed = 0;
+uniform vec2 drift_offset = vec2(0.0);
+uniform float patch_start : hint_range(0.0, 1.0) = 0.0;
+uniform float patch_full : hint_range(0.0, 1.0) = 0.0;
 
 // Optional authored composition for a single local landmark. Defaults are a
 // complete no-op, so bushes, litter and flowers everywhere else keep their
@@ -102,6 +109,14 @@ uniform vec3 composition_cluster_b = vec3(0.0);
 uniform vec3 composition_cluster_c = vec3(0.0);
 uniform float composition_quiet_keep : hint_range(0.0, 1.0) = 1.0;
 uniform float composition_scale_boost : hint_range(0.0, 1.0) = 0.0;
+// Optional original scatter inside an authored landmark. Blend back to the
+// regional treatment outside its zone using world cells, never camera position.
+uniform bool composition_preserve_scatter = false;
+uniform float composition_item_size = 0.74;
+uniform float composition_size_jitter = 0.3;
+uniform float composition_density_gain = 0.85;
+uniform float composition_drift_scale = 0.04;
+uniform float composition_drift_contrast = 0.93;
 
 // NORMAL SOFTENING. How far each item's own normals are bent toward world up.
 // Without it every leaf of one bush takes a wildly different lambert term and a
@@ -387,6 +402,12 @@ bool on_built_ground(vec2 world_xz) {
 	return false;
 }
 
+float cover_rand(ivec2 cid, ivec2 tag, uint salt, float regional) {
+	float seeded = lattice_rand(cid, tag, salt + uint(placement_seed));
+	if (regional >= 1.0) { return seeded; }
+	return mix(lattice_rand(cid, tag, salt), seeded, regional);
+}
+
 void vertex() {
 	// STABLE RING. Which world cell is this instance standing in, and which of
 	// that cell's items is it? The stored translation is a cell plus an
@@ -400,15 +421,20 @@ void vertex() {
 			* LATTICE_SLOTS + 0.5));
 	int lattice_layer = clamp(tag.y - 1, 0, 15);
 
-	vec2 lattice_jit = vec2(lattice_rand(cid, tag, 11u),
-			lattice_rand(cid, tag, 29u)) - 0.5;
+	float regional = 1.0;
+	if (composition_preserve_scatter && composition_zone.z > 0.001) {
+		regional = smoothstep(composition_zone.z, composition_zone.z + 16.0,
+				length((vec2(cid) + 0.5) * lattice_cell - composition_zone.xy));
+	}
+	vec2 lattice_jit = vec2(cover_rand(cid, tag, 11u, regional),
+			cover_rand(cid, tag, 29u, regional)) - 0.5;
 	vec2 world_xz = (vec2(cid) + 0.5) * lattice_cell
 			+ lattice_jit * lattice_cell * lattice_jitter;
 	// What the geometry has to be shifted by to stand there instead of on the
 	// cell tag, in the instance's own space -- the basis is identity now.
 	vec2 lattice_shift = world_xz - anchor;
-	float item_yaw = lattice_rand(cid, tag, 53u) * 6.2831853;
-	float item_rank = lattice_rand(cid, tag, 71u);
+	float item_yaw = cover_rand(cid, tag, 53u, regional) * 6.2831853;
+	float item_rank = cover_rand(cid, tag, 71u, regional);
 
 	float dist = length(world_xz - field_centre.xz);
 	v_fade = 1.0 - smoothstep(fade_start, field_radius, dist);
@@ -434,7 +460,21 @@ void vertex() {
 	bool hole = bool(control >> 2u & 0x1u);
 	bool on_ground = ((allowed_base_mask >> base_id) & 1) == 1 && ground_h >= min_ground_height;
 
-	float drift = mix(1.0, pow(value_noise(world_xz * drift_scale), drift_gate), drift_contrast);
+	float local_density = mix(composition_density_gain, density_gain, regional);
+	float patch_noise = value_noise(world_xz * drift_scale + drift_offset);
+	float patch_keep = pow(patch_noise, drift_gate);
+	if (patch_full > patch_start) {
+		patch_keep = smoothstep(patch_start, patch_full, patch_noise);
+	}
+	float drift = mix(1.0, patch_keep, drift_contrast);
+	if (regional < 1.0) {
+		// Blend complete fields, not their coordinates: interpolating frequencies
+		// at large world coordinates would create a noisy transition annulus.
+		float authored_drift = mix(1.0,
+				pow(value_noise(world_xz * composition_drift_scale), drift_gate),
+				composition_drift_contrast);
+		drift = mix(authored_drift, drift, regional);
+	}
 	float composition_influence = 0.0;
 	float composition_mass = 0.0;
 	if (composition_zone.z > 0.001) {
@@ -450,7 +490,7 @@ void vertex() {
 	bool culled = off_map || hole || !on_ground || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
-			|| hash12(world_xz * 4.41) > drift * density_gain * composition_keep;
+			|| hash12(world_xz * 4.41) > drift * local_density * composition_keep;
 
 	// NOT an early `return`: Godot rejects `return` inside `vertex()` and the
 	// failure is silent -- the shader does not compile, a default material is
@@ -465,7 +505,9 @@ void vertex() {
 	} else {
 		// `item_presence` is in the SIZE, so a bush whose layer is arriving
 		// grows rather than appearing.
-		float size = item_size * (1.0 + (hash12(world_xz * 6.13) - 0.5) * 2.0 * size_jitter)
+		float local_size = mix(composition_item_size, item_size, regional);
+		float local_jitter = mix(composition_size_jitter, size_jitter, regional);
+		float size = local_size * (1.0 + (hash12(world_xz * 6.13) - 0.5) * 2.0 * local_jitter)
 				* item_presence * (1.0 + composition_scale_boost * composition_mass
 						* composition_influence);
 		v_t = UV.y;

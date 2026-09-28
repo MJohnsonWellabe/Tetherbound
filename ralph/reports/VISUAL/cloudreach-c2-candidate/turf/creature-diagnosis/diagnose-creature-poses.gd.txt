@@ -1,0 +1,72 @@
+extends SceneTree
+
+const CREATURE = preload("res://scenes/creatures/creature.tscn")
+const BODY = preload("res://scripts/creatures/creature_body.gd")
+const OUT = "D:/tetherbound/visual-acceptance-local/creature-diagnosis-v2"
+
+func _init():
+	_run.call_deferred()
+
+func _run():
+	await process_frame
+	root.size = Vector2i(1920,1080)
+	var world = Node3D.new()
+	root.add_child(world)
+	var env = WorldEnvironment.new()
+	env.environment = Environment.new()
+	env.environment.background_mode = Environment.BG_COLOR
+	env.environment.background_color = Color(0.24,0.28,0.32)
+	env.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.environment.ambient_light_color = Color(0.8,0.85,1.0)
+	env.environment.ambient_light_energy = 0.65
+	world.add_child(env)
+	var light = DirectionalLight3D.new()
+	light.rotation_degrees = Vector3(-40,-30,0)
+	light.light_energy = 1.0
+	world.add_child(light)
+	var cam = Camera3D.new()
+	world.add_child(cam)
+	cam.position = Vector3(3,2.8,5)
+	cam.look_at(Vector3(0,1.8,0))
+	cam.make_current()
+	DirAccess.make_dir_recursive_absolute(OUT)
+	for id in ["galecrest", "cloudfang"]:
+		var body = CREATURE.instantiate()
+		body.set_script(BODY)
+		world.add_child(body)
+		body.setup(id)
+		body.set_physics_process(false)
+		body.set_process(false)
+		await process_frame
+		var players = body.find_children("*","AnimationPlayer",true,false)
+		var player = players[0] as AnimationPlayer
+		player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+		print(id, " clips: ",player.get_animation_list())
+		if id == "galecrest":
+			player.stop()
+			for sk in body.find_children("*","Skeleton3D",true,false):
+				sk.reset_bone_poses()
+			await shoot("galecrest-rest")
+			var clip = "idle"
+			for name in player.get_animation_list():
+				if str(name).ends_with("idle"): clip = name
+			player.play(clip)
+			for t in [0.0,0.6,1.2,1.8]:
+				player.seek(t,true)
+				player.advance(0)
+				await shoot("galecrest-idle-%.1f" % t)
+		else:
+			await shoot("cloudfang-ordinary")
+			body.set_shiny(true)
+			await shoot("cloudfang-shiny")
+		body.queue_free()
+		await process_frame
+	quit()
+
+func shoot(label):
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var img = root.get_texture().get_image()
+	img.save_png(OUT+"/"+label+".png")
+	print(label," ",img.get_size())
+

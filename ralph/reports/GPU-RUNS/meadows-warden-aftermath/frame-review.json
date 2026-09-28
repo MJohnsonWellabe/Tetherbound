@@ -1,0 +1,10 @@
+[
+  {
+    "file": "user/aftermath/warden_aldis-a1.png",
+    "pass": false,
+    "shows": "Native 1920x1080 lit Stronghold arena after the real Warden win. Large pale cyan/gold player companion fills the foreground; the human player is behind it; Warden is at left behind the team HUD. No standing enemy creature or magenta/grey placeholder is apparent. Camera is not inside geometry.",
+    "problem": "The level-up toast overlaps the companion and chamber view; the team roster covers the Warden's upper body. The Warden does not visibly read as defeated. Bright gold ribbons and foreground occlusion prevent confirming an opening/open chamber shutter from this frame. This fails the requested unobscured aftermath witness.",
+    "sidecar": "Both ally.in_frustum and trainer.in_frustum are true, both visible are true, image_size is [1920,1080]. Those point-frustum checks do not establish an unobscured silhouette.",
+    "retry": "No environment correction is supported: native dimensions, NVIDIA renderer, and source pin are correct. Capture occurs at the lane-authored 0.75-second aftermath delay. Parent instructed no identical rerun and no script changes."
+  }
+]

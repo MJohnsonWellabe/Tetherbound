@@ -1,0 +1,441 @@
+{
+  "baseline_commit": "b9cecc17f39896b6c2fd940ce6614bcbf42fe6d3",
+  "integrated_main": "94c63b1f221063c2cec7122136bb111f6805bfd7",
+  "runs": [
+    {
+      "tag": "terraces",
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-terraces\\region\\cloudreach",
+      "frames": [
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "001_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "b60bc13a17a44035e5be119e2130c485714d52467637ce93cc91640860305849"
+        },
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "002_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "213c2c878f18f7cd044d8ce3b64e9ef639ef24d35dc4826b7bf01e25b051e5d3"
+        },
+        {
+          "camera": [
+            -288.1,
+            182.8,
+            539.6
+          ],
+          "camera_arm_m": 5.19993495941162,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -286.0,
+            180.0,
+            535.0
+          ],
+          "file": "003_cloudreach_place_cliff_review_env_gate_lower_cliffs_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "gate_lower_cliffs / Galefoot Waycamp",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_gate_lower_cliffs_1",
+          "target": [
+            -248.0,
+            182.0,
+            453.4
+          ],
+          "target_dist_m": 90.0,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -25.0,
+          "sha256": "0b64a025f0c0f4b01bf56e5dbd1864ef39e948f2e551d0e4fc0a4c32aa42d1e7"
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "004_cloudreach_place_cliff_review_env_windscar_ravine_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "d34eb6a24bfdcbefe293ddbb5ac17a714bdefea3d9ee47c33c0f257dafae9509"
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "005_cloudreach_place_cliff_review_env_windscar_ravine_0_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "e51dea29f697406c160843c1497f2670147ef9cbf05d7baf3026c77a0a9c7d28"
+        },
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "006_cloudreach_place_cliff_review_env_windscar_ravine_0_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "6a951eb4b76793a6fa1aa69f0cfcfeef7f2e65669d5b4f3aff637673151e46a1"
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "007_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "eceae7a42c27e791f47c6ba730ffa71beebc97dfd431dd1e53b8a0d055a10c81"
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "008_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "dusk",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "fb39ec66695ec3e6bb2126a368a4a1a4a2e4aac59ecc2e0b5ebeeb526baf6f81"
+        },
+        {
+          "camera": [
+            903.6,
+            1023.0,
+            2696.4
+          ],
+          "camera_arm_m": 5.20008659362793,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            900.0,
+            1020.1,
+            2700.0
+          ],
+          "file": "009_cloudreach_place_cliff_review_env_high_roost_sky_shrine_1_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "high_roost_sky_shrine / The High Perches",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_high_roost_sky_shrine_1",
+          "target": [
+            -340.0,
+            832.0,
+            3970.0
+          ],
+          "target_dist_m": 1775.0,
+          "time": "night",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": 135.7,
+          "sha256": "8f8632919098d99e768acf203a811a73f752ba896e8249d3b22df0d92de4d894"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "010_cloudreach_place_cliff_review_place_cliffhold_settlement_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "05180404894c33efce57b74dcf50e7fca368df8b0e22f3bb5ad7a38c4d002e73"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "011_cloudreach_place_cliff_review_place_cliffhold_settlement_dusk.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "dusk",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "6761b5d4c80b8222c421f2038b7f69e768d83252bfcecae74b8969c31d38d74c"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "camera_arm_m": 5.19990348815918,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "012_cloudreach_place_cliff_review_place_cliffhold_settlement_night.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "sha256": "f47cd9d92cfd7fa66c35de364deb60281167da9dc6d151571a5d12129c06a8e7"
+        }
+      ],
+      "engine_exit": 0,
+      "wrapper_exit": 1,
+      "diagnostic": "Existing production unscoped fly_tutorial_completed flag"
+    },
+    {
+      "tag": "ownership",
+      "native_root": "D:\\tetherbound\\visual-acceptance\\shots\\cliff-family-ownership\\region\\cloudreach",
+      "frames": [
+        {
+          "camera": [
+            -263.7,
+            503.0,
+            2676.6
+          ],
+          "camera_arm_m": 5.20003890991211,
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -260.0,
+            500.1,
+            2680.0
+          ],
+          "file": "001_cloudreach_place_cliff_review_env_windscar_ravine_0_day.png",
+          "fixture": "staged location/party/flags/clock; HUD hidden; companion parked",
+          "kind": "frame",
+          "label": "windscar_ravine / Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliff_review_env_windscar_ravine_0",
+          "target": [
+            373.0,
+            612.0,
+            3262.5
+          ],
+          "target_dist_m": 860.3,
+          "time": "day",
+          "why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting",
+          "yaw_deg": -132.6,
+          "sha256": "645dc1b83d3659b5e97e316c769602b89990683ae53cc63f2e04cb8d2381feec"
+        }
+      ],
+      "engine_exit": 0,
+      "wrapper_exit": 1,
+      "diagnostic": "Existing production unscoped fly_tutorial_completed flag"
+    }
+  ],
+  "disposition": "Terrace candidate removed; ownership diagnostic changes next repair target from procedural walls to stretched installed crags."
+}

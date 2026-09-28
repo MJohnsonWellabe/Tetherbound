@@ -1,0 +1,19 @@
+{
+  "subject": "production flight landing and perch",
+  "captured": [
+    "cloudreach__flying__launch",
+    "cloudreach__flying__glide",
+    "cloudreach__flying__approach_perch",
+    "cloudreach__flying__descent",
+    "cloudreach__flying_return__descent",
+    "cloudreach__flying_return__landed_shelf",
+    "cloudreach__flying_return__perch_rest"
+  ],
+  "landing_engine_state": "grounded at (400.0,610.1303,3250.0) on verified aerie launch floor",
+  "limitations": [
+    "The return-to-launch landing is a short flight, not a distant high perch arrival",
+    "Two earlier route targets were open void after 600 descent frames; only airborne frames from those attempts are indexed"
+  ],
+  "visual_judgment": "Trainer is clearly grounded after descent; bird disappears and no visible wing-fold, foot-contact or creature perch/rest pose appears. Perch remains an open capture row.",
+  "catalog_item": "P2-069"
+}

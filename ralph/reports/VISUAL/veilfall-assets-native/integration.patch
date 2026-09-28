@@ -1,0 +1,76 @@
+diff --git a/scripts/world/water_veilfall.gd b/scripts/world/water_veilfall.gd
+index 9a3f4ada2..e12f81487 100644
+--- a/scripts/world/water_veilfall.gd
++++ b/scripts/world/water_veilfall.gd
+@@ -244,30 +244,14 @@ func _build_distance_presentation() -> void:
+ 		flow.build(world.config, flow_config, _game.world.flags)
+ 
+ func _build_heart_chamber() -> void:
+-	var crystal := MeshInstance3D.new()
++	var crystal := Node3D.new()
+ 	_crystal = crystal
+ 	crystal.name = "CaptiveHeartChamberCrystal"
+-	var prism := PrismMesh.new()
+-	prism.size = Vector3(5, 10, 5)
+-	var material := StandardMaterial3D.new()
+-	material.albedo_color = Color(rules.colours.crystal)
+-	material.emission_enabled = true
+-	material.emission = material.albedo_color
+-	material.emission_energy_multiplier = float(rules.get("crystal_glow", 0.3))
+-	# The C3 judge read the pale opaque prism as an untextured slab: with a
+-	# `crystal_look` it is a deeper, glassy, rim-lit blue (the board's
+-	# "Crystal (Subtle)" swatch).
+-	var look: Dictionary = rules.get("crystal_look", {})
+-	if not look.is_empty():
+-		material.albedo_color = Color(str(look.get("albedo", rules.colours.crystal)))
+-		material.emission = Color(str(look.get("emission", rules.colours.crystal)))
+-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+-		material.roughness = float(look.get("roughness", 0.08))
+-		material.metallic = float(look.get("metallic", 0.25))
+-		material.rim_enabled = true
+-		material.rim = float(look.get("rim", 0.6))
+-	prism.material = material
+-	crystal.mesh = prism
++	var visual: Node3D = preload("res://assets/environment/tidewake/heart_crystal/heart_crystal.tscn").instantiate()
++	crystal.add_child(visual)
++	# Keep the gameplay parent and light at the old prism centre.
++	# The authored crystal is base-origin, ten metres tall.
++	visual.position.y = -5.0
+ 	interior.add_child(crystal)
+ 	crystal.position = _v(rules.crystal_position)
+ 	if rules.has("crystal_light"):
+diff --git a/scripts/world/water_veilfall_interior_dressing.gd b/scripts/world/water_veilfall_interior_dressing.gd
+index 9c2c62f4d..638a4fedc 100644
+--- a/scripts/world/water_veilfall_interior_dressing.gd
++++ b/scripts/world/water_veilfall_interior_dressing.gd
+@@ -195,28 +195,10 @@ func _fall_wall(interior: Node3D, cfg: Dictionary) -> bool:
+ 	var height := float(cfg.get("height_m", 12.0))
+ 	var at_raw: Array = cfg.get("centre", [0.0, 6.0, 123.3])
+ 	var at := Vector3(float(at_raw[0]), float(at_raw[1]), float(at_raw[2]))
+-	var material := ShaderMaterial.new()
+-	material.shader = preload("res://shaders/waterfall_curtain.gdshader")
+-	material.set_shader_parameter("water_colour", Color(str(cfg.get("colour", "#e6f6f8"))))
+-	for key in ["opacity_min", "opacity_max", "flow_speed", "edge_feather", "ground_feather_m", "albedo_min", "albedo_max"]:
+-		if cfg.has(key):
+-			material.set_shader_parameter(key, float(cfg[key]))
+-	var floor_world := interior.global_position.y + at.y - height * 0.5 - 1.0
+-	var heights := Image.create(2, 1, false, Image.FORMAT_RF)
+-	heights.set_pixel(0, 0, Color(floor_world, 0, 0))
+-	heights.set_pixel(1, 0, Color(floor_world, 0, 0))
+-	material.set_shader_parameter("ground_heights", ImageTexture.create_from_image(heights))
+-	material.set_shader_parameter("ground_span", Vector2(interior.global_position.x + at.x - width * 0.5,
+-		interior.global_position.x + at.x + width * 0.5))
+-	var sheet := MeshInstance3D.new()
++	var sheet: Node3D = preload("res://assets/environment/tidewake/interior_waterfall/interior_waterfall.tscn").instantiate()
+ 	sheet.name = "HeartChamberFallWall"
+-	var plane := PlaneMesh.new()
+-	plane.size = Vector2(width, height)
+-	plane.material = material
+-	sheet.mesh = plane
+-	sheet.rotation.x = PI * 0.5
+ 	sheet.position = at
+-	sheet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
++	sheet.scale = Vector3(width / 16.0, height / 12.0, 1.0)
+ 	interior.add_child(sheet)
+ 	var pool := MeshInstance3D.new()
+ 	pool.name = "HeartChamberPlungeChannel"

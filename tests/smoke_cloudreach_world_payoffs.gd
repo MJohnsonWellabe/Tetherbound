@@ -58,12 +58,14 @@ func _run() -> void:
 		game.progression.set_flag(flag)
 	player.global_position=Vector3(-495,338.5,1310)
 	await frames(12)
-	check(payoffs.people.size()==4,"two bell travelers and stranded pair appear")
+	check(payoffs.people.size()==6,"two bell travelers, stranded pair and the two Galefoot residents appear")
 	check(payoffs.signal_audio.stream!=null and payoffs.signal_count>0,"installed audible route signal played near real bridge")
 	var walker: Node3D=payoffs.people.bell_traveler.body
 	var walk_start:=walker.global_position
 	await frames(90)
 	check(walker.global_position.distance_to(walk_start)>0.5,"traveler actually walks along supported bridge deck")
+	var carter: Node3D=payoffs.people.waycamp_carter.body
+	check(absf(carter.global_position.y-180)<1.5,"Galefoot carter stands on the waycamp terrace")
 	var first_pair: Node3D=payoffs.people.shelter_traveler.body
 	var second_pair: Node3D=payoffs.people.shelter_courier.body
 	check(absf(first_pair.global_position.y-460)<1 and absf(second_pair.global_position.y-460)<1,"stranded pair begins at ravine shelter")
@@ -106,7 +108,7 @@ func _run() -> void:
 	game.progression.set_flag("defeated_cloudreach_tavi")
 	game.progression.set_flag("cloudreach_winds_restored")
 	await frames(12)
-	check(payoffs.people.size()==6,"restoration fills reopened lower and upper roads")
+	check(payoffs.people.size()==10,"restoration fills reopened lower and upper roads beside the Cliffhold residents")
 	check(payoffs.board.visible and not payoffs.board.get_node("MasterySeal").visible,"five-place circuit mark precedes mastery reward")
 	for id: String in payoffs.anchors:
 		check(payoffs.anchors[id].wind.visible and not payoffs.anchors[id].bottled.visible,"natural wind replaces bottled anchor "+id)
@@ -144,7 +146,7 @@ func _run() -> void:
 	check(game.inventory.count("coin")==coins+90,"duplicate victory cannot pay again")
 	check(game.load_game(1),"reload all payoffs from disk")
 	await frames(12)
-	check(payoffs.people.size()==6 and payoffs.board.get_node("MasterySeal").visible,"payoffs rebuild after reload without duplicates")
+	check(payoffs.people.size()==10 and payoffs.board.get_node("MasterySeal").visible,"payoffs rebuild after reload without duplicates")
 	check(not director.can_challenge(spec),"saved rematch cannot be farmed")
 	check(game.inventory.count("coin")==coins+90 and game.inventory.count("great_candy")==candy+1,"reload preserves exact reward")
 	check(game.load_game(0),"load earlier save")

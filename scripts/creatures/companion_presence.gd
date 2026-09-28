@@ -180,6 +180,7 @@ var _anim_player: AnimationPlayer = null
 var _anim_speed_held := false
 var _look: LookAtModifier3D = null
 var _look_skeleton: Skeleton3D = null
+var _gaze_target: Node3D = null
 ## Where a hurt creature's head hangs: a point on the ground just ahead of its
 ## own feet, which the head bone is aimed at instead of at the trainer. A
 ## whole-body forward pitch was tried first and a code-blind critic read it as
@@ -1003,7 +1004,7 @@ func anim_speed_scale() -> float:
 ## pose against the model's own +Z rather than assumed, because 21 rigs from
 ## the same pipeline still cannot be trusted to agree.
 func _update_look(leader: Node3D) -> void:
-	var cfg: Dictionary = _cfg.get("look", {})
+	var cfg := _look_config()
 	if not bool(cfg.get("enabled", true)) or leader == null:
 		_set_look(false)
 		return
@@ -1022,7 +1023,7 @@ func _update_look(leader: Node3D) -> void:
 		_look.target_node = _look.get_path_to(_droop_target)
 		_set_look(true)
 		return
-	_look.target_node = _look.get_path_to(leader)
+	_look.target_node = _look.get_path_to(_trainer_look_target(leader, cfg))
 	_set_look(_standing() and to.length() <= float(cfg.get("radius", 7.0)))
 
 
@@ -1053,17 +1054,64 @@ func _build_look(cfg: Dictionary, leader: Node3D) -> void:
 	look.bone = bone
 	look.target_node = look.get_path_to(leader)
 	look.forward_axis = _forward_axis_of(skeleton, bone)
-	look.primary_rotation_axis = Vector3.AXIS_Y
+	look.primary_rotation_axis = _upright_axis_of(skeleton, bone) if bool(
+		cfg.get("align_to_body_up", false)) else Vector3.AXIS_Y
 	look.use_secondary_rotation = true
 	look.use_angle_limitation = true
 	look.symmetry_limitation = true
-	look.primary_limit_angle = deg_to_rad(float(cfg.get("limit_deg", 55.0)) * 2.0)
-	look.secondary_limit_angle = deg_to_rad(60.0)
+	look.primary_limit_angle = deg_to_rad(float(cfg.get("primary_limit_deg",
+		float(cfg.get("limit_deg", 55.0)) * 2.0)))
+	look.secondary_limit_angle = deg_to_rad(float(cfg.get("secondary_limit_deg", 60.0)))
 	look.duration = float(cfg.get("duration_s", 0.35))
 	look.influence = float(cfg.get("influence", 0.75))
 	look.active = false
 	_look = look
 	_look_skeleton = skeleton
+
+
+## Opt-in art recipes preserve the other roster members' existing reactions.
+func _look_config() -> Dictionary:
+	var cfg: Dictionary = (_cfg.get("look", {}) as Dictionary).duplicate(true)
+	var overrides: Dictionary = cfg.get("species_overrides", {})
+	cfg.merge(overrides.get(str(_body.get("species_id")), {}), true)
+	return cfg
+
+
+func _trainer_look_target(leader: Node3D, cfg: Dictionary) -> Node3D:
+	var height := float(cfg.get("target_height_m", 0.0))
+	if is_zero_approx(height):
+		return leader
+	if not is_instance_valid(_gaze_target):
+		_gaze_target = Node3D.new()
+		_gaze_target.name = "CompanionGazeTarget"
+		_body.add_child(_gaze_target)
+	# World-up offset, independent of the companion's facing and model scale.
+	var body_transform := _body.global_transform if _body.is_inside_tree() else _body.transform
+	_gaze_target.position = body_transform.affine_inverse() * (_gpos(leader) + Vector3.UP * height)
+	return _gaze_target
+
+
+## Y is bone-forward on Galecrest, so rotating about Y twists its face.
+## Measure the perpendicular bone axis nearest body-up for a level scan.
+func _upright_axis_of(skeleton: Skeleton3D, bone: int) -> int:
+	var to_body := Basis.IDENTITY
+	var node: Node = skeleton
+	while node != null and node != _body:
+		if node is Node3D:
+			to_body = (node as Node3D).transform.basis * to_body
+		node = node.get_parent()
+	var rest := to_body * skeleton.get_bone_global_rest(bone).basis
+	var forward := int(_forward_axis_of(skeleton, bone) / 2)
+	var best := Vector3.AXIS_Y
+	var alignment := -1.0
+	for axis in [Vector3.AXIS_X, Vector3.AXIS_Y, Vector3.AXIS_Z]:
+		if axis == forward:
+			continue
+		var dot := absf(rest[axis].normalized().dot(Vector3.UP))
+		if dot > alignment:
+			alignment = dot
+			best = axis
+	return best
 
 
 ## Which bone-local axis points the way the creature faces (+Z on the body).

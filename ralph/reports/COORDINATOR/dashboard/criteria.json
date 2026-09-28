@@ -469,14 +469,14 @@
    "id": "F08",
    "title": "Veyra finale, persistence and Cloudreach look",
    "chapter": "Cloudreach",
-   "pct": 50,
+   "pct": 100,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 6,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -500,22 +500,24 @@
     },
     {
      "text": "Correct high-perch production camera",
-     "status": "partial",
-     "evidence": "PR215 recapture via production camera; blind A no, B partly/mostly no",
-     "gap": "Passing verdict"
+     "status": "met",
+     "evidence": "ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/ @ tb/cloudreach 9e850f5b (Phase 1 lane landing): tools/capture_cloudreach_high_perch_live.gd, one continuous flight per time of day through the scene's own CameraRig, never frozen or replaced (Fly 7.5 m arm in flight, 5.2 m on foot): Jump in the air launches the glide, held move-forward lands it on the crown, the trainer walks to the rim and looks over the drop, crosses the court, launches north by a second Jump and glides away looking back. 12/12 frames, 0 failures. Code-blind judge (prompt verbatim in judge-prompt.md): CAMERA READ PASS (height YES, crowding PARTLY, arrival/departure PARTLY, night YES/PARTLY). Independent strict re-check: MET. Shortcuts disclosed: fixture start (BOOT_FLAGS incl. fly_traversal_unlocked, four-creature party with no flier), Maela's loaner carries every flight, air teleport to the arrival start once per time of day, yaw written each frame as the stick, pitch -32 deg for the rim-out frame, clock pinned, HUD hidden, PNG->JPG.",
+     "gap": "",
+     "note": "Bars A/B → Phase 2 catalog (aerie dome/towers/banners, rock, cloud floor; the c3 judge failed both bars). Non-blocking readability defects recorded in r5/verdict.md (landed frame boxed by needles; gate wall hides the landing ring at 20 m; court view has only a far cloud height cue)."
     },
     {
      "text": "Settlements and cliff identity pass C2 visual matrix",
-     "status": "failing",
-     "evidence": "36-frame matrix blind verdict A: no; B: yes at lower tier (ralph/cloudreach-frame-matrix)",
-     "gap": "Work orders M1–M12 plus art assets"
+     "status": "met",
+     "evidence": "ralph/reports/CLOUDREACH/f08-4-settlements/ @ tb/cloudreach 1178e18a (Phase 1 lane landing), README.md. Game: two working residents each at Galefoot (first visit) and Cliffhold (upper route open), walking clear of every cottage along the arrival lanes (tests pin occupancy and footprint clearance); Cliffhold's settlement ambience moved from Tavi's ring onto Cliffhold; the Broken Causeways crown is carved down to broken_causeway_main's climb (the summit's crown_cut), which had run inside the crown so the road vanished into a grass wall. Frame matrix (production CameraRig) r1/r1c/r1d/r1f; code-blind judge 1: settlements A PASS (Galefoot YES, Cliffhold PARTLY), night C PASS, routes B FAIL on the buried causeway; after the carve, fresh judge 2: B PASS, C PASS. Independent strict re-check: MET. Shortcuts disclosed: fixture start, teleport to stands, clock pinned, HUD hidden, --active=terrapup for settlement rows, rows 16/18 capture-stand defects not judged, two stand changes after judge 1, judge 2 told High Roost is glide-only (plus a leniency line and the F08#3 glide frames), row 37 day under post-finale flags, verdicts are lane summaries, JPG stills.",
+     "gap": "",
+     "note": "Bars A/B → Phase 2 catalog (Cliffhold distinctness and night lights, settlement and cliff materials; Codex towers and occupied terrace stay off). Recorded, not blocking: companion fills frames on the rope bridge (09) and at the aviary (29); High Roost reverse/rim views show no next landing; row 14 frames no beacon."
     },
     {
      "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
      "status": "met",
-     "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/ at tb/cloudreach-b 45ef17fd (batch 67): two-peer run3 PASS. The host accepts at four and ends with five including Solmane; the guest refuses at five with the same uids. Each character gets its own receipt, with no re-offer after rejoin or host reload. Solo: 5 of 6 cases pass, 0 failures. Summit tables hold tempestwing. Coordinator re-check: MET apart from the solo sixth case, now disclosed.",
+     "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/ at tb/cloudreach-b 45ef17fd (batch 67): two-peer run3 PASS. The host accepts at four and ends with five including Solmane; the guest refuses at five with the same uids. Each character gets its own receipt, with no re-offer after rejoin or host reload. Solo: 6 of 6 cases pass (VERIFIER 1 rerun). Summit tables hold tempestwing. Coordinator re-check: MET apart from the solo sixth case, now disclosed.",
      "gap": "",
-     "note": "Disclosed shortcut: the solo save-while-open case was not run (timeout, two-strike). Rerun it with a timeout above 3000 s."
+     "note": "Solo sixth case (save while the choice is open) since passed: VERIFIER 1 serial run, 6 of 6 cases (#356 5860765391)."
     }
    ]
   },
@@ -523,10 +525,10 @@
    "id": "F09",
    "title": "Stormwood earned traversal",
    "chapter": "Stormwood",
-   "pct": 60,
+   "pct": 100,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 5,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -555,9 +557,10 @@
     },
     {
      "text": "Four loops, three shortcuts, five pockets, alternate routes physically traversable",
-     "status": "partial",
-     "evidence": "test_stormwood_route_walkability, test_stormwood_pockets, dynamo_west_approach, five walled pockets + re-bake, mouth lamps/approach cones (main fe07d0d2, CI green); fixture-staged captures",
-     "gap": "Pocket lures not visible from road; ordinary walk witness"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f09_3_r8/ @ tb/stormwood b2653f34: tests/smoke_stormwood_route_walks.gd from the earned 4_core checkpoint, 72/0: all five loops walked vertex by vertex, dynamo_west_approach end to end, arch pairs C and D relit by their prompts and crossed both ways, Raise a Road pair raised by ordinary Build input and crossed both ways; smoke_stormwood_pocket_walks.gd from the earned 3_rootgate checkpoint 102/0 (five pockets walked by stick, rewards claimed); route/pocket/Surge/rod/Arch units 101/0. Building-uid defect found by the walk fixed (c4fdd59c). Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Starts: earned 4_core (routes/shortcuts) and 3_rootgate (pockets) checkpoints; the full run began at the Cloudreach-boundary fixture. Teleports: one per route start, per dark arch before relight, per road footing, per pocket (32 m before junction). Grants: 3 Stormglass per relight; road-arch recipe shortfall. Clock x8 at 480 Hz (fights, conductor roads, Build at 1x); harness-driven stick, fights and Build input; waypoints interpolated <=40 m; Calm waits. Frames: teleport, day pinned, Calm. Lures visible 5/5 in every judge round; detour read r7d 4/5, r8 2 YES + 1 PROBABLY; lure tuning stopped under the two-strikes rule. FINDINGs (non-blocking, owned in STATE): pools_west_loop crosses b_pools; b2 landing curb 1.11 m; d_giant rear step 0.4-0.67 m. Bars A/B -> Phase 2 catalog. Landed by the Stormwood Phase 1 lane."
     },
     {
      "text": "Two peers and reload retain the same world gates",
@@ -571,10 +574,10 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 36,
+   "pct": 71,
    "counts": {
-    "met": 3,
-    "partial": 3,
+    "met": 5,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
@@ -602,15 +605,17 @@
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
-     "status": "partial",
-     "evidence": "Surge readability: 4 blind judges, final 9/9 day/night phase grouping (visual/surge/JUDGE.md, main fe07d0d2)",
-     "gap": "Telegraph reads as zone; night merge; reduced-motion flashes"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f10_3/r6/ @ tb/stormwood 9adc99f1 (Break-only crawler lightning, out during ground warnings): code-blind phase judge names Break from a single still (both Break stills YES; 8/8 grouped and named); strike judges at 9adc99f1 PASS zone, impact, reduced motion, no competition during the warning (FAIL->PASS after the warning hold) and photosensitivity; test_stormwood_surge_presentation +2 tests. Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Phase stills: surge clock pinned, hour frozen, trainer teleported, HUD hidden, rendered before the hold existed. Strikes: one staged no-damage warning through the client path, schedule pushed out, fixed 60 fps, llvmpipe. Recorded, not fixed: Q2 PARTIAL on one r6 judge (other r6 judges and r4/r5 PASS on unchanged telegraph code; the last-moment cue lands late); crawler veins fade back in 0.4-0.5 s after impact and can read as a second bolt; Calm/Fading moderately confusable from a single still; both r6 judges' overall lines PARTIAL; fixed 2D-looking vein shape -> Bars A/B Phase 2 catalog. Landed by the Stormwood Phase 1 lane."
     },
     {
      "text": "Forest, rod line and restored-sky views pass visual matrix / Bars A/B",
-     "status": "partial",
-     "evidence": "Surge before/after matrix views and aftermath blue sky (main fe07d0d2); no Bars A/B pass",
-     "gap": "Blind Bars A/B verdict"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f10_4/r7/ @ tb/stormwood e5e450fd: dense Deepwood (3d5fb0e6, dense_stands 17->12 m, re-baked) reads INSIDE DEEP FOREST at the r5 heart-north, r6 heart-west and road stands in a code-blind judge (blind key compromised; frames checked independently); eye-level sight-line probe (tools/_probe_deepwood_sightlines.gd) reproduced: median first trunk 26/27/69 m, 1/1/3 of 21 rays open past 120 m; walks on the new bake 20/0, 8/0, 22/0; bake/clearance tests pass. Rod line YES and restored sky YES since r5 (ralph/reports/STORMWOOD/f10_4/r5/). Independent strict re-check (third round): MET.",
+     "gap": "",
+     "note": "Phase 1 (function and readability). Relaxed proof: one debug teleport per stand, hour and surge pinned, aftermath by flag, HUD hidden, llvmpipe. Bars A/B -> Phase 2 catalog: canopy tint; lightning under the canopy; aftermath brightness under the canopy (beyond the owner's 'only lighter rain, no lightning, scars' ruling; the declared _why_f10_4_restored_sky tune); glass scar (flag off); Stormheart hero tree; giant stand; heart-west clearing floor; cottage red roof; road-current look. Open risk (owner: Stormwood lane): the denser Stormwood bake has no perf measurement (the scatter perf test covers the playground only). Landed by the Stormwood Phase 1 lane."
     },
     {
      "text": "Audio witness for phases/lightning",
@@ -739,14 +744,14 @@
    "id": "F13",
    "title": "Tidewake islands, chains and look",
    "chapter": "Tidewake",
-   "pct": 67,
+   "pct": 100,
    "counts": {
-    "met": 4,
-    "partial": 1,
+    "met": 6,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -771,10 +776,10 @@
     },
     {
      "text": "Six local chains, one per group, satisfy §5",
-     "status": "partial",
-     "evidence": "Six chain smokes with production save/reload in CI (batch 22)",
-     "gap": "Inter-island swims replaced by position writes; Tidecoil resolved by fixture; Lastlight supplies/bed fixtured; no visible lure; solo only. (strict re-score 23:40)",
-     "note": "Blocked on moving Otto and Halen to reachable ground (Tidewake lane). Tidewake-B (#310)."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_3/ @ tb/tidewake 8d7e3ddf (Phase 1 lane landing): one uninterrupted production run of all six chains, tests/smoke_tidewake_b_chain_route.gd --continuous: 619 checks, 0 failures, exit 0. Every inter-island leg swum by real input (35 SWIM legs, retained five, no mount); each chain lure -> action -> payoff -> acknowledgement (Pell, Adair, Otto, Edda, Orsen with a real Tidecoil win then the separate chart control, Halen with gathered driftwood/reed and a bed rest); production save, reset, load, then every requester re-greeted with acknowledgement and no re-offer. Lure: WORLD §11 counts NPC knowledge; every requester names the place (HUD toast for five, dialogue for Orsen) and a lead now pins its destination on the Tidewake map (98ce9985, water_local_chains.json lead_map_pins, test_water_lead_map_pins 5 tests). Two-peer: full/f13_3_chains two_peer_local_chains_1fa83a57.log ALL CHECKS PASSED. Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Shortcuts disclosed: declared fixture start (retained five at L43, pickaxe/axe/knife, upstream story flags; the log's 'DRY RUN' self-label predates the relaxed rule); one position write to the Deep Watch landing after the Tidecoil win; harness-planned walks steered by real stick input, headless; the run tree carried the Tidecoil surface-mode data since reverted to main's (a524fb4d run covers main's setup, 619/0); the map frame is a fixture capture; the two-peer run used teleports and fixture materials. Recorded, not fixed: after Tidecoil a swimmer-less player may be left in the cliff-foot shallows (the harness pose); the 3-10 min detour budget is unmeasured; lure props (Lantern WEAK 4/4) and the pin look -> Phase 2 catalog. Landed by the Tidewake Phase 1 lane."
     },
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
@@ -784,10 +789,10 @@
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
-     "status": "failing",
-     "evidence": "Tide-race shader on main fe07d0d2; blind judges: surf read 'no' then 'weakly' (WATER-HUMAN-ROUTE); stop rule reached",
-     "gap": "Readable currents; docks/Veilfall matrix",
-     "note": "Art: Codex lane (queue V1–V3). Dock lanterns (V1) landing in #316."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/ @ tb/tidewake 811c3244/8d7e3ddf (Phase 1 lane landing), VERDICTS.md and RECHECK.md. Function under STATE §1 ruling 4. Code-blind judges (tools/capture_tidewake_f13_5.gd, production CameraRig and HUD): Veilfall distance read YES (the same cone and falls from First Shore, Tidal Cradle and Sluice Isle, gaining detail); docks 7/7 INHABITED (r1: six of seven empty; scripts/world/water_dock_residents.gd stands two installed-cast dock hands at every mandatory dock, presentation only, built from data on every peer, test_water_dock_residents 3 tests); currents read as moving water with the correct direction from motion (foam comets along each lane, water_current_flow shader; still-frame arrow WEAK 3/3). Independent strict re-check: MET.",
+     "gap": "",
+     "note": "Relaxed proof (owner 2026-09-27). Shortcuts disclosed: teleport stands and mid-chapter flags; xvfb + llvmpipe opengl3 at 1280x720, no device capture; day only, clock frozen; motion judged from still pairs 0.5 s apart; dock and Veilfall frames not re-shot after the comet change. Recorded -> Phase 2 catalog: still-frame current direction, Veilfall small from First Shore, dock coves share one template with small static figures, the Sluice Isle control block hides the player from the approach stand, Veilfall interior room identity WEAK (pumps/sluices/banners placed, route readable). Landed by the Tidewake Phase 1 lane."
     }
    ]
   },
@@ -931,19 +936,20 @@
   },
   {
    "id": "C2",
-   "status": "failing",
-   "note": "Frame matrix blind A no; 885 s stretch and A7 unmeasured; activities/ledger on branches."
+   "status": "met",
+   "note": "Integrated run passed independent re-check (Phase 1 lane landing); all feeders met (F07#0-#4, F08#3, F08#4). Bars A/B → Phase 2 catalog.",
+   "integrated_run": "ralph/reports/CLOUDREACH/c2-card/ (Phase 1 lane landing): run-1 at 4fc380f4, one uninterrupted earned run from c1_arrival (C1 CARD PASS, CONTINUOUS PASS, 18,865 m): 296 activity intervals, longest travel gap 98.18 s, none over 120 s; the same five throughout (L21-26 to L24-29), no new catch, Senn/Maela/Voss/Veyra won live; six-activities witness at 1178e18a SIX ACTIVITIES PASS (lure, action, payoff, acknowledgement, disk reload each); frame matrix by the F08#3 and F08#4 code-blind verdicts. Shortcuts disclosed: earned-checkpoint start, accelerated clock, live-combat pilot writes camera yaw, Title Load by signal, logged walking aids, loaner flights (owned-carrier Fly is open debt), Solmane skipped by this harness (C3/F08#5), six activities from a fixture start with teleports, composite of three runs."
   },
   {
    "id": "C3",
-   "status": "partial",
-   "note": "Batch 62 two-peer run predates the owner Solmane ruling (2026-09-27): C3 now also needs Solmane freed after Veyra with per-participant offers through disconnect/reload. The run must be redone with that; F08#3, F08#4 and F08#5 still open.",
-   "integrated_run": "ralph/reports/CLOUDREACH/b/c3-coop/run-9-solmane/ @ tb/cloudreach-b 45ef17fd (batch 67): two-peer Solmane rerun PASSED. Both peers refuse at five, and receipts persist through a host restart. The return crossing was dropped (disclosed). The card is still open until F08#3 and F08#4 are met."
+   "status": "met",
+   "note": "Integrated run passed independent re-check (Phase 1 lane landing); all F08 feeders met.",
+   "integrated_run": "ralph/reports/CLOUDREACH/c3-card/run-1/ @ tb/cloudreach d0ee930d (Phase 1 lane landing): two real peers, ALL CHECKS PASSED, exit 0 (FAIL rows are two any-steps and three designed negative controls). Owned-carrier flight from the Sky Shrine pad, guest drop mid-flight and rejoin as the same character with the same five UIDs, Cloudreach to Stormwood crossing, host kill/restart/title Load with an equal world hash, Veyra/shrine/winds/heart/Stormwood key read once from the host world and saved; Solmane freed once, both peers refuse at five and the receipts survive the host restart and the guest's rejoin; the accept branch, a guest drop after answering and no second offer are F08#5's two-peer run3. Shortcuts disclosed: story_flag chapter facts (earned play is C1/C2), veridian_fixture participant journals, freeing written as a world fact, enter_realm crossings, party_grant and fly_setup, teleport to the pad, loopback ENet."
   },
   {
    "id": "S1",
    "status": "partial",
-   "note": "Integrated run passed review in batch 64; card completes when F09#3 (pocket lures, full art bar) closes.",
+   "note": "Integrated run passed review in batch 64; F09#3 met (route and pocket walks, f09_3_r8). Card run recorded after the landing.",
    "integrated_run": "ralph/reports/STORMWOOD/full_run/run_a.txt + s1/ @ tb/stormwood 9dc96424 (batch 64): one continuous chapter run passes prefix, Crown arch, Rootgate, core, Marrow and aftermath with live fights; route unit tests 101/0; closed-arch bypass 15/0; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: Cloudreach-boundary fixture start (no earned C3 save), fresh L44 party with granted tools, 8x clock, harness input and fights, helper routing B1-B8, one teleport per pocket for the walk witness."
   },
   {

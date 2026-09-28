@@ -1,0 +1,271 @@
+{
+  "baseline_commit": "9425066d003dd20f0faf6bfb0a461f98ab2aee35",
+  "main_commit": "f04d82fa1ed07cad05185ad7adc397a26cf174ab",
+  "candidate": "working patch over baseline; source hashes normalized UTF-8 LF",
+  "source_sha256": {
+    "scripts/world/cloudreach_world.gd": "6b0814e30d71621846eafdb223aa180561651e83655457250c6932adb6cbc08d",
+    "scripts/world/cloudreach_windwatch.gd": "41f49e15342f225018db0ec430349c9c0f9066fd7adf42e9e520f592388dde82",
+    "data/config/cloudreach_visual.json": "12c2c44923496853a7cbd8f930ff82d5a096afddecb4ead7982dcaa679c11a14",
+    "tools/capture_cloudreach_settlement_identity.gd": "e0efd9a7a6f7d075cb144fba23200ee5a69d4e462f486380ac4cc10e2f28cdf3",
+    "tests/smoke_cloudreach_windwatch.gd": "9aa84e9868f31c3b7fee77def57ea25407b630211d38cbb7933df79b064d6ace"
+  },
+  "files": [
+    {
+      "file": ".gitattributes",
+      "bytes": 65,
+      "sha256": "09988058ff8095ae2e36c23a58f46e17ceeb793509db659149667b3889d06337"
+    },
+    {
+      "file": "baseline/001_cloudreach_place_cliffhold_approach_day.png",
+      "bytes": 1562397,
+      "sha256": "2aa1d6681fcbcb23a99e430d1b9c04af89bd35ba0955b0016ce1f9e571fa6da8"
+    },
+    {
+      "file": "baseline/002_cloudreach_place_cliffhold_approach_night.png",
+      "bytes": 1336520,
+      "sha256": "5f68aa022fdd4211e4384339193d5ec512fb4296f155d229e7d096059ba13d2a"
+    },
+    {
+      "file": "baseline/003_cloudreach_place_cliffhold_court_day.png",
+      "bytes": 2207107,
+      "sha256": "df56b7083019675b5fd2690e893b6ece083303c0a51afa788bf22e8bd0341437"
+    },
+    {
+      "file": "baseline/004_cloudreach_place_cliffhold_court_night.png",
+      "bytes": 1796836,
+      "sha256": "0a176615d934c2734f716075fcb49e6e9abfc519a1d85b40fc88e5d7fb4af79d"
+    },
+    {
+      "file": "baseline/005_cloudreach_place_cliffhold_windwatch_day.png",
+      "bytes": 2287009,
+      "sha256": "3ffc1fefc09fda20d7d1178308913bc0bac3a4771ae86fd701d91252efba212c"
+    },
+    {
+      "file": "baseline/006_cloudreach_place_cliffhold_windwatch_night.png",
+      "bytes": 1711409,
+      "sha256": "6bd498b5c497d40454f259973afc2d8dabfb5af364c040db9422d85fbfb7f204"
+    },
+    {
+      "file": "baseline/007_cloudreach_place_galefoot_approach_day.png",
+      "bytes": 2237690,
+      "sha256": "53716bf4cff0ff85af2e354e056a193b7757598f3b932ebd48152685a6af8736"
+    },
+    {
+      "file": "baseline/008_cloudreach_place_galefoot_approach_night.png",
+      "bytes": 1940072,
+      "sha256": "6499d81831b032477fcd7613b42defce4ff1f9e86060a0fa5b40e2c4317fa7a3"
+    },
+    {
+      "file": "baseline/009_cloudreach_place_galefoot_hearth_day.png",
+      "bytes": 2384931,
+      "sha256": "f6cdf5289a37267fc27ea820ea19f2bd37a25d7cf8394c7fab73e4b235cf35d6"
+    },
+    {
+      "file": "baseline/010_cloudreach_place_galefoot_hearth_night.png",
+      "bytes": 1998162,
+      "sha256": "d1072514e674ef70d7fa6e8f460f72f420a6cf49f3030b48c8bb72578ff9a236"
+    },
+    {
+      "file": "baseline/manifest.jsonl",
+      "bytes": 5248,
+      "sha256": "464829bc3ca7644cd594ce1b7aa6957305e244be622ebd0e64c9b62f52bf5065"
+    },
+    {
+      "file": "baseline/run.err",
+      "bytes": 3406,
+      "sha256": "85edde47a63fff8a708090fa49dab71404c5fd457e8a7419a0d916150a03c608"
+    },
+    {
+      "file": "baseline/run.log",
+      "bytes": 5782,
+      "sha256": "98d9f67de9ab1f0eb322607bdefd37b0cd1e78a1acb912a1ebac0948e112d535"
+    },
+    {
+      "file": "baseline/sheet.jpg",
+      "bytes": 200842,
+      "sha256": "98e4c950f206f348d40a169a6cc713fbec4e1fbe1bf0d0b8d8baff2fa40cd90b"
+    },
+    {
+      "file": "candidate/001_cloudreach_place_cliffhold_approach_day.png",
+      "bytes": 1555828,
+      "sha256": "8ca34f6ce0d6538d1d3742beedb5178331a189fc8ab85c08b54cbb789153ac73"
+    },
+    {
+      "file": "candidate/002_cloudreach_place_cliffhold_approach_night.png",
+      "bytes": 1329691,
+      "sha256": "6eb68ce8a95d87853d7742ebefce3d4e0adac577b9c04383ecb4a6b3f2b7a73e"
+    },
+    {
+      "file": "candidate/003_cloudreach_place_cliffhold_court_day.png",
+      "bytes": 2191047,
+      "sha256": "08e0e664adb41e56e2e42a4b85477cb9b70b08b38d4511da6d42204f1d605499"
+    },
+    {
+      "file": "candidate/004_cloudreach_place_cliffhold_court_night.png",
+      "bytes": 1776959,
+      "sha256": "009bc119023e621d4f4e22805e49759d41d7dfca051c387361c29a594d18079e"
+    },
+    {
+      "file": "candidate/005_cloudreach_place_cliffhold_windwatch_day.png",
+      "bytes": 2243522,
+      "sha256": "310d02234f4166111cfe5e727f6ed6ccee592f620c311bc19ec6d19634fedcc8"
+    },
+    {
+      "file": "candidate/006_cloudreach_place_cliffhold_windwatch_night.png",
+      "bytes": 1679080,
+      "sha256": "14bb0b3a965cd087bccfc1260fdcde4469dbb61a6a13063f1c08ced08896a57b"
+    },
+    {
+      "file": "candidate/007_cloudreach_place_galefoot_approach_day.png",
+      "bytes": 2239499,
+      "sha256": "e4c36cddead548b7b6d178698aeb6aa04d9145a6f509c961692c0762aadd9d15"
+    },
+    {
+      "file": "candidate/008_cloudreach_place_galefoot_approach_night.png",
+      "bytes": 1942450,
+      "sha256": "0cee9ac677a3e35d6fdb5b4e0685ee61e53b8a19660e1753c0e78d7b81b0aa6e"
+    },
+    {
+      "file": "candidate/009_cloudreach_place_galefoot_hearth_day.png",
+      "bytes": 2383964,
+      "sha256": "7fb3dc8e67e0a3354da8c016016077a4e45b12abd8527febc55b5d6c7deb5f61"
+    },
+    {
+      "file": "candidate/010_cloudreach_place_galefoot_hearth_night.png",
+      "bytes": 2000581,
+      "sha256": "245215836120bb65a9855b9f622b9bba81ec9c53d206e729d5c82539cc88b1b1"
+    },
+    {
+      "file": "candidate/manifest.jsonl",
+      "bytes": 5248,
+      "sha256": "464829bc3ca7644cd594ce1b7aa6957305e244be622ebd0e64c9b62f52bf5065"
+    },
+    {
+      "file": "candidate/run.err",
+      "bytes": 3406,
+      "sha256": "d99f8bfd318ec8c46a9ad265dbc7e23a7c36c88fe9cfdc6fdb1cc29e5d675873"
+    },
+    {
+      "file": "candidate/run.log",
+      "bytes": 5787,
+      "sha256": "e4a9f91936726e803871e1294eb6036750fb85937fa3d108c118331a51b4323a"
+    },
+    {
+      "file": "candidate/sheet.jpg",
+      "bytes": 200370,
+      "sha256": "ee5aee2b71306837ea43578caa46353d326bd7b42bdf04377d83162ef37d168d"
+    },
+    {
+      "file": "code-review.md",
+      "bytes": 7246,
+      "sha256": "4c95e030613f0e03dee49672f98650ecdb180db99ce073e4d4883b4961c5f392"
+    },
+    {
+      "file": "final-pair-review.md",
+      "bytes": 9108,
+      "sha256": "b63ded08836df84818cf23856ff4bd3b814289feb0267edafe38e5377d196f4b"
+    },
+    {
+      "file": "intermediate/001_cloudreach_place_cliffhold_approach_day.png",
+      "bytes": 1555828,
+      "sha256": "23c3212e1d9da1abe8b7bc2a8f6e2212fbe18a19471cceb83dacbdfd714b2189"
+    },
+    {
+      "file": "intermediate/002_cloudreach_place_cliffhold_approach_night.png",
+      "bytes": 1329694,
+      "sha256": "1c7f04b8867cc8598d498044ae483b5fbd7bf1c90c67ba634bb9b791eb5dc5b0"
+    },
+    {
+      "file": "intermediate/003_cloudreach_place_cliffhold_court_day.png",
+      "bytes": 2191052,
+      "sha256": "013dda0a525a43bb1d2fc15554bafaecb5431ca834ad5acb79d9ba957da36b49"
+    },
+    {
+      "file": "intermediate/004_cloudreach_place_cliffhold_court_night.png",
+      "bytes": 1776959,
+      "sha256": "0026ab88626dc4f1d1b7c6ea80953f780d949f558411d060f5271ec4c197bea7"
+    },
+    {
+      "file": "intermediate/005_cloudreach_place_cliffhold_windwatch_day.png",
+      "bytes": 2243522,
+      "sha256": "310d02234f4166111cfe5e727f6ed6ccee592f620c311bc19ec6d19634fedcc8"
+    },
+    {
+      "file": "intermediate/006_cloudreach_place_cliffhold_windwatch_night.png",
+      "bytes": 1679082,
+      "sha256": "0182c3ee7b709aa4c0a50630dd401927c7132aa68127ff7123293cde55fcc541"
+    },
+    {
+      "file": "intermediate/007_cloudreach_place_galefoot_approach_day.png",
+      "bytes": 2226494,
+      "sha256": "d6657fcb9c4a7701703418f2519f3ed111641fb9fdffc058aacaf79dfd164bf9"
+    },
+    {
+      "file": "intermediate/008_cloudreach_place_galefoot_approach_night.png",
+      "bytes": 1929299,
+      "sha256": "315fe0085453fb212011695d03ee89bf8449886734eda8ad1859cd01fd6a552e"
+    },
+    {
+      "file": "intermediate/009_cloudreach_place_galefoot_hearth_day.png",
+      "bytes": 2358464,
+      "sha256": "4d0b808dac83961d29b4b13420286414088e20c7a96d1250678e102f91a21047"
+    },
+    {
+      "file": "intermediate/010_cloudreach_place_galefoot_hearth_night.png",
+      "bytes": 1965706,
+      "sha256": "910ba323949c235a6e18a708f3dadc3dd441e43bfdc3fb6a04e170c4dad2db82"
+    },
+    {
+      "file": "intermediate/manifest.jsonl",
+      "bytes": 5248,
+      "sha256": "464829bc3ca7644cd594ce1b7aa6957305e244be622ebd0e64c9b62f52bf5065"
+    },
+    {
+      "file": "intermediate/run.err",
+      "bytes": 3406,
+      "sha256": "d99f8bfd318ec8c46a9ad265dbc7e23a7c36c88fe9cfdc6fdb1cc29e5d675873"
+    },
+    {
+      "file": "intermediate/run.log",
+      "bytes": 5776,
+      "sha256": "6f9d56f00f0c98ea26cd370e25d977b890f3a582a5699bbdced45a80c59d3f67"
+    },
+    {
+      "file": "intermediate/sheet.jpg",
+      "bytes": 199767,
+      "sha256": "6cde9d7e36c18ac0ab7f04caa6aa42c7130211a86ff72086a40ebf4a3aba8f10"
+    },
+    {
+      "file": "intermediate-pair-review.md",
+      "bytes": 9526,
+      "sha256": "5a7a86883216f1c86a31b4751bf47f8af15d2b0344fe68db39b92c897898d670"
+    },
+    {
+      "file": "smoke.log",
+      "bytes": 111,
+      "sha256": "8f3174d3a8af25c068410683e637bbe0589c334b5e402bbaca79ecfdb97576da"
+    }
+  ],
+  "native_raster": [
+    1920,
+    1080
+  ],
+  "renderer": "Godot 4.7 Compatibility, OpenGL 3.3, NVIDIA GTX 1060 3GB",
+  "execution": {
+    "baseline_exit": 0,
+    "candidate_exit": 0,
+    "frames_each": 10,
+    "skips_each": 0,
+    "matched_pose_fields": [
+      "subject",
+      "time",
+      "feet",
+      "target",
+      "camera",
+      "pitch_deg",
+      "yaw_deg"
+    ]
+  },
+  "fixture": "Production rig; teleported and physically seated stands, prescribed reachable pitch, companion parked behind camera, HUD hidden; dry visual witness, not earned play or full acceptance",
+  "excluded_first_attempt": "baseline at 1920x1061, retained locally only; native raster is enforced after world boot in final adapter"
+}

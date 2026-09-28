@@ -1,0 +1,903 @@
+{
+  "proof": "DRY RUN \u2014 does not count",
+  "baseline": "ce1a3c6e576c5e0bf99c5ee543258794be302b00",
+  "engine": "Godot 4.7 5b4e0cb0f Compatibility OpenGL 3.3 GTX1060 3GB driver560.94",
+  "frames": [
+    {
+      "path": "shots/machine-baseline/roster/001_machine_0.png",
+      "sha256": "f739172312de5f672ac78fbed7ee051c9765912b58486d4f6e04d60d0e0af672",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 0.0,
+        "file": "001_machine_0.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-baseline/roster/002_machine_90.png",
+      "sha256": "d86537ccc6231730b07689f7c449064629ff57c2829dcceac7b6eb951ddb83d1",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 90.0,
+        "file": "002_machine_90.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-baseline/roster/003_machine_180.png",
+      "sha256": "a937f0f3f372d1a37dd09d1d91f58f56fc61b99aa5f8bb0f8d24e8cae5481213",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 180.0,
+        "file": "003_machine_180.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-baseline/roster/004_machine_270.png",
+      "sha256": "a3bf0866ac7baf79b78844e8934634493549fdaface41c12c839e54bc6bd5d19",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 270.0,
+        "file": "004_machine_270.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-baseline-world/region/meadows/001_meadows_machine_entrance_day.png",
+      "sha256": "5fcaf7c762db59b3d63376e996e28bd5609be60ed554d5ba734c259f24e06040",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -8.0,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.5,
+          6.2,
+          7650.2
+        ],
+        "file": "001_meadows_machine_entrance_day.png",
+        "kind": "frame",
+        "label": "machine_entrance",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 12.5,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-baseline-world/region/meadows/002_meadows_machine_entrance_night.png",
+      "sha256": "bd9c2030961a8b19d65f275f9d1b97f5cce6711904b56882d5f29adb7226e993",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -8.0,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.5,
+          6.2,
+          7650.2
+        ],
+        "file": "002_meadows_machine_entrance_night.png",
+        "kind": "frame",
+        "label": "machine_entrance",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 12.5,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-baseline-world/region/meadows/003_meadows_machine_reveal_day.png",
+      "sha256": "9c89a68cf274e97d5954c1773122bb9042bd9f2010df1c335efbd1e1b8f9779b",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -24.0,
+          7.3,
+          7636.7
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -24.0,
+          6.2,
+          7640.2
+        ],
+        "file": "003_meadows_machine_reveal_day.png",
+        "kind": "frame",
+        "label": "machine_reveal",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_reveal",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 10.0,
+        "time": "day",
+        "why": "",
+        "yaw_deg": -180.0
+      }
+    },
+    {
+      "path": "shots/machine-baseline-world/region/meadows/004_meadows_machine_reveal_night.png",
+      "sha256": "0eec6eb8fe87e41c7981e9c26b45ff0f8c5e7cfe30dc69c64e011b7f820cb68e",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -24.0,
+          7.3,
+          7636.7
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -24.0,
+          6.2,
+          7640.2
+        ],
+        "file": "004_meadows_machine_reveal_night.png",
+        "kind": "frame",
+        "label": "machine_reveal",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_reveal",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 10.0,
+        "time": "night",
+        "why": "",
+        "yaw_deg": -180.0
+      }
+    },
+    {
+      "path": "shots/machine-baseline-world/region/meadows/005_meadows_machine_side_day.png",
+      "sha256": "374df3c90334c88e54a81dbd1e787b44cf00b5b60ab120789f25444e22da0321",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -11.4,
+          7.3,
+          7661.6
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -14.0,
+          6.2,
+          7659.2
+        ],
+        "file": "005_meadows_machine_side_day.png",
+        "kind": "frame",
+        "label": "machine_side",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_side",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.5,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 48.0
+      }
+    },
+    {
+      "path": "shots/machine-baseline-world/region/meadows/006_meadows_machine_side_night.png",
+      "sha256": "bb33951b9e8062a07162d06cb51b565deabb5fe7bf5348ff145a30cc3b6654d2",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -11.4,
+          7.3,
+          7661.6
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -14.0,
+          6.2,
+          7659.2
+        ],
+        "file": "006_meadows_machine_side_night.png",
+        "kind": "frame",
+        "label": "machine_side",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_side",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.5,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 48.0
+      }
+    },
+    {
+      "path": "shots/machine-final/roster/001_machine_0.png",
+      "sha256": "999248710ced152bfd1750b6b539d68e460f1d5a3554685a21cf832e60465adf",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 0.0,
+        "file": "001_machine_0.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-final/roster/002_machine_90.png",
+      "sha256": "55184c0223785eaa1972f75c0ce4e12f4d297e59a9cb9d56e872dbea4f546324",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 90.0,
+        "file": "002_machine_90.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-final/roster/003_machine_180.png",
+      "sha256": "638af2c2d92155e6959f5d304699b6c48d817d61a920f6c5bb78580ec36a9ce1",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 180.0,
+        "file": "003_machine_180.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-final/roster/004_machine_270.png",
+      "sha256": "3272dd53d3dd2fa0d8a9a03f6ad57a5e091dd4f8a4ec82c25a19bffd8d199b87",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "azimuth": 270.0,
+        "file": "004_machine_270.png",
+        "height": 19.5,
+        "kind": "frame",
+        "proof": "DRY RUN \u2014 does not count"
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/001_meadows_machine_entrance_day.png",
+      "sha256": "ab0740e6e22b97959873f2a3f05f27d2c4e2fdc72a51a2e2c79b562f412753bd",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -8.0,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.5,
+          6.2,
+          7650.2
+        ],
+        "file": "001_meadows_machine_entrance_day.png",
+        "kind": "frame",
+        "label": "machine_entrance",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 12.5,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/002_meadows_machine_entrance_night.png",
+      "sha256": "77af8a19a09f4eeacc6083452c305a6f5dbf463940bbef376b502941ab05e078",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -8.0,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.5,
+          6.2,
+          7650.2
+        ],
+        "file": "002_meadows_machine_entrance_night.png",
+        "kind": "frame",
+        "label": "machine_entrance",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 12.5,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/003_meadows_machine_reveal_day.png",
+      "sha256": "4f28916fcf82d0c5229dc2aec5bbe9272160d9c890eaf8796f21ffb3814ccc08",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -24.0,
+          7.3,
+          7636.7
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -24.0,
+          6.2,
+          7640.2
+        ],
+        "file": "003_meadows_machine_reveal_day.png",
+        "kind": "frame",
+        "label": "machine_reveal",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_reveal",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 10.0,
+        "time": "day",
+        "why": "",
+        "yaw_deg": -180.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/004_meadows_machine_reveal_night.png",
+      "sha256": "57730b1989a61af57cee52a0f961d230ccd0b33eda1507b6b63edc5c806aabb7",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -24.0,
+          7.3,
+          7636.7
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -24.0,
+          6.2,
+          7640.2
+        ],
+        "file": "004_meadows_machine_reveal_night.png",
+        "kind": "frame",
+        "label": "machine_reveal",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_reveal",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 10.0,
+        "time": "night",
+        "why": "",
+        "yaw_deg": -180.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/005_meadows_machine_side_day.png",
+      "sha256": "07751e7ce2cf4ca594411242ba904b62d7cf317c4bb6386c94cf8f539b5b4537",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -11.4,
+          7.3,
+          7661.6
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -14.0,
+          6.2,
+          7659.2
+        ],
+        "file": "005_meadows_machine_side_day.png",
+        "kind": "frame",
+        "label": "machine_side",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_side",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.5,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 48.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/006_meadows_machine_side_night.png",
+      "sha256": "264923a7ffcde2e33824bce813fcd3eecf4056c56de3746ba6b34400f3e8cb70",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -11.4,
+          7.3,
+          7661.6
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -14.0,
+          6.2,
+          7659.2
+        ],
+        "file": "006_meadows_machine_side_night.png",
+        "kind": "frame",
+        "label": "machine_side",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_side",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.5,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 48.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/007_meadows_machine_entrance_freed_day.png",
+      "sha256": "7237f3c9814a075961cb81b9bf0a01eb5831eaec5f9a5513f3beb70876fcbe89",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -7.6,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.0,
+          6.2,
+          7650.2
+        ],
+        "file": "007_meadows_machine_entrance_freed_day.png",
+        "kind": "frame",
+        "label": "machine_entrance_freed",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance_freed",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.0,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-final-world/region/meadows/008_meadows_machine_entrance_freed_night.png",
+      "sha256": "7e9fb2f0ca8e060bf9a74b8b74b908c038dbbaaf6d03c3849bab95db49e3fa9d",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -7.6,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.0,
+          6.2,
+          7650.2
+        ],
+        "file": "008_meadows_machine_entrance_freed_night.png",
+        "kind": "frame",
+        "label": "machine_entrance_freed",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance_freed",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.0,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-control-release/region/meadows/001_meadows_machine_entrance_day.png",
+      "sha256": "3b60e15787f4439560f0687c050b2dc065b87ce902930b0090dbded2cb74f1cc",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -8.0,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.5,
+          6.2,
+          7650.2
+        ],
+        "file": "001_meadows_machine_entrance_day.png",
+        "kind": "frame",
+        "label": "machine_entrance",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 12.5,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-control-release/region/meadows/002_meadows_machine_entrance_night.png",
+      "sha256": "e67fb81a6feb6a7c1d57ccd9761e0df4bdcf1c55bb51426af1f54999373d9e35",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -8.0,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.5,
+          6.2,
+          7650.2
+        ],
+        "file": "002_meadows_machine_entrance_night.png",
+        "kind": "frame",
+        "label": "machine_entrance",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 12.5,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-control-release/region/meadows/003_meadows_machine_entrance_freed_day.png",
+      "sha256": "fe8f0e3d4cb81cc7e045f5c29e0d0ccc7c631d700f3b40f9628de86b02e7037d",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -7.6,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.0,
+          6.2,
+          7650.2
+        ],
+        "file": "003_meadows_machine_entrance_freed_day.png",
+        "kind": "frame",
+        "label": "machine_entrance_freed",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance_freed",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.0,
+        "time": "day",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    },
+    {
+      "path": "shots/machine-control-release/region/meadows/004_meadows_machine_entrance_freed_night.png",
+      "sha256": "a7709fbcce3198965ee592e9bb33372ad498cc222019df516d294138ef177d97",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "capture": {
+        "camera": [
+          -7.6,
+          7.3,
+          7650.2
+        ],
+        "closed_dialogue": [],
+        "companion": "parked behind camera",
+        "feet": [
+          -11.0,
+          6.2,
+          7650.2
+        ],
+        "file": "004_meadows_machine_entrance_freed_night.png",
+        "kind": "frame",
+        "label": "machine_entrance_freed",
+        "pitch_deg": 12.0,
+        "region": "meadows",
+        "subject": "machine_entrance_freed",
+        "target": [
+          -24.0,
+          14.2,
+          7650.2
+        ],
+        "target_dist_m": 13.0,
+        "time": "night",
+        "why": "",
+        "yaw_deg": 90.0
+      }
+    }
+  ],
+  "runtime_checks": [
+    {
+      "kind": "check",
+      "label": "hardware sits outside measured Model",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "bound core light active",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "bound rune surfaces active",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "unchanged measured dais",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "unchanged measured crown",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "unchanged base collision",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "released core light disabled",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "released rune emission disabled",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "released physical fittings remain",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "release preserves measured cage geometry",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "control has no hardware / candidate hardware outside Model",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "bound core light active",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "control has no runes / candidate bound runes active",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "unchanged measured dais",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "unchanged measured crown",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "unchanged base collision",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "control retains core light / candidate released core light disabled",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "released rune emission disabled",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "control has no hardware / candidate released fittings remain",
+      "ok": true
+    },
+    {
+      "kind": "check",
+      "label": "release preserves measured cage geometry",
+      "ok": true
+    }
+  ],
+  "assets": {
+    "assets/environment/team_tether/tether_machine.glb": "b1acfeea35d303b1e37009dc2032d2430eaff9b416df61c162f75a9d6e4bafc1",
+    "assets/environment/team_tether/machine_hardware.glb": "6a86660631e5a887925bdd258eeda757e4910f7201b64377d97f9b58a8898bb3",
+    "scripts/world/tether_machine_finish.gd": "cb1af847f77874a6679b9b15ae1a84937c66550d0c9240e98f3297a7ab68a607",
+    "scripts/world/tether_machine_hardware_mesh.gd": "b38d691b0098ecd8fc0f130cd7f7efd52b38935bc475f48cbe29301c2e1c6328",
+    "tools/capture_tether_machine.gd": "0a0ef0bc2e3bf386901d03ec082bddbade0371f346f949f48e65ab4284c3687c",
+    "tests/smoke_machine_finish.gd": "1cc53afcd70f7d8d4b08d37c6f9f607d9f8c65f6727bc366e6d5c9d6200488bb"
+  }
+}

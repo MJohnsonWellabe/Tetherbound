@@ -1,0 +1,12 @@
+{
+  "review": "Code-blind inspection of all 32 indexed Venn fight frames",
+  "findings": [
+    "P2-063: shared flat magenta tell ring and weak hit response",
+    "P2-088: faded team roster loses contrast",
+    "P2-089: player and Cannonback silhouettes overlap late",
+    "P2-090: small blue figure partly buried in sand",
+    "P2-091: boss title card overlaps shell/head"
+  ],
+  "positive": "Two creatures, boss name, health, tell/open captions and command controls remain legible.",
+  "limit": "Recorder stopped at active fight 32-frame cap; win and aftermath not captured."
+}

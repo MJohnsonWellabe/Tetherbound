@@ -1,0 +1,1273 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+FRESH CAMPAIGN world_seed override=4
+RESUME staged res://tests/fixtures/earned_saves/checkpoints/seed4_hall at boundary hall (next segment warden) into D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_fresh_13600_15114
+FIGHT LOG observer attached targets=["captain_riverwatch","captain_field","captain_ridge","warden_aldis"] aftermath_capture=true render=true
+FRESH CAMPAIGN scratch=D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_fresh_13600_15114 slot=user://four_biome_fresh_13600_15114/slot_0.json checkpoints=D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_checkpoints_13600_15114
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1134)
+       [1] _ready (res://scripts/world/playground_world.gd:786)
+[playground] spawned at 8.0, 1.1, 7649.7
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=5205 reorder[16 layers]=259
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=5653 mark_harvestable=240 group_by_model=327 register_mesh_assets=851 build_batches_total=5941 (of which harvest_points[57397 nodes]=3734, initial_collision_stream[52318 solid]=172) update_mmis=912
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(17832704213090) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 130/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 19 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66081
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66082
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66083
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66084
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66085
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66086
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+RESUME VERIFIED boundary=hall realm=meadows player=(7.999907, 6.172785, 7649.672) party=[{"level":16,"nickname":"Bud","species":"ripplet","uid":"creature-f4118d54a2317867246afbf1e8ea834f"},{"level":18,"nickname":"","species":"bramblebun","uid":"creature-390db8e0de00cd1fcaaf1747203b0768"},{"level":16,"nickname":"","species":"mudsnout","uid":"creature-c785f517af159966b72ca0f49f61d386"},{"level":17,"nickname":"","species":"mudsnout","uid":"creature-8e12dace31044e591f02b96391ca2372"},{"level":15,"nickname":"","species":"bramblebun","uid":"creature-3fd010116aee4ec96d669fb5d4ecca74"}] flags=118 seed=1393508821
+M4 PASS 0_resume_seed4_hall expected=5 earned UIDs at the Warden arena; no Warden/ending flags observed={"arena_m":0.528320968151093,"ending_flags":[],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+[meadow] local healing at 3 station(s): 229 plants back, 0 drain skin(s) fading
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737700234639,"food_after":0.0,"food_before":0.0,"hp_after":99.75,"hp_before":0.0,"item":"revive","mood_after":83.5356623349572,"mood_before":83.5392974190481,"remaining":9}
+EARNED WARDEN — { "index": 0, "species": "ripplet", "hp": 0.0, "max_hp": 199.5, "fainted": true, "item": "revive", "hp_after": 99.75, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737649902988,"food_after":0.0,"food_before":0.0,"hp_after":93.177829117775,"hp_before":0.0,"item":"revive","mood_after":87.1724279409097,"mood_before":87.1767611200764,"remaining":8}
+EARNED WARDEN — { "index": 3, "species": "mudsnout", "hp": 0.0, "max_hp": 186.35565823555, "fainted": true, "item": "revive", "hp_after": 93.177829117775, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737700234639,"food_after":0.0,"food_before":0.0,"hp_after":149.75,"hp_before":99.75,"item":"potion_small","mood_after":83.5271185444269,"mood_before":83.5313291557905,"remaining":6}
+EARNED WARDEN — { "index": 0, "species": "ripplet", "hp": 99.75, "max_hp": 199.5, "fainted": false, "item": "potion_small", "hp_after": 149.75, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737683457422,"food_after":0.0,"food_before":0.0,"hp_after":58.9954076841843,"hp_before":8.99540768418428,"item":"potion_small","mood_after":99.7942458295459,"mood_before":99.7986006462126,"remaining":5}
+EARNED WARDEN — { "index": 1, "species": "bramblebun", "hp": 8.99540768418428, "max_hp": 202.364196410656, "fainted": false, "item": "potion_small", "hp_after": 58.9954076841843, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737666680205,"food_after":0.0,"food_before":0.0,"hp_after":137.942893732972,"hp_before":87.9428937329716,"item":"potion_small","mood_after":99.7901570378792,"mood_before":99.7942458295459,"remaining":4}
+EARNED WARDEN — { "index": 2, "species": "mudsnout", "hp": 87.9428937329716, "max_hp": 181.386343741417, "fainted": false, "item": "potion_small", "hp_after": 137.942893732972, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737649902988,"food_after":0.0,"food_before":0.0,"hp_after":143.177829117775,"hp_before":93.177829117775,"item":"potion_small","mood_after":87.1553596670461,"mood_before":87.1597737212127,"remaining":3}
+EARNED WARDEN — { "index": 3, "species": "mudsnout", "hp": 93.177829117775, "max_hp": 186.35565823555, "fainted": false, "item": "potion_small", "hp_after": 143.177829117775, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737633125771,"food_after":0.0,"food_before":0.0,"hp_after":87.77885808213,"hp_before":37.77885808213,"item":"potion_small","mood_after":99.7813669045459,"mood_before":99.7857429837126,"remaining":2}
+EARNED WARDEN — { "index": 4, "species": "bramblebun", "hp": 37.77885808213, "max_hp": 162.625689842224, "fainted": false, "item": "potion_small", "hp_after": 87.77885808213, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737683457422,"food_after":0.0,"food_before":0.0,"hp_after":108.995407684184,"hp_before":58.9954076841843,"item":"potion_small","mood_after":99.7772160027602,"mood_before":99.7813669045459,"remaining":1}
+EARNED WARDEN — { "index": 1, "species": "bramblebun", "hp": 58.9954076841843, "max_hp": 202.364196410656, "fainted": false, "item": "potion_small", "hp_after": 108.995407684184, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9223371737633125771,"food_after":0.0,"food_before":0.0,"hp_after":137.77885808213,"hp_before":87.77885808213,"item":"potion_small","mood_after":99.7728173652602,"mood_before":99.7772160027602,"remaining":0}
+EARNED WARDEN — { "index": 4, "species": "bramblebun", "hp": 87.77885808213, "max_hp": 162.625689842224, "fainted": false, "item": "potion_small", "hp_after": 137.77885808213, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"depleted_stock_pilot_selected","creature_id":-9223371737633125771,"hp":137.77885808213,"hp_fraction":0.847214595773891,"max_hp":162.625689842224,"maximum_eligible_fraction":0.847214595773891,"stock":0}
+[meadows_earned_team] {"after":3,"beat":"party_cycle","before":2,"wanted":4}
+[meadows_earned_team] {"after":4,"beat":"party_cycle","before":3,"wanted":4}
+EARNED WARDEN — { "party": ["L16 150/200", "L18 109/202", "L16 138/181", "L17 143/186", "L15 138/163"], "potions_left": 0, "beat": "trainer_top_up" }
+FIGHT LOG begin {"attempt":1,"id":"warden_aldis","target":true}
+EARNED WARDEN — { "id": "warden_aldis", "rounds": 5, "wins": 5, "hits": 91, "items_before": { "coin": 725, "revive": 8, "potion_small": 0 }, "items_after": { "coin": 875, "revive": 10, "potion_small": 4 }, "xp_before": { -9223371737700234639: 7286, -9223371737683457422: 9429, -9223371737666680205: 7640, -9223371737649902988: 7873, -9223371737633125771: 6485 }, "xp_after": { -9223371737700234639: 9022, -9223371737683457422: 10656, -9223371737666680205: 8867, -9223371737649902988: 9100, -9223371737633125771: 8030 }, "expected_xp": { -9223371737700234639: 1736, -9223371737683457422: 1227, -9223371737666680205: 1227, -9223371737649902988: 1227, -9223371737633125771: 1545 }, "frames": 6323, "beat": "trainer_defeated" }
+FIGHT LOG {"attempt":1,"capture":"user://aftermath/warden_aldis-a1.png","defeat_flag":"defeated_warden","duration_s":105.37,"end_reason":"resolved","events":[{"ally_speed":1.61,"amount":6.6,"dist_m":3.22,"ev":"hit_dealt","t":0.57},{"ally_speed":4.47,"dist_m":7.02,"ev":"avoided","t":1.58},{"ally_speed":0.09,"amount":28.4,"dist_m":2.85,"ev":"hit_dealt","t":2.78},{"ally_speed":0.51,"amount":7.6,"dist_m":4.11,"ev":"hit_dealt","t":3.53},{"ally_speed":2.77,"dist_m":6.59,"ev":"avoided","t":4.3},{"ally_speed":1.61,"amount":6.6,"dist_m":3.3,"ev":"hit_dealt","t":5.05},{"ally_speed":0.52,"amount":7.9,"dist_m":3.24,"ev":"hit_dealt","t":5.53},{"ally_speed":0.1,"amount":4.1,"dist_m":4.23,"ev":"hit_dealt","t":6.18},{"ally_speed":0.5,"dist_m":6.84,"ev":"avoided","t":7.02},{"ally_speed":0.0,"dist_m":3.32,"ev":"stagger_dealt","t":8.47},{"ally_speed":0.0,"amount":17.3,"dist_m":3.32,"ev":"hit_dealt","t":8.47},{"ally_speed":0.1,"amount":7.0,"dist_m":3.51,"ev":"hit_dealt","t":9.38},{"ally_speed":0.1,"amount":4.2,"dist_m":4.4,"ev":"hit_dealt","t":10.1},{"ally_speed":4.6,"dist_m":6.76,"ev":"avoided","t":11.07},{"ally_speed":0.1,"amount":4.1,"dist_m":3.22,"ev":"hit_dealt","t":11.85},{"ally_speed":0.1,"amount":4.3,"dist_m":3.52,"ev":"hit_dealt","t":12.47},{"ally_speed":0.0,"dist_m":3.64,"ev":"stagger_dealt","t":13.65},{"ally_speed":0.0,"amount":16.0,"dist_m":3.64,"ev":"hit_dealt","t":13.65},{"ally_speed":0.1,"amount":6.8,"dist_m":3.73,"ev":"hit_dealt","t":14.57},{"ally_speed":0.1,"amount":4.5,"dist_m":4.62,"ev":"hit_dealt","t":15.28},{"ally_speed":4.03,"dist_m":6.77,"ev":"avoided","t":16.38},{"ally_speed":1.61,"amount":7.3,"dist_m":3.29,"ev":"hit_dealt","t":17.0},{"ally_speed":0.1,"amount":4.1,"dist_m":3.26,"ev":"hit_dealt","t":17.65},{"ally_speed":0.0,"dist_m":2.98,"ev":"stagger_dealt","t":18.83},{"ally_speed":0.0,"amount":16.4,"dist_m":2.98,"ev":"hit_dealt","t":18.83},{"ally_speed":0.1,"amount":6.5,"dist_m":2.75,"ev":"hit_dealt","t":19.75},{"ally_speed":0.1,"amount":4.7,"dist_m":2.72,"ev":"hit_dealt","t":20.47},{"ally_speed":2.77,"dist_m":6.55,"ev":"avoided","t":21.43},{"ally_speed":1.61,"amount":6.6,"dist_m":3.36,"ev":"hit_dealt","t":22.17},{"ally_speed":0.1,"amount":4.1,"dist_m":3.57,"ev":"hit_dealt","t":22.82},{"ally_speed":0.0,"dist_m":3.72,"ev":"stagger_dealt","t":24.0},{"ally_speed":0.0,"amount":18.1,"dist_m":3.72,"ev":"hit_dealt","t":24.0},{"ally_speed":0.1,"amount":6.8,"dist_m":3.65,"ev":"hit_dealt","t":24.92},{"ally_speed":0.1,"amount":4.5,"dist_m":3.14,"ev":"hit_dealt","t":25.63},{"ally_speed":2.2,"dist_m":6.61,"ev":"avoided","t":26.6},{"ally_speed":1.61,"amount":6.9,"dist_m":3.29,"ev":"hit_dealt","t":27.33},{"ally_speed":0.1,"amount":4.6,"dist_m":3.15,"ev":"hit_dealt","t":27.98},{"ally_speed":0.0,"amount":16.1,"dist_m":2.04,"ev":"hit_dealt","t":29.17},{"ally_speed":1.61,"amount":11.1,"dist_m":3.39,"ev":"hit_dealt","t":32.87},{"ally_speed":5.6,"amount":13.1,"dist_m":4.52,"ev":"hit_taken","t":33.55},{"ally_speed":1.11,"amount":11.8,"dist_m":3.42,"ev":"hit_dealt","t":34.2},{"ally_speed":0.52,"dist_m":3.83,"ev":"stagger_dealt","t":34.68},{"ally_speed":0.52,"amount":11.4,"dist_m":3.83,"ev":"hit_dealt","t":34.68},{"ally_speed":0.52,"amount":15.9,"dist_m":3.78,"ev":"hit_dealt","t":35.17},{"ally_speed":0.0,"dist_m":4.99,"ev":"stagger_dealt","t":36.45},{"ally_speed":0.0,"amount":29.6,"dist_m":4.99,"ev":"hit_dealt","t":36.45},{"ally_speed":0.1,"amount":7.5,"dist_m":4.13,"ev":"hit_dealt","t":37.7},{"ally_speed":0.1,"amount":7.4,"dist_m":4.08,"ev":"hit_dealt","t":38.53},{"ally_speed":5.6,"amount":15.0,"dist_m":4.86,"ev":"hit_taken","t":39.28},{"ally_speed":0.1,"amount":6.8,"dist_m":3.26,"ev":"hit_dealt","t":40.07},{"ally_speed":0.1,"dist_m":4.23,"ev":"stagger_dealt","t":40.68},{"ally_speed":0.1,"amount":7.1,"dist_m":4.23,"ev":"hit_dealt","t":40.68},{"ally_speed":0.0,"dist_m":4.12,"ev":"stagger_dealt","t":41.95},{"ally_speed":0.0,"amount":29.9,"dist_m":4.12,"ev":"hit_dealt","t":41.95},{"ally_speed":0.1,"amount":7.0,"dist_m":4.01,"ev":"hit_dealt","t":42.87},{"ally_speed":0.1,"amount":7.2,"dist_m":4.38,"ev":"hit_dealt","t":43.48},{"ally_speed":0.1,"amount":6.7,"dist_m":4.06,"ev":"hit_dealt","t":44.32},{"ally_speed":5.6,"dist_m":5.43,"ev":"avoided","t":44.83},{"ally_speed":0.1,"dist_m":3.93,"ev":"stagger_dealt","t":45.9},{"ally_speed":0.1,"amount":7.5,"dist_m":3.93,"ev":"hit_dealt","t":45.9},{"ally_speed":0.0,"dist_m":4.36,"ev":"stagger_dealt","t":47.08},{"ally_speed":0.0,"amount":29.1,"dist_m":4.36,"ev":"hit_dealt","t":47.08},{"ally_speed":0.1,"amount":6.5,"dist_m":3.99,"ev":"hit_dealt","t":48.17},{"ally_speed":0.1,"amount":6.6,"dist_m":4.06,"ev":"hit_dealt","t":48.97},{"ally_speed":0.1,"amount":6.8,"dist_m":3.52,"ev":"hit_dealt","t":49.78},{"ally_speed":0.0,"dist_m":4.38,"ev":"stagger_dealt","t":53.85},{"ally_speed":0.0,"amount":49.5,"dist_m":4.38,"ev":"hit_dealt","t":53.85},{"ally_speed":0.74,"amount":12.2,"dist_m":4.35,"ev":"hit_dealt","t":54.68},{"ally_speed":0.75,"amount":12.3,"dist_m":5.02,"ev":"hit_dealt","t":55.17},{"ally_speed":2.77,"dist_m":7.88,"ev":"avoided","t":55.97},{"ally_speed":2.34,"dist_m":4.44,"ev":"stagger_dealt","t":56.82},{"ally_speed":2.34,"amount":12.2,"dist_m":4.44,"ev":"hit_dealt","t":56.82},{"ally_speed":0.75,"amount":15.5,"dist_m":4.33,"ev":"hit_dealt","t":57.3},{"ally_speed":0.0,"dist_m":5.44,"ev":"stagger_dealt","t":58.75},{"ally_speed":0.0,"amount":28.3,"dist_m":5.44,"ev":"hit_dealt","t":58.75},{"ally_speed":0.2,"amount":6.6,"dist_m":4.66,"ev":"hit_dealt","t":59.9},{"ally_speed":0.07,"dist_m":8.03,"ev":"avoided","t":60.82},{"ally_speed":2.34,"amount":12.1,"dist_m":4.38,"ev":"hit_dealt","t":61.57},{"ally_speed":0.2,"amount":6.6,"dist_m":4.9,"ev":"hit_dealt","t":62.18},{"ally_speed":5.6,"dist_m":7.01,"ev":"avoided","t":62.82},{"ally_speed":0.2,"dist_m":4.74,"ev":"stagger_dealt","t":63.88},{"ally_speed":0.2,"amount":7.5,"dist_m":4.74,"ev":"hit_dealt","t":63.88},{"ally_speed":0.0,"amount":31.1,"dist_m":5.67,"ev":"hit_dealt","t":65.23},{"ally_speed":0.74,"amount":12.9,"dist_m":4.68,"ev":"hit_dealt","t":68.87},{"ally_speed":0.75,"amount":14.1,"dist_m":4.18,"ev":"hit_dealt","t":69.35},{"ally_speed":0.5,"amount":15.5,"dist_m":3.06,"ev":"hit_taken","t":70.3},{"ally_speed":0.34,"dist_m":2.96,"ev":"stagger_dealt","t":70.55},{"ally_speed":0.34,"amount":13.8,"dist_m":2.96,"ev":"hit_dealt","t":70.55},{"ally_speed":0.75,"amount":21.2,"dist_m":2.81,"ev":"hit_dealt","t":71.03},{"ally_speed":0.0,"dist_m":4.1,"ev":"stagger_dealt","t":72.48},{"ally_speed":0.0,"amount":32.3,"dist_m":4.1,"ev":"hit_dealt","t":72.48},{"ally_speed":0.2,"amount":7.4,"dist_m":4.3,"ev":"hit_dealt","t":73.45},{"ally_speed":0.2,"amount":7.4,"dist_m":4.87,"ev":"hit_dealt","t":73.98},{"ally_speed":2.75,"amount":15.9,"dist_m":3.12,"ev":"hit_taken","t":74.93},{"ally_speed":0.08,"amount":8.3,"dist_m":2.65,"ev":"hit_dealt","t":75.3},{"ally_speed":0.0,"amount":7.1,"dist_m":2.61,"ev":"hit_dealt","t":75.83},{"ally_speed":0.0,"dist_m":3.99,"ev":"stagger_dealt","t":77.18},{"ally_speed":0.0,"amount":33.9,"dist_m":3.99,"ev":"hit_dealt","t":77.18},{"ally_speed":0.2,"amount":8.2,"dist_m":4.19,"ev":"hit_dealt","t":78.15},{"ally_speed":0.2,"amount":8.1,"dist_m":4.76,"ev":"hit_dealt","t":78.68},{"ally_speed":2.83,"amount":15.4,"dist_m":3.03,"ev":"hit_taken","t":79.55},{"ally_speed":0.0,"amount":7.7,"dist_m":2.61,"ev":"hit_dealt","t":80.0},{"ally_speed":0.0,"amount":7.7,"dist_m":2.61,"ev":"hit_dealt","t":80.53},{"ally_speed":0.0,"dist_m":3.99,"ev":"stagger_dealt","t":81.88},{"ally_speed":0.0,"amount":32.4,"dist_m":3.99,"ev":"hit_dealt","t":81.88},{"ally_speed":0.2,"amount":8.1,"dist_m":4.19,"ev":"hit_dealt","t":82.85},{"ally_speed":0.2,"amount":7.4,"dist_m":4.76,"ev":"hit_dealt","t":83.38},{"ally_speed":2.27,"amount":16.5,"dist_m":3.09,"ev":"hit_taken","t":84.25},{"ally_speed":0.0,"amount":7.6,"dist_m":2.61,"ev":"hit_dealt","t":84.72},{"ally_speed":0.74,"amount":11.6,"dist_m":4.68,"ev":"hit_dealt","t":88.38},{"ally_speed":0.0,"amount":53.4,"dist_m":4.64,"ev":"hit_dealt","t":89.2},{"ally_speed":0.74,"dist_m":4.1,"ev":"stagger_dealt","t":90.03},{"ally_speed":0.74,"amount":12.0,"dist_m":4.1,"ev":"hit_dealt","t":90.03},{"ally_speed":0.75,"amount":19.9,"dist_m":3.93,"ev":"hit_dealt","t":90.52},{"ally_speed":0.2,"amount":7.8,"dist_m":3.7,"ev":"hit_dealt","t":91.23},{"ally_speed":0.2,"amount":6.9,"dist_m":4.03,"ev":"hit_dealt","t":91.77},{"ally_speed":0.0,"dist_m":4.85,"ev":"stagger_dealt","t":93.12},{"ally_speed":0.0,"amount":31.3,"dist_m":4.85,"ev":"hit_dealt","t":93.12},{"ally_speed":0.2,"amount":10.2,"dist_m":4.57,"ev":"hit_dealt","t":94.08},{"ally_speed":0.2,"amount":8.1,"dist_m":4.62,"ev":"hit_dealt","t":94.72},{"ally_speed":0.2,"amount":6.7,"dist_m":5.42,"ev":"hit_dealt","t":95.25},{"ally_speed":0.63,"dist_m":9.64,"ev":"avoided","t":96.37},{"ally_speed":2.34,"amount":13.3,"dist_m":5.31,"ev":"hit_dealt","t":97.12},{"ally_speed":0.0,"dist_m":6.6,"ev":"stagger_dealt","t":98.47},{"ally_speed":0.0,"amount":31.2,"dist_m":6.6,"ev":"hit_dealt","t":98.47},{"ally_speed":0.2,"amount":10.0,"dist_m":5.23,"ev":"hit_dealt","t":99.57},{"ally_speed":0.2,"amount":6.8,"dist_m":5.56,"ev":"hit_dealt","t":100.2},{"ally_speed":0.2,"amount":7.6,"dist_m":6.09,"ev":"hit_dealt","t":100.73},{"ally_speed":1.77,"dist_m":9.31,"ev":"avoided","t":101.72},{"ally_speed":2.34,"amount":11.1,"dist_m":5.31,"ev":"hit_dealt","t":102.38},{"ally_speed":0.0,"amount":33.4,"dist_m":6.6,"ev":"hit_dealt","t":103.73}],"id":"warden_aldis","outcome":"won","party":["ripplet L16","bramblebun L18","mudsnout L16","mudsnout L17","bramblebun L15"],"physics_hz":60,"realm":"meadows","rounds":[{"end_s":30.78,"enemy":"","entered_before_bind":true,"outcome":"won","start_s":0.0},{"end_s":51.4,"enemy":"","outcome":"won","start_s":32.38},{"end_s":66.85,"enemy":"","outcome":"won","start_s":53.0},{"end_s":86.33,"enemy":"","outcome":"won","start_s":68.43},{"end_s":105.35,"enemy":"","outcome":"won","start_s":87.95}],"start_game_frame":1418,"target":true,"tells":[{"at_s":0.73,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":1.58,"strike_kind":"","strike_s":-1.0},{"at_s":3.4,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":4.3,"strike_kind":"","strike_s":-1.0},{"at_s":6.12,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":7.02,"strike_kind":"","strike_s":-1.0},{"at_s":10.22,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":11.07,"strike_kind":"","strike_s":-1.0},{"at_s":12.88,"authored_s":0.85,"enemy":"burrowback","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":15.53,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":16.38,"strike_kind":"","strike_s":-1.0},{"at_s":18.2,"authored_s":0.85,"enemy":"burrowback","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":20.58,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":21.43,"strike_kind":"","strike_s":-1.0},{"at_s":23.25,"authored_s":0.85,"enemy":"burrowback","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":25.75,"authored_s":0.85,"enemy":"burrowback","resolved":"avoided","resolved_s":26.6,"strike_kind":"","strike_s":-1.0},{"at_s":28.42,"authored_s":0.85,"enemy":"burrowback","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":33.13,"authored_s":0.4,"enemy":"galecrest","resolved":"hit","resolved_s":33.55,"strike_kind":"","strike_s":-1.0},{"at_s":38.87,"authored_s":0.4,"enemy":"galecrest","resolved":"hit","resolved_s":39.28,"strike_kind":"","strike_s":-1.0},{"at_s":44.42,"authored_s":0.4,"enemy":"galecrest","resolved":"avoided","resolved_s":44.83,"strike_kind":"","strike_s":-1.0},{"at_s":49.5,"authored_s":0.4,"enemy":"galecrest","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":53.7,"authored_s":0.8,"enemy":"brooktail","resolved":"avoided","resolved_s":55.97,"strike_kind":"","strike_s":-1.0},{"at_s":55.12,"authored_s":0.8,"enemy":"brooktail","measured_tell_s":0.85,"resolved":"none","strike_kind":"strike_ready","strike_s":55.97},{"at_s":58.13,"authored_s":0.8,"enemy":"brooktail","resolved":"avoided","resolved_s":60.82,"strike_kind":"","strike_s":-1.0},{"at_s":60.02,"authored_s":0.8,"enemy":"brooktail","measured_tell_s":0.8,"resolved":"avoided","resolved_s":62.82,"strike_kind":"strike_ready","strike_s":60.82},{"at_s":61.97,"authored_s":0.8,"enemy":"brooktail","measured_tell_s":0.85,"resolved":"none","strike_kind":"strike_ready","strike_s":62.82},{"at_s":65.22,"authored_s":0.8,"enemy":"brooktail","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":69.18,"authored_s":0.8,"enemy":"meadowhart","measured_tell_s":0.85,"resolved":"hit","resolved_s":70.3,"strike_kind":"lunge_started","strike_s":70.03},{"at_s":71.95,"authored_s":0.8,"enemy":"meadowhart","measured_tell_s":2.73,"resolved":"hit","resolved_s":74.93,"strike_kind":"lunge_started","strike_s":74.68},{"at_s":73.83,"authored_s":0.8,"enemy":"meadowhart","measured_tell_s":1.1,"resolved":"none","strike_kind":"strike_ready","strike_s":74.93},{"at_s":76.58,"authored_s":0.8,"enemy":"meadowhart","measured_tell_s":2.8,"resolved":"hit","resolved_s":79.55,"strike_kind":"lunge_started","strike_s":79.38},{"at_s":78.53,"authored_s":0.8,"enemy":"meadowhart","measured_tell_s":1.02,"resolved":"none","strike_kind":"strike_ready","strike_s":79.55},{"at_s":81.2,"authored_s":0.8,"enemy":"meadowhart","measured_tell_s":2.88,"resolved":"none","strike_kind":"lunge_started","strike_s":84.08},{"at_s":83.23,"authored_s":0.8,"enemy":"meadowhart","resolved":"hit","resolved_s":84.25,"strike_kind":"","strike_s":-1.0},{"at_s":92.13,"authored_s":1.1,"enemy":"tuskroot","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":95.22,"authored_s":1.1,"enemy":"tuskroot","resolved":"avoided","resolved_s":96.37,"strike_kind":"","strike_s":-1.0},{"at_s":98.23,"authored_s":1.1,"enemy":"tuskroot","resolved":"none","strike_kind":"","strike_s":-1.0},{"at_s":100.57,"authored_s":1.1,"enemy":"tuskroot","resolved":"avoided","resolved_s":101.72,"strike_kind":"","strike_s":-1.0},{"at_s":103.58,"authored_s":1.1,"enemy":"tuskroot","resolved":"none","strike_kind":"","strike_s":-1.0}],"time_scale":1.0,"totals":{"avoided":13,"damage_dealt":1168.8,"damage_taken":91.4,"hits_dealt":91,"hits_taken":6,"player_misses":0,"rounds":5,"rounds_won":5,"staggers_dealt":21,"staggers_taken":0,"tells":33,"tells_avoided":13,"tells_hit":6,"tells_unresolved":14,"witness":true}}
+EARNED WARDEN — { "beat": "post_victory_dialogue_read", "conversations": ["stronghold_warden_realm_reward"], "taps": 2 }
+M4 PASS 1_warden_fight expected=real Warden win: defeated_warden, realm_key_cloudreach, realm_heart_meadows_earned; shutter open; same five observed={"missing":[],"reward_flags":["realm_key_cloudreach","realm_heart_meadows_earned"],"shutter_open":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+AFTERMATH CAPTURE {"ally":{"camera_m":5.4,"in_frustum":true,"pos":[8.4,6.2,7651.5],"visible":true},"camera":[12.9,9.2,7651.9],"fight":"warden_aldis","game_frame":7787,"image_size":[1920,1080],"player":{"camera_m":5.8,"in_frustum":true,"pos":[8.1,6.2,7653.2],"visible":true},"png":"user://aftermath/warden_aldis-a1.png","saved":true,"size":[1920.0,1080.0],"trainer":{"camera_m":8.5,"in_frustum":true,"pos":[8.0,6.2,7658.2],"visible":true}}
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 657 plants back, 37304 regreen quads, 137 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+[climax] the legendary stands 10.55 m from the machine's axis, 0.00 m up
+[climax] choice prompts: accept 2.56 m, refuse 2.56 m from the player (reach 1.60 m)
+M4 PASS 2_offer_open expected=legendary_freed; choice open with both prompts; no answer flag; party 5 unchanged observed={"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+EARNED WARDEN — { "slot": 2, "saved": true, "choice_open": true, "stage": "choice", "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "beat": "production_save" }
+M4 DISCLOSED — offer-open production save (slot 2) copied byte-for-byte to D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_fresh_13600_15114_m4_offer_open as the declared start of branches C and A
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at -16.9, 3.7, 7650.2
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=3320 reorder[16 layers]=250
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3799 mark_harvestable=113 group_by_model=320 register_mesh_assets=387 build_batches_total=6064 (of which harvest_points[57397 nodes]=3630, initial_collision_stream[52318 solid]=171) update_mmis=822
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(20326254850867312) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 142/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 20 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_135815
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_135816
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_135817
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_135818
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_135819
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_135820
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[climax] the legendary stands 10.55 m from the machine's axis, 0.00 m up
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 886 plants back, 37304 regreen quads, 133 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+[climax] the legendary stands 13.32 m from the machine's axis, 0.00 m up
+EARNED WARDEN — { "slot": 2, "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (-16.92181, 6.172788, 7650.162), "stage": "join", "loads": 1, "beat": "title_load" }
+[climax] choice prompts: accept 2.56 m, refuse 2.56 m from the player (reach 1.60 m)
+M4 PASS 2_offer_survives_reload expected=title Load of the offer-open save re-offers the same unanswered choice observed={"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+EARNED WARDEN — { "prompt": "/root/MeadowsPlayground/StrongholdClimax/VeridianRefusePromptAnchor/VeridianRefusePrompt", "distance_m": 2.56283092498779, "beat": "veridian_refuse_prompt" }
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[climax] this character refused the legendary; it stays free
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (398.0, -6.098061, 5869.0)
+[climax] the legendary stands 13.32 m from the machine's axis, 0.00 m up
+[climax] every participant has answered; the creature leaves the chamber
+[climax] the tether machinery has failed; 'legendary_freed' is set for SG44
+EARNED WARDEN — { "branch": "R", "read": ["stronghold_machinery_fails"], "beat": "answer_settled" }
+M4 PASS 3R_refuse_prompt expected=legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once observed={"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":133,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":true,"joined":false,"key":true,"pending":false,"receipt":"legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":true,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":0}
+EARNED WARDEN — { "slot": 3, "saved": true, "choice_open": false, "stage": "done", "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "beat": "production_save" }
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at -16.7, 3.9, 7647.9
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=3082 reorder[16 layers]=255
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3525 mark_harvestable=90 group_by_model=319 register_mesh_assets=92 build_batches_total=6244 (of which harvest_points[57397 nodes]=3711, initial_collision_stream[52318 solid]=174) update_mmis=866
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(39999193636405334) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 147/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 20 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_202733
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_202734
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_202735
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_202736
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_202737
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_202738
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 886 plants back, 37304 regreen quads, 132 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (398.0, -6.098061, 5869.0)
+EARNED WARDEN — { "slot": 3, "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (-16.6929, 6.172788, 7647.903), "stage": "done", "loads": 2, "beat": "title_load" }
+M4 PASS 3R_after_reload expected=legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once observed={"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":132,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":true,"joined":false,"key":true,"pending":false,"receipt":"legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":true,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":0}
+M4 PASS 3R_reload_no_reoffer expected=standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged observed={"joined":false,"player_to_climax_m":7647.923828125,"refused":true,"reoffered":false,"stages_seen":["done"],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=3172 reorder[16 layers]=263
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3635 mark_harvestable=110 group_by_model=333 register_mesh_assets=98 build_batches_total=6788 (of which harvest_points[57397 nodes]=3980, initial_collision_stream[52318 solid]=193) update_mmis=943
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(59669525376794722) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 381/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 20 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_269501
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_269502
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_269503
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_269504
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_269505
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_269506
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[climax] the legendary stands 10.55 m from the machine's axis, 0.00 m up
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 886 plants back, 37304 regreen quads, 133 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (398.0, -6.098061, 5869.0)
+[climax] the legendary stands 10.55 m from the machine's axis, 0.00 m up
+[climax] every participant has answered; the creature leaves the chamber
+EARNED WARDEN — { "slot": 2, "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (0.0, 0.92059, 0.0), "stage": "failure", "loads": 3, "beat": "title_load" }
+[climax] the tether machinery has failed; 'legendary_freed' is set for SG44
+M4 PASS 3R_offer_save_no_second_grant expected=standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged observed={"joined":false,"player_to_climax_m":0.920589923858643,"refused":true,"reoffered":false,"stages_seen":["failure","done"],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+M4 PASS 3R_answer_kept_across_saves expected=the offer-open save with the answered character keeps legendary_refused, same five observed={"joined":false,"refused":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+M4 DISCLOSED — 4C: started from the byte-copied offer-open production save (declared start save)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at -16.9, 3.7, 7650.2
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=4492 reorder[16 layers]=274
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=5019 mark_harvestable=253 group_by_model=333 register_mesh_assets=714 build_batches_total=6892 (of which harvest_points[57397 nodes]=3974, initial_collision_stream[52318 solid]=184) update_mmis=921
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(79342794874814579) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 142/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 20 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_336411
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_336412
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_336413
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_336414
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_336415
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_336416
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[climax] the legendary stands 10.55 m from the machine's axis, 0.00 m up
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 886 plants back, 37304 regreen quads, 133 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+[climax] the legendary stands 13.32 m from the machine's axis, 0.00 m up
+EARNED WARDEN — { "slot": 2, "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (-16.92181, 6.172788, 7650.162), "stage": "join", "loads": 4, "beat": "title_load" }
+[climax] choice prompts: accept 2.56 m, refuse 2.56 m from the player (reach 1.60 m)
+M4 PASS 4C_offer_restored expected=the declared offer-open start re-offers the unanswered choice to the same five observed={"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+EARNED WARDEN — { "prompt": "/root/MeadowsPlayground/StrongholdClimax/VeridianAcceptPromptAnchor/VeridianAcceptPrompt", "distance_m": 2.56283092498779, "beat": "veridian_accept_prompt" }
+[climax] the belt is full; R4.10's release ceremony has the decision
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[climax] the legendary stands 13.32 m from the machine's axis, 0.00 m up
+[climax] every participant has answered; the creature leaves the chamber
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (398.0, -6.098061, 5869.0)
+[climax] the tether machinery has failed; 'legendary_freed' is set for SG44
+EARNED WARDEN — { "branch": "C", "read": ["stronghold_machinery_fails"], "beat": "answer_settled" }
+M4 PASS 4C_ceremony_let_newcomer_go expected=legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once observed={"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":133,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":true,"joined":false,"key":true,"pending":false,"receipt":"legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":true,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":0}
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+M4 DISCLOSED — 5A: started from the byte-copied offer-open production save (declared start save)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at -16.9, 3.7, 7650.2
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=3134 reorder[16 layers]=267
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3591 mark_harvestable=86 group_by_model=330 register_mesh_assets=100 build_batches_total=6800 (of which harvest_points[57397 nodes]=3915, initial_collision_stream[52318 solid]=182) update_mmis=928
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(99031466125557858) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 142/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 20 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_403488
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_403489
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_403490
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_403491
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_403492
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_403493
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[climax] the legendary stands 10.55 m from the machine's axis, 0.00 m up
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 886 plants back, 37304 regreen quads, 133 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+[climax] the legendary stands 13.32 m from the machine's axis, 0.00 m up
+EARNED WARDEN — { "slot": 2, "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-3fd010116aee4ec96d669fb5d4ecca74", "creature-8e12dace31044e591f02b96391ca2372", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (-16.92181, 6.172788, 7650.162), "stage": "join", "loads": 5, "beat": "title_load" }
+[climax] choice prompts: accept 2.56 m, refuse 2.56 m from the player (reach 1.60 m)
+M4 PASS 5A_offer_restored expected=the declared offer-open start re-offers the unanswered choice to the same five observed={"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+EARNED WARDEN — { "prompt": "/root/MeadowsPlayground/StrongholdClimax/VeridianAcceptPromptAnchor/VeridianAcceptPrompt", "distance_m": 2.56283092498779, "beat": "veridian_accept_prompt" }
+[climax] the belt is full; R4.10's release ceremony has the decision
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[meadow] local healing at 3 station(s): 0 plants back, 0 drain skin(s) fading
+[climax] the legendary stands 13.32 m from the machine's axis, 0.00 m up
+[climax] every participant has answered; the creature leaves the chamber
+EARNED WARDEN — { "released": { "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74", "species": "bramblebun", "level": 17, "index": 4 }, "joined": { "uid": "creature-a0d44d79be1d7e1abaf51017072e188f", "species": "veridian", "level": 22 }, "beat": "veridian_accepted_release_lowest" }
+[climax] the tether machinery has failed; 'legendary_freed' is set for SG44
+EARNED WARDEN — { "branch": "A", "read": ["stronghold_machinery_fails"], "beat": "answer_settled" }
+M4 PASS 5A_party_after_release expected=the four earned members kept + the Veridian; the lowest-level member released observed={"joined":{"level":22,"species":"veridian","uid":"creature-a0d44d79be1d7e1abaf51017072e188f"},"released":{"index":4,"level":17,"species":"bramblebun","uid":"creature-3fd010116aee4ec96d669fb5d4ecca74"},"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+M4 PASS 5A_accept_release_lowest expected=legendary_joined + accepted receipt; not refused; the new five with one Veridian; no herd display; healing applied; key/heart; Rift open once observed={"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":133,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":false,"joined":true,"key":true,"pending":false,"receipt":"legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":false,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":1}
+EARNED WARDEN — { "slot": 3, "saved": true, "choice_open": false, "stage": "done", "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-8e12dace31044e591f02b96391ca2372", "creature-a0d44d79be1d7e1abaf51017072e188f", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "beat": "production_save" }
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at -16.8, 3.5, 7651.8
+[scatter bake] load phases (ms): read[256 regions, 374406 placements, 424801 skipped]=3056 reorder[16 layers]=260
+[vegetation] grass field is on; 424801 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3505 mark_harvestable=86 group_by_model=321 register_mesh_assets=91 build_batches_total=6839 (of which harvest_points[57397 nodes]=3928, initial_collision_stream[52318 solid]=183) update_mmis=881
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(118728877634748527) region_map=1024 entries
+[playground] scattered 373494 props in 36 batches (57371 harvestable, 26 already chopped, 141/52307 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+[props] placed 425 props in 53 clusters (6 usable rest points)
+[village_npcs] placed 20 of 20
+[relay_site] placed 0 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 0 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 79 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons (disabled)
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)
+[playground] placed 146 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 738 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 745 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_470567
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_470568
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_470569
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_470570
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_470571
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_470572
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[occupation] the garrison withdrew: 2 groups gone, 5 dark (36 lights out, 105 flames out, 31 surfaces unlit)
+[meadow] the tether let go: 886 plants back, 37304 regreen quads, 132 tether lights out, 29 pylons down (0 left standing, 168 cable pieces gone), 7 of the herd back, 0 barriers open, 4 beaten patrols withdrawn
+EARNED WARDEN — { "slot": 3, "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-8e12dace31044e591f02b96391ca2372", "creature-a0d44d79be1d7e1abaf51017072e188f", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (-16.81977, 6.172788, 7651.764), "stage": "done", "loads": 6, "beat": "title_load" }
+M4 PASS 5A_after_reload expected=legendary_joined + accepted receipt; not refused; the new five with one Veridian; no herd display; healing applied; key/heart; Rift open once observed={"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":132,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":false,"joined":true,"key":true,"pending":false,"receipt":"legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":false,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":1}
+M4 PASS 5A_reload_no_reoffer expected=standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged observed={"joined":true,"player_to_climax_m":7651.78515625,"refused":false,"reoffered":false,"stages_seen":["done"],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+[meadows_earned_team] {"beat":"care","creature_id":-9222887602913054070,"food_after":0.0,"food_before":0.0,"hp_after":143.849360363901,"hp_before":93.8493603639009,"item":"potion_small","mood_after":99.6042473249994,"mood_before":99.6076898749994,"remaining":3}
+EARNED WARDEN — { "index": 0, "species": "ripplet", "hp": 93.8493603639009, "max_hp": 212.1, "fainted": false, "item": "potion_small", "hp_after": 143.849360363901, "beat": "bench_care" }
+[meadows_earned_team] {"beat":"care","creature_id":-9222887602896500110,"food_after":0.0,"food_before":0.0,"hp_after":162.23289504114,"hp_before":112.23289504114,"item":"potion_small","mood_after":99.6005926499994,"mood_before":99.6042473249994,"remaining":2}
+EARNED WARDEN — { "index": 1, "species": "bramblebun", "hp": 112.23289504114, "max_hp": 208.375014125824, "fainted": false, "item": "potion_small", "hp_after": 162.23289504114, "beat": "bench_care" }
+[meadows_earned_team] {"after":1,"beat":"party_cycle","before":0,"wanted":4}
+[meadows_earned_team] {"after":2,"beat":"party_cycle","before":1,"wanted":4}
+[meadows_earned_team] {"after":3,"beat":"party_cycle","before":2,"wanted":4}
+[meadows_earned_team] {"after":4,"beat":"party_cycle","before":3,"wanted":4}
+EARNED WARDEN — { "from": (19.40089, -6.919785, 7481.37), "points": "[(-28.12, 7409.87), (-33.99, 7513.46)]", "reason": "B15: the storm spoke\'s own road crosses the Sigil Gate gorge; walk its points north of it", "beat": "storm_road_north_of_gorge" }
+M4 DISCLOSED — Kell acknowledgement skipped (B13); the Rift precondition meadows_acknowledged is not required by this helper
+M4 PASS 6_rift_ready expected=span standing once (openings 1), 0 crossings yet, Cloudreach admitted by the key observed={"can_enter_realm":true,"crossings_fired":0,"meadows_acknowledged":false,"openings":1,"span_ready":true}
+[rift_crossing] the player crossed the rebuilt storm road span into Cloudreach
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+ERROR: Parameter "material" is null.
+   at: material_casts_shadows (drivers/gles3/storage/material_storage.cpp:2592)
+ERROR: Parameter "material" is null.
+   at: material_is_animated (drivers/gles3/storage/material_storage.cpp:2579)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (drivers/gles3/storage/material_storage.cpp:2618)
+ERROR: Parameter "material" is null.
+   at: material_update_dependency (drivers/gles3/storage/material_storage.cpp:2630)
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:936)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:584)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:549)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:117)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:409)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:410)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:410)
+M4 PASS 6_rift_fires_once expected=trigger entered once; crossings_fired 1; openings 1 observed={"crossings_fired":1,"openings":1,"trigger_entries":1}
+M4 PASS 6_cloudreach_same_five expected=realm cloudreach reached by the physical crossing with the recorded five observed={"expected":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"heart":true,"key":true,"legendary_joined":true,"realm":"cloudreach","realm_gate_cloudreach_unlocked":true,"scene":"CloudreachCliffs","uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]}
+EARNED WARDEN — { "uids": ["creature-390db8e0de00cd1fcaaf1747203b0768", "creature-8e12dace31044e591f02b96391ca2372", "creature-a0d44d79be1d7e1abaf51017072e188f", "creature-c785f517af159966b72ca0f49f61d386", "creature-f4118d54a2317867246afbf1e8ea834f"], "player": (0.0, 105.0302, -260.0), "trigger_entries": 1, "wall_seconds": 148.118, "beat": "cloudreach_arrived" }
+M4 RESULT {"completed":true,"disclosures":["offer-open production save (slot 2) copied byte-for-byte to D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_fresh_13600_15114_m4_offer_open as the declared start of branches C and A","4C: started from the byte-copied offer-open production save (declared start save)","5A: started from the byte-copied offer-open production save (declared start save)","Kell acknowledgement skipped (B13); the Rift precondition meadows_acknowledged is not required by this helper"],"failures":[],"frames_watched":21796,"max_party_size_any_frame":5,"passed":true,"steps":[{"expected":"5 earned UIDs at the Warden arena; no Warden/ending flags","observed":{"arena_m":0.528320968151093,"ending_flags":[],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"0_resume_seed4_hall"},{"expected":"real Warden win: defeated_warden, realm_key_cloudreach, realm_heart_meadows_earned; shutter open; same five","observed":{"missing":[],"reward_flags":["realm_key_cloudreach","realm_heart_meadows_earned"],"shutter_open":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"1_warden_fight"},{"expected":"legendary_freed; choice open with both prompts; no answer flag; party 5 unchanged","observed":{"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"2_offer_open"},{"expected":"title Load of the offer-open save re-offers the same unanswered choice","observed":{"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"2_offer_survives_reload"},{"expected":"legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once","observed":{"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":133,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":true,"joined":false,"key":true,"pending":false,"receipt":"legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":true,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":0},"pass":true,"step":"3R_refuse_prompt"},{"expected":"legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once","observed":{"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":132,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":true,"joined":false,"key":true,"pending":false,"receipt":"legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":true,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":0},"pass":true,"step":"3R_after_reload"},{"expected":"standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged","observed":{"joined":false,"player_to_climax_m":7647.923828125,"refused":true,"reoffered":false,"stages_seen":["done"],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"3R_reload_no_reoffer"},{"expected":"standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged","observed":{"joined":false,"player_to_climax_m":0.920589923858643,"refused":true,"reoffered":false,"stages_seen":["failure","done"],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"3R_offer_save_no_second_grant"},{"expected":"the offer-open save with the answered character keeps legendary_refused, same five","observed":{"joined":false,"refused":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"3R_answer_kept_across_saves"},{"expected":"the declared offer-open start re-offers the unanswered choice to the same five","observed":{"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"4C_offer_restored"},{"expected":"legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once","observed":{"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":133,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":true,"joined":false,"key":true,"pending":false,"receipt":"legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":true,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":0},"pass":true,"step":"4C_ceremony_let_newcomer_go"},{"expected":"the declared offer-open start re-offers the unanswered choice to the same five","observed":{"accept_prompt":true,"choice_open":true,"joined":false,"legendary_freed":true,"pending":false,"refuse_prompt":true,"refused":false,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-3fd010116aee4ec96d669fb5d4ecca74","creature-8e12dace31044e591f02b96391ca2372","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"5A_offer_restored"},{"expected":"the four earned members kept + the Veridian; the lowest-level member released","observed":{"joined":{"level":22,"species":"veridian","uid":"creature-a0d44d79be1d7e1abaf51017072e188f"},"released":{"index":4,"level":17,"species":"bramblebun","uid":"creature-3fd010116aee4ec96d669fb5d4ecca74"},"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"5A_party_after_release"},{"expected":"legendary_joined + accepted receipt; not refused; the new five with one Veridian; no herd display; healing applied; key/heart; Rift open once","observed":{"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":133,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":false,"joined":true,"key":true,"pending":false,"receipt":"legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":false,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":1},"pass":true,"step":"5A_accept_release_lowest"},{"expected":"legendary_joined + accepted receipt; not refused; the new five with one Veridian; no herd display; healing applied; key/heart; Rift open once","observed":{"healing_applied":true,"healing_report":{"barriers_opened":0,"bloomed":1963,"cables_hidden":168,"dead_ground_faded":2,"drain_lifted":0,"field_greened":17,"herd_returned":7,"lights_killed":132,"patrols_withdrawn":4,"pylons_left_standing":0,"pylons_toppled":29,"regreened":37304,"regrown":886},"heart":true,"herd_display":false,"joined":true,"key":true,"pending":false,"receipt":"legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0","receipt_set":true,"refused":false,"rift":{"crossings_fired":0,"openings":1,"span_ready":true},"rift_ok":true,"settled":true,"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"veridians":1},"pass":true,"step":"5A_after_reload"},{"expected":"standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged","observed":{"joined":true,"player_to_climax_m":7651.78515625,"refused":false,"reoffered":false,"stages_seen":["done"],"uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"5A_reload_no_reoffer"},{"expected":"span standing once (openings 1), 0 crossings yet, Cloudreach admitted by the key","observed":{"can_enter_realm":true,"crossings_fired":0,"meadows_acknowledged":false,"openings":1,"span_ready":true},"pass":true,"step":"6_rift_ready"},{"expected":"trigger entered once; crossings_fired 1; openings 1","observed":{"crossings_fired":1,"openings":1,"trigger_entries":1},"pass":true,"step":"6_rift_fires_once"},{"expected":"realm cloudreach reached by the physical crossing with the recorded five","observed":{"expected":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"],"heart":true,"key":true,"legendary_joined":true,"realm":"cloudreach","realm_gate_cloudreach_unlocked":true,"scene":"CloudreachCliffs","uids":["creature-390db8e0de00cd1fcaaf1747203b0768","creature-8e12dace31044e591f02b96391ca2372","creature-a0d44d79be1d7e1abaf51017072e188f","creature-c785f517af159966b72ca0f49f61d386","creature-f4118d54a2317867246afbf1e8ea834f"]},"pass":true,"step":"6_cloudreach_same_five"}],"steps_passed":19,"steps_total":19,"title_loads":6,"wall_seconds":1373.065}
+FOUR BIOME CHECKPOINT {"boundary":"c1_arrival","commit":"212e036edca60d03ee7febcc5471fe8e4c05d944","dir":"D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_checkpoints_13600_15114/c1_arrival","elapsed_seconds":1587.652,"flags_total":129,"party":[{"level":18,"nickname":"Bud","species":"ripplet","uid":"creature-f4118d54a2317867246afbf1e8ea834f"},{"level":19,"nickname":"","species":"bramblebun","uid":"creature-390db8e0de00cd1fcaaf1747203b0768"},{"level":18,"nickname":"","species":"mudsnout","uid":"creature-c785f517af159966b72ca0f49f61d386"},{"level":18,"nickname":"","species":"mudsnout","uid":"creature-8e12dace31044e591f02b96391ca2372"},{"level":22,"nickname":"","species":"veridian","uid":"creature-a0d44d79be1d7e1abaf51017072e188f"}],"world_seed":1393508821}
+FRESH COVERAGE OBSERVATIONS {"below_two_samples":0,"camera_below_two_samples":26,"caveat":"below_two_samples grades only aligned <=5m road samples; camera_below_two_samples retains all observed-camera telemetry; unvisited routes and rendered silhouette readability remain unproved","complete_coverage":false,"failures":[],"graded_road_samples":7,"kind":"summary","observed_travel_m":480.737961193547,"off_route_samples":36,"samples":44,"unaligned_road_samples":1,"undersampled_intervals":0,"unusable_heading_samples":0}
+FIGHT LOG SUMMARY {"f04_4_witnessed":false,"fights":1,"missing_or_unwitnessed":["captain_riverwatch","captain_field","captain_ridge"],"per_fight":{"warden_aldis":{"attempts":1,"avoided":13,"capture":"user://aftermath/warden_aldis-a1.png","duration_s":105.37,"hits_dealt":91,"hits_taken":6,"outcome":"won","player_misses":0,"rounds":5,"target":true,"tells":33,"tells_avoided":13,"tells_hit":6,"witness":true}},"targets":["captain_riverwatch","captain_field","captain_ridge","warden_aldis"]}
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":["D:/tetherbound/gpu-run-service/meadows-warden-aftermath/profile/Godot/app_userdata/Tetherbound/four_biome_checkpoints_13600_15114/c1_arrival"],"counts_as_proof":false,"cumulative_elapsed_seconds":10414.884,"dry_run":false,"elapsed_seconds":1672.914,"failures":[],"local_chains":[],"reached":"cloudreach_arrived","requested_prefix_passed":true,"resume":{"boundary":"hall","source":"res://tests/fixtures/earned_saves/checkpoints/seed4_hall","source_commit":"","source_kind":"earned_chain_runner"},"resumed_from":"hall","scratch":"user://four_biome_fresh_13600_15114"}

@@ -1,0 +1,10 @@
+{
+  "aabb": "[P: (-2.5, 0.0, -1.504925), S: (5.0, 10.0, 2.884579)]",
+  "crystal_parent_position": "(0.0, 5.0, 113.0)",
+  "crystal_visual_position": "(0.0, -5.0, 0.0)",
+  "hidden_after_release": true,
+  "shader_assigned": true,
+  "viewport": "(1920.0, 1080.0)",
+  "visible_before_release": true,
+  "waterfall_children": 5
+}

@@ -1,0 +1,2215 @@
+{
+  "meadows": [
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        7.3,
+        51.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_candy_gate_meadow",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -7.9,
+        128.3
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_potion_gate_meadow",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stamina_mushroom",
+      "subject": "stamina_mushroom",
+      "position_xz": [
+        -348.3,
+        389.9
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_mushroom_rise_stamina",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        -378.0,
+        350.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_candy_rise_top",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        -309.0,
+        498.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_candy_pond_alpha",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "wild_mushroom",
+      "subject": "wild_mushroom",
+      "position_xz": [
+        -360.0,
+        570.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_mushroom_pond_bank",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        203.6,
+        891.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_revive_old_champion_detour",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "speed_mushroom",
+      "subject": "speed_mushroom",
+      "position_xz": [
+        433.3,
+        1012.8
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/pickups.json",
+      "authored_id": "b1_mushroom_grove_speed",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "wood",
+      "subject": "wood",
+      "position_xz": [
+        16.0,
+        -28.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "0",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "stone",
+      "subject": "stone",
+      "position_xz": [
+        22.0,
+        -34.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "4",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "fiber",
+      "subject": "fiber",
+      "position_xz": [
+        12.0,
+        -22.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "7",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "berries",
+      "subject": "berries",
+      "position_xz": [
+        -6.0,
+        -24.5
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "10",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -478.0,
+        535.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "1028",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "orb_basic",
+      "subject": "orb_basic",
+      "position_xz": [
+        -245.0,
+        935.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "1029",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "travel_pack",
+      "subject": "travel_pack",
+      "position_xz": [
+        515.0,
+        1035.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "1030",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        -30.0,
+        -24.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/harvest.json",
+      "authored_id": "1034",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "anvil_log",
+      "subject": "Anvil_Log",
+      "position_xz": [
+        12.5,
+        -35.5
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "work_area",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "workbench",
+      "subject": "Workbench",
+      "position_xz": [
+        11.5,
+        -34.5
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "work_area",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "whetstone",
+      "subject": "Whetstone",
+      "position_xz": [
+        13.3,
+        -34.3
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "work_area",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "crate_wooden",
+      "subject": "Crate_Wooden",
+      "position_xz": [
+        11.5,
+        -36.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "work_area",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "pickaxe_bronze",
+      "subject": "Pickaxe_Bronze",
+      "position_xz": [
+        13.7,
+        -36.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "work_area",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "barrel_apples",
+      "subject": "Barrel_Apples",
+      "position_xz": [
+        -24.0,
+        -25.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "farmhouse_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "farmcrate_apple",
+      "subject": "FarmCrate_Apple",
+      "position_xz": [
+        -24.9,
+        -24.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "farmhouse_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "farmcrate_empty",
+      "subject": "FarmCrate_Empty",
+      "position_xz": [
+        -23.3,
+        -24.7
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "farmhouse_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "bucket_wooden_1",
+      "subject": "Bucket_Wooden_1",
+      "position_xz": [
+        -24.3,
+        -26.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "farmhouse_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "bag",
+      "subject": "Bag",
+      "position_xz": [
+        24.9,
+        -27.3
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trainer_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "barrel",
+      "subject": "Barrel",
+      "position_xz": [
+        26.62,
+        -28.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trainer_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "axe_bronze",
+      "subject": "Axe_Bronze",
+      "position_xz": [
+        -390.9,
+        521.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "bridge_repair_site",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "rope_1",
+      "subject": "Rope_1",
+      "position_xz": [
+        -391.0,
+        521.34
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "bridge_repair_site",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "log_large",
+      "subject": "log_large",
+      "position_xz": [
+        -15.0,
+        -18.9
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "village_twins_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "bench",
+      "subject": "Bench",
+      "position_xz": [
+        4.7,
+        -6.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "village_twins_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "bonfire_fire",
+      "subject": "Bonfire_Fire",
+      "position_xz": [
+        344.0,
+        935.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "campfire_stone_ring",
+      "subject": "campfire_stone_ring",
+      "position_xz": [
+        344.0,
+        935.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "tree_log",
+      "subject": "tree-log",
+      "position_xz": [
+        342.4,
+        933.25
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "stool",
+      "subject": "Stool",
+      "position_xz": [
+        344.6,
+        937.2
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "tree_log_small",
+      "subject": "tree-log-small",
+      "position_xz": [
+        345.15,
+        936.35
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "backpack",
+      "subject": "Backpack",
+      "position_xz": [
+        342.95,
+        937.85
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "camp_tent",
+      "subject": "camp_tent",
+      "position_xz": [
+        343.5,
+        941.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "approach"
+    },
+    {
+      "family_type": "prop",
+      "slug": "camp_bed",
+      "subject": "camp_bed",
+      "position_xz": [
+        343.5,
+        937.9
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "bush_common",
+      "subject": "Bush_Common",
+      "position_xz": [
+        347.2,
+        937.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "bush_common_flowers",
+      "subject": "Bush_Common_Flowers",
+      "position_xz": [
+        339.4,
+        932.8
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "fern_1",
+      "subject": "Fern_1",
+      "position_xz": [
+        345.9,
+        938.4
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "grass_wide_tall",
+      "subject": "Grass_Wide_Tall",
+      "position_xz": [
+        348.2,
+        935.9
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "clover_1",
+      "subject": "Clover_1",
+      "position_xz": [
+        340.9,
+        932.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "trail_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "rock_medium_1",
+      "subject": "Rock_Medium_1",
+      "position_xz": [
+        301.9,
+        982.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "old_champion_rest",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "rock_medium_3",
+      "subject": "Rock_Medium_3",
+      "position_xz": [
+        301.2,
+        984.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "old_champion_rest",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "rock_medium_2",
+      "subject": "Rock_Medium_2",
+      "position_xz": [
+        302.4,
+        984.1
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "old_champion_rest",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "banner_1",
+      "subject": "Banner_1",
+      "position_xz": [
+        158.0,
+        1230.2
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "tether_waypost",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "deadtree_2",
+      "subject": "DeadTree_2",
+      "position_xz": [
+        -395.5,
+        360.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "rise_cache_marker",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "prop_woodenfence_single",
+      "subject": "Prop_WoodenFence_Single",
+      "position_xz": [
+        81.9,
+        1223.2
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "bridge_approach_fence",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "prop_woodenfence_extension2",
+      "subject": "Prop_WoodenFence_Extension2",
+      "position_xz": [
+        75.57,
+        1225.33
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "bridge_approach_fence",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "prop_woodenfence_extension1",
+      "subject": "Prop_WoodenFence_Extension1",
+      "position_xz": [
+        62.9,
+        1229.6
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "bridge_approach_fence",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "twistedtree_3",
+      "subject": "TwistedTree_3",
+      "position_xz": [
+        99.5,
+        -55.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "the_rise_rock_crown",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "rockpath_round_wide",
+      "subject": "RockPath_Round_Wide",
+      "position_xz": [
+        74.8,
+        -42.5
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "the_rise_cairn_trail",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "rockpath_round_thin",
+      "subject": "RockPath_Round_Thin",
+      "position_xz": [
+        72.6,
+        -46.0
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "the_rise_cairn_trail",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "torch_metal",
+      "subject": "Torch_Metal",
+      "position_xz": [
+        77.6,
+        -43.4
+      ],
+      "band": "band1_lower_meadows",
+      "source": "data/config/bands/band1_lower_meadows/props.json",
+      "authored_id": "the_rise_cairn_trail",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        -62.0,
+        2934.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/pickups.json",
+      "authored_id": "b2_potion_large_kest_road",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "rootstone",
+      "subject": "rootstone",
+      "position_xz": [
+        394.0,
+        1797.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/harvest.json",
+      "authored_id": "12",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "ironwood",
+      "subject": "ironwood",
+      "position_xz": [
+        -321.5,
+        2616.3
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/harvest.json",
+      "authored_id": "17",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        350.0,
+        1968.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/harvest.json",
+      "authored_id": "2013",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "hide_boots",
+      "subject": "hide_boots",
+      "position_xz": [
+        -165.0,
+        2225.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/harvest.json",
+      "authored_id": "2015",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "stoneguard_brew",
+      "subject": "stoneguard_brew",
+      "position_xz": [
+        -345.0,
+        2585.0
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/harvest.json",
+      "authored_id": "2016",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "prop_wagon",
+      "subject": "Prop_Wagon",
+      "position_xz": [
+        404.0,
+        1787.5
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/props.json",
+      "authored_id": "quarry_station",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "approach"
+    },
+    {
+      "family_type": "prop",
+      "slug": "cabinet",
+      "subject": "Cabinet",
+      "position_xz": [
+        -257.3,
+        2258.4
+      ],
+      "band": "band2_stone_and_root",
+      "source": "data/config/bands/band2_stone_and_root/props.json",
+      "authored_id": "ranger_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "hide_leggings",
+      "subject": "hide_leggings",
+      "position_xz": [
+        165.0,
+        4548.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/harvest.json",
+      "authored_id": "3018",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "attack_tonic",
+      "subject": "attack_tonic",
+      "position_xz": [
+        200.0,
+        3688.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/harvest.json",
+      "authored_id": "3019",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "orb_greater",
+      "subject": "orb_greater",
+      "position_xz": [
+        -133.5,
+        3454.5
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/harvest.json",
+      "authored_id": "3026",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "floor_unevenbrick",
+      "subject": "Floor_UnevenBrick",
+      "position_xz": [
+        -140.46,
+        4219.83
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/props.json",
+      "authored_id": "old_mill_yard",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "grass_wheat",
+      "subject": "Grass_Wheat",
+      "position_xz": [
+        -299.0,
+        4178.2
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/props.json",
+      "authored_id": "long_water_reach",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "grass_wispy_tall",
+      "subject": "Grass_Wispy_Tall",
+      "position_xz": [
+        -296.8,
+        4178.6
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/props.json",
+      "authored_id": "long_water_reach",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "banner_2",
+      "subject": "Banner_2",
+      "position_xz": [
+        -31.0,
+        4171.0
+      ],
+      "band": "band3_the_river_lock",
+      "source": "data/config/bands/band3_the_river_lock/props.json",
+      "authored_id": "doss_ranger_camp",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "hide_helm",
+      "subject": "hide_helm",
+      "position_xz": [
+        -358.0,
+        5058.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "authored_id": "4023",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "swift_tonic",
+      "subject": "swift_tonic",
+      "position_xz": [
+        155.0,
+        5605.0
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "authored_id": "4024",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "prop_support",
+      "subject": "Prop_Support",
+      "position_xz": [
+        394.7,
+        5885.5
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/props.json",
+      "authored_id": "highfield_drove_gate",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "stall_cart_empty",
+      "subject": "Stall_Cart_Empty",
+      "position_xz": [
+        413.7,
+        5883.2
+      ],
+      "band": "band4_upper_meadows_ironwood",
+      "source": "data/config/bands/band4_upper_meadows_ironwood/props.json",
+      "authored_id": "highfield_drove_camp_hero",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "prop_metalfence_ornament",
+      "subject": "Prop_MetalFence_Ornament",
+      "position_xz": [
+        0.8,
+        7500.7
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/props.json",
+      "authored_id": "hallward_overlook",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "weaponstand",
+      "subject": "WeaponStand",
+      "position_xz": [
+        2.9,
+        7504.4
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/props.json",
+      "authored_id": "hallward_overlook",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "prop",
+      "slug": "crate_metal",
+      "subject": "Crate_Metal",
+      "position_xz": [
+        25.2,
+        7503.4
+      ],
+      "band": "band5_stronghold_approach",
+      "source": "data/config/bands/band5_stronghold_approach/props.json",
+      "authored_id": "hallward_overlook",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
+  ],
+  "water": [
+    {
+      "family_type": "pickup",
+      "slug": "torch",
+      "subject": "torch",
+      "position_xz": [
+        -30.0,
+        -54.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        -144.0,
+        18.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "cloudreach_trail_preserve",
+      "subject": "cloudreach_trail_preserve",
+      "position_xz": [
+        60.0,
+        -156.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:003",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -72.0,
+        132.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:004",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "attack_tonic",
+      "subject": "attack_tonic",
+      "position_xz": [
+        96.0,
+        138.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        -138.0,
+        -108.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:007",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        -48.0,
+        -168.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:009",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        162.0,
+        54.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:010",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_prime",
+      "subject": "orb_prime",
+      "position_xz": [
+        -72.0,
+        54.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:014",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "swift_tonic",
+      "subject": "swift_tonic",
+      "position_xz": [
+        174.0,
+        -6.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:pickup:020",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "skill_candy_i",
+      "subject": "skill_candy_i",
+      "position_xz": [
+        66.0,
+        374.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:reedhaven:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "hide_boots",
+      "subject": "hide_boots",
+      "position_xz": [
+        -30.0,
+        548.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:reedhaven:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_greater",
+      "subject": "orb_greater",
+      "position_xz": [
+        90.0,
+        578.0
+      ],
+      "band": "reedhaven",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:reedhaven:pickup:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_aqua_shot",
+      "subject": "tm_aqua_shot",
+      "position_xz": [
+        594.0,
+        654.0
+      ],
+      "band": "brine_steps",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:brine_steps:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "travel_pack",
+      "subject": "travel_pack",
+      "position_xz": [
+        302.0,
+        1210.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:shellwatch:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "berries",
+      "subject": "berries",
+      "position_xz": [
+        290.0,
+        1300.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:shellwatch:pickup:012",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "skill_candy_ii",
+      "subject": "skill_candy_ii",
+      "position_xz": [
+        562.0,
+        1680.0
+      ],
+      "band": "tidal_cradle",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:tidal_cradle:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_tidal_burst",
+      "subject": "tm_tidal_burst",
+      "position_xz": [
+        6.0,
+        2124.0
+      ],
+      "band": "salt_crown",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:salt_crown:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        1012.0,
+        2900.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:sluice_isle:pickup:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_riptide_lance",
+      "subject": "tm_riptide_lance",
+      "position_xz": [
+        754.0,
+        2708.0
+      ],
+      "band": "sluice_isle",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:sluice_isle:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "skill_candy_iii",
+      "subject": "skill_candy_iii",
+      "position_xz": [
+        1409.751,
+        3550.137
+      ],
+      "band": "deep_watch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:deep_watch:pickup:002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_leviathan_surge",
+      "subject": "tm_leviathan_surge",
+      "position_xz": [
+        1464.0,
+        3410.0
+      ],
+      "band": "deep_watch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:deep_watch:pickup:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "reed_fiber",
+      "subject": "reed_fiber",
+      "position_xz": [
+        18.0,
+        -18.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "driftwood",
+      "subject": "driftwood",
+      "position_xz": [
+        -12.0,
+        66.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:003",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "reef_stone",
+      "subject": "reef_stone",
+      "position_xz": [
+        72.0,
+        -24.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:005",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "tide_bloom",
+      "subject": "tide_bloom",
+      "position_xz": [
+        -30.0,
+        -6.0
+      ],
+      "band": "first_shore",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:first_shore:harvest:010",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "sluice_metal",
+      "subject": "sluice_metal",
+      "position_xz": [
+        302.0,
+        1018.0
+      ],
+      "band": "shellwatch",
+      "source": "data/config/water_pickups.json",
+      "authored_id": "water:shellwatch:harvest:007",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
+  ],
+  "cloudreach": [
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        -281.5,
+        509.5
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_lower_good_candy",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -124,
+        704
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_lower_potion",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        -320,
+        1040
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_lower_revive",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        -1004,
+        1315
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_west_great_candy",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        346,
+        1945
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_arch_large_potion",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_wind_blade",
+      "subject": "tm_wind_blade",
+      "position_xz": [
+        -1204,
+        1695
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_west_wind_tm",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stamina_mushroom",
+      "subject": "stamina_mushroom",
+      "position_xz": [
+        409,
+        3245
+      ],
+      "band": "windscar_ravine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_aerie_stamina",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        1116,
+        2946
+      ],
+      "band": "high_roost_sky_shrine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_shrine_rare_candy",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_heavenfall",
+      "subject": "tm_heavenfall",
+      "position_xz": [
+        895,
+        2705
+      ],
+      "band": "high_roost_sky_shrine",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_perches_heavenfall",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_aerial_flash",
+      "subject": "tm_aerial_flash",
+      "position_xz": [
+        -755,
+        4565
+      ],
+      "band": "upper_cloudreach",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_pickup_upper_aerial_tm",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "speed_mushroom",
+      "subject": "speed_mushroom",
+      "position_xz": [
+        300.9,
+        654.4
+      ],
+      "band": "gate_lower_cliffs",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_recovery_gate_detour_speed_01",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "wild_mushroom",
+      "subject": "wild_mushroom",
+      "position_xz": [
+        -939,
+        1292.4
+      ],
+      "band": "broken_causeways",
+      "source": "data/config/cloudreach_chapter.json",
+      "authored_id": "cr_recovery_broken_detour_wild_01",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
+  ],
+  "stormwood": [
+    {
+      "family_type": "pickup",
+      "slug": "good_candy",
+      "subject": "good_candy",
+      "position_xz": [
+        -300,
+        180
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_01",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "great_candy",
+      "subject": "great_candy",
+      "position_xz": [
+        -166.1,
+        2696.6
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_09",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rare_candy",
+      "subject": "rare_candy",
+      "position_xz": [
+        -1118.8,
+        3282.1
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_12",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_small",
+      "subject": "potion_small",
+      "position_xz": [
+        -650,
+        3550
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_route_13",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "potion_large",
+      "subject": "potion_large",
+      "position_xz": [
+        784,
+        2566
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_112",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "revive",
+      "subject": "revive",
+      "position_xz": [
+        758,
+        2732
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_130",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "speed_mushroom",
+      "subject": "speed_mushroom",
+      "position_xz": [
+        -1100,
+        4200
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_154",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stamina_mushroom",
+      "subject": "stamina_mushroom",
+      "position_xz": [
+        -378,
+        4284
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_162",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "wild_mushroom",
+      "subject": "wild_mushroom",
+      "position_xz": [
+        -282,
+        4248
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_170",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "swift_tonic",
+      "subject": "swift_tonic",
+      "position_xz": [
+        -126,
+        5236
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_178",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "attack_tonic",
+      "subject": "attack_tonic",
+      "position_xz": [
+        -78,
+        5568
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_182",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "stoneguard_brew",
+      "subject": "stoneguard_brew",
+      "position_xz": [
+        -30,
+        5200
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_186",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_basic",
+      "subject": "orb_basic",
+      "position_xz": [
+        18,
+        5532
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_190",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_greater",
+      "subject": "orb_greater",
+      "position_xz": [
+        -160,
+        5330
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_196",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "orb_prime",
+      "subject": "orb_prime",
+      "position_xz": [
+        -112,
+        5662
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_200",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_static_snap",
+      "subject": "tm_static_snap",
+      "position_xz": [
+        -800,
+        1900
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_202",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_voltaic_whip",
+      "subject": "tm_voltaic_whip",
+      "position_xz": [
+        620,
+        2600
+      ],
+      "band": "hollow_crown",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_203",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_thunder_break",
+      "subject": "tm_thunder_break",
+      "position_xz": [
+        -900,
+        4400
+      ],
+      "band": "deepwood",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_204",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "tm_stormfall",
+      "subject": "tm_stormfall",
+      "position_xz": [
+        73,
+        5377
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_205",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "insulated_leggings",
+      "subject": "insulated_leggings",
+      "position_xz": [
+        -290,
+        5460
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_206",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "insulated_boots",
+      "subject": "insulated_boots",
+      "position_xz": [
+        -153,
+        5543
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_207",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "rootgate_release_key",
+      "subject": "rootgate_release_key",
+      "position_xz": [
+        -16,
+        5626
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_208",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "dynamo_core_key",
+      "subject": "dynamo_core_key",
+      "position_xz": [
+        121,
+        5009
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_209",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "pickup",
+      "slug": "spark_of_stormwood",
+      "subject": "spark_of_stormwood",
+      "position_xz": [
+        -242,
+        5092
+      ],
+      "band": "dynamo",
+      "source": "data/config/stormwood_pickups.json",
+      "authored_id": "stormwood_pickup_pocket_210",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "conductor_vine",
+      "subject": "conductor_vine",
+      "position_xz": [
+        -1850,
+        220
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_cinder_verge_001",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "glowmoss",
+      "subject": "glowmoss",
+      "position_xz": [
+        -1725,
+        220
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_cinder_verge_002",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "stormglass",
+      "subject": "stormglass",
+      "position_xz": [
+        -1600,
+        220
+      ],
+      "band": "cinder_verge",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_cinder_verge_003",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "voltcap",
+      "subject": "voltcap",
+      "position_xz": [
+        -1720,
+        1270
+      ],
+      "band": "glowmoss_hollows",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_glowmoss_hollows_042",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "stormglass_crown",
+      "subject": "stormglass_crown",
+      "position_xz": [
+        -1750,
+        2380
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_conductor_run_071",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    },
+    {
+      "family_type": "harvest",
+      "slug": "thunderwood",
+      "subject": "thunderwood",
+      "position_xz": [
+        -1750,
+        2510
+      ],
+      "band": "conductor_run",
+      "source": "data/config/stormwood_harvests.json",
+      "authored_id": "stormwood_harvest_conductor_run_076",
+      "heading_deg": 0.0,
+      "route": "off",
+      "view": "close"
+    }
+  ]
+}

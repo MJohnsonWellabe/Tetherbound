@@ -1,0 +1,151 @@
+{
+  "label": "cb-f08-3-c2-review-retry",
+  "sha": "9072147d31c53c59c6fc21a2590ba83f6890034f",
+  "script": "tools/capture_cloudreach_b_high_perch_r4.gd",
+  "args": [
+    "--output=res://shots/locations/cloudreach-high-perches-c2-review-retry"
+  ],
+  "mode": "render",
+  "comment_id": 5856959991,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/cb-f08-3-c2",
+  "fixed_fps_60_capture_retry": true,
+  "retry_reason": "Single capture-only retry with fixed60fps to eliminate frame-settle timing variability. Pinned script has no camera/spawn/Fly override; the source only poses the trainer, so missing carrier may persist and requires lane script correction. Fresh output path avoids overwrite; no source changes.",
+  "stage": "ready_to_publish",
+  "runner_pid": 2240,
+  "started_utc": "2026-09-27T15:23:13.016443+00:00",
+  "engine_pid": 18008,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\cb-f08-3-c2",
+    "--rendering-method",
+    "gl_compatibility",
+    "--fixed-fps",
+    "60",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tools/capture_cloudreach_b_high_perch_r4.gd",
+    "--",
+    "--output=res://shots/locations/cloudreach-high-perches-c2-review-retry"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T15:26:13.794824+00:00",
+  "output_worktree_files": [
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-court-high-oblique-day.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-court-high-oblique-night.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-glide-approach-day.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-glide-approach-night.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-rig-fly-arrival-day.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-rig-fly-arrival-night.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-rig-fly-departure-day.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-rig-fly-departure-night.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-southeast-glide-approach-day.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-southeast-glide-approach-night.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-west-glide-high-day.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\high-perches-west-glide-high-night.png",
+    "shots\\locations\\cloudreach-high-perches-c2-review-retry\\manifest.json"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 494,
+      "sha256": "309484a3a8c2ca5a0f196a1f094013872801d11b44b85f737e8bbb54ef397d93"
+    },
+    {
+      "path": "import.log",
+      "bytes": 5909,
+      "sha256": "5fb266a248ffe7b83ab3ac033abd458d6b41da6b7ae7ca0171773d7c083f1965"
+    },
+    {
+      "path": "run.log",
+      "bytes": 4295,
+      "sha256": "29d7ebe3b375ea246dafb8d0df0fee8b25bd37ef9c8ef1276849dab7b1296859"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 219,
+      "sha256": "58b47a2703564cd12595d7057b153e4b5ef316204a3186a6b9583b9999c361bc"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 4252,
+      "sha256": "499664c53e445efe40f365f7dad283d90a2b17b047f510ba60caa3ffee671ee5"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 77,
+      "sha256": "58692ece76f4c328df4fd6060e86f3fc636ef4ebec3240abbcc27b355cd5d849"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-court-high-oblique-day.png",
+      "bytes": 1789191,
+      "sha256": "2cc8610ed56a5e4313f84afef22955a356eb6dd73cd743b096dcd8450706d10a"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-court-high-oblique-night.png",
+      "bytes": 1549604,
+      "sha256": "41b97ae4eac842744e35ad3cb60802064530580212dcdf98d6aaf21219450a47"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-glide-approach-day.png",
+      "bytes": 2514568,
+      "sha256": "19723c82fcdf0854cded51db9c1cb0d2fcea03405680d8fba0afc905ffe5c6e4"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-glide-approach-night.png",
+      "bytes": 1982573,
+      "sha256": "a235238fa9339e2c57f73c952b2bbc0a8f4ea1b14f14687fc86099adb4995818"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-rig-fly-arrival-day.png",
+      "bytes": 2410937,
+      "sha256": "d5f55e5c38739d0ec54e2455d7c59f0cb1bce37321bfe7cd3f79e063b4fb30e0"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-rig-fly-arrival-night.png",
+      "bytes": 1917639,
+      "sha256": "77615635fabe1aaa9ea7b0398ecb21c3410977fe3ada26fcff3c61b7ce746439"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-rig-fly-departure-day.png",
+      "bytes": 1341472,
+      "sha256": "73aa221f00d9c648cfc60abc0f392bdca6db0fed758ac6cc19bd2d125bc97fa6"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-rig-fly-departure-night.png",
+      "bytes": 1064367,
+      "sha256": "0553e979758c9f373e322464e2e0eb2b576d69b88941f99143ce61796850998c"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-southeast-glide-approach-day.png",
+      "bytes": 1798667,
+      "sha256": "8ba5713085804014c462043037b10e58bcdeda14c876233349f60939e30a0c13"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-southeast-glide-approach-night.png",
+      "bytes": 1520225,
+      "sha256": "6528c8ab6ccfd703a3449f1ec2c250dd398813070898eb6d1213a9da56fe8fc3"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-west-glide-high-day.png",
+      "bytes": 1562231,
+      "sha256": "6542a4d03c850a42aeab7146d1d672f8be9ac9146cea1276ccaa488bc0c2df17"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/high-perches-west-glide-high-night.png",
+      "bytes": 1334063,
+      "sha256": "37a79eb38f1646441e2a2f085b4222a8cd6abc1c67383d92c85aa779e1aa642e"
+    },
+    {
+      "path": "worktree/shots/locations/cloudreach-high-perches-c2-review-retry/manifest.json",
+      "bytes": 11912,
+      "sha256": "b777928f9ccc87383e5da485d6750d7e875d296c3ddb7b7c2ac83a79fdf2d5ab"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}

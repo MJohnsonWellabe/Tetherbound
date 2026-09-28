@@ -1,0 +1,85 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+ERROR: unscoped chapter flag: fly_tutorial_completed
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _write_flag (res://scripts/world/realm_chapter_events.gd:135)
+       [1] _set_flag (res://scripts/world/realm_chapter_progression.gd:171)
+       [2] _complete (res://scripts/world/realm_chapter_progression.gd:145)
+       [3] reconcile (res://scripts/world/realm_chapter_progression.gd:110)
+       [4] restore_progression_from_game (res://scripts/world/realm_chapter_events.gd:83)
+       [5] _ready (res://scripts/world/realm_chapter_events.gd:44)
+       [6] _ready (res://scripts/world/cloudreach_chapter.gd:73)
+       [7] _ready (res://scripts/world/cloudreach_world.gd:429)
+       [8] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [9] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:429)
+       [6] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [7] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [4] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [5] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:430)
+       [4] _boot (res://tools/capture_cloudreach_frame_matrix.gd:377)
+       [5] _run (res://tools/capture_cloudreach_frame_matrix.gd:342)
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+frame matrix: world booted after 20 frames
+# Cloudreach frame matrix -- tools/capture_cloudreach_frame_matrix.gd (production CameraRig; fixture in the tool header)
+# name | row | trainer feet | yaw/pitch deg | target | hour | stand (candidate) | camera | trainer on screen | companion | flags
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/01_gate_lower_cliffs_approach_day.png
+MANIFEST 01_gate_lower_cliffs_approach_day | approach | trainer (-8.0, 105.55, -248.0) | yaw 169.8 pitch -12.0 | target (-24.0, 130.00, -159.0) | hour 10.00 | stand (-8.0, 105.00, -248.0) (1/2) | camera (-7.1, 108.38, -253.0) | trainer on screen (50%, 60%) | companion native follower (-3.6, 105.77, -244.9); trainer gap 5.36 m | flags boot | Arrival from the Meadows gate (transition point 0,105,-260) toward Realm Gate Crag; stand from capture_cloudreach_realm_gate_crag.gd `arrival`.
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/05_gate_lower_cliffs_settlement-galefoot_day.png
+MANIFEST 05_gate_lower_cliffs_settlement-galefoot_day | settlement-galefoot | trainer (-286.0, 180.00, 535.0) | yaw -30.5 pitch -12.0 | target (-276.0, 186.00, 518.0) | hour 10.00 | stand (-286.0, 180.00, 535.0) (1/2) | camera (-288.6, 182.83, 539.4) | trainer on screen (50%, 60%) | companion native follower (-279.8, 180.03, 533.2); trainer gap 6.44 m | flags boot | Key settlement Galefoot Waycamp (camp -280,180,520) on its terrace toward the hearth; stand from capture_cloudreach_galefoot_waycamp.gd.
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/09_broken_causeways_detail-ropebridge_day.png
+MANIFEST 09_broken_causeways_detail-ropebridge_day | detail-ropebridge | trainer (-515.0, 336.86, 1302.2) | yaw -131.6 pitch -12.0 | target (-450.0, 343.00, 1360.0) | hour 10.00 | stand (-515.0, 333.30, 1302.2) (1/2) | camera (-518.8, 339.69, 1298.8) | trainer on screen (50%, 60%) | companion native follower (-514.3, 337.28, 1303.5); trainer gap 1.57 m | flags boot | On the first_rope_span deck (t=0.28 of its endpoints) looking along planks, rails and rope; fallback is the tested bridge approach.
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/12_windscar_ravine_route_day.png
+MANIFEST 12_windscar_ravine_route_day | route | trainer (-332.1, 447.97, 2592.3) | yaw 124.2 pitch -12.0 | target (-520.0, 431.50, 2720.0) | hour 10.00 | stand (-332.1, 448.00, 2592.3) (1/2) | camera (-327.9, 450.80, 2589.4) | trainer on screen (50%, 60%) | companion native follower (-333.4, 447.59, 2598.6); trainer gap 6.50 m | flags boot | windscar_floor_loop (t=0.55) along the ravine floor toward the chain bridge.
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/23_upper_cloudreach_reverse_day.png
+MANIFEST 23_upper_cloudreach_reverse_day | reverse | trainer (95.2, 909.01, 4622.9) | yaw 109.4 pitch -12.0 | target (-180.0, 901.50, 4720.0) | hour 10.00 | stand (95.2, 909.00, 4622.9) (1/2) | camera (100.0, 911.84, 4621.2) | trainer on screen (50%, 60%) | companion native follower (92.2, 908.85, 4628.6); trainer gap 6.45 m | flags boot | Same stand, looking back west along the circuit.
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/26_summit_final_stronghold_approach_day.png
+MANIFEST 26_summit_final_stronghold_approach_day | approach | trainer (339.2, 917.18, 4534.9) | yaw 163.6 pitch -11.3 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (339.2, 917.00, 4534.9) (1/2) | camera (340.6, 919.95, 4530.0) | trainer on screen (50%, 60%) | companion native follower (341.7, 917.17, 4541.1); trainer gap 6.67 m | flags boot | upper_plateau_circuit near the observatory (t=0.85), ~850 m from the domed aviary on the summit.
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/30_gate_lower_cliffs_approach_night.png
+MANIFEST 30_gate_lower_cliffs_approach_night | approach | trainer (-8.0, 105.55, -248.0) | yaw 169.8 pitch -12.0 | target (-24.0, 130.00, -159.0) | hour 23.00 | stand (-8.0, 105.00, -248.0) (1/2) | camera (-7.1, 108.38, -253.0) | trainer on screen (50%, 60%) | companion native follower (-5.0, 106.07, -241.8); trainer gap 6.89 m | flags boot | Night arrival route cue: row 01 at 23:00.
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] restore_progression_from_game (res://scripts/world/cloudreach_physical_runtime.gd:620)
+       [4] _apply_row_flags (res://tools/capture_cloudreach_frame_matrix.gd:468)
+       [5] _run_matrix (res://tools/capture_cloudreach_frame_matrix.gd:447)
+       [6] _capture_row (res://tools/capture_cloudreach_frame_matrix.gd:511)
+[village_npcs] placed 11 of 11
+frame matrix: fixture flags now pre_finale (storm_anchor_upper_west_disabled, storm_anchor_upper_east_disabled, storm_anchor_summit_feed_disabled, cloudreach_upper_anchors_disabled, summit_extraction_engine_reached)
+CAPTURE wrote res://shots/cloudreach-c2-cards-v1/34_summit_final_stronghold_finale100_day.png
+MANIFEST 34_summit_final_stronghold_finale100_day | finale100 | trainer (162.5, 1135.85, 5271.9) | yaw 141.3 pitch -1.4 | target (100.0, 1190.00, 5350.0) | hour 10.00 | stand (162.5, 1135.00, 5271.9) (1/3) | camera (165.7, 1137.73, 5267.8) | trainer on screen (50%, 60%) | companion native follower (167.3, 1136.00, 5276.3); trainer gap 6.51 m | flags pre_finale | 100 m from the aviary: first the final road (under the drawn summit crown on main -- rejected there by the drawn-surface check), then summit_overlook_loop at 100 m, then the arena deck (90 m).
+CAPTURE sheet res://shots/cloudreach-c2-cards-v1/_sheet_frame_matrix.png (8 frames)
+CAPTURE sheet res://shots/cloudreach-c2-cards-v1/_sheet_frame_matrix_regions.png (5 frames)
+CAPTURE sheet res://shots/cloudreach-c2-cards-v1/_sheet_frame_matrix_hero.png (1 frames)
+CAPTURE sheet res://shots/cloudreach-c2-cards-v1/_sheet_frame_matrix_day_night.png (2 frames)
+CAPTURE sheet res://shots/cloudreach-c2-cards-v1/_sheet_frame_matrix_finale.png (2 frames)
+# frame matrix: 8 frames written, 0 rows skipped

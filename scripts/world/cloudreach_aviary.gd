@@ -95,7 +95,8 @@ static func build(root: Node3D, materials: Dictionary, spec: Dictionary) -> Dict
 		if body != null:
 			colliders.append(body)
 
-	var dome := _build_dome(root, dome_spec, drum_height, timber, iron)
+	var dome := _build_dome(root, dome_spec, drum_height,
+		materials.get("dome_rib", timber), materials.get("dome_rib", iron))
 	var veils := _build_veils(root, spec, drum_height, rx, rz, materials)
 
 	var furniture := _build_furniture(root, furniture_spec, dome, timber, rope, iron, lantern_glow,

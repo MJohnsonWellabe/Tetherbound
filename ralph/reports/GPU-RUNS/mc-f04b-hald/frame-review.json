@@ -1,0 +1,308 @@
+[
+  {
+    "file": "stronghold_elite-00-before.png",
+    "shows": "Shows trainer facing Keeper Hald at a torch-lit stone doorway with Challenge Keeper Hald prompt; oversized stone-armored companion fills and is cropped by left edge.",
+    "pass": false,
+    "problem": "Companion heavily clipped at left/bottom; teal strips cross room. Readable lighting and exploration HUD; no obvious primitive placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-01.png",
+    "shows": "Shows Keeper Hald / Galecrest fight HUD over an extreme close-up of brown and gray geometry; incoming move warning is visible.",
+    "pass": false,
+    "problem": "Camera is inside/occluded by geometry; opponent and companion unreadable/offscreen, combat VFX cannot be assessed. HUD readable; scene dark from occlusion; no identifiable placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-02.png",
+    "shows": "Shows stone-armored companion close at left and Galecrest airborne at right with open-hit warning and Pebble Toss highlighted.",
+    "pass": false,
+    "problem": "Companion heavily cropped left/bottom and Galecrest tail clipped at right. Both identities readable, lighting and fight HUD/VFX present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-03.png",
+    "shows": "Shows companion and Galecrest facing each other above trainer, with weakness-hit message, Pebble Toss highlight and partial enemy health depletion.",
+    "pass": true,
+    "problem": "Subjects readable in lit room; teal geometry strips cross scene but do not hide subjects. HUD present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-04.png",
+    "shows": "Shows Galecrest over cyan target ring facing companion, STAGGERED punish-now message and Pebble Toss highlighted.",
+    "pass": true,
+    "problem": "Both combatants readable; no major clipping, darkness or blown-out subjects. Fight HUD and visible combat feedback present; no obvious placeholder mesh. Teal straight strips remain visible."
+  },
+  {
+    "file": "stronghold_elite-05.png",
+    "shows": "Shows companion facing wing-raised Galecrest, depleted enemy health and both attack buttons available.",
+    "pass": true,
+    "problem": "Both combatants readable; no major clipping, darkness or blown-out subjects. Fight HUD and visible combat feedback present; no obvious placeholder mesh. Teal straight strips remain visible."
+  },
+  {
+    "file": "stronghold_elite-06.png",
+    "shows": "Shows companion and Galecrest with golden translucent impact particles between them, both attack buttons lit.",
+    "pass": true,
+    "problem": "Both combatants readable; no major clipping, darkness or blown-out subjects. Fight HUD and visible combat feedback present; no obvious placeholder mesh. Teal straight strips remain visible."
+  },
+  {
+    "file": "stronghold_elite-07.png",
+    "shows": "Shows Galecrest approaching companion with raised wing and incoming-move warning, golden particles across room.",
+    "pass": true,
+    "problem": "Both combatants readable; no major clipping, darkness or blown-out subjects. Fight HUD and visible combat feedback present; no obvious placeholder mesh. Teal straight strips remain visible."
+  },
+  {
+    "file": "stronghold_elite-08.png",
+    "shows": "Shows companion turning side-on in foreground, Galecrest behind it with cyan stagger ring and STAGGERED message.",
+    "pass": false,
+    "problem": "Companion overlaps most of Galecrest torso; right wall occupies substantial frame. Lighting readable; HUD and combat feedback present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-09.png",
+    "shows": "Shows companion back covering Galecrest lower body; trainer stands at right inside arena circle.",
+    "pass": false,
+    "problem": "Galecrest largely occluded by companion; close right wall obstructs roughly one-third of scene. Lighting readable; HUD and combat feedback present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-10.png",
+    "shows": "Shows gray impact puff over companion head and portions of Galecrest wing/crest behind it.",
+    "pass": false,
+    "problem": "Galecrest mostly hidden behind companion; right wall close-up blocks substantial frame. Lighting readable; HUD and combat feedback present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-11.png",
+    "shows": "Shows large foreground companion and Galecrest with golden hit effect, magenta ring and weakness/incoming messages.",
+    "pass": false,
+    "problem": "Companion cropped at bottom and blocks Galecrest lower body; fight framing too tight. Lighting readable; HUD and combat feedback present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-12.png",
+    "shows": "Shows companion left, Galecrest recoiling centrally and trainer right with type-held and open-hit messages.",
+    "pass": true,
+    "problem": "Both combatants readable; bright VFX do not blow out scene. HUD/feedback present, no obvious placeholder mesh. Teal strips visible."
+  },
+  {
+    "file": "stronghold_elite-13.png",
+    "shows": "Shows flat brown and dark-green geometry filling view with golden impact burst and weakness message; neither combatant visible.",
+    "pass": false,
+    "problem": "Camera occluded/inside geometry; both subjects absent. HUD and VFX visible over obstruction; no assessable placeholder meshes."
+  },
+  {
+    "file": "stronghold_elite-14.png",
+    "shows": "Shows companion left and Galecrest recoiling over cyan stagger ring with bright golden impact particles.",
+    "pass": true,
+    "problem": "Both combatants readable; bright VFX do not blow out scene. HUD/feedback present, no obvious placeholder mesh. Teal strips visible."
+  },
+  {
+    "file": "stronghold_elite-15.png",
+    "shows": "Shows companion and Galecrest facing across visible arena floor, golden radial impact centered on Galecrest wing.",
+    "pass": true,
+    "problem": "Both combatants readable; bright VFX do not blow out scene. HUD/feedback present, no obvious placeholder mesh. Teal strips visible."
+  },
+  {
+    "file": "stronghold_elite-16.png",
+    "shows": "Shows both creatures facing, golden circular impact over Galecrest chest and attack buttons dimmed.",
+    "pass": true,
+    "problem": "Lighting readable; fight HUD and combat feedback present. No obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-17.png",
+    "shows": "Shows companion side-on and Galecrest on magenta telegraph ring with incoming warning and golden effect.",
+    "pass": true,
+    "problem": "Right wall intrudes but subjects remain readable. Lighting readable; fight HUD and combat feedback present. No obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-18.png",
+    "shows": "Shows companion facing right while Galecrest lies/dips horizontally behind its torso; open-hit prompt persists.",
+    "pass": false,
+    "problem": "Galecrest head and torso hidden by companion. Lighting readable; fight HUD and combat feedback present. No obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-19.png",
+    "shows": "Shows companion back overlapping Galecrest and golden particles; Hald stands left, stone pillar close at right.",
+    "pass": false,
+    "problem": "Galecrest face/body mostly occluded by companion; foreground pillar narrows scene. Lighting readable; fight HUD and combat feedback present. No obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-20.png",
+    "shows": "Shows Galecrest through a dithered transparent companion silhouette, golden particles and Hald at left.",
+    "pass": true,
+    "problem": "Companion transparency preserves opponent visibility; close right pillar occupies significant scene. Lighting readable; fight HUD and VFX present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-21.png",
+    "shows": "Shows companion facing recoiling Galecrest on cyan ring with STAGGERED message, trainer left and Hald rear.",
+    "pass": false,
+    "problem": "Foreground stone wall blocks companion lower body and arena floor. Lighting readable; fight HUD and VFX present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-22.png",
+    "shows": "Shows companion and Galecrest close together with golden impact over bird and both attack controls lit.",
+    "pass": false,
+    "problem": "Foreground stone wall blocks lower third of combat area and companion legs. Lighting readable; fight HUD and VFX present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-23.png",
+    "shows": "Shows close-up companion left and Galecrest right with golden hit effect and low enemy health.",
+    "pass": false,
+    "problem": "Companion heavily clipped along left and bottom. Lighting readable; fight HUD and VFX present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-24.png",
+    "shows": "Shows side-on companion and raised Galecrest on magenta telegraph with incoming warning; Hald visible left.",
+    "pass": true,
+    "problem": "Right pillar narrows scene but combatants remain readable. Lighting readable; fight HUD and VFX present; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-99-after.png",
+    "shows": "Shows final postfight room at 09:49, trainer center, Hald standing at rear and companion behind left table; reward items in quickbar.",
+    "pass": true,
+    "problem": "Hald and aftermath room readable; companion partly hidden by props. No persistent defeat label after toast. Lighting/HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a01.png",
+    "shows": "Shows Keeper Hald defeated reward toast, Hald tiny at rear doorway, companion left and prone creature portion right behind huge foreground pipe.",
+    "pass": false,
+    "problem": "Camera trapped behind pipe/pillar and wall; subjects/aftermath substantially occluded. Lighting and reward/exploration HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a02.png",
+    "shows": "Shows same reward toast and distant Hald while companion turns behind large pipe; right creature remains mostly hidden.",
+    "pass": false,
+    "problem": "Pipe and wall dominate view; aftermath subjects obscured. Lighting and reward/exploration HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a03.png",
+    "shows": "Shows reward toast, trainer center, Hald standing at doorway, companion left and large prone creature at right.",
+    "pass": true,
+    "problem": "Foreground pipe upper-left and HUD hide parts of creatures, but Hald and reward aftermath readable. Lighting and reward/exploration HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a04.png",
+    "shows": "Shows reward toast with trainer center, Hald at rear doorway and companion behind worktable at left; floor clears at right.",
+    "pass": true,
+    "problem": "Companion partly overlaps furniture; Hald and aftermath room readable. Lighting and reward/exploration HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a05.png",
+    "shows": "Shows postfight room at 09:32, trainer center, Hald at doorway and companion behind left worktable; exploration HUD replaces victory toast.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a06.png",
+    "shows": "Shows postfight room at 09:33, trainer center, Hald at doorway and companion behind left worktable; exploration HUD replaces victory toast.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a07.png",
+    "shows": "Shows postfight room at 09:34, trainer center, Hald at doorway and companion behind left worktable; exploration HUD replaces victory toast.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a08.png",
+    "shows": "Shows postfight room at 09:35, trainer center, Hald at doorway and companion behind left worktable; exploration HUD replaces victory toast.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a09.png",
+    "shows": "Shows postfight room at 09:37, trainer center, Hald at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a10.png",
+    "shows": "Shows postfight room at 09:38, trainer center, Hald at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a11.png",
+    "shows": "Shows postfight room at 09:39, trainer center, Hald at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a12.png",
+    "shows": "Shows postfight room at 09:40, trainer center, Hald at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a13.png",
+    "shows": "Shows postfight room at 09:42, trainer center, Hald standing at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a14.png",
+    "shows": "Shows postfight room at 09:43, trainer center, Hald standing at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a15.png",
+    "shows": "Shows postfight room at 09:44, trainer center, Hald standing at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-a16.png",
+    "shows": "Shows postfight room at 09:45, trainer center, Hald standing at doorway and companion behind left worktable; exploration HUD and three potions/one revive visible.",
+    "pass": true,
+    "problem": "Hald and room readable, companion partially hidden by props. Lighting readable with bright face/chest highlights. No persistent defeat indicator after toast; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r01.png",
+    "shows": "Shows companion side-on filling foreground and Galecrest behind its armored back; Hald at left and low Galecrest health HUD.",
+    "pass": false,
+    "problem": "Galecrest face and torso mostly occluded by companion, large pillar blocks right. Lighting and HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r02.png",
+    "shows": "Shows same close companion/Galecrest overlap, with bird eye visible above companion back and fight HUD.",
+    "pass": false,
+    "problem": "Galecrest body and face substantially hidden behind companion; right pillar intrusive. Lighting and HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r03.png",
+    "shows": "Shows exploration HUD between fight stages, trainer center and Hald rear, with Galecrest tilted down at far right.",
+    "pass": false,
+    "problem": "Galecrest heavily cropped right and companion absent; transitional frame cannot show both subjects. Lighting and HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r04.png",
+    "shows": "Shows new Keeper Hald level-19 Burrowback HUD, companion close left and armored Burrowback head/back at lower right.",
+    "pass": false,
+    "problem": "Both creatures too close; companion cropped bottom, Burrowback cropped heavily at right/bottom. Lighting and HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r05.png",
+    "shows": "Shows companion filling left foreground and Burrowback facing camera at center-right with full-health fight HUD.",
+    "pass": false,
+    "problem": "Companion heavily cropped at bottom; dark foreground geometry cuts across bottom-right combat space. Lighting/HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r06.png",
+    "shows": "Shows exploration HUD, Hald tiny at rear and Burrowback portion behind huge foreground pipe.",
+    "pass": false,
+    "problem": "Camera behind pipe/pillar and wall; trainer and creature mostly occluded. Lighting/HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r07.png",
+    "shows": "Shows exploration HUD over close wall and large pipe; only Hald head and part of Burrowback back visible.",
+    "pass": false,
+    "problem": "Severe foreground geometry obstruction hides subjects and arena. Lighting/HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r08.png",
+    "shows": "Shows full-health Mosshell HUD with turtle opponent center-right and companion very close left.",
+    "pass": false,
+    "problem": "Companion cropped at left/bottom; dark foreground geometry cuts across lower-right. Lighting/HUD readable; no obvious placeholder mesh."
+  },
+  {
+    "file": "stronghold_elite-r09.png",
+    "shows": "Shows Mosshell facing trainer at center-right, companion left, full-health fight HUD and teal arena rim.",
+    "pass": true,
+    "problem": "Tight framing and right wall intrusion, but both creature identities and trainer readable. Lighting/HUD readable; no obvious placeholder mesh."
+  }
+]

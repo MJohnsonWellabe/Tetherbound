@@ -12,6 +12,7 @@ extends SceneTree
 ##     --resolution 1280x720 --script tools/capture_cloudreach_frame_matrix.gd
 ##   ... --script tools/capture_cloudreach_frame_matrix.gd -- --motion
 ##   ... --script tools/capture_cloudreach_frame_matrix.gd -- --only=1,7,34
+##   ... --script tools/capture_cloudreach_frame_matrix.gd -- --only=12,13 --night
 ##
 ## Never combine `--headless` with a rendering driver (WORKFLOW §7).
 ##
@@ -52,8 +53,8 @@ extends SceneTree
 ##   - Party of five added directly: galecrest (active; the Fly carrier, so the
 ##     companion in frame is the chapter's flyer), bramblebun, mudsnout,
 ##     terrapup, brooktail. The active creature is summoned through
-##     `EncounterDirector.summon_active_creature()` and placed beside the
-##     trainer on a verified floor at each stand.
+##     `EncounterDirector.summon_active_creature()`; after each stand teleport,
+##     the native follower gets 120 physics ticks to resolve its own station.
 ##   - Progression flags set before boot (`BOOT_FLAGS`): the realm key and gate,
 ##     the chapter entry flags and every Act I and Act II flag
 ##     (cloudreach_chapter.json `persistent_flags`), so the counterweight gate,
@@ -87,8 +88,9 @@ const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
-const OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
-const MOTION_OUT := OUT + "/motion"
+const DEFAULT_OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
+## `--output=<res:// dir>` renders a round into its own folder (F08#4 rounds).
+var OUT := DEFAULT_OUT
 
 const DAY_HOUR := 10.0
 const NIGHT_HOUR := 23.0
@@ -112,7 +114,7 @@ const BOOT_FLAGS := [
 	"realm_key_cloudreach", "realm_gate_cloudreach_unlocked", "cloudreach_chapter_started",
 	"cloudreach_crisis_learned", "storm_anchor_lower_west_mapped", "storm_anchor_lower_east_mapped",
 	"cloudreach_lower_anchors_investigated", "causeway_survivors_reconnected", "windscar_aerie_prepared",
-	"cloudreach_act_i_complete", "fly_traversal_unlocked", "fly_tutorial_completed", "sky_shrine_reached",
+	"cloudreach_act_i_complete", "fly_traversal_unlocked", "sky_shrine_reached",
 	"cloudreach_shrine_vane_west_aligned", "cloudreach_shrine_vane_east_aligned",
 	"cloudreach_shrine_vane_crown_aligned", "storm_anchor_engine_truth_learned",
 	"cloudreach_upper_route_unlocked", "cloudreach_act_ii_complete"]
@@ -165,9 +167,9 @@ const ROWS := [
 		"target": Vector3(-485.0, 345.0, 1320.0),
 		"why": "lower_cliff_road final climb (t=0.7) toward Three Bells Bridge, the causeway's first landmark."},
 	{"n": 7, "region": "broken_causeways", "row": "route", "time": "day", "sheet": "regions",
-		"stands": [Vector3(-365.9, 363.6, 1451.4), Vector3(-364.5, 363.6, 1450.0)],
+		"stands": [Vector3(-336.0, 370.8, 1480.0), Vector3(-365.9, 363.6, 1451.4)],
 		"target": Vector3(-260.0, 391.5, 1560.0),
-		"why": "broken_causeway_main past the rope bridge (t=0.45), looking up the causeway toward the stone viaduct."},
+		"why": "broken_causeway_main past the rope bridge (t=0.6, on the centreline), looking up the causeway toward the stone viaduct. F08#4: the t=0.45 stand 2 m off the centreline framed only the grass bank beside the road."},
 	{"n": 8, "region": "broken_causeways", "row": "reverse", "time": "day", "sheet": "regions",
 		"stands": [Vector3(-365.9, 363.6, 1451.4), Vector3(-364.5, 363.6, 1450.0)],
 		"target": Vector3(-450.0, 343.5, 1360.0),
@@ -241,7 +243,7 @@ const ROWS := [
 		"target": Vector3(430.0, 932.0, 4500.0),
 		"why": "Old Wind Observatory dial court close; ObservatoryWalkableCrown stands from capture_cloudreach_old_wind_observatory.gd."},
 	{"n": 25, "region": "upper_cloudreach", "row": "settlement-cliffhold", "time": "day", "sheet": "hero",
-		"stands": [Vector3(-309.2, 830.0, 3991.2), Vector3(-352.0, 830.0, 3954.0)],
+		"stands": [Vector3(-315.4, 830.0, 3987.1), Vector3(-309.2, 830.0, 3991.2), Vector3(-352.0, 830.0, 3954.0)],
 		"target": Vector3(-340.0, 838.0, 3970.0),
 		"why": "Key settlement Cliffhold from its east arrival; production-integration `08-upper-cliffhold-east-arrival` / `12-cliffhold-ground-connection`."},
 	# --- Summit / Stronghold ------------------------------------------------------------
@@ -267,7 +269,7 @@ const ROWS := [
 		"target": Vector3(-24.0, 130.0, -159.0),
 		"why": "Night arrival route cue: row 01 at 23:00."},
 	{"n": 31, "region": "broken_causeways", "row": "route", "time": "night", "sheet": "night", "twin": 7,
-		"reuse_stand_of": 7, "stands": [Vector3(-365.9, 363.6, 1451.4), Vector3(-364.5, 363.6, 1450.0)],
+		"reuse_stand_of": 7, "stands": [Vector3(-336.0, 370.8, 1480.0), Vector3(-365.9, 363.6, 1451.4)],
 		"target": Vector3(-260.0, 391.5, 1560.0),
 		"why": "Night causeway route cue: row 07 at 23:00."},
 	{"n": 32, "region": "upper_cloudreach", "row": "approach", "time": "night", "sheet": "night", "twin": 21,
@@ -295,6 +297,12 @@ const ROWS := [
 		"stands": [Vector3(-286.0, 180.0, 535.0), Vector3(-280.0, 180.0, 496.0)],
 		"target": Vector3(-276.0, 186.0, 518.0),
 		"why": "Post-finale Galefoot: returning travelers (Aila, Neri, Orrin) against row 05."},
+	# F08#4 (Phase 1): row 05 stands inside the terrace; this is Galefoot from the
+	# road a player arrives on, before its terrace edge (z 502).
+	{"n": 37, "region": "gate_lower_cliffs", "row": "settlement-galefoot-approach", "time": "day", "sheet": "hero",
+		"stands": [Vector3(-280.0, 179.0, 484.0), Vector3(-279.0, 178.5, 475.0)],
+		"target": Vector3(-278.0, 184.0, 518.0),
+		"why": "Galefoot Waycamp from arrival_gate_road's last segment, ~36 m out below the terrace edge, toward the arrival lane and yard."},
 ]
 
 var _game: Node
@@ -313,6 +321,10 @@ var _hour := DAY_HOUR
 var _rest_pitch_deg := -12.0
 var _only: Dictionary = {}
 var _motion := false
+var _force_night := false
+## `--active=<species>`: which party member is out (default galecrest). The
+## earned five carry no flier, so F08#4 settlement rows also render with one.
+var _active_species := "galecrest"
 var _flag_state := ""
 
 
@@ -325,6 +337,12 @@ func _parse_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--motion":
 			_motion = true
+		elif arg == "--night":
+			_force_night = true
+		elif arg.begins_with("--active="):
+			_active_species = arg.substr("--active=".length()).strip_edges()
+		elif arg.begins_with("--output="):
+			OUT = arg.substr("--output=".length()).strip_edges().trim_suffix("/")
 		elif arg.begins_with("--only="):
 			for part: String in arg.substr("--only=".length()).split(",", false):
 				_only[int(part)] = true
@@ -361,7 +379,7 @@ func _boot() -> bool:
 		party.call("add", SPECIES.spawn(species))
 	for index in (party.call("members") as Array).size():
 		var member: RefCounted = party.call("at", index)
-		if member != null and str(member.get("species_id")) == "galecrest":
+		if member != null and str(member.get("species_id")) == _active_species:
 			party.call("set_active", index)
 			break
 	var flags: RefCounted = _game.get("progression")
@@ -473,7 +491,7 @@ func _apply_row_flags(kind: String) -> void:
 
 func _capture_row(row: Dictionary) -> void:
 	var n := int(row["n"])
-	var time := str(row.get("time", "day"))
+	var time := "night" if _force_night else str(row.get("time", "day"))
 	var name := "%02d_%s_%s_%s" % [n, str(row["region"]), str(row["row"]), time]
 	_pin_hour(NIGHT_HOUR if time == "night" else DAY_HOUR)
 	var stands: Array = []
@@ -523,7 +541,7 @@ func _pose(stand: Vector3, row: Dictionary) -> Dictionary:
 	var pitch := _pitch_for(feet, target, row)
 	_face_model(yaw)
 	_snap_rig(feet, yaw, pitch)
-	var companion := _place_companion(feet, yaw)
+	var companion := await _settle_companion()
 	for i in POSE_FRAMES - RENDERED_FRAMES:
 		await process_frame
 	_set_render(true)
@@ -653,26 +671,17 @@ func _snap_rig(feet: Vector3, yaw: float, pitch: float) -> void:
 	_rig.spring_length = float(_rig.get("_distance"))
 
 
-## The active creature beside and slightly ahead of the trainer, on a verified
-## floor, so it reads in frame the way a following companion does.
-func _place_companion(feet: Vector3, yaw: float) -> String:
+## Let the production follower resolve its own formation after a stand teleport.
+## The former fixed 1.8 m placement ignored the creature's visual envelope and
+## overrode the live formation, manufacturing trainer/landmark overlaps.
+func _settle_companion() -> String:
 	var ally := _ally()
 	if ally == null:
 		return "none"
-	var basis := Basis(Vector3.UP, yaw)
-	var forward := basis * Vector3.FORWARD
-	var right := basis * Vector3.RIGHT
-	for offset: Vector3 in [right * 1.8 + forward * 1.6, -right * 1.8 + forward * 1.6,
-			forward * 2.6, right * 2.2, -right * 2.2]:
-		var spot := feet + offset
-		var floor_y := _floor_hit(Vector3(spot.x, feet.y, spot.z))
-		if is_nan(floor_y):
-			continue
-		ally.global_position = Vector3(spot.x, floor_y + 0.05, spot.z)
-		if ally is CharacterBody3D:
-			(ally as CharacterBody3D).velocity = Vector3.ZERO
-		return "placed %s" % _fmt(ally.global_position)
-	return "no floor beside the trainer; left where it was %s" % _fmt(ally.global_position)
+	for i in 120:
+		await physics_frame
+	return "native follower %s; trainer gap %.2f m" % [
+		_fmt(ally.global_position), ally.global_position.distance_to(_player.global_position)]
 
 
 ## Pin WorldLook's clock the way the live clock applies an hour, then freeze it.
@@ -763,8 +772,8 @@ func _finish(written: int) -> void:
 ## half second, the camera steered by yaw toward the road ahead the way a player
 ## eases the stick, pitch at the rig's rest.
 func _run_motion() -> void:
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(MOTION_OUT))
-	_manifest = FileAccess.open(MOTION_OUT + "/manifest.txt", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path((OUT + "/motion")))
+	_manifest = FileAccess.open((OUT + "/motion") + "/manifest.txt", FileAccess.WRITE)
 	_manifest_line("# Cloudreach 30 s motion witness -- arrival_gate_road, real move input, production CameraRig")
 	_pin_hour(DAY_HOUR)
 	var seat: Dictionary = await _seat(MOTION_START)
@@ -777,7 +786,7 @@ func _run_motion() -> void:
 	var pitch := deg_to_rad(_rest_pitch_deg)
 	_face_model(yaw)
 	_snap_rig(feet, yaw, pitch)
-	_place_companion(feet, yaw)
+	await _settle_companion()
 	for i in 20:
 		await process_frame
 	_hide_overlays()
@@ -827,7 +836,7 @@ func _run_motion() -> void:
 			shot += 1
 			var t := float(Engine.get_physics_frames() - start) / float(hz)
 			var name := "m%02d_gate_lower_cliffs_walk_day" % shot
-			var path: String = LANE.save_frame(self, MOTION_OUT, name, motion_frames)
+			var path: String = LANE.save_frame(self, (OUT + "/motion"), name, motion_frames)
 			_set_render(false)
 			if not path.is_empty():
 				# Keep a small copy for the sheet; the full frame is on disk.

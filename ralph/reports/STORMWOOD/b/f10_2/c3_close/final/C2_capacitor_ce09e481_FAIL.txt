@@ -1,0 +1,10 @@
+STORMWOOD_C2C3 capacitor_alpha terrapup MASHER L37 runs=24 win=1.00 med_lead=0.210 med_party=0.051 med_s=66.1 max_s=70.5 lead_faint=0.00 wipe=0.00 max_hit=0.034 tell=[0.80,0.80] incoming=156 stalled=0
+STORMWOOD_C2C3 capacitor_alpha terrapup READER L37 runs=24 win=1.00 med_lead=0.091 med_party=0.022 med_s=107.0 max_s=132.2 lead_faint=0.00 wipe=0.00 max_hit=0.033 tell=[0.80,0.80] incoming=98 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha terrapup PASS ratio=0.43 reader_win=1.00 max_hit=0.034 min_tell=0.80 
+STORMWOOD_C2C3 capacitor_alpha ripplet MASHER L37 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=40.5 max_s=41.9 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.80] incoming=0 stalled=0
+STORMWOOD_C2C3 capacitor_alpha ripplet READER L37 runs=24 win=1.00 med_lead=0.113 med_party=0.025 med_s=88.4 max_s=93.0 lead_faint=0.00 wipe=0.00 max_hit=0.063 tell=[0.80,0.80] incoming=67 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha ripplet FAIL ratio=inf reader_win=1.00 max_hit=0.063 min_tell=0.80 reader/masher lead cost inf > 0.55
+STORMWOOD_C2C3 capacitor_alpha galewisp MASHER L37 runs=24 win=1.00 med_lead=0.068 med_party=0.013 med_s=38.8 max_s=41.4 lead_faint=0.00 wipe=0.00 max_hit=0.076 tell=[0.80,0.80] incoming=24 stalled=0
+STORMWOOD_C2C3 capacitor_alpha galewisp READER L37 runs=24 win=1.00 med_lead=0.245 med_party=0.048 med_s=84.7 max_s=92.4 lead_faint=0.00 wipe=0.00 max_hit=0.077 tell=[0.80,0.80] incoming=91 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha galewisp FAIL ratio=3.61 reader_win=1.00 max_hit=0.077 min_tell=0.80 reader/masher lead cost 3.61 > 0.55
+STORMWOOD_C2C3 done: 3 rows, 144 runs, 2 failing rows, 0 errors

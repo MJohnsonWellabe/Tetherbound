@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "_comment": "Presentation only: nearby non-colliding leaf surfaces fade only when their per-instance projected bounds overlap the trainer corridor. A bounds test is conservative, not an exact leaf-depth/ray test. No placements, bake inputs, harvest state or colliders change. Validate native Compatibility motion before accepting.",
+  "invisible_below_m": 5.8,
+  "opaque_above_m": 8.0,
+  "trainer_rect": [0.455, 0.49, 0.545, 0.73],
+  "edge_feather": 0.025,
+  "models": [
+    "res://assets/environment/stylized_nature/Bush_Common.gltf",
+    "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+    "res://assets/environment/stylized_nature/Fern_1.gltf"
+  ]
+}

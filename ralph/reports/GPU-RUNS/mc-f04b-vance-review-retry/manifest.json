@@ -1,0 +1,406 @@
+{
+  "label": "mc-f04b-vance-review-retry",
+  "sha": "7fe6e7037a37d5e68d4c6833dcc554fafadc1625",
+  "script": "tools/art_pipeline/capture_named_fight.gd",
+  "args": [
+    "--trainer=relay_captain",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16",
+    "--face-trainer"
+  ],
+  "mode": "render",
+  "comment_id": 5855250530,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/mc-f04b-vance",
+  "followup_of": "mc-f04b-vance",
+  "visual_retry_attempt": 1,
+  "adjustment": "Owner-authorized single capture retry: use supported --face-trainer for aftermath framing. Original production source, script, fight inputs and other args unchanged. Fight-camera obstructions remain lane-owned if they recur.",
+  "stage": "ready_to_publish",
+  "runner_pid": 9680,
+  "started_utc": "2026-09-27T14:15:41.988253+00:00",
+  "engine_pid": 3404,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\mc-f04b-vance",
+    "--rendering-method",
+    "gl_compatibility",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tools/art_pipeline/capture_named_fight.gd",
+    "--",
+    "--trainer=relay_captain",
+    "--out=res://shots/f04",
+    "--frames=24",
+    "--interval=0.5",
+    "--attack",
+    "--dodge",
+    "--keep-alive",
+    "--resolve=won",
+    "--after-frames=16",
+    "--face-trainer"
+  ],
+  "exit_code": 0,
+  "completed_utc": "2026-09-27T14:21:57.083506+00:00",
+  "output_worktree_files": [
+    "shots\\f04\\relay_captain-00-before.png",
+    "shots\\f04\\relay_captain-01.png",
+    "shots\\f04\\relay_captain-02.png",
+    "shots\\f04\\relay_captain-03.png",
+    "shots\\f04\\relay_captain-04.png",
+    "shots\\f04\\relay_captain-05.png",
+    "shots\\f04\\relay_captain-06.png",
+    "shots\\f04\\relay_captain-07.png",
+    "shots\\f04\\relay_captain-08.png",
+    "shots\\f04\\relay_captain-09.png",
+    "shots\\f04\\relay_captain-10.png",
+    "shots\\f04\\relay_captain-11.png",
+    "shots\\f04\\relay_captain-12.png",
+    "shots\\f04\\relay_captain-13.png",
+    "shots\\f04\\relay_captain-14.png",
+    "shots\\f04\\relay_captain-15.png",
+    "shots\\f04\\relay_captain-16.png",
+    "shots\\f04\\relay_captain-17.png",
+    "shots\\f04\\relay_captain-18.png",
+    "shots\\f04\\relay_captain-19.png",
+    "shots\\f04\\relay_captain-20.png",
+    "shots\\f04\\relay_captain-21.png",
+    "shots\\f04\\relay_captain-22.png",
+    "shots\\f04\\relay_captain-23.png",
+    "shots\\f04\\relay_captain-24.png",
+    "shots\\f04\\relay_captain-99-after.png",
+    "shots\\f04\\relay_captain-a01.png",
+    "shots\\f04\\relay_captain-a02.png",
+    "shots\\f04\\relay_captain-a03.png",
+    "shots\\f04\\relay_captain-a04.png",
+    "shots\\f04\\relay_captain-a05.png",
+    "shots\\f04\\relay_captain-a06.png",
+    "shots\\f04\\relay_captain-a07.png",
+    "shots\\f04\\relay_captain-a08.png",
+    "shots\\f04\\relay_captain-a09.png",
+    "shots\\f04\\relay_captain-a10.png",
+    "shots\\f04\\relay_captain-a11.png",
+    "shots\\f04\\relay_captain-a12.png",
+    "shots\\f04\\relay_captain-a13.png",
+    "shots\\f04\\relay_captain-a14.png",
+    "shots\\f04\\relay_captain-a15.png",
+    "shots\\f04\\relay_captain-a16.png",
+    "shots\\f04\\relay_captain-r01.png",
+    "shots\\f04\\relay_captain-r02.png",
+    "shots\\f04\\relay_captain-r03.png",
+    "shots\\f04\\relay_captain-r04.png",
+    "shots\\f04\\relay_captain-r05.png",
+    "shots\\f04\\relay_captain-r06.png",
+    "shots\\f04\\relay_captain-r07.png",
+    "shots\\f04\\relay_captain-r08.png",
+    "shots\\f04\\relay_captain-r09.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "c6aad046b1b05c105d0ed2c8727e2c7b5535ffbf1b5d215552e2b88ecb355dc9"
+    },
+    {
+      "path": "import.log",
+      "bytes": 13988,
+      "sha256": "fd0083386f5273ee031170ae6b426a02e5f9f29f35892bf05a931635d86ce74f"
+    },
+    {
+      "path": "run.log",
+      "bytes": 15388,
+      "sha256": "f9d1ff3e85c0bfe27000b4bf4ca74b9865f5273ff10055f4817db406bd1da30d"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 2675,
+      "sha256": "777df42e15b0a9df109c3e983acbf713542cf491f70eb0040b7f7ee229adb4d6"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 916214,
+      "sha256": "c713ec481bec294e9567e211946035fc890a70dbf161a6ea7530725da006fd0f"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 15164,
+      "sha256": "4668f1555edb6b05d6107b2dde3a3bda543e2c9c68eb55c84ee469f027b5f8f2"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 76,
+      "sha256": "56aec656ae063fcabedd5af01de91ff5214465ff5e7210a7537ab827e74fce86"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-00-before.png",
+      "bytes": 2924875,
+      "sha256": "b8acc0726bf25b843c6a2df1897fc61d7d0eb66623bd7cc7d397ed8b64239a35"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-01.png",
+      "bytes": 3582517,
+      "sha256": "96710be4d08454548b98d33e51db6ad49b3f44c7168172826a866fc8270a378a"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-02.png",
+      "bytes": 3384468,
+      "sha256": "04d0ecc655a173192fde845e249e65b35e3040fd7662f3e4b879b76201bcc50e"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-03.png",
+      "bytes": 3378910,
+      "sha256": "08e5e9c29567bb982fc2452187d2c0070004d3b0ea9a8021ab56050e0ae943bf"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-04.png",
+      "bytes": 3216503,
+      "sha256": "079bab243bcc91b593b0cb8d3681591172f054d219deca184b58e5b6c89b5956"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-05.png",
+      "bytes": 2186361,
+      "sha256": "d1eebc55ecae1faaa34407c8bf1e03675fcc11a0e2bb19ca037f7591f56feae6"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-06.png",
+      "bytes": 3313142,
+      "sha256": "1b022c798e6f002d86947c960b36d13c0c77955b4961a0068c714c57a16cd06f"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-07.png",
+      "bytes": 3243977,
+      "sha256": "75e94c64f8fade3403cc325b0e35d9fb3075ee4a0f26ce9398de31d568492e47"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-08.png",
+      "bytes": 3208753,
+      "sha256": "89298baeff047d65facf858ae9153941bbff9547b9dbd67326969dc29c992466"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-09.png",
+      "bytes": 3433847,
+      "sha256": "8f9381527879992022656b9d5267b25dea81662c07370b8eaff2c63c28929165"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-10.png",
+      "bytes": 3451351,
+      "sha256": "88056da1f18b0a9beac91764c9ca277a6dfea9630ac9d034d950519a02bf3058"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-11.png",
+      "bytes": 3328637,
+      "sha256": "a2dc47aabc0731a48129f02ff18aca207f606f1403b691ca972dcda2e7a98e94"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-12.png",
+      "bytes": 3595629,
+      "sha256": "cf3303bb72722a74789ee363aae5233be9ba4974e709b412eb52704518703cd4"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-13.png",
+      "bytes": 3548218,
+      "sha256": "af927f199b5ef8a3c5d99efdc699b6f6262dca53ee3157bca5ac636642d7cd8f"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-14.png",
+      "bytes": 3510235,
+      "sha256": "f4a9f0b1818b2e772439af516cb3ab38eb04934352491646757c3f312dc206b6"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-15.png",
+      "bytes": 3475118,
+      "sha256": "2313c3650f0abfcb4375d1671df9d87665b863b4c1a90494b8f6b250f8218d48"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-16.png",
+      "bytes": 3417059,
+      "sha256": "b94addb8a8966cf019a3e8240b366d6d62be7425c948dce7e5effd6a5244cee1"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-17.png",
+      "bytes": 3596688,
+      "sha256": "082cd90548fd71ae0b1b42359fe6bccc22eb0f0c392cac7e4aef42ec3ffdb6ab"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-18.png",
+      "bytes": 3598679,
+      "sha256": "57470594ef31c69129ab748f40614c6c608cb22df314e009c271e40e62530658"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-19.png",
+      "bytes": 3086257,
+      "sha256": "c64ba05daf21eb5d6e1f12d36c5741517ea12e988211ea232ade1b3b52412299"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-20.png",
+      "bytes": 3444177,
+      "sha256": "3a70335174da9b17754384883bd01d762f66dd677933f330f3bbb624a8849f40"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-21.png",
+      "bytes": 3455290,
+      "sha256": "4b55c56937d138db527abdb7f6a694bdba9136b1d2e02cae1a129606b69351fc"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-22.png",
+      "bytes": 3475979,
+      "sha256": "0ebfc578cd36eb70ca189b7d12301f056db215b471de71b32526def718ccc321"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-23.png",
+      "bytes": 3465527,
+      "sha256": "2a578e0c588998550db11f1ae24462f848b3a6d49bfdff035d708facaf9b66e2"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-24.png",
+      "bytes": 3412083,
+      "sha256": "1ac8002b7d1b50f49ec8617dc934156dc20c82a90879895a57b235373ed2a44e"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-99-after.png",
+      "bytes": 2876445,
+      "sha256": "23b4edfd0091cc33107be4ecd82a76095953c2b4d060cc0018962f2ca80060c4"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a01.png",
+      "bytes": 2815452,
+      "sha256": "4bc69a0e3dce957260253bee57930a5f0acd1693a2d9742efb3f9d05e6b9996a"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a02.png",
+      "bytes": 2831145,
+      "sha256": "3d367f8a7a4999f0e012f3327bab3957ce0fc45441433ac6f96c4b97ddc19207"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a03.png",
+      "bytes": 2832497,
+      "sha256": "bfbdee67a600449a2e500014b1be6de6e4e6cf33df42c107cd42a0ccbc1bbfa0"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a04.png",
+      "bytes": 2917487,
+      "sha256": "ecb12291d7214dac9fd90867ebd5e1eb4ff4e4667e2831ecc88417ffee56e824"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a05.png",
+      "bytes": 2913486,
+      "sha256": "6f40bfeb4b3ffa60fc050cf600e9e5451c24dc9b8dd6bf77582f66475af83c9a"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a06.png",
+      "bytes": 2909760,
+      "sha256": "08de6c2641c0cfeeb9bce9f2ea9f8b34fc1e2243ca3047450e07782cca595009"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a07.png",
+      "bytes": 2907586,
+      "sha256": "0bb71a11330a921de701985c0c80309b42f0724471388581876b76292a6e3e3e"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a08.png",
+      "bytes": 2901983,
+      "sha256": "1f4ea875baf1bcf8fab477bf0a7b5fc71c3be9e2c174e512a1d25d2051847308"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a09.png",
+      "bytes": 2900151,
+      "sha256": "300bc25f36538719ecb1dba7149e63f2c6f7575a4e89dcce378ed04b658997c5"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a10.png",
+      "bytes": 2899299,
+      "sha256": "f789aff81ae7f05f8e30f562f8f33aef1c11b30659b66e7ec2773a5c6333a181"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a11.png",
+      "bytes": 2895122,
+      "sha256": "c63d9255e91afa3d19feac792323bcaa3a2327d578dc196cb970c67debe37e23"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a12.png",
+      "bytes": 2892426,
+      "sha256": "1415b23ee5edf2e1f75ba0400c666a4145a4cce353e3a05b04018df4f3f0cbf0"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a13.png",
+      "bytes": 2890315,
+      "sha256": "d39b776a655d79764ab595616ea6761a4c5c81eba417e5ee9f05877faf4ef007"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a14.png",
+      "bytes": 2888343,
+      "sha256": "bd1a46c26471387d24d46a2311448f05c82eb247f781c8b90f417c9dba53ff11"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a15.png",
+      "bytes": 2885703,
+      "sha256": "0aed6a673e5754cb6bf4fea447429283cc5c6b0e79d40eaae67f95c084bfb7a0"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-a16.png",
+      "bytes": 2882425,
+      "sha256": "3d36ca687a0ff93fea54ee8589ad304dfe69c4157550b36a2772c14603d3dff3"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r01.png",
+      "bytes": 3396292,
+      "sha256": "d1647418e757a2645f6ca70c5622b92a416c9317b9c484aeb624455b75e238e5"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r02.png",
+      "bytes": 3402406,
+      "sha256": "c2b3749f70b6d190ce7e0dfb59d62cb0df83638289c44067a2fc90ee45d2d107"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r03.png",
+      "bytes": 2951844,
+      "sha256": "e8e029e0805c5c9dfcaaa09022f29a76102c2c56e967b8b8455e95acaab6cfed"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r04.png",
+      "bytes": 3743105,
+      "sha256": "a0c1cf636be6bf3671ab31d841d1bc990908e98538477fdc113f7ecd721cc27e"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r05.png",
+      "bytes": 3384728,
+      "sha256": "d65e628a90c591608c0a61f96d35a958a5026bf0fbc9768b73bb10ef8e8d2f53"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r06.png",
+      "bytes": 3028405,
+      "sha256": "9e950e4d7c8872482f74eadefd8b4cbfa9caa6098798295e8b42f97fd9706818"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r07.png",
+      "bytes": 3002904,
+      "sha256": "e1966925c714766fc57e03b5e0d242090778cb575ad414d323ed76031a1222ed"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r08.png",
+      "bytes": 3412267,
+      "sha256": "66013c4ec081521e363cf047c054faa9a7b83220822efcde89f5c081ad23d9af"
+    },
+    {
+      "path": "worktree/shots/f04/relay_captain-r09.png",
+      "bytes": 3298213,
+      "sha256": "bebefe50403e683c2526666bbf96c46596ed476fb50ddb2a0f6e3e39df2687de"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}

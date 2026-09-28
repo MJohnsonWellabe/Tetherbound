@@ -764,7 +764,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,

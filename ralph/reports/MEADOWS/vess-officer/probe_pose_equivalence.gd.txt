@@ -1,0 +1,66 @@
+extends SceneTree
+
+func _load(path: String) -> Node3D:
+	var doc := GLTFDocument.new()
+	var state := GLTFState.new()
+	doc.append_from_file(path, state)
+	return doc.generate_scene(state) as Node3D
+
+func _find(n: Node, cls: String) -> Node:
+	if n.is_class(cls):
+		return n
+	for c in n.get_children():
+		var f := _find(c, cls)
+		if f != null:
+			return f
+	return null
+
+func _rel(n: Node3D, top: Node) -> Transform3D:
+	var t := Transform3D.IDENTITY
+	var cur: Node = n
+	while cur != null and cur != top:
+		if cur is Node3D:
+			t = (cur as Node3D).transform * t
+		cur = cur.get_parent()
+	return t
+
+func _sample(r: Node3D, clip: String, t: float) -> Dictionary:
+	var ap := _find(r, "AnimationPlayer") as AnimationPlayer
+	var sk := _find(r, "Skeleton3D") as Skeleton3D
+	ap.play(clip)
+	ap.seek(t, true)
+	var out := {}
+	for i in sk.get_bone_count():
+		out[sk.get_bone_name(i)] = (_rel(sk, root) * sk.get_bone_global_pose(i)).origin
+	return out
+
+func _worst(a: Node3D, b: Node3D, clip: String) -> float:
+	var length := (_find(a, "AnimationPlayer") as AnimationPlayer).get_animation(clip).length
+	var w := 0.0
+	for k in 9:
+		var pa := _sample(a, clip, length * k / 8.0)
+		var pb := _sample(b, clip, length * k / 8.0)
+		for bone in pa:
+			w = maxf(w, (pa[bone] as Vector3).distance_to(pb[bone]))
+	return w
+
+func _initialize() -> void:
+	var S := "/tmp/claude-0/"
+	for rig in ["officer_b", "grunt", "warden", "captain_a", "captain_b"]:
+		var pre := _load(S + "pre/%s_lod0.glb" % rig)
+		var out := _load(S + "out/%s_lod0.glb" % rig)
+		var shipped := _load("/home/user/Tetherbound/assets/characters/%s/%s_lod0.glb" % [rig, rig])
+		root.add_child.call_deferred(pre); root.add_child.call_deferred(out); root.add_child.call_deferred(shipped)
+		await process_frame
+		await process_frame
+		var line := "%s:" % rig
+		for clip in (_find(pre, "AnimationPlayer") as AnimationPlayer).get_animation_list():
+			line += " %s=%.4f" % [clip, _worst(pre, out, clip)]
+		var d0 := _sample(out, "defeated", 0.0)
+		var d1 := _sample(out, "defeated", 1.54)
+		line += " | defeated head drop %.3fm fwd %.3fm" % [(d0["Head"] as Vector3).y - (d1["Head"] as Vector3).y, (d1["Head"] as Vector3).z - (d0["Head"] as Vector3).z]
+		if rig != "officer_b":
+			line += " | vs shipped defeated %.4f" % _worst(shipped, out, "defeated")
+		print("EQ ", line)
+		pre.queue_free(); out.queue_free(); shipped.queue_free()
+	quit(0)

@@ -46,3 +46,27 @@ jobs:
           fi
           gh workflow run release.yml --repo "$REPO" --ref main -f publish=true
           echo "Dispatched rolling release for $main_sha"
+
+  # Same gap for CI (2026-09-28): a GITHUB_TOKEN auto-merge push starts no CI
+  # run, so batch 67 reached main with no CI at all. If main's tip has no CI
+  # run, dispatch the fast tier on it. ci.yml diffs a main run against the last
+  # main commit CI ran on, so every commit since then is covered.
+  ci-reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch fast CI only when main's tip has no CI run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          main_sha=$(gh api "repos/$REPO/commits/main" --jq '.sha')
+          # A cancelled run (replaced while pending) built nothing; it does not count.
+          count=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$main_sha&per_page=30" \
+            --jq '[.workflow_runs[] | select(.event != "pull_request" and .conclusion != "cancelled" and .conclusion != "skipped")] | length')
+          if [ "$count" != "0" ]; then
+            echo "CI already ran (or is running) on main $main_sha"
+            exit 0
+          fi
+          gh workflow run ci.yml --repo "$REPO" --ref main -f tier=fast
+          echo "Dispatched fast CI for $main_sha"

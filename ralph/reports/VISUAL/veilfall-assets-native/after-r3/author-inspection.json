@@ -1,0 +1,112 @@
+{
+  "frames_inspected": [
+    "intake_gallery",
+    "pump_hall",
+    "sluice_crossing",
+    "heart_chamber_entry",
+    "heart_chamber_crystal",
+    "heart_chamber_banner",
+    "motion_0",
+    "motion_1",
+    "motion_2"
+  ],
+  "geometry_audit": "Seven meshes: nondegenerate triangles, normalized normals, x within +/-8m and y within +/-6m; no collider added.",
+  "asset_hashes": [
+    {
+      "sha256": "7272A082C5332ACF471889678DC21AA65C69197F76FAD1C88BB3ACF173763FB5",
+      "path": "fall_ribbons.obj"
+    },
+    {
+      "sha256": "D1F1B0299C15F2DFB82E59FC0E095C862FBF5E6D093B79B9016FDB0580DE9329",
+      "path": "fall_threads.obj"
+    },
+    {
+      "sha256": "2E4153757EF0FEDDE9CEFC8563A80A7B66128554682E6C55C0D0190BB5A88475",
+      "path": "falling_water.gdshader"
+    },
+    {
+      "sha256": "5A75D718FF205979430482ADED35E678EB1BC7B9F871D0A669CF704E27FBFCD0",
+      "path": "interior_waterfall.tscn"
+    },
+    {
+      "sha256": "6AA4295913401F4A24BB2D37F849253FA16619CF09D49AF21FD008CF74028708",
+      "path": "plunge_crowns.obj"
+    },
+    {
+      "sha256": "E44CAB4499CC3A3977845FDE7820BEA68A8094A9A86B072FD04BA1EADD937EDC",
+      "path": "plunge_foam.gdshader"
+    },
+    {
+      "sha256": "ECAFE8D542F0C80DF2DB90BA867299BA39F68743A17CF2CC945464A533B768A9",
+      "path": "plunge_mist.gdshader"
+    },
+    {
+      "sha256": "CCEE38BF9B1BBACB13152D645E6F52E3B47D7428DA94090D8EDD2FC4475158EE",
+      "path": "plunge_mist.obj"
+    },
+    {
+      "sha256": "16C8D875DBB722A399296211FA90EA2B93AB9D3F81F101A0200E515228D231C4",
+      "path": "receiving_water.gdshader"
+    },
+    {
+      "sha256": "B64AB9922F338B7F1D0A788AF6A3F8BAF1AC633E174E0BB9004EF4A8C86B1660",
+      "path": "receiving_water.obj"
+    },
+    {
+      "sha256": "BF3D20BF7810A173ACD097FA2CEDA324BCDAD7D9423E108BE8B67C8F960A0F62",
+      "path": "source_and_basin_stone.obj"
+    },
+    {
+      "sha256": "0474BB7BC3D948D725314E5FA1CEA9C247426CAD5E0176610337B32501C7E90C",
+      "path": "splash_arcs.obj"
+    },
+    {
+      "sha256": "415107F29B7AA1C3D74B49C8EE8AA3C4408CC4AF3942C0ECB32EAA8E7A97A38F",
+      "path": "wet_stone.gdshader"
+    },
+    {
+      "sha256": "B906C30A7D43A19C3D5CD82FC2F4A1A447FC1DE81A6C440A1C75D445B1730996",
+      "path": "source\\generate_waterfall.py"
+    },
+    {
+      "sha256": "6937B3371AE4D8BB7832870E189981CAFD3706C1C40D47C97BA471051CD8DA21",
+      "path": "source\\geometry_audit.json"
+    },
+    {
+      "sha256": "826DFAAD06C1A0FA0E645195EB9C823DBE20D40A2315573CE7007EB04AA3D279",
+      "path": "source\\provenance.json"
+    }
+  ],
+  "changes": [
+    "Added original chamfered wet-slate feeder lintel, jambs and protruding lip below ceiling.",
+    "Added shallow receiving basin front and side rims plus rippled dark water surface.",
+    "Lowered and advanced curled water shoulder to expose source and clear the ceiling.",
+    "Reduced fine repetitive streaking and differentiated five main flows.",
+    "Raised and broadened low mist over receiving water."
+  ],
+  "observations": [
+    "heart_chamber_crystal and motion frames show a rolled source edge against visible dark stone below the ceiling.",
+    "Receiving rim is visible as a continuous dark segmented edge beneath the splash; the effect no longer terminates directly on the room cobbles.",
+    "Broad flows have irregular gaps and change texture across motion samples.",
+    "intake_gallery, pump_hall and sluice_crossing show source/basin silhouettes at the destination, but crystal remains dominant.",
+    "heart_chamber_banner contains no waterfall; existing banner/wall presentation unchanged."
+  ],
+  "error_matches": 0,
+  "capture_exit": 0,
+  "renderer": "Godot 4.7 native Windows OpenGL3 Compatibility on NVIDIA GTX 1060 3GB",
+  "independent_review": "A fresh reviewer must issue the scoped waterfall verdict and Bars A/B; author does not self-accept.",
+  "type": "Author implementation inspection; not independent visual acceptance",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "variant": "after-r3",
+  "camera_fixture": "Unchanged capture_veilfall_interior.gd: six original production-camera stands plus three same-camera samples. Teleported fixture, five L43 companions, two open pump flags, live HUD.",
+  "limitations": [
+    "The new wet stone reads very dark against the existing wall and can look like dark metal at this distance.",
+    "Crystal and existing cubes obscure much of central receiving area.",
+    "Mist remains concentrated at the low impact zone; independent critic must decide whether its volume is sufficient.",
+    "Existing sparse box room, banner and cyan sluice pools are outside this change.",
+    "No continuous-motion or Ally performance acceptance."
+  ]
+}

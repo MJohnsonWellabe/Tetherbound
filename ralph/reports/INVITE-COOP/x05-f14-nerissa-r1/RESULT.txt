@@ -1,0 +1,10 @@
+FAIL: #1 peer 0 host -> ERROR -- 
+FAIL: ERROR: peer 0 reported ERROR: 
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot call non-static function "get_script_constant_map()" on the class "res://scripts/creatures/wild_creature.gd" directly. Make an instance instead.
+          at: GDScript::reload (res://tools/net/proof_steps.gd:3354)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://tools/net/proof_peer_runner.gd:0)
+ERROR: Failed to load script "res://tools/net/proof_peer_runner.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

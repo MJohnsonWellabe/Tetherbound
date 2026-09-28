@@ -1,0 +1,13 @@
+frame_01.jpg veilfall_1_first_shore
+frame_02.jpg veilfall_2_salt_crown
+frame_03.jpg veilfall_3_sluice_isle
+frame_04.jpg dock_first_shore
+frame_05.jpg dock_reedhaven
+frame_06.jpg dock_brine_steps
+frame_07.jpg dock_shellwatch
+frame_08.jpg dock_tidal_cradle
+frame_09.jpg dock_salt_crown
+frame_10.jpg dock_sluice_isle
+frame_11.jpg current_first_shore_to_reedhaven
+frame_12.jpg current_brine_steps_to_shellwatch
+frame_13.jpg current_salt_crown_to_sluice_isle

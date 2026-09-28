@@ -1,0 +1,19 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only cloudreach_environment: 1 of 615 test files
+WARNING: 'res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb': In external resource #0, invalid UID: 'uid://bmt3u8pvs2wgx' - using text path instead: 'res://assets/environment/cloudreach/cliff_buttress/limestone_buttress_CloudreachLimestoneColour.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _mesa (res://scripts/world/cloudreach_world.gd:5368)
+       [1] test_cliff_walls_face_outward (res://tests/test_cloudreach_environment.gd:25)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_cloudreach_environment.gd :: test_cliff_walls_face_outward
+  ok    test_cloudreach_environment.gd :: test_cloud_banks_are_deterministic_and_below_registered_ground
+  ok    test_cloudreach_environment.gd :: test_generated_ground_faces_upward
+  ok    test_cloudreach_environment.gd :: test_route_joints_do_not_restart_fades
+
+4 tests, 31 assertions, 0 failed

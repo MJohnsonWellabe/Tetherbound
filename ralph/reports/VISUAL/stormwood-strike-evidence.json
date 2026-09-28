@@ -1,0 +1,5178 @@
+{
+  "proof": "DRY RUN \u2014 does not count",
+  "base": "bee614d03bd230d511b045ab83ad25bd6bad776d",
+  "main": "ce1a3c6e576c5e0bf99c5ee543258794be302b00",
+  "engine": "Godot 4.7 5b4e0cb0f; Compatibility/OpenGL3.3; GTX1060 3GB; driver560.94",
+  "sources": {
+    "scripts/world/stormwood_lightning.gd": "3d05f38c007238662ea026973f737557810ea2625986609880ea9eb411af5d59",
+    "scripts/world/stormwood_surge.gd": "bb4fb8990148fc7bbe0bb73e972830f5517a3f53e2c2602f5a4077a0298f0608",
+    "data/config/stormwood_surge.json": "2816b75f681c620cb77950b88420938cf4ad9d24c78c9a903137d3cba768cec7",
+    "tests/smoke_stormwood_lightning_cleanup.gd": "ca0aec109d18ff5b88499f15b4ace4acf6638f7b2930c2b559d8255782ec5ac7",
+    "tools/capture_stormwood_strike_visual.gd": "1b56573e11d1c89826ced9d694834ef7cf972d0d7f3c1463564f48319c87d9f7"
+  },
+  "non_presentation_config_identical": true,
+  "timing": "Final run uses real production warning tween at fixed60fps, then fixture delivers hit-free impact at progress1. Each view/mode has19 sampled frames. This is simulation-time presentation proof, not wall-time performance or earned gameplay.",
+  "baseline_timing": "Baseline stages warning progress .1/.5/.9 and writes each PNG immediately. Its impact sample is later than final first-impact sample; compare visual class and recorded flash values, not pixel-identical timing.",
+  "limits": [
+    "Bush occlusion remains unresolved.",
+    "No earned route, audio, co-op or Ally performance proof.",
+    "Whole F10#3 and BarsA/B remain open.",
+    "Earlier candidate captures are diagnostic; retained final evidence is24baseline+114final."
+  ],
+  "logs": {
+    "storm-strike-baseline.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-baseline.log",
+      "sha256": "1da3a36a3046b3ef20f4d2c4b0cf74d34a816b0be6fcaaec4fe25085b694b4ef",
+      "bytes": 11129
+    },
+    "storm-strike-baseline.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-baseline.err",
+      "sha256": "cc7756b011081dba00bd0478b81df6404b92bfddd5e37fdf850086c2a2940889",
+      "bytes": 921
+    },
+    "storm-strike-candidate1.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-candidate1.log",
+      "sha256": "22fdf0f36b6428b204eacdf2a34f88f0599d1356c834a529e31ce85405f4ea26",
+      "bytes": 11073
+    },
+    "storm-strike-candidate1.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-candidate1.err",
+      "sha256": "cc7756b011081dba00bd0478b81df6404b92bfddd5e37fdf850086c2a2940889",
+      "bytes": 921
+    },
+    "storm-strike-timed.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-timed.log",
+      "sha256": "e5321718b18202fa2c297bb795125180fe9c7331eac29bd14d44ed76d88bd4fb",
+      "bytes": 3050
+    },
+    "storm-strike-timed.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-timed.err",
+      "sha256": "60a3ad33ecb3da9c2a9cdc5cdb88b57d28c3d6ff75d5368007e19cced7b68962",
+      "bytes": 921
+    },
+    "storm-strike-perimeter-timed.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-perimeter-timed.log",
+      "sha256": "80662919a73945507cbed47600b4d48d1813528d9a0d712bc785859f2e61bb70",
+      "bytes": 3050
+    },
+    "storm-strike-perimeter-timed.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-perimeter-timed.err",
+      "sha256": "60a3ad33ecb3da9c2a9cdc5cdb88b57d28c3d6ff75d5368007e19cced7b68962",
+      "bytes": 921
+    },
+    "storm-strike-unit.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-unit.log",
+      "sha256": "9608cb5acb74a42dc5edaf536744d5e52553c737681f03dfb5ddfbddb0835306",
+      "bytes": 6218
+    },
+    "storm-strike-unit.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-unit.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "storm-strike-cleanup.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-cleanup.log",
+      "sha256": "65ff75c2cd82e718c6b5ad87850d66449576a5f1efefdd8e1bc311a2ae701540",
+      "bytes": 600
+    },
+    "storm-strike-cleanup.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-cleanup.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "storm-strike-mechanics.log": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-mechanics.log",
+      "sha256": "a35f690c0e8b9fd7ee05fb94d5d7ceb8718dfb5410b5264d600374d62fab9963",
+      "bytes": 128
+    },
+    "storm-strike-mechanics.err": {
+      "path": "D:\\tetherbound\\visual-acceptance-local\\storm-strike-mechanics.err",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  },
+  "frames": [
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_normal_00_clear.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": -1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_normal_00_clear.png",
+      "sha256": "a85d44c1d42081818457f39bfad8386d5d66801aa1b80eea68f7b62f8194a801",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_normal_01_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.1,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_normal_01_warning.png",
+      "sha256": "32d1c85026868ecbb2c4d67fb4057a44a0267d3016f1da3636db70c6c139d21e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_normal_02_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.5,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_normal_02_warning.png",
+      "sha256": "6f0a7380c9266cbe7897ea2a75f27e477af7ab1faa4d1c420be36fc66440557b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_normal_03_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.9,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_normal_03_warning.png",
+      "sha256": "6ed60840f5120362a8f324abdf991dc20ae3d60fca9bfc670e7ae1e448566bf8",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_normal_04_impact.png",
+      "flash": 0.952380952380952,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_normal_04_impact.png",
+      "sha256": "b86a7447d05a6bd73d55f69313617fe2fa8fc6b0c999f0905f567b476ee3933e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_normal_05_decay.png",
+      "flash": 0.666666666666666,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_normal_05_decay.png",
+      "sha256": "470021214eff73c5c420fe903567db1dac61bd12862ad203ca78298612450c49",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_reduced_00_clear.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": -1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_reduced_00_clear.png",
+      "sha256": "5475f5718c14aca78b7293bf773ecbdcc6b06fdbac1ae1e791668920ce1c97a2",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_reduced_01_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.1,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_reduced_01_warning.png",
+      "sha256": "bb58a738f1c89279e94d3877bb88996d8eb48dfb720fbcee8307b0bf592a38ea",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_reduced_02_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.5,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_reduced_02_warning.png",
+      "sha256": "62ffcae77efe763d79bda05d917e657af06bf44026485b5ffed454f51494538a",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_reduced_03_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.9,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_reduced_03_warning.png",
+      "sha256": "1bf285edd4eb4a5ba3fe9547ebe6793f14c2b4a134ba35fa05daad5dcb89195f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_reduced_04_impact.png",
+      "flash": 0.102380952380952,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_reduced_04_impact.png",
+      "sha256": "fbc5f065f779060a3c2fa3e09d5a77eb51d6f2574081804abcfe7e3cc0a46736",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.8331775665283,
+        739.913635253906
+      ],
+      "feet": [
+        -610.0,
+        25.0020236968994,
+        745.0
+      ],
+      "file": "clearing_reduced_05_decay.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/clearing_reduced_05_decay.png",
+      "sha256": "8f39dbbcfcaa35ee5460dcb5bf33d4a63b73c403f53a0aa5a5db7ec1dff9e39b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_normal_00_clear.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": -1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_normal_00_clear.png",
+      "sha256": "8c7eb1f582f53200df0e42766e670304875f9331da7770980eee3dfef6a9fd22",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_normal_01_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.1,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_normal_01_warning.png",
+      "sha256": "afc1a189be6add5163fc7e9fb13c6fb76fe37a70ac562dba469f075bc780f903",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_normal_02_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.5,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_normal_02_warning.png",
+      "sha256": "899c11e25e638919ac482b1d65f9d71cd75e7462e75975aaa45209ff1efe0d95",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_normal_03_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.9,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_normal_03_warning.png",
+      "sha256": "0c2e8a6fbca71ffa03dc778f1603adccfb0d125efcba9a0e77b4658362ee1657",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_normal_04_impact.png",
+      "flash": 0.952380952380952,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_normal_04_impact.png",
+      "sha256": "8b33615cae26bd8afc22b314056e07c86b928bfe9448d90806e85c95b693f125",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_normal_05_decay.png",
+      "flash": 0.666666666666666,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_normal_05_decay.png",
+      "sha256": "44e37307b8845fc8199df82afd4dbe7511bb48c05f0f631352d555023aa1eb45",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_reduced_00_clear.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": -1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_reduced_00_clear.png",
+      "sha256": "ea54e1abb8995c0dc13fae2af6dae78e67d3b5f088a29bbc24ceac75d5b6b02f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_reduced_01_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.1,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_reduced_01_warning.png",
+      "sha256": "695e16c28783088d94651109fbaadbb626fa7af2ccd4f770c4ead52ce1803138",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_reduced_02_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.5,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_reduced_02_warning.png",
+      "sha256": "0496b208c870ee5491a0b7057f3911c10284475173bd191047679124b9bd3876",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_reduced_03_warning.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.9,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_reduced_03_warning.png",
+      "sha256": "5bc43dd47eecfb253c06690b02f91f97f50ba947aa315f30d85fd8684ee38953",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_reduced_04_impact.png",
+      "flash": 0.102380952380952,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_reduced_04_impact.png",
+      "sha256": "c6c58da44fd0119bb6ab48406f1ae449d442bf6627dbf4b7208e1840bb0b7e58",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "verge_reduced_05_decay.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "phase": "break",
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "baseline",
+      "path": "shots/storm-strike-baseline/verge_reduced_05_decay.png",
+      "sha256": "4abc3cf2ebdfbc5196234dda101c6124ef6bc37bdb48f4e1e476fe3b2a63839c",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_000.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 0,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.0277777779847384,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_000.png",
+      "sha256": "8f2be22dafa2c013a9c0df75a0f5388ff7f983c8112c855dfd41e35aefeebafe",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_006.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 6,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.111111111938953,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_006.png",
+      "sha256": "96c26bdf6d45f012092e3ca82391c8a8d2282409507c7c9107140ccb50b6d94c",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_012.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 12,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.194444432854652,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_012.png",
+      "sha256": "a2da8d64d189173492423d46604a4b5105ce17df02d0e94b7c54d885f634a66c",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_018.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 18,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.277777761220932,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_018.png",
+      "sha256": "d21013fe4db5b676703591e96e7a871b68972253ea6411d3a4934b170329557d",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_024.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 24,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.361111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_024.png",
+      "sha256": "ccc959a5d147e80aab9ffb4bddc4d0b36eb142662298fa4045ca42e9cc239dff",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_030.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 30,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.444444447755814,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_030.png",
+      "sha256": "9543847e6c84c8d68beeeb96757adc0e002e33072a4a9af310449a9653417cb0",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_036.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 36,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.52777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_036.png",
+      "sha256": "d9fbbee8d365ad30bf3155aba1db73e6be901c63aa50d7692337ab83a4ade43b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_042.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 42,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.611111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_042.png",
+      "sha256": "d03819623ac782b32c07b84d394117be54a910b16249ab2fdfa529d97178b1fa",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_048.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 48,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.694444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_048.png",
+      "sha256": "26aeb95e045ad8528b3eef87d4e03aede245117e0d7e4cc974389afcda43df6f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_054.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 54,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.77777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_054.png",
+      "sha256": "04d2d98c3d56ef1bf4e3ff62f85389971470eec528a342b9373affa674412a05",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_060.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 60,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.861111044883728,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_060.png",
+      "sha256": "219f2afb438ff7935e5fd3abe8465f6e692f8c19cf34701e016f1ea97b19f75e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_066.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 66,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.944444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_066.png",
+      "sha256": "eff2e59e180d5c2711176ec2cc0a09309380b827c89c970695a586da3f35b1a8",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_070.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 70,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_070.png",
+      "sha256": "f4521d28faaec9e1cd4788bd7ad43aa140303dceccbabe91dd92898707b10380",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_071.png",
+      "flash": 0.132380952380952,
+      "fov": 70.0,
+      "frame": 71,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_071.png",
+      "sha256": "6e7af16e89f53c511dc7e528b7c23335af47d9761ccb71d1b9511e1db992c17b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_072.png",
+      "flash": 0.0847619047619048,
+      "fov": 70.0,
+      "frame": 72,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_072.png",
+      "sha256": "22412268d7c02584a03aa8dd1e8bd62d51f348f0438a5e96b94e20a596589b58",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_073.png",
+      "flash": 0.0371428571428571,
+      "fov": 70.0,
+      "frame": 73,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_073.png",
+      "sha256": "f3e5390e3c7ad8210efdfb5f42b26c541307801ddea6ee0b7998317289ee700f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_078.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 78,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_078.png",
+      "sha256": "14450f62dd32d5ec46c95ad7b54b17fd5a00cbe17e85d89dca37d292af65946e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_084.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 84,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_084.png",
+      "sha256": "23f14d8deb557d3a2a133fa7a9d0641f101a112ad5cde41abf95095d879e2e89",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_normal_090.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 90,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_normal_090.png",
+      "sha256": "574fac6da06aa63ef1610e8c85ed16bf8d855dc5a0c4da4e1ede88bbc691a00f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_000.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 0,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.0277777779847384,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_000.png",
+      "sha256": "b6d373b8cc0663f6aacf1d43089ad04ba8a725e863421b3c0cbc907a8765a0b8",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_006.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 6,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.111111111938953,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_006.png",
+      "sha256": "8c6b3f0ee2dd3cd02b759217d29a17ba6bb9b5296625c8b34b2e9ea18b47bc84",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_012.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 12,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.194444432854652,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_012.png",
+      "sha256": "2d6fac781628cb144464395677d9b4b54e20daa33e67d501a95b760be531eb60",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_018.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 18,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.277777761220932,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_018.png",
+      "sha256": "729ae38c1838600cfd06a320291bca3d55e30f2ccc2b4544a1b05c9a51b73513",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_024.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 24,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.361111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_024.png",
+      "sha256": "b62ad0895d86e26d2e75be7a17bf87f00742a972186cb242408250cbf3fa6024",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_030.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 30,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.444444447755814,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_030.png",
+      "sha256": "4d227528c2d1ecaee8ad33bba68c3913873113fc5ce0e5c3093e61cf67a28bbf",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_036.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 36,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.52777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_036.png",
+      "sha256": "e0a8d2f99e10658e1f8f5a7806cb16c2e83241d25b446431586a787b4c3351ae",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_042.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 42,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.611111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_042.png",
+      "sha256": "9cda69eb2a91c8fb4002f44767ab57564488ce43e1e0b5f02cfc220e76bd34e1",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_048.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 48,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.694444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_048.png",
+      "sha256": "8f97334b6acde58373902415b8defdb1b154dd42c7a1c35e83241ccd7d325c27",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_054.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 54,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.77777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_054.png",
+      "sha256": "4239c4b27462165444e44844d42cfb5e963adc574e5ae8d81bce9439d96d17af",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_060.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 60,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.861111044883728,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_060.png",
+      "sha256": "a7fed6c98d66de407fdff08019921d1939bed1ab60173cb5a67a029a3d597241",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_066.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 66,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.944444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_066.png",
+      "sha256": "cd299e7260e5bce59af5e11034bbc7cefe8430671e443c115baf95243a8548fb",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_070.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 70,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_070.png",
+      "sha256": "2b0e13ea4387bba851eab7547ed5d8da097aaccb8a96770cf0f49bea700c872f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_071.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 71,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_071.png",
+      "sha256": "bf781a0be0e2272c683ad0667d066fd11afa00df03ba398a22dbde541dc2f557",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_072.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 72,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_072.png",
+      "sha256": "1b90d6c9226e101c553c9f094cd4a925cb4258a2d3f4fdd936c5be3138f0b618",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_073.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 73,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_073.png",
+      "sha256": "794b3c52176389b6d69de00b0d3d89ab6daa99e19fb6e508d186b5e5de52427e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_078.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 78,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_078.png",
+      "sha256": "e89230625a56850444e0d474c2bc75743cab79fc96acfad1ac38f0718dd5c440",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_084.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 84,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_084.png",
+      "sha256": "bbb00b64989ccd10efa2256afe2f3ccac42134213bf621159d9381ecfdc90a0e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        29.1927070617676,
+        737.913635253906
+      ],
+      "feet": [
+        -598.0,
+        26.3615684509277,
+        743.0
+      ],
+      "file": "outside_reduced_090.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 90,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/outside_reduced_090.png",
+      "sha256": "68b7bb09d7ebeeaa875724354448477770cada3bb385a11eda4f5e0650807f90",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_000.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 0,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.0277777779847384,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_000.png",
+      "sha256": "6f9e3130dea0e70b1243bbd7cad6fa9de28084e018dd27bf02e5486e401e70a4",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_006.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 6,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.111111111938953,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_006.png",
+      "sha256": "830c4f9f8153f7fc4e6c750a118cfb66f785e9efe042e39da1a3f25706317894",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_012.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 12,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.194444432854652,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_012.png",
+      "sha256": "8bcaddc788d3112a71d83b060d011eb5a3d3b90dd0fd0ec65ea1d69fb1fe9415",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_018.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 18,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.277777761220932,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_018.png",
+      "sha256": "b97f5904005e995850a7f307396fa3a1187c637994f93957956cad1403c6ec68",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_024.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 24,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.361111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_024.png",
+      "sha256": "827673e3fed6fcfbb847cf70745316663f816de29a677993e67fd0925d3d79df",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_030.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 30,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.444444447755814,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_030.png",
+      "sha256": "1cbd09a7c3b0ffce1e41c52b84195f96f6840df6a2dd94ff3c3cce06df335320",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_036.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 36,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.52777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_036.png",
+      "sha256": "690b26ba6c53a5f127c735728bc04608f60d2ba02c839c668094142ffa9a3b20",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_042.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 42,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.611111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_042.png",
+      "sha256": "420275b96229d1310157a0f19207c6591c7bc809112f2cfa0a15111247ca18db",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_048.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 48,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.694444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_048.png",
+      "sha256": "7cdff8ac913d0f55d94f10a211df9cdfa1d9ead8d2b60e9d90457d5626e337a4",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_054.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 54,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.77777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_054.png",
+      "sha256": "e0602749d3c2651a2f52a16e3c03af674a31ff0b8190091847ead717c9796d7c",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_060.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 60,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.861111044883728,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_060.png",
+      "sha256": "b2075e8c64296f3bbe119b9653550776b17682f0cfdaa915b359c0b0e04dfaef",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_066.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 66,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.944444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_066.png",
+      "sha256": "77f2100ceb31cb7b6f912fe0df2f7a8799135b8d7b46c73da389e95330d9b1ee",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_070.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 70,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_070.png",
+      "sha256": "ab870257d648332b5ea4420818a391b6ab570c0ff235eb952346848a8906440a",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_071.png",
+      "flash": 0.132380952380952,
+      "fov": 70.0,
+      "frame": 71,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_071.png",
+      "sha256": "56429cddbbb0b934390cc6fe3af87aaee26d581e773774a15281b51ea4e36d4d",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_072.png",
+      "flash": 0.0847619047619048,
+      "fov": 70.0,
+      "frame": 72,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_072.png",
+      "sha256": "b599fcbf2cac12656bcfd87b419b3b7d6233fb527daf0a6dc02a1b2c3a51e99b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_073.png",
+      "flash": 0.0371428571428571,
+      "fov": 70.0,
+      "frame": 73,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_073.png",
+      "sha256": "33b30c6744783f349030a2a765b605e316db379a66846de68f728cd44b933d1b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_078.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 78,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_078.png",
+      "sha256": "86b70e95b488aaddd102f5291c995406851c15ed0e2b3e545edf871ca6aa82de",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_084.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 84,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_084.png",
+      "sha256": "bea68f803e18d3e994715cd748db489496b0d8598cea10e5c6f214464e1f1505",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_normal_090.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 90,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_normal_090.png",
+      "sha256": "280f02c0eebba6c4b50ffdbb4658a592b441959a01499d13110660e5b4198dc6",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_000.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 0,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.0277777779847384,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_000.png",
+      "sha256": "793d412447b866d4a5aca11f62ebf4f7fac74e07b342d1e1e2c87e3ee9bc9816",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_006.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 6,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.111111111938953,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_006.png",
+      "sha256": "23b6c3b9e173b6c2feb72c1b1f5254c1e5fefba2e7f1eb18d65cf85ebb08ccf6",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_012.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 12,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.194444432854652,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_012.png",
+      "sha256": "d981c032b9584452a358e3e27fd248bc6efa98df74c0d61d3af5f302a77dc53a",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_018.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 18,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.277777761220932,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_018.png",
+      "sha256": "b9a12d120de269391970fce179eda61540bd767c15a3acd90bbf002d0f7dcd20",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_024.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 24,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.361111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_024.png",
+      "sha256": "e9f3e96432e548fb2e2b11c8ff7a9c9e528eb3a1f0ab3dc1f1e57091ecb8917a",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_030.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 30,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.444444447755814,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_030.png",
+      "sha256": "1c38bc4dde7dd1c6ed491da3a9beea0ea9103ffd4e0fe2094c80952a076eaba8",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_036.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 36,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.52777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_036.png",
+      "sha256": "061541f55b2205cd88b527f1b9cf629d248d67c032eb53bd3f0804b484dc780d",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_042.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 42,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.611111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_042.png",
+      "sha256": "4ebd25958af58b3cf6c44da0542aca7253b7a32c2fb1662bfbba78702a97d1d6",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_048.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 48,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.694444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_048.png",
+      "sha256": "b76f8cf3767b76c7cc041cc3e18e2bf0509e5f4e38d93c5051ac88d0c2fbf865",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_054.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 54,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.77777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_054.png",
+      "sha256": "ba1afad2f9646f1fe063f8e9ccc4bafc99c1234a6e99ca44a46be3f2a1e259f7",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_060.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 60,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.861111044883728,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_060.png",
+      "sha256": "0f89b50ab959170e047875ab466cf8ee1f824d14d0d403ada72b9d5b9c9e6290",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_066.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 66,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 0.944444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_066.png",
+      "sha256": "ff28b03c5fbc0542a8c1a7a3d3c554038a6f02da3b4e1abbc9d727b59e40251e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_070.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 70,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_070.png",
+      "sha256": "0454207094cfe319c62e4108b2b4ac82048596d306b85bd386ccfc95dc3c575e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_071.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 71,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_071.png",
+      "sha256": "6d6d6c35cd2213b3bedce1875b0e243866284e3509705786bbcc94988d6c2d25",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_072.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 72,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_072.png",
+      "sha256": "c6e037c27f6689d529a4131aeddeadd490a2050f31da400877ceb6e6f4cf7b80",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_073.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 73,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_073.png",
+      "sha256": "576e406cfae29e74c87d92f0a8ae752808d9c2ac8456aae0fd389e4a96d55352",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_078.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 78,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_078.png",
+      "sha256": "2c8e7d91b0ba28fdab24e5f15aa70e4a6bade23094a6140e6999381bcadb01ab",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_084.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 84,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_084.png",
+      "sha256": "8c3df9119060ba334b1b01829018bfd0d2b159e9264ebddfd52dbbf209f88b96",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -598.0,
+        28.4516696929932,
+        747.913696289063
+      ],
+      "feet": [
+        -598.0,
+        25.6205577850342,
+        753.0
+      ],
+      "file": "inside_reduced_090.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 90,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -598.0,
+        25.6719551086426,
+        753.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/inside_reduced_090.png",
+      "sha256": "4dcd01b9898650e79c38e6e257b8a4eb65eb89512d7d7feabd7dd3c124ababaf",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_000.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 0,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.0277777779847384,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_000.png",
+      "sha256": "e983865b469d47b52425bf866d79575302784bfcc116959a4c1c0eb97669bef6",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_006.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 6,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.111111111938953,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_006.png",
+      "sha256": "d5f92a002e0c92910215dff457f746c86d18d2b50407e9fca06d5505c1a96591",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_012.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 12,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.194444432854652,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_012.png",
+      "sha256": "cb18284296a1108f0e165d257b228927ed9d0774591e74cec8aa9f2fbb4421b3",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_018.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 18,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.277777761220932,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_018.png",
+      "sha256": "42e87ccdd7bc1f0e12eb1fb5d9849fba8ae5499a8c83df406a7edb5b01cf7f29",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_024.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 24,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.361111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_024.png",
+      "sha256": "6b546393b92d21f1c86bf79cbdf3df72a4ba29212972fb1056be82ef2287cedc",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_030.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 30,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.444444447755814,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_030.png",
+      "sha256": "410e8032db8c49632b42725b422f6085c0e333862d484f36a12cefba81c9281d",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_036.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 36,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.52777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_036.png",
+      "sha256": "70cb436c8bdd71b08334a9c16c5daab962dbd88b9edf9fed03691cdf5a18417b",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_042.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 42,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.611111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_042.png",
+      "sha256": "f4b14ea436c77171f8f154913c5fc119876a46672b28e3a060a8bebe8cf51aa5",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_048.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 48,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.694444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_048.png",
+      "sha256": "9b7402f6d448a6fb71c1b4df3290b027bf9b439423261de36264c3897d4913a2",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_054.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 54,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.77777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_054.png",
+      "sha256": "dbefdea0f502c0a8b1a20e9d6be257d992a48227809f6e81aa845a4d4b0ffe3a",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_060.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 60,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.861111044883728,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_060.png",
+      "sha256": "1463e82cac975878fb40ef7ff4b1299eada4efb19ea94d80270d95913518febd",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_066.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 66,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.944444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_066.png",
+      "sha256": "05f33cf6766157f4b79f818b459f8c1416ee91204287f362b96ae81c606d33fc",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_070.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 70,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_070.png",
+      "sha256": "d5c800faff35db694c26b53becc60297e1c7d95e0c37312b4308a4f3767cd48a",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_071.png",
+      "flash": 0.132380952380952,
+      "fov": 70.0,
+      "frame": 71,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_071.png",
+      "sha256": "995a01fe5e1b45031dc6eb6d601429af240338875d110a9b292540e4577897a5",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_072.png",
+      "flash": 0.0847619047619048,
+      "fov": 70.0,
+      "frame": 72,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_072.png",
+      "sha256": "1cc54afff10e6840a6fb33e4ebca0282fbf625d57f93d15d30273deb90f02270",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_073.png",
+      "flash": 0.0371428571428571,
+      "fov": 70.0,
+      "frame": 73,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_073.png",
+      "sha256": "b5c5343c464cf58b6592cc188cc01b9b6116c360fcd42cb0e5ca79888d4a892d",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_078.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 78,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_078.png",
+      "sha256": "5ecec44c20aff4f25d5c72173be8e7c875124b09472454cb253f3031336aa6f4",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_084.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 84,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_084.png",
+      "sha256": "d65ed539004440acf9ec5ffa0cf353938ecc510946528d71d70ffbecbf980771",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_normal_090.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 90,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": false,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_normal_090.png",
+      "sha256": "7a8dba0ae98f25915a300989965bb2c94600491856e4f9407f0fb3443458815f",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_000.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 0,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.0277777779847384,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_000.png",
+      "sha256": "8302e82a7b6002d0d1f14a1a4eae28d9b99772002b295875833770098d85afe2",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_006.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 6,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.111111111938953,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_006.png",
+      "sha256": "77d9d306a42fd469de02b12adc42bca0a10a8f8951ed0dcfb766ea7650879a09",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_012.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 12,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.194444432854652,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_012.png",
+      "sha256": "13adea44617f23927565a1913ae8c222667ad574f593d47a0110708d1e8de1b6",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_018.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 18,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.277777761220932,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_018.png",
+      "sha256": "6a6823a7d5a62791918abe8eba3965dbfa461612e891f8a361e5aa7e1ec66f5e",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_024.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 24,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.361111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_024.png",
+      "sha256": "d9a41c4af5d3bd7651bbb5c2853cd3f95a99e54e71437e0ea8feea687715d142",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_030.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 30,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.444444447755814,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_030.png",
+      "sha256": "4e787c3d6f10c524c3e8627a605c887e988e857366b034e34d97d1ba3148a06c",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_036.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 36,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.52777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_036.png",
+      "sha256": "60855925a0ebced584054af96fc3dd5ee370277dd336465d83e40fd6c36595f2",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_042.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 42,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.611111104488373,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_042.png",
+      "sha256": "04c50285427e6a7c277dd290333f56111f2e3775f93fb56ff3ca4a3a3dc351e6",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_048.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 48,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.694444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_048.png",
+      "sha256": "9efceb502aa20f8d4b8ffea7d335805b199c0e686cda5b64362bb5980b008916",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_054.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 54,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.77777773141861,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_054.png",
+      "sha256": "2fa64d06ff272c2437cecd09d5a7d52b8e2a483f1812f34d338918532ec51663",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_060.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 60,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.861111044883728,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_060.png",
+      "sha256": "f589d8efd305fe9da240f00dd69b1435aad397b9a81aa5aeaf6e58f61466a527",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_066.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 66,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 0.944444417953491,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_066.png",
+      "sha256": "868491239d90be5544a9b5adaf6c8aa939179c4d8a4efd91e38e4fa102beadc0",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_070.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 70,
+      "impact": false,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_070.png",
+      "sha256": "0a353cb6da282c1a4e6d1a10d40ff8f421e36272dbb890289a545621abae96b9",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_071.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 71,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_071.png",
+      "sha256": "da710623339dfaebdc76f7399f09f1aee58f87cb14f4b6761c53917f428f6688",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_072.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 72,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_072.png",
+      "sha256": "aee6e5b4eaba286f4793448b5c8bbc7a983a66bc93401b61d7f374ec3fc29e95",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_073.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 73,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_073.png",
+      "sha256": "6a254c0a761a76961d03c2b30856c795378545013171628db1643006594bd174",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_078.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 78,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_078.png",
+      "sha256": "8c078232e814286cf80751dba8a970fe2c41cfefa2cdde3922298e6ba1e5ebed",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_084.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 84,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_084.png",
+      "sha256": "faf267c7ba26993663eb668d64bb45fb30bf776fe81199105e1a73b979af97c5",
+      "pixels": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": [
+        -610.0,
+        27.2792797088623,
+        749.913635253906
+      ],
+      "feet": [
+        -610.0,
+        24.4481258392334,
+        755.0
+      ],
+      "file": "brush_inside_reduced_090.png",
+      "flash": 0.0,
+      "fov": 70.0,
+      "frame": 90,
+      "impact": true,
+      "proof": "DRY RUN \u2014 does not count",
+      "reduced_motion": true,
+      "rotation": [
+        -12.0,
+        179.999984741211,
+        0.0
+      ],
+      "target": [
+        -610.0,
+        24.5340251922607,
+        755.0
+      ],
+      "warning_progress": 1.0,
+      "run": "perimeter-timed",
+      "path": "shots/storm-strike-perimeter-timed/brush_inside_reduced_090.png",
+      "sha256": "34f5f468949603028bbb28f638d0cff55990c417a497c45dee2bba33f4f310a7",
+      "pixels": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}

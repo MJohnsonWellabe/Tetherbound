@@ -65,3 +65,19 @@ func test_multiple_registrations_each_keep_their_own_yaw() -> void:
 	game.register_building("wall", Vector3(2.0, 0.0, 0.0), 90.0)
 	assert_almost_eq(float((game.placed_buildings[0] as Dictionary).get("yaw_deg")), 0.0)
 	assert_almost_eq(float((game.placed_buildings[1] as Dictionary).get("yaw_deg")), 90.0)
+
+
+## F09#3 route-walk finding: a title Load restores `placed_buildings` through
+## GameState's setter. The next placement must mint past every restored uid,
+## or a new Stormwood arch reuses the Crown arch's "b1" and relinks its pair.
+func test_restored_records_keep_the_uid_counter_past_them() -> void:
+	game.placed_buildings = [
+		{"realm": "stormwood", "uid": "b1", "id": "stormglass_arch", "position": [-160.0, 0.0, 2750.0], "yaw_deg": 90.0, "paid": true},
+		{"realm": "meadows", "uid": "b4", "id": "wall", "position": [0.0, 0.0, 0.0], "yaw_deg": 0.0, "paid": true},
+	]
+	game.register_building("floor", Vector3.ONE)
+	assert_eq(str((game.placed_buildings[2] as Dictionary).get("uid", "")), "b5", "the next uid is past every restored record")
+	var uids := {}
+	for record: Dictionary in game.placed_buildings:
+		assert_false(uids.has(str(record.uid)), "uid %s is unique" % record.uid)
+		uids[str(record.uid)] = true

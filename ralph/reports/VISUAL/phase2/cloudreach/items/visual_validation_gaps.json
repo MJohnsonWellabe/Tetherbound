@@ -1,0 +1,8 @@
+{
+  "review": "Code-blind view of two previously missing Cloudreach pickups after opposite-heading pass item_gaps_main096b",
+  "visible_at_normal_distance": [
+    "cloudreach__inventory__pickup__great_candy",
+    "cloudreach__inventory__pickup__tm_wind_blade"
+  ],
+  "notes": "The green candy and glowing technique orb now sit beyond the trainer without overlap. Earlier attempts placed the player over the pickup or hid the candy; the indexed frames use the opposite-heading pass."
+}

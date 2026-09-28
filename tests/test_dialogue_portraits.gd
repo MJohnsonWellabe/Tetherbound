@@ -199,6 +199,11 @@ func test_ranked_and_family_speakers_wear_their_own_plate_family() -> void:
 		if speaker == "Warden Aila" and str(entry["id"]).begins_with("cloudreach_aila_"):
 			assert_eq(str(entry["portrait"]), "res://assets/ui/portraits/cloudreach_aila_clean.png")
 			continue
+		# Vess holds a captain's rank but is the female officer body and plate
+		# (owner, STATE ruling 11); the only captain plates are the male bodies.
+		if speaker == "Captain Vess":
+			assert_eq(str(entry["portrait"]), "res://assets/ui/portraits/officer_b.png")
+			continue
 		for prefix: String in RANK_FAMILY_BY_PREFIX:
 			if not speaker.begins_with(prefix):
 				continue

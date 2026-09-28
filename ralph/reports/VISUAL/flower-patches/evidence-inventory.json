@@ -1,0 +1,526 @@
+{
+  "base_commit": "07299f301d04dffe4319ee1371d30e55399f77ac",
+  "main_commit": "3dad15f417d9538b43cd5d2376ec0c1ab96d991f",
+  "source": {
+    "data/config/grass_field.json": "3b31d5632b4111d4369bc4b9bc6da4d8abda25d6607722906301493050ce4150",
+    "scripts/world/grass_field.gd": "497ddaf3aecc175dbf33974d9f04adabd45fdc58228719d7ab4550135fb7cd34",
+    "shaders/cover_tier.gdshader": "d66cbe387f5671265e3243c5e86e251064242893d0fd199805539f91c2d33fe7"
+  },
+  "captures": [
+    {
+      "source": "shots/flower-patches-paired/region/meadows/001_meadows_place_flower_review_env_band1_lower_meadows_0_day_baseline.png",
+      "sha256": "7c9f05f13b32b46c0daec338979c1ec3f833fae4defe1a1802d19c2bee487f82",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/002_meadows_place_flower_review_env_band1_lower_meadows_0_day_candidate.png",
+      "sha256": "34ee3375029d0e6169baeefa0900dce064d9af9fe944c345139abed67a2f68f2",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/003_meadows_place_flower_review_env_band1_lower_meadows_0_night_baseline.png",
+      "sha256": "446f8b7accc10879149d1938b93b0c5317e512f79b5a3f2b0d96457a7a4d4dc1",
+      "retained": "paired-meadows/003_meadows_place_flower_review_env_band1_lower_meadows_0_night_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/004_meadows_place_flower_review_env_band1_lower_meadows_0_night_candidate.png",
+      "sha256": "63099210251f1ab2d40892944c0acecc61a319e42535e18492c05ed2b6fedc27",
+      "retained": "paired-meadows/004_meadows_place_flower_review_env_band1_lower_meadows_0_night_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/005_meadows_place_flower_review_env_band2_stone_and_root_0_day_baseline.png",
+      "sha256": "fcad5dfcec731ce145fb58fe6a110a88ccf5d611b87b5dc5d6187846be8cc0be",
+      "retained": "paired-meadows/005_meadows_place_flower_review_env_band2_stone_and_root_0_day_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/006_meadows_place_flower_review_env_band2_stone_and_root_0_day_candidate.png",
+      "sha256": "00836c27acd277d41e104e6e30f4ec62ec25a7aa68fe4f727fde3ee3fcec1d23",
+      "retained": "paired-meadows/006_meadows_place_flower_review_env_band2_stone_and_root_0_day_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/007_meadows_place_flower_review_env_band2_stone_and_root_0_night_baseline.png",
+      "sha256": "a3374086412540d5bae3c35b3aff820aecab0d51543d2f989cc56ab69ccec0bf",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/008_meadows_place_flower_review_env_band2_stone_and_root_0_night_candidate.png",
+      "sha256": "66613251824a1645f5c511b9a126e635cc5c2c646145497e3ad512841620696a",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/009_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_day_baseline.png",
+      "sha256": "85be17aff721387967f8fb80ffaecc4dd6ccae9c417c1635117fdd78dac10c77",
+      "retained": "paired-meadows/009_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_day_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/010_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_day_candidate.png",
+      "sha256": "4fe155a4faa738f8502a803c8044540417d60ed0978c187ae41fefe2b24d41b1",
+      "retained": "paired-meadows/010_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_day_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/011_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_night_baseline.png",
+      "sha256": "4723fe96a9fe31cf23a0b3fcc06ccfc1c173b38a5a70615d619425d18b51bd5c",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/meadows/012_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_night_candidate.png",
+      "sha256": "1a991e6807b27a0596e73938cbc86dbfc8d0eeec296f826c6c7bd9406307f7b8",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/001_stormwood_place_flower_review_env_cinder_verge_0_calm_baseline.png",
+      "sha256": "c6eeecd2aaa310b2839674a13512df23e5bce6d68874741be53c971928cf2d5c",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/002_stormwood_place_flower_review_env_cinder_verge_0_calm_candidate.png",
+      "sha256": "daa2813b6f33ca4a8e4eaab33d3bb75139f8f0a25da21fba86174039b5ce1ed7",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/003_stormwood_place_flower_review_env_cinder_verge_0_break_baseline.png",
+      "sha256": "f5dbe76a0b440b83de38a797039377df6f0085bae34ce510cd81233e1cc4238f",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/004_stormwood_place_flower_review_env_cinder_verge_0_break_candidate.png",
+      "sha256": "4ca78cd31d3120fde224af70cdb5c169b17d00a2c3b804c71cbb310a763e96cb",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/005_stormwood_place_flower_review_env_glowmoss_hollows_0_calm_baseline.png",
+      "sha256": "196869818d024af26f432089ebaf9154106ee359c4f706a05eac0ddc1cb7ba42",
+      "retained": "paired-stormwood/005_stormwood_place_flower_review_env_glowmoss_hollows_0_calm_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/006_stormwood_place_flower_review_env_glowmoss_hollows_0_calm_candidate.png",
+      "sha256": "1099e1cca48dfbd3132553b2ee2478a7fbb862397f334002ccc1c04a0f6fdd85",
+      "retained": "paired-stormwood/006_stormwood_place_flower_review_env_glowmoss_hollows_0_calm_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/007_stormwood_place_flower_review_env_glowmoss_hollows_0_break_baseline.png",
+      "sha256": "1fd2b193b82e9e1299bf04b971cf8829d2334f83e4911b464dffb3e0fe0b7947",
+      "retained": "paired-stormwood/007_stormwood_place_flower_review_env_glowmoss_hollows_0_break_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/008_stormwood_place_flower_review_env_glowmoss_hollows_0_break_candidate.png",
+      "sha256": "70b2758ec584130d74fc684a6e87fb4eb2c4deafca1315c7b1656327f08c7ff5",
+      "retained": "paired-stormwood/008_stormwood_place_flower_review_env_glowmoss_hollows_0_break_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/009_stormwood_place_flower_review_env_conductor_run_1_calm_baseline.png",
+      "sha256": "e965005481b046fe480fda434c9a4057b424852795333e884dc97c24d0145f1d",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/010_stormwood_place_flower_review_env_conductor_run_1_calm_candidate.png",
+      "sha256": "cb5a2e51c9d14baa9c326722edd5d2ab387068a19ed4ad54cb1a91c5285889ed",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/011_stormwood_place_flower_review_env_conductor_run_1_break_baseline.png",
+      "sha256": "f3ff1c70b6f2a17a6461800500ddcbc02ce5341c4adfd775113e35c137042dc7",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/stormwood/012_stormwood_place_flower_review_env_conductor_run_1_break_candidate.png",
+      "sha256": "2657a5eab2bba14d10de0e162ac1698c065ec99c38b7cc3de27de07ba2ce3cb6",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/001_tidewake_place_flower_review_env_first_shore_0_day_baseline.png",
+      "sha256": "ba8c02fd915cf6d151ee02eedccfad9891e9f583a2db1f123ecd60fe39fa05db",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/002_tidewake_place_flower_review_env_first_shore_0_day_candidate.png",
+      "sha256": "f2e03c4fa7b16353d8a1118ae0025370c58b851ea849afbd83270742c84c33ef",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/003_tidewake_place_flower_review_env_first_shore_0_night_baseline.png",
+      "sha256": "5bac9ccd29a648c9711b88905c15b17808d7ae7379da2c7f69a9e1585092ab9d",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/004_tidewake_place_flower_review_env_first_shore_0_night_candidate.png",
+      "sha256": "fbad84433e728ba1938b783b91ee5a720880141c2ca0f626eadc4c7743eb6c6f",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/005_tidewake_place_flower_review_env_reedhaven_0_day_baseline.png",
+      "sha256": "15b8a90f627a53bfe23f695fc645e0b13a469d91583ec2663065ac6f2924c720",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/006_tidewake_place_flower_review_env_reedhaven_0_day_candidate.png",
+      "sha256": "867a601face7786d6ce3c14723f9bcf33d2b67fd57d1d251e2804e5bf8843584",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/007_tidewake_place_flower_review_env_reedhaven_0_night_baseline.png",
+      "sha256": "11ff90ccce444a4fb619af44c1dbcd619bb22f70d5e4f746863eed5e1d341dd3",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/008_tidewake_place_flower_review_env_reedhaven_0_night_candidate.png",
+      "sha256": "d6350f7d7f9724e4e7be3f0505fe6796eed1014473c1b26ef0b94b045379c954",
+      "retained": null,
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/009_tidewake_place_flower_review_env_deep_watch_0_day_baseline.png",
+      "sha256": "c4d8f7bdbf23dfba21312657d2b79470d96e355e16905d89067dd5e59506d315",
+      "retained": "paired-tidewake/009_tidewake_place_flower_review_env_deep_watch_0_day_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/010_tidewake_place_flower_review_env_deep_watch_0_day_candidate.png",
+      "sha256": "1d1e51db58287b7d24012bda71cf4da4e4ca44bfa2a6407300b0c223be917a60",
+      "retained": "paired-tidewake/010_tidewake_place_flower_review_env_deep_watch_0_day_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/011_tidewake_place_flower_review_env_deep_watch_0_night_baseline.png",
+      "sha256": "9cfc03974eb0ba5e698c792e70e4195c0dc3edd2c02ea5528f2b59cede0747af",
+      "retained": "paired-tidewake/011_tidewake_place_flower_review_env_deep_watch_0_night_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-paired/region/tidewake/012_tidewake_place_flower_review_env_deep_watch_0_night_candidate.png",
+      "sha256": "0509425f154a821f5bc14b08c2a64f01af6f3a8440d738abd8a5bad908cc74c1",
+      "retained": "paired-tidewake/012_tidewake_place_flower_review_env_deep_watch_0_night_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/001_meadows_place_flower_final_ironwood_day_baseline.png",
+      "sha256": "907e147c71c1a820f82f8b1b79488ff92bc21214ae29ab6838b006e1e93b943d",
+      "retained": "final-meadows/001_meadows_place_flower_final_ironwood_day_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/002_meadows_place_flower_final_ironwood_day_candidate.png",
+      "sha256": "c77fa2e62035046cdb6c58bd0ab9f9bc9368f948df01c435dd7fdf10da2f5230",
+      "retained": "final-meadows/002_meadows_place_flower_final_ironwood_day_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_00.png",
+      "sha256": "29b59e955711713f2a3ad2e130aa02e6c0005ebfa8a67a4a896c89c6177ea59d",
+      "retained": "final-meadows/motion_00.png",
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_01.png",
+      "sha256": "bbc60f5d4170cd2054337031c29dd58e976cbf9493f53ea269e4a96cf1259101",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_02.png",
+      "sha256": "734e020a24e60fcef9e0af2a0272ed2b5560ddea23f14889ec358d4365c050d6",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_03.png",
+      "sha256": "b61c5bf8d76bbb2aecdb5a7f0d0aae34a349aff9c36457610cf8eae36122741a",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_04.png",
+      "sha256": "9e06a8a9916f61f3c5fc29457a1cd4cf5b01228bb1af4cf03548857b09954f20",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_05.png",
+      "sha256": "2b1802a6d0c191d3e55229a61d51dc6fd1facd1e7d99c58422c3913604f632ce",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_06.png",
+      "sha256": "1b772ddbffa234a1428b9fab93a3549621238a788e9fdb3dae6b22756e9f6eab",
+      "retained": "final-meadows/motion_06.png",
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_07.png",
+      "sha256": "a8a21b2d547f5f0455aa51907ab97ee5dfd832a52391682bf2e68c42b17e68f2",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_08.png",
+      "sha256": "fffd389438d093b204857f092124ebebe708f03b50e1777213cb92b577d68cd6",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_09.png",
+      "sha256": "b30c8af5ad187dc35b6d6e3385fc4f1654a7aab4d9164a261aa45372298c55ef",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_10.png",
+      "sha256": "b4c5abbabc3509e5d1fe9dc19eade44a9dbc7f2c6ba72d130f646a7917133113",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_11.png",
+      "sha256": "9cdd78f141acaa04c6964d312e8f4e8da11d2e9207f6934dd650f1913abd1ee6",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_12.png",
+      "sha256": "90fccad4a3cc51995c8c81862434c0d6b92705b8c98539218d4cb5aa2b79c284",
+      "retained": "final-meadows/motion_12.png",
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_13.png",
+      "sha256": "07d7a429e67e3954bdcc0616fd2db2feb4be2d71d4de2bb985d9a820e90f8a8c",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_14.png",
+      "sha256": "897e98d106db7f06549d9f08d17cd8adb9b91dfb6bad45dab4bc97a7faa89b38",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_15.png",
+      "sha256": "116b8bcacc0895bc095d4987873c396d6d13e0af4d5c4e135765df05394c7afa",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_16.png",
+      "sha256": "6227dcd4494cd234384c38625f390cb6f42395ec4d0e5bd4487fb6bca7854470",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_17.png",
+      "sha256": "ba6c140d1350b6dcf54f496a88c18c9a8c71ffa8f2c34f8e7a5435f0806a04c5",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_18.png",
+      "sha256": "427158c299ab87ccb20ce7dd02e1248e1d2c7a1fded21103bcb33587b2ae774a",
+      "retained": "final-meadows/motion_18.png",
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_19.png",
+      "sha256": "36b181a3e0887288b6abd693e3e12a2a9df045f9f382dfb4a1f63321a4e3815d",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_20.png",
+      "sha256": "fc1c25380126d9a39380da44836e60f90efb3b11b2231fbe1db98782015369aa",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_21.png",
+      "sha256": "60979fa56585c1fe2f1f4de63731de588fc3fb88e8bab2525a75b5870c9384b5",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_22.png",
+      "sha256": "11d25b5cfadc30b5c2187b98185f87a851bda46a3c36c118214fa930c94ad98c",
+      "retained": null,
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/motion_23.png",
+      "sha256": "7447218add9ef63b698a5ddb6e627f23fb7754e6a7709f2f9b8975402eb4e312",
+      "retained": "final-meadows/motion_23.png",
+      "kind": "motion_frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/003_meadows_place_flower_final_ironwood_night_baseline.png",
+      "sha256": "4bb32f1c09c5326e2bbcc840887f59b36943a3db270c2f33c7b11760fc52edfc",
+      "retained": "final-meadows/003_meadows_place_flower_final_ironwood_night_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/004_meadows_place_flower_final_ironwood_night_candidate.png",
+      "sha256": "7406e1264813054f20e9c49b7abae852d7f544e34cfc318921d425ce599fca99",
+      "retained": "final-meadows/004_meadows_place_flower_final_ironwood_night_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/005_meadows_place_flower_final_ridgeline_day_baseline.png",
+      "sha256": "51b0703e32bf55da9427982690c5b8b16733333afa1c116d1e0a002145a9dddf",
+      "retained": "final-meadows/005_meadows_place_flower_final_ridgeline_day_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/006_meadows_place_flower_final_ridgeline_day_candidate.png",
+      "sha256": "022fb6585956d8dcccd527da5117a684951448d256bee228190df18fae8b0f58",
+      "retained": "final-meadows/006_meadows_place_flower_final_ridgeline_day_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/007_meadows_place_flower_final_ridgeline_night_baseline.png",
+      "sha256": "9588a40458356ecfc15b66679d9449bca9364ec1d11029aefa1136ef825194d1",
+      "retained": "final-meadows/007_meadows_place_flower_final_ridgeline_night_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-final/region/meadows/008_meadows_place_flower_final_ridgeline_night_candidate.png",
+      "sha256": "18bda21aae5a9518c4cf1f6e31296caa4d95a00ad98a046c7e6d276a1fcf5270",
+      "retained": "final-meadows/008_meadows_place_flower_final_ridgeline_night_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-preserved-final/region/meadows/001_meadows_place_flower_final_ridgeline_day_baseline.png",
+      "sha256": "a8904de8466cf7239fa92a8564094eb9b70de3832ce4bd7966317ac601ff56a4",
+      "retained": "preserved-final-meadows/001_meadows_place_flower_final_ridgeline_day_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-preserved-final/region/meadows/002_meadows_place_flower_final_ridgeline_day_candidate.png",
+      "sha256": "c00c4d1185a783155d14594e28d2c690b401ca4b516947762dc023007448fc2c",
+      "retained": "preserved-final-meadows/002_meadows_place_flower_final_ridgeline_day_candidate.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-preserved-final/region/meadows/003_meadows_place_flower_final_ridgeline_night_baseline.png",
+      "sha256": "77e4ea13cff3d5dd178bd547026c2b990cab29eac429d10351ba63b02aac1851",
+      "retained": "preserved-final-meadows/003_meadows_place_flower_final_ridgeline_night_baseline.png",
+      "kind": "frame"
+    },
+    {
+      "source": "shots/flower-patches-preserved-final/region/meadows/004_meadows_place_flower_final_ridgeline_night_candidate.png",
+      "sha256": "c19416905949a19756a3d79b33b1f1a88102eae546e20b443f7ba7cfd183d6db",
+      "retained": "preserved-final-meadows/004_meadows_place_flower_final_ridgeline_night_candidate.png",
+      "kind": "frame"
+    }
+  ],
+  "initial_source": {
+    "data/config/grass_field.json": "521a40f6a7be12f7b2782d2cfdc254464b506e43b70fe6a2c41fa0c7973f73bf",
+    "scripts/world/grass_field.gd": "36c0f3789498b6ae88b3895fbbb2b470f5e3c550f9b9c75b64705881bfba7b94",
+    "shaders/cover_tier.gdshader": "b50c69c41c45c5bcc5535ef5d0b640fc6cb0711c25a2961599c07da7a15fa231"
+  },
+  "artifact_text_hash_normalization": "CRLF to LF for text artifacts; images use exact bytes. Production source hashes record working-copy bytes at capture.",
+  "files": {
+    "capture_flower_final.gd": "541e3a3540b801db10b27a258875e39f3d93f4bd695ae659c9cfeadbdc53c4a5",
+    "capture_flower_patches.gd": "1bc7831ce35f71ce89878ffc5b39c8360a72b1db01b9b35a76003a9c9889727d",
+    "capture_flower_preserved.gd": "77d55e62fcfd39283e909b166a1611fa5860fc2cb35ffdb53bb742e7cc238dc1",
+    "final-meadows/001_meadows_place_flower_final_ironwood_day_baseline.png": "907e147c71c1a820f82f8b1b79488ff92bc21214ae29ab6838b006e1e93b943d",
+    "final-meadows/002_meadows_place_flower_final_ironwood_day_candidate.png": "c77fa2e62035046cdb6c58bd0ab9f9bc9368f948df01c435dd7fdf10da2f5230",
+    "final-meadows/003_meadows_place_flower_final_ironwood_night_baseline.png": "4bb32f1c09c5326e2bbcc840887f59b36943a3db270c2f33c7b11760fc52edfc",
+    "final-meadows/004_meadows_place_flower_final_ironwood_night_candidate.png": "7406e1264813054f20e9c49b7abae852d7f544e34cfc318921d425ce599fca99",
+    "final-meadows/005_meadows_place_flower_final_ridgeline_day_baseline.png": "51b0703e32bf55da9427982690c5b8b16733333afa1c116d1e0a002145a9dddf",
+    "final-meadows/006_meadows_place_flower_final_ridgeline_day_candidate.png": "022fb6585956d8dcccd527da5117a684951448d256bee228190df18fae8b0f58",
+    "final-meadows/007_meadows_place_flower_final_ridgeline_night_baseline.png": "9588a40458356ecfc15b66679d9449bca9364ec1d11029aefa1136ef825194d1",
+    "final-meadows/008_meadows_place_flower_final_ridgeline_night_candidate.png": "18bda21aae5a9518c4cf1f6e31296caa4d95a00ad98a046c7e6d276a1fcf5270",
+    "final-meadows/manifest.jsonl": "93cefa3fbcfda323d86f8327641bd99d1d1d3b542437ede7ceb45bd1fcfa0c8d",
+    "final-meadows/motion_00.png": "29b59e955711713f2a3ad2e130aa02e6c0005ebfa8a67a4a896c89c6177ea59d",
+    "final-meadows/motion_06.png": "1b772ddbffa234a1428b9fab93a3549621238a788e9fdb3dae6b22756e9f6eab",
+    "final-meadows/motion_12.png": "90fccad4a3cc51995c8c81862434c0d6b92705b8c98539218d4cb5aa2b79c284",
+    "final-meadows/motion_18.png": "427158c299ab87ccb20ce7dd02e1248e1d2c7a1fded21103bcb33587b2ae774a",
+    "final-meadows/motion_23.png": "7447218add9ef63b698a5ddb6e627f23fb7754e6a7709f2f9b8975402eb4e312",
+    "final-meadows-day.jpg": "80dcb252f7e88e90dc83a3c379f8beec4028c1e16c47d2ca73c786f0608ca977",
+    "final-meadows-night.jpg": "5f2f15a2aa8ddc3b30f9ef75baf84dcc32ebac48c5de1931a35011799faa7036",
+    "flower-original-grass-field.json": "717f70b7fd302f7bb44b5c9d0489e1c38ecd111c49851aef04fc0e2820b43da5",
+    "flower-patches-cpu-probe-output.json": "a6d29faf36a56760aad8e238d058865236bda37e6e24aa13ae1b8c16e56b2a62",
+    "flower-patches-cpu-probe.cjs": "38da6165eb4a21c88a15f5e4c2a549aa3e3324aa814f8f49c0ce1b63e395f712",
+    "flower-patches-final-meadows.err": "87295b41acd7b5584f39d1f4d336e4bf1343eb4321520993972dd78b67862490",
+    "flower-patches-final-meadows.log": "db2d7ac5127d2ac0cf3d56b1db271f3f2f90d2c5d11510f51a4635874e0838ef",
+    "flower-patches-paired-meadows.err": "d1c8b1c1f0642a356b484ad41e709cd23232bef7d2e05d0a193245878f227647",
+    "flower-patches-paired-meadows.log": "71ec4219067f504a95ee6ea2037d0ab8337bbb51eeecc28e2133ce07da6d2492",
+    "flower-patches-paired-stormwood.err": "591c7dd59e84cac467ea867022dd89fc3a59a94254654f4a561c563a7903763f",
+    "flower-patches-paired-stormwood.log": "dd7bec3a7fd859d4ac1293f655666047648c87b1615cf300876174c75dff4faa",
+    "flower-patches-paired-tidewake.err": "c28b9f4d2f9d504ba0773bf5a93586dfe4afb222bfbf2331d60767b947f4a160",
+    "flower-patches-paired-tidewake.log": "896922cdb14858cdefd0a1b0bce4d1091ee911c7b91b4d26803924649f2fb1f4",
+    "flower-patches-preserved-final-meadows.err": "8a087af66e8c94477ec087eeb8795e86ff608a2d6e79a5ed6affbcf2998cf5fc",
+    "flower-patches-preserved-final-meadows.log": "ea240295c7655447a54586a51a54f02b698652eec13ca33afeb3e2b6cb8245eb",
+    "flower-patches-source-review.md": "68ffd217d8f46019abf14da4d710b5ef17c8e596c29eb51e1de8e780a62c963e",
+    "flower-patches-tests.err": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "flower-patches-tests.log": "3d58826ebc401968d5c88afe8ec1221281856e876442264a5d1957e43619a94e",
+    "flower-patches-tidewake-review.md": "2aa0bae8d89bf16501c18c86fabc11979d00942ac4840caf9a18e17aeaad9bdc",
+    "flower-patches-visual-review.md": "9e641e6a6fa2db69010fe31bd611c07f3818ff9e66a864616464488d3144ce19",
+    "flower-preservation-harness-error.err": "e72879d8c6e805d9857acf418b74a57f9f2d90cd815dac1b015162909df06fc2",
+    "flower-preserve-scatter-probe-output.json": "1c217b42ceb29293c245a2a2a56ee9ae368f61efc81b2e43cc9be47127ee47a5",
+    "flower-preserve-scatter-probe.cjs": "d61e731a235502f13ae5c08d2670b204b6b3f045d5b8191d8d23561c52f94315",
+    "motion-contact.jpg": "ae88ff173fedc648025a338ffc9c84bb0d249554734e78c3307d823450055540",
+    "paired-meadows/003_meadows_place_flower_review_env_band1_lower_meadows_0_night_baseline.png": "446f8b7accc10879149d1938b93b0c5317e512f79b5a3f2b0d96457a7a4d4dc1",
+    "paired-meadows/004_meadows_place_flower_review_env_band1_lower_meadows_0_night_candidate.png": "63099210251f1ab2d40892944c0acecc61a319e42535e18492c05ed2b6fedc27",
+    "paired-meadows/005_meadows_place_flower_review_env_band2_stone_and_root_0_day_baseline.png": "fcad5dfcec731ce145fb58fe6a110a88ccf5d611b87b5dc5d6187846be8cc0be",
+    "paired-meadows/006_meadows_place_flower_review_env_band2_stone_and_root_0_day_candidate.png": "00836c27acd277d41e104e6e30f4ec62ec25a7aa68fe4f727fde3ee3fcec1d23",
+    "paired-meadows/009_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_day_baseline.png": "85be17aff721387967f8fb80ffaecc4dd6ccae9c417c1635117fdd78dac10c77",
+    "paired-meadows/010_meadows_place_flower_review_env_band4_upper_meadows_ironwood_0_day_candidate.png": "4fe155a4faa738f8502a803c8044540417d60ed0978c187ae41fefe2b24d41b1",
+    "paired-meadows/manifest.jsonl": "c0436a38f02387f1a23cc1370a456231ea67b2c61d2358c33d4444c119375400",
+    "paired-meadows-day.jpg": "e9e3570ba0929f1a84e51cd3b40a522fdb06ec615f132cfdfb69a7e889cde254",
+    "paired-meadows-night.jpg": "000a9458b2933c67c3ed49d5f641a5b7d0e89296516fc0482e84e37c32f58e36",
+    "paired-stormwood/005_stormwood_place_flower_review_env_glowmoss_hollows_0_calm_baseline.png": "196869818d024af26f432089ebaf9154106ee359c4f706a05eac0ddc1cb7ba42",
+    "paired-stormwood/006_stormwood_place_flower_review_env_glowmoss_hollows_0_calm_candidate.png": "1099e1cca48dfbd3132553b2ee2478a7fbb862397f334002ccc1c04a0f6fdd85",
+    "paired-stormwood/007_stormwood_place_flower_review_env_glowmoss_hollows_0_break_baseline.png": "1fd2b193b82e9e1299bf04b971cf8829d2334f83e4911b464dffb3e0fe0b7947",
+    "paired-stormwood/008_stormwood_place_flower_review_env_glowmoss_hollows_0_break_candidate.png": "70b2758ec584130d74fc684a6e87fb4eb2c4deafca1315c7b1656327f08c7ff5",
+    "paired-stormwood/manifest.jsonl": "c73fbc6c8e0089c5fc34234c92aa73e9a81018e32b773b0be7b4d0998be79410",
+    "paired-stormwood-break.jpg": "cd8b0e3fc1d02105957f1dca863a5948bbf958a3958755c5bedcd68f3a76df3f",
+    "paired-stormwood-calm.jpg": "f2e7e5ad1f70b2d11a55b18e02bfc045298ff61a183ca9a844db6cb4bb770c19",
+    "paired-tidewake/009_tidewake_place_flower_review_env_deep_watch_0_day_baseline.png": "c4d8f7bdbf23dfba21312657d2b79470d96e355e16905d89067dd5e59506d315",
+    "paired-tidewake/010_tidewake_place_flower_review_env_deep_watch_0_day_candidate.png": "1d1e51db58287b7d24012bda71cf4da4e4ca44bfa2a6407300b0c223be917a60",
+    "paired-tidewake/011_tidewake_place_flower_review_env_deep_watch_0_night_baseline.png": "9cfc03974eb0ba5e698c792e70e4195c0dc3edd2c02ea5528f2b59cede0747af",
+    "paired-tidewake/012_tidewake_place_flower_review_env_deep_watch_0_night_candidate.png": "0509425f154a821f5bc14b08c2a64f01af6f3a8440d738abd8a5bad908cc74c1",
+    "paired-tidewake/manifest.jsonl": "2a7d7024e95c4ddaafa59189f908bbfe655638b584360dbb0bcd860b7204affe",
+    "paired-tidewake-day.jpg": "c4060c460008f8888582ee81f5ee7def152a49ced42883847548f1d940e76011",
+    "paired-tidewake-night.jpg": "73bad5916450fd61ad08f0c83da22811399d344f6405745be118d4538ca41dfb",
+    "preserved-final-meadows/001_meadows_place_flower_final_ridgeline_day_baseline.png": "a8904de8466cf7239fa92a8564094eb9b70de3832ce4bd7966317ac601ff56a4",
+    "preserved-final-meadows/002_meadows_place_flower_final_ridgeline_day_candidate.png": "c00c4d1185a783155d14594e28d2c690b401ca4b516947762dc023007448fc2c",
+    "preserved-final-meadows/003_meadows_place_flower_final_ridgeline_night_baseline.png": "77e4ea13cff3d5dd178bd547026c2b990cab29eac429d10351ba63b02aac1851",
+    "preserved-final-meadows/004_meadows_place_flower_final_ridgeline_night_candidate.png": "c19416905949a19756a3d79b33b1f1a88102eae546e20b443f7ba7cfd183d6db",
+    "preserved-final-meadows/manifest.jsonl": "380b58544dab2a17cebe2cd93df60b149b78be6a4e73c02ea328d1d1e069cf0e",
+    "preserved-final-meadows-day.jpg": "cc7c5df290e78055263afb6bde17824884a18302e96ab5d35f9e79d5d4923f87",
+    "preserved-final-meadows-night.jpg": "9f3406ad92d4c214ec77a8928cdd14e2b13e47501b6f9606663e503e0453a7d6",
+    "run-flower-final.ps1": "b71311e64a21eebe47e075b30a80cc61157eaf999f22a553a08753928f19c791",
+    "run-flower-patches.ps1": "b71d9e56387e00a0e151ec02675a6d98ad22d457118626eda305340964a479be",
+    "run-flower-preserved.ps1": "8402f72da63da3a1d20d78ab032ee2ef176a1880c3c6ef32a6e7b08e55886130",
+    "run-flower-tests.ps1": "050b5b3d1a6e02a9526d9858dd2e8a9c10d46882149d58a7216dc0b3e2713494"
+  }
+}
