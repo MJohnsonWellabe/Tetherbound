@@ -123,6 +123,11 @@
     "boundary_alpha": 0.3,
     "_comment_soft_occluders": "Meadows visual pass round 2: a standing dead tree in the middle of the ring sat between the combat camera and the fight. Bushes and deadfall (vegetation.json layers with collides:false) inside radius + occluder_clear_margin are taken out of the instancer when the arena opens and put back when it closes (vegetation.gd::hide_fight_occluders). Presentation only and local to each peer; colliding trees and rocks are untouched. The margin reaches the ring's near edge, where the camera looks across. TUNABLE.",
     "clear_soft_occluders": true,
+    "_comment_named_trainer_wild_clear": "F04#2 (round-1 judge B1: a wild burrowback in the foreground of Halder's fight confused who was fighting; Halder stood inside wild cluster 4002). Wild bodies neither spawn nor choose a wander destination within this many metres (18 -> 26 after judge r2 17a80aa4 still saw Vess's neighbouring burrowbacks at her arena's edge) of a named Meadows trainer's stand (ranks below), so a captain's or the Warden's fight ground holds only the fight. encounter_director.gd::_clear_of_named_trainer_grounds. 0 disables. TUNABLE.",
+    "named_trainer_wild_clear_m": 26.0,
+    "_comment_trainer_ally_lateral": "F04#2 (round-1 judge B1/D): in a trainer fight the ally opened on the player->opponent line and the camera, behind the ally, looked through it at the opponent. The ally is seated this far beside that line, on the side with room (combat_manager.gd::_place_fighters; realm fights already do the same with REALM_SEAT_LATERAL_M). 0 keeps the in-line formation. TUNABLE.",
+    "trainer_ally_lateral_m": 2.4,
+    "named_trainer_ranks": ["captain", "warden"],
     "occluder_clear_margin": 2.0,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
@@ -173,6 +178,7 @@
     },
     "occlusion_fade": {
       "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Once the foe is clear the swing holds for `composition_hold_s` before easing back, so it does not oscillate. Only if the foe stays hidden for `dither_after_s` do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear. COMBAT section 5 allows no continuous actionable-tell occlusion longer than 0.25s: the dither starts at 0.2s and reaches `transparency` 0.6 at 12/s by 0.25s, and the swing's ease rate finishes 40 degrees in 0.25s. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer; like the neutral tracker it extends, the swing moves the camera basis that camera-relative movement reads (scripts/combat/ally_occlusion_fade.gd).",
+      "_why_r2_17a80aa4": "F04#2/#3 judge r2 (17a80aa4): in melee clinches the ally covered part of the captain's and the Warden's creature for most of the fight without tripping the fade (two of three sample heights had to be hidden). hidden_points 2 -> 1 and transparency 0.6 -> 0.75: the ally thins as soon as any sampled height of the foe is behind it, and the foe reads through more of it. At speed 12 it still reaches full in 0.26 s.",
       "enabled": true,
       "_why_head_forward_fraction": "F14 C3 (Tidewake Phase 1: Tess 62%, Tidecoil 88%, Nerissa 85% framing): code-blind judges failed frames where the ally covered a long foe's head while the centre sample column stayed clear, so the swing never ran. The head is tested at head_forward_fraction of the foe's longer horizontal extent ahead of its base along its facing, at head_height_fraction of its height; a hidden head alone swings the camera (never the dither: Tess r2, the dithered ally fused into the foe's head). 0 turns the head test off.",
       "_why_head_swing": "F14 C3 independent review: the hidden-head swing changed the camera in every fight, including ones judged before it. It is off here and opted in per opponent (camera block framing.head_swing, or a body with tell_camera_swing): Tess, Nerissa, Tidecoil and Aquaryn.",
@@ -185,8 +191,8 @@
       "composition_ease_deg_per_s": 160.0,
       "composition_hold_s": 1.5,
       "dither_after_s": 0.2,
-      "transparency": 0.6,
-      "hidden_points": 2,
+      "transparency": 0.75,
+      "hidden_points": 1,
       "speed": 12.0
     },
     "hud_safe": {
@@ -206,7 +212,7 @@
     },
     "body_clear": {
         "_why_ignore_lunging_foe": "F04#1 (tools/f04_fight_camera_probe.gd --live-member=relay_captain:2): a CHARGER's travelling lunge ends on the arm behind the ally, and the clamp put the lens on min_length_m inside the player's creature for every lunge. While the foe is mid-lunge the clamp stands down; the charging body crosses the shot instead. combat_manager.gd::_update_combat_body_clear.",
-        "ignore_lunging_foe": false,
+        "ignore_lunging_foe": true,
       "_why": "F10#2 C3 (V-SW-7): the SpringArm stops at collision capsules, but a large foe's render mesh (Voltarach's legs) reaches well past its capsule, so at the strike the lens sat inside the mesh and the frame was flat geometry. The arm is clamped short of the foe's live render box along the arm. TUNABLE.",
       "enabled": true,
       "margin_m": 0.35,

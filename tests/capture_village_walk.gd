@@ -104,12 +104,16 @@ const EVENT_NEAR_M := 6.0
 const VILLAGE_RADIUS_M := 70.0
 const WELL := Vector2(10.0, -10.0)
 ## The Practice Meadow's authored `trainer_camp` cluster (band1 props.json:
-## a travelling trainer's pack -- Bag (24.9,-27.3), Crate (26.4,-28.9),
-## Barrel (26.62,-28.1)) inside the clearing map_landmarks.json names at
+## its fire at (26.8,-26.6), the tent and bedroll behind it, the pack, crate
+## and barrel at its side) inside the clearing map_landmarks.json names at
 ## (30,-40). The walk used to stop at the clearing's centre, where a judge
-## saw only the objective beam and no camp.
-const CAMP_AT := Vector2(26.0, -28.1)
-const CAMP_ARRIVAL_M := 4.0
+## saw only the objective beam and no camp; the visit now aims just short of
+## the fire on the road side, so the arrival frame holds fire, tent and bed.
+## Aimed between fire and tent, arriving 7 m out: at 2.5 m (night walk
+## 9e0a6edb, night_071) the over-the-shoulder camera put the camp under the
+## hotbar at the frame's lower right.
+const CAMP_AT := Vector2(25.9, -25.2)
+const CAMP_ARRIVAL_M := 7.0
 ## Stop this far short of the pack: its crate and barrel are solid, and the
 ## trainer who owns it stands beside them.
 const CAMP_STOP_M := 2.5
@@ -1012,6 +1016,9 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 			_failed = "stood %.2fm from the old key but its prompt never won" % d
 			return
 		# The frame the reviewer needs: the key with its prompt up, before the take.
+		# Orbited off the approach bearing first: straight behind the trainer,
+		# the trainer's own body hid the key (judge, day 049 / night 049).
+		await _frame_for_photo(at, false)
 		await _capture("take %s" % t.label)
 		await _press("interact")
 		print("[village-walk] NOTE key-take: pressed interact on \"%s\" at %.2fm; satchel has key=%s" % [

@@ -60,18 +60,20 @@ func test_deck_route_hands_off_inside_the_authored_gantry_pad_overlap() -> void:
 func test_captain_has_exact_current_team_and_no_captive_gear_reward() -> void:
 	var spec: Dictionary = SEGMENT.TRAINERS.trainer(SEGMENT.CAPTAIN)
 	var team: Array = SEGMENT.TRAINERS.team_of(spec)
-	assert_eq(team.size(), 3)
-	assert_eq([team[0].species, team[1].species, team[2].species], ["galecrest", "duskhush", "tuskroot"])
-	assert_eq([team[0].level, team[1].level, team[2].level], [11.0, 11.0, 12.0])
+	# F04#7 (owner 2026-09-28, BOSSES §4.2): Vance fields five at the Band 3 ceiling.
+	assert_eq(team.size(), 5)
+	assert_eq(team.map(func(m: Dictionary) -> String: return str(m.species)),
+		["galecrest", "duskhush", "burrowback", "mosshell", "tuskroot"])
+	assert_eq(team.map(func(m: Dictionary) -> float: return float(m.level)), [12.0, 12.0, 12.0, 12.0, 12.0])
 	var items := SEGMENT.reward_items(spec.reward)
 	assert_eq(items, {"coin": 60, "orb_greater": 3, "revive": 1})
 	assert_false(items.has(SEGMENT.GEAR))
 	var creature := CREATURE.new()
 	creature.species_id = "galecrest"
-	creature.level = 11
+	creature.level = 12
 	assert_true(SEGMENT.opponent_matches(creature, team[0]))
 	assert_false(SEGMENT.opponent_matches(creature, team[1]))
-	creature.level = 10
+	creature.level = 11
 	assert_false(SEGMENT.opponent_matches(creature, team[0]))
 	assert_false(SEGMENT.opponent_matches(null, team[0]))
 	assert_true(SEGMENT.captain_within_deadline(8999))

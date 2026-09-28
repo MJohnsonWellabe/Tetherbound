@@ -2,6 +2,7 @@
   "_comment": "Named moves (D30, creature progression). Every species in data/creatures/species.json points at exactly one quick and one charged id here through its own `moves` field. `type` is flavour/vocabulary (ground|water|air) and is not cross-checked against the wielding species' own type -- Reedwing borrows an air-flavoured charged move on purpose, because the wild canon calls it a Water/Air waterfowl.",
   "_comment_balance": "Each move now carries its OWN reach, arc, timing, commitment and presentation. Before this every one of the 26 was power 1.0 with the identical range and cone, so a named move was a display string and nothing else and all quick attacks felt the same as each other -- the owner's report was that TMs 'aren't upgrades', which is what happens when the thing being upgraded has no stats. `power` stays a multiplier over combat.json's player_quick/player_charged blocks; `range`, `cone_degrees`, `windup`, `recovery` and `lunge` OVERRIDE the matching key in those blocks (combat_manager.gd::_move_profile). Ranged moves trade arc for distance and give up the lunge entirely -- you plant and fire instead of closing. ALL TUNABLE.",
   "_comment_slots": "`slot` is \"quick\" (fast, low-commitment, builds energy) or \"charged\" (the energy-spend finisher). Quick moves carry `energy_gain`; charged moves carry `energy_cost`, mirroring combat.json's energy.gain_per_quick / energy.charged_cost so a designer tuning one move at a time does not have to touch two files to keep them honest.",
+  "_comment_f10_2_starter_parity": "F10#2 (owner 2026-09-27 23:55: starters similar in skill and strength). ripple_jab 0.14/0.18 -> 0.22/0.24 and gale_peck 0.12/0.15 -> 0.22/0.34 windup/recovery. The very short melee quicks let a mashing Ripplet or Galewisp poise-lock Capacitor Alpha and never get caught mid-swing, so reading the fight bought nothing (C2 ratio 0.98 and 0.71 against Terrapup's 0.42). Windup 0.22 matches pebble_toss; Galewisp pays its extra commitment in recovery instead, because a 0.24-0.26 s windup no longer fits a CURRENT's 0.55 s recovery window. Evidence ralph/reports/BALANCE/.",
   "moves": {
     "pebble_toss": {
       "display_name": "Pebble Toss",
@@ -221,8 +222,8 @@
       "energy_gain": 26,
       "range": 2.6,
       "cone_degrees": 100.0,
-      "windup": 0.14,
-      "recovery": 0.18,
+      "windup": 0.22,
+      "recovery": 0.24,
       "lunge": 3.2,
       "vfx": {
         "kind": "melee",
@@ -319,8 +320,8 @@
       "energy_gain": 26,
       "range": 2.5,
       "cone_degrees": 100.0,
-      "windup": 0.12,
-      "recovery": 0.15,
+      "windup": 0.22,
+      "recovery": 0.34,
       "lunge": 3.4,
       "vfx": {
         "kind": "melee",

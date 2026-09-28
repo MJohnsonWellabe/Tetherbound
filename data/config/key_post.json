@@ -1,0 +1,12 @@
+{
+  "_why": "F01#2/#3 code-blind judge (day 050, night 049): the old key read only by its UI prompt -- an 18 cm prop lying in 0.86 m flower grass is hidden in both lights, and four earlier shape/material rounds on the lying key did not move the verdict (ART_DIRECTION two-round rule: change the approach). The key now hangs from a peg on a weathered hitching post beside the road, at chest height above the grass canopy, at twice its old size, facing the village approach. The post stays after the key is taken (an empty peg). ALL TUNABLE.",
+  "enabled": true,
+  "post_height_m": 1.45,
+  "post_width_m": 0.13,
+  "post_colour": "#6b5a45",
+  "peg_height_m": 1.3,
+  "peg_length_m": 0.16,
+  "key_scale": 2.0,
+  "facing_yaw_deg": -90.0,
+  "_why_facing": "Yaw of the post and key about +Y. Local +Z (the peg and the key's ring face) points toward world -X, the village side the walk and the objective hint approach from."
+}
