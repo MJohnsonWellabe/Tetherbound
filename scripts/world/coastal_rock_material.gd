@@ -31,11 +31,14 @@ uniform vec3 coast_wet_colour : source_color = vec3(0.22, 0.29, 0.27);
 uniform float coast_wet_height_m = 1.6;
 uniform float coast_rock_detail = 0.45;
 uniform bool coast_dunes_enabled = false;
+uniform sampler2D coast_dune_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec3 coast_dune_sand_colour : source_color = vec3(0.78, 0.71, 0.59);
 uniform vec3 coast_dune_wet_colour : source_color = vec3(0.51, 0.47, 0.40);
 uniform float coast_dune_patch_scale = 0.022;
 uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
+uniform float coast_dune_texture_scale = 0.30;
+uniform float coast_dune_texture_strength = 0.65;
 uniform float coast_dune_shadow_push_m = 0.0;
 uniform float coast_dune_bluff_start_y = 0.72;
 uniform float coast_dune_bluff_full_y = 0.38;
@@ -148,6 +151,14 @@ const MATERIAL := """
 		float ripple = sin(phase) * (1.0 - smoothstep(0.3, 0.9, fwidth(phase)))
 			* smoothstep(0.8, 0.98, abs(dune_normal.y));
 		vec3 sand = coast_dune_sand_colour * (mix(0.70, 0.88, patch) + (grain - 0.5) * 0.065 + ripple * coast_dune_ripple_strength);
+		// Triplanar photographic grain gives the broad dune shoulders the
+		// wind-cut texture visible in the owner's shore references. Use its
+		// luminance so the chapter palette and wet-sand response remain authored.
+		float dune_scale = coast_dune_texture_scale;
+		float dune_tex = dot(texture(coast_dune_albedo, v_vertex.zy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.x
+			+ dot(texture(coast_dune_albedo, v_vertex.xz * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.y
+			+ dot(texture(coast_dune_albedo, v_vertex.xy * dune_scale).rgb, vec3(0.299, 0.587, 0.114)) * dune_weights.z;
+		sand *= clamp(1.0 + (dune_tex - 0.70) * coast_dune_texture_strength, 0.68, 1.22);
 		// Sand caps the gentle ground; required steep banks expose the
 		// installed mineral material beneath it. This keeps those fixed
 		// landforms from reading as vertical piles of uniformly pale sand.
@@ -233,7 +244,8 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 	var dune: Variant = JSON.parse_string(FileAccess.get_file_as_string(DUNE_CONFIG))
 	if dune is Dictionary:
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
-		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
+		material.call("set_shader_param", "coast_dune_albedo", load("res://assets/environment/terrain/tidewake_dune_sand_v1.png"))
+		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
