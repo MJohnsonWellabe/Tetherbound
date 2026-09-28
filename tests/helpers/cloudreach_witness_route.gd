@@ -43,12 +43,15 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## member of the five that is not out and is not a starter (a duplicated
 ## species first, then the lowest level) is replaced by a
 ## freshly spawned `<species>` at that member's level, so the party is still
-## exactly five and nothing else is written. Before the Fly unlock nothing
-## changes (Maela's trial loaner). After it, before the first launch the
-## witness tries a real Jump, Jump with the carrier still in the five but not
-## out and requires the refusal to name it (no loaner for a five that holds a
-## carrier); then, before every launch, it sends the carrier out with the real
-## exploration `party_cycle` press. `_deploy` requires the owned carrier to fly.
+## exactly five and nothing else is written. Before the Fly unlock (nothing
+## else changes) if the live pilot's switching left the carrier out, a real
+## `party_cycle` press puts another member out so Maela's loaner visibly serves
+## her trial. After it, before the first launch the witness (sending another
+## member out the same way if needed) tries a real Jump, Jump with the carrier
+## in the five but not out and requires the refusal to name it (no loaner for a
+## five that holds a carrier); then, before every launch, it sends the carrier
+## out with the real `party_cycle` press. `_deploy` requires the owned carrier
+## to fly.
 ##
 ## Precedent: smoke_cloudreach_floor_loop_return.gd / aerie_services.gd use the
 ## same declared flags-before-build plus single placement fixture.
@@ -492,8 +495,14 @@ func _rest(id: String) -> bool:
 ## already flown in the loaded save.
 func _deploy() -> bool:
 	if _resume_skip("deploy", ""): return true
-	if not owned_carrier_species.is_empty() and _has("fly_traversal_unlocked"):
-		if owned_carrier_refusal.is_empty() and not await _owned_carrier_not_out_refusal(): return false
+	if not owned_carrier_species.is_empty() and not _has("fly_traversal_unlocked"):
+		# Maela's trial: her loaner serves it whoever is out, so the witness
+		# keeps the carrier in the five but not out and shows exactly that.
+		if not await _send_back_owned_carrier("trial"): return false
+	elif not owned_carrier_species.is_empty():
+		if owned_carrier_refusal.is_empty():
+			if not await _send_back_owned_carrier("refusal"): return false
+			if not await _owned_carrier_not_out_refusal(): return false
 		if not await _send_out_owned_carrier(): return false
 	return await super._deploy()
 
@@ -545,9 +554,6 @@ func _load_earned_handoff() -> bool:
 func _owned_carrier_not_out_refusal() -> bool:
 	var own: RefCounted = fly.owned_carrier()
 	if not _require(own != null and own.species_id == owned_carrier_species, "Owned carrier: the five hold the %s carrier after the unlock" % owned_carrier_species): return false
-	if game.party.active() == own:
-		owned_carrier_refusal = {"skipped": "carrier already out"}
-		return true
 	_release()
 	for tick in 600:
 		if player.is_on_floor(): break
@@ -566,6 +572,22 @@ func _owned_carrier_not_out_refusal() -> bool:
 	return _require(str(fly.last_denial) == "Send out %s to fly." % own.label(), "Owned carrier not out: the refusal names the carrier to send out")
 
 
+## Put another member out with the real exploration `party_cycle` press when
+## the live-combat pilot's own switching has left the carrier out.
+func _send_back_owned_carrier(why: String) -> bool:
+	var carrier: RefCounted = null
+	for member: RefCounted in game.party.members():
+		if str(member.species_id) == owned_carrier_species: carrier = member
+	var presses := 0
+	while carrier != null and game.party.active() == carrier and presses < 5:
+		await _tap("party_cycle")
+		presses += 1
+	if presses > 0:
+		owned_carrier_switches.append({"stage": stage, "why": "send back for " + why, "presses": presses, "active": game.party.active().species_id})
+		_log("witness_owned_carrier_send_back", owned_carrier_switches[-1])
+	return _require(carrier != null and game.party.active() != carrier, "Owned carrier in the five but not out before the %s launch" % why)
+
+
 ## Send the owned carrier out with the real exploration `party_cycle` press.
 func _send_out_owned_carrier() -> bool:
 	var own: RefCounted = fly.owned_carrier()
@@ -574,7 +596,7 @@ func _send_out_owned_carrier() -> bool:
 		await _tap("party_cycle")
 		presses += 1
 	if presses > 0:
-		owned_carrier_switches.append({"stage": stage, "presses": presses, "active": game.party.active().species_id})
+		owned_carrier_switches.append({"stage": stage, "why": "send out to fly", "presses": presses, "active": game.party.active().species_id})
 		_log("witness_owned_carrier_send_out", owned_carrier_switches[-1])
 	return _require(own != null and game.party.active() == own, "Owned carrier sent out by party_cycle before launch")
 
