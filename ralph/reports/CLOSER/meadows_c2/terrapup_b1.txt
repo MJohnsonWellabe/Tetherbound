@@ -1,0 +1,7 @@
+MEADOWS_C2C3 relay_captain terrapup MASHER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.268 tell=[0.80,0.90] diver_tell=-1.00 med_s=89.2 stalled=0
+MEADOWS_C2C3 relay_captain terrapup READER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.184 tell=[0.80,0.90] diver_tell=-1.00 med_s=188.8 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain terrapup PASS
+MEADOWS_C2C3 captain_riverwatch terrapup MASHER L12 runs=12 win=0.00 med_lead=1.000 lead_faint=1.00 wipe=1.00 max_hit=0.446 tell=[0.80,0.90] diver_tell=-1.00 med_s=100.4 stalled=0
+MEADOWS_C2C3 captain_riverwatch terrapup READER L12 runs=12 win=1.00 med_lead=0.252 lead_faint=0.00 wipe=0.00 max_hit=0.180 tell=[0.80,0.90] diver_tell=-1.00 med_s=201.2 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch terrapup PASS
+MEADOWS_C2C3 captain_field terrapup MASHER L15 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.446 tell=[0.80,0.90] diver_tell=-1.00 med_s=108.6 stalled=0
