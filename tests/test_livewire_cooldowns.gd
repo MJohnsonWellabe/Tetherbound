@@ -6,6 +6,14 @@ const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const COMBAT := preload("res://scripts/combat/combat_manager.gd")
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
+
+
+## The authored charged cooldown (1.2 s) as the player actually fights with it:
+## combat.json `player_pace` scales every player cooldown, so the profile the
+## host and the solo path build is the authored value times that scale.
+func _paced(authored: float) -> float:
+	return authored * float((MATH.config().get("player_pace", {}) as Dictionary).get("cooldown_scale", 1.0))
 
 
 class GameAdapter extends Node:
@@ -70,9 +78,9 @@ func test_profile_multiplier_shortens_only_cooldown_and_is_clamped() -> void:
 		0.5, 0.5)
 	var host_livewire := COMBAT.host_move_profile(moves, "player_charged", "arc_lash",
 		0.5, 0.5, 0.75)
-	assert_almost_eq(float(host_default.cooldown), 1.2, 0.0001,
+	assert_almost_eq(float(host_default.cooldown), _paced(1.2), 0.0001,
 		"the host starts from its own authored charged cooldown")
-	assert_almost_eq(float(host_livewire.cooldown), 0.9, 0.0001,
+	assert_almost_eq(float(host_livewire.cooldown), _paced(1.2) * 0.75, 0.0001,
 		"the host applies validated Livewire to its own rebuilt profile")
 
 
@@ -92,15 +100,15 @@ func _run_initialized_cases() -> void:
 	var manager := Manager.new()
 	game.add_child(manager)
 	var ordinary: Dictionary = manager.call("_move_profile", "player_charged", "stone_rush")
-	assert_almost_eq(float(ordinary.cooldown), 1.2, 0.0001,
+	assert_almost_eq(float(ordinary.cooldown), _paced(1.2), 0.0001,
 		"solo combat keeps the authored cooldown with no active relic")
 	assert_true(game.realm_hearts.activate("stormwood", game.progression))
 	var solo_livewire: Dictionary = manager.call("_move_profile", "player_charged", "stone_rush")
-	assert_almost_eq(float(solo_livewire.cooldown), 0.9, 0.0001,
+	assert_almost_eq(float(solo_livewire.cooldown), _paced(1.2) * 0.75, 0.0001,
 		"the real solo move profile applies Livewire")
 	assert_true(game.realm_hearts.activate("meadows", game.progression))
 	var meadowstride: Dictionary = manager.call("_move_profile", "player_charged", "stone_rush")
-	assert_almost_eq(float(meadowstride.cooldown), 1.2, 0.0001,
+	assert_almost_eq(float(meadowstride.cooldown), _paced(1.2), 0.0001,
 		"swapping to Meadowstride removes Livewire instead of stacking")
 
 	var director := CardDirector.new()
