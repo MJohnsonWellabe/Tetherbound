@@ -37,6 +37,7 @@ const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const DIRECTOR_SCRIPT := "res://scripts/story/sequence_director.gd"
 const INTERACTABLE_SCRIPT := "res://scripts/world/interactable.gd"
 const STARTER_PICKER_SCRIPT := "res://scripts/ui/starter_picker.gd"
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
@@ -473,7 +474,9 @@ func _fight_until_catchable() -> bool:
 			_fail("fight ended before the Bramblebun became catchable")
 			return false
 		if own.fainted:
-			_fail("starter fainted before naturally weakening the tutorial Bramblebun")
+			_fail("starter fainted before naturally weakening the tutorial Bramblebun (gap %.2f m, contact separation %.2f m, Bramblebun %.0f/%d HP, tick %d)" % [
+				ally.global_position.distance_to(_wild.global_position),
+				CONTACT_SPACING.pair_need(ally, _wild), foe.hp, foe.max_hp, _i])
 			return false
 		if float(foe.hp) <= float(foe.max_hp) * 0.28:
 			# Remembered so the catch loop can HOLD the fight here. Captured
@@ -483,7 +486,11 @@ func _fight_until_catchable() -> bool:
 			_checkpoint("Bramblebun naturally weakened to %.0f/%d HP" % [foe.hp, foe.max_hp])
 			return true
 		await _drive_body_toward(ally, _wild.global_position, 1)
-		if ally.global_position.distance_to(_wild.global_position) < 4.0 and _i % 35 == 0:
+		# COMBAT §5 contact spacing holds the pair apart by their rendered
+		# extents, so the strike gate follows that separation (plus the same
+		# 0.5 m the reach floors add) instead of a fixed 4 m.
+		var strike_gate := maxf(4.0, CONTACT_SPACING.pair_reach_need(ally, _wild) + 0.5)
+		if ally.global_position.distance_to(_wild.global_position) < strike_gate and _i % 35 == 0:
 			await _tap_action("combat_quick")
 	_stop_left_stick()
 	_fail("real piloted attacks did not weaken Bramblebun within the bounded fight")
