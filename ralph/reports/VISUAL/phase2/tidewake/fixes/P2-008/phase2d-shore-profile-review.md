@@ -20,9 +20,9 @@ The pass fixes the specific gray-skirt symptom at the recorded views, but **P2-0
 
 - Full-resolution eight-pair gallery: `.artifacts/phase2/P2-008-phase2d-before-after.html`.
 - Contact sheets: `.artifacts/phase2/P2-008-phase2d-before-after-locations.jpg` and `.artifacts/phase2/P2-008-phase2d-before-after-routes.jpg`.
-- Before: original production `p2008-dunes-04-before-locations` and `p2008-dunes-04-before-routes`. Current candidate: `p2008-phase2d-mirejaw01-locations` and `p2008-phase2d-mirejaw01-routes`.
+- Before: original production `p2008-dunes-04-before-locations` and `p2008-dunes-04-before-routes`. Current candidate: `p2008-phase2d-sluicelow05-locations` and `p2008-phase2d-sluicelow05-routes`.
 
-All eight pairs are native 1920×1080 day captures at seed 2042. Both before and after manifests are complete with no frame failures. Requested positions and player XZ coordinates match exactly; maximum horizontal camera drift is 0.000252 m. Ground/camera Y changes by at most 7.210 m because the physical shore was graded. The Brine Steps walk03 image has a player standing in the shallows in both versions; it is not a traversal acceptance frame.
+All eight pairs are native 1920×1080 day captures at seed 2042. Both before and after manifests are complete with no frame failures. Requested positions and player XZ coordinates match exactly; maximum horizontal camera drift is 0.000252 m. Ground/camera Y changes by at most 58.912 m because the physical Sluice peak was lowered. The Brine Steps walk03 image has a player standing in the shallows in both versions; it is not a traversal acceptance frame.
 
 ## Work and checks
 
@@ -60,11 +60,11 @@ The local-defect column asks only whether the recorded gray skirt/green-carpet s
 | First Shore welcome beacon, close | PASS | FAIL | Sand crest and sea direction read, but sparse props and uniform dune sides lack the references' natural layering. |
 | Gull Rest beach, close | PASS | FAIL | Foreground ripples and grass are clearer; distant space and habitat detail remain thin. |
 | Shellwatch rescue jetty, close | PASS | FAIL | Former gray bank is sand, but the hill remains a broad clean mound with a repeated grass band. |
-| Sluice Isle twin pumps, close | PASS | FAIL | The huge near-white flank overwhelms the frame with little relief, vegetation or destination detail. |
+| Sluice Isle twin pumps, close | PASS | FAIL | The gray wall is now an open sand passage, but the dune is broad and evenly smoothed, the landmark pumps are absent from the composition, and Veilfall reads as a giant simple cone. |
 | Brine Steps east beach, walk03 | PASS | FAIL | Opposite dune is simplified and the trainer stands in water in this fixed catalogue frame; this is not a traversal acceptance shot. |
 | First Shore horizon stones, route | PASS | FAIL | Dune grass and open water improve; the far Veilfall landmark is still a small dark cone and the midground lacks depth. |
 | Salt Crown tide shrine, walk01 | PASS | FAIL | Sand ridge improves, while low island silhouettes and sparse shoreline dressing remain below the board. |
-| Sluice Isle twin pumps, route | PASS | FAIL | Broad blank dune face and weak destination staging dominate despite the corrected creature palette. |
+| Sluice Isle twin pumps, route | PASS | FAIL | The blank wall has opened into a grass-framed sand passage, but planted bands and Veilfall's giant simple cone fall short of the supplied path photo and the Tidewake board. |
 
 **Pass report: 8/8 local symptom checks pass; 0/8 complete visual-bar checks pass.** The first queue item cannot be signed off from these side-by-sides.
 
@@ -89,3 +89,9 @@ I next tested Sluice-specific scenic scatter without changing terrain. The first
 An authored 1,340-clump dune-mat probe accepted every point and captured four route views, but the Sluice frame remained visually unchanged in `.artifacts/phase2/p2008-phase2d-authoredmats01-routes` through `authoredmats04-routes`. The first runs had MultiMesh culling mistakes; correcting the node origin and bounds did not expose the patches because their coordinates were behind the ridge. Tracing rays through seven pixels of the *actual* Sluice route camera placed the visible face near X 872–900, Z 2874–2906, with slopes about 30–63°. The initial face sampling had targeted the opposite side of the hill. The misplaced authored mesh and config were reverted. This camera-space finding supersedes the earlier description of that sampled side as the visible wall.
 
 At the correctly sampled face, the 15 m trail-grading shoulder lowers terrain by about 7–13 m beside the route and contributes to the steep near bank. I tested route-specific 48 m and 27 m shoulder widths without changing other islands. The analytic Water heightfield suite passed 15 tests/11,041 assertions and both 31-region bakes completed. Native route captures `.artifacts/phase2/p2008-phase2d-sluiceshoulder01-routes` and `.artifacts/phase2/p2008-phase2d-sluiceshoulder02-routes` show the sharp cut smoothing into an even larger, mostly bare sand dome. Both fail the owner references and Bar A/B. The route-specific grading and baked changes were reverted. Together these probes show the visible form needs a broader landform/prop recomposition, not extra grass or a wider trail feather alone; the 0/8 full-bar verdict remains unchanged.
+
+### Revised Sluice dune, current candidate
+
+Reducing Sluice Isle's peak from 118 m to 45 m replaces the dominant gray/sand wall with a low passage and visible sea gap in the two Twin Pumps frames. The island's exploration spine, patrol loop, Twin Pumps and Channel Bridge landmark heights, and changed ground encounter positions were resampled against the new surface. Large scenic rocks on this island were reduced through a Sluice-only vegetation override. All 31 Terrain3D regions were rebaked; the manifest config hash matches the current world config. The eight latest native frames, `p2008-phase2d-sluicelow05-{locations,routes}`, are paired with the original eight in the gallery. Both manifests are complete with zero frame failures. The Sluice patrol circuit was walked in the production scene for 850.4 m, reaching all 19 following waypoints on floor with no fall, teleport, health loss, failure or defect (32 checks). The heightfield suite passed 15 tests/11,041 assertions; the production encounter scene smoke passed 40 checks with zero failures.
+
+This is a local Sluice composition improvement, not a full-bar pass. The revised dune remains too even and banded beside the owner's natural grass-framed sand path. The Twin Pumps are not a clear destination in either fixed frame. Veilfall fills the background as an oversized simple cone, far below the layered waterfall stronghold board. Shellwatch remains a smooth bare mound, and the other recorded views retain the shortcomings listed in the eight-view table. **P2-008 remains open: eight local symptom passes, zero of eight complete visual-bar passes.**

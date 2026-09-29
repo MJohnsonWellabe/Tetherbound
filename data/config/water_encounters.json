@@ -4789,18 +4789,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -170.962,
-        10.4083,
+        8.5163,
         150.987
       ],
       "position": [
         679.038,
-        10.4083,
+        8.5163,
         3110.987
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 12.4789,
+      "terrain_slope_deg": 3.8052,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -4889,18 +4889,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         8.615,
-        120.1835,
+        45.9732,
         -32.826
       ],
       "position": [
         858.615,
-        120.1835,
+        45.9732,
         2927.174
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 11.4216,
+      "terrain_slope_deg": 4.2786,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5014,18 +5014,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         46.44,
-        76.8633,
+        31.2951,
         124.891
       ],
       "position": [
         896.44,
-        76.8633,
+        31.2951,
         3084.891
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 16.2445,
+      "terrain_slope_deg": 5.0737,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5039,18 +5039,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -137.0,
-        78.7018,
+        32.0995,
         4.74
       ],
       "position": [
         713.0,
-        78.7018,
+        32.0995,
         2964.74
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 26.4548,
+      "terrain_slope_deg": 9.2697,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5064,18 +5064,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         134.583,
-        75.99,
+        31.0454,
         21.863
       ],
       "position": [
         984.583,
-        75.99,
+        31.0454,
         2981.863
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 43.218,
+      "terrain_slope_deg": 18.3331,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5089,18 +5089,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -84.681,
-        64.6526,
+        27.101,
         -123.892
       ],
       "position": [
         765.319,
-        64.6526,
+        27.101,
         2836.108
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 20.4673,
+      "terrain_slope_deg": 6.8106,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -5114,18 +5114,18 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         110.027,
-        53.6236,
+        23.0015,
         -107.51
       ],
       "position": [
         960.027,
-        53.6236,
+        23.0015,
         2852.49
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 32.2644,
+      "terrain_slope_deg": 11.9915,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Pump spoil banks",
@@ -7099,12 +7099,12 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -146.528,
-        39.929,
+        20.2914,
         -89.141
       ],
       "position": [
         703.472,
-        39.929,
+        20.2914,
         2870.859
       ],
       "count": 2,
@@ -7124,12 +7124,12 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -30.614,
-        70.627,
+        28.3653,
         -94.185
       ],
       "position": [
         819.386,
-        70.627,
+        28.3653,
         2865.815
       ],
       "count": 2,
@@ -7149,12 +7149,12 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         71.895,
-        74.879,
+        27.8707,
         -7.568
       ],
       "position": [
         921.895,
-        74.879,
+        27.8707,
         2952.432
       ],
       "count": 2,
@@ -7174,12 +7174,12 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         104.993,
-        42.592,
+        16.4392,
         145.618
       ],
       "position": [
         954.993,
-        42.592,
+        16.4392,
         3105.618
       ],
       "count": 2,
@@ -7199,12 +7199,12 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -23.811,
-        21.503,
+        10.458,
         188.984
       ],
       "position": [
         826.189,
-        21.503,
+        10.458,
         3148.984
       ],
       "count": 2,
@@ -7224,12 +7224,12 @@
       "table_id": "water_sluice_isle_land",
       "island_local_offset": [
         -127.462,
-        1.929,
+        1.7129,
         242.562
       ],
       "position": [
         722.538,
-        1.929,
+        1.7129,
         3202.562
       ],
       "count": 2,

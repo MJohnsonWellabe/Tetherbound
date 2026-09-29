@@ -199,6 +199,9 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 func _island_layer(source: Dictionary, layer_name: String, island_id: String, profile: String) -> Dictionary:
 	var layer := DUNE_COVER.layer_profile(source, layer_name, island_id, _dune_settings)
 	layer = layer.duplicate()
+	var island_overrides: Dictionary = _rules.get("island_layer_overrides", {}).get(island_id, {})
+	if island_overrides.has(layer_name):
+		layer.merge((island_overrides[layer_name] as Dictionary).duplicate(true), true)
 	layer["max_slope_deg"] = float((layer.get("profile_max_slope_deg", {}) as Dictionary).get(
 		profile, layer.get("max_slope_deg", 30.0)))
 	return layer

@@ -1640,7 +1640,7 @@
       ],
       "main_path": true,
       "name": "Sluice Isle",
-      "peak_height_m": 118.0,
+      "peak_height_m": 45.0,
       "peak_power": 1.65,
       "region_id": "tether_current",
       "scatter_seed": 486006.0,
@@ -2077,112 +2077,111 @@
     },
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "_comment_grade": "Walked in engine end to end on baked ground (smoke_water_loops_shortcuts, max drop 0.00 m), but the steepest 1 m chord sample is 26.6 deg, above this row's 24.0 deg target; geometry unchanged, so the status says so rather than baked_grade_checked.",
-      "grading_status": "baked_walkable_above_target_grade",
+      "_comment_grade": "Sluice dune height revised in Phase 2d; waypoint Y samples follow the new baked surface. Production patrol walk completed 850.4 m with all waypoints on floor and no drop or defect. The prior maximum grade measurement no longer applies; remeasure grade before claiming the 24 degree target.",
+      "grading_status": "baked_walked_grade_unchecked",
       "id": "sluice_patrol_circuit",
       "island_id": "sluice_isle",
       "maximum_target_grade_deg": 24.0,
-      "measured_max_grade_deg": 26.6,
       "measured_polyline_m": 883.265,
       "polyline": [
         [
           1019.25,
-          58.029,
+          22.403,
           2898.25
         ],
         [
           1055.0,
-          44.249,
+          13.297,
           2958.0
         ],
         [
           1055.0,
-          44.22,
+          13.676,
           2965.0
         ],
         [
           1013.0,
-          61.416,
+          19.037,
           3021.0
         ],
         [
           1013.0,
-          58.205,
+          17.715,
           3036.0
         ],
         [
           975.0,
-          85.044,
+          33.571,
           2990.0
         ],
         [
           965.0,
-          88.358,
+          34.809,
           2921.0
         ],
         [
           965.0,
-          76.395,
+          25.732,
           2870.0
         ],
         [
           903.0,
-          83.344,
+          32.733,
           2839.0
         ],
         [
           850.0,
-          88.099,
+          33.086,
           2838.0
         ],
         [
           799.0,
-          60.043,
+          21.534,
           2791.0
         ],
         [
           788.0,
-          58.112,
+          21.858,
           2791.0
         ],
         [
           850.0,
-          47.008,
+          14.444,
           2760.0
         ],
         [
           857.0,
-          46.941,
+          13.821,
           2760.0
         ],
         [
           916.0,
-          60.414,
+          23.900,
           2797.0
         ],
         [
           926.0,
-          58.205,
+          23.267,
           2797.0
         ],
         [
           992.0,
-          46.556,
+          13.055,
           2818.0
         ],
         [
           1000.0,
-          43.403,
+          12.184,
           2818.0
         ],
         [
           1019.0,
-          55.401,
+          22.104,
           2885.0
         ],
         [
           1019.25,
-          58.029,
+          22.403,
           2898.25
         ]
       ],
@@ -2520,17 +2519,17 @@
         ],
         [
           694.289,
-          37.505,
+          19.67,
           2870.1
         ],
         [
           905.1,
-          93.309,
+          34.32,
           2864.564
         ],
         [
           954.792,
-          41.784,
+          16.29,
           3109.659
         ],
         [
@@ -2892,7 +2891,7 @@
       "name": "Sluice Isle Twin Pumps",
       "position": [
         905.1,
-        93.309,
+        34.32,
         2864.564
       ],
       "role": "current_control_network",
@@ -3033,7 +3032,7 @@
       "name": "Sluice Channel Bridge",
       "position": [
         819.785,
-        61.438,
+        18.925,
         3131.357
       ],
       "role": "patrol_and_control_bridge",
