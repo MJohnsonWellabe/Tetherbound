@@ -2,20 +2,35 @@
 
 **Status:** Product contract. Built status is stated per feature; a design target is not completion evidence.
 
-**Product:** A finite, authored creature expedition action RPG for one to four players, with co-op required for release. The four current chapters/biomes form the release campaign; around eight good hours is an acceptable clear and there is no minimum duration per chapter. Optional exploration, catching, team experiments, gathering and building can extend a run. The game is not an endless survival sandbox.
+**Product:** A finite, authored creature expedition action RPG for one to four players, with co-op required for release. The four current chapters/biomes form the release campaign. The target normal clear is **15–25 hours** (owner, 2026-09-29, RD-01). The loop is fun to grind but optional to repeat. Each biome asks for real preparation (gather, train, craft, build), and the main path finishes without padding. **Superseded (RD-01):** the former "around eight good hours" clear and the no-grind rule. There is still no minimum duration per chapter. Optional exploration, catching, team experiments, gathering, building and the repeatables (§2.11) can extend a run. The game is not an endless survival sandbox.
+
+**Redesign routing (owner, 2026-09-29).** This contract now covers:
+
+- the new chapter order: Meadows → Tidewake → Cloudreach → Stormwood (RD-10);
+- the village road and the Crossing Hall hub (§3.2, §2.6; RD-17, RD-29);
+- the Home Key, portal keys and waystones, which replace the physical crossings (§2.7; RD-18–RD-21);
+- the Stormwood ending (§2.8; RD-22);
+- Master placement (§2.10);
+- repeatables (§2.11; RD-31);
+- material and attuned essence nodes (§2.12);
+- the eight-biome slots (§2.13; RD-09).
+
+All of it is **target, not built** unless a line says otherwise. Section numbers are kept stable for cross-references. The chapter sections therefore stay in the old order: §3 Meadows is chapter 1, §6 Tidewake is chapter 2, §4 Cloudreach is chapter 3 and §5 Stormwood is chapter 4. Acceptance lives in ACCEPTANCE §6.2 (F17–F20, F28, F32, F37, F43, F44); this file does not restate it. BOSSES owns fight levels, Masters' fights and rematch tiers. TRAINING owns breakthroughs and Ripplet. HOMESTEAD owns stations, materials and forward camps.
 
 ## 1. Player journey
 
-The player leaves Grandpa's farmhouse with one named companion, builds a five-creature team, crosses four compact worlds and breaks a regional Team Tether supply network. Each chapter asks the player to prepare, travel, read terrain and creature behavior and defeat named gatekeepers. Meadows, Stormwood and Tidewake also free one captive legendary and ask whether the volunteer belongs among the five. Cloudreach restores its wind roads and earns Wings without inventing a captive or legendary offer.
+The player leaves Grandpa's farm with one named companion, a Home Key and a patch of land. They build a five-creature team and grow its power at the homestead. From the Crossing Hall they portal into four compact worlds and break a regional Team Tether supply network. Each chapter asks the player to prepare, travel, read terrain and creature behavior and defeat named gatekeepers. Every chapter frees one captive legendary and asks whether the volunteer belongs among the five: Veridian, the Abyssal Guardian, Solmane and Stormheart (§2.3). The older line saying Cloudreach offers no legendary is withdrawn. Solmane has been freed after Veyra since the owner decision of 2026-09-27.
 
-The campaign order is fixed:
+The campaign order is fixed. **Superseded (owner, 2026-09-29, RD-10):** the former order Meadows → Cloudreach → Stormwood → Tidewake.
 
-1. **The Meadows** — learn the expedition loop and break the Hall's regional occupation.
-2. **Cloudreach Cliffs** — reconnect wind roads and learn Fly.
-3. **The Stormwood** — relight Stormglass roads and end the Long Storm.
-4. **Tidewake** — restore the archipelago's currents and close the regional supply network.
+1. **The Meadows** (§3), L3→22: learn the expedition loop and break the Warden's regional occupation.
+2. **Tidewake** (§6), L20→33: restore the archipelago's currents. Its dock exchange closes the chapter.
+3. **Cloudreach Cliffs** (§4), L31→44: reconnect the wind roads and learn Fly.
+4. **The Stormwood** (§5), L42→55: relight the Stormglass roads, end the Long Storm and go home.
 
-The four-chapter ending is complete in itself and is the current release pass. Eight legendary forces, eight Tether Rifts and an eventual eight-biome campaign remain later canon/scope; they do not add release work, require a fifth-chapter tease or weaken this ending.
+`data/config/biome_order.json` (new, F16) is the single source of this order for the map, journal, portal signs and credits (F19#0).
+
+The four-chapter ending is complete in itself and is the current release pass (§2.8). Eight legendary forces, eight Tether Rifts and an eventual eight-biome campaign remain later canon and scope. This pass reserves their data and hub slots (§2.13) but builds no content for them. **Superseded (owner, 2026-09-29, RD-22):** the former "no fifth-chapter tease" line. The fifth portal key makes the fifth arch *stir* and nothing more. That is not a cliffhanger, quest or sequel prompt.
 
 ## 2. Rules shared by every chapter
 
@@ -37,35 +52,202 @@ The terrain envelopes are fixed. Density work may repair routes, leads and rewar
 
 ### 2.2 Gates, relics and chapter handoffs
 
-Each chapter climax grants its relic. Chapters 1–3 also grant the world-owned key for the next realm; Tidewake closes the regional campaign and grants no fictional fifth key.
+**Current source:** each chapter climax grants its relic, and chapters 1–3 grant a world-owned key that is spent once to open a physical realm gate, in the old order. The relic is placed at an in-biome shrine or the Meadows home circle. F15 and the T3 card closed the old ending in Tidewake, and they stay met as history (CODEX_START_HERE §7.5).
 
-- The world-owned key is spent atomically once to open the next realm gate. The opened gate is reusable by the party.
-- The personal relic is earned, physically placed at its shrine and remains reusable.
-- Exactly one relic power is active at a time; selection persists.
-- The next chapter is shown first as a distant, non-enterable view.
+**Target (owner, 2026-09-29, RD-17, RD-20, RD-21, RD-22). Superseded:** the world-owned key, the physical crossings between biomes and the Tidewake ending.
 
-Relics are Heart of the Meadows (**2× max stamina**), Wings of Cloudreach/Skyborne (**0 Fly stamina cost**), Spark of the Stormwood/Livewire (**0.75 move-cooldown multiplier**) and Tideglass Compass/Tidal Guard (**0.90 incoming-damage multiplier**).
+| Climax | Relic (each participant) | Portal key item (each participant) |
+|---|---|---|
+| Warden Aldis, Meadows | Heart of the Meadows | Tidewake portal key |
+| Captain Nerissa, Tidewake | Tideglass Compass | Cloudreach portal key |
+| Captain Veyra, Cloudreach | Wings of Cloudreach | Stormwood portal key |
+| Captain Marrow, Stormwood finale | Spark of the Stormwood | Fifth portal key (the arch stirs only; §2.8) |
+
+- Every admitted participant in the climax receives their own relic and their own key. BOSSES §9.1 owns the drop transaction. A non-participant receives neither.
+- The **portal key** is a real inventory item, used once at its arch in the Crossing Hall (§2.7). It is not spent by the party as a whole.
+- The **relic** must be hung on its biome's pedestal in the Shrine Room (§2.6). Hanging it unlocks that biome's homestead attachment recipes (HOMESTEAD) and adds its power to the player's selectable set. Exactly one relic power is active at a time, and the selection persists.
+- **Physical crossings retired (RD-17; F18#2).** The Meadows rift bridge, the Cloudreach and Stormwood realm gates, the Stormwood water gate, the First Shore passage and the return gates no longer lead between biomes. Each becomes scenery or a one-way return to the Crossing Hall; F18 chooses per gate. They sit behind one `legacy_physical_crossings` flag that defaults off (F16). Portals are the only realm path. Existing overlooks (Stormward, Waterward) remain as views, not routes.
+- The next chapter first appears as its signed arch in the Crossing Hall, showing the biome name and recommended level.
+
+Relic powers are unchanged: Heart of the Meadows (**2× max stamina**), Wings of Cloudreach/Skyborne (**0 Fly stamina cost**), Spark of the Stormwood/Livewire (**0.75 move-cooldown multiplier**) and Tideglass Compass/Tidal Guard (**0.90 incoming-damage multiplier**). The new order makes Tideglass the second relic and Wings the third. Nothing in Tidewake may assume Wings or Spark (§2.9).
 
 ### 2.3 Legendary offer
 
 When a chapter frees a legendary, that creature volunteers. The player never weakens it for capture and never throws an Orb at it. With fewer than five companions it may join directly. With five, the existing ceremony presents the volunteer beside the five companions' names and history and requires one permanent release or a refusal. Refusal completes the chapter. This contract applies to Meadows, Cloudreach (Solmane, freed after Veyra (owner, 2026-09-27)), Stormwood and Tidewake.
 
-In co-op the host owns the shared freeing result, then records a separate, once-only offer for **each participant in that fight** against that participant's stable character. Each may accept or refuse independently; a non-participant receives no offer. Every accepter keeps their own legendary within the five-creature cap. The UI states this and the permanent-release consequence before each personal commitment. The world relic and gate remain shared. This supersedes the historical single-recipient interpretation everywhere in this file.
+In co-op the host owns the shared freeing result, then records a separate, once-only offer for **each participant in that fight** against that participant's stable character. Each may accept or refuse independently; a non-participant receives no offer. Every accepter keeps their own legendary within the five-creature cap. The UI states this and the permanent-release consequence before each personal commitment. The world restoration stays shared. **Target (RD-21):** the relic and the next portal key are per participant (§2.2), replacing the former shared relic and gate. This supersedes the historical single-recipient interpretation everywhere in this file. The offers work in the new order, accepting and refusing, at capacity and with space (F19#4).
 
 ### 2.4 Progression envelope
 
-| Chapter | Intended entry | Intended exit / ace | Current authored basis |
-|---|---:|---:|---|
-| Meadows | 3 | 21 target; Warden ace 20 | Source curve 3→9→12→15→17→21; Warden 18/18/19/19/20 |
-| Cloudreach | 18–21 overlap | 33 target; Veyra ace 34 | Trainer ladder 19–34; wild bands 18–33 |
-| Stormwood | 33 | 44 | Region team curve 33→35→37→39→40→42→44 |
-| Tidewake | 43 | 55 | Trainer ladder 43–55; Aquaryn49, Tidecoil54, Guardian55 |
+**Target (owner, 2026-09-29, RD-10). Superseded:** the old-order envelope, shown in the last column as current source.
 
-The overlaps let a normal party enter without grind and still find optional challenge. The global creature level cap is **100**. No route uses a generic level wall where a person, creature, machine, current or physical gate can explain the boundary.
+| Order | Chapter | Team in→out | Wild | Boss team | Masters (§2.10) | Current authored basis (old order) |
+|---:|---|---|---|---|---|---|
+| 1 | Meadows | 3→22 | 2–20 | Warden ~21–22 | L10, L20 | Curve 3→9→12→15→17→21; Warden 18/18/19/19/20 |
+| 2 | Tidewake | 20→33 | 18–32 | Nerissa ~32–33 | L30 | Ladder 43–55; Aquaryn49, Tidecoil54, Guardian55 |
+| 3 | Cloudreach | 31→44 | 29–43 | Veyra ~43–44 | L40 | Ladder 19–34; wild 18–33 |
+| 4 | Stormwood | 42→55 | 40–54 | Finale ~54–55 | L50 | Team curve 33→35→37→39→40→42→44 |
+| — | After credits | endgame | — | Leaders and bosses L55–60 | Rematches | none |
+
+- **Rows and data.** BOSSES §0 lists the per-row fight targets. F19 re-derives the wild tables and named teams and pins them with a curve test (F19#1).
+- **Caps.** Creature level caps sit at L10/20/30/40/50, with a **ceiling of 60** this pass. Data supports tiers to **100** for biomes 5–8 (RD-08). **Superseded:** the former global cap of 100. TRAINING owns caps and breakthroughs.
+- **Portal signs, not level walls.** Each Crossing Hall portal sign shows the recommended level. The portal key is the only hard gate (F19#5). No route uses a generic level wall where a person, creature, machine, current or physical gate can explain the boundary. A breakthrough cap is a creature-power limit, not a route wall.
+- **Overlaps.** The band overlaps let a prepared party enter the next chapter at the bottom of its band. Grinding makes the party clearly stronger (RD-01).
 
 ### 2.5 Ordinary wild return policy
 
-An ordinary wild site may repopulate only after **two complete 600-second world days** have elapsed since its defeat or catch **and** every player has left that principal region at least once. The host persists the site's stable ID and next-eligible world time; reload, rest, reconnect and realm transition cannot move the deadline backward or instantly respawn it. A new wild is a new encounter with the site's authored table, not a resurrection of an owned/caught instance. Named alphas, trainers, quest fights, rewards, pickups and permanent harvests remain once-only under their existing receipts. The journal need not show a countdown. This policy makes optional later catching possible without making respawn farming a route requirement. Acceptance uses a deterministic world clock, solo and two-peer exit/re-entry, save/reload before and after eligibility, and exact reward/XP receipts; the required route and four-player supply ledger must still clear when **no wild respawns at all**.
+An ordinary wild site may repopulate only after **two complete 600-second world days** have elapsed since its defeat or catch **and** every player has left that principal region at least once. The host persists the site's stable ID and next-eligible world time; reload, rest, reconnect and realm transition cannot move the deadline backward or instantly respawn it. A new wild is a new encounter with the site's authored table, not a resurrection of an owned/caught instance. Trainers, quest fights, rewards, pickups and permanent harvests remain once-only under their existing receipts. **Superseded for alphas and trainers (owner, 2026-09-29, RD-31):** named alphas respawn on their own timer with freshly rolled traits (§2.11). Trainers can be rematched in tiers (BOSSES §9.2). Their first-win rewards stay once-only. Wild defeats now also pay type essence (TRAINING §1), so this return policy feeds the optional grind. F47 may tune the interval with evidence. The journal need not show a countdown. This policy makes optional later catching possible without making respawn farming a route requirement. Acceptance uses a deterministic world clock, solo and two-peer exit/re-entry, save/reload before and after eligibility, and exact reward/XP receipts; the required route and four-player supply ledger must still clear when **no wild respawns at all**. This constraint keeps respawn grinding optional (RD-01). F47 confirms it against the new essence ledger.
+
+### 2.6 The Crossing Hall and the Shrine Room (RD-17, RD-20; F17)
+
+**Not built (target).** No Crossing Hall, arch or pedestal exists in source.
+
+- **Place.** The Hall caps the far end of the village road (§3.2). It is the tallest village landmark and reads as the destination from Grandpa's farm door, by day and by night (F17#1). It is kitbashed from installed families (MegaKit stone, timber, props) under ART_DIRECTION, and it needs no new mesh. Config: `data/config/crossing_hall.json` (new, F17).
+- **Nave.** It holds the **home arch**, where the Home Key arrives, plus **seven portal arches**:
+  - **Tidewake, Cloudreach and Stormwood** are live-capable.
+  - **Biomes 5–8** are sealed, dark but visible, and signed "Sealed".
+  - The Meadows has no portal arch, because the village sits inside it.
+  - Each arch is signed with its biome name and recommended level, read from `biome_order.json` and the §2.4 band.
+  - Arch states are *sealed* (biomes 5–8; biome 5 can also show *stirred*, §2.8), *locked* or *open*.
+- **Shrine Room.** A side room holds **eight pedestals** in biome order, Meadows first. Pedestals 1–4 are live and 5–8 are dark placeholders. A player hangs a relic by using the pedestal with that relic in their inventory:
+  - The relic leaves the inventory and appears on the pedestal.
+  - The player's character records it as hung.
+  - That relic's power joins the character's selectable set. The one active power is chosen at the Shrine Room, and the choice persists. UX owns the screen.
+  - Hanging unlocks the homestead attachment recipes that HOMESTEAD §4 assigns to that relic. HOMESTEAD settles this as the *next* biome's attachments.
+  - Hanging is required for those recipes and for the power. It does **not** gate the next portal, because the portal key alone opens that.
+- **Existing in-biome shrines** (the Sky Shrine at High Roost, the Lantern Hollow shrine and the Meadows home circle) are no longer where a relic is placed. Their geography stays. F18/F19 decide whether each keeps an acknowledgement line or becomes scenery.
+- **Co-op and scope.** The Hall layout and each arch's and pedestal's *display* are world scope, owned by the host. Host and guest see the same display (F17#5). Portal unlocks and hung relics are **character** scope, and each also writes a world-scope display record in the host world where it happened, as portal keys do (§2.7). The host validates each hang once, keyed `relic_hung:<biome>:<character_id>`. A reconnect replays or rolls back the hang, never both. Nothing here needs migration, because saves reset for this redesign (RD-35).
+
+### 2.7 Home Key, portal keys, waystones and portal access (RD-18–RD-21; F18)
+
+**Not built (target).** Source currently moves players between realms through physical gates and `Game.enter_realm`, and has no fast travel.
+
+**Home Key.** Grandpa gives it during the opening. F18 picks the earlier natural beat: `grandpa_first_catch` or the tournament send-off (F18#0).
+
+| Rule | Target |
+|---|---|
+| Item | Key category, in the backpack. It cannot be dropped, sold, traded or lost, and it is excluded from death satchels. |
+| Use | One tap. The trainer raises the key for about **2 s** (`data/config/portals.json`, starting value 2.0 s), with glow and sound under an `input_owner` lock, then fades and arrives at the home arch. Free, with **no cooldown**. |
+| Refused | In combat (as an admitted participant), in dialogue, in a cutscene, while swimming or diving, and mid-flight. Each refusal states its reason. Taking damage or entering combat during the raise cancels it at no cost. |
+| Companions | The player's own five travel with them. Other players stay where they are. |
+| Scope | Character. The grant is a one-time receipt; the item cannot be duplicated and needs no re-grant because it cannot be lost. Using it writes only the player's position, which saves normally. |
+
+**Portal keys.** The keys are `tidewake_portal_key`, `cloudreach_portal_key`, `stormwood_portal_key` and `fifth_portal_key`. Each is a real item dropped per participant by a chapter climax (§2.2). Like the Home Key, they cannot be dropped, sold or lost, and they are excluded from death satchels. A player uses one with a tap at its arch. The key is consumed once, and two records are written in the same host transaction (`portal_unlock:<biome>:<character_id>`):
+
+- a **character-scope** unlock that travels with the player;
+- a **world-scope** unlock for the host world.
+
+A locked arch refuses with a readable reason ("Needs the Cloudreach Portal Key") (F18#2).
+
+**Portal access rule (RD-21).** An arch is open for a player when the **host world or that player's character** has unlocked it. That holds for the whole session. Passing through moves only that player and their five. A behind friend can therefore follow a host through an open portal. Their own key still comes only from fighting the climax, so their progress stays honest (F48#3).
+
+**Waystones (RD-19).** Each live biome has **3–5 waystones**, placed at existing camps and landmarks through `data/config/waystones.json` (new). Each one is a small shrine from installed families. A player activates one by walking up to it and tapping interact out of combat. The **last** waystone a character activated in a biome is that biome's portal destination. With none activated, the destination is the biome entry point: First Shore for Tidewake, Cloudreach Gate for Cloudreach and Cinder Verge for Stormwood. Waystones are not a network; the portal is the only way to travel to one. Activation is character scope, and it persists through reload and travels to other hosts (F18#3).
+
+- **Starting placements (F18 finalizes).**
+  - Tidewake: First Shore, Shellwatch, Tidal Cradle, Salt Crown and Sluice Isle camps.
+  - Cloudreach: Lower Cliffs settlement, Windscar shelter, High Roost and Summit Bivouac.
+  - Stormwood: Ashfoot, Lantern Pools Camp, Still Grove Shelter, Lantern Hollow Waycamp and Ember Bivouac.
+- **Meadows gap (open question).** F18#3 requires Meadows waystones, but the Meadows has no portal arch. **Proposed:** the home arch doubles as the Meadows portal, sending the player to their last Meadows waystone. The candidates are the Trail camp, the Quarry camp, the Old Mill crossing, the Upper Meadows camp and the Sigil-gate waystop. This needs owner or F18 confirmation before it is built.
+
+**Consequence of RD-18 for attrition sequences.** The Home Key works anywhere the refusal list allows. That includes the Meadows stronghold corridor ("no ordinary recovery from the Sigil gate through the Outer Works", §3.2), Veilfall and the Dynamo approach. Leaving to heal at home and returning through a waystone is therefore legal. The cost is the walk back through already-cleared ground, since cleared fights stay cleared. The no-recovery rule still governs placed beds and supplies inside those sequences. The owner is asked to confirm that this is intended, rather than a Home Key no-use zone, which RD-18 does not list.
+
+| State | Scope | Authority | Transaction / duplication | Save and reconnect |
+|---|---|---|---|---|
+| Home Key grant | character | host validates the opening beat | Once per character (`home_key_granted`) | Portable; cannot be lost |
+| Home Key use | character (position only) | host validates the refusal list and the destination | No resource spent | A disconnect during the raise leaves the player where they stood |
+| Portal key item | character | host grants it from the climax (BOSSES §9.1) | One per participant per climax | Portable inventory |
+| Portal unlock | character + host-world display | host, at the arch | Key consumed and unlocks written atomically, once | A reconnect replays or rolls back, never both |
+| Waystone activation | character | host validates proximity | Idempotent | Portable; the last-activated id per biome |
+| Portal destination | derived | host | — | Recomputed on use |
+
+### 2.8 Campaign ending (RD-22; F20)
+
+**Superseded (owner, 2026-09-29, RD-22):** the ending in Tidewake, the physical return route home and the "no fifth-chapter tease" line.
+
+- **Tidewake closes its own chapter** with the dock exchange (§6.5). It does not roll the credits (F20#0). Nerissa's participants receive Tideglass and the Cloudreach key (§2.2).
+- **Stormwood is the finale.** The sequence runs:
+  1. Marrow and the Break (BOSSES §4.7).
+  2. Stormheart's offer.
+  3. The Spark of the Stormwood relic and the **fifth portal key** for each participant.
+  4. The Long Storm ends.
+  5. The objective feed prompts the player to **use the Home Key**.
+  6. The player arrives in the Crossing Hall and walks up the road to the farm.
+  7. Grandpa's homecoming names the current five, the starter's status, one bond memory and the player's chapter choices. It names a legendary only if that character accepted one.
+  8. The credits roll **once per character**, and the player returns to the same live world (F20#1).
+- **The fifth arch.** Using the fifth key at the biome-5 arch consumes the key and makes the arch *stir*: a glow, a low hum and dust. Grandpa or a Hall NPC says one line meaning *not ready yet*. The arch does not open. There is no quest, marker, cliffhanger or sequel prompt. A player may use the key before or after the homecoming (F20#2). Scope: a character receipt (`fifth_arch_stirred`) plus a host-world display, keyed once per character.
+- **After credits.** Reload resumes a safe completed world. Bounties, endgame rematches, alpha respawns and research completion are available (§2.11; F20#3).
+- **Co-op.** Each peer gets their own homecoming acknowledgement and credits exactly once, through disconnects and reloads (F20#4). The built character-scope flags `homecoming_seen` and `regional_credits_seen` carry over.
+- **Built today, to move.** The homecoming conversation and the credits slice are built, but they are keyed to Tidewake's `water_currents_restored` (§6.5). F20 re-keys them to the Stormwood finale. It must not rebuild them.
+
+### 2.9 Traversal assumptions by chapter order (F19#3)
+
+A chapter may assume only what every player has been granted by then. No route may require a relic power, because only one is active at a time.
+
+| Chapter | Available | Must not be required |
+|---|---|---|
+| 1 Meadows | Walking, sprint, Terrapup Ride, the Meadowhart saddle | Swimming beyond authored shallows, Fly |
+| 2 Tidewake | Human swimming (§6.3), the Swim Stone and saddle as optional extras, Ripplet surface mount if owned, Dive after its L30 breakthrough | **Fly** (not learned until Cloudreach), Wings, Spark, any swim mount, Dive, catching Aquaryn |
+| 3 Cloudreach | Fly (taught by Maela; Galewisp's Fly; the loaner under §4.2) | Stormheart, Spark, Dive, any Tidewake-only ability |
+| 4 Stormwood | Fly, the Stormglass arches | Dive, Tidewake-only abilities, any legendary |
+
+Tidewake rules that mention Fly, such as the sealed tide-race discs (§6.6), still apply because players can return by portal after Cloudreach. A gate-scan test proves the table (F19#3).
+
+### 2.10 Master placement (RD-06, RD-07; F28)
+
+**Not built (target).** BOSSES §4.13 owns each Master's fight. TRAINING §3 owns the breakthrough.
+
+| Tier | Where (RD-10 table) | Starting site | Access | Must be reachable before |
+|---|---|---|---|---|
+| L10 | Mid-Meadows (River Lock/Quarry) | Old Quarry approach, off the haul road | On foot | Burrow Warrens guardian (L14) and Captain Vance |
+| L20 | Upper Meadows, before the Hall approach | An Ironwood ridge off the Upper Meadows road | On foot or riding | The Sigil gate and Keeper Hald |
+| L30 | An outer Tidewake island | Gull Rest (human-swimmable optional crossing) | Human swim; no mount, Fly or Dive needed | Veilfall |
+| L40 | A Cloudreach high perch | High Perches, off High Roost | Fly | Officer Voss's summit approach |
+| L50 | Deep Stormwood | A rod-protected storm clearing in Capacitor Grove | On foot, through storm hazard | The Deepwood fights |
+
+- **Siting.** Each Master is off the main path and signposted from it by a physical sign and a named NPC lead. The arena is a clear, flat, collision-tested space of about **18 m radius** (starting value, `masters.json`) with room for co-op observers.
+- **Order.** The "reachable before" column is the cap constraint in BOSSES §0.
+- **"The Hall" means the Warden's Hall.** In this row and throughout §3, "the Hall" is the Meadows stronghold. The village hub is always "the Crossing Hall". TRAINING §3's wording "before the Crossing Hall" appears to be a slip; see the open questions.
+- **Scope.** The arena is world scope (host). The win and recipe are character scope (BOSSES §4.13).
+
+### 2.11 Repeatables (RD-31; F43, F44, F45)
+
+**Not built (target).** **Superseded (owner, 2026-09-29, RD-31):** the former "no enemy scaling tier after the ending" and "no repeatable trainer economy" lines. These loops are optional. The main path never requires them (RD-01).
+
+| Loop | Contract | Scope, authority and transaction |
+|---|---|---|
+| **Bounty board** at Halda's tournament board | **Three bounties** refresh each in-game morning, drawn only from biomes the player has unlocked (F43#0). There are four kinds: catch a creature with a named trait, defeat an alpha, deliver materials, win a rematch (F43#1). Rewards are type essence, Tether Candy, materials and an occasional Trait Seed (F43#2). Data: `data/config/bounties.json`. | Personal: each character gets their own three, rolled by the host from a per-character seed and the world day. Each bounty instance pays once under `bounty:<instance>:<character_id>`, and a reconnect cannot pay twice. Bounties survive save and reload (F43#3). |
+| **Alpha respawns** | Named alphas reappear every configured number of in-game days (starting value 3, in the alpha respawn config that F44 adds) at their authored sites, with freshly rolled traits at better odds (F44#2; TRAINING §6). The first-defeat and first-catch rewards stay once-only. A caught alpha is never copied; the respawn is a new individual. | The host owns the timer and the roll (world scope). Rewards are receipts per character. The §2.5 "every player has left" rule applies. |
+| **Rematches** | Tiered trainer, captain, Master and boss rematches (BOSSES §9.2). They open after the chapter's climax, at the next chapter's level, and at the endgame tier (L55–60) after the credits. | BOSSES §9.2 |
+| **Research log** | At least three tasks per species that pay type essence, with a completion title per biome (TRAINING §8; F45). | TRAINING §10 |
+
+None of these may revert a world aftermath, reopen a story gate or pay a unique reward twice.
+
+### 2.12 Material and attuned essence nodes (RD-05, RD-33; F32)
+
+HOMESTEAD §5 owns material identities, refining, crops and respawn timers. This section owns placement. The tier material nodes and the essence nodes are renewable. Starting respawn values are 2 in-game days for tier nodes and 3 for essence nodes (HOMESTEAD §5.1). Story pickups and caches stay once per world.
+
+| Chapter | Tier material nodes (existing ids) | Placement rule |
+|---|---|---|
+| Meadows (tier 1) | rootstone, ironwood, sunleaf, plus wood, stone and fiber | Quarry and Warrens for rootstone; Upper Meadows for ironwood; along the main route and its loops |
+| Tidewake (tier 2) | driftwood, reed_fiber, reef_stone, sluice_metal, tide_bloom, tide_pearl (new) | On land and in shallows on the main islands. `tide_pearl` has human-reachable reef beds on the main islands, with richer optional beds at Dive-only sunken sites (§6.7). F32#5 registers the ten `water_crafting.json` proposals at runtime. |
+| Cloudreach (tier 3) | windworn_heartwood, cliffglass_ore, gale_fiber, skyplume, cloudberry | Ledges and causeways. At least one required-tier source per material must be reachable without Fly-only terrain before Windscar. |
+| Stormwood (tier 4) | thunderwood, stormglass, conductor_vine, glowmoss, sparkfur, voltcap | The existing 210 harvest sites plus the 24 charged nodes |
+
+- **Attuned essence nodes (F32#2).** Each biome holds one or two nodes per type, mostly off-route, placed with the existing harvest schema. Harvesting yields that type's essence and an `attuned_<type>` ingredient.
+- **Shed drops.** Items such as skyplume and sparkfur come from wins and Den grooming (HOMESTEAD §5.4). Nothing implies hunting or butchering (F32#4).
+- **Co-op.** Node depletion and respawn timers are world scope and host-owned. The harvest receipt and the items are character scope. Contention among four characters follows MULTIPLAYER's existing node rules (F32#5).
+- **Ledger.** F28#5 and F47 prove that every feast and gear ingredient is reachable in or before its biome.
+
+### 2.13 Eight-biome planning slots (RD-09)
+
+This pass builds four biomes. The data and the hub reserve biomes 5–8:
+
+- `biome_order.json` reserves `biome5`–`biome8`, each with the display name "Sealed".
+- The Crossing Hall has 4 dormant arches and 4 dark pedestals.
+- The material, gear and attachment schemas hold 8 tiers.
+- The level caps `[70, 80, 90, 100]` are reserved.
+
+Nothing in this pass names, dates or promises a fifth biome. The only acknowledgement is the fifth arch's stir (§2.8). Reserved slots never block the four-chapter release.
 
 ## 3. Chapter 1 — The Meadows
 
@@ -88,6 +270,20 @@ The live Bible's 11,518 m value conflicts with the archived segment sum by 76 m.
 **Village form is fixed for this pass.** Rebuild the existing footprint as a road settlement, not the old compact radial/circular arrangement. A traversable through-road must connect the home/opening side to the South Bridge exit, with at least one visible side lane that leads to the berry field, grove or stone-working area. Face house fronts/doors and civic activity onto those roads; vary roof lines and building setbacks so the approach, centre and departure read as different silhouettes. Keep at most five street villagers, all required interactions, protected starter/tournament/camp flow and every authored boundary gate. Roads at the boundary have working gates; other edges are dressed and cannot be bypassed. The new geometry may move buildings, paths and props but must preserve stable IDs, saves, quest triggers and accessibility. **Acceptance:** compare a labelled overhead plan of old/new traversable road topology, then walk home→centre→bridge and one side lane with the normal camera and controller at day and night; verify that the three named subareas and exit are visible without map overlays, all key interactions and NPCs are reachable, no path or gate can be skirted, and save/reload/co-op peers see the same layout. A paint or prop pass on the former circular road plan fails this criterion.
 
 **Current village shape (owner-picked option B, 2026-09-29).** One straight main street runs north-south at x = 10.5 from the z = -16 crossroads (Grandpa's cross lane, the Rise lane and Stoneyard Lane) to z = 2, where the Pond lane and South Street to TrailGate leave it. Houses line both sides. The well stands on the street axis at (10.5, -6) in the middle of a small walkable green (radius about 4 m, no collision, existing grass and the 0.9 m square flat). The inn (-2.5, -6, turned 90 degrees) and the stone cottage (19.5, -6, turned to face west) look onto the green and street; Mira's shop, Oskar's pen, Tam's workshop, Halda, the bracket board and Grandpa's house did not move. Data: `terrain_playground.json` `paths` and `building_aprons`, `village.json`; pinned by `tests/test_village_main_street.gd`.
+
+**Target village road (owner, 2026-09-29, RD-17, RD-29; F17). Not built.** The village stays inside the Meadows and becomes **one straight road**:
+
+- **Homestead at the start.** Grandpa's farm, now the homestead plot (HOMESTEAD §2), sits at the start of the road beside the Meadows exit and the South Bridge road.
+- **Houses on both sides.** Eight to ten MegaKit houses face the road on both sides. They hold Mira's shop, Tam's workshop, the inn, Halda's tournament board with the bounty board (§2.11) and the arena lawn, the research keeper, and named residents from the installed cast.
+- **Crossing Hall at the end.** The Hall caps the far end of the road (§2.6) and is visible from the farm.
+
+Every house has a named resident or lived-in dressing (F17#3). **Superseded (RD-29):** the former ceiling of five street villagers. The resident count follows the installed cast, and residents can be at doors or inside.
+
+**What changes from the built street.** The built street already runs straight. It puts Grandpa's house at the northern crossroads and the exit at the southern end, which is the opposite of RD-29, where the homestead sits by the exit and the Hall at the far end. F17 therefore either moves the farmhouse to the exit end or re-routes the exit. It keeps Grandpa's farmhouse as the homestead anchor and pins any new position in tests.
+
+**What F17 must preserve.** Stable IDs, the South Bridge route, every authored boundary gate and the whole M1 opening chain (starter, practice catch, camp, three-bed readiness, three tournament rounds) must survive (F17#4). F17 re-bakes terrain and scatter for the village pad only. The acceptance walk in the paragraph above still applies to the new plan, together with F17#0–#6.
+
+**Naming.** In this chapter "the Hall" and "Hall approach" mean the Warden's stronghold. The village hub is always "the Crossing Hall".
 
 **Lower Meadows.** Broad readable grassland, local habitats, trainers and the first voluntary detours lead to the South Bridge. The bridge opens through story/trainer progression, never a floating level message.
 

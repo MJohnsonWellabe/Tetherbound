@@ -63,6 +63,15 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
    - Tool repair stays the free Satchel press.
    - Starting numbers are in TRAINING/HOMESTEAD, marked as starting values.
 
+   More defaults from the art, multiplayer and technical pass:
+   - The Stormwood legendary is Fulgocobra, replacing the Sparkit placeholder (it is the roster board's legendary).
+   - A portal opening from a character's own unlock is a per-traveler check (RD-21 "your own character").
+   - The shrine display becomes world-visible on the first hang in that world.
+   - Other players may watch a Master duel but not join it.
+   - The magenta telegraph changes form, and COMBAT/UX pick its colour.
+   - Daily caps keyed to the host day are checked for world-hopping in F47#4.
+   - Meshy refine, retexture and retry tasks count toward the 30-per-night cap.
+
    Settled from RD-20's "next tier": Meadows attachments are available from the start, and each hung relic unlocks the next biome's attachments (HOMESTEAD §4).
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).

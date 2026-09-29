@@ -26,6 +26,112 @@ Creature level caps are L10/20/30/40/50 with a ceiling of 60 this pass (RD-08). 
 
 **Cap constraint (starting value, F19/F47 tune).** Before a tier's Master can be reached, no required named fight may field a creature more than **2 levels above that tier's cap**. The formulas satisfy this constraint only when each Master sits where §4.13 places it: before the Burrow Warrens guardian (L14) and Captain Vance (L12) for L10; before Hald for L20; before Veilfall for L30; before Veyra for L40; and before the Deepwood fights (Nysa, first creature above 52) for L50. If F28 moves a Master later, F19 lowers the affected rows instead.
 
+### 0.1 Per-row starting targets
+
+The catalogue tables in §§5–8 keep their current-source rows verbatim, because tests quote them. The targets live here instead. "Current" lists send-out levels in order.
+
+**Meadows.** The other 19 rows (Bands 1–3, `practice_trainer` through Vance) keep their current levels.
+
+| Row | Current | Target |
+|---|---|---|
+| captain_riverwatch / Oreth | 16/16/16/16/16 | 18/18/18/18/18 |
+| captain_field / Halder | 16/16/16/16/16 | 18/18/18/18/18 |
+| captain_ridge / Vess | 16/16/16/16/16 | 18/18/18/18/18 |
+| patrol_ridgeline | 13/14 | 15/16 |
+| pasture_drover_juno | 13/13 | 15/15 |
+| lost_creature_rue | 14/15 | 16/17 |
+| stronghold_patrol / Verrick | 15/16 | 17/18 |
+| stronghold_courtyard / Solene | 16/17/17 | 18/19/19 |
+| stronghold_elite / Hald | 18/19/19/19/19 | 20/21/21/21/21 |
+| warden_aldis | 18/18/19/19/20 | 21/21/21/22/22 |
+| stronghold_outer_watch | 15/15 | 17/17 |
+| stronghold_checkpoint / Ness | 16/16/16 | 18/18/18 |
+
+**Tidewake.**
+
+| Row | Current | Target |
+|---|---|---|
+| water_trainer_pell_trial / Pell | 43/43 | 20/20 |
+| water_trainer_fen / Fen | 44/44 | 21/21 |
+| water_trainer_lysa / Lysa | 45/45 | 22/22 |
+| water_trainer_daro / Daro | 45/45 | 22/22 |
+| water_trainer_tovin / Tovin | 46/46 | 23/23 |
+| water_trainer_keir / Keir | 46/46 | 23/23 |
+| water_trainer_rune / Rune | 47/47 | 24/24 |
+| water_trainer_solm / Solm | 47/47 | 24/24 |
+| water_trainer_irva / Irva | 48/48 | 25/25 |
+| water_trainer_nel / Nel | 47/47 | 24/24 |
+| water_trainer_oswin / Oswin | 48/48 | 25/25 |
+| water_trainer_tal / Tal | 49/49 | 26/26 |
+| water_trainer_sera / Sera | 50/50 | 28/28 |
+| water_trainer_odan / Odan | 50/50 | 28/28 |
+| water_trainer_yara / Yara | 51/51/51 | 29/29/29 |
+| water_trainer_bex / Bex | 51/51 | 29/29 |
+| water_trainer_calder / Calder | 52/52/52 | 30/30/30 |
+| water_trainer_vera / Vera | 52/52 | 30/30 |
+| water_trainer_tess / Tess | 54/54/54 | 32/32/32 |
+| water_trainer_fennel / Fennel | 53/53 | 31/31 |
+| water_trainer_venn / Venn | 53/53/53 | 31/31/31 |
+| water_trainer_morra / Morra | 54/54/54 | 32/32/32 |
+| water_trainer_evi / Evi | 54/54/54 | 32/32/32 |
+| water_trainer_nerissa / Nerissa | 55/55/55/55 | 32/32/33/33 |
+| water_lantern_shell_sentinel | 45 | 22 |
+| water_gull_basalt_claw | 47 | 24 |
+| water_brine_root_watcher | 47 | 24 |
+| water_drowned_garden_songweaver | 51 | 29 |
+| water_deep_watch_tidecoil | 54 | 32 |
+| water_aquaryn_alpha | 49 | 26 |
+| water_abyssal_guardian_release | 55 | 33 |
+
+**Cloudreach.**
+
+| Row | Current | Target |
+|---|---|---|
+| trainer_ila_lower_ring / Ila | 19/21 | 31/33 |
+| trainer_orrin_bridge_watch / Orrin | 21/23 | 33/34 |
+| tether_lieutenant_senn / Senn | 22/24 | 34/35 |
+| keeper_maela_trial / Maela | 23/25 | 34/36 |
+| young_trainer_tavi_upper_ring / Tavi | 26/28/29 | 37/39/40 |
+| officer_voss_summit_approach / Voss | 29/30/31 | 40/41/41 |
+| captain_veyra_storm_anchor / Veyra | 31/32/34 | 43/43/44 |
+
+**Stormwood.**
+
+| Row | Current | Target |
+|---|---|---|
+| tamsin_surge_lesson / Tamsin | 32/33 | 42/43 |
+| rodfolk_pathfinder_elin / Elin | 33/34 | 43/44 |
+| lieutenant_dace_hollows_rod / Dace | 35/36/36 | 45/46/46 |
+| traveller_ivo_lantern_pools / Ivo | 34/35 | 44/45 |
+| lieutenant_varga_rodline_bridge / Varga | 37/38/39 | 47/48/50 |
+| officer_maren_verge_rod / Maren | 32/33/34 | 42/43/44 |
+| archwright_senn_crown_footing / Senn | 39/40 | 50/51 |
+| archivist_wen_crown_trial / Wen | 40/40 | 51/51 |
+| crown_wayfarer_nell / Nell | 40/41 | 51/52 |
+| officer_nysa_deepwood_rod / Nysa | 40/41/42 | 51/52/53 |
+| rodfolk_guard_bram / Bram | 40/41 | 51/52 |
+| outerworks_lieutenant_sera / Sera | 41/42/42 | 52/53/53 |
+| officer_kestrel_outer_works / Kestrel | 41/42/43 | 52/53/54 |
+| captain_marrow_dynamo_core / Marrow | 42/43/43/44/44 | 54/54/54/55/55 |
+| tamsin_ash_ring | 32/33 | 42/43 |
+| ranger_pax_sentinel / Pax | 33/34 | 43/44 |
+| courier_pim_pool_loop / Pim | 34/35 | 44/45 |
+| traveller_ivo_moss_detour | 35/36 | 45/46 |
+| rodline_scout_kael / Kael | 36/37 | 46/47 |
+| rodline_keeper_fenn / Fenn | 37/38 | 47/48 |
+| rodline_duelist_ren / Ren | 38/39 | 48/50 |
+| rook_circuit_lantern / Rook | 40/41/42 | 51/52/53 |
+| circuit_lena_giant / Lena | 40/41 | 51/52 |
+| circuit_orin_blackwater / Orin | 41/42 | 52/53 |
+| circuit_mira_lantern / Mira | 39/40 | 50/51 |
+| circuit_tavi_rodline / Tavi | 41/42 | 52/53 |
+| hollows_alpha | 38 | 48 |
+| capacitor_alpha | 40 | 51 |
+| crown_guardian | 41 | 52 |
+| old_rodfolk_hall_guardian | 43 | 54 |
+| blackwater_elder | 43 | 54 |
+| glass_field_alpha | 42 | 53 |
+
 ## 1. Combat language shared by named fights
 
 Combat is real-time and creature-piloted. The player directly moves the active creature. **Current source** uses:
@@ -300,41 +406,41 @@ Timings in the table are starting values in `masters.json`, tuned by F22/F47 wit
 
 ## 5. Source catalogue — Meadows trainer encounters
 
-These 31 rows are current band data. “Baseline” means no bespoke behavior should be inferred from the row. The **Target** column is the RD-10 starting target from §0, and F19 finalizes it.
+These 31 rows are current band data. “Baseline” means no bespoke behavior should be inferred from the row. The RD-10 starting targets are in §0.1, and F19 finalizes them.
 
-| ID / display | Team in send-out order | Target (RD-10, F19) | Current or intended test role |
-|---|---|---:|---|
-| `practice_trainer` | Bramblebun2, Mudsnout3 | unchanged | opening baseline |
-| `trainer_mira` | Bramblebun4 | unchanged | single-creature quick-read lesson |
-| `trainer_oskar` | Meadowhart6, Mosshell7 | unchanged | switching/durability lesson |
-| `trainer_tam` | Pipwing5, Mudsnout6 | unchanged | authored-move lesson |
-| `south_bridge_grunt` | Mudsnout10, Burrowback12 | unchanged | physical bridge gate |
-| `tournament_quarter_mira` | Bramblebun7, Mudsnout8 | unchanged | tournament quarterfinal |
-| `tournament_semi_tam` | Pipwing9, Mosshell9 | unchanged | tournament semifinal |
-| `tournament_final_oskar` | Mudsnout10, Mosshell10, Meadowhart11 | unchanged | tournament composition final |
-| `shepherd_the_rise` | Trailpup3, Trailpup4 | unchanged | optional early baseline |
-| `wanderer_trail_camp` | Mudsnout6, Pipwing7 | unchanged | optional mixed-type baseline |
-| `old_champion_bram` | Meadowhart6, Galecrest7 | unchanged | optional late-Band1 mobility |
-| `quarry_picket_dorn` | Bramblebun9, Burrowback9 | unchanged | quarry gate baseline |
-| `warrens_watch_pell` | Mudsnout10, Bramblebun10, Duskhush11 | unchanged | cave-door composition |
-| `band2_outrider_kest` | Burrowback12, Duskhush12 | unchanged | optional Stone & Root test |
-| `night_watch_farro` | Trailpup12, Duskhush13 | unchanged | optional night encounter |
-| `relay_picket_hess` | Bramblebun8, Mudsnout8 | unchanged | relay escalation 1 |
-| `relay_picket_orrin` | Burrowback9, Pipwing9 | unchanged | relay escalation 2 |
-| `relay_officer_dell` | Mosshell10, Burrowback10, Galecrest10 | unchanged | relay officer composition |
-| `relay_captain` / Vance | Galecrest12, Duskhush12, Burrowback12, Mosshell12, Tuskroot12 | unchanged | Tuskroot CHARGER; crossing payoff |
-| `captain_riverwatch` / Oreth | Mosshell16, Trailpup16, Burrowback16, Duskhush16, Brooktail16 | 18/18/18/18/18 | WALL→baseline→baseline→baseline→CURRENT; Sigil |
-| `captain_field` / Halder | Duskhush16, Tuskroot16, Burrowback16, Mosshell16, Meadowhart16 | 18/18/18/18/18 | baseline→CHARGER→baseline→baseline→CURRENT; Sigil |
-| `captain_ridge` / Vess | Trailpup16, Duskhush16, Trailpup16, Tuskroot16, Galecrest16 | 18/18/18/18/18 | baseline→baseline→baseline→baseline→DIVER; Sigil |
-| `patrol_ridgeline` | Burrowback13, Galecrest14 | 15/16 | optional ridge baseline |
-| `pasture_drover_juno` | Burrowback13, Mudsnout13 | 15/15 | optional pasture baseline |
-| `lost_creature_rue` | Burrowback14, Trailpup15 | 16/17 | optional recovery story |
-| `stronghold_patrol` / Verrick | Trailpup15, Burrowback16 | 17/18 | garrison floor |
-| `stronghold_courtyard` / Solene | Mosshell16, Reedwing17, Mudsnout17 | 18/19/19 | three-body numeric escalation |
-| `stronghold_elite` / Hald | Galecrest18, Burrowback19, Trailpup19, Duskhush19, Mosshell19 | 20/21/21/21/21 | DIVER→baseline→baseline→baseline→WALL; mandatory door |
-| `warden_aldis` | Burrowback18, Galecrest18, Brooktail19, Meadowhart19, Tuskroot20 | 21/21/21/22/22 | WALL→DIVER→CURRENT→CHARGER→ACE final exam |
-| `stronghold_outer_watch` | Burrowback15, Duskhush15 | 17/17 | optional approach baseline |
-| `stronghold_checkpoint` / Ness | Trailpup16, Galecrest16, Mosshell16 | 18/18/18 | recovered CURRENT pressure at Sigil gate; verify consumer |
+| ID / display | Team in send-out order | Current or intended test role |
+|---|---|---|
+| `practice_trainer` | Bramblebun2, Mudsnout3 | opening baseline |
+| `trainer_mira` | Bramblebun4 | single-creature quick-read lesson |
+| `trainer_oskar` | Meadowhart6, Mosshell7 | switching/durability lesson |
+| `trainer_tam` | Pipwing5, Mudsnout6 | authored-move lesson |
+| `south_bridge_grunt` | Mudsnout10, Burrowback12 | physical bridge gate |
+| `tournament_quarter_mira` | Bramblebun7, Mudsnout8 | tournament quarterfinal |
+| `tournament_semi_tam` | Pipwing9, Mosshell9 | tournament semifinal |
+| `tournament_final_oskar` | Mudsnout10, Mosshell10, Meadowhart11 | tournament composition final |
+| `shepherd_the_rise` | Trailpup3, Trailpup4 | optional early baseline |
+| `wanderer_trail_camp` | Mudsnout6, Pipwing7 | optional mixed-type baseline |
+| `old_champion_bram` | Meadowhart6, Galecrest7 | optional late-Band1 mobility |
+| `quarry_picket_dorn` | Bramblebun9, Burrowback9 | quarry gate baseline |
+| `warrens_watch_pell` | Mudsnout10, Bramblebun10, Duskhush11 | cave-door composition |
+| `band2_outrider_kest` | Burrowback12, Duskhush12 | optional Stone & Root test |
+| `night_watch_farro` | Trailpup12, Duskhush13 | optional night encounter |
+| `relay_picket_hess` | Bramblebun8, Mudsnout8 | relay escalation 1 |
+| `relay_picket_orrin` | Burrowback9, Pipwing9 | relay escalation 2 |
+| `relay_officer_dell` | Mosshell10, Burrowback10, Galecrest10 | relay officer composition |
+| `relay_captain` / Vance | Galecrest12, Duskhush12, Burrowback12, Mosshell12, Tuskroot12 | Tuskroot CHARGER; crossing payoff |
+| `captain_riverwatch` / Oreth | Mosshell16, Trailpup16, Burrowback16, Duskhush16, Brooktail16 | WALL→baseline→baseline→baseline→CURRENT; Sigil |
+| `captain_field` / Halder | Duskhush16, Tuskroot16, Burrowback16, Mosshell16, Meadowhart16 | baseline→CHARGER→baseline→baseline→CURRENT; Sigil |
+| `captain_ridge` / Vess | Trailpup16, Duskhush16, Trailpup16, Tuskroot16, Galecrest16 | baseline→baseline→baseline→baseline→DIVER; Sigil |
+| `patrol_ridgeline` | Burrowback13, Galecrest14 | optional ridge baseline |
+| `pasture_drover_juno` | Burrowback13, Mudsnout13 | optional pasture baseline |
+| `lost_creature_rue` | Burrowback14, Trailpup15 | optional recovery story |
+| `stronghold_patrol` / Verrick | Trailpup15, Burrowback16 | garrison floor |
+| `stronghold_courtyard` / Solene | Mosshell16, Reedwing17, Mudsnout17 | three-body numeric escalation |
+| `stronghold_elite` / Hald | Galecrest18, Burrowback19, Trailpup19, Duskhush19, Mosshell19 | DIVER→baseline→baseline→baseline→WALL; mandatory door |
+| `warden_aldis` | Burrowback18, Galecrest18, Brooktail19, Meadowhart19, Tuskroot20 | WALL→DIVER→CURRENT→CHARGER→ACE final exam |
+| `stronghold_outer_watch` | Burrowback15, Duskhush15 | optional approach baseline |
+| `stronghold_checkpoint` / Ness | Trailpup16, Galecrest16, Mosshell16 | recovered CURRENT pressure at Sigil gate; verify consumer |
 
 The recovered encounter contract and these Halder/Vess source rows agree. Oreth's lowered L15 ace and the Warden/Hald changes are also present in current data; remaining open questions concern evidence and world payoff rather than silently replacing these teams.
 
@@ -342,56 +448,56 @@ The recovered encounter contract and these Halder/Vess source rows agree. Oreth'
 
 ## 6. Source catalogue — Cloudreach trainers (chapter 3)
 
-The Team column is current source. The Target column is the RD-10 starting target (§0).
+The Team column is current source. The RD-10 starting targets are in §0.1.
 
-| ID / name | Team | Target (RD-10, F19) | Source role |
-|---|---|---:|---|
-| `trainer_ila_lower_ring` / Ila | Breezetail19, Ribbonray21 | 31/33 | optional basic switching/ledge spacing |
-| `trainer_orrin_bridge_watch` / Orrin | Aeriex21, Craghorn23 | 33/34 | optional narrow arena/forced reposition |
-| `tether_lieutenant_senn` / Senn | Cliffspike22, Cloudfang24 | 34/35 | required anchor pulse/switch pressure |
-| `keeper_maela_trial` / Maela | Aeriex23, Galecrest25 | 34/36 | required crosswind movement/recovery lesson |
-| `young_trainer_tavi_upper_ring` / Tavi | Craghorn26, Skyrill28, Galecrest29 | 37/39/40 | optional three-body counter-switch/elevation |
-| `officer_voss_summit_approach` / Voss | Stormcapra29, Cloudfang30, Skyrill31 | 40/41/41 | required gust denial/aggressive switching |
-| `captain_veyra_storm_anchor` / Veyra | Aeriex31, Cloudfang32, Galecrest34 | 43/43/44 | required finale and three-relay movement exam |
+| ID / name | Team | Source role |
+|---|---|---|
+| `trainer_ila_lower_ring` / Ila | Breezetail19, Ribbonray21 | optional basic switching/ledge spacing |
+| `trainer_orrin_bridge_watch` / Orrin | Aeriex21, Craghorn23 | optional narrow arena/forced reposition |
+| `tether_lieutenant_senn` / Senn | Cliffspike22, Cloudfang24 | required anchor pulse/switch pressure |
+| `keeper_maela_trial` / Maela | Aeriex23, Galecrest25 | required crosswind movement/recovery lesson |
+| `young_trainer_tavi_upper_ring` / Tavi | Craghorn26, Skyrill28, Galecrest29 | optional three-body counter-switch/elevation |
+| `officer_voss_summit_approach` / Voss | Stormcapra29, Cloudfang30, Skyrill31 | required gust denial/aggressive switching |
+| `captain_veyra_storm_anchor` / Veyra | Aeriex31, Cloudfang32, Galecrest34 | required finale and three-relay movement exam |
 
 ## 7. Source catalogue — Stormwood trainers and named wilds (chapter 4)
 
-The Team column is current source. The Target column is the RD-10 starting target (§0). In the proposal table below, the body levels (Voltarach38 and the rest) are current. The targets are Hollows 48, Capacitor 51, Crown 52, Hall guardian 54, Blackwater 54 and Glass Field 53.
+The Team column is current source. The RD-10 starting targets are in §0.1. In the proposal table below, the body levels (Voltarach38 and the rest) are current. The targets are Hollows 48, Capacitor 51, Crown 52, Hall guardian 54, Blackwater 54 and Glass Field 53.
 
-| ID / name | Team or level | Target (RD-10, F19) | Source role |
-|---|---|---:|---|
-| `tamsin_surge_lesson` / Tamsin | Stormraven32, Voltwig33 | 42/43 | critical shelter/reposition lesson |
-| `rodfolk_pathfinder_elin` / Elin | Thundertunnel33, Sparkit34 | 43/44 | critical narrow ash lane |
-| `lieutenant_dace_hollows_rod` / Dace | Tanglevolt35, Glimmermoth36, Sparkit36 | 45/46/46 | critical picket/switch pressure |
-| `traveller_ivo_lantern_pools` / Ivo | Mosshock34, Glimmermoth35 | 44/45 | critical pool counter-switch |
-| `lieutenant_varga_rodline_bridge` / Varga | Tanglevolt37, Tanglevolt38, Stormraven39 | 47/48/50 | critical bridge choke |
-| `officer_maren_verge_rod` / Maren | Sparkit32, Voltwig33, Mosshock34 | 42/43/44 | critical hazard-lane reposition |
-| `archwright_senn_crown_footing` / Senn | Staticub39, Stormraven40 | 50/51 | critical glass-ring spacing |
-| `archivist_wen_crown_trial` / Wen | Staticub40, Sparkit40 | 51/51 | critical wall timing/counter-switch |
-| `crown_wayfarer_nell` / Nell | Glimmermoth40, Glimmermoth41 | 51/52 | critical telegraph read |
-| `officer_nysa_deepwood_rod` / Nysa | Stormbrush40, Glimmermoth41, Staticub42 | 51/52/53 | critical hazard lanes |
-| `rodfolk_guard_bram` / Bram | Stormraven40, Staticub41 | 51/52 | critical canopy recovery |
-| `outerworks_lieutenant_sera` / Sera | Thundertunnel41, Sparkit42, Stormbrush42 | 52/53/53 | critical outer-works lanes |
-| `officer_kestrel_outer_works` / Kestrel | Stormraven41, Tanglevolt42, Mosshock43 | 52/53/54 | critical discharge/counter-switch |
-| `captain_marrow_dynamo_core` / Marrow | Tanglevolt42, Stormraven43, Stormbrush43, Sparkit44, Voltarach44 | 54/54/54/55/55 | critical Dynamo roster |
-| `tamsin_ash_ring` | Voltwig32, Stormraven33 | 42/43 | optional open-arena scout |
-| `ranger_pax_sentinel` / Pax | Thundertunnel33, Glimmermoth34 | 43/44 | optional pursuit |
-| `courier_pim_pool_loop` / Pim | Mosshock34, Sparkit35 | 44/45 | optional waterline reposition |
-| `traveller_ivo_moss_detour` | Mosshock35, Glimmermoth36 | 45/46 | optional dark-pool switch |
-| `rodline_scout_kael` / Kael | Tanglevolt36, Sparkit37 | 46/47 | optional ridge pursuit |
-| `rodline_keeper_fenn` / Fenn | Voltwig37, Mosshock38 | 47/48 | optional lane control |
-| `rodline_duelist_ren` / Ren | Tanglevolt38, Stormraven39 | 48/50 | optional wind-up dive read |
-| `rook_circuit_lantern` / Rook | Stormraven40, Staticub41, Stormbrush42 | 51/52/53 | optional ace counter-switch |
-| `circuit_lena_giant` / Lena | Staticub40, Thundertunnel41 | 51/52 | optional Hall telegraph drill |
-| `circuit_orin_blackwater` / Orin | Mosshock41, Glimmermoth42 | 52/53 | optional ravine pressure |
-| `circuit_mira_lantern` / Mira | Mosshock39, Staticub40 | 50/51 | optional shelter/recovery choice |
-| `circuit_tavi_rodline` / Tavi | Sparkit41, Tanglevolt42 | 52/53 | optional rod hazard lane |
-| `hollows_alpha` | L38 CHARGER | 48 | named alpha |
-| `capacitor_alpha` | L40 DIVER | 51 | named alpha |
-| `crown_guardian` | L41 WALL | 52 | mandatory Crown guard |
-| `old_rodfolk_hall_guardian` | L43 ACE | 54 | optional dungeon guardian |
-| `blackwater_elder` | L43 CURRENT | 54 | optional current-pressure elder |
-| `glass_field_alpha` | L42 CHARGER | 53 | named alpha |
+| ID / name | Team or level | Source role |
+|---|---|---|
+| `tamsin_surge_lesson` / Tamsin | Stormraven32, Voltwig33 | critical shelter/reposition lesson |
+| `rodfolk_pathfinder_elin` / Elin | Thundertunnel33, Sparkit34 | critical narrow ash lane |
+| `lieutenant_dace_hollows_rod` / Dace | Tanglevolt35, Glimmermoth36, Sparkit36 | critical picket/switch pressure |
+| `traveller_ivo_lantern_pools` / Ivo | Mosshock34, Glimmermoth35 | critical pool counter-switch |
+| `lieutenant_varga_rodline_bridge` / Varga | Tanglevolt37, Tanglevolt38, Stormraven39 | critical bridge choke |
+| `officer_maren_verge_rod` / Maren | Sparkit32, Voltwig33, Mosshock34 | critical hazard-lane reposition |
+| `archwright_senn_crown_footing` / Senn | Staticub39, Stormraven40 | critical glass-ring spacing |
+| `archivist_wen_crown_trial` / Wen | Staticub40, Sparkit40 | critical wall timing/counter-switch |
+| `crown_wayfarer_nell` / Nell | Glimmermoth40, Glimmermoth41 | critical telegraph read |
+| `officer_nysa_deepwood_rod` / Nysa | Stormbrush40, Glimmermoth41, Staticub42 | critical hazard lanes |
+| `rodfolk_guard_bram` / Bram | Stormraven40, Staticub41 | critical canopy recovery |
+| `outerworks_lieutenant_sera` / Sera | Thundertunnel41, Sparkit42, Stormbrush42 | critical outer-works lanes |
+| `officer_kestrel_outer_works` / Kestrel | Stormraven41, Tanglevolt42, Mosshock43 | critical discharge/counter-switch |
+| `captain_marrow_dynamo_core` / Marrow | Tanglevolt42, Stormraven43, Stormbrush43, Sparkit44, Voltarach44 | critical Dynamo roster |
+| `tamsin_ash_ring` | Voltwig32, Stormraven33 | optional open-arena scout |
+| `ranger_pax_sentinel` / Pax | Thundertunnel33, Glimmermoth34 | optional pursuit |
+| `courier_pim_pool_loop` / Pim | Mosshock34, Sparkit35 | optional waterline reposition |
+| `traveller_ivo_moss_detour` | Mosshock35, Glimmermoth36 | optional dark-pool switch |
+| `rodline_scout_kael` / Kael | Tanglevolt36, Sparkit37 | optional ridge pursuit |
+| `rodline_keeper_fenn` / Fenn | Voltwig37, Mosshock38 | optional lane control |
+| `rodline_duelist_ren` / Ren | Tanglevolt38, Stormraven39 | optional wind-up dive read |
+| `rook_circuit_lantern` / Rook | Stormraven40, Staticub41, Stormbrush42 | optional ace counter-switch |
+| `circuit_lena_giant` / Lena | Staticub40, Thundertunnel41 | optional Hall telegraph drill |
+| `circuit_orin_blackwater` / Orin | Mosshock41, Glimmermoth42 | optional ravine pressure |
+| `circuit_mira_lantern` / Mira | Mosshock39, Staticub40 | optional shelter/recovery choice |
+| `circuit_tavi_rodline` / Tavi | Sparkit41, Tanglevolt42 | optional rod hazard lane |
+| `hollows_alpha` | L38 CHARGER | named alpha |
+| `capacitor_alpha` | L40 DIVER | named alpha |
+| `crown_guardian` | L41 WALL | mandatory Crown guard |
+| `old_rodfolk_hall_guardian` | L43 ACE | optional dungeon guardian |
+| `blackwater_elder` | L43 CURRENT | optional current-pressure elder |
+| `glass_field_alpha` | L42 CHARGER | named alpha |
 
 These six source rows provide region, position, level, catchability and a reusable behavior profile but no complete encounter contract. The table below is the selected **proposal candidate** that closes that source gap without requesting a new creature mesh. Each encounter is one 100–0% combat phase, uses its configured placeholder body, the body's existing quick/charged VFX and the shared projected telegraph shapes; it does not acquire a custom phase transition.
 
@@ -408,41 +514,41 @@ The completion flag is a world-once receipt; proposed candy/material rewards are
 
 ## 8. Source catalogue — Tidewake trainers and named encounters (chapter 2)
 
-The Team column is current source. The Target column is the RD-10 starting target (§0). In the proposal table below, the body levels are current. The targets are Sentinel 22, Basalt Claw 24, Root Watcher 24, Songweaver 29 and Tidecoil 32. The Tidewake trainer ladder was authored for a team arriving from Stormwood. At L20–33, the Y/utility escalation and the teaching floor follow the chapter-2 values in §2.1.
+The Team column is current source. The RD-10 starting targets are in §0.1. In the proposal table below, the body levels are current. The targets are Sentinel 22, Basalt Claw 24, Root Watcher 24, Songweaver 29 and Tidecoil 32. The Tidewake trainer ladder was authored for a team arriving from Stormwood. At L20–33, the Y/utility escalation and the teaching floor follow the chapter-2 values in §2.1.
 
-| ID / name | Team | Target (RD-10, F19) | Source profile/role |
-|---|---|---:|---|
-| `water_trainer_pell_trial` / Pell | Torrentoad43, Mosshell43 | 20/20 | CURRENT; optional lesson |
-| `water_trainer_fen` / Fen | Riverdrake44, Sirenseal44 | 21/21 | DIVER |
-| `water_trainer_lysa` / Lysa | Cragclaw45, Mirejaw45 | 22/22 | WALL |
-| `water_trainer_daro` / Daro | Riptusk45, Torrentoad45 | 22/22 | CHARGER |
-| `water_trainer_tovin` / Tovin | Cannonback46, Riverdrake46 | 23/23 | ACE |
-| `water_trainer_keir` / Keir | Mosshell46, Cragclaw46 | 23/23 | WALL |
-| `water_trainer_rune` / Rune | Riverdrake47, Sirenseal47 | 24/24 | DIVER |
-| `water_trainer_solm` / Solm | Mirejaw47, Mangrove Monitor47 | 24/24 | CURRENT |
-| `water_trainer_irva` / Irva | Riptusk48, Cannonback48 | 25/25 | CHARGER |
-| `water_trainer_nel` / Nel | Torrentoad47, Sirenseal47 | 24/24 | CURRENT |
-| `water_trainer_oswin` / Oswin | Riverdrake48, Mirejaw48 | 25/25 | DIVER |
-| `water_trainer_tal` / Tal | Mosshell49, Cannonback49 | 26/26 | WALL |
-| `water_trainer_sera` / Sera | Mangrove Monitor50, Riptusk50 | 28/28 | CURRENT |
-| `water_trainer_odan` / Odan | Sirenseal50, Riverdrake50 | 28/28 | DIVER |
-| `water_trainer_yara` / Yara | Mosshell51, Mangrove Monitor51, Sirenseal51 | 29/29/29 | ACE |
-| `water_trainer_bex` / Bex | Cragclaw51, Cannonback51 | 29/29 | WALL |
-| `water_trainer_calder` / Calder | Riptusk52, Torrentoad52, Riverdrake52 | 30/30/30 | CHARGER |
-| `water_trainer_vera` / Vera | Cannonback52, Sirenseal52 | 30/30 | CURRENT |
-| `water_trainer_tess` / Tess | Mirejaw54, Riverdrake54, Sirenseal54 | 32/32/32 | DIVER |
-| `water_trainer_fennel` / Fennel | Mirejaw53, Mangrove Monitor53 | 31/31 | CURRENT |
-| `water_trainer_venn` / Venn | Cannonback53, Riptusk53, Riverdrake53 | 31/31/31 | ACE; Veilfall gate |
-| `water_trainer_morra` / Morra | Cragclaw54, Mirejaw54, Cannonback54 | 32/32/32 | WALL |
-| `water_trainer_evi` / Evi | Sirenseal54, Riverdrake54, Mosshell54 | 32/32/32 | DIVER |
-| `water_trainer_nerissa` / Nerissa | Cannonback55, Mirejaw55, Riverdrake55, Riptusk55 | 32/32/33/33 | ACE; final captain |
-| `water_lantern_shell_sentinel` | Cannonback45 | 22 | named encounter |
-| `water_gull_basalt_claw` | Cragclaw47 | 24 | named encounter |
-| `water_brine_root_watcher` | Mirejaw47 | 24 | named encounter |
-| `water_drowned_garden_songweaver` | Sirenseal51 | 29 | named encounter |
-| `water_deep_watch_tidecoil` | Tidecoil54 | 32 | optional apex |
-| `water_aquaryn_alpha` | Aquaryn49 | 26 | scripted catch-or-defeat alpha |
-| `water_abyssal_guardian_release` | Guardian55 | 33 | scripted non-combat offer |
+| ID / name | Team | Source profile/role |
+|---|---|---|
+| `water_trainer_pell_trial` / Pell | Torrentoad43, Mosshell43 | CURRENT; optional lesson |
+| `water_trainer_fen` / Fen | Riverdrake44, Sirenseal44 | DIVER |
+| `water_trainer_lysa` / Lysa | Cragclaw45, Mirejaw45 | WALL |
+| `water_trainer_daro` / Daro | Riptusk45, Torrentoad45 | CHARGER |
+| `water_trainer_tovin` / Tovin | Cannonback46, Riverdrake46 | ACE |
+| `water_trainer_keir` / Keir | Mosshell46, Cragclaw46 | WALL |
+| `water_trainer_rune` / Rune | Riverdrake47, Sirenseal47 | DIVER |
+| `water_trainer_solm` / Solm | Mirejaw47, Mangrove Monitor47 | CURRENT |
+| `water_trainer_irva` / Irva | Riptusk48, Cannonback48 | CHARGER |
+| `water_trainer_nel` / Nel | Torrentoad47, Sirenseal47 | CURRENT |
+| `water_trainer_oswin` / Oswin | Riverdrake48, Mirejaw48 | DIVER |
+| `water_trainer_tal` / Tal | Mosshell49, Cannonback49 | WALL |
+| `water_trainer_sera` / Sera | Mangrove Monitor50, Riptusk50 | CURRENT |
+| `water_trainer_odan` / Odan | Sirenseal50, Riverdrake50 | DIVER |
+| `water_trainer_yara` / Yara | Mosshell51, Mangrove Monitor51, Sirenseal51 | ACE |
+| `water_trainer_bex` / Bex | Cragclaw51, Cannonback51 | WALL |
+| `water_trainer_calder` / Calder | Riptusk52, Torrentoad52, Riverdrake52 | CHARGER |
+| `water_trainer_vera` / Vera | Cannonback52, Sirenseal52 | CURRENT |
+| `water_trainer_tess` / Tess | Mirejaw54, Riverdrake54, Sirenseal54 | DIVER |
+| `water_trainer_fennel` / Fennel | Mirejaw53, Mangrove Monitor53 | CURRENT |
+| `water_trainer_venn` / Venn | Cannonback53, Riptusk53, Riverdrake53 | ACE; Veilfall gate |
+| `water_trainer_morra` / Morra | Cragclaw54, Mirejaw54, Cannonback54 | WALL |
+| `water_trainer_evi` / Evi | Sirenseal54, Riverdrake54, Mosshell54 | DIVER |
+| `water_trainer_nerissa` / Nerissa | Cannonback55, Mirejaw55, Riverdrake55, Riptusk55 | ACE; final captain |
+| `water_lantern_shell_sentinel` | Cannonback45 | named encounter |
+| `water_gull_basalt_claw` | Cragclaw47 | named encounter |
+| `water_brine_root_watcher` | Mirejaw47 | named encounter |
+| `water_drowned_garden_songweaver` | Sirenseal51 | named encounter |
+| `water_deep_watch_tidecoil` | Tidecoil54 | optional apex |
+| `water_aquaryn_alpha` | Aquaryn49 | scripted catch-or-defeat alpha |
+| `water_abyssal_guardian_release` | Guardian55 | scripted non-combat offer |
 
 The five `water_*` named rows immediately before Aquaryn are the data-named encounter census; Aquaryn and the Guardian live in separate scripted systems. Metrics must state whether they include those systems rather than calling the same body two encounters.
 
@@ -469,6 +575,38 @@ For these catchable wilds, the host journals one catch recipient and never copie
 - Record maximum single hit, unavoidable damage, time-to-first-safe-read, faint/revive consumption, switches, burst/skill use and whether the player can state the intended answer.
 - A reader should reliably outperform a masher. The campaign acceptance target remains reader ≤55% of masher HP loss and ≥75% success across representative top fights, with sample size disclosed.
 - **Top-fight bar (owner decision, 2026-09-28; F04#7 option c).** Per top fight and starter, at 24 seeds: the reader wins ≥75%; the masher loses its lead in every run; and the reader's median party HP cost is ≤55% of the masher's. This replaces the per-fight 25% masher team wipe, which the five-creature cap, band level pins, 0.5 hit ceiling and no-HP rule cannot reach at chapter entry. The owner asked that an unprepared masher lose about a quarter of the time. The Balance lane reads that at chapter level, and this reading is not the owner's own wording: a masher playing a chapter's named trainer fights loses at least one of them in ≥25% of playthroughs. It is reported both as 1 − Π(masher win rate) with the fights treated as independent and as the observed rate over seed-indexed six-fight playthroughs. Per-fight masher-loss rates are always disclosed beside it. The same form applies to Tidewake's top fights (F14#0); the Tidewake lane measures and closes that row.
+- **Target (RD-03):** combat XP from named fights is scaled by the global `auto_xp_scale`, owned by TRAINING/PROGRESSION. That is a declared global tunable, not a hidden per-fight multiplier. Named fights also pay type essence per TRAINING §1.
+
+### 9.1 Boss drop hand-offs (RD-20, RD-21, RD-22; F19#2, F20)
+
+**Target, not built.** Current source grants a world-owned key and a relic entitlement per chapter, in the old order.
+
+| Chapter climax | Relic | Portal key item | Next |
+|---|---|---|---|
+| Warden Aldis (Meadows) | Heart of the Meadows | `tidewake_portal_key` | Tidewake arch |
+| Captain Nerissa (Tidewake) | Tideglass Compass | `cloudreach_portal_key` | Cloudreach arch |
+| Captain Veyra (Cloudreach) | Wings of Cloudreach | `stormwood_portal_key` | Stormwood arch |
+| Captain Marrow (Stormwood finale) | Spark of the Stormwood | `fifth_portal_key` | The fifth arch *stirs* but does not open (WORLD §2.8) |
+
+- **Per participant.** Every admitted participant in the climax receives their own relic and their own key, journaled against their stable character before delivery (`boss_drop:<chapter>:<character_id>`). A reconnect resumes the same receipt. Nobody receives a second copy. A non-participant receives neither, so no one gains a permanent key without the fight (F48#3). A full satchel leaves the drop pending at the host, and it is never lost. Key items are undroppable and unsellable, and they are excluded from death satchels (WORLD §2.7).
+- The Tidewake and Stormwood relic/key hand-off waits for the legendary ceremony to settle, as the relic does today (§4.11–4.12). It still follows the existing rule: world restoration never waits on an absent participant.
+- The relic is used in the Shrine Room and the key at its arch (WORLD §§2.6–2.7). Neither is consumed by the fight itself. The legendary offers (Veridian, Abyssal Guardian, Solmane, Stormheart) are unchanged and remain per participant (F19#4).
+
+### 9.2 Rematch tiers and post-credits leaders (RD-31, F44)
+
+**Target, not built.** All 31 Meadows trainer entries currently set `rechallenge` false, and no rematch data exists. This overrides the old "no enemy scaling tier after the ending" rule and the Cloudreach "rematch deferred" line in WORLD §11 (owner, 2026-09-29, RD-31). Rematch tiers are fixed authored tiers. They are not player-scaled levels, which stay out of scope (§10).
+
+| Tier | Opens when | Who | Level (starting values in the rematch data that F44 adds) |
+|---|---|---|---|
+| R1 (next-biome tier) | That chapter's climax is beaten (host world or own character) | The chapter's named trainers, captains/officers and its Master(s) | Next chapter's boss band: Meadows at 32–33, Tidewake at 43–44, Cloudreach at 54–55 |
+| Endgame (post-credits) | Own character has seen the credits | Every rematchable trainer, the four bosses and all five Masters | **L55–60:** ordinary trainers 55, captains/officers/Masters 58, bosses 60 |
+
+Stormwood has no R1: its climax leads to the credits, so its trainers open straight at the endgame tier.
+
+- **Same identity, harder play.** A rematch keeps the team, send-out order and pattern (§2.2). It adds the full loadout (quick, charged, utility and ultimate, F23) and raises levels to the tier. It adds no new phases and no HP beyond level. Master rematches stay 1v1.
+- **Where.** Trainers rematch at their original site. Bosses whose arena changed in the aftermath (Warden chamber, Heart Chamber, summit engine, Dynamo core) rematch through Halda's board at the village arena lawn (starting proposal, F44 to confirm). A rematch never reverts a world aftermath, re-arms a hazard or reopens a story flag.
+- **Rewards (F44#3).** Each character's first win at each tier pays a unique reward once: starting value 1 Tether Candy for bosses and Masters, and chapter-tier materials for others. After that, a repeatable payout (type essence plus that chapter's materials) is available once per trainer per character every **two 600-second world days** (starting value, matching WORLD §2.5). A win inside the cooldown pays nothing. Bounties may ask for a rematch win (WORLD §2.11).
+- **Authority and scope.** The host validates the fight. Tier availability is world scope, with the portal-style rule: open if the host world or this character has passed the gate. Unique receipts and cooldown timestamps are character scope, keyed `rematch:<trainer>:<tier>:<character_id>` and saved with the character. A reconnect cannot pay twice.
 
 ## 10. Built status and out of scope
 
@@ -480,9 +618,28 @@ For these catchable wilds, the host journals one catch recipient and never copie
 | Stormwood Dynamo/ending | Landed and focused-tested under current timing; the 36 s conduit revision requires implementation and acceptance; later chapter not continuously earned |
 | Tidewake trainer data/Aquaryn/Veilfall/Guardian | Landed and focused-tested in slices; normal-party finale and campaign ending not accepted |
 | Tidewake five named spawn plans/metadata | Spawn integration landed; the numeric contracts and reserved reward delivery in §§4.9/8 are target, not built |
-| Level-4 Y geometry skill across roster | Required, not fully built |
+| Level-4 Y geometry skill across roster | Required, not fully built; superseded in the target by the utility slot (RD-11, F23) |
 | Tidecoil bespoke behavior | Target design, not built evidence |
 | Nerissa environmental phase integration | Target design, current hosted roster/Veilfall gates landed |
+| New-order levels (§0) | Not built (target, F19); data still carries the old levels |
+| Distinct named-fight patterns (§2.2) | Not built (target, F22) |
+| Five Masters (§4.13) | Not built (target, F28) |
+| Relic + portal-key drops per participant (§9.1) | Not built (target, F18/F19); current keys are world-owned and in the old order |
+| Rematch tiers and endgame leaders (§9.2) | Not built (target, F44) |
+
+### 10.1 Open Phase 1 fight items folded into F22 (RD-34; CODEX_START_HERE §7.5)
+
+These rows stay open on the board until F22#4 lands. They then close with F22's evidence, or they are marked "superseded by owner redesign 2026-09-29" with F22#4 cited. The old evidence stays valid as history. Under the new timings and levels, each named fight is re-judged, not re-used.
+
+| Old row | Board gap today | How F22 closes it |
+|---|---|---|
+| F04#1 Relay officers | Partial: no visible lunge travel; path telegraph | Vance/Dell patterns with a visible lane telegraph (F21 impact, F25 effects), then a C3 capture and a code-blind verdict |
+| F04#2 Three captains | Partial: no normal-camera witness | Captures and a blind verdict per captain, on their distinct §2.2 kernels at L18 |
+| F04#6 Distinct aftermath | Partial: flags only | A visible, judged aftermath per fight. It must still hold where §9.2 rematches exist (a rematch never undoes it) |
+| F04#7 Framing and C2/C3 | Partial: varied-size framing and the C3 blind verdict. C2 met under option (c) at old levels | Re-run C2 at the new levels (Warden 21–22). The F21 fight camera covers varied-size framing, followed by the C3 blind footage verdict |
+| F14#1 Veilfall and Guardian | Partial: C3 framing, contact-range head occlusion | Re-judged at Nerissa's new Tidewake level (32–33) with the F21 camera, under the same C3 rubric |
+
+F10#6 (the Stormwood device profile) folds into F42#2 rather than F22. It is listed here only so the §7.5 set is complete.
 
 Out of scope: human combat, guns, shields, block/parry, held-button defense, invulnerable dodge, player-scaled enemy levels, arbitrary HP inflation, catching trainer creatures, forced legendary capture, new boss meshes without inspected owner-supplied or authorized agent-drafted references, and turning every named trainer into a three-phase spectacle. Per-participant legendary offers are **no longer** out of scope: the owner decided every participant in the freeing fight may keep their own. What remains out of scope is granting one to a peer who did not fight it, or to the same character twice.
 

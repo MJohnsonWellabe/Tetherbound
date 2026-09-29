@@ -376,8 +376,9 @@ same criteria, numbered from zero (`F27#3`).
 - **Build:**
   1. Apply the level table (§3.3). Re-derive every wild range and named-trainer team per band with PROGRESSION's constraints (wild high ≤ exit, wild low ≤ entry, no backwards band).
   2. Rewire boss hand-offs to portal-key items and relic grants per participant.
-  3. Scan gates for traversal assumptions (Tidewake without Fly; Stormwood without Tidewake-only abilities being assumed beyond what the order grants).
-  4. Regenerate earned saves and band baselines; update smoke scripts that assume the old order (smoke_four_biome_continuous and card scripts).
+  3. Stormwood legendary: replace the Sparkit placeholder (`stormwood_dynamo.json` captive.placeholder_species, nickname 'the Stormheart') with Fulgocobra, the existing species the Stormwood roster board marks Legendary. This is an existing species, not a roster expansion. Keep the nickname if the story needs it.
+  4. Scan gates for traversal assumptions (Tidewake without Fly; Stormwood without Tidewake-only abilities being assumed beyond what the order grants).
+  5. Regenerate earned saves and band baselines; update smoke scripts that assume the old order (smoke_four_biome_continuous and card scripts).
 - **Proof:** Curve test, gate-scan test, legendary offer smokes in new order, regenerated fixtures committed with provenance.
 - **Acceptance (F19#0–#5):**
   - `#0` The order Meadows → Tidewake → Cloudreach → Stormwood drives the config, map, journal, portal signs and credits.
@@ -670,7 +671,7 @@ same criteria, numbered from zero (`F27#3`).
 - **Proof:** Mapping test; judge per unique ultimate.
 - **Acceptance (F35#0–#4):**
   - `#0` 16–20 shared type×role ultimates exist and every non-unique species maps to one (test).
-  - `#1` Unique ultimates exist for Terrapup, Ripplet, Galewisp, Veridian, Abyssal Guardian, Solmane, the Stormwood legendary, Tuskroot, Ashtusk, Cannonback, Stormcapra and the storm bear.
+  - `#1` Unique ultimates exist for Terrapup, Ripplet, Galewisp, Veridian, Abyssal Guardian, Solmane, Fulgocobra (the Stormwood legendary), Tuskroot, Ashtusk, Cannonback, Stormcapra and the storm bear.
   - `#2` Each ultimate visibly grows at breakthroughs.
   - `#3` Presentation lasts 2–3 s with no longer loss of control and stays readable in four-player fights.
   - `#4` A code-blind judge distinguishes every unique ultimate from the others.
@@ -904,7 +905,10 @@ same criteria, numbered from zero (`F27#3`).
 3. Merge `origin/main`. Run the unit suite once on the merged head
    (`godot --headless --path . --import`, then `--script tests/run_tests.gd -- --shard=I/4`, 4 shards).
 4. Update the board row (`status`, `evidence`, `gap`), STATE §0 (one line), then open the PR with
-   the template, `tools/check_pr_traceability.mjs`, and auto-merge. CI decides.
+   the template, `tools/check_pr_traceability.mjs`, and auto-merge. **Label every PR that touches
+   code, data, scenes or tests `full-ci`.** `ci.yml` runs no build or test jobs on an unlabelled PR, so an
+   unlabelled green PR proves nothing about the engine. A docs-only PR (board, STATE) needs no label.
+   With the label on, CI decides.
 5. If CI goes red on your PR, fix it on the same PR. Never skip, disable or quarantine a test.
 
 ### 7.3 Pushing and the hourly board
