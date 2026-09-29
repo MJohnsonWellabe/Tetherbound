@@ -3559,7 +3559,7 @@
     }
   },
   "terrain": {
-    "dune_relief": {"enabled": true, "bearing_deg": 25.0, "wavelength_m": 130.0, "warp_wavelength_m": 240.0, "shore_preserve_m": 36.0, "summit_preserve_m": 45.0, "max_amplitude_m": 8.0, "peak_fraction": 0.065},
+    "dune_relief": {"enabled": true, "bearing_deg": 25.0, "wavelength_m": 130.0, "warp_wavelength_m": 240.0, "shore_preserve_m": 36.0, "summit_preserve_m": 45.0, "max_amplitude_m": 8.0, "peak_fraction": 0.065, "site_clear_m": 8.0, "site_fade_m": 28.0, "site_rows_path": "res://data/config/water_pickups.json"},
     "_comment": "Separate aligned bake bounds pad authored world bounds without moving islands. Sparse island+shore regions avoid a giant empty seabed bake.",
     "collision_comment": "FULL_GAME on sparse island regions; measure memory/startup and two separated remote bodies. One averaged camera is insufficient.",
     "collision_mode": 3.0,
