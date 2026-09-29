@@ -132,8 +132,6 @@ static func in_hit_cone(
 	return angle <= cone_degrees * 0.5
 
 
-## Convenience for the common case: read reach and arc from a move's config
-## block, so callers do not each re-read the same two keys.
 ## Owner playtest 2026-09-29 ("combat seemed a little slow"): the authored
 ## timings of a player move scaled by combat.json `player_pace`, and the charged
 ## attack's arc widened by its bonus. Pure; `block` is "player_quick" or
@@ -180,6 +178,8 @@ static func reaimed_facing(origin: Vector3, facing: Vector3, target: Vector3, ma
 	return aim.rotated(Vector3.UP, turn_sign * limit)
 
 
+## Convenience for the common case: read reach and arc from a move's config
+## block, so callers do not each re-read the same two keys.
 static func move_connects(move: Dictionary, origin: Vector3, facing: Vector3, target: Vector3) -> bool:
 	return in_hit_cone(
 		origin, facing, target,
