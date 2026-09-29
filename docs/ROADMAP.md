@@ -4,7 +4,7 @@
 
 This plan resumes from the integrated four-chapter foundation; STATE owns the current main/PR and CI receipt. It is not a greenfield plan. Meadows, Cloudreach, Stormwood and Tidewake all have substantial production runtime, content and regression coverage. Presence in source is **built**, ordinary earned play is **integrated**, evidence on an identified commit/package is **proven**, and independent agent judgment against the owner-settled spec is **accepted**. Do not turn a source census, unit pass, staged save or still image into chapter acceptance.
 
-The release in this pass is a four-chapter creature expedition action RPG with a Tidewake regional ending, solo and required invitation-based 1–4 co-op, at most five owned companions, directly piloted creature combat, light care/camping and no human combat or starvation damage. Eight good active hours may ship; measure length and remove padding. The future eight-biome direction is outside this pass.
+The release in this pass is a four-chapter creature expedition action RPG (Meadows → Tidewake → Cloudreach → Stormwood, with the homecoming and credits after Stormwood), solo and required invitation-based 1–4 co-op, at most five owned companions, directly piloted creature combat with trainer Tether Commands that never deal damage, a homestead and camps, and no starvation damage. **Owner redesign (2026-09-29):** a 15–25-hour normal clear with an optional-but-rewarding grind loop in which creature power is the spine (CODEX_START_HERE §1, RD-01..RD-35). Measure length. Padding is still not content. Eight biomes remain the plan; this pass builds four and reserves slots for the rest.
 
 There is no new spending assumption and no fixed ship date or commission budget. Use code, installed assets/tools and the existing Meshy licence. Agent-drafted references and scoped Meshy submissions are authorized; usable access, topology, rigging, animation, material quality, import behavior and rights/provenance still require review. The rolling development download publishes automatically after verified merge. Do not make a commercial platform launch, buy, contact third parties or promise a platform without separate authority.
 
@@ -36,6 +36,8 @@ This table is the plan-rewrite baseline. Current criterion and card results are 
 | Art/audio/release | Directional shadows, authored locations, installed stand-ins, generated cue managers and configurable audio exist. Bars A/B and device targets are defined. | Commercial creature/environment review, Meshy subject selection/validation, final chapter music/ambience/mix, asset rights/credits, export/package/install/update and truthful store claims remain open. |
 
 ## 3. Ordered execution plan
+
+**Redesign (owner, 2026-09-29):** the active execution order is the wave plan in `CODEX_START_HERE.md` §4 (Wave 0 foundations; Wave 1 world, order, combat and look; Wave 2 creature power, homestead and visuals; Wave 3 loop, balance and release). The phases below are the historical F01–F15 route. Their still-open items fold into the redesign rows (CODEX_START_HERE §7.5).
 
 The numbered steps are the planned order, not a live to-do list: many are done (for example steps 2–3, the guardian camera and the Sela crossing), and the board plus STATE's WIP list say what remains. Each numbered slice should be independently reviewable, decomposed into 30–90 minute implementation tasks before focused proof; a chapter-sized outcome below is multiple tasks, not a promised 90-minute chapter. Fix the originating production path. Reuse an existing smoke or helper where it directly covers the change; do not add a broad campaign harness for a local defect. Full-world runs are serialized after source freeze because import/render contention can invalidate them.
 
@@ -76,6 +78,47 @@ Seven shared technical workstreams support those features without counting the s
 | X07 | Ally performance, exports and final package/campaign proof | §7, A1–A11 | 5–10 |
 
 That adds an estimated **35–70 shared tasks**, or **153–250 tasks overall**. This is a sizing range for work order generation, not a promise to create all tasks upfront or a reason to pad work. A repair in X01–X07 must be cited by every affected F card but implemented and tested once.
+
+### Redesign feature register (F16–F49, owner 2026-09-29)
+
+The owner redesign adds **34 feature requests** in four waves. CODEX_START_HERE §4–§6 holds lanes, dependencies and work orders; ACCEPTANCE §6.2 holds the criteria. Each row is a PRD boundary as above. Still-open F01–F15 criteria fold in as CODEX_START_HERE §7.5 records.
+
+| ID | Feature request / player outcome | Wave | Lane |
+|---|---|---|---|
+| F16 | Foundations: save reset, schemas and biome order: One schema and one biome-order config every later lane builds on; old saves are refused cleanly. | Wave 0 | `tb/foundations` |
+| F17 | Village road and the Crossing Hall: The village is one straight road lined with houses, the homestead at its start and the giant Crossing Hall capping the far end. | Wave 1 | `tb/hub` |
+| F18 | Home Key, portal keys and waystones: Grandpa's Home Key returns you to the Hall from anywhere; boss keys open portals; waystones send you back out where you left off. | Wave 1 | `tb/hub` |
+| F19 | Biome reorder and level curve: Meadows → Tidewake → Cloudreach → Stormwood with re-derived levels, keys and relic hand-offs. | Wave 1 | `tb/reorder` |
+| F20 | Ending after Stormwood and the fifth key: Tidewake resolves its own chapter; the Stormwood finale leads home by the Home Key to Grandpa, credits and a stirring fifth arch. | Wave 1 | `tb/reorder` |
+| F21 | Combat impact and camera: Hits land: hitstop, knockback, reactions, damage numbers, crits and a camera that keeps the fight readable. | Wave 1 | `tb/combat` |
+| F22 | Enemy patterns, anti-mash and role identity: Enemies telegraph learnable patterns, mashing loses, switching matters and each role plays differently. | Wave 1 | `tb/combat` |
+| F23 | Move loadout: three slots, ultimate, learnsets and mastery: Each creature fights with quick, charged and utility moves plus a signature ultimate, learns moves and masters them. | Wave 1 | `tb/combat` |
+| F24 | Tether Commands (trainer support, no damage): The trainer supports the fight with a command meter: item throw, Rally, tag-switch combo and Tether Snare. | Wave 1 | `tb/combat` |
+| F25 | Move effects library (real pebbles, fireballs, lightning): Every move shows its real object: pebbles fly, fireballs burn, lightning strikes from the sky. | Wave 1 | `tb/vfx` |
+| F26 | Renderer and look development (Palworld + Valheim bar): A Forward+ look with quality presets delivers Valheim-class light and atmosphere around Palworld-class creatures and world. | Wave 1 | `tb/lookdev` |
+| F27 | Type essence and chosen leveling: Eight type essences and Tether Candy let the player choose who grows; combat XP still trickles. | Wave 2 | `tb/training` |
+| F28 | Breakthroughs, Masters and Ascension Feasts: Every ten levels a creature needs a breakthrough: beat a Master 1v1, earn the feast recipe, gather, cook and feed. | Wave 2 | `tb/training` |
+| F29 | Evolution lines (one per biome): Mudsnout, Mosshell, Craghorn and Staticub can evolve at breakthrough feasts; evolving is optional. | Wave 2 | `tb/training` |
+| F30 | Traits and Trait Seeds: Wild creatures roll traits; releasing one distils a Trait Seed you teach to your five. | Wave 2 | `tb/training` |
+| F31 | Homestead stations and upgrades: Six stations at Grandpa's farm; four of them take one upgrade per biome, unlocked by hanging that biome's relic. | Wave 2 | `tb/homestead` |
+| F32 | Materials, attuned nodes and essence farming: Each biome has its material tier, rare type-essence nodes and crops worth planting. | Wave 2 | `tb/homestead` |
+| F33 | Creature gear and trainer gear: Harness and Charm tiers make each biome's gear matter; trainer gear protects against the trainer's real hazards. | Wave 2 | `tb/homestead` |
+| F34 | Forward camps: A small travel-tier camp you can build in any biome: bed, cookpot and field workbench. | Wave 2 | `tb/homestead` |
+| F35 | Signature ultimates: Starters, legendaries and evolved forms get unique ultimates; everyone else shares a type-and-role ultimate. | Wave 2 | `tb/vfx` |
+| F36 | Creature art: priority models, poses and scale: The creatures players see most look and move like they belong in a Palworld-class game. | Wave 2 | `tb/creature-art` |
+| F37 | Ripplet swim and dive: Ripplet becomes a swim mount in Tidewake and learns to dive at its L30 breakthrough. | Wave 2 | `tb/training` |
+| F38 | Meadows and village: visual catalog burn-down to the full bar: Meadows and village looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect. | Wave 2 | `tb/visual-meadows` |
+| F39 | Tidewake: visual catalog burn-down to the full bar: Tidewake looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect. | Wave 2 | `tb/visual-tidewake` |
+| F40 | Cloudreach: visual catalog burn-down to the full bar: Cloudreach looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect. | Wave 2 | `tb/visual-cloudreach` |
+| F41 | Stormwood: visual catalog burn-down to the full bar: Stormwood looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect. | Wave 2 | `tb/visual-stormwood` |
+| F42 | HUD, menus and new-system screens: Controller-first screens for the Altar, stations, gear, research and bounties; the HUD reads on a 7-inch screen. | Wave 2 | `tb/hud` |
+| F43 | Bounty board: Halda's board always has three bounties worth doing. | Wave 3 | `tb/loop` |
+| F44 | Rematches and alpha respawns: Beaten biomes stay worth visiting: stronger rematches and fresh alphas. | Wave 3 | `tb/loop` |
+| F45 | Research log: Species-by-species research turns meeting creatures you won't keep into progress. | Wave 3 | `tb/loop` |
+| F46 | Onboarding for the new systems: Grandpa and the village teach each new system when it first matters. | Wave 3 | `tb/loop` |
+| F47 | Economy, balance and the 15–25 hour clear: The whole loop pays off: solvent ledgers, fair difficulty and a 15–25 hour normal clear. | Wave 3 | `tb/balance` |
+| F48 | Co-op across the new loop: Friends play the whole new loop together without losing or duplicating progress. | Wave 3 | `tb/coop` |
+| F49 | Integrated four-biome run and release proof: One save plays the new game from Grandpa to credits, on the device that matters. | Wave 3 | `tb/release` |
 
 ### Concurrent feature sessions and integration
 
@@ -153,6 +196,6 @@ Implementation may proceed ahead of a preceding chapter. **Integrated chapter ac
 
 ## 5. Cut lines and stop rules
 
-Cut in PRODUCT order: fishing/survey/camp checklists and decorative extras; activities above six per chapter and duplicate elites; mechanical trait perks/bespoke vocal variants; decorative build expansion/cosmetics/postgame/localization; promotion/date. Candidate skill/bond/Strain work can be dropped when the brief play check does not justify it. Remove padding before cutting chapter identity.
+Redesign rows follow PRODUCT's updated cut order; the creature-power spine (F27–F28), homestead engine (F31–F33), combat rework (F21–F23) and visual bar rows are not cut silently. Cut in PRODUCT order: fishing/survey/camp checklists and decorative extras; activities above six per chapter and duplicate elites; mechanical trait perks/bespoke vocal variants; decorative build expansion/cosmetics/postgame/localization; promotion/date. Candidate skill/bond/Strain work can be dropped when the brief play check does not justify it. Remove padding before cutting chapter identity.
 
 Do not cut four complete chapters and their regional ending, five-owned identity, meaningful piloted creature combat, essential traversal/care, save reliability, accessibility required for controls, invitation-based 1–4 co-op authority, or honest device/package proof. If current tools cannot meet the visual, performance, networking or rights bar, report the exact unmet gate and present the owner a concrete scope/quality tradeoff. Do not invent a date, budget, acceptance result or silent relaxation.

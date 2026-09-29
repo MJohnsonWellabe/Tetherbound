@@ -22,6 +22,12 @@ CHAPTERS = [("Meadows", "M", ["F01", "F02", "F03", "F04", "F05"]),
             ("Cloudreach", "C", ["F06", "F07", "F08"]),
             ("Stormwood", "S", ["F09", "F10", "F11"]),
             ("Tidewake", "T", ["F12", "F13", "F14", "F15"])]
+# Redesign rows (owner, 2026-09-29): every row outside the four original chapters is
+# grouped by its `chapter` field (the wave name) in first-seen order, one section each.
+_ORIG = {i for _n, _l, ids in CHAPTERS for i in ids}
+_crit_rows = json.loads((HERE / "criteria.json").read_text(encoding="utf-8"))["rows"]
+for _wave in dict.fromkeys(r.get("chapter", "Redesign") for r in _crit_rows if r["id"] not in _ORIG):
+    CHAPTERS.append((_wave, "R", [r["id"] for r in _crit_rows if r["id"] not in _ORIG and r.get("chapter", "Redesign") == _wave]))
 
 
 def norm(s):
@@ -41,6 +47,9 @@ rows = {r["id"]: r for r in crit["rows"]}
 all_c = [x for r in crit["rows"] for x in r.get("criteria", [])]
 counts = {k: sum(1 for x in all_c if norm(x.get("status")) == k) for k in ORDER}
 overall = round(sum(pct(r) for r in crit["rows"]) / max(1, len(crit["rows"])))
+redesign_c = [x for r in crit["rows"] if r["id"] not in _ORIG for x in r.get("criteria", [])]
+redesign_met = sum(1 for x in redesign_c if norm(x.get("status")) == "met")
+last_id = crit["rows"][-1]["id"] if crit["rows"] else "F15"
 accepted = sum(1 for r in crit["rows"] if r.get("criteria") and all(norm(x.get("status")) == "met" for x in r["criteria"]))
 
 
@@ -202,7 +211,7 @@ page = f"""<title>Tetherbound Acceptance Board</title>
 <style>
 :root{{
   --bg:#f3f5f1; --panel:#ffffff; --ink:#1c2420; --muted:#5d6a63; --line:#d9e0da;
-  --meadows:#4f8a3c; --cloud:#3f7fb3; --storm:#6b55a8; --tide:#1f8a86;
+  --meadows:#4f8a3c; --cloud:#3f7fb3; --storm:#6b55a8; --tide:#1f8a86; --redesign:#b0602a;
   --met:#2f8a4a; --partial:#b7861a; --prog:#3b74c4; --fail:#c2413b; --block:#9a4fa0; --none:#8a948e;
   --tint-met:#e3f2e6; --tint-partial:#f7eed8; --tint-prog:#e2ecf8; --tint-fail:#f8e2e0; --tint-block:#f1e3f2; --tint-none:#eceeec;
   --accent:#27594a;
@@ -238,7 +247,7 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .chapter{{display:grid;gap:8px}}
 .chapter header{{display:flex;align-items:baseline;gap:12px;border-bottom:3px solid var(--chc);padding-bottom:6px}}
 .chpct{{font:600 14px "JetBrains Mono",monospace;color:var(--chc)}}
-.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}}
+.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}}
 .frow{{background:var(--panel);border:1px solid var(--line);border-radius:10px}}
 .frow summary{{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto 120px 44px;grid-template-areas:"id title num meter pct" "id stack stack stack stack";gap:6px 12px;align-items:center;padding:12px 14px}}
 .frow summary::-webkit-details-marker{{display:none}}
@@ -273,14 +282,15 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 </style>
 <main class="wrap">
   <div class="top">
-    <span class="eyebrow">Project update · F01–F15 acceptance</span>
+    <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(status.get("updated", crit.get("generated_at", "")))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
   <div class="kpis">
-    <div class="kpi"><b>{accepted} / 15</b><span>F rows accepted (every criterion met)</span></div>
+    <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
     <div class="kpi"><b>{overall}%</b><span>Criteria evidenced, weighted (met 1, partial ½, in progress ¼)</span></div>
     <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Atomic criteria fully met</span></div>
+    <div class="kpi"><b>{redesign_met} / {len(redesign_c)}</b><span>Redesign criteria met (F16 onward)</span></div>
     <div class="kpi"><b>{counts["failing"] + counts["blocked"]}</b><span>Criteria failing or blocked</span></div>
   </div>
   <div class="legend">{legend}</div>

@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-29T21:20Z",
+ "updated": "2026-09-29 owner redesign",
  "headline": [
-  "MAIN IS GREEN. The full CI run on 8f5dd6ed2 (everything merged, run 36626653020) finished success: every job passed except the expected known-red probe verify-gate-b-full-known-red; both unit shards, the Reedhaven relay smoke, the regions shard and all multiplayer shards pass. The rolling download is rebuilt at that same commit.",
-  "Criteria met: 95 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Open criteria: F04#1, #2, #6, #7 (Meadows); F10#6 (Stormwood HUD); F14#1 (Nerissa C3, two failed rounds). Open cards: M2, M3, S2, T2. Every judge capture and C2 number the serial closer took predates the combat timing change (#448/#450) and must be re-taken on merged main before any criterion counts.",
-  "Landed (all PRs merged): #442 consolidated landing, #443 mouse capture after panels and Tam story marker, #444 Tess camera (F14#0), #447 Nerissa failed rounds, #448/#450/#454/#457 combat feel (power attacks re-aim before the hit; player windup and recovery x0.85, charged cooldown stays 1.2 s; faster enemy waits), #449 sprint lean and slower cadence, #451 village sketch, #452 Codex Tidewake 2d, #453 serial closer wrap-up, #455 village option B (straight main street x=10.5 plus a small green), #456 fix for the Codex #452 fallout (dune ripple flat near authored sites, Reedhaven wall profile zone, route height, texture import).",
-  "The serial closer session is archived. Codex has its own lane. No PRs are open."
+  "OWNER REDESIGN (2026-09-29): 35 owner decisions (RD-01..RD-35) and 34 new feature rows F16–F49 with 179 criteria. Every lane now works from CODEX_START_HERE.md (Waves 0–3). The Phase 1 and Phase 2 briefs are superseded; still-open F01–F15 criteria fold into the new rows (§7.5).",
+  "Criteria met: 95 of 280. That is 95/101 original (F01–F15) plus 0/179 redesign (F16–F49). Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3); M2, M3, S2 and T2 re-run under F49 in the new order.",
+  "Next: Wave 0 tb/foundations (F16: save reset, schemas, biome order). tb/combat, tb/vfx and tb/lookdev may prototype in parallel. Lanes push at least hourly; the board-duty holder rebuilds this board hourly (CODEX_START_HERE §7.3).",
+  "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
   {
@@ -364,22 +364,98 @@
  ],
  "lanes": [
   {
-   "lane": "Serial closer (tb/closer)",
-   "now": "ARCHIVED 2026-09-29 at the owner's request; wrap-up evidence merged in #453.",
-   "next": "Re-take judge captures and C2 numbers on merged main before any criterion counts (queue in docs/STATE.md)."
+   "lane": "tb/foundations",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F16"
   },
   {
-   "lane": "Codex (Phase 2, own lane)",
-   "now": "Merged #452 (Tidewake P2-008). Its dune ripple and shore grading broke water tests and the Reedhaven gate; fixed in #456.",
-   "next": "Confirm the ~7 m Reedhaven terrace step is visually acceptable; check main CI after every merge (bot merges can land before unit shards finish)."
+   "lane": "tb/hub",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F17, F18"
   },
   {
-   "lane": "Look development, HUD legibility, Stormwood audio",
-   "now": "Approved by the owner, deferred until the criteria are done. The Meadows river by the village (P2-006) waits for the look pass.",
-   "next": "Not started."
+   "lane": "tb/reorder",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F19, F20"
+  },
+  {
+   "lane": "tb/combat",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
+  },
+  {
+   "lane": "tb/vfx",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F25, F35"
+  },
+  {
+   "lane": "tb/lookdev",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F26"
+  },
+  {
+   "lane": "tb/training",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F27, F28, F29, F30, F37"
+  },
+  {
+   "lane": "tb/homestead",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F31, F32, F33, F34"
+  },
+  {
+   "lane": "tb/creature-art",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F36"
+  },
+  {
+   "lane": "tb/visual-meadows",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F38"
+  },
+  {
+   "lane": "tb/visual-tidewake",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F39"
+  },
+  {
+   "lane": "tb/visual-cloudreach",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F40"
+  },
+  {
+   "lane": "tb/visual-stormwood",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F41"
+  },
+  {
+   "lane": "tb/hud",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F42"
+  },
+  {
+   "lane": "tb/loop",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F43, F44, F45, F46"
+  },
+  {
+   "lane": "tb/balance",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F47"
+  },
+  {
+   "lane": "tb/coop",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F48"
+  },
+  {
+   "lane": "tb/release",
+   "now": "not started (redesign plan landed 2026-09-29)",
+   "next": "Work order in CODEX_START_HERE §6: F49"
   }
  ],
  "decisions": [
+  "Owner redesign 2026-09-29: RD-01..RD-35 in CODEX_START_HERE §1 (grind loop, creature-power spine, hybrid leveling and breakthroughs via Masters and feasts, per-type essence, homestead with six stations, Crossing Hall with Home Key, portals and waystones, the new order Meadows→Tidewake→Cloudreach→Stormwood, three move slots plus ultimate, Tether Commands, effect archetypes, the Palworld+Valheim bar, Forward+ pending the Ally test, the Meshy overnight batch, evolution per biome with a new storm bear, traits, repeatables, the fifth-key ending, saves reset).",
   "Coordinator 2026-09-28 (delegated): new Combat Spacing lane owns contact-range body separation; new Cards lane owns M1/M2 integrated runs and T2/S2 non-fight clauses; biome lanes keep only their F rows (Meadows also M3).",
   "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
   "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
@@ -399,15 +475,17 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "Confirm on a real PC: (1) the mouse steers the camera after the build menu and after trading with Oskar; (2) power attacks land when aimed and combat feels faster; (3) running looks better (8 degree lean on the baked 19, sprint cadence x0.85, about 15% foot slide at full sprint).",
-  "Village option B (#455, merged): Oskar's and Tam's trainer fight spots moved (their NPC positions did not) because the moved cottage and the new lane covered the old spots. OK? The green is plain lawn plus the well's apron; do you want a distinct green look?",
-  "The Meadows river by the village looks bad (P2-006): waits for the full look-development pass unless you want a river-only pass sooner.",
-  "Follow-ups noted: the water bake manifest does not fingerprint water_pickups.json; Codex to confirm the Reedhaven terrace step.",
-  "Branches to delete once you say yes (all merged): tb/net-livewire-pace, tb/village-main-street, tb/village-sketch, tb/water-pockets-fix, tb/closer, and tb/board-final after its PR.",
-  "Stormwood audio (needs an owner listen) and the look-development and HUD lanes stay deferred. Seven-day usage limit is at warning."
+  "ROG Ally test of the Forward+ build (F26#5) when tb/lookdev posts the checklist in STATE.",
+  "Meshy overnight cap: 30 generations per night unless you set another number (RD-26).",
+  "Name the new Stormwood storm bear (working name Stormursa).",
+  "Steam AppID, partner access and four accounts for internet co-op.",
+  "Whether to author the nine missing Stormwood audio files from installed sources.",
+  "Owner play pass at the end of Wave 3 (F47/F49).",
+  "Confirm on a real PC: (1) the mouse steers the camera after the build menu and after trading with Oskar; (2) power attacks land when aimed and combat feels faster; (3) running looks better (8 degree lean on the baked 19, sprint cadence x0.85, about 15% foot slide at full sprint)."
  ],
  "four_chapter_run": null,
  "wip": [
+  "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE §6. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE §7.5 and STATE §0.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",
   "Stormwood Phase 2c wind-down (tb/x04-stormwood), owner requested no new experiments. P2-042 remains fixed/enabled by1ed0259e5. P2-082 portraits and P2-084 eleven NPC openings passed96 native1920 captures, independent evidence audit and fresh blind review; enabled on branch bya53f158c9/8f5c25445. They remain catalog-open until full regression and landing finish. Full unit suite on8f5c25445 is still running at checkpoint: session46696, console12232/native9904, log .tmp/stormwood-phase2/people-accepted-full-suite.log. Reattach/check terminal result; do not restart merely for elapsed time. Scoped people Bars A/B YES/YES do not close chapter bars. Duplicate named cast identities, Fenn post-view obstruction and rough close-range materials remain separate findings. P2-037 remains open and all geometry/material candidates stay off; latest22 native frames/14 pairs prefer construction readability but complete crown/core/arena fails, scoped ancient-tree A YES/B NO. Production chapter matrix30 native frames plus derived720 review remains Bars A/B NO/NO; ordinary combat/HUD, adequate settlement coverage and wholechapter acceptance remain open. P2-041 confirmed by78-frame baseline; P2-043 glass candidate stays off after partial five-pair review. P2-045 candy, P2-081 trainer dialogue and P2-110 roster refresh remain off. P2-081 audit matches19 trainer plates; four missing profile recipes cover seven trainers. Reviewed scratch helpere0c5866ac was cancelled before native launch; no plates generated. P2-092 deferred to gameplay for collision/contact/lunge separation. P2-093 fade/HUD source hypothesis needs live measurement. P2-111 concerns persistent quick bindings. All remaining owned impact>=12 work stays open/needs_capture/deferred as catalogued. No regional or Phase1 criterion closure. See phase2/catalog.csv and stormwood/fixes/.",
   "Stormwood Glass Field scorched scars: flag stormwood_glass_field.json scorched_scars=false. P2-043 five native route pairs independently reviewed: partial improvement, full item and Bars A/B fail. Revise smooth patch margins, straight white fissures, dark chunks and lost glass-field identity before another native review; see phase2/stormwood/fixes/P2-043/pair-verdict.md.",
