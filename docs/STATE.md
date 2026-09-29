@@ -164,6 +164,10 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 3. **Consolidated landing (owner, 2026-09-28 23:55): PR #442 (`tb/consolidated`) carries everything open** (Combat Spacing, Meadows #437, the bridge fix, Stormwood #439, Codex #414/#428/#430, plus the relay and Nysa CI fixes). #414, #428, #430, #437 and #439 are closed as superseded, branches untouched. No criterion is marked met by it. The serial lane validates on #442 and resumes its queue (F14#0/#1 residual camera fixes, F04#2/#7, F10#6 r7 judge) after it merges. Look development, HUD-legibility and Stormwood-audio lanes are approved but archived, not started.
    - **Balance lane:** F10#2 and F04#7 C2 halves met (ruling 12; `ralph/reports/BALANCE/`). C3 halves stay open.
 
+4. **Settled by the owner, 2026-09-28 (superseded in part by item 3: the look-development, HUD-legibility and audio lanes were approved, then archived before doing any work; Cards is paused):** (a) a **shared look-development pass** comes before further per-biome Phase 2 work (lane `tb/lookdev`; see CODEX_START_HERE §0); (b) **one shared handheld HUD-legibility lane** (`tb/hud-legibility`) takes F10#6's device profile and T2's small-HUD-text clause from the Stormwood and Tidewake lanes; (c) the **Cards lane is paused** until the Meadows bridge-guardian fix merges, then re-runs M2 once. Still open: whether to author the nine missing `assets/audio/stormwood/*.wav` from installed sources under AUDIO §10 (blocks S2). Agents cannot listen, so acceptance would rest on spectral/loop checks plus an owner listen.
+
+**Settled by the owner (2026-09-27, 23:55):** the Capacitor Alpha no-stagger ruling and the storm strike sparing a trainer in a fight are **kept**. They are no longer interim.
+
 **Owner, 2026-09-27 23:55:** Capacitor Alpha no-stagger and storm strikes sparing trainers in fights are **kept**, no longer interim.
 
 ## 1. Rulings in force

@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-28T18:35Z",
+ "updated": "2026-09-29T00:35Z",
  "headline": [
-  "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Since 15:45: Meadows landed F01#2 and F01#3, both opening walks (#423, #427); Tidewake landed its F14 C2 results under the option-(c) bar (#429); Stormwood landed card S1 and F10#2 (#425).",
-  "Open: Meadows F04#1, F04#2, F04#6, F04#7 (C3); Stormwood F10#6; Tidewake F14#0, F14#1 (C3); cards M2, M3, S2, T2. Cards lane: M1 met (#435). M2 blocked: South Bridge guardian regression (3f04ece8) and the harder captains (b20d23ab) beat the harness-piloted earned five, which cannot heal and retry (Meadows lane).",
-  "Critical path: the new Combat Spacing lane (tb/combat-spacing) adds one shared rule so the ally and foe never overlap at contact range. That overlap is the remaining C3 failure for F14#0, F14#1, F04#2 and F04#7. A new Cards lane (tb/cards) runs M1 now (all feeders met) and M2's continuous earned route, and re-scores T2 and S2's non-fight clauses.",
-  "Main CI is green on each merge. Meadows render jobs are capped at about 3 at a time so CI isn't starved. The owner has delegated lane decisions to the coordinator."
+  "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Unchanged since card M1 landed (#435, 20:26Z).",
+  "Open: F04#1, #2, #6, #7 (Meadows); F10#6 (Stormwood HUD); F14#0, #1 (Tidewake C3); cards M2, M3, S2, T2.",
+  "Everything open is on ONE PR, #442 (tb/consolidated): Combat Spacing, Meadows #437, the bridge-guardian fix, Stormwood #439, Codex #414/#428/#430 and two main CI fixes. #414, #428, #430, #437, #439 are closed as superseded. Landing it marks no criterion met; it makes the next ones reachable.",
+  "Blocker found and fixed on #442: the spacing code made the Gate A opening drive fail (starter fainted before weakening the tutorial Bramblebun), because the test driver struck only within a fixed 4 m. main passes, consolidated fails, consolidated plus a spacing-aware strike gate passes (local). Spacing alone does not pass F14 C3 (Tess A 92.1 / B 81.6; Nerissa A 91.3 / B 87.0; bar both at least 90)."
  ],
  "batches": [
   {
@@ -354,6 +354,12 @@
    "sha": "6b85e6b0",
    "state": "Merged",
    "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
+  },
+  {
+   "name": "Landings 18:35–21:55",
+   "sha": "33afd91f",
+   "state": "Merged",
+   "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
   }
  ],
  "lanes": [
@@ -364,8 +370,8 @@
   },
   {
    "lane": "Meadows (tb/meadows)",
-   "now": "Landed F03#0, F04#3, F01#2, F01#3. Queue: F04#1 (Dell/Vance tells), F04#6 aftermath, F04#2 and F04#7 C3 after combat spacing lands, then card M3. M1/M2 moved to the Cards lane.",
-   "next": "Self-lands each criterion"
+   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
+   "next": "Criteria resume in the serial lane after #442 merges"
   },
   {
    "lane": "Cloudreach (tb/cloudreach)",
@@ -374,28 +380,28 @@
   },
   {
    "lane": "Stormwood (tb/stormwood)",
-   "now": "Landed card S1 and F10#2 (#425). Landing the F10#6 HUD work (compact portrait fight column, UX section 8 text floors, trainer kept out of the left column); F10#6 capped at the r7 judge round. S2's non-F10 parts moved to the Cards lane.",
-   "next": "Self-lands each criterion"
+   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
+   "next": "Criteria resume in the serial lane after #442 merges"
   },
   {
    "lane": "Tidewake (tb/tidewake)",
-   "now": "Landed #407 (Nerissa stand, Tidecoil bay, camera liners) and #429 (F14 C2 met under option c: Venn lane lock, Nerissa at the 9 m ring). Open: F14#0/#1 C3, re-judged once combat spacing lands. T2's non-fight clauses moved to the Cards lane.",
-   "next": "Self-lands each criterion"
+   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
+   "next": "Criteria resume in the serial lane after #442 merges"
   },
   {
    "lane": "Combat Spacing (tb/combat-spacing)",
-   "now": "Shared contact-spacing rule committed; after-runs pass, C2 baselines running; then Tess/Nerissa C3 re-capture under the two-judge rubric",
-   "next": "Lands its own PR; the biome lanes then re-judge C3"
+   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
+   "next": "Criteria resume in the serial lane after #442 merges"
   },
   {
    "lane": "Cards (tb/cards)",
-   "now": "Done. M1 met (#435). M2 blocked (ROUTE_FINDINGS.md): bridge regression 3f04ece8, then Keeper Hald 0/3 after b20d23ab; relay harness fixed. T2 and S2 notes current.",
-   "next": "Stopped. M2 re-run after the Meadows lane fixes the bridge and picks retry or reader pilot"
+   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
+   "next": "Criteria resume in the serial lane after #442 merges"
   },
   {
    "lane": "Codex (Phase 2)",
-   "now": "2c lanes running for all four biomes. Stormwood: four weather phases read apart (#412), landmark evidence (#418). Cloudreach #414 and Meadows #416 open.",
-   "next": "The other 2c lanes start as each Claude biome lane completes (Cloudreach can start now)"
+   "now": "#414, #428, #430 merged into #442 and closed. Paused: no new catalog items until a look-development pass reports (CODEX_START_HERE §0).",
+   "next": "Restart from main after #442 lands"
   },
   {
    "lane": "Balance (tb/balance)",
@@ -411,6 +417,16 @@
    "lane": "Cloudreach Phase 2c (tb/x04-cloudreach)",
    "now": "20/20 owned impact >=12 rows explicitly deferred with reason/owner/follow-up; 0 fixed. Eleven compact rounds verified. P2-021/P2-022 paired FAIL; both candidates off. Regional Bars A/B NO/NO; 37-row native before/after matrix retained.",
    "next": "Deferred owners follow the per-item catalog evidence. F08#3/#4 visual debt remains open; disposition completion is not visual acceptance."
+  },
+  {
+   "lane": "Serial closer (tb/closer)",
+   "now": "Active. Opened PR #441 for spacing before the consolidation; #441 is on hold and closes once its fix is in #442. Found the tutorial-fight regression and the strike-gate fix.",
+   "next": "After #442 merges: F14#0/#1 residual camera fixes, F04#2/#7, F10#6 r7 judge, then M2, T2, S2, M3"
+  },
+  {
+   "lane": "Look development, HUD legibility, Stormwood audio",
+   "now": "Approved by the owner, then archived before starting (one serial lane instead).",
+   "next": "Deferred until the criteria lanes finish"
   }
  ],
  "decisions": [
@@ -433,7 +449,10 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "Branch cleanup: every merged lane branch is contained in main; see the coordinator's list.",
+  "Stormwood audio (blocks S2): approved to author the nine files from installed sources; lane archived before starting. AUDIO §10 allows it; agents cannot listen, so acceptance needs an owner listen.",
+  "Look-development pass (blocks M3 and Phase 2 Bars A/B): approved, deferred until the criteria are done.",
+  "Branch cleanup after #442 merges: every lane and Codex branch is inside tb/consolidated (checked by ancestry) and can be deleted; keep tb/closer until its lane finishes.",
+  "Usage: the seven-day limit is at warning; one serial lane is running to conserve it.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
  ],
  "four_chapter_run": null,
