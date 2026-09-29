@@ -53,26 +53,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 7. **Story framing of the final relay:** Tidewake was written as the supply network's final relay. With Stormwood last, the recommended reading is: Stormwood's Stormheart is the final relay; Tidewake's regional link is one of four; the dock exchange stays Tidewake's chapter close. WORLD keeps the current wording conservative until the owner confirms.
 8. **PRODUCT proposals to confirm:** the cut order within owner-decided systems, the "Build the best five" sub-line, a demo that includes the village, the Hall and the first homestead loop, and keeping US$19.99 at 15–25 h.
 
-9. **Design defaults taken in the doc pass (conservative; the owner may override):**
-   - Each co-op character wins its own Master 1v1 for its recipe.
-   - Creatures caught above a cap count lower tiers as cleared, but evolution offers are not retroactive.
-   - The existing Good, Great and Rare Candy stay and respect caps.
-   - Taught trait slots are extra to rolled traits.
-   - The Tether Command pouch uses the existing backpack slot.
-   - `hide_*` armour keeps its ids with non-butchery display names.
-   - Tool repair stays the free Satchel press.
-   - Starting numbers are in TRAINING/HOMESTEAD, marked as starting values.
-
-   More defaults from the art, multiplayer and technical pass:
-   - The Stormwood legendary is Fulgocobra, replacing the Sparkit placeholder (it is the roster board's legendary).
-   - A portal opening from a character's own unlock is a per-traveler check (RD-21 "your own character").
-   - The shrine display becomes world-visible on the first hang in that world.
-   - Other players may watch a Master duel but not join it.
-   - The magenta telegraph changes form, and COMBAT/UX pick its colour.
-   - Daily caps keyed to the host day are checked for world-hopping in F47#4.
-   - Meshy refine, retexture and retry tasks count toward the 30-per-night cap.
-
-   Settled from RD-20's "next tier": Meadows attachments are available from the start, and each hung relic unlocks the next biome's attachments (HOMESTEAD §4).
+9. **Design defaults taken in the doc pass** (conservative, the owner may override): listed in CODEX_START_HERE §8.1.
 
 10. **Controller map for the new combat (COMBAT §1, UX §2.2): please confirm.**
     - The ultimate and commands are tap-then-tap sequences (tap RB, then a face button), not chords, to respect the no-held rule.

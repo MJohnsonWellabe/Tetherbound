@@ -70,7 +70,7 @@ One Master per tier, each a named character from the installed humanoid cast, of
 | Tier | Placement | Access |
 |---|---|---|
 | L10 | Mid-Meadows (River Lock / Quarry) | on foot |
-| L20 | Upper Meadows before the Crossing Hall | on foot |
+| L20 | Upper Meadows before the Warden's stronghold | on foot |
 | L30 | An outer Tidewake island | swim (human-swimmable) |
 | L40 | A Cloudreach high perch | Fly |
 | L50 | Deep Stormwood | on foot |

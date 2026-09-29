@@ -191,7 +191,7 @@ the credits: bounties, rematches, alpha respawns and research completion.
 
 | Biome | Team in→out | Wild | Boss team | Master (unlocks) | Boss drops |
 |---|---|---|---|---|---|
-| Meadows | 3→22 | 2–20 | Warden ~21–22 | L10 mid-Meadows (River Lock/Quarry); L20 upper meadows before the Hall | Heart of the Meadows relic + Tidewake portal key |
+| Meadows | 3→22 | 2–20 | Warden ~21–22 | L10 mid-Meadows (River Lock/Quarry); L20 upper meadows before the Warden's stronghold | Heart of the Meadows relic + Tidewake portal key |
 | Tidewake | 20→33 | 18–32 | Nerissa ~32–33 | L30 outer island | Tideglass relic + Cloudreach portal key |
 | Cloudreach | 31→44 | 29–43 | Veyra ~43–44 | L40 high perch (Fly) | Wings relic + Stormwood portal key |
 | Stormwood | 42→55 | 40–54 | Finale ~54–55 | L50 deep storm | Spark relic + fifth portal key |
@@ -551,7 +551,7 @@ same criteria, numbered from zero (`F27#3`).
 - **Proof:** Unit tests; ordinary-input Master win + feast + cap lift; two-peer recipe receipts.
 - **Acceptance (F28#0–#5):**
   - `#0` Caps at 10, 20, 30, 40 and 50 (ceiling 60 this pass; data holds up to 100); a capped creature stops gaining levels and shows 'breakthrough needed'.
-  - `#1` Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Hall, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.
+  - `#1` Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Warden's stronghold, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.
   - `#2` Each Master fight is a 1v1 with a creature of the player's choice; a win opens a chest teaching that tier's Ascension Feast once per character; a loss is retryable.
   - `#3` The feast needs that tier's biome materials plus one type-attuned ingredient matching the creature; it is cooked at the Kitchen and fed to one creature to lift its cap.
   - `#4` Each co-op participant earns their own recipe; nobody receives it twice.
@@ -954,3 +954,25 @@ same criteria, numbered from zero (`F27#3`).
 3. **Steam AppID, partner access and accounts** for internet co-op (unchanged open item).
 4. **Meshy credits:** the cap is 30 generations per night unless the owner raises it.
 5. Naming the storm bear (working name *Stormursa*).
+
+### 8.1 Defaults taken in the documentation pass (conservative; the owner may override)
+
+These fill gaps the interview did not settle. Lanes build them as written unless STATE records an owner change.
+
+- Each co-op character wins its own Master 1v1 for its recipe. Other players may watch but not join.
+- Creatures caught above a cap count lower tiers as cleared; evolution offers are not retroactive.
+- The existing Good, Great and Rare Candy stay and respect caps. Taught trait slots are extra to rolled traits.
+- The Tether Command pouch uses the existing backpack slot. `hide_*` armour keeps its ids with non-butchery display names. Tool repair stays the free Satchel press.
+- Attachment order: Meadows attachments are available from the start, and each hung relic unlocks the next biome's attachments (RD-20 "next tier"; HOMESTEAD §4).
+- The Stormwood legendary is **Fulgocobra**, replacing the Sparkit placeholder (the roster board's legendary; not a roster expansion).
+- Portal access through a character's own unlock is a per-traveler check (RD-21 "your own character"). A guest who is ahead may lead a host into a later biome (Valheim-style), and the guest's progress counts only for the guest.
+- The shrine display becomes world-visible on the first hang in that world.
+- **The Home Key works anywhere outside its refusal list, including inside strongholds**. The owner said "from anywhere in the game", so leaving to heal and returning by waystone is intended.
+- The home arch is the "Meadows portal": it sends the player to their last Meadows waystone.
+- Portal keys, like the Home Key, cannot be dropped or lost.
+- The magenta telegraph changes form; COMBAT/UX pick its colour. Daily caps keyed to the host day are checked for world-hopping (F47#4).
+- Meshy refine, retexture and retry tasks count toward the 30-per-night cap.
+- Ordinary consumable use in combat stays free; the Tether Command item throw only buys an instant throw.
+- Proposed placements and numbers in WORLD/BOSSES/TRAINING/HOMESTEAD (Master sites and species, waystone candidates, Ripplet mount and dive values, rematch cycles, 3-day alpha respawn) are starting values, tuned in F47.
+- The Tidewake dock-exchange line that names Cloudreach contacts is rewritten in F20 for the new order.
+
