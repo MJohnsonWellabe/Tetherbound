@@ -1514,12 +1514,13 @@
       "model": "res://assets/characters/captain_b/captain_b_lod0.glb",
       "portrait": "res://assets/ui/portraits/captain_b.png",
       "combat_profile": "ACE",
+      "_why_camera_f14_1_cannonback": "F14#1 C3 (ralph/reports/CLOSER/f14_1_nerissa/r1/, ordinary-side placement, both judges): at the fight opening the 35 degree composition of the fight camera put her huge Cannonback half or mostly off the right edge (tell-start-000.27, tell-ended-000.57). camera_composition_yaw_deg 20 on her Cannonback brings it into frame; presentation only, this one team member.",
       "team": [
         {
           "trainer_owned": true,
           "species": "cannonback",
           "level": 55,
-          "combat": {"tell_camera_swing": true}
+          "combat": {"tell_camera_swing": true, "camera_composition_yaw_deg": 20.0}
         },
         {
           "trainer_owned": true,
