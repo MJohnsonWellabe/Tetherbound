@@ -1,0 +1,16 @@
+{
+  "pose_enabled": false,
+  "_comment": "P2-071 unjudged presentation candidate. Only the installed human art and skeleton are posed; existing local/remote aquatic state is read-only. No wake or P2-072 change. Keep disabled until production stills and motion pass independent review for all four playable bodies.",
+  "body_pitch_deg": 68.0,
+  "chest_above_surface_m": 0.10,
+  "neck_lift_deg": -18.0,
+  "head_lift_deg": -25.0,
+  "stroke_seconds": 1.8,
+  "arm_lateral": 0.45,
+  "arm_depth": -0.25,
+  "forearm_lateral_scale": 0.55,
+  "forearm_minimum_reach": 0.15,
+  "forearm_depth": -0.45,
+  "kick_deg": 9.0,
+  "knee_deg": 14.0
+}

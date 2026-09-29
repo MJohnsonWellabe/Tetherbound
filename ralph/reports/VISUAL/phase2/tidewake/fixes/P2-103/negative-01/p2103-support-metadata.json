@@ -1,0 +1,19 @@
+{
+  "base_commit": "1f3e6397e52e186eb98c22eade58ef4303728bee",
+  "engine_run": false,
+  "production_modified": false,
+  "files": {
+    "tests/capture_tidewake_named_fights.gd": {
+      "old_lf_sha256": "51441063b3b84c5fc70854ca8dab085744b302c632f1387e98a1d1392bde4b78",
+      "proposal_lf_sha256": "8e37bf64d6628ff19e2e3890fad598547f5a00d5c9b98dc38ee83707da6aec6a"
+    },
+    "tools/phase2_capture_tidewake_fights.gd": {
+      "old_lf_sha256": "fc419154f8de3e40a1eb0d7a92db5a1a37918a8ee8f952c1f651c96c1afad280",
+      "proposal_lf_sha256": "d67add54b299171945c51b15f7bd361a2758070e5c4f9143bd39886737350d26"
+    },
+    "tests/test_phase2_fight_capture_lifecycle.gd": {
+      "old_lf_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "proposal_lf_sha256": "246c921ab6a86a0a95382a1763dd21c06486a1488c30f4226ee127fe1b6f11b4"
+    }
+  }
+}

@@ -1,0 +1,3 @@
+*.txt -text whitespace=cr-at-eol,-blank-at-eof
+*.json -text whitespace=cr-at-eol
+*.patch.txt -text -whitespace

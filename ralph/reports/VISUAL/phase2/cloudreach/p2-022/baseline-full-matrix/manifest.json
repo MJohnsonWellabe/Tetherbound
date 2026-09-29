@@ -1,0 +1,467 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "0f2303feb00d16e0d67ab5038f3d41abfd3742eb",
+  "repro": "Set data/config/cloudreach_aviary.json crown_arcade.enabled=false; isolate APPDATA under .artifacts/cloudreach-phase2/profile; Godot_v4.7-stable_win64_console.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --script tools/phase2_capture_cloudreach_frame_matrix.gd --  --seed=2042 --output=res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix; restore crown_arcade.enabled=false afterward.",
+  "source_manifest_sha256": "e2732d8721f8c0a358505d1c881ba8d3a5bc9a676858cdedbbee31ba353eae47",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Existing chapter frame matrix: declared party/progress, teleport to validated authored route stands, production CameraRig yaw/pitch, pinned clock and hidden HUD. No earned-route or combat claim.",
+    "rendering_method": "gl_compatibility",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "seed": 2042,
+    "stand_receipt": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/manifest.txt"
+  },
+  "frames": [
+    {
+      "id": "cloudreach_matrix__01_gate_lower_cliffs_approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/01_gate_lower_cliffs_approach_day.png",
+        "frame_id": "cloudreach_matrix__01_gate_lower_cliffs_approach_day"
+      },
+      "source_sha256": "266b741aa8c0d4e7e7f6b182dacf686f2cea07826087af6b28ea740c9a7e667a",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/01_gate_lower_cliffs_approach_day.png",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__02_gate_lower_cliffs_route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/02_gate_lower_cliffs_route_day.png",
+        "frame_id": "cloudreach_matrix__02_gate_lower_cliffs_route_day"
+      },
+      "source_sha256": "7af0f36ddc7379a5be78657e169e575b7675af0cf3d938ef4c4f16279d75b10a",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/02_gate_lower_cliffs_route_day.png",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__03_gate_lower_cliffs_reverse_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/03_gate_lower_cliffs_reverse_day.png",
+        "frame_id": "cloudreach_matrix__03_gate_lower_cliffs_reverse_day"
+      },
+      "source_sha256": "a9da0e12843933c5cbdb12b8dd4a2efad626819c93ac5206b5a639463f3a6cb2",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/03_gate_lower_cliffs_reverse_day.png",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__04_gate_lower_cliffs_detail-crag_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/04_gate_lower_cliffs_detail-crag_day.png",
+        "frame_id": "cloudreach_matrix__04_gate_lower_cliffs_detail-crag_day"
+      },
+      "source_sha256": "a4e3788ac04bde8d304816c1727a728d1c1d616c95d41673ad8f9764f670ee9c",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/04_gate_lower_cliffs_detail-crag_day.png",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__05_gate_lower_cliffs_settlement-galefoot_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/05_gate_lower_cliffs_settlement-galefoot_day.png",
+        "frame_id": "cloudreach_matrix__05_gate_lower_cliffs_settlement-galefoot_day"
+      },
+      "source_sha256": "e67f97a5ce53391e9aa3500dc14e3d317549bbe8d9ebe2e7675cc8bbe7057bfc",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/05_gate_lower_cliffs_settlement-galefoot_day.png",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__06_broken_causeways_approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/06_broken_causeways_approach_day.png",
+        "frame_id": "cloudreach_matrix__06_broken_causeways_approach_day"
+      },
+      "source_sha256": "7a07047ec68ffccd599658bd891543712d312a8dbde6f5591749a60c808b0fb8",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/06_broken_causeways_approach_day.png",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__07_broken_causeways_route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/07_broken_causeways_route_day.png",
+        "frame_id": "cloudreach_matrix__07_broken_causeways_route_day"
+      },
+      "source_sha256": "fc3ab95f738671965be38194c23da448ad8681cbb025cdaeaccdc62960336333",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/07_broken_causeways_route_day.png",
+      "tile_index": 6,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__08_broken_causeways_reverse_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/08_broken_causeways_reverse_day.png",
+        "frame_id": "cloudreach_matrix__08_broken_causeways_reverse_day"
+      },
+      "source_sha256": "f4b4d2f265b51f4ef44fa10ea080f87a3378d3c5d65ebed43eca30bc56ecd430",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/08_broken_causeways_reverse_day.png",
+      "tile_index": 7,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__09_broken_causeways_detail-ropebridge_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/09_broken_causeways_detail-ropebridge_day.png",
+        "frame_id": "cloudreach_matrix__09_broken_causeways_detail-ropebridge_day"
+      },
+      "source_sha256": "08b6a52838d57263ecd98b4c551ce55fee4261f7f04e3b2f04478e63e6dc4828",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/09_broken_causeways_detail-ropebridge_day.png",
+      "tile_index": 8,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__10_broken_causeways_lure-bells_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/10_broken_causeways_lure-bells_day.png",
+        "frame_id": "cloudreach_matrix__10_broken_causeways_lure-bells_day"
+      },
+      "source_sha256": "802e704f28f7cabaca072bb4342c8e7790aa1a734ce55e949ac33ee71e517ae2",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/10_broken_causeways_lure-bells_day.png",
+      "tile_index": 9,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__11_windscar_ravine_approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/11_windscar_ravine_approach_day.png",
+        "frame_id": "cloudreach_matrix__11_windscar_ravine_approach_day"
+      },
+      "source_sha256": "651a54c9bffe3ccc90efbf5c5d226f02d84a219b9c82e0c8e21557b1801058c2",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/11_windscar_ravine_approach_day.png",
+      "tile_index": 10,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__12_windscar_ravine_route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/12_windscar_ravine_route_day.png",
+        "frame_id": "cloudreach_matrix__12_windscar_ravine_route_day"
+      },
+      "source_sha256": "90c8d6f63b54f03876562fec50aca32beb1bf8cdaa03de01cc67a216409dce04",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/12_windscar_ravine_route_day.png",
+      "tile_index": 11,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__13_windscar_ravine_reverse_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/13_windscar_ravine_reverse_day.png",
+        "frame_id": "cloudreach_matrix__13_windscar_ravine_reverse_day"
+      },
+      "source_sha256": "2f17bdaa630abb849b10a9790fe1a5b4ff3f2ee9626caee57a1bf1d8e7c4ff92",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/13_windscar_ravine_reverse_day.png",
+      "tile_index": 12,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__14_windscar_ravine_detail-beacon_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/14_windscar_ravine_detail-beacon_day.png",
+        "frame_id": "cloudreach_matrix__14_windscar_ravine_detail-beacon_day"
+      },
+      "source_sha256": "47643e8cebccc236e6312d779f91bd2c09601e104ba5afc5e0bfe81f99e3dadf",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/14_windscar_ravine_detail-beacon_day.png",
+      "tile_index": 13,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__15_high_roost_sky_shrine_approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/15_high_roost_sky_shrine_approach_day.png",
+        "frame_id": "cloudreach_matrix__15_high_roost_sky_shrine_approach_day"
+      },
+      "source_sha256": "2c6d8beb0495d1eae16bfd91b812079ebd8e7b6611cdc36f10e1618eadf58eef",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/15_high_roost_sky_shrine_approach_day.png",
+      "tile_index": 14,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__16_high_roost_sky_shrine_route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/16_high_roost_sky_shrine_route_day.png",
+        "frame_id": "cloudreach_matrix__16_high_roost_sky_shrine_route_day"
+      },
+      "source_sha256": "6f0d69144d9967fab88e21645d20858c3f60737f03b1dc62f0d33df55cd70dca",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/16_high_roost_sky_shrine_route_day.png",
+      "tile_index": 15,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__17_high_roost_sky_shrine_reverse_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/17_high_roost_sky_shrine_reverse_day.png",
+        "frame_id": "cloudreach_matrix__17_high_roost_sky_shrine_reverse_day"
+      },
+      "source_sha256": "0fde3400958ebd4b0c45bb4073a52c34d51b75d9c5808a193cc695fe72c139dd",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/17_high_roost_sky_shrine_reverse_day.png",
+      "tile_index": 16,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__18_high_roost_sky_shrine_detail-shrine_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/18_high_roost_sky_shrine_detail-shrine_day.png",
+        "frame_id": "cloudreach_matrix__18_high_roost_sky_shrine_detail-shrine_day"
+      },
+      "source_sha256": "edd344ee54c1a8419197463683d29bcbad6f23277894bc01b0077ce248c61d3b",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/18_high_roost_sky_shrine_detail-shrine_day.png",
+      "tile_index": 17,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__19_high_roost_sky_shrine_perch-landing_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/19_high_roost_sky_shrine_perch-landing_day.png",
+        "frame_id": "cloudreach_matrix__19_high_roost_sky_shrine_perch-landing_day"
+      },
+      "source_sha256": "aa14142d2135ec4d8dac5caea31b6b661ba783e2a042026228c68f54274a302d",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/19_high_roost_sky_shrine_perch-landing_day.png",
+      "tile_index": 18,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__20_high_roost_sky_shrine_perch-vista_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/20_high_roost_sky_shrine_perch-vista_day.png",
+        "frame_id": "cloudreach_matrix__20_high_roost_sky_shrine_perch-vista_day"
+      },
+      "source_sha256": "eca0ddb3e095d8380ef842b8e8981359032156449c80b61e1ef7960f9d1a143a",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/20_high_roost_sky_shrine_perch-vista_day.png",
+      "tile_index": 19,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__21_upper_cloudreach_approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/21_upper_cloudreach_approach_day.png",
+        "frame_id": "cloudreach_matrix__21_upper_cloudreach_approach_day"
+      },
+      "source_sha256": "70ed3de82df8d67d60e8ffd129fef9863d0121c343824028ce508e336d70cce1",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/21_upper_cloudreach_approach_day.png",
+      "tile_index": 20,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__22_upper_cloudreach_route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/22_upper_cloudreach_route_day.png",
+        "frame_id": "cloudreach_matrix__22_upper_cloudreach_route_day"
+      },
+      "source_sha256": "8eed60cb522102ac26cba09aa3b230c231ca1ceb7fcf0d3ec9f3f6d562cc0b34",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/22_upper_cloudreach_route_day.png",
+      "tile_index": 21,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__23_upper_cloudreach_reverse_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/23_upper_cloudreach_reverse_day.png",
+        "frame_id": "cloudreach_matrix__23_upper_cloudreach_reverse_day"
+      },
+      "source_sha256": "7efa5df1cc91b6ae2302fde799528092dee1aad1177f440112834c2757bfe0cc",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/23_upper_cloudreach_reverse_day.png",
+      "tile_index": 22,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__24_upper_cloudreach_detail-observatory_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_01.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/24_upper_cloudreach_detail-observatory_day.png",
+        "frame_id": "cloudreach_matrix__24_upper_cloudreach_detail-observatory_day"
+      },
+      "source_sha256": "7be36d135b4699c7124458c9bfa3459a9a4cf88b4b60ee8190a556bc9a858541",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/24_upper_cloudreach_detail-observatory_day.png",
+      "tile_index": 23,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__25_upper_cloudreach_settlement-cliffhold_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/25_upper_cloudreach_settlement-cliffhold_day.png",
+        "frame_id": "cloudreach_matrix__25_upper_cloudreach_settlement-cliffhold_day"
+      },
+      "source_sha256": "ac3200fda225ca1e9e5953cb2af769e592d12c1a78bd8f536e4302b1f43520c2",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/25_upper_cloudreach_settlement-cliffhold_day.png",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__26_summit_final_stronghold_approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/26_summit_final_stronghold_approach_day.png",
+        "frame_id": "cloudreach_matrix__26_summit_final_stronghold_approach_day"
+      },
+      "source_sha256": "93eaa432a89144a56ba80a09604fc5fb834dbd540e0a959e241b37ddf2088fbc",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/26_summit_final_stronghold_approach_day.png",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__27_summit_final_stronghold_route_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/27_summit_final_stronghold_route_day.png",
+        "frame_id": "cloudreach_matrix__27_summit_final_stronghold_route_day"
+      },
+      "source_sha256": "f31d8949e45f5a56e8808b857092c6e4f7405b7a2d63e5765d144bfcc447b081",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/27_summit_final_stronghold_route_day.png",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__28_summit_final_stronghold_reverse_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/28_summit_final_stronghold_reverse_day.png",
+        "frame_id": "cloudreach_matrix__28_summit_final_stronghold_reverse_day"
+      },
+      "source_sha256": "8724f615dfb0a20f500f832eebce9bfe77d62862592a9b7150dc482fe31c7a64",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/28_summit_final_stronghold_reverse_day.png",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__29_summit_final_stronghold_detail-aviary_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/29_summit_final_stronghold_detail-aviary_day.png",
+        "frame_id": "cloudreach_matrix__29_summit_final_stronghold_detail-aviary_day"
+      },
+      "source_sha256": "e4efaa276a10736c2928df2c073383111825f82c0aaf17fe58c75c24d25a5928",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/29_summit_final_stronghold_detail-aviary_day.png",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__30_gate_lower_cliffs_approach_night",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/30_gate_lower_cliffs_approach_night.png",
+        "frame_id": "cloudreach_matrix__30_gate_lower_cliffs_approach_night"
+      },
+      "source_sha256": "71c51040cff48f1e04b8295011840a0464f9536e365b061085f3444234e81a2d",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/30_gate_lower_cliffs_approach_night.png",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__31_broken_causeways_route_night",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/31_broken_causeways_route_night.png",
+        "frame_id": "cloudreach_matrix__31_broken_causeways_route_night"
+      },
+      "source_sha256": "114ab0f745ddd5d72ad5c373106348c9ab52f9092f0fe717db8440305c395edc",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/31_broken_causeways_route_night.png",
+      "tile_index": 6,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__32_upper_cloudreach_approach_night",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/32_upper_cloudreach_approach_night.png",
+        "frame_id": "cloudreach_matrix__32_upper_cloudreach_approach_night"
+      },
+      "source_sha256": "b5bb818a62b956cb6c1349eb758fa8e7bf17196f558a429a15a8276f2ebbd7ef",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/32_upper_cloudreach_approach_night.png",
+      "tile_index": 7,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__33_summit_final_stronghold_finale400_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/33_summit_final_stronghold_finale400_day.png",
+        "frame_id": "cloudreach_matrix__33_summit_final_stronghold_finale400_day"
+      },
+      "source_sha256": "8a4cba3281c144f67415ea24d91d6e70f719723c59289062c323119785a1394d",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/33_summit_final_stronghold_finale400_day.png",
+      "tile_index": 8,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__34_summit_final_stronghold_finale100_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/34_summit_final_stronghold_finale100_day.png",
+        "frame_id": "cloudreach_matrix__34_summit_final_stronghold_finale100_day"
+      },
+      "source_sha256": "2218c988dfebb00e84a8cd8f69c418c0a1974290eeeb4d0e6a6f6af259b92cb7",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/34_summit_final_stronghold_finale100_day.png",
+      "tile_index": 9,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__35_summit_final_stronghold_postfinale_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/35_summit_final_stronghold_postfinale_day.png",
+        "frame_id": "cloudreach_matrix__35_summit_final_stronghold_postfinale_day"
+      },
+      "source_sha256": "db3eb261e3d20c8816d761155f75028269dac97e01863eddd3a2ea2b9365c0c1",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/35_summit_final_stronghold_postfinale_day.png",
+      "tile_index": 10,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__36_gate_lower_cliffs_postfinale-galefoot_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/36_gate_lower_cliffs_postfinale-galefoot_day.png",
+        "frame_id": "cloudreach_matrix__36_gate_lower_cliffs_postfinale-galefoot_day"
+      },
+      "source_sha256": "55b871c3c366fb130fb7d42a3cfdeba2f4c579eea8f613d795141fa446afe9ae",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/36_gate_lower_cliffs_postfinale-galefoot_day.png",
+      "tile_index": 11,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach_matrix__37_gate_lower_cliffs_settlement-galefoot-approach_day",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/baseline-full-matrix/contact_sheet_02.jpg",
+      "capture": {
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/37_gate_lower_cliffs_settlement-galefoot-approach_day.png",
+        "frame_id": "cloudreach_matrix__37_gate_lower_cliffs_settlement-galefoot-approach_day"
+      },
+      "source_sha256": "87bfb0c7aa9408acff4fa34546af0c402d51fe5591f21fc06e8352905d728311",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/baseline-full-matrix/37_gate_lower_cliffs_settlement-galefoot-approach_day.png",
+      "tile_index": 12,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+*.txt -text whitespace=cr-at-eol
+gdscript-parser.log.txt -text whitespace=cr-at-eol,-blank-at-eof
+prepared-description.md -text

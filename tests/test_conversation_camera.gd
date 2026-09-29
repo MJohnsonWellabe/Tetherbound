@@ -631,3 +631,49 @@ func _wall_behind_open_to_the_side(_pivot: Vector3, dir: Vector3, limit: float) 
 	if planar.dot(Vector3.BACK) > 0.9:
 		return minf(1.0, limit)
 	return limit
+
+
+## F04#6 (aftermath render af2 03e7486c): the Watchtower Spur's signpost stood
+## between the lens and Vess for her whole victory speech. The aftermath shot
+## (`require_speaker_sight`) swings round the pivot to a reachable angle that
+## sees the speaker; the plain push-in is unchanged.
+var _post := Vector3.INF
+
+
+func _room_with_a_post(pivot: Vector3, dir: Vector3, limit: float) -> float:
+	var flat_dir := Vector2(dir.x, dir.z)
+	var flat_len := flat_dir.length()
+	if flat_len < 0.001:
+		return limit
+	var to_post := Vector2(_post.x - pivot.x, _post.z - pivot.z)
+	var along := to_post.dot(flat_dir / flat_len)
+	if along < 0.0:
+		return limit
+	var miss := (to_post - flat_dir / flat_len * along).length()
+	if miss > 0.3:
+		return limit
+	var hit := (along - sqrt(maxf(0.09 - miss * miss, 0.0))) / flat_len
+	return clampf(hit, 0.0, limit)
+
+
+func test_a_victory_shot_swings_off_a_post_between_lens_and_speaker() -> void:
+	var cfg := CONVERSATION.profile_config("aftermath")
+	assert_true(bool(cfg.get("require_speaker_sight", false)), "the aftermath asks to see its speaker")
+	_rig.set_occlusion_probe_for_tests(_clear_room)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var straight: Dictionary = _rig.conversation_shot()
+	_rig.exit_conversation()
+	var lens: Vector3 = straight["pivot"] + Vector3(straight["dir"]) * float(straight["distance"])
+	var head := CONVERSATION.speaker_anchor(_speaker, cfg)
+	_post = lens.lerp(head, 0.5)
+	_rig.set_occlusion_probe_for_tests(_room_with_a_post)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var swung: Dictionary = _rig.conversation_shot()
+	var swung_lens: Vector3 = swung["pivot"] + Vector3(swung["dir"]) * float(swung["distance"])
+	var to_head := head - swung_lens
+	var look := to_head.length() - 0.3
+	assert_true(_room_with_a_post(swung_lens, to_head.normalized(), look) >= look - 0.01,
+		"the swung lens sees the speaker past the post")
+	assert_true(swung_lens.distance_to(lens) > 0.5, "the camera moved off the blocked line")

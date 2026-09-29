@@ -1,31 +1,40 @@
-# Installed portrait mapping candidate
+# Accepted installed portrait mapping
 
-The separate `npc_portraits.enabled=false` gate in
-`stormwood_dialogue_presentation.json` maps seven existing body profiles to
-their already-installed portrait plates. Chapter mounting applies the mapping
-to the exact registered speaker names, including side/state conversations and
-the synthetic Wen guardian refusal. The four Glass for Bryn activity panels
-register later; a second pass updates only those exact registered IDs after
-their mount, preserving other chapters' tables. It covers the nine catalogued speakers
-plus Fenn and Neri, who use the same affected profiles. No world body, name,
-dialogue text, choice, requirement, completion event or progression flag changes.
-Missing candidate plates preserve the original path.
+`npc_portraits.enabled=true` is accepted by the native comparison and fresh
+code-blind verdict in `people-blind-verdict.md`. The enable commit is
+`a53f158c9`. All eleven visible world speakers match their portraits across
+24 dialogue panels, including the generated Wen refusal and four later Glass
+for Bryn registrations. No portrait is missing or incorrectly cropped.
 
-The focused enabled-overlay and existing NPC suites pass 7 tests / 613
-assertions without diagnostics (`.tmp/stormwood-phase2/portrait-candidate-tests-r2.log`).
-They verify actual authored conversations, generated refusal and all four later
-Bryn activity conversations, preservation
-of all non-portrait fields, disabled behavior and a missing-file fallback.
-They do not establish panel appearance or prove ordinary interactions.
+The mapping reuses seven existing body-profile plates and applies them to
+exact registered speaker names. It covers the nine original catalog speakers
+plus Fenn and Neri. Missing candidate files preserve the original path. No
+world body, name, choice, requirement, completion event or progression flag
+changes. Other chapter registrations are unaffected.
 
-Independent source reviewer `stormwood_dialogue_review` verified the seven
-profile recipes and installed plate hashes. Review found the four later Bryn
-registrations and stale dialogue-camera metadata; both were corrected and the
-final bounded recheck found no remaining source/evidence issue.
+The enabled-overlay and existing NPC suites previously passed 7 tests / 613
+assertions without diagnostics. They verify actual authored and synthetic
+conversations, all non-portrait fields, disabled behavior and missing-file
+fallback. Independent source review caught and corrected late Bryn registration
+ordering and stale dialogue-camera metadata before capture.
 
-The existing dialogue recorder now records the actual camera transform,
-speaker and displayed portrait at the dialogue image, instead of inheriting
-the post frame's camera metadata. The production camera and panel behavior
-are unchanged. Native baseline/candidate post and dialogue pairs, side/state
-panel checks and independent identity review remain required. P2-082 remains
-open, and the candidate is off.
+Capture source `cc5e2947ec6f1637a2162ee8f4a5491939122d08` produced 96 actual
+1920×1080 images in two production-world boots. The 24 rows each have a post
+and dialogue image: eleven arrivals, eight progress/aftermath panels and five
+synthetic panels. The independent audit verifies source hashes, dimensions,
+coverage, displayed speaker/profile mappings and 48 eligible comparisons.
+All dialogue cameras reached blend 1.0; their FOVs match. Post FOV is unrecorded.
+See `people-native-comparison.md` and retained round manifests for measurements.
+
+These are debug-staged direct-start panels, with ordinary HUD hidden and
+chapter progression/arrival callbacks isolated. All before/after-close flags
+remain empty. They do not prove earned story states or ordinary interaction.
+Portrait and opening gates toggled together; the trainer gate stayed off.
+The launcher restored its original disabled config before the later acceptance
+commits enabled the two reviewed settings.
+
+Scoped Bars A/B are YES/YES for movement toward the intended register, not
+whole-chapter acceptance. Repeated apparent identities across different names,
+Fenn's fully obstructed post view and rough close-range world materials remain
+separate findings. Fenn's clearly visible dialogue world body supports portrait
+identity; its obstructed post image does not establish ordinary world visibility.

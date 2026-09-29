@@ -1,0 +1,13 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_dune_cover.gd: 1 of 648 test files
+  ok    test_water_dune_cover.gd :: test_colony_and_arc_overrides_bind_only_to_the_candidate_material
+  ok    test_water_dune_cover.gd :: test_disabled_profile_and_veilfall_preserve_original_inputs
+  ok    test_water_dune_cover.gd :: test_enabled_copies_preserve_clearances_and_unrelated_layers
+  ok    test_water_dune_cover.gd :: test_json_basal_indices_shorten_only_the_selected_dune_leaves
+  ok    test_water_dune_cover.gd :: test_ordinary_and_dune_batches_never_share_modified_imported_materials
+  ok    test_water_dune_cover.gd :: test_pioneer_eligibility_tracks_only_the_requested_shore_texture
+  ok    test_water_dune_cover.gd :: test_rooted_tussocks_have_pointed_tips_and_stable_lod_roots
+  ok    test_water_dune_cover.gd :: test_shelter_leaves_windward_ground_open_without_affecting_ordinary_layers
+
+8 tests, 132 assertions, 0 failed

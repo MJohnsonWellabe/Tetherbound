@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "0930716acaf88f4827576b050e782c32fb46269e",
+  "repro": "Godot_v4.7-stable_win64.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --audio-driver Dummy --script tools/phase2_capture_ui.gd -- --biome=stormwood --seed=2042 --map-cycle --output=res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood; isolated APPDATA=.local/appdata; TB_WORLD_SEED=2042; map_realm_selection_visual.enabled=false; all other visual candidate flags at committed defaults",
+  "source_manifest_sha256": "26e45131535cba174d4c3a0f439e3ed8108d59e236834ae65e6369692384c126",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome": "stormwood",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture": "Stocked party and satchel in production scene; no save or progression proof",
+    "rendering_method": "gl_compatibility",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/stormwood.tscn",
+    "seed": 2042
+  },
+  "frames": [
+    {
+      "id": "exploration_hud",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-stormwood/contact_sheet_01.jpg",
+      "capture": {
+        "camera": "production CameraRig/Camera3D",
+        "id": "exploration_hud",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/exploration_hud.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/stormwood.tscn",
+        "subject": "HUD in exploration",
+        "ui": true
+      },
+      "source_sha256": "990facb9960129da7404ea495976c209e3f5e1849416b8fca8fc0e4d0f07cb07",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/exploration_hud.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "menu_map",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-stormwood/contact_sheet_01.jpg",
+      "capture": {
+        "camera": "production CameraRig/Camera3D",
+        "id": "menu_map",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/menu_map.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/stormwood.tscn",
+        "subject": "Menu map",
+        "ui": true
+      },
+      "source_sha256": "9a7ecf62da11d154e4140175f229158e309bd38de3b7b39dc26b78e827e6de84",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/menu_map.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "map_selected_meadows",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-stormwood/contact_sheet_01.jpg",
+      "capture": {
+        "available_realms": [
+          "meadows",
+          "stormwood"
+        ],
+        "camera": "production CameraRig/Camera3D",
+        "id": "map_selected_meadows",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/map_selected_meadows.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/stormwood.tscn",
+        "selected_button_disabled": true,
+        "selected_realm": "meadows",
+        "subject": "Explicit map region selection: meadows",
+        "ui": true
+      },
+      "source_sha256": "1ef373550b6ae1ea17b63b4dece78f983ff7b0a115aeca2c407d8d73ef9e486b",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/map_selected_meadows.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "map_selected_stormwood",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-stormwood/contact_sheet_01.jpg",
+      "capture": {
+        "available_realms": [
+          "meadows",
+          "stormwood"
+        ],
+        "camera": "production CameraRig/Camera3D",
+        "id": "map_selected_stormwood",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/map_selected_stormwood.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/stormwood.tscn",
+        "selected_button_disabled": true,
+        "selected_realm": "stormwood",
+        "subject": "Explicit map region selection: stormwood",
+        "ui": true
+      },
+      "source_sha256": "fcb990e49b7da9dac19e0aa5ee25b57d019fbb5f39bbcc1c1b09a8d4659447f8",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-stormwood/map_selected_stormwood.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

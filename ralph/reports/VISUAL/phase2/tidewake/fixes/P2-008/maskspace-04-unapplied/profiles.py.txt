@@ -1,0 +1,141 @@
+"""Unapplied CPU mechanism profiles; no engine, image writes, or source edits."""
+from pathlib import Path
+import json, math, hashlib, difflib
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+SOURCE = ROOT / "scripts/world/coastal_rock_material.gd"
+ANCHOR = "\t\tbluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);"
+NORMAL_OFFSETS = ((0,1), (1,1), (1,0), (0,0))
+CONFIG = json.loads((ROOT/"data/config/water_dune_terrain.json").read_text())
+
+def smooth(a,b,x):
+    t = np.clip((x-a)/(b-a),0.,1.)
+    return t*t*(3.-2.*t)
+
+def slope_coverage(y, paint, noise):
+    steep = 1.-smooth(CONFIG["bluff_full_y"],CONFIG["bluff_start_y"],y+(noise-.5)*.12)
+    painted = paint*(1.-smooth(CONFIG["painted_bluff_full_y"],CONFIG["painted_bluff_start_y"],y+(noise-.5)*.08))
+    return np.maximum(steep,painted)
+
+def softplus(x,width):
+    return width*np.logaddexp(0.,x/width)
+
+def evaluate(height,paint,axis,noise=.5):
+    # line coordinate is metres perpendicular to the transition. Sample away
+    # from a cell edge; diagonal profiles follow XZ=(t/sqrt2,t/sqrt2)+offset.
+    t = np.linspace(-4.,8.,12001)
+    direction = np.array(axis,dtype=float);direction/=np.linalg.norm(direction)
+    positions=t[:,None]*direction+np.array([.173,.317])
+    cell=np.floor(positions);f=positions-cell
+    weights=np.stack(((1-f[:,0])*f[:,1],f[:,0]*f[:,1],f[:,0]*(1-f[:,1]),(1-f[:,0])*(1-f[:,1])),axis=1)
+    normals=[];paints=[]
+    for dx,dz in NORMAL_OFFSETS:
+        x=cell[:,0]+dx;z=cell[:,1]+dz
+        h=height(x,z)
+        n=np.stack((h-height(x+1,z),np.ones_like(h),h-height(x,z+1)),axis=1)
+        n/=np.linalg.norm(n,axis=1)[:,None]
+        normals.append(n);paints.append(paint(x,z))
+    normals=np.stack(normals,axis=1);paints=np.stack(paints,axis=1)
+    mixed=np.sum(normals*weights[:,:,None],axis=1);mixed/=np.linalg.norm(mixed,axis=1)[:,None]
+    # These transitions are >3.5m: the unchanged final fade is exactly 1.
+    baseline=slope_coverage(np.abs(mixed[:,1]),np.sum(paints*weights,axis=1),noise)
+    candidate=np.sum(slope_coverage(np.abs(normals[:,:,1]),paints,noise)*weights,axis=1)
+    nearest=slope_coverage(np.abs(normals[:,3,1]),paints[:,3],noise)
+    def crossings(values,level=.5):
+        out=[]
+        for i in np.flatnonzero((values[:-1]-level)*(values[1:]-level)<0):
+            out.append(float(t[i]+(level-values[i])*(t[i+1]-t[i])/(values[i+1]-values[i])))
+        exact=np.flatnonzero(values==level)
+        if len(exact):
+            for group in np.split(exact,np.flatnonzero(np.diff(exact)>1)+1):
+                out.append(float((t[group[0]]+t[group[-1]])*.5))
+        return sorted(out)
+    old,new=crossings(baseline),crossings(candidate)
+    base_integral=float(np.trapezoid(baseline,t))
+    new_integral=float(np.trapezoid(candidate,t))
+    return {
+        "range_m":[-4,8],"sample_spacing_m":.001,"noise":noise,
+        "baseline_integrated_coverage_m":base_integral,
+        "candidate_integrated_coverage_m":new_integral,
+        "coverage_change_m":new_integral-base_integral,
+        "coverage_change_percent_of_baseline":100*(new_integral-base_integral)/base_integral if base_integral>1e-12 else None,
+        "baseline_half_coverage_crossings_m":old,"candidate_half_coverage_crossings_m":new,
+        "crossing_displacements_m":[b-a for a,b in zip(old,new)] if len(old)==len(new) else None,
+        "max_abs_coverage_change":float(np.max(np.abs(candidate-baseline))),
+        "max_potential_near_to_nearest_jump_baseline":float(np.max(np.abs(baseline-nearest))),
+        "max_potential_near_to_nearest_jump_candidate":float(np.max(np.abs(candidate-nearest))),
+        "profile_deciles":[{"t":float(t[i]),"baseline":float(baseline[i]),"candidate":float(candidate[i])} for i in range(0,len(t),1000)],
+    }
+
+def allowed(bilerp=True,indices=None,holes=None,finite=True,weights_valid=True):
+    indices=indices if indices is not None else [(10,11,2),(11,11,2),(11,10,2),(10,10,2)]
+    holes=holes if holes is not None else [False]*4
+    origin=indices[3];x,z,layer=origin
+    expected=[(x+dx,z+dz,layer) for dx,dz in NORMAL_OFFSETS]
+    return bilerp and finite and weights_valid and layer>=0 and x>=0 and z>=0 and x+2<512 and z+2<512 and indices==expected and not any(holes)
+
+def main():
+    assert allowed()
+    guards={
+        "nearest":dict(bilerp=False),
+        "known_corner_hole":dict(holes=[False,True,False,False]),
+        "nonfinite":dict(finite=False),
+        "bad_weights":dict(weights_valid=False),
+        "missing_region":dict(indices=[(10,11,-1),(11,11,-1),(11,10,-1),(10,10,-1)]),
+        "cross_region_or_edge":dict(indices=[(510,511,2),(511,511,2),(511,510,2),(510,510,2)]),
+        "remapped_corner":dict(indices=[(10,11,2),(11,11,3),(11,10,2),(10,10,2)]),
+    }
+    for name,args in guards.items():
+        assert not allowed(**args),name
+        # The shader leaves its already-calculated original bluff untouched.
+        assert (.91 if allowed(**args) else .23)==.23,name
+    # Negative world coordinates safely resolve to a valid local region cell.
+    assert allowed(indices=[(400,401,4),(401,401,4),(401,400,4),(400,400,4)])
+    zero=lambda x,z:np.zeros_like(x)
+    one=lambda x,z:np.ones_like(x)
+    flat=lambda x,z:100.+zero(x,z)
+    steep=lambda x,z:100.+3.*x
+    transition=lambda width,axis:lambda x,z:100.+3.*softplus((axis[0]*x+axis[1]*z)/math.hypot(*axis),width)
+    cap=lambda x,z:100.+3.*(softplus(x,.12)-softplus(x-4.,.12))
+    cases={
+        "flat_unpainted":(flat,zero,(1,0)),
+        "flat_painted":(flat,one,(1,0)),
+        "steep_unpainted":(steep,zero,(1,0)),
+        "steep_painted":(steep,one,(1,0)),
+        "sharp_flat_to_steep":(transition(.12,(1,0)),zero,(1,0)),
+        "soft_flat_to_steep_2m":(transition(2.,(1,0)),zero,(1,0)),
+        "sharp_diagonal_transition":(transition(.12,(1,1)),zero,(1,1)),
+        "painted_sharp_transition":(transition(.12,(1,0)),one,(1,0)),
+        "diagonal_paint_and_slope_transition":(transition(.12,(1,1)),lambda x,z:smooth(-1.,1.,(x+z)/math.sqrt(2)),(1,1)),
+        "finite_steep_band_flat_caps":(cap,zero,(1,0)),
+    }
+    profiles={name:evaluate(*case) for name,case in cases.items()}
+    for name in list(cases)[:4]:assert profiles[name]["max_abs_coverage_change"]<1e-12
+    profiles["sharp_flat_to_steep_noise0"]=evaluate(*cases["sharp_flat_to_steep"],noise=0.)
+    profiles["sharp_flat_to_steep_noise1"]=evaluate(*cases["sharp_flat_to_steep"],noise=1.)
+    source=SOURCE.read_text()
+    snippet=(HERE/"bluff-maskspace04-snippet.gdshader.txt").read_text()
+    code=snippet[snippet.index("if (coast_dune_maskspace_enabled"):]
+    assert source.count(ANCHOR)==1
+    for call in ("texelFetch(", "texture(", "textureLod(", "textureGrad("):assert call not in code
+    proposal=source.replace("uniform bool coast_dunes_enabled = false;","uniform bool coast_dunes_enabled = false;\nuniform bool coast_dune_maskspace_enabled = false;")
+    proposal=proposal.replace(ANCHOR,ANCHOR+"\n"+"\n".join("\t\t"+line for line in code.rstrip().splitlines()))
+    diff="".join(difflib.unified_diff(source.splitlines(True),proposal.splitlines(True),
+        fromfile="a/scripts/world/coastal_rock_material.gd",tofile="b/scripts/world/coastal_rock_material.gd"))
+    (HERE/"bluff-maskspace04-proposal.patch").write_text(diff)
+    result={"unapplied":True,"engine_executed":False,"source_sha256":hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
+        "generated_shader_sha256":hashlib.sha256((HERE/"terrain_generated.gdshader").read_bytes()).hexdigest(),
+        "additional_texture_reads":0,"known_guard_fallback_cases":list(guards),
+        "unknown_neighbor_hole_bits":4,
+        "limits":"Synthetic valid bilerp height-stencil profiles, not Gull data, images, performance or acceptance. Height fade held at1; seam figures are potential envelope, not a native distance sweep.",
+        "profiles":profiles}
+    (HERE/"bluff-maskspace04-profiles.json").write_text(json.dumps(result,indent=2)+"\n")
+    print("CPU guard/profile/source checks PASS; proposal remains UNAPPLIED")
+    for name,profile in profiles.items():
+        print(name, "coverage_delta_m",round(profile["coverage_change_m"],6),
+            "half_edge_delta_m",profile["crossing_displacements_m"],
+            "nearfar_old_new",round(profile["max_potential_near_to_nearest_jump_baseline"],4),round(profile["max_potential_near_to_nearest_jump_candidate"],4))
+
+if __name__=="__main__":main()

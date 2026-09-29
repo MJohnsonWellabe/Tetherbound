@@ -1,0 +1,42 @@
+{
+  "status": "implemented_candidate_off",
+  "base_commit": "fc01d644310c14eb045c747f5b49ac837cf7cbe8",
+  "source_sha256_lf": {
+    "scripts/world/grass_field.gd": "6cbe8d3e5aac72439a7de77295b48333d54f9eebc1901fa0d389d9e074e970d9",
+    "shaders/grass_field.gdshader": "62cc54519797c843b1606948168526f551f7b73fed40b69ded9cb33d7ae7f3ac",
+    "data/config/water_dune_cover.json": "d05170c5799836d98a59dab63ff76c2d5195b528c9fb80f2ec37fb259b3e74c9",
+    "tests/test_water_dune_cover.gd": "fef51dc73b2eeebb4cac72e55703e23ea2327286cd029e515a75e98a045a4c4b"
+  },
+  "native_visual_acceptance": false,
+  "mesh_probe": {
+    "exit_code": 0,
+    "checks": 47,
+    "ordinary_and_default_exact_array_comparisons": 24,
+    "vertices_per_tuft": 80,
+    "triangles_per_tuft": 56,
+    "limits": "Actual headless ArrayMesh contents only. No production-world render, shader binding, animation/wind, terrain contact or performance proof."
+  },
+  "focused_tests": {
+    "exit_code": 0,
+    "files": [
+      "test_water_dune_cover.gd",
+      "test_grass_field.gd",
+      "test_grass_field_profiles.gd",
+      "test_water_named_grass_clearance.gd"
+    ],
+    "tests": 34,
+    "assertions": 87990,
+    "failed": 0
+  },
+  "added_json_regression_run": {
+    "exit_code": 0,
+    "file": "test_water_dune_cover.gd",
+    "tests": 8,
+    "assertions": 132,
+    "failed": 0
+  },
+  "discovered_bug": "Initial Python/source checks missed Godot Array.has integer/JSON-float mismatch: basal leaves remained tall. Actual mesh probe detected this. Corrected exact int-or-float membership and production JSON regression pass. Failed probe retained honestly.",
+  "change": "Eight leaves with three shorter wider basal leaves on three close stem bases; 36000 requested centers; zero coastal threshold shift retains colony area. Ordinary/default mesh unchanged.",
+  "allocation": "38760 source-derived instances vs57836 prior control; full-ring triangle equivalents increase7.2273%. This is not measured frame cost or a performance improvement.",
+  "next": "Native comparison against the prior five-leaf/54000-requested candidate remains required. Earlier colony07 six-frame packet is superseded by source change; its frozen old source preflight must not be bypassed."
+}

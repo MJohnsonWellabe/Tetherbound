@@ -1,0 +1,1644 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "becb28dfd0eec195b8cce59b76e1d942b276a4cb",
+  "repro": "Godot4.7 --path D:/tetherbound/x04-tidewake --rendering-driver opengl3 --fullscreen --resolution 1920x1080 --audio-driver Dummy --script res://.artifacts/phase2/dune_shadow_receiver_ablation.gd -- --biome=water --seed=2042 --output=res://.artifacts/phase2/p2008-receiver-01-ablation; apply retained working.patch first; both dune gates capture-only true; local diagnostic and parent sources retained",
+  "source_manifest_sha256": "126bebfb7556f05857056409232753f65f07b0398d6adcf46f4579fa129cd7e6",
+  "capture_metadata": {
+    "ablation_disclosure": "Six local diagnostic cases at the same validated Gull Rest Beach day/close stand. Dunes enabled locally throughout. Original vertex/fragment normals remain unchanged in EVERY case; prior corrected-normal experiment is not applied. Normal-bias cases set Sun.shadow_normal_bias to 3.4 or 6.8. Terrain cases retain baseline Sun settings and add only IN_SHADOW_PASS VERTEX.z subtraction of 0.02/0.05/0.10 metres after conversion to light-view space. This changes terrain caster depth, not visible terrain geometry or collision. Character/vegetation/prop shaders and shadow casters remain unchanged; contact-shadow preservation and shifted cliff shadows still require visual judgment. No shadow disable/opacity reduction. Shader and modified parameters reset before every case and original resources restored at finish. Stationary stills, not traversal/performance proof.",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "water",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 265113569115,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 265130346335,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T14:36:54",
+    "capture_started_utc": "2026-09-28T14:34:31",
+    "captured_frame_count": 6,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "original_dune_params": {
+      "coast_dune_ripple_strength": 0.012,
+      "coast_dunes_enabled": true,
+      "flat_terrain_normals": null
+    },
+    "planned_frame_count": 6,
+    "planned_frame_ids": [
+      "water__gull_rest__20__gull_rest_beach__day__close__baseline",
+      "water__gull_rest__20__gull_rest_beach__day__close__normal_bias_34",
+      "water__gull_rest__20__gull_rest_beach__day__close__normal_bias_68",
+      "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_002",
+      "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_005",
+      "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_010"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 265130346335,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day"
+    ],
+    "requested_views": [
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/water_archipelago.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "shader_hashes": {
+      "baseline": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+      "terrain_shadow_push_002": "1ed8218677e65f1b7337951e0d2925a85af5edeb593398105d4d3263d24d78c1",
+      "terrain_shadow_push_005": "b7bd075183ff07dd90b731db1b63dc1df14e3e1e93c8af6ddba8740dbbf5d84f",
+      "terrain_shadow_push_010": "38a9b24a3df0fbaab905601d64cc92086f04719b4c0cee2a0dd1a3a7320a7a69"
+    },
+    "shadow_baseline_after_day_pin": {
+      "shadow_bias": 0.0599999986588955,
+      "shadow_enabled": true,
+      "shadow_normal_bias": 1.70000004768372,
+      "shadow_opacity": 1.0
+    },
+    "shadow_case_order": [
+      "baseline",
+      "normal_bias_34",
+      "normal_bias_68",
+      "terrain_shadow_push_002",
+      "terrain_shadow_push_005",
+      "terrain_shadow_push_010"
+    ],
+    "shadow_original_before_day_pin": {
+      "shadow_bias": 0.0599999986588955,
+      "shadow_enabled": true,
+      "shadow_normal_bias": 1.70016324520111,
+      "shadow_opacity": 1.0
+    },
+    "shadow_source_notes": "res://.artifacts/phase2/shadow-source-notes.md",
+    "subsets": [
+      "gull_rest_beach"
+    ]
+  },
+  "frames": [
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__baseline",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/receiver-01-ablation/contact_sheet_01.jpg",
+      "capture": {
+        "ablation": {
+          "baseline_shadow_settings": {
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0
+          },
+          "changes_from_dune_baseline": {},
+          "measured_after_apply": {
+            "active_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": null
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": false,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "measured_at_capture": {
+            "active_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": null
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": false,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "original_normals_preserved": true,
+          "terrain_shadow_pass_push_m": 0.0,
+          "variant": "baseline",
+          "visible_terrain_displacement_m": 0.0
+        },
+        "ablation_variant": "baseline",
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 195559,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655383110046,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130900010466576,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.207911685109138,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__baseline.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__baseline",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -75.3280029296875,
+              12.2938575744629,
+              777.859985351563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -79.1709976196289,
+              31.3581428527832,
+              860.107971191406
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              15.371000289917,
+              12.2092885971069,
+              833.093994140625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -152.680114746094,
+              -0.77353036403656,
+              809.522888183594
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -15.7110004425049,
+              -0.609046101570129,
+              783.672973632813
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.0,
+          "hour": 8.0,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ]
+      },
+      "source_sha256": "fd203ba487c01b2ffbae1e6fe46e9ed5a3d60608ecde46dd0e10fc389c753025",
+      "source_frame_path": ".artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__baseline.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__normal_bias_34",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/receiver-01-ablation/contact_sheet_01.jpg",
+      "capture": {
+        "ablation": {
+          "baseline_shadow_settings": {
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0
+          },
+          "camera_delta_from_baseline_m": 0.0,
+          "changes_from_dune_baseline": {
+            "Sun.shadow_normal_bias": 3.4
+          },
+          "measured_after_apply": {
+            "active_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": null
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 3.40000009536743,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": false,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "measured_at_capture": {
+            "active_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": null
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 3.40000009536743,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": false,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "original_normals_preserved": true,
+          "terrain_shadow_pass_push_m": 0.0,
+          "variant": "normal_bias_34",
+          "visible_terrain_displacement_m": 0.0
+        },
+        "ablation_variant": "normal_bias_34",
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 156036,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655406951904,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130900010466576,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.207911685109138,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__normal_bias_34.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__normal_bias_34",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              0.999999403953552,
+              1.0,
+              0.999999403953552
+            ],
+            "position": [
+              -76.0667266845703,
+              12.2584419250488,
+              777.599731445313
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              0.999999523162842,
+              1.0,
+              0.999999523162842
+            ],
+            "position": [
+              -80.2476577758789,
+              31.2551250457764,
+              859.680725097656
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              0.999999821186066,
+              1.0,
+              0.999999821186066
+            ],
+            "position": [
+              16.2021312713623,
+              12.1753664016724,
+              834.246154785156
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              0.999999940395355,
+              1.0,
+              0.999999940395355
+            ],
+            "position": [
+              -153.092742919922,
+              -0.911866843700409,
+              809.4140625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              0.999999821186066,
+              1.0,
+              0.999999821186066
+            ],
+            "position": [
+              -15.2438163757324,
+              -0.709371328353882,
+              783.626953125
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.0,
+          "hour": 8.0,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ]
+      },
+      "source_sha256": "3a7d45a62bd7623b6154146705e5e11eea4b949da336f0b1a4a16e75dc5f819f",
+      "source_frame_path": ".artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__normal_bias_34.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__normal_bias_68",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/receiver-01-ablation/contact_sheet_01.jpg",
+      "capture": {
+        "ablation": {
+          "baseline_shadow_settings": {
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0
+          },
+          "camera_delta_from_baseline_m": 0.0,
+          "changes_from_dune_baseline": {
+            "Sun.shadow_normal_bias": 6.8
+          },
+          "measured_after_apply": {
+            "active_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": null
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 6.80000019073486,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": false,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "measured_at_capture": {
+            "active_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": null
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 6.80000019073486,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": false,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "original_normals_preserved": true,
+          "terrain_shadow_pass_push_m": 0.0,
+          "variant": "normal_bias_68",
+          "visible_terrain_displacement_m": 0.0
+        },
+        "ablation_variant": "normal_bias_68",
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 154208,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655406951904,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130899995565414,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.207911670207977,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__normal_bias_68.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__normal_bias_68",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              0.999999344348907,
+              1.0,
+              0.999999344348907
+            ],
+            "position": [
+              -74.6928176879883,
+              12.3767976760864,
+              778.432312011719
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              0.999999523162842,
+              1.0,
+              0.999999523162842
+            ],
+            "position": [
+              -80.2476577758789,
+              31.2551250457764,
+              859.680725097656
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              0.999999821186066,
+              1.0,
+              0.999999821186066
+            ],
+            "position": [
+              16.2021312713623,
+              12.1753664016724,
+              834.246154785156
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              0.999999821186066,
+              1.0,
+              0.999999821186066
+            ],
+            "position": [
+              -152.968826293945,
+              -0.944407880306244,
+              809.086120605469
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              0.999999761581421,
+              1.0,
+              0.999999761581421
+            ],
+            "position": [
+              -15.2099714279175,
+              -0.736567318439484,
+              783.556701660156
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.0,
+          "hour": 8.0,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ]
+      },
+      "source_sha256": "b85fd8a74b80699f6956d080e37181decff1633177cf684b4e2935f9f129eec9",
+      "source_frame_path": ".artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__normal_bias_68.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_002",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/receiver-01-ablation/contact_sheet_01.jpg",
+      "capture": {
+        "ablation": {
+          "baseline_shadow_settings": {
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0
+          },
+          "camera_delta_from_baseline_m": 0.0,
+          "changes_from_dune_baseline": {
+            "terrain_shadow_pass_push_m": 0.02
+          },
+          "measured_after_apply": {
+            "active_override_code_sha256": "1ed8218677e65f1b7337951e0d2925a85af5edeb593398105d4d3263d24d78c1",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "1ed8218677e65f1b7337951e0d2925a85af5edeb593398105d4d3263d24d78c1",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": false
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": true,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "measured_at_capture": {
+            "active_override_code_sha256": "1ed8218677e65f1b7337951e0d2925a85af5edeb593398105d4d3263d24d78c1",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "1ed8218677e65f1b7337951e0d2925a85af5edeb593398105d4d3263d24d78c1",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": false
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": true,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "original_normals_preserved": true,
+          "terrain_shadow_pass_push_m": 0.02,
+          "variant": "terrain_shadow_push_002",
+          "visible_terrain_displacement_m": 0.0
+        },
+        "ablation_variant": "terrain_shadow_push_002",
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 173132,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655406951904,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130900010466576,
+            0.978147625923157,
+            0.161531627178192
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.2079117000103,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_002.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_002",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              0.999999046325684,
+              1.0,
+              0.999999046325684
+            ],
+            "position": [
+              -75.4222717285156,
+              12.2372932434082,
+              777.374328613281
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              0.999998390674591,
+              1.0,
+              0.999998390674591
+            ],
+            "position": [
+              -77.7901382446289,
+              31.4696178436279,
+              860.542724609375
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              0.999998688697815,
+              1.0,
+              0.999998688697815
+            ],
+            "position": [
+              15.7685203552246,
+              12.2333564758301,
+              834.568481445313
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              0.999999523162842,
+              1.0,
+              0.999999523162842
+            ],
+            "position": [
+              -153.226715087891,
+              -0.938563168048859,
+              809.468566894531
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              0.999999761581421,
+              1.0,
+              0.999999761581421
+            ],
+            "position": [
+              -15.2099714279175,
+              -0.736567318439484,
+              783.556701660156
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.0,
+          "hour": 8.0,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ]
+      },
+      "source_sha256": "b53e0959e9e738eaa2e74b45a293e4e61b2553fcdceadcb66eb00611ba015ef9",
+      "source_frame_path": ".artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_002.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_005",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/receiver-01-ablation/contact_sheet_01.jpg",
+      "capture": {
+        "ablation": {
+          "baseline_shadow_settings": {
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0
+          },
+          "camera_delta_from_baseline_m": 0.0,
+          "changes_from_dune_baseline": {
+            "terrain_shadow_pass_push_m": 0.05
+          },
+          "measured_after_apply": {
+            "active_override_code_sha256": "b7bd075183ff07dd90b731db1b63dc1df14e3e1e93c8af6ddba8740dbbf5d84f",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "b7bd075183ff07dd90b731db1b63dc1df14e3e1e93c8af6ddba8740dbbf5d84f",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": false
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": true,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "measured_at_capture": {
+            "active_override_code_sha256": "b7bd075183ff07dd90b731db1b63dc1df14e3e1e93c8af6ddba8740dbbf5d84f",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "b7bd075183ff07dd90b731db1b63dc1df14e3e1e93c8af6ddba8740dbbf5d84f",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": false
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": true,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "original_normals_preserved": true,
+          "terrain_shadow_pass_push_m": 0.05,
+          "variant": "terrain_shadow_push_005",
+          "visible_terrain_displacement_m": 0.0
+        },
+        "ablation_variant": "terrain_shadow_push_005",
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 157403,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655406951904,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130900010466576,
+            0.978147625923157,
+            0.161531627178192
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.2079117000103,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_005.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_005",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              0.999999046325684,
+              1.0,
+              0.999999046325684
+            ],
+            "position": [
+              -75.6901168823242,
+              12.1977367401123,
+              777.048461914063
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              0.999998331069946,
+              1.0,
+              0.999998331069946
+            ],
+            "position": [
+              -79.2167053222656,
+              31.4168758392334,
+              861.031555175781
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              0.999997556209564,
+              1.0,
+              0.999997556209564
+            ],
+            "position": [
+              14.846284866333,
+              12.3394155502319,
+              834.559753417969
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              0.999999225139618,
+              1.0,
+              0.999999225139618
+            ],
+            "position": [
+              -153.287246704102,
+              -0.91062331199646,
+              809.687133789063
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              0.999999701976776,
+              1.0,
+              0.999999701976776
+            ],
+            "position": [
+              -15.3961353302002,
+              -0.796351432800293,
+              783.237854003906
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.0,
+          "hour": 8.0,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ]
+      },
+      "source_sha256": "fb6497afd3ec31afb0935350b9c9c3a013bfb8576674acea39200651d51f1618",
+      "source_frame_path": ".artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_005.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_010",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/receiver-01-ablation/contact_sheet_01.jpg",
+      "capture": {
+        "ablation": {
+          "baseline_shadow_settings": {
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0
+          },
+          "camera_delta_from_baseline_m": 0.0,
+          "changes_from_dune_baseline": {
+            "terrain_shadow_pass_push_m": 0.1
+          },
+          "measured_after_apply": {
+            "active_override_code_sha256": "38a9b24a3df0fbaab905601d64cc92086f04719b4c0cee2a0dd1a3a7320a7a69",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "38a9b24a3df0fbaab905601d64cc92086f04719b4c0cee2a0dd1a3a7320a7a69",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": false
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": true,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "measured_at_capture": {
+            "active_override_code_sha256": "38a9b24a3df0fbaab905601d64cc92086f04719b4c0cee2a0dd1a3a7320a7a69",
+            "active_override_is_diagnostic": true,
+            "original_normals_preserved": true,
+            "original_override_code_sha256": "33c313dafbfc9a4abf7cc176186e7a211e30221d2749abf0c9e16f21391a97fc",
+            "quiet_shader": false,
+            "shader_code_sha256": "38a9b24a3df0fbaab905601d64cc92086f04719b4c0cee2a0dd1a3a7320a7a69",
+            "shader_params": {
+              "coast_dune_ripple_strength": 0.012,
+              "coast_dunes_enabled": true,
+              "flat_terrain_normals": false
+            },
+            "shadow_bias": 0.0599999986588955,
+            "shadow_enabled": true,
+            "shadow_max_distance": 220.0,
+            "shadow_mode": 1,
+            "shadow_normal_bias": 1.70000004768372,
+            "shadow_opacity": 1.0,
+            "shadow_pass_push_present": true,
+            "sun_rotation": [
+              -0.767944872379303,
+              2.4434609413147,
+              0.0
+            ]
+          },
+          "original_normals_preserved": true,
+          "terrain_shadow_pass_push_m": 0.1,
+          "variant": "terrain_shadow_push_010",
+          "visible_terrain_displacement_m": 0.0
+        },
+        "ablation_variant": "terrain_shadow_push_010",
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 156879,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655406951904,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130900010466576,
+            0.978147625923157,
+            0.161531627178192
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.2079117000103,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_010.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_010",
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              0.999998509883881,
+              1.0,
+              0.999998509883881
+            ],
+            "position": [
+              -74.8551177978516,
+              12.1693830490112,
+              776.737670898438
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              0.999998331069946,
+              1.0,
+              0.999998331069946
+            ],
+            "position": [
+              -80.5787124633789,
+              31.34836769104,
+              861.471130371094
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              0.999997615814209,
+              1.0,
+              0.999997615814209
+            ],
+            "position": [
+              13.744930267334,
+              12.3856534957886,
+              832.83837890625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              0.999999225139618,
+              1.0,
+              0.999999225139618
+            ],
+            "position": [
+              -153.287246704102,
+              -0.91062331199646,
+              809.687133789063
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              0.999999403953552,
+              1.0,
+              0.999999403953552
+            ],
+            "position": [
+              -15.807092666626,
+              -0.743909418582916,
+              783.155822753906
+            ],
+            "species_id": "water_torrentoad"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.0,
+          "hour": 8.0,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 2,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ]
+      },
+      "source_sha256": "53027ac0ef2174eb14db105e4a4651b8b5c33757bbadcc113d570309d5983db7",
+      "source_frame_path": ".artifacts/phase2/p2008-receiver-01-ablation/water__gull_rest__20__gull_rest_beach__day__close__terrain_shadow_push_010.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

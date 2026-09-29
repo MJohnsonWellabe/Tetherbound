@@ -65,6 +65,10 @@ const UNLOCKED_RING_STANDOFF := 14.0
 ## dozen screens this pass has not measured, the same reasoning
 ## `playground_hud.gd::HUD_READABLE_FONT_SIZE` records for its own local floor.
 const CAPTION_FONT_SIZE := 26
+const READOUT_VISUAL_CONFIG := "res://data/config/capture_readout_visual.json"
+
+## P2-114: local presentation only; leaves target/chance state untouched.
+var _readout_visual: Dictionary = {}
 
 var _active := false
 var _pos := Vector2.ZERO
@@ -84,8 +88,14 @@ var _break_fx: Dictionary = {}
 
 
 func _ready() -> void:
+	_readout_visual = load_readout_visual()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_process(true)
+
+
+static func load_readout_visual() -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(READOUT_VISUAL_CONFIG))
+	return raw if raw is Dictionary else {}
 
 
 ## Called every frame while aiming (and once more with `active=false` the
@@ -279,6 +289,13 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 	var pct_size := UITokens.FONT_BIG_NUMBER - 4
 	var pct_dims: Vector2 = font.get_string_size(pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size)
 	var pct_pos := center + Vector2(-pct_dims.x * 0.5, radius + READOUT_GAP)
+	var outlined := bool(_readout_visual.get("outline_enabled", false))
+	var outline_size := maxi(0, int(_readout_visual.get("outline_size", UITokens.OUTLINE_SIZE)))
+	if outlined:
+		var pct_outline := UITokens.OUTLINE
+		pct_outline.a *= tier_colour.a
+		draw_string_outline(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+			pct_size, outline_size, pct_outline)
 	draw_string(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size, tier_colour)
 
 	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
@@ -288,6 +305,11 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
 	)
 	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
+	if outlined:
+		var caption_outline := UITokens.OUTLINE
+		caption_outline.a *= caption_colour.a
+		draw_string_outline(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+			CAPTION_FONT_SIZE, outline_size, caption_outline)
 	draw_string(font, caption_pos, caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE, caption_colour)
 
 

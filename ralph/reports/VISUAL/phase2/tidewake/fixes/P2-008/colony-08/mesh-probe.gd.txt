@@ -1,0 +1,53 @@
+extends SceneTree
+
+const ORIGINAL := preload("res://scripts/world/grass_field.gd")
+const CANDIDATE := preload("res://.artifacts/phase2/colony08-grass-field-preview.gd")
+
+func _init() -> void:
+	var original := ORIGINAL.new()
+	var candidate := CANDIDATE.new()
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://.artifacts/phase2/colony08-cover-preview.json"))
+	var shape: Dictionary = config.ground_cover.dune_tuft_shape
+	var checks := 0
+	for blades: int in [4, 5, 8]:
+		for segments: int in [3, 4]:
+			for keep: int in [-1, 2]:
+				var a: ArrayMesh = original._tuft_mesh(blades, segments, keep, false)
+				var b: ArrayMesh = candidate._tuft_mesh(blades, segments, keep, false, shape)
+				assert(a.surface_get_arrays(0) == b.surface_get_arrays(0), "ordinary mesh changed")
+				var c: ArrayMesh = original._tuft_mesh(blades, segments, keep, true)
+				var d: ArrayMesh = candidate._tuft_mesh(blades, segments, keep, true, {})
+				assert(c.surface_get_arrays(0) == d.surface_get_arrays(0), "default dune mesh changed")
+				checks += 2
+	var full: ArrayMesh = candidate._tuft_mesh(8, 4, -1, true, shape)
+	var reference: ArrayMesh = candidate._tuft_mesh(8, 4, -1, true, {})
+	var arrays := full.surface_get_arrays(0)
+	var uv2: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV2]
+	var base_uv2: PackedVector2Array = reference.surface_get_arrays(0)[Mesh.ARRAY_TEX_UV2]
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	assert(vertices.size() == 80 and indices.size() == 168, "candidate topology mismatch")
+	checks += 1
+	for blade in 8:
+		var multiplier := 0.6 if blade in [0, 3, 6] else 1.0
+		var expected_height := base_uv2[blade * 10].y * multiplier
+		var height_error := absf(uv2[blade * 10].y - expected_height)
+		print("COLONY08 UV2 blade=%d actual=%.9f expected=%.9f error=%.9f" % [blade, uv2[blade * 10].y, expected_height, height_error])
+		assert(is_equal_approx(uv2[blade * 10].y, expected_height), "basal height not encoded in UV2")
+		assert(vertices[blade * 10 + 8] == vertices[blade * 10 + 9], "dune tip not pointed")
+		checks += 2
+	for vertex: Vector3 in vertices:
+		assert(vertex.is_finite(), "nonfinite candidate vertex")
+	for index: int in indices:
+		assert(index >= 0 and index < vertices.size(), "invalid candidate index")
+	checks += 2
+	for keep: int in [2, 4]:
+		var lod: ArrayMesh = candidate._tuft_mesh(8, 4, keep, true, shape)
+		var lod_arrays := lod.surface_get_arrays(0)
+		assert(lod_arrays[Mesh.ARRAY_VERTEX] == vertices.slice(0, keep * 10), "LOD roots changed")
+		assert(lod_arrays[Mesh.ARRAY_TEX_UV2] == uv2.slice(0, keep * 10), "LOD leaf identifiers changed")
+		checks += 2
+	original.free()
+	candidate.free()
+	print("COLONY08 ACTUAL ARRAYMESH PASS: %d checks; 24 exact default/ordinary comparisons, 80 vertices/56 triangles; no world/GPU/performance proof" % checks)
+	quit(0)

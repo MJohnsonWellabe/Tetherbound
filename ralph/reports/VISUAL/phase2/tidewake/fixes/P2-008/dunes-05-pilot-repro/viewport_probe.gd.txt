@@ -1,0 +1,9 @@
+extends SceneTree
+func _initialize() -> void:
+	call_deferred("run")
+func run() -> void:
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var picture := root.get_texture().get_image()
+	print("VIEWPORT_PROBE root=", root.size, " image=", picture.get_size())
+	quit(0 if picture.get_size() == Vector2i(1920, 1080) else 1)

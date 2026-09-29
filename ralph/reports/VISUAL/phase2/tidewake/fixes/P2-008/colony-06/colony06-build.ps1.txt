@@ -1,0 +1,60 @@
+param([string]$Root = 'D:\tetherbound\x04-tidewake')
+$ErrorActionPreference = 'Stop'
+$out = Join-Path $Root '.artifacts/phase2'
+$utf8 = [Text.UTF8Encoding]::new($false)
+function Hash-Text([string]$Text) { [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($utf8.GetBytes($Text))).ToLowerInvariant() }
+function Read-Normal([string]$Path) { [IO.File]::ReadAllText($Path).Replace("`r`n", "`n") }
+$sourcePath = Join-Path $Root 'shaders/grass_field.gdshader'
+$source = Read-Normal $sourcePath
+$patchPath = Join-Path $out 'coastal-colony-proposal/proposal.patch'
+$patch = Read-Normal $patchPath
+$section = ($patch -split '(?m)^--- a/scripts/world/grass_field.gd')[0]
+if (-not $section.StartsWith("--- a/shaders/grass_field.gdshader`n+++ b/shaders/grass_field.gdshader`n")) { throw 'Unexpected shader patch header' }
+$sourceLines = $source.Split("`n")
+$result = [Collections.Generic.List[string]]::new()
+$cursor = 0; $inside = $false; $hunks = 0
+foreach ($line in $section.Split("`n")) {
+    if ($line -match '^@@ -(\d+)(?:,\d+)? \+\d+(?:,\d+)? @@') {
+        $at = [int]$Matches[1] - 1
+        if ($at -lt $cursor) { throw 'Overlapping shader hunks' }
+        while ($cursor -lt $at) { $result.Add($sourceLines[$cursor]); $cursor++ }
+        $inside = $true; $hunks++; continue
+    }
+    if (-not $inside -or $line -eq '') { continue }
+    $prefix = $line.Substring(0,1); $body = $line.Substring(1)
+    if ($prefix -in @(' ','-')) {
+        if ($sourceLines[$cursor] -cne $body) { throw ('Shader source anchor mismatch at line ' + ($cursor+1)) }
+        $cursor++
+    }
+    if ($prefix -in @(' ','+')) { $result.Add($body) }
+}
+while ($cursor -lt $sourceLines.Length) { $result.Add($sourceLines[$cursor]); $cursor++ }
+$candidate = $result -join "`n"
+if ($hunks -ne 2 -or $candidate -notmatch 'uniform float dune_coastal_colony_shift = 0\.18;' -or $candidate -notmatch 'bool valid_coastal_patch') { throw 'Reviewed shader anchors absent' }
+$packPath = Join-Path $out 'dune05-runtime.zip'
+$archive = [IO.Compression.ZipFile]::OpenRead($packPath)
+try {
+    $expected = @('data/config/water_dune_cover.json','data/config/water_dune_terrain.json')
+    if ((($archive.Entries.FullName | Sort-Object) -join '|') -cne (($expected | Sort-Object) -join '|')) { throw 'Pack must contain exactly two config files' }
+    $gates = @{}
+    foreach ($entry in $archive.Entries) {
+        $stream = [IO.StreamReader]::new($entry.Open()); try { $raw = $stream.ReadToEnd() } finally { $stream.Dispose() }
+        $packed = $raw | ConvertFrom-Json -AsHashtable
+        $diskRaw = [IO.File]::ReadAllText((Join-Path $Root $entry.FullName))
+        $disk = $diskRaw | ConvertFrom-Json -AsHashtable
+        if ($packed.enabled -ne $true -or $disk.enabled -ne $false) { throw 'Expected process pack true / production false' }
+        # Compare canonical JSON after changing only the gate. Source config is not written.
+        $packed.enabled = $false
+        if (($packed | ConvertTo-Json -Depth 100 -Compress) -cne ($disk | ConvertTo-Json -Depth 100 -Compress)) { throw ('05 pack differs beyond gate: ' + $entry.FullName) }
+        $gates[$entry.FullName] = @{enabled=$false; sha256=(Get-FileHash -Algorithm SHA256 (Join-Path $Root $entry.FullName)).Hash.ToLowerInvariant()}
+    }
+} finally { $archive.Dispose() }
+$anchors = @{}
+foreach ($relative in @('shaders/grass_field.gdshader','scripts/world/grass_field.gd','scripts/world/water_world.gd','tools/phase2_capture_locations.gd','data/config/debug_teleport_spots.json','data/config/water_ground_cover.json')) {
+    $anchors[$relative] = (Get-FileHash -Algorithm SHA256 (Join-Path $Root $relative)).Hash.ToLowerInvariant()
+}
+$metadata = @{prepared_only=$true; source_commit=(& git -C $Root rev-parse HEAD); baseline_text_sha256=(Hash-Text $source); candidate_text_sha256=(Hash-Text $candidate); expected_uniform=0.18; patch_sha256=(Get-FileHash $patchPath -Algorithm SHA256).Hash.ToLowerInvariant(); pack_sha256=(Get-FileHash $packPath -Algorithm SHA256).Hash.ToLowerInvariant(); production_gates=$gates; source_anchors=$anchors}
+[IO.File]::WriteAllText((Join-Path $out 'colony06-baseline.gdshader.txt'),$source,$utf8)
+[IO.File]::WriteAllText((Join-Path $out 'colony06-candidate.gdshader.txt'),$candidate,$utf8)
+[IO.File]::WriteAllText((Join-Path $out 'colony06-review.json'),($metadata | ConvertTo-Json -Depth 20),$utf8)
+$metadata | ConvertTo-Json -Depth 20

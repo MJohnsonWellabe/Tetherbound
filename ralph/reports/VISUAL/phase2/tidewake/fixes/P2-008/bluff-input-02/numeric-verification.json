@@ -1,0 +1,35 @@
+{
+  "session": 81716,
+  "exit_code": 1,
+  "complete": false,
+  "source_commit": "ebd5c6258fdfbabcc0bcb1b4b1b6b93dbf19df66",
+  "failures": [
+    "height_only: exact comparison camera_transform changed; inspect before using pair",
+    "control_only: exact comparison camera_transform changed; inspect before using pair",
+    "slope_only: exact comparison camera_transform changed; inspect before using pair"
+  ],
+  "exact_camera_origins_player_stands_sun_lod": true,
+  "native_dimensions": [
+    1920,
+    1080
+  ],
+  "camera_basis_deltas": [
+    {
+      "variant": "mask_baseline",
+      "max_camera_basis_component_delta": 0.0
+    },
+    {
+      "variant": "height_only",
+      "max_camera_basis_component_delta": 2.9802322998317976e-08
+    },
+    {
+      "variant": "control_only",
+      "max_camera_basis_component_delta": 2.9802322998317976e-08
+    },
+    {
+      "variant": "slope_only",
+      "max_camera_basis_component_delta": 2.9802322998317976e-08
+    }
+  ],
+  "limits": "Original failed status preserved. This numeric description does not retroactively pass the strict invariant or select a visual fix."
+}

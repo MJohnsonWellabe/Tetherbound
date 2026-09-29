@@ -1,0 +1,155 @@
+extends "res://.artifacts/phase2/dune_surface_ablation.gd"
+
+## Local diagnostic only. Reuses the surface ablation's Gull Rest stand,
+## clock/camera validation, image capture, comparison and restoration logic.
+## No production assets, shader files or configuration are written.
+const SHADOW_CASES := [
+	"baseline", "normal_bias_0_bias_006", "normal_bias_0_bias_02",
+	"normal_bias_17_bias_02", "corrected_vertex_normals", "corrected_vertex_normals_bias_02",
+]
+const VERTEX_START := "void vertex() {"
+const HEIGHT_ASSIGNMENT := "\t\tv_vertex.y = h;"
+const NORMAL_ASSIGNMENT := "NORMAL = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);"
+const CENTRAL_GRADIENT := """
+		// Diagnostic only: UV is world XZ / vertex spacing, so +/-1 samples
+		// the adjacent terrain heights, including across region boundaries.
+		float diagnostic_h_x_minus = texelFetch(_height_maps, get_index_coord(UV - vec2(1.0, 0.0), VERTEX_PASS), 0).r;
+		float diagnostic_h_x_plus = texelFetch(_height_maps, get_index_coord(UV + vec2(1.0, 0.0), VERTEX_PASS), 0).r;
+		float diagnostic_h_z_minus = texelFetch(_height_maps, get_index_coord(UV - vec2(0.0, 1.0), VERTEX_PASS), 0).r;
+		float diagnostic_h_z_plus = texelFetch(_height_maps, get_index_coord(UV + vec2(0.0, 1.0), VERTEX_PASS), 0).r;
+		diagnostic_world_normal = normalize(vec3(diagnostic_h_x_minus - diagnostic_h_x_plus,
+			2.0 * _vertex_spacing, diagnostic_h_z_minus - diagnostic_h_z_plus));"""
+
+var _corrected_code := ""
+var _original_shadow: Dictionary = {}
+var _shadow_baseline: Dictionary = {}
+
+
+func _parse_args() -> bool:
+	if not super._parse_args():
+		return false
+	if _output_dir == "res://.artifacts/phase2/dune-surface-ablation":
+		_output_dir = "res://.artifacts/phase2/dune-shadow-ablation"
+	return true
+
+
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	# Parent already selected and validated one day/close Gull Rest Beach row.
+	var original := _planned[0].duplicate(true)
+	var base_id := str(original.frame_id).trim_suffix("__baseline")
+	_planned.clear()
+	for variant: String in SHADOW_CASES:
+		var row := original.duplicate(true)
+		row["ablation_variant"] = variant
+		row["frame_id"] = base_id + "__" + variant
+		_planned.append(row)
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	_original_shadow = _shadow_readback()
+	for anchor: String in [VERTEX_START, HEIGHT_ASSIGNMENT, NORMAL_ASSIGNMENT]:
+		if _original_code.count(anchor) != 1:
+			_failures.append("Shadow ablation requires exactly one shader anchor: " + anchor)
+			return false
+	# v_vertex is already world-space. Keep a separate world normal until the
+	# final assignment: feeding it through MODELVIEW_MATRIX would rotate twice.
+	_corrected_code = _original_code.replace(VERTEX_START,
+		VERTEX_START + "\n\tvec3 diagnostic_world_normal = vec3(0.0, 1.0, 0.0);")
+	_corrected_code = _corrected_code.replace(HEIGHT_ASSIGNMENT, HEIGHT_ASSIGNMENT + CENTRAL_GRADIENT)
+	_corrected_code = _corrected_code.replace(NORMAL_ASSIGNMENT,
+		"NORMAL = normalize((VIEW_MATRIX * vec4(diagnostic_world_normal, 0.0)).xyz);")
+	_manifest["ablation_disclosure"] = "Six local diagnostic cases at the same validated Gull Rest Beach day/close stand. Dune shader enabled locally for every case; production files unchanged. Baseline retains the frozen daytime Sun settings. Bias cases alter only the stated Sun shadow biases. Corrected cases add four vertex-stage terrain height lookups at UV +/-1 and transform the central-gradient world normal with VIEW_MATRIX exactly once; displacement, fragment normals and colour remain unchanged. Every case resets the shader and modified parameters before applying its changes. No case disables shadows or sets shadow opacity to zero. Stationary stills, not traversal or performance proof; moving creatures can differ."
+	_manifest["shadow_case_order"] = SHADOW_CASES
+	_manifest["shadow_original_before_day_pin"] = _original_shadow.duplicate(true)
+	_manifest["shader_hashes"] = {"original": _original_code.sha256_text(), "corrected_vertex_normals": _corrected_code.sha256_text()}
+	return true
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	# Parent restores the original code and all its modified shader parameters,
+	# repins/freezes daytime, and keeps the exact ordinary-camera capture path.
+	var observed := await super._pin_time(time_name)
+	if observed.is_empty():
+		return observed
+	if _shadow_baseline.is_empty():
+		_shadow_baseline = _shadow_readback()
+		_manifest["shadow_baseline_after_day_pin"] = _shadow_baseline.duplicate(true)
+	_restore_shadow(_shadow_baseline)
+	var changes := {}
+	match _variant:
+		"normal_bias_0_bias_006":
+			_sun.shadow_normal_bias = 0.0
+			_sun.shadow_bias = 0.06
+			changes = {"Sun.shadow_normal_bias": 0.0, "Sun.shadow_bias": 0.06}
+		"normal_bias_0_bias_02":
+			_sun.shadow_normal_bias = 0.0
+			_sun.shadow_bias = 0.2
+			changes = {"Sun.shadow_normal_bias": 0.0, "Sun.shadow_bias": 0.2}
+		"normal_bias_17_bias_02":
+			_sun.shadow_normal_bias = 1.7
+			_sun.shadow_bias = 0.2
+			changes = {"Sun.shadow_normal_bias": 1.7, "Sun.shadow_bias": 0.2}
+		"corrected_vertex_normals", "corrected_vertex_normals_bias_02":
+			_diagnostic_shader.code = _corrected_code
+			changes = {"vertex_normal": "central_height_gradient_four_lookups_VIEW_MATRIX"}
+			if _variant == "corrected_vertex_normals_bias_02":
+				_sun.shadow_bias = 0.2
+				changes["Sun.shadow_bias"] = 0.2
+	_ablation_state = {"variant": _variant, "changes_from_dune_baseline": changes,
+		"baseline_shadow_settings": _shadow_baseline.duplicate(true)}
+	for frame in 6:
+		await process_frame
+	var measured := _measure()
+	_ablation_state["measured_after_apply"] = measured
+	var corrected := _variant.begins_with("corrected_vertex_normals")
+	var expected_hash := (_corrected_code if corrected else _original_code).sha256_text()
+	if str(measured.active_override_code_sha256) != expected_hash or not bool(measured.active_override_is_diagnostic):
+		_failures.append(_variant + ": active shader override differs from requested case")
+		return {}
+	if not _sun.shadow_enabled or _sun.shadow_opacity <= 0.0 or not is_equal_approx(_sun.shadow_opacity, float(_shadow_baseline.shadow_opacity)):
+		_failures.append(_variant + ": shadows disabled or opacity changed from baseline")
+		return {}
+	for key: String in changes:
+		if key == "Sun.shadow_bias" and not is_equal_approx(_sun.shadow_bias, float(changes[key])):
+			_failures.append(_variant + ": shadow bias readback mismatch")
+			return {}
+		if key == "Sun.shadow_normal_bias" and not is_equal_approx(_sun.shadow_normal_bias, float(changes[key])):
+			_failures.append(_variant + ": shadow normal bias readback mismatch")
+			return {}
+	return observed
+
+
+func _shadow_readback() -> Dictionary:
+	return {"shadow_bias": _sun.shadow_bias, "shadow_normal_bias": _sun.shadow_normal_bias,
+		"shadow_opacity": _sun.shadow_opacity, "shadow_enabled": _sun.shadow_enabled}
+
+
+func _restore_shadow(settings: Dictionary) -> void:
+	_sun.shadow_bias = float(settings.shadow_bias)
+	_sun.shadow_normal_bias = float(settings.shadow_normal_bias)
+	_sun.shadow_opacity = float(settings.shadow_opacity)
+	_sun.shadow_enabled = bool(settings.shadow_enabled)
+
+
+func _measure() -> Dictionary:
+	var measured := super._measure()
+	var active := _terrain_material.call("get_shader_override") as Shader
+	measured["active_override_is_diagnostic"] = active == _diagnostic_shader
+	measured["active_override_code_sha256"] = active.code.sha256_text() if active != null else "missing"
+	measured["original_override_code_sha256"] = _original_shader.code.replace("\r\n", "\n").sha256_text()
+	measured["corrected_vertex_normals"] = _diagnostic_shader.code == _corrected_code
+	return measured
+
+
+func _finish(complete: bool) -> void:
+	if _sun != null and not _original_shadow.is_empty():
+		_restore_shadow(_original_shadow)
+		# Parent restores opacity too; make that value the original, not the
+		# last case's daytime repin, while retaining its shader/parameter cleanup.
+		_baseline_shadow_opacity = float(_original_shadow.shadow_opacity)
+	super._finish(complete)

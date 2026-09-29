@@ -723,6 +723,17 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	arch.set_surface_override_material(0, _gate_stone_material())
 	arch.set_surface_override_material(1, _works.call("_tether_material"))
 	root.add_child(arch)
+	# F04#1 (Vance render 5e8c3de3, --lens-probe): the fitted arch is wider and
+	# deeper than the jamb/lintel colliders it dresses, and the fight camera
+	# parked inside its stone. Its own shape, camera-only: the lens stops at
+	# the stone and still passes through the open arch; nobody collides with it.
+	arch.create_trimesh_collision()
+	for child: Node in arch.get_children():
+		if child is StaticBody3D:
+			var occluder := child as StaticBody3D
+			occluder.name = "CameraOccluder"
+			occluder.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+			occluder.collision_mask = 0
 	return arch
 
 

@@ -9,6 +9,7 @@ const PROGRESSION:=preload("res://scripts/creatures/progression.gd")
 const GLYPHS:=preload("res://scripts/ui/input_glyph.gd")
 const FEED:=preload("res://scripts/creatures/progression_feed.gd")
 const INPUT_OWNER:=preload("res://scripts/ui/input_owner.gd")
+const TOKENS:=preload("res://scripts/ui/ui_tokens.gd")
 class Manager extends Node:
 	var _enemy_owned := true
 class Director extends Node:
@@ -19,6 +20,7 @@ var game:Node
 var hud:CanvasLayer
 var combat:CanvasLayer
 var feed:CanvasLayer
+var victory_candidate := false
 
 
 func _init()->void:_run.call_deferred()
@@ -41,10 +43,11 @@ func _capture(label:String)->void:
 
 
 func _run()->void:
-	root.size=Vector2i(1280,800)
+	var at_720p := "--720p" in OS.get_cmdline_user_args()
+	root.size=Vector2i(1280,720 if at_720p else 800)
 	# Production HUD authoring canvas is 1920 wide; render its normal stretch
 	# at the actual 1280x800 handheld window, not a narrower fake author canvas.
-	root.content_scale_size=Vector2i(1920,1200)
+	root.content_scale_size=Vector2i(1920,1080 if at_720p else 1200)
 	game=root.get_node("Game")
 	game.reset_for_new_game()
 	game.set_process(false)
@@ -63,6 +66,9 @@ func _run()->void:
 	await _frames(15)
 	hud.set_process(false)
 	combat.set_process(false)
+	victory_candidate = "--victory-hierarchy-candidate" in OS.get_cmdline_user_args()
+	if victory_candidate:
+		await _enable_victory_candidate()
 	feed=get_first_node_in_group("progression_feedback_presenter")
 	feed.set_process(false)
 	_check(feed == hud and get_nodes_in_group("progression_feedback_presenter").size() == 1,"Production HUD owns one progression presenter")
@@ -183,6 +189,10 @@ func _full_party_moment_layout() -> void:
 		_check(rect.position.y >= canvas.y * 0.05 - 1 and rect.end.x <= canvas.x * 0.95 + 1 and rect.end.y <= canvas.y * 0.95 + 1, mode + ": whole receipt fits the handheld safe area")
 		_check(rect.size.y <= canvas.y * 0.48, mode + ": five-member details remain a compact card")
 		_check(text.contains("150 Coin, 1 Rare Candy"), mode + ": full-team layout retains exact payout")
+		if victory_candidate:
+			_check(hud._moment_separator.visible, mode + ": mixed receipt/growth has a divider")
+			_check(hud._moment_title.get_theme_color("font_color") == TOKENS.WARNING,
+				mode + ": receipt keeps the gold accent when five members level up")
 		_check(text.count(" HP") == 5 and text.count(" ATK") == 5 and text.count(" DEF") == 5, mode + ": every member retains its stat deltas")
 		index = 0
 		for member: RefCounted in game.party.members():
@@ -191,6 +201,68 @@ func _full_party_moment_layout() -> void:
 			index += 1
 		print("FULL PARTY HUD %s bounds=%s canvas=%s" % [mode, rect, canvas])
 	hud.set_world_presentation_mode("exploration")
+
+
+## Exercise the candidate without changing the on-disk gate used by concurrent
+## captures. These are layout/ownership checks, not a rendered acceptance claim.
+func _enable_victory_candidate() -> void:
+	_check(not hud._victory_hierarchy_candidate, "Committed victory gate starts disabled")
+	_check(hud._quick_items_heading == null and hud._moment_separator == null,
+		"Disabled candidate adds no visual nodes")
+	var panel: Control = hud._hotbar_panel
+	var baseline := panel.get_global_rect()
+	var slot_sizes: Array[Vector2] = []
+	for chip: Control in hud._hotbar_chips:
+		slot_sizes.append(chip.custom_minimum_size)
+	hud._victory_hierarchy_candidate = true
+	hud._style_hotbar()
+	hud._moment_banner.free()
+	hud._build_moment_banner()
+	await _frames(8)
+	var heading: Label = hud._quick_items_heading
+	_check(heading.text == "QUICK ITEMS" and heading.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"Persistent bar heading is explicit and passive")
+	_check(heading.get_theme_font_size("font_size") >= hud.HUD_READABLE_FONT_SIZE,
+		"Heading retains the existing controller label font floor")
+	_check(panel.get_global_rect().is_equal_approx(baseline), "Heading spends existing padding without growing/moving the bar")
+	_check(panel.get_global_rect().encloses(heading.get_global_rect()), "Heading is contained by its panel")
+	_check(hud._hotbar_chips.size() == 5, "All five quick bindings remain present")
+	for index in 5:
+		_check(hud._hotbar_chips[index].custom_minimum_size == slot_sizes[index], "Slot %d retains its full dimensions" % index)
+		_check(not heading.get_global_rect().intersects(hud._hotbar_chips[index].get_global_rect()), "Heading clears slot %d" % index)
+	panel.hide()
+	_check(not heading.is_visible_in_tree(), "Heading follows the hotbar visibility owner")
+	panel.show()
+	# The assigned bar keeps all icon/glyph/count space, not only empty slots.
+	for chip: Control in hud._hotbar_chips:
+		chip.custom_minimum_size.y = hud.HOTBAR_ASSIGNED_SLOT_HEIGHT
+	await _frames(8)
+	_check(is_equal_approx(panel.size.y - baseline.size.y,
+		hud.HOTBAR_ASSIGNED_SLOT_HEIGHT - slot_sizes[0].y), "Assigned bar grows only by the original slot-height difference")
+	_check(panel.get_global_rect().encloses(heading.get_global_rect()), "Assigned heading stays within the existing bar bounds")
+	_check(not panel.get_global_rect().intersects(hud._prompt_label.get_global_rect()), "Assigned bar still clears the contextual prompt")
+	for index in 5:
+		hud._hotbar_chips[index].custom_minimum_size = slot_sizes[index]
+	await _frames(8)
+	var level := {"kind":"level_up", "creature_id":17, "name":"Probe", "old_level":1,
+		"new_level":2, "hp_delta":4, "attack_delta":1, "defence_delta":1}
+	hud._moment_events.assign([level])
+	hud._render_moment_events()
+	_check(not hud._moment_separator.visible and hud._moment_title.get_theme_color("font_color") == TOKENS.TEAL,
+		"Unrelated level-only moments retain their original styling")
+	var receipt := {"kind":"reward_summary", "receipt":"Officer Venn's reward: 10 Coin, 1 Revive"}
+	hud._moment_events.assign([receipt])
+	hud._render_moment_events()
+	_check(not hud._moment_separator.visible and hud._moment_detail.text == receipt.receipt,
+		"Receipt-only card retains exact wording without an empty divider")
+	hud._moment_events.assign([receipt, level])
+	var original_events: Array = hud._moment_events.duplicate(true)
+	hud._render_moment_events()
+	_check(hud._moment_separator.visible and hud._moment_title.get_theme_color("font_color") == TOKENS.WARNING,
+		"Mixed receipt and level card uses a gold hierarchy and divider")
+	_check(hud._moment_events == original_events and hud._moment_detail.text == receipt.receipt,
+		"Presentation leaves source events and exact receipt unchanged")
+	hud._moment_events.clear()
 
 
 func _progression_reset_and_modal_lifecycle(member: RefCounted) -> void:

@@ -64,6 +64,7 @@ const MAP_BAKER_PATH := "res://scripts/world/map_baker.gd"
 const REALM_TRANSITIONS_PATH := "res://data/config/realm_transitions.json"
 const CLOUDREACH_WORLD_PATH := "res://data/config/cloudreach_world.json"
 const MAP_CONFIG_PATH := "res://data/config/map.json"
+const REALM_SELECTION_VISUAL := "res://data/config/map_realm_selection_visual.json"
 
 ## Fallback used only if `map.json`'s own `realm_link.unlock_flags` is
 ## missing/empty (`_realm_link_unlock_flags()`). D110: the Warden grants
@@ -639,6 +640,8 @@ func _refresh_realm_row() -> void:
 	_realm_row.visible = true
 	var realms_key := ",".join(realms)
 	if str(_realm_row.get_meta("realms_key", "")) != realms_key:
+		var selection_visual: Variant = JSON.parse_string(FileAccess.get_file_as_string(REALM_SELECTION_VISUAL))
+		var highlight_selected := selection_visual is Dictionary and bool(selection_visual.get("enabled", false))
 		for child in _realm_row.get_children():
 			child.queue_free()
 		_realm_buttons.clear()
@@ -652,13 +655,22 @@ func _refresh_realm_row() -> void:
 			button.focus_mode = Control.FOCUS_NONE
 			button.pressed.connect(_on_realm_button_pressed.bind(realm_id))
 			_realm_row.add_child(button)
+			if highlight_selected:
+				# Keep the selected button's existing disabled/input semantics,
+				# but use the menu's selected palette instead of unavailable gray.
+				var selected_box := button.get_theme_stylebox("normal").duplicate() as StyleBoxFlat
+				if selected_box != null:
+					selected_box.bg_color = UITokens.BG_PANEL_ALT.lightened(0.08)
+					selected_box.border_color = UITokens.TEAL
+					selected_box.set_border_width_all(UITokens.EDGE)
+					button.add_theme_stylebox_override("disabled", selected_box)
+					button.add_theme_color_override("font_disabled_color", UITokens.TEXT_PRIMARY)
 			_realm_buttons[realm_id] = button
 		_realm_row.set_meta("realms_key", realms_key)
 	var shown := _display_realm()
 	for realm_id: String in _realm_buttons:
-		# `disabled` reads as "this is the one already selected" — the same
-		# meaning a tab strip gives its own current tab — without inventing a
-		# second selected/unselected stylebox pair for one two-item row.
+		# The displayed realm cannot be clicked again; L3/R3 and the other
+		# realm buttons retain their existing navigation behavior.
 		(_realm_buttons[realm_id] as Button).disabled = (realm_id == shown)
 
 

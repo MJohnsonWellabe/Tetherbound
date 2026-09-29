@@ -13,6 +13,7 @@ extends MeshInstance3D
 ## registered material that writes its own FOG (the fall columns and spray).
 ## Tunables: water_veilfall.json::silhouette.
 const SHADER := preload("res://shaders/water_veilfall_silhouette.gdshader")
+const VISUAL_CONFIG := "res://data/config/water_veilfall_silhouette_visual.json"
 const POLL_SECONDS := 0.25
 
 var fogged_materials: Array[ShaderMaterial] = []
@@ -73,6 +74,49 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# WorldLook may swap the Environment resource, so read it through the node.
 	_environment_node = world.get_node_or_null("WorldEnvironment") as WorldEnvironment
+	var candidate: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
+	if candidate is Dictionary and bool(candidate.get("enabled", false)):
+		var composition := world.get_node_or_null(str(candidate.get("source_root", ""))) as Node3D
+		add_decorative_far_meshes(world, composition, candidate)
+
+
+## Reuse only visible crag/cap surfaces. Never duplicate the source hierarchy:
+## it contains PhysicalCragSupport bodies that must remain owned by the near
+## composition. Sharing Mesh resources also prevents a second geometry recipe
+## from drifting away from the existing grounded formations.
+func add_decorative_far_meshes(world: Node3D, composition: Node3D, settings: Dictionary) -> int:
+	if not bool(settings.get("enabled", false)) or composition == null:
+		return 0
+	var accepted: Array = settings.get("mesh_names", [])
+	var receiver_inverse := _transform_under(self, world).affine_inverse()
+	var count := 0
+	for child: Node in composition.find_children("*", "MeshInstance3D", true, false):
+		var source := child as MeshInstance3D
+		if str(source.name) not in accepted or source.mesh == null:
+			continue
+		var copy := MeshInstance3D.new()
+		copy.name = "Far_%s_%s" % [source.get_parent().name, source.name]
+		copy.mesh = source.mesh
+		copy.transform = receiver_inverse * _transform_under(source, world)
+		copy.material_override = material_override
+		copy.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		copy.visibility_range_begin = maxf(visibility_range_begin, source.visibility_range_end)
+		copy.extra_cull_margin = extra_cull_margin
+		add_child(copy)
+		count += 1
+	return count
+
+
+## Composed local transforms work both in production and in detached unit
+## fixtures, without asking the scene tree for global transforms.
+static func _transform_under(node: Node3D, ancestor: Node3D) -> Transform3D:
+	var result := Transform3D.IDENTITY
+	var current: Node = node
+	while current != null and current != ancestor:
+		if current is Node3D:
+			result = (current as Node3D).transform * result
+		current = current.get_parent()
+	return result
 
 
 func _grid_normal(grid: Array, ring: int, segment: int, segments: int, centre_xz: Vector2) -> Vector3:

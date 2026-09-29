@@ -1,0 +1,301 @@
+{
+  "scope": "Unapplied CPU/source-only fuller dune tuft proposal. No engine/GPU, capture harness, art acceptance or performance claim.",
+  "source_commit": "c2110feba1ac31ccc981434599ee7f844b86c499",
+  "source_hashes": {
+    "scripts/world/water_world.gd": "3efa0f5360776a9a4b2899441bcaaf78335e92bade4c244814889c92a57280b4",
+    "data/config/water_ground_cover.json": "e5e601918b4bb7f674e1d9d0b29c613408421dc7b7c33aecbbb6573d7dc9c490",
+    "scripts/world/grass_field.gd": "9f805bcc8b4a32e3c5a91762a534d47850a8c4a71d53ade6ef2ae03e4a1b35b9",
+    "data/config/debug_teleport_spots.json": "6c964ce0922ad3a73ac9ede369ec58a6389951f8ca70f19976347a244a7ab8f1",
+    "shaders/grass_field.gdshader": "aca83f9afec27156636d57aa4cea26060c04ed5fef82dafc2f406d8be0d56043",
+    "tools/phase2_capture_locations.gd": "fcd3bd8dfb1a527dc86dbdf827270b0f498de15ffb09c85dbc2687a9865589dc"
+  },
+  "production_gates": {
+    "data/config/water_dune_terrain.json": {
+      "enabled": false,
+      "sha256": "21253bb62ba36b4195d83d1a8f079159e3354ff7eed5d3ab1fa71093125ff8e5"
+    },
+    "data/config/water_dune_cover.json": {
+      "enabled": false,
+      "sha256": "bdbe87f081ef3a338984d994fc07d4492aac37d9ba37c64c505ff4e13b27dba6"
+    }
+  },
+  "zero_shift_dependency": {
+    "path": ".artifacts/phase2/coastal-colony07-proposal/proposal.patch",
+    "sha256": "ae52370805702957ffad8d6458e252f83f07721125ef22171d226a0f1c2fcf31"
+  },
+  "cpu_allocation_provenance": {
+    "path": "colony07-cpu.json",
+    "sha256": "0aa17e553e20a943ad77a6cd307ad250bcd9399ec8f0888568969312a8bbd839",
+    "method": "Retained source-derived lattice transcription, native06 baseline reproduced; sum and candidate topology checked again here."
+  },
+  "default_recipe": {
+    "basal_blades": [],
+    "basal_height_scale": 1.0,
+    "basal_half_width_m": 0.018,
+    "stem_count": 0,
+    "stem_radius_m": 0.0,
+    "stem_jitter_m": 0.0
+  },
+  "candidate_recipe": {
+    "basal_blades": [
+      0,
+      3,
+      6
+    ],
+    "basal_height_scale": 0.6,
+    "basal_half_width_m": 0.026,
+    "stem_count": 3,
+    "stem_radius_m": 0.045,
+    "stem_jitter_m": 0.012
+  },
+  "prior_native_failure": {
+    "log": ".local/phase2/colony08-mesh-probe02.log",
+    "observed_blade0_uv2_y": 0.971844673,
+    "expected_blade0_uv2_y": 0.583106804,
+    "cause": "Array.has(integer blade) did not match the JSON float indices. Python numeric membership hid the mismatch.",
+    "fix": "Exact integer OR float membership; no string/bool/fraction conversion.",
+    "verification_status": "Corrected CPU/type-sensitive checks pass; root must rerun actual ArrayMesh probe."
+  },
+  "checks": {
+    "exact_source_edit_inversion": true,
+    "ordinary_recipe_ignored_cases": [
+      [
+        4,
+        3,
+        null
+      ],
+      [
+        4,
+        3,
+        1
+      ],
+      [
+        4,
+        3,
+        3
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        4,
+        4,
+        1
+      ],
+      [
+        4,
+        4,
+        3
+      ],
+      [
+        7,
+        2,
+        null
+      ],
+      [
+        7,
+        2,
+        1
+      ],
+      [
+        7,
+        2,
+        6
+      ],
+      [
+        8,
+        4,
+        null
+      ],
+      [
+        8,
+        4,
+        1
+      ],
+      [
+        8,
+        4,
+        7
+      ]
+    ],
+    "dune_default_recipe_equivalence": true,
+    "candidate_topology_80_vertices_56_triangles": true,
+    "three_basal_leaves_on_distinct_stems": true,
+    "finite_vertices_valid_indices_pointed_tips": true,
+    "lod_prefix_retained": true,
+    "shader_identical_to_zero_shift_control": true,
+    "candidate_config_enabled_false": true,
+    "json_float_indices_match_integer_recipe": true,
+    "mixed_numeric_indices_match": true,
+    "wrong_type_and_fractional_indices_ignored": true,
+    "limitation": "Python transcription and exact source checks; no GDScript execution/parser or native mesh verification."
+  },
+  "candidate_leaves": [
+    {
+      "blade": 0,
+      "basal": true,
+      "stem": 0,
+      "height": 0.5831068141896403,
+      "half_width": 0.026,
+      "root_xz": [
+        0.0,
+        0.05453486854765362
+      ]
+    },
+    {
+      "blade": 1,
+      "basal": false,
+      "stem": 0,
+      "height": 0.7761897836940543,
+      "half_width": 0.018,
+      "root_xz": [
+        0.0073287302045320635,
+        0.04823244096422813
+      ]
+    },
+    {
+      "blade": 2,
+      "basal": false,
+      "stem": 0,
+      "height": 0.8137984255078663,
+      "half_width": 0.018,
+      "root_xz": [
+        0.00014621065902871083,
+        0.04486649657758775
+      ]
+    },
+    {
+      "blade": 3,
+      "basal": true,
+      "stem": 1,
+      "height": 0.5879981508662768,
+      "half_width": 0.026,
+      "root_xz": [
+        0.035611339799899555,
+        -0.03248442486734949
+      ]
+    },
+    {
+      "blade": 4,
+      "basal": false,
+      "stem": 1,
+      "height": 0.8122157581891962,
+      "half_width": 0.018,
+      "root_xz": [
+        0.03231153193053676,
+        -0.023106335359016184
+      ]
+    },
+    {
+      "blade": 5,
+      "basal": false,
+      "stem": 1,
+      "height": 0.7774293845290047,
+      "half_width": 0.018,
+      "root_xz": [
+        0.0386364278023391,
+        -0.02189622727546539
+      ]
+    },
+    {
+      "blade": 6,
+      "basal": true,
+      "stem": 2,
+      "height": 0.5834738751380107,
+      "half_width": 0.026,
+      "root_xz": [
+        -0.032138508056794704,
+        -0.013497236341066584
+      ]
+    },
+    {
+      "blade": 7,
+      "basal": false,
+      "stem": 2,
+      "height": 0.8544907528958198,
+      "half_width": 0.018,
+      "root_xz": [
+        -0.03378695579368994,
+        -0.02373467177546729
+      ]
+    }
+  ],
+  "allocation": [
+    {
+      "requested_tufts": 54000,
+      "actual_instances": 57836,
+      "layers": 9,
+      "tiles": 52,
+      "per_cell": [
+        19,
+        4,
+        4,
+        4,
+        6,
+        6,
+        7,
+        8,
+        10
+      ],
+      "layer_instance_counts": [
+        46968,
+        5088,
+        2432,
+        1200,
+        888,
+        480,
+        364,
+        256,
+        160
+      ],
+      "blades": 5,
+      "segments": 4,
+      "vertices_per_tuft": 50,
+      "triangles_per_tuft": 35,
+      "allocated_vertices": 2891800,
+      "allocated_triangles": 2024260
+    },
+    {
+      "requested_tufts": 36000,
+      "actual_instances": 38760,
+      "layers": 9,
+      "tiles": 52,
+      "per_cell": [
+        13,
+        2,
+        3,
+        3,
+        3,
+        5,
+        4,
+        6,
+        7
+      ],
+      "layer_instance_counts": [
+        32136,
+        2544,
+        1824,
+        900,
+        444,
+        400,
+        208,
+        192,
+        112
+      ],
+      "blades": 8,
+      "segments": 4,
+      "vertices_per_tuft": 80,
+      "triangles_per_tuft": 56,
+      "allocated_vertices": 3100800,
+      "allocated_triangles": 2170560
+    }
+  ],
+  "output_sha256": {
+    "colony08-proposal.patch": "9a565e4cdade3c112d4af1f47df301c50ad7e8da9e8cb4ad6177ac0b194753c2",
+    "colony08-mesh-only.patch": "0b1557284aa33649acd7f5505a8e2951d93c226b0a384d3835c979cc32b7ac08",
+    "colony08-grass-field-preview.gd": "6cbe8d3e5aac72439a7de77295b48333d54f9eebc1901fa0d389d9e074e970d9",
+    "colony08-cover-preview.json": "d05170c5799836d98a59dab63ff76c2d5195b528c9fb80f2ec37fb259b3e74c9"
+  }
+}

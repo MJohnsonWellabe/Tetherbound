@@ -96,8 +96,11 @@ func _capture_row(row: Dictionary) -> void:
 		panel.visible = false
 		_write_manifest()
 		return
-	for frame in 7:
-		await process_frame
+	if not await _settle_dialogue_capture():
+		panel.call("close")
+		panel.visible = false
+		_write_manifest()
+		return
 	await RenderingServer.frame_post_draw
 	var path := "%s/%s__dialogue.jpg" % [_output_dir, str(row.frame_id)]
 	var image := root.get_texture().get_image()
@@ -119,6 +122,14 @@ func _capture_row(row: Dictionary) -> void:
 		record["camera_rig_spring_length"] = _rig.spring_length
 		record["camera_player_distance_m"] = _camera.global_position.distance_to(_player.global_position)
 		record["camera_fov_degrees"] = _camera.fov
+		record["conversation_camera_active"] = bool(_rig.call("is_in_conversation"))
+		record["conversation_camera_blend"] = float(_rig.call("conversation_blend"))
+		var shot: Dictionary = _rig.call("conversation_shot")
+		for key: String in shot:
+			if shot[key] is Vector3:
+				shot[key] = _vec3(shot[key])
+		record["conversation_camera_shot"] = shot
+		record["conversation_camera_fallback"] = bool(_rig.call("conversation_used_fallback"))
 		record["camera_purpose"] = "dialogue"
 		record["player_position"] = _vec3(_player.global_position)
 		record["bytes"] = FileAccess.get_file_as_bytes(path).size()
@@ -141,3 +152,9 @@ func _capture_row(row: Dictionary) -> void:
 	for frame in 30:
 		await physics_frame
 	_write_manifest()
+
+
+func _settle_dialogue_capture() -> bool:
+	for frame in 7:
+		await process_frame
+	return true

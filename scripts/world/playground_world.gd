@@ -981,6 +981,11 @@ func _apply_dynamic_collision() -> void:
 ## reader. Read once in `_ready()` (below `COLLISION_STREAM_INTERVAL`'s own
 ## fallback default), same pattern as `vegetation.gd`'s two sibling levers.
 var COLLISION_STREAM_INTERVAL := 0.5
+## Playtest (2026-09-29): the mouse stopped turning the camera after the build menu and
+## after trading with Oskar. See `_reclaim_mouse_if_released`.
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const MOUSE_GUARD_INTERVAL := 0.25
+var _mouse_guard_elapsed := 0.0
 var _collision_stream_elapsed: float = 0.0
 
 
@@ -991,6 +996,10 @@ func _process(delta: float) -> void:
 	# would drag the bubble back to the spawn twice a second.
 	if simulation_only:
 		return
+	_mouse_guard_elapsed += delta
+	if _mouse_guard_elapsed >= MOUSE_GUARD_INTERVAL:
+		_mouse_guard_elapsed = 0.0
+		_reclaim_mouse_if_released()
 	if _vegetation == null or _player == null:
 		return
 	_collision_stream_elapsed += delta
@@ -999,6 +1008,23 @@ func _process(delta: float) -> void:
 	_collision_stream_elapsed = 0.0
 	if _vegetation.has_method("update_collision_streaming"):
 		_vegetation.call("update_collision_streaming", _player.global_position)
+
+
+## Safety net for the camera's mouse. Every panel puts the mouse back when it closes,
+## but only if nothing else still owns input at that instant (the dialogue panel keeps
+## owning input until its closing press is released, so a shop that closes inside that
+## window skips the restore), and once skipped nothing ever came back: the camera stayed
+## dead until the player happened to alt-tab. Whenever no panel owns input and nothing
+## wants the cursor, the camera gets the mouse back. A no-op on the headless display
+## server, which cannot report the real mode.
+func _reclaim_mouse_if_released() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
+	if INPUT_OWNER.current(get_tree()) != null or _mouse_wanted_elsewhere():
+		return
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 ## Capture the mouse for camera look — unless a menu, dialogue box or the

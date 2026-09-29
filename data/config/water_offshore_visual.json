@@ -1,0 +1,11 @@
+{
+  "_comment": "P2-009 default-off Water-only offshore material candidate. Retains the physical depth ramp, near-shore foam, waterline and surface geometry; no current/restoration/physics or other-realm shader changes. Native paired review required.",
+  "enabled": false,
+  "deep_colour": "#194856",
+  "depth_start_m": 5.0,
+  "depth_full_m": 32.0,
+  "strength": 0.62,
+  "variation_scale": 0.0035,
+  "variation_strength": 0.08,
+  "fresnel_multiplier": 0.52
+}

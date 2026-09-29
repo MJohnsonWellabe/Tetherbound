@@ -1,0 +1,257 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome": "water",
+	"complete": false,
+	"display_server": "Windows",
+	"failures": [
+		"riptusk: camera changed within the lifecycle"
+	],
+	"fixture": "Production scene, trainer and camera; direct visual pose fixture, not combat or traversal proof",
+	"frames": [
+		{
+			"animation": "idle",
+			"animation_playing": true,
+			"animation_position_seconds": 0.0948383333333333,
+			"body_instance_id": 650150691713,
+			"body_parked": true,
+			"camera": {
+				"far": 6500.0,
+				"fov": 70.0,
+				"frustum_offset": [
+					0.0,
+					0.0
+				],
+				"h_offset": 0.0,
+				"keep_aspect": 1,
+				"near": 0.0500000007450581,
+				"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+				"projection": 0,
+				"size": 1.0,
+				"transform": {
+					"basis": [
+						[
+							-1.0,
+							0.0,
+							-0.000000150995802528087
+						],
+						[
+							-0.0000000313937960072508,
+							0.978147625923157,
+							0.2079117000103
+						],
+						[
+							0.000000147696184171764,
+							0.2079117000103,
+							-0.978147625923157
+						]
+					],
+					"origin": [
+						35.0,
+						17.5536098480225,
+						106.781288146973
+					]
+				},
+				"v_offset": 0.0,
+				"viewport": [
+					1920,
+					1080
+				]
+			},
+			"camera_delta_from_entry": {
+				"basis_max": 0.0,
+				"lens_equal": true,
+				"origin_m": 0.0
+			},
+			"elapsed_seconds": 0.133127,
+			"id": "water__riptusk__resting__t0100",
+			"lateness_seconds": 0.033127,
+			"live_gate": false,
+			"model_pivot": {
+				"basis": [
+					[
+						-0.0000000437113882867379,
+						1.0,
+						0.0
+					],
+					[
+						-1.0,
+						-0.0000000437113882867379,
+						0.0
+					],
+					[
+						0.0,
+						0.0,
+						1.0
+					]
+				],
+				"origin": [
+					2.125,
+					1.36749994754791,
+					0.0
+				]
+			},
+			"observed_monotonic_usec": 73881942,
+			"path": "res://.artifacts/phase2/p2029-rest-native-01-before/water__riptusk__resting__t0100.jpg",
+			"physical": {
+				"body_global_transform": {
+					"basis": [
+						[
+							-1.0,
+							0.0,
+							0.0000000874227765734759
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							-0.0000000874227765734759,
+							0.0,
+							-1.0
+						]
+					],
+					"origin": [
+						37.9749984741211,
+						14.7493009567261,
+						117.650001525879
+					]
+				},
+				"body_transform": {
+					"basis": [
+						[
+							-1.0,
+							0.0,
+							0.0000000874227765734759
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							-0.0000000874227765734759,
+							0.0,
+							-1.0
+						]
+					],
+					"origin": [
+						37.9749984741211,
+						14.7493009567261,
+						117.650001525879
+					]
+				},
+				"capsule_height": 4.25,
+				"capsule_radius": 1.48749995231628,
+				"collider_class": "CapsuleShape3D",
+				"collider_disabled": false,
+				"collider_transform": {
+					"basis": [
+						[
+							1.0,
+							0.0,
+							0.0
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							0.0,
+							0.0,
+							1.0
+						]
+					],
+					"origin": [
+						0.0,
+						2.125,
+						0.0
+					]
+				},
+				"height": 4.25,
+				"radius": 1.4875,
+				"scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"pose": "resting",
+			"resolution": [
+				1920,
+				1080
+			],
+			"rest_receipt": {
+				"active": true,
+				"bones": [],
+				"config": {
+					"mode": "roll",
+					"roll_deg": 90.0
+				},
+				"pending": false,
+				"species": "riptusk",
+				"vertex_contact_deform": {}
+			},
+			"sample_seconds": 0.1,
+			"sample_window_valid": true,
+			"sha256": "ef6df1ae2319be3e49a0189c33669ad6be489b1d45d0502445c392beb263aeec",
+			"species": "riptusk",
+			"sun": {
+				"color": [
+					1.0,
+					0.945098042488098,
+					0.847058832645416
+				],
+				"directional_shadow_max_distance": 220.0,
+				"directional_shadow_mode": 1,
+				"energy": 1.39999997615814,
+				"shadow_bias": 0.0599999986588955,
+				"shadow_enabled": true,
+				"shadow_normal_bias": 1.70000004768372,
+				"shadow_opacity": 1.0,
+				"transform": {
+					"basis": [
+						[
+							-0.766044437885284,
+							0.0,
+							-0.642787635326386
+						],
+						[
+							-0.446517825126648,
+							0.719339787960052,
+							0.532139182090759
+						],
+						[
+							0.462382733821869,
+							0.694658398628235,
+							-0.551046252250671
+						]
+					],
+					"origin": [
+						0.0,
+						0.0,
+						0.0
+					]
+				}
+			}
+		}
+	],
+	"live_transitions": true,
+	"paired_transitions": false,
+	"pose_filter": [
+		"resting"
+	],
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"species_filter": "riptusk,torrentoad",
+	"stage_xz": [
+		35.0,
+		110.0
+	]
+}

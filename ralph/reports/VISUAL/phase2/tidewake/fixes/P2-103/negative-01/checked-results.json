@@ -1,0 +1,9 @@
+{
+  "id": "venn-cap-negative",
+  "kind": "negative_frame_cap",
+  "expected_exit": 1,
+  "actual_exit": 1,
+  "checked": true,
+  "native_visual_acceptance": false,
+  "manifest_sha256": "CD1989AEE6C0359DAD2AE77297EA33D4EA8E16F015DBBB1B0BFDC6DF137A1987"
+}

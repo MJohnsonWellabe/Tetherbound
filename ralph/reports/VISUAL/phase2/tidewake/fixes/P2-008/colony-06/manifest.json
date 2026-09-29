@@ -1,0 +1,4709 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2",
+  "repro": "Restore retained colony06 wrapper/runner/shader texts/review JSON and exact reviewed proposal.patch into .artifacts/phase2; reuse hash-pinned dune05-runtime.zip from dunes-05-pilot-repro. Authorized shared GPU slot required. Run colony06-capture.ps1 -Round <fresh-colony06-suffix>; one native Windows Compatibility fullscreen1920x1080 process, three exact named views with baseline/candidate pairs. Gates remain false on disk. This capture passes runtime guards; art/performance require separate judgments.",
+  "source_manifest_sha256": "dfabc721ee2aaafee90e924f9881ae2020a982229f6d6aab5f287cda2da00cf4",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "water",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 254090938231,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 254107715451,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T17:26:37",
+    "capture_started_utc": "2026-09-28T17:25:27",
+    "captured_frame_count": 6,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "colony06": {
+      "live_gates": {
+        "data/config/water_dune_cover.json": {
+          "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
+          "_comment_colonies": "Unjudged rooted-tussock candidate: pointed ribbons fan out from a shared root with varied arcs, leaf-specific olive/straw gradients and smaller pockets within each colony. Existing terrain and gameplay clearances remain enforced. Source profiles and other realms are unchanged.",
+          "enabled": true,
+          "grass_palette": {
+            "sage": "#92966a",
+            "straw": "#c4b782"
+          },
+          "grass_texture": "res://assets/environment/stylized_nature/derived/Grass_C_dune_sage_straw.png",
+          "ground_cover": {
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "count": 280.0,
+                "density_gain": 0.16,
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "name": "strand_bushes",
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a"
+              },
+              {
+                "count": 100.0,
+                "density_gain": 0.1,
+                "item_size": 0.4,
+                "name": "strand_flowers",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0
+          },
+          "layers": {
+            "groundcover": {
+              "cluster_radius_m": [
+                1.8,
+                4.0
+              ],
+              "clusters": 12.0,
+              "models": [
+                "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"
+              ],
+              "per_cluster": [
+                12.0,
+                24.0
+              ],
+              "scale": [
+                0.42,
+                0.68
+              ]
+            },
+            "shrubs": {
+              "_dune_sheltered": true,
+              "cluster_radius_m": [
+                5.0,
+                11.0
+              ],
+              "clusters": 9.0,
+              "models": [
+                "res://assets/environment/stylized_nature/Bush_Common.gltf"
+              ],
+              "per_cluster": [
+                3.0,
+                6.0
+              ],
+              "scale": [
+                0.45,
+                0.85
+              ]
+            },
+            "trees": {
+              "_dune_sheltered": true,
+              "cluster_radius_m": [
+                7.0,
+                17.0
+              ],
+              "clusters": 12.0,
+              "per_cluster": [
+                4.0,
+                8.0
+              ]
+            }
+          },
+          "preserve_islands": [
+            "veilfall"
+          ],
+          "shelter": {
+            "_comment": "Canopy and understory share deterministic centres accepted by both original ground/slope/clearance rules. Existing lee bounds remain unchanged. An upwind ridge must rise at least ridge_relief_m above the centre; bounded unsuccessful searches report zero groves with no fallback placement.",
+            "grove_search_attempts": 256.0,
+            "grove_spacing_m": 20.0,
+            "lee_direction_xz": [
+              1.0,
+              0.35
+            ],
+            "max_radius_fraction": 0.78,
+            "min_projection": 0.04,
+            "ridge_relief_m": 3.0,
+            "shared_groves": true,
+            "upwind_samples_m": [
+              12.0,
+              24.0,
+              40.0
+            ]
+          }
+        },
+        "data/config/water_dune_terrain.json": {
+          "_comment": "Owner-directed Lake Michigan dune islands, 2026-09-28. Presentation-only surface replacement outside Veilfall's separate mountain treatment; no height, collision, control-map, route or water-depth changes. Pair with water_dune_cover.json. Default off until production review.",
+          "_comment_bluff": "Painted rocky banks blend out the dune replacement between normal Y 0.90 and 0.70, retaining installed mineral albedo, normals and roughness at full coverage. Gentle ground stays sand. Verified baked Sluice bank samples span 34-74 degrees; no terrain geometry or collision changes.",
+          "_comment_shadow": "Gated terrain-only shadow caster offset in metres, limited to 0..0.10 and faded out at Veilfall. Native Gull Rest controlled receiver-01 comparison removed fine self-shadow bands at 0.05 while retaining the trainer contact shadow. Visual terrain/collision and global Sun bias are unchanged. Cross-island/day-night review remains required.",
+          "_reference": "Inspected NPS Sleeping Bear Dunes photo: https://www.nps.gov/slbe/learn/photosmultimedia/index.htm (pale quartz sand, sparse sage/straw beach grass, dark damp waterline); direction only, no photographic pixels shipped.",
+          "bluff_full_y": 0.38,
+          "bluff_start_y": 0.72,
+          "enabled": true,
+          "painted_bluff_full_y": 0.7,
+          "painted_bluff_start_y": 0.9,
+          "patch_scale": 0.022,
+          "ripple_scale": 16.0,
+          "ripple_strength": 0.012,
+          "sand_colour": "#b9a078",
+          "shadow_push_m": 0.05,
+          "wet_colour": "#827969"
+        }
+      },
+      "mechanism": "05 two-config process pack, same cached grass Shader resource code switched per pair",
+      "review": {
+        "baseline_text_sha256": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9",
+        "candidate_text_sha256": "2b48b3cea48da27afa440fb93a97841a2e829782fac5d5e56596fffc1845922e",
+        "expected_uniform": 0.18,
+        "pack_sha256": "f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12",
+        "patch_sha256": "3a9abf069a1f331f79df0a55ab1a513f6fe29974bb1ee193a260693c4a13caca",
+        "prepared_only": true,
+        "production_gates": {
+          "data/config/water_dune_cover.json": {
+            "enabled": false,
+            "sha256": "bdbe87f081ef3a338984d994fc07d4492aac37d9ba37c64c505ff4e13b27dba6"
+          },
+          "data/config/water_dune_terrain.json": {
+            "enabled": false,
+            "sha256": "21253bb62ba36b4195d83d1a8f079159e3354ff7eed5d3ab1fa71093125ff8e5"
+          }
+        },
+        "source_anchors": {
+          "data/config/debug_teleport_spots.json": "6c964ce0922ad3a73ac9ede369ec58a6389951f8ca70f19976347a244a7ab8f1",
+          "data/config/water_ground_cover.json": "e5e601918b4bb7f674e1d9d0b29c613408421dc7b7c33aecbbb6573d7dc9c490",
+          "scripts/world/grass_field.gd": "9f805bcc8b4a32e3c5a91762a534d47850a8c4a71d53ade6ef2ae03e4a1b35b9",
+          "scripts/world/water_world.gd": "3efa0f5360776a9a4b2899441bcaaf78335e92bade4c244814889c92a57280b4",
+          "shaders/grass_field.gdshader": "aca83f9afec27156636d57aa4cea26060c04ed5fef82dafc2f406d8be0d56043",
+          "tools/phase2_capture_locations.gd": "fcd3bd8dfb1a527dc86dbdf827270b0f498de15ffb09c85dbc2687a9865589dc"
+        },
+        "source_commit": "ebd5c6258fdfbabcc0bcb1b4b1b6b93dbf19df66"
+      },
+      "scope": "six-frame diagnostic only; no visual or performance acceptance",
+      "wrapper_sha256": "c4a3bd67b0318729505669e17d657c480558e8e15f6a3c3b096b5c660806ea60"
+    },
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 6,
+    "planned_frame_ids": [
+      "water__gull_rest__20__gull_rest_beach__day__close__baseline",
+      "water__gull_rest__20__gull_rest_beach__day__close__candidate",
+      "water__sluice_isle__13__sluice_isle_twin_pumps__day__close__baseline",
+      "water__sluice_isle__13__sluice_isle_twin_pumps__day__close__candidate",
+      "water__first_shore__01__first_shore_welcome_beacon__day__close__baseline",
+      "water__first_shore__01__first_shore_welcome_beacon__day__close__candidate"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 6500.0,
+      "fov": 70.0,
+      "instance_id": 254107715451,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day"
+    ],
+    "requested_views": [
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "restored_shader_text_sha256": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9",
+    "scene": "res://scenes/world/water_archipelago.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "water__gull_rest__20__gull_rest_beach",
+      "water__sluice_isle__13__sluice_isle_twin_pumps",
+      "water__first_shore__01__first_shore_welcome_beacon"
+    ]
+  },
+  "frames": [
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__baseline",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/colony-06/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 268976,
+        "camera_pitch_deg": -12.0,
+        "camera_player_distance_m": 5.82128572463989,
+        "camera_position": [
+          -63.1753692626953,
+          4.39770984649658,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655359268188,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130899995565414,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.207911670207977,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39770984649658,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/colony06-native01/water__gull_rest__20__gull_rest_beach__day__close__baseline.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__baseline",
+        "grass_verification": {
+          "active_config": {
+            "_comment": "Water profile for the shared camera-relative cover system, enabled after matched production captures and guarded boot checks. It adds scenic, non-colliding cover; authored Water vegetation remains authoritative for harvest and canopy.",
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "anchor_clear_radius_m": 3.5,
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "camp_clear_radius_m": 5.0,
+            "centre_bias": 0.62,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "centre_bias": 0.6,
+                "clears_grass": true,
+                "contact_darken": 0.28,
+                "count": 280.0,
+                "density_gain": 0.16,
+                "drift_contrast": 0.9,
+                "drift_gate": 2.2,
+                "drift_scale": 0.028,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "leaf_cut": 1.0,
+                "leaf_root_darken": 0.58,
+                "leaf_serrate": 0.2,
+                "leaf_teeth": 3.6,
+                "leaf_tint_jitter": 0.2,
+                "mesh": "bush",
+                "name": "strand_bushes",
+                "normal_soften": 0.72,
+                "reach_band_m": 12.0,
+                "reach_m": 48.0,
+                "sink": 0.05,
+                "size_jitter": 0.42,
+                "sway": 0.035,
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a",
+                "tint_wood": "#594932"
+              },
+              {
+                "centre_bias": 0.6,
+                "contact_darken": 0.24,
+                "count": 100.0,
+                "density_gain": 0.1,
+                "drift_contrast": 0.93,
+                "drift_gate": 2.4,
+                "drift_scale": 0.032,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.3,
+                "item_size": 0.4,
+                "mesh": "flower",
+                "name": "strand_flowers",
+                "reach_band_m": 12.0,
+                "reach_m": 46.0,
+                "sink": 0.04,
+                "size_jitter": 0.28,
+                "sway": 0.05,
+                "tint_base": "#42572f",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "cull_tile_m": 16.0,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "enabled": true,
+            "fade_start": 36.0,
+            "far_cover": {
+              "enabled": false
+            },
+            "field_radius": 56.0,
+            "forbidden_ground": [
+              "shore",
+              "rock"
+            ],
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "min_ground_height": 0.35,
+            "shade_jitter": 0.26,
+            "snap": 2.0,
+            "stones": {
+              "enabled": false
+            },
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0,
+            "wind_scale": 0.055,
+            "wind_strength": 0.1
+          },
+          "camera": {
+            "basis_component_tolerance": 1e-06,
+            "fov": 70.0,
+            "keep_aspect": 1,
+            "position_tolerance_m": 0.05,
+            "projection": 0,
+            "transform": {
+              "basis_x": [
+                -0.776923954486847,
+                -6.44983941811006e-08,
+                0.629594504833221
+              ],
+              "basis_y": [
+                0.130899995565414,
+                0.978147625923157,
+                0.16153159737587
+              ],
+              "basis_z": [
+                -0.615836322307587,
+                0.207911670207977,
+                -0.759946286678314
+              ],
+              "origin": [
+                -63.1753692626953,
+                4.39770984649658,
+                781.228576660156
+              ]
+            }
+          },
+          "coastal_shift_effective": null,
+          "field_path": "/root/WaterArchipelago/WaterGroundCover",
+          "geometry": [
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737297579638,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737280802421,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737264025204,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737247247987,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737230470770,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737213693553,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737196916336,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737180139119,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737163361902,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737146584685,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_2"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737129807468,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737113030251,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737096253034,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737079475817,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737062698600,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737045921383,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737029144166,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-4"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737012366949,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736995589732,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736978812515,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736962035298,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736945258081,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736928480864,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736911703647,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736894926430,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736878149213,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736861371996,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736844594779,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736827817562,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736811040345,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736794263128,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736777485911,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736760708694,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736743931477,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_3"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736727154260,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-4"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736710377043,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736693599826,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736676822609,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736660045392,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736643268175,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736626490958,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736609713741,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736592936524,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-3"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736576159307,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736559382090,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736542604873,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736525827656,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736509050439,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736492273222,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736475496005,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736458718788,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736441941571,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_1"
+            }
+          ],
+          "material_id": -9223371737331134071,
+          "parameters": {
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_width": 0.85,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "translucency": 0.16
+          },
+          "shader_id": -9223372006555122119,
+          "shader_path": "res://shaders/grass_field.gdshader",
+          "shader_text_sha256": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9"
+        },
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -75.3280029296875,
+              12.2938575744629,
+              777.859985351563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -79.1709976196289,
+              31.3591976165771,
+              860.107971191406
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              15.371000289917,
+              12.2090167999268,
+              833.093994140625
+            ],
+            "species_id": "water_mangrove_monitor"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -152.680114746094,
+              -0.77353036403656,
+              809.522888183594
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -15.7110004425049,
+              -0.612642168998718,
+              783.672973632813
+            ],
+            "species_id": "water_cragclaw"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.196026555556,
+          "hour": 8.00784106222222,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          -59.972972869873,
+          785.180358886719
+        ],
+        "spot_index_in_band": 2,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.994300246238709,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "variant": "baseline",
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "a9467df83f8318ec56a6892e497689bc86b99ede9d6920d66ced564f582db1a8",
+      "source_frame_path": ".artifacts/phase2/colony06-native01/water__gull_rest__20__gull_rest_beach__day__close__baseline.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__gull_rest__20__gull_rest_beach__day__close__candidate",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/colony-06/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 10 \u2014 Gull Rest",
+        "band_id": "gull_rest",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 259736,
+        "camera_pitch_deg": -12.0,
+        "camera_player_distance_m": 5.82128620147705,
+        "camera_position": [
+          -63.1753692626953,
+          4.39771032333374,
+          781.228576660156
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            0.0,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.13090007007122,
+            0.978147625923157,
+            0.16153159737587
+          ],
+          "basis_z": [
+            -0.615836501121521,
+            0.207911759614944,
+            -0.759946525096893
+          ],
+          "origin": [
+            -59.972972869873,
+            3.31655383110046,
+            785.180358886719
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.776923954486847,
+            -6.44983941811006e-08,
+            0.629594504833221
+          ],
+          "basis_y": [
+            0.130900010466576,
+            0.978147625923157,
+            0.161531627178192
+          ],
+          "basis_z": [
+            -0.615836322307587,
+            0.2079117000103,
+            -0.759946286678314
+          ],
+          "origin": [
+            -63.1753692626953,
+            4.39771032333374,
+            781.228576660156
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Gull Rest Beach",
+        "destination_index": 20,
+        "file": "res://.artifacts/phase2/colony06-native01/water__gull_rest__20__gull_rest_beach__day__close__candidate.jpg",
+        "frame_id": "water__gull_rest__20__gull_rest_beach__day__close__candidate",
+        "grass_verification": {
+          "active_config": {
+            "_comment": "Water profile for the shared camera-relative cover system, enabled after matched production captures and guarded boot checks. It adds scenic, non-colliding cover; authored Water vegetation remains authoritative for harvest and canopy.",
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "anchor_clear_radius_m": 3.5,
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "camp_clear_radius_m": 5.0,
+            "centre_bias": 0.62,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "centre_bias": 0.6,
+                "clears_grass": true,
+                "contact_darken": 0.28,
+                "count": 280.0,
+                "density_gain": 0.16,
+                "drift_contrast": 0.9,
+                "drift_gate": 2.2,
+                "drift_scale": 0.028,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "leaf_cut": 1.0,
+                "leaf_root_darken": 0.58,
+                "leaf_serrate": 0.2,
+                "leaf_teeth": 3.6,
+                "leaf_tint_jitter": 0.2,
+                "mesh": "bush",
+                "name": "strand_bushes",
+                "normal_soften": 0.72,
+                "reach_band_m": 12.0,
+                "reach_m": 48.0,
+                "sink": 0.05,
+                "size_jitter": 0.42,
+                "sway": 0.035,
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a",
+                "tint_wood": "#594932"
+              },
+              {
+                "centre_bias": 0.6,
+                "contact_darken": 0.24,
+                "count": 100.0,
+                "density_gain": 0.1,
+                "drift_contrast": 0.93,
+                "drift_gate": 2.4,
+                "drift_scale": 0.032,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.3,
+                "item_size": 0.4,
+                "mesh": "flower",
+                "name": "strand_flowers",
+                "reach_band_m": 12.0,
+                "reach_m": 46.0,
+                "sink": 0.04,
+                "size_jitter": 0.28,
+                "sway": 0.05,
+                "tint_base": "#42572f",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "cull_tile_m": 16.0,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "enabled": true,
+            "fade_start": 36.0,
+            "far_cover": {
+              "enabled": false
+            },
+            "field_radius": 56.0,
+            "forbidden_ground": [
+              "shore",
+              "rock"
+            ],
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "min_ground_height": 0.35,
+            "shade_jitter": 0.26,
+            "snap": 2.0,
+            "stones": {
+              "enabled": false
+            },
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0,
+            "wind_scale": 0.055,
+            "wind_strength": 0.1
+          },
+          "camera": {
+            "basis_component_tolerance": 1e-06,
+            "fov": 70.0,
+            "keep_aspect": 1,
+            "position_tolerance_m": 0.05,
+            "projection": 0,
+            "transform": {
+              "basis_x": [
+                -0.776923954486847,
+                -6.44983941811006e-08,
+                0.629594504833221
+              ],
+              "basis_y": [
+                0.130900010466576,
+                0.978147625923157,
+                0.161531627178192
+              ],
+              "basis_z": [
+                -0.615836322307587,
+                0.2079117000103,
+                -0.759946286678314
+              ],
+              "origin": [
+                -63.1753692626953,
+                4.39771032333374,
+                781.228576660156
+              ]
+            }
+          },
+          "coastal_shift_effective": 0.180000007152557,
+          "field_path": "/root/WaterArchipelago/WaterGroundCover",
+          "geometry": [
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737297579638,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737280802421,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737264025204,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737247247987,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737230470770,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737213693553,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737196916336,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737180139119,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737163361902,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737146584685,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_2"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737129807468,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737113030251,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737096253034,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737079475817,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737062698600,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737045921383,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737029144166,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-4"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737012366949,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736995589732,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736978812515,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736962035298,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736945258081,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736928480864,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736911703647,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736894926430,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736878149213,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736861371996,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736844594779,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736827817562,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736811040345,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736794263128,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736777485911,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736760708694,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736743931477,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_3"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736727154260,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-4"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736710377043,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736693599826,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736676822609,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736660045392,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736643268175,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736626490958,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736609713741,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736592936524,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-3"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736576159307,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736559382090,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736542604873,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736525827656,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736509050439,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736492273222,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736475496005,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736458718788,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736441941571,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_1"
+            }
+          ],
+          "material_id": -9223371737331134071,
+          "parameters": {
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_width": 0.85,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "translucency": 0.16
+          },
+          "shader_id": -9223372006555122119,
+          "shader_path": "res://shaders/grass_field.gdshader",
+          "shader_text_sha256": "2b48b3cea48da27afa440fb93a97841a2e829782fac5d5e56596fffc1845922e"
+        },
+        "identity": "water__gull_rest__20__gull_rest_beach",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_basalt_claw",
+            "node_scale": [
+              0.99999988079071,
+              1.0,
+              0.99999988079071
+            ],
+            "position": [
+              -74.7873229980469,
+              12.3711452484131,
+              778.395568847656
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "water_gull_rest_wild_001_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -79.1709976196289,
+              31.3591976165771,
+              860.107971191406
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_gull_rest_wild_004_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              15.371000289917,
+              12.2090167999268,
+              833.093994140625
+            ],
+            "species_id": "water_mangrove_monitor"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_007_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -153.154647827148,
+              -0.931044638156891,
+              809.406127929688
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_gull_rest_wild_008_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -15.7110004425049,
+              -0.612642168998718,
+              783.672973632813
+            ],
+            "species_id": "water_cragclaw"
+          }
+        ],
+        "nearby_creatures_160m": 5,
+        "observed_clock": {
+          "elapsed_seconds": 200.205410333333,
+          "hour": 8.00821641333333,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -59.972972869873,
+          1.56655406951904,
+          785.180358886719
+        ],
+        "position_xz": [
+          -56.825,
+          789.065
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 1.56316864490509,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          -59.972972869873,
+          785.180358886719
+        ],
+        "spot_index_in_band": 2,
+        "stand_laterals_m": [
+          0.0
+        ],
+        "stand_offsets_m": [
+          5.0
+        ],
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.994300246238709,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          -56.8250007629395,
+          789.065002441406
+        ],
+        "terrain_ground_y": 1.56316864490509,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "variant": "candidate",
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.629594504833221,
+          0.776923954486847
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "54fcd3c74c4e76b18cdac91e0970b3e08453c33d6a09c0e440c80c9b04b9ed07",
+      "source_frame_path": ".artifacts/phase2/colony06-native01/water__gull_rest__20__gull_rest_beach__day__close__candidate.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close__baseline",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/colony-06/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 7 \u2014 Sluice Isle",
+        "band_id": "sluice_isle",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 294309,
+        "camera_pitch_deg": -12.0,
+        "camera_player_distance_m": 5.82121896743774,
+        "camera_position": [
+          908.172119140625,
+          96.0342788696289,
+          2854.95678710938
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.952485024929047,
+            0.0,
+            -0.304585516452789
+          ],
+          "basis_y": [
+            -0.063326895236969,
+            0.978147625923157,
+            0.198032796382904
+          ],
+          "basis_z": [
+            0.297929644584656,
+            0.207911759614944,
+            -0.93167120218277
+          ],
+          "origin": [
+            906.622924804688,
+            94.9531478881836,
+            2859.80151367188
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.952485024929047,
+            -8.05347895038722e-08,
+            -0.304585427045822
+          ],
+          "basis_y": [
+            -0.0633269250392914,
+            0.978147625923157,
+            0.198032692074776
+          ],
+          "basis_z": [
+            0.297929465770721,
+            0.207911625504494,
+            -0.931670963764191
+          ],
+          "origin": [
+            908.172119140625,
+            96.0342788696289,
+            2854.95678710938
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sluice Isle Twin Pumps",
+        "destination_index": 13,
+        "file": "res://.artifacts/phase2/colony06-native01/water__sluice_isle__13__sluice_isle_twin_pumps__day__close__baseline.jpg",
+        "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close__baseline",
+        "grass_verification": {
+          "active_config": {
+            "_comment": "Water profile for the shared camera-relative cover system, enabled after matched production captures and guarded boot checks. It adds scenic, non-colliding cover; authored Water vegetation remains authoritative for harvest and canopy.",
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "anchor_clear_radius_m": 3.5,
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "camp_clear_radius_m": 5.0,
+            "centre_bias": 0.62,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "centre_bias": 0.6,
+                "clears_grass": true,
+                "contact_darken": 0.28,
+                "count": 280.0,
+                "density_gain": 0.16,
+                "drift_contrast": 0.9,
+                "drift_gate": 2.2,
+                "drift_scale": 0.028,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "leaf_cut": 1.0,
+                "leaf_root_darken": 0.58,
+                "leaf_serrate": 0.2,
+                "leaf_teeth": 3.6,
+                "leaf_tint_jitter": 0.2,
+                "mesh": "bush",
+                "name": "strand_bushes",
+                "normal_soften": 0.72,
+                "reach_band_m": 12.0,
+                "reach_m": 48.0,
+                "sink": 0.05,
+                "size_jitter": 0.42,
+                "sway": 0.035,
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a",
+                "tint_wood": "#594932"
+              },
+              {
+                "centre_bias": 0.6,
+                "contact_darken": 0.24,
+                "count": 100.0,
+                "density_gain": 0.1,
+                "drift_contrast": 0.93,
+                "drift_gate": 2.4,
+                "drift_scale": 0.032,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.3,
+                "item_size": 0.4,
+                "mesh": "flower",
+                "name": "strand_flowers",
+                "reach_band_m": 12.0,
+                "reach_m": 46.0,
+                "sink": 0.04,
+                "size_jitter": 0.28,
+                "sway": 0.05,
+                "tint_base": "#42572f",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "cull_tile_m": 16.0,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "enabled": true,
+            "fade_start": 36.0,
+            "far_cover": {
+              "enabled": false
+            },
+            "field_radius": 56.0,
+            "forbidden_ground": [
+              "shore",
+              "rock"
+            ],
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "min_ground_height": 0.35,
+            "shade_jitter": 0.26,
+            "snap": 2.0,
+            "stones": {
+              "enabled": false
+            },
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0,
+            "wind_scale": 0.055,
+            "wind_strength": 0.1
+          },
+          "camera": {
+            "basis_component_tolerance": 1e-06,
+            "fov": 70.0,
+            "keep_aspect": 1,
+            "position_tolerance_m": 0.05,
+            "projection": 0,
+            "transform": {
+              "basis_x": [
+                -0.952485024929047,
+                -8.05347895038722e-08,
+                -0.304585427045822
+              ],
+              "basis_y": [
+                -0.0633269250392914,
+                0.978147625923157,
+                0.198032692074776
+              ],
+              "basis_z": [
+                0.297929465770721,
+                0.207911625504494,
+                -0.931670963764191
+              ],
+              "origin": [
+                908.172119140625,
+                96.0342788696289,
+                2854.95678710938
+              ]
+            }
+          },
+          "coastal_shift_effective": null,
+          "field_path": "/root/WaterArchipelago/WaterGroundCover",
+          "geometry": [
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737297579638,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737280802421,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737264025204,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737247247987,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737230470770,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737213693553,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737196916336,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737180139119,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737163361902,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737146584685,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_2"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737129807468,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737113030251,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737096253034,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737079475817,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737062698600,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737045921383,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737029144166,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-4"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737012366949,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736995589732,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736978812515,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736962035298,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736945258081,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736928480864,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736911703647,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736894926430,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736878149213,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736861371996,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736844594779,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736827817562,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736811040345,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736794263128,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736777485911,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736760708694,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736743931477,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_3"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736727154260,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-4"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736710377043,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736693599826,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736676822609,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736660045392,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736643268175,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736626490958,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736609713741,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736592936524,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-3"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736576159307,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736559382090,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736542604873,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736525827656,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736509050439,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736492273222,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736475496005,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736458718788,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736441941571,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_1"
+            }
+          ],
+          "material_id": -9223371737331134071,
+          "parameters": {
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_width": 0.85,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "translucency": 0.16
+          },
+          "shader_id": -9223372006555122119,
+          "shader_path": "res://shaders/grass_field.gdshader",
+          "shader_text_sha256": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9"
+        },
+        "identity": "water__sluice_isle__13__sluice_isle_twin_pumps",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              819.385986328125,
+              70.6729125976563,
+              2865.81494140625
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              823.885986328125,
+              71.8720016479492,
+              2865.81494140625
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              921.89501953125,
+              74.9123764038086,
+              2952.43188476563
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              925.077026367188,
+              74.131103515625,
+              2955.61376953125
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_sluice_isle_wild_005_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              858.614990234375,
+              115.561416625977,
+              2927.17407226563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "water_sluice_isle_wild_014_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              960.026977539063,
+              72.4899520874023,
+              2852.48999023438
+            ],
+            "species_id": "water_mirejaw"
+          }
+        ],
+        "nearby_creatures_160m": 6,
+        "observed_clock": {
+          "elapsed_seconds": 200.188765666667,
+          "hour": 8.00755062666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          906.622924804688,
+          93.2031631469727,
+          2859.80151367188
+        ],
+        "position_xz": [
+          905.1,
+          2864.564
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 93.1971740722656,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          906.622924804688,
+          2859.80151367188
+        ],
+        "spot_index_in_band": 1,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.991998732089996,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          905.099975585938,
+          2864.56396484375
+        ],
+        "terrain_ground_y": 93.1971740722656,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "variant": "baseline",
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.304585486650467,
+          0.952485084533691
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "8550894c0c5ec47c7384c2ecf70bd7aab22fedce3b787ac12ef2d6ee3507967c",
+      "source_frame_path": ".artifacts/phase2/colony06-native01/water__sluice_isle__13__sluice_isle_twin_pumps__day__close__baseline.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close__candidate",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/colony-06/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 7 \u2014 Sluice Isle",
+        "band_id": "sluice_isle",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 294533,
+        "camera_pitch_deg": -12.0,
+        "camera_player_distance_m": 5.82122325897217,
+        "camera_position": [
+          908.172119140625,
+          96.0342864990234,
+          2854.95678710938
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.952485024929047,
+            0.0,
+            -0.304585516452789
+          ],
+          "basis_y": [
+            -0.063326895236969,
+            0.978147625923157,
+            0.198032796382904
+          ],
+          "basis_z": [
+            0.297929644584656,
+            0.207911759614944,
+            -0.93167120218277
+          ],
+          "origin": [
+            906.622924804688,
+            94.9531555175781,
+            2859.80151367188
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.952485024929047,
+            -8.05347895038722e-08,
+            -0.304585427045822
+          ],
+          "basis_y": [
+            -0.0633269250392914,
+            0.978147625923157,
+            0.198032692074776
+          ],
+          "basis_z": [
+            0.297929495573044,
+            0.207911625504494,
+            -0.931670963764191
+          ],
+          "origin": [
+            908.172119140625,
+            96.0342864990234,
+            2854.95678710938
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sluice Isle Twin Pumps",
+        "destination_index": 13,
+        "file": "res://.artifacts/phase2/colony06-native01/water__sluice_isle__13__sluice_isle_twin_pumps__day__close__candidate.jpg",
+        "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day__close__candidate",
+        "grass_verification": {
+          "active_config": {
+            "_comment": "Water profile for the shared camera-relative cover system, enabled after matched production captures and guarded boot checks. It adds scenic, non-colliding cover; authored Water vegetation remains authoritative for harvest and canopy.",
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "anchor_clear_radius_m": 3.5,
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "camp_clear_radius_m": 5.0,
+            "centre_bias": 0.62,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "centre_bias": 0.6,
+                "clears_grass": true,
+                "contact_darken": 0.28,
+                "count": 280.0,
+                "density_gain": 0.16,
+                "drift_contrast": 0.9,
+                "drift_gate": 2.2,
+                "drift_scale": 0.028,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "leaf_cut": 1.0,
+                "leaf_root_darken": 0.58,
+                "leaf_serrate": 0.2,
+                "leaf_teeth": 3.6,
+                "leaf_tint_jitter": 0.2,
+                "mesh": "bush",
+                "name": "strand_bushes",
+                "normal_soften": 0.72,
+                "reach_band_m": 12.0,
+                "reach_m": 48.0,
+                "sink": 0.05,
+                "size_jitter": 0.42,
+                "sway": 0.035,
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a",
+                "tint_wood": "#594932"
+              },
+              {
+                "centre_bias": 0.6,
+                "contact_darken": 0.24,
+                "count": 100.0,
+                "density_gain": 0.1,
+                "drift_contrast": 0.93,
+                "drift_gate": 2.4,
+                "drift_scale": 0.032,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.3,
+                "item_size": 0.4,
+                "mesh": "flower",
+                "name": "strand_flowers",
+                "reach_band_m": 12.0,
+                "reach_m": 46.0,
+                "sink": 0.04,
+                "size_jitter": 0.28,
+                "sway": 0.05,
+                "tint_base": "#42572f",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "cull_tile_m": 16.0,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "enabled": true,
+            "fade_start": 36.0,
+            "far_cover": {
+              "enabled": false
+            },
+            "field_radius": 56.0,
+            "forbidden_ground": [
+              "shore",
+              "rock"
+            ],
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "min_ground_height": 0.35,
+            "shade_jitter": 0.26,
+            "snap": 2.0,
+            "stones": {
+              "enabled": false
+            },
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0,
+            "wind_scale": 0.055,
+            "wind_strength": 0.1
+          },
+          "camera": {
+            "basis_component_tolerance": 1e-06,
+            "fov": 70.0,
+            "keep_aspect": 1,
+            "position_tolerance_m": 0.05,
+            "projection": 0,
+            "transform": {
+              "basis_x": [
+                -0.952485024929047,
+                -8.05347895038722e-08,
+                -0.304585427045822
+              ],
+              "basis_y": [
+                -0.0633269250392914,
+                0.978147625923157,
+                0.198032692074776
+              ],
+              "basis_z": [
+                0.297929495573044,
+                0.207911625504494,
+                -0.931670963764191
+              ],
+              "origin": [
+                908.172119140625,
+                96.0342864990234,
+                2854.95678710938
+              ]
+            }
+          },
+          "coastal_shift_effective": 0.180000007152557,
+          "field_path": "/root/WaterArchipelago/WaterGroundCover",
+          "geometry": [
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737297579638,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737280802421,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737264025204,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737247247987,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737230470770,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737213693553,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737196916336,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737180139119,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737163361902,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737146584685,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_2"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737129807468,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737113030251,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737096253034,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737079475817,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737062698600,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737045921383,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737029144166,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-4"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737012366949,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736995589732,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736978812515,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736962035298,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736945258081,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736928480864,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736911703647,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736894926430,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736878149213,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736861371996,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736844594779,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736827817562,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736811040345,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736794263128,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736777485911,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736760708694,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736743931477,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_3"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736727154260,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-4"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736710377043,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736693599826,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736676822609,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736660045392,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736643268175,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736626490958,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736609713741,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736592936524,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-3"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736576159307,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736559382090,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736542604873,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736525827656,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736509050439,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736492273222,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736475496005,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736458718788,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736441941571,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_1"
+            }
+          ],
+          "material_id": -9223371737331134071,
+          "parameters": {
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_width": 0.85,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "translucency": 0.16
+          },
+          "shader_id": -9223372006555122119,
+          "shader_path": "res://shaders/grass_field.gdshader",
+          "shader_text_sha256": "2b48b3cea48da27afa440fb93a97841a2e829782fac5d5e56596fffc1845922e"
+        },
+        "identity": "water__sluice_isle__13__sluice_isle_twin_pumps",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              819.400268554688,
+              70.6771774291992,
+              2865.83081054688
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              823.885986328125,
+              71.8720016479492,
+              2865.81494140625
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 4.45,
+            "body_radius_m": 1.59372052777778,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              921.947692871094,
+              74.9028549194336,
+              2952.47192382813
+            ],
+            "species_id": "water_riptusk"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "road_visibility_sluice_isle_exploration_spine_03_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              925.077026367188,
+              74.131103515625,
+              2955.61376953125
+            ],
+            "species_id": "water_mirejaw"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.34070566101695,
+            "node_path": "water_sluice_isle_wild_005_0",
+            "node_scale": [
+              0.999999582767487,
+              1.0,
+              0.999999582767487
+            ],
+            "position": [
+              858.260864257813,
+              115.459991455078,
+              2926.35375976563
+            ],
+            "species_id": "water_cragclaw"
+          },
+          {
+            "body_height_m": 3.55,
+            "body_radius_m": 1.18230355813953,
+            "node_path": "water_sluice_isle_wild_014_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              960.026977539063,
+              72.4899520874023,
+              2852.48999023438
+            ],
+            "species_id": "water_mirejaw"
+          }
+        ],
+        "nearby_creatures_160m": 6,
+        "observed_clock": {
+          "elapsed_seconds": 200.203338222222,
+          "hour": 8.00813352888889,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          906.622924804688,
+          93.2031631469727,
+          2859.80151367188
+        ],
+        "position_xz": [
+          905.1,
+          2864.564
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 93.1971740722656,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          906.622924804688,
+          2859.80151367188
+        ],
+        "spot_index_in_band": 1,
+        "stand_laterals_m": [
+          0.0
+        ],
+        "stand_offsets_m": [
+          5.0
+        ],
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.991998732089996,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          905.099975585938,
+          2864.56396484375
+        ],
+        "terrain_ground_y": 93.1971740722656,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "variant": "candidate",
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.304585486650467,
+          0.952485084533691
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "9dd893e20def091dad38c0e1a46067925dfac932839e0e0ce9a3876fe45b83b1",
+      "source_frame_path": ".artifacts/phase2/colony06-native01/water__sluice_isle__13__sluice_isle_twin_pumps__day__close__candidate.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__first_shore__01__first_shore_welcome_beacon__day__close__baseline",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/colony-06/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 1 \u2014 First Shore",
+        "band_id": "first_shore",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 303191,
+        "camera_pitch_deg": -12.0,
+        "camera_player_distance_m": 5.82120800018311,
+        "camera_position": [
+          45.5491828918457,
+          26.3359775543213,
+          100.309944152832
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.218706175684929,
+            0.0,
+            -0.975789487361908
+          ],
+          "basis_y": [
+            -0.202878296375275,
+            0.978147625923157,
+            -0.0454716272652149
+          ],
+          "basis_z": [
+            0.954467594623566,
+            0.207911744713783,
+            0.213927239179611
+          ],
+          "origin": [
+            40.5859527587891,
+            25.2548370361328,
+            99.1975250244141
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.218706369400024,
+            -6.54134950650587e-08,
+            -0.975790739059448
+          ],
+          "basis_y": [
+            -0.202878162264824,
+            0.978147625923157,
+            -0.0454716458916664
+          ],
+          "basis_z": [
+            0.954467415809631,
+            0.207911565899849,
+            0.21392710506916
+          ],
+          "origin": [
+            45.5491828918457,
+            26.3359775543213,
+            100.309944152832
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "First Shore Welcome Beacon",
+        "destination_index": 1,
+        "file": "res://.artifacts/phase2/colony06-native01/water__first_shore__01__first_shore_welcome_beacon__day__close__baseline.jpg",
+        "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day__close__baseline",
+        "grass_verification": {
+          "active_config": {
+            "_comment": "Water profile for the shared camera-relative cover system, enabled after matched production captures and guarded boot checks. It adds scenic, non-colliding cover; authored Water vegetation remains authoritative for harvest and canopy.",
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "anchor_clear_radius_m": 3.5,
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "camp_clear_radius_m": 5.0,
+            "centre_bias": 0.62,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "centre_bias": 0.6,
+                "clears_grass": true,
+                "contact_darken": 0.28,
+                "count": 280.0,
+                "density_gain": 0.16,
+                "drift_contrast": 0.9,
+                "drift_gate": 2.2,
+                "drift_scale": 0.028,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "leaf_cut": 1.0,
+                "leaf_root_darken": 0.58,
+                "leaf_serrate": 0.2,
+                "leaf_teeth": 3.6,
+                "leaf_tint_jitter": 0.2,
+                "mesh": "bush",
+                "name": "strand_bushes",
+                "normal_soften": 0.72,
+                "reach_band_m": 12.0,
+                "reach_m": 48.0,
+                "sink": 0.05,
+                "size_jitter": 0.42,
+                "sway": 0.035,
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a",
+                "tint_wood": "#594932"
+              },
+              {
+                "centre_bias": 0.6,
+                "contact_darken": 0.24,
+                "count": 100.0,
+                "density_gain": 0.1,
+                "drift_contrast": 0.93,
+                "drift_gate": 2.4,
+                "drift_scale": 0.032,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.3,
+                "item_size": 0.4,
+                "mesh": "flower",
+                "name": "strand_flowers",
+                "reach_band_m": 12.0,
+                "reach_m": 46.0,
+                "sink": 0.04,
+                "size_jitter": 0.28,
+                "sway": 0.05,
+                "tint_base": "#42572f",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "cull_tile_m": 16.0,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "enabled": true,
+            "fade_start": 36.0,
+            "far_cover": {
+              "enabled": false
+            },
+            "field_radius": 56.0,
+            "forbidden_ground": [
+              "shore",
+              "rock"
+            ],
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "min_ground_height": 0.35,
+            "shade_jitter": 0.26,
+            "snap": 2.0,
+            "stones": {
+              "enabled": false
+            },
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0,
+            "wind_scale": 0.055,
+            "wind_strength": 0.1
+          },
+          "camera": {
+            "basis_component_tolerance": 1e-06,
+            "fov": 70.0,
+            "keep_aspect": 1,
+            "position_tolerance_m": 0.05,
+            "projection": 0,
+            "transform": {
+              "basis_x": [
+                0.218706369400024,
+                -6.54134950650587e-08,
+                -0.975790739059448
+              ],
+              "basis_y": [
+                -0.202878162264824,
+                0.978147625923157,
+                -0.0454716458916664
+              ],
+              "basis_z": [
+                0.954467415809631,
+                0.207911565899849,
+                0.21392710506916
+              ],
+              "origin": [
+                45.5491828918457,
+                26.3359775543213,
+                100.309944152832
+              ]
+            }
+          },
+          "coastal_shift_effective": null,
+          "field_path": "/root/WaterArchipelago/WaterGroundCover",
+          "geometry": [
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737297579638,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737280802421,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737264025204,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737247247987,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737230470770,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737213693553,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737196916336,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737180139119,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737163361902,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737146584685,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_2"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737129807468,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737113030251,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737096253034,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737079475817,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737062698600,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737045921383,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737029144166,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-4"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737012366949,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736995589732,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736978812515,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736962035298,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736945258081,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736928480864,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736911703647,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736894926430,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736878149213,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736861371996,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736844594779,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736827817562,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736811040345,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736794263128,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736777485911,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736760708694,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736743931477,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_3"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736727154260,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-4"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736710377043,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736693599826,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736676822609,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736660045392,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736643268175,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736626490958,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736609713741,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736592936524,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-3"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736576159307,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736559382090,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736542604873,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736525827656,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736509050439,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736492273222,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736475496005,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736458718788,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736441941571,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_1"
+            }
+          ],
+          "material_id": -9223371737331134071,
+          "parameters": {
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_width": 0.85,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "translucency": 0.16
+          },
+          "shader_id": -9223372006555122119,
+          "shader_path": "res://shaders/grass_field.gdshader",
+          "shader_text_sha256": "edae2afffe384929aa944eb3fbcd7540b3bc2b4a695932c131b8602aa36c99d9"
+        },
+        "identity": "water__first_shore__01__first_shore_welcome_beacon",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_002_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -90.0240020751953,
+              12.0993061065674,
+              147.572998046875
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_009_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              40.1590003967285,
+              1.65415966510773,
+              159.664001464844
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.73114262,
+            "node_path": "water_first_shore_wild_013_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              58.6839981079102,
+              18.6234321594238,
+              70.8880004882813
+            ],
+            "species_id": "water_cannonback"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_first_shore_wild_017_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -10.2910003662109,
+              11.1445188522339,
+              101.672996520996
+            ],
+            "species_id": "water_mangrove_monitor"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_first_shore_wild_021_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -27.4179992675781,
+              -0.430995672941208,
+              179.365997314453
+            ],
+            "species_id": "water_mangrove_monitor"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_025_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              101.346000671387,
+              -0.423745363950729,
+              150.509002685547
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_first_shore_wild_026_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              131.421005249023,
+              -0.431046724319458,
+              125.111000061035
+            ],
+            "species_id": "water_mangrove_monitor"
+          }
+        ],
+        "nearby_creatures_160m": 7,
+        "observed_clock": {
+          "elapsed_seconds": 200.195883,
+          "hour": 8.00783531999999,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          40.5859527587891,
+          23.5048408508301,
+          99.1975250244141
+        ],
+        "position_xz": [
+          35.707,
+          98.104
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 23.5053939819336,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          40.5859527587891,
+          99.1975250244141
+        ],
+        "spot_index_in_band": 1,
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.990587174892426,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          35.7070007324219,
+          98.1039962768555
+        ],
+        "terrain_ground_y": 23.5053939819336,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "variant": "baseline",
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.975790739059448,
+          -0.21870644390583
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "ef1712337b010d8ab53fd6b627cb05b47487cc3bd2f76e769615f3244ec3605c",
+      "source_frame_path": ".artifacts/phase2/colony06-native01/water__first_shore__01__first_shore_welcome_beacon__day__close__baseline.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "water__first_shore__01__first_shore_welcome_beacon__day__close__candidate",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/colony-06/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Island 1 \u2014 First Shore",
+        "band_id": "first_shore",
+        "biome_display_name": "Tidewake",
+        "biome_id": "water",
+        "bytes": 303282,
+        "camera_pitch_deg": -12.0,
+        "camera_player_distance_m": 5.82120895385742,
+        "camera_position": [
+          45.5491828918457,
+          26.3359794616699,
+          100.309944152832
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.218706175684929,
+            0.0,
+            -0.975789487361908
+          ],
+          "basis_y": [
+            -0.202878296375275,
+            0.978147625923157,
+            -0.0454716272652149
+          ],
+          "basis_z": [
+            0.954467594623566,
+            0.207911744713783,
+            0.213927239179611
+          ],
+          "origin": [
+            40.5859527587891,
+            25.2548389434814,
+            99.1975250244141
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.218706369400024,
+            -6.54134950650587e-08,
+            -0.975790739059448
+          ],
+          "basis_y": [
+            -0.202878162264824,
+            0.978147625923157,
+            -0.0454716458916664
+          ],
+          "basis_z": [
+            0.954467415809631,
+            0.207911565899849,
+            0.21392710506916
+          ],
+          "origin": [
+            45.5491828918457,
+            26.3359794616699,
+            100.309944152832
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "First Shore Welcome Beacon",
+        "destination_index": 1,
+        "file": "res://.artifacts/phase2/colony06-native01/water__first_shore__01__first_shore_welcome_beacon__day__close__candidate.jpg",
+        "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day__close__candidate",
+        "grass_verification": {
+          "active_config": {
+            "_comment": "Water profile for the shared camera-relative cover system, enabled after matched production captures and guarded boot checks. It adds scenic, non-colliding cover; authored Water vegetation remains authoritative for harvest and canopy.",
+            "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. A common density ceiling rises from shore probability at 3m to unrestricted colony probability at 6m on all eligible ground, avoiding a painted-boundary density jump. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map or geometry changes.",
+            "anchor_clear_radius_m": 3.5,
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_segments": 4.0,
+            "blade_width": 0.85,
+            "blades_per_tuft": 5.0,
+            "camp_clear_radius_m": 5.0,
+            "centre_bias": 0.62,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "cover_tiers": [
+              {
+                "centre_bias": 0.6,
+                "clears_grass": true,
+                "contact_darken": 0.28,
+                "count": 280.0,
+                "density_gain": 0.16,
+                "drift_contrast": 0.9,
+                "drift_gate": 2.2,
+                "drift_scale": 0.028,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.16,
+                "item_size": 0.58,
+                "leaf_cut": 1.0,
+                "leaf_root_darken": 0.58,
+                "leaf_serrate": 0.2,
+                "leaf_teeth": 3.6,
+                "leaf_tint_jitter": 0.2,
+                "mesh": "bush",
+                "name": "strand_bushes",
+                "normal_soften": 0.72,
+                "reach_band_m": 12.0,
+                "reach_m": 48.0,
+                "sink": 0.05,
+                "size_jitter": 0.42,
+                "sway": 0.035,
+                "tint_base": "#5b6545",
+                "tint_tip": "#89916a",
+                "tint_wood": "#594932"
+              },
+              {
+                "centre_bias": 0.6,
+                "contact_darken": 0.24,
+                "count": 100.0,
+                "density_gain": 0.1,
+                "drift_contrast": 0.93,
+                "drift_gate": 2.4,
+                "drift_scale": 0.032,
+                "enabled": true,
+                "ground": [
+                  "grass"
+                ],
+                "ground_blend": 0.3,
+                "item_size": 0.4,
+                "mesh": "flower",
+                "name": "strand_flowers",
+                "reach_band_m": 12.0,
+                "reach_m": 46.0,
+                "sink": 0.04,
+                "size_jitter": 0.28,
+                "sway": 0.05,
+                "tint_base": "#42572f",
+                "tint_tip": "#c8c0a0"
+              }
+            ],
+            "cull_tile_m": 16.0,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_offset": [
+              43.7,
+              -17.9
+            ],
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_ground": [
+              "shore"
+            ],
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "enabled": true,
+            "fade_start": 36.0,
+            "far_cover": {
+              "enabled": false
+            },
+            "field_radius": 56.0,
+            "forbidden_ground": [
+              "shore",
+              "rock"
+            ],
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "min_ground_height": 0.35,
+            "shade_jitter": 0.26,
+            "snap": 2.0,
+            "stones": {
+              "enabled": false
+            },
+            "tint_base": "#596344",
+            "tint_jitter": 0.13,
+            "tint_tip": "#aaa16c",
+            "translucency": 0.16,
+            "tuft_count": 54000.0,
+            "wind_scale": 0.055,
+            "wind_strength": 0.1
+          },
+          "camera": {
+            "basis_component_tolerance": 1e-06,
+            "fov": 70.0,
+            "keep_aspect": 1,
+            "position_tolerance_m": 0.05,
+            "projection": 0,
+            "transform": {
+              "basis_x": [
+                0.218706369400024,
+                -6.54134950650587e-08,
+                -0.975790739059448
+              ],
+              "basis_y": [
+                -0.202878162264824,
+                0.978147625923157,
+                -0.0454716458916664
+              ],
+              "basis_z": [
+                0.954467415809631,
+                0.207911565899849,
+                0.21392710506916
+              ],
+              "origin": [
+                45.5491828918457,
+                26.3359794616699,
+                100.309944152832
+              ]
+            }
+          },
+          "coastal_shift_effective": 0.180000007152557,
+          "field_path": "/root/WaterArchipelago/WaterGroundCover",
+          "geometry": [
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737297579638,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737280802421,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737264025204,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_-2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737247247987,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-4_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737230470770,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737213693553,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737196916336,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737180139119,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737163361902,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_-3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737146584685,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-3_2"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737129807468,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737113030251,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737096253034,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737079475817,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737062698600,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737045921383,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737029144166,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_-4"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371737012366949,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-2_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736995589732,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736978812515,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736962035298,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736945258081,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736928480864,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736911703647,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736894926430,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736878149213,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_-1_3"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736861371996,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-4"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736844594779,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-3"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736827817562,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-2"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736811040345,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_-1"
+            },
+            {
+              "instances": 2509,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736794263128,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_0"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736777485911,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736760708694,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736743931477,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_0_3"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736727154260,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-4"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736710377043,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-3"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736693599826,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-2"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736676822609,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_-1"
+            },
+            {
+              "instances": 1664,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736660045392,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_0"
+            },
+            {
+              "instances": 1472,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736643268175,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_1"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736626490958,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736609713741,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_1_3"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736592936524,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-3"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736576159307,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-2"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736559382090,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_-1"
+            },
+            {
+              "instances": 1332,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736542604873,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_0"
+            },
+            {
+              "instances": 1217,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736525827656,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_1"
+            },
+            {
+              "instances": 532,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736509050439,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_2_2"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736492273222,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-2"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736475496005,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_-1"
+            },
+            {
+              "instances": 551,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736458718788,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_0"
+            },
+            {
+              "instances": 209,
+              "mesh_id": -9223371737347911288,
+              "multimesh_id": -9223371736441941571,
+              "node": "/root/WaterArchipelago/WaterGroundCover/GrassTile_3_1"
+            }
+          ],
+          "material_id": -9223371737331134071,
+          "parameters": {
+            "bend": 0.16,
+            "blade_arc_angle": 0.95,
+            "blade_width": 0.85,
+            "clump_contrast": 1.0,
+            "clump_patch_full": 0.68,
+            "clump_patch_start": 0.52,
+            "clump_scale": 0.065,
+            "density_gain": 0.95,
+            "dune_colony_shape": true,
+            "dune_gap_full": 0.65,
+            "dune_gap_scale": 0.025,
+            "dune_gap_start": 0.48,
+            "dune_gap_warp_m": 12.0,
+            "dune_gap_warp_scale": 0.013,
+            "dune_pioneer_probability": 0.045,
+            "dune_pioneer_start": 0.36,
+            "dune_shore_dry_full_y": 3.0,
+            "dune_shore_dry_start_y": 1.0,
+            "dune_shore_probability": 0.07,
+            "dune_stabilized_height_y": 6.0,
+            "dune_tussock": true,
+            "ground_blend": 0.16,
+            "height_far": 0.8,
+            "height_jitter": 0.38,
+            "height_near": 0.65,
+            "shade_jitter": 0.26,
+            "translucency": 0.16
+          },
+          "shader_id": -9223372006555122119,
+          "shader_path": "res://shaders/grass_field.gdshader",
+          "shader_text_sha256": "2b48b3cea48da27afa440fb93a97841a2e829782fac5d5e56596fffc1845922e"
+        },
+        "identity": "water__first_shore__01__first_shore_welcome_beacon",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_002_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -90.0240020751953,
+              12.0993061065674,
+              147.572998046875
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_009_0",
+            "node_scale": [
+              0.999999284744263,
+              1.0,
+              0.999999284744263
+            ],
+            "position": [
+              38.4986610412598,
+              1.64268624782562,
+              160.189193725586
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 4.15,
+            "body_radius_m": 1.73114262,
+            "node_path": "water_first_shore_wild_013_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              58.6839981079102,
+              18.6234321594238,
+              70.8880004882813
+            ],
+            "species_id": "water_cannonback"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_first_shore_wild_017_0",
+            "node_scale": [
+              0.999999403953552,
+              1.0,
+              0.999999403953552
+            ],
+            "position": [
+              -10.2341041564941,
+              11.4391784667969,
+              101.081604003906
+            ],
+            "species_id": "water_mangrove_monitor"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_first_shore_wild_021_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -27.4179992675781,
+              -0.430995672941208,
+              179.365997314453
+            ],
+            "species_id": "water_mangrove_monitor"
+          },
+          {
+            "body_height_m": 3.7,
+            "body_radius_m": 1.40341822222222,
+            "node_path": "water_first_shore_wild_025_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              101.571685791016,
+              -0.593975424766541,
+              150.945556640625
+            ],
+            "species_id": "water_torrentoad"
+          },
+          {
+            "body_height_m": 3.85,
+            "body_radius_m": 1.28221653488372,
+            "node_path": "water_first_shore_wild_026_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              131.421005249023,
+              -0.431046724319458,
+              125.111000061035
+            ],
+            "species_id": "water_mangrove_monitor"
+          }
+        ],
+        "nearby_creatures_160m": 7,
+        "observed_clock": {
+          "elapsed_seconds": 200.198274555556,
+          "hour": 8.00793098222222,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          40.5859527587891,
+          23.5048408508301,
+          99.1975250244141
+        ],
+        "position_xz": [
+          35.707,
+          98.104
+        ],
+        "rejected_stand_candidates": [],
+        "resolved_ground_y": 23.5053939819336,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "selected_stand_xz": [
+          40.5859527587891,
+          99.1975250244141
+        ],
+        "spot_index_in_band": 1,
+        "stand_laterals_m": [
+          0.0
+        ],
+        "stand_offsets_m": [
+          5.0
+        ],
+        "surface_state": {
+          "dead": false,
+          "drowning": false,
+          "floor_normal_y": 0.990587174892426,
+          "has_safe_landing": true,
+          "mode": 0,
+          "on_floor": true,
+          "owner_peer_id": 1,
+          "resume_mode": 0,
+          "revision": 1,
+          "safe_landing": [
+            0.0,
+            1.92857146263123,
+            162.0
+          ],
+          "stamina_fraction": 1.0,
+          "surface_y": 0.0,
+          "version": 1
+        },
+        "swimming_stand": false,
+        "target_position_xz": [
+          35.7070007324219,
+          98.1039962768555
+        ],
+        "terrain_ground_y": 23.5053939819336,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "variant": "candidate",
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          -0.975790739059448,
+          -0.21870644390583
+        ],
+        "water_surface_y": 0.0
+      },
+      "source_sha256": "3d1551e324aa1d4dc0378f25d059bb7e047b930d7a78ce9de82239fe80d0cc0f",
+      "source_frame_path": ".artifacts/phase2/colony06-native01/water__first_shore__01__first_shore_welcome_beacon__day__close__candidate.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

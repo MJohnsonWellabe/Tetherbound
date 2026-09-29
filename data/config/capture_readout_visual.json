@@ -1,0 +1,5 @@
+{
+  "outline_enabled": false,
+  "outline_size": 6,
+  "_comment": "P2-114 unjudged presentation candidate. Local/static visual scope only; no save, network, target, camera or catch-chance effect. Adds the existing UITokens.OUTLINE color behind the capture percentage and caption, following each text's current alpha. outline_size is tunable in logical UI pixels. Keep disabled until matched production captures pass independent visual review."
+}

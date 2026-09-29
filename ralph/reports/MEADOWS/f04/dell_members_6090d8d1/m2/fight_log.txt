@@ -1,0 +1,8 @@
+live member 2 (galecrest) out vs relay_officer_dell after 65 steps (earlier members resolved: disclosed)
+tell 1: 0.90s, policy stand
+strike 1 policy=stand outcome=hit 17.4
+tell 2: 0.90s, policy dodge
+strike 2 policy=dodge outcome=hit 18.3
+tell 3: 0.90s, policy stand
+strike 3 policy=stand outcome=hit 16.5
+tell 4: 0.90s, policy dodge

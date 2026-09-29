@@ -29,6 +29,16 @@ extends CanvasLayer
 
 const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const CREATURE_PORTRAIT := preload("res://scripts/ui/creature_portrait.gd")
+## F10#6 device profile (code-blind 7-inch judge r6: the move buttons' pad
+## badges read at about 4 px on the 7-inch sheet). The badge art is padded
+## inside its box, so 34 drew "RT"/"LB" lettering near the glyph ladder's
+## 22 px "marginal" rung; 40 lands it at the ladder's comfortable size.
+const CELL_GLYPH_PX := 40
+## UX section 8 raster floor: essential text is at least 18 px at the 1280x720
+## stress raster, UITokens.FONT_READ (27) on this 1920x1080 canvas; the HUD's
+## glance labels (combat_hud.tscn) take the next token up, FONT_BUTTON (28).
+const GLANCE_FONT_PX := UITokens.FONT_BUTTON
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
@@ -370,7 +380,7 @@ func _build_effect_banner() -> void:
 	_effect_banner = Label.new()
 	_effect_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_effect_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_effect_banner.add_theme_font_size_override("font_size", 26)
+	_effect_banner.add_theme_font_size_override("font_size", GLANCE_FONT_PX)
 	# F10#6 (UX §1.4): the plate moved to the top-right corner, off the
 	# framed target; the banner stays under it.
 	_effect_banner.anchor_left = 1.0
@@ -556,7 +566,10 @@ func _update_subject_fade(delta: float) -> void:
 	# are not written elsewhere, so the fade is their alpha.
 	# [faded node, multiply?, node whose rect is tested]: the strip holder is
 	# full-rect by design, so the strip's own rect decides its fade.
-	for entry: Array in [[_enemy_panel, true, _enemy_panel], [_grid_panel, true, _grid_panel],
+	# The target plate is not faded: it carries the tell line, and both the
+	# C3 footage judge and device judge r5 read a faded "incoming" as a miss.
+	# It sits top-right, off the framed target.
+	for entry: Array in [[_grid_panel, true, _grid_panel],
 			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
 			[_strip_fader, false, _party_strip]]:
 		var panel := entry[0] as Control
@@ -972,7 +985,7 @@ func _move_type(move_id: String, fallback_type: String) -> String:
 
 func _draw_quick_cell(creature: RefCounted, ready: bool) -> void:
 	var name_text := _move_name(str(creature.move_quick), "Quick")
-	var glyph := INPUT_GLYPH.icon("quick", 34, VERB_READY if ready else VERB_DIMMED)
+	var glyph := INPUT_GLYPH.icon("quick", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
 	_cell_quick_content.text = "[center]%s\n%s[/center]" % [glyph, name_text]
 	_cell_quick_hairline.color = _type_color(_move_type(str(creature.move_quick), str(creature.creature_type)))
 	_cell_quick.modulate = CELL_READY if ready else CELL_DIMMED
@@ -982,7 +995,7 @@ func _draw_quick_cell(creature: RefCounted, ready: bool) -> void:
 func _draw_charged_cell(creature: RefCounted, ready: bool) -> void:
 	var move_id := str(creature.move_charged)
 	var name_text := _move_name(move_id, "Charged")
-	var glyph := INPUT_GLYPH.icon("charged", 34, VERB_READY if ready else VERB_DIMMED)
+	var glyph := INPUT_GLYPH.icon("charged", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
 	var text := "[center]%s\n%s[/center]" % [glyph, name_text]
 	if not ready:
 		var required: int = int(_moves.move(move_id).get("energy_cost", 100)) if move_id != "" else 100
@@ -998,7 +1011,7 @@ func _draw_charged_cell(creature: RefCounted, ready: bool) -> void:
 
 
 func _draw_throw_cell(orbs: int, ready: bool) -> void:
-	var glyph := INPUT_GLYPH.icon("throw", 34, VERB_READY if ready else VERB_DIMMED)
+	var glyph := INPUT_GLYPH.icon("throw", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
 	var name_text := "Throw" if ready else "No orbs"
 	_cell_throw_content.text = "[center]%s\n%s[/center]" % [glyph, name_text]
 	_cell_throw.modulate = CELL_READY if ready else CELL_DIMMED
@@ -1006,7 +1019,7 @@ func _draw_throw_cell(orbs: int, ready: bool) -> void:
 
 
 func _draw_switch_cell(ready: bool) -> void:
-	var glyph := INPUT_GLYPH.icon("party_cycle", 34, VERB_READY if ready else VERB_DIMMED)
+	var glyph := INPUT_GLYPH.icon("party_cycle", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
 	_cell_switch_content.text = "[center]%s\nSwitch[/center]" % glyph
 	_cell_switch.modulate = CELL_READY if ready else CELL_DIMMED
 	_mark_ready("switch", ready, _cell_switch_pulse)
@@ -1271,6 +1284,10 @@ func _party_entries(source: Array) -> Array:
 			"level": int(member.level),
 			"hp_fraction": member.hp_fraction(),
 			"tint": _species_colour(str(member.species_id)),
+			# F10#6 (r6 judge: the compact column's pips were five colour
+			# swatches, Mudsnout and Terrapup the same brown): the roster knows
+			# each member by portrait, as the exploration strip already does.
+			"portrait": CREATURE_PORTRAIT.resolve(str(member.species_id)),
 			"fainted": bool(member.fainted),
 		}
 		# PROGRESSION-VISIBLE: the xp sliver, the bond pip and the creature id

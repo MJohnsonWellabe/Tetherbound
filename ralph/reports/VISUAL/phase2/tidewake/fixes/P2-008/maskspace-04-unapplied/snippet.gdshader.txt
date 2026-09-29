@@ -1,0 +1,39 @@
+// UNAPPLIED DIAGNOSTIC PROPOSAL. Add this default-off uniform to UNIFORMS:
+// uniform bool coast_dune_maskspace_enabled = false;
+// Insert the block immediately AFTER the original final bluff/height-fade line.
+// Reuses stock bilerp normals/control/weights; no texture calls added.
+if (coast_dune_maskspace_enabled && bilerp && outside > 0.0) {
+	bool ms_valid = !any(isnan(weights)) && !any(isinf(weights))
+		&& all(greaterThanEqual(weights, vec4(0.0)))
+		&& abs(dot(weights, vec4(1.0)) - 1.0) < 0.0001;
+	// Conservative fallback at region seams: all 8 normal-stencil heights must
+	// lie inside the same installed region, with exact unremapped corner IDs.
+	ivec3 ms_origin = index[3];
+	ms_valid = ms_valid && ms_origin.z >= 0
+		&& all(greaterThanEqual(ms_origin.xy, ivec2(0)))
+		&& all(lessThan(ms_origin.xy + ivec2(2), ivec2(_region_size)))
+		&& all(equal(index[0], ms_origin + ivec3(0, 1, 0)))
+		&& all(equal(index[1], ms_origin + ivec3(1, 1, 0)))
+		&& all(equal(index[2], ms_origin + ivec3(1, 0, 0)));
+	for (int ms_i = 0; ms_i < 4; ms_i++) {
+		ms_valid = ms_valid && !DECODE_HOLE(control[ms_i])
+			&& !any(isnan(index_normal[ms_i])) && !any(isinf(index_normal[ms_i]))
+			&& index_normal[ms_i].y > 0.0
+			&& !isnan(h[ms_i]) && !isinf(h[ms_i]);
+	}
+	// The extra four stencil neighbors' hole bits are NOT available here.
+	// This preserves stock normals and does not prove those neighbors hole-free.
+	if (ms_valid) {
+		vec4 ms_coverage = vec4(0.0);
+		for (int ms_i = 0; ms_i < 4; ms_i++) {
+			float ms_y = abs(index_normal[ms_i].y);
+			float ms_steep = 1.0 - smoothstep(coast_dune_bluff_full_y,
+				coast_dune_bluff_start_y, ms_y + (bluff_patch - 0.5) * 0.12);
+			float ms_painted = coast_paint[ms_i] * (1.0 - smoothstep(
+				coast_dune_painted_bluff_full_y, coast_dune_painted_bluff_start_y,
+				ms_y + (bluff_patch - 0.5) * 0.08));
+			ms_coverage[ms_i] = max(ms_steep, ms_painted);
+		}
+		bluff = dot(ms_coverage, weights) * smoothstep(1.3, 3.5, v_vertex.y);
+	}
+}

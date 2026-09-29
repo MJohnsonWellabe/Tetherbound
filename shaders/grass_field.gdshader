@@ -107,6 +107,8 @@ uniform float height_jitter = 0.45;
 uniform float bend = 0.18;
 // Maximum static circular centerline arc in radians. Zero preserves legacy geometry.
 uniform float blade_arc_angle : hint_range(0.0, 1.0472, 0.0174533) = 1.047198;
+// Water dune profile only. Paired with the rooted, pointed ribbon mesh.
+uniform bool dune_tussock = false;
 // Per-blade value spread. One flat green over a whole field reads as a
 // texture; this is the cheapest way to give it depth without a second tint.
 uniform float shade_jitter : hint_range(0.0, 1.0) = 0.22;
@@ -118,6 +120,29 @@ uniform float shade_jitter : hint_range(0.0, 1.0) = 0.22;
 uniform float density_gain : hint_range(0.0, 1.0) = 0.82;
 uniform float clump_scale = 0.035;
 uniform float clump_contrast : hint_range(0.0, 1.0) = 0.55;
+// Optional colonies, using the same threshold idiom as cover_tier's patches.
+// Equal defaults keep the original linear drift exactly. With full contrast,
+// the enabled ramp makes truly empty sand below start and dense cores above
+// full; density_gain then sets the within-colony tuft population.
+uniform float clump_patch_start : hint_range(0.0, 1.0) = 0.0;
+uniform float clump_patch_full : hint_range(0.0, 1.0) = 0.0;
+// Water-only proposal: independent bare gaps, sparse colony margins and dry
+// shore pioneers. Disabled defaults retain the ordinary coverage expression.
+uniform bool dune_colony_shape = false;
+uniform float dune_gap_scale = 0.0;
+uniform float dune_gap_warp_scale = 0.0;
+uniform float dune_gap_warp_m = 0.0;
+uniform vec2 dune_gap_offset = vec2(0.0);
+uniform float dune_gap_start = 0.0;
+uniform float dune_gap_full = 0.0;
+uniform float dune_pioneer_start = 0.0;
+uniform float dune_pioneer_probability = 0.0;
+uniform int dune_pioneer_base_mask = 0;
+uniform float dune_shore_probability = 0.0;
+uniform float dune_shore_dry_start_y = 0.0;
+uniform float dune_shore_dry_full_y = 0.0;
+uniform float dune_stabilized_height_y = 0.0;
+uniform float dune_coastal_colony_shift = 0.0;
 
 // Colour. `tint_base`/`tint_tip` are the base-to-tip gradient a blind critic
 // named as missing from the scattered tufts ("flat two-tone polygon, no
@@ -186,6 +211,7 @@ varying float v_blade_t;
 varying vec3 v_ground_colour;
 varying float v_fade;
 varying float v_shade;
+varying float v_leaf_straw;
 
 // ---------------------------------------------------------------------------
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader. Do not "clean up".
@@ -443,6 +469,10 @@ vec2 grass_blade_arc(float blade_length, float t, vec2 blade_seed) {
 	}
 	float magnitude = blade_arc_angle * mix(0.625, 1.0, hash12(blade_seed * 7.31));
 	float arc_sign = hash12(blade_seed * 13.17) < 0.5 ? -1.0 : 1.0;
+	if (dune_tussock) {
+		magnitude = blade_arc_angle * mix(0.30, 1.0, hash12(blade_seed * 7.31));
+		arc_sign = 1.0;
+	}
 	float radius = blade_length / magnitude;
 	float angle = magnitude * t;
 	return vec2(radius * sin(angle), arc_sign * radius * (1.0 - cos(angle)));
@@ -511,11 +541,27 @@ void vertex() {
 	int base_id = int(control >> 27u & 0x1Fu);
 	bool hole = bool(control >> 2u & 0x1u);
 	bool forbidden = ((forbidden_base_mask >> base_id) & 1) == 1;
+	bool dune_shape_active = dune_colony_shape && dune_gap_scale > 0.0
+			&& dune_gap_full > dune_gap_start && dune_stabilized_height_y > dune_shore_dry_full_y;
+	bool dune_shore = dune_shape_active && ((dune_pioneer_base_mask >> base_id) & 1) == 1
+			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+	// The opt-in mask resolves only the requested shore texture name on CPU.
+	// Water's painted shore already excludes slopes above its rock threshold.
+	forbidden = forbidden && !dune_shore;
 
 	// Coverage: two octaves of noise decide whether this blade exists at all,
 	// so the field reads as drifts with open ground between them rather than a
 	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
 	float drift = value_noise(world_xz * clump_scale);
+	if (dune_tussock) {
+		// Smaller pockets break up the broad colony's boundary without
+		// changing world-stable placement or terrain/landmark clearances.
+		drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
+	}
+	float colony_noise = drift;
+	if (clump_patch_full > clump_patch_start) {
+		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
+	}
 	drift = mix(1.0, drift, clump_contrast);
 	// The bush tier's drift, evaluated with the bush tier's own numbers. Same
 	// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
@@ -526,14 +572,52 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
+	if (dune_shape_active) {
+		vec2 warp = vec2(
+			value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
+			value_noise(world_xz * dune_gap_warp_scale - dune_gap_offset.yx)) - vec2(0.5);
+		float gap = value_noise((world_xz + warp * dune_gap_warp_m) * dune_gap_scale + dune_gap_offset);
+		float gap_keep = 1.0 - smoothstep(dune_gap_start, dune_gap_full, gap);
+		float pioneer = 0.0;
+		if (clump_patch_start > dune_pioneer_start) {
+			pioneer = dune_pioneer_probability
+				* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
+		}
+		// A common coastal transition crosses the painted shore/grass boundary.
+		// Its ceiling now limits only pioneers; colony area grows inland.
+		float coast_ceiling = mix(dune_shore_probability, 1.0,
+			smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+		// Low coastal colonies occupy smaller areas with intact dense centres.
+		// Invalid/linear patch thresholds retain the original density expression.
+		float coastal_keep = min(max(drift * density_gain, pioneer), coast_ceiling);
+		bool valid_coastal_patch = clump_patch_full > clump_patch_start
+			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+		if (valid_coastal_patch) {
+			float coastal_shift = max(dune_coastal_colony_shift, 0.0) * (1.0 - smoothstep(
+				dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+			float coastal_colony = smoothstep(clump_patch_start + coastal_shift,
+				clump_patch_full + coastal_shift, colony_noise);
+			coastal_colony = mix(1.0, coastal_colony, clump_contrast);
+			coastal_keep = max(coastal_colony * density_gain, min(pioneer, coast_ceiling));
+		}
+		// Pioneers remain sparse and no vegetation fills the blowout's zero core.
+		keep = coastal_keep
+			* gap_keep * (1.0 - clearing);
+		if (dune_shore || valid_coastal_patch) {
+			// Match density across shore/grass paint at the same low dry height.
+			keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
+		}
+	}
 	v_drain = drain_at(world_xz);
 	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
 			|| on_built_ground(world_xz)
+			|| (dune_shape_active && keep <= 0.0)
 			|| hash12(world_xz * 7.31) > keep
 			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
 
 	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
+	v_leaf_straw = dune_tussock ? mix(0.38, 1.0, hash12(blade_seed * 9.43)) : 1.0;
 
 	if (culled) {
 		// Collapse to a point. The cheapest cull available in a vertex shader,
@@ -601,6 +685,9 @@ void vertex() {
 			local.y = t * h * UV2.y;
 		} else {
 			vec2 blade_side = normalize(vec2(NORMAL.z, -NORMAL.x));
+			if (dune_tussock) {
+				blade_side = normalize(NORMAL.xz);
+			}
 			vec2 arc = grass_blade_arc(h * UV2.y, t, blade_seed);
 			local.y = arc.x;
 			local.xz += blade_side * arc.y;
@@ -640,6 +727,9 @@ void fragment() {
 	// destroying the tint.
 	vec3 root = tint_base * mix(vec3(1.0), v_ground_colour, ground_blend);
 	vec3 col = mix(root, tint_tip, smoothstep(0.0, 0.85, v_blade_t));
+	if (dune_tussock) {
+		col = mix(root, tint_tip, smoothstep(0.12, 1.0, v_blade_t) * v_leaf_straw);
+	}
 	col = mix(col, drain_tint * mix(0.75, 1.1, v_blade_t), v_drain);
 	ALBEDO = col * v_shade;
 	ROUGHNESS = 0.95;
@@ -647,6 +737,9 @@ void fragment() {
 	// has no subsurface scattering, so this lifts the tip toward the tint
 	// rather than pretending to be transmission.
 	BACKLIGHT = mix(tint_tip, drain_tint, v_drain) * translucency * v_blade_t;
+	if (dune_tussock) {
+		BACKLIGHT *= v_leaf_straw;
+	}
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 }

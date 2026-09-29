@@ -325,12 +325,28 @@ func _set_exposure(scale: float) -> void:
 		_lights[i].light_energy = _light_energy[i] * scale
 
 
+## Optional appearance_variant uses the same post-rank resolver as runtime.
+## Refuse a disabled/mismatched requested variant instead of writing the base
+## face into its dedicated portrait. Existing portrait jobs are unchanged.
+static func portrait_model_config(spec: Dictionary, variant_settings: Dictionary = {}) -> Dictionary:
+	var cfg: Dictionary = VILLAGE_NPCS.model_config(spec)
+	var variant_id := str(spec.get("appearance_variant", ""))
+	if variant_id.is_empty() or cfg.is_empty():
+		return cfg
+	var profile := str(spec.get("base", spec.get("config_key", "")))
+	var resolved := CHARACTER_MODEL.with_appearance_variant(cfg, profile, variant_id, variant_settings)
+	return resolved if str(resolved.get("appearance_variant_id", "")) == variant_id else {}
+
+
 func _render_plate(spec: Dictionary) -> void:
 	var file := str(spec["file"])
-	var cfg: Dictionary = VILLAGE_NPCS.model_config(spec)
+	var cfg := portrait_model_config(spec)
 	if cfg.is_empty():
 		_failures.append("%s: no config resolved from %s" % [file, JSON.stringify(spec)])
 		return
+	var variant_portrait := str(cfg.get("portrait", "")) if spec.has("appearance_variant") else ""
+	if not variant_portrait.is_empty():
+		file = variant_portrait.get_file().get_basename()
 
 	var holder := Node3D.new()
 	holder.set_script(CHARACTER_MODEL)
@@ -382,7 +398,7 @@ func _render_plate(spec: Dictionary) -> void:
 	var distance := (window * 0.5) / tan(deg_to_rad(FOV_DEG * 0.5))
 	var target := "%s/%s.png" % [OUT_DIR, file]
 	if not bool(spec.get("scratch_only", false)):
-		target = "%s/%s.png" % [PORTRAIT_DIR, file]
+		target = variant_portrait if not variant_portrait.is_empty() else "%s/%s.png" % [PORTRAIT_DIR, file]
 	var blown := _blown_fraction(image)
 	var touching := _touches_edge(image)
 	if image.save_png(target) != OK:

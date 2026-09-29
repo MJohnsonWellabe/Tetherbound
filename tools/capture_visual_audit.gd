@@ -62,6 +62,7 @@ var _kind := ""  # region rows: "", "env" or "places"
 var _variant := ""  # region: "aftermath" for post-finale state
 var _extra_flags: Array = []  # region: --flags=a,b story flags set before the scene loads
 var _times: Array = []  # region: --times=a,b overrides every row's times/phases
+var _capture_seed := -1  # optional deterministic Phase 2 follow-up; legacy default unchanged
 
 var _dir := ""
 var _manifest: FileAccess = null
@@ -82,7 +83,9 @@ func _init() -> void:
 
 func _parse_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--section="):
+		if arg.begins_with("--seed="):
+			_capture_seed = int(arg.trim_prefix("--seed="))
+		elif arg.begins_with("--section="):
 			_section = arg.substr(10)
 		elif arg.begins_with("--region="):
 			_region = arg.substr(9)
@@ -107,6 +110,8 @@ func _parse_args() -> void:
 
 func _run() -> void:
 	_parse_args()
+	if _capture_seed >= 0:
+		seed(_capture_seed)
 	if DisplayServer.get_name() == "headless":
 		print("visual audit: headless has no renderer; run under xvfb-run with --rendering-driver opengl3")
 		quit(1)
@@ -1074,6 +1079,8 @@ func _skip(name: String, why: String) -> void:
 
 
 func _log_line(d: Dictionary) -> void:
+	if _capture_seed >= 0:
+		d["capture_seed"] = _capture_seed
 	var line := JSON.stringify(d)
 	print("AUDIT " + line)
 	if _manifest != null:

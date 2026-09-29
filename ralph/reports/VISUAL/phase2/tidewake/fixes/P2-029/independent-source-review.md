@@ -1,0 +1,33 @@
+# P2-029 current rest proposal review
+
+Reviewed production HEAD `471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2` and the three requested scratch artifacts. No production changes, engine invocation or GPU work. This review owns only this file.
+
+**Disposition:** the original primary proposal is current enough to integrate but has the hurt-to-camp carryover below. The new scratch `rest-reviewed-proposal.patch` includes a candidate-only correction and regression; apply-check passed against current source. The separate capture integration patch is stale and unnecessary. Keep the candidate default off; native endpoint/contact/resume acceptance remains open.
+
+## Concrete finding
+
+**[P2] Release an existing procedural hurt pivot before starting the new authored camp rest.** In current `companion_presence.gd::_drive_continuous`, the hurt branch calls `_hold_pivot()` and applies configured pitch 3 degrees plus a downward offset of 0.03 times body height. On a later transition into camp, the proposed `use_body_pose` branch immediately calls `play_rest()` without releasing that held pivot. `CreatureBody._begin_authored_rest_pose()` therefore snapshots the already hurt-pitched/sunk transform, and the no-op recipe deliberately preserves it at the faint endpoint. The companion rest is then tilted and sunk relative to the neutral bed/fixture pose, contrary to the intended unmodified endpoint presentation. Existing authored-rest species share this latent path, but the proposal newly routes these two species into it.
+
+Minimal scoped correction, now prepared in the reviewed patch: the resolver adds `release_presence_pivot: true` only to its candidate recipe. Inside `if use_body_pose`, immediately before the first `_body.call("play_rest")` guarded by `not _body_rest_held`, check that explicit marker before calling `_release_pivot()`. This leaves marker-free existing authored recipes and default-off behavior unchanged. Do not release the pivot every active-rest frame or rewrite the lifecycle. The new regression first establishes a genuinely held pitched/sunk hurt pivot, checks neutral rest snapshot/endpoint, then confirms hurt resumes once after camp exit and healthy resume restores the neutral pivot/playback. The original proposed companion test starts neutral and misses this case. This is source reasoning plus an unrun regression, not a runtime reproduction.
+
+## Merge status and minimal integration
+
+- `git apply --check --ignore-space-change .artifacts/phase2/rest-pose-proposal.patch` passed (exit 0). It already contains the resolver/config, body/presence wiring, focused tests and the two required capture endpoint/receipt hunks.
+- The same check on `rest-capture-integration.patch` failed (exit 1 at the header hunk). Current source already has `_poses`, argument parsing/validation, scratch output allowance, fresh-output guard, filters in both still/transition loops, empty-selection failure and filter manifest fields. Do not force-apply or duplicate this patch.
+- `rest-capture-merged-preview.gd` differs from current capture source only in the needed authored-rest wait/receipt additions plus an unnecessary header rewrite and the equivalent `species not in ...` -> `not ...has(species)` rewrite. Do not replace the full production file with the preview. Apply the reviewed primary proposal only; it preserves current header/filter syntax and includes the scoped marker guard plus targeted regression.
+
+## Source checks that hold
+
+The new config is false by default. Resolver scope is the four explicit global/Water IDs and exact installed model paths; unmatched models/species and existing nonempty authored recipes return unchanged. The enabled branch deep-copies the placeholder before adding a recipe, so the catalogue remains unchanged. Water adapter presentation inherits the installed base species model. The recipe chooses `faint` and an empty `root` adjustment, with no model roll, scale, translation, vertex deformation or gameplay/collider writes.
+
+`play_rest()` reaches the authored branch before the generic 90-degree model roll and retains the pending/active idempotence guard. `play_terminal` prevents locomotion from replacing the one-shot; the real `animation_finished` callback applies the no-op endpoint recipe. `stop_rest()` disconnects the callback, restores the snapshotted pivot/bone data, calls animator `revive()` and requests idle. Movement cancels pending or active rest. Companion camp selects this same body route before its fractional-roll path, retains half-speed playback, and releases rest on camp exit. The hurt-pivot issue above is the identified missing transition boundary.
+
+For endpoint stills, the capture change waits while authored rest is pending, then requires active/not-pending and pauses only after completion. Failure records an error and produces no successful endpoint frame. Legacy non-authored poses retain their existing sampling. The live-transition branch returns before this wait and before the five-frame still settle; its existing 0.1/0.35/1/3-second schedule is unchanged. The merged preview therefore does not accidentally convert transition witnesses into endpoint samples.
+
+Limits: source tests manually seeking/emitting the endpoint are not proof of the real animation callback, visual contact or smooth resume. Companion look-at remains intentionally active at camp in existing code, so an in-world camp image may include the established head greeting rather than a mathematically untouched skeleton. The capture is a parked presentation fixture, not an earned bed/camp interaction. Native stills, transition timing, ground contact and movement resume must be judged before enabling the gate.
+
+Artifact SHA-256: primary proposal `97f10c38c7fd85ce09e67f2a20d6a5dc0b19db96e27d164f4c2f200659f33d2d`; stale integration patch `227fe6ca1ec85c19dfb53ac8cbc106b30984f9366ffc195d27f58777d9ae7546`; merged preview `cbb570dd1344c3cd5cf21ebb7e5cc6296ebdc9057ca473851ca3fcd85af642bb`.
+
+## Corrected scratch proposal receipt
+
+Prepared rest-reviewed-proposal.patch without applying it to production. Exact candidate-only marker guard and hurt-to-camp-to-hurt-to-healthy regression were added; current capture header/filters remain unchanged. Git apply --check --ignore-space-change passed (exit 0). Stat: six files, 255 insertions and 3 deletions. SHA-256: fc0a688513b7a10984d6b4e33c1f858e38d6a424320dfaeb806c9837f18ee838. No tests, parser, engine, animation callbacks or GPU work were executed. Original artifacts are retained unchanged; use only this reviewed primary patch, not the stale integration patch or full merged preview.
