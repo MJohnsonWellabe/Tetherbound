@@ -393,6 +393,21 @@ static func solve(trainer_anchor: Vector3, speaker_anchor_point: Vector3,
 			# any bias, and there is nothing to correct.
 			bias = minf(bias, maxf((-uv - sqrt(disc)) / uu, 0.0))
 
+	# A far speaker is still the subject (judge r4 7121d40c: a captain beaten
+	# ten metres off stood small behind a signpost through her victory lines).
+	# With `max_speaker_distance_m` set, the pivot slides further toward the
+	# speaker until the lens is no further than that from them: w = bias - 1
+	# solves |w * u + v| = cap, taking the root nearest the speaker's side.
+	var speaker_cap := float(cfg.get("max_speaker_distance_m", INF))
+	if speaker_cap < INF and uu > 0.000001:
+		var w := bias - 1.0
+		if (u * w + v).length() > speaker_cap:
+			var uv_s := u.dot(v)
+			var disc_s := uv_s * uv_s - uu * (v.length_squared() - speaker_cap * speaker_cap)
+			var nearest := -uv_s / uu
+			w = maxf(w, (-uv_s - sqrt(disc_s)) / uu if disc_s > 0.0 else nearest)
+			bias = clampf(w + 1.0, bias, 1.0)
+
 	var pivot := trainer_anchor.lerp(speaker_anchor_point, bias)
 
 	# Never inside the person talking either. The camera stands behind the

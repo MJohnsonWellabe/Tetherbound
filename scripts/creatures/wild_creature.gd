@@ -449,6 +449,17 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# travelling lunge runs (combat_manager.gd::_update_combat_body_clear, the
 	# shared `ignore_lunging_foe` rule for one body). Presentation only.
 	"camera_ignore_lunge",
+	# F14#0 C3 (after COMBAT §5 contact spacing): the fight camera's neutral
+	# composition yaw for this opponent, in degrees (combat_manager.gd::
+	# _take_camera). A long body held nose to nose with the ally at its full
+	# rendered separation needs a near side-on view to show both heads; 0 or
+	# absent keeps combat.json's `camera.tracking.composition_yaw_deg`.
+	# Presentation only.
+	"camera_composition_yaw_deg",
+	# F14#0 C3: the trainer steps aside next to the ally instead of at the
+	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
+	# the spaced separation is the opponent's head. Presentation only.
+	"camera_trainer_beside_ally",
 ]
 
 
@@ -645,17 +656,17 @@ func _select_attack() -> Dictionary:
 	var cadence := maxi(1, int(_combat_cfg.get("charged_every", 1)))
 	if _selected_attack_attempts % cadence != 0:
 		profile["move_id"] = str(instance.get("move_quick"))
-		return spaced_config_for(profile, mine, theirs)
+		return spaced_config_for(profile, mine, theirs, _contact_need(), _contact_reach_need())
 	var move_id := str(instance.get("move_charged"))
 	if move_id.is_empty():
 		profile["move_id"] = str(instance.get("move_quick"))
-		return spaced_config_for(profile, mine, theirs)
+		return spaced_config_for(profile, mine, theirs, _contact_need(), _contact_reach_need())
 	if _move_db == null:
 		_move_db = MOVE_DB.new()
 	var move: Dictionary = _move_db.move(move_id)
 	if move.is_empty():
 		profile["move_id"] = str(instance.get("move_quick"))
-		return spaced_config_for(profile, mine, theirs)
+		return spaced_config_for(profile, mine, theirs, _contact_need(), _contact_reach_need())
 	# Enemy power remains the authored absolute enemy value.  A named move only
 	# contributes its multiplier at the existing damage roll, never player base
 	# charged power.
@@ -668,7 +679,7 @@ func _select_attack() -> Dictionary:
 	profile["face_lock_fraction"] = clampf(float(_combat_cfg.get("charged_face_lock_fraction", 0.0)), 0.0, 1.0)
 	# Geometry is overlaid before the one spacing pass, so a large guardian's
 	# Earth Fist retains both its authored arc and its valid body-clear reach.
-	return spaced_config_for(profile, mine, theirs)
+	return spaced_config_for(profile, mine, theirs, _contact_need(), _contact_reach_need())
 
 
 ## The combat config, with `preferred_range` floored by how big the two
@@ -691,7 +702,17 @@ func _spaced_config() -> Dictionary:
 		return _combat_cfg
 	var mine: float = body_radius()
 	var theirs: float = float(_opponent.call("body_radius")) if _opponent.has_method("body_radius") else 0.5
-	return spaced_config_for(_combat_cfg, mine, theirs)
+	return spaced_config_for(_combat_cfg, mine, theirs, _contact_need(), _contact_reach_need())
+
+
+## COMBAT §5 contact spacing: the separation the two rendered bodies keep, as
+## they stand (`preferred_range` floor) and at worst (the reach floor).
+func _contact_need() -> float:
+	return CONTACT_SPACING.pair_need(self, _opponent)
+
+
+func _contact_reach_need() -> float:
+	return CONTACT_SPACING.pair_reach_need(self, _opponent)
 
 
 ## The spacing arithmetic, static so tests/smoke_combat_baseline.gd fights with
@@ -707,8 +728,11 @@ func _spaced_config() -> Dictionary:
 ## keep exactly the relationships the contract's table promises. It is NOT in
 ## `_COMBAT_OVERRIDE_KEYS`: no band file may author it, it is one chapter-wide
 ## number.
-static func spaced_config_for(cfg: Dictionary, mine: float, theirs: float) -> Dictionary:
-	var floor_at: float = (mine + theirs) * float(cfg.get("body_clearance", 1.35))
+static func spaced_config_for(cfg: Dictionary, mine: float, theirs: float,
+		contact_floor: float = 0.0, reach_floor: float = 0.0) -> Dictionary:
+	# COMBAT §5: the rendered bodies' own separation (`contact_spacing.gd`)
+	# floors the spacing as well, so a long body stands where the pair clears.
+	var floor_at: float = maxf((mine + theirs) * float(cfg.get("body_clearance", 1.35)), contact_floor)
 
 	var preferred: float = maxf(float(cfg.get("preferred_range", 2.1)), floor_at)
 	var spaced := cfg.duplicate()
@@ -717,7 +741,7 @@ static func spaced_config_for(cfg: Dictionary, mine: float, theirs: float) -> Di
 	# no longer hit anything and whiffs forever. Two bodies further apart are
 	# further apart at the SURFACE by the same amount, so the swing that used to
 	# connect still does.
-	spaced["range"] = maxf(float(cfg.get("range", 2.6)), preferred + 0.5)
+	spaced["range"] = maxf(maxf(float(cfg.get("range", 2.6)), preferred + 0.5), reach_floor + 0.5)
 	spaced["reposition_distance"] = maxf(float(cfg.get("reposition_distance", 5.0)), preferred + 2.4)
 	spaced["power"] = float(cfg.get("power", 8.0)) * float(cfg.get("damage_scale", 1.0))
 	return spaced
@@ -816,6 +840,18 @@ func tell_camera_swing() -> bool:
 
 func camera_ignores_lunge() -> bool:
 	return bool(_combat_cfg.get("camera_ignore_lunge", false))
+
+
+## The authored fight-camera composition yaw in degrees, or 0.0 for the shared
+## `camera.tracking.composition_yaw_deg`. Read from the override rather than
+## `_combat_cfg` because the camera is taken before the fight snapshot.
+func camera_composition_yaw_deg() -> float:
+	return float(_enemy_config_for_this_body().get("camera_composition_yaw_deg", 0.0))
+
+
+## True when this opponent's fight stands the trainer beside the ally.
+func camera_trainer_beside_ally() -> bool:
+	return bool(_enemy_config_for_this_body().get("camera_trainer_beside_ally", false))
 
 
 ## --- F10#2 named-fight cues ------------------------------------------------

@@ -3,6 +3,35 @@
   "_comment": "P2-037 candidate: ground the visual bark skirt without altering the tree's position, decks, ascent, rails, collision or entrance split. Full landmark identity and native comparison remain open.",
   "ground_shell_base": true,
   "bark_embed_m": 0.5,
+  "ancient_trunk": {
+    "enabled": false,
+    "_comment": "P2-037: articulated outer bark and split crown tips around the unchanged inner clearance. Visual geometry and UVs only; native comparison required.",
+    "lobe_depth_m": 8.0,
+    "bark_repeat_m": 4.0
+  },
+  "built_detail": {
+    "enabled": false,
+    "_comment": "P2-037: distinct installed-family cut wood on existing floors, supported deck fascia and hanging blue/gold cloth. No new floors, barriers or collision.",
+    "wood_tint": "#c4aa87",
+    "banner_colour": "#183e65",
+    "banner_trim": "#d5b466"
+  },
+  "branching_crown": {
+    "enabled": false,
+    "_comment": "Reference-backed P2-037 geometry candidate: connected asymmetric branch tiers and overlapping installed-family leaf masses. Visual only; existing shell, entrance, platforms, ascent and collisions remain unchanged. Native exterior/interior review required.",
+    "bark_repeat_m": 6.0,
+    "leaf_shape": [1.35, 0.85, 1.25],
+    "branches": [
+      {"id":"WestLow", "points":[[-62,82,8],[-74,107,4],[-104,132,-6],[-130,145,-18]], "radii":[15,12,7,2.8], "leaves":[{"at":[-130,135,-18],"height":72,"yaw":0.2},{"at":[-110,144,12],"height":64,"yaw":1.7}]},
+      {"id":"EastLow", "points":[[63,106,-5],[78,127,-7],[102,151,-18],[126,171,-28]], "radii":[16,12,6,2.6], "leaves":[{"at":[126,160,-28],"height":76,"yaw":2.3},{"at":[107,171,-3],"height":62,"yaw":0.8}]},
+      {"id":"WestUpper", "points":[[-60,165,20],[-78,186,22],[-98,204,30],[-116,213,38]], "radii":[15,11,6,2.8], "leaves":[{"at":[-118,202,35],"height":78,"yaw":1.1},{"at":[-92,212,7],"height":65,"yaw":2.8}]},
+      {"id":"WestRear", "points":[[-49,191,40],[-57,208,55],[-69,224,70],[-77,234,85]], "radii":[13,9,5,2.2], "leaves":[{"at":[-78,223,85],"height":70,"yaw":2.1},{"at":[-58,223,61],"height":60,"yaw":0.5}]},
+      {"id":"EastUpper", "points":[[57,171,26],[76,194,34],[96,215,43],[111,227,50]], "radii":[15,10,5,2.5], "leaves":[{"at":[111,216,50],"height":72,"yaw":0.6},{"at":[91,221,24],"height":66,"yaw":2.2}]},
+      {"id":"NorthUpper", "points":[[35,197,49],[40,215,67],[46,231,87],[51,239,106]], "radii":[13,9,5,2.3], "leaves":[{"at":[51,227,104],"height":68,"yaw":1.8},{"at":[26,234,86],"height":57,"yaw":0.3}]},
+      {"id":"WestTop", "points":[[-34,231,20],[-40,243,18],[-47,253,17],[-52,263,18]], "radii":[12,8,4,1.8], "leaves":[{"at":[-35,245,19],"height":65,"yaw":2.6},{"at":[-52,243,39],"height":52,"yaw":1.0}]},
+      {"id":"EastTop", "points":[[34,230,20],[39,241,15],[41,251,7],[44,259,-1]], "radii":[12,8,4,1.8], "leaves":[{"at":[45,247,0],"height":63,"yaw":0.4},{"at":[27,251,25],"height":56,"yaw":1.9}]}
+    ]
+  },
   "canopy_atlas": {
     "enabled": false,
     "_comment": "P2-037 candidate: preserve the installed TwistedTree leaf UV/alpha atlas and recolour it in a shader. Native crown review is required; no geometry, scale, placement or collision changes.",

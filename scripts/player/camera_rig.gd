@@ -879,6 +879,8 @@ func _solve_conversation_shot() -> Dictionary:
 	var forward := -CONVERSATION.world_basis(self).z
 
 	var shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, _talk_cfg)
+	var used_cfg: Dictionary = _talk_cfg
+	var used_room := INF
 	var room := _free_distance_behind(shot["pivot"], shot["dir"], float(shot["distance"]))
 	if CONVERSATION.is_blocked(shot, room, _talk_cfg):
 		# Re-solved rather than trimmed. The room is handed to the solver as a
@@ -929,7 +931,47 @@ func _solve_conversation_shot() -> Dictionary:
 		shot = CONVERSATION.solve(
 			trainer_anchor, speaker_anchor, forward, best, best_room)
 		shot["fallback"] = true
+		used_cfg = best
+		used_room = best_room
+	if bool(_talk_cfg.get("require_speaker_sight", false)) \
+			and not _speaker_in_sight(shot, speaker_anchor):
+		shot = _swing_for_sight(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward)
 	_talk_used_fallback = bool(shot.get("fallback", false))
+	return shot
+
+
+## F04#6 (aftermath render af2 03e7486c): Vess's post is the start of the
+## Watchtower Spur, and the spur's signpost stood between the lens and her for
+## her whole victory speech. With `require_speaker_sight`, a shot whose line to
+## the speaker's head runs into something swings round the pivot, nearest
+## first, to the first angle the camera can reach that sees them.
+func _speaker_in_sight(shot: Dictionary, speaker_anchor: Vector3) -> bool:
+	var lens: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var to_speaker := speaker_anchor - lens
+	var reach := to_speaker.length()
+	if reach <= 0.3:
+		return true
+	# Stops short of the speaker's own anchor: their body is excluded, but a
+	# prop they lean on at arm's length is not what this is asking about.
+	var look := reach - 0.3
+	return _free_distance_behind(lens, to_speaker / reach, look, false) >= look - 0.01
+
+
+func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
+		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3) -> Dictionary:
+	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
+	for extra: float in CONVERSATION.swing_search(cfg):
+		if is_zero_approx(extra):
+			continue
+		var candidate := cfg.duplicate()
+		candidate["shoulder_yaw_deg"] = base_swing + extra
+		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
+		if probe_room < float(probe["distance"]) - 0.01:
+			continue
+		if _camera_is_reachable(trainer_anchor, probe) and _speaker_in_sight(probe, speaker_anchor):
+			probe["fallback"] = bool(shot.get("fallback", false))
+			return probe
 	return shot
 
 

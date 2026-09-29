@@ -58,7 +58,7 @@
       "flag_id": "tam_tools_given",
       "scope": "player",
       "label": "Meet Tam in the village and take his tools.",
-      "beacon": {"position": [8.0, -16.0], "display_name": "Tam"},
+      "beacon": {"position": [8.0, 12.0], "display_name": "Tam"},
       "how": "Tam is the village smith, south-east of the well. {interact} to talk: axe for trees, pickaxe for stone, knife for fiber.",
       "_comment": "OP23-04, a NEW rung and the one the ladder was missing. Real flag, already wired: data/dialogue/village.json's `village_tam_tools` carries `flag:tam_tools_given` on the same line as its three `give:` effects. Everything below this rung presupposes those tools -- item_db.harvest_yield()'s rule is right-tool = full, no tool = half, WRONG tool = nothing, so a player without the knife gathers ZERO fiber and cannot afford an orb, a camp or a bed. Gate B's own harness discovered this the hard way and wrote it down: \"'natural route requires Tam's axe before it can harvest', which was not a harness bug -- it was a real beat of Gate B this file had skipped\" (tests/smoke_gate_b_continuous.gd). A ladder that skips the rung the player is actually standing on is the whole of what OP23-04 reports."
     },

@@ -7,11 +7,11 @@
    "id": "F01",
    "title": "Village road topology and opening",
    "chapter": "Meadows",
-   "pct": 71,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 7,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -32,15 +32,13 @@
     },
     {
      "text": "Normal-controller DAY walk reaches every opening NPC, camp and gate",
-     "status": "in_progress",
-     "evidence": "tests/capture_village_walk.gd (WORLD 3.2 acceptance walk) added on ralph/f01-village-road-plan; no recorded result",
-     "gap": "Run walk, record result, independent verdict"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS/f01-walks/day_d41ff2f0 (render 36439730921: tests/capture_village_walk.gd --route=visits --time=day --from-title, PASS visited=11, max_off_road 0.00 m, controller events only); code-blind verdict code_blind_judge_verdict_day_d41ff2f0.md PASS (gates, lived-in camp with fire/tent/bedroll, key on its post); strict re-check RECHECK_F01_2.md MET. Bars A/B → Phase 2 catalog."
     },
     {
      "text": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate",
-     "status": "in_progress",
-     "evidence": "Same capture tool on branch; no night result recorded",
-     "gap": "Run night walk and record"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS/f01-walks/night_d41ff2f0 (render 36439735704: tests/capture_village_walk.gd --route=visits --time=night --from-title, PASS visited=11 at 23:00, controller events only); the old key hangs glowing on its post by The Rise and reads in the world (key_post.json); code-blind verdict code_blind_judge_verdict_night_d41ff2f0.md PASS; strict re-check RECHECK_F01_3.md MET. Bars A/B → Phase 2 catalog."
     },
     {
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
@@ -505,14 +503,14 @@
      "status": "met",
      "evidence": "ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/ @ tb/cloudreach 9e850f5b (Phase 1 lane landing): tools/capture_cloudreach_high_perch_live.gd, one continuous flight per time of day through the scene's own CameraRig, never frozen or replaced (Fly 7.5 m arm in flight, 5.2 m on foot): Jump in the air launches the glide, held move-forward lands it on the crown, the trainer walks to the rim and looks over the drop, crosses the court, launches north by a second Jump and glides away looking back. 12/12 frames, 0 failures. Code-blind judge (prompt verbatim in judge-prompt.md): CAMERA READ PASS (height YES, crowding PARTLY, arrival/departure PARTLY, night YES/PARTLY). Independent strict re-check: MET. Shortcuts disclosed: fixture start (BOOT_FLAGS incl. fly_traversal_unlocked, four-creature party with no flier), Maela's loaner carries every flight, air teleport to the arrival start once per time of day, yaw written each frame as the stick, pitch -32 deg for the rim-out frame, clock pinned, HUD hidden, PNG->JPG.",
      "gap": "",
-     "note": "Bars A/B → Phase 2 catalog (aerie dome/towers/banners, rock, cloud floor; the c3 judge failed both bars). Non-blocking readability defects recorded in r5/verdict.md (landed frame boxed by needles; gate wall hides the landing ring at 20 m; court view has only a far cloud height cue)."
+     "note": "Bars A/B → Phase 2 catalog (aerie dome/towers/banners, rock, cloud floor; the c3 judge failed both bars). Non-blocking readability defects recorded in r5/verdict.md (landed frame boxed by needles; gate wall hides the landing ring at 20 m; court view has only a far cloud height cue). Phase 2c fresh native chapter matrix (37 rows, plus four summit views) and independent regional/paired reviews: Bars A/B NO/NO; visual debt remains open. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/regional-baseline-judge.md and paired-visual-judge.md. P2-021/P2-022 candidates are disabled after FAIL; no Phase 2 visual closure. Obstructed matrix rows remain inadequate evidence."
     },
     {
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "met",
      "evidence": "ralph/reports/CLOUDREACH/f08-4-settlements/ @ tb/cloudreach 1178e18a (Phase 1 lane landing), README.md. Game: two working residents each at Galefoot (first visit) and Cliffhold (upper route open), walking clear of every cottage along the arrival lanes (tests pin occupancy and footprint clearance); Cliffhold's settlement ambience moved from Tavi's ring onto Cliffhold; the Broken Causeways crown is carved down to broken_causeway_main's climb (the summit's crown_cut), which had run inside the crown so the road vanished into a grass wall. Frame matrix (production CameraRig) r1/r1c/r1d/r1f; code-blind judge 1: settlements A PASS (Galefoot YES, Cliffhold PARTLY), night C PASS, routes B FAIL on the buried causeway; after the carve, fresh judge 2: B PASS, C PASS. Independent strict re-check: MET. Shortcuts disclosed: fixture start, teleport to stands, clock pinned, HUD hidden, --active=terrapup for settlement rows, rows 16/18 capture-stand defects not judged, two stand changes after judge 1, judge 2 told High Roost is glide-only (plus a leniency line and the F08#3 glide frames), row 37 day under post-finale flags, verdicts are lane summaries, JPG stills.",
      "gap": "",
-     "note": "Bars A/B → Phase 2 catalog (Cliffhold distinctness and night lights, settlement and cliff materials; Codex towers and occupied terrace stay off). Recorded, not blocking: companion fills frames on the rope bridge (09) and at the aviary (29); High Roost reverse/rim views show no next landing; row 14 frames no beacon."
+     "note": "Bars A/B → Phase 2 catalog (Cliffhold distinctness and night lights, settlement and cliff materials; Codex towers and occupied terrace stay off). Recorded, not blocking: companion fills frames on the rope bridge (09) and at the aviary (29); High Roost reverse/rim views show no next landing; row 14 frames no beacon. Phase 2c fresh native chapter matrix (37 rows, plus four summit views) and independent regional/paired reviews: Bars A/B NO/NO; visual debt remains open. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/regional-baseline-judge.md and paired-visual-judge.md. P2-021/P2-022 candidates are disabled after FAIL; no Phase 2 visual closure. Obstructed matrix rows remain inadequate evidence."
     },
     {
      "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
@@ -601,9 +599,10 @@
     },
     {
      "text": "Named fights pass C2/C3",
-     "status": "partial",
-     "evidence": "C2 half MET (F10#2 starter parity, owner 2026-09-27): smoke_stormwood_b_named_c2c3 --seeds=24, 18/18 rows pass; Capacitor Alpha ratio 0.42/0.50/0.41 (was 0.42/0.98/0.71). ripple_jab/gale_peck timing and Ripplet/Galewisp stats. ralph/reports/BALANCE/f10_2/ @ tb/balance.",
-     "gap": "C3 blind fight-footage verdict"
+     "status": "met",
+     "evidence": "C2: Balance #413, smoke_stormwood_b_named_c2c3 --seeds=24, 18/18 rows (six named fights x three starters), worst single hit 0.105 of HP, reader win >= 0.96, Capacitor ratios 0.42/0.50/0.41 (ralph/reports/BALANCE/f10_2/). C3: ralph/reports/STORMWOOD/f10_2/c3_p1/ @ tb/stormwood feba5de9 (current fight camera and HUD): code-blind judge all six C3 PASS on (a) tell visible, (b) where it hits and where to go, (c) both creatures readable at scale, (d) a real hit or avoidance; measured tells 0.80-0.90 s (authored 0.8/0.85), hall guardian heavy 1.10 s; Stormwood-B 07bc9cad/45927814/85ba1c57 stay reverted (not needed). Independent strict re-check: MET. Shortcuts disclosed: L42 fixture five with Sparkit leading, debug placement 4.5 m from each named body (gated regions by placement), other wilds within 25 m hidden, storm pinned in Calm, fixed 10 fps, harness stick and quick taps, 12 s cap; frames predate a8aafa0d's tell wording; Capacitor route cue not measured in this capture.",
+     "gap": "",
+     "note": "Phase 1. Bars A/B -> Phase 2 catalog (impact starburst veils the wind-up; creature style). Residual (STATE): \"it missed you\" while the ally stands inside the lane (W tell4)."
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
@@ -627,9 +626,9 @@
     },
     {
      "text": "Device profile",
-     "status": "not_started",
-     "evidence": "No Ally GPU profile (lane report)",
-     "gap": "Computer capture per owner ruling 2026-09-27 (#356 5857144944): 1920x1080 opengl3, handheld profile if present, code-blind 7-inch readability verdict; no Ally hardware needed."
+     "status": "in_progress",
+     "evidence": "ralph/reports/STORMWOOD/f10_6/r2-r5 (computer capture, no Ally hardware; 1920x1080 opengl3; no handheld profile exists). Code-blind 7-inch judges: r2 FAIL, r3 FAIL, r4 YES x4 but strict re-check NOT MET (its prompt had exempted the trainer; UX 1.4 forbids covering trainer, active creature, target or attack geometry), r5 FAIL. Landed improvements: combat HUD text held to hud_scale.gd floors (test_combat_hud_handheld_floors), dimmed-cell contrast, move grid kept in the punish window, translucent vitals chip, Day/time at the glance floor, target plate top-right, subject fade, trainer aside 2.4 m.",
+     "gap": "UX 1.4 in fights: the left fight column (team list + active card, about a quarter of the screen) covers the trainer and attack lanes (r5 Hi/H2b); the plate fade hides the punish line (C2f; take the plate out of the fade); Voltarach tell legibility and the tell sunburst bleaching the foe (F10#2/C3 territory); FB trainer dark on dark. Judge variance: identical explore frames read legible (r4) and illegible (r5). Next approach: compact fight column (active creature plus four pips)."
     }
    ]
   },
@@ -802,10 +801,10 @@
    "id": "F14",
    "title": "Tidewake fights, network and Guardian",
    "chapter": "Tidewake",
-   "pct": 50,
+   "pct": 83,
    "counts": {
-    "met": 4,
-    "partial": 2,
+    "met": 5,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -814,17 +813,17 @@
    "criteria": [
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md (tb/tidewake Phase 1). C3 under the fixed rubric (phase1/C3_RUBRIC.md: two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 152 m stick walk from the Tidal Cradle landing, creature_recall, Challenge prompt; 100%/100%, tells 4/4); Tidecoil PASS (tidecoil_r12: 100%/91.7%, tells 4/4; engaged by walking down the arrival bay and the Engage prompt). C2: f14_confirm_main (Tess top-fight pass; Tidecoil named-wild ratios 0.05-0.07) plus aquaryn_c2_3starters (ratios 0.54/0.32/0.29, reader win 1.00), under the STATE named-wild ruling. Tells observed 0.80-0.90 s in the in-world smoke.",
-     "gap": "Tess on the ordinary route (317 m walk, prompt): r5 judge A 97%, judge B 84% under the fixed rubric (both must reach 90%). All of judge B's failures are the ally in front of the opponent's head at contact range (4.7-6.6 m). Blocked on a shared combat contact-spacing rule (bodies interpenetrate); the camera cannot separate touching bodies.",
-     "note": "Strict re-check (phase1/f14_0/RECHECK_F14_0.md) NOT MET before the fixes; gaps 1, 2, 3 and 5 are now addressed and gap 4 (Tess) remains. Tidewake lane (Phase 1)."
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md. C2: top trainers against the option-(c) bar on main 1e0ddd39 (optc_1e0ddd39/): Tess, Calder, Venn reader win 1.00 x3, masher lead-faint 1.00, reader/masher party cost <= 0.19, chapter-level masher loss 1.00. Venn's Riptusk lane now locks at 0.25 of the tell (it failed at 0.33-0.50 reader win). Aquaryn (3 starters) and Tidecoil pass under the named-wild ruling. C3 under the fixed rubric (phase1/C3_RUBRIC.md, two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 100/100), Tidecoil PASS (tidecoil_r12: 100/91.7). Tells observed 0.80-0.90 s. | C3 (serial closer lane, 2026-09-29): Tess on main f4ebca9e plus Mirejaw side-on camera (camera_composition_yaw_deg 70, trainer beside the ally), ralph/reports/CLOSER/f14_0_tess/r1/. Two code-blind judges under C3_RUBRIC.md: A 33/36 = 91.7%, B 36/36 = 100%; strict re-check with its own calls A 94.4%, B 94.4% (STRICT_RECHECK.md); tell-start markings 6/6. All seven Mirejaw frames near the ally pass. Margin rests on borderline HUD and ally-overlap calls on Riverdrake/Sirenseal; the 0.25 s clause is unverifiable in stills. One render; met on this round.",
+     "gap": "—",
+     "note": "C2 met under option (c). Tidewake lane (Phase 1)."
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (tb/tidewake Phase 1): C2 PASS at a3269be7 in the actual Heart Chamber, 144 fights: READER win 1.00 x3, party cost 0.12/0.07/0.24 of the masher's, masher wipe 1.00, max single hit 18%, tells 0.8/1.1 s. The regression since dbe43195 (render bisect) was the ring reaching the Sluice Crossing channel; Nerissa's stand moved 9 m deeper. C3 tells 12/12 with the heavy distinct (orange HEAVY banner plus chevron lane). Veilfall interior route readable in every frame (room identity WEAK, Phase 2).",
-     "gap": "C3 blocked after r17 (two-strike rule): judge A 98%, judge B 83%. The ring bound (water_veilfall arena_bounds), the tell swing and Riptusk's camera_ignore_lunge removed the banner-wall, edge-crop and camera-in-ally failures. What remains is contact-range head occlusion, which needs the shared combat spacing rule. Her ring is now 9 m, so the 144-fight in-world C2 must be rerun (local seeds: READER 5/5, cost 0.24-0.33, MASHER wipes).",
-     "note": "Blocked on the shared contact-spacing rule (with Tess). Tidewake lane (Phase 1)."
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md. C2 at the 9 m Heart Chamber ring (main 1e0ddd39, c2_1e0ddd39/): 144 in-world fights, reader win 1.00 x3, masher lead-faint and wipe 1.00, reader/masher party cost 0.13 / 0.24 / 0.24, max single hit 17%, observed tells 0.80-1.58 s (heavy 1.1 s). C3 tells 12/12 with the heavy distinct; banner-wall and camera-in-ally failures are fixed (arena bound, lunge opt-in).",
+     "gap": "C3 framing: r17 98% / 83%. Contact-range head occlusion waits on the COMBAT SPACING lane (tb/combat-spacing), then a re-judge under C3_RUBRIC.",
+     "note": "C2 met under option (c) at the 9 m ring. Tidewake lane (Phase 1)."
     },
     {
      "text": "Water/current network visibly changes and persists",
@@ -912,13 +911,14 @@
  "chapter_cards": [
   {
    "id": "M1",
-   "status": "in_progress",
-   "note": "Road topology on ralph/f01-village-road-plan; one-starter earned bridge pass; two-peer opening/tournament pass with fixtures."
+   "status": "met",
+   "note": "Integrated run passed independent strict re-check (Cards lane); all F01 feeders met, so M1 is complete.",
+   "integrated_run": "ralph/reports/CARDS/m1/ @ main e35e2611 (Cards lane): fresh seed-15 new game, tests/smoke_four_biome_continuous.gd --reload-at-transitions --through-tournament, exit 0, failures [], 1159 s: title, starter picked and named in the real picker, live practice fight and physical catch, earned village key and gate, earned team by live catches, paid campsite with bedroll and 3 creature beds, three entrants bedded and cared for, production save/reload (flags 59->59, party/inventory/condition identical), then quarter/semi/final won by real fights (Mira, Tam, Oskar). Composite with F01#0-#6 (road plan, side lane, day/night walks 11/11 code-blind PASS, three starters, reload, two-peer). RECHECK_M1.md: VERDICT MET. Shortcuts disclosed: harness controller input and fights, headless, one seed/one starter (other starters from F01#4, which grants the third member), walk gates counted by proximity, consent inferred from marshal/beds/bracket entry, two-peer opening witness predates the road rebuild."
   },
   {
    "id": "M2",
    "status": "partial",
-   "note": "Earned route passed to South Bridge once; later spine only as segments/two-peer fixture legs; practice-wild solvency owner question."
+   "note": "Partial; the continuous earned run is blocked (Cards lane, ralph/reports/CARDS/m2/ROUTE_FINDINGS.md). Fresh seed-15 runs on main pass the opening and tournament, then (1) fail the South Bridge guardian 0/3; trainer_ally_lateral_m 0.0 (3f04ece8, F04#2) passes 3/3 (owner: Meadows lane). Past the bridge on a diagnostic save, the Warrens, the relay (after the Cards lane's harness fix to read the relay captain's new victory lines) and the three Sigil captains pass, but (2) Keeper Hald beats the earned five 0/3 on main settings, and with lateral 0.0 Captain Field does 0/2. The harder captains are b20d23ab (F04#7, owner ruling 11/12: a masher loses a named fight in 94-100% of playthroughs), and the route harness has no heal-and-retry. Needed: the bridge fix, then either a disclosed heal-and-rechallenge aid in the route harness or a reader-policy pilot, then one uninterrupted run to Cloudreach. Waits on fight feeders F04#1, #2, #6 and #7 (Meadows lane). Retired: the practice-wild solvency question is ruled; the 326 m Hall-exit walk is exempt (owner)."
   },
   {
    "id": "M3",
@@ -951,14 +951,14 @@
   },
   {
    "id": "S1",
-   "status": "partial",
-   "note": "Integrated run passed review in batch 64; F09#3 met (route and pocket walks, f09_3_r8). Card run recorded after the landing.",
-   "integrated_run": "ralph/reports/STORMWOOD/full_run/run_a.txt + s1/ @ tb/stormwood 9dc96424 (batch 64): one continuous chapter run passes prefix, Crown arch, Rootgate, core, Marrow and aftermath with live fights; route unit tests 101/0; closed-arch bypass 15/0; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: Cloudreach-boundary fixture start (no earned C3 save), fresh L44 party with granted tools, 8x clock, harness input and fights, helper routing B1-B8, one teleport per pocket for the walk witness."
+   "status": "met",
+   "note": "Integrated run passed independent strict re-check (MET) after F09#3 landed (Stormwood Phase 1 landing); all feeders met (F09, F11).",
+   "integrated_run": "ralph/reports/STORMWOOD/s1/phase1_rerun/ @ tb/stormwood 0068c542: run 4 of smoke_stormwood_continuous --through-aftermath passes EXIT 0 and its reload EXIT 0; six witness steps PASS (prefix, paid Crown arch, Crown guardian/Wen/Rootgate, Deepwood/rods/core, Marrow five rounds and the four-conduit Break, Stormheart and aftermath); a production Break witnessed sheltered, rods disabled, Crown glass gathered in live Break/Fading windows, no Stormwood flag/position/party writes. Loops, shortcuts, pockets, alternate routes: f09_3_r8 (shortcuts both ways 72/0, pockets 102/0), re-walked on the dense bake in f10_4/r7; closed-arch bypass 15/0; route suites 101/0. Runs 1-3 failed on harness gaps and CPU contention, recorded with causes (harness now fights out a wild engaged at a stance and retries a displaced press; neither writes state). Shortcuts disclosed: Cloudreach-boundary fixture start (no C3 save), fresh L44 party with granted tools, 8x clock (fights and presses 1x), harness input and fights, helper routing B1-B8; route walks from an earlier run's earned checkpoint with teleports to each route start, dark arch and footing and Stormglass/recipe grants; one teleport per pocket."
   },
   {
    "id": "S2",
    "status": "partial",
-   "note": "Surge phase grouping 9/9 blind (main fe07d0d2); night phases merge; no Bars A/B, audio or device pass; Bryn chain untouched."
+   "note": "Cards lane re-score on main e35e2611. Met: six activities cover all regions (F10#0, including Glass for Bryn: STORMWOOD/b/f10_0/CLOSE.md; the Bryn chain is built and counted); lightning 1.2 s/3 m telegraph and phase cues without HUD (F10#3); night phase merge retired: the Stormwood look is hour-invariant (test_look_is_identical_at_every_hour, test_stormwood_surge_presentation 51/716/0) and P2-042 (#412) passes four-phase identity code-blind at native and small size. Audio: the Surge observer fires each phase bed and the strike chain on time (smoke_stormwood_surge_audio 19/0, CARDS/s2/), but all nine assets/audio/stormwood/*.wav are missing, so no phase is audible; the audio witness cannot pass until those assets exist (asset gap, owner decision; the config forbids placeholders). Left: that audio gap; F10#2 C3 and F10#6 device profile (Stormwood lane); Bars A/B -> Phase 2 catalog. Note: normal play shows a HUD phase label; the no-HUD reads come from F10#3."
   },
   {
    "id": "S3",
@@ -975,7 +975,7 @@
   {
    "id": "T2",
    "status": "failing",
-   "note": "Tide-race shader on main fe07d0d2 still blind-fails surf read; six chains unbuilt; no C2/C3 fight verdicts."
+   "note": "Cards lane re-score on main e35e2611. Met on disclosed relaxed proofs: six island groups (f13_0_six_groups), four loops and three shortcuts (RUN8, 74/0), eight pockets (full/f13_2_pockets, 53/0), six local chains one per group (phase1/f13_3, 619/0), four-character ledger with no catch or repeated wild (b/f13_4, 598/0); on function, currents, inhabited docks and Veilfall distance read (phase1/f13_5) and restoration (b/f14_2 blind A/B, 77/0). Device profile FAILS (CARDS/t2_device/JUDGE.md: 1920x1080 opengl3 computer capture, no Ally hardware, code-blind 7-inch): docks 7/7 inhabited, Veilfall read and restoration YES, but current flow direction is unreadable at 7 inches and small HUD text (clock, hotbar numbers, key glyphs, FOOD) is illegible. Left: (1) F14#0 Tess and F14#1 Nerissa C3 (Tidewake lane, after tb/combat-spacing); (2) device profile: current direction cue (Tidewake lane) and small HUD text at 7 inches (HUD owner; shared with F10#6's handheld HUD work); (3) Bars A/B -> Phase 2 catalog."
   },
   {
    "id": "T3",

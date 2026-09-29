@@ -45,7 +45,13 @@
     "terrain_lean_scale": 0.5,
     "terrain_pitch_limit_deg": 18.0,
     "terrain_roll_limit_deg": 18.0,
-    "terrain_smoothing_rate": 6.0
+    "terrain_smoothing_rate": 6.0,
+    "_comment_run": "RUN-LEAN, TUNABLE, presentation only (scripts/player/run_gait.gd, driven from trainer_model.gd; remote puppets share it). run_lean_max_deg is the steady forward pitch of the model at full sprint speed, eased in above walk_speed (smoothstep) over run_lean_ease_s seconds, 0 at walk and rest; it stacks on the clip's own baked lean. sprint_cadence_scale multiplies the sprint clip's ground-speed-matched playback (1.0 = authored 4.4 steps/s at 8.6 m/s; below 1 slows the step rate at the cost of a little foot slide). gait_rate_min/max clamp all gait playback.",
+    "run_lean_max_deg": 8.0,
+    "run_lean_ease_s": 0.15,
+    "sprint_cadence_scale": 0.85,
+    "gait_rate_min": 0.5,
+    "gait_rate_max": 1.4
   },
 
   "jump": {

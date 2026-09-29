@@ -56,6 +56,35 @@
     "_comment_impulse": "How fast an attack lunge or a knockback decays, in units per second. High enough that an impulse is a punch rather than a shove.",
     "impulse_damping": 9.0
   },
+  "contact_spacing": {
+    "_why": "COMBAT §5 contact spacing (scripts/combat/contact_spacing.gd, applied in creature_body.gd::_hold_contact_spacing). Tidewake F14#0/#1 (Tess judge B 84%, Nerissa 83%), Meadows F04#2/#7 and Stormwood F10#2 failed C3 on one defect: after a strike the capsules touch but the RENDERED bodies overlap at 4.7-6.6 m, the ally stands in front of the opponent's head, and no camera can separate them. At contact range the pair now keeps the two directional rendered half-extents plus a visible clearance apart, floored at the colliders' sum. The opponent's preferred_range floors at that same separation (wild_creature.spaced_config_for), so it walks to where the bodies clear; every reach (the player's floor_reach_for_bodies / host_move_profile and the opponent's spaced range) floors at the pair's LONGEST possible separation (each body's longest half-extent) plus 0.5 m, so no hold-apart and no turn can carry a target out of a strike that would have reached it. A first cut capped the separation at (r_a + r_b) x enemy.body_clearance instead; judge B still saw Mirejaw (5.5 m half-length) and Ripplet touching at that cap, so the cap was replaced by these floors. The ally yields at once; the host-authoritative opponent holds and yields only a deficit older than foe_yield_after_s (the ally is pinned). Bodies in a combat burst or travelling lunge are exempt until it ends. Swept with move_and_collide, never a teleport; the arena hold runs after it. Same numbers solo, host and guest.",
+    "enabled": true,
+    "_why_visible_clearance_m": "COMBAT §5's target: 'measured directional rendered half-extents plus 0.6m visible clearance'. TUNABLE.",
+    "visible_clearance_m": 0.6,
+    "_why_max_separation_m": "Safety ceiling on any separation so a malformed model cannot push a fight across its arena. The largest shipped pair (abyssal guardian head-on vs a long ally) needs about 11 m.",
+    "max_separation_m": 12.0,
+    "_why_push_speed_mps": "Soft correction speed. Faster than creature_movement.speed (5.6) is not needed because walking INTO the partner is always cancelled in full (the closing speed is added to the step), so this only settles a lunge's overshoot: 6 m/s clears a typical 0.5-1 m overlap in about a tenth of a second, which reads as a bump rather than a snap. TUNABLE.",
+    "push_speed_mps": 6.0,
+    "_why_foe_yield_after_s": "The opponent's position is host-authoritative and stays put while the ally resolves the overlap. Only when a deficit outlives this (the ally is pinned by terrain or the ring) does the opponent step back itself. Longer than the ally's own settle time at push_speed_mps. TUNABLE.",
+    "foe_yield_after_s": 0.35,
+    "foe_yield_share": 1.0,
+    "_why_tolerance_m": "Deficits below this are ignored so the rule does not jitter a body by millimetres.",
+    "tolerance_m": 0.01
+  },
+  "player_pace": {
+    "_why": "Owner playtest 2026-09-29: 'combat seemed a little slow in general'. One scale on every player move's wind-up, recovery and cooldown (each move in moves.json authors its own, so the scale lives here rather than in 53 rows). Applied in combat_manager._move_profile and host_move_profile so solo, host and guest read the same numbers. TUNABLE; 1.0 restores the authored timings.",
+    "windup_scale": 0.85,
+    "recovery_scale": 0.85,
+    "cooldown_scale": 0.85,
+    "_why_charged_cone_bonus_degrees": "Owner playtest: 'I'm not sure any of my power attacks hit even though they should've'. The charged attack is the one whose aim is committed longest, so its arc widens by this many degrees on top of the move's own cone_degrees. TUNABLE.",
+    "charged_cone_bonus_degrees": 15.0
+  },
+  "strike_reaim": {
+    "_why": "Facing was locked when the wind-up STARTED, then the hit was tested 0.55 s later against wherever the opponent had circled to, so a correctly aimed power attack whiffed. Just before the hit test the striker now turns toward the target by at most this many degrees (0 disables). Runs before the strike is tested solo and before the intent is sent in a session, so the host arbitrates the same facing. Quick attacks keep their wide arc and do not re-aim. TUNABLE.",
+    "enabled": true,
+    "charged_max_degrees": 45.0,
+    "quick_max_degrees": 0.0
+  },
   "player_quick": {
     "_comment": "The bread-and-butter attack. Short wind-up, short recovery, wide arc: it should be usable under pressure without feeling like a commitment.",
     "power": 9.0,
@@ -91,9 +120,9 @@
     "reposition_speed": 3.2,
     "telegraph": 0.8,
     "recovery": 0.75,
-    "attack_cooldown": 1.1,
+    "attack_cooldown": 0.9,
     "_comment_reposition": "After recovering it backs off and circles for this long before closing again. Without it the fight is two creatures standing in each other's faces trading hits, which is exactly the static fight this model replaced. W23-DIFFICULTY (D77): 1.0 -> 0.7. MEASURED with tests/smoke_combat_baseline.gd: the opponent's whole attack cycle was recovery 0.75 + reposition 1.0 + the walk back + telegraph 0.55, about 2.7s per swing against a pilot dealing ~13 damage a second, so an ordinary wild landed two hits and died in seven seconds. 0.7 keeps the back-off readable (DIVER authors 1.6, CURRENT 0.5, so the baseline still sits between the two profiles that are ABOUT this number) and buys one more swing per fight.",
-    "reposition_time": 0.7,
+    "reposition_time": 0.5,
     "reposition_distance": 4.0,
     "_comment_circle_speed": "COMBAT-1. Inside preferred range but on cooldown, the opponent circles at this pace instead of walking into contact (which left no room to evade the next telegraph). A slow prowl, not a dodge: at reposition_speed the strafe carried it out of the path of the player's quick. TUNABLE.",
     "circle_speed": 1.2,
@@ -113,6 +142,21 @@
     "_comment_power": "1.3x the wild baseline, before `damage_scale`. Profile members author their own absolute power and are unaffected.",
     "power": 10.4
   },
+  "hud_subject_fade": {
+    "_why": "F10#6 device profile (UX section 1.4: the HUD supports direction, team state and danger without covering the trainer, the active creature, the target or the attack geometry). combat_hud.gd::_update_subject_fade: a fight panel (target plate, move grid, ally card, orbs plate, team list) that covers at least min_overlap of the trainer's, the active creature's or the target's projected screen rect eases to alpha at rate per second, and back to opaque once clear. TUNABLE.",
+    "enabled": true,
+    "alpha": 0.3,
+    "rate": 6.0,
+    "min_overlap": 0.1
+  },
+  "trainer_aside": {
+    "_why": "combat_manager.gd::_stand_the_trainer_aside offsets: side_m metres to the side (side_fraction of the arena radius when side_m is absent) and forward_m along the fight's forward (negative = back toward the lens). F10#6 device profile (UX section 1.4: the HUD must not cover the trainer; code-blind 7-inch judges r2-r4): 0.55 x an 8 m radius = 4.4 m stood the trainer at the frame's edge under the move grid or the left column. 2.4 m at the ally's depth keeps them beside the fight, clear of a Voltarach-wide charge lane, in the frame's clear middle band. forward 0.8 stood them in charge lanes (r3 experiment). TUNABLE.",
+    "side_fraction": 0.55,
+    "side_m": 2.4,
+    "forward_m": -1.2
+  },
+
+
   "arena": {
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
@@ -123,10 +167,16 @@
     "boundary_alpha": 0.3,
     "_comment_soft_occluders": "Meadows visual pass round 2: a standing dead tree in the middle of the ring sat between the combat camera and the fight. Bushes and deadfall (vegetation.json layers with collides:false) inside radius + occluder_clear_margin are taken out of the instancer when the arena opens and put back when it closes (vegetation.gd::hide_fight_occluders). Presentation only and local to each peer; colliding trees and rocks are untouched. The margin reaches the ring's near edge, where the camera looks across. TUNABLE.",
     "clear_soft_occluders": true,
+    "_comment_clear_bystanders": "F04#1 (C3 judge 257839f5): a relay grunt (relay_site.json 'Relay Sentry', 8.6 m from Vance) stood inside Vance's charging Tuskroot. Set-dressing people (village_npcs.gd bodies with nothing to say) walk out to the ring's edge plus `bystander_edge_m` when a fight opens around them, face it, and walk back when it closes (combat_arena.gd). Presentation only, per peer, not saved. TUNABLE.",
+    "clear_bystanders": true,
+    "bystander_edge_m": 1.0,
+    "bystander_walk_mps": 2.6,
     "_comment_named_trainer_wild_clear": "F04#2 (round-1 judge B1: a wild burrowback in the foreground of Halder's fight confused who was fighting; Halder stood inside wild cluster 4002). Wild bodies neither spawn nor choose a wander destination within this many metres (18 -> 26 after judge r2 17a80aa4 still saw Vess's neighbouring burrowbacks at her arena's edge) of a named Meadows trainer's stand (ranks below), so a captain's or the Warden's fight ground holds only the fight. encounter_director.gd::_clear_of_named_trainer_grounds. 0 disables. TUNABLE.",
     "named_trainer_wild_clear_m": 26.0,
     "_comment_trainer_ally_lateral": "F04#2 (round-1 judge B1/D): in a trainer fight the ally opened on the player->opponent line and the camera, behind the ally, looked through it at the opponent. The ally is seated this far beside that line, on the side with room (combat_manager.gd::_place_fighters; realm fights already do the same with REALM_SEAT_LATERAL_M). 0 keeps the in-line formation. TUNABLE.",
     "trainer_ally_lateral_m": 2.4,
+    "_comment_trainer_ally_lateral_ranks": "Cards M2 (ralph/reports/CARDS/m2/BRIDGE_GUARDIAN_REGRESSION.md): the lateral seat applied to every trainer fight cost the earned five the South Bridge gatekeeper (a grunt) on seed 15, 0/3, against 2/2 in line. Only these trainer ranks sit the ally aside: the named fights of every chapter (Meadows relay officers, captains and the Warden; the Stormwood lieutenants and aces, Cloudreach's elite and mentor, whose C3 framing was judged with the side seat on main); grunts, tournament rounds and unranked trainers keep the in-line seat (combat_manager.gd::trainer_seats_aside). TUNABLE.",
+    "trainer_ally_lateral_ranks": ["officer", "captain", "warden", "lieutenant", "ace", "mentor", "elite"],
     "named_trainer_ranks": ["captain", "warden"],
     "occluder_clear_margin": 2.0,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
@@ -198,7 +248,10 @@
     "hud_safe": {
       "_why": "F10#2 C3 (V-SW-3/5, Tidewake's matching finding): the shoulder solver pushes the pivot up to max_shoulder_offset sideways so the foe clears the ally, which slides the ally into the combat HUD's left column (TEAM list + pilot card), where every code-blind judge found it hidden. Each physics frame combat_manager.gd projects the ally's live render bounds through the live camera and caps the shoulder so their left edge stays right of left_column.right wherever they reach below left_column.top (fractions of the viewport). The occlusion swing/dither stays the fallback when the capped shoulder lets the ally hide the foe. Presentation only. TUNABLE.",
       "enabled": true,
-      "left_column": {"right": 0.26, "top": 0.42},
+      "_why_left_column_f10_6": "F10#6 round 6: the fight roster is a 232 px pip column and the active card 280 px (x 56-336 of 1920), so the column the ally is kept clear of ends at 0.19, not 0.26.",
+      "left_column": {"right": 0.19, "top": 0.42},
+      "_why_trainer": "F10#6 round 7 (code-blind 7-inch judge r6, Hi/H2b: the trainer stood under the faded ally card). UX section 1.4 names the trainer too, so the trainer's 0.7 x 1.8 m standing box joins the ally's bounds in the cap: whichever reaches further left is kept right of the column. Presentation only. TUNABLE.",
+      "trainer": true,
       "margin": 0.02,
       "min_shoulder": -1.5,
     "top_band": {
@@ -281,6 +334,10 @@
   "telegraph": {
     "_comment_heavy_tell_s": "F04#0: a wind-up authored at or above this reads as a HEAVY on the HUD (combat_hud.gd, combat_manager.gd::enemy_windup_is_heavy). BOSSES/C3 name 1.1s as the heavy tell: Earth Fist and the ACE. TUNABLE.",
     "heavy_tell_s": 1.1,
+    "_comment_shape_text": "F04#1/#2 (judge r4 7121d40c: every captain's tell read the same '! incoming -- move', and Vess's DIVER looked like Halder's CHARGER). A wind-up whose authored attack travels (`lunge_travels`) names the question: a DIVER (it also repositions at least `dive_reposition_m`) says where to go, a CHARGER says to leave the lane. Read by combat_manager.gd::enemy_windup_shape and combat_hud.gd. TUNABLE.",
+    "dive_reposition_m": 5.0,
+    "charge_text": "!  CHARGE — step off the lane",
+    "dive_text": "!  DIVE — step out of its line",
     "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
     "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Round 1 of this lane tried the HUD's own WARNING amber (#ffbe47, hue 39); a blind judge found it three degrees from the reward gold the orb band, the catch sparkle and the level-up rings all use, at a value inside the sunlit-grass band -- 'a dropped coin', a buff, not a warning. This is magenta on purpose: hue 308, the complement of the meadow's green, a colour nothing in the world or the reward layer carries, 44 degrees of hue from the nearest painted oxblood and 31 from the palette's near-black tether_oxblood, and the genre's established colour for an attack you cannot block and must MOVE off -- which, with no shields in this game, is every wind-up. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched. tests/test_telegraph_glow.gd holds the ring at least 25 degrees of hue from every reserved oxblood.",
     "enabled": true,

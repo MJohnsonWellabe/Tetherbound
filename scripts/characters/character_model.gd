@@ -16,6 +16,7 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/art.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const APPEARANCE_VARIANTS := preload("res://scripts/characters/appearance_variants.gd")
+const RUN_GAIT := preload("res://scripts/player/run_gait.gd")
 
 var _art: Node3D = null
 var _body: MeshInstance3D = null
@@ -1178,14 +1179,16 @@ func play(clip: String, looping: bool = true) -> void:
 ## trainer's take-off speed would be its own new bug. Clamped: below 0.5x a
 ## gait reads as slow-motion rather than as slowing down (the idle
 ## cross-fade already covers speeds that low), and above 1.4x as frantic.
-func match_gait_rate(role: String, ground_speed: float) -> void:
+func match_gait_rate(role: String, ground_speed: float, feel: Dictionary = {}) -> void:
 	if _anim == null:
 		return
 	var reference := float(_gait_speeds.get(role, 0.0))
-	if reference <= 0.0:
-		_anim.speed_scale = 1.0
-		return
-	_anim.speed_scale = clampf(ground_speed / reference, 0.5, 1.4)
+	# RUN-LEAN: optional per-role cadence factor and clamp from movement.json's
+	# gait_feel (`sprint_cadence_scale`, `gait_rate_min/max`); defaults are the
+	# old 1x match and 0.5..1.4 clamp, so callers without `feel` are unchanged.
+	var cadence := float(feel.get("%s_cadence_scale" % role, 1.0))
+	_anim.speed_scale = RUN_GAIT.playback_scale(ground_speed, reference, cadence,
+		float(feel.get("gait_rate_min", 0.5)), float(feel.get("gait_rate_max", 1.4)))
 
 
 ## MQ1A: weight in the transitions. The gait clips are steady-state cycles;

@@ -1,0 +1,1198 @@
+[
+  {
+    "ally": [
+      1804.01,
+      40.0,
+      4244.12,
+      40.0
+    ],
+    "camera": [
+      1795.02,
+      46.49,
+      4244.07,
+      40.0
+    ],
+    "enemy": [
+      1806.47,
+      40.0,
+      4249.61,
+      40.0
+    ],
+    "fight_s": 0.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-000.00.jpg",
+    "gap_m": 6.02,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1802.93,
+      40.0,
+      4241.7,
+      40.0
+    ],
+    "camera": [
+      1790.43,
+      48.15,
+      4242.71,
+      40.0
+    ],
+    "enemy": [
+      1806.38,
+      40.0,
+      4249.52,
+      40.0
+    ],
+    "fight_s": 0.27,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-000.27.jpg",
+    "gap_m": 8.55,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1805.32,
+      40.0,
+      4239.6,
+      40.0
+    ],
+    "camera": [
+      1789.28,
+      49.73,
+      4241.44,
+      40.0
+    ],
+    "enemy": [
+      1806.29,
+      40.0,
+      4249.22,
+      40.0
+    ],
+    "fight_s": 0.57,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-000.57.jpg",
+    "gap_m": 9.67,
+    "opponent": "water_cannonback",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1807.19,
+      40.0,
+      4241.72,
+      40.0
+    ],
+    "camera": [
+      1799.8,
+      47.36,
+      4233.54,
+      40.0
+    ],
+    "enemy": [
+      1804.91,
+      40.0,
+      4249.91,
+      40.0
+    ],
+    "fight_s": 1.72,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-001.72.jpg",
+    "gap_m": 8.5,
+    "opponent": "water_cannonback",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1810.57,
+      40.0,
+      4241.88,
+      40.0
+    ],
+    "camera": [
+      1807.06,
+      47.66,
+      4230.83,
+      40.0
+    ],
+    "enemy": [
+      1805.02,
+      40.0,
+      4249.61,
+      40.0
+    ],
+    "fight_s": 2.02,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-002.02.jpg",
+    "gap_m": 9.51,
+    "opponent": "water_cannonback",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1809.95,
+      40.0,
+      4243.7,
+      40.0
+    ],
+    "camera": [
+      1808.44,
+      46.83,
+      4234.12,
+      40.0
+    ],
+    "enemy": [
+      1804.94,
+      40.0,
+      4250.13,
+      40.0
+    ],
+    "fight_s": 4.37,
+    "file": "res://shots/cs/nerissa/nerissa/hit-004.37.jpg",
+    "gap_m": 8.15,
+    "opponent": "water_cannonback",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1810.0,
+      40.0,
+      4243.64,
+      40.0
+    ],
+    "camera": [
+      1808.5,
+      46.81,
+      4234.12,
+      40.0
+    ],
+    "enemy": [
+      1804.92,
+      40.0,
+      4250.14,
+      40.0
+    ],
+    "fight_s": 6.18,
+    "file": "res://shots/cs/nerissa/nerissa/hit-006.18.jpg",
+    "gap_m": 8.25,
+    "opponent": "water_cannonback",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1809.43,
+      40.0,
+      4244.33,
+      40.0
+    ],
+    "camera": [
+      1809.6,
+      46.6,
+      4235.1,
+      40.0
+    ],
+    "enemy": [
+      1802.58,
+      40.0,
+      4250.99,
+      40.0
+    ],
+    "fight_s": 16.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-016.00.jpg",
+    "gap_m": 9.55,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.29,
+      40.0,
+      4246.5,
+      40.0
+    ],
+    "camera": [
+      1809.8,
+      46.53,
+      4238.15,
+      40.0
+    ],
+    "enemy": [
+      1798.2,
+      40.0,
+      4249.0,
+      40.0
+    ],
+    "fight_s": 32.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-032.02.jpg",
+    "gap_m": 8.47,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.66,
+      40.0,
+      4246.23,
+      40.0
+    ],
+    "camera": [
+      1814.27,
+      47.04,
+      4237.85,
+      40.0
+    ],
+    "enemy": [
+      1798.01,
+      40.0,
+      4247.58,
+      40.0
+    ],
+    "fight_s": 48.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-048.02.jpg",
+    "gap_m": 10.73,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.32,
+      40.0,
+      4246.61,
+      40.0
+    ],
+    "camera": [
+      1812.37,
+      46.4,
+      4240.21,
+      40.0
+    ],
+    "enemy": [
+      1798.65,
+      40.0,
+      4249.37,
+      40.0
+    ],
+    "fight_s": 64.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-064.02.jpg",
+    "gap_m": 8.15,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.87,
+      40.0,
+      4246.48,
+      40.0
+    ],
+    "camera": [
+      1814.46,
+      46.4,
+      4240.64,
+      40.0
+    ],
+    "enemy": [
+      1798.01,
+      40.0,
+      4247.47,
+      40.0
+    ],
+    "fight_s": 80.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-080.02.jpg",
+    "gap_m": 9.91,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.61,
+      40.0,
+      4246.71,
+      40.0
+    ],
+    "camera": [
+      1815.05,
+      46.6,
+      4243.03,
+      40.0
+    ],
+    "enemy": [
+      1799.23,
+      40.0,
+      4243.26,
+      40.0
+    ],
+    "fight_s": 96.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-096.02.jpg",
+    "gap_m": 8.15,
+    "opponent": "water_cannonback",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1803.45,
+      40.0,
+      4242.63,
+      40.0
+    ],
+    "camera": [
+      1790.39,
+      48.42,
+      4242.61,
+      40.0
+    ],
+    "enemy": [
+      1806.63,
+      40.0,
+      4249.99,
+      40.0
+    ],
+    "fight_s": 112.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-112.02.jpg",
+    "gap_m": 8.02,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1803.45,
+      40.0,
+      4242.63,
+      40.0
+    ],
+    "camera": [
+      1788.26,
+      49.36,
+      4244.19,
+      40.0
+    ],
+    "enemy": [
+      1806.63,
+      40.0,
+      4249.99,
+      40.0
+    ],
+    "fight_s": 112.12,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-112.12.jpg",
+    "gap_m": 8.02,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1803.45,
+      40.0,
+      4242.63,
+      40.0
+    ],
+    "camera": [
+      1788.6,
+      49.2,
+      4241.47,
+      40.0
+    ],
+    "enemy": [
+      1806.63,
+      40.0,
+      4249.99,
+      40.0
+    ],
+    "fight_s": 112.18,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-112.18.jpg",
+    "gap_m": 8.02,
+    "opponent": "water_mirejaw",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1803.45,
+      40.0,
+      4242.63,
+      40.0
+    ],
+    "camera": [
+      1792.35,
+      47.5,
+      4240.54,
+      40.0
+    ],
+    "enemy": [
+      1807.54,
+      40.0,
+      4250.24,
+      40.0
+    ],
+    "fight_s": 112.25,
+    "file": "res://shots/cs/nerissa/nerissa/hit-112.25.jpg",
+    "gap_m": 8.64,
+    "opponent": "water_mirejaw",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1802.7,
+      40.0,
+      4241.62,
+      40.0
+    ],
+    "camera": [
+      1794.4,
+      46.39,
+      4239.12,
+      40.0
+    ],
+    "enemy": [
+      1808.5,
+      40.0,
+      4250.24,
+      40.0
+    ],
+    "fight_s": 112.72,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-112.72.jpg",
+    "gap_m": 10.39,
+    "opponent": "water_mirejaw",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1802.44,
+      40.0,
+      4241.22,
+      40.0
+    ],
+    "camera": [
+      1793.93,
+      46.41,
+      4238.84,
+      40.0
+    ],
+    "enemy": [
+      1808.33,
+      40.0,
+      4249.98,
+      40.0
+    ],
+    "fight_s": 113.03,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-113.03.jpg",
+    "gap_m": 10.56,
+    "opponent": "water_mirejaw",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1804.44,
+      40.0,
+      4244.06,
+      40.0
+    ],
+    "camera": [
+      1795.92,
+      46.4,
+      4241.74,
+      40.0
+    ],
+    "enemy": [
+      1810.07,
+      40.0,
+      4250.37,
+      40.0
+    ],
+    "fight_s": 115.4,
+    "file": "res://shots/cs/nerissa/nerissa/hit-115.40.jpg",
+    "gap_m": 8.46,
+    "opponent": "water_mirejaw",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.79,
+      40.0,
+      4246.96,
+      40.0
+    ],
+    "camera": [
+      1798.0,
+      46.41,
+      4246.12,
+      40.0
+    ],
+    "enemy": [
+      1813.46,
+      40.0,
+      4253.12,
+      40.0
+    ],
+    "fight_s": 128.02,
+    "file": "res://shots/cs/nerissa/nerissa/t-128.02.jpg",
+    "gap_m": 9.08,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.2,
+      40.0,
+      4248.11,
+      40.0
+    ],
+    "camera": [
+      1799.39,
+      46.42,
+      4247.14,
+      40.0
+    ],
+    "enemy": [
+      1813.69,
+      40.0,
+      4253.8,
+      40.0
+    ],
+    "fight_s": 144.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-144.00.jpg",
+    "gap_m": 7.91,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.66,
+      40.0,
+      4247.14,
+      40.0
+    ],
+    "camera": [
+      1798.26,
+      47.12,
+      4242.72,
+      40.0
+    ],
+    "enemy": [
+      1809.86,
+      40.0,
+      4255.83,
+      40.0
+    ],
+    "fight_s": 160.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-160.00.jpg",
+    "gap_m": 8.97,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.04,
+      40.0,
+      4248.18,
+      40.0
+    ],
+    "camera": [
+      1803.3,
+      45.03,
+      4251.68,
+      40.0
+    ],
+    "enemy": [
+      1815.6,
+      40.0,
+      4250.46,
+      40.0
+    ],
+    "fight_s": 176.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-176.00.jpg",
+    "gap_m": 7.89,
+    "opponent": "water_mirejaw",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1802.41,
+      40.0,
+      4241.35,
+      40.0
+    ],
+    "camera": [
+      1792.82,
+      46.81,
+      4241.14,
+      40.0
+    ],
+    "enemy": [
+      1806.36,
+      40.0,
+      4249.81,
+      40.0
+    ],
+    "fight_s": 190.1,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-190.10.jpg",
+    "gap_m": 9.34,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1802.08,
+      40.0,
+      4241.01,
+      40.0
+    ],
+    "camera": [
+      1787.98,
+      48.89,
+      4243.24,
+      40.0
+    ],
+    "enemy": [
+      1806.23,
+      40.0,
+      4249.53,
+      40.0
+    ],
+    "fight_s": 190.42,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-190.42.jpg",
+    "gap_m": 9.48,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1802.09,
+      40.0,
+      4241.91,
+      40.0
+    ],
+    "camera": [
+      1793.45,
+      46.41,
+      4240.62,
+      40.0
+    ],
+    "enemy": [
+      1808.16,
+      40.0,
+      4249.72,
+      40.0
+    ],
+    "fight_s": 191.55,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-191.55.jpg",
+    "gap_m": 9.89,
+    "opponent": "water_riverdrake",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1801.79,
+      40.0,
+      4241.53,
+      40.0
+    ],
+    "camera": [
+      1792.95,
+      46.44,
+      4240.61,
+      40.0
+    ],
+    "enemy": [
+      1807.96,
+      40.0,
+      4249.47,
+      40.0
+    ],
+    "fight_s": 191.87,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-191.87.jpg",
+    "gap_m": 10.05,
+    "opponent": "water_riverdrake",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1803.37,
+      40.0,
+      4243.56,
+      40.0
+    ],
+    "camera": [
+      1794.61,
+      46.34,
+      4242.8,
+      40.0
+    ],
+    "enemy": [
+      1807.84,
+      40.0,
+      4250.02,
+      40.0
+    ],
+    "fight_s": 192.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-192.00.jpg",
+    "gap_m": 7.86,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1803.67,
+      40.0,
+      4244.0,
+      40.0
+    ],
+    "camera": [
+      1794.99,
+      46.41,
+      4242.64,
+      40.0
+    ],
+    "enemy": [
+      1807.53,
+      40.0,
+      4250.12,
+      40.0
+    ],
+    "fight_s": 193.8,
+    "file": "res://shots/cs/nerissa/nerissa/hit-193.80.jpg",
+    "gap_m": 7.24,
+    "opponent": "water_riverdrake",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1803.59,
+      40.0,
+      4243.84,
+      40.0
+    ],
+    "camera": [
+      1791.48,
+      48.0,
+      4245.66,
+      40.0
+    ],
+    "enemy": [
+      1806.85,
+      40.0,
+      4250.12,
+      40.0
+    ],
+    "fight_s": 194.92,
+    "file": "res://shots/cs/nerissa/nerissa/hit-194.92.jpg",
+    "gap_m": 7.07,
+    "opponent": "water_riverdrake",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.99,
+      40.0,
+      4247.09,
+      40.0
+    ],
+    "camera": [
+      1798.11,
+      46.46,
+      4246.61,
+      40.0
+    ],
+    "enemy": [
+      1813.1,
+      40.0,
+      4251.2,
+      40.0
+    ],
+    "fight_s": 208.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-208.00.jpg",
+    "gap_m": 7.36,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.85,
+      40.0,
+      4246.48,
+      40.0
+    ],
+    "camera": [
+      1798.87,
+      46.37,
+      4243.26,
+      40.0
+    ],
+    "enemy": [
+      1812.27,
+      40.0,
+      4254.97,
+      40.0
+    ],
+    "fight_s": 224.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-224.00.jpg",
+    "gap_m": 10.08,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.28,
+      40.0,
+      4248.83,
+      40.0
+    ],
+    "camera": [
+      1799.61,
+      46.44,
+      4246.81,
+      40.0
+    ],
+    "enemy": [
+      1813.8,
+      40.0,
+      4253.7,
+      40.0
+    ],
+    "fight_s": 240.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-240.00.jpg",
+    "gap_m": 7.36,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1807.64,
+      40.0,
+      4246.48,
+      40.0
+    ],
+    "camera": [
+      1800.75,
+      46.58,
+      4240.54,
+      40.0
+    ],
+    "enemy": [
+      1808.11,
+      40.0,
+      4256.61,
+      40.0
+    ],
+    "fight_s": 256.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-256.00.jpg",
+    "gap_m": 10.14,
+    "opponent": "water_riverdrake",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1806.03,
+      40.0,
+      4242.59,
+      40.0
+    ],
+    "camera": [
+      1796.38,
+      46.99,
+      4240.48,
+      40.0
+    ],
+    "enemy": [
+      1806.36,
+      40.0,
+      4249.61,
+      40.0
+    ],
+    "fight_s": 266.83,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-266.83.jpg",
+    "gap_m": 7.02,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 1.1
+  },
+  {
+    "ally": [
+      1811.5,
+      40.0,
+      4242.83,
+      40.0
+    ],
+    "camera": [
+      1803.83,
+      49.07,
+      4230.7,
+      40.0
+    ],
+    "enemy": [
+      1806.12,
+      40.0,
+      4242.68,
+      40.0
+    ],
+    "fight_s": 267.43,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-267.43.jpg",
+    "gap_m": 5.39,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 1.1
+  },
+  {
+    "ally": [
+      1812.46,
+      40.0,
+      4243.1,
+      40.0
+    ],
+    "camera": [
+      1817.18,
+      49.15,
+      4229.5,
+      40.0
+    ],
+    "enemy": [
+      1806.0,
+      40.0,
+      4242.61,
+      40.0
+    ],
+    "fight_s": 267.77,
+    "file": "res://shots/cs/nerissa/nerissa/hit-267.77.jpg",
+    "gap_m": 6.48,
+    "opponent": "water_riptusk",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1811.15,
+      40.0,
+      4245.13,
+      40.0
+    ],
+    "camera": [
+      1815.9,
+      44.81,
+      4247.44,
+      40.0
+    ],
+    "enemy": [
+      1805.02,
+      40.0,
+      4240.94,
+      40.0
+    ],
+    "fight_s": 268.73,
+    "file": "res://shots/cs/nerissa/nerissa/tell-start-268.73.jpg",
+    "gap_m": 7.42,
+    "opponent": "water_riptusk",
+    "tag": "tell-start",
+    "tell_s": 1.1
+  },
+  {
+    "ally": [
+      1810.35,
+      40.0,
+      4248.84,
+      40.0
+    ],
+    "camera": [
+      1816.23,
+      45.23,
+      4250.63,
+      40.0
+    ],
+    "enemy": [
+      1810.65,
+      40.0,
+      4244.96,
+      40.0
+    ],
+    "fight_s": 269.33,
+    "file": "res://shots/cs/nerissa/nerissa/tell-ended-269.33.jpg",
+    "gap_m": 3.9,
+    "opponent": "water_riptusk",
+    "tag": "tell-ended",
+    "tell_s": 1.1
+  },
+  {
+    "ally": [
+      1809.93,
+      40.0,
+      4251.07,
+      40.0
+    ],
+    "camera": [
+      1816.81,
+      46.0,
+      4254.26,
+      40.0
+    ],
+    "enemy": [
+      1810.74,
+      40.0,
+      4244.71,
+      40.0
+    ],
+    "fight_s": 269.67,
+    "file": "res://shots/cs/nerissa/nerissa/hit-269.67.jpg",
+    "gap_m": 6.41,
+    "opponent": "water_riptusk",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1809.27,
+      40.0,
+      4250.98,
+      40.0
+    ],
+    "camera": [
+      1816.2,
+      46.7,
+      4256.91,
+      40.0
+    ],
+    "enemy": [
+      1809.28,
+      40.0,
+      4244.5,
+      40.0
+    ],
+    "fight_s": 272.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-272.00.jpg",
+    "gap_m": 6.48,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1808.66,
+      40.0,
+      4255.7,
+      40.0
+    ],
+    "camera": [
+      1817.07,
+      46.4,
+      4256.23,
+      40.0
+    ],
+    "enemy": [
+      1802.81,
+      40.0,
+      4249.78,
+      40.0
+    ],
+    "fight_s": 288.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-288.00.jpg",
+    "gap_m": 8.32,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1811.29,
+      40.0,
+      4253.63,
+      40.0
+    ],
+    "camera": [
+      1817.16,
+      46.23,
+      4247.92,
+      40.0
+    ],
+    "enemy": [
+      1803.09,
+      40.0,
+      4252.81,
+      40.0
+    ],
+    "fight_s": 304.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-304.00.jpg",
+    "gap_m": 8.23,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1811.16,
+      40.0,
+      4246.49,
+      40.0
+    ],
+    "camera": [
+      1814.6,
+      46.73,
+      4237.88,
+      40.0
+    ],
+    "enemy": [
+      1804.92,
+      40.0,
+      4250.29,
+      40.0
+    ],
+    "fight_s": 320.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-320.00.jpg",
+    "gap_m": 7.31,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1799.1,
+      40.0,
+      4244.07,
+      40.0
+    ],
+    "camera": [
+      1791.61,
+      47.06,
+      4250.35,
+      40.0
+    ],
+    "enemy": [
+      1805.0,
+      40.0,
+      4246.66,
+      40.0
+    ],
+    "fight_s": 336.0,
+    "file": "res://shots/cs/nerissa/nerissa/t-336.00.jpg",
+    "gap_m": 6.45,
+    "opponent": "water_riptusk",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

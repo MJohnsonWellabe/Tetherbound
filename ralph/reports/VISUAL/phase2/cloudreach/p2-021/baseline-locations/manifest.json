@@ -1,0 +1,859 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "71ff7e84203f632e53bdde8de0f08c21f9158fb1",
+  "repro": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --script tools/phase2_capture_locations.gd -- --biome=cloudreach --subset=cloudreach__high_roost_sky_shrine__07__sky_shrine --subset=cloudreach__landmark__realm_gate_crag --subset=cloudreach__landmark__sky_shrine_heartstone --times=day --views=approach,close --seed=2042 --output=res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080",
+  "source_manifest_sha256": "217cfa6a790cc33752f869975a0bc310142f48dac22b211708e2caa5dc11816e",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "cloudreach",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 295933314903,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 295950092123,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T12:41:55",
+    "capture_started_utc": "2026-09-28T12:38:51",
+    "captured_frame_count": 6,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 6,
+    "planned_frame_ids": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+      "cloudreach__landmark__realm_gate_crag__day__approach",
+      "cloudreach__landmark__realm_gate_crag__day__close",
+      "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+      "cloudreach__landmark__sky_shrine_heartstone__day__close"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 295950092123,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day"
+    ],
+    "requested_views": [
+      "approach",
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+      "cloudreach__landmark__realm_gate_crag",
+      "cloudreach__landmark__sky_shrine_heartstone"
+    ]
+  },
+  "frames": [
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/baseline-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 4 \u2014 High Roost / Sky Shrine",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 558299,
+        "camera_player_distance_m": 5.82116031646729,
+        "camera_position": [
+          1110.0,
+          1022.86090087891,
+          2922.08642578125
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1110.0,
+            1021.77984619141,
+            2917.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78834438848297e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1110.0,
+            1022.86090087891,
+            2922.08642578125
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sky Shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.201274111111,
+          "hour": 8.00805096444445,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1110.0,
+          1020.02996826172,
+          2917.0
+        ],
+        "position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "resolved_ground_y": 1020.0,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ]
+      },
+      "source_sha256": "c9330a21e588992d24418c206bffcadaf5a70295aedb4e3baea07fe4dfef3ab1",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/baseline-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 4 \u2014 High Roost / Sky Shrine",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 592591,
+        "camera_player_distance_m": 5.82143259048462,
+        "camera_position": [
+          1110.0,
+          1022.86102294922,
+          2895.08666992188
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            1.0,
+            0.0,
+            1.22460635382238e-16
+          ],
+          "basis_y": [
+            2.54609981031027e-17,
+            0.978147625923157,
+            -0.2079117000103
+          ],
+          "basis_z": [
+            -1.19784580369176e-16,
+            0.2079117000103,
+            0.978147625923157
+          ],
+          "origin": [
+            1110.0,
+            1021.77984619141,
+            2890.0
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            1.0,
+            -1.45755194580488e-07,
+            3.09812477894411e-08
+          ],
+          "basis_y": [
+            1.49011455619075e-07,
+            0.978147566318512,
+            -0.207911744713783
+          ],
+          "basis_z": [
+            -1.78835777160354e-14,
+            0.207911744713783,
+            0.978147566318512
+          ],
+          "origin": [
+            1110.0,
+            1022.86102294922,
+            2895.08666992188
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sky Shrine",
+        "destination_index": 7,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+        "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+        "identity": "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.19216,
+          "hour": 8.0076864,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1110.0,
+          1020.02996826172,
+          2890.0
+        ],
+        "position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "resolved_ground_y": 1020.0,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          1110.0,
+          2885.0
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": 180.0,
+        "view_heading_xz": [
+          1.22460635382238e-16,
+          -1.0
+        ]
+      },
+      "source_sha256": "d8a5876844a0f8e54487428399475cc324f1fd2c59978ec91f5416007c0b41cc",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__landmark__realm_gate_crag__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/baseline-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "gate_lower_cliffs",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 403869,
+        "camera_player_distance_m": 5.82120561599731,
+        "camera_position": [
+          -7.1698055267334,
+          152.961853027344,
+          -149.830001831055
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.940417945384979,
+            0.0,
+            0.340020775794983
+          ],
+          "basis_y": [
+            0.0706943050026894,
+            0.978147625923157,
+            0.195523902773857
+          ],
+          "basis_z": [
+            -0.332590520381927,
+            0.207911714911461,
+            -0.91986757516861
+          ],
+          "origin": [
+            -5.44033288955688,
+            151.880706787109,
+            -145.046691894531
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.940417945384979,
+            -3.7678088915527e-07,
+            0.340020775794983
+          ],
+          "basis_y": [
+            0.0706939324736595,
+            0.978147625923157,
+            0.195523947477341
+          ],
+          "basis_z": [
+            -0.332590579986572,
+            0.207911625504494,
+            -0.919867515563965
+          ],
+          "origin": [
+            -7.1698055267334,
+            152.961853027344,
+            -149.830001831055
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Realm Gate Crag",
+        "destination_index": 13,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+        "frame_id": "cloudreach__landmark__realm_gate_crag__day__approach",
+        "identity": "cloudreach__landmark__realm_gate_crag",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_01_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -24.536527633667,
+              113.101318359375,
+              -160.424011230469
+            ],
+            "species_id": "skyrill"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_01_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -26.6578483581543,
+              113.321472167969,
+              -158.302688598633
+            ],
+            "species_id": "pebbik"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -52.7881927490234,
+              122.318435668945,
+              -54.4802360534668
+            ],
+            "species_id": "pebbik"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.9095115661621,
+              122.538368225098,
+              -52.3589172363281
+            ],
+            "species_id": "skyrill"
+          }
+        ],
+        "nearby_creatures_160m": 4,
+        "observed_clock": {
+          "elapsed_seconds": 200.199762161616,
+          "hour": 8.00799048646464,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -5.44033288955688,
+          150.130722045898,
+          -145.046691894531
+        ],
+        "position_xz": [
+          0.0,
+          -130.0
+        ],
+        "resolved_ground_y": 150.0,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 16.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          0.0,
+          -130.0
+        ],
+        "terrain_ground_y": 150.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.340020805597305,
+          0.940417885780334
+        ]
+      },
+      "source_sha256": "a6ea58d2f4695a03f367dafd3f9a21d19bc33418fd6374e4f555de76e2403bb2",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__realm_gate_crag__day__approach.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__landmark__realm_gate_crag__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/baseline-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "gate_lower_cliffs",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 454859,
+        "camera_player_distance_m": 5.82121276855469,
+        "camera_position": [
+          -3.42957615852356,
+          152.961868286133,
+          -139.485397338867
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.940417945384979,
+            0.0,
+            0.340020775794983
+          ],
+          "basis_y": [
+            0.0706943050026894,
+            0.978147625923157,
+            0.195523902773857
+          ],
+          "basis_z": [
+            -0.332590520381927,
+            0.207911714911461,
+            -0.91986757516861
+          ],
+          "origin": [
+            -1.7001039981842,
+            151.880706787109,
+            -134.702087402344
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.940417945384979,
+            -3.75689381826305e-07,
+            0.340020805597305
+          ],
+          "basis_y": [
+            0.0706939324736595,
+            0.978147625923157,
+            0.19552393257618
+          ],
+          "basis_z": [
+            -0.332590609788895,
+            0.207911625504494,
+            -0.919867515563965
+          ],
+          "origin": [
+            -3.42957615852356,
+            152.961868286133,
+            -139.485397338867
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Realm Gate Crag",
+        "destination_index": 13,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+        "frame_id": "cloudreach__landmark__realm_gate_crag__day__close",
+        "identity": "cloudreach__landmark__realm_gate_crag",
+        "nearby_creature_records_160m": [
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_01_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -24.536527633667,
+              113.101318359375,
+              -160.424011230469
+            ],
+            "species_id": "skyrill"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_01_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -26.6578483581543,
+              113.321472167969,
+              -158.302688598633
+            ],
+            "species_id": "pebbik"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_02_0",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -52.7881927490234,
+              122.318435668945,
+              -54.4802360534668
+            ],
+            "species_id": "pebbik"
+          },
+          {
+            "body_height_m": 3.25,
+            "body_radius_m": 1.1375,
+            "node_path": "road_visibility_arrival_gate_road_02_1",
+            "node_scale": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "position": [
+              -54.9095115661621,
+              122.538368225098,
+              -52.3589172363281
+            ],
+            "species_id": "skyrill"
+          }
+        ],
+        "nearby_creatures_160m": 4,
+        "observed_clock": {
+          "elapsed_seconds": 200.192805952381,
+          "hour": 8.00771223809524,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          -1.7001039981842,
+          150.130722045898,
+          -134.702087402344
+        ],
+        "position_xz": [
+          0.0,
+          -130.0
+        ],
+        "resolved_ground_y": 150.0,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          0.0,
+          -130.0
+        ],
+        "terrain_ground_y": 150.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.340020805597305,
+          0.940417885780334
+        ]
+      },
+      "source_sha256": "fb9c2b23053c9e5628e25ac42654b09d2dc16dd4d1ae3a55148497f775aa3424",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__realm_gate_crag__day__close.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/baseline-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 522604,
+        "camera_player_distance_m": 5.82051563262939,
+        "camera_position": [
+          1097.39001464844,
+          1022.85998535156,
+          2905.12353515625
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.940417945384979,
+            0.0,
+            0.340020775794983
+          ],
+          "basis_y": [
+            0.0706943050026894,
+            0.978147625923157,
+            0.195523902773857
+          ],
+          "basis_z": [
+            -0.332590520381927,
+            0.207911714911461,
+            -0.91986757516861
+          ],
+          "origin": [
+            1099.11938476563,
+            1021.77899169922,
+            2909.90673828125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.940417885780334,
+            -4.15049925095445e-07,
+            0.340020895004272
+          ],
+          "basis_y": [
+            0.0706939250230789,
+            0.978147625923157,
+            0.195523947477341
+          ],
+          "basis_z": [
+            -0.332590728998184,
+            0.207911640405655,
+            -0.919867515563965
+          ],
+          "origin": [
+            1097.39001464844,
+            1022.85998535156,
+            2905.12353515625
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sky Shrine",
+        "destination_index": 14,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+        "frame_id": "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+        "identity": "cloudreach__landmark__sky_shrine_heartstone",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.197227444445,
+          "hour": 8.00788909777778,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1099.11938476563,
+          1020.03002929688,
+          2909.90673828125
+        ],
+        "position_xz": [
+          1110.0,
+          2940.0
+        ],
+        "resolved_ground_y": 1020.0,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1110.0,
+          2940.0
+        ],
+        "terrain_ground_y": 1020.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.340020805597305,
+          0.940417885780334
+        ]
+      },
+      "source_sha256": "dd6f0a5e040cce7ba89ffad25143b98dbed73488a790ca50f3a91e4e39f2f3f8",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__sky_shrine_heartstone__day__approach.jpg",
+      "tile_index": 4,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__landmark__sky_shrine_heartstone__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-021/baseline-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "",
+        "band_id": "high_roost_sky_shrine",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 509697,
+        "camera_player_distance_m": 5.82105016708374,
+        "camera_position": [
+          1106.57055664063,
+          1054.13122558594,
+          2930.5146484375
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            -0.940417945384979,
+            0.0,
+            0.340020775794983
+          ],
+          "basis_y": [
+            0.0706943050026894,
+            0.978147625923157,
+            0.195523902773857
+          ],
+          "basis_z": [
+            -0.332590520381927,
+            0.207911714911461,
+            -0.91986757516861
+          ],
+          "origin": [
+            1108.29992675781,
+            1053.04992675781,
+            2935.2978515625
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            -0.940417885780334,
+            -4.15049925095445e-07,
+            0.340020895004272
+          ],
+          "basis_y": [
+            0.0706939250230789,
+            0.978147625923157,
+            0.195523947477341
+          ],
+          "basis_z": [
+            -0.332590728998184,
+            0.207911640405655,
+            -0.919867515563965
+          ],
+          "origin": [
+            1106.57055664063,
+            1054.13122558594,
+            2930.5146484375
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Sky Shrine",
+        "destination_index": 14,
+        "file": "res://.artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+        "frame_id": "cloudreach__landmark__sky_shrine_heartstone__day__close",
+        "identity": "cloudreach__landmark__sky_shrine_heartstone",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.204269515152,
+          "hour": 8.00817078060606,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          1108.29992675781,
+          1051.30017089844,
+          2935.2978515625
+        ],
+        "position_xz": [
+          1110.0,
+          2940.0
+        ],
+        "resolved_ground_y": 1050.0,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 0,
+        "target_position_xz": [
+          1110.0,
+          2940.0
+        ],
+        "terrain_ground_y": 1050.0,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": null,
+        "view_heading_xz": [
+          0.340020805597305,
+          0.940417885780334
+        ]
+      },
+      "source_sha256": "e5a2fe6e85809da328463fd4ad1772f9188229fa5a8e668cde71130a23c2c7d0",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-021/baseline-locations-1080/cloudreach__landmark__sky_shrine_heartstone__day__close.jpg",
+      "tile_index": 5,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

@@ -51,6 +51,24 @@ func test_build_makes_five_fixed_rows() -> void:
 	strip.free()
 
 
+## F10#6 round 6 (UX §1.4): the fight roster is a narrow pip column: portrait,
+## state and HP per slot, no name or level text, so the left column no longer
+## covers a quarter of the fight screen.
+func test_compact_roster_is_a_narrow_pip_column() -> void:
+	var strip := _make_strip()
+	strip.set_compact(true)
+	assert_almost_eq(strip.size.x, PARTY_STRIP.COMPACT_ROW_WIDTH, 0.01, "strip width follows the pip column")
+	assert_true(PARTY_STRIP.COMPACT_ROW_WIDTH <= 240.0, "pip column stays narrow")
+	for i in PARTY_STRIP.SLOTS:
+		assert_almost_eq(strip._rows[i].custom_minimum_size.x, PARTY_STRIP.COMPACT_ROW_WIDTH, 0.01)
+		assert_false(strip._name_labels[i].visible, "row %d hides its name in the fight column" % i)
+		assert_eq(strip._chips[i].custom_minimum_size, PARTY_STRIP.COMPACT_CHIP_SIZE)
+	strip.set_compact(false)
+	assert_almost_eq(strip.size.x, PARTY_STRIP.ROW_SIZE.x, 0.01, "exploration strip keeps its full width")
+	assert_true(strip._name_labels[0].visible, "exploration rows keep their names")
+	strip.free()
+
+
 func test_build_is_idempotent() -> void:
 	# A test (or a stray double-mount) calling `_build()` twice must not double
 	# the rows — `autoload/party.gd`'s five-creature cap is meaningless if the
@@ -157,6 +175,37 @@ func test_health_bar_stacks_directly_above_the_food_bar() -> void:
 			0.001,
 			"the two plates must sit a fixed gap apart with no overlap at canvas height %.0f" % canvas_h
 		)
+
+
+## F10#6 device profile: the value chip sits over the right half of a full
+## meter, so an opaque chip made a 100/100 bar read as about 40 % full on a
+## 7-inch panel. The chip is translucent, and the digits still clear WCAG AA
+## over every state the chip exists for (full fill, danger, white hit flash).
+func test_meter_value_chip_lets_a_full_fill_show_and_keeps_digit_contrast() -> void:
+	var hud = PLAYGROUND_HUD.new()
+	var chip: Panel = hud._style_meter_value_chip()
+	var box := chip.get_theme_stylebox("panel") as StyleBoxFlat
+	assert_true(box != null, "the chip is a StyleBoxFlat")
+	var alpha := box.bg_color.a
+	assert_true(alpha < 0.8, "chip alpha %.2f hides the fill beneath the digits" % alpha)
+	for fill: Color in [UI_TOKENS.HP_GREEN, UI_TOKENS.DANGER, UI_TOKENS.WARNING, Color.WHITE]:
+		var under := fill.lerp(Color(box.bg_color, 1.0), alpha)
+		var ratio := _contrast(UI_TOKENS.TEXT_PRIMARY, under)
+		assert_true(ratio >= 4.5, "digits over %s behind the chip: %.2f:1 < 4.5:1" % [fill.to_html(false), ratio])
+	chip.free()
+	hud.free()
+
+
+func _contrast(a: Color, b: Color) -> float:
+	var la := _luminance(a)
+	var lb := _luminance(b)
+	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
+
+
+func _luminance(c: Color) -> float:
+	var lin := func(v: float) -> float:
+		return v / 12.92 if v <= 0.03928 else pow((v + 0.055) / 1.055, 2.4)
+	return 0.2126 * float(lin.call(c.r)) + 0.7152 * float(lin.call(c.g)) + 0.0722 * float(lin.call(c.b))
 
 
 ## OWNER-HUD-INPUT-0903: stacking the health and food plates only reopens the
@@ -798,6 +847,10 @@ func test_compact_rows_are_opaque_and_state_moves_to_the_name() -> void:
 	assert_eq(strip._name_labels[0].get_theme_color("font_color"), UI_TOKENS.TEXT_PRIMARY, "the active row reads brightest")
 	assert_eq(strip._name_labels[1].get_theme_color("font_color"), UI_TOKENS.TEXT_SECONDARY, "a benched row is dimmer")
 	assert_eq(strip._name_labels[2].get_theme_color("font_color"), UI_TOKENS.TEXT_MUTED, "a fainted row is dimmest")
+	# Names are hidden in compact mode, so the portrait chip carries the state.
+	assert_almost_eq(strip._portraits[0].modulate.r, 1.0, 0.0001, "the active chip is brightest")
+	assert_almost_eq(strip._portraits[1].modulate.r, PARTY_STRIP.COMPACT_CHIP_BENCHED, 0.0001, "a benched chip is dimmer")
+	assert_almost_eq(strip._portraits[2].modulate.r, PARTY_STRIP.COMPACT_CHIP_MUTED, 0.0001, "a fainted chip is dimmest")
 	strip.free()
 
 

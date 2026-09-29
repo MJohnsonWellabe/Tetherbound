@@ -25,6 +25,10 @@ func start_opponent(body: Node3D, target: Node3D, centre: Vector3,
 	_wild.connect("strike_ready", _on_enemy_strike)
 	_wild.connect("telegraph_started", _on_enemy_telegraph)
 	_wild.call("set_engaged", true, target)
+	# COMBAT §5: the host's opponent holds its ground against whichever
+	# participant it is fighting; that participant's own peer yields.
+	if _wild.has_method("set_contact_partner"):
+		_wild.call("set_contact_partner", target, CONTACT_SPACING.ROLE_FOE)
 	state = State.ACTIVE
 
 func set_target_body(target: Node3D) -> void:
@@ -34,6 +38,8 @@ func set_target_body(target: Node3D) -> void:
 	# Retargeting must preserve a wind-up already underway. Restarting engagement
 	# here lets two players alternate nearest position to suppress every attack.
 	_wild.set("_opponent", target)
+	if _wild.has_method("set_contact_partner"):
+		_wild.call("set_contact_partner", target, CONTACT_SPACING.ROLE_FOE)
 
 func _on_enemy_telegraph(seconds: float) -> void:
 	telegraph.emit(seconds)
@@ -75,6 +81,8 @@ func stop_opponent() -> void:
 			_wild.set("engaged", false)
 			_wild.set("_opponent", null)
 		_wild.set("arena", null)
+		if _wild.has_method("set_contact_partner"):
+			_wild.call("set_contact_partner", null)
 		if _wild.is_connected("strike_ready", _on_enemy_strike):
 			_wild.disconnect("strike_ready", _on_enemy_strike)
 		if _wild.is_connected("telegraph_started", _on_enemy_telegraph):

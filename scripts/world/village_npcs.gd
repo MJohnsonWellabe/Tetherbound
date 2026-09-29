@@ -22,6 +22,7 @@ extends Node3D
 ## `greeting_for()` at the bottom of this file.
 
 const NPC := preload("res://scripts/npc/npc_body.gd")
+const COMBAT_ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CONFIG_PATH := "res://data/config/village_npcs.json"
@@ -234,6 +235,11 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 	# states the rule this applies to dialogue: "off means no offer at all —
 	# not a greyed one... a visible prompt the button refuses is worse than no
 	# prompt."
+	if not has_anything_to_say(spec):
+		# Pure set dressing: steps out of a fight that opens around it
+		# (combat_arena.gd BYSTANDER_GROUP; C3 judge 257839f5, the relay grunt
+		# standing inside Vance's Tuskroot).
+		npc.add_to_group(COMBAT_ARENA.BYSTANDER_GROUP)
 	if has_anything_to_say(spec):
 		var prompt: Node3D = npc.call("add_prompt", "Greet %s" % display_name)
 		# F01#2: a shopkeeper behind a counter. The prompt's line-of-sight ray

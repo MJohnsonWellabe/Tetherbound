@@ -32,7 +32,10 @@ const HUMAN := 1
 const PAUSED := 3
 const MEASURE_FRAMES := 120
 ## Horizontal drift allowed between the settled pause and the fight end.
-const PAUSED_DRIFT_LIMIT_M := 0.1
+## 0.5 m, not 0.1: COMBAT §5 contact spacing slides the ally (swept, 6 m/s) until
+## the rendered bodies clear, which moves a swimmer about 0.2 m in this fight.
+## The bar still catches a swim current or a teleport (0.1 m before spacing).
+const PAUSED_DRIFT_LIMIT_M := 0.5
 ## Resumed drain/drowning must be within this fraction of the configured rate.
 const RATE_TOLERANCE := 0.1
 
