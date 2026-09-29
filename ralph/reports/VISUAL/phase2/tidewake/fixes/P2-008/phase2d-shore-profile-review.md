@@ -20,7 +20,7 @@ The pass fixes the specific gray-skirt symptom at the recorded views, but **P2-0
 
 - Full-resolution eight-pair gallery: `.artifacts/phase2/P2-008-phase2d-before-after.html`.
 - Contact sheets: `.artifacts/phase2/P2-008-phase2d-before-after-locations.jpg` and `.artifacts/phase2/P2-008-phase2d-before-after-routes.jpg`.
-- Before: original production `p2008-dunes-04-before-locations` and `p2008-dunes-04-before-routes`. Current candidate: `p2008-phase2d-twinpumps-final-locations` and `p2008-phase2d-twinpumps02-routes`.
+- Before: original production `p2008-dunes-04-before-locations` and `p2008-dunes-04-before-routes`. Current candidate: `p2008-phase2d-shellboards-final-locations` and `p2008-phase2d-twinpumps02-routes`.
 
 All eight pairs are native 1920×1080 day captures at seed 2042. Both before and after manifests are complete with no frame failures. Requested positions and player XZ coordinates match exactly; maximum horizontal camera drift is 0.000252 m. Ground/camera Y changes by at most 58.912 m because the physical Sluice peak was lowered. The Brine Steps walk03 image has a player standing in the shallows in both versions; it is not a traversal acceptance frame.
 
@@ -59,7 +59,7 @@ The local-defect column asks only whether the recorded gray skirt/green-carpet s
 |---|---|---|---|
 | First Shore welcome beacon, close | PASS | FAIL | Sand crest and sea direction read, but sparse props and uniform dune sides lack the references' natural layering. |
 | Gull Rest beach, close | PASS | FAIL | Foreground ripples and grass are clearer; distant space and habitat detail remain thin. |
-| Shellwatch rescue jetty, close | PASS | FAIL | The new dry sand passage is framed by grass, but the dune shoulders are still smooth, the sea is out of frame, and habitat detail falls short of the supplied boardwalk photo. |
+| Shellwatch rescue jetty, close | PASS | FAIL | Weathered timber sleepers mark the dry grass-framed passage, but the dune shoulders are still smooth, the sea is out of frame, and habitat detail falls short of the supplied boardwalk photo. |
 | Sluice Isle twin pumps, close | PASS | FAIL | Two pump machines now mark the passage, but the dune is broad and evenly smoothed, and Veilfall remains a giant simple cone. |
 | Brine Steps east beach, walk03 | PASS | FAIL | Opposite dune is simplified and the trainer stands in water in this fixed catalogue frame; this is not a traversal acceptance shot. |
 | First Shore horizon stones, route | PASS | FAIL | Dune grass and open water improve; the far Veilfall landmark is still a small dark cone and the midground lacks depth. |
@@ -115,3 +115,11 @@ The current eight-pair gallery uses `p2008-phase2d-twinpumps-final-locations` an
 ### Veilfall structure probes after the Twin Pumps pass
 
 The existing six entrance crags were enabled in the far-silhouette copy for `p2008-phase2d-veilfarcrags01-routes`. Their exact installed geometry made no meaningful change in the First Shore or Sluice frames. Four much larger, route-clear physical crags were then added and copied at distance in `p2008-phase2d-veillargecrags01-routes`: the Sluice frame showed detached white pillars on the mountain face, while First Shore still read as the same narrow cone. Both config probes were reverted. A further 1.5–1.7× widening of the three authored waterfall ribbons in `p2008-phase2d-veilbroadfalls01-routes` produced little visual change at these distances and was reverted. These captures isolate the remaining Veilfall failure as the overall mountain mass and layered material/structure, not a lack of a few copied entrance rocks or wider white ribbons. **The current gallery and 0/8 verdict remain the Twin Pumps candidate above.**
+
+Two larger structural probes were also rejected. Reusing the Cloudreach cliff buttress as two mountainside masses in `p2008-phase2d-veilbuttress01-routes` left most geometry hidden behind the physical cone and exposed pale disconnected fragments. A bounded angular heightfield ridge in `p2008-phase2d-veilridges01-routes` made the First Shore crown somewhat more jagged but left Sluice's oversized smooth cone, while raising the baked maximum above the authored 620 m summit. The buttress scene, ridge formula, config and trial terrain regions were reverted. Neither changes the **0/8 full-frame verdict**.
+
+### Shellwatch path composition, current candidate
+
+The Shellwatch close frame had a dry grass-framed corridor but no built path cue like the owner's second photo. I laid 36 weathered timber sleepers into the existing sand passage using the approved `Floor_WoodDark` source, sampling the baked surface under each board to follow the cross-slope and path grade. The first render (`p2008-phase2d-shellboards01-locations`) showed boards clipping the sand; the second (`shellboards02`) corrected their pitch but looked too orange and even; the third (`shellboards03`) desaturated the wood; and the fourth (`shellboards04`) bent the line too far into the grass. The current `p2008-phase2d-shellboards-final-locations` keeps a slight bend inside the clearing. Its native four-frame manifest is complete with no capture, script or shader failures. The updated eight-pair gallery combines that location set with the unchanged Twin Pumps route set.
+
+This improves Shellwatch's path readability, but the boards still repeat visibly, the passage ends against smooth high sand, and the sea sightline in the photo remains absent. The other seven frames retain their previous visual limitations. **Scoped shore symptom: 8/8 clear. Complete photo/Bar A/Bar B/Palworld-quality frame: 0/8 pass. P2-008 remains open.**

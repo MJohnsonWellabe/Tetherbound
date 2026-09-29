@@ -90,6 +90,10 @@ func _ready() -> void:
 		twin_pumps.name = "WaterSluiceTwinPumps"
 		add_child(twin_pumps)
 		twin_pumps.build(self)
+		var shellwatch_boardwalk := preload("res://scripts/world/water_shellwatch_boardwalk.gd").new()
+		shellwatch_boardwalk.name = "ShellwatchSandBoardwalk"
+		add_child(shellwatch_boardwalk)
+		shellwatch_boardwalk.build(self)
 		var surface := SURFACE.new()
 		surface.name = "WaterSurface"
 		add_child(surface)
