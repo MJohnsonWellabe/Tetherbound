@@ -46,9 +46,15 @@ func test_player_pace_shortens_timings_and_widens_only_the_charged_arc() -> void
 	var profile := {"windup": 0.55, "recovery": 0.5, "cooldown": 1.2, "cone_degrees": 75.0, "range": 3.0}
 	var charged := MATH.with_player_pace(profile, "player_charged")
 	var quick := MATH.with_player_pace(profile, "player_quick")
-	for key in ["windup", "recovery", "cooldown"]:
+	var pace: Dictionary = MATH.config().get("player_pace", {}) as Dictionary
+	for key in ["windup", "recovery"]:
 		assert_true(float(charged[key]) < float(profile[key]), "%s is shorter after the pace scale" % key)
 		assert_true(float(charged[key]) > 0.3 * float(profile[key]), "%s is not collapsed" % key)
+	# The cooldown follows its own scale (1.0 today: the hosted net smokes time
+	# against the authored charged lock, and the energy meter gates the charged
+	# attack anyway), so pin the relationship, not a number.
+	assert_almost_eq(float(charged["cooldown"]), float(profile["cooldown"]) * float(pace.get("cooldown_scale", 1.0)),
+		0.0001, "the cooldown follows player_pace.cooldown_scale")
 	assert_true(float(charged["cone_degrees"]) > 75.0, "the charged arc widens")
 	assert_eq(float(quick["cone_degrees"]), 75.0, "the quick arc is untouched")
 	assert_eq(float(charged["range"]), 3.0, "reach is untouched")
