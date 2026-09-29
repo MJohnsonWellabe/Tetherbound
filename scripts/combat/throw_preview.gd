@@ -294,6 +294,7 @@ func update_arc(origin: Vector3, direction: Vector3, speed: float, target: Node3
 			var query := PhysicsRayQueryParameters3D.create(previous, p)
 			query.collide_with_areas = false
 			query.exclude = excluded
+			query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 			var hit := get_world_3d().direct_space_state.intersect_ray(query)
 			if not hit.is_empty() and previous.distance_to(hit.position) \
 					<= previous.distance_to(p) * target_entry:

@@ -810,6 +810,7 @@ func _open_separation(cfg: Dictionary) -> float:
 		if body is CollisionObject3D and is_instance_valid(body):
 			exclude.append((body as CollisionObject3D).get_rid())
 	query.exclude = exclude
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	var hit := world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return wanted

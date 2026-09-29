@@ -2820,5 +2820,6 @@ func _ray_ground(target: Vector3) -> float:
 	var query := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * GROUND_PROBE_DOWN)
 	query.collide_with_areas = false
 	query.exclude = [get_rid()]
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	var hit: Dictionary = space.intersect_ray(query)
 	return NAN if hit.is_empty() else float((hit["position"] as Vector3).y)

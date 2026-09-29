@@ -216,6 +216,7 @@ func _has_line_of_sight(from: Vector3) -> bool:
 		if is_instance_valid(viewer) and viewer.is_inside_tree() \
 				and viewer.global_position.is_equal_approx(from):
 			query.exclude = [viewer.get_rid()]
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	return space.intersect_ray(query).is_empty()
 
 
