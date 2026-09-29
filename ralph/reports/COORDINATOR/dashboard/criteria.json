@@ -1,7 +1,7 @@
 {
  "generated_at": "2026-09-26 09:08 UTC",
- "main_sha": "1aa84d1e",
- "batch4_sha": "#275 batch 20 (superset)",
+ "main_sha": "8f5dd6ed2",
+ "batch4_sha": "none in flight; all PRs merged",
  "rows": [
   {
    "id": "F01",
