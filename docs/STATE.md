@@ -53,6 +53,18 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 7. **Story framing of the final relay:** Tidewake was written as the supply network's final relay. With Stormwood last, the recommended reading is: Stormwood's Stormheart is the final relay; Tidewake's regional link is one of four; the dock exchange stays Tidewake's chapter close. WORLD keeps the current wording conservative until the owner confirms.
 8. **PRODUCT proposals to confirm:** the cut order within owner-decided systems, the "Build the best five" sub-line, a demo that includes the village, the Hall and the first homestead loop, and keeping US$19.99 at 15–25 h.
 
+9. **Design defaults taken in the doc pass (conservative; the owner may override):**
+   - Each co-op character wins its own Master 1v1 for its recipe.
+   - Creatures caught above a cap count lower tiers as cleared, but evolution offers are not retroactive.
+   - The existing Good, Great and Rare Candy stay and respect caps.
+   - Taught trait slots are extra to rolled traits.
+   - The Tether Command pouch uses the existing backpack slot.
+   - `hide_*` armour keeps its ids with non-butchery display names.
+   - Tool repair stays the free Satchel press.
+   - Starting numbers are in TRAINING/HOMESTEAD, marked as starting values.
+
+   Settled from RD-20's "next tier": Meadows attachments are available from the start, and each hung relic unlocks the next biome's attachments (HOMESTEAD §4).
+
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 
 ## 1. Rulings in force

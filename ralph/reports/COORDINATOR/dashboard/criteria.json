@@ -1706,7 +1706,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Hanging a biome relic in the Shrine Room unlocks that biome's attachment recipes; the player then carries one chosen relic power.",
+     "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1771,7 +1771,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Eight type crops grow on homestead plots; the Greenhouse attachment grows off-biome crops; every harvest is by hand.",
+     "text": "Eight type crops grow on homestead plots; the Greenhouse (a Farm buildable, not an attachment) grows off-biome crops; every harvest is by hand.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1859,7 +1859,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Forward camps craft travel-tier items only (basic meals and feasts, repairs); tier gear and refining are refused with a reason.",
+     "text": "Forward camps craft travel-tier items only (basic meals and field kits); Ascension Feasts, tier gear and refining need the homestead and are refused with a reason.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."

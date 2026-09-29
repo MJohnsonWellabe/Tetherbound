@@ -69,7 +69,7 @@ Ground rules (unchanged unless §1 says otherwise):
 | RD-17 | **Village stays inside the Meadows.** The **Crossing Hall** at the end of the village road holds the home arch plus 7 portal arches (3 live, 4 dormant) and the Shrine Room. The physical crossings between biomes are retired. |
 | RD-18 | **Home Key** from Grandpa at the start, in the backpack. Tap to use: the trainer raises the key (~2 s) and arrives at the Hall's home arch. Free, **no cooldown**. Not usable in combat, dialogue, cutscenes, swimming or mid-flight. Personal to each player. Cannot be dropped, sold or lost. |
 | RD-19 | **Waystones:** 3–5 per biome, touch to activate. A portal returns you to your last activated waystone in that biome. |
-| RD-20 | **Shrine Room:** hanging a biome relic is required. It unlocks that biome's homestead attachment recipes; the player then carries **one** chosen relic power (the existing one-active rule). The boss drops the next **portal key as a real item**, used once on its arch. |
+| RD-20 | **Shrine Room:** hanging a biome relic is required. It unlocks the **next tier's** homestead recipes and attachments; the Meadows tier is available from the start, so each boss is fought with its own biome's gear. The player then carries **one** chosen relic power (the existing one-active rule). The boss drops the next **portal key as a real item**, used once on its arch. |
 | RD-21 | **Co-op:** every fight participant gets their own key and relic. A portal is open for the whole session if **the host world or your own character** has unlocked it. Station buildings are world-owned; tiers and recipes are personal. A guest uses the host's stations at the host's tier and keeps what they craft. |
 | RD-22 | **Ending:** Tidewake's dock exchange stays as Tidewake's chapter close. After the Stormwood finale the player **uses the Home Key** for Grandpa's homecoming, then credits. Stormwood drops a **fifth portal key**: using it makes the fifth arch *stir* but not open. It is not a cliffhanger. This overrides the Bible's "no fifth-chapter tease" line. |
 | RD-23 | **Move effects: about 24 archetypes with real objects** (pebbles, boulder, fireball, lightning bolt from the sky…) plus bespoke ultimates, within an Ally performance budget. |
@@ -163,7 +163,7 @@ the credits: bounties, rematches, alpha respawns and research completion.
 - **Stations:** Workbench (tools, building, trainer gear, forward-camp kit), Forge (refine
   ingots; Harness; tool upgrades), Kitchen (meals, buff food, feasts), Altar (essence spend,
   loadouts, mastery, traits, charms), Den (rest, happiness, grooming shed drops, gear display),
-  Farm plots (type crops; Greenhouse), chests.
+  Farm plots (type crops; the Greenhouse is a Farm buildable, not an attachment), chests.
 - **Attachments (one per biome, Forge/Kitchen/Altar/Den only):**
 
 | Station | Meadows | Tidewake | Cloudreach | Stormwood | 5–8 |
@@ -173,8 +173,9 @@ the credits: bounties, rematches, alpha respawns and research completion.
 | Altar | Meadow lens | Tide lens | Sky lens | Storm lens | reserved |
 | Den | Straw bedding | Hot spring | Cliff perches | Grounded bedding | reserved |
 
-  Hanging a biome's relic unlocks that biome's attachment recipes. Each attachment gates
-  that tier's recipes.
+  Meadows attachments are available from the start. Hanging a biome's relic unlocks the **next** column
+  (Meadows relic → Tidewake attachments, … Stormwood relic → reserved tier 5), so gear for a biome is
+  craftable from that biome's materials before its boss. Each attachment gates that tier's recipes.
 - **Forward camps:** kit from the Workbench. Bed, portable cookpot and field workbench. Travel-tier
   recipes only.
 - **No automation:** crops need planting and harvesting by hand; the Forge smelts only while the
@@ -596,13 +597,13 @@ same criteria, numbered from zero (`F27#3`).
 - **Owns:** data/items/buildables.json, new data/config/stations.json, scripts/build/** (station pieces), new scripts/build/station_*.gd, scripts/ui/craft_panel.gd, shrine pedestal logic in crossing_hall
 - **Build:**
   1. Six stations as buildables with interaction panels; attachments as adjacent buildables with tier checks.
-  2. Shrine hang → unlock attachment recipes; relic power selection moves to the Shrine Room.
+  2. Shrine hang → unlock the next tier's attachment recipes (Meadows tier from the start); relic power selection moves to the Shrine Room.
   3. Personal tier/recipe state; world-owned buildings; guest crafting rule.
 - **Proof:** Unit + two-peer craft smoke + judge frames.
 - **Acceptance (F31#0–#6):**
   - `#0` Workbench, Forge, Kitchen, Altar, Den and Farm plots (plus chests) can be built on the homestead plot.
   - `#1` Forge, Kitchen, Altar and Den each take exactly one attachment per biome (4 live, 8 slots) built from biome materials; recipe tier requires the attachment.
-  - `#2` Hanging a biome relic in the Shrine Room unlocks that biome's attachment recipes; the player then carries one chosen relic power.
+  - `#2` Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.
   - `#3` Each station shows a single 'next upgrade' target; no tech tree screen is required to understand progress.
   - `#4` No automation: crops, smelting and cooking need the player's interaction (test).
   - `#5` Co-op: buildings are world-owned; tiers and recipes are personal; a guest uses the host's stations at the host's tier and keeps what they craft.
@@ -622,7 +623,7 @@ same criteria, numbered from zero (`F27#3`).
   - `#0` The four tier material sets (Meadows rootstone/ironwood…, Tidewake driftwood/reef stone/sluice metal/tide bloom/Tide Pearl, Cloudreach heartwood/cliffglass/gale fiber/skyplume, Stormwood thunderwood/stormglass/conductor vine/glowmoss/sparkfur/voltcap) are gatherable in their biome.
   - `#1` The Forge refines Rootiron, Tidesteel, Skyglass and Stormglass plate.
   - `#2` One or two type-essence nodes per type sit in each biome, mostly off-route, and respawn on a configured timer.
-  - `#3` Eight type crops grow on homestead plots; the Greenhouse attachment grows off-biome crops; every harvest is by hand.
+  - `#3` Eight type crops grow on homestead plots; the Greenhouse (a Farm buildable, not an attachment) grows off-biome crops; every harvest is by hand.
   - `#4` Shed items (skyplume, sparkfur and others) drop after wins and from Den grooming; no item implies hunting or butchering (test).
   - `#5` The ten Tidewake water_crafting proposals are registered at runtime; four-character node contention follows MULTIPLAYER.
 
@@ -650,11 +651,11 @@ same criteria, numbered from zero (`F27#3`).
 - **Depends on:** F31
 - **Owns:** scripts/build/camp_tent.gd, campfire.gd, new forward_camp.gd, buildables.json (kit)
 - **Build:**
-  1. Kit item, placement validity, three pieces, travel-tier recipe filter, rest and loadout.
+  1. Kit item, placement validity, three pieces, travel-tier recipe filter (meals and field kits; no feasts, tier gear or refining), rest and loadout.
 - **Proof:** Unit + placement smoke in each biome.
 - **Acceptance (F34#0–#4):**
   - `#0` A forward-camp kit crafted at the Workbench places on valid ground in any biome with a bed, portable cookpot and field workbench.
-  - `#1` Forward camps craft travel-tier items only (basic meals and feasts, repairs); tier gear and refining are refused with a reason.
+  - `#1` Forward camps craft travel-tier items only (basic meals and field kits); Ascension Feasts, tier gear and refining need the homestead and are refused with a reason.
   - `#2` Resting recovers the team and saves; loadouts can be changed there.
   - `#3` Existing camp functions (tournament beds, rest bonus) keep working.
   - `#4` Placement is host-authoritative and persists through reload and rejoin.
