@@ -74,6 +74,13 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
    Settled from RD-20's "next tier": Meadows attachments are available from the start, and each hung relic unlocks the next biome's attachments (HOMESTEAD §4).
 
+10. **Controller map for the new combat (COMBAT §1, UX §2.2): please confirm.**
+    - The ultimate and commands are tap-then-tap sequences (tap RB, then a face button), not chords, to respect the no-held rule.
+    - Orb aim moves to LT and flee to RT.
+    - Ordinary consumable use stays free, and the Tether Command item throw only buys an instant throw (default).
+    - The LB+face command layout is an optional preset only.
+    - Command unlock: item throw and Snare at the practice catch; Rally and Tag-switch at the first two-creature fight.
+
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 
 ## 1. Rulings in force
