@@ -26,31 +26,41 @@ its scope and the spec commit in STATE. An unresolved pillar, story, art-bar or
 hard-rule choice remains a spec question; an agent must not answer it by coding.
 Once the spec is settled, agents execute, inspect, test and judge the work
 without asking the owner to review each design note, code diff or test result.
-Before an unattended Meadows-to-later-regions run, inventory each next
-criterion against its owning spec and an observable pass/fail witness. Work
+Before an unattended run, inventory each next criterion against its owning
+spec and an observable pass/fail witness. Work
 the settled slices in dependency order; keep genuinely undecided product
 choices open and continue independent slices. No count of passing checks
 alone closes a chapter.
-For the current four-chapter pass, ROADMAP §3 registers exactly **15 feature
-requests F01–F15** and seven supporting X01–X07 workstreams. Each F row,
-its owning design sections and ACCEPTANCE §6.1 are that feature's PRD; do
-not invent a parallel PRD file or use the 13 chapter cards/31 roadmap steps
-as feature-request IDs. Start concurrent sessions from ROADMAP §3's lane
-layout; integrate chapter acceptance in earned route order. Split each active F
-into 30–90 minute work orders after checking current code and evidence. Each
-work order names its F/X ID, one criterion, baseline, exact owned paths,
-expected player result, proof, dependencies and exclusions. Put the ID and
-criterion in its READY post (§8), update STATE with actual progress and
-revise estimates when evidence changes. A failed card names the next repair,
-not a request for routine owner review.
-Independent F rows may be worked at the same time in separate lanes. The
-coordinating integrator assigns each lane its F rows and exact paths and
-serializes shared-file edits and local Godot writers. All lanes of the
-2026-09-25..27 run are wound down; STATE names the unfinished work and where
-to pick it up. A session continues an
+**The active plan is the owner redesign (owner, 2026-09-29).**
+`CODEX_START_HERE.md` is the build plan for every lane, Claude or Codex:
+§1 the owner decisions RD-01..RD-35, §4 the waves (0–3) and lanes, §5 the
+feature register F16–F49 (34 features, 179 criteria), §6 the work order,
+owned files and dependencies of each feature, §7 landing, hourly push and
+board rules, and §7.5 how still-open F01–F15 criteria fold into the new
+rows. It supersedes the Phase 1 brief (`CLAUDE_START_HERE.md`, now a
+pointer) and the old Phase 2 visual brief (RD-34). ROADMAP §3 registers
+F01–F15, X01–X07 and the redesign rows F16–F49; ACCEPTANCE §6.1 and §6.2
+hold every row's pass/fail criteria. Each F row, its owning design sections and its ACCEPTANCE rows
+are that feature's PRD; do not invent a parallel PRD file or use the 13
+chapter cards/31 roadmap steps as feature-request IDs. The board counts
+**280 criteria** (101 + 179) and grows only if the owner adds features.
+Start concurrent sessions from `CODEX_START_HERE.md` §4; a lane starts when
+its §6 dependencies have landed. Split each active F into 30–90 minute
+work orders after checking current code and evidence. Each work order names
+its F/X ID, one criterion, baseline, exact owned paths, expected player
+result, proof, dependencies and exclusions. Put the ID and criterion in the
+landing PR (§8), update STATE with actual progress and revise estimates when
+evidence changes. A failed card names the next repair, not a request for
+routine owner review.
+Independent F rows may be worked at the same time in separate lanes on
+disjoint files. A shared file has one owning lane per wave
+(`CODEX_START_HERE.md` §4); other lanes request an edit through STATE's WIP
+list or wait for it to land. Serialize local Godot writers (§4). Lanes
+resume from STATE and the board, never from memory. A session continues an
 unfinished F from STATE and current main; it does not declare that F accepted.
-Full chapter acceptance waits for the preceding chapter's earned saved handoff,
-even when regional implementation and focused proof finish earlier.
+Full chapter acceptance waits for the preceding chapter's earned saved handoff
+in the new order (Meadows → Tidewake → Cloudreach → Stormwood), even when
+regional implementation and focused proof finish earlier.
 An agent's own completion report is never its review: another agent (or an
 independent review pass with no implementation context) checks the actual diff,
 runtime evidence and criterion before landing. If an automated or agent check
@@ -126,6 +136,13 @@ different names**, not several systems.
 | Blind visual critique of frames (told nothing about what changed) | mid |
 | World composition, encounter identity, pacing, art direction, acceptance | orchestrator |
 | Rebuild of a system that has failed 3+ tuning rounds | orchestrator designs, mid implements |
+
+**Redesign orchestration (`CODEX_START_HERE.md` §7.1).** One orchestrating
+session per wave spawns one sub-agent per lane, each with its exact file
+ownership (§6 of that file), its criteria and the stop conditions in §12.
+Design, integration, combat and look-dev use the senior model at high
+effort. Mechanical data authoring (learnsets, trait tables, research tasks,
+node placement lists) goes to lower tiers and is reviewed before landing.
 
 **The orchestrator verifies every important claim a lower-tier agent makes.** A
 self-report is not evidence. "Nothing to fix" from a config read was wrong three
@@ -211,8 +228,11 @@ is already handled. Cite functions, config values and commit hashes.
 
 Parallelize agents that touch independent files. Serialize agents whose changes
 are coupled. Each agent gets an explicit ownership list; a collision on a shared
-file (`playground_hud.gd`, `game_state.gd`, `playground_world.gd`,
+file (`combat_manager.gd`, the HUD, `species.json`, `items.json`,
+`project.godot`, `playground_hud.gd`, `game_state.gd`, `playground_world.gd`,
 `vegetation.json`, `grass_field.json`) is a reason to serialize, not to hope.
+In the redesign waves each shared file has one owning lane per wave
+(`CODEX_START_HERE.md` §4, §6).
 
 **One Godot process at a time per machine for renders.**
 
@@ -255,13 +275,21 @@ hours. A git-tracked lock loses the race it exists to prevent.
 # 5. Testing
 
 - **Unit suite:** `godot --headless --path . --script tests/run_tests.gd`
-  (~28 minutes on a 4-core box). One file or one method:
+  (~28 minutes on a 4-core box; before landing, import once with
+  `godot --headless --path . --import`, then run 4 shards with
+  `-- --shard=I/4` on the merged head). One file or one method:
   `-- --only=<file>::<test>`. A selector matching nothing is a hard error, so a
   typo can't silently run and pass the whole suite. Shard with `-- --shard=I/N`.
 - **Smoke:** `godot --headless --path . --script tests/smoke_<name>.gd`
 - Run the tests the task names, plus `tests/smoke_art.gd` for anything touching
   creature data or models, plus the **full** suite for save-format or autoload
-  changes.
+  changes. The redesign resets saves once (F16, RD-35: v27-and-older saves are
+  refused, never overwritten); every later schema change migrates again and
+  proves it with a fixture.
+- **New durable state is multiplayer-native from its first commit:** declare
+  its scope (world or character) and transaction id in the flag-scope registry,
+  and prove no duplication or loss through reconnect and save/reload with a
+  two-peer test.
 - **Tests must exercise real behaviour**: real parsed input events for
   controller/UI focus, real open/close cycles for modals, persisted
   player-facing state for saves, the actual construction sequence for building.
@@ -336,7 +364,28 @@ which render nothing.
   anything whose `/proc/<pid>/cwd` reads `(deleted)`.
 
 The judging protocol, the two bar questions, the stopping rule and when a blind
-judge is required are all in **`ACCEPTANCE.md` §4**.
+judge is required are all in **`ACCEPTANCE.md` §4**. The bars are redefined
+for the redesign as Palworld/Animo-class creature and world appeal with
+Valheim-class light and atmosphere at ordinary gameplay distance (RD-24). Fix
+every visual item to that full bar, not just past its defect: catalog items
+(`ralph/reports/VISUAL/phase2/catalog.csv`) with impact >12 are burned down in
+impact order, one or two per PR (F38–F41). Deferral is not a status; a
+blocked item stays open with an owner.
+
+**Restore the reference boards** in a fresh container before any visual
+judging: `git ls-files -v docs/reference | grep '^S' | cut -c3- | xargs git
+update-index --no-skip-worktree && git checkout -- docs/reference`.
+
+**Meshy overnight batch (owner, 2026-09-29, RD-26).** Codex owns new meshes
+and Meshy work; Claude lanes kitbash installed families (owner, 2026-09-27).
+The batch is agent-attended and bounded to the named priority list of about
+25–30 assets in ART_DIRECTION, plus the storm bear (RD-28). **At most 30
+generations per night** unless the owner raises the cap. Each asset needs:
+a drafted reference inspected before submission → Meshy on the held license
+→ import → scale check against the 1.80 m trainer (grow the smaller side) →
+in-engine code-blind before/after judge → provenance row with the task id.
+A candidate that fails stays flag-off or unwired. Log every task id, including
+failures, so the nightly count is auditable (F36#3). No purchase or top-up.
 
 ---
 
@@ -345,21 +394,40 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 - **One reused branch per lane (owner, 2026-09-27).** Every branch uses the
   `tb/` prefix.
   - **Lanes land their own work (owner, 2026-09-28).** Each lane works on one
-    long-lived `tb/<lane>` branch named for its scope. There is no coordinator
-    and no lane channel. When a criterion closes, the lane:
-    1. has it re-checked;
+    long-lived `tb/<lane>` branch named in `CODEX_START_HERE.md` §4
+    (`tb/foundations`, `tb/hub`, `tb/reorder`, `tb/combat`, `tb/vfx`,
+    `tb/lookdev`, `tb/training`, `tb/homestead`, `tb/creature-art`,
+    `tb/visual-<biome>`, `tb/hud`, `tb/loop`, `tb/balance`, `tb/coop`,
+    `tb/release`), branched from current `main` and reused for all its
+    landings. There is no standing coordinator and no lane channel; only the
+    hourly board duty rotates (below). When a criterion closes, the lane
+    (`CODEX_START_HERE.md` §7.2):
+    1. has it re-checked by an independent strict read-only sub-agent, which
+       closes it only on MET;
     2. merges `origin/main`;
-    3. runs the unit suite once;
-    4. updates the board and STATE;
-    5. opens its own PR to `main` with auto-merge (`CLAUDE_START_HERE.md` §2).
+    3. runs the unit suite once on the merged head (4 shards, §5);
+    4. updates the board row (`status`, `evidence`, `gap`) and one STATE §0 line;
+    5. opens its own PR to `main` with the template,
+       `tools/check_pr_traceability.mjs` and auto-merge. CI decides. If CI goes
+       red on the PR, fix it on the same PR.
 
     After the merge it keeps working on the same branch. Questions for the owner
-    are asked in the lane's own session and recorded in STATE, and the lane keeps
-    working.
+    are recorded in STATE's open owner decisions and `status.json`
+    `owner_needs`, and the lane keeps working.
+  - **Push at least every hour** of active work, even when no criterion has
+    closed (WIP commits on the lane branch). Nothing lives only in a container.
+  - **Hourly board rebuild (`CODEX_START_HERE.md` §7.3).** The duty rotates to
+    whichever lane lands next after each hour mark. It refreshes `status.json`
+    (headline, lanes, WIP), runs
+    `python3 ralph/reports/COORDINATOR/dashboard/build_dashboard.py`, commits
+    the JSON and HTML through a small docs PR with auto-merge, and, when the
+    Artifact tool is available, republishes to the board URL in
+    `ralph/reports/COORDINATOR/README.md`. Headline format:
+    `Criteria met: N of 280`.
   - **No scratch branches:** dispatch `render.yml` with `checkout_ref` set to a
     commit SHA.
-  - **Codex** lanes land the same way, from their own branches, with atomic
-    commits per catalog item (`CODEX_START_HERE.md`).
+  - **Codex** lanes land the same way, from their own branches; visual
+    catalog work lands one or two catalog items per PR (F38–F41).
   - **Forbidden prefixes:** never create `ralph/` or `claude/` branches. Cloud
     sessions set their outcome branch to the lane's `tb/` name.
 - **Build the game, not proof machinery (owner, 2026-09-27).**
@@ -370,22 +438,26 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
     counting the changed game files against test/tool files.
 - **Finish, then land (owner, 2026-09-27).** Lanes commit and push to their own
   branch freely; that is backup, not landing. A lane lands only when:
-  - **a criterion fully closes.** State it as `closes F0x#n`. Partial progress
-    and fixes other lanes need stay on the branch (other lanes merge it).
+  - **a criterion fully closes.** State it as `closes Fxx#n`. Partial progress
+    and fixes other lanes need stay on the branch (other lanes merge it). A
+    still-open F01–F15 criterion that RD-34 folds into a new row closes with
+    that row's evidence or is marked "superseded by owner redesign 2026-09-29"
+    citing the replacing criterion (`CODEX_START_HERE.md` §7.5).
 
   Rules for landing:
   - **Attach an independent strict re-check.** Before landing, a read-only
-    subagent re-scores the claim against ACCEPTANCE §6.1 using the board's
-    strict rules, and its verdict goes in the PR.
+    subagent re-scores the claim against ACCEPTANCE §6.1 or §6.2 using the
+    board's strict rules, and its verdict goes in the PR.
     - **Fixtures and shortcuts are allowed (owner, 2026-09-27).** Fixture or
       declared start saves, position/teleport writes, flag/ledger/inventory/
       party writes, harness-driven fights and skipped sub-parts no longer make
-      a claim partial (ACCEPTANCE §6.1). The PR and the re-check list
-      each one; the board carries the disclosure.
-    - **Visual criteria** need a passing code-blind judge verdict. In Phase 1
-      (owner, 2026-09-28), a mixed row closes on its functional and
-      readability clauses, and its Bars A/B clause moves to the Phase 2
-      Codex catalog.
+      a claim partial (ACCEPTANCE §6.1); a criterion that itself names an
+      ordinary-input witness still needs ordinary input for that witness. The PR and the re-check list each one; the
+      board carries the disclosure.
+    - **Visual criteria** need a passing code-blind judge verdict against the
+      redefined bar (§7). A still-open F01–F15 mixed row closes on its
+      functional and readability clauses; its Bars A/B clause is carried by
+      F26 and F38–F41, which replace the Phase 2 catalog plan (RD-34).
     - **Co-op criteria** need two-peer evidence.
   - **Earned checkpoints are allowed starts (coordinator, 2026-09-27).** A save
     written by a recorded run that itself used no fixtures, position writes,
@@ -399,10 +471,13 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Codex-queue IDs carry a lane prefix and are append-only**
     (`ralph/reports/VISUAL/AUDIT.md`: `V-MC-n`, `V-MA-n`, `V-MR-n`, `V-CR-n`,
     `V-SW-n`, `V-TW-n`, `V-VIS-n`, `V-X05-n`, `V-CX-n`). Rows never renumber,
-    and existing `V1`–`V35` keep their IDs.
-  - **Main moves only when a criterion closes.** There are no `unblocks`
-    landings: a lane blocked on another lane's fix merges that lane's branch
-    into its own and keeps going. Docs and board data ride with the next close.
+    and existing `V1`–`V35` keep their IDs. Phase 2 catalog rows
+    (`ralph/reports/VISUAL/phase2/catalog.csv`, `P2-nnn`) keep their IDs the
+    same way; re-scoring after F26 changes scores, not IDs.
+  - **Main moves only when a criterion closes**, plus the hourly board PR.
+    There are no `unblocks` landings: a lane blocked on another lane's fix
+    merges that lane's branch into its own and keeps going. Other docs ride
+    with the next close.
 - **Wind-down.** When the owner winds lanes down, each lane finishes, pushes
   everything including work in progress, and lands it through its own PR.
   Unjudged visual work in progress lands behind a config flag that defaults to
@@ -444,8 +519,10 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   cache in a fresh container (also usable as the environment setup script).
 - **GPU runs through Codex (owner, 2026-09-27).** Codex runs on the owner's
   GPU machine and serves heavy visual renders when the owner has a Codex lane
-  open. Phase 1 lanes render locally (xvfb and `opengl3`) or through
-  `render.yml`. Headless logic runs stay on GitHub runners.
+  open. Claude lanes render locally (xvfb and `opengl3`) or through
+  `render.yml`. Headless logic runs stay on GitHub runners. Compatibility stays
+  the default renderer until the owner's ROG Ally test passes (RD-25); F26
+  adds the Forward+ presets beside it.
 - **A CI run under five minutes is not a verification.** CI skips every code
   job when the diff against the base is documentation-only — check the run
   duration **and** that code jobs actually ran.
@@ -492,6 +569,10 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 - **Region or system.** The continuous player path produces the intended
   experience end to end. Every child having a commit is not a region passing.
 - **Chapter.** `ACCEPTANCE.md` in full — A1–A11, system/chapter gates, visual and audio bars, density, co-op and device/reliability proof.
+- **The redesign.** Every criterion F16–F49 in ACCEPTANCE §6.2 is met on
+  `main`, and every still-open F01–F15 criterion is closed or formally
+  superseded with evidence (`CODEX_START_HERE.md` definition of done). Work is
+  never done while a criterion it touches is red on `main`.
 
 ---
 
@@ -508,13 +589,16 @@ The authorized live document set is:
 | File | Holds |
 |---|---|
 | AGENTS.md = CLAUDE.md | hard rules, precedence, routing |
-| docs/GAME_BIBLE.md | product identity, pillars, canon and four chapters |
+| CODEX_START_HERE.md | the redesign build plan: owner decisions RD-01..RD-35, waves, lanes, work orders, landing rules (no status) |
+| CLAUDE_START_HERE.md | pointer to CODEX_START_HERE (the superseded Phase 1 brief) |
+| docs/GAME_BIBLE.md | product identity, pillars, canon, hard-rule changes and four chapters |
 | docs/PRODUCT.md | audience, positioning, store copy, platform/price, success/cuts |
 | docs/design/COMBAT.md, CREATURES.md, BOSSES.md | combat, individuals and named fights |
 | docs/design/WORLD.md, SYSTEMS.md, PROGRESSION.md | authored world, support systems, rewards/economy/pacing |
 | docs/design/UX.md, MULTIPLAYER.md, ART_DIRECTION.md, AUDIO.md | presentation, controls and shared-play contracts |
+| docs/design/TRAINING.md, HOMESTEAD.md | creature power (essence, breakthroughs, Masters, evolution, traits, mastery, research); homestead stations, materials, gear and camps (owner, 2026-09-29) |
 | docs/ACCEPTANCE.md | evidence required for completion |
-| docs/ROADMAP.md | dependency order, estimates and cuts |
+| docs/ROADMAP.md | feature register, dependency order, estimates and cuts |
 | docs/WORKFLOW.md | process |
 | docs/STATE.md | live status, next work, feedback/dependencies |
 | docs/TECHNICAL.md | architecture, source/run map and migration risks |
@@ -532,6 +616,9 @@ A design target must name built/partial/not-built grounding, owning source/confi
 These apply to any session, and matter most in a long unsupervised window where
 nothing else will catch drift in real time.
 
+- **A conflict with a hard rule or with an owner decision (RD-nn)** stops that
+  item: write it into STATE with a recommended answer, keep the current rule
+  and continue other work.
 - **Two unsuccessful attempts at the same fix or the same measurement** (the
   two-strike harness rule, §8) is the signal to change approach or move to the next-highest-value work — not to keep
   spinning.
@@ -543,7 +630,9 @@ nothing else will catch drift in real time.
   body ran, or one that passed earlier on this exact commit — at most once. A
   second failure is real.
 - **An open owner decision does not halt the session.** Record it clearly in
-  `STATE.md`, take the conservative option, skip that specific piece if you
+  `STATE.md`'s open owner decisions and `status.json` `owner_needs` (owner-only
+  items: the ROG Ally test, a play pass, Steam resources, raising the Meshy cap,
+  a pillar change), take the conservative option, skip that specific piece if you
   can't, and continue with the next-highest-value work in scope. Do not wait for
   an answer nobody is there to give.
 - **When a goal's acceptance criteria are genuinely met, or a real ceiling is
