@@ -1,12 +1,12 @@
 {
-  "_comment": "Owner Lake Michigan dunes direction, 2026-09-28. Default-off local/static visual candidate pending native capture review. Sleeping Bear Dunes NPS photos guide sandy gaps, upright straw/sage grass and sheltered woodland; no photographic pixels or new models. Runtime copies only: source ground-cover/vegetation configs, terrain bake, routes, harvest and collision remain unchanged. Veilfall's static mountain vegetation and authored groves retain their existing treatment.",
-  "enabled": false,
-  "_comment_colonies": "Unjudged fuller dune tuft candidate: eight pointed leaves, three short wider basal leaves and three closely grouped stem bases. Compare against zero-shift coverage with the existing five-leaf mesh. Default-off; ordinary profiles, terrain and gameplay remain unchanged.",
+  "_comment": "Owner-supplied Great Lakes dune references guide broad sand crests, sparse exposed areas and grass-framed sandy paths. Native-reviewed production dune cover; no reference pixels or new models are shipped. Veilfall's static mountain vegetation and authored groves retain their own treatment.",
+  "enabled": true,
+  "_comment_colonies": "Twelve pointed leaves with four wider basal blades and four grouped stem bases form beach grass colonies. Broad bare gaps and sparse pioneers keep sandy passages visible.",
   "preserve_islands": [
     "veilfall"
   ],
   "ground_cover": {
-    "_comment_colony_shape": "Unjudged coverage proposal: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. The unjudged zero-shift candidate retains the existing colony ramp at low elevation while removing its coastal probability ceiling. Sparse pioneers retain the coastal probability ceiling. The same 1-3m dry-height fade applies to all eligible ground, avoiding a shore/grass paint-density edge; forbidden-ground and clearance rules remain unchanged. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. No terrain/control-map changes. The separate dune_tuft_shape recipe changes only the grass mesh and tuft count.",
+    "_comment_colony_shape": "Coverage: independently warped bare gaps cut whole colonies; sparse pioneers soften their margins and extend only onto dry painted shore. The zero-shift colony recipe retains the existing colony ramp at low elevation while removing its coastal probability ceiling. Sparse pioneers retain the coastal probability ceiling. The same 1-3m dry-height fade applies to all eligible ground, avoiding a shore/grass paint-density edge; forbidden-ground and clearance rules remain unchanged. Rock, wet-height, holes and all existing built/anchor/camp clearances remain enforced. Physical shore grading is baked separately; this cover recipe does not change terrain/control maps. The separate dune_tuft_shape recipe changes only the grass mesh and tuft count.",
     "dune_colony_shape": true,
     "dune_gap_scale": 0.025,
     "dune_gap_warp_scale": 0.013,
@@ -15,8 +15,8 @@
       43.7,
       -17.9
     ],
-    "dune_gap_start": 0.48,
-    "dune_gap_full": 0.65,
+    "dune_gap_start": 0.43,
+    "dune_gap_full": 0.60,
     "dune_pioneer_start": 0.36,
     "dune_pioneer_probability": 0.045,
     "dune_pioneer_ground": [
@@ -27,22 +27,22 @@
     "dune_shore_dry_full_y": 3.0,
     "dune_stabilized_height_y": 6.0,
     "dune_coastal_colony_shift": 0.0,
-    "tuft_count": 36000,
-    "blades_per_tuft": 8,
+    "tuft_count": 30000,
+    "blades_per_tuft": 12,
     "blade_segments": 4,
     "blade_arc_angle": 0.95,
     "blade_width": 0.85,
-    "height_near": 0.65,
-    "height_far": 0.8,
+    "height_near": 1.05,
+    "height_far": 1.2,
     "height_jitter": 0.38,
     "bend": 0.16,
-    "density_gain": 0.95,
+    "density_gain": 1.1,
     "clump_scale": 0.065,
     "clump_contrast": 1.0,
-    "clump_patch_start": 0.52,
-    "clump_patch_full": 0.68,
-    "tint_base": "#596344",
-    "tint_tip": "#aaa16c",
+    "clump_patch_start": 0.47,
+    "clump_patch_full": 0.64,
+    "tint_base": "#656b46",
+    "tint_tip": "#a9a16e",
     "tint_jitter": 0.13,
     "ground_blend": 0.16,
     "cover_tiers": [
@@ -70,13 +70,14 @@
       "basal_blades": [
         0,
         3,
-        6
+        6,
+        9
       ],
       "basal_height_scale": 0.6,
-      "basal_half_width_m": 0.026,
-      "stem_count": 3,
-      "stem_radius_m": 0.045,
-      "stem_jitter_m": 0.012
+      "basal_half_width_m": 0.032,
+      "stem_count": 4,
+      "stem_radius_m": 0.07,
+      "stem_jitter_m": 0.016
     }
   },
   "layers": {

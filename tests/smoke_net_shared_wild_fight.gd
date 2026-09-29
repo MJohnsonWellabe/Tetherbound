@@ -605,7 +605,13 @@ func _run() -> void:
 	var accepted_authority := await _await_host_action(guest_peer_id, 9001)
 	check(int(accepted_authority.get("last_action", 0)) == 9001,
 		"host accepted the fresh monotonic action")
-	check(int(accepted_authority.get("cooldown_ms", 0)) >= 1200,
+	# The authored charged cooldown is 1.2 s, scaled by combat.json `player_pace`
+	# (owner playtest 2026-09-29). The host must hold that resolved lock, not the
+	# forged zero; the bound follows the config so retuning the pace cannot
+	# silently turn this into a different claim.
+	var paced_lock_ms := int(1200.0 * float((load("res://scripts/combat/combat_math.gd").config().get(
+		"player_pace", {}) as Dictionary).get("cooldown_scale", 1.0)))
+	check(int(accepted_authority.get("cooldown_ms", 0)) >= paced_lock_ms,
 		"host retained its resolved charged-move lock instead of the forged zero cooldown")
 	var accepted_deadline := int(accepted_authority.get("deadline_ms", 0))
 
