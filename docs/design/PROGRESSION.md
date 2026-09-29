@@ -58,7 +58,7 @@ The current Meadows test `tests/test_trainers_data.gd::test_the_critical_path_al
 | Sequence | Intended experience and earned state |
 |---|---|
 | Opening | Grandpa, named starter, **Home Key**, a patch of land, real practice fight/catch, five-space rule, village camp and tournament readiness. |
-| Meadows | Cross South Bridge; Quarry/Warrens and River Lock; first Altar spend; L10 Master and feast; ride into Upper Meadows; earn Sigils; L20 Master before the Hall; prepare for and defeat the Warden; resolve Veridian's per-participant offer; hang the relic, unlock Meadows attachments; open the Tidewake portal. |
+| Meadows | Cross South Bridge; use Quarry/Warrens and River Lock; ride into Upper Meadows; earn Sigils; prepare for and defeat the Warden; along the way: first Altar spend, the L10 Master and feast (mid-Meadows), and the L20 Master before the Hall; resolve Veridian's per-participant offer; hang the relic, unlock Meadows attachments; open the Tidewake portal. |
 | Tidewake | Learn safe human swimming/currents; optionally ride Ripplet; L30 Master on the outer island; approach Nerissa and the Abyssal Guardian; dock exchange closes the chapter (no credits); Tideglass relic and Cloudreach key. Aquaryn and Tidecoil remain optional. |
 | Cloudreach | Learn vertical wayfinding and Fly; reconnect the wind roads; L40 Master on a high perch; challenge Veyra; free Solmane (per-participant offer, owner 2026-09-27); Wings relic and Stormwood key. |
 | Stormwood | Read grounded/exposed terrain; repair the Stormglass route; L50 Master; the Long Storm; Stormheart's offer; the finale; Spark relic and fifth key; use the Home Key for Grandpa's homecoming with the actual five; credits; the fifth arch stirs (RD-22). |
