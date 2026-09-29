@@ -134,6 +134,52 @@ static func in_hit_cone(
 
 ## Convenience for the common case: read reach and arc from a move's config
 ## block, so callers do not each re-read the same two keys.
+## Owner playtest 2026-09-29 ("combat seemed a little slow"): the authored
+## timings of a player move scaled by combat.json `player_pace`, and the charged
+## attack's arc widened by its bonus. Pure; `block` is "player_quick" or
+## "player_charged". A missing block leaves the profile untouched.
+static func with_player_pace(profile: Dictionary, block: String) -> Dictionary:
+	var pace: Dictionary = config().get("player_pace", {}) as Dictionary
+	if pace.is_empty():
+		return profile
+	var scaled := profile.duplicate(true)
+	for pair in [["windup", "windup_scale"], ["recovery", "recovery_scale"], ["cooldown", "cooldown_scale"]]:
+		if scaled.has(pair[0]):
+			scaled[pair[0]] = float(scaled[pair[0]]) * clampf(float(pace.get(pair[1], 1.0)), 0.3, 2.0)
+	if block == "player_charged" and scaled.has("cone_degrees"):
+		scaled["cone_degrees"] = minf(180.0, float(scaled["cone_degrees"]) + float(pace.get("charged_cone_bonus_degrees", 0.0)))
+	return scaled
+
+
+## Degrees a striker may turn toward its target just before the hit test
+## (combat.json `strike_reaim`); 0 when disabled.
+static func strike_reaim_degrees(is_quick: bool) -> float:
+	var cfg: Dictionary = config().get("strike_reaim", {}) as Dictionary
+	if not bool(cfg.get("enabled", false)):
+		return 0.0
+	return maxf(0.0, float(cfg.get("quick_max_degrees" if is_quick else "charged_max_degrees", 0.0)))
+
+
+## `facing` turned toward `target` (flat) by at most `max_degrees`. Returns the
+## input unchanged when it already faces the target, either vector is flat-zero,
+## or `max_degrees` is 0.
+static func reaimed_facing(origin: Vector3, facing: Vector3, target: Vector3, max_degrees: float) -> Vector3:
+	var aim := Vector3(facing.x, 0.0, facing.z)
+	var to := Vector3(target.x - origin.x, 0.0, target.z - origin.z)
+	if max_degrees <= 0.0 or aim.length() < 0.001 or to.length() < 0.001:
+		return facing
+	aim = aim.normalized()
+	to = to.normalized()
+	var angle := aim.angle_to(to)
+	if angle <= 0.0001:
+		return facing
+	var limit := deg_to_rad(max_degrees)
+	if angle <= limit:
+		return to
+	var turn_sign := 1.0 if aim.cross(to).y >= 0.0 else -1.0
+	return aim.rotated(Vector3.UP, turn_sign * limit)
+
+
 static func move_connects(move: Dictionary, origin: Vector3, facing: Vector3, target: Vector3) -> bool:
 	return in_hit_cone(
 		origin, facing, target,
