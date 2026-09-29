@@ -75,6 +75,8 @@ func _run() -> void:
 			_frames = maxi(1, int(arg.trim_prefix("--frames=")))
 		elif arg.begins_with("--interval="):
 			_interval = maxf(0.1, float(arg.trim_prefix("--interval=")))
+		elif arg == "--lens-probe":
+			_lens_probe = true
 		elif arg == "--resolve=won":
 			_resolve_won = true
 		elif arg == "--face-trainer":
@@ -125,6 +127,35 @@ func _save(tag: String) -> void:
 	root.get_texture().get_image().save_png(path)
 	print("frame %s fighting=%s panel=%s" % [path, str(_manager.call("is_fighting")),
 		str(_panel.call("is_open"))])
+	if _lens_probe:
+		_log_lens(tag)
+
+
+## `--lens-probe` (diagnostic): after each frame, log the lens position and
+## every render mesh whose world bounds contain it, so a frame drawn from inside
+## geometry names that geometry (judge r4: Warden frames inside stone).
+var _lens_probe := false
+
+
+func _log_lens(tag: String) -> void:
+	var camera := root.get_camera_3d()
+	if camera == null:
+		return
+	var lens := camera.global_position
+	var inside: Array[String] = []
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		if mesh == null or not mesh.is_visible_in_tree() or mesh.mesh == null:
+			continue
+		var box := mesh.global_transform * mesh.get_aabb()
+		# Horizon ranges and terrain sheets contain every point; not what we want.
+		if box.size.x > 40.0 or box.size.z > 40.0:
+			continue
+		if box.grow(0.05).has_point(lens):
+			inside.append("%s (%s)" % [str(mesh.get_path()).trim_prefix("/root/"), str(box.size.snapped(Vector3.ONE * 0.01))])
+		if inside.size() >= 8:
+			break
+	print("lens %s at (%.2f,%.2f,%.2f) inside %d: %s" % [tag, lens.x, lens.y, lens.z, inside.size(), "; ".join(inside)])
 
 
 func _wait_interval() -> void:
@@ -208,7 +239,13 @@ func _cap_dodge_stick() -> Vector2:
 	# A CHARGER's travelling lunge runs down its locked lane, so backing away
 	# stays on it; the answer a player is taught is to step off it sideways,
 	# toward whichever side the creature already stands.
+	# `_lunge_heading` is only set when the lunge begins, so during the
+	# wind-up it is empty or the previous lunge's; the creature already
+	# faces down the lane it is about to take.
 	var lane: Variant = foe.get("_lunge_heading")
+	if foe.has_method("lunge_travels") and bool(foe.call("lunge_travels")) \
+			and foe.has_method("facing"):
+		lane = foe.call("facing")
 	if lane is Vector3 and (lane as Vector3).length() > 0.01:
 		var heading := Vector3((lane as Vector3).x, 0.0, (lane as Vector3).z).normalized()
 		var side := Vector3(-heading.z, 0.0, heading.x)

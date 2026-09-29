@@ -1,0 +1,11 @@
+{
+  "wrapper_sha256": "f03ab1ea5534379957a49d53c6ecaea8b4d146dd6d0123bf80ffb07e1b1bbed2",
+  "output": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\p2008-bluff-noise03",
+  "lock_touched": false,
+  "engine_launched": false,
+  "appdata": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\bluff-noise03-appdata",
+  "source_diff_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "static_preflight": "PASS",
+  "source_commit": "45c737025aec8d890270640d9fb2f279e9f7f5f2",
+  "required_frames": 2
+}

@@ -719,6 +719,7 @@ func launch_assist_diagnostics() -> Dictionary:
 	query.collide_with_areas = false
 	# The same exclusions the orb itself flies with -- see `_sight_exclusions()`.
 	query.exclude = _sight_exclusions()
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	var collider := hit.get("collider") as Node
 	if collider != null:
@@ -757,6 +758,7 @@ func _target_is_visible(eye: Vector3, centre: Vector3) -> bool:
 	var query := PhysicsRayQueryParameters3D.create(eye, centre)
 	query.collide_with_areas = false
 	query.exclude = _sight_exclusions()
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return true
@@ -1002,6 +1004,7 @@ static func _terrain_blocks(space: PhysicsDirectSpaceState3D, exclude: Array[RID
 		var query := PhysicsRayQueryParameters3D.create(from, to)
 		query.collide_with_areas = false
 		query.exclude = skip
+		query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 		var hit := space.intersect_ray(query)
 		if hit.is_empty():
 			return false
@@ -1029,6 +1032,7 @@ static func surface_aim_point(
 	var query := PhysicsRayQueryParameters3D.create(eye, far)
 	query.collide_with_areas = false
 	query.exclude = exclude
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
 		return far

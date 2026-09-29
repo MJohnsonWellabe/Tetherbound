@@ -1,0 +1,10 @@
+MEADOWS_C2C3 captain_riverwatch terrapup MASHER L12 runs=24 win=0.00 med_lead=1.000 lead_faint=1.00 wipe=1.00 max_hit=0.447 tell=[0.80,0.90] diver_tell=-1.00 med_s=101.2 stalled=0
+MEADOWS_C2C3 captain_riverwatch terrapup READER L12 runs=24 win=1.00 med_lead=0.539 lead_faint=0.04 wipe=0.00 max_hit=0.244 tell=[0.80,0.90] diver_tell=-1.00 med_s=201.2 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch terrapup PASS
+MEADOWS_C2C3 captain_riverwatch ripplet MASHER L12 runs=24 win=0.46 med_lead=1.000 lead_faint=1.00 wipe=0.54 max_hit=0.446 tell=[0.80,0.90] diver_tell=-1.00 med_s=95.9 stalled=0
+MEADOWS_C2C3 captain_riverwatch ripplet READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.90] diver_tell=-1.00 med_s=142.0 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch ripplet PASS
+MEADOWS_C2C3 captain_riverwatch galewisp MASHER L12 runs=24 win=0.67 med_lead=1.000 lead_faint=1.00 wipe=0.33 max_hit=0.433 tell=[0.80,0.90] diver_tell=-1.00 med_s=97.2 stalled=0
+MEADOWS_C2C3 captain_riverwatch galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.90] diver_tell=-1.00 med_s=161.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch galewisp PASS
+MEADOWS_C2C3 done: 3 rows, 0 failing rows, 144 runs, 0 errors

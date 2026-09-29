@@ -107,3 +107,70 @@ func test_shader_declares_every_state_uniform() -> void:
 	var code := FileAccess.get_file_as_string("res://shaders/water_current_flow.gdshader")
 	for key: String in MATERIAL_RATIOS.keys() + ["calm_scale", "min_speed_m_s"]:
 		assert_true(code.contains("uniform float " + key), "shader declares " + key)
+
+
+func test_visual_gate_preserves_ribbon_flow_inputs_and_live_state() -> void:
+	var flags := Flags.new()
+	var source_world := _world()
+	var source_config := _config()
+	var original_world := source_world.duplicate(true)
+	var original_config := source_config.duplicate(true)
+	var view := VIEW.new()
+	view.build(source_world, source_config, flags)
+	view.apply_visual_settings({})
+	var material := view.material_override as ShaderMaterial
+	assert_false(bool(material.get_shader_parameter("visual_groups_enabled")), "missing flag preserves old path")
+	var original_mesh := view.mesh
+	var original_arrays := view.mesh.surface_get_arrays(0)
+	var live: Dictionary = view.state_parameters(false)
+	var candidate := {"enabled": true, "shader": {
+		"visual_density": 0.57, "opacity": 0.0, "speed_scale": 99.0,
+		"depth_pull_fraction": 0.5}}
+	var original_candidate := candidate.duplicate(true)
+	view.apply_visual_settings(candidate)
+	assert_true(bool(material.get_shader_parameter("visual_groups_enabled")))
+	assert_almost_eq(_uniform(view, "visual_density"), 0.57)
+	for key: String in MATERIAL_RATIOS:
+		assert_almost_eq(_uniform(view, key), float(live[key]), 0.0001,
+			"visual settings cannot overwrite existing state uniform " + key)
+	assert_almost_eq(_uniform(view, "depth_pull_fraction"), float(source_config.shader.depth_pull_fraction))
+	assert_eq(view.mesh, original_mesh, "visual gate never rebuilds the route ribbon")
+	var candidate_arrays := view.mesh.surface_get_arrays(0)
+	assert_eq(candidate_arrays[Mesh.ARRAY_VERTEX], original_arrays[Mesh.ARRAY_VERTEX])
+	assert_eq(candidate_arrays[Mesh.ARRAY_COLOR], original_arrays[Mesh.ARRAY_COLOR],
+		"encoded physics direction and strength remain exact")
+	assert_eq(candidate_arrays[Mesh.ARRAY_TEX_UV], original_arrays[Mesh.ARRAY_TEX_UV])
+	assert_eq(source_world, original_world)
+	assert_eq(source_config, original_config)
+	assert_eq(candidate, original_candidate)
+	assert_eq(flags.ids, {}, "presentation never writes world state")
+	view.apply_visual_settings({"enabled": false})
+	assert_false(bool(material.get_shader_parameter("visual_groups_enabled")))
+	view.free()
+
+
+func test_candidate_keeps_existing_restoration_and_rebuild_response() -> void:
+	var settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VIEW.VISUAL_CONFIG))
+	settings.enabled = true
+	var flags := Flags.new()
+	var view := VIEW.new()
+	view.build(_world(), _config(), flags)
+	view.apply_visual_settings(settings)
+	for restored: bool in [true, false, true]:
+		flags.set_flag(FLAG, restored)
+		view._refresh(false)
+		var material := view.material_override as ShaderMaterial
+		assert_true(bool(material.get_shader_parameter("visual_groups_enabled")), "state change preserves local gate")
+		var expected: Dictionary = view.state_parameters(restored)
+		for key: String in MATERIAL_RATIOS.keys() + ["calm_scale", "min_speed_m_s", "comet_opacity"]:
+			assert_almost_eq(_uniform(view, key), float(expected[key]), 0.0001,
+				"candidate still uses production restoration value " + key)
+	var rebuilt := VIEW.new()
+	rebuilt.build(_world(), _config(), flags)
+	rebuilt.apply_visual_settings(settings)
+	assert_true(rebuilt.is_restored_look())
+	for key: String in VIEW.VISUAL_UNIFORMS:
+		assert_almost_eq(_uniform(rebuilt, key), _uniform(view, key))
+	assert_eq(flags.ids, {FLAG: true}, "build and visual adapter do not write flags")
+	view.free()
+	rebuilt.free()

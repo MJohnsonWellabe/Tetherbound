@@ -1,0 +1,212 @@
+extends "res://tools/phase2_capture_locations.gd"
+
+const REVIEW := "res://.artifacts/phase2/colony06-review.json"
+const PACK := "res://.artifacts/phase2/dune05-runtime.zip"
+const GRASS_SHADER := "res://shaders/grass_field.gdshader"
+const GRASS_SCRIPT := "res://scripts/world/grass_field.gd"
+const IDENTITIES := ["water__gull_rest__20__gull_rest_beach", "water__sluice_isle__13__sluice_isle_twin_pumps", "water__first_shore__01__first_shore_welcome_beacon"]
+const PARAMETERS := ["dune_colony_shape", "dune_tussock", "density_gain", "clump_scale", "clump_contrast", "clump_patch_start", "clump_patch_full", "dune_gap_scale", "dune_gap_warp_scale", "dune_gap_warp_m", "dune_gap_start", "dune_gap_full", "dune_pioneer_start", "dune_pioneer_probability", "dune_shore_probability", "dune_shore_dry_start_y", "dune_shore_dry_full_y", "dune_stabilized_height_y", "blade_arc_angle", "blade_width", "height_near", "height_far", "height_jitter", "bend", "shade_jitter", "ground_blend", "translucency"]
+var _review: Dictionary = {}
+var _shader: Shader
+var _original_code := ""
+var _baseline_code := ""
+var _candidate_code := ""
+var _variant := "baseline"
+var _pairs: Dictionary = {}
+var _last_grass: Dictionary = {}
+var _fixed_pitch := 0.0
+
+func _init() -> void:
+	_review = JSON.parse_string(FileAccess.get_file_as_string(REVIEW))
+	if _review.is_empty():
+		_abort_init("review metadata unavailable")
+		return
+	for path: String in _review.source_anchors:
+		if FileAccess.get_sha256("res://" + path) != str(_review.source_anchors[path]):
+			_abort_init("production source anchor changed: " + path)
+			return
+	for path: String in _review.production_gates:
+		var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://" + path))
+		if bool(config.get("enabled", true)) or FileAccess.get_sha256("res://" + path) != str(_review.production_gates[path].sha256):
+			_abort_init("production gate/hash changed: " + path)
+			return
+	_baseline_code = FileAccess.get_file_as_string("res://.artifacts/phase2/colony06-baseline.gdshader.txt").replace("\r\n", "\n")
+	_candidate_code = FileAccess.get_file_as_string("res://.artifacts/phase2/colony06-candidate.gdshader.txt").replace("\r\n", "\n")
+	if _baseline_code.sha256_text() != str(_review.baseline_text_sha256) or _candidate_code.sha256_text() != str(_review.candidate_text_sha256):
+		_abort_init("reviewed shader text hash mismatch")
+		return
+	if FileAccess.get_sha256(PACK) != str(_review.pack_sha256):
+		_abort_init("05 config-only pack hash mismatch")
+		return
+	_shader = load(GRASS_SHADER) as Shader
+	if _shader == null or _shader.code.replace("\r\n", "\n") != _baseline_code:
+		_abort_init("cached production shader is not reviewed baseline")
+		return
+	_original_code = _shader.code
+	if not ProjectSettings.load_resource_pack(PACK, true):
+		_abort_init("05 config pack refused")
+		return
+	# Explicit parent init schedules the inherited one-boot capture loop.
+	super()
+
+func _abort_init(message: String) -> void:
+	push_error("COLONY06: " + message)
+	quit(1)
+
+func _parse_args() -> bool:
+	if not super._parse_args():
+		return false
+	return _biome_id == "water" and _times == ["day"] and _views == ["close"] and _seed == 2042
+
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	var originals := _planned.duplicate(true)
+	_planned.clear()
+	for identity: String in IDENTITIES:
+		var found: Array = originals.filter(func(row: Dictionary) -> bool: return str(row.identity) == identity)
+		if found.size() != 1:
+			push_error("COLONY06 exact catalogue identity missing/duplicated: " + identity)
+			return false
+		for variant: String in ["baseline", "candidate"]:
+			var row: Dictionary = found[0].duplicate(true)
+			row["variant"] = variant
+			row["frame_id"] = str(row.frame_id) + "__" + variant
+			_planned.append(row)
+	return _planned.size() == 6
+
+func _begin_manifest() -> void:
+	super._begin_manifest()
+	_manifest["colony06"] = {"review": _review, "wrapper_sha256": FileAccess.get_sha256(get_script().resource_path), "mechanism": "05 two-config process pack, same cached grass Shader resource code switched per pair", "scope": "six-frame diagnostic only; no visual or performance acceptance", "live_gates": {}}
+	for path: String in _review.production_gates:
+		_manifest.colony06.live_gates[path] = JSON.parse_string(FileAccess.get_file_as_string("res://" + path))
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	_fixed_pitch = float(_rig.get("pitch"))
+	if root.size != Vector2i(1920, 1080):
+		_failures.append("COLONY06 native viewport must be exactly 1920x1080")
+		return false
+	return true
+
+func _capture_row(row: Dictionary) -> void:
+	# Parent loop visits remaining rows, but no work occurs after first failure.
+	if not _failures.is_empty():
+		return
+	_variant = str(row.variant)
+	_shader.code = _candidate_code if _variant == "candidate" else _baseline_code
+	row["camera_pitch_deg"] = rad_to_deg(_fixed_pitch)
+	if _variant == "candidate":
+		if not _pairs.has(str(row.identity)):
+			_failures.append("COLONY06 refuses candidate without verified baseline")
+			return
+		var baseline: Dictionary = _pairs[str(row.identity)]
+		row["stand_offsets_m"] = [baseline.selected_stand_offset_m]
+		row["stand_laterals_m"] = [baseline.selected_stand_lateral_m]
+	var before := _records.size()
+	await super._capture_row(row)
+	if _records.size() != before + 1 or not _failures.is_empty():
+		if _failures.is_empty():
+			_failures.append("COLONY06 expected exactly one frame")
+		return
+	var record: Dictionary = _records.back()
+	record["grass_verification"] = _last_grass.duplicate(true)
+	if _variant == "baseline":
+		_pairs[str(row.identity)] = record.duplicate(true)
+	else:
+		var baseline: Dictionary = _pairs[str(row.identity)]
+		for key: String in ["selected_stand_xz", "selected_stand_offset_m", "selected_stand_lateral_m", "terrain_ground_y"]:
+			if record[key] != baseline[key]:
+				_failures.append("COLONY06 pair stand mismatch: " + key)
+		if JSON.stringify(record.grass_verification.geometry) != JSON.stringify(baseline.grass_verification.geometry) or JSON.stringify(record.grass_verification.parameters) != JSON.stringify(baseline.grass_verification.parameters):
+			_failures.append("COLONY06 pair geometry/material parameters changed")
+		var observed_camera: Dictionary = record.grass_verification.camera
+		var baseline_camera: Dictionary = baseline.grass_verification.camera
+		for key: String in ["fov", "projection", "keep_aspect"]:
+			if observed_camera[key] != baseline_camera[key]:
+				_failures.append("COLONY06 pair camera projection changed: " + key)
+		# Component tolerance is numerical only; this is not an art tolerance.
+		for axis: String in ["basis_x", "basis_y", "basis_z"]:
+			for component: int in range(3):
+				if absf(float(observed_camera.transform[axis][component]) - float(baseline_camera.transform[axis][component])) > 0.000001:
+					_failures.append("COLONY06 pair camera basis delta exceeds 1e-6: " + axis)
+		var observed_origin: Array = observed_camera.transform.origin
+		var baseline_origin: Array = baseline_camera.transform.origin
+		if Vector3(observed_origin[0], observed_origin[1], observed_origin[2]).distance_to(Vector3(baseline_origin[0], baseline_origin[1], baseline_origin[2])) > 0.05:
+			_failures.append("COLONY06 verified camera moved more than 5cm")
+		for key: String in ["player_position", "camera_position"]:
+			var a: Array = record[key]
+			var b: Array = baseline[key]
+			if Vector3(a[0], a[1], a[2]).distance_to(Vector3(b[0], b[1], b[2])) > 0.05:
+				_failures.append("COLONY06 pair moved more than 5cm: " + key)
+	_write_manifest()
+
+func _capture_settled_failure(at: Vector2, row: Dictionary, spec: Dictionary) -> String:
+	var failure := super._capture_settled_failure(at, row, spec)
+	if not failure.is_empty():
+		return failure
+	return _verify_grass()
+
+func _verify_grass() -> String:
+	var fields: Array[Node] = []
+	for node: Node in _world.find_children("*", "MultiMeshInstance3D", true, false):
+		if node.get_script() != null and str(node.get_script().resource_path) == GRASS_SCRIPT:
+			fields.append(node)
+	if fields.size() != 1:
+		return "COLONY06 expected exactly one live GrassField"
+	var field: Node = fields[0]
+	var mat := field.get("_material") as ShaderMaterial
+	if mat == null or mat.shader != _shader or field.get("material_override") != mat:
+		return "COLONY06 cached shader/live GrassField material identity mismatch"
+	var wanted := str(_review.candidate_text_sha256) if _variant == "candidate" else str(_review.baseline_text_sha256)
+	if mat.shader.code.replace("\r\n", "\n").sha256_text() != wanted:
+		return "COLONY06 live shader hash mismatch"
+	var params := {}
+	var expected: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_dune_cover.json")).ground_cover
+	for key: String in PARAMETERS:
+		params[key] = mat.get_shader_parameter(key)
+		if not expected.has(key) or params[key] == null:
+			return "COLONY06 required 05 parameter unavailable: " + key
+		if expected[key] is bool:
+			if params[key] != expected[key]:
+				return "COLONY06 05 boolean mismatch: " + key
+		elif not is_equal_approx(float(params[key]), float(expected[key])):
+			return "COLONY06 05 numeric parameter mismatch: " + key
+	var active: Dictionary = field.call("_active_config")
+	for key: String in ["tuft_count", "blades_per_tuft", "blade_segments"]:
+		if int(active.get(key, -1)) != int(expected.get(key, -2)):
+			return "COLONY06 05 geometry config mismatch: " + key
+	if params.dune_colony_shape != true or params.dune_tussock != true or not is_equal_approx(float(params.clump_contrast), 1.0):
+		return "COLONY06 live 05 dune parameters absent"
+	var shift: Variant = null
+	if _variant == "candidate":
+		shift = mat.get_shader_parameter("dune_coastal_colony_shift")
+		if shift == null:
+			shift = RenderingServer.shader_get_parameter_default(mat.shader.get_rid(), "dune_coastal_colony_shift")
+		if shift == null or not is_equal_approx(float(shift), float(_review.expected_uniform)):
+			return "COLONY06 live .18 uniform default mismatch"
+	var geometry: Array = []
+	var instances := 0
+	var nodes: Array[Node] = [field]
+	nodes.append_array(field.find_children("*", "MultiMeshInstance3D", true, false))
+	for node: Node in nodes:
+		var mm: MultiMesh = node.get("multimesh")
+		if mm != null and node.get("material_override") == mat:
+			instances += mm.instance_count
+			geometry.append({"node": str(node.get_path()), "multimesh_id": mm.get_instance_id(), "mesh_id": mm.mesh.get_instance_id(), "instances": mm.instance_count})
+	if instances <= 0 or instances != int(field.get("_ring_instances")):
+		return "COLONY06 grass geometry missing or count mismatch"
+	# Snapshot at the settled/draw verification, independent of parent record fields.
+	var observed_camera := {"transform": _transform(_camera.global_transform), "fov": _camera.fov, "projection": _camera.projection, "keep_aspect": _camera.keep_aspect, "basis_component_tolerance": 0.000001, "position_tolerance_m": 0.05}
+	_last_grass = {"field_path": str(field.get_path()), "material_id": mat.get_instance_id(), "shader_id": mat.shader.get_instance_id(), "shader_path": mat.shader.resource_path, "shader_text_sha256": wanted, "parameters": params, "coastal_shift_effective": shift, "geometry": geometry, "active_config": active, "camera": observed_camera}
+	return ""
+
+func _finish(complete: bool) -> void:
+	if _shader != null and not _original_code.is_empty():
+		_shader.code = _original_code
+		_manifest["restored_shader_text_sha256"] = _shader.code.replace("\r\n", "\n").sha256_text()
+		if _manifest.restored_shader_text_sha256 != str(_review.baseline_text_sha256):
+			_failures.append("COLONY06 shader restore verification failed")
+			complete = false
+	super._finish(complete and _records.size() == 6 and _failures.is_empty())

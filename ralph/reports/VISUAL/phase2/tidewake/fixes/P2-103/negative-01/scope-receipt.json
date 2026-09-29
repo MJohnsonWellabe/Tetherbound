@@ -1,0 +1,60 @@
+{
+  "source_head": "471baef4c7d9f44fc1f778b8e4e47a4202d4e3f2",
+  "source_completeness": {
+    "complete": true,
+    "review_base_commit": "1f3e6397e52e186eb98c22eade58ef4303728bee",
+    "checks": [
+      {
+        "path": "tests/capture_tidewake_named_fights.gd",
+        "exists": true,
+        "missing_anchors": [],
+        "expected_lf_sha256": "8e37bf64d6628ff19e2e3890fad598547f5a00d5c9b98dc38ee83707da6aec6a",
+        "actual_lf_sha256": "8e37bf64d6628ff19e2e3890fad598547f5a00d5c9b98dc38ee83707da6aec6a",
+        "hash_matches": true
+      },
+      {
+        "path": "tests/test_phase2_fight_capture_lifecycle.gd",
+        "exists": true,
+        "missing_anchors": [],
+        "expected_lf_sha256": "246c921ab6a86a0a95382a1763dd21c06486a1488c30f4226ee127fe1b6f11b4",
+        "actual_lf_sha256": "246c921ab6a86a0a95382a1763dd21c06486a1488c30f4226ee127fe1b6f11b4",
+        "hash_matches": true
+      },
+      {
+        "path": "tools/phase2_capture_tidewake_fights.gd",
+        "exists": true,
+        "missing_anchors": [],
+        "expected_lf_sha256": "d67add54b299171945c51b15f7bd361a2758070e5c4f9143bd39886737350d26",
+        "actual_lf_sha256": "d67add54b299171945c51b15f7bd361a2758070e5c4f9143bd39886737350d26",
+        "hash_matches": true
+      }
+    ]
+  },
+  "scoped_source_sha256": {
+    "tests/capture_tidewake_named_fights.gd": "8E37BF64D6628FF19E2E3890FAD598547F5A00D5C9B98DC38EE83707DA6AEC6A",
+    "tools/phase2_capture_tidewake_fights.gd": "D67ADD54B299171945C51B15F7BD361A2758070E5C4F9143BD39886737350D26",
+    "tests/test_phase2_fight_capture_lifecycle.gd": "246C921AB6A86A0A95382A1763DD21C06486A1488C30F4226EE127FE1B6F11B4",
+    "tools/gate_f/fight_victory_receipt.gd": "93934FBAC004AF53B1E4ADE0BC9C0810DC6ACD4A99BBCA80B66E6A8303D6BF39",
+    "scripts/ui/playground_hud.gd": "1CF4C794A272B8810D927330DC3392699131E8F09DECCCD42636C401F9DD9E43",
+    "scripts/ui/dialogue_panel.gd": "405F8F19898D78F99FE4B01A8094D195C04473BE22EF3E7BC3EFDACD469B898C",
+    "scripts/story/dialogue_runner.gd": "2167CE70D4EA090B86861724C8CCDA1EC637828926EC08270D8F57BD65CD1676",
+    "scripts/creatures/progression_feed.gd": "2821EE35183B4196E07F6D4F517B3D74958F5447559CA13C0C4D13FE0CAF5D4B",
+    "data/config/progression_feedback.json": "3AB4BA836B2DFC93483749B000297C595107A8DEAC57AE2262D14AA3796FA8DC",
+    "data/config/victory_hierarchy_visual.json": "54313443483A369CF5AE5234E4FE0D55457E2C33DD1EC34958341922DC0AB1D6",
+    "scripts/combat/combat_manager.gd": "0E6B0AFB714E5D8748DA780898FB5D37C2983C0BDB930873F3928BE2C94D30AE",
+    "scripts/combat/encounter_director.gd": "B5B0A6195FBA3386ACAC1C0A8F43EB259E865A9F1785A38A51786FB46CC4B06C",
+    "scripts/combat/cloudreach_encounter_director.gd": "441008395F68E6D2A655CBE13A1914E3E3387F417CFFD6488C04F7A17C08B704",
+    "scripts/combat/water_encounter_director.gd": "9209CC8E5D3E09C9BCCABA1C8B2723CEEB644CA87C87B460FC7DC9D951FDB2F3",
+    "data/config/water_characters.json": "DD33E3149325CA487BD55D95BA9B3B85D02DB6DC16DD3C1D7E27B91B6687CEA7",
+    "data/config/water_veilfall.json": "C767644899C8AD9A5138F994CDCC0817D009BECCFD127F81313A0D38BD6D03B4",
+    "data/config/camera.json": "6A29BA9FA9B55A8D6B9F2ABF69031E96D841E7E2B26742813396BE082FB1B505",
+    "data/config/combat.json": "1966A80D2F3D8CDB1C15611DC71DBEA2127F2C657F70EC092AC990387C023BA5",
+    "scenes/world/water_archipelago.tscn": "366399BEFF3D93A6EE958FAECE7039BFBEAA971C8CCBB0DCB6AFACFC24F08A81"
+  },
+  "launcher_sha256": "5E18C90872B6AA05C54ADD3ED914DB56755B7A83910A5103FFF14C98953E9AA2",
+  "wrapper_sha256": "AA9CD0B4F3B6BA3C0A58A4DA5A3023FDFABEB6CDDA0C383429974EE9DFB69B15",
+  "proposal_sha256": "88221C38CB81A9DBA57A36CC447B3CE805914B0D1AC64817AE6472045853799A",
+  "negative_only": true,
+  "receipt_kind": "prelaunch_source_snapshot",
+  "engine_launched_at_snapshot": false
+}

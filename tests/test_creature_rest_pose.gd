@@ -25,17 +25,24 @@ extends "res://tests/test_case.gd"
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
+const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
+const WATER_REST_IDS := ["riptusk", "torrentoad", "water_riptusk", "water_torrentoad"]
+
+var _rest_visual_config_before: Dictionary = {}
 
 var _root: Node3D = null
 var _body: Node3D = null
 
 
 func before_each() -> void:
+	_rest_visual_config_before = REST_VISUAL._config.duplicate(true)
 	_root = Node3D.new()
 	_root.name = "World"
 
 
 func after_each() -> void:
+	REST_VISUAL._config = _rest_visual_config_before
 	if _root != null and is_instance_valid(_root):
 		_root.free()
 	_root = null
@@ -357,3 +364,182 @@ func test_galecrest_zero_roll_keeps_its_existing_faint_only_path() -> void:
 		var expected := str(SPECIES.placeholder("galecrest").get("animations", {}).get("faint", ""))
 		assert_eq((players[0] as AnimationPlayer).current_animation, expected,
 			"Galecrest still rests in its authored faint clip")
+
+
+func test_water_rest_candidate_gate_preserves_legacy_roll_for_all_four_ids() -> void:
+	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(REST_VISUAL.CONFIG_PATH))
+	assert_false(bool(shipped.get("enabled", true)), "the installed candidate gate is off")
+	REST_VISUAL._config = {"enabled": false}
+	for id: String in WATER_REST_IDS:
+		var source := SPECIES.placeholder(id).duplicate(true)
+		assert_eq(REST_VISUAL.resolve(id, SPECIES.placeholder(id)), source)
+		_body = _make_body(id)
+		_body.call("play_rest")
+		assert_false(bool(_body.call("rest_pose_pending")), id + " retains immediate legacy roll")
+		assert_eq(str((_body.call("rest_pose_receipt") as Dictionary).config.mode), "roll")
+		assert_almost_eq(_pivot().rotation.z, deg_to_rad(CREATURE_BODY.DEFAULT_REST_ROLL_DEG), 0.001)
+		assert_eq(SPECIES.placeholder(id), source, "presentation cannot write the catalogue")
+		_body.free()
+		_body = null
+
+
+func test_water_rest_candidate_rejects_other_species_models_and_existing_recipes() -> void:
+	REST_VISUAL._config = {"enabled": true}
+	for id: String in ["mudsnout", "terrapup", "galecrest", "tuskroot", "ripplet", "water_aquaryn"]:
+		var source := SPECIES.placeholder(id).duplicate(true)
+		assert_eq(REST_VISUAL.resolve(id, source), source, id + " is outside the candidate")
+	var mismatched := SPECIES.placeholder("riptusk").duplicate(true)
+	mismatched["model"] = SPECIES.placeholder("torrentoad").model
+	assert_eq(REST_VISUAL.resolve("riptusk", mismatched), mismatched, "exact model binding is required")
+	var authored := SPECIES.placeholder("riptusk").duplicate(true)
+	authored["rest_pose"] = {"clip_role": "rest", "bones": {"root": {}}}
+	assert_eq(REST_VISUAL.resolve("riptusk", authored), authored, "future authored recipes retain priority")
+	_body = _make_body("mudsnout")
+	_body.call("play_rest")
+	assert_eq(str((_body.call("rest_pose_receipt") as Dictionary).config.mode), "roll")
+	assert_almost_eq(_pivot().rotation.z, deg_to_rad(CREATURE_BODY.DEFAULT_REST_ROLL_DEG), 0.001)
+
+
+func _complete_water_rest_endpoint() -> void:
+	var player := _body.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
+	assert_eq(str(player.current_animation), "faint", "candidate uses the installed clip")
+	player.seek(player.current_animation_length, true)
+	var rig := _skeleton()
+	var endpoint: Array[Transform3D] = []
+	for index in rig.get_bone_count():
+		endpoint.append(rig.get_bone_pose(index))
+	_body.call("_on_rest_animation_finished", &"faint")
+	assert_true(bool(_body.call("rest_pose_active")))
+	assert_false(bool(_body.call("rest_pose_pending")))
+	for index in rig.get_bone_count():
+		assert_true(rig.get_bone_pose(index).is_equal_approx(endpoint[index]),
+			"recipe retains every bone of the completed installed endpoint")
+
+
+func test_water_rest_candidate_endpoint_is_unmodified_idempotent_and_reversible() -> void:
+	REST_VISUAL._config = {"enabled": true}
+	for id: String in WATER_REST_IDS:
+		var source := SPECIES.placeholder(id).duplicate(true)
+		_body = _make_body(id)
+		var pivot_before := _pivot().transform
+		var body_before := _body.transform
+		var collision := _body.get_node("Collision") as CollisionShape3D
+		var shape := collision.shape as CapsuleShape3D
+		var dimensions := Vector2(shape.radius, shape.height)
+		var collision_before := collision.transform
+		var masks := Vector2i(int(_body.get("collision_layer")), int(_body.get("collision_mask")))
+		var root_index := _skeleton().find_bone("root")
+		var root_before := _skeleton().get_bone_pose(root_index)
+		var meshes := {}
+		for node: Node in _pivot().find_children("*", "MeshInstance3D", true, false):
+			meshes[node] = (node as MeshInstance3D).mesh
+		_body.call("play_rest")
+		assert_true(bool(_body.call("rest_pose_pending")), id + " waits for the authored endpoint")
+		_body.call("play_rest")
+		assert_true(_pivot().transform.is_equal_approx(pivot_before), "pending rest adds no model roll")
+		_complete_water_rest_endpoint()
+		_body.call("play_rest")
+		assert_false(bool(_body.call("rest_pose_pending")), "repeated rest does not restart the clip")
+		assert_true(_pivot().transform.is_equal_approx(pivot_before), "completed rest adds no model transform")
+		assert_true(_body.transform.is_equal_approx(body_before))
+		assert_true(collision.shape == shape and collision.transform.is_equal_approx(collision_before))
+		assert_eq(Vector2(shape.radius, shape.height), dimensions, "collider dimensions remain exact")
+		assert_eq(Vector2i(int(_body.get("collision_layer")), int(_body.get("collision_mask"))), masks)
+		for node: Variant in meshes:
+			assert_true((node as MeshInstance3D).mesh == meshes[node], "no replacement or resized mesh")
+		assert_eq(SPECIES.placeholder(id), source, "catalogue and gameplay dimensions remain unchanged")
+		_body.call("stop_rest")
+		assert_false(bool(_body.call("rest_pose_active")))
+		assert_true(_pivot().transform.is_equal_approx(pivot_before))
+		assert_true(_skeleton().get_bone_pose(root_index).is_equal_approx(root_before))
+		var animator: RefCounted = _body.get("_animator")
+		assert_false(bool(animator.get("_finished")), "rest exit releases terminal animation hold")
+		_body.call("play_rest")
+		assert_true(bool(_body.call("rest_pose_pending")))
+		_body.call("request_move", Vector3.RIGHT)
+		assert_false(bool(_body.call("rest_pose_pending")), "movement also cancels an unfinished rest")
+		assert_false(bool(_body.call("rest_pose_active")))
+		assert_true(_pivot().transform.is_equal_approx(pivot_before))
+		assert_false(bool(animator.get("_finished")))
+		_body.free()
+		_body = null
+
+
+func test_water_companion_settle_uses_and_releases_the_same_candidate() -> void:
+	REST_VISUAL._config = {"enabled": true}
+	for id: String in WATER_REST_IDS:
+		_body = _make_body(id)
+		var pivot_before := _pivot().transform
+		var presence := PRESENCE.new()
+		_root.add_child(presence)
+		presence.setup(_body, {"camp": {"settle_seconds": 0.0, "anim_speed_scale": 0.5}})
+		presence.call("_resolve_model")
+		presence.set("_camp_near", true)
+		presence.call("_drive_continuous", 0.1)
+		assert_true(bool(presence.get("_body_rest_held")), id + " shares CreatureBody's recipe")
+		assert_almost_eq(float(presence.call("anim_speed_scale")), 0.5, 0.0001, "camp playback uses its existing half-speed")
+		assert_true(bool(_body.call("rest_pose_pending")))
+		assert_true(_pivot().transform.is_equal_approx(pivot_before), "no companion fractional roll")
+		_complete_water_rest_endpoint()
+		presence.call("_drive_continuous", 0.1)
+		assert_false(bool(_body.call("rest_pose_pending")), "continued camp rest cannot restart the endpoint")
+		presence.set("_camp_near", false)
+		presence.call("_drive_continuous", 0.1)
+		assert_false(bool(presence.get("_body_rest_held")))
+		assert_almost_eq(float(presence.call("anim_speed_scale")), 1.0, 0.0001, "camp exit restores ordinary playback speed")
+		assert_false(bool(_body.call("rest_pose_active")), "leaving camp releases rest")
+		assert_true(_pivot().transform.is_equal_approx(pivot_before))
+		var animator: RefCounted = _body.get("_animator")
+		assert_false(bool(animator.get("_finished")))
+		presence.free()
+		_body.free()
+		_body = null
+
+
+func test_water_candidate_hurt_to_camp_and_resume_restores_pose_boundaries() -> void:
+	REST_VISUAL._config = {"enabled": true}
+	for id: String in WATER_REST_IDS:
+		_body = _make_body(id)
+		var neutral := _pivot().transform
+		var presence := PRESENCE.new()
+		_root.add_child(presence)
+		presence.setup(_body, {
+			"hurt": {"body_pitch_deg": 3.0, "sink_fraction": 0.03, "anim_speed_scale": 0.78},
+			"camp": {"settle_seconds": 0.0, "anim_speed_scale": 0.5},
+		})
+		presence.call("_resolve_model")
+		presence.set("_hurt", true)
+		presence.set("_flinch_timer", 100.0)
+		presence.call("_drive_continuous", 0.1)
+		var hurt_pose := _pivot().transform
+		assert_true(bool(presence.get("_pivot_held")), "hurt must first hold the fitted pivot")
+		assert_false(hurt_pose.is_equal_approx(neutral), "fixture must establish the actual pitched/sunk hurt pose")
+		assert_almost_eq(float(presence.call("anim_speed_scale")), 0.78, 0.0001)
+		presence.set("_camp_near", true)
+		presence.call("_drive_continuous", 0.1)
+		assert_true(bool(_body.call("rest_pose_pending")))
+		assert_true(bool(presence.get("_body_rest_held")))
+		assert_false(bool(presence.get("_pivot_held")), "scoped candidate releases the procedural pivot before snapshot")
+		var rest_snapshot: Transform3D = _body.get("_rest_pose_pivot_before")
+		assert_true(rest_snapshot.is_equal_approx(neutral), "candidate snapshot excludes preceding hurt offsets")
+		assert_true(_pivot().transform.is_equal_approx(neutral))
+		assert_almost_eq(float(presence.call("anim_speed_scale")), 0.5, 0.0001)
+		_complete_water_rest_endpoint()
+		assert_true(_pivot().transform.is_equal_approx(neutral), "completed faint endpoint retains neutral fitted pivot")
+		presence.set("_camp_near", false)
+		presence.call("_drive_continuous", 0.1)
+		assert_false(bool(presence.get("_body_rest_held")))
+		assert_false(bool(_body.call("rest_pose_active")))
+		assert_false(bool(_body.call("rest_pose_pending")))
+		assert_true(_pivot().transform.is_equal_approx(hurt_pose), "hurt resumes once without accumulating offsets")
+		assert_almost_eq(float(presence.call("anim_speed_scale")), 0.78, 0.0001)
+		var animator: RefCounted = _body.get("_animator")
+		assert_false(bool(animator.get("_finished")), "camp exit releases terminal hold")
+		presence.set("_hurt", false)
+		presence.call("_drive_continuous", 0.1)
+		assert_false(bool(presence.get("_pivot_held")))
+		assert_true(_pivot().transform.is_equal_approx(neutral), "healthy resume restores the fitted pivot")
+		assert_almost_eq(float(presence.call("anim_speed_scale")), 1.0, 0.0001)
+		presence.free()
+		_body.free()
+		_body = null

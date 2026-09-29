@@ -13,6 +13,18 @@
     "pane_tint": "#6e8f96",
     "pane_opacity": 0.28
   },
+  "crown_arcade": {
+    "enabled": false,
+    "_disposition": "P2-022 paired visual FAIL: local arches do not resolve the skeletal whole-site silhouette or cold dark entry. Retain disabled. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/paired-visual-judge.md.",
+    "width_m": 8.2,
+    "post_width_m": 0.9,
+    "depth_m": 1.3,
+    "clear_height_m": 5.4,
+    "lantern_height_m": 1.4,
+    "lantern_colour": "#ffbe7b",
+    "lantern_energy": 2.2,
+    "lantern_range_m": 20.0
+  },
   "towers": {
     "_why": "Original board-backed belvederes extend the four existing drum piers above the walking routes. Open masonry arches, slate hip roofs and finials add the missing architectural silhouette; routes, gates and gameplay collision retain their dimensions.",
     "enabled": false,

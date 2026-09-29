@@ -1,0 +1,130 @@
+         [0] _build_terrain (res://scripts/world/playground_world.gd:1145)
+         [1] _ready (res://scripts/world/playground_world.gd:797)
+[playground] spawned at 0.0, 2.9, 0.0
+[playground] scattered 373499 props in 36 batches (57241 harvestable, 0 already chopped, 389/52118 collision resident)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1506)
+         [3] _ready (res://scripts/world/playground_world.gd:854)
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+         [2] _place_band_pickups (res://scripts/world/playground_world.gd:2004)
+         [3] _build_settlement (res://scripts/world/playground_world.gd:1715)
+         [4] _ready (res://scripts/world/playground_world.gd:854)
+WARNING: band pickup 'b4_candy_wind_ridge_saddle' authored at 345, 6095 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+         [2] _place_band_pickups (res://scripts/world/playground_world.gd:2004)
+         [3] _build_settlement (res://scripts/world/playground_world.gd:1715)
+         [4] _ready (res://scripts/world/playground_world.gd:854)
+[playground] placed 146 band pickups (0 already taken, 39 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] hero clearing: removed 667 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] planted 20 pieces of ground cover around the site
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+ground under relay_captain after 14 frames at y=4.57 (trainer y=3.81)
+frame res://shots/f04/relay_captain/relay_captain-00-before.png fighting=false panel=false
+challenge: settle frame 0 at 0 ms, paused=false
+challenge: settle frame 10 at 4750 ms, paused=false
+challenge: settle frame 20 at 9478 ms, paused=false
+challenge: settle frame 30 at 14182 ms, paused=false
+challenge: settle frame 40 at 23609 ms, paused=false
+challenge: settle frame 50 at 28288 ms, paused=false
+challenge: settled in 33015 ms
+challenge: press 1 at 33035 ms, panel open=true
+challenge: press 2 at 43322 ms, panel open=true
+challenge: press 3 at 48563 ms, panel open=true
+challenge: press 4 at 54056 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs relay_captain
+live member 4 (tuskroot) out vs relay_captain after 129 steps (earlier members resolved: disclosed)
+frame res://shots/f04/relay_captain/relay_captain-01.png fighting=true panel=false
+lens 01 at (340.83,12.83,3759.62) inside 1: MeadowsPlayground/CombatArena/HitSpark2/@MeshInstance3D@69661 ((25.86, 19.86, 21.89))
+frame res://shots/f04/relay_captain/relay_captain-02.png fighting=true panel=false
+lens 02 at (340.21,12.38,3761.63) inside 1: MeadowsPlayground/CombatArena/HitSpark3/@MeshInstance3D@69669 ((22.66, 22.04, 26.72))
+tell 1: 0.80s, policy stand
+frame res://shots/f04/relay_captain/relay_captain-t01-stand-start.png fighting=true panel=false
+lens t01-stand-start at (338.96,12.29,3765.00) inside 1: MeadowsPlayground/CombatArena/HitSpark/@MeshInstance3D@69677 ((20.41, 22.5, 23.63))
+frame res://shots/f04/relay_captain/relay_captain-03.png fighting=true panel=false
+lens 03 at (339.20,12.21,3764.71) inside 1: MeadowsPlayground/CombatArena/HitSpark/@MeshInstance3D@69677 ((22.1, 24.89, 25.49))
+frame res://shots/f04/relay_captain/relay_captain-t01-stand-mid.png fighting=true panel=false
+strike 1 policy=stand outcome=hit 23.7
+frame res://shots/f04/relay_captain/relay_captain-04.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-t01-stand-strike.png fighting=true panel=false
+lens t01-stand-strike at (339.35,12.41,3762.65) inside 1: MeadowsPlayground/CombatArena/HitSpark/@MeshInstance3D@69686 ((18.55, 18.65, 17.83))
+frame res://shots/f04/relay_captain/relay_captain-05.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-06.png fighting=true panel=false
+tell 2: 0.80s, policy dodge
+frame res://shots/f04/relay_captain/relay_captain-t02-dodge-start.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-07.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-t02-dodge-mid.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-t02-dodge-strike.png fighting=true panel=false
+lens t02-dodge-strike at (342.62,12.58,3758.16) inside 0: 
+strike 2 policy=dodge outcome=hit 21.9
+frame res://shots/f04/relay_captain/relay_captain-08.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-09.png fighting=true panel=false
+tell 3: 0.80s, policy stand
+frame res://shots/f04/relay_captain/relay_captain-10.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-t03-stand-start.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-t03-stand-mid.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-11.png fighting=true panel=false
+strike 3 policy=stand outcome=hit 22.4
+frame res://shots/f04/relay_captain/relay_captain-t03-stand-strike.png fighting=true panel=false
+lens t03-stand-strike at (343.00,12.15,3758.36) inside 0: 
+frame res://shots/f04/relay_captain/relay_captain-12.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-13.png fighting=true panel=false
+tell 4: 0.80s, policy dodge
+frame res://shots/f04/relay_captain/relay_captain-t04-dodge-start.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-14.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-t04-dodge-mid.png fighting=true panel=false
+strike 4 policy=dodge outcome=hit 21.6
+frame res://shots/f04/relay_captain/relay_captain-t04-dodge-strike.png fighting=true panel=false
+lens t04-dodge-strike at (339.78,12.62,3760.79) inside 0: 
+frame res://shots/f04/relay_captain/relay_captain-15.png fighting=true panel=false
+lens 15 at (337.87,12.64,3764.63) inside 1: MeadowsPlayground/CombatArena/HitSpark2/@MeshInstance3D@69739 ((24.29, 26.65, 21.64))
+frame res://shots/f04/relay_captain/relay_captain-16.png fighting=true panel=false
+tell 5: 0.80s, policy stand
+frame res://shots/f04/relay_captain/relay_captain-17.png fighting=true panel=false
+lens 17 at (339.85,11.70,3768.05) inside 2: MeadowsPlayground/TetherRelay/Gate/GatePresentationRoot/GatePresentation ((11.2, 8.7, 8.809999)); MeadowsPlayground/CombatArena/HitSpark/@MeshInstance3D@69755 ((23.67, 19.9, 23.13))
+frame res://shots/f04/relay_captain/relay_captain-18.png fighting=true panel=false
+strike 5 policy=stand outcome=miss
+frame res://shots/f04/relay_captain/relay_captain-19.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-20.png fighting=true panel=false
+frame res://shots/f04/relay_captain/relay_captain-21.png fighting=true panel=false
+tell 6: 0.80s, policy dodge
+frame res://shots/f04/relay_captain/relay_captain-22.png fighting=true panel=false
+lens 22 at (338.68,12.45,3770.25) inside 1: MeadowsPlayground/TetherRelay/Gate/GatePresentationRoot/GatePresentation ((11.2, 8.7, 8.809999))
+strike 6 policy=dodge outcome=miss
+frame res://shots/f04/relay_captain/relay_captain-23.png fighting=true panel=false
+lens 23 at (341.51,10.80,3769.77) inside 1: MeadowsPlayground/TetherRelay/Gate/GatePresentationRoot/GatePresentation ((11.2, 8.7, 8.809999))
+frame res://shots/f04/relay_captain/relay_captain-24.png fighting=true panel=false
+lens 24 at (340.37,11.16,3768.76) inside 1: MeadowsPlayground/TetherRelay/Gate/GatePresentationRoot/GatePresentation ((11.2, 8.7, 8.809999))
+frame res://shots/f04/relay_captain/relay_captain-r01.png fighting=true panel=false
+lens r01 at (340.38,11.15,3768.75) inside 1: MeadowsPlayground/TetherRelay/Gate/GatePresentationRoot/GatePresentation ((11.2, 8.7, 8.809999))
+frame res://shots/f04/relay_captain/relay_captain-r02.png fighting=true panel=false
+lens r02 at (340.38,11.15,3768.75) inside 1: MeadowsPlayground/TetherRelay/Gate/GatePresentationRoot/GatePresentation ((11.2, 8.7, 8.809999))
+resolved relay_captain after 4 steps: beaten=true fighting=false
+frame res://shots/f04/relay_captain/relay_captain-a01.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a02.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a03.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a04.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a05.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a06.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a07.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a08.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a09.png fighting=false panel=true
+frame res://shots/f04/relay_captain/relay_captain-a10.png fighting=false panel=false
+frame res://shots/f04/relay_captain/relay_captain-a11.png fighting=false panel=false
+frame res://shots/f04/relay_captain/relay_captain-a12.png fighting=false panel=false
+frame res://shots/f04/relay_captain/relay_captain-99-after.png fighting=false panel=false

@@ -1,0 +1,29 @@
+{
+  "status": "rejected_incomplete",
+  "source_commit": "ef9df4c121cedfc024dc5b1ecb043323d6c136e8",
+  "launcher_session": 61050,
+  "launcher_exit_code": 1,
+  "child_pid": 3852,
+  "accepted_frames": 1,
+  "rejected_diagnostic_images": 1,
+  "expected_frames": 14,
+  "candidate_boot_started": false,
+  "camera_origin_shift_m": 1.9073486328125e-06,
+  "camera_basis_delta": 0.0,
+  "lens_equal": true,
+  "unchanged": [
+    "player transform",
+    "target transform",
+    "camera local transform",
+    "spring hit length",
+    "spring length",
+    "creature physical transform/collider"
+  ],
+  "first_actual_seconds": 0.122289,
+  "rejected_actual_seconds": 0.383995,
+  "rejected_sample_window_valid": true,
+  "interpretation": "Camera and rig Y shifted exactly one float32 representable step at their recorded magnitude. This diagnoses an overstrict absolute-origin guard; it does not retroactively validate the incomplete01/02 comparisons.",
+  "projection_scale_note": "For scale only, focal_pixels*observed_shift/near_distance is about 0.029419 pixels. This is a pinhole lateral-displacement estimate, not image registration or an all-points projective error bound.",
+  "cleanup": "Root verified child3852 absent, no Tidewake Godot processes, lock{}, rest gatefalse; explicit GPUrelease.",
+  "next": "Prospective tolerance correction requires independent review; original failures and thresholds remain intact here."
+}

@@ -1,0 +1,6 @@
+if (bi_valid) {
+	vec4 bi_base = vec4(equal(ivec4(bi_control >> uvec4(27u) & uvec4(31u)), ivec4(coast_rock_texture_id)));
+	vec4 bi_over = vec4(equal(ivec4(bi_control >> uvec4(22u) & uvec4(31u)), ivec4(coast_rock_texture_id)));
+	vec4 bi_blend = vec4(bi_control >> uvec4(14u) & uvec4(255u)) / 255.0;
+	bi_paint = dot(bi_base * (1.0 - bi_blend) + bi_over * bi_blend, weights);
+}

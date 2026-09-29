@@ -1,0 +1,40 @@
+{
+  "source_commit": "45c737025aec8d890270640d9fb2f279e9f7f5f2",
+  "launcher_session": 45373,
+  "launcher_exit_code": 0,
+  "frame_count": 2,
+  "complete": true,
+  "failures": [],
+  "frames": [
+    {
+      "frame": "water__gull_rest__20__gull_rest_beach__day__close__mask_baseline",
+      "sha256": "6a744ebbb8429814fe997b796b973a595d14d63c6145d8d6d8a4115bc12aa696",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "camera_delta": {
+        "basis_max_component_delta": 0.0,
+        "ok": true,
+        "origin_distance_m": 0.0
+      }
+    },
+    {
+      "frame": "water__gull_rest__20__gull_rest_beach__day__close__noise_neutral",
+      "sha256": "36686227049df8ecd0fbbc7a2e0be458f2401cae47f80920a6627d74539ea2ad",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "camera_delta": {
+        "basis_max_component_delta": 2.98023223876953e-08,
+        "ok": true,
+        "origin_distance_m": 0.0
+      }
+    }
+  ],
+  "cleanup": "Owned child 15012 absent; CIM found no x04-tidewake Godot processes; shared lock {} verified after terminal launcher. Explicit release sent to render scheduler.",
+  "warnings": "One existing deprecated instance_reset_physics_interpolation warning retained.",
+  "finding": "The sawtoothed lower mineral boundary and serrated cap survive with bluff_patch fixed to 0.5. This perturbation is not necessary for those defects at this Gull Rest fixture. No unique root cause established.",
+  "limits": "Unshaded final-mask attribution only, not a shipping material or visual acceptance. Live creatures and wind vary. Native camera origin unchanged; basis max delta 2.98023223876953e-8. No terrain/control/LOD/lighting changes. Dune gates remain off."
+}

@@ -1,0 +1,348 @@
+extends "res://tools/phase2_capture_creatures.gd"
+
+## Scratch only: parked production bodies, not a bed/companion interaction.
+const REST_CONFIG := "res://data/config/water_creature_rest_visual.json"
+const REST_METADATA := "res://.artifacts/phase2/rest-native-source-hashes.json"
+const REST_SAVE := preload("res://scripts/save/save_game.gd")
+const REST_TIMES := [0.1, 0.35, 1.0, 3.0]
+const RESUME_TIMES := [0.1, 0.35, 0.75]
+const SAMPLE_MAX_LATENESS := 0.15
+var _rest_variant := ""
+var _rest_metadata: Dictionary = {}
+var _rest_before: Dictionary = {}
+var _rest_lifecycles: Array[Dictionary] = []
+var _rest_save_path := ""
+var _rest_pack := ""
+var _rest_checkpoint := 0
+var _rest_camera_settle: Dictionary = {}
+var _rest_last_sample_usec: Dictionary = {}
+
+
+func _init() -> void:
+	_rest_variant = OS.get_environment("REST_NATIVE_VARIANT")
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_METADATA))
+	if _rest_variant not in ["before", "after"] or not parsed is Dictionary:
+		push_error("Rest diagnostic: missing variant/source metadata")
+		quit(1)
+		return
+	_rest_metadata = parsed
+	_rest_pack = "res://.artifacts/phase2/rest-native-%s.zip" % _rest_variant
+	if FileAccess.get_sha256(_rest_pack) != str(_rest_metadata.packs[_rest_variant]):
+		push_error("Rest diagnostic: process-local pack hash changed")
+		quit(1)
+		return
+	for path: String in _rest_metadata.sources:
+		if FileAccess.get_sha256("res://" + path) != str(_rest_metadata.sources[path]):
+			push_error("Rest diagnostic: reviewed source changed: " + path)
+			quit(1)
+			return
+	if not ProjectSettings.load_resource_pack(_rest_pack, true):
+		push_error("Rest diagnostic: pack mount failed")
+		quit(1)
+		return
+	# Godot 4.7 does not automatically invoke the base SceneTree initializer.
+	super()
+
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	for required: String in ["--biome=water", "--only=riptusk,torrentoad", "--poses=resting", "--live-transitions", "--seed=2042"]:
+		if required not in args:
+			push_error("Rest diagnostic: required fixed argument missing: " + required)
+			quit(1)
+			return
+	if "--paired-transitions" in args:
+		push_error("Rest diagnostic: paired transitions would duplicate the comparison")
+		quit(1)
+		return
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(REST_CONFIG))
+	if not config is Dictionary or config.get("enabled", null) != (_rest_variant == "after"):
+		push_error("Rest diagnostic: live process gate mismatch")
+		quit(1)
+		return
+	# Install the isolated save BEFORE the parent's reset_for_new_game/world setup.
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		push_error("Rest diagnostic: missing Game autoload")
+		quit(1)
+		return
+	_rest_save_path = "user://rest_native_%s_%d/" % [_rest_variant, Time.get_ticks_usec()]
+	game.set("save_system", REST_SAVE.new(_rest_save_path))
+	await super._run()
+	# Parent owns its frame array, final manifest and body queue_free. Its quit is
+	# deferred until this callback yields; verify/augment the actual written file.
+	if _records.size() != 14 or _rest_lifecycles.size() != 2:
+		_failures.append("Expected 14 frames and two same-body rest/resume lifecycles")
+	if not _output.is_empty() and DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output)):
+		var parent_manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(_output + "/manifest.json"))
+		if not parent_manifest is Dictionary:
+			_failures.append("Parent manifest missing or unreadable")
+		else:
+			parent_manifest["rest_diagnostic"] = _provenance()
+			parent_manifest["failures"] = _failures
+			parent_manifest["complete"] = _failures.is_empty()
+			_write_json(_output + "/rest-final-manifest.json", parent_manifest)
+		_checkpoint(true)
+	quit(0 if _failures.is_empty() else 1)
+
+
+func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: float) -> void:
+	if not _failures.is_empty():
+		return
+	# Observe the unmodified live camera BEFORE parent creation/play_rest. Five
+	# frames within a tighter 1e-7 window leave room for the 1e-6 capture bound.
+	var settle_started := Time.get_ticks_usec()
+	var anchor := _camera_receipt()
+	var stable_frames := 0
+	while stable_frames < 5 and Time.get_ticks_usec() - settle_started < 10000000:
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var actual := _camera_receipt()
+		var delta := _camera_delta(actual, anchor)
+		if root.get_camera_3d() == _camera and bool(delta.lens_equal) and float(delta.origin_m) <= 0.0000001 and float(delta.basis_max) <= 0.0000001:
+			stable_frames += 1
+		else:
+			anchor = actual
+			stable_frames = 0
+	_rest_camera_settle[species] = {"elapsed_seconds": float(Time.get_ticks_usec() - settle_started) / 1000000.0,
+		"stable_frames": stable_frames, "camera": _camera_receipt(), "anchor": anchor}
+	if stable_frames < 5:
+		_failures.append(species + ": production camera failed bounded read-only convergence before rest")
+		_checkpoint(false)
+		return
+	await super._capture_pose(species, pose, shiny, scale_factor)
+
+
+func _seat(body: Node3D, ground: float) -> void:
+	super._seat(body, ground)
+	_rest_before[body.get_instance_id()] = {
+		"physical": _physical(body), "model_pivot": _transform(body.get_node(^"Model").transform),
+		"stand_ground_y": ground, "body_instance_id": body.get_instance_id()}
+
+
+func _capture_transition(body: Node3D, species: String, pose: String) -> void:
+	var started := Time.get_ticks_usec()
+	var initial: Dictionary = body.call("rest_pose_receipt")
+	var snapshot: Dictionary = _rest_before.get(body.get_instance_id(), {})
+	var animator: Object = body.get("_animator") as Object
+	var animation: AnimationPlayer = animator.get("_player") as AnimationPlayer if animator != null else null
+	var lifecycle := {"species": species, "body_instance_id": body.get_instance_id(),
+		"pre_rest": snapshot, "initial_rest_receipt": initial.duplicate(true),
+		"declared_model_path": str(SPECIES_DATA.placeholder(species).get("model", "")),
+		"model_loaded": bool(body.get("_has_model")),
+		"initial_animation": str(animation.assigned_animation) if animation != null else "",
+		"initial_animation_length_seconds": animation.current_animation_length if animation != null else 0.0,
+		"initial_animation_speed_scale": animation.speed_scale if animation != null else 0.0,
+		"camera_convergence_before_rest": _rest_camera_settle.get(species, {}),
+		"rest_observer_start_usec": started, "rest_mode_expected": "authored" if _rest_variant == "after" else "roll",
+		"camera_at_entry": _camera_receipt(), "sun_at_entry": _sun_receipt(),
+		"fixture": "Parent production stage/seating; body process and physics parked; real AnimationPlayer and rest lifecycle. Resume is idle, not movement."}
+	_rest_lifecycles.append(lifecycle)
+	if pose != "resting" or snapshot.is_empty() or animation == null or not bool(body.get("_has_model")):
+		_failures.append(species + ": missing rest fixture/model/animation")
+		_checkpoint(false)
+		return
+	if str(snapshot.physical.collider_class) != "CapsuleShape3D" or lifecycle.sun_at_entry.has("missing"):
+		_failures.append(species + ": missing production capsule or Sun")
+	if str(initial.get("config", {}).get("mode", "")) != lifecycle.rest_mode_expected:
+		_failures.append(species + ": unexpected rest mode")
+	if _rest_variant == "after" and (not bool(initial.get("pending", false)) or bool(initial.get("active", false)) or not animation.is_playing()):
+		_failures.append(species + ": authored rest did not begin as a pending, live animation")
+	if _rest_variant == "before" and (bool(initial.get("pending", false)) or not bool(initial.get("active", false))):
+		_failures.append(species + ": generic roll not active at entry")
+	_checkpoint(false)
+	for target: float in REST_TIMES:
+		if not _failures.is_empty():
+			return
+		await _wait_sample(started, target, animator)
+		await _sample(body, species, "resting", started, target, snapshot, lifecycle)
+	if not _failures.is_empty():
+		return
+	# No seek, pause, manual animation_finished callback, or forced endpoint.
+	var deadline := started + 30000000
+	while bool(body.call("rest_pose_pending")) and Time.get_ticks_usec() < deadline:
+		await process_frame
+		animator.call("tick", root.get_process_delta_time(), 0.0, 8.0)
+	var endpoint: Dictionary = body.call("rest_pose_receipt")
+	lifecycle["endpoint_receipt"] = endpoint.duplicate(true)
+	lifecycle["endpoint_observed_elapsed_seconds"] = float(Time.get_ticks_usec() - started) / 1000000.0
+	if bool(endpoint.get("pending", false)) or not bool(endpoint.get("active", false)):
+		_failures.append(species + ": natural rest endpoint failed to become active within 30 seconds")
+		_checkpoint(false)
+		return
+	lifecycle["stop_call_usec"] = Time.get_ticks_usec()
+	body.call("stop_rest")
+	var resumed := Time.get_ticks_usec()
+	lifecycle["stop_return_usec"] = resumed
+	lifecycle["immediate_resume_receipt"] = (body.call("rest_pose_receipt") as Dictionary).duplicate(true)
+	_validate_body(body, snapshot, true)
+	_checkpoint(false)
+	for target: float in RESUME_TIMES:
+		if not _failures.is_empty():
+			return
+		await _wait_sample(resumed, target, animator)
+		await _sample(body, species, "resume", resumed, target, snapshot, lifecycle)
+	lifecycle["complete"] = _failures.is_empty()
+	_checkpoint(false)
+
+
+func _wait_sample(started: int, target: float, animator: Object) -> void:
+	while float(Time.get_ticks_usec() - started) / 1000000.0 < target:
+		await process_frame
+		animator.call("tick", root.get_process_delta_time(), 0.0, 8.0)
+
+
+func _sample(body: Node3D, species: String, phase: String, started: int, target: float, snapshot: Dictionary, lifecycle: Dictionary) -> void:
+	await RenderingServer.frame_post_draw
+	var observed := Time.get_ticks_usec()
+	var elapsed := float(observed - started) / 1000000.0
+	var key := species + "/" + phase
+	var timing_valid := elapsed >= target and elapsed <= target + SAMPLE_MAX_LATENESS and observed > int(_rest_last_sample_usec.get(key, 0))
+	_rest_last_sample_usec[key] = observed
+	_validate_body(body, snapshot, phase == "resume")
+	if root.get_camera_3d() != _camera or root.size != Vector2i(1920, 1080):
+		_failures.append(species + ": nonproduction current camera or nonnative viewport")
+	var camera := _camera_receipt()
+	# Production camera remains live. Tiny numerical drift is measured, not hidden.
+	var camera_delta := _camera_delta(camera, lifecycle.camera_at_entry)
+	if float(camera_delta.origin_m) > 0.000001 or float(camera_delta.basis_max) > 0.000001 or not bool(camera_delta.lens_equal):
+		_failures.append(species + ": camera changed within the lifecycle")
+	if _sun_receipt() != lifecycle.sun_at_entry:
+		_failures.append(species + ": Sun changed within the lifecycle")
+	if not _failures.is_empty():
+		_checkpoint(false)
+		return
+	var frame_id := "%s__%s__%s__t%04d" % [_biome, species, phase, int(target * 1000.0)]
+	var path := "%s/%s.jpg" % [_output, frame_id]
+	var image := root.get_texture().get_image()
+	if image == null or image.is_empty() or image.get_width() != 1920 or image.get_height() != 1080:
+		_failures.append(frame_id + ": wrong-sized or empty image")
+	elif image.save_jpg(path, 0.87) != OK:
+		_failures.append(frame_id + ": save failed")
+	else:
+		var animator: Object = body.get("_animator") as Object
+		var animation := animator.get("_player") as AnimationPlayer
+		_records.append({"id": frame_id, "species": species, "pose": phase, "path": path,
+			"sha256": FileAccess.get_sha256(path), "resolution": [image.get_width(), image.get_height()],
+			"sample_seconds": target, "elapsed_seconds": float(observed - started) / 1000000.0,
+			"sample_window_valid": timing_valid,
+			"lateness_seconds": float(observed - started) / 1000000.0 - target,
+			"observed_monotonic_usec": observed, "body_instance_id": body.get_instance_id(),
+			"animation": str(animation.assigned_animation), "animation_playing": animation.is_playing(),
+			"animation_position_seconds": animation.current_animation_position,
+			"rest_receipt": (body.call("rest_pose_receipt") as Dictionary).duplicate(true),
+			"physical": _physical(body), "model_pivot": _transform(body.get_node(^"Model").transform),
+			"camera": camera, "camera_delta_from_entry": camera_delta, "sun": _sun_receipt(),
+			"body_parked": true, "live_gate": _rest_variant == "after"})
+		print("REST NATIVE %s actual_elapsed=%.6f -> %s" % [frame_id, float(observed - started) / 1000000.0, path])
+	if not timing_valid:
+		_failures.append(frame_id + ": missed distinct sample window or nonmonotonic sample; actual=%.6f target=%.3f max_lateness=%.3f" % [elapsed, target, SAMPLE_MAX_LATENESS])
+	if phase == "resting" and target == 3.0:
+		var receipt: Dictionary = body.call("rest_pose_receipt")
+		if bool(receipt.get("pending", false)) or not bool(receipt.get("active", false)):
+			_failures.append(frame_id + ": three-second frame is not the natural active rest endpoint")
+	_checkpoint(false)
+
+
+func _validate_body(body: Node3D, snapshot: Dictionary, resumed: bool) -> void:
+	if _physical(body) != snapshot.physical:
+		_failures.append("Physical body/collider/scale changed during rest/resume")
+	if resumed:
+		var receipt: Dictionary = body.call("rest_pose_receipt")
+		if bool(receipt.get("pending", false)) or bool(receipt.get("active", false)):
+			_failures.append("stop_rest did not clear pending/active state")
+		if _transform(body.get_node(^"Model").transform) != snapshot.model_pivot:
+			_failures.append("stop_rest did not restore pre-rest model pivot exactly")
+		var animator: Object = body.get("_animator") as Object
+		var animation := animator.get("_player") as AnimationPlayer
+		var expected_idle := str((animator.get("_clips") as Dictionary).get("idle", ""))
+		if expected_idle.is_empty() or str(animation.assigned_animation) != expected_idle or not animation.is_playing():
+			_failures.append("stop_rest did not resume the installed live idle animation")
+
+
+func _physical(body: Node3D) -> Dictionary:
+	var collision := body.get_node_or_null(^"Collision") as CollisionShape3D
+	var shape := collision.shape as CapsuleShape3D if collision != null else null
+	return {"body_transform": _transform(body.transform), "body_global_transform": _transform(body.global_transform),
+		"scale": _vector(body.scale), "height": body.call("body_height"), "radius": body.call("body_radius"),
+		"collider_transform": _transform(collision.transform) if collision != null else {},
+		"collider_disabled": collision.disabled if collision != null else true,
+		"collider_class": collision.shape.get_class() if collision != null and collision.shape != null else "missing",
+		"capsule_height": shape.height if shape != null else -1.0, "capsule_radius": shape.radius if shape != null else -1.0}
+
+
+func _camera_receipt() -> Dictionary:
+	return {"path": str(_camera.get_path()), "transform": _transform(_camera.global_transform),
+		"fov": _camera.fov, "projection": _camera.projection, "keep_aspect": _camera.keep_aspect,
+		"size": _camera.size, "near": _camera.near, "far": _camera.far,
+		"h_offset": _camera.h_offset, "v_offset": _camera.v_offset, "frustum_offset": [_camera.frustum_offset.x, _camera.frustum_offset.y],
+		"viewport": [root.size.x, root.size.y]}
+
+
+func _camera_delta(actual: Dictionary, expected: Dictionary) -> Dictionary:
+	var origin_delta := 0.0
+	var basis_delta := 0.0
+	for axis in 3:
+		origin_delta += pow(float(actual.transform.origin[axis]) - float(expected.transform.origin[axis]), 2.0)
+		for component in 3:
+			basis_delta = maxf(basis_delta, absf(float(actual.transform.basis[axis][component]) - float(expected.transform.basis[axis][component])))
+	var a := actual.duplicate(true)
+	var b := expected.duplicate(true)
+	a.erase("transform")
+	b.erase("transform")
+	return {"origin_m": sqrt(origin_delta), "basis_max": basis_delta, "lens_equal": a == b}
+
+
+func _sun_receipt() -> Dictionary:
+	var sun := _world.get_node_or_null(^"Sun") as DirectionalLight3D
+	if sun == null:
+		return {"missing": true}
+	return {"transform": _transform(sun.global_transform), "color": [sun.light_color.r, sun.light_color.g, sun.light_color.b],
+		"energy": sun.light_energy, "shadow_enabled": sun.shadow_enabled,
+		"shadow_bias": sun.shadow_bias, "shadow_normal_bias": sun.shadow_normal_bias,
+		"shadow_opacity": sun.shadow_opacity, "directional_shadow_mode": sun.directional_shadow_mode,
+		"directional_shadow_max_distance": sun.directional_shadow_max_distance}
+
+
+func _vector(value: Vector3) -> Array:
+	return [value.x, value.y, value.z]
+
+
+func _transform(value: Transform3D) -> Dictionary:
+	return {"origin": _vector(value.origin), "basis": [_vector(value.basis.x), _vector(value.basis.y), _vector(value.basis.z)]}
+
+
+func _provenance() -> Dictionary:
+	return {"variant": _rest_variant, "gate_enabled": _rest_variant == "after", "source_commit": OS.get_environment("REST_NATIVE_SOURCE_COMMIT"),
+		"prepared_source": _rest_metadata, "pack": _rest_pack, "pack_sha256": FileAccess.get_sha256(_rest_pack),
+		"live_config_sha256": FileAccess.get_sha256(REST_CONFIG), "isolated_save": _rest_save_path,
+		"isolated_save_absolute": ProjectSettings.globalize_path(_rest_save_path), "appdata": OS.get_environment("APPDATA"),
+		"wrapper_sha256": FileAccess.get_sha256("res://.artifacts/phase2/rest-native-wrapper.gd"),
+		"launcher_sha256": FileAccess.get_sha256("res://.artifacts/phase2/rest-native-launch.ps1"),
+		"required_frames_per_boot": 14, "rest_targets_seconds": REST_TIMES, "resume_targets_seconds": RESUME_TIMES,
+		"sample_max_lateness_seconds": SAMPLE_MAX_LATENESS, "paired_max_elapsed_delta_seconds": 0.15,
+		"timing": "Real monotonic time immediately after parent play_rest, then after stop_rest returns. Includes draw waits and image IO; nominal targets are not exact samples. No seek or forced completion.",
+		"fixture": "Parked parent visual fixture with naturally running AnimationPlayer; resume witnesses restored idle only, not bed/companion/gameplay traversal.",
+		"lifecycles": _rest_lifecycles}
+
+
+func _checkpoint(final: bool) -> void:
+	if _output.is_empty():
+		return
+	_rest_checkpoint += 1
+	_write_json("%s/rest-checkpoint-%03d.json" % [_output, _rest_checkpoint], {
+		"final": final, "complete": final and _failures.is_empty() and _records.size() == 14,
+		"frames": _records, "failures": _failures, "rest_diagnostic": _provenance()})
+
+
+func _write_json(path: String, data: Dictionary) -> void:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		_failures.append("Cannot open manifest/checkpoint: " + path)
+		return
+	file.store_string(JSON.stringify(data, "\t") + "\n")
+	file.flush()
+	var status := file.get_error()
+	file.close()
+	if status != OK:
+		_failures.append("Cannot store manifest/checkpoint: " + path)

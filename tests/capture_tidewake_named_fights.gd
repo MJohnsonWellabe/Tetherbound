@@ -2,8 +2,8 @@ extends SceneTree
 
 ## F14#1 evidence: production-camera frames of the Veilfall named fights (BOSSES
 ## §4.10 Officer Venn, §4.11 Captain Nerissa -- the owner's "Guardian C2/C3"
-## fight) for a code-blind C3 framing/readability judge. Evidence only: nothing
-## is asserted and no state is saved.
+## fight) for a code-blind C3 framing/readability judge. Evidence only: no state
+## is saved; a completed recording now requires observed production victory.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script res://tests/capture_tidewake_named_fights.gd \
@@ -25,6 +25,7 @@ extends SceneTree
 ## captain smoke's close-and-tap loop.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const VICTORY_RECEIPT := preload("res://tools/gate_f/fight_victory_receipt.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SMOKE := preload("res://tests/smoke_tidewake_named_inworld_c2.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -82,6 +83,8 @@ var _log: Array = []
 ## telegraph signal writes these for the capture loop to read.
 var _tell: Dictionary = {}
 var _fight_t := 0.0
+var _record_result: Dictionary = {}
+var _save_failures := 0
 
 
 func _init() -> void:
@@ -137,14 +140,31 @@ func _run() -> void:
 	for id: String in ids:
 		if not await _capture(world, game, id):
 			failures += 1
+			break # A capped fight may still be active; never stage the next trainer.
 	for wild: String in _wilds:
+		if failures > 0:
+			break
 		if not await _capture_wild(world, game, wild):
 			failures += 1
 	var file := FileAccess.open(_out.path_join("frames.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(_log, "  "))
+		file.flush()
+		if file.get_error() != OK:
+			failures += 1
+		file.close()
+	else:
+		failures += 1
+	if not _finalize_capture(failures):
+		failures += 1
 	print("TIDEWAKE C3 CAPTURE done: %d trainer(s), %d failure(s), %d frames" % [ids.size(), failures, _log.size()])
 	quit(1 if failures else 0)
+
+
+## Derived evidence tools can finalize their manifest after raw export errors
+## are known, before the process declares success. No scene or result mutation.
+func _finalize_capture(_failures: int) -> bool:
+	return true
 
 
 func _capture(world: Node3D, game: Node, id: String) -> bool:
@@ -318,6 +338,12 @@ func _capture_walked(world: Node3D, game: Node, id: String, spec: Dictionary) ->
 func _record(world: Node3D, game: Node, dir: String, label: String, active: Callable) -> bool:
 	var director: Node = world.get_node("EncounterDirector")
 	var manager: Node = world.get_node("CombatManager")
+	_record_result = {}
+	_save_failures = 0
+	var receipt := VICTORY_RECEIPT.new()
+	if not receipt.begin(manager):
+		_record_result = {"ok": false, "reason": "victory observer unavailable"}
+		return false
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 	var saved := 0
 	_fight_t = 0.0
@@ -406,10 +432,34 @@ func _record(world: Node3D, game: Node, dir: String, label: String, active: Call
 		_reader._release_move()
 	print("TIDEWAKE C3 CAPTURE %s: %d frames over %.1f s, fight active=%s" % [label, saved, _fight_t,
 		bool(active.call())])
-	if bool(active.call()):
-		manager.call("_begin_resolve", "fled")
-		await _frames(30)
-	return saved > 0
+	var still_active := bool(active.call())
+	_record_result = capture_terminal_result(still_active, _fight_t, _fight_cap_s,
+		saved, _max_frames, receipt.finish(still_active), _save_failures)
+	if not bool(_record_result.ok):
+		push_error("Capture rejected: %s" % str(_record_result.reason))
+	# A budget stop is evidence failure, never a synthetic combat result.
+	return bool(_record_result.ok)
+
+
+## Pure verdict shared by the recorder and CPU tests. Even a cap-boundary won
+## signal fails closed: the requested recording budget was exhausted.
+static func capture_terminal_result(active: bool, seconds: float, cap: float,
+		saved: int, frame_cap: int, receipt: Dictionary, save_failures: int) -> Dictionary:
+	var reason := ""
+	if seconds >= cap:
+		reason = "time_cap"
+	elif saved >= frame_cap:
+		reason = "frame_cap"
+	elif active:
+		reason = "combat_still_active"
+	elif not bool(receipt.get("ok", false)):
+		reason = str(receipt.get("why", "victory not verified"))
+		if reason.is_empty():
+			reason = "victory not verified"
+	elif saved == 0 or save_failures > 0:
+		reason = "missing_or_failed_fight_image"
+	return {"ok": reason.is_empty(), "reason": reason, "fight_counter_s": seconds,
+		"saved": saved, "save_failures": save_failures, "victory": receipt.duplicate(true)}
 
 
 ## Grabs a frame rendered AFTER the requested moment. The viewport texture is
@@ -430,7 +480,8 @@ func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell
 	var image := root.get_viewport().get_texture().get_image()
 	if _sparse:
 		RenderingServer.render_loop_enabled = false
-	if image == null or image.save_png(dir.path_join(name)) != OK:
+	if image == null or image.is_empty() or image.save_png(dir.path_join(name)) != OK:
+		_save_failures += 1
 		return 0
 	var gap := -1.0
 	if is_instance_valid(enemy) and is_instance_valid(ally):

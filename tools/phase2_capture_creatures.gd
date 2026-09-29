@@ -3,6 +3,8 @@ extends SceneTree
 ## Phase 2 creature pose inventory in the production biome, with the trainer
 ## as a scale ruler and the production camera. This is a visual fixture: pose
 ## calls do not claim that a combat or traversal path was played.
+## Optional --poses=idle,shiny_idle narrows a paired material review while
+## retaining the same stage, camera and pose timings as the full inventory.
 
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
@@ -41,6 +43,7 @@ var _biome := ""
 var _output := ""
 var _seed := 2042
 var _only := ""
+var _poses: PackedStringArray = []
 var _live_transitions := false
 var _paired_transitions := false
 var _world: Node3D
@@ -69,12 +72,23 @@ func _run() -> void:
 			_seed = int(arg.trim_prefix("--seed="))
 		elif arg.begins_with("--only="):
 			_only = arg.trim_prefix("--only=")
+		elif arg.begins_with("--poses="):
+			_poses = arg.trim_prefix("--poses=").split(",", false)
 		elif arg == "--live-transitions":
 			_live_transitions = true
 		elif arg == "--paired-transitions":
 			_paired_transitions = true
-	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
+	if not SCENES.has(_biome) or not (_output.begins_with("res://ralph/reports/VISUAL/phase2/") or _output.begins_with("res://.artifacts/phase2/")):
 		push_error("Use --biome and a Phase 2 evidence output")
+		quit(1)
+		return
+	for pose: String in _poses:
+		if pose not in POSES and pose not in ["shiny_idle", "alpha_idle"]:
+			push_error("Unknown creature pose filter: " + pose)
+			quit(1)
+			return
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output)):
+		push_error("Choose a fresh creature capture output: " + _output)
 		quit(1)
 		return
 	for _frame in 3:
@@ -141,22 +155,28 @@ func _run() -> void:
 	for frame in 45:
 		await physics_frame
 	for species: String in SPECIES[_biome]:
-		if not _only.is_empty() and not _only.split(",", false).has(species):
+		if not _only.is_empty() and species not in _only.split(",", false):
 			continue
 		for pose: String in POSES:
-			await _capture_pose(species, pose, false, 1.0)
+			if _poses.is_empty() or pose in _poses:
+				await _capture_pose(species, pose, false, 1.0)
 		if _paired_transitions and not _live_transitions:
 			_live_transitions = true
 			for pose: String in POSES:
-				await _capture_pose(species, pose, false, 1.0)
+				if _poses.is_empty() or pose in _poses:
+					await _capture_pose(species, pose, false, 1.0)
 			_live_transitions = false
 		if _live_transitions:
 			continue
-		await _capture_pose(species, "shiny_idle", true, 1.0)
+		if _poses.is_empty() or "shiny_idle" in _poses:
+			await _capture_pose(species, "shiny_idle", true, 1.0)
 		var alpha_scale := _alpha_scale(species)
-		if alpha_scale > 1.0:
+		if alpha_scale > 1.0 and (_poses.is_empty() or "alpha_idle" in _poses):
 			await _capture_pose(species, "alpha_idle", false, alpha_scale)
+	if _records.is_empty():
+		_failures.append("No creature frames matched the species/pose selection")
 	var manifest := {"biome": _biome, "scene": SCENES[_biome], "seed": _seed,
+		"species_filter": _only, "pose_filter": _poses,
 		"stage_xz": [stage.x, stage.y], "display_server": DisplayServer.get_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
@@ -239,7 +259,28 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	if pose == "idle":
 		print("PHASE2 POSE PLAYER %s player=%s active=%s" % [species,
 			str(player != null), str(player.current_animation) if player != null else ""])
-	if player != null and not str(player.current_animation).is_empty():
+	var rest_receipt: Dictionary = body.call("rest_pose_receipt") if pose == "resting" else {}
+	var authored_rest := str((rest_receipt.get("config", {}) as Dictionary).get("mode", "")) == "authored"
+	# Live transition capture has already returned above: only endpoint stills wait.
+	if authored_rest:
+		# The recipe is applied by animation_finished. Seeking to 45% and
+		# pausing would strand it pending and photograph an unfinished pose.
+		var wait_seconds := 5.0
+		if player != null and not str(player.current_animation).is_empty():
+			wait_seconds = clampf(player.current_animation_length / maxf(absf(player.speed_scale), 0.01) + 2.0, 5.0, 30.0)
+		var deadline := Time.get_ticks_msec() + int(wait_seconds * 1000.0)
+		while bool(body.call("rest_pose_pending")) and Time.get_ticks_msec() < deadline:
+			await process_frame
+		rest_receipt = body.call("rest_pose_receipt")
+		if bool(rest_receipt.get("pending", false)) or not bool(rest_receipt.get("active", false)):
+			_failures.append("%s resting: authored rest did not complete before capture" % species)
+			body.queue_free()
+			await process_frame
+			return
+		if player != null:
+			player.pause()
+	elif player != null and not str(player.current_animation).is_empty():
+		# Preserve the inventory's original sampling for every legacy pose.
 		var length := player.get_animation(player.current_animation).length
 		player.seek(length * (0.9 if pose == "fainted" else 0.45), true)
 		player.pause()
@@ -254,6 +295,7 @@ func _capture_pose(species: String, pose: String, shiny: bool, scale_factor: flo
 	else:
 		_records.append({"id": frame_id, "species": species, "pose": pose,
 			"shiny": shiny, "alpha_scale": scale_factor, "path": path,
+			"rest_pose": rest_receipt,
 			"model_loaded": bool(body.get("_has_model")),
 			"animator_present": animator != null,
 			"animation_player_present": player != null,

@@ -1,0 +1,12 @@
+live member 1 (burrowback) out vs relay_officer_dell after 32 steps (earlier members resolved: disclosed)
+tell 1: 0.90s, policy stand
+strike 1 policy=stand outcome=hit 16.8
+tell 2: 0.90s, policy dodge
+strike 2 policy=dodge outcome=hit 18.3
+tell 3: 0.90s, policy stand
+strike 3 policy=stand outcome=hit 19.7
+tell 4: 0.90s, policy dodge
+strike 4 policy=dodge outcome=hit 18.2
+tell 5: 0.90s, policy stand
+strike 5 policy=stand outcome=hit 17.1
+tell 6: 0.90s, policy dodge

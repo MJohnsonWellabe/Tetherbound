@@ -1,0 +1,363 @@
+{
+  "baked_control_image": true,
+  "baked_height_image": true,
+  "foot_height": 93.1971756211787,
+  "projection": "manifest basis, 70deg vertical FOV, 1920x1080; CPU bilinear ray intersections, no rendered depth",
+  "recorded_terrain_height": 93.1971740722656,
+  "region_properties": [
+    "Terrain3DRegion",
+    "version",
+    "region_size",
+    "vertex_spacing",
+    "height_range",
+    "height_map",
+    "control_map",
+    "color_map",
+    "instances",
+    "edited",
+    "deleted",
+    "modified",
+    "location",
+    "RefCounted",
+    "Resource",
+    "Resource",
+    "resource_local_to_scene",
+    "resource_path",
+    "resource_name",
+    "resource_scene_unique_id",
+    "script"
+  ],
+  "samples": [
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 1.0,
+      "bluff_noise_low": 1.0,
+      "bluff_without_noise": 1.0,
+      "distance": 88.564549446106,
+      "non_bilerp_normal_y": 0.292548567056656,
+      "normal_y": 0.285689294338226,
+      "overlay_id": 2,
+      "pixel": [
+        700.0,
+        350.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 73.3999445809038,
+      "xyz": [
+        908.792297363281,
+        98.7374954223633,
+        2943.47802734375
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.661520759466734,
+      "bluff_noise_low": 0.995858255779798,
+      "bluff_without_noise": 0.882109932836816,
+      "distance": 45.036524772644,
+      "non_bilerp_normal_y": 0.45383208990097,
+      "normal_y": 0.45279461145401,
+      "overlay_id": 2,
+      "pixel": [
+        850.0,
+        350.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 63.0768748117384,
+      "xyz": [
+        900.476257324219,
+        97.4670104980469,
+        2899.30786132813
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0,
+      "bluff_noise_low": 0.250587793291482,
+      "bluff_without_noise": 0.0610001394125579,
+      "distance": 29.4039974212646,
+      "non_bilerp_normal_y": 0.688797771930695,
+      "normal_y": 0.668888926506042,
+      "overlay_id": 2,
+      "pixel": [
+        1100.0,
+        300.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 48.0186305663868,
+      "xyz": [
+        894.60205078125,
+        98.7036285400391,
+        2880.9052734375
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0764629821486226,
+      "bluff_noise_low": 0.533660051726607,
+      "bluff_without_noise": 0.276283542286535,
+      "distance": 32.7889766693115,
+      "non_bilerp_normal_y": 0.574927687644959,
+      "normal_y": 0.602365255355835,
+      "overlay_id": 2,
+      "pixel": [
+        1350.0,
+        300.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 52.9605149369207,
+      "xyz": [
+        885.636962890625,
+        98.7547607421875,
+        2878.61865234375
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.47018833576244,
+      "bluff_noise_low": 0.925694869673115,
+      "bluff_without_noise": 0.727199823262465,
+      "distance": 43.1595258712769,
+      "non_bilerp_normal_y": 0.466515570878983,
+      "normal_y": 0.496760874986649,
+      "overlay_id": 2,
+      "pixel": [
+        1600.0,
+        300.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 60.2140684012372,
+      "xyz": [
+        872.382141113281,
+        99.1509552001953,
+        2878.87548828125
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.768940174449884,
+      "bluff_noise_low": 1.0,
+      "bluff_without_noise": 0.949999427471164,
+      "distance": 60.1544933319092,
+      "non_bilerp_normal_y": 0.392682254314423,
+      "normal_y": 0.4260194003582,
+      "overlay_id": 2,
+      "pixel": [
+        1850.0,
+        300.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 64.7847947962651,
+      "xyz": [
+        853.482360839844,
+        99.758903503418,
+        2879.72998046875
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0,
+      "bluff_noise_low": 0.000647596005016515,
+      "bluff_without_noise": 0.0,
+      "distance": 23.6526288986206,
+      "non_bilerp_normal_y": 0.805225849151611,
+      "normal_y": 0.774979829788208,
+      "overlay_id": 2,
+      "pixel": [
+        1100.0,
+        420.0
+      ],
+      "proposed_painted_rock_mask_090_070": 0.683735564171409,
+      "slope_degrees": 39.1967960909886,
+      "xyz": [
+        897.1142578125,
+        94.7527694702148,
+        2875.826171875
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0931320424829385,
+      "bluff_noise_low": 0.56190733219447,
+      "bluff_without_noise": 0.302275218702538,
+      "distance": 28.883204460144,
+      "non_bilerp_normal_y": 0.602962493896484,
+      "normal_y": 0.595935583114624,
+      "overlay_id": 2,
+      "pixel": [
+        1350.0,
+        420.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 53.4206435281689,
+      "xyz": [
+        888.017395019531,
+        94.6120681762695,
+        2875.5966796875
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.573603623906885,
+      "bluff_noise_low": 0.973160121161205,
+      "bluff_without_noise": 0.815553954980435,
+      "distance": 39.2221479415894,
+      "non_bilerp_normal_y": 0.471009314060211,
+      "normal_y": 0.473262429237366,
+      "overlay_id": 2,
+      "pixel": [
+        1600.0,
+        420.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 61.753722863042,
+      "xyz": [
+        875.260070800781,
+        94.3648071289063,
+        2876.22607421875
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.925267868537293,
+      "bluff_noise_low": 1.0,
+      "bluff_without_noise": 1.0,
+      "distance": 55.8145246505737,
+      "non_bilerp_normal_y": 0.375052034854889,
+      "normal_y": 0.37693464756012,
+      "overlay_id": 2,
+      "pixel": [
+        1850.0,
+        420.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 67.8560635584775,
+      "xyz": [
+        857.010070800781,
+        94.0085906982422,
+        2877.173828125
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0,
+      "bluff_noise_low": 0.162075507399402,
+      "bluff_without_noise": 0.0175942704535675,
+      "distance": 27.9329633712769,
+      "non_bilerp_normal_y": 0.695293843746185,
+      "normal_y": 0.693251311779022,
+      "overlay_id": 2,
+      "pixel": [
+        1450.0,
+        560.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 46.1119673584783,
+      "xyz": [
+        886.923767089844,
+        90.535758972168,
+        2872.23461914063
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.175592219373391,
+      "bluff_noise_low": 0.676212222027904,
+      "bluff_without_noise": 0.415306773357582,
+      "distance": 39.0096998214722,
+      "non_bilerp_normal_y": 0.595520794391632,
+      "normal_y": 0.569279789924622,
+      "overlay_id": 2,
+      "pixel": [
+        1700.0,
+        600.0
+      ],
+      "proposed_painted_rock_mask_090_070": 1.0,
+      "slope_degrees": 55.2999814278646,
+      "xyz": [
+        874.2529296875,
+        88.0526733398438,
+        2872.49340820313
+      ]
+    },
+    {
+      "base_id": 0,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0,
+      "bluff_noise_low": 0.0,
+      "bluff_without_noise": 0.0,
+      "distance": 5.52037811279297,
+      "non_bilerp_normal_y": 0.981655120849609,
+      "normal_y": 0.989473521709442,
+      "overlay_id": 0,
+      "pixel": [
+        1200.0,
+        850.0
+      ],
+      "proposed_painted_rock_mask_090_070": 0.0,
+      "slope_degrees": 8.32071952609728,
+      "xyz": [
+        905.372741699219,
+        93.0762786865234,
+        2858.68334960938
+      ]
+    },
+    {
+      "base_id": 0,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0,
+      "bluff_noise_low": 0.0,
+      "bluff_without_noise": 0.0,
+      "distance": 6.27921390533447,
+      "non_bilerp_normal_y": 0.979734599590302,
+      "normal_y": 0.973300039768219,
+      "overlay_id": 0,
+      "pixel": [
+        500.0,
+        850.0
+      ],
+      "proposed_painted_rock_mask_090_070": 0.0,
+      "slope_degrees": 13.269788668275,
+      "xyz": [
+        909.679382324219,
+        92.9701690673828,
+        2860.22631835938
+      ]
+    },
+    {
+      "base_id": 2,
+      "blend": 0.0,
+      "bluff_noise_high": 0.0,
+      "bluff_noise_low": 0.0,
+      "bluff_without_noise": 0.0,
+      "distance": 43.4995098114014,
+      "non_bilerp_normal_y": 0.784924864768982,
+      "normal_y": 0.828190386295319,
+      "overlay_id": 2,
+      "pixel": [
+        300.0,
+        400.0
+      ],
+      "proposed_painted_rock_mask_090_070": 0.294172812837758,
+      "slope_degrees": 34.0867067952008,
+      "xyz": [
+        924.729125976563,
+        95.0409622192383,
+        2895.169921875
+      ]
+    }
+  ],
+  "source": "baked height/control images where present; analytic Water field fallback outside region01_05"
+}

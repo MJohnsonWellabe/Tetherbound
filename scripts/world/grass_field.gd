@@ -77,6 +77,15 @@ static func texture_mask(texture_names: Array, selected_names: Array) -> int:
 	return mask
 
 
+## Decorative pioneer eligibility is opt-in and resolved by texture identity.
+## Only requested shore is eligible; other ground names cannot widen it.
+static func pioneer_ground_mask(texture_names: Array, cfg: Dictionary) -> int:
+	if not bool(cfg.get("dune_colony_shape", false)):
+		return 0
+	return texture_mask(texture_names, cfg.get("dune_pioneer_ground", [])) \
+		& texture_mask(texture_names, ["shore"])
+
+
 func profile_receipt() -> Dictionary:
 	var cfg := _active_config()
 	var names := _terrain_texture_names()
@@ -681,7 +690,8 @@ func _build() -> void:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = _tuft_mesh(int(cfg.get("blades_per_tuft", 4)),
-			int(cfg.get("blade_segments", 4)))
+			int(cfg.get("blade_segments", 4)), -1, bool(cfg.get("dune_tussock", false)),
+			cfg.get("dune_tuft_shape", {}))
 
 	# Distribution. The disc law `r = radius * u^centre_bias` is still what the
 	# density profile is fitted to -- see the STABLE RING note above -- but the
@@ -750,16 +760,18 @@ func _grass_lod(cfg: Dictionary) -> Array:
 		return []
 	var blades := int(cfg.get("blades_per_tuft", 4))
 	var segments := int(cfg.get("blade_segments", 4))
+	var dune_tussock := bool(cfg.get("dune_tussock", false))
+	var dune_shape: Dictionary = cfg.get("dune_tuft_shape", {})
 	var out: Array = []
 	var mid_m := float(lod_cfg.get("mid_m", 0.0))
 	if mid_m > 0.0:
 		out.append({"from_m": mid_m,
-			"mesh": _tuft_mesh(blades, int(lod_cfg.get("mid_segments", segments)), blades)})
+			"mesh": _tuft_mesh(blades, int(lod_cfg.get("mid_segments", segments)), blades, dune_tussock, dune_shape)})
 	var far_m := float(lod_cfg.get("far_m", 0.0))
 	if far_m > mid_m:
 		out.append({"from_m": far_m,
 			"mesh": _tuft_mesh(blades, int(lod_cfg.get("far_segments", segments)),
-				clampi(int(lod_cfg.get("far_blades", blades)), 1, blades))})
+				clampi(int(lod_cfg.get("far_blades", blades)), 1, blades), dune_tussock, dune_shape)})
 	return out
 
 
@@ -1532,7 +1544,8 @@ func _stone_mesh(sides: int) -> ArrayMesh:
 ## runs over all of them so a kept blade's yaw and offset are the ones it has
 ## in the full mesh -- the far LOD tuft is the near tuft with its last blades
 ## missing, not a different tuft.
-func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
+func _tuft_mesh(blades: int, segments: int, keep: int = -1, dune_tussock: bool = false,
+		dune_shape: Dictionary = {}) -> ArrayMesh:
 	if keep < 0:
 		keep = blades
 	var verts := PackedVector3Array()
@@ -1557,6 +1570,14 @@ func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
 	# 18mm base half-width before per-blade variation and the profile multiplier.
 	var half_width := 0.018
 	var spread := 0.10
+	# Optional dune-only recipe. Empty defaults preserve the existing fan.
+	# Read once at mesh build; never change world lattice placement or hashes.
+	var basal_blades: Array = dune_shape.get("basal_blades", []) if dune_tussock else []
+	var basal_height := clampf(float(dune_shape.get("basal_height_scale", 1.0)), 0.1, 1.0)
+	var basal_half_width := clampf(float(dune_shape.get("basal_half_width_m", 0.018)), 0.001, 0.05)
+	var stem_count := clampi(int(dune_shape.get("stem_count", 0)), 0, 8) if dune_tussock else 0
+	var stem_radius := clampf(float(dune_shape.get("stem_radius_m", 0.0)), 0.0, 0.1)
+	var stem_jitter := clampf(float(dune_shape.get("stem_jitter_m", 0.0)), 0.0, 0.05)
 	for b in blades:
 		if b >= keep:
 			continue
@@ -1571,11 +1592,31 @@ func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
 		var blade_width := 0.72 + 0.34 * (0.5 + 0.5 * blade_phase)
 		var offset := (dir * (0.38 + 0.28 * blade_phase)
 				+ side * (float(b) - float(blades - 1) * 0.5)) * spread
+		if dune_tussock:
+			# Beach grass grows as a rooted fan. Keep a small common footprint;
+			# the shader opens each leaf outward instead of translating a comb.
+			offset = dir * spread * (0.25 + 0.18 * blade_phase)
+		var blade_half_width := half_width
+		if dune_tussock:
+			# JSON numbers are floats; Array.has keeps numeric Variant types distinct.
+			# Accept exact numeric indices without coercing strings, booleans or fractions.
+			if basal_blades.has(b) or basal_blades.has(float(b)):
+				blade_height *= basal_height
+				blade_half_width = basal_half_width
+			if stem_count > 0:
+				# Group by full blade count so kept LOD blades retain their roots.
+				# Eight leaves / three stems puts basal indices 0, 3, 6 on different stems.
+				var stem := mini(stem_count - 1, int(float(b) * float(stem_count) / float(blades)))
+				var stem_yaw := TAU * float(stem) / float(stem_count)
+				offset = Vector3(sin(stem_yaw), 0.0, cos(stem_yaw)) * stem_radius
+				offset += dir * stem_jitter * (0.5 + 0.5 * blade_phase)
 		var first := verts.size()
 		for s in segments + 1:
 			var t := float(s) / float(segments)
 			# Taper: full width at the base, a point at the tip.
 			var half := half_width * blade_width * (1.0 - t * t * 0.78)
+			if dune_tussock:
+				half = blade_half_width * blade_width * (1.0 - pow(t, 1.35))
 			verts.append(offset + side * -half + Vector3.UP * t * blade_height)
 			verts.append(offset + side * half + Vector3.UP * t * blade_height)
 			normals.append(normal)
@@ -1589,7 +1630,9 @@ func _tuft_mesh(blades: int, segments: int, keep: int = -1) -> ArrayMesh:
 			uv2s.append(Vector2(blade_id, blade_height))
 		for s in segments:
 			var a := first + s * 2
-			indices.append_array([a, a + 1, a + 2, a + 1, a + 3, a + 2])
+			indices.append_array([a, a + 1, a + 2])
+			if not dune_tussock or s < segments - 1:
+				indices.append_array([a + 1, a + 3, a + 2])
 
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
@@ -1609,9 +1652,20 @@ func surface_tuft_mesh(blades: int = 4, segments: int = 3) -> ArrayMesh:
 
 
 func _apply_config(cfg: Dictionary) -> void:
+	if cfg.has("dune_tussock"):
+		_material.set_shader_parameter("dune_tussock", bool(cfg.dune_tussock))
+	if cfg.has("dune_colony_shape"):
+		_material.set_shader_parameter("dune_colony_shape", bool(cfg.dune_colony_shape))
+		_material.set_shader_parameter("dune_pioneer_base_mask", pioneer_ground_mask(_terrain_texture_names(), cfg))
+		var offset: Array = cfg.get("dune_gap_offset", [0.0, 0.0])
+		_material.set_shader_parameter("dune_gap_offset", Vector2(float(offset[0]), float(offset[1])))
 	for key: String in [
 		"field_radius", "fade_start", "blade_width", "height_near", "height_far",
 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
+		"clump_patch_start", "clump_patch_full", "blade_arc_angle",
+		"dune_gap_scale", "dune_gap_warp_scale", "dune_gap_warp_m", "dune_gap_start", "dune_gap_full",
+		"dune_pioneer_start", "dune_pioneer_probability", "dune_shore_probability",
+		"dune_shore_dry_start_y", "dune_shore_dry_full_y", "dune_stabilized_height_y", "dune_coastal_colony_shift",
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
 		"lens_clear_m", "lens_clear_band",

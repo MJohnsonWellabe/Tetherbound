@@ -1,0 +1,19 @@
+{
+  "status": "rejected_incomplete",
+  "source_commit": "c2110feba1ac31ccc981434599ee7f844b86c499",
+  "launcher_session": 25905,
+  "launcher_exit_code": 1,
+  "child_pid": 16704,
+  "captured_frames": 1,
+  "expected_frames_per_boot": 14,
+  "candidate_boot_started": false,
+  "failures": [
+    "riptusk: camera changed within the lifecycle",
+    "Expected 14 frames and two same-body rest/resume lifecycles"
+  ],
+  "first_frame_actual_seconds": 0.133127,
+  "first_frame_lateness_seconds": 0.033127,
+  "camera_cause": "Unknown: original harness failed to retain rejected camera observation before returning. Do not assert numerical drift or relax bounds from this evidence.",
+  "cleanup": "Root verified child absent, no Tidewake Godot processes, shared lock {}, production rest gate false; explicit GPU release sent.",
+  "scope": "One valid baseline .1s sample, not a completed comparison, natural endpoint, resume, gameplay-rest or art acceptance. Original source reconstructed by narrow reversal and exact reviewed hashes verified; raw manifests/logs/images retained unchanged."
+}

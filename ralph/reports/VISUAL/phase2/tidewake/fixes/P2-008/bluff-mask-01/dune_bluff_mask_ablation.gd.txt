@@ -1,0 +1,155 @@
+extends "res://tools/phase2_capture_locations.gd"
+
+## Scratch diagnostic, never a production material or visual acceptance.
+const CONFIG_PACK := "res://.artifacts/phase2/dune05-runtime.zip"
+const CASES := ["baseline", "final_bluff_mask"]
+const MASK_ANCHOR := "bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);"
+const FRAGMENT_ANCHOR := "void fragment() {"
+const OUTPUT_MARKER := "// DIAGNOSTIC-FINAL-BLUFF-OUTPUT"
+
+var _mask_terrain: Node
+var _mask_material: Object
+var _mask_original: Shader
+var _mask_shader: Shader
+var _mask_original_code := ""
+var _mask_code := ""
+var _mask_variant := "baseline"
+var _mask_baseline: Dictionary = {}
+var _mask_initial_lod: Dictionary = {}
+
+
+func _init() -> void:
+	# Godot 4.7 does not implicitly call the inherited SceneTree _init.
+	# Mount only the process-local config override BEFORE scheduling base _run.
+	if not ProjectSettings.load_resource_pack(CONFIG_PACK, true):
+		push_error("Bluff diagnostic: config ZIP mount failed")
+		quit(1)
+		return
+	super()
+
+
+func _parse_args() -> bool:
+	_biome_id = "water"
+	_output_dir = "res://.artifacts/phase2/p2008-bluff-mask-01"
+	if not super._parse_args() or _biome_id != "water":
+		return false
+	_times.assign(["day"])
+	_views.assign(["close"])
+	_subsets.assign(["water__gull_rest__20__gull_rest_beach"])
+	_seed = 2042
+	return true
+
+
+func _load_plan() -> bool:
+	if not super._load_plan() or _planned.size() != 1:
+		push_error("Bluff diagnostic requires exactly one Gull Rest day/close view")
+		return false
+	var original := _planned[0].duplicate(true)
+	_planned.clear()
+	for variant: String in CASES:
+		var row := original.duplicate(true)
+		row["ablation_variant"] = variant
+		row["frame_id"] = str(original.frame_id) + "__" + variant
+		_planned.append(row)
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	if root.size != Vector2i(1920, 1080) or DisplayServer.window_get_mode() not in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]:
+		_failures.append("Bluff diagnostic requires actual fullscreen 1920x1080")
+		return false
+	_mask_terrain = _world.get_node_or_null("Terrain")
+	if _mask_terrain == null:
+		_failures.append("Bluff diagnostic: production Terrain missing")
+		return false
+	_mask_material = _mask_terrain.get("material")
+	_mask_original = _mask_material.call("get_shader_override") as Shader
+	if _mask_original == null or not bool(_mask_material.call("is_shader_override_enabled")) or not bool(_mask_material.call("get_shader_param", "coast_dunes_enabled")):
+		_failures.append("Bluff diagnostic requires active dunes and installed coastal override")
+		return false
+	_mask_original_code = _mask_original.code
+	if _mask_original_code.count(MASK_ANCHOR) != 1 or _mask_original_code.count(FRAGMENT_ANCHOR) != 1 or _mask_original_code.count("render_mode ") != 1:
+		_failures.append("Bluff diagnostic: exact current shader anchors changed")
+		return false
+	_mask_code = _mask_original_code.replace("render_mode ", "render_mode unshaded, ")
+	_mask_code = _mask_code.replace(FRAGMENT_ANCHOR, FRAGMENT_ANCHOR + "\n\tfloat diagnostic_final_bluff = 0.0;")
+	_mask_code = _mask_code.replace(MASK_ANCHOR, MASK_ANCHOR + "\n\t\tdiagnostic_final_bluff = bluff;")
+	# Installed generated shader ends with fragment(). Append after ALL PBR,
+	# macro/color-map and Veilfall output writes, not at an earlier albedo hook.
+	var end := _mask_code.rfind("}")
+	if end < _mask_code.find(FRAGMENT_ANCHOR) or not _mask_code.substr(end + 1).strip_edges().is_empty():
+		_failures.append("Bluff diagnostic: unsupported generated fragment ending")
+		return false
+	_mask_code = _mask_code.insert(end, "\n\t" + OUTPUT_MARKER + "\n\tALBEDO = vec3(diagnostic_final_bluff);\n\tEMISSION = vec3(0.0);\n\t")
+	_mask_shader = _mask_original.duplicate() as Shader
+	_mask_material.call("set_shader_override", _mask_shader)
+	_mask_initial_lod = _mask_lod()
+	_manifest["ablation_disclosure"] = "Two repeated production Gull Rest day/close fixtures: ordinary dunes baseline, then unshaded exact final bluff mask (black=0 sand side; white=1 mineral side). Only terrain fragment output/render lighting mode changes; vertex, height/control sampling, normals, LOD, geometry, camera and Sun settings are unchanged. ZIP enables dune configs process-locally; no production files written. World fog/tonemapping may affect displayed grayscale; this is boundary-shape evidence, not a calibrated scalar image. Live creatures can move. No acceptance/performance/traversal claim."
+	_manifest["config_pack"] = {"path": CONFIG_PACK, "sha256": FileAccess.get_sha256(CONFIG_PACK)}
+	_manifest["process_appdata"] = OS.get_environment("APPDATA")
+	_manifest["source_files_sha256"] = {
+		"coastal_rock_material.gd": FileAccess.get_sha256("res://scripts/world/coastal_rock_material.gd"),
+		"phase2_capture_locations.gd": FileAccess.get_sha256("res://tools/phase2_capture_locations.gd"),
+		"diagnostic_wrapper": FileAccess.get_sha256(get_script().resource_path),
+	}
+	_manifest["shader_hashes"] = {"baseline": _mask_original_code.sha256_text(), "final_bluff_mask": _mask_code.sha256_text()}
+	_manifest["terrain_lod_readback"] = _mask_initial_lod.duplicate(true)
+	return true
+
+
+func _mask_lod() -> Dictionary:
+	return {"mesh_size": _mask_terrain.get("mesh_size"), "mesh_lods": _mask_terrain.get("mesh_lods"), "vertex_spacing": _mask_terrain.get("vertex_spacing")}
+
+
+func _mask_measure() -> Dictionary:
+	var active := _mask_material.call("get_shader_override") as Shader
+	return {"variant": _mask_variant, "shader_code_sha256": active.code.sha256_text() if active != null else "",
+		"override_enabled": _mask_material.call("is_shader_override_enabled"),
+		"active_override_is_diagnostic": active == _mask_shader,
+		"terrain_lod": _mask_lod(), "dunes_enabled": _mask_material.call("get_shader_param", "coast_dunes_enabled")}
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	var observed := await super._pin_time(time_name)
+	if observed.is_empty():
+		return observed
+	# Repin frozen clock for an identical Sun transform across both cases.
+	_look.call("apply_time", time_name)
+	observed["hour"] = _look.call("hour")
+	observed["elapsed_seconds"] = _look.call("elapsed_seconds")
+	var expected := _mask_original_code if _mask_variant == "baseline" else _mask_code
+	_mask_shader.code = expected
+	for frame in 6:
+		await process_frame
+	var measured := _mask_measure()
+	if str(measured.shader_code_sha256) != expected.sha256_text() or not bool(measured.active_override_is_diagnostic) or not bool(measured.override_enabled) or not bool(measured.dunes_enabled) or measured.terrain_lod != _mask_initial_lod:
+		_failures.append("Bluff diagnostic: shader/gate/LOD readback mismatch")
+		return {}
+	return observed
+
+
+func _capture_row(row: Dictionary) -> void:
+	_mask_variant = str(row.ablation_variant)
+	var previous := _records.size()
+	await super._capture_row(row)
+	if _records.size() > previous:
+		var record := _records[-1]
+		record["ablation"] = _mask_measure()
+		if _mask_baseline.is_empty():
+			_mask_baseline = record.duplicate(true)
+		else:
+			var a: Array = record.camera_position
+			var b: Array = _mask_baseline.camera_position
+			var drift := Vector3(float(a[0]) - float(b[0]), float(a[1]) - float(b[1]), float(a[2]) - float(b[2])).length()
+			record.ablation["camera_delta_from_baseline_m"] = drift
+			if drift > 0.01 or record.selected_stand_offset_m != _mask_baseline.selected_stand_offset_m or record.selected_stand_lateral_m != _mask_baseline.selected_stand_lateral_m:
+				_failures.append("Bluff diagnostic: mismatched comparison stand/camera")
+	_write_manifest()
+
+
+func _finish(complete: bool) -> void:
+	if _mask_material != null and _mask_original != null:
+		_mask_material.call("set_shader_override", _mask_original)
+	super._finish(complete and _failures.is_empty())

@@ -23,6 +23,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const OCCLUSION_FADE := preload("res://scripts/combat/ally_occlusion_fade.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
@@ -611,6 +612,7 @@ func begin(
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
 	_ally_body.set("arena", null if realm_owned_opponent else _arena)
+	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
 
@@ -620,6 +622,25 @@ func begin(
 	entered.emit()
 	state_changed.emit()
 	return true
+
+
+## COMBAT §5 contact spacing (`contact_spacing.gd`). The piloted ally yields;
+## the opponent holds. A realm-owned opponent is simulated by the host, so this
+## participant binds only its own ally against it and never writes the
+## opponent's transform.
+func _bind_contact_spacing(realm_owned_opponent: bool) -> void:
+	if _ally_body != null and _ally_body.has_method("set_contact_partner"):
+		_ally_body.call("set_contact_partner", _wild, CONTACT_SPACING.ROLE_ALLY)
+	if not realm_owned_opponent and _wild != null and _wild.has_method("set_contact_partner"):
+		_wild.call("set_contact_partner", _ally_body, CONTACT_SPACING.ROLE_FOE)
+
+
+func _release_contact_spacing() -> void:
+	if _ally_body != null and is_instance_valid(_ally_body) and _ally_body.has_method("set_contact_partner"):
+		_ally_body.call("set_contact_partner", null)
+	if not _realm_owned_opponent and _wild != null and is_instance_valid(_wild) \
+			and _wild.has_method("set_contact_partner") and _wild.get("contact_partner") == _ally_body:
+		_wild.call("set_contact_partner", null)
 
 
 ## End only the presentation fight whose realm-owned body is being withdrawn.
@@ -789,6 +810,7 @@ func _open_separation(cfg: Dictionary) -> float:
 		if body is CollisionObject3D and is_instance_valid(body):
 			exclude.append((body as CollisionObject3D).get_rid())
 	query.exclude = exclude
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	var hit := world.direct_space_state.intersect_ray(query)
 	if hit.is_empty():
 		return wanted
@@ -885,7 +907,8 @@ func _place_fighters() -> void:
 	# side with room, the same treatment `_place_realm_owned_ally` gives realm
 	# fights (F14#0 C3). 0 keeps the in-line formation.
 	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
-	if _enemy_owned and lateral > 0.0:
+	if _enemy_owned and lateral > 0.0 \
+			and trainer_seats_aside(cfg, _wild.get_meta(&"trainer_rank", null)):
 		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
 		var right := _staging_reach(ally_spot, side, lateral)
 		var left := _staging_reach(ally_spot, -side, lateral)
@@ -897,6 +920,22 @@ func _place_fighters() -> void:
 	_place(_wild, wild_spot)
 	_wild.call("face_towards", ally_spot)
 	_stand_the_trainer_aside(forward)
+
+
+## Cards M2 (BRIDGE_GUARDIAN_REGRESSION): the lateral seat is F04#2's answer
+## for the NAMED fights (the ally hid a captain's creature). Seating every
+## trainer fight aside cost the earned five the South Bridge gatekeeper on
+## seed 15 (0/3 with it, 2/2 in line), a grunt on the carved crossing slope.
+## The director tags each trainer body with its trainer's `rank`; only the
+## ranks in `trainer_ally_lateral_ranks` sit aside, so a grunt or an unranked
+## tournament round keeps the in-line seat. An untagged body (a peer's
+## snapshot, a headless fight fixture) and a config without the list keep the
+## lateral seat as before.
+static func trainer_seats_aside(cfg: Dictionary, rank: Variant) -> bool:
+	var ranks: Variant = cfg.get("trainer_ally_lateral_ranks", null)
+	if rank == null or not ranks is Array:
+		return true
+	return (ranks as Array).has(str(rank))
 
 
 ## Shared encounters retain the host-owned opponent's transform, but a local
@@ -1401,40 +1440,88 @@ static func top_band_lift(live: float, foe_top_px: float, foe_depth: float, ally
 	return clampf(live + minf(for_foe, for_ally), 0.0, max_lift_m)
 
 
+## The trainer's standing box for the HUD-safe cap: width (x, also depth) and
+## height in metres, the same 0.7 x 1.8 m box combat_hud.gd's subject fade uses.
+const TRAINER_SAFE_BOX_M := Vector2(0.7, 1.8)
+
+
 ## F10#2 C3 (V-SW-3/5): the largest shoulder that keeps the ally's live render
 ## bounds out of the combat HUD's left column, measured through the live
 ## camera. INF when disabled, without a live camera, or while the ally's bounds
 ## stay above the column; otherwise finite (it may exceed the live shoulder when
 ## the ally has room to spare).
+##
+## F10#6 device profile (code-blind 7-inch judge r6, Hi/H2b: the trainer stood
+## under the faded ally card). UX section 1.4 names the trainer too, so with
+## `trainer` set their standing box is capped the same way, at its own depth,
+## and the smaller of the two caps wins.
 func _hud_safe_shoulder_cap(hud: Dictionary) -> float:
-	if not bool(hud.get("enabled", false)) or _camera_rig == null or _ally_body == null \
-			or not is_instance_valid(_ally_body):
+	if not bool(hud.get("enabled", false)) or _camera_rig == null:
 		return INF
 	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null or not camera.is_inside_tree():
 		return INF
 	var viewport := camera.get_viewport().get_visible_rect().size
-	var world := _body_world_bounds(_ally_body)
-	if world.size.is_zero_approx() or viewport.x <= 1.0 or viewport.y <= 1.0:
+	if viewport.x <= 1.0 or viewport.y <= 1.0:
 		return INF
-	var corners: Array[Vector2] = []
-	var depth := 0.0
+	var column: Dictionary = hud.get("left_column", {}) as Dictionary
+	var column_right := float(column.get("right", 0.26))
+	var column_top := float(column.get("top", 0.42))
+	var margin := float(hud.get("margin", 0.02))
+	var min_shoulder := float(hud.get("min_shoulder", -1.5))
+	var live := float(_camera_rig.get("_shoulder"))
+	var cap := INF
+	if _ally_body != null and is_instance_valid(_ally_body):
+		var world := _body_world_bounds(_ally_body)
+		if not world.size.is_zero_approx():
+			cap = minf(cap, _box_shoulder_cap(camera, world, viewport, live, column_right,
+				column_top, margin, min_shoulder, false))
+	if bool(hud.get("trainer", false)) and _player != null and is_instance_valid(_player):
+		var half := TRAINER_SAFE_BOX_M.x * 0.5
+		var box := AABB(_player.global_position - Vector3(half, 0.0, half),
+			Vector3(TRAINER_SAFE_BOX_M.x, TRAINER_SAFE_BOX_M.y, TRAINER_SAFE_BOX_M.x))
+		cap = minf(cap, _box_shoulder_cap(camera, box, viewport, live, column_right,
+			column_top, margin, min_shoulder, true))
+	return cap
+
+
+## One body's cap through the live camera. INF unless all eight corners are in
+## front of the lens (a corner at the near plane projects to a huge coordinate).
+## `need_on_column` (the trainer) also asks that the box's screen rect actually
+## overlap the column's on-screen region, so a trainer outside the frame never
+## drags the shoulder.
+func _box_shoulder_cap(camera: Camera3D, world: AABB, viewport: Vector2, live: float,
+		column_right: float, column_top: float, margin: float, min_shoulder: float,
+		need_on_column: bool) -> float:
 	var forward := -camera.global_basis.z
+	var corners: Array[Vector2] = []
 	for i in 8:
 		var corner := world.get_endpoint(i)
-		var ahead := (corner - camera.global_position).dot(forward)
-		if ahead <= 0.05:
+		if (corner - camera.global_position).dot(forward) <= 0.05:
 			return INF
-		depth = maxf(depth, ahead)
 		corners.append(camera.unproject_position(corner))
-	var column: Dictionary = hud.get("left_column", {}) as Dictionary
-	var centre := world.get_center()
-	var centre_depth := maxf((centre - camera.global_position).dot(forward), 0.05)
-	# Pixels one metre of shoulder moves the ally at its own depth.
+	if need_on_column and not rect_meets_column(corners, viewport, column_right, column_top):
+		return INF
+	var centre_depth := maxf((world.get_center() - camera.global_position).dot(forward), 0.05)
+	# Pixels one metre of shoulder moves this body at its own depth.
 	var pixels_per_metre := viewport.y * 0.5 / (centre_depth * tan(deg_to_rad(camera.fov) * 0.5))
-	return hud_safe_shoulder_cap(float(_camera_rig.get("_shoulder")), corners, viewport,
-		pixels_per_metre, float(column.get("right", 0.26)), float(column.get("top", 0.42)),
-		float(hud.get("margin", 0.02)), float(hud.get("min_shoulder", -1.5)))
+	return hud_safe_shoulder_cap(live, corners, viewport, pixels_per_metre, column_right,
+		column_top, margin, min_shoulder)
+
+
+## Whether projected corners overlap the column's on-screen region (x 0 to
+## column_right, y column_top to the bottom edge), in viewport pixels.
+static func rect_meets_column(corners: Array[Vector2], viewport: Vector2, column_right: float,
+		column_top: float) -> bool:
+	if corners.is_empty():
+		return false
+	var lo := corners[0]
+	var hi := corners[0]
+	for p: Vector2 in corners:
+		lo = lo.min(p)
+		hi = hi.max(p)
+	return hi.x > 0.0 and lo.x < column_right * viewport.x \
+		and hi.y > column_top * viewport.y and lo.y < viewport.y
 
 
 ## Pure form of the cap. Lowering the shoulder by one metre moves the pivot
@@ -2731,7 +2818,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 ## longer reach by describing its own move in the intent -- it names the move,
 ## and this decides what the move is.
 static func host_move_profile(moves: RefCounted, block: String, move_id: String,
-		mine: float, theirs: float, cooldown_multiplier: float = 1.0) -> Dictionary:
+		mine: float, theirs: float, cooldown_multiplier: float = 1.0, reach_floor: float = 0.0) -> Dictionary:
 	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
 	if not move_id.is_empty() and moves != null:
 		var move: Dictionary = moves.call("move", move_id)
@@ -2741,7 +2828,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
 	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
-	return floor_reach_for_bodies(profile, mine, theirs)
+	return floor_reach_for_bodies(profile, mine, theirs, reach_floor)
 
 
 ## Realm powers may shorten a move's cooldown, but never lengthen it and never
@@ -3329,16 +3416,21 @@ func _with_reach_for_the_bodies(move: Dictionary) -> Dictionary:
 	if _wild.has_method("body_radius"):
 		theirs = float(_wild.call("body_radius"))
 
-	return floor_reach_for_bodies(move, mine, theirs)
+	return floor_reach_for_bodies(move, mine, theirs, CONTACT_SPACING.pair_reach_need(_ally_body, _wild))
 
 
 ## The reach floor itself, static so the host's own profile builder
 ## (`host_move_profile()`) and this instance path are one copy rather than two
 ## that eventually disagree about what a quick attack reaches.
-static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float) -> Dictionary:
+## `reach_floor` is the pair's longest rendered separation
+## (`contact_spacing.pair_reach_need`): the hold-apart never exceeds it, so the
+## reach clears it by the same 0.5 m.
+static func floor_reach_for_bodies(move: Dictionary, mine: float, theirs: float,
+		reach_floor: float = 0.0) -> Dictionary:
 	var clearance: float = float(MATH.config().get("enemy", {}).get("body_clearance", 1.35))
 	var adjusted := move.duplicate()
-	adjusted["range"] = maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5)
+	adjusted["range"] = maxf(maxf(float(move.get("range", 2.6)), (mine + theirs) * clearance + 0.5),
+		reach_floor + 0.5)
 	return adjusted
 
 
@@ -4069,6 +4161,7 @@ func _begin_resolve(outcome: String) -> void:
 		else float(flow.get("faint_pause", 1.6))
 	if _wild != null and not _realm_owned_opponent:
 		_wild.call("set_engaged", false)
+	_release_contact_spacing()
 	state_changed.emit()
 
 
@@ -4096,6 +4189,7 @@ func _finish() -> void:
 		if not hold:
 			_ally_body.visible = false
 		_ally_body.set("arena", null)
+	_release_contact_spacing()
 	# Freed with the arena it was parented to; only the stale reference needs
 	# clearing here.
 	_target_marker = null
@@ -4342,8 +4436,13 @@ func enemy_windup_shape() -> String:
 	var cfg: Dictionary = _wild.call("combat_config")
 	if not bool(cfg.get("lunge_travels", false)) or float(cfg.get("lunge", 0.0)) <= 0.0:
 		return ""
+	# The DIVE question is the fight's own authored shape, not the species'
+	# base movement: a Tuskroot's default reposition read as a dive on Vance's
+	# CHARGER (render 5e8c3de3). Only the named fight's override says DIVER.
+	var authored: Variant = _wild.get("combat_override")
 	var tell := MATH.config().get("telegraph", {}) as Dictionary
-	if float(cfg.get("reposition_distance", 0.0)) >= float(tell.get("dive_reposition_m", 5.0)):
+	if authored is Dictionary and float((authored as Dictionary).get("reposition_distance", 0.0)) \
+			>= float(tell.get("dive_reposition_m", 5.0)):
 		return "dive"
 	return "charge"
 

@@ -179,6 +179,7 @@ const BUILD_TOOL := "hammer"
 ## game time, so the message had expired before the next rendered frame.
 const HOTBAR_MESSAGE_SECONDS := 2.2
 const HUD_CONFIG_PATH := "res://data/config/hud.json"
+const VICTORY_HIERARCHY_CONFIG := "res://data/config/victory_hierarchy_visual.json"
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
 
@@ -241,9 +242,10 @@ const REGION_BANNER_HEIGHT := 48.0
 ## F10#6 device profile (code-blind 7-inch judge r3: "Day/time" unreadable):
 ## the glance floor (`hud_scale.gd`, 26 px) with the HUD's outline so the
 ## muted text holds against a bright or violet sky.
-const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_BODY
+## r6: UX section 8's raster floor (FONT_READ) rather than the glance floor.
+const DAYTIME_READOUT_FONT_SIZE := UITokens.FONT_BUTTON
 const DAYTIME_READOUT_TOP := UITokens.HUD_INSET
-const DAYTIME_READOUT_HEIGHT := 36.0
+const DAYTIME_READOUT_HEIGHT := 40.0
 
 ## --- layout (spec §6/§6.6, numbers inlined per the task) --------------------
 ## All positions are in the HUD's own 1920x1080 authoring space (top-left
@@ -363,7 +365,13 @@ const VITALS_WIDTH := 244.0
 const VITALS_PLATE_OVERHANG := 8.0
 const VITALS_BAR_HEIGHT := 20.0
 const VITALS_ROW_GAP := 10.0
-const VITALS_VALUE_FONT := HUD_READABLE_FONT_SIZE
+## F10#6 device profile r6 (code-blind 7-inch judge: "100 / 100" and "100%"
+## about 5 px on the 7-inch sheet): these are UX section 8's critical changing
+## numbers, 22 px at the 1280x720 stress raster = 33 on this canvas.
+const VITALS_VALUE_FONT := UITokens.FONT_NUMBER
+## The value labels' box, centred on the bar row, tall enough for that font.
+const VITALS_VALUE_BOX_HEIGHT := 46.0
+const VITALS_VALUE_BOX_TOP := (VITALS_BAR_HEIGHT - VITALS_VALUE_BOX_HEIGHT) * 0.5
 ## Chip behind the vitals value text: translucent so a full meter reads full
 ## through it (see `_style_meter_value_chip()`).
 const METER_VALUE_CHIP_ALPHA := 0.6
@@ -377,7 +385,8 @@ const METER_VALUE_CHIP_ALPHA := 0.6
 ## HUD-SCALE: 104 -> 76. This was widened to 104 so "FOOD" (4 capitals at the
 ## old 38px `VITALS_VALUE_FONT`) had room; at 26 the same four capitals need
 ## about 73px, so the column follows the font that set it.
-const VITALS_CAPTION_WIDTH := 76.0
+## r6: "FOOD" at HUD_READABLE_FONT_SIZE (28) needs about 80 px.
+const VITALS_CAPTION_WIDTH := 88.0
 const VITALS_HP_ROW_Y := 28.0 + VITALS_ROW_GAP
 const VITALS_SATIETY_ROW_Y := VITALS_HP_ROW_Y + 34.0 + VITALS_ROW_GAP
 ## Real content height of the vitals cluster (buff row 0-28, HP icon/bar/value
@@ -673,7 +682,10 @@ const LEGEND_FONT_SIZE := 26
 ## GLANCE tier is the right one for a label you recognise rather than read;
 ## the sentence-shaped text on this HUD (the objective line) takes
 ## `HUD_SENTENCE_FONT_SIZE` below instead, so the two stop sharing one number.
-const HUD_READABLE_FONT_SIZE := 26
+## F10#6 device profile r6: UX section 8's raster floor (18 px essential text at
+## the 1280x720 stress raster = UITokens.FONT_READ, 27, on this canvas) sits
+## just above the glance floor, so the HUD takes the next token up.
+const HUD_READABLE_FONT_SIZE := UITokens.FONT_BUTTON
 ## Text on this HUD that is an actual sentence and is parsed rather than
 ## recognised. See `HUD_SCALE.SENTENCE_CAP_ARCMIN`.
 const HUD_SENTENCE_FONT_SIZE := 32
@@ -981,6 +993,9 @@ var _moment_banner: PanelContainer = null
 var _moment_title: Label = null
 var _moment_detail: Label = null
 var _moment_also: Label = null
+var _moment_separator: MarginContainer = null
+var _quick_items_heading: Label = null
+var _victory_hierarchy_candidate := false
 var _moment_queue: Array = []
 var _moment_feed_seq: int = 0
 var _moment_feed_epoch: int = -1
@@ -1053,6 +1068,8 @@ func _ready() -> void:
 
 	_load_buff_config()
 	_load_hud_config()
+	var victory_visual: Variant = JSON.parse_string(FileAccess.get_file_as_string(VICTORY_HIERARCHY_CONFIG))
+	_victory_hierarchy_candidate = victory_visual is Dictionary and victory_visual.get("enabled", false) == true
 	_build_creature_block()
 	_mount_party_strip()
 	_build_vitals_cluster()
@@ -1158,7 +1175,30 @@ func _ready() -> void:
 ## their own accent border instead, so all three tiers are visually distinct
 ## rather than one repeated dark-navy box.
 func _style_hotbar() -> void:
-	$Root/BottomDock/HotbarPanel.add_theme_stylebox_override("panel", UITokens.panel_deep_box())
+	var box := UITokens.panel_deep_box()
+	if _victory_hierarchy_candidate:
+		var layout := $Root/BottomDock/HotbarPanel/Margin/Layout as VBoxContainer
+		var margin := $Root/BottomDock/HotbarPanel/Margin as MarginContainer
+		_quick_items_heading = Label.new()
+		_quick_items_heading.name = "QuickItemsHeading"
+		_quick_items_heading.text = "QUICK ITEMS"
+		_quick_items_heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_quick_items_heading.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+		_quick_items_heading.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		layout.add_child(_quick_items_heading)
+		layout.move_child(_quick_items_heading, 0)
+		UITokens.make_text_legible(_quick_items_heading)
+		# Spend existing panel + Margin padding on the heading. Slots keep
+		# their full height, width and glyph sizes; the dock does not grow.
+		var padding := box.content_margin_top + box.content_margin_bottom \
+			+ margin.get_theme_constant("margin_top") + margin.get_theme_constant("margin_bottom")
+		var heading_height := _quick_items_heading.get_combined_minimum_size().y \
+			+ layout.get_theme_constant("separation")
+		margin.add_theme_constant_override("margin_top", 0)
+		margin.add_theme_constant_override("margin_bottom", 0)
+		box.content_margin_top = maxf(0.0, (padding - heading_height) * 0.5)
+		box.content_margin_bottom = box.content_margin_top
+	_hotbar_panel.add_theme_stylebox_override("panel", box)
 	for chip in _hotbar_chips:
 		chip.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 
@@ -2236,11 +2276,11 @@ func _build_vitals_cluster() -> void:
 	# a right-aligned percentage value mirroring the HP row exactly.
 	_satiety_caption_label = Label.new()
 	_satiety_caption_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_caption_label.position = Vector2(0.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
-	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, 34.0)
+	_satiety_caption_label.position = Vector2(0.0, VITALS_FOOD_ONLY_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
-	_satiety_caption_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING)
 	_vitals_cluster.add_child(_satiety_caption_label)
 
@@ -2262,8 +2302,8 @@ func _build_vitals_cluster() -> void:
 
 	_satiety_value_label = Label.new()
 	_satiety_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y - 8.0)
-	_satiety_value_label.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH - 8.0, 34.0)
+	_satiety_value_label.position = Vector2(VITALS_CAPTION_WIDTH, VITALS_FOOD_ONLY_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_satiety_value_label.size = Vector2(VITALS_WIDTH - VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_satiety_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
@@ -2277,10 +2317,10 @@ func _build_vitals_cluster() -> void:
 	# task's own floor for a state word the player needs to actually read.
 	_satiety_state_label = Label.new()
 	_satiety_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_FOOD_ONLY_ROW_Y - 8.0)
-	_satiety_state_label.size = Vector2(220.0, 34.0)
+	_satiety_state_label.position = Vector2(VITALS_WIDTH + 12.0, VITALS_FOOD_ONLY_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_satiety_state_label.size = Vector2(220.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_state_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_satiety_state_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
+	_satiety_state_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_state_label.visible = false
 	_vitals_cluster.add_child(_satiety_state_label)
 
@@ -2353,8 +2393,8 @@ func _build_player_health_bar() -> void:
 
 	_hp_value_label = Label.new()
 	_hp_value_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hp_value_label.position = Vector2(0.0, HEALTH_BAR_ROW_Y - 8.0)
-	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, 34.0)
+	_hp_value_label.position = Vector2(0.0, HEALTH_BAR_ROW_Y + VITALS_VALUE_BOX_TOP)
+	_hp_value_label.size = Vector2(VITALS_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_hp_value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hp_value_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_hp_value_label.add_theme_font_size_override("font_size", VITALS_VALUE_FONT)
@@ -2883,7 +2923,9 @@ func _build_objective_block() -> void:
 
 	var eyebrow := Label.new()
 	eyebrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	eyebrow.text = "M A I N   S T O R Y" # letter-spaced feel; no theme letter-spacing support
+	# F10#6 device profile r6: the spaced-out letters ("M A I N") read as
+	# single-letter specks at 7 inches; a plain word reads as a word.
+	eyebrow.text = "MAIN STORY"
 	# `UITokens.FONT_TINY` (19) measured ~7 physical px at the Ally's real
 	# resolution -- same "shared by a dozen screens this lane does not own"
 	# reason `HUD_READABLE_FONT_SIZE`'s own header gives for not raising that
@@ -3285,6 +3327,19 @@ func _build_moment_banner() -> void:
 	_moment_detail.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	_moment_detail.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	column.add_child(_moment_detail)
+	if _victory_hierarchy_candidate:
+		_moment_separator = MarginContainer.new()
+		_moment_separator.name = "ReceiptGrowthSeparator"
+		_moment_separator.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_moment_separator.add_theme_constant_override("margin_top", 4)
+		_moment_separator.add_theme_constant_override("margin_bottom", 4)
+		_moment_separator.visible = false
+		var line := ColorRect.new()
+		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		line.color = UITokens.BORDER
+		line.custom_minimum_size.y = 1.0
+		_moment_separator.add_child(line)
+		column.add_child(_moment_separator)
 
 	_moment_also = Label.new()
 	_moment_also.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -3478,7 +3533,8 @@ func _render_moment_events() -> void:
 			growth.append(event)
 			has_level = has_level or str(event.get("kind", "")) == "level_up"
 
-	_dress_moment_banner("level_up" if has_level else "bond_milestone")
+	var receipt_accent := _victory_hierarchy_candidate and not receipts.is_empty()
+	_dress_moment_banner("level_up" if has_level and not receipt_accent else "bond_milestone")
 	var rows := PackedStringArray()
 	var used_awards: Dictionary = {}
 	var single_growth := receipts.is_empty() and growth.size() == 1
@@ -3530,6 +3586,8 @@ func _render_moment_events() -> void:
 	_moment_detail.visible = not _moment_detail.text.is_empty()
 	_moment_also.text = "\n".join(rows)
 	_moment_also.visible = not _moment_also.text.is_empty()
+	if _moment_separator != null:
+		_moment_separator.visible = not receipts.is_empty() and _moment_detail.visible and _moment_also.visible
 	_position_moment_banner()
 
 

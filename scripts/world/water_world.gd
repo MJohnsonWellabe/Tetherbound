@@ -345,6 +345,8 @@ func _stand_up_ground_cover() -> void:
 	var profile: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_COVER_PATH))
 	if not profile is Dictionary or not bool((profile as Dictionary).get("enabled", false)):
 		return
+	var dunes := preload("res://scripts/world/water_dune_cover.gd")
+	profile = dunes.ground_profile(profile as Dictionary, dunes.config())
 	var texture_names: Array = []
 	for spec: Dictionary in _visual.terrain.textures:
 		texture_names.append(str(spec.name))

@@ -1,0 +1,34 @@
+{
+  "session_id": 52422,
+  "launcher_exit_code": 0,
+  "engine_exit_code": 1,
+  "expected_failure": "frame_cap",
+  "terminal": {
+    "fight_counter_s": 0.45,
+    "ok": false,
+    "reason": "frame_cap",
+    "save_failures": 0,
+    "saved": 4,
+    "victory": {
+      "ok": false,
+      "outcomes": [],
+      "why": "fight/battle still running at the step boundary",
+      "xp_progress": []
+    }
+  },
+  "defeat_before": false,
+  "defeat_after": false,
+  "missing_phases": [
+    "win",
+    "aftermath",
+    "receipt-expired"
+  ],
+  "capture_complete": false,
+  "native_dimensions": [
+    1920,
+    1080
+  ],
+  "status": "Negative-control PASS only; no victory or visual acceptance",
+  "cleanup": "Root verified no Tidewake Godot process and shared lock {} after launcher terminal exit; later independent jobs may claim the GPU.",
+  "diagnostics": "Expected ERROR Capture rejected: frame_cap and one existing deprecated interpolation warning; no script/parse/compile errors."
+}

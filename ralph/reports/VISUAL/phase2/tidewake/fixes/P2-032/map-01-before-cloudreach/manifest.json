@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "0930716acaf88f4827576b050e782c32fb46269e",
+  "repro": "Godot_v4.7-stable_win64.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --audio-driver Dummy --script tools/phase2_capture_ui.gd -- --biome=cloudreach --seed=2042 --map-cycle --output=res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach; isolated APPDATA=.local/appdata; TB_WORLD_SEED=2042; map_realm_selection_visual.enabled=false; all other visual candidate flags at committed defaults",
+  "source_manifest_sha256": "43e746c98c290cdc5542c3bf2f74f7ab07e67f1ce76c229c2866b5ce3a9db247",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome": "cloudreach",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture": "Stocked party and satchel in production scene; no save or progression proof",
+    "rendering_method": "gl_compatibility",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+    "seed": 2042
+  },
+  "frames": [
+    {
+      "id": "exploration_hud",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-cloudreach/contact_sheet_01.jpg",
+      "capture": {
+        "camera": "production CameraRig/Camera3D",
+        "id": "exploration_hud",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/exploration_hud.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+        "subject": "HUD in exploration",
+        "ui": true
+      },
+      "source_sha256": "f55fef9d879466e2b3dce940a50c011db4b2d636f8d917fde41ad5e1c3c3ce1d",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/exploration_hud.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "menu_map",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-cloudreach/contact_sheet_01.jpg",
+      "capture": {
+        "camera": "production CameraRig/Camera3D",
+        "id": "menu_map",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/menu_map.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+        "subject": "Menu map",
+        "ui": true
+      },
+      "source_sha256": "c1d3c7802434b749a5526d2818d55cf690ad08e048d979125a7e3017bbc88bba",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/menu_map.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "map_selected_meadows",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-cloudreach/contact_sheet_01.jpg",
+      "capture": {
+        "available_realms": [
+          "meadows",
+          "cloudreach"
+        ],
+        "camera": "production CameraRig/Camera3D",
+        "id": "map_selected_meadows",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/map_selected_meadows.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+        "selected_button_disabled": true,
+        "selected_realm": "meadows",
+        "subject": "Explicit map region selection: meadows",
+        "ui": true
+      },
+      "source_sha256": "15bf6ea534843e48e3c49750a0ba6ab0d0089498928c50088c86f503b5272e75",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/map_selected_meadows.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "map_selected_cloudreach",
+      "frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/map-01-before-cloudreach/contact_sheet_01.jpg",
+      "capture": {
+        "available_realms": [
+          "meadows",
+          "cloudreach"
+        ],
+        "camera": "production CameraRig/Camera3D",
+        "id": "map_selected_cloudreach",
+        "path": "res://ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/map_selected_cloudreach.jpg",
+        "player_present": true,
+        "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+        "selected_button_disabled": true,
+        "selected_realm": "cloudreach",
+        "subject": "Explicit map region selection: cloudreach",
+        "ui": true
+      },
+      "source_sha256": "08a2ae6254ad6db66cfc65ee6b82a57160e8af8340480d6b28667ca13d9451ae",
+      "source_frame_path": "ralph/reports/VISUAL/phase2/tidewake/fixes/P2-032/raw-map-01-before-cloudreach/map_selected_cloudreach.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

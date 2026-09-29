@@ -1,0 +1,613 @@
+{
+	"complete": false,
+	"failures": [
+		"riptusk: camera changed within the lifecycle",
+		"Expected 14 frames and two same-body rest/resume lifecycles"
+	],
+	"final": true,
+	"frames": [
+		{
+			"animation": "idle",
+			"animation_playing": true,
+			"animation_position_seconds": 0.0948383333333333,
+			"body_instance_id": 650150691713,
+			"body_parked": true,
+			"camera": {
+				"far": 6500.0,
+				"fov": 70.0,
+				"frustum_offset": [
+					0.0,
+					0.0
+				],
+				"h_offset": 0.0,
+				"keep_aspect": 1,
+				"near": 0.0500000007450581,
+				"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+				"projection": 0,
+				"size": 1.0,
+				"transform": {
+					"basis": [
+						[
+							-1.0,
+							0.0,
+							-0.000000150995802528087
+						],
+						[
+							-0.0000000313937960072508,
+							0.978147625923157,
+							0.2079117000103
+						],
+						[
+							0.000000147696184171764,
+							0.2079117000103,
+							-0.978147625923157
+						]
+					],
+					"origin": [
+						35.0,
+						17.5536098480225,
+						106.781288146973
+					]
+				},
+				"v_offset": 0.0,
+				"viewport": [
+					1920,
+					1080
+				]
+			},
+			"camera_delta_from_entry": {
+				"basis_max": 0.0,
+				"lens_equal": true,
+				"origin_m": 0.0
+			},
+			"elapsed_seconds": 0.133127,
+			"id": "water__riptusk__resting__t0100",
+			"lateness_seconds": 0.033127,
+			"live_gate": false,
+			"model_pivot": {
+				"basis": [
+					[
+						-0.0000000437113882867379,
+						1.0,
+						0.0
+					],
+					[
+						-1.0,
+						-0.0000000437113882867379,
+						0.0
+					],
+					[
+						0.0,
+						0.0,
+						1.0
+					]
+				],
+				"origin": [
+					2.125,
+					1.36749994754791,
+					0.0
+				]
+			},
+			"observed_monotonic_usec": 73881942,
+			"path": "res://.artifacts/phase2/p2029-rest-native-01-before/water__riptusk__resting__t0100.jpg",
+			"physical": {
+				"body_global_transform": {
+					"basis": [
+						[
+							-1.0,
+							0.0,
+							0.0000000874227765734759
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							-0.0000000874227765734759,
+							0.0,
+							-1.0
+						]
+					],
+					"origin": [
+						37.9749984741211,
+						14.7493009567261,
+						117.650001525879
+					]
+				},
+				"body_transform": {
+					"basis": [
+						[
+							-1.0,
+							0.0,
+							0.0000000874227765734759
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							-0.0000000874227765734759,
+							0.0,
+							-1.0
+						]
+					],
+					"origin": [
+						37.9749984741211,
+						14.7493009567261,
+						117.650001525879
+					]
+				},
+				"capsule_height": 4.25,
+				"capsule_radius": 1.48749995231628,
+				"collider_class": "CapsuleShape3D",
+				"collider_disabled": false,
+				"collider_transform": {
+					"basis": [
+						[
+							1.0,
+							0.0,
+							0.0
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							0.0,
+							0.0,
+							1.0
+						]
+					],
+					"origin": [
+						0.0,
+						2.125,
+						0.0
+					]
+				},
+				"height": 4.25,
+				"radius": 1.4875,
+				"scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"pose": "resting",
+			"resolution": [
+				1920,
+				1080
+			],
+			"rest_receipt": {
+				"active": true,
+				"bones": [],
+				"config": {
+					"mode": "roll",
+					"roll_deg": 90.0
+				},
+				"pending": false,
+				"species": "riptusk",
+				"vertex_contact_deform": {}
+			},
+			"sample_seconds": 0.1,
+			"sample_window_valid": true,
+			"sha256": "ef6df1ae2319be3e49a0189c33669ad6be489b1d45d0502445c392beb263aeec",
+			"species": "riptusk",
+			"sun": {
+				"color": [
+					1.0,
+					0.945098042488098,
+					0.847058832645416
+				],
+				"directional_shadow_max_distance": 220.0,
+				"directional_shadow_mode": 1,
+				"energy": 1.39999997615814,
+				"shadow_bias": 0.0599999986588955,
+				"shadow_enabled": true,
+				"shadow_normal_bias": 1.70000004768372,
+				"shadow_opacity": 1.0,
+				"transform": {
+					"basis": [
+						[
+							-0.766044437885284,
+							0.0,
+							-0.642787635326386
+						],
+						[
+							-0.446517825126648,
+							0.719339787960052,
+							0.532139182090759
+						],
+						[
+							0.462382733821869,
+							0.694658398628235,
+							-0.551046252250671
+						]
+					],
+					"origin": [
+						0.0,
+						0.0,
+						0.0
+					]
+				}
+			}
+		}
+	],
+	"rest_diagnostic": {
+		"appdata": "D:\\tetherbound\\x04-tidewake\\.artifacts\\phase2\\rest-native-01-before-appdata",
+		"fixture": "Parked parent visual fixture with naturally running AnimationPlayer; resume witnesses restored idle only, not bed/companion/gameplay traversal.",
+		"gate_enabled": false,
+		"isolated_save": "user://rest_native_before_5156384/",
+		"isolated_save_absolute": "D:/tetherbound/x04-tidewake/.artifacts/phase2/rest-native-01-before-appdata/Godot/app_userdata/Tetherbound/rest_native_before_5156384/",
+		"launcher_sha256": "5db66d403cdd31b2f8bbe5afc94839c26390660fe42bca6db2a1dcbbef8f6a6d",
+		"lifecycles": [
+			{
+				"body_instance_id": 650150691713,
+				"camera_at_entry": {
+					"far": 6500.0,
+					"fov": 70.0,
+					"frustum_offset": [
+						0.0,
+						0.0
+					],
+					"h_offset": 0.0,
+					"keep_aspect": 1,
+					"near": 0.0500000007450581,
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"projection": 0,
+					"size": 1.0,
+					"transform": {
+						"basis": [
+							[
+								-1.0,
+								0.0,
+								-0.000000150995802528087
+							],
+							[
+								-0.0000000313937960072508,
+								0.978147625923157,
+								0.2079117000103
+							],
+							[
+								0.000000147696184171764,
+								0.2079117000103,
+								-0.978147625923157
+							]
+						],
+						"origin": [
+							35.0,
+							17.5536098480225,
+							106.781288146973
+						]
+					},
+					"v_offset": 0.0,
+					"viewport": [
+						1920,
+						1080
+					]
+				},
+				"camera_convergence_before_rest": {
+					"anchor": {
+						"far": 6500.0,
+						"fov": 70.0,
+						"frustum_offset": [
+							0.0,
+							0.0
+						],
+						"h_offset": 0.0,
+						"keep_aspect": 1,
+						"near": 0.0500000007450581,
+						"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+						"projection": 0,
+						"size": 1.0,
+						"transform": {
+							"basis": [
+								[
+									-1.0,
+									0.0,
+									-0.000000150995802528087
+								],
+								[
+									-0.0000000313937960072508,
+									0.978147625923157,
+									0.2079117000103
+								],
+								[
+									0.000000147696184171764,
+									0.2079117000103,
+									-0.978147625923157
+								]
+							],
+							"origin": [
+								35.0,
+								17.5536098480225,
+								106.781288146973
+							]
+						},
+						"v_offset": 0.0,
+						"viewport": [
+							1920,
+							1080
+						]
+					},
+					"camera": {
+						"far": 6500.0,
+						"fov": 70.0,
+						"frustum_offset": [
+							0.0,
+							0.0
+						],
+						"h_offset": 0.0,
+						"keep_aspect": 1,
+						"near": 0.0500000007450581,
+						"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+						"projection": 0,
+						"size": 1.0,
+						"transform": {
+							"basis": [
+								[
+									-1.0,
+									0.0,
+									-0.000000150995802528087
+								],
+								[
+									-0.0000000313937960072508,
+									0.978147625923157,
+									0.2079117000103
+								],
+								[
+									0.000000147696184171764,
+									0.2079117000103,
+									-0.978147625923157
+								]
+							],
+							"origin": [
+								35.0,
+								17.5536098480225,
+								106.781288146973
+							]
+						},
+						"v_offset": 0.0,
+						"viewport": [
+							1920,
+							1080
+						]
+					},
+					"elapsed_seconds": 0.23815,
+					"stable_frames": 5
+				},
+				"declared_model_path": "res://assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb",
+				"fixture": "Parent production stage/seating; body process and physics parked; real AnimationPlayer and rest lifecycle. Resume is idle, not movement.",
+				"initial_animation": "idle",
+				"initial_animation_length_seconds": 3.04166674613953,
+				"initial_animation_speed_scale": 1.0,
+				"initial_rest_receipt": {
+					"active": true,
+					"bones": [],
+					"config": {
+						"mode": "roll",
+						"roll_deg": 90.0
+					},
+					"pending": false,
+					"species": "riptusk",
+					"vertex_contact_deform": {}
+				},
+				"model_loaded": true,
+				"pre_rest": {
+					"body_instance_id": 650150691713,
+					"model_pivot": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							0.0,
+							0.0,
+							0.0
+						]
+					},
+					"physical": {
+						"body_global_transform": {
+							"basis": [
+								[
+									-1.0,
+									0.0,
+									0.0000000874227765734759
+								],
+								[
+									0.0,
+									1.0,
+									0.0
+								],
+								[
+									-0.0000000874227765734759,
+									0.0,
+									-1.0
+								]
+							],
+							"origin": [
+								37.9749984741211,
+								14.7493009567261,
+								117.650001525879
+							]
+						},
+						"body_transform": {
+							"basis": [
+								[
+									-1.0,
+									0.0,
+									0.0000000874227765734759
+								],
+								[
+									0.0,
+									1.0,
+									0.0
+								],
+								[
+									-0.0000000874227765734759,
+									0.0,
+									-1.0
+								]
+							],
+							"origin": [
+								37.9749984741211,
+								14.7493009567261,
+								117.650001525879
+							]
+						},
+						"capsule_height": 4.25,
+						"capsule_radius": 1.48749995231628,
+						"collider_class": "CapsuleShape3D",
+						"collider_disabled": false,
+						"collider_transform": {
+							"basis": [
+								[
+									1.0,
+									0.0,
+									0.0
+								],
+								[
+									0.0,
+									1.0,
+									0.0
+								],
+								[
+									0.0,
+									0.0,
+									1.0
+								]
+							],
+							"origin": [
+								0.0,
+								2.125,
+								0.0
+							]
+						},
+						"height": 4.25,
+						"radius": 1.4875,
+						"scale": [
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"stand_ground_y": 14.7493009567261
+				},
+				"rest_mode_expected": "roll",
+				"rest_observer_start_usec": 73748815,
+				"species": "riptusk",
+				"sun_at_entry": {
+					"color": [
+						1.0,
+						0.945098042488098,
+						0.847058832645416
+					],
+					"directional_shadow_max_distance": 220.0,
+					"directional_shadow_mode": 1,
+					"energy": 1.39999997615814,
+					"shadow_bias": 0.0599999986588955,
+					"shadow_enabled": true,
+					"shadow_normal_bias": 1.70000004768372,
+					"shadow_opacity": 1.0,
+					"transform": {
+						"basis": [
+							[
+								-0.766044437885284,
+								0.0,
+								-0.642787635326386
+							],
+							[
+								-0.446517825126648,
+								0.719339787960052,
+								0.532139182090759
+							],
+							[
+								0.462382733821869,
+								0.694658398628235,
+								-0.551046252250671
+							]
+						],
+						"origin": [
+							0.0,
+							0.0,
+							0.0
+						]
+					}
+				}
+			}
+		],
+		"live_config_sha256": "938ecb7c8945f806fd61d185cc4c8c4ab5514f1b2c104c9a20a026f4f45e01dd",
+		"pack": "res://.artifacts/phase2/rest-native-before.zip",
+		"pack_sha256": "a2ab7d27fe96601622f3708a2c6e2c0d27f84832fa1da337c83c2b769f223472",
+		"paired_max_elapsed_delta_seconds": 0.15,
+		"prepared_source": {
+			"only_variant_difference": "rest config enabled false/true",
+			"pack_entries": [
+				"data/config/water_creature_rest_visual.json"
+			],
+			"packed_config_sha256": {
+				"after": "ecc7e79c624707bfdde42fd42903772a8f1ab57af6d2cf87b187f670259b9db5",
+				"before": "938ecb7c8945f806fd61d185cc4c8c4ab5514f1b2c104c9a20a026f4f45e01dd"
+			},
+			"packs": {
+				"after": "07e8e2e41f3093afe99a0683e76fe158f1ece7e7f08a1b09646a6cd082816b59",
+				"before": "a2ab7d27fe96601622f3708a2c6e2c0d27f84832fa1da337c83c2b769f223472"
+			},
+			"prepared_head": "45c737025aec8d890270640d9fb2f279e9f7f5f2",
+			"required_frames_per_boot": 14.0,
+			"required_frames_total": 28.0,
+			"sources": {
+				"assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb": "fc6cc22690bff0d14eaabb978699fc39bf350ca987e808fd5b19017f33ef35cc",
+				"assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb": "f5a567fd5b97f3c0334e66a12d3db6ebdf5ae4f4c55467592d24dd6da7d4d04c",
+				"autoload/game_state.gd": "6ab20b980b6b263d43206cf90da4c0717e57ffc63a701f5f4e232490f6fcffd0",
+				"data/config/water_creature_rest_visual.json": "938ecb7c8945f806fd61d185cc4c8c4ab5514f1b2c104c9a20a026f4f45e01dd",
+				"data/creatures/species.json": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+				"project.godot": "ae6c6a0e6e4f7d26c441c6075841b40c78225230f63e3017f889634eb55cd2c9",
+				"scenes/creatures/creature.tscn": "d1096b7a4ea22a67ee1be02bb865045edf08a365c4d56ba5fdee73bd9036085a",
+				"scenes/world/water_archipelago.tscn": "366399beff3d93a6ee958faece7039bfbeaa971c8ccbb0dcb6afacfc24f08a81",
+				"scripts/characters/render_bounds.gd": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90",
+				"scripts/creatures/creature_animator.gd": "a23f708c491ff8433d16e33017c0af262db34e54a27a96d2bafa0643a64f7d78",
+				"scripts/creatures/creature_body.gd": "7fe136e616945432d4f5f8bfd17e2b1b711bd0f30d4318155196e6906d5105aa",
+				"scripts/creatures/creature_species.gd": "22be0364b448437e0afc075c2141b709fd6ad1be22dfc85d34435290d30591e3",
+				"scripts/creatures/water_rest_pose_visual.gd": "60ce97b7d571e7471ac66a72eb75c3062724a5bec88236b6edcd43b43fe0b8e9",
+				"scripts/player/camera_rig.gd": "125363a186a833c09276ddf0adc53db179d429f3a8ee021c5e157e28e9827f7c",
+				"scripts/save/save_game.gd": "5fc4909ea193dc0b3d2d743984e95ef78abdd58bb34df95ff59260e8e2a6e9ca",
+				"scripts/world/water_world.gd": "3efa0f5360776a9a4b2899441bcaaf78335e92bade4c244814889c92a57280b4",
+				"scripts/world/world_look.gd": "cfa597b5ec5cd49922e45687326cb7be6dbf4e3c9bef6d61286f9c17096b116b",
+				"tools/phase2_capture_creatures.gd": "b88d4a83a78849e04c952d7395847ce9aa4edaf53a40723fe620b29428d08482"
+			}
+		},
+		"required_frames_per_boot": 14,
+		"rest_targets_seconds": [
+			0.1,
+			0.35,
+			1.0,
+			3.0
+		],
+		"resume_targets_seconds": [
+			0.1,
+			0.35,
+			0.75
+		],
+		"sample_max_lateness_seconds": 0.15,
+		"source_commit": "c2110feba1ac31ccc981434599ee7f844b86c499",
+		"timing": "Real monotonic time immediately after parent play_rest, then after stop_rest returns. Includes draw waits and image IO; nominal targets are not exact samples. No seek or forced completion.",
+		"variant": "before",
+		"wrapper_sha256": "b31e2cd3b4090ea5c6cb367366c02f665793394ea6bc2a02bb6c95708170412c"
+	}
+}

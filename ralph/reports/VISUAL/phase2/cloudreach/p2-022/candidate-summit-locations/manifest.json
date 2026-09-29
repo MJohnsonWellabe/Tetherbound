@@ -1,0 +1,508 @@
+{
+  "schema_version": 1,
+  "evidence_format": "contact_sheet_tile_320x180",
+  "commit": "0f2303feb00d16e0d67ab5038f3d41abfd3742eb",
+  "repro": "Set data/config/cloudreach_aviary.json crown_arcade.enabled=true; isolate APPDATA under .artifacts/cloudreach-phase2/profile; Godot_v4.7-stable_win64_console.exe --path . --rendering-driver opengl3 --resolution 1920x1080 --fullscreen --script tools/phase2_capture_locations.gd -- --biome=cloudreach --subset=cloudreach__summit_final_stronghold__11__summit_eyrie --times=day,night --views=approach,close --seed=2042 --output=res://.artifacts/cloudreach-phase2/p2-022/candidate-summit-locations; restore crown_arcade.enabled=false afterward.",
+  "source_manifest_sha256": "44cdddc356c5df998d226d59b77ebc9502e5b2130d98765bf799ec54f3340872",
+  "capture_metadata": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "biome_id": "cloudreach",
+    "bound_player_character": "trainer",
+    "camera_rig": {
+      "class": "SpringArm3D",
+      "has_shape": true,
+      "instance_id": 296419854167,
+      "margin": 0.600000023841858,
+      "path": "CameraRig",
+      "spring_length": 5.19999980926514
+    },
+    "capture_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 296436631387,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D",
+      "source": "production CameraRig/Camera3D"
+    },
+    "capture_finished_utc": "2026-09-28T13:53:13",
+    "capture_started_utc": "2026-09-28T13:49:57",
+    "captured_frame_count": 4,
+    "catalogue": "res://data/config/debug_teleport_spots.json",
+    "complete": true,
+    "display_server": "Windows",
+    "failures": [],
+    "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+    "planned_frame_count": 4,
+    "planned_frame_ids": [
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+      "cloudreach__summit_final_stronghold__11__summit_eyrie__night__close"
+    ],
+    "player_character": "trainer",
+    "production_camera": {
+      "far": 3500.0,
+      "fov": 70.0,
+      "instance_id": 296436631387,
+      "near": 0.0500000007450581,
+      "path": "CameraRig/Camera3D"
+    },
+    "rendering_method": "gl_compatibility",
+    "requested_times": [
+      "day",
+      "night"
+    ],
+    "requested_views": [
+      "approach",
+      "close"
+    ],
+    "resolution": [
+      1920,
+      1080
+    ],
+    "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+    "schema_version": 1,
+    "seed": 2042,
+    "subsets": [
+      "cloudreach__summit_final_stronghold__11__summit_eyrie"
+    ]
+  },
+  "frames": [
+    {
+      "id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/candidate-summit-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 Summit / Final Stronghold",
+        "band_id": "summit_final_stronghold",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 477591,
+        "camera_player_distance_m": 5.82113122940063,
+        "camera_position": [
+          245.676132202148,
+          1179.3896484375,
+          5408.966796875
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.375253796577454,
+            0.0,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.19271793961525,
+            0.978147625923157,
+            -0.0780196487903595
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911685109138,
+            0.367053598165512
+          ],
+          "origin": [
+            240.961517333984,
+            1178.30847167969,
+            5407.05810546875
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.375253856182098,
+            -1.32271338770806e-07,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.192717850208282,
+            0.978147625923157,
+            -0.0780197754502296
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911655306816,
+            0.367053627967834
+          ],
+          "origin": [
+            245.676132202148,
+            1179.3896484375,
+            5408.966796875
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Summit Eyrie",
+        "destination_index": 11,
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+        "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+        "identity": "cloudreach__summit_final_stronghold__11__summit_eyrie",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.193939393939,
+          "hour": 8.00775757575757,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          240.961517333984,
+          1176.55859375,
+          5407.05810546875
+        ],
+        "position_xz": [
+          211.3,
+          5395.05
+        ],
+        "resolved_ground_y": 1176.52585907177,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          211.300003051758,
+          5395.0498046875
+        ],
+        "terrain_ground_y": 1176.52585907177,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": -112.04,
+        "view_heading_xz": [
+          -0.926922082901001,
+          -0.375253796577454
+        ]
+      },
+      "source_sha256": "78747c4f553e089be6371646d364d9debdc0d8567228e8a23a543c48a8c08d67",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.jpg",
+      "tile_index": 0,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/candidate-summit-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 Summit / Final Stronghold",
+        "band_id": "summit_final_stronghold",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 597443,
+        "camera_player_distance_m": 5.82094478607178,
+        "camera_position": [
+          220.648803710938,
+          1176.31750488281,
+          5398.83544921875
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.375253796577454,
+            0.0,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.19271793961525,
+            0.978147625923157,
+            -0.0780196487903595
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911685109138,
+            0.367053598165512
+          ],
+          "origin": [
+            215.934616088867,
+            1175.236328125,
+            5396.92626953125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.375253856182098,
+            -1.24983571936355e-07,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.192717850208282,
+            0.978147625923157,
+            -0.0780197605490685
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911655306816,
+            0.367053627967834
+          ],
+          "origin": [
+            220.648803710938,
+            1176.31750488281,
+            5398.83544921875
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Summit Eyrie",
+        "destination_index": 11,
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+        "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+        "identity": "cloudreach__summit_final_stronghold__11__summit_eyrie",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 200.212225666667,
+          "hour": 8.00848902666667,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          215.934616088867,
+          1173.48645019531,
+          5396.92626953125
+        ],
+        "position_xz": [
+          211.3,
+          5395.05
+        ],
+        "resolved_ground_y": 1173.45381261681,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          211.300003051758,
+          5395.0498046875
+        ],
+        "terrain_ground_y": 1173.45381261681,
+        "time": "day",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": -112.04,
+        "view_heading_xz": [
+          -0.926922082901001,
+          -0.375253796577454
+        ]
+      },
+      "source_sha256": "f453e72758f64fec546a5f598112cce936bff7cced9f807c639ea24e20282318",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.jpg",
+      "tile_index": 1,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/candidate-summit-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 Summit / Final Stronghold",
+        "band_id": "summit_final_stronghold",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 374498,
+        "camera_player_distance_m": 5.82113122940063,
+        "camera_position": [
+          245.676132202148,
+          1179.3896484375,
+          5408.966796875
+        ],
+        "camera_purpose": "approach",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.375253796577454,
+            0.0,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.19271793961525,
+            0.978147625923157,
+            -0.0780196487903595
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911685109138,
+            0.367053598165512
+          ],
+          "origin": [
+            240.961517333984,
+            1178.30847167969,
+            5407.05810546875
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.375253856182098,
+            -1.17695797996475e-07,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.192717865109444,
+            0.978147625923157,
+            -0.0780197605490685
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911655306816,
+            0.367053627967834
+          ],
+          "origin": [
+            245.676132202148,
+            1179.3896484375,
+            5408.966796875
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Summit Eyrie",
+        "destination_index": 11,
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach.jpg",
+        "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach",
+        "identity": "cloudreach__summit_final_stronghold__11__summit_eyrie",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 575.198484848485,
+          "hour": 23.0079393939394,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          240.961517333984,
+          1176.55859375,
+          5407.05810546875
+        ],
+        "position_xz": [
+          211.3,
+          5395.05
+        ],
+        "resolved_ground_y": 1176.52585907177,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 32.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          211.300003051758,
+          5395.0498046875
+        ],
+        "terrain_ground_y": 1176.52585907177,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "approach",
+        "view_heading_deg": -112.04,
+        "view_heading_xz": [
+          -0.926922082901001,
+          -0.375253796577454
+        ]
+      },
+      "source_sha256": "74ebdef38da2c3ee10658e93b1a7c72b6565ae39274d2f9de471797a96bf54c9",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach.jpg",
+      "tile_index": 2,
+      "evidence_format": "contact_sheet_tile_320x180"
+    },
+    {
+      "id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night__close",
+      "frame_path": "ralph/reports/VISUAL/phase2/cloudreach/p2-022/candidate-summit-locations/contact_sheet_01.jpg",
+      "capture": {
+        "band_display_name": "Region 6 \u2014 Summit / Final Stronghold",
+        "band_id": "summit_final_stronghold",
+        "biome_display_name": "Cloudreach Cliffs",
+        "biome_id": "cloudreach",
+        "bytes": 486850,
+        "camera_player_distance_m": 5.82094478607178,
+        "camera_position": [
+          220.648803710938,
+          1176.31750488281,
+          5398.83544921875
+        ],
+        "camera_purpose": "close",
+        "camera_rig_spring_length": 5.19999980926514,
+        "camera_rig_transform": {
+          "basis_x": [
+            0.375253796577454,
+            0.0,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.19271793961525,
+            0.978147625923157,
+            -0.0780196487903595
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911685109138,
+            0.367053598165512
+          ],
+          "origin": [
+            215.934616088867,
+            1175.236328125,
+            5396.92626953125
+          ]
+        },
+        "camera_transform": {
+          "basis_x": [
+            0.375253856182098,
+            -1.10408031162024e-07,
+            -0.926922082901001
+          ],
+          "basis_y": [
+            -0.192717865109444,
+            0.978147625923157,
+            -0.0780197530984879
+          ],
+          "basis_z": [
+            0.90666663646698,
+            0.207911655306816,
+            0.367053627967834
+          ],
+          "origin": [
+            220.648803710938,
+            1176.31750488281,
+            5398.83544921875
+          ]
+        },
+        "debug_travel": true,
+        "destination_display_name": "Summit Eyrie",
+        "destination_index": 11,
+        "file": "res://.artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__night__close.jpg",
+        "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night__close",
+        "identity": "cloudreach__summit_final_stronghold__11__summit_eyrie",
+        "nearby_creature_records_160m": [],
+        "nearby_creatures_160m": 0,
+        "observed_clock": {
+          "elapsed_seconds": 575.211111111111,
+          "hour": 23.0084444444444,
+          "requested": "night",
+          "time_of_day": "night"
+        },
+        "player_character": "trainer",
+        "player_position": [
+          215.934616088867,
+          1173.48645019531,
+          5396.92626953125
+        ],
+        "position_xz": [
+          211.3,
+          5395.05
+        ],
+        "resolved_ground_y": 1173.45381261681,
+        "selected_stand_lateral_m": 0.0,
+        "selected_stand_offset_m": 5.0,
+        "spot_index_in_band": 1,
+        "target_position_xz": [
+          211.300003051758,
+          5395.0498046875
+        ],
+        "terrain_ground_y": 1173.45381261681,
+        "time": "night",
+        "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+        "trainer_visible_intent": true,
+        "view": "close",
+        "view_heading_deg": -112.04,
+        "view_heading_xz": [
+          -0.926922082901001,
+          -0.375253796577454
+        ]
+      },
+      "source_sha256": "5ddd91dde4ecd46a2e0ae193e39517460ad303a4e6237cdf3e47fcbef4784eab",
+      "source_frame_path": ".artifacts/cloudreach-phase2/p2-022/candidate-summit-locations/cloudreach__summit_final_stronghold__11__summit_eyrie__night__close.jpg",
+      "tile_index": 3,
+      "evidence_format": "contact_sheet_tile_320x180"
+    }
+  ]
+}

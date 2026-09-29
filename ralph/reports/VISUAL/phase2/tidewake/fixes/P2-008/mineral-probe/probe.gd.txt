@@ -1,0 +1,80 @@
+extends SceneTree
+const FIELD := preload("res://scripts/world/water_heightfield.gd")
+var field: RefCounted
+var heights: Image
+var controls: Image
+
+func h(x: float, z: float) -> float:
+	if heights != null and x >= 512.0 and x < 1023.0 and z >= 2560.0 and z < 3071.0:
+		var ix := floori(x) - 512
+		var iz := floori(z) - 2560
+		return lerpf(lerpf(heights.get_pixel(ix, iz).r, heights.get_pixel(ix + 1, iz).r, x - floorf(x)),
+			lerpf(heights.get_pixel(ix, iz + 1).r, heights.get_pixel(ix + 1, iz + 1).r, x - floorf(x)), z - floorf(z))
+	return float(field.height_at(x, z))
+
+func normal(x: float, z: float) -> Vector3:
+	var ix := floorf(x)
+	var iz := floorf(z)
+	var weights := Vector4((1.0 - (x-ix)) * (z-iz), (x-ix)*(z-iz), (x-ix)*(1.0-(z-iz)), (1.0-(x-ix))*(1.0-(z-iz)))
+	var a := Vector3(h(ix, iz+1)-h(ix+1, iz+1),1.0,h(ix, iz+1)-h(ix,iz+2)).normalized()
+	var b := Vector3(h(ix+1, iz+1)-h(ix+2,iz+1),1.0,h(ix+1,iz+1)-h(ix+1,iz+2)).normalized()
+	var c := Vector3(h(ix+1,iz)-h(ix+2,iz),1.0,h(ix+1,iz)-h(ix+1,iz+1)).normalized()
+	var d := Vector3(h(ix,iz)-h(ix+1,iz),1.0,h(ix,iz)-h(ix,iz+1)).normalized()
+	return (a*weights.x+b*weights.y+c*weights.z+d*weights.w).normalized()
+
+func _init() -> void:
+	field = FIELD.new(FIELD.load_config())
+	var region: Resource = load("res://data/terrain/water/terrain3d_01_05.res")
+	var properties: Array[String] = []
+	for p: Dictionary in region.get_property_list():
+		properties.append(str(p.name))
+		if str(p.name) == "height_map": heights = region.get("height_map") as Image
+		if str(p.name) == "control_map": controls = region.get("control_map") as Image
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://.artifacts/phase2/p2008-dunes-04-after-locations/manifest.json"))
+	var frame: Dictionary = {}
+	for row: Dictionary in manifest.frames:
+		if str(row.frame_id).contains("sluice_isle__13"): frame = row
+	var tr: Dictionary = frame.camera_transform
+	var bx := Vector3(tr.basis_x[0], tr.basis_x[1], tr.basis_x[2])
+	var by := Vector3(tr.basis_y[0], tr.basis_y[1], tr.basis_y[2])
+	var bz := Vector3(tr.basis_z[0], tr.basis_z[1], tr.basis_z[2])
+	var eye := Vector3(tr.origin[0],tr.origin[1],tr.origin[2])
+	var samples: Array = []
+	for pixel: Vector2 in [Vector2(700,350),Vector2(850,350),Vector2(1100,300),Vector2(1350,300),Vector2(1600,300),Vector2(1850,300),Vector2(1100,420),Vector2(1350,420),Vector2(1600,420),Vector2(1850,420),Vector2(1450,560),Vector2(1700,600),Vector2(1200,850),Vector2(500,850),Vector2(300,400)]:
+		var direction := (bx*((pixel.x/1920.0*2.0-1.0)*1920.0/1080.0*tan(deg_to_rad(35.0)))+by*((1.0-pixel.y/1080.0*2.0)*tan(deg_to_rad(35.0)))-bz).normalized()
+		var distance := 0.0
+		var found := false
+		while distance < 250.0:
+			distance += 0.25
+			var at := eye+direction*distance
+			if at.y <= h(at.x,at.z):
+				found = true
+				break
+		if not found: continue
+		var lo := distance-0.25
+		var hi := distance
+		for iteration in 18:
+			var mid := (lo+hi)*0.5
+			var pos := eye+direction*mid
+			if pos.y <= h(pos.x,pos.z): hi=mid
+			else: lo=mid
+		var at := eye+direction*hi
+		var n := normal(at.x,at.z)
+		var ix := floorf(at.x)
+		var iz := floorf(at.z)
+		var flat := Vector3(h(ix,iz)-h(ix+1,iz),1.0,h(ix,iz)-h(ix,iz+1)).normalized()
+		var mask := 1.0-smoothstep(0.38,0.72,absf(n.y))
+		var control := -1
+		if controls != null and at.x>=512 and at.x<1024 and at.z>=2560 and at.z<3072:
+			var bytes := PackedFloat32Array([controls.get_pixel(floori(at.x)-512,floori(at.z)-2560).r]).to_byte_array()
+			control=bytes.decode_u32(0)
+		samples.append({"pixel":[pixel.x,pixel.y],"xyz":[at.x,at.y,at.z],"distance":hi,"normal_y":n.y,"slope_degrees":rad_to_deg(acos(n.y)),"bluff_without_noise":mask,
+			"bluff_noise_low":1.0-smoothstep(.38,.72,n.y-.06),"bluff_noise_high":1.0-smoothstep(.38,.72,n.y+.06),
+			"non_bilerp_normal_y":flat.y,"proposed_painted_rock_mask_090_070":1.0-smoothstep(.70,.90,n.y),
+			"base_id":(control>>27)&31 if control>=0 else -1,"overlay_id":(control>>22)&31 if control>=0 else -1,"blend":float((control>>14)&255)/255.0 if control>=0 else -1})
+	var result := {"source":"baked height/control images where present; analytic Water field fallback outside region01_05", "baked_height_image":heights!=null,"baked_control_image":controls!=null,"region_properties":properties,"projection":"manifest basis, 70deg vertical FOV, 1920x1080; CPU bilinear ray intersections, no rendered depth", "foot_height":h(float(frame.player_position[0]),float(frame.player_position[2])),"recorded_terrain_height":frame.terrain_ground_y,"samples":samples}
+	var out := FileAccess.open("res://.artifacts/phase2/sluice_bluff_slope_probe.json",FileAccess.WRITE)
+	out.store_string(JSON.stringify(result,"  "))
+	out.close()
+	print(JSON.stringify(result))
+	quit()

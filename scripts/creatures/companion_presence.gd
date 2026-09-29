@@ -82,6 +82,7 @@ const CAMP_GROUP := &"companion_camp"
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
 
 ## Reaction names. Also the keys of the config and of `_cooldowns`.
 const ACKNOWLEDGE := "acknowledge"
@@ -813,12 +814,16 @@ func _drive_continuous(delta: float) -> void:
 			_stop_body_rest()
 		_camp = want_camp
 	if _camp:
-		var look := SPECIES.placeholder(str(_body.get("species_id")))
+		var species_id := str(_body.get("species_id"))
+		var look := REST_VISUAL.resolve(species_id, SPECIES.placeholder(species_id))
 		var authored: Variant = look.get("rest_pose", {})
 		var use_body_pose := bool(look.get("rest_use_body_pose", false)) \
 			or (authored is Dictionary and not (authored as Dictionary).is_empty())
 		if use_body_pose:
 			if not _body_rest_held and _body.has_method("play_rest"):
+				# Only the scoped candidate clears a preceding procedural hurt pose.
+				if authored is Dictionary and bool((authored as Dictionary).get("release_presence_pivot", false)):
+					_release_pivot()
 				_body.call("play_rest")
 				_body_rest_held = true
 			_set_anim_speed(float(camp_cfg.get("anim_speed_scale", 0.5)))

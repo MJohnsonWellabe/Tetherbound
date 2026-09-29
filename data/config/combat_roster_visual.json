@@ -1,0 +1,4 @@
+{
+  "stable_compact_pin_reveal": false,
+  "_comment": "P2-088 unjudged presentation candidate. Repeated true pin requests on the combat compact PartyStrip keep the existing reveal instead of restarting its alpha tween. Exploration strips and unpin/re-pin behavior are unchanged. Enable only after production fight captures pass independent review."
+}

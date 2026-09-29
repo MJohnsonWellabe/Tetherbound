@@ -1,0 +1,230 @@
+extends "res://.artifacts/phase2/dune_bluff_mask_ablation.gd"
+
+## Scratch mask-only attribution experiment; never a production material.
+const NOISE_CASES := ["mask_baseline", "noise_neutral"]
+const NOISE_ANCHOR := "float bluff_patch = coast_noise(v_vertex.xz * 0.16 + vec2(v_vertex.y * 0.025));"
+const EXPECTED_PACK_SHA256 := "f28a8ac9e5001c9dd4f435832ebfae777280a94145a759d003c66b6f5b436c12"
+const BASIS_TOLERANCE := 0.000001
+const ORIGIN_TOLERANCE_M := 0.000001
+var _noise_codes: Dictionary = {}
+var _noise_io_failed := false
+var _noise_checkpoint_index := 0
+var _noise_previous_checkpoint := ""
+
+
+func _init() -> void:
+	# Parent mounts the unchanged process-local ZIP BEFORE explicitly calling
+	# its own base SceneTree initializer. Godot 4.7 requires this super().
+	if FileAccess.get_sha256(CONFIG_PACK) != EXPECTED_PACK_SHA256:
+		push_error("Noise diagnostic: config pack hash changed")
+		quit(1)
+		return
+	super()
+
+
+func _parse_args() -> bool:
+	if not super._parse_args():
+		return false
+	if _output_dir == "res://.artifacts/phase2/p2008-bluff-mask-01":
+		_output_dir = "res://.artifacts/phase2/p2008-bluff-noise03"
+	return true
+
+
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	var source := _planned[0].duplicate(true)
+	var base_id := str(source.frame_id).trim_suffix("__baseline")
+	_planned.clear()
+	for variant: String in NOISE_CASES:
+		var row := source.duplicate(true)
+		row["frame_id"] = base_id + "__" + variant
+		row["ablation_variant"] = variant
+		_planned.append(row)
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	if _mask_original_code.count(NOISE_ANCHOR) != 1:
+		_failures.append("Noise diagnostic: exact bluff_patch anchor changed")
+		return false
+	var hashes := {}
+	for variant: String in NOISE_CASES:
+		# Independent rebuilds. No height/control/slope snippet is included.
+		var code := _mask_original_code
+		if variant == "noise_neutral":
+			code = code.replace(NOISE_ANCHOR, "float bluff_patch = 0.5;")
+		code = code.replace("render_mode ", "render_mode unshaded, ")
+		code = code.replace(FRAGMENT_ANCHOR, FRAGMENT_ANCHOR + "\nfloat diagnostic_final_bluff = 0.0;")
+		code = code.replace(MASK_ANCHOR, MASK_ANCHOR + "\ndiagnostic_final_bluff = bluff;")
+		code = code.insert(code.rfind("}"), "\nALBEDO = vec3(diagnostic_final_bluff);\nEMISSION = vec3(0.0);\n")
+		_noise_codes[variant] = code
+		hashes[variant] = code.sha256_text()
+	_manifest["source_commit"] = OS.get_environment("BLUFF_NOISE03_SOURCE_COMMIT")
+	_manifest["source_worktree_diff_sha256"] = OS.get_environment("BLUFF_NOISE03_DIFF_SHA256")
+	_manifest["shader_hashes"] = hashes
+	_manifest["original_shader_code_sha256"] = _mask_original_code.sha256_text()
+	_manifest["parent_wrapper_sha256"] = FileAccess.get_sha256("res://.artifacts/phase2/dune_bluff_mask_ablation.gd")
+	_manifest["launcher_sha256"] = FileAccess.get_sha256("res://.artifacts/phase2/bluff-noise03-launch.ps1")
+	_manifest["camera_tolerances"] = {"basis_max_component": BASIS_TOLERANCE, "origin_distance_m": ORIGIN_TOLERANCE_M,
+		"projection_parameters": "exact", "sun_player_stand_lod": "exact"}
+	_manifest["additional_texture_fetches"] = 0
+	_manifest["ablation_disclosure"] = "Two unshaded exact final-bluff masks at one repeated production Gull Rest day/close fixture. Both rebuild from original installed shader; noise_neutral substitutes only bluff_patch=0.5, removing its perturbation from the two existing slope arguments. No sampling, threshold, palette, lighting-normal, height/control asset, vertex, collision, LOD or Sun changes. Production dune gates are unchanged; the hash-pinned pack enables dunes process-locally. Camera origin tolerance is 1e-6 m Euclidean distance and basis tolerance is 1e-6 maximum component; actual deltas and exact lens parameters are recorded. Fog/tonemapping remain; grayscale is not calibrated scalar data. Live creatures/vegetation may move. No art, performance, gameplay or P2-008 acceptance claim."
+	return true
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	_mask_code = str(_noise_codes[_mask_variant])
+	return await super._pin_time(time_name)
+
+
+func _mask_measure() -> Dictionary:
+	var measured := super._mask_measure()
+	measured["camera_transform"] = _transform(_camera.global_transform)
+	measured["camera_rig_transform"] = _transform(_rig.global_transform)
+	measured["camera_identity"] = {"instance_id": _camera.get_instance_id(), "path": str(_world.get_path_to(_camera)),
+		"is_current": _camera.is_current(), "is_viewport_camera": root.get_camera_3d() == _camera}
+	measured["lens"] = {"fov": _camera.fov, "projection": _camera.projection, "keep_aspect": _camera.keep_aspect,
+		"size": _camera.size, "frustum_offset": [_camera.frustum_offset.x, _camera.frustum_offset.y],
+		"h_offset": _camera.h_offset, "v_offset": _camera.v_offset, "near": _camera.near, "far": _camera.far}
+	measured["player_position"] = _vec3(_player.global_position)
+	measured["viewport_size"] = [root.size.x, root.size.y]
+	var window_size := DisplayServer.window_get_size()
+	measured["window_size"] = [window_size.x, window_size.y]
+	measured["window_mode"] = DisplayServer.window_get_mode()
+	var sun := _world.get_node_or_null("Sun") as DirectionalLight3D
+	if sun != null:
+		measured["sun"] = {"transform": _transform(sun.global_transform), "shadow_enabled": sun.shadow_enabled,
+			"shadow_opacity": sun.shadow_opacity, "bias": sun.shadow_bias, "normal_bias": sun.shadow_normal_bias,
+			"mode": sun.directional_shadow_mode, "max_distance": sun.directional_shadow_max_distance, "energy": sun.light_energy}
+	return measured
+
+
+## Pure numeric comparison. Reject malformed/nonfinite values, never round the
+## recorded transforms to make equality pass. Lens parameters are checked apart.
+static func camera_delta(reference: Dictionary, current: Dictionary) -> Dictionary:
+	var basis_max := 0.0
+	var origin_sq := 0.0
+	for key: String in ["basis_x", "basis_y", "basis_z", "origin"]:
+		var a: Variant = reference.get(key)
+		var b: Variant = current.get(key)
+		if not a is Array or not b is Array or a.size() != 3 or b.size() != 3:
+			return {"ok": false, "reason": "malformed camera transform"}
+		for index in 3:
+			if not is_finite(float(a[index])) or not is_finite(float(b[index])):
+				return {"ok": false, "reason": "nonfinite camera transform"}
+			var difference := absf(float(a[index]) - float(b[index]))
+			if key == "origin":
+				origin_sq += difference * difference
+			else:
+				basis_max = maxf(basis_max, difference)
+	var distance := sqrt(origin_sq)
+	return {"ok": basis_max <= BASIS_TOLERANCE and distance <= ORIGIN_TOLERANCE_M,
+		"basis_max_component_delta": basis_max, "origin_distance_m": distance}
+
+
+func _capture_row(row: Dictionary) -> void:
+	var previous := _records.size()
+	await super._capture_row(row)
+	if _records.size() <= previous:
+		return
+	var record := _records[-1]
+	var measured: Dictionary = record.ablation
+	var baseline: Dictionary = _mask_baseline.ablation
+	var delta := camera_delta(baseline.camera_transform, measured.camera_transform)
+	measured["camera_delta_from_baseline"] = delta
+	measured["camera_rig_delta_from_baseline"] = camera_delta(baseline.camera_rig_transform, measured.camera_rig_transform)
+	if not bool(delta.ok):
+		_failures.append(_mask_variant + ": camera transform exceeded tolerance or is invalid")
+	if measured.lens != baseline.lens or measured.camera_identity != baseline.camera_identity \
+			or not bool(measured.camera_identity.is_current) or not bool(measured.camera_identity.is_viewport_camera):
+		_failures.append(_mask_variant + ": camera identity/FOV/projection/aspect changed")
+	if measured.viewport_size != [1920, 1080] or measured.window_size != [1920, 1080] \
+			or measured.window_mode not in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]:
+		_failures.append(_mask_variant + ": actual native viewport/window/fullscreen mismatch")
+	var image := Image.load_from_file(str(record.file))
+	if image == null or image.is_empty() or image.get_size() != Vector2i(1920, 1080):
+		_failures.append(_mask_variant + ": saved native image dimensions invalid")
+	else:
+		measured["saved_image_size"] = [image.get_width(), image.get_height()]
+		record["sha256"] = FileAccess.get_sha256(str(record.file))
+	if str(measured.shader_code_sha256) != str(_noise_codes[_mask_variant]).sha256_text() \
+			or not bool(measured.active_override_is_diagnostic) or not bool(measured.override_enabled) or not bool(measured.dunes_enabled) \
+			or measured.terrain_lod != _mask_initial_lod:
+		_failures.append(_mask_variant + ": post-capture shader/gate/LOD mismatch")
+	if not measured.has("sun") or not baseline.has("sun") or measured.get("sun") != baseline.get("sun"):
+		_failures.append(_mask_variant + ": Sun absent or changed")
+	if measured.player_position != baseline.player_position:
+		_failures.append(_mask_variant + ": player position changed")
+	for key: String in ["selected_stand_xz", "selected_stand_offset_m", "selected_stand_lateral_m", "resolved_ground_y", "terrain_ground_y", "surface_state", "observed_clock"]:
+		if record.get(key) != _mask_baseline.get(key):
+			_failures.append(_mask_variant + ": exact stand/clock field changed: " + key)
+	_write_manifest()
+
+
+func _write_manifest() -> void:
+	_manifest["frames"] = _records
+	_manifest["failures"] = _failures
+	# Windows rename-over-existing is not an atomic replacement guarantee.
+	# Preserve a verified immutable checkpoint before touching the canonical file.
+	var canonical := _output_dir.path_join("manifest.json")
+	if FileAccess.file_exists(canonical):
+		var checkpoint := ""
+		while checkpoint.is_empty() or FileAccess.file_exists(checkpoint):
+			_noise_checkpoint_index += 1
+			checkpoint = _output_dir.path_join("manifest.previous-%06d.json" % _noise_checkpoint_index)
+		var previous_hash := FileAccess.get_sha256(canonical)
+		if previous_hash.length() != 64:
+			_noise_io_error("previous manifest hash failed; canonical untouched")
+			return
+		var copied := DirAccess.copy_absolute(ProjectSettings.globalize_path(canonical), ProjectSettings.globalize_path(checkpoint))
+		if copied != OK or FileAccess.get_sha256(checkpoint) != previous_hash:
+			_noise_io_error("previous checkpoint copy/hash failed: " + checkpoint + "; canonical untouched")
+			return
+		_noise_previous_checkpoint = checkpoint
+	_manifest["manifest_io"] = {"previous_checkpoint": _noise_previous_checkpoint,
+		"replacement_is_atomic": false, "engine_exit_authoritative": true}
+	var pending := _output_dir.path_join("manifest.pending.json")
+	var file := FileAccess.open(pending, FileAccess.WRITE)
+	if file == null:
+		_noise_io_error("manifest open failed")
+		return
+	file.store_string(JSON.stringify(_manifest, "\t") + "\n")
+	file.flush()
+	var failure := file.get_error()
+	file.close()
+	if failure != OK:
+		_noise_io_error("manifest store failed: " + str(failure))
+		return
+	var moved := DirAccess.rename_absolute(ProjectSettings.globalize_path(pending),
+		ProjectSettings.globalize_path(canonical))
+	if moved != OK:
+		_noise_io_error("manifest replace failed: " + str(moved) + "; verified previous checkpoint: " + _noise_previous_checkpoint)
+
+
+func _noise_io_error(reason: String) -> void:
+	_noise_io_failed = true
+	_manifest["complete"] = false
+	_manifest["manifest_io_failure"] = {"reason": reason, "previous_checkpoint": _noise_previous_checkpoint,
+		"engine_exit_authoritative": true}
+	_failures.append("Noise diagnostic " + reason + "; last verified checkpoint: " + _noise_previous_checkpoint)
+	push_error(_failures[-1])
+
+
+func _finish(complete: bool) -> void:
+	# Restore even after a partially prepared or failed case. Do not let the
+	# inherited finalizer print OK when the final manifest write itself fails.
+	if _mask_material != null and _mask_original != null:
+		_mask_material.call("set_shader_override", _mask_original)
+	_manifest["capture_finished_utc"] = Time.get_datetime_string_from_system(true)
+	_manifest["complete"] = complete and not _noise_io_failed and _failures.is_empty() and _records.size() == 2
+	_manifest["captured_frame_count"] = _records.size()
+	_manifest["planned_frame_count"] = _planned.size()
+	_write_manifest()
+	var accepted := bool(_manifest.complete) and not _noise_io_failed and _failures.is_empty()
+	for failure: String in _failures:
+		push_error("Noise diagnostic: " + failure)
+	print("NOISE DIAGNOSTIC %s: %d/2 frames" % ["OK" if accepted else "FAILED", _records.size()])
+	quit(0 if accepted else 1)

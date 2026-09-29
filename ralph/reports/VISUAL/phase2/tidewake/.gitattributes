@@ -1,0 +1,3 @@
+# Preserve retained evidence; embedded patches and raw logs are not source formatting.
+fixes/P2-008/receiver-01-ablation/working.patch -whitespace
+fixes/P2-008/shadow-01-ablation/working.patch -whitespace

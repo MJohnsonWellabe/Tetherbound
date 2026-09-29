@@ -1,0 +1,158 @@
+extends "res://tools/phase2_capture_locations.gd"
+
+## Local diagnostic only. Run the ordinary native fullscreen launcher with
+## --script res://.artifacts/phase2/dune_surface_ablation.gd -- --biome=water
+## --output=res://.artifacts/phase2/<fresh-round>. No source/config edits.
+const VARIANTS := ["baseline", "no_ripples", "no_shadowterm", "flat_normals", "no_procedural_detail"]
+const GRAIN := """float grain = coast_noise(v_vertex.zy * 3.4) * dune_weights.x
+			+ coast_noise(v_vertex.xz * 3.4) * dune_weights.y
+			+ coast_noise(v_vertex.xy * 3.4) * dune_weights.z;"""
+const RIPPLE := """float ripple = sin(phase) * (1.0 - smoothstep(0.3, 0.9, fwidth(phase)))
+			* smoothstep(0.8, 0.98, abs(dune_normal.y));"""
+const PARAMS := ["coast_dunes_enabled", "coast_dune_ripple_strength", "flat_terrain_normals"]
+
+var _variant := "baseline"
+var _terrain_material: Object
+var _original_shader: Shader
+var _diagnostic_shader: Shader
+var _original_code := ""
+var _quiet_code := ""
+var _original_params: Dictionary = {}
+var _sun: DirectionalLight3D
+var _baseline_shadow_opacity := 1.0
+var _baseline_record: Dictionary = {}
+var _ablation_state: Dictionary = {}
+
+
+func _parse_args() -> bool:
+	_biome_id = "water"
+	_output_dir = "res://.artifacts/phase2/dune-surface-ablation"
+	if not super._parse_args() or _biome_id != "water":
+		return false
+	_times.assign(["day"])
+	_views.assign(["close"])
+	_subsets.assign(["gull_rest_beach"])
+	_seed = 2042
+	return true
+
+
+func _load_plan() -> bool:
+	if not super._load_plan():
+		return false
+	if _planned.size() != 1:
+		push_error("Ablation requires exactly one Gull Rest Beach catalogue row")
+		return false
+	var original := _planned[0].duplicate(true)
+	_planned.clear()
+	for variant: String in VARIANTS:
+		var row := original.duplicate(true)
+		row["ablation_variant"] = variant
+		row["frame_id"] = str(original.frame_id) + "__" + variant
+		_planned.append(row)
+	return true
+
+
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	var terrain := _world.get_node_or_null("Terrain")
+	_sun = _world.get_node_or_null("Sun") as DirectionalLight3D
+	if terrain == null or _sun == null:
+		_failures.append("Ablation requires production Terrain and Sun")
+		return false
+	_terrain_material = terrain.get("material")
+	_original_shader = _terrain_material.call("get_shader_override") as Shader
+	if _original_shader == null or not bool(_terrain_material.call("is_shader_override_enabled")):
+		_failures.append("Ablation requires the installed coastal shader override")
+		return false
+	_original_code = _original_shader.code.replace("\r\n", "\n")
+	if not _original_code.contains(GRAIN) or not _original_code.contains(RIPPLE):
+		_failures.append("Installed dune grain/ripple anchors do not match; refusing a mislabeled ablation")
+		return false
+	_quiet_code = _original_code.replace(GRAIN, "float grain = 0.5;").replace(RIPPLE, "float ripple = 0.0;")
+	for key: String in PARAMS:
+		_original_params[key] = _terrain_material.call("get_shader_param", key)
+	_diagnostic_shader = _original_shader.duplicate() as Shader
+	_terrain_material.call("set_shader_override", _diagnostic_shader)
+	_manifest["ablation_disclosure"] = "Same production catalogue stand and validation repeated five times. Dune shader enabled locally in every case; configuration files remain unchanged. Only the named variant changes from that baseline. no_shadowterm retains the shadow map and sets Sun.shadow_opacity=0. no_procedural_detail replaces dune grain with 0.5 and ripple with 0 while preserving broad patch, slope tint, wetness and all terrain geometry. flat_normals changes the lighting normal, not the independent w_normal used by dune colour masks. Live creatures can move between frames; retained poses expose comparison drift."
+	_manifest["original_dune_params"] = _original_params.duplicate(true)
+	return true
+
+
+func _capture_row(row: Dictionary) -> void:
+	_variant = str(row.ablation_variant)
+	var before := _records.size()
+	await super._capture_row(row)
+	if _records.size() > before:
+		var record := _records[-1]
+		record["ablation"] = _ablation_state.duplicate(true)
+		record["ablation"]["measured_at_capture"] = _measure()
+		if _baseline_record.is_empty():
+			_baseline_record = record.duplicate(true)
+		else:
+			var a: Array = record.camera_position
+			var b: Array = _baseline_record.camera_position
+			var delta := Vector3(float(a[0]) - float(b[0]), float(a[1]) - float(b[1]), float(a[2]) - float(b[2])).length()
+			record["ablation"]["camera_delta_from_baseline_m"] = delta
+			if delta > 0.15 or record.selected_stand_offset_m != _baseline_record.selected_stand_offset_m or record.selected_stand_lateral_m != _baseline_record.selected_stand_lateral_m:
+				_failures.append("%s: stand/camera changed; not a controlled baseline comparison" % _variant)
+	_write_manifest()
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	var observed := await super._pin_time(time_name)
+	if observed.is_empty():
+		return observed
+	# The parent freezes after settling. Repin at that frozen clock so each
+	# case has exactly the same sun transform, independent of frame duration.
+	_look.call("apply_time", time_name)
+	observed["hour"] = _look.call("hour")
+	observed["elapsed_seconds"] = _look.call("elapsed_seconds")
+	_baseline_shadow_opacity = _sun.shadow_opacity
+	# Reset the source and every modified uniform before applying this one case.
+	if _diagnostic_shader.code != _original_code:
+		_diagnostic_shader.code = _original_code
+	for key: String in PARAMS:
+		_terrain_material.call("set_shader_param", key, _original_params[key])
+	_terrain_material.call("set_shader_param", "coast_dunes_enabled", true)
+	_ablation_state = {"variant": _variant, "changes_from_dune_baseline": {}}
+	match _variant:
+		"no_ripples":
+			_terrain_material.call("set_shader_param", "coast_dune_ripple_strength", 0.0)
+			_ablation_state.changes_from_dune_baseline = {"coast_dune_ripple_strength": 0.0}
+		"no_shadowterm":
+			_sun.shadow_opacity = 0.0
+			_ablation_state.changes_from_dune_baseline = {"Sun.shadow_opacity": 0.0}
+		"flat_normals":
+			_terrain_material.call("set_shader_param", "flat_terrain_normals", true)
+			_ablation_state.changes_from_dune_baseline = {"flat_terrain_normals": true}
+		"no_procedural_detail":
+			_diagnostic_shader.code = _quiet_code
+			_ablation_state.changes_from_dune_baseline = {"dune_grain_expression": 0.5, "dune_ripple_expression": 0.0}
+	for frame in 6:
+		await process_frame
+	_ablation_state["measured_after_apply"] = _measure()
+	return observed
+
+
+func _measure() -> Dictionary:
+	var params := {}
+	for key: String in PARAMS:
+		params[key] = _terrain_material.call("get_shader_param", key)
+	return {"shader_params": params, "quiet_shader": _diagnostic_shader.code == _quiet_code,
+		"shader_code_sha256": _diagnostic_shader.code.sha256_text(),
+		"sun_rotation": _vec3(_sun.rotation), "shadow_enabled": _sun.shadow_enabled,
+		"shadow_opacity": _sun.shadow_opacity, "shadow_bias": _sun.shadow_bias,
+		"shadow_normal_bias": _sun.shadow_normal_bias,
+		"shadow_mode": _sun.directional_shadow_mode, "shadow_max_distance": _sun.directional_shadow_max_distance}
+
+
+func _finish(complete: bool) -> void:
+	if _diagnostic_shader != null:
+		_diagnostic_shader.code = _original_code
+		_terrain_material.call("set_shader_override", _original_shader)
+		for key: String in PARAMS:
+			_terrain_material.call("set_shader_param", key, _original_params[key])
+	if _sun != null:
+		_sun.shadow_opacity = _baseline_shadow_opacity
+	super._finish(complete)
