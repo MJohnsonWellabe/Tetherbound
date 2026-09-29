@@ -1510,6 +1510,10 @@
       "name": "Shellwatch",
       "peak_height_m": 66.0,
       "peak_power": 1.65,
+      "dune_passages": [
+        {"center_offset_xz_m": [30.0, 10.0], "axis_xz": [0.58, 0.82], "half_length_m": 90.0, "half_width_m": 26.0, "depth_m": -26.0, "shore_preserve_m": 28.0,
+         "grass_clear_radius_m": 7.0, "grass_clear_from_m": -160.0, "grass_clear_to_m": 90.0, "grass_clear_step_m": 7.0}
+      ],
       "region_id": "marsh_channels",
       "scatter_seed": 486003.0,
       "shore_radius_m": 190.0,
@@ -2365,17 +2369,17 @@
         ],
         [
           267.004,
-          31.864,
+          16.732,
           1006.349
         ],
         [
           217.982,
-          35.175,
+          27.27,
           1061.1
         ],
         [
           388.657,
-          19.532,
+          7.351,
           1218.052
         ],
         [
@@ -2849,7 +2853,7 @@
       "name": "Shellwatch Rescue Jetty",
       "position": [
         267.004,
-        31.864,
+        16.732,
         1006.349
       ],
       "role": "occupied_dock_rescue",

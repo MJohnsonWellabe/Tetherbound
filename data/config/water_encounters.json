@@ -2787,18 +2787,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         38.897,
-        50.4022,
+        10.8457,
         70.315
       ],
       "position": [
         358.897,
-        50.4022,
+        10.8457,
         1190.315
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 3.8597,
+      "terrain_slope_deg": 4.91,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -2937,18 +2937,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         -0.952,
-        53.2038,
+        38.3046,
         -61.878
       ],
       "position": [
         319.048,
-        53.2038,
+        38.3046,
         1058.122
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 30.289,
+      "terrain_slope_deg": 23.8532,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3012,18 +3012,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         -112.695,
-        27.697,
+        27.669,
         -36.536
       ],
       "position": [
         207.305,
-        27.697,
+        27.669,
         1083.464
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 21.4601,
+      "terrain_slope_deg": 21.3387,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3073,7 +3073,7 @@
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 29.4953,
+      "terrain_slope_deg": 29.4716,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3087,18 +3087,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         94.613,
-        29.254,
+        29.0516,
         -38.955
       ],
       "position": [
         414.613,
-        29.254,
+        29.0516,
         1081.045
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 29.7427,
+      "terrain_slope_deg": 28.7549,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",
@@ -3137,18 +3137,18 @@
       "table_id": "water_shellwatch_land",
       "island_local_offset": [
         114.061,
-        27.022,
+        24.0839,
         42.685
       ],
       "position": [
         434.061,
-        27.022,
+        24.0839,
         1162.685
       ],
       "count": 1,
       "radius_m": 2.5,
       "habitat": "land",
-      "terrain_slope_deg": 26.7286,
+      "terrain_slope_deg": 21.5085,
       "activation_distance_m": 100,
       "roam_radius_m": 2.5,
       "purpose": "Ruined signal terraces",

@@ -22,6 +22,7 @@ var _peak := PackedFloat64Array()
 var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
+var _dune_passages: Array = []
 var _dune_relief: Dictionary = {}
 var _sectors: Array = []
 var _trail_cells: Dictionary = {}
@@ -76,6 +77,7 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 	_power.append(maxf(0.001, float(spec.get("peak_power", 1.65))))
 	_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
 	_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
+	_dune_passages.append(spec.get("dune_passages", []))
 	# Compile each sector once, avoiding JSON lookups per terrain texel.
 	var sectors: Array = []
 	for sector: Dictionary in spec.get("landing_sectors", []):
@@ -251,6 +253,19 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 		return _sea_level + inner * (radius - r) / width
 	var factor := maxf(0.0, 1.0 - (r / interior_radius) * (r / interior_radius))
 	var height := _sea_level + inner + (_peak[index] - inner) * pow(factor, _power[index])
+	for passage: Dictionary in _dune_passages[index]:
+		var raw_centre: Array = passage.get("center_offset_xz_m", [])
+		var raw_axis: Array = passage.get("axis_xz", [])
+		if raw_centre.size() != 2 or raw_axis.size() != 2:
+			continue
+		var axis := Vector2(float(raw_axis[0]), float(raw_axis[1])).normalized()
+		if axis.length_squared() < 0.5:
+			continue
+		var relative := Vector2(dx - float(raw_centre[0]), dz - float(raw_centre[1]))
+		var along := relative.dot(axis) / maxf(1.0, float(passage.get("half_length_m", 100.0)))
+		var across := relative.dot(Vector2(-axis.y, axis.x)) / maxf(1.0, float(passage.get("half_width_m", 24.0)))
+		var coast_fade := smoothstep(0.0, maxf(1.0, float(passage.get("shore_preserve_m", 28.0))), interior_radius - r)
+		height += float(passage.get("depth_m", 0.0)) * exp(-0.5 * (along * along + across * across)) * coast_fade
 	if bool(_dune_relief.get("enabled", false)) and _ids[index] != "veilfall" \
 			and not _ids[index].contains("_rest_"):
 		var inland := interior_radius - r

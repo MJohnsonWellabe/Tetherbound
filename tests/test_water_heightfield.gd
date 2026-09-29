@@ -31,12 +31,21 @@ func test_real_island_peaks_and_full_shorelines_match_authored_mass() -> void:
 	var base_config := _config.duplicate(true)
 	base_config.terrain.erase("trail_grading")
 	var base := FIELD.new(base_config)
+	var unsculpted_config := base_config.duplicate(true)
+	for island: Dictionary in unsculpted_config.get("islands", []):
+		island.erase("dune_passages")
+	var unsculpted := FIELD.new(unsculpted_config)
 	for island: Dictionary in _config.get("islands", []):
 		var at: Array = island["center_xz_m"]
 		var cx := float(at[0])
 		var cz := float(at[1])
 		var radius := float(island["shore_radius_m"])
-		assert_almost_eq(base.height_at(cx, cz), float(island["peak_height_m"]), 0.001, island["id"])
+		assert_almost_eq(unsculpted.height_at(cx, cz), float(island["peak_height_m"]), 0.001, island["id"])
+		if (island.get("dune_passages", []) as Array).is_empty():
+			assert_almost_eq(base.height_at(cx, cz), float(island["peak_height_m"]), 0.001, island["id"])
+		else:
+			assert_between(base.height_at(cx, cz), float(island["coast_inner_height_m"]),
+				float(island["peak_height_m"]), "%s sculpted crown stays dry below its base peak" % island["id"])
 		# Roads may cut an interior crown; the distant Veilfall summit remains
 		# untouched because its hike goes around the mountain to the falls.
 		if str(island.id) == "veilfall":
@@ -46,6 +55,35 @@ func test_real_island_peaks_and_full_shorelines_match_authored_mass() -> void:
 			var angle := TAU * float(n) / 36.0
 			assert_almost_eq(_field.height_at(cx + cos(angle) * radius, cz + sin(angle) * radius),
 				_field.water_level(), 0.001, "%s shoreline %d" % [island["id"], n])
+
+
+func test_shellwatch_dune_passage_is_dry_and_framed_by_higher_sand() -> void:
+	var shellwatch: Dictionary = {}
+	for island: Dictionary in _config.islands:
+		if str(island.id) == "shellwatch":
+			shellwatch = island
+			break
+	assert_false(shellwatch.is_empty())
+	var passage: Dictionary = shellwatch.dune_passages[0]
+	var island_centre := Vector2(float(shellwatch.center_xz_m[0]), float(shellwatch.center_xz_m[1]))
+	var centre := island_centre + Vector2(float(passage.center_offset_xz_m[0]), float(passage.center_offset_xz_m[1]))
+	var axis := Vector2(float(passage.axis_xz[0]), float(passage.axis_xz[1])).normalized()
+	var side := Vector2(-axis.y, axis.x)
+	var unsculpted_config := _config.duplicate(true)
+	for island: Dictionary in unsculpted_config.islands:
+		if str(island.id) == "shellwatch":
+			island.erase("dune_passages")
+	var unsculpted := FIELD.new(unsculpted_config)
+	assert_true(_field.height_at(centre.x, centre.y) < unsculpted.height_at(centre.x, centre.y) - 15.0,
+		"passage cuts a visible saddle into the previous smooth mound")
+	for raw_distance in [-55.0, -25.0, 0.0, 25.0, 55.0]:
+		var point: Vector2 = centre + axis * float(raw_distance)
+		var sand: float = _field.height_at(point.x, point.y)
+		assert_true(sand > _field.water_level() + 1.0, "passage stays above water")
+		var left: Vector2 = point - side * 48.0
+		var right: Vector2 = point + side * 48.0
+		assert_true(maxf(_field.height_at(left.x, left.y), _field.height_at(right.x, right.y)) > sand + 4.0,
+			"passage has a raised sand shoulder")
 
 
 func test_directional_dune_relief_changes_interior_without_moving_safe_coasts_or_veilfall() -> void:
