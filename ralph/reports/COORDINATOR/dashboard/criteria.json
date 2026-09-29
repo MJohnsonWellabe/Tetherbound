@@ -801,10 +801,10 @@
    "id": "F14",
    "title": "Tidewake fights, network and Guardian",
    "chapter": "Tidewake",
-   "pct": 50,
+   "pct": 83,
    "counts": {
-    "met": 4,
-    "partial": 2,
+    "met": 5,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -813,9 +813,9 @@
    "criteria": [
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md. C2: top trainers against the option-(c) bar on main 1e0ddd39 (optc_1e0ddd39/): Tess, Calder, Venn reader win 1.00 x3, masher lead-faint 1.00, reader/masher party cost <= 0.19, chapter-level masher loss 1.00. Venn's Riptusk lane now locks at 0.25 of the tell (it failed at 0.33-0.50 reader win). Aquaryn (3 starters) and Tidecoil pass under the named-wild ruling. C3 under the fixed rubric (phase1/C3_RUBRIC.md, two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 100/100), Tidecoil PASS (tidecoil_r12: 100/91.7). Tells observed 0.80-0.90 s.",
-     "gap": "C3: Tess on the ordinary route 97% / 84% (r5), with contact-range head occlusion. Waits on the COMBAT SPACING lane (tb/combat-spacing), then a re-judge under C3_RUBRIC.",
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md. C2: top trainers against the option-(c) bar on main 1e0ddd39 (optc_1e0ddd39/): Tess, Calder, Venn reader win 1.00 x3, masher lead-faint 1.00, reader/masher party cost <= 0.19, chapter-level masher loss 1.00. Venn's Riptusk lane now locks at 0.25 of the tell (it failed at 0.33-0.50 reader win). Aquaryn (3 starters) and Tidecoil pass under the named-wild ruling. C3 under the fixed rubric (phase1/C3_RUBRIC.md, two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 100/100), Tidecoil PASS (tidecoil_r12: 100/91.7). Tells observed 0.80-0.90 s. | C3 (serial closer lane, 2026-09-29): Tess on main f4ebca9e plus Mirejaw side-on camera (camera_composition_yaw_deg 70, trainer beside the ally), ralph/reports/CLOSER/f14_0_tess/r1/. Two code-blind judges under C3_RUBRIC.md: A 33/36 = 91.7%, B 36/36 = 100%; strict re-check with its own calls A 94.4%, B 94.4% (STRICT_RECHECK.md); tell-start markings 6/6. All seven Mirejaw frames near the ally pass. Margin rests on borderline HUD and ally-overlap calls on Riverdrake/Sirenseal; the 0.25 s clause is unverifiable in stills. One render; met on this round.",
+     "gap": "—",
      "note": "C2 met under option (c). Tidewake lane (Phase 1)."
     },
     {
