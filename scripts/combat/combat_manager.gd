@@ -2509,6 +2509,7 @@ func _resolve_player_strike() -> void:
 	# "host fast path" here would be a second copy of the rules that eventually
 	# disagrees with the first, and it would be the copy nobody ever tests
 	# against a second peer.
+	_reaim_before_strike()
 	if _encounter_link != null:
 		_submit_strike_intent()
 		return
@@ -2518,6 +2519,23 @@ func _resolve_player_strike() -> void:
 	var target: Vector3 = _wild.call("centre")
 
 	_perform_player_strike(MATH.move_connects(_pending_move, origin, facing, target))
+
+
+## Facing was locked when the wind-up began, so a striker whose opponent
+## circled during it swung at empty air. Turn toward the target by at most
+## combat.json `strike_reaim` degrees just before the hit is tested (solo) or the
+## intent is built (session), so every authority reads the same facing.
+func _reaim_before_strike() -> void:
+	var is_quick: bool = bool(_pending_move.get("is_quick", false))
+	var max_degrees := MATH.strike_reaim_degrees(is_quick)
+	if max_degrees <= 0.0 or _ally_body == null or _wild == null:
+		return
+	var origin: Vector3 = _ally_body.call("centre")
+	var facing: Vector3 = _ally_body.call("facing")
+	var turned := MATH.reaimed_facing(origin, facing, _wild.call("centre"), max_degrees)
+	if turned.is_equal_approx(facing):
+		return
+	_ally_body.call("face_towards", _ally_body.global_position + turned)
 
 
 ## §5. Send what the player did. `origin` is this process's own position for its
@@ -2864,6 +2882,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 				profile[key] = float(move[key])
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+	profile = MATH.with_player_pace(profile, block)
 	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
 	return floor_reach_for_bodies(profile, mine, theirs, reach_floor)
 
@@ -3381,6 +3400,7 @@ func _move_profile(block: String, move_id: String) -> Dictionary:
 		# look without going back to the database for it.
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+	profile = MATH.with_player_pace(profile, block)
 	return with_cooldown_multiplier(profile, active_move_cooldown_multiplier())
 
 
