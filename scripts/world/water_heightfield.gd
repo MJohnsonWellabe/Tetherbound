@@ -22,6 +22,8 @@ var _peak := PackedFloat64Array()
 var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
+var _dune_passages: Array = []
+var _dune_relief: Dictionary = {}
 var _sectors: Array = []
 var _trail_cells: Dictionary = {}
 var _trail_pitch := 32.0
@@ -42,6 +44,7 @@ static func load_config(path: String = CONFIG_PATH) -> Dictionary:
 func _init(config: Dictionary = {}) -> void:
 	_config = (config if not config.is_empty() else load_config()).duplicate(true)
 	var terrain: Dictionary = _config.get("terrain", {})
+	_dune_relief = terrain.get("dune_relief", {})
 	_sea_level = float(terrain.get("sea_level_m", 0.0))
 	_seabed_depth = maxf(0.0, float(terrain.get("seabed_depth_m", 65.0)))
 	_outer_slope = maxf(0.0001, float(terrain.get("outer_shore_slope", 0.35)))
@@ -74,6 +77,7 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 	_power.append(maxf(0.001, float(spec.get("peak_power", 1.65))))
 	_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
 	_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
+	_dune_passages.append(spec.get("dune_passages", []))
 	# Compile each sector once, avoiding JSON lookups per terrain texel.
 	var sectors: Array = []
 	for sector: Dictionary in spec.get("landing_sectors", []):
@@ -248,4 +252,32 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 	if r >= interior_radius:
 		return _sea_level + inner * (radius - r) / width
 	var factor := maxf(0.0, 1.0 - (r / interior_radius) * (r / interior_radius))
-	return _sea_level + inner + (_peak[index] - inner) * pow(factor, _power[index])
+	var height := _sea_level + inner + (_peak[index] - inner) * pow(factor, _power[index])
+	for passage: Dictionary in _dune_passages[index]:
+		var raw_centre: Array = passage.get("center_offset_xz_m", [])
+		var raw_axis: Array = passage.get("axis_xz", [])
+		if raw_centre.size() != 2 or raw_axis.size() != 2:
+			continue
+		var axis := Vector2(float(raw_axis[0]), float(raw_axis[1])).normalized()
+		if axis.length_squared() < 0.5:
+			continue
+		var relative := Vector2(dx - float(raw_centre[0]), dz - float(raw_centre[1]))
+		var along := relative.dot(axis) / maxf(1.0, float(passage.get("half_length_m", 100.0)))
+		var across := relative.dot(Vector2(-axis.y, axis.x)) / maxf(1.0, float(passage.get("half_width_m", 24.0)))
+		var coast_fade := smoothstep(0.0, maxf(1.0, float(passage.get("shore_preserve_m", 28.0))), interior_radius - r)
+		height += float(passage.get("depth_m", 0.0)) * exp(-0.5 * (along * along + across * across)) * coast_fade
+	if bool(_dune_relief.get("enabled", false)) and _ids[index] != "veilfall" \
+			and not _ids[index].contains("_rest_"):
+		var inland := interior_radius - r
+		var fade := smoothstep(0.0, float(_dune_relief.get("shore_preserve_m", 36.0)), inland) \
+			* smoothstep(0.0, float(_dune_relief.get("summit_preserve_m", 45.0)), r)
+		var bearing := deg_to_rad(float(_dune_relief.get("bearing_deg", 25.0)))
+		var along := dx * cos(bearing) + dz * sin(bearing)
+		var across := -dx * sin(bearing) + dz * cos(bearing)
+		var wave := maxf(1.0, float(_dune_relief.get("wavelength_m", 130.0)))
+		var warp_wave := maxf(1.0, float(_dune_relief.get("warp_wavelength_m", 240.0)))
+		var phase := TAU * along / wave + sin(TAU * across / warp_wave + index * 0.61) * 0.75 + index * 0.37
+		var amplitude := minf(float(_dune_relief.get("max_amplitude_m", 8.0)),
+			_peak[index] * float(_dune_relief.get("peak_fraction", 0.065)))
+		height += amplitude * fade * sin(phase)
+	return height

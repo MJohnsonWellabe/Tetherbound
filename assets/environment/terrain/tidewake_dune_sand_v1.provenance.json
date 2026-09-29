@@ -1,0 +1,8 @@
+{
+  "asset": "tidewake_dune_sand_v1.png",
+  "origin": "OpenAI image generation, 2026-09-28",
+  "purpose": "Original Great Lakes inspired wind-ripple sand albedo for Tidewake terrain",
+  "reference_use": "Owner supplied dune photographs informed the written prompt; no reference pixels were copied or edited into the asset.",
+  "prompt": "Square tileable terrain albedo source for a stylized realistic Great Lakes sand dune in a creature-adventure game. Direct orthographic top-down view of clean pale warm quartz sand, fine irregular wind-shaped ripple ridges and shallow troughs, subtle grain and occasional tiny darker grains. No large baked shadows, directional lighting, perspective, horizon, vegetation, rocks, shells, footprints, objects, borders, text or watermark. Natural cream, beige and muted golden tones.",
+  "integration": "coastal_rock_material.gd samples luminance with triplanar projection; water_dune_terrain.json controls scale and strength. The generated RGB palette does not directly replace the authored chapter sand colour."
+}
