@@ -23,6 +23,9 @@ Numbers labelled **target** are implementation work, not changes made by this do
 | B / D-pad | Assigned consumable | Existing context mapping in UX; B cancels orb aim while aiming. |
 | Right stick / R3 | Look / soft lock | **Target:** right-stick motion manually overrides framing without changing target. An R3 press toggles facing/framing assistance on the current encounter opponent only; it never selects an ambient creature or a different encounter target. |
 
+**Owner-tuned pace (2026-09-29, `combat.json` `player_pace`).** Every player move's windup, recovery and cooldown run at x0.85 of the base values above, and the charged arc is +15 degrees. The opponent baseline is faster too (recovery 0.6 s, attack cooldown 0.9 s, back-off 0.5 s; profiles that author their own keep them).
+
+
 Combat state: `admission → deploy/input_guard → active → resolving → exit`. A trainer's next opponent returns through deploy without leaving the encounter. Actor state: `idle/move`, `windup`, `active strike`, `recovery`, `burst`, `stagger`, `fainted`; aim temporarily hands input to the human while the active creature remains vulnerable. One action owns movement at a time. A strike cannot survive its actor fainting, being withdrawn or its action generation changing.
 
 Built input guard0.25s prevents the engage press attacking immediately; input buffer0.30s retains at most one pending attack. **Target:** newest valid attack replaces an older queued attack, no queue of held repeats; queue expires on switch, stagger, aim, exit or menu ownership change. Holding a trigger does not repeatedly attack. Cooldown begins at commitment; a cancelled attack still spends resources and retains cooldown. Windup/recovery root voluntary movement; authored lunge is separate and applied once. Walls stop movement rather than accumulate impulse for later.
@@ -78,6 +81,8 @@ Base profile pools: WALL60, CHARGER40, DIVER30, CURRENT35, ACE60. Ordinary stagg
 Out of scope: permanent stun, interrupting any boss action indiscriminately, armour immunity hidden from the tell, animation-dependent damage that differs across peers.
 
 ## 5. Geometry, targeting and camera
+
+**Strike re-aim (owner-tuned exception, 2026-09-29, `combat.json` `strike_reaim`).** Facing is otherwise committed at the start of the windup; a charged strike turns up to 45 degrees toward the target just before the hit is tested (solo, and before the intent is sent in a session), so a circling opponent cannot slip an aimed power attack. A target behind the striker still dodges it.
 
 Each move declares `kind`, range, cone, windup, recovery, power and lunge in `moves.json`. Already built examples: Pebble Toss is a9m projectile with26° cone and0 lunge; Stone Rush is3.2m/80° with7.5 lunge. Preserve these distinct profiles. Hit validation uses current action facing at commitment and supported movement, not a damage roll based solely on distance. **Target:** facing tracks during the first half of windup, then locks; a telegraph's displayed shape matches that locked strike shape. Projectiles collide along their travelled segment and cannot pass through world walls.
 

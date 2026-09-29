@@ -71,6 +71,20 @@
     "_why_tolerance_m": "Deficits below this are ignored so the rule does not jitter a body by millimetres.",
     "tolerance_m": 0.01
   },
+  "player_pace": {
+    "_why": "Owner playtest 2026-09-29: 'combat seemed a little slow in general'. One scale on every player move's wind-up, recovery and cooldown (each move in moves.json authors its own, so the scale lives here rather than in 53 rows). Applied in combat_manager._move_profile and host_move_profile so solo, host and guest read the same numbers. TUNABLE; 1.0 restores the authored timings.",
+    "windup_scale": 0.85,
+    "recovery_scale": 0.85,
+    "cooldown_scale": 0.85,
+    "_why_charged_cone_bonus_degrees": "Owner playtest: 'I'm not sure any of my power attacks hit even though they should've'. The charged attack is the one whose aim is committed longest, so its arc widens by this many degrees on top of the move's own cone_degrees. TUNABLE.",
+    "charged_cone_bonus_degrees": 15.0
+  },
+  "strike_reaim": {
+    "_why": "Facing was locked when the wind-up STARTED, then the hit was tested 0.55 s later against wherever the opponent had circled to, so a correctly aimed power attack whiffed. Just before the hit test the striker now turns toward the target by at most this many degrees (0 disables). Runs before the strike is tested solo and before the intent is sent in a session, so the host arbitrates the same facing. Quick attacks keep their wide arc and do not re-aim. TUNABLE.",
+    "enabled": true,
+    "charged_max_degrees": 45.0,
+    "quick_max_degrees": 0.0
+  },
   "player_quick": {
     "_comment": "The bread-and-butter attack. Short wind-up, short recovery, wide arc: it should be usable under pressure without feeling like a commitment.",
     "power": 9.0,
@@ -105,10 +119,10 @@
     "chase_speed": 4.6,
     "reposition_speed": 3.2,
     "telegraph": 0.8,
-    "recovery": 0.75,
-    "attack_cooldown": 1.1,
+    "recovery": 0.6,
+    "attack_cooldown": 0.9,
     "_comment_reposition": "After recovering it backs off and circles for this long before closing again. Without it the fight is two creatures standing in each other's faces trading hits, which is exactly the static fight this model replaced. W23-DIFFICULTY (D77): 1.0 -> 0.7. MEASURED with tests/smoke_combat_baseline.gd: the opponent's whole attack cycle was recovery 0.75 + reposition 1.0 + the walk back + telegraph 0.55, about 2.7s per swing against a pilot dealing ~13 damage a second, so an ordinary wild landed two hits and died in seven seconds. 0.7 keeps the back-off readable (DIVER authors 1.6, CURRENT 0.5, so the baseline still sits between the two profiles that are ABOUT this number) and buys one more swing per fight.",
-    "reposition_time": 0.7,
+    "reposition_time": 0.5,
     "reposition_distance": 4.0,
     "_comment_circle_speed": "COMBAT-1. Inside preferred range but on cooldown, the opponent circles at this pace instead of walking into contact (which left no room to evade the next telegraph). A slow prowl, not a dodge: at reposition_speed the strafe carried it out of the path of the player's quick. TUNABLE.",
     "circle_speed": 1.2,
