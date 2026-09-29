@@ -1646,6 +1646,10 @@
       "name": "Sluice Isle",
       "peak_height_m": 45.0,
       "peak_power": 1.65,
+      "pump_assemblage": {"enabled": true, "units": [
+        {"at_xz_m": [883.0, 2900.0], "yaw_deg": 35.0, "scale": 2.5, "sink_m": 0.45, "grass_clear_radius_m": 9.0},
+        {"at_xz_m": [936.0, 2912.0], "yaw_deg": -30.0, "scale": 2.5, "sink_m": 0.45, "grass_clear_radius_m": 9.0}
+      ]},
       "region_id": "tether_current",
       "scatter_seed": 486006.0,
       "shore_radius_m": 290.0,

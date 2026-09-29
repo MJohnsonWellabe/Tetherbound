@@ -86,6 +86,10 @@ func _ready() -> void:
 		add_child(vegetation)
 		vegetation.build(config, field)
 		_stand_up_ground_cover()
+		var twin_pumps := preload("res://scripts/world/water_sluice_twin_pumps.gd").new()
+		twin_pumps.name = "WaterSluiceTwinPumps"
+		add_child(twin_pumps)
+		twin_pumps.build(self)
 		var surface := SURFACE.new()
 		surface.name = "WaterSurface"
 		add_child(surface)
@@ -388,6 +392,13 @@ func _ground_cover_clearances(profile: Dictionary = {}) -> PackedVector3Array:
 		var island_centre: Array = island.get("center_xz_m", [])
 		if island_centre.size() != 2:
 			continue
+		var pumps: Dictionary = island.get("pump_assemblage", {})
+		if bool(pumps.get("enabled", false)):
+			for unit: Dictionary in pumps.get("units", []):
+				var at: Array = unit.get("at_xz_m", [])
+				if at.size() == 2:
+					out.append(Vector3(float(at[0]), float(at[1]),
+						float(unit.get("grass_clear_radius_m", 0.0))))
 		for passage: Dictionary in island.get("dune_passages", []):
 			var offset: Array = passage.get("center_offset_xz_m", [])
 			var raw_axis: Array = passage.get("axis_xz", [])

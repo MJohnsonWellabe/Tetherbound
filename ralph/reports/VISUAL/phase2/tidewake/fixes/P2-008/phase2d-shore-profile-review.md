@@ -20,7 +20,7 @@ The pass fixes the specific gray-skirt symptom at the recorded views, but **P2-0
 
 - Full-resolution eight-pair gallery: `.artifacts/phase2/P2-008-phase2d-before-after.html`.
 - Contact sheets: `.artifacts/phase2/P2-008-phase2d-before-after-locations.jpg` and `.artifacts/phase2/P2-008-phase2d-before-after-routes.jpg`.
-- Before: original production `p2008-dunes-04-before-locations` and `p2008-dunes-04-before-routes`. Current candidate: `p2008-phase2d-shellpassage-final-locations` and `p2008-phase2d-shellpassage-final-routes`.
+- Before: original production `p2008-dunes-04-before-locations` and `p2008-dunes-04-before-routes`. Current candidate: `p2008-phase2d-twinpumps-final-locations` and `p2008-phase2d-twinpumps02-routes`.
 
 All eight pairs are native 1920×1080 day captures at seed 2042. Both before and after manifests are complete with no frame failures. Requested positions and player XZ coordinates match exactly; maximum horizontal camera drift is 0.000252 m. Ground/camera Y changes by at most 58.912 m because the physical Sluice peak was lowered. The Brine Steps walk03 image has a player standing in the shallows in both versions; it is not a traversal acceptance frame.
 
@@ -60,11 +60,11 @@ The local-defect column asks only whether the recorded gray skirt/green-carpet s
 | First Shore welcome beacon, close | PASS | FAIL | Sand crest and sea direction read, but sparse props and uniform dune sides lack the references' natural layering. |
 | Gull Rest beach, close | PASS | FAIL | Foreground ripples and grass are clearer; distant space and habitat detail remain thin. |
 | Shellwatch rescue jetty, close | PASS | FAIL | The new dry sand passage is framed by grass, but the dune shoulders are still smooth, the sea is out of frame, and habitat detail falls short of the supplied boardwalk photo. |
-| Sluice Isle twin pumps, close | PASS | FAIL | The gray wall is now an open sand passage, but the dune is broad and evenly smoothed, the landmark pumps are absent from the composition, and Veilfall reads as a giant simple cone. |
+| Sluice Isle twin pumps, close | PASS | FAIL | Two pump machines now mark the passage, but the dune is broad and evenly smoothed, and Veilfall remains a giant simple cone. |
 | Brine Steps east beach, walk03 | PASS | FAIL | Opposite dune is simplified and the trainer stands in water in this fixed catalogue frame; this is not a traversal acceptance shot. |
 | First Shore horizon stones, route | PASS | FAIL | Dune grass and open water improve; the far Veilfall landmark is still a small dark cone and the midground lacks depth. |
 | Salt Crown tide shrine, walk01 | PASS | FAIL | Sand ridge improves, while low island silhouettes and sparse shoreline dressing remain below the board. |
-| Sluice Isle twin pumps, route | PASS | FAIL | The blank wall has opened into a grass-framed sand passage, but planted bands and Veilfall's giant simple cone fall short of the supplied path photo and the Tidewake board. |
+| Sluice Isle twin pumps, route | PASS | FAIL | Two grounded pumps flank the grass-framed sand passage, but planted bands, sparse infrastructure and Veilfall's giant simple cone fall short of the supplied path photo and the Tidewake board. |
 
 **Pass report: 8/8 local symptom checks pass; 0/8 complete visual-bar checks pass.** The first queue item cannot be signed off from these side-by-sides.
 
@@ -102,4 +102,12 @@ An authored, coast-faded sand passage now cuts through Shellwatch's formerly uni
 
 The paired eight-view gallery now uses `p2008-phase2d-shellpassage-final-{locations,routes}`. Both native manifests completed with zero frame failures or script/shader errors. The original and current captures use identical player XZ and requested positions; maximum horizontal camera drift is **0.000252 m**. The Shellwatch route is more legible, while the First Shore, Gull Rest, Brine Steps, Salt Crown and Sluice failures remain visible. A longer/deeper passage probe would have put the far Shellwatch route underwater and was rejected. A lower Shellwatch peak made a plain grass dome and was reverted. Extra far Veilfall peaks made artificial needles and were reverted. A short weathered-boardwalk prototype rendered as flat dark tiles in `p2008-phase2d-shellplanks07-locations`; it was removed. None of those rejected probes count toward acceptance.
 
-**Current pass report:** the scoped gray-skirt/green-carpet symptom is clear at **8/8** recorded views. The photo match is **partial**. Tidewake Bar A, Bar B and the requested Palworld-quality whole-frame check are **0/8**. Shellwatch still lacks the sea sightline and natural grass/sand layering of photo 2; Sluice still lacks a clear Twin Pumps landmark and the board's layered Veilfall waterfall destination. This first visual-queue item remains open.
+**Pass report at this stage:** the scoped gray-skirt/green-carpet symptom is clear at **8/8** recorded views. The photo match is **partial**. Tidewake Bar A, Bar B and the requested Palworld-quality whole-frame check are **0/8**. Shellwatch still lacks the sea sightline and natural grass/sand layering of photo 2; Sluice still lacks a clear Twin Pumps landmark and the board's layered Veilfall waterfall destination. This first visual-queue item remains open.
+
+### Visible Twin Pumps, current candidate
+
+The Sluice landmark previously had a map coordinate but no pump structure in its two fixed gameplay frames. Two instances of the already approved pump-station asset now stand on opposite sides of the authored route, scaled to read at gameplay distance, grounded to the live terrain and fitted with solid measured footprints. The grass clears around their bases. The route gap is measured at more than 15 m from both collision footprints; the focused pump test passes **1 test / 10 assertions**. The production Sluice patrol walked **850.3 m**, reached all 19 following waypoints on foot and passed **32 checks / zero failures / zero defects** with the new colliders present. The 31-region bake manifest matches the current config hash; only its provenance changed because the physical terrain is unchanged.
+
+The current eight-pair gallery uses `p2008-phase2d-twinpumps-final-locations` and `p2008-phase2d-twinpumps02-routes` against the original production captures. Both four-frame native manifests completed with zero frame failures and no script/shader errors. The machines are plainly visible in both Sluice frames. A broad far-silhouette shoulder probe (`p2008-phase2d-veilshoulders01-routes`) changed First Shore only slightly and left the giant Sluice cone; it was reverted. A physical radial terrace probe (`p2008-phase2d-veilterrace01-routes`) made a hard artificial step on the mountain, and its first version broke the authored hike's grade; both the profile and trial bake were reverted. Neither is credited as an art improvement.
+
+**Current pass report: 8/8 scoped shore-defect checks clear; 0/8 full photo/Bar A/Bar B/Palworld-quality checks pass.** The Twin Pumps readability defect is improved, but Sluice still needs grounded infrastructure, natural dune habitat and a layered Veilfall destination. Shellwatch, First Shore, Gull Rest, Brine Steps and Salt Crown retain the whole-frame failures in the table. P2-008 remains open.
