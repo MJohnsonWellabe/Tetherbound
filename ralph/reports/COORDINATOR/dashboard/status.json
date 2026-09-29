@@ -1,10 +1,10 @@
 {
- "updated": "2026-09-29T00:35Z",
+ "updated": "2026-09-29T03:55Z",
  "headline": [
-  "Criteria met: 94 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Unchanged since card M1 landed (#435, 20:26Z).",
-  "Open: F04#1, #2, #6, #7 (Meadows); F10#6 (Stormwood HUD); F14#0, #1 (Tidewake C3); cards M2, M3, S2, T2.",
-  "Everything open is on ONE PR, #442 (tb/consolidated): Combat Spacing, Meadows #437, the bridge-guardian fix, Stormwood #439, Codex #414/#428/#430 and two main CI fixes. #414, #428, #430, #437, #439 are closed as superseded. Landing it marks no criterion met; it makes the next ones reachable.",
-  "Blocker found and fixed on #442: the spacing code made the Gate A opening drive fail (starter fainted before weakening the tutorial Bramblebun), because the test driver struck only within a fixed 4 m. main passes, consolidated fails, consolidated plus a spacing-aware strike gate passes (local). Spacing alone does not pass F14 C3 (Tess A 92.1 / B 81.6; Nerissa A 91.3 / B 87.0; bar both at least 90)."
+  "Criteria met: 95 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). F14#0 (Tess C3) was earned overnight: A 94.4% / B 94.4% on the strict re-check, tell markings 6/6 (#444).",
+  "Open: F04#1, #2, #6, #7 (Meadows); F10#6 (Stormwood HUD); F14#1 (Nerissa C3); cards M2, M3, S2, T2.",
+  "Landed overnight on main: the consolidated PR #442 (Combat Spacing, Meadows #437, bridge-guardian fix, Stormwood #439, Codex 2c, CI fixes), #443 (mouse capture after panels, Tam story marker) and #444 (Tess camera). One serial lane is running the queue; the download was rebuilt by hand after #443 (bot merges do not trigger the Release workflow).",
+  "Owner playtest reports not yet actioned: charged attacks may whiff (facing locks at wind-up start), combat pace, the Meadows river (P2-006), village shape, running animation."
  ],
  "batches": [
   {
@@ -364,9 +364,9 @@
  ],
  "lanes": [
   {
-   "lane": "Tidewake visual fixes (tb/x04-tidewake)",
-   "now": "Phase 2c active. P2-032 fixed/enabled by 8c5009e09 after six native map boots (24 frames, source 0930716ac), independent visual PASS and strict item recheck; actual enabled tests pass 8/36. Dunes-04 remains item PARTIAL, direction PASS, ecology/transitions PARTIAL, limited Bars A/B No/No; repaired paired stands documented. Dunes-05 e22fdbcb2 remains off, source review clean, focused 35/87970 pass, native pending. Victory hierarchy remains off, 99 lifecycle checks at 720p pass, native pending. No chapter acceptance.",
-   "next": "Capture and judge dune corrections and victory hierarchy; complete remaining owned impact>=12 fixes/dispositions, chapter matrix and independent Bars A/B, then land through CI-green PRs. See ralph/reports/VISUAL/phase2/tidewake/fixes/."
+   "lane": "Serial closer (tb/closer)",
+   "now": "#444 merged (F14#0). Next: F14#1 Nerissa, then F04#2/#7, F10#6 r7, then cards M2/T2/S2/M3.",
+   "next": "One PR at a time; combat numbers frozen pending the owner's answers."
   },
   {
    "lane": "Meadows (tb/meadows)",
@@ -449,11 +449,14 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "Stormwood audio (blocks S2): approved to author the nine files from installed sources; lane archived before starting. AUDIO §10 allows it; agents cannot listen, so acceptance needs an owner listen.",
-  "Look-development pass (blocks M3 and Phase 2 Bars A/B): approved, deferred until the criteria are done.",
-  "Branch cleanup after #442 merges: every lane and Codex branch is inside tb/consolidated (checked by ancestry) and can be deleted; keep tb/closer until its lane finishes.",
-  "Usage: the seven-day limit is at warning; one serial lane is running to conserve it.",
-  "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
+  "Charged (power) attack aim: facing locks at wind-up start (0.55 s, 75 deg cone). Approve re-aim just before the hit and/or a wider cone?",
+  "Combat pace: faster attacks, or shorter enemy waits? Enemy damage is x1.6 since the difficulty pass.",
+  "Meadows river by the village (catalog P2-006): start a river-only look pass?",
+  "Village shape: desired layout (a real main street lined with houses?) - a design change, not started.",
+  "Running animation: approve a steady sprint lean and cadence match (no new art)?",
+  "Branch cleanup: consolidated, combat-spacing, meadows, meadows-bridge, stormwood, tidewake, cards, coordinator, x04-* can be deleted; keep tb/closer.",
+  "Please confirm on a real PC that the mouse controls the camera after the build menu and after trading with Oskar.",
+  "Look-development pass, HUD-legibility lane and Stormwood audio (needs an owner listen) stay approved-but-deferred. Seven-day usage limit is at warning."
  ],
  "four_chapter_run": null,
  "wip": [
