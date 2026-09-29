@@ -248,8 +248,8 @@ func _well_radius() -> float:
 func test_the_topology_block_names_real_roads_and_places() -> void:
 	assert_false(_topology.is_empty(), "paths.village_topology is missing; nothing says which road is the through-road")
 	var through := _through_road_lines()
-	assert_eq(through.size(), 3, "the through-road is Grandpa's west street, South Street and the Lower Meadows spine, and all three exist")
-	assert_eq(_well(), Vector2(10.0, -10.0), "the well is the fixed village.json well")
+	assert_eq(through.size(), 4, "the through-road is Grandpa's cross lane, Main Street, South Street and the Lower Meadows spine, and all four exist")
+	assert_eq(_well(), Vector2(10.5, -6.0), "the well is the village.json well on the main street axis")
 	assert_true(_well_radius() >= 8.0, "the no-hub radius still covers the square around the well")
 	var village := _json(VILLAGE_PATH)
 	var well_found := false
@@ -310,42 +310,23 @@ func test_the_through_road_continues_to_the_south_bridge() -> void:
 
 ## --- no radial hub --------------------------------------------------------
 
-func test_the_well_is_beside_the_road_not_a_hub() -> void:
+func test_the_well_is_on_the_main_street_and_no_junction_crowds_the_green() -> void:
+	# OPTION-B replaces the old "well beside the road, not a hub" rule: the
+	# well now stands on the straight main street's axis at the centre of a
+	# small green. What still must hold is that the green is not a hub: the
+	# street passes through it with no junction inside the green's radius.
 	var well := _well()
-	var radius := _well_radius()
-	var hits: Array[Vector2] = []
+	var green := _topology.get("green", {}) as Dictionary
+	var green_r := float(green.get("radius_m", 0.0))
+	assert_true(green_r >= 3.5 and green_r <= 5.0, "the green is small (radius %.1fm)" % green_r)
+	assert_eq(_v(green.get("centre", [])), well, "the well is at the green's centre")
+	var street: PackedVector2Array = _roads.get("village_main_street", PackedVector2Array())
+	assert_false(street.is_empty(), "the main street is a real road polyline")
+	assert_true(_distance_to_line(well, street) <= 1.0, "the well is on the main street axis")
 	for i: int in _adj:
-		for j: int in (_adj[i] as Dictionary):
-			if j <= i:
-				continue
-			var a := _nodes[i]
-			var d := _nodes[j] - a
-			var f := a - well
-			var qa := d.dot(d)
-			var qb := 2.0 * f.dot(d)
-			var qc := f.dot(f) - radius * radius
-			var disc := qb * qb - 4.0 * qa * qc
-			if disc < 0.0:
-				continue
-			for sgn: float in [-1.0, 1.0]:
-				var t := (-qb + sgn * sqrt(disc)) / (2.0 * qa)
-				if t >= 0.0 and t <= 1.0:
-					hits.append(a + d * t)
-	var arms: Array[Vector2] = []
-	for h: Vector2 in hits:
-		var fresh := true
-		for q: Vector2 in arms:
-			if q.distance_to(h) <= ARM_MERGE_M:
-				fresh = false
-		if fresh:
-			arms.append(h)
-	assert_true(arms.size() <= 2,
-		"%d road arms meet within %.0fm of the well; a road settlement passes its well, it does not radiate from it (%s)" % [
-			arms.size(), radius, str(arms)])
-	for i: int in _adj:
-		if _nodes[i].distance_to(well) <= radius:
+		if _nodes[i].distance_to(well) < green_r - 0.05:
 			assert_true(_degree(i) <= 2,
-				"road node (%.1f,%.1f) is a %d-way junction %.1fm from the well" % [
+				"road node (%.1f,%.1f) is a %d-way junction inside the green (%.1fm from the well)" % [
 					_nodes[i].x, _nodes[i].y, _degree(i), _nodes[i].distance_to(well)])
 
 
@@ -634,7 +615,13 @@ func _footprint(fp: Dictionary, inset: float) -> PackedVector2Array:
 func _village_footprints() -> Array:
 	var out: Array = []
 	for raw: Variant in ((_terrain.get("building_aprons", {}) as Dictionary).get("footprints", []) as Array):
-		if _v((raw as Dictionary).get("centre", [])).distance_to(_well()) <= 90.0:
+		var centre := _v((raw as Dictionary).get("centre", []))
+		# OPTION-B (owner 2026-09-29): the well stands ON the main street axis at
+		# the centre of the green, so its paved apron is not a building the
+		# street must avoid. Players walk round the curb on the green.
+		if centre.distance_to(_well()) < 0.01:
+			continue
+		if centre.distance_to(_well()) <= 90.0:
 			out.append(raw)
 	return out
 

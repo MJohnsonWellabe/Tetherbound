@@ -170,9 +170,18 @@ func test_bram_faces_the_customer_lane_instead_of_the_stock_wall() -> void:
 	assert_false(bram.is_empty(), "Bram is no longer placed in the Inn")
 	if bram.is_empty():
 		return
-	# Pin the production-evidence correction directly. The repaired Inn itself is
-	# now placed at 180 degrees, and the installed male rig's visible face is local
-	# +Z. Matching that 180-degree building yaw faces Bram north through the bar
-	# toward arriving patrons, as the current production capture proves.
-	assert_almost_eq(float(bram.get("facing_deg", 0.0)), 180.0, 0.01,
+	# Pin the production-evidence correction directly. The installed male rig's
+	# visible face is local +Z, so Bram's world facing equals the Inn's yaw: the
+	# Inn is placed at 90 degrees since OPTION-B (owner 2026-09-29; it was 180
+	# on the old north-facing street), which faces him through the bar toward
+	# arriving patrons.
+	assert_almost_eq(float(bram.get("facing_deg", 0.0)), float(_inn_yaw()), 0.01,
 		"Bram no longer uses the production-corrected patron-facing yaw")
+
+
+func _inn_yaw() -> float:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village.json"))
+	for raw: Variant in (parsed as Dictionary).get("structures", []):
+		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "inn":
+			return float((raw as Dictionary).get("yaw_deg", 0.0))
+	return 0.0

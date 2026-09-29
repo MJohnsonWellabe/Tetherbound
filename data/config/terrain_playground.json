@@ -188,8 +188,8 @@
     {
       "_comment_owner_0912_inn_frontage_repair": "OWNER-0912 visual acceptance repair. The inn rotated out of the west road and onto its south side. This same-height pad covers the corrected long footprint and overlaps the existing village flat without a step, so solving the street intersection cannot trade it for a tilted or buried public room.",
       "centre": [
-        -1.5,
-        -2.0
+        -2.5,
+        -6.0
       ],
       "radius": 8.5,
       "skirt": 12.0,
@@ -210,8 +210,8 @@
     {
       "_comment": "EV6-remainder-polish plus OWNER-0912. cottage_b's small pad follows the building to [19,-18]. Its 0.9m explicit height matches the square, while its own skirt keeps the cottage's downhill border off the larger pad's falloff. TUNABLE.",
       "centre": [
-        19.0,
-        -18.0
+        19.5,
+        -6.0
       ],
       "radius": 7.0,
       "skirt": 14.0,
@@ -356,20 +356,20 @@
       },
       {
         "centre": [
-          19.0,
-          -18.0
+          19.5,
+          -6.0
         ],
         "half_extents": [
           3.05,
           3.05
         ],
-        "yaw_deg": -110.0,
+        "yaw_deg": -90.0,
         "_why": "OWNER-0912: cottage_b at the west-street bend"
       },
       {
         "centre": [
-          10.0,
-          -10.0
+          10.5,
+          -6.0
         ],
         "half_extents": [
           2.9,
@@ -381,14 +381,14 @@
       {
         "_comment_t1village": "T1-VILLAGE 2026-08-30. The inn (R7.9, added 2026-08-16 -- after this apron system was authored) never got a footprint here: it is the one square building JUDGE-VISUAL-2026-08-29's 'no ground-material response at all' finding and the earlier VISUAL_LOCATIONS_2026-08-23 twins frame ('buildings and props sit on untouched uniform lawn') can actually be pinned on, verified by grep against every entry in this array before adding this one. half_extents follow the same rule every other entry here derived from (tools/_probe_prefabs.gd's combined-AABB + 0.2m, matching cottage_a/cottage_b/well/ranger_station exactly): the inn's own local-frame combined AABB (probed 2026-08-30, same building_prefabs.gd::combined_aabb call, after this pass's own door-canopy addition) is X half 4.12, Z -5.90..6.58 -- asymmetric because the new entry canopy projects further past the door gable than the roof already overhung on the back eave. Took the LARGER Z half (6.58) rather than the true centre-offset rectangle, the same symmetric-box simplification every other footprint in this array already makes.",
         "centre": [
-          -1.5,
-          -2.0
+          -2.5,
+          -6.0
         ],
         "half_extents": [
           4.32,
           6.78
         ],
-        "yaw_deg": 180.0,
+        "yaw_deg": 90.0,
         "_why": "OWNER-0912 visual acceptance repair: the inn apron follows its corrected south-side frontage instead of remaining beneath the retired road-crossing pose"
       },
       {
@@ -434,14 +434,11 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the north cross lane along z=-16 from the main street to Grandpa's door (endpoint unchanged at [-16.5,-16]); Berry Lane leaves it at x=-7.5.",
         "points": [
           [
-            7.0,
-            -7.0
-          ],
-          [
-            -4.0,
-            -13.0
+            10.5,
+            -16.0
           ],
           [
             -16.5,
@@ -456,18 +453,19 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): a short desire line from the main street across the green to the inn's doorstep, which now faces the green (inn at [-2.5,-6], yaw 90).",
         "points": [
           [
-            7.0,
+            10.5,
+            -10.0
+          ],
+          [
+            6.6,
             -7.0
           ],
           [
-            -1.5,
-            -11.64
-          ],
-          [
-            -1.5,
-            -8.1
+            3.6,
+            -6.0
           ]
         ]
       },
@@ -478,18 +476,11 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): Stoneyard Lane now leaves the main street at the z=-16 crossroads and keeps the old (13.6,-20) waypoint.",
         "points": [
           [
-            7.0,
-            -7.0
-          ],
-          [
-            -1.5,
-            -11.64
-          ],
-          [
-            4.0,
-            -18.0
+            10.5,
+            -16.0
           ],
           [
             13.6,
@@ -517,22 +508,23 @@
         "_why": "the square to the pond valley (the water creatures)",
         "_why_f01": "F01-a. Was [10,-10]->[-14,14]: a spoke from the well that ran through the inn's south-east corner and Tam's rear yard. Now follows the through-road west to the pond junction [-8,-13.96] and turns south between Grandpa's garden and the inn's west wall (3.5m+ clear), rejoining the old line at [-14,14], so the fence crossing at PondGate [-21,21] is point-for-point the old one and everything past it is untouched.",
         "label": "The Pond",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the Pond lane leaves the main street at z=2 (south of the green) and runs west between the inn and Tam's workshop; the tail from [-14,14] on is unchanged.",
         "points": [
           [
-            7.0,
-            -7.0
+            10.5,
+            2.0
           ],
           [
-            -4.0,
-            -13.0
+            3.0,
+            2.5
           ],
           [
-            -8.0,
-            -13.96
+            -5.0,
+            4.0
           ],
           [
-            -11.0,
-            -2.0
+            -12.5,
+            6.5
           ],
           [
             -14.0,
@@ -557,22 +549,15 @@
         "_why_f01": "F01-a. Was [10,-10]->[45,-22]: a spoke from the well, 1m off cottage_b's corner. Now leaves the through-road's South Street at [10.05,-0.9] (9.1m from the well), runs east 4m clear of the square fingerpost and 3m clear of Mira's shop, bends around the square oak and the cottage's south-east corner, and rejoins the old line at [28,-16.17], so the RoadGate crossing and everything from [45,-22] outward (trailhead, Stronghold approach, Rise hero composition) are unchanged.",
         "label": "The Rise",
         "_comment_of10a": "OF10a (walkability half of OF10). The old last two points (85,-48) and (118,-72) drove this road in a straight line up and OVER `rises.peaks[0]`'s own rim -- fine for the first ~38m of that line (slope <=6 deg the whole way, `tools/`-style probe with slope_degrees_at at 0.5m steps) and then a genuine cliff: 4.8deg at (76.9,-42.7) to 46.4deg just 1.2m later at (78.1,-43.5), and 40-52deg for most of the rest of the climb toward both old points -- well past the player's own 45deg floor_max_angle (player.tscn), so the character simply cannot walk it, in any direction, not just straight ahead (confirmed with a headless playthrough: holding forward pins the player exactly at the base of this same jump, is_on_floor never leaves true, velocity pins at zero). This is the rise's own DESIGNED collar (terrain_playground.json's own `rises` comment: 'these are the only places the 45-degree slope limit should actually bite'; EV4-hillside-seam-remainder-4's `relief_amplitude`/`relief_frequency`, gated to this exact flank band and owned by the separate look-quality item, add further sub-2m irregularity on top of it) -- not a collision defect like OF6's undersized boundary box, and not something this item's own scope may touch (rises.peaks / relief are geometry the look pass already tuned against). A grid pathfind at up to 2m resolution could not thread a >=44deg-safe line through that collar anywhere near this bearing; the two are genuinely entangled, per this item's own escape valve. The walkable fix is where the road ITSELF stops: truncated to end at (74,-41), the last point on the ORIGINAL bearing/line before the cliff (worst slope on the new leg is 13.3deg, with the cliff still 4-6m further on) -- 82.2m from the rise's own centre, i.e. just past the dome's 78m-radius footprint, so the road now reads as reaching the genuine foot of the rise and stopping there, not dead-ending mid-slope. Nothing in `rises`, `colour.relief_*`, or any texture/material entry was touched.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the Rise lane is re-run along z=-16 from the main street to the RoadGate at [27.5,-16]; the tail from [28,-16.17] on is unchanged.",
         "points": [
           [
-            7.0,
-            -7.0
+            10.5,
+            -16.0
           ],
           [
-            10.05,
-            -0.9
-          ],
-          [
-            21.0,
-            -5.5
-          ],
-          [
-            22.5,
-            -11.5
+            19.0,
+            -16.0
           ],
           [
             28.0,
@@ -592,16 +577,25 @@
     "_comment_approaches": "Roads that join `road_polylines()` -- painted soil in the control map, no scatter on them, path stones down them, verge fringe along them -- WITHOUT adding an arm to the village junction fingerpost. This carries both the local south-street continuation and STRONGHOLD-R2's deliberately undisclosed approach. Exactly the same reason `spokes`, `crossings` and `trail` are separate sections rather than more `paths.routes` entries: signpost.gd draws one arm per `routes` entry and the post by the well cannot become an arm for every road segment.",
     "approaches": [
       {
+        "id": "village_main_street",
+        "label": "Main Street",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why": "OPTION-B (owner 2026-09-29, 'the shape of the village still hasn't changed'): ONE straight north-south main street at x=10.5 from the z=-16 crossroads (Stoneyard Lane, the Rise lane and Grandpa's cross lane) south to z=2, where the Pond lane and South Street leave it. Houses line both sides; the well stands on its axis at the centre of a small green. tests/test_village_main_street.gd pins it straight within 0.5 m. Same 3.0/1.2 village width as every other village road.",
+        "points": [[10.5, -16.0], [10.5, 2.0]]
+      },
+      {
         "id": "village_south_street",
         "width": 3.0,
         "shoulder": 1.2,
         "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "label": "South Street",
         "_why": "OWNER-0912 / C3 V-1 plus production visual acceptance repair. The L-shaped village street now turns at [7,-7], on the paved civic bend but 4.24m clear of the fixed well's canopy and bucket. It shares that exact endpoint with the west street, then runs between Mira's east-side shop and Tam's west-side workshop before meeting TrailGate. It lives here rather than paths.routes so a local continuation does not add a redundant destination arm to the junction fingerpost.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): now starts on the main street at z=2 and retraces the band1 spine's first leg [11.5,2]->[14,20] (unchanged) to TrailGate.",
         "points": [
           [
-            7.0,
-            -7.0
+            10.5,
+            2.0
           ],
           [
             11.5,
@@ -620,14 +614,11 @@
         "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "label": "Stoneyard Lane",
         "_why_f01": "F01-a/F01-b (WORLD 3.2: a visible side lane to the berry field, grove or stone-working area). Leaves the through-road at the inn crossroads [-1.5,-11.64], runs 9m+ clear of the well, passes 2.8m in front of the stone cottage's real threshold [15.72,-18.13] (so cottage_b keeps its 0912 pose and its door fronts a road), then turns north into The Stoneyard (paths.village_topology.subareas), the stone-working ground around band-1 stone nodes 4 [22,-34] and 1037 [11,-32]. An approach, not a route: the fingerpost's Practice Meadow arm already points down it. Harvest nodes it passes (fiber 7, deadwood 0) stay 1.6m+ off the centreline. REQUIRES the terrain + scatter re-bake.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): leaves the main street at the z=-16 crossroads; exit at [14.6,-31] unchanged.",
         "points": [
           [
-            -1.5,
-            -11.64
-          ],
-          [
-            4.0,
-            -18.0
+            10.5,
+            -16.0
           ],
           [
             13.6,
@@ -649,7 +640,8 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why": "F01 (#270, coordinator ruling 13:17): the in-village leg of The Pond, painted at the village width. An approach, not a route, so signpost.gd draws no extra fingerpost arm; the route itself (and its leg outside the fence) keeps the owner-directed 1.4/1.1. Ends exactly at the gate the route crosses, on the route's own line.",
-        "points": [[7.0, -7.0], [-4.0, -13.0], [-8.0, -13.96], [-11.0, -2.0], [-14.0, 14.0], [-21.0, 21.0]]
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): painted twin of the Pond lane route above.",
+        "points": [[10.5, 2.0], [3.0, 2.5], [-5.0, 4.0], [-12.5, 6.5], [-14.0, 14.0], [-21.0, 21.0]]
       },
       {
         "id": "village_rise_leg",
@@ -657,7 +649,16 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why": "F01 (#270, coordinator ruling 13:17): the in-village leg of The Rise, painted at the village width. An approach, not a route, so signpost.gd draws no extra fingerpost arm; the route itself (and its leg outside the fence) keeps the owner-directed 1.4/1.1. Ends exactly at the gate the route crosses, on the route's own line.",
-        "points": [[7.0, -7.0], [10.05, -0.9], [21.0, -5.5], [22.5, -11.5], [28.0, -16.17], [38.72, -19.85]]
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): painted twin of the Rise lane route above; exit at [38.72,-19.85] unchanged.",
+        "points": [[10.5, -16.0], [19.0, -16.0], [28.0, -16.17], [38.72, -19.85]]
+      },
+      {
+        "id": "village_green_walk",
+        "label": "Green Walk",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why": "OPTION-B (owner 2026-09-29): the stone cottage's doorstep [16.37,-5] faces the green from the east but sat 5.9 m from the nearest road. This short walk leaves the main street at the green's north edge [10.5,-10] (6 m from the z=-16 crossroads, the same node the inn's route uses) and ends on the doorstep. An approach, not a route, so the junction fingerpost draws no extra arm.",
+        "points": [[10.5, -10.0], [14.0, -8.6], [16.37, -5.0]]
       },
       {
         "id": "village_berry_lane",
@@ -666,14 +667,15 @@
         "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "label": "Berry Lane",
         "_why_f01": "F01-b (WORLD 3.2 / ART_DIRECTION: berry field, grove and stone-working area). The Berry Field's own lane: it leaves the through-road at the Pond crossroads [-8,-13.96] (the Pond lane goes south, this goes north) and ends inside the Berry Field (paths.village_topology.subareas), 1.6m clear of berry node 1036 [-9,-19]. An approach, not a route, so the junction fingerpost keeps its arms. REQUIRES the terrain + scatter re-bake.",
+        "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): leaves the z=-16 cross lane at x=-7.5; exit at [-7.2,-20.5] unchanged.",
         "points": [
           [
-            -8.0,
-            -13.96
+            -7.5,
+            -16.0
           ],
           [
-            -7.2,
-            -20.5
+            -7.4,
+            -22.5
           ]
         ]
       },
@@ -1121,36 +1123,36 @@
       {
         "_why_f01": "F01-a. One-arm fingerpost at the Stoneyard Lane mouth so the side lane and its subarea are named in the world, not only on the map. `at` stands 2.5m off the through-road's centreline and 3.6m off the lane's, on the inn side of the crossroads; the arm points up the lane, so a player walking the through-road sees the plank broadside.",
         "at": [
-          -4.2,
-          -15.6
+          8.0,
+          -18.5
         ],
         "label": "The Stoneyard",
         "points": [
           [
-            -1.5,
-            -11.64
+            10.5,
+            -16.0
           ],
           [
-            4.0,
-            -18.0
+            13.6,
+            -20.0
           ]
         ]
       },
       {
         "_why_f01": "F01-b. One-arm fingerpost naming the Berry Field at its lane mouth (the Pond crossroads), so the subarea is named in the world, not only on the map. Stands 2.4m off the through-road and 3.4m off Berry Lane, on the far side from the Stoneyard post so the two planks do not stack; the arm points up the lane.",
         "at": [
-          -11.0,
-          -17.2
+          -5.0,
+          -18.3
         ],
         "label": "Berry Field",
         "points": [
           [
-            -8.0,
-            -13.96
+            -7.5,
+            -16.0
           ],
           [
-            -7.2,
-            -20.5
+            -7.4,
+            -22.5
           ]
         ]
       },
@@ -1183,15 +1185,25 @@
       "through_road": {
         "roads": [
           "Grandpa's House",
+          "village_main_street",
           "village_south_street",
           "band1_lower_meadows"
         ],
-        "_why": "Grandpa's door -> inn crossroads -> civic bend [7,-7] -> South Street -> TrailGate [13.79,22.4] -> Lower Meadows spine -> South Bridge (0,1330). One continuous line with no junction at the well."
+        "_why": "OPTION-B: Grandpa's door -> the z=-16 cross lane -> Main Street (x=10.5, past the green) -> South Street -> TrailGate [13.79,22.4] -> Lower Meadows spine -> South Bridge (0,1330). One continuous line with no junction at the well."
       },
       "well": [
-        10.0,
-        -10.0
+        10.5,
+        -6.0
       ],
+      "_comment_green": "OPTION-B (owner 2026-09-29): the small village green. Declarative: the ground is the existing 0.9 m square flat (grass, no collision, no new material); village.json's well stands at its centre on the main street axis, and the inn door and the stone cottage door face it. tests/test_village_main_street.gd reads centre and radius.",
+      "green": {
+        "centre": [10.5, -6.0],
+        "radius_m": 4.0
+      },
+      "main_street": {
+        "road": "village_main_street",
+        "axis_x": 10.5
+      },
       "well_hub_radius_m": 8.0,
       "_comment_well": "The old plan's failure mode, as a number: within this radius of the well at most two road arms may meet (the through-road passing the square) and no road node may be a junction. OLD measured five arms and a degree-5 node at [7,-7].",
       "side_lanes": [
