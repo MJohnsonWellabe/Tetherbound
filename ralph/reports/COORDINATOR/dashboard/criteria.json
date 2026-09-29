@@ -906,6 +906,1658 @@
      "gap": "—"
     }
    ]
+  },
+  {
+   "id": "F16",
+   "title": "Foundations: save reset, schemas and biome order",
+   "chapter": "Wave 0 · Foundations",
+   "lane": "tb/foundations",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Save schema bumped past v27; loading any v27-or-older save shows a clear 'older version, start a new game' message, never crashes and never overwrites the old file (unit test with a v27 fixture).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10–100); a schema test fails on a missing or unknown id.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Biome order is one config list (meadows, tidewake, cloudreach, stormwood, then four reserved slots); a test proves no gameplay code hard-codes the old Meadows→Cloudreach→Stormwood→Water order.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every new durable field declares scope (world or character) and transaction semantics in the flag-scope registry; a two-peer save/reload round trip preserves them.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "New game from the title reaches Grandpa's opening on the new schema with an empty satchel apart from authored gifts; the full unit suite is green.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F17",
+   "title": "Village road and the Crossing Hall",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/hub",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 7,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Overhead plan and topology test: one straight road, 8–10 houses facing it on both sides, the homestead plot at the road's start beside the Meadows exit, the Crossing Hall at the road's end; road-graph test passes.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "From Grandpa's farm door at the normal camera, the Crossing Hall reads as the destination down the road (code-blind judge YES, day and night).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every house has a named resident or lived-in dressing; shop, workshop, inn, tournament board and research keeper are reachable on a controller day and night walk.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The M1 opening chain (starter, practice catch, camp, three-bed readiness, three tournament rounds) still completes on the new layout.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Host and guest see the same layout, arch states and shrine states after join and reload.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F18",
+   "title": "Home Key, portal keys and waystones",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/hub",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Grandpa gives the Home Key during the opening; it sits in the backpack and cannot be dropped, sold, traded or lost in a death satchel.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Using the Home Key is one tap: a ~2 s raise-and-glow animation, then arrival at the home arch; it is refused with a stated reason in combat, dialogue, cutscene, while swimming and mid-flight; free with no cooldown.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Portal keys are real inventory items; using one at its arch unlocks that portal permanently; locked arches refuse with a readable reason; retired physical crossings no longer lead between biomes (test proves portals are the only realm path).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each live biome has 3–5 waystones activated by touch; a portal sends the player to their last activated waystone in that biome (entry point if none); activation persists through reload.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Co-op: every player has their own Home Key and it moves only that player; a portal opens for the whole session when the host world or that character has unlocked it; a guest's own unlock follows their character to another host.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Ordinary-input loop witness: deep in a biome → Home Key → use a homestead station → portal back to the waystone, with a save/reload between steps.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F19",
+   "title": "Biome reorder and level curve",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/reorder",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "The order Meadows → Tidewake → Cloudreach → Stormwood drives the config, map, journal, portal signs and credits.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Level bands: Meadows 3→22 (wild 2–20, Warden ~21–22), Tidewake 20→33 (wild 18–32, Nerissa ~32–33), Cloudreach 31→44 (wild 29–43, Veyra ~43–44), Stormwood 42→55 (wild 40–54, finale ~54–55); wild tables and named trainer teams re-derived; a curve test pins them.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Boss hand-offs: Warden → Tidewake key; Tidewake finale → Cloudreach key; Veyra → Stormwood key; Stormwood finale → fifth key; each biome relic still granted; every participant receives their own.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Traversal: nothing in Tidewake requires Fly; nothing in Cloudreach or Stormwood assumes a later legendary or relic (gate-scan test).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Per-participant legendary offers (Veridian, Abyssal Guardian, Solmane, Stormwood's legendary) still work in the new order, accept and refuse, at capacity and with space.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F20",
+   "title": "Ending after Stormwood and the fifth key",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/reorder",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Tidewake's dock exchange completes as Tidewake's chapter resolution and no longer rolls credits.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "After the Stormwood finale the player uses the Home Key; Grandpa names the current five, the starter's status, one bond memory and chapter choices; credits roll once per character.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Using the fifth key at the fifth arch makes it stir (glow, sound, one line: not ready yet) but not open; no quest, cliffhanger or sequel prompt.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "After credits, reload resumes a safe completed world with bounties, rematches and remaining activities available.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Two peers each get their own homecoming acknowledgement and credits exactly once through disconnect/reload.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F21",
+   "title": "Combat impact and camera",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/combat",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Every landed hit produces tunable hitstop, knockback scaled by move weight, a target hit-reaction pose and a damage number; all values live in config.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Critical and super-effective hits read differently from ordinary hits (number size/colour, sound, flash); resisted hits read weaker.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Poise break produces a visible stagger state with a bonus-damage window.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Heavy hits add camera shake and controller rumble, each with an accessibility toggle.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Fight camera keeps both actors framed without overlap for small, normal and giant bodies (catalog P2-062/P2-092 class); code-blind judge PASS on a size matrix.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Code-blind judge prefers after over before on 'hits feel weighty and readable' from matched frame sequences; fights hold frame rate on the Medium preset capture.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F22",
+   "title": "Enemy patterns, anti-mash and role identity",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/combat",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Each combat role has at least two data-driven attack patterns with readable telegraphs; wild creatures reposition, dodge and punish rather than stand and trade.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win ≥0.9; masher loses the lead creature materially more often).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A code-blind judge names the role of five different creatures from fight footage alone.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F23",
+   "title": "Move loadout: three slots, ultimate, learnsets and mastery",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/combat",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Every creature has quick, charged and utility slots plus an ultimate; default mapping X quick, Y charged, B utility, RB+face ultimate, A dodge; no held-button gameplay (charged moves are tap-to-start).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "At least ten utility moves exist (dash-strike, heal pulse, trap and others) and every role can equip at least two.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Loadouts change at the Altar or a forward camp and persist through save/reload and two-peer rejoin.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Move mastery ranks 1–5 rise with use; each rank raises damage and upgrades the move's effect tier; mastery persists.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The ultimate meter fills from landed hits, the HUD shows it, and the ultimate fires only when full.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F24",
+   "title": "Tether Commands (trainer support, no damage)",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/combat",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "A command meter fills from the piloted creature's hits and powers four commands: quick item throw, Rally (short team buff), tag-switch combo and Tether Snare.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The trainer never deals damage: a test proves every damage event is creature-attributed.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Switching within the combo window after a hit triggers a joint attack from both creatures.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Tether Snare slows a wild creature and raises catch chance; it cannot target a trainer-owned creature.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Co-op: each player's commands affect only their own creature and are host-validated.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F25",
+   "title": "Move effects library (real pebbles, fireballs, lightning)",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/vfx",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every move in data/moves/moves.json maps to an archetype with parameters; a test fails on an unmapped move.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A code-blind judge identifies from frames: pebble toss shows several small stones in flight, rock throw one boulder, fireball a burning orb with a trail and explosion, lightning a bolt striking the target from above.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Damage resolves when the effect arrives (or the exception is documented per archetype); no damage number appears before the visible hit.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each effect has a particle budget; a worst-case four-creature fight holds frame rate on the Medium preset capture; nothing depends on an effect the Compatibility preset cannot draw without a fallback.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Mastery ranks visibly upgrade the effect (size, count, trail).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F26",
+   "title": "Renderer and look development (Palworld + Valheim bar)",
+   "chapter": "Wave 1 · World, order, combat and look",
+   "lane": "tb/lookdev",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each biome has a documented look bar (sky, fog, sun shafts, time-of-day grade, weather mood) with reference boards in ART_DIRECTION.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A code-blind judge rates each biome's frame matrix as meeting the new bar on High and Medium.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Computer captures at 1920×1080 record frame time per preset for a scripted route in each biome.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Owner ROG Ally test: Medium handheld holds ≥30 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F27",
+   "title": "Type essence and chosen leveling",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/training",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Eight type essences (ground, water, air, electric, fire, dark, ice, psychic) and Tether Candy exist as stackable items.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Sources work: defeating wilds, releasing a caught creature (its type), attuned nodes, essence crops, research tasks and a capped daily care trickle; no creature expeditions or automation.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Automatic combat XP continues at a reduced configured rate and is never zero.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "At the Altar the player spends essence to raise a chosen creature's level up to its cap; dual types may use either essence; starters level through their type.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Release payouts and essence spends cannot duplicate through reconnect or reload (two-peer test).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A route ledger shows the ordinary path reaches each biome's entry level without mandatory repeat grinding, and optional grinding speeds it measurably.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F28",
+   "title": "Breakthroughs, Masters and Ascension Feasts",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/training",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Caps at 10, 20, 30, 40 and 50 (ceiling 60 this pass; data holds up to 100); a capped creature stops gaining levels and shows 'breakthrough needed'.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Warden's stronghold, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each Master fight is a 1v1 with a creature of the player's choice; a win opens a chest teaching that tier's Ascension Feast once per character; a loss is retryable.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The feast needs that tier's biome materials plus one type-attuned ingredient matching the creature; it is cooked at the Kitchen and fed to one creature to lift its cap.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each co-op participant earns their own recipe; nobody receives it twice.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A ledger proves every feast ingredient is reachable in or before its biome.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F29",
+   "title": "Evolution lines (one per biome)",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/training",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Four lines: Mudsnout → Tuskroot or Ashtusk at L20 (heartstone/sunstone as feast ingredient), Mosshell → Cannonback at L30, Craghorn → Stormcapra at L40, Staticub → the new Stormwood storm bear at L50.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The breakthrough offers evolve or stay; staying is permanent for that tier.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Evolution preserves uid, nickname, level, bond history, IVs, traits and mastery.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The new storm bear exists via an agent-drafted reference and Meshy, larger than Staticub and taller than the trainer, with provenance recorded and an in-engine code-blind PASS; flag-gated until then.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Cannonback and Stormcapra remain wild where they already appear; Tuskroot, Ashtusk and the storm bear are not wild.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F30",
+   "title": "Traits and Trait Seeds",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/training",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "About 30 traits in Common, Rare and Epic tiers; wild creatures roll 0–3; alphas and night or weather spawns roll better.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Traits show on the catch readout and creature inspect screens.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Releasing a caught creature at the Altar distils one chosen trait into a Trait Seed.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A seed teaches into trait slots unlocked at the L10, L30 and L50 breakthroughs and costs essence.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each trait's effect applies in combat or traversal (unit test per trait); the existing bond second-trait rule is unified with this system.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F31",
+   "title": "Homestead stations and upgrades",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/homestead",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 7,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Workbench, Forge, Kitchen, Altar, Den and Farm plots (plus chests) can be built on the homestead plot.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Forge, Kitchen, Altar and Den each take exactly one attachment per biome (4 live, 8 slots) built from biome materials; recipe tier requires the attachment.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each station shows a single 'next upgrade' target; no tech tree screen is required to understand progress.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No automation: crops, smelting and cooking need the player's interaction (test).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Co-op: buildings are world-owned; tiers and recipes are personal; a guest uses the host's stations at the host's tier and keeps what they craft.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Stations read as distinct objects at the normal camera (code-blind judge).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F32",
+   "title": "Materials, attuned nodes and essence farming",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/homestead",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "The four tier material sets (Meadows rootstone/ironwood…, Tidewake driftwood/reef stone/sluice metal/tide bloom/Tide Pearl, Cloudreach heartwood/cliffglass/gale fiber/skyplume, Stormwood thunderwood/stormglass/conductor vine/glowmoss/sparkfur/voltcap) are gatherable in their biome.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The Forge refines Rootiron, Tidesteel, Skyglass and Stormglass plate.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "One or two type-essence nodes per type sit in each biome, mostly off-route, and respawn on a configured timer.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Eight type crops grow on homestead plots; the Greenhouse (a Farm buildable, not an attachment) grows off-biome crops; every harvest is by hand.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Shed items (skyplume, sparkfur and others) drop after wins and from Den grooming; no item implies hunting or butchering (test).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The ten Tidewake water_crafting proposals are registered at runtime; four-character node contention follows MULTIPLAYER.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F33",
+   "title": "Creature gear and trainer gear",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/homestead",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Creatures have Harness and Charm slots in Rootiron, Tidesteel, Skyglass and Stormglass tiers, each upgradable +1 to +3.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Equipped gear shows on the creature as a trim or glow accent.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Trainer gear mitigates the trainer's actual hazards (falls, storm static, cold heights, drowning and currents, hazard terrain), each covered by a test.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Trainer tool pouch tiers extend Tether Commands; all gear persists and is personal in co-op.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F34",
+   "title": "Forward camps",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/homestead",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "A forward-camp kit crafted at the Workbench places on valid ground in any biome with a bed, portable cookpot and field workbench.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Forward camps craft travel-tier items only (basic meals and field kits); Ascension Feasts, tier gear and refining need the homestead and are refused with a reason.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Resting recovers the team and saves; loadouts can be changed there.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Existing camp functions (tournament beds, rest bonus) keep working.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Placement is host-authoritative and persists through reload and rejoin.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F35",
+   "title": "Signature ultimates",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/vfx",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "16–20 shared type×role ultimates exist and every non-unique species maps to one (test).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Unique ultimates exist for Terrapup, Ripplet, Galewisp, Veridian, Abyssal Guardian, Solmane, Fulgocobra (the Stormwood legendary), Tuskroot, Ashtusk, Cannonback, Stormcapra and the storm bear.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Each ultimate visibly grows at breakthroughs.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Presentation lasts 2–3 s with no longer loss of control and stays readable in four-player fights.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A code-blind judge distinguishes every unique ultimate from the others.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F36",
+   "title": "Creature art: priority models, poses and scale",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/creature-art",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Hurt, faint/collapse, swim, fly-grip and ride poses read correctly for every species (P2-015, P2-016, P2-071, P2-028).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every creature meets the scale rule against the 1.80 m trainer and fight scale is consistent (P2-017, P2-062).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The nightly Meshy cap (30 generations) is respected and logged with task ids.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F37",
+   "title": "Ripplet swim and dive",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/training",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "An owned Ripplet can be ridden as a surface swimmer from Tidewake's opening, faster than human swimming and able to cross currents.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "At the L30 breakthrough Ripplet gains Dive, reaching sunken caches, nodes and hidden optional routes.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every required water route stays human-swimmable without Ripplet.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The old Ripplet Teleport promise is removed from docs and UI.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Riding and diving survive save/reload and two-peer rejoin.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F38",
+   "title": "Meadows and village: visual catalog burn-down to the full bar",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/visual-meadows",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every top-20 item for the biome is fixed on main with a before/after code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every remaining catalog item touching the biome with impact >12 is fixed on main with a code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The hero landmark (the village road and Crossing Hall) reads at distance and up close.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the matrix.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F39",
+   "title": "Tidewake: visual catalog burn-down to the full bar",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/visual-tidewake",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every top-20 item for the biome is fixed on main with a before/after code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every remaining catalog item touching the biome with impact >12 is fixed on main with a code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The hero landmark (Veilfall) reads at distance and up close.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the matrix.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F40",
+   "title": "Cloudreach: visual catalog burn-down to the full bar",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/visual-cloudreach",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every top-20 item for the biome is fixed on main with a before/after code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every remaining catalog item touching the biome with impact >12 is fixed on main with a code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The hero landmark (the Sky Aviary) reads at distance and up close.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the matrix.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F41",
+   "title": "Stormwood: visual catalog burn-down to the full bar",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/visual-stormwood",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 6,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every top-20 item for the biome is fixed on main with a before/after code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every remaining catalog item touching the biome with impact >12 is fixed on main with a code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The hero landmark (the Stormheart tree) reads at distance and up close.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the matrix.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F42",
+   "title": "HUD, menus and new-system screens",
+   "chapter": "Wave 2 · Creature power, homestead and visuals",
+   "lane": "tb/hud",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Catalog UI rows (map without terrain context, bare menus, heavy HUD boxes, low-contrast text) are fixed with code-blind PASS.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Altar (levels, essence, loadout, traits, mastery), station, gear, research log and bounty screens exist, are controller-first and registered with input_owner.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The HUD shows ultimate meter, command meter and move slots without clutter; the 7-inch device-profile judge passes.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Every new screen passes a 1920×1080 and 1280×800 readability capture.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F43",
+   "title": "Bounty board",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/loop",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Three bounties refresh each in-game morning, drawn only from unlocked biomes.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Bounty kinds: catch with a trait, defeat an alpha, deliver materials, win a rematch.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Rewards (essence, Tether Candy, materials, occasional Trait Seed) pay once per bounty instance and cannot duplicate through reconnect.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Bounties are personal in co-op and survive save/reload.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F44",
+   "title": "Rematches and alpha respawns",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/loop",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "After a biome's boss, its named trainers, captains and Master can be rematched at the next biome's level for better rewards.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Alphas respawn every configured number of in-game days with freshly rolled, better traits.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Unique rewards pay once; repeatable rewards follow a cycle that cannot be farmed without limit.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F45",
+   "title": "Research log",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/loop",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Every species has at least three research tasks (for example: see its move, catch one at night, defeat three) that pay type essence.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Completion percentage per biome, with a title or cosmetic at 100%.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The journal screen shows tasks and progress; released and never-kept creatures count.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Research progress is personal, persists and cannot pay twice.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F46",
+   "title": "Onboarding for the new systems",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/loop",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 3,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "Grandpa or a village NPC introduces the Home Key, homestead, Altar and essence, breakthroughs and Masters, portals and shrines as each unlocks; each lesson can be skipped.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "At every gate a new player can state the next goal (A-criteria check by an agent-piloted run).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No stacked modals; every prompt uses input_owner.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F47",
+   "title": "Economy, balance and the 15–25 hour clear",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/balance",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 5,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "An agent-piloted normal route estimates a 15–25 hour clear; the owner's play pass confirms the range.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Essence and material ledgers: the main path reaches each band's entry without mandatory repeat grinding; optional grinding measurably speeds progress.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Four-character contention ledgers are solvent.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "C2 difficulty holds for every biome band in the new order.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "No exploit loop (buy/resell, rest, release farming beyond the intended rate, bounty rerolls) mints unbounded value.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F48",
+   "title": "Co-op across the new loop",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/coop",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "A two-peer session runs hub → homestead crafting → portal → Master → feast → boss → relic hang, with each player's receipts separate.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "Disconnect and rejoin at each transaction (craft, release payout, feast, key use, relic hang) neither duplicates nor loses anything.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A four-peer session completes one biome boss with every participant receiving their own key and relic.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "A behind friend follows a host through an unlocked portal, and their own progress stays honest (no permanent key without the fight).",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
+  },
+  {
+   "id": "F49",
+   "title": "Integrated four-biome run and release proof",
+   "chapter": "Wave 3 · Loop, balance and release",
+   "lane": "tb/release",
+   "pct": 0,
+   "counts": {
+    "met": 0,
+    "partial": 0,
+    "in_progress": 0,
+    "not_started": 4,
+    "blocked": 0,
+    "failing": 0
+   },
+   "criteria": [
+    {
+     "text": "One save runs new game → Meadows → Tidewake → Cloudreach → Stormwood → Home Key homecoming → credits in the new order, with shortcuts disclosed.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The owner completes a human play pass and records findings.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The ROG Ally device gate passes on the chosen renderer.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    },
+    {
+     "text": "The rolling development download is published from the passing commit.",
+     "status": "not_started",
+     "evidence": "",
+     "gap": "Not started (redesign 2026-09-29)."
+    }
+   ]
   }
  ],
  "chapter_cards": [
