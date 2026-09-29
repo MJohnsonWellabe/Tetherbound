@@ -34,7 +34,7 @@ There is no XP loss on death, no party XP tax for co-op and no reward for killin
 
 | Biome | Team in→out | Wild | Boss team | Masters (breakthrough) | New power and strategic change | Boss drops (every participant) |
 |---|---|---|---|---|---|---|
-| Meadows | 3→22 | 2–20 | Warden ~21–22 | L10 mid-Meadows (River Lock/Quarry); L20 upper Meadows before the Crossing Hall | Named starter and team; camp and homestead; Altar and essence; first TMs; saddle; Mudsnout's L20 evolution; Meadowstride | Heart of the Meadows relic + Tidewake portal key |
+| Meadows | 3→22 | 2–20 | Warden ~21–22 | L10 mid-Meadows (River Lock/Quarry); L20 upper Meadows before the Warden's stronghold | Named starter and team; camp and homestead; Altar and essence; first TMs; saddle; Mudsnout's L20 evolution; Meadowstride | Heart of the Meadows relic + Tidewake portal key |
 | Tidewake | 20→33 | 18–32 | Nerissa ~32–33 | L30 outer island | Human swimming and currents; Ripplet swim mount and L30 Dive; Mosshell's L30 evolution; Tidal Guard; Abyssal Guardian offer; dock exchange closes the chapter | Tideglass relic + Cloudreach portal key |
 | Cloudreach | 31→44 | 29–43 | Veyra ~43–44 | L40 high perch (Fly) | Wingroads and Fly; aerial route judgment; Craghorn's L40 evolution; Skyborne; Solmane offer | Wings relic + Stormwood portal key |
 | Stormwood | 42→55 | 40–54 | Finale ~54–55 | L50 deep storm | Stormglass routes, grounding; Staticub's L50 evolution; Livewire; Stormheart offer; Home Key homecoming and credits | Spark relic + fifth portal key |

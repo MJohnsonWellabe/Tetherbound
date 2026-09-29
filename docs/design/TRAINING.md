@@ -81,7 +81,7 @@ One Master per tier, each a named character from the installed humanoid cast, of
 
 ## 4. Ascension Feasts (F28, RD-07)
 
-A feast `feast_t<N>` = that tier's biome materials + one `attuned_<type>` ingredient matching the creature to be fed. It is cooked **only at the homestead Kitchen**, at a Kitchen tier that HOMESTEAD's attachment rule allows; forward-camp cookpots refuse feasts (F34#1's "basic meals and feasts" wording conflicts with F28#3; Kitchen-only is kept, flagged in HOMESTEAD §12). One feast feeds one creature and lifts one tier. Material lists live in `data/recipes/feasts.json` and are owned by HOMESTEAD; the tier-to-biome map is:
+A feast `feast_t<N>` = that tier's biome materials + one `attuned_<type>` ingredient matching the creature to be fed. It is cooked **only at the homestead Kitchen**, at a Kitchen tier that HOMESTEAD's attachment rule allows; forward-camp cookpots refuse feasts (F34#1). One feast feeds one creature and lifts one tier. Material lists live in `data/recipes/feasts.json` and are owned by HOMESTEAD; the tier-to-biome map is:
 
 | Feast | Breaks | Materials from | Evolution ingredient |
 |---|---|---|---|
@@ -176,11 +176,12 @@ New tunable files: `data/config/essence.json`, `masters.json`, `traits.json`, `r
 
 Out of scope: breeding, IV rerolls, creature storage or a sixth slot, respec currency, skill trees, trading traits or recipes between players, offline production, creature expeditions, levels above 60 in this pass, evolving starters or legendaries.
 
-## 12. Open questions (flagged, not decided here)
+## 12. Open questions and the defaults taken
 
-1. Whether the existing Good/Great/Rare Candy stay as level items, convert to Tether Candy or retire.
-2. Breakthrough state of a creature caught above a cap (§2 proposed rule).
-3. Co-op Master fights: does each character need their own 1v1 win, or does taking part in one arena visit suffice (§3 proposes the former)?
-4. Mapping of the eight personality traits and the bond secondary into the new pool (§6).
-5. Whether taught trait slots are in addition to the 0–3 rolled traits (this file assumes yes) and whether starters roll traits.
+CODEX_START_HERE §8.1 sets conservative defaults for items 1–3 and 5. Lanes build these until the owner changes one:
+1. **Default:** Good, Great and Rare Candy stay as level items and respect caps.
+2. **Default:** a creature caught above a cap counts lower tiers as cleared (§2 rule). Evolution offers are not retroactive.
+3. **Default:** each co-op character wins its own 1v1. Others may watch but not join.
+4. Mapping of the eight personality traits and the bond secondary into the new pool (§6). This is an F30 implementation choice; the proposal is Common traits.
+5. **Default:** taught trait slots are extra to the 0–3 rolled traits. Starters roll traits like any creature.
 6. The storm bear's final name (owner item).

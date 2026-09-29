@@ -279,7 +279,7 @@ pushes it (§7.3).
 | F28 | Breakthroughs, Masters and Ascension Feasts | Wave 2 | `tb/training` | Every ten levels a creature needs a breakthrough: beat a Master 1v1, earn the feast recipe, gather, cook and feed. | TRAINING, BOSSES (Masters), HOMESTEAD (Kitchen), WORLD | 6 |
 | F29 | Evolution lines (one per biome) | Wave 2 | `tb/training` | Mudsnout, Mosshell, Craghorn and Staticub can evolve at breakthrough feasts; evolving is optional. | CREATURES, TRAINING, ART_DIRECTION | 5 |
 | F30 | Traits and Trait Seeds | Wave 2 | `tb/training` | Wild creatures roll traits; releasing one distils a Trait Seed you teach to your five. | TRAINING, CREATURES, UX | 5 |
-| F31 | Homestead stations and upgrades | Wave 2 | `tb/homestead` | Six stations at Grandpa's farm; four of them take one upgrade per biome, unlocked by hanging that biome's relic. | HOMESTEAD, UX, MULTIPLAYER | 7 |
+| F31 | Homestead stations and upgrades | Wave 2 | `tb/homestead` | Six stations at Grandpa's farm; four of them take one upgrade per biome; Meadows upgrades are open from the start and each hung relic unlocks the next biome's. | HOMESTEAD, UX, MULTIPLAYER | 7 |
 | F32 | Materials, attuned nodes and essence farming | Wave 2 | `tb/homestead` | Each biome has its material tier, rare type-essence nodes and crops worth planting. | HOMESTEAD, SYSTEMS, WORLD, PROGRESSION | 6 |
 | F33 | Creature gear and trainer gear | Wave 2 | `tb/homestead` | Harness and Charm tiers make each biome's gear matter; trainer gear protects against the trainer's real hazards. | HOMESTEAD, COMBAT, SYSTEMS | 5 |
 | F34 | Forward camps | Wave 2 | `tb/homestead` | A small travel-tier camp you can build in any biome: bed, cookpot and field workbench. | HOMESTEAD, SYSTEMS | 5 |
@@ -593,7 +593,7 @@ same criteria, numbered from zero (`F27#3`).
 
 ### F31 · Homestead stations and upgrades  (`tb/homestead`)
 
-- **Outcome:** Six stations at Grandpa's farm; four of them take one upgrade per biome, unlocked by hanging that biome's relic.
+- **Outcome:** Six stations at Grandpa's farm; four of them take one upgrade per biome; Meadows upgrades are open from the start and each hung relic unlocks the next biome's.
 - **Depends on:** F16, F17
 - **Owns:** data/items/buildables.json, new data/config/stations.json, scripts/build/** (station pieces), new scripts/build/station_*.gd, scripts/ui/craft_panel.gd, shrine pedestal logic in crossing_hall
 - **Build:**

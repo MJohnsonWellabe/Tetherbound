@@ -34,7 +34,7 @@ The Den is an addition to, not a replacement for, creature beds: a creature bed 
 
 ## 4. Attachments: one per biome
 
-**Not built (target).** Only the Forge, Kitchen, Altar and Den take upgrades, and each takes **exactly one attachment per biome** (RD-16). The schema holds 8 slots per station; 4 are live and 4 reserved for biomes 5–8 (RD-09). Each attachment is an adjacent buildable (world building record) snapped to its station, built from that biome's materials, and its recipe (the blueprint) is unlocked by hanging that biome's relic in the Shrine Room (RD-20, F31#2).
+**Not built (target).** Only the Forge, Kitchen, Altar and Den take upgrades, and each takes **exactly one attachment per biome** (RD-16). The schema holds 8 slots per station; 4 are live and 4 reserved for biomes 5–8 (RD-09). Each attachment is an adjacent buildable (world building record) snapped to its station, built from that biome's materials, and its recipe (the blueprint) is available from the start for Meadows, and for later biomes is unlocked by hanging the previous biome's relic in the Shrine Room (RD-20 "next tier", F31#2; ¶ below).
 
 | Station | Meadows | Tidewake | Cloudreach | Stormwood | 5–8 |
 |---|---|---|---|---|---|
@@ -143,8 +143,8 @@ Built: `data/items/buildables.json`, `data/recipes/{recipes,recipes_rootstone,re
 Keep conservative behavior until answered; none blocks other work.
 
 1. **Attachment gating order: settled.** Meadows attachments are available from the start. Hanging biome *N*'s relic unlocks biome *N*+1's attachments (§4; RD-20's "next tier"). This replaces the literal reading that deadlocked.
-2. **Greenhouse.** F32#3 calls it an "attachment", but RD-16 limits attachments to the Forge, Kitchen, Altar and Den. Treated here as a single Farm buildable.
+2. **Greenhouse: settled.** It is a Farm buildable, not an attachment (F32#3 now says so; RD-16 limits attachments to the Forge, Kitchen, Altar and Den).
 3. **Pouch slot.** RD-12/F33#4 do not say where the pouch is worn. Treated here as the backpack slot so the five-slot rule in `player_equipment.gd` holds; a sixth slot would need owner approval.
 4. **Hide armour wording.** The built `hide_*` pieces conflict with the no-butchery naming test (F32#4). Recommended: rename display names and blurbs (for example "Padded"), keep the ids.
-5. **Feasts at forward camps.** F34#1 lists "basic meals and feasts", but CODEX_START_HERE §3.1 and F28#3 say feasts are Kitchen-only. Kitchen-only is kept here.
+5. **Feasts at forward camps: settled.** Feasts are Kitchen-only; F34#1 now reads "basic meals and field kits" and refuses feasts at forward camps.
 6. **Repairs.** Tool repair is a free Satchel press today (SYSTEMS §1). F34#1 lists repairs as a forward-camp recipe. Keep the free press unless F47 finds it breaks the economy.

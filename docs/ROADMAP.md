@@ -100,7 +100,7 @@ The owner redesign adds **34 feature requests** in four waves. CODEX_START_HERE 
 | F28 | Breakthroughs, Masters and Ascension Feasts: Every ten levels a creature needs a breakthrough: beat a Master 1v1, earn the feast recipe, gather, cook and feed. | Wave 2 | `tb/training` |
 | F29 | Evolution lines (one per biome): Mudsnout, Mosshell, Craghorn and Staticub can evolve at breakthrough feasts; evolving is optional. | Wave 2 | `tb/training` |
 | F30 | Traits and Trait Seeds: Wild creatures roll traits; releasing one distils a Trait Seed you teach to your five. | Wave 2 | `tb/training` |
-| F31 | Homestead stations and upgrades: Six stations at Grandpa's farm; four of them take one upgrade per biome, unlocked by hanging that biome's relic. | Wave 2 | `tb/homestead` |
+| F31 | Homestead stations and upgrades: Six stations at Grandpa's farm; four of them take one upgrade per biome; Meadows upgrades are open from the start and each hung relic unlocks the next biome's. | Wave 2 | `tb/homestead` |
 | F32 | Materials, attuned nodes and essence farming: Each biome has its material tier, rare type-essence nodes and crops worth planting. | Wave 2 | `tb/homestead` |
 | F33 | Creature gear and trainer gear: Harness and Charm tiers make each biome's gear matter; trainer gear protects against the trainer's real hazards. | Wave 2 | `tb/homestead` |
 | F34 | Forward camps: A small travel-tier camp you can build in any biome: bed, cookpot and field workbench. | Wave 2 | `tb/homestead` |

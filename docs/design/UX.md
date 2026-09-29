@@ -270,7 +270,7 @@ Grandpa or a village resident introduces each new system when it first matters (
 | Ascension Feasts and evolution | the Kitchen and Altar prompts | first feast recipe learned | Feasts need this biome's materials plus one ingredient of your creature's type; some creatures may evolve, and staying is also fine. |
 | Traits and Trait Seeds | the Altar prompt | first release at the Altar | Release distils one trait into a seed for your five. |
 | Portals, keys and waystones | the Crossing Hall's resident (WORLD names who) | first portal key in the satchel (Warden's drop) | Use the key on its arch once; portals send you to your last waystone. |
-| Shrine Room and relic power | the same resident | first relic in the satchel | Hang it to unlock that biome's station upgrades; carry one relic power. |
+| Shrine Room and relic power | the same resident | first relic in the satchel | Hang it to unlock the next biome's station upgrades; carry one relic power. |
 | Forward camps | Tam | kit recipe unlocked | A small camp anywhere: bed, cookpot, field workbench; travel recipes only. |
 | Gear | Tam or the Forge prompt | first ingot refined | A Harness and a Charm per creature; each biome's boss is meant for that tier. |
 | Research log | the research keeper | first visit or first research task ticked | Meeting creatures you won't keep still pays essence. |
@@ -403,7 +403,7 @@ With the fifth portal key held, the fifth arch prompts "Use the fifth key". The 
 
 ## 13. Shrine Room: hang a relic, choose a power (target, F31#2; owner, 2026-09-29, RD-20)
 
-Eight pedestals: four live, four sealed. At a live pedestal with that biome's relic in the Satchel, X prompts "Hang <relic>". Hanging plays a moment banner naming what it unlocked: "<Biome> station upgrades unlocked: <Forge attachment>, <Kitchen attachment>, <Altar attachment>, <Den attachment>" (HOMESTEAD owns the names). The hang is character-scoped and host-validated with a transaction id; the relic item moves to the pedestal once and cannot be hung twice.
+Eight pedestals: four live, four sealed. At a live pedestal with that biome's relic in the Satchel, X prompts "Hang <relic>". Hanging plays a moment banner naming what it unlocked, which is the next biome's set (Meadows relic → Tidewake upgrades): "<Next biome> station upgrades unlocked: <Forge attachment>, <Kitchen attachment>, <Altar attachment>, <Den attachment>" (HOMESTEAD owns the names). The hang is character-scoped and host-validated with a transaction id; the relic item moves to the pedestal once and cannot be hung twice.
 
 The relic power screen (`shrine` context) then opens, and can be reopened at any pedestal outside combat: it lists hung relics with their power in one line each, marks the active one, and A makes the focused relic active (the existing one-active rule; the power selection moves here from its former place). B closes. What each pedestal *displays* to peers follows MULTIPLAYER's shrine-state rule (F17#5).
 
@@ -429,7 +429,7 @@ A forward camp's bed or field workbench offers the Loadout tab only (F23#3, F34#
 Workbench, Forge, Kitchen, Den and Farm plots share one panel layout (`station` context); chests keep the container screen. Each panel has:
 
 - a header: station name and its built attachments as icons (live biomes only; reserved tiers are not shown);
-- **one "Next upgrade" line** at the top (F31#3), always a single target: "Next upgrade: Smoker. Hang the Tideglass relic.", or "Next upgrade: Smoker. Driftwood 6/8 · Tidesteel ingot 2/4", or "All upgrades built." Workbench and Farm, which take no attachments, show their next unlockable recipe instead. No tech-tree screen is required;
+- **one "Next upgrade" line** at the top (F31#3), always a single target: "Next upgrade: Smoker. Hang the Meadows relic.", or "Next upgrade: Smoker. Driftwood 6/8 · Tidesteel ingot 2/4", or "All upgrades built." Workbench and Farm, which take no attachments, show their next unlockable recipe instead. No tech-tree screen is required;
 - the recipe list, filtered to the station's tier, with locked recipes shown dim with their reason ("Needs the Smoker");
 - the §2.4 crafting detail: selected recipe, owned/needed counts, action state and the reason a disabled action cannot run.
 

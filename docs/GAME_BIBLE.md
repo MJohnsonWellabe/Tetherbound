@@ -47,7 +47,7 @@ Eight legendary forces are conduits that maintain artificial **Tether Rifts**. T
 
 **Grandpa's Home Key** is personal, free and has no cooldown. One tap raises it (~2 s of light, not a hold) and the player arrives at the home arch. It is refused in combat, dialogue, cutscenes, while swimming and mid-flight, and cannot be dropped, sold, traded or lost in a satchel (RD-18).
 
-**The relic shrine.** The Hall's Shrine Room has eight pedestals. Hanging a biome's relic is required; it unlocks that biome's homestead attachment recipes, and the player then carries one chosen relic power (the existing one-active rule; RD-20).
+**The relic shrine.** The Hall's Shrine Room has eight pedestals. Hanging a biome's relic is required; it unlocks the next tier's homestead attachment recipes (Meadows attachments are available from the start, so each boss is fought with its own biome's gear), and the player then carries one chosen relic power (the existing one-active rule; RD-20).
 
 **Masters.** Five named Masters from the installed humanoid cast each hold one level tier (L10, L20, L30, L40, L50). The player wins a 1v1 with a creature of their choice; the Master's chest teaches that tier's **Ascension Feast** once per character; losses are retryable. The feast needs the tier's biome materials plus one type-attuned ingredient matching the creature, and breaks its cap (RD-06, RD-07, RD-08).
 

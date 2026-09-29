@@ -263,7 +263,7 @@ The owner authorized a **bounded, agent-attended** Meshy batch for **about 25–
 
 Alternates if F36 evidence reorders: Mosshell and Craghorn (evolution bases), Trailpup, Pipwing, Riptusk, Glimmermoth, and the Halda/Mira/Tam bodies if a village face outranks a repeated body.
 
-**Open (not decided here):** Stormwood's freed legendary has no species today. `stormwood_dynamo.json::captive` uses a Sparkit placeholder at ×1.8 scale, nicknamed "the Stormheart". F19#4 and F35#1 name "the Stormwood legendary", but RD-28 authorizes only one new creature, the storm bear. Whether the Stormwood legendary becomes a second new species, an existing species or stays the placeholder is an owner decision. It stays off this list until settled.
+**Stormwood legendary (settled default, CODEX_START_HERE §8.1):** the freed legendary is **Fulgocobra**, the existing species the Stormwood roster board marks Legendary. It replaces the Sparkit placeholder at ×1.8 in `stormwood_dynamo.json::captive` (nicknamed "the Stormheart"). This is not a roster expansion. Fulgocobra is a candidate for this priority list (confirm in F36) and needs a unique ultimate (F35#1).
 
 ### 7.2 The storm bear (owner, 2026-09-29, RD-28; F29 — target)
 
