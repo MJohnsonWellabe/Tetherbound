@@ -1,0 +1,1508 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 268099913591,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 268116690811,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-09-29T11:28:49",
+	"capture_started_utc": "2026-09-29T11:27:42",
+	"captured_frame_count": 4,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 483560,
+			"camera_player_distance_m": 5.82120704650879,
+			"camera_position": [
+				-63.9028015136719,
+				21.1641616821289,
+				65.7551574707031
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.999650120735168,
+					0.0,
+					0.0264515150338411
+				],
+				"basis_y": [
+					0.00549957947805524,
+					0.978147625923157,
+					0.207838952541351
+				],
+				"basis_z": [
+					-0.0258734859526157,
+					0.2079117000103,
+					-0.977805376052856
+				],
+				"origin": [
+					-63.7682609558105,
+					20.0830249786377,
+					70.8397445678711
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.999650120735168,
+					-0.0000000333868790391989,
+					0.0264515038579702
+				],
+				"basis_y": [
+					0.00549954455345869,
+					0.978147625923157,
+					0.207838952541351
+				],
+				"basis_z": [
+					-0.0258734822273254,
+					0.2079117000103,
+					-0.977805376052856
+				],
+				"origin": [
+					-63.9028015136719,
+					21.1641616821289,
+					65.7551574707031
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "water / first shore / 02 / first shore horizon stones",
+			"destination_index": 2,
+			"file": "res://.artifacts/phase2/p2008-phase2d-twinpumps02-routes/water__first_shore__02__first_shore_horizon_stones__route_day.jpg",
+			"frame_id": "water__first_shore__02__first_shore_horizon_stones__route_day",
+			"identity": "water__first_shore__02__first_shore_horizon_stones",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-90.0240020751953,
+						1.83712041378021,
+						147.572998046875
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-1.67700004577637,
+						35.9753723144531,
+						3.29200005531311
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						40.1590003967285,
+						1.65617477893829,
+						159.664001464844
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_012_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-73.7170028686523,
+						18.1950836181641,
+						58.0929985046387
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-111.524002075195,
+						17.4546909332275,
+						-14.1389999389648
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-10.2910003662109,
+						11.9083738327026,
+						101.672996520996
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-27.4179992675781,
+						-0.404193133115768,
+						179.365997314453
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_023_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-145.593002319336,
+						-0.423692017793655,
+						108.290000915527
+					],
+					"species_id": "water_torrentoad"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.219420636364,
+				"hour": 8.00877682545455,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-63.7682609558105,
+				18.3330268859863,
+				70.8397445678711
+			],
+			"position_xz": [
+				-63.6360015869141,
+				75.8379974365234
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 18.3108921051025,
+			"route_class": "main",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 5.0,
+			"selected_stand_xz": [
+				-63.7682609558105,
+				70.8397445678711
+			],
+			"spot_index_in_band": 0,
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.947699964046478,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-63.6360015869141,
+				75.8379974365234
+			],
+			"terrain_ground_y": 18.3108921051025,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.0264514964073896,
+				0.999650061130524
+			],
+			"walk_offset_xz": [
+				0.0,
+				0.0
+			],
+			"walk_seed": 234169681,
+			"walk_step": 0,
+			"water_surface_y": 0.0
+		},
+		{
+			"band_display_name": "",
+			"band_id": "brine_steps",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 298758,
+			"camera_player_distance_m": 5.82121706008911,
+			"camera_position": [
+				371.838073730469,
+				2.54711484909058,
+				839.694396972656
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.837198495864868,
+					0.0,
+					-0.546899139881134
+				],
+				"basis_y": [
+					-0.113706730306149,
+					0.978147625923157,
+					0.174063369631767
+				],
+				"basis_z": [
+					0.534948110580444,
+					0.2079117000103,
+					-0.818903744220734
+				],
+				"origin": [
+					369.056335449219,
+					1.46597158908844,
+					843.952697753906
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.837198495864868,
+					-0.0000000437266045594242,
+					-0.546899139881134
+				],
+				"basis_y": [
+					-0.113706782460213,
+					0.978147625923157,
+					0.174063369631767
+				],
+				"basis_z": [
+					0.534948110580444,
+					0.207911744713783,
+					-0.818903744220734
+				],
+				"origin": [
+					371.838073730469,
+					2.54711484909058,
+					839.694396972656
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "water / brine steps / 06 / brine steps east beach",
+			"destination_index": 6,
+			"file": "res://.artifacts/phase2/p2008-phase2d-twinpumps02-routes/water__brine_steps__06__brine_steps_east_beach__walk_03_day.jpg",
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"identity": "water__brine_steps__06__brine_steps_east_beach",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_brine_root_watcher",
+					"node_scale": [
+						0.999998331069946,
+						1.0,
+						0.999998331069946
+					],
+					"position": [
+						327.108520507813,
+						2.35344958305359,
+						815.035949707031
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_brine_steps_wild_004_0",
+					"node_scale": [
+						0.999999344348907,
+						1.0,
+						0.999999344348907
+					],
+					"position": [
+						400.53466796875,
+						0.772780060768127,
+						841.8408203125
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_008_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						321.660064697266,
+						3.29278969764709,
+						942.979919433594
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_shellwatch_wild_019_0",
+					"node_scale": [
+						0.999999642372131,
+						1.0,
+						0.999999642372131
+					],
+					"position": [
+						385.783996582031,
+						-0.285366803407669,
+						940.671020507813
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.2,
+				"hour": 8.008,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				369.056335449219,
+				-0.284028202295303,
+				843.952697753906
+			],
+			"position_xz": [
+				362.493528366089,
+				853.999055862427
+			],
+			"rejected_stand_candidates": [
+				{
+					"camera_position": [
+						366.090423583984,
+						2.13113021850586,
+						850.683715820313
+					],
+					"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+					"ground_y": -2.64529705047607,
+					"lateral_m": 0.0,
+					"offset_m": 5.0,
+					"player_position": [
+						363.267272949219,
+						-0.699999988079071,
+						854.833740234375
+					],
+					"reason": "player left staged stand by 5.39m (possible slide, encounter or respawn)",
+					"stage": "settled",
+					"stand_xz": [
+						365.22802734375,
+						849.813110351563
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.0,
+						"has_safe_landing": true,
+						"mode": 1,
+						"on_floor": false,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 84,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 0.961733333333333,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": true,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						371.332183837891,
+						2.13113594055176,
+						851.935974121094
+					],
+					"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+					"ground_y": -3.1788067817688,
+					"lateral_m": -5.0,
+					"offset_m": 5.0,
+					"player_position": [
+						368.5439453125,
+						-0.699999988079071,
+						856.268737792969
+					],
+					"reason": "player left staged stand by 3.82m (possible slide, encounter or respawn)",
+					"stage": "settled",
+					"stand_xz": [
+						369.414031982422,
+						852.547607421875
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.0,
+						"has_safe_landing": true,
+						"mode": 1,
+						"on_floor": false,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 166,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 0.923466666666666,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": true,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						361.109130859375,
+						2.13113021850586,
+						849.758422851563
+					],
+					"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+					"ground_y": -2.15220642089844,
+					"lateral_m": 5.0,
+					"offset_m": 5.0,
+					"player_position": [
+						358.209808349609,
+						-0.699999988079071,
+						853.997375488281
+					],
+					"reason": "player left staged stand by 7.48m (possible slide, encounter or respawn)",
+					"stage": "settled",
+					"stand_xz": [
+						361.042022705078,
+						847.07861328125
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.0,
+						"has_safe_landing": true,
+						"mode": 1,
+						"on_floor": false,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 251,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 0.883799999999999,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": true,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						367.220397949219,
+						2.13113617897034,
+						850.945129394531
+					],
+					"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+					"ground_y": -1.64214324951172,
+					"lateral_m": 0.0,
+					"offset_m": 8.0,
+					"player_position": [
+						364.368041992188,
+						-0.699999988079071,
+						855.25341796875
+					],
+					"reason": "player left staged stand by 8.34m (possible slide, encounter or respawn)",
+					"stage": "settled",
+					"stand_xz": [
+						366.868713378906,
+						847.301513671875
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.0,
+						"has_safe_landing": true,
+						"mode": 1,
+						"on_floor": false,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 334,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 0.845066666666666,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": true,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						372.317443847656,
+						2.13115501403809,
+						852.217834472656
+					],
+					"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+					"ground_y": -2.18332147598267,
+					"lateral_m": -5.0,
+					"offset_m": 8.0,
+					"player_position": [
+						369.590393066406,
+						-0.699999988079071,
+						856.40234375
+					],
+					"reason": "player left staged stand by 6.53m (possible slide, encounter or respawn)",
+					"stage": "settled",
+					"stand_xz": [
+						371.054718017578,
+						850.036010742188
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.0,
+						"has_safe_landing": true,
+						"mode": 1,
+						"on_floor": false,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 416,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 0.806799999999999,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": true,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						362.337127685547,
+						2.13112831115723,
+						849.908020019531
+					],
+					"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+					"ground_y": -1.14194798469543,
+					"lateral_m": 5.0,
+					"offset_m": 8.0,
+					"player_position": [
+						359.436737060547,
+						-0.700005114078522,
+						854.156799316406
+					],
+					"reason": "player left staged stand by 10.12m (possible slide, encounter or respawn)",
+					"stage": "settled",
+					"stand_xz": [
+						362.682708740234,
+						844.567016601563
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.0,
+						"has_safe_landing": true,
+						"mode": 1,
+						"on_floor": false,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 498,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 0.768533333333332,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				}
+			],
+			"resolved_ground_y": -0.307310312986374,
+			"route_class": "off",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 12.0,
+			"selected_stand_xz": [
+				369.056335449219,
+				843.952697753906
+			],
+			"spot_index_in_band": 0,
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.945744395256042,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 499,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.768533333333332,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				362.493530273438,
+				853.999084472656
+			],
+			"terrain_ground_y": -0.307310312986374,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.546899199485779,
+				0.837198495864868
+			],
+			"walk_angle_rad": 1.53185105323792,
+			"walk_distance_m": 27.958137512207,
+			"walk_offset_xz": [
+				-20.9684772491455,
+				25.9250812530518
+			],
+			"walk_seed": 2637220796,
+			"walk_step": 3,
+			"water_surface_y": 0.0
+		},
+		{
+			"band_display_name": "",
+			"band_id": "salt_crown",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 388459,
+			"camera_player_distance_m": 5.82129096984863,
+			"camera_position": [
+				177.585540771484,
+				91.5432968139648,
+				2339.81811523438
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.790144562721252,
+					0.0,
+					0.612920522689819
+				],
+				"basis_y": [
+					0.127433344721794,
+					0.978147625923157,
+					-0.164280295372009
+				],
+				"basis_z": [
+					-0.599526762962341,
+					0.2079117000103,
+					0.772878050804138
+				],
+				"origin": [
+					180.703125,
+					90.4621429443359,
+					2335.79907226563
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.790144562721252,
+					-0.000000064498401286528,
+					0.612920522689819
+				],
+				"basis_y": [
+					0.127433434128761,
+					0.978147625923157,
+					-0.164280295372009
+				],
+				"basis_z": [
+					-0.599526762962341,
+					0.207911744713783,
+					0.772878050804138
+				],
+				"origin": [
+					177.585540771484,
+					91.5432968139648,
+					2339.81811523438
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "water / salt crown / 11 / salt crown tide shrine",
+			"destination_index": 11,
+			"file": "res://.artifacts/phase2/p2008-phase2d-twinpumps02-routes/water__salt_crown__11__salt_crown_tide_shrine__walk_01_day.jpg",
+			"frame_id": "water__salt_crown__11__salt_crown_tide_shrine__walk_01_day",
+			"identity": "water__salt_crown__11__salt_crown_tide_shrine",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_salt_crown_exploration_spine_05_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						149.537002563477,
+						66.3446960449219,
+						2300.69604492188
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_salt_crown_exploration_spine_05_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						152.537002563477,
+						66.6491775512695,
+						2300.69604492188
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_salt_crown_exploration_spine_06_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						220.164993286133,
+						69.454963684082,
+						2344.82690429688
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "road_visibility_salt_crown_exploration_spine_06_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						223.164993286133,
+						70.8623275756836,
+						2344.82690429688
+					],
+					"species_id": "water_sirenseal"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "water_salt_crown_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						182.175003051758,
+						90.7061004638672,
+						2293.49194335938
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_salt_crown_wild_012_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						215.828704833984,
+						57.7657585144043,
+						2413.46801757813
+					],
+					"species_id": "water_riptusk"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.200505050505,
+				"hour": 8.0080202020202,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				180.703125,
+				88.7121505737305,
+				2335.79907226563
+			],
+			"position_xz": [
+				183.767732620239,
+				2331.84829080105
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 88.6141662597656,
+			"route_class": "off",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 5.0,
+			"selected_stand_xz": [
+				180.703125,
+				2335.79907226563
+			],
+			"spot_index_in_band": 0,
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.839606702327728,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 499,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.768533333333332,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				183.767730712891,
+				2331.84838867188
+			],
+			"terrain_ground_y": 88.6141662597656,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				0.612920463085175,
+				-0.790144562721252
+			],
+			"walk_angle_rad": -3.12758278846741,
+			"walk_distance_m": 27.3149490356445,
+			"walk_offset_xz": [
+				-27.3122692108154,
+				-0.382666230201721
+			],
+			"walk_seed": 2457685571,
+			"walk_step": 1,
+			"water_surface_y": 0.0
+		},
+		{
+			"band_display_name": "",
+			"band_id": "sluice_isle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 308809,
+			"camera_player_distance_m": 5.82131195068359,
+			"camera_position": [
+				908.17236328125,
+				37.122386932373,
+				2854.95678710938
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.952485024929047,
+					0.0,
+					-0.304585516452789
+				],
+				"basis_y": [
+					-0.063326895236969,
+					0.978147625923157,
+					0.198032796382904
+				],
+				"basis_z": [
+					0.297929584980011,
+					0.207911714911461,
+					-0.931670963764191
+				],
+				"origin": [
+					906.622924804688,
+					36.0412063598633,
+					2859.80151367188
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.952485024929047,
+					-0.0000000608545107638747,
+					-0.304585486650467
+				],
+				"basis_y": [
+					-0.0633269622921944,
+					0.978147625923157,
+					0.198032826185226
+				],
+				"basis_z": [
+					0.297929555177689,
+					0.207911774516106,
+					-0.931670963764191
+				],
+				"origin": [
+					908.17236328125,
+					37.122386932373,
+					2854.95678710938
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "water / sluice isle / 13 / sluice isle twin pumps",
+			"destination_index": 13,
+			"file": "res://.artifacts/phase2/p2008-phase2d-twinpumps02-routes/water__sluice_isle__13__sluice_isle_twin_pumps__route_day.jpg",
+			"frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__route_day",
+			"identity": "water__sluice_isle__13__sluice_isle_twin_pumps",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_02_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						819.385986328125,
+						28.3682270050049,
+						2865.81494140625
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_02_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						823.885986328125,
+						28.6817283630371,
+						2865.81494140625
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_03_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						921.89501953125,
+						27.8750305175781,
+						2952.43188476563
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "road_visibility_sluice_isle_exploration_spine_03_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						926.39501953125,
+						27.8685436248779,
+						2952.43188476563
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_sluice_isle_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						858.614990234375,
+						45.9762115478516,
+						2927.17407226563
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						960.026977539063,
+						23.0285873413086,
+						2852.48999023438
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.199026,
+				"hour": 8.00796104,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				906.622924804688,
+				34.2912139892578,
+				2859.80151367188
+			],
+			"position_xz": [
+				905.099975585938,
+				2864.56396484375
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 34.2895202636719,
+			"route_class": "main",
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 5.0,
+			"selected_stand_xz": [
+				906.622924804688,
+				2859.80151367188
+			],
+			"spot_index_in_band": 0,
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.999557912349701,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 499,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.768533333333332,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				905.099975585938,
+				2864.56396484375
+			],
+			"terrain_ground_y": 34.2895202636719,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": null,
+			"view_heading_xz": [
+				-0.304585486650467,
+				0.952485084533691
+			],
+			"walk_offset_xz": [
+				0.0,
+				0.0
+			],
+			"walk_seed": 926664823,
+			"walk_step": 0,
+			"water_surface_y": 0.0
+		}
+	],
+	"planned_frame_count": 4,
+	"planned_frame_ids": [
+		"water__first_shore__02__first_shore_horizon_stones__route_day",
+		"water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+		"water__salt_crown__11__salt_crown_tide_shrine__walk_01_day",
+		"water__sluice_isle__13__sluice_isle_twin_pumps__route_day"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 268116690811,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rejected_stand_candidates": [
+		{
+			"camera_position": [
+				366.090423583984,
+				2.13113021850586,
+				850.683715820313
+			],
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"ground_y": -2.64529705047607,
+			"lateral_m": 0.0,
+			"offset_m": 5.0,
+			"player_position": [
+				363.267272949219,
+				-0.699999988079071,
+				854.833740234375
+			],
+			"reason": "player left staged stand by 5.39m (possible slide, encounter or respawn)",
+			"stage": "settled",
+			"stand_xz": [
+				365.22802734375,
+				849.813110351563
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.0,
+				"has_safe_landing": true,
+				"mode": 1,
+				"on_floor": false,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 84,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.961733333333333,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": true,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				371.332183837891,
+				2.13113594055176,
+				851.935974121094
+			],
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"ground_y": -3.1788067817688,
+			"lateral_m": -5.0,
+			"offset_m": 5.0,
+			"player_position": [
+				368.5439453125,
+				-0.699999988079071,
+				856.268737792969
+			],
+			"reason": "player left staged stand by 3.82m (possible slide, encounter or respawn)",
+			"stage": "settled",
+			"stand_xz": [
+				369.414031982422,
+				852.547607421875
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.0,
+				"has_safe_landing": true,
+				"mode": 1,
+				"on_floor": false,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 166,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.923466666666666,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": true,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				361.109130859375,
+				2.13113021850586,
+				849.758422851563
+			],
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"ground_y": -2.15220642089844,
+			"lateral_m": 5.0,
+			"offset_m": 5.0,
+			"player_position": [
+				358.209808349609,
+				-0.699999988079071,
+				853.997375488281
+			],
+			"reason": "player left staged stand by 7.48m (possible slide, encounter or respawn)",
+			"stage": "settled",
+			"stand_xz": [
+				361.042022705078,
+				847.07861328125
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.0,
+				"has_safe_landing": true,
+				"mode": 1,
+				"on_floor": false,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 251,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.883799999999999,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": true,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				367.220397949219,
+				2.13113617897034,
+				850.945129394531
+			],
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"ground_y": -1.64214324951172,
+			"lateral_m": 0.0,
+			"offset_m": 8.0,
+			"player_position": [
+				364.368041992188,
+				-0.699999988079071,
+				855.25341796875
+			],
+			"reason": "player left staged stand by 8.34m (possible slide, encounter or respawn)",
+			"stage": "settled",
+			"stand_xz": [
+				366.868713378906,
+				847.301513671875
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.0,
+				"has_safe_landing": true,
+				"mode": 1,
+				"on_floor": false,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 334,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.845066666666666,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": true,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				372.317443847656,
+				2.13115501403809,
+				852.217834472656
+			],
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"ground_y": -2.18332147598267,
+			"lateral_m": -5.0,
+			"offset_m": 8.0,
+			"player_position": [
+				369.590393066406,
+				-0.699999988079071,
+				856.40234375
+			],
+			"reason": "player left staged stand by 6.53m (possible slide, encounter or respawn)",
+			"stage": "settled",
+			"stand_xz": [
+				371.054718017578,
+				850.036010742188
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.0,
+				"has_safe_landing": true,
+				"mode": 1,
+				"on_floor": false,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 416,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.806799999999999,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": true,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				362.337127685547,
+				2.13112831115723,
+				849.908020019531
+			],
+			"frame_id": "water__brine_steps__06__brine_steps_east_beach__walk_03_day",
+			"ground_y": -1.14194798469543,
+			"lateral_m": 5.0,
+			"offset_m": 8.0,
+			"player_position": [
+				359.436737060547,
+				-0.700005114078522,
+				854.156799316406
+			],
+			"reason": "player left staged stand by 10.12m (possible slide, encounter or respawn)",
+			"stage": "settled",
+			"stand_xz": [
+				362.682708740234,
+				844.567016601563
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.0,
+				"has_safe_landing": true,
+				"mode": 1,
+				"on_floor": false,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 498,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 0.768533333333332,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day"
+	],
+	"requested_views": [
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}
