@@ -35,6 +35,10 @@ func test_tidewake_allowlist_uses_repaints_without_enabling_other_phase2_species
 		assert_true(VISUAL.shiny_colourway_allowed(species), species)
 	for species: String in ["voltwig", "staticub", "solmane"]:
 		assert_false(VISUAL.shiny_colourway_allowed(species), species)
+	assert_true(VISUAL.shiny_colourway_allowed("mirejaw"))
+	assert_true(ResourceLoader.exists(
+		"res://assets/creatures/tetherbound/mirejaw/models/mirejaw_extracted_base_color_shiny.png"),
+		"Mirejaw's rare roll must load a repaint instead of the neon fallback")
 
 
 func test_disabled_gate_retints_source_once_after_ordinary_override() -> void:
