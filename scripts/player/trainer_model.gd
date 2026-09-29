@@ -65,6 +65,8 @@ var _riding_leg_fit: Node3D = null
 ## movement.json's `gait_feel` block (MQ1A, TUNABLE) — momentum-tilt limits for
 ## character_model.gd's apply_momentum_tilt(). Read once at ready.
 var _gait_feel: Dictionary = {}
+## RUN-LEAN: current eased steady-lean pitch in degrees (see run_gait.gd).
+var _run_lean_deg: float = 0.0
 var _fly_hang := false
 var _fly_pose: Dictionary = {}
 const HUMAN_SWIM_CONFIG := "res://data/config/human_swim_visual.json"
@@ -112,7 +114,13 @@ static func _load_gait_feel() -> Dictionary:
 	if not parsed is Dictionary:
 		return {}
 	var feel: Variant = (parsed as Dictionary).get("gait_feel", {})
-	return feel if feel is Dictionary else {}
+	var out: Dictionary = (feel as Dictionary).duplicate() if feel is Dictionary else {}
+	# RUN-LEAN needs the locomotion speeds the lean is measured against.
+	var loco: Variant = (parsed as Dictionary).get("locomotion", {})
+	if loco is Dictionary:
+		out["walk_speed"] = float((loco as Dictionary).get("walk_speed", 5.0))
+		out["sprint_speed"] = float((loco as Dictionary).get("sprint_speed", 8.6))
+	return out
 
 
 # Physics tick, not _process: every input here — ground_speed, is_on_floor,
@@ -126,6 +134,7 @@ func _physics_process(delta: float) -> void:
 	if animation_player() == null or _player == null:
 		return
 	if _update_human_swim_visual(delta):
+		_run_lean_deg = 0.0  # a swim exit must not resume a stale sprint lean
 		_throwing_for = maxf(0.0, _throwing_for - delta)
 		_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
 		return
@@ -144,9 +153,11 @@ func _physics_process(delta: float) -> void:
 	# wins: if a build ever reaches a state where both flags are set, the fly
 	# hang is the pose that draws, and W14's seated pose yields to it.
 	if _fly_hang:
+		_run_lean_deg = 0.0
 		_apply_fly_hang()
 		return
 	if _riding:
+		_run_lean_deg = 0.0  # a dismount starts upright
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
 	_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
@@ -198,12 +209,21 @@ func _physics_process(delta: float) -> void:
 	# OF5: gait cadence tracks how fast the body is actually covering ground,
 	# not the one speed the clip was baked at. No-op (resets to 1x) for every
 	# non-gait role — see character_model.gd's match_gait_rate().
-	match_gait_rate(role, _player.call("ground_speed"))
+	match_gait_rate(role, _player.call("ground_speed"), _gait_feel)
 	# MQ1A: the body tips into starts, stops and turns. Grounded only — in
 	# the air the jump clip owns the silhouette and a tilt reads as tumbling.
 	var planar := Vector3(_player.velocity.x, 0.0, _player.velocity.z) \
 		if _player.is_on_floor() else Vector3.ZERO
 	apply_momentum_tilt(planar, delta, _gait_feel)
+	# RUN-LEAN: steady forward pitch that grows with speed above walk. Added
+	# after the (assigning) momentum tilt and before terrain adaptation (which
+	# also adds), so all three stack. Presentation only, on this model node.
+	_run_lean_deg = RUN_GAIT.ease_toward(_run_lean_deg, RUN_GAIT.lean_target_deg(
+		planar.length(), float(_gait_feel.get("walk_speed", 5.0)),
+		float(_gait_feel.get("sprint_speed", 8.6)),
+		float(_gait_feel.get("run_lean_max_deg", 0.0))),
+		delta, float(_gait_feel.get("run_lean_ease_s", 0.15)))
+	rotation.x += deg_to_rad(-_run_lean_deg)
 	# MQ1B: terrain adaptation ADDS to the momentum tilt just applied above,
 	# so a launch on a slope both leans into the acceleration and banks into
 	# the hill — see character_model.gd::apply_terrain_adaptation's own
