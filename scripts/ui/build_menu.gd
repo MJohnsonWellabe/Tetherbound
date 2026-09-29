@@ -218,7 +218,19 @@ func close(play_cue: bool = true) -> void:
 		AUDIO_CUES.play(&"ui_cancel")
 	_open = false
 	visible = false
-	Input.mouse_mode = _mouse_before
+	# Playtest (2026-09-29): after the build menu the mouse no longer turned the
+	# camera. `_mouse_before` is a value cached at open, and a cached value can be
+	# wrong by the time we close (the same trap RG1 documents in craft_panel.gd, and
+	# on Windows a "CAPTURED" reading can be a capture that never really happened,
+	# see playground_world.gd::_capture_mouse_if_free). Restore by the live ownership
+	# graph instead: once nothing else owns the screen the camera needs the mouse
+	# captured, whatever we found when we opened. If another panel still owns the
+	# screen it releases the mouse itself, so leave it as it was.
+	var tree := get_tree()
+	if tree != null and INPUT_OWNER.current(tree) == null:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	else:
+		Input.mouse_mode = _mouse_before
 
 
 func _process(delta: float) -> void:
