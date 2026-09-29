@@ -134,6 +134,7 @@ func _physics_process(delta: float) -> void:
 	if animation_player() == null or _player == null:
 		return
 	if _update_human_swim_visual(delta):
+		_run_lean_deg = 0.0  # a swim exit must not resume a stale sprint lean
 		_throwing_for = maxf(0.0, _throwing_for - delta)
 		_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
 		return
@@ -152,9 +153,11 @@ func _physics_process(delta: float) -> void:
 	# wins: if a build ever reaches a state where both flags are set, the fly
 	# hang is the pose that draws, and W14's seated pose yields to it.
 	if _fly_hang:
+		_run_lean_deg = 0.0
 		_apply_fly_hang()
 		return
 	if _riding:
+		_run_lean_deg = 0.0  # a dismount starts upright
 		return
 	_throwing_for = maxf(0.0, _throwing_for - delta)
 	_tool_swing_for = maxf(0.0, _tool_swing_for - delta)
