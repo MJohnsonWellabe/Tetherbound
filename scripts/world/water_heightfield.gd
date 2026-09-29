@@ -132,6 +132,24 @@ func _compile_sites() -> void:
 					for i in range(line.size() - 1):
 						segments.append([float(line[i][0]), float(line[i][2]),
 							float(line[i + 1][0]), float(line[i + 1][2]), 0.0])
+	# Gameplay geometry that depends on ground height (gated ramps, barricade
+	# and cliff-lip bypass zones, loops, routes, dock anchors): each source names
+	# a config list (or another JSON file's list) and the point/polyline keys to
+	# read, plus an extra flat radius (m) added to `site_clear_m`.
+	var reach_extra := 0.0
+	for source: Dictionary in _dune_relief.get("site_sources", []):
+		var rows: Variant = _config.get(str(source.get("list", "")), [])
+		var source_path := str(source.get("path", ""))
+		if not source_path.is_empty():
+			var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string(source_path)) \
+				if FileAccess.file_exists(source_path) else null
+			rows = doc.get(str(source.get("list", "")), []) if doc is Dictionary else []
+		var source_extra := maxf(0.0, float(source.get("extra_m", 0.0)))
+		for row: Variant in rows:
+			if not row is Dictionary:
+				continue
+			for key: String in source.get("keys", []):
+				_append_source_geometry(segments, row.get(key, []), source_extra)
 	var reach := _site_clear + _site_fade
 	for seg: Array in segments:
 		var extra: float = seg[4]
@@ -160,6 +178,32 @@ func _compile_sites() -> void:
 					seg[0] - _cx[owner_index], seg[1] - _cz[owner_index],
 					seg[2] - _cx[owner_index], seg[3] - _cz[owner_index], extra]))
 				cells[key] = list
+
+
+## Adds one point ([x, z] or [x, y, z]) or a polyline of them as flat-zone
+## segments with `extra` additional flat radius.
+func _append_source_geometry(segments: Array, value: Variant, extra: float) -> void:
+	if not value is Array or (value as Array).is_empty():
+		return
+	var arr: Array = value
+	var points: Array = []
+	if arr[0] is Array:
+		points = arr
+	else:
+		points = [arr]
+	var prev := Vector2.ZERO
+	var have_prev := false
+	for point: Variant in points:
+		if not point is Array or (point as Array).size() < 2:
+			continue
+		var pa: Array = point
+		var xz := Vector2(float(pa[0]), float(pa[pa.size() - 1]))
+		if have_prev:
+			segments.append([prev.x, prev.y, xz.x, xz.y, extra])
+		elif points.size() == 1:
+			segments.append([xz.x, xz.y, xz.x, xz.y, extra])
+		prev = xz
+		have_prev = true
 
 
 ## 1 = full dunes, 0 = authored-site flat zone.
