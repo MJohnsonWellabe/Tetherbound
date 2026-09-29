@@ -919,7 +919,12 @@ func _place_fighters() -> void:
 	_ally_body.call("face_towards", wild_spot)
 	_place(_wild, wild_spot)
 	_wild.call("face_towards", ally_spot)
-	_stand_the_trainer_aside(forward)
+	# F14#0 C3: an opted-in opponent has the trainer stand beside the ally,
+	# not at the midpoint, which contact spacing turned into its head.
+	var beside_ally := _wild != null and is_instance_valid(_wild) \
+		and _wild.has_method("camera_trainer_beside_ally") \
+		and bool(_wild.call("camera_trainer_beside_ally"))
+	_stand_the_trainer_aside(forward, ally_spot if beside_ally else Vector3.INF)
 
 
 ## Cards M2 (BRIDGE_GUARDIAN_REGRESSION): the lateral seat is F04#2's answer
@@ -1026,11 +1031,15 @@ func _combat_position(body: Node3D) -> Vector3:
 ##
 ## This is a small, one-off move at the moment the fight opens, not a system
 ## that puppets them around afterwards.
-func _stand_the_trainer_aside(forward: Vector3) -> void:
+func _stand_the_trainer_aside(forward: Vector3, anchor: Vector3 = Vector3.INF) -> void:
 	if _arena == null:
 		return
 	var side := forward.cross(Vector3.UP).normalized()
 	var centre: Vector3 = _arena.global_position
+	# The offsets below are measured from `origin`: the arena midpoint, or the
+	# ally when the opponent asked for the trainer beside it. The arena bound
+	# and the turn to watch still use the arena centre.
+	var origin: Vector3 = centre if anchor.x == INF else anchor
 	# Well inside the boundary rather than on it. The aim camera sits several
 	# metres behind the trainer, and standing them at the very edge put that
 	# camera outside the arena looking in through the wall.
@@ -1059,8 +1068,13 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	# `side_m` (metres) wins over the radius fraction when set: a big arena's
 	# 0.55 x radius put the trainer at the frame's edge, under the HUD corners.
 	var lateral := float(aside.get("side_m", float(_arena.get("radius")) * side_fraction))
-	for sign_value in [1.0, -1.0]:
-		var candidate: Vector3 = centre + side * (lateral * float(sign_value)) + forward * forward_m
+	# The fight camera swings to the +side, so beside the ally the far (-) side
+	# is tried first: a trainer between the lens and the ally would cover it.
+	var side_order := [1.0, -1.0]
+	if anchor.x != INF:
+		side_order = [-1.0, 1.0]
+	for sign_value in side_order:
+		var candidate: Vector3 = origin + side * (lateral * float(sign_value)) + forward * forward_m
 		if Vector2(candidate.x - centre.x, candidate.z - centre.z).length() > float(_arena.get("radius")):
 			continue
 		var height := _ground_height(candidate.x, candidate.z)
@@ -1139,6 +1153,11 @@ func _take_camera() -> void:
 		var tracking: Dictionary = ((MATH.config().get("camera", {}) as Dictionary) \
 			.get("tracking", {}) as Dictionary).duplicate()
 		tracking.merge(_opponent_camera("tracking"), true)
+		# F14#0 C3: an opponent's own `camera_composition_yaw_deg` (a trainer
+		# team member's combat override) wins over both blocks above.
+		var authored_yaw := opponent_composition_yaw_deg(_wild)
+		if authored_yaw != 0.0:
+			tracking["composition_yaw_deg"] = authored_yaw
 		_camera_rig.call("set_tracking_target", _wild, tracking)
 		if bool(tracking.get("snap_on_open", false)) and _camera_rig.has_method("snap_to_tracking"):
 			_camera_rig.call("snap_to_tracking")
@@ -1165,6 +1184,15 @@ func _opponent_camera(part: String) -> Dictionary:
 	var block: Variant = _wild.get_meta("combat_camera")
 	var value: Variant = (block as Dictionary).get(part, {}) if block is Dictionary else {}
 	return value as Dictionary if value is Dictionary else {}
+
+
+## The composition yaw an opponent's own combat override asks of the fight
+## camera, in degrees; 0.0 (the shared value stands) for every body without one.
+static func opponent_composition_yaw_deg(opponent: Node) -> float:
+	if opponent == null or not is_instance_valid(opponent) \
+			or not opponent.has_method("camera_composition_yaw_deg"):
+		return 0.0
+	return clampf(float(opponent.call("camera_composition_yaw_deg")), -100.0, 100.0)
 
 
 func _combat_camera_profile() -> Dictionary:

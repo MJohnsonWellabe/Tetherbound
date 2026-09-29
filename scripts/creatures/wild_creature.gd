@@ -449,6 +449,17 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# travelling lunge runs (combat_manager.gd::_update_combat_body_clear, the
 	# shared `ignore_lunging_foe` rule for one body). Presentation only.
 	"camera_ignore_lunge",
+	# F14#0 C3 (after COMBAT §5 contact spacing): the fight camera's neutral
+	# composition yaw for this opponent, in degrees (combat_manager.gd::
+	# _take_camera). A long body held nose to nose with the ally at its full
+	# rendered separation needs a near side-on view to show both heads; 0 or
+	# absent keeps combat.json's `camera.tracking.composition_yaw_deg`.
+	# Presentation only.
+	"camera_composition_yaw_deg",
+	# F14#0 C3: the trainer steps aside next to the ally instead of at the
+	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
+	# the spaced separation is the opponent's head. Presentation only.
+	"camera_trainer_beside_ally",
 ]
 
 
@@ -829,6 +840,18 @@ func tell_camera_swing() -> bool:
 
 func camera_ignores_lunge() -> bool:
 	return bool(_combat_cfg.get("camera_ignore_lunge", false))
+
+
+## The authored fight-camera composition yaw in degrees, or 0.0 for the shared
+## `camera.tracking.composition_yaw_deg`. Read from the override rather than
+## `_combat_cfg` because the camera is taken before the fight snapshot.
+func camera_composition_yaw_deg() -> float:
+	return float(_enemy_config_for_this_body().get("camera_composition_yaw_deg", 0.0))
+
+
+## True when this opponent's fight stands the trainer beside the ally.
+func camera_trainer_beside_ally() -> bool:
+	return bool(_enemy_config_for_this_body().get("camera_trainer_beside_ally", false))
 
 
 ## --- F10#2 named-fight cues ------------------------------------------------
