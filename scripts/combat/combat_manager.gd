@@ -173,6 +173,12 @@ var _camera_clear_orbit_deg: float = 0.0
 var _camera_clear_orbit_target: float = 0.0
 var _camera_clear_orbit_wait: float = 0.0
 var _framing_bounds_cache: Dictionary = {}
+## F14#0 C3: where `_stand_the_trainer_aside` measures its offsets from when the
+## opponent asked for the trainer beside the ally; INF means the arena midpoint.
+## A member, not a parameter, so the method keeps the one-argument signature the
+## tests' stub managers override.
+var _trainer_stand_anchor := Vector3.INF
+
 ## MEADOWS-VISUAL-PASS: how far the ally is faded because it hides the foe
 ## (`ally_occlusion_fade.gd`), and the model it was written to, so the fade is
 ## taken off that model whatever replaces it.
@@ -924,7 +930,9 @@ func _place_fighters() -> void:
 	var beside_ally := _wild != null and is_instance_valid(_wild) \
 		and _wild.has_method("camera_trainer_beside_ally") \
 		and bool(_wild.call("camera_trainer_beside_ally"))
-	_stand_the_trainer_aside(forward, ally_spot if beside_ally else Vector3.INF)
+	_trainer_stand_anchor = ally_spot if beside_ally else Vector3.INF
+	_stand_the_trainer_aside(forward)
+	_trainer_stand_anchor = Vector3.INF
 
 
 ## Cards M2 (BRIDGE_GUARDIAN_REGRESSION): the lateral seat is F04#2's answer
@@ -1031,9 +1039,10 @@ func _combat_position(body: Node3D) -> Vector3:
 ##
 ## This is a small, one-off move at the moment the fight opens, not a system
 ## that puppets them around afterwards.
-func _stand_the_trainer_aside(forward: Vector3, anchor: Vector3 = Vector3.INF) -> void:
+func _stand_the_trainer_aside(forward: Vector3) -> void:
 	if _arena == null:
 		return
+	var anchor := _trainer_stand_anchor
 	var side := forward.cross(Vector3.UP).normalized()
 	var centre: Vector3 = _arena.global_position
 	# The offsets below are measured from `origin`: the arena midpoint, or the
