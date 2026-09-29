@@ -1,0 +1,7 @@
+MEADOWS_C2C3 relay_captain galewisp MASHER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.267 tell=[0.80,0.90] diver_tell=-1.00 med_s=87.3 stalled=0
+MEADOWS_C2C3 relay_captain galewisp READER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.159 tell=[0.80,0.90] diver_tell=-1.00 med_s=149.4 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain galewisp PASS
+MEADOWS_C2C3 captain_riverwatch galewisp MASHER L12 runs=12 win=0.50 med_lead=1.000 lead_faint=1.00 wipe=0.50 max_hit=0.429 tell=[0.80,0.90] diver_tell=-1.00 med_s=98.5 stalled=0
+MEADOWS_C2C3 captain_riverwatch galewisp READER L12 runs=12 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.80,0.90] diver_tell=-1.00 med_s=161.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch galewisp PASS
+MEADOWS_C2C3 captain_field galewisp MASHER L15 runs=12 win=0.92 med_lead=1.000 lead_faint=1.00 wipe=0.08 max_hit=0.448 tell=[0.80,0.90] diver_tell=-1.00 med_s=103.1 stalled=0
