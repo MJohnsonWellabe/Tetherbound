@@ -23,7 +23,16 @@ var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
 var _dune_passages: Array = []
+## Per island: local profile zones [dx, dz, radius, fade, beach_width, inner_height]
+## that blend back to an authored coast profile (e.g. a gated cliff wall).
+var _profile_zones: Array = []
 var _dune_relief: Dictionary = {}
+## Per island: cell key -> flat [ax, az, bx, bz, ...] authored-site segments
+## (island-local offsets) whose flat+fade zone touches that cell.
+var _site_cells: Array = []
+var _site_pitch := 32.0
+var _site_clear := 0.0
+var _site_fade := 1.0
 var _sectors: Array = []
 var _trail_cells: Dictionary = {}
 var _trail_pitch := 32.0
@@ -60,6 +69,7 @@ func _init(config: Dictionary = {}) -> void:
 		if not parent.is_empty():
 			_compile_landform(spec, parent)
 	_compile_trails()
+	_compile_sites()
 
 
 func _compile_landform(spec: Dictionary, membership_id: String) -> void:
@@ -78,6 +88,16 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 	_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
 	_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
 	_dune_passages.append(spec.get("dune_passages", []))
+	var zones: Array = []
+	for zone: Dictionary in spec.get("profile_zones", []):
+		var at: Array = zone.get("center_offset_xz_m", [])
+		if at.size() == 2:
+			zones.append([float(at[0]), float(at[1]), maxf(0.0, float(zone.get("radius_m", 0.0))),
+				maxf(0.001, float(zone.get("fade_m", 30.0))),
+				clampf(float(zone.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999),
+				float(zone.get("coast_inner_height_m", 12.0))])
+	_profile_zones.append(zones)
+	_site_cells.append({})
 	# Compile each sector once, avoiding JSON lookups per terrain texel.
 	var sectors: Array = []
 	for sector: Dictionary in spec.get("landing_sectors", []):
@@ -89,6 +109,142 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 			float(sector.get("inner_height_m", 3.0)),
 		])
 	_sectors.append(sectors)
+
+
+## Authored pickup/harvest rows (incl. approach lines) and reward pockets sit
+## on flat ground: the dune ripple fades to zero within `site_clear_m` of them,
+## returning to full over `site_fade_m`. Compiled once into per-island buckets.
+func _compile_sites() -> void:
+	_site_clear = maxf(0.0, float(_dune_relief.get("site_clear_m", 0.0)))
+	_site_fade = maxf(0.001, float(_dune_relief.get("site_fade_m", 24.0)))
+	var path := str(_dune_relief.get("site_rows_path", ""))
+	if _site_clear <= 0.0:
+		return
+	var segments: Array = []  # [ax, az, bx, bz] world-space
+	for pocket: Dictionary in _config.get("reward_pockets", []):
+		var at: Array = pocket.get("position", [])
+		if at.size() == 3:
+			var radius := float(pocket.get("radius_m", 0.0))
+			# The pocket disc is covered by growing the clear zone with its radius.
+			segments.append([float(at[0]), float(at[2]), float(at[0]), float(at[2]), radius])
+	if not path.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) \
+			if FileAccess.file_exists(path) else null
+		if parsed is Dictionary:
+			for key: String in ["pickups", "harvest"]:
+				for row: Dictionary in parsed.get(key, []):
+					var pos: Array = row.get("position", [])
+					if pos.size() != 3:
+						continue
+					var line: Array = row.get("approach_polyline", [])
+					if line.is_empty() and row.has("approach_from"):
+						line = [row.approach_from, pos]
+					if line.size() < 2:
+						segments.append([float(pos[0]), float(pos[2]), float(pos[0]), float(pos[2]), 0.0])
+					for i in range(line.size() - 1):
+						segments.append([float(line[i][0]), float(line[i][2]),
+							float(line[i + 1][0]), float(line[i + 1][2]), 0.0])
+	# Gameplay geometry that depends on ground height (gated ramps, barricade
+	# and cliff-lip bypass zones, loops, routes, dock anchors): each source names
+	# a config list (or another JSON file's list) and the point/polyline keys to
+	# read, plus an extra flat radius (m) added to `site_clear_m`.
+	var reach_extra := 0.0
+	for source: Dictionary in _dune_relief.get("site_sources", []):
+		var rows: Variant = _config.get(str(source.get("list", "")), [])
+		var source_path := str(source.get("path", ""))
+		if not source_path.is_empty():
+			var doc: Variant = JSON.parse_string(FileAccess.get_file_as_string(source_path)) \
+				if FileAccess.file_exists(source_path) else null
+			rows = doc.get(str(source.get("list", "")), []) if doc is Dictionary else []
+		var source_extra := maxf(0.0, float(source.get("extra_m", 0.0)))
+		for row: Variant in rows:
+			if not row is Dictionary:
+				continue
+			for key: String in source.get("keys", []):
+				_append_source_geometry(segments, row.get(key, []), source_extra)
+	var reach := _site_clear + _site_fade
+	for seg: Array in segments:
+		var extra: float = seg[4]
+		var mid := Vector2((seg[0] + seg[2]) * 0.5, (seg[1] + seg[3]) * 0.5)
+		var owner_index := -1
+		var best := INF
+		for i in _ids.size():
+			var d := mid.distance_to(Vector2(_cx[i], _cz[i]))
+			if d <= _radius[i] and d < best and not _ids[i].contains("_rest_"):
+				best = d
+				owner_index = i
+		if owner_index < 0:
+			continue
+		var lo := Vector2(minf(seg[0], seg[2]) - reach - extra, minf(seg[1], seg[3]) - reach - extra)
+		var hi := Vector2(maxf(seg[0], seg[2]) + reach + extra, maxf(seg[1], seg[3]) + reach + extra)
+		var cells: Dictionary = _site_cells[owner_index]
+		for cx in range(int(floor((lo.x - _cx[owner_index]) / _site_pitch)),
+				int(floor((hi.x - _cx[owner_index]) / _site_pitch)) + 1):
+			for cz in range(int(floor((lo.y - _cz[owner_index]) / _site_pitch)),
+					int(floor((hi.y - _cz[owner_index]) / _site_pitch)) + 1):
+				var key := Vector2i(cx, cz)
+				if not cells.has(key):
+					cells[key] = PackedFloat64Array()
+				var list: PackedFloat64Array = cells[key]
+				list.append_array(PackedFloat64Array([
+					seg[0] - _cx[owner_index], seg[1] - _cz[owner_index],
+					seg[2] - _cx[owner_index], seg[3] - _cz[owner_index], extra]))
+				cells[key] = list
+
+
+## Adds one point ([x, z] or [x, y, z]) or a polyline of them as flat-zone
+## segments with `extra` additional flat radius.
+func _append_source_geometry(segments: Array, value: Variant, extra: float) -> void:
+	if not value is Array or (value as Array).is_empty():
+		return
+	var arr: Array = value
+	var points: Array = []
+	if arr[0] is Array:
+		points = arr
+	else:
+		points = [arr]
+	var prev := Vector2.ZERO
+	var have_prev := false
+	for point: Variant in points:
+		if not point is Array or (point as Array).size() < 2:
+			continue
+		var pa: Array = point
+		var xz := Vector2(float(pa[0]), float(pa[pa.size() - 1]))
+		if have_prev:
+			segments.append([prev.x, prev.y, xz.x, xz.y, extra])
+		elif points.size() == 1:
+			segments.append([xz.x, xz.y, xz.x, xz.y, extra])
+		prev = xz
+		have_prev = true
+
+
+## 1 = full dunes, 0 = authored-site flat zone.
+func _site_relief_factor(index: int, dx: float, dz: float) -> float:
+	var cells: Dictionary = _site_cells[index]
+	if cells.is_empty():
+		return 1.0
+	var key := Vector2i(int(floor(dx / _site_pitch)), int(floor(dz / _site_pitch)))
+	if not cells.has(key):
+		return 1.0
+	var list: PackedFloat64Array = cells[key]
+	var best_sq := INF
+	var far := _site_clear + _site_fade
+	var i := 0
+	while i < list.size():
+		var abx := list[i + 2] - list[i]
+		var abz := list[i + 3] - list[i + 1]
+		var len_sq := abx * abx + abz * abz
+		var t := 0.0
+		if len_sq > 0.0:
+			t = clampf(((dx - list[i]) * abx + (dz - list[i + 1]) * abz) / len_sq, 0.0, 1.0)
+		var ex := dx - (list[i] + abx * t)
+		var ez := dz - (list[i + 1] + abz * t)
+		var d := maxf(0.0, sqrt(ex * ex + ez * ez) - list[i + 4])
+		best_sq = minf(best_sq, d * d)
+		i += 5
+	if best_sq >= far * far:
+		return 1.0
+	return smoothstep(_site_clear, far, sqrt(best_sq))
 
 
 func water_level() -> float:
@@ -233,12 +389,21 @@ func slope_degrees_at(x: float, z: float, step: float = 1.0) -> float:
 
 
 func _height_for(index: int, dx: float, dz: float) -> float:
+	var base := _profile_height(index, dx, dz, _beach_width[index], _inner_height[index])
+	for zone: Array in _profile_zones[index]:
+		var weight := 1.0 - smoothstep(zone[2], zone[2] + zone[3], Vector2(dx - zone[0], dz - zone[1]).length())
+		if weight > 0.0:
+			base = lerpf(base, _profile_height(index, dx, dz, zone[4], zone[5]), weight)
+	return base
+
+
+func _profile_height(index: int, dx: float, dz: float, default_width: float, default_inner: float) -> float:
 	var r := sqrt(dx * dx + dz * dz)
 	var radius := _radius[index]
 	if r > radius:
 		return _sea_level - minf(_seabed_depth, (r - radius) * _outer_slope)
-	var width := _beach_width[index]
-	var inner := _inner_height[index]
+	var width := default_width
+	var inner := default_inner
 	var angle := atan2(dz, dx)
 	var strongest := 0.0
 	for sector: Array in _sectors[index]:
@@ -246,8 +411,8 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 		var weight := 1.0 - smoothstep(float(sector[1]), float(sector[1]) + float(sector[2]), distance)
 		if weight > strongest:
 			strongest = weight
-			width = lerpf(_beach_width[index], float(sector[3]), weight)
-			inner = lerpf(_inner_height[index], float(sector[4]), weight)
+			width = lerpf(default_width, float(sector[3]), weight)
+			inner = lerpf(default_inner, float(sector[4]), weight)
 	var interior_radius := radius - width
 	if r >= interior_radius:
 		return _sea_level + inner * (radius - r) / width
@@ -279,5 +444,6 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 		var phase := TAU * along / wave + sin(TAU * across / warp_wave + index * 0.61) * 0.75 + index * 0.37
 		var amplitude := minf(float(_dune_relief.get("max_amplitude_m", 8.0)),
 			_peak[index] * float(_dune_relief.get("peak_fraction", 0.065)))
+		fade *= _site_relief_factor(index, dx, dz)
 		height += amplitude * fade * sin(phase)
 	return height

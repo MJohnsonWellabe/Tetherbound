@@ -1401,6 +1401,16 @@
       "coast_beach_width_m": 18.0,
       "coast_inner_height_m": 5.0,
       "id": "reedhaven",
+      "profile_zones": [
+        {
+          "_comment": "Reedhaven maintenance-ramp wall (return_shortcuts reedhaven_maintenance_ramp; smoke_water_loops_shortcuts). Keeps the pre-ecaff5848 steep north coast (terrace ~17 m, 3-10 m unclimbable cliff, x 40..165 z 440..500) inside the broad-shore visual pass; blends back to the island profile over fade_m.",
+          "center_offset_xz_m": [104.0, 35.0],
+          "coast_beach_width_m": 8.0,
+          "coast_inner_height_m": 12.0,
+          "fade_m": 25.0,
+          "radius_m": 62.0
+        }
+      ],
       "landing_sectors": [
         {
           "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",
@@ -2536,6 +2546,11 @@
           2864.564
         ],
         [
+          954.993,
+          16.29,
+          3105.618
+        ],
+        [
           954.792,
           16.29,
           3109.659
@@ -3559,7 +3574,13 @@
     }
   },
   "terrain": {
-    "dune_relief": {"enabled": true, "bearing_deg": 25.0, "wavelength_m": 130.0, "warp_wavelength_m": 240.0, "shore_preserve_m": 36.0, "summit_preserve_m": 45.0, "max_amplitude_m": 8.0, "peak_fraction": 0.065},
+    "dune_relief": {"enabled": true, "bearing_deg": 25.0, "wavelength_m": 130.0, "warp_wavelength_m": 240.0, "shore_preserve_m": 36.0, "summit_preserve_m": 45.0, "max_amplitude_m": 8.0, "peak_fraction": 0.065, "site_clear_m": 8.0, "site_fade_m": 28.0, "site_rows_path": "res://data/config/water_pickups.json",
+      "site_sources_comment": "Extra flat zones (site_clear_m + extra_m, then site_fade_m) for authored geometry that depends on ground height. return_shortcuts: the ramp deck line, the cliff-top lip and the closed-state return, 30 m flat so the barricade/wall bypass walks (smoke_water_loops_shortcuts, wall x 54..145) meet the pre-ripple ground. Loops, routes and dock anchors keep their graded corridors.",
+      "site_sources": [
+        {"list": "return_shortcuts", "keys": ["path", "cliff_top_edge_xz", "closed_return_xz"], "extra_m": 22.0},
+        {"list": "land_loops", "keys": ["polyline"], "extra_m": 4.0},
+        {"list": "land_routes", "keys": ["polyline"], "extra_m": 0.0},
+        {"list": "anchors", "keys": ["safe_position", "shore_position"], "extra_m": 6.0}]},
     "_comment": "Separate aligned bake bounds pad authored world bounds without moving islands. Sparse island+shore regions avoid a giant empty seabed bake.",
     "collision_comment": "FULL_GAME on sparse island regions; measure memory/startup and two separated remote bodies. One averaged camera is insufficient.",
     "collision_mode": 3.0,

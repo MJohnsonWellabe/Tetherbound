@@ -23,7 +23,7 @@ Numbers labelled **target** are implementation work, not changes made by this do
 | B / D-pad | Assigned consumable | Existing context mapping in UX; B cancels orb aim while aiming. |
 | Right stick / R3 | Look / soft lock | **Target:** right-stick motion manually overrides framing without changing target. An R3 press toggles facing/framing assistance on the current encounter opponent only; it never selects an ambient creature or a different encounter target. |
 
-**Owner-tuned pace (2026-09-29, `combat.json` `player_pace`).** Every player move's windup, recovery and cooldown run at x0.85 of the base values above, and the charged arc is +15 degrees. The opponent baseline is faster too (recovery 0.6 s, attack cooldown 0.9 s, back-off 0.5 s; profiles that author their own keep them).
+**Owner-tuned pace (2026-09-29, `combat.json` `player_pace`).** Every player move's windup and recovery run at x0.85 of the base values above (the cooldown scale stays 1.0: the energy meter gates the charged attack and the hosted net smokes time against the authored 1.2 s lock), and the charged arc is +15 degrees. The opponent baseline is faster too (recovery 0.6 s, attack cooldown 0.9 s, back-off 0.5 s; profiles that author their own keep them).
 
 
 Combat state: `admission → deploy/input_guard → active → resolving → exit`. A trainer's next opponent returns through deploy without leaving the encounter. Actor state: `idle/move`, `windup`, `active strike`, `recovery`, `burst`, `stagger`, `fainted`; aim temporarily hands input to the human while the active creature remains vulnerable. One action owns movement at a time. A strike cannot survive its actor fainting, being withdrawn or its action generation changing.
