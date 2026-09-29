@@ -1,10 +1,12 @@
 {
- "updated": "2026-09-29T12:30Z",
+ "updated": "2026-09-29T14:05Z",
  "headline": [
-  "Criteria met: 95 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). F14#0 (Tess C3) was earned overnight: A 94.4% / B 94.4% on the strict re-check, tell markings 6/6 (#444).",
-  "Open: F04#1, #2, #6, #7 (Meadows); F10#6 (Stormwood HUD); F14#1 (Nerissa C3); cards M2, M3, S2, T2.",
-  "Landed overnight on main: the consolidated PR #442 (Combat Spacing, Meadows #437, bridge-guardian fix, Stormwood #439, Codex 2c, CI fixes), #443 (mouse capture after panels, Tam story marker) and #444 (Tess camera). One serial lane is running the queue; the download was rebuilt by hand after #443 (bot merges do not trigger the Release workflow).",
-  "Owner playtest reports not yet actioned: charged attacks may whiff (facing locks at wind-up start), combat pace, the Meadows river (P2-006), village shape, running animation."
+  "Criteria met: 95 of 101. Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3). Unchanged today except F14#0 (Tess C3), earned in #444.",
+  "Open criteria: F04#1, #2, #6, #7 (Meadows); F10#6 (Stormwood HUD); F14#1 (Nerissa C3, two failed rounds). Open cards: M2, M3, S2, T2. Every judge capture and C2 number the serial closer took predates the combat timing change (#448/#450) and must be re-taken on merged main before it counts.",
+  "MAIN IS NOT VERIFIED GREEN. The full CI run on f530010c6 failed two unit-test shards on Tidewake water tests (test_water_reward_pockets, test_water_harvest_density) after Codex's #452 changed the shore profile; a data fix is on tb/water-pockets-fix and its result is not yet in. My #448 combat-feel change also broke three tests (enemy recovery floor, Livewire cooldown, net smoke charged lock); all three were fixed in #450 and #454. Multiplayer shards of that run were still going when this was written.",
+  "Landed on main since yesterday: #442 (consolidated landing: combat spacing, Meadows, bridge fix, Stormwood HUD, Codex 2c), #443 (mouse capture after panels, Tam story marker), #444 (Tess camera, F14#0), #445/#446 (board), #447 (Nerissa failed rounds), #448/#450/#454 (combat feel: power attacks re-aim before the hit, player pace x0.85, faster enemy waits), #449 (sprint lean and slower cadence), #452 (Codex Tidewake 2d).",
+  "Open PRs: #451 (village layout sketch image), #453 (serial closer wrap-up evidence, no criterion marked met), #455 DRAFT (village option B, owner picked B: straight main street x=10.5 plus a small green; kept draft until its own full CI run is green; the green is not visually distinct yet).",
+  "Bot merges start their own CI on main, which my manual runs can cancel, and PRs can merge before their unit shards finish: check main CI after every merge, do not trust the PR check alone. The rolling download was rebuilt by hand at 71f2ca35d (combat feel) and after #449; it is not yet rebuilt for #454/#452."
  ],
  "batches": [
   {
@@ -365,68 +367,23 @@
  "lanes": [
   {
    "lane": "Serial closer (tb/closer)",
-   "now": "#444 merged (F14#0). Next: F14#1 Nerissa, then F04#2/#7, F10#6 r7, then cards M2/T2/S2/M3.",
-   "next": "One PR at a time; combat numbers frozen pending the owner's answers."
+   "now": "ARCHIVED 2026-09-29 at the owner's request. Wrap-up evidence and handoff are in #453. F14#1 open after two failed rounds; F04#2/#7, F10#6 and cards not counted.",
+   "next": "Re-take judge captures and C2 numbers on merged main before any criterion counts; queue is in docs/STATE.md."
   },
   {
-   "lane": "Meadows (tb/meadows)",
-   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
-   "next": "Criteria resume in the serial lane after #442 merges"
+   "lane": "Codex (Phase 2, own lane)",
+   "now": "Merged #452 (Tidewake P2-008 visual checkpoint and evidence). Its shore-profile change broke two water unit tests on main; a data fix is on tb/water-pockets-fix.",
+   "next": "Owner told Codex the goal is everything on main and green; Codex should not merge further visual work until main CI is green."
   },
   {
-   "lane": "Cloudreach (tb/cloudreach)",
-   "now": "Lane done. Phase 1 complete; owned-carrier Fly debt closed (#411) (ralph/reports/CLOUDREACH/owned-carrier-fly/): the five's own healthy active carrier flies, the Galewisp starter gains Fly at the unlock, Maela's loaner only for the trial and a five with no healthy carrier; the follower is recalled for the flight. Session archived.",
-   "next": "Stopped. tb/cloudreach can be deleted."
-  },
-  {
-   "lane": "Stormwood (tb/stormwood)",
-   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
-   "next": "Criteria resume in the serial lane after #442 merges"
-  },
-  {
-   "lane": "Tidewake (tb/tidewake)",
-   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
-   "next": "Criteria resume in the serial lane after #442 merges"
-  },
-  {
-   "lane": "Combat Spacing (tb/combat-spacing)",
-   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
-   "next": "Criteria resume in the serial lane after #442 merges"
-  },
-  {
-   "lane": "Cards (tb/cards)",
-   "now": "Archived 2026-09-29 (owner consolidation); handoff in STATE; its work is in #442.",
-   "next": "Criteria resume in the serial lane after #442 merges"
-  },
-  {
-   "lane": "Codex (Phase 2)",
-   "now": "#414, #428, #430 merged into #442 and closed. Paused: no new catalog items until a look-development pass reports (CODEX_START_HERE §0).",
-   "next": "Restart from main after #442 lands"
-  },
-  {
-   "lane": "Balance (tb/balance)",
-   "now": "Done: F10#2 starter parity and the F04#7 C2 half landed (#413), with the option-(c) bar written into COMBAT §7, BOSSES §9 and ACCEPTANCE. Session archived.",
-   "next": "-"
-  },
-  {
-   "lane": "Earlier lanes, VERIFIER 1 and 2, Vess officer",
-   "now": "All merged in batch 67 and archived",
-   "next": "-"
-  },
-  {
-   "lane": "Cloudreach Phase 2c (tb/x04-cloudreach)",
-   "now": "20/20 owned impact >=12 rows explicitly deferred with reason/owner/follow-up; 0 fixed. Eleven compact rounds verified. P2-021/P2-022 paired FAIL; both candidates off. Regional Bars A/B NO/NO; 37-row native before/after matrix retained.",
-   "next": "Deferred owners follow the per-item catalog evidence. F08#3/#4 visual debt remains open; disposition completion is not visual acceptance."
-  },
-  {
-   "lane": "Serial closer (tb/closer)",
-   "now": "Active. Opened PR #441 for spacing before the consolidation; #441 is on hold and closes once its fix is in #442. Found the tutorial-fight regression and the strike-gate fix.",
-   "next": "After #442 merges: F14#0/#1 residual camera fixes, F04#2/#7, F10#6 r7 judge, then M2, T2, S2, M3"
+   "lane": "Coordinator (this session)",
+   "now": "Driving main to green: water data fix, draft village PR #455, #451 and #453 auto-merge, main CI reads after each merge.",
+   "next": "When main CI and the download are current, stop."
   },
   {
    "lane": "Look development, HUD legibility, Stormwood audio",
-   "now": "Approved by the owner, then archived before starting (one serial lane instead).",
-   "next": "Deferred until the criteria lanes finish"
+   "now": "Approved by the owner, deferred until the criteria are done. The Meadows river by the village (catalog P2-006) waits for the look pass.",
+   "next": "Not started."
   }
  ],
  "decisions": [
@@ -449,14 +406,11 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "Charged (power) attack aim: facing locks at wind-up start (0.55 s, 75 deg cone). Approve re-aim just before the hit and/or a wider cone?",
-  "Combat pace: faster attacks, or shorter enemy waits? Enemy damage is x1.6 since the difficulty pass.",
-  "Meadows river by the village (catalog P2-006): start a river-only look pass?",
-  "Village shape: desired layout (a real main street lined with houses?) - a design change, not started.",
-  "Running animation: approve a steady sprint lean and cadence match (no new art)?",
-  "Branch cleanup: consolidated, combat-spacing, meadows, meadows-bridge, stormwood, tidewake, cards, coordinator, x04-* can be deleted; keep tb/closer.",
-  "Please confirm on a real PC that the mouse controls the camera after the build menu and after trading with Oskar.",
-  "Look-development pass, HUD-legibility lane and Stormwood audio (needs an owner listen) stay approved-but-deferred. Seven-day usage limit is at warning."
+  "Confirm on a real PC: (1) the mouse steers the camera after the build menu and after trading with Oskar; (2) power attacks land when aimed and combat feels faster; (3) running looks better (an 8 degree lean on the baked 19, sprint cadence x0.85, about 15% foot slide at full sprint).",
+  "Village option B (draft #455): OK for Oskar's and Tam's trainer fight spots to have moved (their NPC positions did not)? The green is plain lawn plus the well's apron; do you want a distinct green look?",
+  "The Meadows river by the village looks bad (P2-006): waits for the full look-development pass unless you want a river-only pass sooner.",
+  "Branches: only main plus tb/closer, tb/village-sketch, tb/x04-tidewake, tb/village-main-street, tb/water-pockets-fix remain; delete each after its PR merges.",
+  "Stormwood audio (needs an owner listen) and the look-development and HUD lanes stay deferred. Seven-day usage limit is at warning."
  ],
  "four_chapter_run": null,
  "wip": [
