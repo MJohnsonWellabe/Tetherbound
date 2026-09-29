@@ -469,7 +469,15 @@ func _fight_until_catchable() -> bool:
 	if ally == null or foe == null or own == null:
 		_fail("combat started without both real creature instances/bodies")
 		return false
+	var strikes := 0
+	var strike_gate_last := 0.0
+	var closest := INF
 	for _i in 1800:
+		closest = minf(closest, ally.global_position.distance_to(_wild.global_position))
+		if _i % 300 == 0:
+			_checkpoint("fight tick %d: gap %.2f m, separation %.2f m, Bramblebun %.0f/%d HP, starter %.0f/%d HP, %d strike(s) tapped" % [
+				_i, ally.global_position.distance_to(_wild.global_position),
+				CONTACT_SPACING.pair_need(ally, _wild), foe.hp, foe.max_hp, own.hp, own.max_hp, strikes])
 		if not bool(_combat.call("is_fighting")):
 			_fail("fight ended before the Bramblebun became catchable")
 			return false
@@ -490,10 +498,13 @@ func _fight_until_catchable() -> bool:
 		# extents, so the strike gate follows that separation (plus the same
 		# 0.5 m the reach floors add) instead of a fixed 4 m.
 		var strike_gate := maxf(4.0, CONTACT_SPACING.pair_reach_need(ally, _wild) + 0.5)
+		strike_gate_last = strike_gate
 		if ally.global_position.distance_to(_wild.global_position) < strike_gate and _i % 35 == 0:
+			strikes += 1
 			await _tap_action("combat_quick")
 	_stop_left_stick()
-	_fail("real piloted attacks did not weaken Bramblebun within the bounded fight")
+	_fail("real piloted attacks did not weaken Bramblebun within the bounded fight (closest gap %.2f m, strike gate %.2f m, %d strike(s) tapped, Bramblebun %.0f/%d HP)" % [
+		closest, strike_gate_last, strikes, foe.hp, foe.max_hp])
 	return false
 
 
