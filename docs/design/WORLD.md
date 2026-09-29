@@ -491,7 +491,7 @@ active ending marker; another unfinished world resumes its ordinary chapter
 feed. Mara's First Shore afterword describes civilian supplies/couriers and
 names the route home; hearing it is optional and writes no progression.
 
-The current physical route is First Shore's Stormwood passage, Stormwood's
+*(Built record, superseded by RD-18/RD-22: the Home Key replaces this route home.)* The current physical route is First Shore's Stormwood passage, Stormwood's
 Cloudreach return gate, Cloudreach's Meadows return gate, then Grandpa's home.
 No new gate, ferry, party teleport, mandatory catch or companion replacement
 is added. The configured gate endpoints imply roughly19km across the three
