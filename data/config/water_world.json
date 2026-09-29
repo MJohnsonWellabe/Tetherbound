@@ -1401,6 +1401,16 @@
       "coast_beach_width_m": 18.0,
       "coast_inner_height_m": 5.0,
       "id": "reedhaven",
+      "profile_zones": [
+        {
+          "_comment": "Reedhaven maintenance-ramp wall (return_shortcuts reedhaven_maintenance_ramp; smoke_water_loops_shortcuts). Keeps the pre-ecaff5848 steep north coast (terrace ~17 m, 3-10 m unclimbable cliff, x 40..165 z 440..500) inside the broad-shore visual pass; blends back to the island profile over fade_m.",
+          "center_offset_xz_m": [104.0, 35.0],
+          "coast_beach_width_m": 8.0,
+          "coast_inner_height_m": 12.0,
+          "fade_m": 25.0,
+          "radius_m": 62.0
+        }
+      ],
       "landing_sectors": [
         {
           "_comment": "Angle atan2(z-center_z,x-center_x). Safe centerline radius-18 is 1.929m above sea.",

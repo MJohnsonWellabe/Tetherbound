@@ -657,7 +657,7 @@
       "quantity": 1,
       "position": [
         156.0,
-        5.0877,
+        12.5071,
         470.0
       ],
       "off_main_route": true,
@@ -891,7 +891,7 @@
       "quantity": 1,
       "position": [
         102.0,
-        13.1359,
+        17.7975,
         428.0
       ],
       "off_main_route": true,
@@ -4379,7 +4379,7 @@
       "yield": 2,
       "position": [
         60.0,
-        19.8555,
+        21.6652,
         434.0
       ],
       "sampled_slope_deg": 4.065,
@@ -4507,7 +4507,7 @@
       "yield": 2,
       "position": [
         138.0,
-        6.6209,
+        8.4512,
         404.0
       ],
       "sampled_slope_deg": 5.2,

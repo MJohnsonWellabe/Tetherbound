@@ -23,6 +23,9 @@ var _power := PackedFloat64Array()
 var _beach_width := PackedFloat64Array()
 var _inner_height := PackedFloat64Array()
 var _dune_passages: Array = []
+## Per island: local profile zones [dx, dz, radius, fade, beach_width, inner_height]
+## that blend back to an authored coast profile (e.g. a gated cliff wall).
+var _profile_zones: Array = []
 var _dune_relief: Dictionary = {}
 ## Per island: cell key -> flat [ax, az, bx, bz, ...] authored-site segments
 ## (island-local offsets) whose flat+fade zone touches that cell.
@@ -85,6 +88,15 @@ func _compile_landform(spec: Dictionary, membership_id: String) -> void:
 	_beach_width.append(clampf(float(spec.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999))
 	_inner_height.append(float(spec.get("coast_inner_height_m", 12.0)))
 	_dune_passages.append(spec.get("dune_passages", []))
+	var zones: Array = []
+	for zone: Dictionary in spec.get("profile_zones", []):
+		var at: Array = zone.get("center_offset_xz_m", [])
+		if at.size() == 2:
+			zones.append([float(at[0]), float(at[1]), maxf(0.0, float(zone.get("radius_m", 0.0))),
+				maxf(0.001, float(zone.get("fade_m", 30.0))),
+				clampf(float(zone.get("coast_beach_width_m", 4.0)), 0.001, radius * 0.999),
+				float(zone.get("coast_inner_height_m", 12.0))])
+	_profile_zones.append(zones)
 	_site_cells.append({})
 	# Compile each sector once, avoiding JSON lookups per terrain texel.
 	var sectors: Array = []
@@ -377,12 +389,21 @@ func slope_degrees_at(x: float, z: float, step: float = 1.0) -> float:
 
 
 func _height_for(index: int, dx: float, dz: float) -> float:
+	var base := _profile_height(index, dx, dz, _beach_width[index], _inner_height[index])
+	for zone: Array in _profile_zones[index]:
+		var weight := 1.0 - smoothstep(zone[2], zone[2] + zone[3], Vector2(dx - zone[0], dz - zone[1]).length())
+		if weight > 0.0:
+			base = lerpf(base, _profile_height(index, dx, dz, zone[4], zone[5]), weight)
+	return base
+
+
+func _profile_height(index: int, dx: float, dz: float, default_width: float, default_inner: float) -> float:
 	var r := sqrt(dx * dx + dz * dz)
 	var radius := _radius[index]
 	if r > radius:
 		return _sea_level - minf(_seabed_depth, (r - radius) * _outer_slope)
-	var width := _beach_width[index]
-	var inner := _inner_height[index]
+	var width := default_width
+	var inner := default_inner
 	var angle := atan2(dz, dx)
 	var strongest := 0.0
 	for sector: Array in _sectors[index]:
@@ -390,8 +411,8 @@ func _height_for(index: int, dx: float, dz: float) -> float:
 		var weight := 1.0 - smoothstep(float(sector[1]), float(sector[1]) + float(sector[2]), distance)
 		if weight > strongest:
 			strongest = weight
-			width = lerpf(_beach_width[index], float(sector[3]), weight)
-			inner = lerpf(_inner_height[index], float(sector[4]), weight)
+			width = lerpf(default_width, float(sector[3]), weight)
+			inner = lerpf(default_inner, float(sector[4]), weight)
 	var interior_radius := radius - width
 	if r >= interior_radius:
 		return _sea_level + inner * (radius - r) / width
