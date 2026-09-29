@@ -58,6 +58,12 @@ var _wilds: PackedStringArray = []
 ## through the prompt from where the walk ended. No placement beside the
 ## trainer; a stalled walk fails the capture.
 var _approach := ""
+## --stand=south: F14#1 (serial lane). The default shortcut stands the player on
+## the trainer's +Z side, which for Nerissa is the crystal side (z 100+), so her
+## fights form beside the containment crystal. The ordinary route enters at z 4
+## and reaches her from the south, where her fights form about 8 m south of her
+## (water_veilfall.json captain_position note). "south" stands the player there.
+var _stand_south := false
 var _approach_log: Dictionary = {}
 ## --hits-per-opponent=N: also save a frame HIT_LAG_S after a landed hit (each
 ## way), so impact VFX and hit reactions are on record, not only wind-ups.
@@ -107,6 +113,7 @@ func _run() -> void:
 		elif arg.begins_with("--hits-per-opponent="): _hits_per_opponent = maxi(0, int(arg.trim_prefix("--hits-per-opponent=")))
 		elif arg.begins_with("--wild="): _wilds = arg.trim_prefix("--wild=").split(",", false)
 		elif arg.begins_with("--approach="): _approach = arg.trim_prefix("--approach=")
+		elif arg == "--stand=south": _stand_south = true
 	if (ids.is_empty() and _wilds.is_empty()) or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
@@ -178,7 +185,7 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		return await _capture_walked(world, game, id, spec)
 	if spec.has("position"):
 		var at: Array = spec.position
-		var near := Vector3(float(at[0]), 0.0, float(at[2]) + 6.0)
+		var near := Vector3(float(at[0]), 0.0, float(at[2]) + (-6.0 if _stand_south else 6.0))
 		near.y = float(world.ground_height_at(near.x, near.z)) + 0.3
 		player.global_position = near
 		player.velocity = Vector3.ZERO
@@ -190,7 +197,10 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		push_error("trainer %s not stood up" % id)
 		return false
 	# In front of the trainer, facing it, as the captain smoke stands.
-	player.global_position = trainer.global_position + trainer.global_basis.z * 2.7 + Vector3(0, 0.1, 0)
+	if _stand_south:
+		player.global_position = trainer.global_position + Vector3(0, 0.1, -2.7)
+	else:
+		player.global_position = trainer.global_position + trainer.global_basis.z * 2.7 + Vector3(0, 0.1, 0)
 	player.velocity = Vector3.ZERO
 	await _frames(20)
 	if not await director.summon_active_creature():
