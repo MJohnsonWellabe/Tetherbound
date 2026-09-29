@@ -259,10 +259,11 @@ const SUNSTONE_AT := Vector2(121.0, 7336.0)
 const WATCHTOWER_AT := Vector2(40.0, 6800.0)
 const WATCHTOWER_FACING_DEG := -123.7
 
-## A few metres off the well (village.json stands it at the square's exact
-## centre, [10,-10], which is also where every route in `paths.routes`
-## starts) so the signpost has its own footing instead of sharing the well's.
-const SIGNPOST_AT := Vector2(13.5, -7.0)
+## A few metres off the well (village.json stands it at the green's centre,
+## [10.5,-6], on the main street axis) so the signpost has its own footing
+## instead of sharing the well's, and clear of the Green Walk to the stone
+## cottage (OPTION-B, owner 2026-09-29).
+const SIGNPOST_AT := Vector2(13.5, -3.5)
 
 ## R4.4: two TMs standing in the open field, well clear of every other
 ## interactable's radius (checked against GATE_AT/GATE_KEY_AT and every

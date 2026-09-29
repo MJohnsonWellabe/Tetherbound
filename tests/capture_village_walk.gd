@@ -88,10 +88,10 @@ const SPINE_CAPTURE_EVERY_S := 20.0
 ## Photo mode: frames the 3D view draws before a capture is read back, so
 ## shadows, LOD and scatter streaming settle.
 const PHOTO_SETTLE_FRAMES := 6
-## Bram keeps the bar in the inn (village.json inn at (-1.5,-2), yaw 180;
-## inn_interior.gd door lane local x 0 in the north-facing front wall, doorstep
-## (-1.5,-8.1); counter local z -3.69 with Bram at bar_position() local z -4.39
-## = world (-1.5,2.39)). The customer spot is local (0,-2.6) = world (-1.5,0.6).
+## Bram keeps the bar in the inn (village.json inn at (-2.5,-6), yaw 90;
+## inn_interior.gd door lane local x 0 in the east-facing front wall, doorstep
+## (3.6,-6); counter local z -3.69 with Bram at bar_position() local z -4.39
+## = world (-6.89,-6)). The customer spot is local (0,-2.6) = world (-5.1,-6).
 ## Steering: look-stick strength reaches full deflection at this error.
 const STEER_FULL_DEG := 25.0
 const STEER_DEADBAND_DEG := 2.0
@@ -102,7 +102,7 @@ const EVENT_NEAR_M := 6.0
 ## `visits` route. Villagers this close to the well are the village's cast; the
 ## rest of village_npcs.json stands out on the bands.
 const VILLAGE_RADIUS_M := 70.0
-const WELL := Vector2(10.0, -10.0)
+const WELL := Vector2(10.5, -6.0)
 ## The Practice Meadow's authored `trainer_camp` cluster (band1 props.json:
 ## its fire at (26.8,-26.6), the tent and bedroll behind it, the pack, crate
 ## and barrel at its side) inside the clearing map_landmarks.json names at
@@ -140,7 +140,7 @@ const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 ## doorway to z ~5.3, leaving the lane's southern ~0.9m clear for the body.
 const INDOOR_APPROACH := {
 	"Mira": [Vector2(13.87, 4.8), Vector2(16.5, 4.8), Vector2(17.5, 4.0)],
-	"Bram": [Vector2(-1.5, -8.1), Vector2(-1.5, -5.0), Vector2(-1.5, 0.6)],
+	"Bram": [Vector2(3.6, -6.0), Vector2(0.5, -6.0), Vector2(-5.1, -6.0)],
 }
 ## A closed door on the way is opened the way a player opens it: when the walk
 ## stalls and the arbiter's actionable winner is an "Open ..." prompt (or a
