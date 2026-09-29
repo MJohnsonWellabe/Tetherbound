@@ -86,6 +86,10 @@ func _ready() -> void:
 		add_child(vegetation)
 		vegetation.build(config, field)
 		_stand_up_ground_cover()
+		var twin_pumps := preload("res://scripts/world/water_sluice_twin_pumps.gd").new()
+		twin_pumps.name = "WaterSluiceTwinPumps"
+		add_child(twin_pumps)
+		twin_pumps.build(self)
 		var surface := SURFACE.new()
 		surface.name = "WaterSurface"
 		add_child(surface)
@@ -384,4 +388,32 @@ func _ground_cover_clearances(profile: Dictionary = {}) -> PackedVector3Array:
 			var at: Array = camp.get("at", [])
 			if at.size() >= 2:
 				out.append(Vector3(float(at[0]), float(at[1]), camp_radius))
+	for island: Dictionary in config.get("islands", []):
+		var island_centre: Array = island.get("center_xz_m", [])
+		if island_centre.size() != 2:
+			continue
+		var pumps: Dictionary = island.get("pump_assemblage", {})
+		if bool(pumps.get("enabled", false)):
+			for unit: Dictionary in pumps.get("units", []):
+				var at: Array = unit.get("at_xz_m", [])
+				if at.size() == 2:
+					out.append(Vector3(float(at[0]), float(at[1]),
+						float(unit.get("grass_clear_radius_m", 0.0))))
+		for passage: Dictionary in island.get("dune_passages", []):
+			var offset: Array = passage.get("center_offset_xz_m", [])
+			var raw_axis: Array = passage.get("axis_xz", [])
+			var clear_radius := float(passage.get("grass_clear_radius_m", 0.0))
+			if offset.size() != 2 or raw_axis.size() != 2 or clear_radius <= 0.0:
+				continue
+			var axis := Vector2(float(raw_axis[0]), float(raw_axis[1])).normalized()
+			if axis.length_squared() < 0.5:
+				continue
+			var centre := Vector2(float(island_centre[0]) + float(offset[0]),
+				float(island_centre[1]) + float(offset[1]))
+			var from_m := float(passage.get("grass_clear_from_m", -float(passage.get("half_length_m", 100.0))))
+			var to_m := float(passage.get("grass_clear_to_m", float(passage.get("half_length_m", 100.0))))
+			var step_m := maxf(1.0, float(passage.get("grass_clear_step_m", clear_radius)))
+			for index in maxi(0, ceili((to_m - from_m) / step_m) + 1):
+				var point := centre + axis * minf(to_m, from_m + float(index) * step_m)
+				out.append(Vector3(point.x, point.y, clear_radius))
 	return out

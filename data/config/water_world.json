@@ -1337,13 +1337,13 @@
   },
   "islands": [
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         0.0,
         0.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 20.0,
+      "coast_inner_height_m": 5.0,
       "id": "first_shore",
       "landing_sectors": [
         {
@@ -1393,13 +1393,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         0.0,
         440.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 18.0,
+      "coast_inner_height_m": 5.0,
       "id": "reedhaven",
       "landing_sectors": [
         {
@@ -1440,13 +1440,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         420.0,
         660.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 24.0,
+      "coast_inner_height_m": 6.0,
       "id": "brine_steps",
       "landing_sectors": [
         {
@@ -1478,13 +1478,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         320.0,
         1120.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 24.0,
+      "coast_inner_height_m": 6.0,
       "id": "shellwatch",
       "landing_sectors": [
         {
@@ -1510,19 +1510,23 @@
       "name": "Shellwatch",
       "peak_height_m": 66.0,
       "peak_power": 1.65,
+      "dune_passages": [
+        {"center_offset_xz_m": [30.0, 10.0], "axis_xz": [0.58, 0.82], "half_length_m": 90.0, "half_width_m": 26.0, "depth_m": -26.0, "shore_preserve_m": 28.0,
+         "grass_clear_radius_m": 7.0, "grass_clear_from_m": -160.0, "grass_clear_to_m": 90.0, "grass_clear_step_m": 7.0}
+      ],
       "region_id": "marsh_channels",
       "scatter_seed": 486003.0,
       "shore_radius_m": 190.0,
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         700.0,
         1530.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 28.0,
+      "coast_inner_height_m": 7.0,
       "id": "tidal_cradle",
       "landing_sectors": [
         {
@@ -1554,13 +1558,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         150.0,
         2310.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 28.0,
+      "coast_inner_height_m": 7.0,
       "id": "salt_crown",
       "landing_sectors": [
         {
@@ -1601,13 +1605,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         850.0,
         2960.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 32.0,
+      "coast_inner_height_m": 8.0,
       "id": "sluice_isle",
       "landing_sectors": [
         {
@@ -1640,15 +1644,19 @@
       ],
       "main_path": true,
       "name": "Sluice Isle",
-      "peak_height_m": 118.0,
+      "peak_height_m": 45.0,
       "peak_power": 1.65,
+      "pump_assemblage": {"enabled": true, "units": [
+        {"at_xz_m": [883.0, 2900.0], "yaw_deg": 35.0, "scale": 2.5, "sink_m": 0.45, "grass_clear_radius_m": 9.0},
+        {"at_xz_m": [936.0, 2912.0], "yaw_deg": -30.0, "scale": 2.5, "sink_m": 0.45, "grass_clear_radius_m": 9.0}
+      ]},
       "region_id": "tether_current",
       "scatter_seed": 486006.0,
       "shore_radius_m": 290.0,
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         200.0,
         4140.0
@@ -1677,13 +1685,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         -350.0,
         170.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 16.0,
+      "coast_inner_height_m": 4.0,
       "id": "lantern_cove",
       "landing_sectors": [
         {
@@ -1706,13 +1714,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         -70.0,
         870.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 16.0,
+      "coast_inner_height_m": 4.0,
       "id": "gull_rest",
       "landing_sectors": [
         {
@@ -1735,13 +1743,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         1200.0,
         2240.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 20.0,
+      "coast_inner_height_m": 5.0,
       "id": "drowned_garden",
       "landing_sectors": [
         {
@@ -1764,13 +1772,13 @@
       "terrain_profile": "radial_landing_sectors_v1"
     },
     {
-      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. Default coast is steep; authored landing sectors provide shallow beaches. No runtime terrain evidence.",
+      "_comment": "Center/radius preserve BUILD section 3 exactly. Peak is a starting elevation. The baked physical shore profile broadens beach shoulders; authored landing sectors preserve shallow approaches.",
       "center_xz_m": [
         1350.0,
         3500.0
       ],
-      "coast_beach_width_m": 4.0,
-      "coast_inner_height_m": 12.0,
+      "coast_beach_width_m": 20.0,
+      "coast_inner_height_m": 5.0,
       "id": "deep_watch",
       "landing_sectors": [
         {
@@ -2077,112 +2085,111 @@
     },
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "_comment_grade": "Walked in engine end to end on baked ground (smoke_water_loops_shortcuts, max drop 0.00 m), but the steepest 1 m chord sample is 26.6 deg, above this row's 24.0 deg target; geometry unchanged, so the status says so rather than baked_grade_checked.",
-      "grading_status": "baked_walkable_above_target_grade",
+      "_comment_grade": "Sluice dune height revised in Phase 2d; waypoint Y samples follow the new baked surface. Production patrol walk completed 850.4 m with all waypoints on floor and no drop or defect. The prior maximum grade measurement no longer applies; remeasure grade before claiming the 24 degree target.",
+      "grading_status": "baked_walked_grade_unchecked",
       "id": "sluice_patrol_circuit",
       "island_id": "sluice_isle",
       "maximum_target_grade_deg": 24.0,
-      "measured_max_grade_deg": 26.6,
       "measured_polyline_m": 883.265,
       "polyline": [
         [
           1019.25,
-          58.029,
+          22.403,
           2898.25
         ],
         [
           1055.0,
-          44.249,
+          13.297,
           2958.0
         ],
         [
           1055.0,
-          44.22,
+          13.676,
           2965.0
         ],
         [
           1013.0,
-          61.416,
+          19.037,
           3021.0
         ],
         [
           1013.0,
-          58.205,
+          17.715,
           3036.0
         ],
         [
           975.0,
-          85.044,
+          33.571,
           2990.0
         ],
         [
           965.0,
-          88.358,
+          34.809,
           2921.0
         ],
         [
           965.0,
-          76.395,
+          25.732,
           2870.0
         ],
         [
           903.0,
-          83.344,
+          32.733,
           2839.0
         ],
         [
           850.0,
-          88.099,
+          33.086,
           2838.0
         ],
         [
           799.0,
-          60.043,
+          21.534,
           2791.0
         ],
         [
           788.0,
-          58.112,
+          21.858,
           2791.0
         ],
         [
           850.0,
-          47.008,
+          14.444,
           2760.0
         ],
         [
           857.0,
-          46.941,
+          13.821,
           2760.0
         ],
         [
           916.0,
-          60.414,
+          23.900,
           2797.0
         ],
         [
           926.0,
-          58.205,
+          23.267,
           2797.0
         ],
         [
           992.0,
-          46.556,
+          13.055,
           2818.0
         ],
         [
           1000.0,
-          43.403,
+          12.184,
           2818.0
         ],
         [
           1019.0,
-          55.401,
+          22.104,
           2885.0
         ],
         [
           1019.25,
-          58.029,
+          22.403,
           2898.25
         ]
       ],
@@ -2366,17 +2373,17 @@
         ],
         [
           267.004,
-          31.864,
+          16.732,
           1006.349
         ],
         [
           217.982,
-          35.175,
+          27.27,
           1061.1
         ],
         [
           388.657,
-          19.532,
+          7.351,
           1218.052
         ],
         [
@@ -2520,17 +2527,17 @@
         ],
         [
           694.289,
-          37.505,
+          19.67,
           2870.1
         ],
         [
           905.1,
-          93.309,
+          34.32,
           2864.564
         ],
         [
           954.792,
-          41.784,
+          16.29,
           3109.659
         ],
         [
@@ -2850,7 +2857,7 @@
       "name": "Shellwatch Rescue Jetty",
       "position": [
         267.004,
-        31.864,
+        16.732,
         1006.349
       ],
       "role": "occupied_dock_rescue",
@@ -2892,7 +2899,7 @@
       "name": "Sluice Isle Twin Pumps",
       "position": [
         905.1,
-        93.309,
+        34.32,
         2864.564
       ],
       "role": "current_control_network",
@@ -3033,7 +3040,7 @@
       "name": "Sluice Channel Bridge",
       "position": [
         819.785,
-        61.438,
+        18.925,
         3131.357
       ],
       "role": "patrol_and_control_bridge",
@@ -3552,6 +3559,7 @@
     }
   },
   "terrain": {
+    "dune_relief": {"enabled": true, "bearing_deg": 25.0, "wavelength_m": 130.0, "warp_wavelength_m": 240.0, "shore_preserve_m": 36.0, "summit_preserve_m": 45.0, "max_amplitude_m": 8.0, "peak_fraction": 0.065},
     "_comment": "Separate aligned bake bounds pad authored world bounds without moving islands. Sparse island+shore regions avoid a giant empty seabed bake.",
     "collision_comment": "FULL_GAME on sparse island regions; measure memory/startup and two separated remote bodies. One averaged camera is insufficient.",
     "collision_mode": 3.0,
@@ -3560,8 +3568,8 @@
       "_comment": "Deterministic analytic base surface, highest finite island contribution. Trail grading later requires explicit modifier; not implied here.",
       "angular_profile": "For each landing sector angular distance d: w=1-smoothstep(half_width_deg,half_width_deg+feather_deg,d). Choose maximum weight and lerp default beach width and inner height toward its profile.",
       "id": "radial_landing_sectors_v1",
-      "land": "When R-beach_width<=r<=R: h=inner_height*(R-r)/beach_width. When r<R-beach_width: h=inner_height+(peak_height-inner_height)*pow(1-pow(r/(R-beach_width),2),peak_power).",
-      "noise": "Disabled until a shoreline-preserving mask exists. Future detail must be zero at shore and safe anchors.",
+      "land": "When R-beach_width<=r<=R: h=inner_height*(R-r)/beach_width. When r<R-beach_width: h=inner_height+(peak_height-inner_height)*pow(1-pow(r/(R-beach_width),2),peak_power) plus bounded directional dune relief. Relief fades to zero at the beach shoulder and summit; the authored trail grade follows it.",
+      "noise": "Directional interior dune relief is enabled for ordinary islands only. The coast and summit preservation masks retain safe landings and exact peak heights; Veilfall and route rest shoals remain on their original profiles.",
       "ocean": "When r>R: h=-min(seabed_depth,(r-R)*outer_shore_slope). Beyond sparse regions, depth queries return deep sea; no synthetic walkable floor.",
       "radius": "r=length(xz-center); R=shore_radius_m",
       "shore": "r=R gives h=0 exactly. Straight crossing gap=center_distance-R_from-R_to."

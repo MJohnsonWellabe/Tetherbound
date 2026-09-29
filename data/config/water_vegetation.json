@@ -76,6 +76,16 @@
       "profile_scale": {"wetland": 0.55, "green": 0.75, "rocky": 1.6, "mountain": 1.8}
     }
   },
+  "island_layer_overrides": {
+    "sluice_isle": {
+      "rocks": {
+        "clusters": 5,
+        "per_cluster": [2, 3],
+        "scale": [0.45, 1.05],
+        "profile_scale": {"rocky": 0.6}
+      }
+    }
+  },
   "island_profiles": {
     "first_shore": "green",
     "reedhaven": "wetland",

@@ -44,13 +44,12 @@ func test_enabled_copies_preserve_clearances_and_unrelated_layers() -> void:
 	assert_eq(dune_grass.min_height_m, grass.min_height_m)
 
 
-func test_colony_and_arc_overrides_bind_only_to_the_candidate_material() -> void:
+func test_colony_and_arc_overrides_bind_only_to_the_dune_material() -> void:
 	var settings := DUNES.config()
-	assert_false(bool(settings.enabled), "native-unjudged candidate remains off")
+	assert_true(bool(settings.enabled), "reviewed dune cover is enabled")
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/config/water_ground_cover.json"))
 	var original := source.duplicate(true)
-	settings.enabled = true
 	var candidate := DUNES.ground_profile(source, settings)
 	var ordinary := GRASS.new()
 	var dunes := GRASS.new()
