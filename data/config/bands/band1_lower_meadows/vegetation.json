@@ -986,8 +986,8 @@
     },
     {
       "order": 6,
-      "x": -1.5,
-      "z": -2.0,
+      "x": -2.5,
+      "z": -6.0,
       "radius": 7.8,
       "_why": "R7.9 plus OWNER-0912 visual acceptance repair: the inn's 7.8m canopy-aware exclusion follows its corrected south-side frontage at [-1.5,-2], so grass and scatter cannot occupy the common room or public porch."
     },
@@ -1021,8 +1021,8 @@
     },
     {
       "order": 1004,
-      "x": 19.0,
-      "z": -18.0,
+      "x": 19.5,
+      "z": -6.0,
       "radius": 5.3,
       "_why": "OWNER-0912. The stone cottage footprint follows its west-street move; this exact building exclusion complements the broad square clearing for layers that intentionally ignore clearings."
     },

@@ -99,8 +99,8 @@
       "placed_by": "village_npcs",
       "config_key": "villager_keeper",
       "position": [
-        22.0,
-        -6.0
+        13.4,
+        -12.0
       ],
       "facing_deg": -108.4,
       "challenge": "village_oskar_challenge",
@@ -136,7 +136,7 @@
       "config_key": "villager_smith",
       "position": [
         8.0,
-        -16.0
+        -13.6
       ],
       "facing_deg": 18.4,
       "challenge": "village_tam_challenge",

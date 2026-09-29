@@ -1,12 +1,13 @@
 {
   "_comment": "The opening settlement. EV6: every structure is a PREFAB from data/config/building_prefabs.json, composed from the Medieval Village MegaKit (docs/specs/ASSET_LEDGER.md, D24 -- the one civilian architectural family) and placed by scripts/world/village.gd: stood on the ground by asking the world (D09), given the prefab's own colliders or one AABB box, at kit-native scale (no scale corrections -- the kit is authored in real metres, walls measured 2.0w x 3.12h). Positions are world metres on the fixed farmhouse/square flats plus OWNER-0912's matching south-street pad. ALL TUNABLE.",
   "_comment_layout": "OWNER-0912 / C3 village street replan. Grandpa's house remains the fixed west endpoint, the well remains the bend, and the settlement now reads as an L-shaped street: farmhouse and inn on the west leg, then Mira's shop and Tam's workshop facing each other across the south leg toward TrailGate. The matching level pad, worked-soil aprons, thresholds, vegetation exclusions and role-based NPC positions are authored in their owning configs and require the integration terrain/scatter bake plus production visual proof.",
+  "_comment_main_street": "OPTION-B (owner 2026-09-29): the L-shaped street is replaced by one straight main street at x=10.5 (terrain_playground.json paths.approaches village_main_street). The well stands on its axis at [10.5,-6], the centre of a small walkable green (village_topology.green, radius 4, no collision). The inn moved 4.1 m to [-2.5,-6] and turned to yaw 90 so its door faces the green from the west; the stone cottage moved 12.0 m to [19.5,-6] and turned to yaw -90 to face the street from the east. Its threshold, the inn threshold and the cottage cart moved with them; Mira, Oskar's pen, Tam, Halda, the bracket board and Grandpa did not. The building aprons, flats and scatter footprints mirror these poses.",
   "structures": [
     {
       "prefab": "well",
       "at": [
-        10.0,
-        -10.0
+        10.5,
+        -6.0
       ],
       "yaw_deg": 15.0,
       "_why": "the square's centre; slightly off-axis so the square does not read as gridded"
@@ -42,10 +43,10 @@
     {
       "prefab": "cottage_b",
       "at": [
-        19.0,
-        -18.0
+        19.5,
+        -6.0
       ],
-      "yaw_deg": -110.0,
+      "yaw_deg": -90.0,
       "interior": "cottage",
       "_why": "OWNER-0912 / C3 V-1. The stone cottage moves four metres onto the south side of the west street leg and turns its real doorway north-west toward that road. The move remains on its existing 0.9m cottage/square pads."
     },
@@ -132,10 +133,10 @@
     {
       "prefab": "inn",
       "at": [
-        -1.5,
-        -2.0
+        -2.5,
+        -6.0
       ],
-      "yaw_deg": 180.0,
+      "yaw_deg": 90.0,
       "interior": "inn",
       "_why": "OWNER-0912 village visual acceptance repair. The first street replan stood the long inn parallel to the west road at [-6,-14], so its wall/canopy footprint physically crossed the painted route and the public door faced along it. The inn now stands wholly on the south side of the shared street at [-1.5,-2], with its broad public facade facing north across a short forecourt. Its canopy clears the west road's full painted band; threshold, pad, apron, exclusion and Bram's interior pose move with the same transform."
     },
@@ -151,19 +152,19 @@
     {
       "prefab": "doorstep",
       "at": [
-        15.72,
-        -18.13
+        16.37,
+        -5.0
       ],
-      "yaw_deg": -110.0,
+      "yaw_deg": -90.0,
       "_why": "OWNER-0912. cottage_b's existing local threshold [1,3.13] transformed through the new [-110deg] building pose, so the path cue moves with the actual door."
     },
     {
       "prefab": "doorstep",
       "at": [
-        -1.5,
-        -8.1
+        3.6,
+        -6.0
       ],
-      "yaw_deg": 180.0,
+      "yaw_deg": 90.0,
       "_why": "OWNER-0912 village visual acceptance repair. The inn's local +Z public threshold transforms to [-1.5,-8.1], facing the west street across a short forecourt without placing paving or porch geometry across its painted band."
     },
     {
@@ -196,8 +197,8 @@
     {
       "prefab": "wagon",
       "at": [
-        24.0,
-        -22.0
+        25.0,
+        -3.0
       ],
       "yaw_deg": 110.0,
       "_why": "OWNER-0912. The cottage cart follows cottage_b east into its back yard instead of being stranded at the old wall line; it stays off the Practice Meadow path."

@@ -920,8 +920,8 @@
       "_why": "SC14: the South Bridge's deck and both stone landings -- the same treatment the mill's footbridge already gets, at this span's own half-length"
     },
     {
-      "x": -1.5,
-      "z": -2.0,
+      "x": -2.5,
+      "z": -6.0,
       "radius": 7.8,
       "_why": "R7.9 plus OWNER-0912 visual acceptance repair: the inn's 7.8m canopy-aware exclusion follows its corrected south-side frontage at [-1.5,-2], so grass and scatter cannot occupy the common room or public porch."
     }
