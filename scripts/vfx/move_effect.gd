@@ -144,12 +144,19 @@ func _process(delta: float) -> void:
 		var u := clampf((_elapsed - _travel) / maxf(duration, 0.001), 0.0, 1.0)
 		_update_impact(u, delta)
 		var contact_age := _elapsed - _travel
+		var body_profile: Dictionary = _row.body
+		var contact_fade := 1.0
+		if str(body_profile.get("motion", "")) == "sky" and body_profile.has("contact_fade_power"):
+			var hold := maxf(0.001, float(body_profile.get("contact_hold_seconds", 0.0)))
+			contact_fade = pow(maxf(0.0, 1.0 - contact_age / hold), maxf(0.1, float(body_profile.contact_fade_power)))
 		for body: MeshInstance3D in _bodies:
 			# Retain the completed vertical strike through contact and early
 			# impact, so the visual actually joins sky, target and ground.
 			body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
+			if body_profile.has("contact_fade_power"):
+				_set_opacity(body.material_override, contact_fade * float(body_profile.get("opacity", 1.0)))
 		for trail: MeshInstance3D in _trails:
-			_set_opacity(trail.material_override, (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
+			_set_opacity(trail.material_override, contact_fade * (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
 		if u >= 1.0: queue_free()
 
 func _finish_presentation() -> void:
@@ -412,6 +419,9 @@ func _build_impact() -> void:
 		var backscatter := (_from - _to).normalized()
 		direction = (direction + backscatter * float(profile.get("mote_backscatter", 0.0))).normalized()
 		_velocities.append(direction * float(profile.get("speed", 3.8)) * _rng.randf_range(0.65, 1.25))
+	# Authored stage profiles must start at their contact scale in the same
+	# frame as arrival, rather than flashing full size before the next update.
+	if profile.has("growth_power"): _update_impact(0.0, 0.0)
 
 func _impact_visual_origin(profile: Dictionary) -> Vector3:
 	var contact := _contact_position()
@@ -484,12 +494,14 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 func _update_puffs(u: float) -> void:
 	if _puffs == null: return
 	var profile: Dictionary = _row.impact
-	var extent := _puff_extent * lerpf(float(profile.get("puff_start_radius_scale", 0.65)), float(profile.get("puff_end_radius_scale", 1.4)), u)
-	_set_opacity(_puffs.material_override, pow(1.0 - u, 1.2) * float(profile.get("puff_opacity", 0.72)))
+	var growth_u := pow(u, clampf(float(profile.get("growth_power", 1.0)), 0.2, 3.0))
+	var extent := _puff_extent * lerpf(float(profile.get("puff_start_radius_scale", 0.65)), float(profile.get("puff_end_radius_scale", 1.4)), growth_u)
+	var reveal := pow(u, maxf(0.0, float(profile.puff_reveal_power))) if profile.has("puff_reveal_power") else 1.0
+	_set_opacity(_puffs.material_override, reveal * pow(1.0 - u, 1.2) * float(profile.get("puff_opacity", 0.72)))
 	for i in _puff_directions.size():
 		var center := _puff_origin + _puff_directions[i] * extent
 		center.y += float(profile.get("puff_lift_m", 0.7)) * u
-		var scale := _puff_scales[i] * lerpf(1.0, float(profile.get("puff_grow", 1.6)), u)
+		var scale := _puff_scales[i] * lerpf(float(profile.get("puff_initial_scale", 1.0)), float(profile.get("puff_grow", 1.6)), growth_u)
 		_puffs.multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * scale), center))
 
 func _update_impact(u: float, delta: float) -> void:
@@ -502,7 +514,8 @@ func _update_impact(u: float, delta: float) -> void:
 		if child is MeshInstance3D:
 			var alpha := (1.0 - u) * float(child.get_meta("base_opacity", profile.get("opacity", 0.82)))
 			_set_opacity(child.material_override, alpha)
-	var growth := lerpf(float(profile.get("initial_grow", 0.35)), float(profile.get("grow", 2.0)), u)
+	var growth_u := pow(u, clampf(float(profile.get("growth_power", 1.0)), 0.2, 3.0))
+	var growth := lerpf(float(profile.get("initial_grow", 0.35)), float(profile.get("grow", 2.0)), growth_u)
 	for child: Node in _impact.get_children():
 		if child is Node3D and child != _motes and child != _puffs: child.scale = Vector3.ONE * growth
 	if _motes != null:

@@ -1,0 +1,37 @@
+F25 R17: distinct compact contact, expanding burst and fading bolt aftermath.
+Motivation is the fresh independent R14 original-image report, archived verbatim
+under independent-r14. Every family full-craft FAIL is preserved, not superseded.
+
+Found a presentation initialization defect: impact children were born at full size
+and only received initial_grow on the next frame. Three authored stage profiles now
+initialize at u=0 within the existing _build_impact call, before arrival is emitted.
+This creates the contact mark in the same frame as the informational arrival.
+Existing arrival timer, signal guard, authority and effect lifetime are unchanged.
+
+All new temporal values live in the three data profiles:
+- Stones: compact 0.18 contact, growth exponent 0.45 to unchanged 1.55 final scale;
+  existing three puffs begin smaller and reveal into outward dust. Narrower/lower
+  dust trails let bodies lead; warmer lighter mineral tints retain the installed
+  triplanar scree texture and unchanged faceted meshes/scale/volley geometry.
+- Fireball: compact 0.26 contact, exponent 0.42 to unchanged 1.18 final scale;
+  six existing puffs begin smaller and reveal into the flame burst. No added mesh,
+  emitter, particle, layer or opacity increase to obscure the largest target.
+- Sky lightning: keep the existing full vertical path, branching and 0.22s hold;
+  fade body and its existing trail within that hold (power 2.4), while compact
+  0.20 contact arcs expand to unchanged 1.8 extent at power 0.5. Hold, marker,
+  timing, endpoints and sky/ground anchors are unchanged; only opacity stages.
+
+Only four presentation methods and 16 fields in three profiles changed; 21 methods,
+all other profiles, mastery tables, counts, budgets, caps, meshes, anchors, light
+profiles, cue bank/mapping, ownership and Combat/host results remain unchanged.
+Source-preservation receipt verifies that bounded delta and all 175 cue hashes.
+No engine run or independent visual PASS yet; library remains OFF/F25 remains OPEN.
+
+Next necessary batch under a new sole-GPU token: fresh Compatibility 1920x1080
+identities capture plus motion at fixed30fps, all 12 cases/36 originals. This combines
+the R16 first-stone lifetime repair with R17's four-family/rank phase changes.
+Reuse the passing light unit rather than rerunning the suite. Preserve all native
+assertions, raw source/command/exit and owned child cleanup; fresh code-blind review
+judges full craft against originals/references. Actual earned player HP/audio path,
+launch witness, production environment, Medium worst-case fight and Ally remain
+separate required evidence. No single-defect or synthetic-only acceptance claim.
