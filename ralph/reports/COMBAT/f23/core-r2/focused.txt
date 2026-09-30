@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_move_mastery.gd: 1 of 674 test files
+  ok    test_move_mastery.gd :: test_invalid_config_and_portable_document_cannot_forge_known_moves_or_uses
+  ok    test_move_mastery.gd :: test_mastery_launch_metadata_is_frozen_without_changing_geometry_or_timing
+  ok    test_move_mastery.gd :: test_portable_loadout_preflight_is_whole_and_detached_without_resetting_v28
+  ok    test_move_mastery.gd :: test_saturation_retains_every_credited_identity_and_all_rank_thresholds
+  ok    test_move_mastery.gd :: test_station_edit_stages_compare_and_swap_and_refuses_wrong_scope_or_replay_collision
+  ok    test_move_mastery.gd :: test_threshold_crossing_freezes_old_rank_and_replay_cannot_credit_again
+  ok    test_move_mastery.gd :: test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other_records
+
+7 tests, 700 assertions, 0 failed
