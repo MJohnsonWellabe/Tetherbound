@@ -19,7 +19,7 @@ class Individual extends RefCounted:
 func test_invalid_config_and_portable_document_cannot_forge_known_moves_or_uses() -> void:
 	var good := {"rank_thresholds":[0,25,75,150,300],"damage_per_rank":.05,"max_known_moves":128}
 	assert_true(MASTERY.valid_config(good))
-	for thresholds: Array in [[],[0,25,75,300],[0,25,25,150,300],[1,25,75,150,300],[0,25,75,150,INF],[0,25.5,75,150,300]]:
+	for thresholds: Array in [[],[0,25,75,300],[0,25,25,150,300],[1,25,75,150,300],[0,25,75,150,INF],[0,25.5,75,150,300],[0,25,75,150,301]]:
 		var bad := good.duplicate(true)
 		bad.rank_thresholds = thresholds
 		assert_false(MASTERY.valid_config(bad), "invalid config fails closed before any hit")
@@ -124,7 +124,7 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	assert_eq(preserved.creatures[creature.uid].taught_traits,{"1":"hardy"},"move mirror preserves other lane's earned records")
 	assert_eq(character.creatures,{},"detached projection leaves live carrier untouched")
 	var identity := MASTERY.new_action_identity("encounter:1:hit:1")
-	assert_eq(identity,MASTERY.new_action_identity("encounter:1:hit:1"),"one accepted action retains its process-epoch identity")
+	assert_true(identity!=MASTERY.new_action_identity("encounter:1:hit:1"),"a recreated manager's counter cannot collide in the same process; callers freeze one allocation per accepted action")
 	assert_true(identity!= "encounter:1:hit:1" and identity.length()<=160)
 
 func test_portable_loadout_preflight_is_whole_and_detached_without_resetting_v28() -> void:

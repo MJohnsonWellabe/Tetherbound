@@ -6,9 +6,11 @@ extends RefCounted
 const CONFIG_PATH := "res://data/config/move_mastery.json"
 const MOVES := preload("res://scripts/creatures/move_db.gd")
 const MAX_KNOWN_MOVES := 256
+const MAX_TRACKED_USES := 300
 static var _loaded := false
 static var _config: Dictionary = {}
 static var _host_epoch: String = ""
+static var _host_sequence: int = 0
 
 ## Mint on the authority once per accepted action and freeze in its pending
 ## transaction. Encounter/body counters alone repeat after process restart;
@@ -17,7 +19,10 @@ static var _host_epoch: String = ""
 static func new_action_identity(accepted_action_id: String) -> String:
 	if accepted_action_id.is_empty() or accepted_action_id.length()>120: return ""
 	if _host_epoch.is_empty(): _host_epoch = Crypto.new().generate_random_bytes(16).hex_encode()
-	return _host_epoch+":"+accepted_action_id
+	_host_sequence += 1
+	# Separate allocation sequence also covers a recreated encounter/manager
+	# reusing its presentation counter during the same process lifetime.
+	return "%s:%d:%s" % [_host_epoch,_host_sequence,accepted_action_id.sha256_text().left(24)]
 
 static func config() -> Dictionary:
 	if not _loaded:
@@ -35,6 +40,7 @@ static func valid_config(raw: Variant) -> bool:
 		if not _whole_nonnegative(value) or int(value) <= previous: return false
 		previous = int(value)
 	if int(thresholds[0]) != 0: return false
+	if int(thresholds[4])>MAX_TRACKED_USES: return false
 	var increment: Variant = raw.get("damage_per_rank")
 	if not (increment is int or increment is float) or not is_finite(float(increment)) or float(increment) < 0.0: return false
 	var cap: Variant = raw.get("max_known_moves")
