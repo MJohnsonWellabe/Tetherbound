@@ -88,3 +88,15 @@ static func frozen_copy(value: Variant) -> Variant:
 		copy.make_read_only()
 		return copy
 	return value
+
+static func cancel_action(tree: SceneTree, action_id: String) -> void:
+	if tree == null or action_id.is_empty(): return
+	for effect: Node in tree.get_nodes_in_group("move_effect_presentation"):
+		if effect.has_method("action_id") and str(effect.call("action_id")) == action_id:
+			effect.call("cancel_presentation")
+
+static func cancel_encounter(tree: SceneTree, encounter_id: String) -> void:
+	if tree == null or encounter_id.is_empty(): return
+	for effect: Node in tree.get_nodes_in_group("move_effect_presentation"):
+		if effect.has_method("encounter_id") and str(effect.call("encounter_id")) == encounter_id:
+			effect.call("cancel_presentation")

@@ -12,11 +12,14 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 		context: Dictionary = {}) -> Node3D:
 	if spec.has("archetype") and bool(LIBRARY.config().get("enabled", false)):
 		return LIBRARY.launch(parent, from, to, spec, context)
-	var fallback := LEGACY.launch(parent, from, to, spec)
-	if fallback != null and context.has("travel_seconds"):
-		fallback.set("_travel", maxf(0.0, float(context.travel_seconds)))
-	return fallback
+	return LEGACY.launch(parent, from, to, spec, context)
 
 static func travel_seconds(from: Vector3, to: Vector3, spec: Dictionary,
 		context: Dictionary = {}) -> float:
 	return LIBRARY.travel_seconds(from, to, spec, context)
+
+static func cancel_action(tree: SceneTree, action_id: String) -> void:
+	LIBRARY.cancel_action(tree, action_id)
+
+static func cancel_encounter(tree: SceneTree, encounter_id: String) -> void:
+	LIBRARY.cancel_encounter(tree, encounter_id)

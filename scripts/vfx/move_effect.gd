@@ -45,6 +45,7 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 	_rng.seed = int(context.get("seed", 0))
 
 func _ready() -> void:
+	add_to_group("move_effect_presentation")
 	top_level = true
 	global_transform = Transform3D.IDENTITY
 	var budget: Dictionary = _row.get("budget", {})
@@ -215,7 +216,7 @@ func _build_impact() -> void:
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	if bool(_row.impact_layer):
-		var secondary := _mesh_node(GEOMETRY.shape("ring", scale_factor * 1.35, profile), _colour, 0.65)
+		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
 		secondary.reparent(_impact, false)
 		secondary.rotation.x = PI * 0.5
 	var count := int(BUDGET.allocation(_lease).get("impact", 0))
@@ -277,3 +278,15 @@ func _play_impact() -> void:
 func _exit_tree() -> void:
 	BUDGET.release(_lease)
 	# AudioManager owns its pooled players; do not stop a recycled voice here.
+
+func action_id() -> String:
+	return str(_context.get("action_id", ""))
+
+func encounter_id() -> String:
+	return str(_context.get("encounter_id", "global"))
+
+func cancel_presentation() -> void:
+	# This cannot cancel an earned action or an authoritative pending hit.
+	# Stop local processing now; deferred deletion still releases the lease.
+	set_process(false)
+	queue_free()

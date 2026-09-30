@@ -29,8 +29,12 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			cylinder.height = size * float(profile.get("height_ratio", 3.0))
 			cylinder.radial_segments = int(profile.get("segments", 5 if kind in ["shard", "spike"] else 12))
 			return cylinder
-		"ring", "crescent", "sigil":
+		"ring", "crescent":
 			return band(size, float(profile.get("width", 0.16)), float(profile.get("arc_degrees", 150.0 if kind == "crescent" else 360.0)), int(profile.get("segments", 24)))
+		"sigil":
+			return sigil(size, profile)
+		"glint":
+			return glint(size, profile)
 		"wave":
 			return wave(size, profile)
 		"vortex":
@@ -39,6 +43,38 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			return ribbon([Vector3.ZERO, Vector3.UP * size], float(profile.get("width", 0.09)), Color.WHITE)
 	push_error("Unknown effect geometry %s" % kind)
 	return null
+
+static func sigil(size: float, profile: Dictionary) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var sides := clampi(int(profile.get("glyph_sides", 6)), 3, 12)
+	var width := float(profile.get("width", 0.08))
+	for i in sides:
+		var a := TAU * float(i) / float(sides)
+		var b := TAU * float(i + 1) / float(sides)
+		var start := Vector3(cos(a), 0.0, sin(a)) * size
+		var finish := Vector3(cos(b), 0.0, sin(b)) * size
+		var across := (finish - start).normalized().cross(Vector3.UP) * width
+		quad(mesh, start - across, start + across, finish + across, finish - across, Color.WHITE, Color.WHITE)
+		# Inward broken strokes distinguish the glyph from a plain circle.
+		if i % 2 == 0:
+			var inward := start * 0.55
+			quad(mesh, start - across, start + across, inward + across, inward - across, Color.WHITE, Color.WHITE)
+	mesh.surface_end()
+	return mesh
+
+static func glint(size: float, profile: Dictionary) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var width := size * float(profile.get("ray_width_ratio", 0.12))
+	for axis: Vector3 in [Vector3.RIGHT, Vector3.UP, Vector3.FORWARD]:
+		var side := axis.cross(Vector3.UP).normalized()
+		if side.length_squared() < 0.001: side = Vector3.RIGHT
+		quad(mesh, -axis * size, side * width, axis * size, -side * width, Color.WHITE, Color.WHITE)
+		var other := axis.cross(side).normalized()
+		quad(mesh, -axis * size, other * width, axis * size, -other * width, Color.WHITE, Color.WHITE)
+	mesh.surface_end()
+	return mesh
 
 static func band(radius: float, width: float, arc_degrees: float, segments: int) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()

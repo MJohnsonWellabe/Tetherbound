@@ -50,6 +50,8 @@ var _travel: float = 0.2
 var _colour: Color = Color("#ffd27a")
 var _kind: String = "projectile"
 var _done: bool = false
+var _action_id: String = ""
+var _encounter_id: String = "global"
 
 var _body: MeshInstance3D = null
 var _mesh: ImmediateMesh = null
@@ -61,7 +63,8 @@ var _mesh: ImmediateMesh = null
 ## that has no travel to draw (a plain melee swing), which lets the caller ask
 ## unconditionally and branch on the answer instead of duplicating the
 ## "is this move ranged" test.
-static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary) -> Node3D:
+static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
+		context: Dictionary = {}) -> Node3D:
 	var kind := str(spec.get("kind", "melee"))
 	if kind == "melee" or parent == null:
 		return null
@@ -76,12 +79,17 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary) -
 	# gets the floor and reads as an immediate burst.
 	var distance := from.distance_to(to) if kind != "area" else 0.0
 	shot._travel = clampf(distance / maxf(speed, 0.001), MIN_TRAVEL, MAX_TRAVEL)
+	if context.has("travel_seconds"):
+		shot._travel = maxf(0.0, float(context.travel_seconds))
+	shot._action_id = str(context.get("action_id", ""))
+	shot._encounter_id = str(context.get("encounter_id", "global"))
 	parent.add_child(shot)
 	shot.global_position = from
 	return shot
 
 
 func _ready() -> void:
+	add_to_group("move_effect_presentation")
 	_mesh = ImmediateMesh.new()
 	_body = MeshInstance3D.new()
 	_body.mesh = _mesh
@@ -233,3 +241,13 @@ func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3,
 	_mesh.surface_add_vertex(c)
 	_mesh.surface_set_color(far_colour)
 	_mesh.surface_add_vertex(d)
+
+func action_id() -> String:
+	return _action_id
+
+func encounter_id() -> String:
+	return _encounter_id
+
+func cancel_presentation() -> void:
+	set_process(false)
+	queue_free()
