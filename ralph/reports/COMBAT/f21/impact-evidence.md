@@ -1,5 +1,9 @@
 # F21 impact work in progress
 
+## Camera archive byte normalization
+
+`camera-native-r2/archive-normalization-receipt.json` independently compares raw `git show 25f2f77769f39381b433e0971d884e8b57e88ae6:<path>` bytes with every original observed hash. All 15 original files match their observed raw hashes. The nine PNGs and matrix JSON remain byte-identical in Git. Five native/parser text logs were normalized from CRLF to LF by Git; the receipt records both hashes and proves this is their only byte difference. The original `source-proof.json` raw hashes are retained. This is an archive audit, with no runtime replay or changed result.
+
 No F21 criterion is closed by this checkpoint. The hosted outgoing/incoming/observer witness now passes; independent strict re-check and dependency landing remain required. F21 camera, code-blind matched sequences, controller rumble and Medium frame-rate proof remain open.
 
 ## Exact source and named proof
