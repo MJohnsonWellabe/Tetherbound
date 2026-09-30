@@ -29,7 +29,7 @@ const INTERACTABLE_SCRIPT := "res://scripts/world/interactable.gd"
 const DOOR_SCRIPT := "res://scripts/world/village_door.gd"
 const HARVEST_NODE_SCRIPT := "res://scripts/world/harvest_node.gd"
 const BACKPACK_COLUMNS := 6
-const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const NAVIGATOR := preload("res://tests/helpers/opening_geometry_navigator.gd")
 
 ## Metres out along a door's own outward normal that the approach stands off
 ## before asking for the prompt, and metres in past the leaf once it is open.
@@ -317,8 +317,7 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if node == null:
 		_fail("no unspent authored %s node exists in the opening route" % item_id)
 		return false
-	if not await _walk_toward(node.global_position, 1800, 1.55) \
-			and not await _go_around_to(node.global_position, 1.55):
+	if not await _walk_toward(node.global_position, 1800, 1.55):
 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
 		return false
 	# A visible swing owns the held prop for its full production animation.  Do
@@ -489,11 +488,10 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 		return false
 	var outward := _door_outward(door, inside_target)
 	if not bool(door.call("is_open")):
-		# Stand in front of the door before asking for it. Best effort on
-		# purpose: if the standoff is unreachable the walk below still gets its
-		# full budget and its own diagnosis, which is better evidence than a
-		# second failure message about a point the player never needed to reach.
-		await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0)
+		# Require the actual axial standoff within its existing 900-frame budget.
+		if not await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0):
+			_fail("could not reach actual door standoff: " + _walk_diagnosis(door.global_position))
+			return false
 		if not await _walk_to_and_activate(prompt, 1200):
 			var winner: Variant = _arbiter.call("winning_provider")
 			_fail(("could not reach or activate door '%s' in 1200 frames "
@@ -632,6 +630,7 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 ## and then reported the villager as unreachable from twenty-nine metres away.
 func _one_approach(target: Node3D, budget: int) -> bool:
 	_nav.reset()
+	_nav.set_approach_radius(1.65)
 	var walked := 0
 	var held := 0
 	while walked < budget:
@@ -645,8 +644,11 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			_nav.reset()
 			await _tree.physics_frame
 			continue
+		if _nav.refused():
+			_fail("Native opening refused: " + _nav.refusal_reason())
+			return false
 		walked += 1
-		if _arbiter.call("winning_provider") == target:
+		if not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
 			var activation := await _press_and_observe_activation(target)
 			if activation == ActivationVerdict.TARGET:
 				return true
@@ -661,7 +663,7 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			continue
 		var to := target.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= 1.65:
+		if not _nav.departure_pending(target.global_position) and to.length() <= 1.65:
 			# Close enough, and something ELSE is holding the interact line.
 			#
 			# The village stands in open meadow and the arbiter ranks by
@@ -684,18 +686,24 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			for _j in 10:
 				_nav.push_once(aside.normalized())
 				await _tree.physics_frame
+				if _nav.refused():
+					_fail("Native opening shuffle refused: " + _nav.refusal_reason())
+					return false
 			_stop_left_stick()
 			for _j in 6:
 				await _tree.physics_frame
 			_nav.reset()
 			continue
 		await _nav.step(target.global_position)
+		if _nav.refused():
+			_fail("Native opening refused: " + _nav.refusal_reason())
+			return false
 	_stop_left_stick()
 	# Standing close and still not winning: give the arbiter a few frames to
 	# settle before giving up, which is what the previous version did and is
 	# still right once the walking is over.
 	for _i in 30:
-		if _arbiter.call("winning_provider") == target:
+		if not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
 			var activation := await _press_and_observe_activation(target)
 			if activation == ActivationVerdict.TARGET:
 				return true
@@ -734,28 +742,7 @@ static func activation_verdict(provider: Object, target: Object) -> int:
 	return ActivationVerdict.TARGET if provider == target else ActivationVerdict.COMPETING
 
 
-## Travel one leg. The detour logic lives in `stick_navigator.gd`; this only
-## adds the settle frames the callers here rely on after arriving.
-## One go-around after a timed-out approach, as a player walks round what the
-## straight line keeps meeting: ten metres to either side of the heading, then
-## the target again. Seed-15 runs twice failed the first wood node here with
-## no position logged (CI r18 36291504880, a local run at 145a2229).
-const GO_AROUND_M := 10.0
-
-
-func _go_around_to(point: Vector3, close_enough: float) -> bool:
-	var at := _player.global_position
-	var heading := point - at
-	heading.y = 0.0
-	if heading.length() < 0.01:
-		return false
-	var side := Vector3(-heading.z, 0.0, heading.x).normalized() * GO_AROUND_M
-	for sign: float in [1.0, -1.0]:
-		print("GATE A NPC/GATHER go-around: player=%s target=%s via=%s" % [at, point, at + side * sign])
-		await _walk_toward(at + side * sign, 600, 1.5)
-		if await _walk_toward(point, 1200, close_enough):
-			return true
-	return false
+## Native opening queries share the real stick seam and original frame budgets.
 
 
 func _walk_diagnosis(point: Vector3) -> String:
@@ -770,6 +757,9 @@ func _walk_diagnosis(point: Vector3) -> String:
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	var arrived: bool = await _nav.walk_to(point, budget, close_enough)
 	_stop_left_stick()
+	if _nav.refused():
+		_fail("Native opening refused: " + _nav.refusal_reason())
+		return false
 	if arrived:
 		for _i in 5:
 			await _tree.physics_frame

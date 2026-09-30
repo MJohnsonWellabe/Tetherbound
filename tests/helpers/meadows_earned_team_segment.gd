@@ -6,7 +6,7 @@ extends RefCounted
 ## Every catch, strike, party change and carried remedy goes through player input.
 const CATCH := preload("res://tests/helpers/fresh_opening_segment.gd")
 const CLOUDREACH := preload("res://tests/helpers/cloudreach_live_segment.gd")
-const NAV := preload("res://tests/helpers/stick_navigator.gd")
+const NAV := preload("res://tests/helpers/opening_geometry_navigator.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const MAX_TRAINING_FIGHTS := 40
@@ -361,16 +361,19 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 		_receipt("wild_boundary_route", {"target": str(target.name), "gate": boundary.gate, "points": points})
 	_receipt("wild_approach", _approach_snapshot(target))
 	for _frame in APPROACH_FRAMES:
+		if _nav.refused():
+			_stick(0, 0)
+			return _fail("Native opening refused: " + _nav.refusal_reason())
 		if _fighting():
 			_stick(0, 0)
-			if departure_index < required_departure or waypoint < points.size():
+			if departure_index < required_departure or waypoint < points.size() or _nav.departure_pending(target.global_position):
 				return _fail("Combat interrupted the required physical village gate crossing")
 			return _verify_engagement(target, allow_neighbour)
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
 			return _fail("The selected living wild disappeared before engagement")
 		closest = minf(closest, _player.global_position.distance_to(target.global_position))
 		var offer: Dictionary = _arbiter.call("winner")
-		if departure_index >= required_departure and waypoint >= points.size() and _frame >= press_after and _arbiter.call("winning_provider") == _director \
+		if not _nav.departure_pending(target.global_position) and departure_index >= required_departure and waypoint >= points.size() and _frame >= press_after and _arbiter.call("winning_provider") == _director \
 				and bool(offer.get("actionable", false)) \
 				and _director.call("_engageable") == target:
 			_stick(0, 0)
@@ -428,6 +431,9 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 				_nav.step(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y))
 		else:
 			_nav.step(target.global_position)
+		if _nav.refused():
+			_stick(0, 0)
+			return _fail("Native opening refused: " + _nav.refusal_reason())
 		await _tree.physics_frame
 	_stick(0, 0)
 	var stalled := _approach_snapshot(target)
