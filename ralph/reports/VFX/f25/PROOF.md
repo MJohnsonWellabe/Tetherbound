@@ -174,3 +174,11 @@ configured phase and disclose that distinction. Contact and impact still follow
 the actual arrival signal, with their original phases preserved. Earlier
 rejected frames and reports remain intact. The library remains disabled;
 every F25 acceptance criterion remains open.
+
+The same pending content slice replaces the descending bolt's opaque gold
+strips with depth-tested soft ion filaments, white cores and tapered irregular
+forks. Frozen seed controls the irregular centreline; authored rank detail adds
+forks and extends them with trail scaling. Sky start, struck target and ground
+endpoint, marker window and travel duration remain unchanged. Its contact puffs
+and sparks share the original particle lease. This is unrendered source work,
+not a lightning finish or mastery acceptance result.

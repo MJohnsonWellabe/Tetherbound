@@ -2,6 +2,7 @@ extends RefCounted
 
 const FIRE_SHADER := preload("res://assets/vfx/shaders/fire_body.gdshader")
 const FIRE_CORE_SHADER := preload("res://assets/vfx/shaders/fire_core.gdshader")
+const ION_SHADER := preload("res://assets/vfx/shaders/ion_filament.gdshader")
 const STONE_SHADER := preload("res://assets/vfx/shaders/stone_body.gdshader")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
@@ -59,6 +60,12 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
 	var out := ShaderMaterial.new()
+	if kind == "ion_filament":
+		out.shader = ION_SHADER
+		out.set_shader_parameter("ion_colour", colour)
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.95)))
+		out.set_shader_parameter("pulse_strength", float(profile.get("pulse_strength", 0.08)))
+		return out
 	if kind == "burning_core":
 		out.shader = FIRE_CORE_SHADER
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff2b2"))))
@@ -200,23 +207,32 @@ static func bolt(points: Array[Vector3], width: float, colour: Color, profile: D
 	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	for i in points.size() - 1:
 		_bolt_segment(mesh, points[i], points[i + 1], width, colour)
-		if i in [2, 5]:
-			var reach := float(profile.get("branch_length_m", 0.8))
-			var branch := points[i] + Vector3(reach * (-1.0 if i == 2 else 1.0), -reach * 0.45, reach * 0.2)
-			_bolt_segment(mesh, points[i], branch, width * 0.45, colour)
+	var branches := clampi(int(profile.get("branch_count", 4)), 0, 12) if points.size() > 2 else 0
+	for i in branches:
+		var point := points[clampi(1 + floori(float(i + 1) * float(points.size() - 2) / float(branches + 1)), 1, points.size() - 2)]
+		var reach := float(profile.get("branch_length_m", 0.8)) * (0.7 + 0.3 * absf(sin(float(i) * 2.71)))
+		var angle := float(i) * 2.399963
+		var direction := Vector3(cos(angle), -float(profile.get("branch_down_ratio", 0.5)), sin(angle)).normalized()
+		var elbow := point + direction * reach * 0.45 + Vector3.UP * reach * 0.18
+		var fork := point + direction * reach
+		_bolt_segment(mesh, point, elbow, width * 0.52, colour)
+		_bolt_segment(mesh, elbow, fork, width * 0.25, colour)
+		if i % 2 == 0:
+			var twig := elbow + Vector3(-direction.z, -0.65, direction.x).normalized() * reach * 0.4
+			_bolt_segment(mesh, elbow, twig, width * 0.15, colour)
 	mesh.surface_end()
 	return mesh
 
-static func _bolt_segment(mesh: ImmediateMesh, from: Vector3, to: Vector3, width: float, colour: Color) -> void:
+static func _bolt_segment(mesh: ImmediateMesh, from: Vector3, to: Vector3, width: float, _colour: Color) -> void:
 	var tangent := (to - from).normalized()
 	if tangent.length_squared() < 0.001: return
 	var side := tangent.cross(Vector3.UP).normalized()
 	if side.length_squared() < 0.001: side = Vector3.RIGHT
 	var other := tangent.cross(side).normalized()
 	for axis: Vector3 in [side, other]:
-		quad(mesh, from - axis * width, from + axis * width, to + axis * width, to - axis * width, colour, colour)
-		var core := axis * width * 0.24
-		quad(mesh, from - core, from + core, to + core, to - core, Color("#fffcef"), Color("#fffcef"))
+		# Continuous soft corona and white core come from UV across the actual
+		# depth-tested filament, not a hard opaque golden rectangular strip.
+		_uv_quad(mesh, from - axis * width, from + axis * width, to + axis * width, to - axis * width, 0.0, 1.0)
 
 static func sigil(size: float, profile: Dictionary) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()

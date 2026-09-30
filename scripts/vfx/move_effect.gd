@@ -66,7 +66,7 @@ func _ready() -> void:
 		if str(profile.shape) in ["stone", "flame_orb", "burning_core"]:
 			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 			body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if str(profile.shape) == "stone" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.material(Color.WHITE)
+		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.authored_material("ion_filament", profile, _colour)
 		_bodies.append(body)
 		var history: Array[Vector3] = []
 		_histories.append(history)
@@ -177,11 +177,17 @@ func _update_bodies(t: float) -> void:
 				var points: Array[Vector3] = []
 				var contact: Vector3 = _context.get("target_ground", _to) if str(_row.body.get("contact_anchor", "target")) == "target_ground" else _to
 				var start := contact + Vector3.UP * height
+				var across := side.cross(Vector3.UP).normalized()
+				var phase := float(int(_context.get("seed", 0)) % 97) * 0.1
 				for k in 9:
 					var f := float(k) / 8.0
-					points.append(start.lerp(contact, f * contact_t) + side * sin(f * TAU * 3.0) * float(_params.size) * sin(f * PI))
+					var irregular := side * sin(f * 19.3 + phase) + across * sin(f * 31.7 - phase) * 0.55
+					points.append(start.lerp(contact, f * contact_t) + irregular * float(_params.size) * sin(f * PI))
 				body.position = Vector3.ZERO
-				body.mesh = GEOMETRY.bolt(points, float(_params.size) * float(_row.body.get("stroke_width_scale", 0.34)), _colour, _row.body)
+				var bolt_profile: Dictionary = _row.body.duplicate(true)
+				bolt_profile["branch_count"] = int(_row.body.get("branch_count", 3)) + (int(_row.mastery_rank) - 1) * int(_row.body.get("branch_add_per_rank", 1))
+				bolt_profile["branch_length_m"] = float(_row.body.get("branch_length_m", 0.9)) * float(_params.trail)
+				body.mesh = GEOMETRY.bolt(points, float(_params.size) * float(_row.body.get("stroke_width_scale", 0.34)), _colour, bolt_profile)
 			"chain", "beam":
 				var points: Array[Vector3] = []
 				for k in 10:
