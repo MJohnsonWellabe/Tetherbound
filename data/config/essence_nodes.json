@@ -1256,5 +1256,13 @@
         "terrain_and_player_path_proven": false
       }
     }
-  ]
+  ],
+  "placement_validation": {
+    "maximum_slope_degrees": 35.0,
+    "slope_sample_m": 0.75,
+    "body_ground_clearance_m": 0.06,
+    "requires_actual_trainer_collision_shape": true,
+    "requires_registered_host_site": true,
+    "player_path_proven": false
+  }
 }
