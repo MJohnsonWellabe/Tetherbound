@@ -20,7 +20,7 @@ Candidate items blob, after LF normalization, SHA256:
 | F16 schema comparison | Eight exact essence IDs/types; stack999; Candy stack99 | Canonical IDs and stackability declarations |
 | Actual ItemDB/PlayerState/Inventory source trace | Default ItemDB reads this catalogue; canonical inventory receives that DB; add/move ask stack_size and merge same-ID stacks | Unchanged production registration/stack path |
 | Independent draft review | PASS literal item existence/stackability, with static-only disclosure | Raw report archived in f27-item-cut-draft-review.txt |
-| Independent strict final review | MET on exact committed cut 5ca22f623474ffd8c9377a9a62e659c7e494455a | Raw byte-faithful report in f27-item-cut-final-review.txt; SHA256 6d26902bf0f992595eccd3425683cf606e600d774e0ee28430baa3f5dc028ac6 |
+| Independent strict final review | MET on exact committed cut 5ca22f623474ffd8c9377a9a62e659c7e494455a | Raw byte-faithful report in f27/review-items-cut-5ca22f.txt; SHA256 6d26902bf0f992595eccd3425683cf606e600d774e0ee28430baa3f5dc028ac6 |
 
 The independent draft review used main `a6fbdb5bac7d3af93a59e45c246399943b9ee813`.
 The candidate items blob is identical at the newer main baseline above, and
