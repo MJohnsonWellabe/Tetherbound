@@ -4,6 +4,31 @@
   "_comment_slots": "`slot` is \"quick\" (fast, low-commitment, builds energy) or \"charged\" (the energy-spend finisher). Quick moves carry `energy_gain`; charged moves carry `energy_cost`, mirroring combat.json's energy.gain_per_quick / energy.charged_cost so a designer tuning one move at a time does not have to touch two files to keep them honest.",
   "_comment_f10_2_starter_parity": "F10#2 (owner 2026-09-27 23:55: starters similar in skill and strength). ripple_jab 0.14/0.18 -> 0.22/0.24 and gale_peck 0.12/0.15 -> 0.22/0.34 windup/recovery. The very short melee quicks let a mashing Ripplet or Galewisp poise-lock Capacitor Alpha and never get caught mid-swing, so reading the fight bought nothing (C2 ratio 0.98 and 0.71 against Terrapup's 0.42). Windup 0.22 matches pebble_toss; Galewisp pays its extra commitment in recovery instead, because a 0.24-0.26 s windup no longer fits a CURRENT's 0.55 s recovery window. Evidence ralph/reports/BALANCE/.",
   "moves": {
+    "fireball": {
+      "display_name": "Fireball",
+      "type": "fire",
+      "slot": "charged",
+      "weight": "heavy",
+      "power": 1.2,
+      "energy_cost": 100,
+      "range": 9.0,
+      "cone_degrees": 28.0,
+      "windup": 0.46,
+      "recovery": 0.5,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "archetype": "fireball",
+        "count": 1,
+        "size": 0.45,
+        "colour": "#f6a132",
+        "arc": 0.08,
+        "speed": 20.0,
+        "spread": 0.0,
+        "trail": 1.2,
+        "impact_scale": 1.3
+      }
+    },
     "pebble_toss": {
       "display_name": "Pebble Toss",
       "type": "ground",
