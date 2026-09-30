@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_scope": "F27 authored tunables, not a new balance store. Essence and candy live only in canonical character inventory. Typed host actions and actual Altar registration are required before gameplay activation.",
+  "_scope": "F27 authored tunables, not a new balance store. Automatic combat XP reads auto_xp_scale on the existing victory path. Essence and candy payouts/spends require canonical typed host actions and actual Altar registration before activation.",
   "auto_xp_scale": 0.35,
   "essence_xp_value": 25,
   "level_cost_bands": [

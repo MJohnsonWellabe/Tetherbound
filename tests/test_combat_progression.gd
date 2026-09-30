@@ -81,6 +81,10 @@ func test_award_victory_splits_xp_between_the_active_creature_and_its_bench() ->
 	# to move).
 	var award: int = PROGRESSION.xp_award_for(enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
+	var rate := float(PROGRESSION.combat_xp_config().get("auto_xp_scale", 0.0))
+	var raw := PROGRESSION.raw_xp_award_for(enemy.level, cfg)
+	assert_eq(award, maxi(1, int(floorf(float(raw) * rate))), "the actual victory entry point applies one configured reduction")
+	assert_true(award > 0 and award < raw and share > 0)
 	var reference_winner := _creature(3, "")
 	reference_winner.gain_xp(award, cfg)
 	var reference_bench := _creature(3, "")
@@ -98,6 +102,12 @@ func test_award_victory_splits_xp_between_the_active_creature_and_its_bench() ->
 		"the bench's xp should match a direct gain_xp(party_share)")
 	assert_eq(fainted_bench.xp, 0, "a fainted party member should not gain xp")
 	assert_eq(fainted_bench.level, 3, "a fainted party member should not level up")
+	var winner_xp := winner.xp
+	var bench_xp := bench.xp
+	mgr.call("_award_victory")
+	assert_eq(winner.xp, winner_xp, "re-reading the same done fight cannot grant XP again")
+	assert_eq(bench.xp, bench_xp)
+
 
 
 ## OWNER-0901-BOND-MILESTONES: `battles_fought` (also prompt 67's release-

@@ -7,18 +7,17 @@ extends RefCounted
 ## threshold can be tuned by editing data, not by finding every place the old
 ## number was hard-coded into gameplay code.
 ##
-## Every function here takes its config dict as an explicit argument rather
-## than reading `config()` internally the way combat_math's damage functions
-## do. combat_math is called mid-fight, always against the one real
-## combat.json; progression numbers get asked about from tests that want to
-## pin a curve without touching the shipped file, and from a future save/load
-## or catch flow that may want to roll a level against a config it already
-## has in hand. Passing it in keeps both cases the same function call.
+## Curve functions accept an explicit progression config. The reachable
+## combat award also reads the shipped F27 rate, with an optional explicit
+## rate config for focused proofs; rest and noncombat bonuses stay separate.
 
 const CONFIG_PATH := "res://data/config/progression.json"
+const COMBAT_XP_CONFIG_PATH := "res://data/config/essence.json"
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 static var _config: Dictionary = {}
+static var _combat_xp_config: Dictionary = {}
+static var _combat_xp_config_loaded := false
 
 
 ## The shipped progression.json, cached after the first read. Callers that do
@@ -50,25 +49,50 @@ static func xp_to_next(level: int, cfg: Dictionary) -> int:
 	return int(base * pow(float(maxi(level, 1)), exponent))
 
 
-## XP a defeated wild creature of `enemy_level` pays out, before it is split across
-## the party that fought it.
-static func xp_award_for(enemy_level: int, cfg: Dictionary) -> int:
+## F27 rate is cached separately from the existing curve. No Essence preload:
+## the arithmetic has no inventory, owner-write or transaction dependency.
+static func combat_xp_config() -> Dictionary:
+	if _combat_xp_config_loaded: return _combat_xp_config
+	_combat_xp_config_loaded = true
+	var file := FileAccess.open(COMBAT_XP_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_error("Combat XP rate config missing at %s" % COMBAT_XP_CONFIG_PATH)
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary: _combat_xp_config = parsed
+	return _combat_xp_config
+
+
+## Existing unreduced formula; never feed this directly to a victory grant.
+## Kept explicit so the live award and future typed defeat cannot double-scale.
+static func raw_xp_award_for(enemy_level: int, cfg: Dictionary) -> int:
 	var award_cfg: Dictionary = cfg.get("xp_award", {})
-	var base := float(award_cfg.get("base", 18.0))
-	var per_level := float(award_cfg.get("per_enemy_level", 6.0))
-	return int(base + per_level * float(enemy_level))
+	var base: Variant = award_cfg.get("base", 18.0)
+	var per_level: Variant = award_cfg.get("per_enemy_level", 6.0)
+	if enemy_level < 1 or enemy_level > 100: return 0
+	for value: Variant in [base, per_level]:
+		if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0: return 0
+	var amount := float(base) + float(per_level) * float(enemy_level)
+	return int(floorf(amount)) if is_finite(amount) and amount <= 2147483647.0 else 0
 
 
-## F27 host defeat integration calls this instead of changing the legacy award
-## until essence payout and the per-creature cap arrive in the same transaction.
-## The rest bonus remains on its existing independent path. A real positive
-## combat award never rounds down to zero after applying the authored scale.
+## CombatManager._award_victory already calls this for every won opponent,
+## including each co-op participant reading the host's done record. Apply the
+## authored reduction HERE, exactly once, before the existing bench split.
+## Optional explicit rate supports focused arithmetic proofs; gameplay uses
+## the shipped cached config. Rest and authored story/trainer bonuses stay separate.
+static func xp_award_for(enemy_level: int, cfg: Dictionary, rate_cfg: Dictionary = {}) -> int:
+	return scaled_combat_xp(enemy_level, cfg, combat_xp_config() if rate_cfg.is_empty() else rate_cfg)
+
+
+## A positive eligible combat award cannot floor to zero. Invalid authoring
+## refuses the amount explicitly, rather than silently falling back to full XP.
 static func scaled_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dictionary) -> int:
 	var raw: Variant = essence_cfg.get("auto_xp_scale")
 	if not (raw is int or raw is float) or not is_finite(float(raw)) \
 			or float(raw) <= 0.0 or float(raw) >= 1.0:
-		return 0 # Invalid configuration refuses the new transaction.
-	var amount := xp_award_for(enemy_level, cfg)
+		return 0
+	var amount := raw_xp_award_for(enemy_level, cfg)
 	return maxi(1, int(floor(float(amount) * float(raw)))) if amount > 0 else 0
 
 
@@ -76,12 +100,7 @@ static func scaled_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dic
 ## second floor. The encounter owner excludes ineligible/fainted recipients;
 ## neither this arithmetic nor the UI decides who earned a defeat award.
 static func scaled_party_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dictionary) -> int:
-	var award := scaled_combat_xp(enemy_level, cfg, essence_cfg)
-	if award <= 0: return 0
-	var share: Variant = cfg.get("xp_award", {}).get("party_share", 0.35)
-	if not (share is int or share is float) or not is_finite(float(share)) \
-			or float(share) <= 0.0 or float(share) > 1.0: return 0
-	return maxi(1, int(floorf(float(award) * float(share))))
+	return party_share(scaled_combat_xp(enemy_level, cfg, essence_cfg), cfg)
 
 
 ## Detached snapshot math uses the same canonical stat functions as
@@ -264,12 +283,14 @@ static func staged_candy_levels(row: Dictionary, cap: int, count: int, cfg: Dict
 	return current
 
 
-## What one party member's share of `amount` xp is, floored so a three-way
-## split can never hand out fractional xp.
+## The live bench split receives an ALREADY reduced award. Never apply the
+## F27 rate twice; a positive eligible share has a one-XP rounding floor.
 static func party_share(amount: int, cfg: Dictionary) -> int:
 	var award_cfg: Dictionary = cfg.get("xp_award", {})
-	var share := float(award_cfg.get("party_share", 0.35))
-	return int(floor(float(amount) * share))
+	var share: Variant = award_cfg.get("party_share", 0.35)
+	if amount <= 0 or amount > 2147483647 or not (share is int or share is float) \
+			or not is_finite(float(share)) or float(share) <= 0.0 or float(share) > 1.0: return 0
+	return maxi(1, int(floor(float(amount) * float(share))))
 
 
 ## §11's "smaller XP from... bonding activities" (R4.1-remainder): a flat

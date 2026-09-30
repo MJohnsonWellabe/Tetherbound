@@ -1,0 +1,42 @@
+{
+  "criterion": "F27#2",
+  "base_main": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
+  "parent_lane_after_main_merge": "2f1415cbd3c26a36f8d23beb395d1c65665ff71f",
+  "cut_paths": [
+    "scripts/creatures/progression.gd",
+    "data/config/essence.json",
+    "tests/test_progression.gd",
+    "tests/test_combat_progression.gd"
+  ],
+  "before_sha256": {
+    "scripts/creatures/progression.gd": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9",
+    "data/config/essence.json": null,
+    "tests/test_progression.gd": "cf4fd592055c340b27c5c128fca9cbf2b91725ca78e4c0d033e59faae32df5c4",
+    "tests/test_combat_progression.gd": "6a7867841c472ee6df1d707ff249c11ee182880671c9356582498005e01fafff"
+  },
+  "after_sha256": {
+    "scripts/creatures/progression.gd": "4447ff73b96c244f8b63aab10f725191f119282d2ecb67e5dae7f25c928d4b21",
+    "data/config/essence.json": "cc33782259f618e415c7c5b7b5e9012b15ee66fb2f7fae154ada20562e947160",
+    "tests/test_progression.gd": "e4db5360d49b34d8ddd0c97fda1c674e725a262fdd06baffd49c5091ba76f349",
+    "tests/test_combat_progression.gd": "a9d9a7bf702b75d7ffe25fcebf3b929d8ba0d193ef1c850720a334e64c0a357d"
+  },
+  "patch_sha256": "31f8f603332a48d763c1f6631bdba60471460419c2a1c98ee2b6594229a04dae",
+  "minimum_config_only": true,
+  "inherited_wip_disclosure": "tb/training contains unaccepted progression staging, essence transactions, Altar UI, traits/breakthroughs/items proposals and evidence. Do not PR lane diff or copy whole progression/config to main. Apply only this exact pinned 4-path cut; it excludes all staged helpers, Altar config, payouts and catalogue deltas.",
+  "authored_proofs": [
+    "tests/test_progression.gd::test_automatic_combat_xp_uses_one_positive_configured_reduction",
+    "tests/test_combat_progression.gd::test_award_victory_splits_xp_between_the_active_creature_and_its_bench (one-rate, fainted exclusion, repeated done idempotence additions)"
+  ],
+  "minimum_root_run_needed": "Independent source gate first. Then existing named two methods on exact main+cut, engine parse implicit. One actual player kill on mounted scene plus host done delivery to peer, capture configured raw/full/share XP and actual member delta; no unit/full-suite default. Failure/reload/cap transaction compatibility must be resolved by shared owner if used for claim.",
+  "engine_unit_ci_gpu_runs": 0,
+  "acceptance_claim": false,
+  "landing_ready": false,
+  "limitations": [
+    "No criterion credit; independent source gate and bounded native/real-path witness not performed.",
+    "Actual existing CombatManager grant is local CreatureInstance.gain_xp, reached by solo kill and co-op host done record. No new grant/save/authority door added. Typed per-UID cap/defeat transaction/reload receipt missing in this main live path; staged unaccepted Altar/essence code excluded.",
+    "Standalone 0.35 reduction before real earned essence/Altar is a substantial route-regression risk. Do not land merely to close F27#2 until compatible actual progression path or an owner-authorized tuning with route evidence exists.",
+    "Existing test_characterize_progression_feed::test_xp_near_uses_one_level_matched_wild_win_against_the_real_curve contains old 46/110 one-fight expectations; L1 and L5 near assertions need an intentional rule update, not disabling.",
+    "Existing test_trainers_data::test_the_critical_path_alone_pays_for_the_warden_ready_level and test_a_level_never_costs_more_than_six_level_matched_fights assume XP-only old route; hybrid actual-earned resource/cap ledger must replace that assumption coherently. No test skip/disable/quarantine or fake helper grant provided.",
+    "Future staged_combat_xp uses raw_xp_award_for through scaled_combat_xp exactly once, not newly reduced xp_award_for. This thin alias repair is in lane source only and absent narrow main cut because staged helper has not landed."
+  ]
+}

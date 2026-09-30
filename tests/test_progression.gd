@@ -96,6 +96,26 @@ func test_xp_award_for_grows_with_enemy_level() -> void:
 	assert_true(high > low, "a tougher enemy should pay out more xp")
 
 
+## F27#2: exercise the same entry point used by actual victory callers, with
+## an explicit second tune to expose a hard-coded scale or double application.
+func test_automatic_combat_xp_uses_one_positive_configured_reduction() -> void:
+	var cfg := PROGRESSION.config()
+	var rate := PROGRESSION.combat_xp_config()
+	var scale := float(rate.get("auto_xp_scale", 0.0))
+	assert_true(scale > 0.0 and scale < 1.0)
+	for level: int in range(1, 101):
+		var raw := PROGRESSION.raw_xp_award_for(level, cfg)
+		var award := PROGRESSION.xp_award_for(level, cfg)
+		assert_eq(award, maxi(1, int(floorf(float(raw) * scale))))
+		assert_true(award > 0 and award < raw, "every live enemy level retains a reduced positive award")
+		assert_eq(PROGRESSION.xp_award_for(level, cfg, {"auto_xp_scale": 0.5}), maxi(1, int(floorf(float(raw) * 0.5))))
+		assert_true(PROGRESSION.party_share(award, cfg) > 0)
+	assert_eq(PROGRESSION.xp_award_for(1, {"xp_award": {"base": 1, "per_enemy_level": 0}}, {"auto_xp_scale": 0.01}), 1)
+	assert_eq(PROGRESSION.party_share(1, cfg), 1)
+	for invalid: Variant in [false, true, 0, -0.1, 1.0, INF, NAN]:
+		assert_eq(PROGRESSION.xp_award_for(1, cfg, {"auto_xp_scale": invalid}), 0)
+
+
 func test_party_share_floors_the_split() -> void:
 	var cfg := PROGRESSION.config()
 	var share := float(cfg.get("xp_award", {}).get("party_share", 0.35))
