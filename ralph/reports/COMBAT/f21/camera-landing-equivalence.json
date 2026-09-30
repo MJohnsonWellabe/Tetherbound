@@ -3,7 +3,7 @@
   "integration_base": "e060aca21d1218ccc1ccd647a92e54a04224234e",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "implementation plus partial evidence; no full criterion MET from held stills",
+  "status": "implementation plus partial static evidence; live current-cut witness failed, F21#4 NOT MET",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Exact camera code/config and measured models preserve the existing static nine-pair native/code-blind composition evidence. Existing physical orbit/movement/switch/aim/exit proof covers the original encounter pair, not moving all nine pairs. Current-main native integration and a moving nine-pair witness remain needed before full F21#4 closure.",
   "functions": {
@@ -147,7 +147,7 @@
   "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
   "live_capture_pending": {
     "mode": "--matrix-live",
-    "source_status": "capture-only source, unparsed/unrun pending token",
+    "source_status": "Parser passed; one native live run at 6155 failed, raw archived at camera-live-r1. No retry.",
     "observations_per_pair": 300,
     "setup_observations": 120,
     "scored_observations": 180,
@@ -156,5 +156,14 @@
     "case_wall_budget_ms": 30000,
     "whole_script_wall_budget_s": 900,
     "scope": "Direct fresh species/roster/pose and action/Wind/poise setup before each pair; no size edits, freeze, mid-observation health/resource grants or earned acquisition claim."
+  },
+  "live_runtime": {
+    "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+    "native_exit": 1,
+    "result": "failed/incomplete",
+    "proof": "camera-live-r1/source-proof.json",
+    "diagnosis": "Strict projected overlap failed in 54 of 119 scored small/small observations despite both actors framed and simulation live. Encounter left ACTIVE at observation 239 before quick input. The render-observation schedule advanced 1,150 actual physics frames, so the nominal tick duration was inaccurate; case elapsed 27.062s is below the 30s wall budget.",
+    "same_source_before_after": true,
+    "all_owned_godot_processes_exited": true
   }
 }

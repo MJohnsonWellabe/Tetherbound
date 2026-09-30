@@ -1,0 +1,81 @@
+{
+  "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+  "criterion": "F21#4",
+  "result": "NOT MET; actual live matrix failed and incomplete",
+  "parser_exit": 0,
+  "native_exit": 1,
+  "native_elapsed_seconds": 229.28200000000652,
+  "same_source_before_after": true,
+  "actual_renderer": "gl_compatibility",
+  "preset": "Low",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "cases": [
+    {
+      "pair": "small/small",
+      "pass": false,
+      "samples": 239,
+      "scored_samples": 119,
+      "bad_scored_samples": 54,
+      "first_bad_observed_frame": 35,
+      "images": 4,
+      "elapsed_ms": 27062,
+      "input_travel_m": 4.71408414840698,
+      "quick_observed": false,
+      "first_actual_physics_frame": 445,
+      "last_actual_physics_frame": 1595,
+      "first_ally_hp": 100,
+      "last_recorded_ally_hp": 10,
+      "first_foe_hp": 100,
+      "last_recorded_foe_hp": 100
+    }
+  ],
+  "raw_errors": [
+    "FAIL: live matrix small/small ended or exceeded its 30s case budget at 239\r",
+    "FAIL: live matrix small/small failed framing/simulation/motion/quick evidence; input travel=4.71408414840698\r",
+    "FAIL: matrix encounter ended before the retained ordinary control checks\r"
+  ],
+  "diagnosis": "Strict projected overlap failed in 54 of 119 scored small/small observations despite both actors framed and simulation live. Encounter left ACTIVE at observation 239 before quick input. The render-observation schedule advanced 1,150 actual physics frames, so the nominal tick duration was inaccurate; case elapsed 27.062s is below the 30s wall budget.",
+  "limits": "Only 1 of 9 pairs, 239 of 300 samples, and 4 of 6 images completed. Original later controls did not execute because the failed encounter ended. Existing static r1/r2 remain unchanged; no dynamic blind PASS, full F21#4, craft bar, FPS, device or earned acquisition claim.",
+  "archive_policy": "All produced raw files retained. Git may normalize CRLF text to LF; dual raw/LF hashes and lossless base64 log envelope preserve exact original native bytes.",
+  "raw_files": {
+    "frames/00-000.png": {
+      "raw_sha256": "4b463b066a7e6d41dc97e3ae3f96ce1040be2f43f9ac62c3e36c1d680b92c432",
+      "bytes": 4455138
+    },
+    "frames/00-030.png": {
+      "raw_sha256": "4e45a8fa508cd137739ab1920e38ae1b89f86250af104761be036c01a35866d7",
+      "bytes": 4446756
+    },
+    "frames/00-060.png": {
+      "raw_sha256": "089356f1de80afc40ed5f6e20825c9b060756d6b8a33ae1f42292ce7b498775e",
+      "bytes": 4631664
+    },
+    "frames/00-090.png": {
+      "raw_sha256": "c7ac15da960ab6a8e10080d6d27548401876734871cd9270c979154bd336c104",
+      "bytes": 3635618
+    },
+    "frames/matrix.json": {
+      "raw_sha256": "98ae2c2e38ec66492180aa4135e4c546ea02e71fe64c657ca502e88c61349775",
+      "bytes": 873163,
+      "git_lf_sha256": "98ae2c2e38ec66492180aa4135e4c546ea02e71fe64c657ca502e88c61349775"
+    },
+    "native-receipt.json": {
+      "raw_sha256": "e112a27fab417891f7807abfa2e597bfe444ee42394d528a3b0cb2e7ffb19c12",
+      "bytes": 4217,
+      "git_lf_sha256": "7fd061aed011f179597e0fcc213b781c17863cef4859b315d60673a38cd63fc4"
+    },
+    "native.txt": {
+      "raw_sha256": "4292b30d3d86d95c498f91d9ed07c6e97d01690e6b33a30e600724e477d4dde6",
+      "bytes": 11454,
+      "git_lf_sha256": "625a5e4eecee1572aee4fb5955b21fb43afa8767d7bc4549efb20a482f2b7edd"
+    },
+    "parser.txt": {
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "bytes": 73,
+      "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+    }
+  }
+}
