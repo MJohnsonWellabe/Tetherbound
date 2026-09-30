@@ -135,7 +135,9 @@ func _refresh_quote() -> void:
 	var raw: Variant = _service.call("quote_essence_spend", _station_key, _creature_uid)
 	if raw is Dictionary and bool(raw.get("ok", false)) and raw.get("creature_uid") == _creature_uid \
 			and raw.get("payments") is Array and raw.get("level") is int \
-			and raw.get("cap") is int and raw.get("expected_character_revision") is int:
+			and raw.get("cap") is int and raw.get("expected_character_revision") is int \
+			and int(raw.level) >= 1 and int(raw.level) <= int(raw.cap) \
+			and int(raw.cap) <= 60 and int(raw.expected_character_revision) >= 0:
 		_quote = raw.duplicate(true)
 
 

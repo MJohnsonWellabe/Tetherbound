@@ -65,6 +65,10 @@ type stacks only. Combat validates actual wild defeat/participants/event id.
 PROGRESSION.scaled_combat_xp preserves a positive configured trickle. Both
 remain unwired until the existing host defeat event stages XP + essence + cap
 clamping atomically; rest XP stays on its independent existing path.
+PROGRESSION.scaled_party_combat_xp applies the configured participant share
+with a positive floor too; use this instead of a second legacy party_share
+call which could round a small eligible award down to zero. Eligibility and
+recipient cap clamping still belong to the encounter/CAS owner.
 
 Acceptance disclosure: F27#0 item source authored; #1 defeat/release arithmetic
 authored but live source producers, care/research/nodes/crops proof pending;

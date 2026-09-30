@@ -71,6 +71,18 @@ static func scaled_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dic
 	return maxi(1, int(floor(float(amount) * float(raw)))) if amount > 0 else 0
 
 
+## An eligible participant's configured share also stays positive after the
+## second floor. The encounter owner excludes ineligible/fainted recipients;
+## neither this arithmetic nor the UI decides who earned a defeat award.
+static func scaled_party_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dictionary) -> int:
+	var award := scaled_combat_xp(enemy_level, cfg, essence_cfg)
+	if award <= 0: return 0
+	var share: Variant = cfg.get("xp_award", {}).get("party_share", 0.35)
+	if not (share is int or share is float) or not is_finite(float(share)) \
+			or float(share) <= 0.0 or float(share) > 1.0: return 0
+	return maxi(1, int(floorf(float(award) * float(share))))
+
+
 ## Detached snapshot math uses the same canonical stat functions as
 ## CreatureInstance._apply_level_stats. Live HP, XP, UI events and saves are
 ## untouched here. The host commits this with the resource debit or neither.
