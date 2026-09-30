@@ -1,0 +1,40 @@
+INDEPENDENT STRICT SOURCE REVIEW — DORMANT DIRECTOR API SUCCESSOR R3
+Verdict: SOURCE PASS for the bounded inactive successor and the two R2 fixes.
+Acceptance: F23 and all six F24 criteria remain OPEN. Runtime stays OFF.
+No earned gameplay, personal-save, co-op, or MET proof is granted.
+
+Exact identity
+- Combat base: df99c2bfcca62f71fcb0b9e03032f88bdbd377fc.
+- Actual neutral foundation API: c023214bf718f38410fb90156a490e84713a112f.
+- Supplied packet: .tmp/f24-next/api-successor-r3/.
+- Hash-frozen inspected copy: .tmp/independent-combat-review/api-successor-r3-frozen/.
+- Director patch SHA256: c66227ce15cec392f1910beb440bdae9e571b8b37e7e2e986799418afc7f532f.
+- Director final SHA256: 3c5e1d0c972b1126a5bacd9e342c3e47b7c63e79c4f18355284d5ba30ac061fb.
+- Disabled config patch SHA256: 88500f30a9143d07ad07364122881e72fd799952b61d77352be73718fdff285d.
+- Final config SHA256: d5a522a00e1dfeea18d48b077c33b208c9a1db8bb94fe2f38a7c63a86e246b41.
+- Optional foundation-owned CatchArbiter patch: 42720c1e0afad907f283c8d08e72ea95407cafc3a44d39920452266c339741c2; not applied here.
+- All manifest file hashes match; exact hunks apply in memory to the pinned base and produce the supplied source files. Existing config values are unchanged apart from the one authored boolean false runtime field.
+
+Strict re-check of R2 findings
+1. FIXED: final _host_equipped_command_profile:2929 explicitly requires personal.has("equipment") and a Dictionary, then reads personal.equipment. Missing gear no longer becomes {} and no tier-one default can be minted from an unknown carrier. Actual c023 CharacterAuthority projection/schema still omit equipment, so this actual helper returns {} until the sole net owner supplies a separately reviewed admitted carrier. Known malformed slot/item/kind/armor-slot entries still refuse before the tolerant loader. No fresh roster, packet tier, registry, or arbitrary gear setter was added.
+2. FIXED: final _host_owned_actor_context:2564 preserves the previous actual host, stable-character, admitted-party, outer/inner deployment UID, local live follower or remote body identity/species, frozen-roster and admitted Wind checks, but has no bind_actor_body call. Explicit binding is isolated in _host_actor_vitals_context:2611. The catch reader _host_frozen_command_context:2955 calls only the nonbinding resolver, compares resolved deployment/admitted UID with canonical participant UID first, then checks existing actor/private body ObjectID/positive integer generation and reads actor_vitals plus command_gear_anchor. The previous A→B pooled-body path now returns {} on UID mismatch before any actor binding. Read refusal does not seed portable HP, change participant active UID, or renew generation.
+
+Reused unchanged source evidence
+- _commit_host_actor_vitals, _host_snare_catch_bonus, and _host_catch are exactly equal to the inspected R2 function bodies. Reused prepared writer/API findings from director-api-successor-review-c45f16.txt against the unchanged exact c023 APIs; no repeated broad review or engine checks.
+- finish_fallback remains before frozen actor/body/revision reads. Host-accepted target UID, monotonic generation and private64-bit ObjectID are rechecked after callback cleanup before stage/CAS. Old target actions cannot debit a replacement actor through this helper.
+- Actual Session CAS invokes the prepared world writer; busy fallback refuses rather than emitting another flush. No publication or owner callback intervenes between durable acceptance and exact pure encounter commit in the inspected prepared path. Unexpected commit/settlement conflicts retain durable recovery truth and require integration reconciliation policy.
+- Finalize remains the actual bool API after actor commit/settlement acknowledgement. Publication failure does not reverse accepted HP; owner apply/save/ACK is separate and failed owner saves retain pending recovery truth. finalized=true is publication success, not a personal-save ACK. delivery_pending=false must not be presented as proof the owner saved.
+- Canonical owner/target/unexpired Snare reader and actual wild/opponent/active/alive/no-trainer-owner guards remain unchanged. Catch intents cannot supply a bonus. Actual false or missing runtime field returns zero before context resolution. Optional CatchArbiter forwarding remains a separate foundation ownership change.
+- New actor commit and equipment-profile helpers each have zero callers. Changing identity resolution into a nonbinding resolver preserves the previous explicit wrapper output shape: body, stable character, UID, owned row, Wind, character revision, generation and canonical vitals.
+
+Shortcuts and activation requirements
+- Source gate only. No Godot parser/import, tests, GPU/render/export, writer failure injection, callback runtime, owner-save failure, or two-peer/rejoin exercise ran. Only ignored review artifacts were written; no tracked source, Git refs, board or STATE changed.
+- The nonbinding resolver can invoke Session's existing admitted-character refresh/recovery for the local owner; the read-only claim here covers encounter actor UID/generation/HP, not immutability of all existing authority caches.
+- Actual equipment carrier and immutable once-at-admission command profile/zero-state producer are absent. Command consumers, meter attribution, combo attack, slowing status, pouch UI, Workbench upgrades, personal saves and co-op remain unproven.
+- Actual accepted hit/heal authorization must bind host arithmetic/receipt to the expected actor signature before a gameplay caller activates the actor helper. The separate hit/heal caller draft was not part of this review.
+- Prepared snapshot uses existing getter/save-data seams. Source inspection does not qualify future callback-emitting adapters or executable failure behavior.
+- Runtime gating still uses bool(value); exact authored false is safe, but malformed truthy nonboolean config is not a strict boolean gate. Retain as an activation hardening gap, without treating the authored OFF draft as enabled.
+- All ACCEPTANCE F23/F24 wording requires functioning paths, attribution, save or co-op proofs. None can close from this inactive source verdict.
+
+Previous failure evidence is preserved: initial261e superseded/HOLD; R2 c45f SOURCEFAIL raw report SHA256 c5af8287411b1fbdd266b661fca2cafbd2c24bf6cc132ef21f26adc7e7f2eb2d; opening-routing5905 SOURCEFAIL unchanged. R3 manifest records the changed approach after two failures.
+Audit artifact: api_successor_r3_audit.py beside this report. This pass closes only the bounded source findings and authorizes continued implementation under the existing OFF contract, not gameplay activation.

@@ -1,0 +1,8 @@
+--- a/data/config/tether_commands.json
++++ b/data/config/tether_commands.json
+@@ -1,4 +1,5 @@
+ {
++  "runtime_enabled": false,
+   "_scope": "Encounter-only host participant state. Meter fill is coupled to the canonical accepted creature HP-debit transaction. Pouch bindings and equipped gear are personal; no command deals human HP or poise damage.",
+   "meter": {
+     "max": 100.0,

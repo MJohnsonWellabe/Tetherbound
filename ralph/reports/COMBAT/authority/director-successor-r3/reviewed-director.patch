@@ -1,0 +1,206 @@
+--- a/scripts/combat/encounter_director.gd
++++ b/scripts/combat/encounter_director.gd
+@@ -21,6 +21,8 @@
+ const MATH := preload("res://scripts/combat/combat_math.gd")
+ const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
+ const CATCH := preload("res://scripts/combat/catch_math.gd")
++const TETHER_COMMANDS := preload("res://scripts/combat/tether_commands.gd")
++const COMMAND_EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
+ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+ ## D30: wild creatures spawn inside a level band rather than at one fixed level.
+ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+@@ -2558,7 +2560,8 @@
+ ## supporting seam is not called by gameplay yet. Stable character and owned
+ ## canonical row come from Session; UID and ObjectID come from the current
+ ## host deployment, never an intent. No legacy card-only HP fallback is legal.
+-func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionary:
++## Read-only identity/ownership/body resolver: zero binding or state writes.
++func _host_owned_actor_context(encounter_id: String, peer_id: int) -> Dictionary:
+ 	if not _is_host() or _encounter_host == null or _session == null \
+ 		or not _session.has_method("admitted_character_state") \
+ 		or not _session.has_method("admitted_character_revision"): return {}
+@@ -2599,14 +2602,21 @@
+ 		character_id, _frozen_tournament_roster(encounter_id, peer_id)): return {}
+ 	var wind_card := admitted_wind_card(owned)
+ 	if wind_card.is_empty(): return {}
+-	var bound: Dictionary = _encounter_host.call("bind_actor_body", encounter_id,
+-		peer_id, character_id, owned, body.get_instance_id())
+-	if not bool(bound.get("ok", false)): return {}
+ 	return {"body": body, "creature_uid": uid, "character_id": character_id,
+-		"generation": int(bound.vitals.body_generation), "vitals": bound.vitals,
+ 		"owned_row": owned.duplicate(true), "wind_card": wind_card,
+ 		"character_revision": int(_session.call("admitted_character_revision", peer_id))}
+ 
++## Explicit actor admission/action binding. Read consumers MUST use the
++## nonbinding resolver above; a pooled body UID switch is not an admission.
++func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionary:
++	var context := _host_owned_actor_context(encounter_id, peer_id)
++	if context.is_empty(): return {}
++	var bound: Dictionary = _encounter_host.call("bind_actor_body", encounter_id,
++		peer_id, str(context.character_id), context.owned_row, (context.body as Node).get_instance_id())
++	if not bool(bound.get("ok", false)): return {}
++	context["generation"] = int(bound.vitals.body_generation)
++	context["vitals"] = bound.vitals
++	return context
+ 
+ ## One canonical deployment UID, including the frozen-tournament boundary.
+ ## Remote bodies expose their host-spawned character/species identity; local
+@@ -2846,6 +2856,140 @@
+ 	return verdict
+ 
+ 
++## Draft only: Foundation API c023214bf718f38410fb90156a490e84713a112f.
++## The neutral package source gate/runtime is pending. No gameplay caller.
++## The amount comes from rechecked host hit/heal arithmetic, never a packet HP.
++## Owner persistence/ACK is a later distinct operation; failure there retains
++## accepted absolute battle HP and the durable pending owner delivery.
++func _commit_host_actor_vitals(encounter_id: String, peer_id: int,
++		expected_creature_uid: String, expected_body_generation: int,
++		expected_host_body_instance_id: int, action_id: String, kind: String, amount: float) -> Dictionary:
++	# These expectations belong to the accepted HOST contact, not an RPC.
++	# ObjectID stays process-private; it is never a wire/schema generation.
++	if expected_creature_uid.is_empty() or expected_body_generation < 1 \
++		or expected_body_generation > 2147483647 or expected_host_body_instance_id < 1:
++		return {"ok": false, "code": "invalid_expected_actor"}
++	if not _is_host() or _session == null or not _session.has_method("host_commit_creature_vitals") \
++		or not _session.has_method("host_finalize_creature_vitals"):
++		return {"ok": false, "code": "vitals_authority_not_ready"}
++	var game := get_node_or_null(^"/root/Game")
++	var saver: RefCounted = game.get("save_system") if game != null else null
++	if saver == null or not saver.has_method("save_world_prepared"):
++		return {"ok": false, "code": "prepared_world_writer_not_ready"}
++	# This can emit. It must precede every frozen actor/body/revision read.
++	saver.call("finish_fallback")
++	var context := _host_actor_vitals_context(encounter_id, peer_id)
++	if context.is_empty(): return {"ok": false, "code": "invalid_actor"}
++	# Cleanup can emit before this freeze. An old hit/heal must never move to
++	# the replacement/switched creature, including same-generation body reuse.
++	if (str(context.creature_uid) != expected_creature_uid
++		or int(context.generation) != expected_body_generation
++		or (context.body as Node).get_instance_id() != expected_host_body_instance_id):
++		return {"ok": false, "code": "stale_expected_actor"}
++	var raw_limit: Variant = MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter")
++	if not (raw_limit is int or raw_limit is float) or not is_finite(float(raw_limit)) \
++		or float(raw_limit) < 1.0 or float(raw_limit) > 65536.0 or floorf(float(raw_limit)) != float(raw_limit):
++		return {"ok": false, "code": "invalid_config"}
++	var actor: Dictionary = context.vitals
++	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", encounter_id, peer_id,
++		str(context.creature_uid), int(context.generation), int(actor.revision), action_id,
++		kind, amount, int(raw_limit))
++	if not bool(proposal.get("ok", false)): return proposal
++	var owned: Dictionary = context.owned_row
++	# The foundation wrapper must call save_world_prepared exclusively; it
++	# refuses a newly busy fallback rather than flushing/emitting again.
++	var durable: Dictionary = _session.call("host_commit_creature_vitals", peer_id,
++		str(context.creature_uid), int(context.character_revision), float(owned.hp),
++		bool(owned.fainted), float(proposal.hp_after), bool(proposal.fainted), proposal.settlement_receipt)
++	if not bool(durable.get("ok", false)) or not bool(durable.get("durable", false)):
++		return {"ok": false, "code": str(durable.get("code", "vitals_not_durable"))}
++	# No await, callbacks or presentation occurs between durable acceptance
++	# and the exact pure encounter commit. Prepared writer safety is required.
++	var committed: Dictionary = _encounter_host.call("commit_actor_vitals", proposal)
++	if not bool(committed.get("ok", false)):
++		# Preserve the durable receipt as truth; never ACK/forget a mismatched
++		# encounter. This impossible-with-silent-writer case needs explicit
++		# reconciliation/rollback policy before activating this draft.
++		return {"ok": false, "code": "actor_reconciliation_required", "durable": true,
++			"authority": durable, "proposal": proposal}
++	if not bool(_encounter_host.call("acknowledge_actor_vitals", encounter_id,
++		str(context.character_id), str(context.creature_uid), int(proposal.revision), proposal.settlement_receipt)):
++		return {"ok": false, "code": "settlement_ack_conflict", "durable": true}
++	# Only now may reliable owner delivery/world publication run callbacks.
++	var finalized: bool = bool(_session.call("host_finalize_creature_vitals", peer_id,
++		str(context.creature_uid), proposal.settlement_receipt))
++	return {"ok": true, "vitals": committed.vitals, "authority": durable,
++		"delivery_pending": not finalized}
++
++
++## F24 DRAFT: admission-side profile reader, not a binder or tier setter.
++## The one Session record is the only payload source. Its net owner must use
++## this once at actual encounter admission and freeze the profile + zero state
++## in that existing participant. Calling it later never changes an anchor.
++func _host_equipped_command_profile(peer_id: int) -> Dictionary:
++	if not _is_host() or _session == null or not _session.has_method("admitted_character_state"):
++		return {}
++	var personal: Dictionary = _session.call("admitted_character_state", peer_id)
++	if personal.is_empty() or not MOVE_TEACHING.admitted_party_errors(personal.get("party"), personal.get("redesign_character")).is_empty(): return {}
++	var game := get_node_or_null("/root/Game")
++	var items: RefCounted = game.get("items") if game != null else null
++	if items == null or not personal.has("equipment") or not personal.equipment is Dictionary: return {}
++	var slots: Dictionary = personal.equipment
++	# PlayerEquipment's legacy loader filters malformed entries. Admission must
++	# refuse them before that tolerant loader could replace a bad pack by tier1.
++	for slot: Variant in slots:
++		if not slot is String or not COMMAND_EQUIPMENT.SLOTS.has(slot) or not slots[slot] is String: return {}
++		var id: String = slots[slot]
++		if id.is_empty(): continue
++		if (not bool(items.call("has", id)) or str(items.call("kind", id)) != "armor"
++			or (items.call("definition", id) as Dictionary).get("armor_slot") != slot): return {}
++	var equipment := COMMAND_EQUIPMENT.new()
++	equipment.configure(items)
++	equipment.load_data(slots)
++	return equipment.command_gear_profile()
++
++
++## F24 DRAFT: read only the existing canonical participant state. No local
++## command registry, packet tier or per-command equipment refresh exists.
++## Actor body/owned UID checks use the already reviewed host context seam.
++func _host_frozen_command_context(encounter_id: String, peer_id: int) -> Dictionary:
++	# Different approach after the two rejected source attempts: this reader
++	# cannot call bind_actor_body, including through the shared resolver.
++	var context := _host_owned_actor_context(encounter_id, peer_id)
++	if context.is_empty(): return {}
++	var record: Dictionary = _encounter_host.call("record", encounter_id)
++	var participant: Dictionary = (record.get("participants", {}) as Dictionary).get(peer_id, {})
++	var uid := str(participant.get("creature_uid", ""))
++	if uid != str(context.creature_uid): return {}
++	var existing: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(uid, {})
++	if (existing.is_empty() or int(existing.get("body_instance_id", 0)) != (context.body as Node).get_instance_id()
++		or not existing.get("body_generation") is int or int(existing.body_generation) < 1): return {}
++	var generation := int(existing.body_generation)
++	var actor: Dictionary = _encounter_host.call("actor_vitals", encounter_id, peer_id, uid, generation)
++	if actor.is_empty() or bool(actor.fainted): return {}
++	var state: Variant = participant.get("command_state")
++	var gear: Dictionary = _encounter_host.call("command_gear_anchor", encounter_id, peer_id,
++		str(context.character_id), uid, generation)
++	if (gear.is_empty() or not state is Dictionary or state.get("gear") != gear
++		or state.get("encounter_id") != encounter_id or state.get("character_id") != context.character_id): return {}
++	return {"character_id": context.character_id, "creature_uid": uid,
++		"generation": generation, "gear": gear, "state": state.duplicate(true)}
++
++## F24 DRAFT: catches receive only this participant's unexpired bonus on the
++## actual canonical wild opponent. Never forward a bonus from the intent.
++func _host_snare_catch_bonus(encounter_id: String, peer_id: int, now_ms: int) -> float:
++	if not bool(TETHER_COMMANDS.config().get("runtime_enabled", false)): return 0.0
++	var context := _host_frozen_command_context(encounter_id, peer_id)
++	if context.is_empty(): return 0.0
++	var record: Dictionary = _encounter_host.call("record", encounter_id)
++	var opponent: Dictionary = record.get("opponent", {})
++	var target_uid := str((opponent.get("card", {}) as Dictionary).get("uid", ""))
++	if (record.get("kind") != "wild" or record.get("phase") != "active"
++		or str(opponent.get("owner_npc", "")) != "" or float(opponent.get("hp", 0.0)) <= 0.0
++		or target_uid.is_empty()): return 0.0
++	return TETHER_COMMANDS.snare_catch_bonus(context.state, str(context.character_id), target_uid, now_ms)
++
++
+ ## §8, entirely delegated: `catch_arbiter.gd` owns the race and the roll, this
+ ## function owns only handing it host truth.
+ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
+@@ -2865,6 +3009,7 @@
+ 			"code": "unknown_encounter", "reason": "That fight is over.",
+ 			"pending": false, "delta": {}}
+ 	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
++	var now_ms := Time.get_ticks_msec()
+ 	var verdict: Dictionary = _catch_arbiter.call("attempt", encounter_id, peer_id, {
+ 		"kind": str(_encounter_host.call("kind", encounter_id)),
+ 		"phase": str(_encounter_host.call("phase", encounter_id)),
+@@ -2879,7 +3024,8 @@
+ 		"orb_id": str(intent.get("orb_id", "")),
+ 		"roll": roll,
+ 		"skill_bonus": _catching_bonus_for(peer_id),
+-	}, Time.get_ticks_msec())
++		"snare_bonus": _host_snare_catch_bonus(encounter_id, peer_id, now_ms),
++	}, now_ms)
+ 	verdict["encounter_id"] = encounter_id
+ 	verdict["attempt"] = int(intent.get("attempt", 0))
+ 	if bool(verdict.get("ok", false)):
