@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_village_regional_bake.gd: 1 of 669 test files
+  ok    test_village_regional_bake.gd :: test_disjoint_receipts_validate_all_effective_hashes_and_allow_supersession
+  ok    test_village_regional_bake.gd :: test_legacy_order_is_the_existing_runtime_identity_before_conversion
+  ok    test_village_regional_bake.gd :: test_regional_promotion_rolls_back_and_keeps_untouched_generation_bytes
+  ok    test_village_regional_bake.gd :: test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys
+  ok    test_village_regional_bake.gd :: test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds
+
+5 tests, 65 assertions, 0 failed
+SOURCE_SHA=09e22dd6a9f6cbef8b187bc7d76e4e8ea5f607b3 NATIVE_EXIT=0 ELAPSED_SECONDS=3.9649766
