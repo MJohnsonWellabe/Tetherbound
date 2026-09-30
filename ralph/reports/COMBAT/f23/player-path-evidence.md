@@ -9,3 +9,9 @@ No F23 or F25 criterion is closed. Production source and authored acquisition ar
 - Source090be0265 corrects the anchor; fireball-parser-final.txt script-only check passes native0. The affected player replay is pending the serialized engine queue. A parser PASS does not turn the earlier real run green.
 
 No rendered-pixel,aural-quality,Medium-performance,mastery/utility/ultimate or code-blind Fireball quality proof is claimed. The library remains governed by VFX's quality gate.
+
+## Final affected replay
+
+`7401b5e89fef` includes the source `090be0265` target-centre contact-witness correction and `46f51f9f3` host defensive metadata. `fireball-parser-final.txt` is the script-only parse, native exit0. `fireball-player-final.txt` is the one affected full production-world replay, native exit0, no ERROR/SCRIPT ERROR. It preserves all original assertions: real authored cache pickup and flag, native Satchel eligible teaching, one TM spent, quick unchanged; four physical quick hits earn the charged energy; physical Fireball's actual presentation arrival precedes HP64.838→9.674,55.164 damage and actual number. The zero-duration incoming Bramble Whip observes a freshly created actual flash at the struck body's centre, HP108→94.498 and a real number. All earlier failures remain above; none was skipped or downgraded.
+
+The one-Cindercub roster fixture and initial pickup/practice teleports are still printed; this is not an earned creature or campaign journey. Headless Input.parse_input_event pad taps are not hardware rumble or visible-pixel/code-blind quality proof. The move library remains flag-off. The new camera source was excluded from the replay. Independent source/evidence re-check is pending; no whole F23 or F25 criterion closure.
