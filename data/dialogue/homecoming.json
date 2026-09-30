@@ -1,12 +1,12 @@
 {
-  "_comment": "Grandpa acknowledges the actual current party after this character returns with the Home Key following Stormwood. Names, starter status, earned bond counters and recorded personal choices are substituted from live personal state.",
+  "_comment": "Grandpa acknowledges the actual current party after this character returns with the Home Key following Stormwood. Names and recorded personal choices come from live personal state; actual starter choice requires its bound receipt. Existing creature history is not attributed to the current trainer.",
   "conversations": {
     "regional_homecoming_0": {
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "You're home. Word reached us that the Dynamo has fallen quiet.",
-        "From the Meadows through Tidewake and Cloudreach to Stormwood, you found your own way.",
+        "The road brought you far from this farm, and you found your own way home.",
         "$starter_status",
         "$bond_memory",
         "$chapter_choices",
@@ -18,7 +18,7 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "You're home. Word reached us that the Dynamo has fallen quiet.",
-        "From the Meadows through Tidewake and Cloudreach to Stormwood, you found your own way.",
+        "The road brought you far from this farm, and you found your own way home.",
         "$party_1 came home with you.",
         "$starter_status",
         "$bond_memory",
@@ -31,7 +31,7 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "You're home. Word reached us that the Dynamo has fallen quiet.",
-        "From the Meadows through Tidewake and Cloudreach to Stormwood, you found your own way.",
+        "The road brought you far from this farm, and you found your own way home.",
         "$party_1 came home with you.",
         "$party_2 came home with you.",
         "$starter_status",
@@ -45,7 +45,7 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "You're home. Word reached us that the Dynamo has fallen quiet.",
-        "From the Meadows through Tidewake and Cloudreach to Stormwood, you found your own way.",
+        "The road brought you far from this farm, and you found your own way home.",
         "$party_1 came home with you.",
         "$party_2 came home with you.",
         "$party_3 came home with you.",
@@ -60,7 +60,7 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "You're home. Word reached us that the Dynamo has fallen quiet.",
-        "From the Meadows through Tidewake and Cloudreach to Stormwood, you found your own way.",
+        "The road brought you far from this farm, and you found your own way home.",
         "$party_1 came home with you.",
         "$party_2 came home with you.",
         "$party_3 came home with you.",
@@ -76,7 +76,7 @@
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
         "You're home. Word reached us that the Dynamo has fallen quiet.",
-        "From the Meadows through Tidewake and Cloudreach to Stormwood, you found your own way.",
+        "The road brought you far from this farm, and you found your own way home.",
         "$party_1 came home with you.",
         "$party_2 came home with you.",
         "$party_3 came home with you.",

@@ -157,3 +157,13 @@ match that Hall itinerary while saved objective, event, reward and flag IDs
 remain intact. Legacy world key grants still await their protected participant
 replacement in one coherent candidate. These lines describe the intended
 handoff; the actual protected delivery and ordinary Hall travel remain unproved.
+
+The bounded Warden, Edda and Stormheart prompt lines also direct the personal
+relic to the Hall Shrine; Warden names the Tidewake key and Hall arch. Hesk's
+arrival greeting no longer assumes the traveler walked down from Cloudreach.
+Grandpa's six initial conversations acknowledge the actual return without
+claiming every earlier personal chapter was cleared. Two existing earned
+Stormheart helpers now require the authored level 55 pending newcomer; their
+ordinary capacity, participant and identity assertions remain. Historical
+level-44 captures and earned proof are unchanged and do not prove this new
+curve. None of these helpers or updated conversations has run on this candidate.
