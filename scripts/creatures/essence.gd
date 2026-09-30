@@ -258,7 +258,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	if next_row.is_empty(): return _refuse("invalid_creature_condition")
 	var next := admitted.duplicate(true)
 	next.party[index] = next_row
-	next.inventory = RULES.slots(inventory)
+	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := prefix + "%s:%d:%s:%d" % [uid, expected_level, payment_item, cost]
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
@@ -407,7 +407,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 			return _refuse("inventory_full")
 	var next := admitted.duplicate(true)
 	next.party = xp.party.duplicate(true)
-	next.inventory = RULES.slots(inventory)
+	next.inventory = RULES.slots(inventory).duplicate(true)
 	next.redesign_character.transaction_receipts.append(receipt)
 	# The foundation owner must admit the explicit defeat namespace; never
 	# disguise defeat XP as an Altar spend or bypass REDESIGN validation.
@@ -750,7 +750,7 @@ static func stage_care(admitted: Dictionary, character_id: String, uid: String,
 	for stack: Dictionary in payout:
 		if int(inventory.add(str(stack.id), int(stack.n))) != 0: return _refuse("inventory_full")
 	var next := admitted.duplicate(true)
-	next.inventory = RULES.slots(inventory)
+	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := day_prefix + "%s:%d" % [uid, amount]
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
@@ -783,7 +783,7 @@ static func stage_release(admitted: Dictionary, character_id: String, uid: Strin
 		if int(inventory.add(str(stack.id), int(stack.n))) != 0: return _refuse("inventory_full")
 	var next := admitted.duplicate(true)
 	next.party.remove_at(index)
-	next.inventory = RULES.slots(inventory)
+	next.inventory = RULES.slots(inventory).duplicate(true)
 	next.redesign_character.creatures.erase(uid)
 	next.redesign_character.release_receipts.append(receipt)
 	next.redesign_character.transaction_receipts.append(receipt)

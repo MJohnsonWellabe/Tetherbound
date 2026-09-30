@@ -1,12 +1,15 @@
 extends RefCounted
 
 ## F30 SOURCE-ONLY drafting helper. Intentionally has no class_name, autoload,
-## scene, Session, inventory, roster, save, RPC or RandomNumberGenerator access.
+## scene, Session, LIVE inventory/roster, save, RPC or RandomNumberGenerator access.
+## Teaching/distilling below stage detached candidates only, never authority.
 ## Every result is inadmissible for gameplay. There is no enable path here.
 ## Host integration must own RNG, recompute from its canonical character record,
 ## stage its existing personalized ledger and commit its same-record CAS.
 ## A caller supplying floats does NOT establish that caller's authority.
 const DATA := preload("res://scripts/data/redesign_data.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const CONFIG_PATH := "res://data/config/traits.json"
 
 ## Identity/semantic contracts, not tunables. Only hardy/max_hp_scale is
@@ -334,3 +337,184 @@ static func _validate(cfg: Dictionary) -> Array[String]:
 			for entry: Variant in integration[key]:
 				if not entry is String or entry.is_empty(): errors.append("malformed integration requirement")
 	return errors
+
+
+## Source generation for F30 Altar transactions. Actual Session sender,
+## station/reach/input/cooldown and same-record registry/world/owner save
+## integration remain required. This pure helper has no live activation arm.
+func _registered_traits() -> Dictionary:
+	if not source_errors().is_empty(): return {}
+	var catalog: Dictionary = DATA.load_catalog("traits")
+	if catalog.get("ok") != true or not catalog.get("data") is Array: return {}
+	var result := {}
+	for row: Variant in catalog.data:
+		if not row is Dictionary or not row.get("id") is String or not _rows.has(row.id) \
+				or row != _rows[row.id] or result.has(row.id): return {}
+		result[row.id] = row.duplicate(true)
+	return result
+
+
+## Existing inventory id/count shape: each admitted trait has a separate
+## registered seed SKU. No generic payload, unknown-id fallback or cross-trait
+## merge. Registration belongs to the item/schema owner; none is invented.
+func registered_seed(trait_id: String) -> String:
+	if not _registered_traits().has(trait_id): return ""
+	var id := "trait_seed_" + trait_id
+	if not RULES.db().has(id): return ""
+	var definition: Dictionary = RULES.db().definition(id)
+	var stack: Variant = definition.get("stack")
+	if definition.get("kind") != "trait_seed" or definition.get("trait_id") != trait_id \
+			or not _number(stack) or float(stack) != floorf(float(stack)) \
+			or float(stack) < 1.0 or float(stack) > 2147483647.0: return ""
+	return id
+
+
+func _record_trait_errors(record: Variant, registered: Dictionary) -> Array[String]:
+	if not record is Dictionary or not record.get("rolled_traits") is Array \
+			or not record.get("taught_traits") is Dictionary or not record.get("breakthroughs") is Array:
+		return ["missing admitted trait record"]
+	var rolled: Array = record.rolled_traits
+	var taught: Dictionary = record.taught_traits
+	if rolled.size() > 3 or taught.size() > 3: return ["trait capacity"]
+	var seen := {}
+	for id: Variant in rolled:
+		if not id is String or not registered.has(id) or seen.has(id): return ["unknown or duplicate trait"]
+		seen[id] = true
+	for slot: Variant in taught:
+		if not slot is String or not slot in ["1", "2", "3"]: return ["unknown taught slot"]
+		var id: Variant = taught[slot]
+		if not id is String or not registered.has(id) or seen.has(id): return ["unknown or duplicate trait"]
+		if not record.breakthroughs.has([1, 3, 5][int(slot) - 1]): return ["taught slot breakthrough missing"]
+		seen[id] = true
+	return []
+
+
+func _refused(code: String) -> Dictionary:
+	return {"ok": false, "code": code, "ready_to_commit": false}
+
+
+## Client intent nominates only one owned UID/slot/trait/payment and the
+## existing revision. Cost, seed identity and completed tiers come from host
+## canonical data. No unchanged/duplicate trait consumes either resource.
+func stage_teach(admitted: Dictionary, character: String, host_revision: int,
+		intent: Dictionary, essence_cfg: Dictionary) -> Dictionary:
+	if not source_errors().is_empty() or not ESSENCE._baseline_errors(admitted, character).is_empty() \
+			or not ESSENCE.configuration_errors(essence_cfg).is_empty(): return _refused("invalid_trait_baseline")
+	var fields := ["teach_id", "creature_uid", "slot", "trait_id", "payment_item", "expected_character_revision"]
+	if not _keys(intent, fields): return _refused("invalid_trait_intent")
+	for field: String in ["teach_id", "creature_uid", "trait_id", "payment_item"]:
+		if not ESSENCE._component(intent[field]): return _refused("invalid_trait_identity")
+	if not ESSENCE._integer(intent.slot, 1, 3) \
+			or not ESSENCE._integer(intent.expected_character_revision, 0, 2147483646):
+		return _refused("invalid_trait_revision")
+	var signature := JSON.stringify([intent.creature_uid, intent.slot, intent.trait_id,
+		intent.payment_item, intent.expected_character_revision]).sha256_text()
+	var prefix := "trait_teach:%s:%s:" % [character, intent.teach_id]
+	var receipt := prefix + signature
+	var duplicate := false
+	for old: String in admitted.redesign_character.transaction_receipts:
+		if not old.begins_with(prefix): continue
+		if duplicate or old != receipt: return _refused("trait_receipt_conflict")
+		duplicate = true
+	if duplicate:
+		return {"ok": true, "duplicate": true, "receipt": receipt, "ready_to_commit": false,
+			"resolved": false, "requires": ["existing_durable_decision_owner_save_reconciliation"]}
+	if host_revision != int(intent.expected_character_revision): return _refused("stale_revision")
+	var index := ESSENCE._owned_index(admitted, intent.creature_uid)
+	if index < 0: return _refused("not_owned")
+	var owned: Dictionary = admitted.party[index]
+	# Identity unification stays under the existing pending mapping decision.
+	# Refuse the whole composition instead of probing an unrevealed secondary
+	# for a duplicate and leaking its identity through a different refusal.
+	if owned.get("trait_primary", "") != "" or owned.get("trait_secondary", "") != "":
+		return _refused("legacy_trait_composition_not_admitted")
+	var registered := _registered_traits()
+	var record: Variant = admitted.redesign_character.creatures.get(intent.creature_uid)
+	if not registered.has(intent.trait_id) or not _record_trait_errors(record, registered).is_empty():
+		return _refused("unregistered_or_invalid_trait")
+	var key := str(int(intent.slot))
+	if not record.breakthroughs.has([1, 3, 5][int(intent.slot) - 1]): return _refused("breakthrough_needed")
+	if record.rolled_traits.has(intent.trait_id) or record.taught_traits.values().has(intent.trait_id):
+		return _refused("duplicate_or_unchanged_trait")
+	var types := ESSENCE._species_types(owned)
+	if types.is_empty(): return _refused("invalid_species_type")
+	# Use the authored primary-type debit proposal for this detached stage.
+	# This technical default creates no new owner approval gate; production
+	# adoption still requires the training integrator's coherent design review.
+	if intent.payment_item != ESSENCE.essence_item(types[0]): return _refused("wrong_payment_type")
+	var seed := registered_seed(intent.trait_id)
+	if seed.is_empty() or not RULES.db().has(intent.payment_item): return _refused("seed_or_essence_not_registered")
+	var cost := int(_config.teaching.slots[int(intent.slot) - 1].essence_cost)
+	if admitted.redesign_character.transaction_receipts.size() >= int(essence_cfg.maximum_transaction_receipts):
+		return _refused("receipt_budget")
+	var inventory := RULES.inventory_from(admitted.inventory)
+	if not inventory.remove(seed, 1) or not inventory.remove(intent.payment_item, cost):
+		return _refused("insufficient_seed_or_essence")
+	var next := admitted.duplicate(true)
+	next.inventory = RULES.slots(inventory).duplicate(true)
+	var replaced := str(record.taught_traits.get(key, ""))
+	next.redesign_character.creatures[intent.creature_uid].taught_traits[key] = intent.trait_id
+	next.redesign_character.transaction_receipts.append(receipt)
+	if not _record_trait_errors(next.redesign_character.creatures[intent.creature_uid], registered).is_empty() \
+			or not ESSENCE._baseline_errors(next, character).is_empty(): return _refused("invalid_trait_candidate")
+	return {"ok": true, "duplicate": false, "ready_to_commit": false,
+		"expected_character_revision": host_revision, "receipt": receipt, "before": admitted.duplicate(true),
+		"state": next, "creature_uid": intent.creature_uid, "slot": int(intent.slot),
+		"trait_id": intent.trait_id, "destroyed_trait": replaced, "seed_debit": {"id": seed, "n": 1},
+		"essence_debit": {"id": intent.payment_item, "n": cost},
+		"requires": ["actual_host_Altar_identity_and_reach", "same_record_trait_derived_power_rebuild",
+			"typed_registry_world_and_owner_save_ACK", "post_durable_UI_feed"]}
+
+
+## Seed, type essence and UID removal are ONE detached release candidate.
+## The existing release:<uid> marker remains canonical; a binding in that same
+## transaction receipt array records the chosen seed. No old release can mint
+## a retrospective seed, and conflicting retry choices never pay again.
+func stage_distil_release(admitted: Dictionary, character: String, uid: String,
+		chosen_trait: String, host_revision: int, essence_cfg: Dictionary) -> Dictionary:
+	if not source_errors().is_empty() or not ESSENCE._baseline_errors(admitted, character).is_empty() \
+			or not ESSENCE._component(uid) or not ESSENCE._integer(host_revision, 0, 2147483646) \
+			or (not chosen_trait.is_empty() and not ESSENCE._component(chosen_trait)):
+		return _refused("invalid_distil_release")
+	var release_receipt := "release:" + uid
+	var prefix := release_receipt + ":seed:"
+	var binding := ""
+	for old: String in admitted.redesign_character.transaction_receipts:
+		if old.begins_with(prefix):
+			if not binding.is_empty(): return _refused("release_seed_receipt_conflict")
+			binding = old
+	var wanted := prefix + chosen_trait.sha256_text() if not chosen_trait.is_empty() else ""
+	if admitted.redesign_character.release_receipts.has(release_receipt):
+		if binding != wanted: return _refused("historical_release_has_no_matching_seed")
+		return {"ok": true, "duplicate": true, "ready_to_commit": false, "resolved": false,
+			"receipt": release_receipt, "seed_binding": binding,
+			"requires": ["existing_durable_release_decision_owner_save_reconciliation"]}
+	if not binding.is_empty(): return _refused("orphan_release_seed_binding")
+	var proposal := ESSENCE.stage_release(admitted, character, uid, host_revision, essence_cfg)
+	if proposal.get("ok") != true or proposal.get("duplicate") == true: return proposal
+	proposal["ready_to_commit"] = false
+	proposal["requires"] = ["actual_host_Altar_release_eligibility", "single_release_UID_essence_seed_commit",
+		"typed_registry_world_and_owner_save_ACK", "replacement_catch_or_volunteer_composition_if_any"]
+	if chosen_trait.is_empty(): return proposal # Ordinary zero-trait release survives.
+	var released: Dictionary = proposal.released
+	if released.get("trait_primary", "") != "" or released.get("trait_secondary", "") != "":
+		return _refused("legacy_trait_composition_not_admitted")
+	var registered := _registered_traits()
+	var record: Variant = admitted.redesign_character.creatures.get(uid)
+	if not registered.has(chosen_trait) or not _record_trait_errors(record, registered).is_empty() \
+			or not (record.rolled_traits.has(chosen_trait) or record.taught_traits.values().has(chosen_trait)):
+		return _refused("not_a_visible_admitted_trait")
+	var seed := registered_seed(chosen_trait)
+	if seed.is_empty(): return _refused("seed_not_registered")
+	var next: Dictionary = proposal.state
+	if next.redesign_character.transaction_receipts.size() >= int(essence_cfg.maximum_transaction_receipts):
+		return _refused("receipt_budget")
+	var inventory := RULES.inventory_from(next.inventory)
+	if inventory.add(seed, 1) != 0: return _refused("inventory_full")
+	next.inventory = RULES.slots(inventory).duplicate(true)
+	next.redesign_character.transaction_receipts.append(wanted)
+	if not ESSENCE._baseline_errors(next, character).is_empty(): return _refused("invalid_release_seed_candidate")
+	proposal["seed_binding"] = wanted
+	proposal["seed_grant"] = {"id": seed, "n": 1}
+	proposal["chosen_trait"] = chosen_trait
+	return proposal
