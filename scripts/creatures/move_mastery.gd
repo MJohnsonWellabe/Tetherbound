@@ -11,7 +11,7 @@ static var _loaded := false
 static var _config: Dictionary = {}
 static var _host_epoch: String = ""
 static var _host_sequence: int = 0
-static var _move_registry: RefCounted = null
+static var _registered_moves: Dictionary = {}
 
 class OwnedRecord extends RefCounted:
 	var uid: String = ""
@@ -164,13 +164,16 @@ static func valid_document(known: Variant, uses: Variant, histories: Variant, al
 	if config().is_empty() or not known is Array or not uses is Dictionary or not histories is Dictionary: return false
 	var thresholds: Array = config().rank_thresholds
 	var maximum := int(thresholds[4])
-	if _move_registry == null: _move_registry = MOVES.load_default()
-	var moves := _move_registry
+	# Cache plain ids rather than a script-backed RefCounted. A static owned
+	# resource can keep its script/dependency graph alive during engine exit.
+	if _registered_moves.is_empty():
+		var registry := MOVES.load_default()
+		for id: String in registry.move_ids(): _registered_moves[id] = true
 	if known.size() > int(config().get("max_known_moves",128)) or uses.size() > known.size() or histories.size() > known.size(): return false
 	var unique: Dictionary = {}
 	for raw: Variant in known:
 		if not raw is String or str(raw).is_empty() or unique.has(raw): return false
-		if not moves.has(raw) or not allowed_moves.has(raw): return false
+		if not _registered_moves.has(raw) or not allowed_moves.has(raw): return false
 		unique[raw] = true
 	for move: Variant in uses:
 		if not unique.has(move): return false

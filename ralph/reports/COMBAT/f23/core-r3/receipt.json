@@ -1,0 +1,40 @@
+{
+  "scope": "Transitive parser and nine named mastery methods only; synthetic transaction body, no real player/remote admission/rejoin/save durability claim",
+  "runs": [
+    {
+      "source": "fc9b99fa1a525b32b91998854a9f649025ca6b47",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/test_move_mastery.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r3-home",
+      "native_exit": 0,
+      "elapsed_seconds": 3.2660000000614673,
+      "log": "D:\\tetherbound\\combat-f23-core-r3\\parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "fc9b99fa1a525b32b91998854a9f649025ca6b47",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_move_mastery.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r3-home",
+      "native_exit": 0,
+      "elapsed_seconds": 6.030999999959022,
+      "log": "D:\\tetherbound\\combat-f23-core-r3\\focused.txt",
+      "raw_sha256": "bbab0e3f4213c5c30f9f19cb27654266f607b60877d4a8a3da5b38587b690288"
+    }
+  ]
+}
