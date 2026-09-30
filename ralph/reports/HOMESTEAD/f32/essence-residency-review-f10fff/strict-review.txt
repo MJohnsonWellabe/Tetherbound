@@ -1,0 +1,11 @@
+Independent narrow source verdict: SOURCE PASS for the dormant original essence-mount residency follow-up only.
+
+Frozen UNAPPLIED patch f10fff6f2125b05109fdba96fcd58b30f40a6a4f878a31c01f53f0f7c407ae07; manifest bc4a6147149150ac84afb4b595f514ea36b5d6567239f2b500caf4b419a8a70b.
+Parent is independently reconstructed/reviewed material V2 8659's mounter, normalized-LF SHA256 c8a016eec1656b24ffab1f74fdb2b903476eac672309d1e68728444778f0a2d0.
+Independent exact one-file/one-hunk context and old/new count reconstruction yields normalized-LF SHA256 a84c1aa8955425b5404fd951c72e3a35d3070557f8008d1c2341daa9f0dc0d7f, exactly matching the submitted expected hash. Packet stable. Frozen patch/manifest/parent/full reconstructed expected source/source-audit.json are beside this report.
+
+The added original mount() guard is byte-identical, including refusal, to the independently accepted mount_additional_materials guard from material V2. It requires in-tree world with world_realm() exactly matching the requested realm, in-tree mount/trainer with actual world ancestry, a nonnull world World3D and matching World3D for all three. It runs before Game/stock/config/model/placement access. Missing, wrong-realm, unrelated, null-world or different-world residency refuses before mounting; the caller realm String cannot establish its own world residency.
+
+The entire file from the original mount's first `var game :=` onward is byte-identical to the accepted parent. Thus all 32 essence definitions, lookup, stock/CAS and typed HarvestNode intent/settlement, configured yields/timers, terrain/slope/body query, model/presentation/materials, default-off additional gates and the corrected Water predicate remain unchanged. No config, grant, durable stock/actor/receipt authority or activation caller is added. No additional source findings in this narrow delta.
+
+Review reuses material-mount-v2-8659/strict-review.txt and its frozen guard/evidence; original failed v1 stays preserved. No repeated suite/census or whole-contract reread. No engine/parser/tests/runtime simulation/GPU/import/export/Git/tracked mutation. This clears only the exact dormant source follow-up; actual native reachability/render/player interaction and host atomic transaction/reconnect/contention remain unproved. No F32 MET, board increase or runtime activation follows.

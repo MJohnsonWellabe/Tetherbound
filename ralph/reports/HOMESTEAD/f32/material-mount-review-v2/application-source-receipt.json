@@ -24,5 +24,12 @@
     "F32#3",
     "F32#4",
     "F32#5"
-  ]
+  ],
+  "raw_changed_hunk_artifact": {
+    "path": "v1-to-v2.diff.base64",
+    "encoding": "base64",
+    "decoded_sha256": "2117bf9a1f6392a09106dfcb55e76b5b1a07aecd2cd4393b2f7a7f18ddaad614",
+    "decoded_matches_reviewer_raw_diff_exactly": true,
+    "reason": "A plain unified diff contains required context-space then tab; archiving as base64 preserves exact bytes without repository whitespace warnings."
+  }
 }

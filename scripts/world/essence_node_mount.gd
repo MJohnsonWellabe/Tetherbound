@@ -25,8 +25,13 @@ func census() -> Dictionary:
 
 
 func mount(world: Node3D, realm: String, trainer: CharacterBody3D) -> Dictionary:
-	if world == null or not world.is_inside_tree():
-		return {"mounted_ids": [], "reason": "World residency is not ready."}
+	# Stock, baked terrain and the actual body must belong to one live realm.
+	if world == null or not world.is_inside_tree() or not world.has_method("world_realm") \
+			or world.call("world_realm") != realm or trainer == null or not trainer.is_inside_tree() \
+			or not is_inside_tree() or not world.is_ancestor_of(self) or not world.is_ancestor_of(trainer) \
+			or world.get_world_3d() == null or get_world_3d() != world.get_world_3d() \
+			or trainer.get_world_3d() != world.get_world_3d():
+		return {"mounted_ids": [], "reason": "Actual world, mount and trainer residency must agree."}
 	var game := world.get_node_or_null(^"/root/Game")
 	var state: Variant = game.get("world") if game != null else null
 	if not state is Object or not state.has_method("renewable_stock_state"):
