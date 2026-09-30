@@ -106,3 +106,28 @@ visible target coverage but cannot replace the earned player path. A separate
 unused families resolve directly from the library and the batch makes no earned
 mastery claim. These source drafts have not been rendered or independently
 judged. The feature remains flag-off and every F25 criterion remains open.
+
+## Native soft-flow / production-target captures (r4)
+
+Executed exact pushed source: `98efd1911df29d4302ce4228c3ff122c44982622`.
+Godot 4.7 official `5b4e0cb0f`, native OpenGL Compatibility, NVIDIA GTX 1060
+3GB / driver 560.94, 1920×1080, isolated APPDATA `D:/tetherbound/vfx-proof-home`.
+Command: `Godot_v4.7-stable_win64_console.exe --path D:/tetherbound/redesign-vfx --rendering-method gl_compatibility --resolution 1920x1080 --script tests/smoke_move_effects_library.gd -- --batch=identities --out=D:/tetherbound/vfx-identities-native-r4`.
+
+Native exit 0, 12 cases, 0 failures, 0 ERROR/SCRIPT ERROR lines. No shader or
+GDScript repair was needed during the run. Raw `native-identities-r4/` retains
+all 36 neutral PNGs, actual phase timestamps, private move/rank mappings,
+unmodified native log and SHA-256 inventory. Checked headers are 1920×1080;
+flight shutters precede actual arrival and contact/impact shutters follow it;
+every arrival frame matches its independently created local schedule frame;
+all particle leases release to zero. Results declare the production Mudsnout
+model present; the harness fails rather than using a capsule fallback.
+
+The target is the production CreatureBody/model posed in the same synthetic lit
+arena, aimed at actual body height with frozen ground contact. It has no active
+encounter, AI or HP transaction. Travel remains slowed to 0.7 seconds. This is
+four authored move profiles at ranks 1/3/5, not all-24 mastery coverage, earned
+mastery, player-camera world combat, multiplayer damage ordering, Medium fight
+performance or Ally proof. A fresh independent code-blind review must assess
+the PNGs before any identity/quality PASS. The tracked feature flag stays off;
+no acceptance row is closed by this native execution result.
