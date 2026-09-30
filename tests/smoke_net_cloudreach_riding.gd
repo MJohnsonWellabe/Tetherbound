@@ -142,6 +142,14 @@ func _run() -> void:
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
+	# RD-35/F16: explicit retired-crossing fixture in isolated debug peers.
+	# All original authority, encounter and persistence assertions remain.
+	for fixture_peer in 2:
+		var legacy: Dictionary = await step(fixture_peer, "legacy_physical_crossings_fixture", {"regression": "cloudreach_riding"})
+		check(legacy.get("verdict") == "PASS", "disclosed retired crossing fixture enabled")
+		if legacy.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + REALM_STEP_BUDGET_S * 1000.0
 	var crossing_budget := int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4
 

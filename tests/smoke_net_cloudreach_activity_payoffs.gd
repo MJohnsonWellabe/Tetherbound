@@ -111,6 +111,14 @@ func _run() -> void:
 	if not await launch(2, "title"):
 		quit(await finish())
 		return
+	# RD-35/F16: explicit retired-crossing fixture in isolated debug peers.
+	# All original authority, encounter and persistence assertions remain.
+	for fixture_peer in 2:
+		var legacy: Dictionary = await step(fixture_peer, "legacy_physical_crossings_fixture", {"regression": "cloudreach_activity_payoffs"})
+		check(legacy.get("verdict") == "PASS", "disclosed retired crossing fixture enabled")
+		if legacy.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
 
 	# --- SETUP: two independent characters reach Cloudreach, then join ------

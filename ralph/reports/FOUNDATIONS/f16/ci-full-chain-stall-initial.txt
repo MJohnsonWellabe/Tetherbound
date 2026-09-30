@@ -1,0 +1,34 @@
+Source: https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36663610989/job/109724959816
+Candidate: fee14bde76b400a181978a4fbebf3d2605b8fbad
+Retained actual failure, native exit 1. Opening/material/paid-build continuation reached tournament tail; driver only attempted approach inside an unreachable raw distance.
+2026-09-30T03:31:00.9319252Z EARNED WALK START phase=camp_tail purpose=the creature bed 2 target=(26.0, 1.248327, -37.3) tolerance=1.4 budget=3600 frame=16918 player=(24.94096, 1.060108, -39.54557)
+2026-09-30T03:31:01.2693193Z EARNED WALK END phase=camp_tail purpose=the creature bed 2 target=(26.0, 1.248327, -37.3) tolerance=1.4 budget=3600 start_frame=16918 end_frame=16938 start_player=(24.94096, 1.060108, -39.54557) player=(25.51816, 1.029298, -38.32097) arrived=true distance=1.12896239757538
+2026-09-30T03:31:01.7821262Z EARNED WALK START phase=camp_tail purpose=the creature bed 3 target=(24.0, 1.698985, -41.3) tolerance=1.4 budget=3600 frame=16969 player=(25.57371, 0.944423, -38.19969)
+2026-09-30T03:31:02.3117152Z EARNED WALK END phase=camp_tail purpose=the creature bed 3 target=(24.0, 1.698985, -41.3) tolerance=1.4 budget=3600 start_frame=16969 end_frame=17001 start_player=(25.57371, 0.944423, -38.19969) player=(24.43729, 1.336539, -40.31064) arrived=true distance=1.08169198036194
+2026-09-30T03:31:02.8214753Z EARNED WALK START phase=camp_tail purpose=the camp bedroll target=(36.0, -0.443166, -39.0) tolerance=1.4 budget=3600 frame=17031 player=(24.42373, 1.336254, -40.30999)
+2026-09-30T03:31:05.4043666Z EARNED WALK END phase=camp_tail purpose=the camp bedroll target=(36.0, -0.443166, -39.0) tolerance=1.4 budget=3600 start_frame=17031 end_frame=17187 start_player=(24.42373, 1.336254, -40.30999) player=(34.83256, -0.924248, -39.00351) arrived=true distance=1.16744375228882
+2026-09-30T03:31:06.2788542Z [rest] rested; day 2
+2026-09-30T03:31:16.1590090Z GATE B +386.48s — save/reload at three-bed readiness, before the tournament kept starter { "species": "terrapup", "nickname": "Bud", "level": 5, "xp": 5 }; party ["creature-6263d433cc322fd82f593dc692c86860/terrapup/Bud L5 xp5", "creature-687404a47b89762ebdd99389b0f1ca05/bramblebun/ L5 xp5", "creature-67ce095416b224ba04be6baadfb14558/trailpup/ L5 xp5", "creature-2541077e252684d86e6007f95c477a7f/riftfrill/ L5 xp0", "creature-616761102d4145203f7d788f6d339410/galecrest/ L5 xp0"]; 9/9 flags; 3 creature beds; day 2; inventory [axe x1 d32, orb_basic x5, pickaxe x1 d38, potion_small x3, berries x5, revive x10, coin x140, fiber x3, knife x1 d37, torch x1, hammer x1 d40, wood x1]
+2026-09-30T03:31:33.7771886Z GATE B +404.09s — tail | placed the tent, campfire and bedroll; a Creature Bed is still needed; wood 19 / stone 0 / fiber 27 left
+2026-09-30T03:31:33.7773891Z GATE B +404.09s — tail | placed 3 creature beds through the build menu, one per entrant; wood 1 / stone 0 / fiber 3 left
+2026-09-30T03:31:33.7775490Z GATE B +404.09s — tail | night 1, bed 1: Bud (Rested · Fed · Happy)
+2026-09-30T03:31:33.7776743Z GATE B +404.09s — tail | night 1, bed 2: Bramblebun (Rested · Fed · Happy)
+2026-09-30T03:31:33.7777924Z GATE B +404.09s — tail | night 1, bed 3: Trailpup (Rested · Fed · Happy)
+2026-09-30T03:31:33.7779132Z GATE B +404.09s — tail | 1 night(s) in 3 beds put the whole team in condition
+2026-09-30T03:31:33.7780309Z GATE B +404.09s — tail | the team is rested, fed and happy; tournament_condition_ready is set
+2026-09-30T03:31:33.7781800Z GATE B +404.09s — tail | signed into the draw through the marshal's own ladder
+2026-09-30T03:31:33.7782736Z GATE B +404.09s — tail | called out Bud for the bracket
+2026-09-30T03:31:33.7783091Z
+2026-09-30T03:31:33.7783911Z gate B continuous FAIL: tail: Quarter-final stalled: 901 frames with no damage -- 129.2 HP left, 4.3m away, piloted=terrapup hp=118.429342501483 fainted=false resting=false, 0 of 2 felled
+2026-09-30T03:31:33.7786613Z ERROR: tail: Quarter-final stalled: 901 frames with no damage -- 129.2 HP left, 4.3m away, piloted=terrapup hp=118.429342501483 fainted=false resting=false, 0 of 2 felled
+2026-09-30T03:31:33.7788087Z    at: push_error (core/variant/variant_utility.cpp:1023)
+2026-09-30T03:31:33.7788914Z    GDScript backtrace (most recent call first):
+2026-09-30T03:31:33.7789555Z        [0] _fail (res://tests/smoke_gate_b_continuous.gd:912)
+2026-09-30T03:31:33.7790076Z        [1] _play_the_tail (res://tests/smoke_gate_b_continuous.gd:440)
+2026-09-30T03:31:33.7791050Z        [2] run (res://tests/helpers/gate_b_tail_segment.gd:200)
+2026-09-30T03:31:33.7791485Z        [3] _fight_the_bracket (res://tests/helpers/gate_b_tail_segment.gd:696)
+2026-09-30T03:31:33.7791962Z        [4] _fight_and_win (res://tests/helpers/gate_b_tail_segment.gd:851)
+2026-09-30T03:31:35.7457393Z ##[error]Process completed with exit code 1.
+2026-09-30T03:31:35.7585738Z Post job cleanup.
+2026-09-30T03:31:35.7589771Z ##[start-action display=Run actions/cache@v4;id=__2cce0a49-1e9d-4fec-a985-4d22a1ff6ea4.__actions_cache]
+2026-09-30T03:31:35.7592608Z ##[end-action id=__2cce0a49-1e9d-4fec-a985-4d22a1ff6ea4.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]

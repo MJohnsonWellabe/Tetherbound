@@ -105,6 +105,14 @@ func _run() -> void:
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
+	# RD-35/F16: explicit retired-crossing fixture in isolated debug peers.
+	# All original authority, encounter and persistence assertions remain.
+	for fixture_peer in 2:
+		var legacy: Dictionary = await step(fixture_peer, "legacy_physical_crossings_fixture", {"regression": "stormwood_stormheart_offers"})
+		check(legacy.get("verdict") == "PASS", "disclosed retired crossing fixture enabled")
+		if legacy.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + PROOF_WALL_S * 1000.0
 	if not await _session_one():
 		_summary()
@@ -602,6 +610,11 @@ func _relaunch(indices: Array, scenes: Dictionary) -> bool:
 		_pump_once()
 		if indices.all(func(i: int) -> bool: return (_peers[i] as Dictionary).get("hello") != null):
 			_step_phase_deadline_ms = Time.get_ticks_msec() + PROOF_WALL_S * 1000.0
+			for fixture_peer: int in indices:
+				var legacy: Dictionary = await step(fixture_peer, "legacy_physical_crossings_fixture", {"regression": "stormwood_stormheart_offers"})
+				check(legacy.get("verdict") == "PASS", "relaunched retired crossing fixture enabled")
+				if legacy.get("verdict") != "PASS":
+					return false
 			return true
 	check(false, "setup: relaunched peers %s never said hello" % str(indices))
 	return false

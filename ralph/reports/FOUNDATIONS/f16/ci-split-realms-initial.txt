@@ -1,0 +1,25 @@
+Source: https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36665190461/job/109729420009
+Candidate: 5d44f94adbbb621657d6570cc028b1a39d6d334d
+Retained actual failure; no new acceptance credit. Semantic stage records follow.
+2026-09-30T03:51:54.4150530Z coordinator: launched peer 0 (host) pid=2437 control_port=41623 home=/tmp/net-ci/net-split_realms-20260930T035151Z/home-0 log=/tmp/net-ci/net-split_realms-20260930T035151Z/peer-0.log
+2026-09-30T03:51:54.4188440Z coordinator: launched peer 1 (client) pid=2438 control_port=44995 home=/tmp/net-ci/net-split_realms-20260930T035151Z/home-1 log=/tmp/net-ci/net-split_realms-20260930T035151Z/peer-1.log
+2026-09-30T03:53:27.1691901Z coordinator: peer 1 hello: {"enet_port":31402.0,"godot_version":"4.7-stable (official)","main_sha":"5f620e9cf92b","peer":1.0,"pid":2438.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-ci/net-split_realms-20260930T035151Z/home-1/godot/app_userdata/Tetherbound"}
+2026-09-30T03:53:27.2661930Z coordinator: peer 0 hello: {"enet_port":31401.0,"godot_version":"4.7-stable (official)","main_sha":"5f620e9cf92b","peer":0.0,"pid":2437.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-ci/net-split_realms-20260930T035151Z/home-0/godot/app_userdata/Tetherbound"}
+2026-09-30T03:53:27.2666917Z coordinator: all 2 peer(s) said hello
+2026-09-30T03:53:27.2667970Z PASS: coordinator tracked 2 peers
+2026-09-30T03:53:27.2724984Z PASS: a Session exists to host/join (lane 2.A); without it there are no remote bodies to see
+2026-09-30T03:53:27.3277629Z PASS: peer 0 hosted a world (hosting udp/31401 as peer 1)
+2026-09-30T03:53:27.5697908Z PASS: peer 1 joined peer 0's world on port 31401 (joined 127.0.0.1:31401 as peer 1810443289 after 11 frames; snapshot applied; 2 peer(s) in registry)
+2026-09-30T03:53:27.5830655Z PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+2026-09-30T03:53:27.6176127Z PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+2026-09-30T03:53:27.6313062Z PASS: peer 0 starts in the Meadows (got 'meadows')
+2026-09-30T03:53:27.6520512Z PASS: peer 1 starts in the Meadows (got 'meadows')
+2026-09-30T03:53:27.6796420Z PASS: the host holds no realm shell while everybody is in one realm (holds [])
+2026-09-30T03:53:27.7072719Z PASS: the Cloudreach route is open before anyone tries to walk it (realm_key_cloudreach: ok=true pending=false code='' reason='')
+2026-09-30T03:53:27.7348454Z PASS: peer 0 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+2026-09-30T03:53:27.7556694Z PASS: peer 1 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+2026-09-30T03:53:27.7832124Z FAIL: peer 1 crossed into Cloudreach without leaving the session (Game.enter_realm('cloudreach') refused from 'meadows' (can_enter=false))
+2026-09-30T03:53:29.9086407Z PASS: departure leaves no stale trainer synchronizer/cache errors
+2026-09-30T03:53:29.9089570Z FAIL: peer 1 crossed into Cloudreach without leaving the session (Game.enter_realm('cloudreach') refused from 'meadows' (can_enter=false))
+2026-09-30T03:53:30.0597216Z - peer 1 crossed into Cloudreach without leaving the session (Game.enter_realm('cloudreach') refused from 'meadows' (can_enter=false))
+2026-09-30T03:53:30.0846437Z ##[error]Process completed with exit code 1.
