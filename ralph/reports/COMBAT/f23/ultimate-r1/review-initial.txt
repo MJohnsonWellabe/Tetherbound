@@ -1,0 +1,88 @@
+Independent bounded ultimate-meter source review
+
+Candidate894707b74722f3e0d127c0e507972858a7c6663f
+Baselinef92cfcf53e (prior five/68 native evidence covers only older actor/status scope).
+Scope combat.json::ultimate,EncounterHost new meter stage/commit/private projection,
+two drafted adversarial methods. Read exact pinned objects, no moving writerfiles,
+source/Git/STATE/board mutation, Godot/import/render/export/GPU/parser/tests/CI.
+Only this ignored report written. Reviewer did not author the candidate.
+
+Verdict: CHANGES REQUESTED. P1 earned-debit entitlement is not established by the
+new API. Meter arithmetic, bounded retained receipt and UID persistence source
+inspection passes; those do not prove an action earned a grant. No F23 criterion
+MET, runtime/activation/durability/controller/co-op proof remains UNPROVED.
+
+P1 / core grant boundary, scripts/net/encounter_host.gd:1371-1451:
+stage_ultimate_credit accepts action_id,slot,hp_before,hp_after supplied in contact.
+It verifies current live actor UID/body generation, target matches record card UID,
+target differs from source and record.opponent.hp equals claimed hp_before. It
+does NOT resolve action_id to any host-accepted action, authorize slot, establish
+the accepted move's actual damaging outcome, check an actual committed HPafter,
+or commit that debit. commit_ultimate_credit merely re-stages the same contact
+and then writes meter/receipt/seq; opponent HP remains unchanged.
+
+Concrete source counterexample: active admitted actor gen1 and canonical foeHP100,
+call stage(id,peer,gen1,{action_id:'never-accepted',source_uid:actualUID,
+target_uid:canonicalFoeUID,slot:'quick',hp_before:100,hp_after:99}), then commit
+the returned exact proposal. It grants6 while record.opponent.hp is STILL100.
+Repeat fresh fake IDs against the unchangedHP100 and the meter reaches100 without
+any attack/action/cost/hostile HPdebit. Same shape permits a refused or missed
+action, a zero-damage utility, or an incoming event relabeled quick/charged to
+grant. A forged explicit gain field refuses, but forged *entitlement* does not.
+This is a dormant host-internal API flaw, not a claim of an active remote RPC
+exploit; review explicitly requires no future-caller assumption for this boundary.
+
+The existing latest_strike_receipt/strike authority record exists, but this API
+does not consult it. Even accepted geometry alone would not prove actual debit.
+The new drafted tests create arbitrary strings named accepted-action-* and feed
+claimed HPbefore/after without authorizing any strike; set_opponent_hp follows
+meter commit. They prove arithmetic/replay/retention over asserted contacts, not
+that misses/refused/zero-power/incoming paths cannot manufacture entitlement.
+
+Minimal correction: tie credit to a canonical host-owned immutable resolved
+landed-debit receipt produced at the actual accepted hostile HPmutation boundary,
+binding accepted action/slot/sourceUID/bodygen/targetUID/revision/actualHPbefore-
+after, consumed exactly once; or stage/commit the accepted debit plus meter
+atomically in the existing encounter authority. Resolve receipt identity from
+host state, not a caller-authored label/numeric before-after dictionary. Preserve
+the one participant/UID meter and bounded replay history; do not add a second
+portable balance, synthetic event producer or generic public receipt registration
+that accepts the same claims under another name. Exact restaging must recheck
+the real debit/action revision, not only its own earlier fabricated contact.
+
+Bounded source passes:
+- Authored max100 and gains quick6/charged14/damaging utility4/ultimate0/
+  damage_taken0 match COMBAT8.3. No caller numeric gain is part of accepted shape.
+  But slot's truth and damaging-utility entitlement have the P1 gap above.
+- Meter is participant.ultimate_state.meters[ownedUID], not a second ownership
+  roster or portable balance. Current actor read enforces active phase, current
+  UID/exactgeneration/alive before grant; ordinary bench UID cannot grant.
+- Fresh UID meter starts0; ordinary switching does not erase others. The same
+  participant row is retained on leave/rejoin when bound actors exist, including
+  changed transportpeer; a new encounter starts from a new participant and0.
+  Accepted ownership removal erases only that UID's meter, retains action
+  receipts. No source idle/bench refill path is introduced.
+- Exact prior contact/gen signature returns duplicate without debit/grant;
+  changed signature or generation conflicts. A staged old proposal cannot
+  commit again because restaging becomes duplicate and no longer equals it.
+  Existing meter revision restage comparison rejects concurrently changed
+  proposals; caller edits cannot change staged meter/state independently.
+- max clamp prevents overflow of authored meter. Every accepted receipt is
+  retained even at saturation, so later spend would not make an old saturation
+  hit refill it. PerUID4096 and total5*limit bounds refuse/no eviction, including
+  roster churn. Five-current-meter bound also refuses a sixth entry. Receipt
+  counting remains bounded; accepted old UID receipts survive meter removal.
+- presentation_snapshot removes entire private ultimate_state; retained
+  departed rows already stay offwire. Actual HUD absolute-meter presentation
+  is not implemented by this checkpoint and remains explicit future scope.
+- New commit adds only194 lines across exact three owned files; no test/assert
+  removed, skipped, disabled or quarantined. Tests are SOURCE only, unexecuted.
+  Prior f92 native5/68 cannot be called proof of this new ultimate implementation.
+
+Minimum next checks: amend the already planned coherent meter/actor batch to
+include no accepted action / refused action / miss / zero-damage utility /
+incoming relabeled as outbound and one actual accepted resolved-debit grant,
+alongside existing bounded replay/saturation/switch/rejoin cases. Do not build
+a second broad test programme or run full CI/suite automatically. Acceptance
+still needs the actual meter consumer/ultimate spend/reset/HUD player path and
+required multiplayer/durability proofs. No source PASS until P1 is fixed.

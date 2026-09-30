@@ -1,0 +1,20 @@
+{
+  "source": "d70d28b5833fcdce3eac50bdabcda7ae0d678540",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-combat",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_utility_effects.gd::test_ultimate_meter"
+  ],
+  "profile": "D:\\tetherbound\\combat-f23-ultimate-r1-home",
+  "native_exit": 0,
+  "timed_out": false,
+  "invalid_proof": false,
+  "elapsed_seconds": 5.077999999979511,
+  "raw_sha256": "8e52385f172f833ad58d109e72d1438e370f09672fc06ebbe0777b883bf56dee",
+  "scope": "Exactly two ultimate methods. Pure accepted geometry plus atomic canonical HP/meter. No firing/HUD/RPC/player-path or F24 proof."
+}

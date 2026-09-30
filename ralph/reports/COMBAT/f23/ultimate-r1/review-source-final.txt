@@ -1,0 +1,20 @@
+Independent bounded ultimate-meter source review
+Pinned revision: d70d28b5833fcdce3eac50bdabcda7ae0d678540
+Production correction: 40cfd51e8d37ed7e0006a31ec873120e59b9c77b
+Prior rejected source: 894707b74722f3e0d127c0e507972858a7c6663f
+
+Verdict: PASS for the corrected source boundary only. The fabricated-contact P1 is closed. No acceptance criterion is marked MET by this review.
+
+Accepted strikes and utilities now mint private, immutable action authorizations inside the existing strike authority ledger, after accepted host geometry and actor UID/generation checks. The slot comes from shipped MoveDB data; self/status-only utility rows cannot acquire this damaging capability. Refused actions and accepted misses acquire none. No second roster or public action-registration endpoint was added.
+
+Staging takes an integer accepted action and host-computed positive damage. It resolves the private authorization itself and reads canonical current opponent HP/UID; external contact, claimed slot, gain and HP-after no longer author entitlement. Current live actor generation is rechecked. Duplicate receipts are exact authorization/damage matches, retain saturation history, and precede budget refusal so exhausted history does not cause replay credit.
+
+Commit restages and compares the complete proposal, including encounter record revision and actor revision. It writes canonical opponent HP and participant meter/receipt state synchronously without callbacks or awaits. Forged or stale proposals cannot pass this comparison. The old fake-contact path that raised meter without debiting canonical HP is absent.
+
+The two rebuilt test methods use actual validate_strike/validate_utility acceptance before the atomic debit. They cover fabricated/unaccepted action IDs, refused replay, accepted miss, status-only utility, incoming actor damage, claimed-slot mismatch, stale generation/revision, altered proposal, exact replay, saturation, persistent UID meter and bounded receipt retention. These methods have NOT been run by this reviewer.
+
+Fixture correction verified: d70d28 differs from 40cfd only by adding hp_max:100 to the second foe fixture. _opponent_row otherwise defaults hp_max to 1 and clamps HP, which made its HP assertions and multi-hit sequence invalid. Assertions remain intact; no tests were disabled or quarantined.
+
+Limits and shortcuts: this is pinned source inspection, not Godot execution, live multiplayer authority proof, projectile-arrival geometry proof, or the actual player path. Existing validators receive host-reconstructed move/view data; this review does not treat them as safe raw client endpoints. Gameplay consumers remain inactive. Before activation, consumers must adopt this canonical HP-plus-meter transaction rather than debit HP separately, and establish encounter terminal-state/engine presentation integration. Ultimate activation/spend, native parser behavior, rejoin timing and integrated runtime remain unproved. Earlier actor/status evidence does not cover these new meter methods.
+
+Next necessary check: only the already-planned two ultimate methods, in one batch when the serialized Godot token is free. No full-suite or full-CI expansion is requested by this source gate.

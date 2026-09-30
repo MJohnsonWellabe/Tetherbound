@@ -1,0 +1,46 @@
+{
+  "executed_source": "d70d28b5833fcdce3eac50bdabcda7ae0d678540",
+  "measurement": "Actual staged Git blobs measured with git show; original run/review hashes retained. No rerun.",
+  "files": [
+    {
+      "path": "ralph/reports/COMBAT/f23/ultimate-r1/focused.txt",
+      "observed_bytes": 418,
+      "observed_sha256": "8e52385f172f833ad58d109e72d1438e370f09672fc06ebbe0777b883bf56dee",
+      "git_blob_bytes": 411,
+      "git_blob_sha256": "bfaa597e8a622d14608a19239831c1ff7122ceb6e975c6236c9cbebb1e277dcf",
+      "relationship": "git-crlf-to-lf-once"
+    },
+    {
+      "path": "ralph/reports/COMBAT/f23/ultimate-r1/receipt.json",
+      "observed_bytes": 770,
+      "observed_sha256": "d54149ca5cd8ec708db27958e6efaefc16f690a618e0834716f8ac845d0a7c15",
+      "git_blob_bytes": 750,
+      "git_blob_sha256": "e902bc1a374e563d9e24f2a49e7ce65f64d708cbd25775cfbfc1ea7d0d1ca45b",
+      "relationship": "git-crlf-to-lf-once"
+    },
+    {
+      "path": "ralph/reports/COMBAT/f23/ultimate-r1/result.md",
+      "observed_bytes": 2505,
+      "observed_sha256": "b190a511e3c3883995e9f3c16b9badde166d0f40b8c3f0afc579021c9359c2ea",
+      "git_blob_bytes": 2505,
+      "git_blob_sha256": "b190a511e3c3883995e9f3c16b9badde166d0f40b8c3f0afc579021c9359c2ea",
+      "relationship": "identical"
+    },
+    {
+      "path": "ralph/reports/COMBAT/f23/ultimate-r1/review-initial.txt",
+      "observed_bytes": 6150,
+      "observed_sha256": "a67b567f33926cd0368c5d80de56cba610f57b2442ea764fad740d0478518140",
+      "git_blob_bytes": 6150,
+      "git_blob_sha256": "a67b567f33926cd0368c5d80de56cba610f57b2442ea764fad740d0478518140",
+      "relationship": "identical"
+    },
+    {
+      "path": "ralph/reports/COMBAT/f23/ultimate-r1/review-source-final.txt",
+      "observed_bytes": 3224,
+      "observed_sha256": "ac29ab7c32122efd5805ba56a250cf10ed84eb4631cb1d33f11a73bc4c6c8f0d",
+      "git_blob_bytes": 3224,
+      "git_blob_sha256": "ac29ab7c32122efd5805ba56a250cf10ed84eb4631cb1d33f11a73bc4c6c8f0d",
+      "relationship": "identical"
+    }
+  ]
+}
