@@ -662,7 +662,7 @@ func _refresh_presentation() -> void:
 		var revealed := _has(WATERWARD_FLAG) or _aftermath_announced
 		_view_prompt.set("enabled", _has(OFFER_FLAG) and not bool(world.get("simulation_only")))
 		_view_prompt.set("actionable", not revealed)
-		_view_prompt.set("label", "Waterward route charted" if revealed else "Look beyond the broken storm")
+		_view_prompt.set("label", "Stormwood aftermath acknowledged" if revealed else "Look beyond the broken storm")
 	if _waterward_sea != null:
 		_waterward_sea.visible = _has(OFFER_FLAG)
 
