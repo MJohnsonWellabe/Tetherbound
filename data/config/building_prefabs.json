@@ -3,6 +3,2896 @@
   "_comment_vocabulary": "Bible sec12's material grade: pale plaster + warm timber for homes, uneven stone for working buildings, ONE roof family (round terracotta tiles) across the whole settlement -- the old three-family mess (BLOCKED.md, resolved by D24) is exactly what a second roof material would reinvite. Gable fronts face the viewer's approach; chimneys break the ridge line; every building sits on a low RockTrim border skirt so it meets the grass in stone, not in a hard plaster line (bible secE).",
   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
   "prefabs": {
+      "crossing_hall_shell": {
+        "modules": [
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -6,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -4,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              -2,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              0,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              2,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              4,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              6,
+              0.06,
+              14
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -7,
+              0.0,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              -7,
+              3.12,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              7,
+              0.0,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              7,
+              3.12,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -6,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -6,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -4,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -4,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -2,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -2,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              0,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              0,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              2,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              2,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              4,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              4,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              6,
+              0.0,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              6,
+              3.12,
+              -15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -6,
+              0.0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -6,
+              3.12,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -4,
+              0.0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -4,
+              3.12,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -2,
+              0.0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              -2,
+              3.12,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              2,
+              0.0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              2,
+              3.12,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              4,
+              0.0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              4,
+              3.12,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              6,
+              0.0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              6,
+              3.12,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_Arch",
+            "at": [
+              0,
+              0,
+              15
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              -3,
+              6.24,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_Plaster_Window_Wide_Flat",
+            "at": [
+              3,
+              6.24,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Roof_RoundTiles_6x10",
+            "at": [
+              0,
+              9.36,
+              -10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_6x10",
+            "at": [
+              0,
+              9.36,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_6x10",
+            "at": [
+              0,
+              9.36,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              -5,
+              6.24,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              -5,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              -5,
+              6.24,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              -5,
+              6.24,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              5,
+              6.24,
+              -12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              5,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              5,
+              6.24,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              5,
+              6.24,
+              12
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              8,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              10,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              12,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              14,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              -6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              -2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              0
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              2
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Floor_UnevenBrick",
+            "at": [
+              16,
+              0.06,
+              6
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              8,
+              0.0,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              8,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              8,
+              0.0,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              8,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              10,
+              0.0,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              10,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              10,
+              0.0,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              10,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              12,
+              0.0,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              12,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              12,
+              0.0,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              12,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              14,
+              0.0,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              14,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              14,
+              0.0,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              14,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              16,
+              0.0,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              16,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              16,
+              0.0,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              16,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Straight",
+            "at": [
+              17,
+              0.0,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Wall_UnevenBrick_Window_Wide_Flat",
+            "at": [
+              17,
+              3.12,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              10,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              10,
+              6.24,
+              4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              14,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Roof_RoundTiles_4x8",
+            "at": [
+              14,
+              6.24,
+              4
+            ],
+            "yaw_deg": 0
+          }
+        ],
+        "colliders": [
+          {
+            "at": [
+              -7,
+              3.12,
+              0
+            ],
+            "size": [
+              0.45,
+              6.24,
+              30
+            ]
+          },
+          {
+            "at": [
+              7,
+              3.12,
+              -8.5
+            ],
+            "size": [
+              0.45,
+              6.24,
+              13
+            ]
+          },
+          {
+            "at": [
+              7,
+              3.12,
+              8.5
+            ],
+            "size": [
+              0.45,
+              6.24,
+              13
+            ]
+          },
+          {
+            "at": [
+              7,
+              5.2,
+              0
+            ],
+            "size": [
+              0.45,
+              2.08,
+              4
+            ]
+          },
+          {
+            "at": [
+              0,
+              3.12,
+              -15
+            ],
+            "size": [
+              14.4,
+              6.24,
+              0.45
+            ]
+          },
+          {
+            "at": [
+              -4.25,
+              3.12,
+              15
+            ],
+            "size": [
+              5.5,
+              6.24,
+              0.45
+            ]
+          },
+          {
+            "at": [
+              4.25,
+              3.12,
+              15
+            ],
+            "size": [
+              5.5,
+              6.24,
+              0.45
+            ]
+          },
+          {
+            "at": [
+              0,
+              5.15,
+              15
+            ],
+            "size": [
+              3,
+              2.18,
+              0.45
+            ]
+          },
+          {
+            "at": [
+              17,
+              3.12,
+              0
+            ],
+            "size": [
+              0.45,
+              6.24,
+              14
+            ]
+          },
+          {
+            "at": [
+              12,
+              3.12,
+              -7
+            ],
+            "size": [
+              10.4,
+              6.24,
+              0.45
+            ]
+          },
+          {
+            "at": [
+              12,
+              3.12,
+              7
+            ],
+            "size": [
+              10.4,
+              6.24,
+              0.45
+            ]
+          },
+          {
+            "at": [
+              0,
+              -0.03,
+              0
+            ],
+            "size": [
+              14,
+              0.18,
+              30
+            ]
+          },
+          {
+            "at": [
+              12,
+              -0.03,
+              0
+            ],
+            "size": [
+              10,
+              0.18,
+              14
+            ]
+          }
+        ],
+        "_why": "F17 installed MegaKit stone/timber shell; tall nave with open west arrival and side shrine. Physical floor/walls use explicit boxes; never combined-AABB seals the interior."
+      },
     "river_bank_perch": {
       "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 24.0, "_why_broken_roll_deg": "F03#1 round-5 judge: at 16 degrees the buckled boards read as one pale slab changing shape. 24 degrees, with the timber rails below tilting the same way, reads as a collapsed frame before and a braced one after."},
       "modules": [
