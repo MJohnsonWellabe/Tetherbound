@@ -1,0 +1,28 @@
+{
+  "base_commit": "9a6dbc823c4a4b05695ac00be51150312fee470f",
+  "scope": "Bounded source preservation only; no parser/native/craft or acceptance PASS",
+  "changed_method": "move_effect_geometry.authored_material",
+  "data_delta": "21 material tunables added to three existing ice consumers; no old fields modified",
+  "consumers": [
+    [
+      "ice_shard_volley",
+      "body"
+    ],
+    [
+      "ice_shard_volley",
+      "impact"
+    ],
+    [
+      "frost_breath",
+      "impact"
+    ]
+  ],
+  "geometry_vertex_mesh_counts_unchanged": true,
+  "all_effect_methods_and_fixture_unchanged": true,
+  "all_timing_mastery_params_budget_lights_voices_unchanged": true,
+  "active_cues_unchanged": 175,
+  "library_enabled": false,
+  "shader_sha256_lf": "27ba9e59a231efd83d5520ed716015727d087c7c3460f2042a37fc5e966c2d3b",
+  "installed_geometry_source": "scripts/vfx/fluid_effect_geometry.gd:54; exact existing UV tips/ring and flat normals",
+  "unproved": "No ordinary mapped ice move exists today; no earned-route or invented consumer claim"
+}

@@ -160,6 +160,13 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 	if kind == "ice_crystal":
 		out.shader = ICE_SHADER
 		out.set_shader_parameter("ice_colour", colour)
+		out.set_shader_parameter("frost_colour", Color(str(profile.get("frost_colour", "#d6f0f5"))))
+		out.set_shader_parameter("edge_width", float(profile.get("edge_width", 0.055)))
+		out.set_shader_parameter("frost_strength", float(profile.get("frost_strength", 0.36)))
+		out.set_shader_parameter("facet_variation", float(profile.get("facet_variation", 0.16)))
+		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.22)))
+		out.set_shader_parameter("specular_strength", float(profile.get("specular_strength", 0.55)))
+		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.015)))
 		return out
 	if kind in ["ion_filament", "electrical_splash"]:
 		out.shader = ION_SHADER
