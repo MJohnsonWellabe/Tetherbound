@@ -1,0 +1,759 @@
+{
+  "schema_version": 1,
+  "destination": "D:/tetherbound/redesign-lookdev/ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620",
+  "scope": "Exact archive plan prepared in ignored helper outputs. ROOT executes copying; no engine, tracked source changes or independent acceptance claim.",
+  "capture_sets": [
+    {
+      "name": "trainer-baseline-medium",
+      "original_directory": "D:/tetherbound/lookdev-cloudreach-medium-visual-r1",
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "archived_frame_ids": [
+        "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+        "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night"
+      ],
+      "original_manifest_frame_count": 24,
+      "original_manifest_is_broader_than_archived_images": true,
+      "native_exit": 0,
+      "elapsed_seconds": 298.61,
+      "renderer": "forward_plus",
+      "preset": "Medium",
+      "observed_capture_art_text_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "canonical_git_LF_art_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "observed_capture_hash_matches_canonical_git_LF": true
+    },
+    {
+      "name": "trainer-candidate-medium",
+      "original_directory": "D:/tetherbound/f26-trainer-medium-ff0395c9ae",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "archived_frame_ids": [
+        "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+        "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night"
+      ],
+      "original_manifest_frame_count": 2,
+      "original_manifest_is_broader_than_archived_images": false,
+      "native_exit": 0,
+      "elapsed_seconds": 261.75,
+      "renderer": "forward_plus",
+      "preset": "Medium",
+      "observed_capture_art_text_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "canonical_git_LF_art_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "observed_capture_hash_matches_canonical_git_LF": true
+    },
+    {
+      "name": "water-candidate-medium",
+      "original_directory": "D:/tetherbound/f26-water-medium-ff0395c9ae",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "archived_frame_ids": [
+        "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+        "water__veilfall__15__the_veilfall_cascade__day"
+      ],
+      "original_manifest_frame_count": 2,
+      "original_manifest_is_broader_than_archived_images": false,
+      "native_exit": 0,
+      "elapsed_seconds": 79.297,
+      "renderer": "forward_plus",
+      "preset": "Medium",
+      "observed_capture_art_text_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "canonical_git_LF_art_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "observed_capture_hash_matches_canonical_git_LF": true
+    },
+    {
+      "name": "storm-candidate-medium",
+      "original_directory": "D:/tetherbound/f26-storm-medium-0620d57bad",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "archived_frame_ids": [
+        "stormwood__dynamo__12__the_stormheart_tree__day"
+      ],
+      "original_manifest_frame_count": 1,
+      "original_manifest_is_broader_than_archived_images": false,
+      "native_exit": 0,
+      "elapsed_seconds": 137.844,
+      "renderer": "forward_plus",
+      "preset": "Medium",
+      "observed_capture_art_text_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "canonical_git_LF_art_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "observed_capture_hash_matches_canonical_git_LF": true
+    }
+  ],
+  "current_source_observations": [
+    {
+      "path": "data/config/art.json",
+      "observed_current_windows_worktree_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "canonical_pinned_git_LF_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "observed_crlf_count": 0,
+      "bytes_equal": true,
+      "scope": "Observed at archive preparation, not a retroactive historical execution byte measurement"
+    },
+    {
+      "path": "tools/capture_lookdev_catalogue.gd",
+      "observed_current_windows_worktree_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "canonical_pinned_git_LF_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "observed_crlf_count": 0,
+      "bytes_equal": true,
+      "scope": "Observed at archive preparation, not a retroactive historical execution byte measurement"
+    },
+    {
+      "path": "tools/lookdev_capture_bootstrap.gd",
+      "observed_current_windows_worktree_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "canonical_pinned_git_LF_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "observed_crlf_count": 0,
+      "bytes_equal": true,
+      "scope": "Observed at archive preparation, not a retroactive historical execution byte measurement"
+    },
+    {
+      "path": "tools/catalogue_survey.gd",
+      "observed_current_windows_worktree_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "canonical_pinned_git_LF_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "observed_crlf_count": 0,
+      "bytes_equal": true,
+      "scope": "Observed at archive preparation, not a retroactive historical execution byte measurement"
+    },
+    {
+      "path": "tools/capture_renderer_material_census.gd",
+      "observed_current_windows_worktree_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "canonical_pinned_git_LF_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "observed_crlf_count": 0,
+      "bytes_equal": true,
+      "scope": "Observed at archive preparation, not a retroactive historical execution byte measurement"
+    }
+  ],
+  "original_bytes_are_authoritative": true,
+  "lf_projection_is_not_an_observed_original": true,
+  "authored_triage_is_not_independent_acceptance": true,
+  "entries": [
+    {
+      "destination": "captures/trainer-baseline-medium/manifest.json",
+      "bytes": 70784,
+      "original_sha256": "0e8a5b7c8192bed44da1569b6bbf1355e0c99be1ddc47f84e014b6deb8ab56ad",
+      "lf_normalized_projection_sha256": "0e8a5b7c8192bed44da1569b6bbf1355e0c99be1ddc47f84e014b6deb8ab56ad",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/lookdev-cloudreach-medium-visual-r1/manifest.json",
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "role": "untouched native manifest"
+    },
+    {
+      "destination": "captures/trainer-baseline-medium/native.json",
+      "bytes": 921,
+      "original_sha256": "58a278a4181ef2186368b1498c878351d1e1c304191481f716817664f31b71f2",
+      "lf_normalized_projection_sha256": "bec9a1842bd20079d69c2ebd07bb097f1b700a2870ce00dfd71d041aa03fbc58",
+      "original_crlf_count": 24,
+      "original_path": "D:/tetherbound/lookdev-cloudreach-medium-visual-r1.native.json",
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "role": "untouched native exit receipt"
+    },
+    {
+      "destination": "captures/trainer-baseline-medium/native.log",
+      "bytes": 13495,
+      "original_sha256": "5a4918a82e1a778a3ba1b4462fea25a8bf0df85b024eeca150176fc806b2b8b5",
+      "lf_normalized_projection_sha256": "a686d9218b88f770ace8c8fb36e1afffe27bbf9da1dc8779e7d642e859a5ef1d",
+      "original_crlf_count": 128,
+      "original_path": "D:/tetherbound/lookdev-cloudreach-medium-visual-r1.log",
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "role": "untouched combined stdout/stderr"
+    },
+    {
+      "destination": "captures/trainer-baseline-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "bytes": 2338170,
+      "original_sha256": "d6a09aa54c0a8d6e8d50980a5d689d86d4a6030ed4303ca0b490c4e8cfbd0de0",
+      "lf_normalized_projection_sha256": "76cfc6a9b9088f45e6f10370a1b6ae01021fea72cecef0353ab00517e77bf8ac",
+      "original_crlf_count": 40,
+      "original_path": "D:/tetherbound/lookdev-cloudreach-medium-visual-r1/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day"
+    },
+    {
+      "destination": "captures/trainer-baseline-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "bytes": 2093990,
+      "original_sha256": "abcd1c330889e0bcde280c181163d41b3a550424cdfa0aba70b04f0442b3b122",
+      "lf_normalized_projection_sha256": "6f06dc228b36a82aa4f2518b08f23a0484f0c22ce124a5632431160891802567",
+      "original_crlf_count": 22,
+      "original_path": "D:/tetherbound/lookdev-cloudreach-medium-visual-r1/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night"
+    },
+    {
+      "destination": "captures/trainer-candidate-medium/manifest.json",
+      "bytes": 11745,
+      "original_sha256": "865f57972c405a949cead88157db23a00521262c4b188cd7578a250d43506310",
+      "lf_normalized_projection_sha256": "865f57972c405a949cead88157db23a00521262c4b188cd7578a250d43506310",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/f26-trainer-medium-ff0395c9ae/manifest.json",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched native manifest"
+    },
+    {
+      "destination": "captures/trainer-candidate-medium/native.json",
+      "bytes": 941,
+      "original_sha256": "76843c34057580563a6ce20c2a27ca9e2d1fcb7a9b8ebce571f3d03f4abafb6a",
+      "lf_normalized_projection_sha256": "871f3f912bddf573f091d10449659420cc920ccb8276c9e70dcdd2fcee53a9ec",
+      "original_crlf_count": 26,
+      "original_path": "D:/tetherbound/f26-trainer-medium-ff0395c9ae.native.json",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched native exit receipt"
+    },
+    {
+      "destination": "captures/trainer-candidate-medium/native.log",
+      "bytes": 8958,
+      "original_sha256": "02568c0f9113a46b50cfc517a2426f53e7d0ff5d2b9dd0f13cba7cb52a13415e",
+      "lf_normalized_projection_sha256": "59b61d01c881fb3f487e6b39f932bb8a3bad76f052aa94aef0202e8a63551bf3",
+      "original_crlf_count": 103,
+      "original_path": "D:/tetherbound/f26-trainer-medium-ff0395c9ae.log",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched combined stdout/stderr"
+    },
+    {
+      "destination": "captures/trainer-candidate-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "bytes": 2338551,
+      "original_sha256": "c272059ebcda426fb97bd05ca971ecb4abb8f73f60eb1eea7d957069779cac6a",
+      "lf_normalized_projection_sha256": "f273210fdf6d566f16a871ba42f3a6a70bb3f0bb2637baef6db7a128dcde2480",
+      "original_crlf_count": 32,
+      "original_path": "D:/tetherbound/f26-trainer-medium-ff0395c9ae/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day"
+    },
+    {
+      "destination": "captures/trainer-candidate-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "bytes": 2092892,
+      "original_sha256": "0e5006cd2ab8e7117af2c42bf01f3d9e1a04527c55dbf45355147dae1632309f",
+      "lf_normalized_projection_sha256": "b5113e7ad74fc0245787ba27c1561be403c5a590899e880f214d51f69c50fb86",
+      "original_crlf_count": 24,
+      "original_path": "D:/tetherbound/f26-trainer-medium-ff0395c9ae/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night"
+    },
+    {
+      "destination": "captures/water-candidate-medium/manifest.json",
+      "bytes": 7503713,
+      "original_sha256": "812487883d4eeacc0ba80443b34c461effab4579d68e7b2ecafae54beb5cd301",
+      "lf_normalized_projection_sha256": "812487883d4eeacc0ba80443b34c461effab4579d68e7b2ecafae54beb5cd301",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/f26-water-medium-ff0395c9ae/manifest.json",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched native manifest"
+    },
+    {
+      "destination": "captures/water-candidate-medium/native.json",
+      "bytes": 963,
+      "original_sha256": "aa3cf3de3bbfc4959ecac014d55beea51329849b1a46482bf1960d2690a6ac98",
+      "lf_normalized_projection_sha256": "a83cf430ad27c64291294bf6c59ff8acf19f98539a62e4f3de2df2d3481f4a67",
+      "original_crlf_count": 27,
+      "original_path": "D:/tetherbound/f26-water-medium-ff0395c9ae.native.json",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched native exit receipt"
+    },
+    {
+      "destination": "captures/water-candidate-medium/native.log",
+      "bytes": 2926,
+      "original_sha256": "1817892b4a21abdf5d2f70df6e6a1fb15a402d1c5a14a23acf67c6efc932a0e8",
+      "lf_normalized_projection_sha256": "896261b5e4f7516b1decdcdbf2a76d9c1d3fb598819eb393f306f3f019b675b2",
+      "original_crlf_count": 24,
+      "original_path": "D:/tetherbound/f26-water-medium-ff0395c9ae.log",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched combined stdout/stderr"
+    },
+    {
+      "destination": "captures/water-candidate-medium/water__sluice_isle__13__sluice_isle_twin_pumps__day.png",
+      "bytes": 2574077,
+      "original_sha256": "d7601154a0cd4b50fe600758d95bee1d672b3f739095f75d7d0783549f046d3c",
+      "lf_normalized_projection_sha256": "368784395d8d1c2d257f46e06c712298afbb95acc3407110298ad56dc8d3b1f6",
+      "original_crlf_count": 34,
+      "original_path": "D:/tetherbound/f26-water-medium-ff0395c9ae/water__sluice_isle__13__sluice_isle_twin_pumps__day.png",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day"
+    },
+    {
+      "destination": "captures/water-candidate-medium/water__veilfall__15__the_veilfall_cascade__day.png",
+      "bytes": 1261065,
+      "original_sha256": "abf16c5b98374fc9fcbdc691fe6dcc03862c878e336a8eb9c72919c26005274c",
+      "lf_normalized_projection_sha256": "f0399fedfd0a35e5c1180b1c8014c7fcddbeebd3b91fb5a5b3c532ad598b9661",
+      "original_crlf_count": 21,
+      "original_path": "D:/tetherbound/f26-water-medium-ff0395c9ae/water__veilfall__15__the_veilfall_cascade__day.png",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "water__veilfall__15__the_veilfall_cascade__day"
+    },
+    {
+      "destination": "captures/storm-candidate-medium/manifest.json",
+      "bytes": 18040611,
+      "original_sha256": "7e996eb6ce613da6c0a0a812564da8d9a6b7bfc4539676661ee65028d47f8b77",
+      "lf_normalized_projection_sha256": "7e996eb6ce613da6c0a0a812564da8d9a6b7bfc4539676661ee65028d47f8b77",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/f26-storm-medium-0620d57bad/manifest.json",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "untouched native manifest"
+    },
+    {
+      "destination": "captures/storm-candidate-medium/native.json",
+      "bytes": 943,
+      "original_sha256": "2f7602e0f44dca5e7fd5c25d54043c1a326cb9f5e1b32ed59fad350a32947a90",
+      "lf_normalized_projection_sha256": "836d89b3d6fc37443ad9e7eeff4e8f94eea5672561b009d1b95c2f04eb7ccf28",
+      "original_crlf_count": 26,
+      "original_path": "D:/tetherbound/f26-storm-medium-0620d57bad.native.json",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "untouched native exit receipt"
+    },
+    {
+      "destination": "captures/storm-candidate-medium/native.log",
+      "bytes": 85268,
+      "original_sha256": "1ad9ee5ab996dfba1d74ea7d2083753b73c5914a2216a36ccd967168d26e4807",
+      "lf_normalized_projection_sha256": "aba4c1d6ea5d8300ee7985d0e4c566c2cf68bf3f0c3b6af90165ec0f15d257bd",
+      "original_crlf_count": 847,
+      "original_path": "D:/tetherbound/f26-storm-medium-0620d57bad.log",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "untouched combined stdout/stderr"
+    },
+    {
+      "destination": "captures/storm-candidate-medium/stormwood__dynamo__12__the_stormheart_tree__day.png",
+      "bytes": 2091417,
+      "original_sha256": "84f4ba63e9cf9e776e09210cb991169b56a57c9b16a5147b304476d619402ce0",
+      "lf_normalized_projection_sha256": "0ceb4e39986d6bb1b636455a3bf898ea8b1c925d17307188bd60f61b72f203f7",
+      "original_crlf_count": 20,
+      "original_path": "D:/tetherbound/f26-storm-medium-0620d57bad/stormwood__dynamo__12__the_stormheart_tree__day.png",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "untouched original PNG",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day"
+    },
+    {
+      "destination": "authored-triage/renderer-material-source-map.md",
+      "bytes": 11801,
+      "original_sha256": "0aaadcb19d081be6c2bb86459d678444946174747fa35ea868873fd9fa0adae4",
+      "lf_normalized_projection_sha256": "0aaadcb19d081be6c2bb86459d678444946174747fa35ea868873fd9fa0adae4",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/renderer-material-source-map.md",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/trainer-authored-receipt-check.json",
+      "bytes": 6760,
+      "original_sha256": "e188e7852ee961bca8305c66e102783e5f3acd3e9b568f00dfa76693a3040b42",
+      "lf_normalized_projection_sha256": "0ee72c8767399763edae85575c4c5ac17aa092bc5d1444000e34256741f31ffd",
+      "original_crlf_count": 157,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/f26-medium-independent-receipt-review.json",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/water-authored-binding-triage.json",
+      "bytes": 49755,
+      "original_sha256": "06414ae3b307700813074c75e6c36a35962397e36cc582a04be6c82dbea49d96",
+      "lf_normalized_projection_sha256": "d748f6a841c498404ec6f04a7c9dcdd23cf516a26135d56b426ea514e9d1622b",
+      "original_crlf_count": 1408,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/f26-water-independent-material-review.json",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/storm-source-expected-families.json",
+      "bytes": 11179,
+      "original_sha256": "4e2acc3c342d6d0fd8c6a4e11f87ce0831c13a2f7182c1db97ff73d9f1f17625",
+      "lf_normalized_projection_sha256": "40df65f095bf03735bf3b8c9ec019df8506a5651f10e6dc77f357886993fdc25",
+      "original_crlf_count": 240,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/f26-storm-expected-families.json",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/storm-authored-binding-triage.json",
+      "bytes": 27780,
+      "original_sha256": "5e78380d9d337e3cea6d4afef6b1c1abccc27309e3eb693ba32dc75c7fa9d171",
+      "lf_normalized_projection_sha256": "349b165b82ec46338177f18f28bc3ddebc1493697c46fdfb148ad08d1788c847",
+      "original_crlf_count": 611,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/f26-storm-actual-material-review.json",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/compare_trainer_receipts.py",
+      "bytes": 5931,
+      "original_sha256": "d95deac691d0aa5105d5bbb569694aa8f1504395c1b175b84d35f8fbe0f0521d",
+      "lf_normalized_projection_sha256": "d95deac691d0aa5105d5bbb569694aa8f1504395c1b175b84d35f8fbe0f0521d",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/compare_f26_medium_receipts.py",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/audit_water_material_census.py",
+      "bytes": 8997,
+      "original_sha256": "fb77de84a9c71501ef6bc313634118883b4448a67bc9e2ec0e97285dff501a88",
+      "lf_normalized_projection_sha256": "fb77de84a9c71501ef6bc313634118883b4448a67bc9e2ec0e97285dff501a88",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/audit_water_material_census.py",
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/build_storm_expected_matrix.py",
+      "bytes": 9543,
+      "original_sha256": "eae47037838f6913a63e935de9a169d0b167d1f3c0bceeba54a53160b4dcf0a3",
+      "lf_normalized_projection_sha256": "eae47037838f6913a63e935de9a169d0b167d1f3c0bceeba54a53160b4dcf0a3",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/build_storm_expected_matrix.py",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "authored-triage/audit_storm_material_census.py",
+      "bytes": 9144,
+      "original_sha256": "51e78e4d2ba61a5ce51d05ce46b861506fd8bf33137f005ee81789bd97fce9db",
+      "lf_normalized_projection_sha256": "51e78e4d2ba61a5ce51d05ce46b861506fd8bf33137f005ee81789bd97fce9db",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/.tmp/audit_storm_material_census.py",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "author source/receipt triage; no independent acceptance verdict"
+    },
+    {
+      "destination": "pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/data/config/art.json",
+      "bytes": 184484,
+      "original_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "lf_normalized_projection_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "original_crlf_count": 0,
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "original_git_object": "f43cde88acde0648123b89895d3023e1f5c50a08:data/config/art.json",
+      "canonical_git_blob_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/capture_lookdev_catalogue.gd",
+      "bytes": 1936,
+      "original_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "lf_normalized_projection_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "original_crlf_count": 0,
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "original_git_object": "f43cde88acde0648123b89895d3023e1f5c50a08:tools/capture_lookdev_catalogue.gd",
+      "canonical_git_blob_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/lookdev_capture_bootstrap.gd",
+      "bytes": 1790,
+      "original_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "lf_normalized_projection_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "original_crlf_count": 0,
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "original_git_object": "f43cde88acde0648123b89895d3023e1f5c50a08:tools/lookdev_capture_bootstrap.gd",
+      "canonical_git_blob_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/catalogue_survey.gd",
+      "bytes": 22400,
+      "original_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "lf_normalized_projection_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "original_crlf_count": 0,
+      "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+      "original_git_object": "f43cde88acde0648123b89895d3023e1f5c50a08:tools/catalogue_survey.gd",
+      "canonical_git_blob_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/data/config/art.json",
+      "bytes": 185016,
+      "original_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "lf_normalized_projection_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "original_crlf_count": 0,
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "original_git_object": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd:data/config/art.json",
+      "canonical_git_blob_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/capture_lookdev_catalogue.gd",
+      "bytes": 1936,
+      "original_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "lf_normalized_projection_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "original_crlf_count": 0,
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "original_git_object": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd:tools/capture_lookdev_catalogue.gd",
+      "canonical_git_blob_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/lookdev_capture_bootstrap.gd",
+      "bytes": 1790,
+      "original_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "lf_normalized_projection_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "original_crlf_count": 0,
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "original_git_object": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd:tools/lookdev_capture_bootstrap.gd",
+      "canonical_git_blob_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/catalogue_survey.gd",
+      "bytes": 22400,
+      "original_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "lf_normalized_projection_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "original_crlf_count": 0,
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "original_git_object": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd:tools/catalogue_survey.gd",
+      "canonical_git_blob_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/capture_renderer_material_census.gd",
+      "bytes": 10595,
+      "original_sha256": "5f7d032ec015d65f5e6d7d911f1445e8263f0a4fd4c90b5fccbd53726102ad67",
+      "lf_normalized_projection_sha256": "5f7d032ec015d65f5e6d7d911f1445e8263f0a4fd4c90b5fccbd53726102ad67",
+      "original_crlf_count": 0,
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "original_git_object": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd:tools/capture_renderer_material_census.gd",
+      "canonical_git_blob_sha256": "5f7d032ec015d65f5e6d7d911f1445e8263f0a4fd4c90b5fccbd53726102ad67",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/data/config/water_visual.json",
+      "bytes": 2531,
+      "original_sha256": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09",
+      "lf_normalized_projection_sha256": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09",
+      "original_crlf_count": 0,
+      "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "original_git_object": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd:data/config/water_visual.json",
+      "canonical_git_blob_sha256": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/art.json",
+      "bytes": 185016,
+      "original_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "lf_normalized_projection_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/art.json",
+      "canonical_git_blob_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/capture_lookdev_catalogue.gd",
+      "bytes": 1936,
+      "original_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "lf_normalized_projection_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:tools/capture_lookdev_catalogue.gd",
+      "canonical_git_blob_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/lookdev_capture_bootstrap.gd",
+      "bytes": 1790,
+      "original_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "lf_normalized_projection_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:tools/lookdev_capture_bootstrap.gd",
+      "canonical_git_blob_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/catalogue_survey.gd",
+      "bytes": 22400,
+      "original_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "lf_normalized_projection_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:tools/catalogue_survey.gd",
+      "canonical_git_blob_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/capture_renderer_material_census.gd",
+      "bytes": 13266,
+      "original_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "lf_normalized_projection_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:tools/capture_renderer_material_census.gd",
+      "canonical_git_blob_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormheart_presentation.json",
+      "bytes": 3224,
+      "original_sha256": "bf5252bb4aea8b591d1c0911e93c1a885b8cb71af8b9fc06d074daf8028f21d8",
+      "lf_normalized_projection_sha256": "bf5252bb4aea8b591d1c0911e93c1a885b8cb71af8b9fc06d074daf8028f21d8",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/stormheart_presentation.json",
+      "canonical_git_blob_sha256": "bf5252bb4aea8b591d1c0911e93c1a885b8cb71af8b9fc06d074daf8028f21d8",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_glass_field.json",
+      "bytes": 2257,
+      "original_sha256": "f9eb916634caef909f122511ccbb11f9d7871e387ccffe46d7aa01c9caf79f1e",
+      "lf_normalized_projection_sha256": "f9eb916634caef909f122511ccbb11f9d7871e387ccffe46d7aa01c9caf79f1e",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/stormwood_glass_field.json",
+      "canonical_git_blob_sha256": "f9eb916634caef909f122511ccbb11f9d7871e387ccffe46d7aa01c9caf79f1e",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_dynamo.json",
+      "bytes": 1373,
+      "original_sha256": "b0eb130c0facc11af8aef0117b57ee6f49a185dd5b00d4903eb82cc40e620fb4",
+      "lf_normalized_projection_sha256": "b0eb130c0facc11af8aef0117b57ee6f49a185dd5b00d4903eb82cc40e620fb4",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/stormwood_dynamo.json",
+      "canonical_git_blob_sha256": "b0eb130c0facc11af8aef0117b57ee6f49a185dd5b00d4903eb82cc40e620fb4",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_camps.json",
+      "bytes": 3008,
+      "original_sha256": "1cc7d09eebfc6ecc09249ef1476e77e2b0d91d3be6f4caaa182c4ce6adffda0f",
+      "lf_normalized_projection_sha256": "1cc7d09eebfc6ecc09249ef1476e77e2b0d91d3be6f4caaa182c4ce6adffda0f",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/stormwood_camps.json",
+      "canonical_git_blob_sha256": "1cc7d09eebfc6ecc09249ef1476e77e2b0d91d3be6f4caaa182c4ce6adffda0f",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_rod_line.json",
+      "bytes": 1946,
+      "original_sha256": "5747ab53b6e39db1ff4f1fccc1f0afe1285a17303f762e42b920ce7a76b03cd0",
+      "lf_normalized_projection_sha256": "5747ab53b6e39db1ff4f1fccc1f0afe1285a17303f762e42b920ce7a76b03cd0",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/stormwood_rod_line.json",
+      "canonical_git_blob_sha256": "5747ab53b6e39db1ff4f1fccc1f0afe1285a17303f762e42b920ce7a76b03cd0",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_arches.json",
+      "bytes": 1597,
+      "original_sha256": "cf2a749b24f0ecb808408ea90a8d7e62bbe8c0c77565d2c57dc4a4a6e623064a",
+      "lf_normalized_projection_sha256": "cf2a749b24f0ecb808408ea90a8d7e62bbe8c0c77565d2c57dc4a4a6e623064a",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/stormwood_arches.json",
+      "canonical_git_blob_sha256": "cf2a749b24f0ecb808408ea90a8d7e62bbe8c0c77565d2c57dc4a4a6e623064a",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/terrain_playground.json",
+      "bytes": 258199,
+      "original_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "lf_normalized_projection_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/terrain_playground.json",
+      "canonical_git_blob_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/grass_field.json",
+      "bytes": 52847,
+      "original_sha256": "99be9cd94105e65615cb8156db287473f7d17adc0ad58ee082a6f8d34a8b5c16",
+      "lf_normalized_projection_sha256": "99be9cd94105e65615cb8156db287473f7d17adc0ad58ee082a6f8d34a8b5c16",
+      "original_crlf_count": 0,
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "original_git_object": "0620d57bad036e52c88446fa1c04408b07cea909:data/config/grass_field.json",
+      "canonical_git_blob_sha256": "99be9cd94105e65615cb8156db287473f7d17adc0ad58ee082a6f8d34a8b5c16",
+      "role": "exact pinned Git blob; LF bytes distinct from historical Windows receipt bytes"
+    },
+    {
+      "destination": "observed-current-windows-source/data/config/art.json",
+      "bytes": 185016,
+      "original_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "lf_normalized_projection_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/data/config/art.json",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "current Windows worktree bytes at archive preparation"
+    },
+    {
+      "destination": "observed-current-windows-source/tools/capture_lookdev_catalogue.gd",
+      "bytes": 1936,
+      "original_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "lf_normalized_projection_sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/tools/capture_lookdev_catalogue.gd",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "current Windows worktree bytes at archive preparation"
+    },
+    {
+      "destination": "observed-current-windows-source/tools/lookdev_capture_bootstrap.gd",
+      "bytes": 1790,
+      "original_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "lf_normalized_projection_sha256": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/tools/lookdev_capture_bootstrap.gd",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "current Windows worktree bytes at archive preparation"
+    },
+    {
+      "destination": "observed-current-windows-source/tools/catalogue_survey.gd",
+      "bytes": 22400,
+      "original_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "lf_normalized_projection_sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/tools/catalogue_survey.gd",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "current Windows worktree bytes at archive preparation"
+    },
+    {
+      "destination": "observed-current-windows-source/tools/capture_renderer_material_census.gd",
+      "bytes": 13266,
+      "original_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "lf_normalized_projection_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+      "original_crlf_count": 0,
+      "original_path": "D:/tetherbound/redesign-lookdev/tools/capture_renderer_material_census.gd",
+      "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+      "role": "current Windows worktree bytes at archive preparation"
+    },
+    {
+      "destination": "README.md",
+      "bytes": 2242,
+      "original_sha256": "41aae153666a48e1b10423a5eaa38da7d06a17491b5bdf7c4a9f9cae814a2040",
+      "lf_normalized_projection_sha256": "41aae153666a48e1b10423a5eaa38da7d06a17491b5bdf7c4a9f9cae814a2040",
+      "original_crlf_count": 0,
+      "role": "archive disclosure, not acceptance"
+    },
+    {
+      "destination": ".gitattributes",
+      "bytes": 8,
+      "original_sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "lf_normalized_projection_sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "original_crlf_count": 0,
+      "role": "subtree-only original-byte preservation in Git"
+    }
+  ]
+}

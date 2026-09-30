@@ -1,0 +1,26 @@
+{
+  "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+  "native_exit": 0,
+  "elapsed_seconds": 261.75,
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_lookdev_catalogue.gd",
+    "--",
+    "--preset=Medium",
+    "--source-commit=ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+    "--output=D:/tetherbound/f26-trainer-medium-ff0395c9ae",
+    "--biome=cloudreach",
+    "--times=day,night",
+    "--subset=Galefoot Waycamp"
+  ],
+  "timed_out": false,
+  "errors": [],
+  "scope": "One selected existing production-camera capture subset. Staged audit travel and day/night clock, isolated user data. No earned campaign, full matrix, performance, Ally or full-bar acceptance claim."
+}

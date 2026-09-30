@@ -1,0 +1,26 @@
+{
+  "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+  "native_exit": 0,
+  "elapsed_seconds": 137.844,
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--preset=Medium",
+    "--source-commit=0620d57bad036e52c88446fa1c04408b07cea909",
+    "--output=D:/tetherbound/f26-storm-medium-0620d57bad",
+    "--biome=stormwood",
+    "--times=day",
+    "--subset=The Stormheart Tree"
+  ],
+  "timed_out": false,
+  "errors": [],
+  "scope": "One selected existing production-camera capture subset. Staged audit travel and day/night clock, isolated user data. No earned campaign, full matrix, performance, Ally or full-bar acceptance claim."
+}

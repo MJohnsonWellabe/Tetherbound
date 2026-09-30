@@ -1,0 +1,157 @@
+{
+  "scope": "Read-only source/receipt/pose/clock/PNG-header/hash verification. No pixel editing, engine, visual verdict or criterion MET.",
+  "baseline_source": "f43cde88acde0648123b89895d3023e1f5c50a08",
+  "candidate_source": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+  "baseline_art_text_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+  "candidate_art_text_sha256": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d",
+  "manifest_hashes": {
+    "baseline": "0e8a5b7c8192bed44da1569b6bbf1355e0c99be1ddc47f84e014b6deb8ab56ad",
+    "candidate": "865f57972c405a949cead88157db23a00521262c4b188cd7578a250d43506310"
+  },
+  "native_receipt": {
+    "source_commit": "ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+    "native_exit": 0,
+    "elapsed_seconds": 261.75,
+    "command": [
+      "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+      "--path",
+      "D:\\tetherbound\\redesign-lookdev",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_lookdev_catalogue.gd",
+      "--",
+      "--preset=Medium",
+      "--source-commit=ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd",
+      "--output=D:/tetherbound/f26-trainer-medium-ff0395c9ae",
+      "--biome=cloudreach",
+      "--times=day,night",
+      "--subset=Galefoot Waycamp"
+    ],
+    "timed_out": false,
+    "errors": [],
+    "scope": "One selected existing production-camera capture subset. Staged audit travel and day/night clock, isolated user data. No earned campaign, full matrix, performance, Ally or full-bar acceptance claim."
+  },
+  "native_receipt_sha256": "76843c34057580563a6ce20c2a27ca9e2d1fcb7a9b8ebce571f3d03f4abafb6a",
+  "native_log_sha256": "02568c0f9113a46b50cfc517a2426f53e7d0ff5d2b9dd0f13cba7cb52a13415e",
+  "native_log_errors": [],
+  "native_log_warnings": [
+    "WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)",
+    "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+    "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+  ],
+  "camera_header_matches": {
+    "path": true,
+    "fov": true,
+    "near": true,
+    "far": true,
+    "source": true
+  },
+  "comparisons": [
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+      "player_distance_delta_m": 0.0,
+      "camera_distance_delta_m": 6.992455582404714e-05,
+      "camera_transform_max_component_delta": 6.1035156022626325e-05,
+      "rig_transform_max_component_delta": 2.384185799897409e-07,
+      "heading_delta": 0.0,
+      "spring_length_delta_m": 0.0,
+      "resolved_ground_delta_m": 0.0,
+      "baseline_clock": {
+        "elapsed_seconds": 200.200874222222,
+        "hour": 8.00803496888889,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "candidate_clock": {
+        "elapsed_seconds": 200.201309666667,
+        "hour": 8.00805238666667,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "hour_delta": 1.7417777780082133e-05,
+      "nearby_creatures_baseline": 8,
+      "nearby_creatures_candidate": 8
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night",
+      "player_distance_delta_m": 0.0,
+      "camera_distance_delta_m": 6.992455560697273e-05,
+      "camera_transform_max_component_delta": 6.1035156022626325e-05,
+      "rig_transform_max_component_delta": 2.384185799897409e-07,
+      "heading_delta": 0.0,
+      "spring_length_delta_m": 0.0,
+      "resolved_ground_delta_m": 0.0,
+      "baseline_clock": {
+        "elapsed_seconds": 575.202834555555,
+        "hour": 23.0081133822222,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "candidate_clock": {
+        "elapsed_seconds": 575.201388888889,
+        "hour": 23.0080555555555,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "hour_delta": -5.782666669773562e-05,
+      "nearby_creatures_baseline": 8,
+      "nearby_creatures_candidate": 8
+    }
+  ],
+  "files": [
+    {
+      "kind": "baseline",
+      "path": "D:\\tetherbound\\lookdev-cloudreach-medium-visual-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "sha256": "d6a09aa54c0a8d6e8d50980a5d689d86d4a6030ed4303ca0b490c4e8cfbd0de0",
+      "bytes": 2338170,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day"
+    },
+    {
+      "kind": "candidate",
+      "path": "D:\\tetherbound\\f26-trainer-medium-ff0395c9ae\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "sha256": "c272059ebcda426fb97bd05ca971ecb4abb8f73f60eb1eea7d957069779cac6a",
+      "bytes": 2338551,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day"
+    },
+    {
+      "kind": "baseline",
+      "path": "D:\\tetherbound\\lookdev-cloudreach-medium-visual-r1\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "sha256": "abcd1c330889e0bcde280c181163d41b3a550424cdfa0aba70b04f0442b3b122",
+      "bytes": 2093990,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night"
+    },
+    {
+      "kind": "candidate",
+      "path": "D:\\tetherbound\\f26-trainer-medium-ff0395c9ae\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "sha256": "0e5006cd2ab8e7117af2c42bf01f3d9e1a04527c55dbf45355147dae1632309f",
+      "bytes": 2092892,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night"
+    }
+  ],
+  "limits": [
+    "Only Medium and trainer/Galefoot sampled. High is explicitly deferred, other three playable profiles and other-biome rim outcomes unproved.",
+    "Prior Cloudreach full-bar FAIL remains. Matching poses/source receipts do not prove artistic improvement or unchanged animation/population/weather pixels.",
+    "Prior baseline was a full24frame catalogue; candidate uses2frame subset with different startup/capture history.",
+    "Night clock around23 is an interpolated golden-to-night interval, not the exact midnight rim endpoint.",
+    "Hashes cover original PNG bytes, not a re-encoded or altered image."
+  ]
+}
