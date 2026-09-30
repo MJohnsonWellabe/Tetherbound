@@ -1,0 +1,44 @@
+Independent code-blind visual judge: camera-native-r2
+
+Verdict: narrow F21 #4 still-image size-matrix PASS. Full requested visual-craft bar UNMET. F21 #5 UNPROVED.
+
+Evidence and blindness
+I first inspected the originals tetherbound-meadows-keyart.png, palworld-01-boss-fight-forest.jpg, and palworld-03-field-boss-meadow.jpg. I then inspected every original 1920x1080 PNG 00.png through 08.png individually using original-detail view_image, with no composite, crop, or omitted frame. I inspected 04.png once more at original detail to judge the HUD/foot clearance. I read no source, configuration, runtime results, proof files, or prior verdicts. Neutral frame observations were sent before the intended size mapping was supplied. This report uses the corrected exact acceptance wording supplied by the coordinator; the earlier guessed acceptance paraphrase is disregarded.
+
+Exact acceptance supplied
+F21 #4: '(4) Fight camera keeps both actors framed without overlap for small, normal and giant bodies (catalog P2-062/P2-092 class); code-blind judge PASS on a size matrix.'
+F21 #5: '(5) Code-blind judge prefers after over before on “hits feel weighty and readable” from matched frame sequences; fights hold frame rate on the Medium preset capture.'
+
+Neutral observations recorded before mapping
+00: Two rounded earth boars face one another with a clear gap. Both main silhouettes fit wholly inside the image. The left one appears larger through perspective. A human is partly behind the left boar.
+01: An earth boar at left faces a much larger stone-plated bearlike creature at right. Both main silhouettes are complete and separate. A reddish unrelated creature is clipped at the far right; other earth-creature fragments enter at the lower edge.
+02: The left earth boar faces an antlered black, cream, and green stag. Both main silhouettes, including the antlers, fit. There is a clear central gap. The antler tips are near the upper HUD region but remain visible.
+03: A stone-plated bear at left faces an earth boar at right. Both main silhouettes fit and remain separate. The left creature conceals the human. An unrelated earth-creature fragment enters at the bottom.
+04: Two stone-plated bears face one another with clear head and body separation. Both fit inside the image. The right rear foot has very little clearance from the lower-right Orbs strip corner; initial inspection left possible tiny corner obscuration uncertain.
+05: A bear at left faces a stag at right. Both bodies and the stag antlers fit with a clear gap. The human is reduced largely to a head above the left back.
+06: A stag at left faces an earth boar at right. Both main silhouettes are complete and clearly separate. A human is partly visible behind the left torso.
+07: A stag at left faces a bear at right. Both main silhouettes are complete and clearly separate. The bear feet remain left of the lower-right HUD.
+08: Two stags face one another with a clear gap. Both main bodies and antler silhouettes fit. The right stag foot stays just left of the lower-right HUD.
+Across all nine: The view looks steeply downward with no horizon. Fine grass and flowers densely cover the terrain. Broad, dark tree and ground shadows cross the field. Fence and trees form the background. The large translucent HUD uses simple colored squares in its portrait positions. The creature faces and species silhouettes are distinctive, while their surfaces have abrupt painted-looking patches and strong light/shadow transitions.
+
+Intended mapping supplied after those observations
+00 small/small; 01 small/normal; 02 small/giant; 03 normal/small; 04 normal/normal; 05 normal/giant; 06 giant/small; 07 giant/normal; 08 giant/giant. The coordinator identifies small as Mudsnout, normal as TerraPup, and giant as Veridian; left is ally and right is target.
+
+F21 #4 adjudication: PASS within the supplied still matrix
+All nine intended ally/target pairs have separate, readable main creature silhouettes. There is visible background between the two actors rather than one masking the other's face, torso, or limbs. Main bodies, feet, tails where visible, and giant antlers remain inside the image edges. The camera accommodates every supplied size combination without sacrificing one main creature to the edge or to the other creature.
+The HUD does not materially hide either main creature in this matrix. On a second original-detail inspection, 04 remains the closest case: the target's right rear foot meets the Orbs strip vicinity with almost no spare margin. I do not see a materially missing foot silhouette that warrants failing the literal actor-framing criterion, but this is weak clearance rather than polished spacing. A cleaner layout should leave an obvious gap there. Background creatures clipped by the edges are visually distracting, but they are not the two matrix actors being assessed. The human trainer is often partly or fully hidden by the left creature; if that human is intended to count as an additional required fight actor, these images do not pass that expanded requirement.
+This is a narrow visual PASS on these nine supplied static compositions, not proof that the camera maintains this result during movement, attacks, orbit, or dynamic approaches. The claimed catalog-class identity is supplied mapping metadata; I did not verify it through code or catalog files.
+
+Full requested Palworld/Animo creature-and-world plus Valheim-lighting craft bar: UNMET
+The creatures establish useful expressive features: large readable eyes, differentiated species shapes, rounded appealing boar/bear forms, stone armor, and a striking oversized antler design. Their silhouettes read clearly enough for this framing exercise. However, the surfaces often resemble blunt color and texture patches rather than a consistently finished material system. The dark stag masses lose some internal form against the shaded field, and the bright cream/green pieces make an abrupt contrast with those near-black areas. These are recognizably authored creature designs, but the overall creature finish is not at the polished reference bar.
+The world provides grass, flowers, trees, terrain, rocks, and fencing, but composition and material detail are less coherent than the supplied references. Dense repeated thin grass and flower marks create widespread high-frequency visual noise. The ground reads as mottled yellow-green texture, and the steep overhead framing makes the meadow a surface rather than a layered landscape with inviting depth. The reference board offers broad scenic hierarchy, hills, distant silhouettes, water, paths, settlements, and atmosphere; the supplied combat views do not demonstrate that breadth or comparable world composition. Their absence in this one arena is a limit of the evidence, while the visible foreground noise and simplified background finish are direct craft shortcomings.
+The sunlight establishes illumination direction and grounded shadows, but the broad dark patches and sharp form transitions do not show the reference board's softer atmospheric separation, nuanced foliage light, or cohesive ambient fill. Strong contrast alone does not satisfy the requested Valheim-like lighting mood. The oversized HUD, simple square portraits, background edge fragments, and frequently hidden trainer also leave the presentation looking unfinished despite the successful main-pair separation.
+The full visual-craft verdict considers creature finish, world composition/materials, lighting, readability, and UI together. It is not based only on the small 04 HUD-clearance issue, and the craft shortfall does not revoke the independently assessed literal #4 still-matrix PASS. No separate Animo or Valheim original reference was supplied in this judging packet, so exact equivalence to those titles cannot be established from this packet.
+
+F21 #5 and other limits: UNPROVED
+There are no matched before/after attack frame sequences in this packet, so I cannot judge a preference for weighty/readable hits or identify attack buildup, contact, or recovery. Single static images do not prove frame rate, Medium preset performance, camera tracking stability, manual orbit, keyboard/mouse or controller consistency, damage timing, or network authority/reconnect behavior. The coordinator describes these as staged held-actor captures on LowCompatibility/GTX1060, which does not constitute the Medium performance capture required by #5.
+
+Final independent conclusion
+Narrow F21 #4 supplied static nine-cell size matrix: PASS.
+Full requested creature/world/lighting/UI craft: UNMET.
+F21 #5 matched hit-feel preference and Medium frame-rate requirement: UNPROVED.
