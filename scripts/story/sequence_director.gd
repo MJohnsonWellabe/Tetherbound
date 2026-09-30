@@ -610,7 +610,9 @@ func _drain_effects() -> void:
 					continue
 				_set_beat(target)
 			"give":
-				_give_items(parts)
+				if not _give_items(parts):
+					_dialogue.call("close")
+					return
 			"flag":
 				_set_progression_flag(str(parts[1]))
 			"shop":
@@ -665,6 +667,12 @@ func _gift_batch_fits(effects: Array[String]) -> bool:
 		var stack: Dictionary = inventory.call("stack_at", index)
 		scratch.call("set_slot", index, null if stack.is_empty() else stack)
 	for gift: Dictionary in gifts:
+		var definition: Dictionary = game.get("items").call("definition", str(gift["id"]))
+		if bool(definition.get("unique_owned", false)):
+			if int(gift["count"]) != 1:
+				return false
+			if int(scratch.call("count", str(gift["id"]))) > 0:
+				continue
 		if int(scratch.call("add", str(gift["id"]), int(gift["count"]))) > 0:
 			return false
 	return true
@@ -1052,25 +1060,52 @@ func _heal_party() -> void:
 ##
 ## `parse_effect` splits on the FIRST colon only, so parts[1] here is
 ## "orb_basic:50" and the id/count split is this function's own job.
-func _give_items(parts: Array) -> void:
+func _give_items(parts: Array) -> bool:
 	var rest := str(parts[1]).split(":")
 	if rest.size() != 2 or not str(rest[1]).is_valid_int():
 		push_warning("a give: effect reads give:<item_id>:<count>; got 'give:%s'" % parts[1])
-		return
+		return false
 	var item_id := str(rest[0])
 	var count := int(str(rest[1]))
 	var game := _effect_game()
-	if game == null:
-		push_error("no Game autoload; '%s' was given to nobody" % item_id)
-		return
+	if game == null or count <= 0:
+		return false
 	var items: RefCounted = game.get("items")
-	if items != null and not bool(items.call("has", item_id)):
-		push_error("dialogue gives '%s', which data/items/items.json does not define" % item_id)
-		return
 	var inventory: RefCounted = game.get("inventory")
+	if items == null or inventory == null or not bool(items.call("has", item_id)):
+		return false
+	var definition: Dictionary = items.call("definition", item_id)
+	if bool(definition.get("unique_owned", false)):
+		if count != 1:
+			return false
+		if int(inventory.call("count", item_id)) > 0:
+			return true
+	var bound := bool(definition.get("character_bound", false))
+	var personal: RefCounted = game.get("local") if bound else null
+	if bound and (personal == null or str(personal.get("character_id")).is_empty()):
+		game.call("push_world_message", "Your character is not ready. Speak to Grandpa again once it is.")
+		return false
+	var before: Dictionary = personal.call("save_data").duplicate(true) if bound else {}
 	var leftover := int(inventory.call("add", item_id, count))
 	if leftover > 0:
+		if bound:
+			personal.call("load_data", before)
 		push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
+		return false
+	if bound and not _persist_bound_gift(game):
+		personal.call("load_data", before)
+		game.call("push_world_message", "Your Home Key could not be saved. Speak to Grandpa again to retry.")
+		return false
+	return true
+
+
+## The character file is the receipt: a repeated gift sees the owned unique key.
+## A failed atomic write restores the complete personal snapshot before any beat
+## advances. Ordinary gifts retain their existing preflight and effect ordering.
+func _persist_bound_gift(game: Node) -> bool:
+	var personal: RefCounted = game.get("local")
+	var saver: RefCounted = game.get("save_system")
+	return saver != null and bool(saver.call("save_character", game, str(personal.get("character_id"))))
 
 
 ## --- what is possible right now -------------------------------------------------

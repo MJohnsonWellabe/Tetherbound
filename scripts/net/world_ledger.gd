@@ -344,7 +344,7 @@ func _death_satchel_intent(intent: Dictionary, peer_id: int, realm: String) -> D
 		return _refuse(kind, peer_id, "wrong_actor", "Your trainer is not ready in this realm.")
 	var character := str(actor.get("character_id", ""))
 	if kind == "death_satchel_create":
-		if not SATCHEL_RULES.valid_slots(intent.get("state")):
+		if not SATCHEL_RULES.valid_death_slots(intent.get("state")):
 			return _refuse(kind, peer_id, "malformed", "The dropped stacks could not be checked.")
 		var uid := "death_" + txn
 		if world.call("death_satchel_index_of", uid) >= 0:
@@ -740,6 +740,8 @@ func _grant_player_flag(intent: Dictionary, peer_id: int, realm: String) -> Dict
 func _transfer_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var txn := str(intent.get("txn_id", ""))
 	var item := str(intent.get("item", ""))
+	if SATCHEL_RULES.db().is_character_bound(item):
+		return _refuse("transfer_item", peer_id, "character_bound", "This key stays with its owner.")
 	var count := int(intent.get("count", 0))
 	var from_peer := int(intent.get("from", peer_id))
 	var to_peer := int(intent.get("to", 0))
@@ -762,6 +764,8 @@ func _transfer_item(intent: Dictionary, peer_id: int, realm: String) -> Dictiona
 func _drop_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var txn := str(intent.get("txn_id", ""))
 	var item := str(intent.get("item", ""))
+	if SATCHEL_RULES.db().is_character_bound(item):
+		return _refuse("drop_item", peer_id, "character_bound", "This key stays with its owner.")
 	var count := int(intent.get("count", 0))
 	if txn.is_empty() or item.is_empty() or count <= 0:
 		return _refuse("drop_item", peer_id, "malformed", "That drop was missing something.")

@@ -1,0 +1,39 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_dialogue_gift_capacity.gd,test_home_key_protection.gd: 2 of 670 test files
+  ok    test_dialogue_gift_capacity.gd :: test_an_existing_stack_with_room_accepts_the_batch
+  ok    test_dialogue_gift_capacity.gd :: test_failed_gift_blocks_a_flag_that_precedes_it_in_the_batch
+  ok    test_dialogue_gift_capacity.gd :: test_full_bag_keeps_selas_gear_and_rescue_available_for_retry
+  ok    test_dialogue_gift_capacity.gd :: test_home_key_full_bag_and_missing_identity_leave_gift_available
+  ok    test_dialogue_gift_capacity.gd :: test_home_key_save_failure_restores_personal_state_and_holds_following_effects
+  ok    test_dialogue_gift_capacity.gd :: test_home_key_success_is_personal_durable_and_unique_on_dialogue_retry
+WARNING: a give: effect reads give:<item_id>:<count>; got 'give:heartstone'
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _gift_batch_fits (res://scripts/story/sequence_director.gd:644)
+       [1] _drain_effects (res://scripts/story/sequence_director.gd:597)
+       [2] _drain (res://tests/test_dialogue_gift_capacity.gd:143)
+       [3] test_invalid_gifts_block_the_batch_before_any_flag_is_written (res://tests/test_dialogue_gift_capacity.gd:136)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: dialogue gives 'no_such_item', which data/items/items.json does not define
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _gift_batch_fits (res://scripts/story/sequence_director.gd:656)
+       [1] _drain_effects (res://scripts/story/sequence_director.gd:597)
+       [2] _drain (res://tests/test_dialogue_gift_capacity.gd:143)
+       [3] test_invalid_gifts_block_the_batch_before_any_flag_is_written (res://tests/test_dialogue_gift_capacity.gd:136)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: a give: effect count must be positive; got 'give:heartstone:0'
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _gift_batch_fits (res://scripts/story/sequence_director.gd:649)
+       [1] _drain_effects (res://scripts/story/sequence_director.gd:597)
+       [2] _drain (res://tests/test_dialogue_gift_capacity.gd:143)
+       [3] test_invalid_gifts_block_the_batch_before_any_flag_is_written (res://tests/test_dialogue_gift_capacity.gd:136)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_dialogue_gift_capacity.gd :: test_invalid_gifts_block_the_batch_before_any_flag_is_written
+  ok    test_dialogue_gift_capacity.gd :: test_two_gifts_competing_for_one_slot_apply_nothing
+  ok    test_home_key_protection.gd :: test_death_escrow_excludes_key_and_server_rejects_forged_key_operations
+  ok    test_home_key_protection.gd :: test_real_bound_item_retains_slot_through_drop_sell_trade_and_death
+
+10 tests, 67 assertions, 0 failed

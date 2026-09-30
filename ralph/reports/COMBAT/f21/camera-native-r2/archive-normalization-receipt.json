@@ -1,0 +1,176 @@
+{
+  "archive_commit": "25f2f77769f39381b433e0971d884e8b57e88ae6",
+  "executed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
+  "method": "subprocess git show captured raw stdout bytes for every archived hash; original files retained outside checkout independently match all observed raw hashes",
+  "original_source_proof_unchanged": true,
+  "rows": [
+    {
+      "file": "00.png",
+      "observed_raw_sha256": "efe030e473e2e477dee7d0ddfbc845d9cc09f5a6b13984af58b60dd102489a28",
+      "original_raw_sha256": "efe030e473e2e477dee7d0ddfbc845d9cc09f5a6b13984af58b60dd102489a28",
+      "git_blob_sha256": "efe030e473e2e477dee7d0ddfbc845d9cc09f5a6b13984af58b60dd102489a28",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 63,
+      "git_crlf_count": 63
+    },
+    {
+      "file": "01.png",
+      "observed_raw_sha256": "f7f434e92f1b0b030bcbf7b2829cc5515790f3028e557d7e152740385df8c35c",
+      "original_raw_sha256": "f7f434e92f1b0b030bcbf7b2829cc5515790f3028e557d7e152740385df8c35c",
+      "git_blob_sha256": "f7f434e92f1b0b030bcbf7b2829cc5515790f3028e557d7e152740385df8c35c",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 55,
+      "git_crlf_count": 55
+    },
+    {
+      "file": "02.png",
+      "observed_raw_sha256": "8b5c1c9d408f96f2935e68660ff06de74535c9a337aef0dd7b8cc04f6bdcd6e4",
+      "original_raw_sha256": "8b5c1c9d408f96f2935e68660ff06de74535c9a337aef0dd7b8cc04f6bdcd6e4",
+      "git_blob_sha256": "8b5c1c9d408f96f2935e68660ff06de74535c9a337aef0dd7b8cc04f6bdcd6e4",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 66,
+      "git_crlf_count": 66
+    },
+    {
+      "file": "03.png",
+      "observed_raw_sha256": "e5291d9fe3a3ccb7427edc13ec52977e4a9ab9eeb16dab26d925e30dc32a3af7",
+      "original_raw_sha256": "e5291d9fe3a3ccb7427edc13ec52977e4a9ab9eeb16dab26d925e30dc32a3af7",
+      "git_blob_sha256": "e5291d9fe3a3ccb7427edc13ec52977e4a9ab9eeb16dab26d925e30dc32a3af7",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 71,
+      "git_crlf_count": 71
+    },
+    {
+      "file": "04.png",
+      "observed_raw_sha256": "5d6113439318cf782bfa8442245be6b66cbeebfa83e79558cfcf3f5bbd1a717f",
+      "original_raw_sha256": "5d6113439318cf782bfa8442245be6b66cbeebfa83e79558cfcf3f5bbd1a717f",
+      "git_blob_sha256": "5d6113439318cf782bfa8442245be6b66cbeebfa83e79558cfcf3f5bbd1a717f",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 69,
+      "git_crlf_count": 69
+    },
+    {
+      "file": "05.png",
+      "observed_raw_sha256": "93bf56d5b379be0389bd34969962fc5663c18913a65788d16b61aa93ab967bcb",
+      "original_raw_sha256": "93bf56d5b379be0389bd34969962fc5663c18913a65788d16b61aa93ab967bcb",
+      "git_blob_sha256": "93bf56d5b379be0389bd34969962fc5663c18913a65788d16b61aa93ab967bcb",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 78,
+      "git_crlf_count": 78
+    },
+    {
+      "file": "06.png",
+      "observed_raw_sha256": "15d152c38d2372796b9406dccf48805838d2de6d8efda1aa35f7e6ab8731bdee",
+      "original_raw_sha256": "15d152c38d2372796b9406dccf48805838d2de6d8efda1aa35f7e6ab8731bdee",
+      "git_blob_sha256": "15d152c38d2372796b9406dccf48805838d2de6d8efda1aa35f7e6ab8731bdee",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 72,
+      "git_crlf_count": 72
+    },
+    {
+      "file": "07.png",
+      "observed_raw_sha256": "062f18f23c8c340dba3bb8bb654e88448f25658ff9a6e4ffa2855c8e99a0ed82",
+      "original_raw_sha256": "062f18f23c8c340dba3bb8bb654e88448f25658ff9a6e4ffa2855c8e99a0ed82",
+      "git_blob_sha256": "062f18f23c8c340dba3bb8bb654e88448f25658ff9a6e4ffa2855c8e99a0ed82",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 68,
+      "git_crlf_count": 68
+    },
+    {
+      "file": "08.png",
+      "observed_raw_sha256": "2d0c85760a669c858ccb6452e1434ff5c52153b949f61814a6c664dbda1e667b",
+      "original_raw_sha256": "2d0c85760a669c858ccb6452e1434ff5c52153b949f61814a6c664dbda1e667b",
+      "git_blob_sha256": "2d0c85760a669c858ccb6452e1434ff5c52153b949f61814a6c664dbda1e667b",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 67,
+      "git_crlf_count": 67
+    },
+    {
+      "file": "focused-final.txt",
+      "observed_raw_sha256": "9922f7834042d08c4f0121a578c03fb43413339a267fcf538175651d332658dc",
+      "original_raw_sha256": "9922f7834042d08c4f0121a578c03fb43413339a267fcf538175651d332658dc",
+      "git_blob_sha256": "303b08f3eafab5002487d0f5bc49f067d5e40c881aec1dc85de66d738df667df",
+      "raw_observed_match": true,
+      "archive_exact_bytes": false,
+      "archive_difference": "Git CRLF-to-LF normalization only",
+      "raw_crlf_count": 10,
+      "git_crlf_count": 0
+    },
+    {
+      "file": "matrix.json",
+      "observed_raw_sha256": "5e241f2ceb8303211f338f932976d4c5a3594b8f00151fc0db80105cd5b5b8c4",
+      "original_raw_sha256": "5e241f2ceb8303211f338f932976d4c5a3594b8f00151fc0db80105cd5b5b8c4",
+      "git_blob_sha256": "5e241f2ceb8303211f338f932976d4c5a3594b8f00151fc0db80105cd5b5b8c4",
+      "raw_observed_match": true,
+      "archive_exact_bytes": true,
+      "archive_difference": "none",
+      "raw_crlf_count": 0,
+      "git_crlf_count": 0
+    },
+    {
+      "file": "native-fullscreen.txt",
+      "observed_raw_sha256": "7688d0e2c22398f8eaac353e50ed388144a53df0de3d39e06f87521b295fe982",
+      "original_raw_sha256": "7688d0e2c22398f8eaac353e50ed388144a53df0de3d39e06f87521b295fe982",
+      "git_blob_sha256": "ebc1877507f7545f78c9a327867a66bd11388f494d08f6e7528bdd59113ab81b",
+      "raw_observed_match": true,
+      "archive_exact_bytes": false,
+      "archive_difference": "Git CRLF-to-LF normalization only",
+      "raw_crlf_count": 160,
+      "git_crlf_count": 0
+    },
+    {
+      "file": "parser-combat_manager.txt",
+      "observed_raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "original_raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "git_blob_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+      "raw_observed_match": true,
+      "archive_exact_bytes": false,
+      "archive_difference": "Git CRLF-to-LF normalization only",
+      "raw_crlf_count": 2,
+      "git_crlf_count": 0
+    },
+    {
+      "file": "parser-peer_runner.txt",
+      "observed_raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "original_raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "git_blob_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+      "raw_observed_match": true,
+      "archive_exact_bytes": false,
+      "archive_difference": "Git CRLF-to-LF normalization only",
+      "raw_crlf_count": 2,
+      "git_crlf_count": 0
+    },
+    {
+      "file": "parser-smoke_combat_camera.txt",
+      "observed_raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "original_raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "git_blob_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+      "raw_observed_match": true,
+      "archive_exact_bytes": false,
+      "archive_difference": "Git CRLF-to-LF normalization only",
+      "raw_crlf_count": 2,
+      "git_crlf_count": 0
+    }
+  ],
+  "all_observed_raw_match": true,
+  "all_archive_differences_explained": true,
+  "scope": "No new engine run or image processing. Git text normalization does not change PNG bytes or observed raw witness; original hashes intentionally retained."
+}

@@ -1,0 +1,21 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_fight_camera.gd,test_hit_feedback.gd: 2 of 671 test files
+  ok    test_fight_camera.gd :: test_impossible_and_near_plane_frames_never_report_a_pass
+  ok    test_fight_camera.gd :: test_nine_authored_pairs_project_both_bodies_without_silhouette_overlap
+  ok    test_fight_camera.gd :: test_pivot_uses_actual_body_midpoint_and_class_boundaries
+  ok    test_fight_camera.gd :: test_rig_takeover_clears_midpoint_offset_and_runtime_pitch_is_not_accumulated
+  ok    test_hit_feedback.gd :: test_critical_effective_resisted_and_ordinary_numbers_differ
+  ok    test_hit_feedback.gd :: test_flash_styles_share_host_crit_type_facts_and_resisted_reads_weaker
+  ok    test_hit_feedback.gd :: test_frozen_launch_rejects_replacement_actors_generation_and_realm
+  ok    test_hit_feedback.gd :: test_giant_and_profile_reductions_apply_once
+  ok    test_hit_feedback.gd :: test_host_defensive_pause_unions_overlap_and_outgoing_hits_extend_stagger
+  ok    test_hit_feedback.gd :: test_host_defensive_poise_break_bonus_expiry_and_peer_scope
+  ok    test_hit_feedback.gd :: test_host_relic_resolution_ignores_numeric_peer_claims_and_unplaced_identity
+  ok    test_hit_feedback.gd :: test_host_stagger_recovery_resets_pool_before_the_next_hit
+  ok    test_hit_feedback.gd :: test_launch_freezes_real_visual_bounds_without_affecting_host_schedule
+  ok    test_hit_feedback.gd :: test_replayed_hits_refuse_but_legitimate_out_of_order_impacts_and_issuers_are_independent
+  ok    test_hit_feedback.gd :: test_rumble_off_and_weight_do_not_modify_host_receipt_or_timing
+  ok    test_hit_feedback.gd :: test_weighted_feedback_is_immutable_and_preserves_host_damage
+
+16 tests, 199 assertions, 0 failed

@@ -1,0 +1,44 @@
+{
+  "source": "367e3b1b167156f88b3726f5112a016298cd1e27",
+  "native_exit": 0,
+  "engine": "Godot4.7-stable5b4e0cb0f",
+  "renderer": "gl_compatibility",
+  "hardware": "GTX1060 3GB",
+  "preset": "Low",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "cases": 9,
+  "all_strict_overlap_zero": true,
+  "focused_tests": 5,
+  "focused_assertions": 106,
+  "focused_failed": 0,
+  "original_controls_passed": true,
+  "scope": "Staged actual authored bodies and roster/positions; actor/manager simulation held temporarily. Normal production rig, live world/weather/UI. No species rescale, earned campaign, code-blind result or fight-FPS claim.",
+  "not_claimed": [
+    "blind quality",
+    "Medium/High",
+    "Ally hardware",
+    "fightFPS",
+    "earned campaign",
+    "F21 complete"
+  ],
+  "sha256": {
+    "00.png": "efe030e473e2e477dee7d0ddfbc845d9cc09f5a6b13984af58b60dd102489a28",
+    "01.png": "f7f434e92f1b0b030bcbf7b2829cc5515790f3028e557d7e152740385df8c35c",
+    "02.png": "8b5c1c9d408f96f2935e68660ff06de74535c9a337aef0dd7b8cc04f6bdcd6e4",
+    "03.png": "e5291d9fe3a3ccb7427edc13ec52977e4a9ab9eeb16dab26d925e30dc32a3af7",
+    "04.png": "5d6113439318cf782bfa8442245be6b66cbeebfa83e79558cfcf3f5bbd1a717f",
+    "05.png": "93bf56d5b379be0389bd34969962fc5663c18913a65788d16b61aa93ab967bcb",
+    "06.png": "15d152c38d2372796b9406dccf48805838d2de6d8efda1aa35f7e6ab8731bdee",
+    "07.png": "062f18f23c8c340dba3bb8bb654e88448f25658ff9a6e4ffa2855c8e99a0ed82",
+    "08.png": "2d0c85760a669c858ccb6452e1434ff5c52153b949f61814a6c664dbda1e667b",
+    "focused-final.txt": "9922f7834042d08c4f0121a578c03fb43413339a267fcf538175651d332658dc",
+    "matrix.json": "5e241f2ceb8303211f338f932976d4c5a3594b8f00151fc0db80105cd5b5b8c4",
+    "native-fullscreen.txt": "7688d0e2c22398f8eaac353e50ed388144a53df0de3d39e06f87521b295fe982",
+    "parser-combat_manager.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "parser-peer_runner.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "parser-smoke_combat_camera.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+  }
+}

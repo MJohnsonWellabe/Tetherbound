@@ -90,6 +90,12 @@ func definition(id: String) -> Dictionary:
 	return value as Dictionary if typeof(value) == TYPE_DICTIONARY else {}
 
 
+## A bound key belongs to this character; inventory and server transfer
+## boundaries enforce this authored policy, not just the backpack UI.
+func is_character_bound(id: String) -> bool:
+	return bool(definition(id).get("character_bound", false))
+
+
 ## Display name, falling back to the raw id so an unknown item is still
 ## identifiable on screen instead of appearing as an empty slot.
 func item_name(id: String) -> String:

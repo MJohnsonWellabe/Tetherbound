@@ -1,0 +1,124 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 360.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"control_port": 30441,
+			"exited": true,
+			"hashes": [
+				363161455,
+				363161455,
+				363161455
+			],
+			"hello": {
+				"enet_port": 30341.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "7401b5e89fef",
+				"peer": 0.0,
+				"pid": 12516.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/combat-defence-host-final/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 390.0,
+				"physics_frame": 1140.0,
+				"pos": [
+					28.4762744903564,
+					0.136399805545807,
+					-35.3342247009277
+				],
+				"session_peers": [
+					1.0,
+					937065216.0
+				],
+				"state_hash": 363161455.0,
+				"t": 160.073,
+				"type": "heartbeat"
+			},
+			"pid": 12516,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"control_port": 30442,
+			"exited": true,
+			"hashes": [
+				363161455,
+				363161455,
+				363161455
+			],
+			"hello": {
+				"enet_port": 30342.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "7401b5e89fef",
+				"peer": 1.0,
+				"pid": 6080.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/combat-defence-host-final/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 589.0,
+				"physics_frame": 1380.0,
+				"pos": [
+					19.8033199310303,
+					0.943669259548187,
+					-35.2993431091309
+				],
+				"session_peers": [
+					1.0,
+					937065216.0
+				],
+				"state_hash": 363161455.0,
+				"t": 160.108,
+				"type": "heartbeat"
+			},
+			"pid": 6080,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "combat-defence-46f-final",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

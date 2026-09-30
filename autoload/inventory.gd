@@ -346,6 +346,10 @@ func split_slot(from: int, to: int, amount: int) -> bool:
 	return true
 
 
+func may_transfer_item(id: String) -> bool:
+	return _db == null or not _db.has_method("is_character_bound") or not bool(_db.call("is_character_bound", id))
+
+
 ## Discard everything in one slot -- the "drop" verb. Returns the removed
 ## stack (or an empty dictionary if the slot was already empty) rather than
 ## nothing, in case a future world-pickup entity wants to spawn from it; none
@@ -355,21 +359,21 @@ func drop_slot(index: int) -> Dictionary:
 	if index < 0 or index >= SLOT_COUNT:
 		return {}
 	var stack: Variant = _slots[index]
-	if stack == null:
+	if stack == null or not may_transfer_item(str(stack.get("id", ""))):
 		return {}
 	_slots[index] = null
 	revision += 1
 	return (stack as Dictionary).duplicate()
 
 
-## Empty the satchel and hand back everything that was in it.
+## Hand back transferable contents, leaving character-bound keys in their slots.
 ##
 ## This is what a death satchel is made from. CLAUDE.md: multiple death satchels
 ## persist, so the caller keeps the returned list — nothing here destroys it.
 func drain() -> Array:
 	var out: Array = []
 	for i in SLOT_COUNT:
-		if _slots[i] != null:
+		if _slots[i] != null and may_transfer_item(str(_slots[i].get("id", ""))):
 			out.append((_slots[i] as Dictionary).duplicate())
 			_slots[i] = null
 	if not out.is_empty():

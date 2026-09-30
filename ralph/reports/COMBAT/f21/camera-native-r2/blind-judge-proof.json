@@ -1,0 +1,6 @@
+{
+  "report": "blind-judge-report.txt",
+  "sha256": "6aeae5f614408e70423a82226156ed52c5c87f7140f21462067917576261ae75",
+  "executed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
+  "scope": "Nine original1920x1080 stills only; independent code-blind F21#4 matrix PASS; full visual-craft bar UNMET and F21#5 UNPROVED. No main closure by this artifact."
+}

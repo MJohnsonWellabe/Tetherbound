@@ -1,0 +1,14 @@
+{
+  "base_source": "b013e4379214d29625eba9f268d2e931dc74eafb",
+  "initial_native_exit": 1,
+  "final_native_exit": 0,
+  "final_tests": 4,
+  "final_assertions": 104,
+  "scope": "named pure geometry; final worktree source hashes bind later checkpoint, no actual native matrix or visual acceptance",
+  "source_files_sha256": {
+    "scripts/combat/fight_camera.gd": "7aa710c0fb17963c49be91022a0182edd11d062d1fb9b78833f05fe08b7158d8",
+    "tests/test_fight_camera.gd": "39a741935515f472b77ad126522ea242129aa41faf8d8ca64c1371d94347c408"
+  },
+  "camera_config_canonical_json_sha256": "5955a3cd85290485fac60b52f92d3e5b8e310bdbcb3dd894f332196e18bf0b04",
+  "post_run_change": "camera.json formatting-only restoration; canonical JSON identical to executed final check"
+}
