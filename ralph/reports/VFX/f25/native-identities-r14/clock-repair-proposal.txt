@@ -1,0 +1,22 @@
+Bounded fixture proposal, pending coordination of the shared test method.
+No production runtime, HP timer, effect lifetime or release assertion change.
+
+Current _exercise uses a wall deadline for every batch:
+max(2 seconds, travel + impact.duration + 1 second).
+Native movie advances the presentation clock at fixed 30 fps, while first-material
+and PNG/AVI encoding can consume wall time without that many simulation frames.
+Case 0 arrives at wall 1.792404s, impact frame at 2.253433s and is still leased at
+the wall deadline. Arrival and independent-schedule frames both equal 78.
+Other eleven cases naturally reach zero end slots. No shader/parser errors.
+
+Proposal for capture batches only: retain the SAME duration using a separate idle
+SceneTreeTimer as the lifetime deadline. Retain a finite 30s wall watchdog against
+a stuck/zero-progress engine, and retain the external process-tree timeout.
+Every existing missing-arrival, lease-zero, cap, schedule-frame and capture assertion
+stays intact. Noncapture profile/clock batches retain their current wall deadline.
+Record ending process frame, wall elapsed and whether the watchdog expired so a
+future reviewer can distinguish actual runtime lifetime from export stalls.
+
+Validate only the affected small-stones:r1 native case in a fresh output/movie
+under a renewed GPU grant; keep the entire original R14 RED evidence unchanged.
+This cannot certify actual real-time gameplay, HP, performance or full visual craft.
