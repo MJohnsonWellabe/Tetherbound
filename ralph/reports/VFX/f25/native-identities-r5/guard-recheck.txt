@@ -1,0 +1,22 @@
+Independent reviewer: /root/combat. Read-only source and retained raw positions;
+no engine, source edits or pixel judgment. Parent authorized assertion-only fix.
+
+Reviewed the exact ignored clear-transit-guard.patch, executed a74500624 source
+body geometry/spread and retained original r5 results. Group envelope remains
+the centre-flight shutter selector. Each body.global_position already includes
+radial volley spread and longitudinal stagger; expanding the target by the same
+group spread before checking each individual body double-counted separation.
+
+The correction retains individual shape/layer radius and clearance, omitting
+only already-applied spread/stagger. Stone bound 1.5 times size is conservative:
+ridge <=1.205 and random-axis scale <=1.14 imply <=1.3737 times size. Stone has
+no vertex-displacement shader. Independently recomputed clear margins beyond
+the individual body radius are 1.398m at rank1, 1.515m at rank3, 1.646m at rank5.
+Individual radius values are 0.46m, 0.505m and 0.55m respectively.
+
+PASS for corrected spatial guard only. Patch changes only assertion/diagnostic
+radius handling; original shutter fraction, model, camera, body geometry,
+timers and all 36 PNGs remain identical. Receipt reuse is justified without
+recapturing images under RD37. Executed r5 remains native1 with original two
+failed checks/raw flags, which are preserved. This is not a native0 result,
+pixel/fight/Mastery/Medium proof or F25 acceptance.

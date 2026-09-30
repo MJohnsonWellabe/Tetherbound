@@ -235,7 +235,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 						var bodies: Array = effect.get("_bodies")
 						for body: MeshInstance3D in bodies:
 							positions.append(body.global_position)
-							if target_bounds.grow(float(transit.envelope_radius_m)).has_point(body.global_position): clear = false
+							if target_bounds.grow(float(transit.body_envelope_radius_m)).has_point(body.global_position): clear = false
 					captured[phase]["actual_body_positions"] = positions
 					captured[phase]["clear_of_expanded_target_bounds"] = clear
 					if not clear: _failures.append("Flight body reached measured target envelope " + encounter)
@@ -272,6 +272,7 @@ func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 		extent += Vector3(float(offset[0]), float(offset[1]), float(offset[2])).length()
 		radius = maxf(radius, float(row.parameters.size) * extent)
+	var body_radius := radius + float((_scenarios.transit_shutter as Dictionary).clearance_m)
 	var spread := maxf(0.0, float(row.parameters.get("spread", 0.0)))
 	if int(row.parameters.count) > 1:
 		spread = maxf(spread, float(row.parameters.size) * float(profile.get("volley_separation_scale", 2.8)))
@@ -287,7 +288,8 @@ func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds
 	var shutter := minf(float(cfg.maximum_fraction), fraction * float(cfg.before_entry_scale))
 	if shutter < float(cfg.minimum_fraction): return {"error": "No usable clear transit interval"}
 	return {"fraction": shutter, "clear_transit_required": true, "envelope_radius_m": radius,
-		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r5-measured-clear-transit"}
+		"body_envelope_radius_m": body_radius,
+		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r6-separate-body-and-group-envelopes"}
 
 func _percentile(samples: Array[float], fraction: float) -> float:
 	if samples.is_empty(): return 0.0
