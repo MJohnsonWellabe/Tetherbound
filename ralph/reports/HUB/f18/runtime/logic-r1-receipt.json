@@ -1,0 +1,17 @@
+{
+  "source": "4a0c66ea13254a584448b29c858813874d68d3bf",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "res://tests/run_tests.gd",
+    "--",
+    "--only=test_dialogue_gift_capacity.gd,test_home_key_protection.gd"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\f18-logic-profile",
+  "native_exit": 0,
+  "elapsed_seconds": 5.780999999959022,
+  "log": "ralph\\reports\\HUB\\f18\\runtime\\logic-r1.txt"
+}

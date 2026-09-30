@@ -417,7 +417,9 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## worker's saver and file handles are separate from the main-thread saver.
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
-	if not _redesign_errors(snapshot(game)).is_empty():
+	var portal_owner: Variant = game.get("local")
+	var portal_character := str(portal_owner.get("character_id")) if portal_owner is Object else ""
+	if not _redesign_errors(snapshot(game), portal_character).is_empty():
 		push_error("Save refused: invalid redesign state")
 		return {}
 	var world_id := ""
@@ -635,6 +637,8 @@ func snapshot(game: Object) -> Dictionary:
 		"realm_environment": game.get("realm_environment").duplicate(true) if game.get("realm_environment") is Dictionary else {},
 	}
 	data["realm_maps"] = game.call("save_realm_maps") if game.has_method("save_realm_maps") else _realm_map_payloads(data)
+	if preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.party,data.redesign_character).is_empty():
+		data.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(data.party,data.redesign_character)
 	return data
 
 
@@ -643,9 +647,11 @@ static func _redesign_payload(owner: Variant, scope: String) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else REDESIGN_STATE.defaults(scope)
 
 
-static func _redesign_errors(data: Dictionary) -> Array[String]:
+static func _redesign_errors(data: Dictionary, character_id: String = "") -> Array[String]:
 	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
 	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
+	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
+	errors.append_array(preload("res://scripts/world/portal_arch.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	return errors
 
 
@@ -679,7 +685,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	last_load_result = version_result(data.get("version", null))
 	if not bool(last_load_result.ok):
 		return false
-	var redesign_errors := _redesign_errors(data)
+	var redesign_errors := _redesign_errors(data, slot_locator_character(slot))
 	if not redesign_errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That save contains invalid data.", "errors": redesign_errors}
 		return false
@@ -733,7 +739,7 @@ func load_slot(game: Object, slot: int) -> bool:
 			return false
 
 	game.set("day", int(data.get("day", 1)))
-	_array_to_party(data.get("party", []), game.get("party"))
+	_array_to_party(data.get("party", []), game.get("party"),data.get("redesign_character",{}))
 	_restore_tournament_selection(data.get("tournament_selection", []), game.get("party"))
 	_array_to_inventory(data.get("inventory", []), game.get("inventory"))
 	_restore_equipment(game, data.get("equipment", {}))
@@ -1884,6 +1890,13 @@ func _party_to_array(party: Variant) -> Array:
 			"feeds_together": int(instance.get("feeds_together")),
 			"move_quick": str(instance.get("move_quick")),
 			"move_charged": str(instance.get("move_charged")),
+			"move_utility": str(instance.get("move_utility")),
+			"move_ultimate": str(instance.get("move_ultimate")),
+			"known_moves": (instance.get("known_moves") as Array).duplicate(),
+			"move_mastery_uses": (instance.get("move_mastery_uses") as Dictionary).duplicate(true),
+			"move_mastery_receipts": (instance.get("move_mastery_receipts") as Dictionary).duplicate(true),
+			"loadout_revision": int(instance.get("loadout_revision")),
+			"loadout_last_edit": (instance.get("loadout_last_edit") as Dictionary).duplicate(true),
 			"iv_hp": float(instance.get("iv_hp")),
 			"iv_attack": float(instance.get("iv_attack")),
 			"iv_defence": float(instance.get("iv_defence")),
@@ -1904,8 +1917,11 @@ func _party_to_array(party: Variant) -> Array:
 ## so a load never depends on `species.json` still defining the species —
 ## an instance's saved stats are trusted as-is, the same "carry on with what
 ## the file says" spirit as the rest of this class.
-func _array_to_party(entries: Variant, party: Variant) -> void:
+func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {}) -> void:
 	if party == null or typeof(entries) != TYPE_ARRAY:
+		return
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	if not teaching.party_loadout_errors(entries,character,true).is_empty():
 		return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
@@ -1977,6 +1993,22 @@ func _array_to_party(entries: Variant, party: Variant) -> void:
 		creature.bond = int(d.get("bond", 0))
 		creature.move_quick = str(d.get("move_quick", ""))
 		creature.move_charged = str(d.get("move_charged", ""))
+		var loadout := teaching.stage_saved_loadout(d,teaching.allowed_saved_moves(d,character),preload("res://scripts/creatures/move_db.gd").load_default())
+		if not bool(loadout.get("needs_defaults",true)):
+			var known: Array[String] = []
+			for move: String in loadout.values.known_moves: known.append(move)
+			creature.known_moves = known
+			creature.move_utility = loadout.values.move_utility
+			creature.move_ultimate = loadout.values.move_ultimate
+			creature.move_mastery_uses = loadout.values.move_mastery_uses
+			creature.move_mastery_receipts = loadout.values.move_mastery_receipts
+			creature.loadout_revision = int(loadout.values.loadout_revision)
+			creature.loadout_last_edit = loadout.values.loadout_last_edit
+		else:
+			# Additive v28 absence preserves the equipped old moves, with zero
+			# earned use credit and no automatic loadout edits on Continue.
+			for move: String in [creature.move_quick,creature.move_charged]:
+				if not move.is_empty() and not creature.known_moves.has(move): creature.known_moves.append(move)
 		# Elixir points (D47). Absent on any save older than VERSION 8, and 0
 		# is exactly right for one: a creature from before elixirs existed
 		# never drank any.

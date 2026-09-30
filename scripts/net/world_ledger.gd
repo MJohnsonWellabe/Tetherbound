@@ -85,6 +85,7 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const STORMWOOD_ARCHES := preload("res://scripts/world/stormwood_arch_rules.gd")
 const STORMWOOD_HARVEST := preload("res://scripts/world/stormwood_harvest_rules.gd")
 var _stormwood_harvest_rules: RefCounted
+const PORTAL := preload("res://scripts/world/portal_arch.gd")
 const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 
@@ -163,6 +164,8 @@ const HOST_ONLY_GRANT_SOURCE_PREFIXES := [
 ## `legacy_unresolved`, emptying the journal. Matched as prefixes, so the two
 ## exact settlement ids also cover any future flag named after them.
 const HOST_ONLY_FLAG_PREFIXES := [
+	"portal_unlock:",
+	"portal_ack:",
 	"water_claim:guardian:",
 	"water_guardian_",
 	"water_currents_restored",
@@ -244,6 +247,17 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
 	match kind:
+		"portal_unlock":
+			var actor: Dictionary = intent.get("_portal_actor", {}) if intent.get("_portal_actor") is Dictionary else {}
+			var result: Dictionary = PORTAL.host_ops(intent, actor, world, peer_id, _actor_character)
+			if not bool(result.get("ok", false)):
+				return _refuse(kind, peer_id, str(result.code), str(result.reason))
+			return _commit(result.ops, kind, peer_id, realm)
+		"portal_ack":
+			var result: Dictionary = PORTAL.ack_ops(intent, world, _actor_character)
+			if not bool(result.get("ok", false)):
+				return _refuse(kind, peer_id, str(result.code), str(result.reason))
+			return _commit(result.ops, kind, peer_id, realm)
 		"stormwood_disable_rod":
 			return _stormwood_disable_rod(intent, peer_id, realm)
 		"stormwood_harvest":
@@ -344,7 +358,7 @@ func _death_satchel_intent(intent: Dictionary, peer_id: int, realm: String) -> D
 		return _refuse(kind, peer_id, "wrong_actor", "Your trainer is not ready in this realm.")
 	var character := str(actor.get("character_id", ""))
 	if kind == "death_satchel_create":
-		if not SATCHEL_RULES.valid_slots(intent.get("state")):
+		if not SATCHEL_RULES.valid_death_slots(intent.get("state")):
 			return _refuse(kind, peer_id, "malformed", "The dropped stacks could not be checked.")
 		var uid := "death_" + txn
 		if world.call("death_satchel_index_of", uid) >= 0:
@@ -740,6 +754,8 @@ func _grant_player_flag(intent: Dictionary, peer_id: int, realm: String) -> Dict
 func _transfer_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var txn := str(intent.get("txn_id", ""))
 	var item := str(intent.get("item", ""))
+	if SATCHEL_RULES.db().is_character_bound(item):
+		return _refuse("transfer_item", peer_id, "character_bound", "This key stays with its owner.")
 	var count := int(intent.get("count", 0))
 	var from_peer := int(intent.get("from", peer_id))
 	var to_peer := int(intent.get("to", 0))
@@ -762,6 +778,8 @@ func _transfer_item(intent: Dictionary, peer_id: int, realm: String) -> Dictiona
 func _drop_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var txn := str(intent.get("txn_id", ""))
 	var item := str(intent.get("item", ""))
+	if SATCHEL_RULES.db().is_character_bound(item):
+		return _refuse("drop_item", peer_id, "character_bound", "This key stays with its owner.")
 	var count := int(intent.get("count", 0))
 	if txn.is_empty() or item.is_empty() or count <= 0:
 		return _refuse("drop_item", peer_id, "malformed", "That drop was missing something.")

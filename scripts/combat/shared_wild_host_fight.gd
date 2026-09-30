@@ -43,6 +43,14 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 	authority_link.call("host_deliver_enemy_hit", encounter_id, peer_id, payload)
 
 
+func host_deliver_enemy_launch(encounter_id: String, peer_id: int, launch: Dictionary) -> void:
+	authority_link.call("host_deliver_enemy_launch", encounter_id, peer_id, launch)
+
+
+func host_enemy_target_current(encounter_id: String, peer_id: int, target_uid: String) -> bool:
+	return bool(authority_link.call("host_enemy_target_current", encounter_id, peer_id, target_uid))
+
+
 func body() -> Node3D:
 	return authority_body
 
@@ -85,3 +93,6 @@ func stop_opponent() -> void:
 		_wild.set_physics_process(_catch_physics_was_processing)
 	_catch_paused = false
 	super.stop_opponent()
+
+func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
+	return authority_link.call("host_resolve_enemy_hit", encounter_id, peer_id, payload)

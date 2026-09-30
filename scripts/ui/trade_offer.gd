@@ -69,6 +69,7 @@ extends Node
 
 const SESSION := preload("res://scripts/net/session.gd")
 const SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
+const ITEM_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const OFFER_PANEL := preload("res://scripts/ui/trade_offer_panel.gd")
 
 const NODE_NAME := "TradeOffer"
@@ -131,6 +132,8 @@ func _ready() -> void:
 func offer(to_peer: int, item: String, count: int) -> Dictionary:
 	if item.is_empty() or count <= 0:
 		return _sent(false, "", "There is nothing there to give.")
+	if ITEM_RULES.db().is_character_bound(item):
+		return _sent(false, "", "This key stays with its owner.")
 	if not _connected_to(to_peer):
 		return _sent(false, "", "They are not in this world any more.")
 	var game := _game()
@@ -184,6 +187,8 @@ func accept() -> Dictionary:
 	var item := str(_incoming.get("item", ""))
 	var n := int(_incoming.get("count", 0))
 	var from_peer := int(_incoming.get("from", 0))
+	if ITEM_RULES.db().is_character_bound(item):
+		return _reply_no(txn, from_peer, "This key stays with its owner.")
 	var game := _game()
 	var satchel: RefCounted = null
 	if game != null:
@@ -223,6 +228,9 @@ func _reply_no(txn: String, to_peer: int, reason: String) -> Dictionary:
 func _rpc_offer(txn_id: String, item: String, count: int, realm: String) -> void:
 	var from_peer := multiplayer.get_remote_sender_id()
 	if txn_id.is_empty() or item.is_empty() or count <= 0 or from_peer == 0:
+		return
+	if ITEM_RULES.db().is_character_bound(item):
+		rpc_id(from_peer, "_rpc_reply", txn_id, false, "This key stays with its owner.")
 		return
 	if not _incoming.is_empty():
 		# Already deciding on somebody else's offer. Refuse the second rather
@@ -286,6 +294,9 @@ func _submit_transfer(offered: Dictionary) -> void:
 	var game := _game()
 	if game == null:
 		offer_resolved.emit(txn, false, "The world is not ready yet.")
+		return
+	if ITEM_RULES.db().is_character_bound(item):
+		offer_resolved.emit(txn, false, "This key stays with its owner.")
 		return
 	var satchel: RefCounted = game.get("inventory") as RefCounted
 	if satchel == null or int(satchel.call("count", item)) < n:

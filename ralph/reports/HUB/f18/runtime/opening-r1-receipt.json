@@ -1,0 +1,15 @@
+{
+  "source": "4a0c66ea13254a584448b29c858813874d68d3bf",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "res://tests/smoke_home_key_opening.gd"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\f18-opening-profile",
+  "native_exit": 1,
+  "elapsed_seconds": 149.84299999999348,
+  "log": "ralph\\reports\\HUB\\f18\\runtime\\opening-r1.txt"
+}

@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 const DIRECTOR := preload("res://scripts/story/sequence_director.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
+const PLAYER := preload("res://autoload/player_state.gd")
 
 const GEAR := "mill_bridge_gear"
 const RESCUE := "captive_rescued"
@@ -25,10 +26,24 @@ class FakeDialogue extends CanvasLayer:
 class FakeGame extends Node:
 	var items: RefCounted
 	var inventory: RefCounted
+	var local: RefCounted
+	var save_system: RefCounted
 	var messages: Array[String] = []
 
 	func push_world_message(message: String) -> void:
 		messages.append(message)
+
+
+class SaverFixture extends RefCounted:
+	var succeeds := true
+	var writes := 0
+	var stored: Dictionary = {}
+	func save_character(game: Node, character_id: String) -> bool:
+		writes += 1
+		if not succeeds or character_id != str(game.local.character_id):
+			return false
+		stored = game.local.save_data().duplicate(true)
+		return true
 
 
 class HarnessDirector extends "res://scripts/story/sequence_director.gd":
@@ -55,6 +70,11 @@ func before_each() -> void:
 	_game = FakeGame.new()
 	_game.items = _db
 	_game.inventory = _bag
+	_game.local = PLAYER.new()
+	_game.local.configure(_db)
+	_game.local.character_id = "opening-key-owner"
+	_game.local.inventory = _bag
+	_game.save_system = SaverFixture.new()
 	_dialogue = FakeDialogue.new()
 	_director = HarnessDirector.new()
 	_director.test_game = _game
@@ -126,3 +146,47 @@ func _drain(effects: Array[String]) -> void:
 func _fill_every_slot() -> void:
 	for index in _bag.slot_count():
 		_bag.set_slot(index, {"id": "axe", "n": 1})
+
+
+func test_home_key_save_failure_restores_personal_state_and_holds_following_effects() -> void:
+	_bag.add("wood", 7)
+	_game.local.display_name = "Key Owner"
+	var before: Dictionary = _game.local.save_data().duplicate(true)
+	_game.save_system.succeeds = false
+	_drain(["give:home_key:1", "flag:%s" % RESCUE])
+	assert_eq(_game.local.save_data(), before, "failed write restores the complete personal document")
+	assert_eq(_bag.count("home_key"), 0)
+	assert_true(_dialogue.closed)
+	assert_false(_director.written_flags.has(RESCUE))
+	assert_eq(_game.save_system.writes, 1)
+
+
+func test_home_key_success_is_personal_durable_and_unique_on_dialogue_retry() -> void:
+	_drain(["give:home_key:1", "flag:%s" % RESCUE])
+	assert_eq(_bag.count("home_key"), 1)
+	assert_eq(_game.save_system.writes, 1)
+	assert_eq(_game.save_system.stored.character_id, "opening-key-owner")
+	var restored: RefCounted = PLAYER.new()
+	restored.configure(_db)
+	restored.load_data(JSON.parse_string(JSON.stringify(_game.save_system.stored)))
+	assert_eq(restored.inventory.count("home_key"), 1, "the stored document restores the key")
+	for index in _bag.slot_count():
+		if _bag.stack_at(index).is_empty():
+			_bag.set_slot(index, {"id": "axe", "n": 1})
+	_drain(["give:home_key:1"])
+	assert_eq(_bag.count("home_key"), 1, "full-bag retry recognizes the unique already-owned gift")
+	assert_eq(_game.save_system.writes, 1)
+
+
+func test_home_key_full_bag_and_missing_identity_leave_gift_available() -> void:
+	_fill_every_slot()
+	_drain(["give:home_key:1", "flag:%s" % RESCUE])
+	assert_eq(_bag.count("home_key"), 0)
+	assert_eq(_game.save_system.writes, 0)
+	assert_false(_director.written_flags.has(RESCUE))
+	_bag.set_slot(23, null)
+	_game.local.character_id = ""
+	_drain(["give:home_key:1", "flag:%s" % RESCUE])
+	assert_eq(_bag.count("home_key"), 0)
+	assert_false(_director.written_flags.has(RESCUE))
+	assert_eq(_game.save_system.writes, 0)

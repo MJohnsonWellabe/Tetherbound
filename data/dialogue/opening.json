@@ -40,6 +40,10 @@
       "lines": [
         "Before you go anywhere, you need another creature beside you.",
         {
+          "text": "One more thing: your Home Key. Tap it when you need to return to the home arch. Keep it close — it belongs to you.",
+          "effect": "give:home_key:1"
+        },
+        {
           "text": "Take these Orbs. Head outside, find one you like, and catch it.",
           "effect": "give:orb_basic:50"
         },
@@ -59,7 +63,8 @@
           "text": "Then come back and show me.",
           "effect": "beat:first_encounter"
         }
-      ]
+      ],
+      "_comment_home_key": "F18: the earliest natural gift beat, before the first catch. The unique personal key is saved before subsequent dialogue effects advance; a full satchel or failed character save keeps this conversation available."
     },
     "grandpa_encounter_hint": {
       "_comment": "Talking to him between the naming and the catch. He does not repeat the whole briefing.",

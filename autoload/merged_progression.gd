@@ -157,3 +157,63 @@ func load_data(data: Dictionary) -> void:
 		world_flags.call("load_data", {"flags": world_ids})
 	if player_flags != null:
 		player_flags.call("load_data", {"flags": player_ids})
+
+
+## Read-only views over the current canonical carriers. No copied progression
+## store or Session admission registry; rebind whenever Game replaces a carrier.
+var _traveler_ref: WeakRef
+var _portal_world_ref: WeakRef
+
+
+func bind_traveler(traveler: Object, world: Object = null) -> void:
+	_traveler_ref = weakref(traveler) if traveler != null else null
+	_portal_world_ref = weakref(world) if world != null else null
+
+
+func traveler_character_id() -> String:
+	var traveler: Object = _traveler_ref.get_ref() if _traveler_ref != null else null
+	var value: Variant = traveler.get("character_id") if traveler != null else null
+	return value if value is String else ""
+
+
+func traveler_relics_held() -> Array[String]:
+	return _traveler_strings("relics_held")
+
+
+func traveler_relics_hung() -> Array[String]:
+	return _traveler_strings("relics_hung")
+
+
+func traveler_transaction_receipts() -> Array[String]:
+	return _traveler_strings("transaction_receipts")
+
+
+func _traveler_strings(field: String) -> Array[String]:
+	var result: Array[String] = []
+	var traveler: Object = _traveler_ref.get_ref() if _traveler_ref != null else null
+	if traveler == null:
+		return result
+	var state: Variant = traveler.get("redesign_character")
+	if not state is Dictionary or not state.get(field) is Array:
+		return result
+	for value: Variant in state[field]:
+		if value is String:
+			result.append(value)
+	return result
+
+
+## Display eligibility only. Host realm-transition admission separately proves
+## owner identity, arch reach, encounter state and a durable accepted unlock.
+func portal_is_unlocked(canonical_biome: String) -> bool:
+	var live_ids := preload("res://scripts/data/biome_order.gd").ids(false)
+	if canonical_biome == "meadows":
+		return true
+	if not live_ids.has(canonical_biome):
+		return false
+	if _traveler_strings("portal_unlocks").has(canonical_biome):
+		return true
+	var world: Object = _portal_world_ref.get_ref() if _portal_world_ref != null else null
+	if world == null:
+		return false
+	var state: Variant = world.get("redesign_world")
+	return state is Dictionary and state.get("portal_unlocks") is Array and state.portal_unlocks.has(canonical_biome)

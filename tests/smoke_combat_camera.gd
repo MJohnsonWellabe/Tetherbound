@@ -10,6 +10,8 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const FIT := preload("res://scripts/combat/fight_camera.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 
 const SETTLE_FRAMES := 300
 const RIGHT_X := JOY_AXIS_RIGHT_X
@@ -39,6 +41,11 @@ func _init() -> void:
 
 
 func _run() -> void:
+	await process_frame
+	create_timer(900.0).timeout.connect(func() -> void: _fail("bounded camera witness exceeded 900s"); _report())
+	if not _matrix_renderer_preflight():
+		_report()
+		return
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
 	# Raw B/LB events also reach the autoload menu. A manually-instanced world
@@ -59,6 +66,7 @@ func _run() -> void:
 		_report()
 		return
 	await _capture_combat_entry()
+	await _capture_size_matrix()
 	await _prove_combat_entry_follow_and_orbit()
 	await _prove_camera_fits_both_separations()
 	await _prove_neutral_camera_keeps_the_opponent_in_frame()
@@ -82,6 +90,189 @@ func _capture_combat_entry() -> void:
 		if error != OK:
 			_fail("could not save the ordinary combat camera frame: %s" % error)
 		return
+
+
+## Fail before the expensive world boot if the requested matrix would only
+## capture a fallback preset or the wrong viewport. Source identity is checked
+## by the external clean-HEAD launcher; runtime checks its receipt syntax.
+func _matrix_renderer_preflight() -> bool:
+	var requested := false
+	var preset := "Low"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--matrix-dir="): requested = true
+		elif argument.begins_with("--matrix-preset="): preset = argument.trim_prefix("--matrix-preset=")
+	if not requested: return true
+	if DisplayServer.get_name() == "headless" or GRAPHICS.choose(preset) != OK \
+			or GRAPHICS.restart_required() or RenderingServer.get_current_rendering_method() != GRAPHICS.requested_renderer() \
+			or root.get_visible_rect().size != Vector2(1920,1080):
+		_fail("matrix refused before world boot: actual renderer/preset and1920x1080 required")
+		return false
+	return true
+
+## Optional F21#4 pixels from the normal production rig. All original input,
+## aim/exit and render-corner checks continue after restoring this scoped fixture.
+## Only the three actual authored species are swapped, never their scales.
+func _capture_size_matrix() -> void:
+	var directory := ""
+	var source := ""
+	var preset := "Low"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--matrix-dir="): directory = argument.trim_prefix("--matrix-dir=")
+		elif argument.begins_with("--source-commit="): source = argument.trim_prefix("--source-commit=")
+		elif argument.begins_with("--matrix-preset="): preset = argument.trim_prefix("--matrix-preset=")
+	if directory.is_empty(): return
+	var pattern := RegEx.new()
+	pattern.compile("^[0-9a-f]{40}$")
+	if DisplayServer.get_name() == "headless" or pattern.search(source) == null \
+			or DirAccess.dir_exists_absolute(directory) or GRAPHICS.choose(preset) != OK \
+			or GRAPHICS.restart_required() or RenderingServer.get_current_rendering_method() != GRAPHICS.requested_renderer() \
+			or root.get_visible_rect().size != Vector2(1920,1080):
+		_fail("matrix needs matching actual renderer/preset,1920x1080,exact source SHA and fresh output directory")
+		return
+	if DirAccess.make_dir_recursive_absolute(directory) != OK:
+		_fail("could not create fresh matrix output")
+		return
+	for look: Node in get_nodes_in_group("day_cycle"):
+		if look.has_method("refresh_graphics"): look.call("refresh_graphics")
+	GRAPHICS.apply_viewport(root)
+	GRAPHICS.apply_camera(_camera)
+	var saved_party: Array = (_manager.get("_party") as Array).duplicate()
+	var active_index := int(_manager.get("_active_index"))
+	var saved_enemy: RefCounted = _manager.get("_enemy")
+	var saved_ally_species := str(_ally.get("species_id"))
+	var saved_enemy_species := str(_wild.get("species_id"))
+	var saved_ally_at := _ally.global_transform
+	var saved_foe_at := _wild.global_transform
+	var manager_physics := _manager.is_physics_processing()
+	var ally_physics := _ally.is_physics_processing()
+	var foe_physics := _wild.is_physics_processing()
+	_manager.set_physics_process(false)
+	_ally.set_physics_process(false)
+	_wild.set_physics_process(false)
+	var kinds := {"small":"mudsnout", "normal":"terrapup", "giant":"veridian"}
+	var cfg := FIT.config()
+	var cases: Array[Dictionary] = []
+	var case_index := 0
+	print("MATRIX SCOPE: direct species/roster and position fixture in physically entered real encounter; only actor/manager simulation held during captures, live normal rig/world/weather/UI; no rescale, earned campaign, combat difficulty or fight-FPS claim")
+	for ally_class: String in kinds:
+		for foe_class: String in kinds:
+			var ally_instance := SPECIES.spawn(str(kinds[ally_class]))
+			var foe_instance := SPECIES.spawn(str(kinds[foe_class]))
+			var staged_party := saved_party.duplicate()
+			staged_party[active_index] = ally_instance
+			_manager.set("_party", staged_party)
+			_manager.set("_enemy", foe_instance)
+			_wild.set("instance", foe_instance)
+			_ally.call("setup", str(kinds[ally_class]))
+			_wild.call("setup", str(kinds[foe_class]))
+			_ally.global_transform = saved_ally_at
+			_wild.global_transform = saved_foe_at
+			var ally_bounds: AABB = _manager.call("_body_world_bounds", _ally)
+			var foe_bounds: AABB = _manager.call("_body_world_bounds", _wild)
+			var gap := (ally_bounds.size.x + foe_bounds.size.x) * 0.5 + 0.6
+			var foe_at := _ally.global_position + Vector3(gap,0,0)
+			foe_at.y = float(_world.call("ground_height_at",foe_at.x,foe_at.z))
+			_wild.global_position = foe_at
+			_ally.call("face_towards", _wild.global_position)
+			_wild.call("face_towards", _ally.global_position)
+			_manager.call("_take_camera")
+			_manager.emit_signal("state_changed")
+			var last_frame := Time.get_ticks_usec()
+			var samples: Array[float] = []
+			for frame: int in 180:
+				await physics_frame
+				_manager.call("_update_combat_camera_framing",1.0/60.0)
+				var now := Time.get_ticks_usec()
+				samples.append(float(now-last_frame)/1000.0)
+				last_frame = now
+			await RenderingServer.frame_post_draw
+			ally_bounds = _manager.call("_body_world_bounds",_ally)
+			foe_bounds = _manager.call("_body_world_bounds",_wild)
+			var viewport := _camera.get_viewport().get_visible_rect().size
+			var aspect := viewport.x/maxf(viewport.y,1.0)
+			var a := FIT.project_box(ally_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+			var b := FIT.project_box(foe_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+			var measured_pair := FIT.size_class(ally_bounds.size.y,cfg)+"/"+FIT.size_class(foe_bounds.size.y,cfg)
+			var pair := ally_class+"/"+foe_class
+			var framed := bool(a.get("in_frame",false)) and bool(b.get("in_frame",false))
+			var overlap := FIT.overlap_ratio(a.rect,b.rect) if bool(a.get("valid",false)) and bool(b.get("valid",false)) else 1.0
+			var image := root.get_texture().get_image()
+			var pixels := _pixel_summary(image)
+			var pixels_present := bool(pixels.get("nonblank",false))
+			var filename := "%02d.png" % case_index
+			var wrote := pixels_present and image.save_png(directory.path_join(filename)) == OK
+			var passed := measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap) and wrote
+			if not passed: _fail("actual matrix "+pair+" failed: measured="+measured_pair+" framed="+str(framed)+" overlap="+str(overlap)+" png="+str(wrote))
+			cases.append({"pair":pair,"measured_pair":measured_pair,"ally_species":kinds[ally_class],"foe_species":kinds[foe_class],
+				"ally_bounds":_bounds_record(ally_bounds),"foe_bounds":_bounds_record(foe_bounds),"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),
+				"framed":framed,"overlap":overlap,"pass":passed,"png":filename,"pixels":pixels,"physics_interval_ms":samples,"spring_length":_rig.spring_length,
+				"resolution":[image.get_width(),image.get_height()] if image != null else [],"actual_camera_position":_point_record(_camera.global_position),
+				"requested_solution":_camera_solution_record(),"actual_rig_yaw":float(_rig.yaw),"actual_rig_pivot":_point_record(_rig.global_position),
+				"requested_pivot_offset":_point_record(_rig.framing_pivot_offset()),"manual_grace_seconds":float(_rig.get("_tracking_manual_left"))})
+			case_index += 1
+	_manager.set("_party",saved_party)
+	_manager.set("_enemy",saved_enemy)
+	_wild.set("instance",saved_enemy)
+	_ally.call("setup",saved_ally_species)
+	_wild.call("setup",saved_enemy_species)
+	_ally.global_transform = saved_ally_at
+	_wild.global_transform = saved_foe_at
+	_manager.call("_take_camera")
+	_manager.set_physics_process(manager_physics)
+	_ally.set_physics_process(ally_physics)
+	_wild.set_physics_process(foe_physics)
+	var output := FileAccess.open(directory.path_join("matrix.json"),FileAccess.WRITE)
+	if output == null:
+		_fail("could not write matrix receipt")
+	else:
+		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
+			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
+			"scope":"Staged actual authored bodies and roster/positions; actor/manager simulation held temporarily. Normal production rig, live world/weather/UI. No species rescale, earned campaign, code-blind result or fight-FPS claim.","cases":cases,
+			"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
+		output.close()
+	for frame: int in 30: await physics_frame
+
+func _camera_solution_record() -> Dictionary:
+	var solution: Dictionary = (_manager.get("_fight_camera_solution") as Dictionary).duplicate(true)
+	for key: String in ["pivot"]:
+		if solution.get(key) is Vector3: solution[key] = _point_record(solution[key])
+	for key: String in ["ally_rect","foe_rect"]:
+		if solution.get(key) is Rect2:
+			var rect: Rect2 = solution[key]
+			solution[key] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
+	return solution
+
+## Refuse uniform opaque or transparent frames as evidence. This is only a
+## bounded capture-validity guard; it does not judge art or actor readability.
+func _pixel_summary(image: Image) -> Dictionary:
+	if image == null or image.get_width() <= 0 or image.get_height() <= 0:
+		return {"nonblank":false}
+	var low := 1.0
+	var high := 0.0
+	var visible := 0
+	for y: int in 9:
+		for x: int in 16:
+			var px := mini(image.get_width()-1, int((float(x)+0.5)*float(image.get_width())/16.0))
+			var py := mini(image.get_height()-1, int((float(y)+0.5)*float(image.get_height())/9.0))
+			var colour := image.get_pixel(px,py)
+			if colour.a <= 0.01: continue
+			var luma := colour.r*0.2126+colour.g*0.7152+colour.b*0.0722
+			low = minf(low,luma)
+			high = maxf(high,luma)
+			visible += 1
+	return {"nonblank":visible > 0 and high > 0.02 and high-low > 0.03,
+		"sample_count":144,"visible":visible,"minimum_luminance":low,"maximum_luminance":high}
+
+func _point_record(point: Vector3) -> Array:
+	return [point.x,point.y,point.z]
+
+func _bounds_record(bounds: AABB) -> Dictionary:
+	return {"position":_point_record(bounds.position),"size":_point_record(bounds.size)}
+
+func _rect_record(projection: Dictionary) -> Dictionary:
+	if not bool(projection.get("valid",false)): return {"valid":false}
+	var rect: Rect2 = projection.rect
+	return {"valid":true,"position":[rect.position.x,rect.position.y],"size":[rect.size.x,rect.size.y]}
 
 
 func _collect_and_stage() -> bool:
@@ -271,6 +462,8 @@ func _measure_requested_framing(gap: float) -> float:
 	var requested := float(_rig.get("_distance"))
 	var basis := _rig.global_basis.orthonormalized()
 	var pivot := _ally.global_position + Vector3.UP * float(_rig.get("_height"))
+	if _rig.has_method("framing_pivot_offset"):
+		pivot += _rig.call("framing_pivot_offset") as Vector3
 	pivot += Basis(Vector3.UP, float(_rig.get("yaw"))).x * float(_rig.get("_shoulder"))
 	var probe := Camera3D.new()
 	probe.current = false

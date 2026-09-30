@@ -40,6 +40,7 @@ extends Node
 ## D95's channels: ledger traffic rides `CHANNEL_LEDGER`, never the snapshot
 ## channel, so a joiner's world snapshot cannot queue behind somebody's gather.
 
+const PORTAL := preload("res://scripts/world/portal_arch.gd")
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
 const SESSION := preload("res://scripts/net/session.gd")
 ## OP-0905-18: a no-op unless the granted item is a known evolution catalyst.
@@ -282,8 +283,10 @@ func submit(intent: Dictionary) -> Dictionary:
 ## local player and a remote one are arbitrated by literally the same lines.
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
+	var portal_stage: Dictionary = {}
+	var portal_session: Node = _game().get("session")
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
-	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear"]
+	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "portal_unlock", "portal_ack"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -309,6 +312,16 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if kind == "river_nest_clear":
 		intent = intent.duplicate(true)
 		intent["_doss_actor"] = _water_actor_context(peer_id, intent)
+	if kind == "portal_unlock":
+		intent = intent.duplicate(true)
+		intent["_portal_actor"] = _portal_actor_context(peer_id, str(intent.get("biome", "")))
+		if portal_session == null or not portal_session.has_method("host_stage_portal_debit"):
+			return {"ok": false, "pending": false, "code": "not_admitted", "reason": "Your owned character is not ready at this arch."}
+		var id := PORTAL.receipt(str(intent.get("biome", "")), _registered_character(peer_id))
+		if not bool(ledger.world.get("flags").call("has", id)):
+			portal_stage = portal_session.call("host_stage_portal_debit", peer_id, str(intent.get("biome", "")), id)
+			if not bool(portal_stage.get("ok", false)):
+				return {"ok": false, "pending": false, "code": str(portal_stage.get("code", "not_admitted")), "reason": "Your owned portal key is not ready. Nothing was spent."}
 	# Every kind can write world flags, so every intent carries the admitted
 	# identity; a claimed `_actor_character_id` is always overwritten.
 	intent = with_host_actor(intent, _registered_character(peer_id))
@@ -325,7 +338,17 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 			# the receipt even when the original creation/transfer delta was lost.
 			verdict["satchel_recovery_snapshot"] = {"seq": ledger.seq, "world": ledger.world.save_data()}
 	if not bool(verdict.get("ok", false)):
+		if not portal_stage.is_empty() and not bool(portal_stage.get("duplicate", false)):
+			portal_session.call("host_finish_portal_debit", portal_stage, false)
 		return verdict
+	if not portal_stage.is_empty() and not bool(portal_stage.get("duplicate", false)) 			and not bool(portal_session.call("host_commit_portal_debit", portal_stage)):
+		ledger.world.load_data(before_satchel.world)
+		ledger.world.set("revision", int(before_satchel.world_revision))
+		ledger.seq = before_satchel.seq
+		ledger.set("_storage_revisions", before_satchel.revisions)
+		ledger.set("_seen_txns", before_satchel.seen)
+		portal_session.call("host_finish_portal_debit", portal_stage, false)
+		return {"ok": false, "pending": false, "code": "stale_character", "reason": "Your character changed before the key transaction. Nothing was spent."}
 	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
 	if durable_world_transaction:
 		var satchel_game := _game()
@@ -333,9 +356,11 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if kind in ["reward_grant", "water_dock_action", "river_nest_clear"] or not world_id.is_empty():
+		if kind in ["reward_grant", "water_dock_action", "river_nest_clear", "portal_unlock", "portal_ack"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
+				if not portal_stage.is_empty() and not bool(portal_stage.get("duplicate", false)):
+					portal_session.call("host_finish_portal_debit", portal_stage, false)
 				# No personal settlement or publication happened yet. Roll back
 				# the synchronous in-memory commit as one unit, including receipt
 				# bookkeeping, so a later retry cannot mistake it for durable work.
@@ -349,15 +374,19 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 						"The world could not save this dock change. Nothing was changed." \
 						if kind == "water_dock_action" else (
 							"The world could not save Doss's repair. Your items remain safe." \
-							if kind == "river_nest_clear" else "The world could not save this satchel move. Your items remain safe."))
+							if kind == "river_nest_clear" else ("The world could not save this portal. Your key remains safe." if kind in ["portal_unlock", "portal_ack"] else "The world could not save this satchel move. Your items remain safe.")))
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
 					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),
 					"txn_id": str(intent.get("txn_id", "")), "uid": str(intent.get("uid", "")), "delta": {"ops": []}}
+	if not portal_stage.is_empty() and not bool(portal_stage.get("duplicate", false)):
+		if not bool(portal_session.call("host_finish_portal_debit", portal_stage, true)):
+			push_error("Saved portal receipt is waiting for its owned-character reconciliation.")
+			return {"ok": false, "pending": true, "code": "reconcile_character", "reason": "The saved portal is waiting for your character. Your pending key remains recoverable."}
 	# A host recipient can durably ACK while its player op is applied. Publish
 	# the pending journal first so its later acceptance delta cannot overtake it
 	# on the same reliable ledger channel.
-	if kind in ["reward_grant", "river_nest_clear"]:
+	if kind in ["reward_grant", "river_nest_clear", "portal_unlock"]:
 		delta_applied.emit(delta)
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
@@ -434,6 +463,88 @@ func _registered_character(peer_id: int) -> String:
 		if session is Object and (session as Object).has_method("registry") else null
 	return registered_character(peer_id, _local_peer_id(), local_character,
 		roster as Object if roster is Object else null)
+
+
+
+## The host resolves the admitted sender's rig and a unique actual authored
+## arch. Client positions, arch coordinates and combat booleans are ignored.
+func _portal_actor_context(peer_id: int, biome: String) -> Dictionary:
+	var context := _water_actor_context(peer_id, {})
+	if context.is_empty() or str(context.get("realm", "")) != "meadows":
+		return {}
+	var matching: Array[Node3D] = []
+	for node: Node in get_tree().get_nodes_in_group("crossing_hall_arches"):
+		if node is Node3D and str(node.get_meta("biome", "")) == biome:
+			matching.append(node)
+	if matching.size() != 1:
+		return {}
+	var arch := matching[0]
+	context["arch_position"] = arch.global_position
+	var root: Node = arch.get_parent()
+	while root != null and root.get_node_or_null("EncounterDirector") == null:
+		root = root.get_parent()
+	if root == null:
+		return {}
+	var director := root.get_node("EncounterDirector")
+	var authority: Variant = director.get("_encounter_host")
+	if peer_id != _local_peer_id() and (not authority is Object or not authority.has_method("is_participant")):
+		return {}
+	context["combat"] = false
+	if authority is Object:
+		var records: Variant = authority.get("encounters")
+		if not records is Dictionary:
+			return {}
+		for id: Variant in records:
+			if bool(authority.call("is_participant", str(id), peer_id)):
+				context["combat"] = true
+	if peer_id == _local_peer_id():
+		var manager := root.get_node_or_null("CombatManager")
+		if manager == null or not manager.has_method("is_fighting"):
+			return {}
+		context["combat"] = bool(context.combat) or bool(manager.call("is_fighting"))
+		context["owned_inventory"] = SATCHEL_RULES.slots(_game().get("local").inventory)
+	else:
+		var session: Variant = _game().get("session")
+		if not session is Object or not session.has_method("admitted_character_state"):
+			return {}
+		var owned: Dictionary = session.call("admitted_character_state", peer_id)
+		if owned.is_empty() or str(owned.get("character_id", "")) != _registered_character(peer_id):
+			return {}
+		context["owned_inventory"] = owned.get("inventory")
+	var session: Variant = _game().get("session")
+	if session is Object and session.has_method("admitted_portal_keys"):
+		context["owned_portal_keys"] = session.call("admitted_portal_keys", peer_id)
+	return context
+
+
+func reconcile_portal_receipts() -> void:
+	var game := _game()
+	if game == null or not _character_writes_ready():
+		return
+	var player: RefCounted = game.get("local")
+	var world: RefCounted = game.get("world")
+	for id: Variant in player.get("satchel_escrow").keys():
+		var row: Variant = player.get("satchel_escrow")[id]
+		if PORTAL.valid_row(row, str(player.get("character_id"))) \
+				and str(row.world_id) == str(world.get("world_id")) \
+				and str(row.world_instance_id) == str(world.get("reward_delivery_namespace")) \
+				and bool(world.get("flags").call("has", str(id))):
+			_process_portal_receipt(str(id))
+
+
+func _process_portal_receipt(id: String) -> void:
+	var game := _game()
+	if game == null or not _character_writes_ready():
+		return
+	var result := PORTAL.settle(game, id)
+	if not bool(result.get("ok", false)):
+		game.call("push_world_message", str(result.get("reason", "Your portal key remains pending.")))
+		return
+	var row: Dictionary = game.get("local").satchel_escrow[id]
+	var ack := PORTAL.ack_receipt(str(row.biome), str(row.character_id))
+	if not bool(game.get("world").flags.has(ack)):
+		submit({"kind": "portal_ack", "realm": "meadows", "biome": str(row.biome),
+			"receipt": id, "world_instance_id": str(row.world_instance_id)})
 
 
 func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
@@ -597,6 +708,9 @@ func _apply_player_ops(delta: Dictionary) -> void:
 	for raw: Variant in WORLD_LEDGER.player_ops_for(delta, _local_peer_id()):
 		var op := raw as Dictionary
 		match str(op.get("op", "")):
+			"portal_settle":
+				if _character_writes_ready():
+					_process_portal_receipt(str(op.get("receipt", "")))
 			"reward_delivery":
 				var delivery: Variant = op.get("delivery", {})
 				if delivery is Dictionary and _character_writes_ready():
@@ -637,6 +751,7 @@ func reconcile_reward_deliveries() -> void:
 	if game == null or game.get("local") == null or game.get("world") == null \
 			or not _character_writes_ready():
 		return
+	reconcile_portal_receipts()
 	var character_id := str(game.get("local").character_id)
 	if character_id.is_empty():
 		return

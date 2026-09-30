@@ -40,8 +40,8 @@ static func begin_drop(player: RefCounted, world: RefCounted, at: Vector3, realm
 	var instance := world_instance(world)
 	if instance.is_empty() or str(player.character_id).is_empty():
 		return ""
-	var slots := RULES.slots(player.inventory)
-	if player.inventory.used_slots() == 0:
+	var slots := RULES.death_slots(player.inventory)
+	if not slots.any(func(stack: Variant) -> bool: return stack != null):
 		return ""
 	var txn := Crypto.new().generate_random_bytes(16).hex_encode()
 	player.satchel_escrow[txn] = {"status": "pending", "kind": "death_satchel_create", "world_id": str(world.world_id),
@@ -53,6 +53,8 @@ static func begin_drop(player: RefCounted, world: RefCounted, at: Vector3, realm
 	return txn
 
 static func begin_transfer(player: RefCounted, world: RefCounted, uid: String, direction: String, item: String, count: int, expected: int, origin_host: bool) -> String:
+	if RULES.db().is_character_bound(item):
+		return ""
 	var instance := world_instance(world)
 	if instance.is_empty() or str(player.character_id).is_empty():
 		return ""

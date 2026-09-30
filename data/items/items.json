@@ -19,6 +19,16 @@
   "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
+    "tm_fireball": {
+      "name": "TM: Fireball",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#f6a132",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A burning orb that bursts when it reaches its target.",
+      "description": "A burning orb that bursts when it reaches its target. Teaching it spends the disc, and it replaces the creature's charged move. Fire creatures can learn it.",
+      "move": "fireball"
+    },
     "windworn_heartwood": {
       "name": "Windworn Heartwood",
       "kind": "resource",
@@ -1120,6 +1130,52 @@
       "world_model_scale": 0.42,
       "blurb": "One electric creature, one lesson.",
       "description": "A gold-lit teaching orb carrying Stormfall. An electric creature can learn this charged move; the orb is spent after the lesson."
+    },
+    "home_key": {
+      "name": "Home Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#e0bd65",
+      "blurb": "Return to the home arch. This key stays with its owner.",
+      "description": "Return to the home arch. This key stays with its owner.",
+      "character_bound": true,
+      "unique_owned": true
+    },
+    "tidewake_portal_key": {
+      "name": "Tidewake Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#6caac7",
+      "blurb": "Unlock the Tidewake arch in the Crossing Hall.",
+      "description": "Unlock the Tidewake arch in the Crossing Hall.",
+      "character_bound": true
+    },
+    "cloudreach_portal_key": {
+      "name": "Cloudreach Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#cee4ee",
+      "blurb": "Unlock the Cloudreach arch in the Crossing Hall.",
+      "description": "Unlock the Cloudreach arch in the Crossing Hall.",
+      "character_bound": true
+    },
+    "stormwood_portal_key": {
+      "name": "Stormwood Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#a89cd9",
+      "blurb": "Unlock the Stormwood arch in the Crossing Hall.",
+      "description": "Unlock the Stormwood arch in the Crossing Hall.",
+      "character_bound": true
+    },
+    "fifth_portal_key": {
+      "name": "Fifth Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#bbbd87",
+      "blurb": "Stir the fifth arch in the Crossing Hall.",
+      "description": "Stir the fifth arch in the Crossing Hall.",
+      "character_bound": true
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",

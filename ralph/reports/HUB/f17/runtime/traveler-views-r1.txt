@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_traveler_progression.gd: 1 of 676 test files
+  ok    test_traveler_progression.gd :: test_ahead_world_flags_do_not_supply_personal_ending_entitlements
+  ok    test_traveler_progression.gd :: test_detached_views_follow_canonical_rebind_and_weak_lifetime
+  ok    test_traveler_progression.gd :: test_finite_portal_host_or_personal_unlock_home_and_sealed_fifth
+
+3 tests, 20 assertions, 0 failed
