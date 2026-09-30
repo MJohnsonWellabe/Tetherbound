@@ -209,5 +209,9 @@ static func with_defence(impact: Dictionary, defence: Dictionary) -> Dictionary:
 	resolved.damage = float(defence.damage)
 	resolved.critical = bool(defence.critical)
 	resolved.hitstop_seconds = float(config().get("critical_hitstop_seconds", 0.0)) if resolved.critical else float(impact.get("hitstop_seconds", 0.0))
+	resolved.host_resolved_defence = true
+	resolved.host_poise = float(defence.poise)
+	resolved.host_staggered = bool(defence.staggered)
+	resolved.host_critical_ready = bool(defence.critical_ready)
 	resolved.make_read_only()
 	return resolved

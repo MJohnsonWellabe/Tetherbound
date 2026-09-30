@@ -601,7 +601,14 @@ func _run() -> void:
 			if not bool(raw.get("own_hit", true)):
 				observer_count += 1
 				check(int(raw.get("target_timed_leases", 0)) > 0, "peer %d observer proxy received body-only timed lease" % peer)
-			if not bool(raw.get("on_enemy", true)): incoming_count += 1
+			if not bool(raw.get("on_enemy", true)):
+				incoming_count += 1
+				check(bool(raw.get("host_resolved_defence", false)), "peer %d incoming feedback uses accepted host defensive receipt" % peer)
+				check(is_equal_approx(float(raw.get("host_poise", -1.0)), float(raw.get("local_poise", -2.0))),
+					"peer %d actual incoming path mirrors host defensive poise" % peer)
+				if bool(raw.get("host_staggered", false)):
+					check(int(raw.get("local_action", -1)) == COMBAT_MANAGER.Action.STAGGER,
+						"peer %d actual incoming poise break enters production stagger" % peer)
 			var launched: Dictionary = raw.get("launch", {})
 			if float(launched.get("travel_seconds", 0.0)) > 0.0:
 				check(int(launched.get("contact_process_frame", -1)) >= 0 and int(launched.contact_process_frame) <= int(raw.impact_process_frame),
