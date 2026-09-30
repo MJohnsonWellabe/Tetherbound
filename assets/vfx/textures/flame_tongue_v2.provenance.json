@@ -1,0 +1,34 @@
+{
+  "asset": "assets/vfx/textures/flame_tongue_v2.png",
+  "sha256": "27b0cf8c2feda7d7a2bb292dac2dbfe5c1cc5cd8286d8aba07a7ea92973b6210",
+  "origin": "Original transparent flame sprite generated with the built-in image_gen tool, then one tool edit for padding. The model name is not exposed by this tool.",
+  "skill": "C:/Users/mattj/.codex/skills/.system/imagegen/SKILL.md",
+  "use_case": "stylized-concept",
+  "references_studied": [
+    "docs/reference/tetherbound-meadows-keyart.png",
+    "docs/reference/palworld-01-boss-fight-forest.jpg",
+    "docs/reference/palworld-03-field-boss-meadow.jpg"
+  ],
+  "reference_scope": "Author visual study of restored owner boards only. No reference pixels or geometry were copied and no reference image was supplied to generation.",
+  "generate_prompt": "Use case: stylized-concept. Asset type: one production game VFX flame-tongue RGBA texture, original art for Tetherbound. This is a single isolated flame tongue sprite, NOT a screenshot, illustration scene, fireball, explosion, sheet, icon or logo. Transparent background with real alpha; no ground, no shadows, no text or borders. Composition: one vertical asymmetrical S-curving flame tongue centered in a square, with generous transparent padding; narrow foot at the lower centre, a wider bent belly, three deliberately uneven sharply tapered curled tips. The shape has clean purposeful curved silhouette and clearly separated internal negative spaces, like a polished hand-painted stylized 3D creature-combat effect. Art direction studied from owner forest-combat boards: deliberate layered hot yellow accents against orange midtones, readable creature-friendly scale, restrained glow. Materials: a thin luminous golden-white inner flame stroke splits into two fine hooked tongues, vivid warm orange body outside it, a small deep burnt-orange underside, translucent feathered rim confined to just a few pixels. Keep the luminous central accent narrow and directional rather than a circular blob. Style: refined hand-painted game texture, simple strong curved masses with subtle painted surface variation; no realistic photographic noise, no chunky polygons, no fluffy smoke, no round glowing sphere, no broad blurry halo, no thick black line, no tiny detached embers. Preserve a useful clear contour and alpha edge for later rendering on small layered depth-tested 3D meshes.",
+  "edit_prompt": "Edit target: the attached original flame-tongue game texture. Change only its framing by giving it generous genuinely transparent padding on every side. Preserve the entire flame's exact painted shape, hooked tips, internal negative spaces, colors and brightness. The complete silhouette must occupy no more than 64% of image width and 72% of image height and must be centered; all outermost image rows and columns must be fully transparent. The top and bottom points must fit fully inside the canvas with ample transparent margin, never cut by an edge. Do not add or redraw flame tongues, detached sparks, new glow, shadows, smoke, text or a background; do not fill transparent areas with black. Keep real alpha.",
+  "generation": {
+    "transparent_background": true,
+    "original": "C:/Users/mattj/.codex/generated_images/01a0efa7-9c1b-77a1-a37b-e55692c4c473/exec-46065c30-0601-4fb5-902b-fd9cf0b69454.png",
+    "edited": "C:/Users/mattj/.codex/generated_images/01a0efa7-9c1b-77a1-a37b-e55692c4c473/exec-ac538f8e-e7ef-4b07-b9a6-7e9620c79a3d.png",
+    "retained_original_scope": "Original and edited images remain at their tool output paths; the first image was rejected for edge contact and also retained in ignored .tmp/vfx-authored-r7.",
+    "calls": 2,
+    "meshy_generations": 0,
+    "postprocessing": "Bit-identical copy of the selected tool output. No CPU image edit or alpha replacement."
+  },
+  "measured_image": {
+    "dimensions": [1254, 1254],
+    "mode": "RGBA",
+    "alpha_range": [0, 255],
+    "nonzero_alpha_bbox_exclusive": [105, 59, 1210, 1246],
+    "outermost_row_column_max_alpha": 0,
+    "padding_limit": "The requested 64% width / 72% height fit was not achieved. All outer rows and columns are actually transparent; no requested fit ratio is claimed as met."
+  },
+  "scale_contract": "Curved physical body planes use move size times size_scale times card_extent_scale, preserve authored production target bounds/model scale and receive no gameplay collision. The clear-transit guard includes the full mesh corner diagonal, curvature and bounded shader sway, including transparent padding. Impact planes are presentation children only.",
+  "release_state": "Move library disabled. Native import, shader parse, motion, visual finish and performance are unproved. Author bitmap inspection is not an independent game visual verdict."
+}

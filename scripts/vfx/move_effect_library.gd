@@ -38,6 +38,13 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	params["trail"] = maxf(0.0, float(params.get("trail", 1.0)) * float(tier.get("trail_scale", 1.0)))
 	params["impact_scale"] = maxf(0.01, float(params.get("impact_scale", 1.0)) * float(tier.get("impact_scale", 1.0)))
 	resolved["parameters"] = params
+	# Optional authored detail is presentation-only. The frozen host rank
+	# selects it once; no costs, targets, clocks or damage are read here.
+	if tier.has("accent_count"):
+		resolved["impact"]["accent_count"] = clampi(int(tier.accent_count), 4, 18)
+	if tier.has("body_layer_count"):
+		var layers: Array = resolved.body.get("layers", [])
+		resolved["body"]["layers"] = layers.slice(0, clampi(int(tier.body_layer_count), 0, layers.size()))
 	if id == "stone_throw" and int(params.count) == 1 and float(params.size) >= 0.5:
 		resolved["sound"] = (resolved.get("sound_variants", {}) as Dictionary).get("boulder", resolved.sound).duplicate(true)
 	resolved["mastery_rank"] = rank
@@ -46,7 +53,7 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	resolved["archetype"] = id
 	return resolved
 
-## No runtime geometry/timing/cost can be changed by mastery. Combat supplies
+## No gameplay geometry/timing/cost can be changed by mastery. Combat supplies
 ## travel_seconds from its frozen schedule; computed fallback is presentation
 ## for legacy callers only, never damage authority.
 static func travel_seconds(from: Vector3, to: Vector3, spec: Dictionary,

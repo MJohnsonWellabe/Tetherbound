@@ -74,11 +74,12 @@ func _ready() -> void:
 			var component := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), float(_params.size) * float(layer.get("size_scale", 0.5)), layer),
 				Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.8)))
 			component.reparent(body, false)
-			if str(layer.get("shape", "")) in ["flame_orb", "fire_bloom"]:
+			if str(layer.get("shape", "")) in ["flame_orb", "fire_bloom", "flame_tongue"]:
 				component.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
 			var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 			component.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * float(_params.size)
 			component.set_meta("spin_rate", float(layer.get("spin_rate", 0.0)))
+			component.set_meta("yaw_offset", deg_to_rad(float(layer.get("yaw_offset_deg", 0.0))))
 		if str(profile.shape) == "stone":
 			body.scale = Vector3(_rng.randf_range(0.82, 1.14), _rng.randf_range(0.82, 1.14), _rng.randf_range(0.82, 1.14))
 			body.rotation = Vector3(_rng.randf() * TAU, _rng.randf() * TAU, _rng.randf() * TAU)
@@ -167,6 +168,7 @@ func _update_bodies(t: float) -> void:
 		if _bodies.size() > 1:
 			body.position += direction * (float(i) - float(_bodies.size() - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
 		body.position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
+		if mode == "projectile": body.position = _projectile_position(t, i)
 		match mode:
 			"sky":
 				var marker_fraction := float((_row.body as Dictionary).get("marker_fraction", 0.65))
@@ -240,13 +242,28 @@ func _update_bodies(t: float) -> void:
 			var ground: Vector3 = _context.get("target_ground", _to)
 			body.position.y = ground.y + float(_params.size) * 0.05
 		for component: Node in body.get_children():
-			if component is Node3D: component.rotation.y = _elapsed * float(component.get_meta("spin_rate", 0.0))
+			if component is Node3D: component.rotation.y = float(component.get_meta("yaw_offset", 0.0)) + _elapsed * float(component.get_meta("spin_rate", 0.0))
 		var trail_head := body.position if mode not in ["sky", "chain", "beam"] else front
 		if mode == "sky":
 			var contact: Vector3 = _context.get("target_ground", _to) if str(_row.body.get("contact_anchor", "target")) == "target_ground" else _to
 			var start := contact + Vector3.UP * float(_row.body.get("sky_height", 6.0))
 			trail_head = start.lerp(contact, clampf((t - float(_row.body.get("marker_fraction", 0.65))) / maxf(0.001, 1.0 - float(_row.body.get("marker_fraction", 0.65))), 0.0, 1.0))
 		_append_trail_point(i, trail_head)
+
+func _projectile_position(t: float, index: int) -> Vector3:
+	var direction := (_to - _from).normalized()
+	if direction.length_squared() < 0.001: direction = Vector3.FORWARD
+	var side := direction.cross(Vector3.UP).normalized()
+	if side.length_squared() < 0.001: side = Vector3.RIGHT
+	var count := maxi(1, _bodies.size())
+	var spread_size := float(_params.get("spread", 0.0))
+	if count > 1: spread_size = maxf(spread_size, float(_params.size) * float(_row.body.get("volley_separation_scale", 2.8)))
+	var angle := TAU * float(index) / float(count)
+	var position := _from.lerp(_to, t) + (side * cos(angle) + Vector3.UP * sin(angle)) * spread_size * sin(t * PI)
+	if count > 1:
+		position += direction * (float(index) - float(count - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
+	position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
+	return position
 
 func _append_trail_point(index: int, point: Vector3) -> void:
 	var history: Array[Vector3] = _histories[index]
@@ -275,6 +292,16 @@ func _update_trail() -> void:
 			var max_length := float(profile.get("max_length_m", 2.4)) * float(_params.trail)
 			while points.size() > 2 and points.front().distance_to(points.back()) > max_length: points.pop_front()
 			var style := str(profile.get("style", "air"))
+			# A small volley has only a few leased trail control points per
+			# stone. Sample its actual frozen visual path across a meaningful
+			# length instead of spending those points on centimetres of wake.
+			if style == "dust" and str(_row.body.get("motion", "")) == "projectile":
+				var progress := clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
+				var span := max_length / maxf(_from.distance_to(_to), 0.001)
+				var start := maxf(0.0, progress - span)
+				points.clear()
+				for sample in maxi(2, samples):
+					points.append(_projectile_position(lerpf(start, progress, float(sample) / float(maxi(1, samples - 1))), body_index))
 			var amplitude := float(profile.get("wave_amplitude", 0.05)) * float(_params.size)
 			var frequency := float(profile.get("wave_frequency", 3.0))
 			for i in points.size():
@@ -282,7 +309,7 @@ func _update_trail() -> void:
 				var phase := f * frequency * TAU + _elapsed * float(profile.get("wave_speed", 4.0))
 				match style:
 					"ion", "tether": points[i].y += signf(sin(phase)) * amplitude * sin(f * PI)
-					"flame", "ember": points[i].y += absf(sin(phase)) * amplitude * (1.0 - f)
+					"flame", "ember", "painted_flame": points[i].y += absf(sin(phase)) * amplitude * (1.0 - f)
 					"wisp", "ripple", "mote": points[i] += Vector3(cos(phase), sin(phase), 0.0) * amplitude * sin(f * PI)
 					"foam", "spray", "bubble": points[i].y += sin(phase) * amplitude
 					"dust": points[i].y -= amplitude * (1.0 - f)
@@ -306,7 +333,7 @@ func _build_impact() -> void:
 	var surface_offset := _impact_visual_origin(profile) - _contact_position()
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
-	if str(profile.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
+	if str(profile.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	core.position = surface_offset
@@ -314,7 +341,7 @@ func _build_impact() -> void:
 		var scale := float(layer.get("size_scale", 1.0))
 		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
 			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
-		if str(layer.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
+		if str(layer.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
 		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
 		part.reparent(_impact, false)
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
@@ -324,7 +351,7 @@ func _build_impact() -> void:
 			part.position.y = ground.y - _contact_position().y + scale_factor * float(layer.get("ground_lift_scale", 0.3))
 	if bool(_row.impact_layer):
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
-		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
+		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
 		secondary.set_meta("base_opacity", 0.65)
 		secondary.reparent(_impact, false)
 		secondary.position = surface_offset
@@ -362,7 +389,8 @@ func _build_impact() -> void:
 
 func _impact_visual_origin(profile: Dictionary) -> Vector3:
 	var contact := _contact_position()
-	if str(profile.get("visual_anchor", "")) != "contact_surface": return contact
+	var anchor := str(profile.get("visual_anchor", ""))
+	if anchor not in ["contact_surface", "sky_surface"]: return contact
 	var raw_bounds: Variant = _context.get("target_visual_bounds", {})
 	if not raw_bounds is Dictionary: return contact
 	var raw_position: Variant = raw_bounds.get("position", null)
@@ -371,6 +399,10 @@ func _impact_visual_origin(profile: Dictionary) -> Vector3:
 	var position: Vector3 = raw_position
 	var size: Vector3 = raw_size
 	if not position.is_finite() or not size.is_finite() or size.x <= 0.0 or size.y <= 0.0 or size.z <= 0.0: return contact
+	if anchor == "sky_surface":
+		return Vector3(clampf(contact.x, position.x, position.x + size.x),
+			position.y + size.y + float(profile.get("visual_surface_lift_m", 0.02)),
+			clampf(contact.z, position.z, position.z + size.z))
 	var intersection: Variant = AABB(position, size).intersects_segment(_from, _to)
 	return intersection as Vector3 if intersection is Vector3 else contact
 
@@ -390,7 +422,7 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 	if valid_bounds:
 		var size: Vector3 = raw_size
 		_puff_extent = _puff_extent.max(size * float(profile.get("target_envelope_scale", 0.55)))
-		if str(profile.get("visual_anchor", "")) != "contact_surface":
+		if str(profile.get("visual_anchor", "")) not in ["contact_surface", "sky_surface"]:
 			_puff_origin = (raw_position as Vector3) + size * 0.5 - _contact_position()
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D

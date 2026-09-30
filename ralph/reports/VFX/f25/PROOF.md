@@ -257,3 +257,39 @@ verbs and earned mastery are not implemented by this presentation slice.
 ## Actual r6 and independent full-bar verdict
 
 Exact pushed game08be1a3b26ebabf76a77057dcd18a0ea7fc6ce50: one named parser native0 and Compatibility1920 native0/12cases/36 originals, arrival exactly once on independent clock and leases0 at end; raw files retained in native-identities-r6. Fresh independent code-blind report there is verbatim, with complete SHA256 image inventory. Sampled literal4-family identities PASS; mastery progression incomplete (Pebble3-to5 weak, ranks2/4/other moves unproved). Full effect/creature craft FAIL all4; actual integrated world UNPROVED on synthetic background. No F25 criterion is complete; library stays flag-off. Previous native1 and visual failures retained. Next content approach must replace repeated procedural finish attempts with reference-backed authored shape/material/layer hierarchy and clear rank progression; runtime/timing/authority remain unchanged.
+
+## Authored shapes and accents after the r6 full-bar rejection
+
+This increment changes approach after repeated procedural blob/noise finish
+failures. It preserves the present Fireball orb/trail/basic explosion identity,
+then layers an original painted hooked flame silhouette on curved physical
+planes and the continuous trail. The built-in imagegen skill/tool generated
+one RGBA sprite and edited it once for transparent padding; exact prompts,
+original paths, selected hash, measured alpha and scale limits are in
+`assets/vfx/textures/flame_tongue_v2.provenance.json`. The edit did not achieve
+its requested fit percentages; its outer rows/columns are actually transparent.
+No Meshy generation or reference pixel copying occurred.
+
+New unequal tapered contact accents replace the broad main dust/fire puff.
+Stone chips retain lit irregular geometry; three smaller dust puffs leave
+21 of the same24 impact leases for fragments. Stone trail control points now
+span their actual frozen projectile path instead of a short recent wake.
+Lightning retains its descending bolt and adds a thicker tapered corona,
+branches and a local electric splash at the frozen measured target's top.
+Only impact children move to that surface; contact parent/endpoints/timers and
+combat HP authority are unchanged. No model, production pose or target scale
+is adjusted. The updated clear-transit guard includes new flame planes' full
+corner diagonal, curvature and bounded vertex sway.
+
+Every volley rank adds one actual body; a single boulder stays single. Fireball
+rank1..5 selects one..five authored flame planes. All24 data rows retain five
+strictly increasing size/trail/impact envelopes; contact accents also grow on
+the four identity families. This is implementation, not proof of visible
+all-library progression or an earned player path. Ordinary leases remain42
+(24 impact +18 trail), existing encounter cap remains384 and flag stays off.
+
+Only source/JSON/mapping/budget/provenance/whitespace checks ran for this
+increment while another lane held Godot. Native parsing/import/shader rendering,
+motion/audio/performance, real-world integration and fresh code-blind craft
+remain pending. Existing r1..r6 originals, native failures and strict verdicts
+are retained unchanged. F25#0..#5 remain open.

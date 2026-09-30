@@ -8,6 +8,9 @@ const FLUID := preload("res://scripts/vfx/fluid_effect_geometry.gd")
 const FLOW_SHADER := preload("res://assets/vfx/shaders/flowing_water.gdshader")
 const ICE_SHADER := preload("res://assets/vfx/shaders/ice_crystal.gdshader")
 const DUST_SHADER := preload("res://assets/vfx/shaders/dust_plume.gdshader")
+const AUTHORED := preload("res://scripts/vfx/authored_effect_geometry.gd")
+const TONGUE_SHADER := preload("res://assets/vfx/shaders/flame_tongue.gdshader")
+const TONGUE_TEXTURE := preload("res://assets/vfx/textures/flame_tongue_v2.png")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
 ## Forward+. No screen-space distortion or GPU particles are required.
@@ -25,6 +28,12 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = false) -> 
 
 static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 	match kind:
+		"flame_tongue":
+			return AUTHORED.flame_tongue(size, profile)
+		"contact_burst":
+			return AUTHORED.contact_burst(size, profile)
+		"electrical_splash":
+			return AUTHORED.electrical_splash(size, profile)
 		"water_stream", "flame_volume", "mist_cone":
 			return FLUID.water_stream(size, profile)
 		"rolling_wave":
@@ -70,6 +79,16 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
 	var out := ShaderMaterial.new()
+	if kind == "flame_tongue" or (kind == "soft_trail" and str(profile.get("style", "")) == "painted_flame"):
+		out.shader = TONGUE_SHADER
+		out.set_shader_parameter("flame_texture", TONGUE_TEXTURE)
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.9)))
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.2)))
+		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.45)))
+		out.set_shader_parameter("billboard", bool(profile.get("billboard", false)))
+		out.set_shader_parameter("sprite_angle", deg_to_rad(float(profile.get("sprite_angle_deg", 0.0))))
+		out.set_shader_parameter("flame_colour", colour)
+		return out
 	if kind == "soft_dust" or (kind == "soft_trail" and str(profile.get("style", "")) == "dust"):
 		out.shader = DUST_SHADER
 		out.set_shader_parameter("dust_colour", colour)
@@ -90,7 +109,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.shader = ICE_SHADER
 		out.set_shader_parameter("ice_colour", colour)
 		return out
-	if kind == "ion_filament":
+	if kind in ["ion_filament", "electrical_splash"]:
 		out.shader = ION_SHADER
 		out.set_shader_parameter("ion_colour", colour)
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.95)))

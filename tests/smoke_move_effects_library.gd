@@ -269,6 +269,12 @@ func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds
 	if str(profile.shape) == "flame_orb": radius *= float(profile.get("card_extent_scale", 3.2)) * 0.5
 	for layer: Dictionary in profile.get("layers", []):
 		var extent := float(layer.get("size_scale", 1.0)) * float(layer.get("card_extent_scale", 3.2)) * 0.5
+		if str(layer.get("shape", "")) == "flame_tongue":
+			# Curved authored planes rotate in world space. Include their full
+			# corner diagonal, curve depth and bounded vertex sway, not merely
+			# projected width or the opaque portion of a generated texture.
+			var layer_scale := float(layer.get("size_scale", 1.0))
+			extent = extent * (sqrt(2.0) + 0.025) + layer_scale * float(layer.get("curve_depth_scale", 0.18))
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 		extent += Vector3(float(offset[0]), float(offset[1]), float(offset[2])).length()
 		radius = maxf(radius, float(row.parameters.size) * extent)
