@@ -2433,7 +2433,9 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		return verdict
 
 	var rolled: Dictionary = damage_engine.call("host_roll_damage", card,
-		str(intent.get("move_id", "")), float(move.get("power", 9.0)), slot == "charged")
+		str(intent.get("move_id", "")), float(move.get("power", 9.0)), slot == "charged",
+		{"action_id": "%s:%d:%d" % [encounter_id, peer_id, int(intent.get("action", 0))],
+		 "direction": wild.global_position - striker.global_position})
 	if rolled.is_empty():
 		return verdict
 	delta.merge(rolled, true)
@@ -2443,6 +2445,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_encounter_host.call("set_phase", encounter_id,
 			"done" if runtime != null else "resolving")
 	_host_after_encounter_change(encounter_id, peer_id)
+	_host_publish_peer_impact(encounter_id, peer_id, rolled.get("impact", {}) as Dictionary)
 	if bool(rolled.get("killed", false)):
 		_finalize_shared_host_fight(encounter_id, "won")
 	return verdict
@@ -2701,7 +2704,7 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 		return {}
 	var struck := int(best.get("peer_id", 0))
 	_encounter_host.call("note_struck", encounter_id, struck)
-	return {"peer_id": struck, "card": _creature_card_for(struck)}
+	return {"peer_id": struck, "card": _creature_card_for(struck), "body": deployed_body_for(struck)}
 
 
 ## Deliver a blow the host rolled to the peer whose creature took it.
@@ -6677,3 +6680,18 @@ func _set_exploration_active(active: bool) -> void:
 		if active and _ally != null and not bool(_ally.get("fainted")) \
 				and not bool(_ally.get("resting")):
 			_ally_body.visible = true
+
+func _host_publish_peer_impact(encounter_id: String, author_peer_id: int, impact: Dictionary) -> void:
+	if not _is_host() or impact.is_empty(): return
+	for participant: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		if participant == author_peer_id: continue
+		if participant == _local_peer_id():
+			if _manager != null and _local_bound_encounter_id() == encounter_id:
+				_manager.call("present_host_peer_impact", impact)
+		elif _can_encounter_rpc():
+			_send_realm_rpc(participant, "_rpc_encounter_peer_impact", [encounter_id, impact])
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_peer_impact(encounter_id: String, impact: Dictionary) -> void:
+	if _manager == null or _local_bound_encounter_id() != encounter_id: return
+	_manager.call("present_host_peer_impact", impact)

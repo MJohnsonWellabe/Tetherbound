@@ -1974,7 +1974,7 @@ func play_hit() -> void:
 ## Combat's hit reaction is deliberately on the visual pivot, never the
 ## CharacterBody: the recoil cannot move collision or change whether the next
 ## attack connects. An authored hit clip still plays underneath it.
-func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
+func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -> void:
 	play_hit()
 	if _model == null or not is_inside_tree():
 		return
@@ -1985,12 +1985,17 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	_combat_flinch_rest_position = _model.position
 	_combat_flinch_rest_rotation = _model.rotation
 	var local_away := global_basis.inverse() * away.normalized()
-	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
+	var profile := impact
+	if profile.is_empty():
+		profile = preload("res://scripts/combat/hit_feedback.gd").config().get("weights", {}).get("light", {})
+	var recoil := Vector3(local_away.x * float(profile.get("recoil_m", 0.0)), float(profile.get("recoil_up_m", 0.0)), local_away.z * float(profile.get("recoil_m", 0.0)))
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+	var out_seconds := float(profile.get("reaction_out_seconds", 0.0))
+	var back_seconds := float(profile.get("reaction_back_seconds", 0.0))
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, out_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(float(profile.get("recoil_degrees", 0.0))), out_seconds)
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, back_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, back_seconds)
 
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager
