@@ -65,7 +65,7 @@
     "tests/test_session_build_compat.gd": "7ed06f9da398d37411782e5de7c2b1f72c9a717efb2393194fe568918c99767f",
     "data/progression/flag_scopes.json": "087c7c46247680c3a55fb296b396c714eabdf90ee75e4d7a7e62c24fa338f2ed",
     "tests/test_session_snapshot.gd": "52d8299aa7c188934ef3086efb1f54fe7506a738c98126b35584092ae6fcf731",
-    "data/items/items.json": "2f2431760e04af540ce25bae977612eeaf12b6d9983cda0a6cba1aed6fc839ca",
+    "data/items/items.json": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff",
     "CODEX_START_HERE.md": "24ca531e6beb908dcdbcbe6eb7065d4e5b191c9b4053cf72c710f8f63b759118",
     "tests/test_moves_data.gd": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
     "tests/test_farming.gd": "1107498508aea329a5e4c01c7b2c7ac83900cf7c038c909609f3c99e77c7d634",
@@ -88,5 +88,11 @@
     "canonical_row_sha256": "73c2aade38e964d386d696283351e6231b9266d41d6ea16c4af61da1c245e5cd",
     "scope": "ONE exact TM ItemDB row only; no other item rows, inventory/crafting/gameplay activation or current main/training replacement"
   },
-  "post_batch_repair_status": "source-only reviewed734 codec hunks and allocated fixture/availability adaptations; affected native checks await exact successor gate"
+  "post_batch_repair_status": "source-only reviewed734 codec hunks and allocated fixture/availability adaptations; affected native checks await exact successor gate",
+  "post_batch_description_graft": {
+    "source_patch_sha256": "dd3b001059716c4e961e0c4637c16f247ab7f6e359b5bd9ff2ee2161351d8dde",
+    "exact8descriptionfields": true,
+    "all99items_other_fields_preserved": true,
+    "tm_fireball_preserved": true
+  }
 }
