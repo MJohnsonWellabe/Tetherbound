@@ -529,12 +529,15 @@ static func write_regions(world_name: String, by_layer: Dictionary, drained: Dic
 	var prior := TERRAIN_BAKE.read_manifest(data_dir)
 	if int(prior.get("base_seed", -1)) != base_seed or float(prior.get("region_size", -1)) != region_size:
 		return {"ok": false, "code": "incompatible_base_bake"}
+	var prior_catalog: Variant = prior.get("regions", [])
+	if not TERRAIN_BAKE.valid_region_selection(prior_catalog):
+		return {"ok": false, "code": "invalid_base_catalog"}
 	var selected := {}
 	for pair: Array in selection:
 		selected[Vector2i(int(pair[0]), int(pair[1]))] = true
 	var old_kept := {}
 	var old_drained := {}
-	for pair: Array in prior.get("regions", []):
+	for pair: Array in prior_catalog:
 		var path := data_dir.path_join(_region_path(world_name, Vector2i(int(pair[0]), int(pair[1]))).get_file())
 		var input := FileAccess.open(path, FileAccess.READ)
 		if input == null or input.get_32() != MAGIC or input.get_32() != FORMAT_VERSION:
@@ -604,9 +607,6 @@ static func write_regions(world_name: String, by_layer: Dictionary, drained: Dic
 	if DirAccess.make_dir_recursive_absolute(stage) != OK:
 		return {"ok": false, "code": "stage_failed"}
 	var files: Array[String] = []
-	var prior_catalog: Variant = prior.get("regions", [])
-	if not TERRAIN_BAKE.valid_region_selection(prior_catalog):
-		return {"ok": false, "code": "invalid_base_catalog"}
 	# JSON numbers are floats. Canonicalize before Array.has so an existing
 	# cell cannot be appended again solely because the new selection uses ints.
 	var catalog: Array = []
