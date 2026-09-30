@@ -7,6 +7,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const FLASH := preload("res://scripts/combat/impact_flash.gd")
 const FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 const PICKUP_ID := "b5_tm_fireball_scorched_pocket"
 var _world: Node
@@ -171,12 +172,17 @@ func _run() -> void:
 		var direction := wild.global_position - ally.global_position
 		direction.y = 0
 		_rig.set("yaw", atan2(-direction.x, -direction.z))
-		if direction.length() > 5.0:
+		var slot := "charged" if bool(_manager.call("charged_ready")) else "quick"
+		var reach := float(_manager.call("combat_move_reach", slot))
+		if direction.length() > reach - 0.15:
 			Input.action_press("move_forward")
 		else:
 			Input.action_release("move_forward")
 			if not _accepted_fireball and bool(_manager.call("charged_ready")):
 				await _tap_action("combat_charged")
+			elif not _accepted_fireball and bool(_manager.call("quick_ready")):
+				# Earn the meter through real connecting quick hits, never inject energy.
+				await _tap_action("combat_quick")
 		await physics_frame
 	Input.action_release("move_forward")
 	if not _accepted_fireball: _fail("physical charged tap never produced an accepted Fireball with real contact/HP/number")
@@ -191,7 +197,7 @@ func _teleport(position: Vector3) -> void:
 
 func _observe_launch(outgoing: bool, launch: Dictionary, presentation: Node3D) -> void:
 	var target: RefCounted = _manager.call("enemy") if outgoing else _manager.call("active_creature")
-	var sample := {"arrived": false, "hp": float(target.get("hp")), "move_id": str(launch.move_id), "process_frame": Engine.get_process_frames()}
+	var sample := {"arrived": false, "instant": float(launch.get("travel_seconds", 0.0)) <= 0.0, "hp": float(target.get("hp")), "move_id": str(launch.move_id), "process_frame": Engine.get_process_frames()}
 	_launches[str(launch.action_id)] = sample
 	if presentation != null:
 		presentation.connect("arrived", func() -> void: sample.arrived = true)
@@ -203,7 +209,18 @@ func _observe_impact(outgoing: bool, receipt: Dictionary, _where: Vector3) -> vo
 		_fail("accepted hit lacks immutable host-style launch/receipt")
 		return
 	var sample: Dictionary = _launches[id]
-	if not bool(sample.arrived): _fail("accepted hit precedes actual informational presentation contact")
+	if not bool(sample.instant) and not bool(sample.arrived):
+		_fail("travelling accepted hit precedes actual informational presentation contact")
+	if bool(sample.instant):
+		# Zero-duration contact moves deliberately have no projectile-arrived
+		# callback. Observe the actual fresh production flash at this contact.
+		var arena: Node3D = _manager.call("arena")
+		var fresh_flash := false
+		if arena != null:
+			for node: Node in arena.get_children():
+				if node.get_script() == FLASH and is_zero_approx(float(node.get("_life"))) and (node as Node3D).global_position.distance_to(_where) < 0.01:
+					fresh_flash = true
+		if not fresh_flash: _fail("instant contact did not construct its actual fresh receipt flash")
 	var target: RefCounted = _manager.call("enemy") if outgoing else _manager.call("active_creature")
 	if target == null or not float(target.get("hp")) < float(sample.hp): _fail("accepted impact did not debit actual target HP")
 	var hud := _world.get_node_or_null("CombatHUD")
@@ -215,7 +232,7 @@ func _observe_impact(outgoing: bool, receipt: Dictionary, _where: Vector3) -> vo
 	if not number_found: _fail("accepted hit did not create its real HUD number")
 	if outgoing and str(receipt.get("move_id", "")) == "fireball": _accepted_fireball = true
 	if not outgoing: _incoming += 1
-	print("IMPACT %s move=%s outgoing=%s contact=%s hp_before=%.3f hp_after=%.3f damage=%.3f number=%s crit=%s" % [id, receipt.get("move_id", ""), outgoing, sample.arrived, sample.hp, target.get("hp") if target != null else -1, receipt.damage, number_found, receipt.critical])
+	print("IMPACT %s move=%s outgoing=%s contact=%s instant=%s hp_before=%.3f hp_after=%.3f damage=%.3f number=%s crit=%s" % [id, receipt.get("move_id", ""), outgoing, sample.arrived, sample.instant, sample.hp, target.get("hp") if target != null else -1, receipt.damage, number_found, receipt.critical])
 
 func _tap_button(index: int) -> void:
 	var event := InputEventJoypadButton.new()
