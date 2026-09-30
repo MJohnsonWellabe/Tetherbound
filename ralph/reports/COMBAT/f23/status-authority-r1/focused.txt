@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_utility_effects.gd::test_actual_body_object_ids,test_utility_effects.gd::test_status_commit,test_utility_effects.gd::test_admitted_deployment,test_utility_effects.gd::test_admitted_wind,test_utility_effects.gd::test_utility_target: 1 of 675 test files
+  ok    test_utility_effects.gd :: test_actual_body_object_ids_map_to_monotonic_private_actor_generations
+  ok    test_utility_effects.gd :: test_admitted_deployment_rejects_split_card_uid_and_frozen_outer_uid_bypass
+  ok    test_utility_effects.gd :: test_admitted_wind_ignores_peer_numeric_profile_and_refuses_malformed_saved_inputs
+  ok    test_utility_effects.gd :: test_status_commit_refuses_stale_or_unsupported_effect_before_spend_and_miss_costs_once
+  ok    test_utility_effects.gd :: test_utility_target_requires_the_exact_live_engine_without_wild_local_fallback
+
+5 tests, 68 assertions, 0 failed
