@@ -1,6 +1,6 @@
 {
-  "status": "Historical four-shard batch RED; targeted12/287/0 repairs PASS. No full-suite green claim. False-ok SCRIPT ERROR methods excluded from passing reuse.",
-  "scope": "Only12 newly archived four-shard/scoped-repair streams and receipt/census blobs. Earlier parser evidence remains separately retained at its existing source commit.",
+  "status": "Historical four-shard batch RED; targeted12/287/0 repairs and Stormwood8/86/0 PASS. No full-suite green claim. False-ok SCRIPT ERROR methods excluded from passing reuse.",
+  "scope": "Exactly17 newly archived four-shard/scoped-repair/bake streams and receipt/census blobs. Earlier parser evidence remains separately retained at its existing source commit.",
   "raw": [
     {
       "path": "affected-repairs-r1-receipt.json",
@@ -61,6 +61,31 @@
       "path": "unit-shard-4.txt",
       "bytes": 152887,
       "sha256": "378bd8097370e85701d9f9b31d78f0bad91e76a17c91b03e4196b587ea0a1284"
+    },
+    {
+      "path": "stormwood-full-rebake-r1-before.json",
+      "bytes": 15381,
+      "sha256": "82a2a1414966a50dcb4234f2d166e612a77969648f732ad907279112f038247d"
+    },
+    {
+      "path": "stormwood-full-rebake-r1-receipt.json",
+      "bytes": 19179,
+      "sha256": "4707fd2c82226b4b23dda97ccdb7ab790c58cfac1599755e2462fcc348686630"
+    },
+    {
+      "path": "stormwood-full-rebake-r1.txt",
+      "bytes": 16741,
+      "sha256": "02c302b0b6b4aad920d1c0250b0362c70fe9e8a75e48f205fc295499cb154a9d"
+    },
+    {
+      "path": "stormwood-affected-r1-receipt.json",
+      "bytes": 18311,
+      "sha256": "425cd344efa1d3532131d7cfb3bbe8340f2c866736422f01f8ad1d6e6c49bc06"
+    },
+    {
+      "path": "stormwood-affected-r1.txt",
+      "bytes": 1536,
+      "sha256": "8084b5d6c12358170d953695c345d5094aa68f140912e4a888b2a09bfa71bb93"
     }
   ]
 }

@@ -1,0 +1,13 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_stormwood_road_surface.gd::test_surface_config_names_a_real_slot_and_every_route_kind,test_stormwood_road_surface.gd::test_every_route_centreline_is_painted_path,test_stormwood_road_surface.gd::test_ground_well_off_every_route_is_not_path,test_stormwood_road_surface.gd::test_spurs_are_painted_to_their_mouth_and_stop_there,test_stormwood_road_surface.gd::test_painted_width_matches_config_per_route_kind,test_stormwood_road_surface.gd::test_spur_junction_flares_so_the_y_reads,test_stormwood_road_surface.gd::test_bake_manifest_is_fresh_and_covers_routes_and_surface,test_stormwood_road_surface.gd::test_committed_heights_still_match_the_heightfield: 1 of 670 test files
+  ok    test_stormwood_road_surface.gd :: test_bake_manifest_is_fresh_and_covers_routes_and_surface
+  ok    test_stormwood_road_surface.gd :: test_committed_heights_still_match_the_heightfield
+  ok    test_stormwood_road_surface.gd :: test_every_route_centreline_is_painted_path
+  ok    test_stormwood_road_surface.gd :: test_ground_well_off_every_route_is_not_path
+  ok    test_stormwood_road_surface.gd :: test_painted_width_matches_config_per_route_kind
+  ok    test_stormwood_road_surface.gd :: test_spur_junction_flares_so_the_y_reads
+  ok    test_stormwood_road_surface.gd :: test_spurs_are_painted_to_their_mouth_and_stop_there
+  ok    test_stormwood_road_surface.gd :: test_surface_config_names_a_real_slot_and_every_route_kind
+
+8 tests, 86 assertions, 0 failed
