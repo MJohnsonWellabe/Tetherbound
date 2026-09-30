@@ -1,0 +1,38 @@
+Independent bounded combat correction review
+Candidate0ff523c4ed00befaa296b9994d923a9d4640db11 vs b0c8724f8c2ce045630c5dec2a14320e61603c1d
+Pinned Git reads only; no engine/test/GPU/Git/source/board/STATE writes.
+
+Original P1 outer/inner UID mismatch: FIXED in source. The actual context now
+selects outer deployment UID, looks up exactly that UID in admitted roster,
+requires outer/card/owned UID and species plus host body character/species to
+agree, then checks frozen roster on that exact UID. Local body identity additionally
+uses Director's actual _ally UID. Pure adversarial tests are authored, unexecuted.
+
+Original P1 peer numeric Wind profile: FIXED in source. Context reconstructs
+Wind card only from admitted species,nourishment and lifetime bond counters using
+existing condition/milestone derivation. Status call uses context.wind_card.
+Peer-fed nourishment_fraction/bond_nodes/scales/active_buffs are ignored. Numeric
+inputs refuse nonfinite/out-of-domain/fractional counters. Unaccepted tonic
+scales deliberately neutral1.0; accepted host tonic consumer is still unproved
+and must restore legitimate current buffs before full gameplay acceptance.
+
+NEW P1 local-path activation defect: in _host_actor_vitals_context local branch,
+`if _ally == null or body.get("instance") != _ally: return {}` asks the actual
+follower body for a property it does not have. _spawn_ally_body explicitly applies
+FOLLOWER_SCRIPT (follower_creature.gd), which extends creature_body.gd. Neither
+script defines `instance`; CreatureBody.setup assigns species_id/shiny/display_name,
+not a saved CreatureInstance. WildCreature has an instance, but is the opponent.
+Therefore a normal local deployment cannot pass this new context; the null value
+from body.get("instance") cannot equal actual non-null _ally. No native reproduction
+is claimed; this is grounded in exact script inheritance and actual spawn code.
+Minimal fix: require body==_ally_body, actual owner peer/body species, Director
+_ally UID/species and admitted/frozen identity. If adding a canonical UID property
+instead, have the existing body owner set it and preserve pool/reset discipline.
+Do not assume WildCreature's instance API exists on local follower.
+
+Original P2 exact opponent runtime/encounter fallback remains unchanged at this
+pin; writer is authoring separately. Final supporting-seam source PASS withheld
+until both actual-local-body and exact-opponent fixes are independently reviewed.
+No acceptance MET; dispatch/HP/durable settlement/native parser/rejoin remain
+unproved. Fold local real body context into the existing coherent actor/status
+batch rather than adding a full suite or another broad test pass.

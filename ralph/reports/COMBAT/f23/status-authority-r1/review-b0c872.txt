@@ -1,0 +1,106 @@
+Independent read-only combat source boundary review
+
+Candidate: b0c8724f8c2ce045630c5dec2a14320e61603c1d
+Compared with previously reviewed 0d24cba944631c964bffac756dbe7bed1c3097e5;
+unchanged movement hooks checked against executed c9c5cbd986fb67b674c8b68cc51744904b29c54f.
+Focus: ee913 body generations,56d2 admitted actor context,b0c872 atomic status door.
+Separate reviewer did not author source. Reads used exact git show objects;
+moving worktree source was not used for judgments. No fetch/merge/Git mutation,
+source/STATE/board writes, Godot, import, render, GPU, tests or CI. Only ignored
+review artifacts written. Existing receipts were not rerun or called new proof.
+
+Verdict: CHANGES REQUESTED before dispatch activation. Low-level actor-generation
+and atomic status boundary pass bounded source inspection; new Director seam
+still carries two peer-card trust defects. All gameplay/acceptance stays UNPROVED.
+
+1. P1: frozen tournament validation and actual chosen UID can disagree.
+   encounter_director.gd:2568 calls _tournament_combat_identity_valid, whose
+   implementation at2373 checks _deployed_by[peer].creature_uid. At2576 the
+   new context instead takes _creature_card_for(peer).creature_uid. For a guest
+   that is _deployed_by[peer].card.creature_uid (3423). _host_set_deployed1538
+   accepts and deep-copies the peer's row/card without requiring these two
+   UIDs to agree. The context only then verifies that the inner UID exists in
+   the admitted party, not that it is the exact frozen/deployed UID.
+   Concrete source path: outer UID is a registered tournament member A,
+   inner card UID is another admitted owned creature B outside that frozen
+   roster. A passes the tournament gate; B passes admitted-party lookup and
+   _host_owned_move, then bind_actor_body binds status casting as B.
+   Minimal correction: establish one host-validated active deployment UID;
+   require the legacy row/card identities to agree or rebuild card identity
+   from the admitted row, and validate tournament membership on that SAME
+   exact UID. Bind only after body owner-character/species/active deployment
+   identity agrees with that admitted actor. No new client party/baseline.
+
+2. P1: status Wind capacity/regeneration still derive from a peer card.
+   encounter_director.gd:2623-2624 calls
+   COMBAT_MANAGER.host_wind_profile(_creature_card_for(peer_id)), although the
+   context contains a detached Session-admitted owned_row. For guests the
+   deployment card is copied from the any_peer _rpc_creature_deployed row by
+   _host_set_deployed. host_wind_profile clamps, but trusts its species_id,
+   nourishment_fraction,bond_nodes,wind_cap_scale and wind_regen_scale.
+   Forged in-range fed/bond/scales (up to3x) therefore alter initial capacity
+   and regeneration used by the supposedly admitted status cost transaction.
+   Bound/clamped peer-authored multipliers are still peer-authored authority.
+   Minimal correction: build a host-only Wind projection from the canonical
+   admitted owned_row using the existing nourishment/bond/current-buff order;
+   use it for this seam. Reject a stale/mismatched deployment card as identity
+   input. Avoid a second independent balance or trusting the UI/card's numbers.
+
+3. P2 / supporting-seam scope guard: fallback opponent can belong to another
+   encounter. At2608-2610 any missing _shared_host_fight(id) unconditionally
+   falls back to _engaged_with/_manager. This differs from _host_strike, which
+   requires a wild's exact shared runtime or _local_bound_encounter_id()==id
+   for its local trainer fallback. New context verifies only active record/
+   participant/actor, not the selected damage engine's bound encounter. Status
+   staging uses selected wild.instance.uid/geometry but rec.opponent.hp.
+   If runtime id is stale/missing or local manager is bound elsewhere, Sap
+   can cost Wind/store a status against an unrelated live body UID while
+   validating HP/participants against id. This is conditional source behavior;
+   no claim that current absent dispatch reaches it in live gameplay.
+   Minimal correction: reuse the existing strict wild-vs-local opponent
+   selection and require exact engine/encounter/current opponent generation
+   association before building view. Refuse missing runtime, not generic fallback.
+
+Bounded source passes:
+- bind_actor_body assigns a separate monotonic1..2147483647 generation per
+  participant; a new ObjectID or pooled-body UID switch increments it. An
+  unchanged current UID/ObjectID reuses its generation, existing HP is not
+  reseeded, changed maxHP or decreasing generation refuses, exhausted counter
+  refuses rather than wraps. Raw ObjectID remains private and is not itself
+  constrained to a32-bit generation domain. Existing admitted ownership is
+  necessarily a Director/Session precondition to this host-internal API.
+- Actor reads require active phase, nonempty matching stable character,
+  current UID and exact body generation. Existing dirty actor HP/receipt row
+  remains retained across leave/rejoin. The prior duplicate-character before
+  initial actor bind fix is retained. No new health reseed/Heal activation.
+- presentation_snapshot is deep-copied and removes departed rows,
+  utility_state,actor_generation,body_instance_id,receipts,settlement_receipt
+  and settled_revision. Both changed/opened broadcasts now use this projection;
+  accepted resolved_impact attaches only to the detached broadcast. Ordinary
+  presentation enrichment adds only opponent geometry/cues to host record.
+- commit_status_utility allows only zero-power movement_buff,next_hit_buff,
+  damage_taken_debuff; healing,damaging/control utilities refuse before spend.
+  Host view current source UID/generation/HP is rechecked before staging.
+  Stage is detached and validates bounded journal budget before any Wind/action
+  commitment. validate_utility shares action/recovery ordering and UID-keyed
+  utility cooldown; cost/action/cooldown and accepted state publish synchronously
+  without intervening callback. Refused staging advances no resource/action;
+  valid aimed misses deliberately spend once without status or HP changes.
+- Accepted status code does not change actor/opponent HP, award energy,
+  ultimate,mastery or introduce damage/immunity. Existing refresh uses max
+  expiry rather than summed duration; Hearten consumption remains separate
+  and explicitly requires actual successful HP debit. Detached status reads
+  cannot mutate authoritative state. Same action cannot commit twice through
+  shared last-action authority; receipt budget is fail-closed/no eviction.
+- Existing movement lease hooks are byte-unchanged since c9 executed proof.
+  New status and actual ObjectID tests exist in source but have not executed
+  at this candidate; they are not passing runtime evidence and do not cover
+  the Director's forged outer/inner deployment-card cases.
+
+Explicit limits: status dispatcher is still uncalled; Heal/live incoming HP,
+movement consumer application,durable Session/world/owner-save/ACK/rejoin,
+real controller path,timing/hitstop, co-op and full acceptance remain open.
+No criterion MET. Minimum next validation: fold outer/inner UID mismatch,
+forged Wind projection and wrong-encounter engine refusal into the already
+planned coherent actor/status batch once source is corrected. No automatic
+full suite/full CI or duplicate broad proof run requested.
