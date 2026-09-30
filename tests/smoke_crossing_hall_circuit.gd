@@ -51,6 +51,9 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 			sealed += 1
 	if live != 3 or sealed != 4:
 		return _circuit_fail("Hall does not have three live-capable and four sealed biome arches")
+	var gallery_route := _gallery_route(hall, stand_by_biome)
+	if gallery_route.is_empty():
+		return false
 	print("F17 Hall circuit structure: one home, three live-capable, four sealed signed arches; eight signed installed pedestals. Node visibility is structural, not a screenshot judgment.")
 	for biome: String in expected:
 		var approach := (arch_by_biome[biome] as Node3D).get_node("Approach") as Marker3D
@@ -58,22 +61,22 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 			return false
 	for biome: String in expected:
 		var approach := (stand_by_biome[biome] as Node3D).get_node("Approach") as Marker3D
-		# The actual side-gallery doorway and central aisle are authored markers,
-		# so a future layout edit cannot silently keep an obsolete test shortcut.
-		var entry := hall.get_node_or_null("ShrineEntry") as Marker3D
-		if entry == null:
-			return _circuit_fail("real ShrineEntry doorway marker missing")
-		if not await _walk_to_marker(hall, entry, Vector3.ZERO, "shrine doorway before " + biome):
+		# Derive the doorway/aisle from actual floor colliders and real Approach
+		# markers; no nonexistent test-only doorway or fixed x=7/x=12 tuple.
+		if not await _walk_to_target(hall, hall.to_global(gallery_route.door), Vector3.ZERO, "shrine doorway before " + biome):
 			return false
-		if not await _walk_to_marker(hall, approach, Vector3(12, 0, 0), "pedestal " + biome):
+		if not await _walk_to_marker(hall, approach, gallery_route.aisle, "pedestal " + biome):
 			return false
 	print("F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup, visual/device/progression/co-op claim.")
 	return true
 
 
 func _walk_to_marker(hall: Node3D, marker: Marker3D, via_local: Vector3, label: String) -> bool:
+	return await _walk_to_target(hall, marker.global_position, via_local, label)
+
+
+func _walk_to_target(hall: Node3D, target: Vector3, via_local: Vector3, label: String) -> bool:
 	var via := hall.to_global(via_local)
-	var target := marker.global_position
 	_path = PackedVector2Array([_xz(), Vector2(via.x, via.z), Vector2(target.x, target.z)])
 	_arcs = PackedFloat32Array([0.0])
 	for index in range(1, _path.size()):
@@ -90,6 +93,38 @@ func _walk_to_marker(hall: Node3D, marker: Marker3D, via_local: Vector3, label: 
 		return _circuit_fail("physical approach refused at %s: distance %.3f floor %s" % [label, distance, _player.is_on_floor()])
 	print("F17 Hall circuit reached %s: player=%s distance=%.3f floor=true" % [label, _player.global_position, distance])
 	return true
+
+
+func _gallery_route(hall: Node3D, stands: Dictionary) -> Dictionary:
+	var aisle := Vector3.ZERO
+	for stand: Node3D in stands.values():
+		aisle += hall.to_local((stand.get_node("Approach") as Marker3D).global_position)
+	aisle /= float(stands.size())
+	var floors: Array[Rect2] = []
+	var recipe: Dictionary = _json("res://data/config/building_prefabs.json").get("prefabs", {}).get("crossing_hall_shell", {})
+	for box: Dictionary in recipe.get("colliders", []):
+		var at: Array = box.get("at", [])
+		var size: Array = box.get("size", [])
+		if at.size() != 3 or size.size() != 3:
+			continue
+		if float(size[1]) > .3 or float(at[1]) > .3 or float(size[0]) < 3.0 or float(size[2]) < 3.0:
+			continue
+		var extent := Vector2(float(size[0]), float(size[2]))
+		floors.append(Rect2(Vector2(float(at[0]), float(at[2])) - extent * .5, extent))
+	var nave := Rect2()
+	var gallery := Rect2()
+	for floor_rect: Rect2 in floors:
+		if floor_rect.has_point(Vector2.ZERO):
+			nave = floor_rect
+		if floor_rect.has_point(Vector2(aisle.x, aisle.z)):
+			gallery = floor_rect
+	var lower := maxf(nave.position.y, gallery.position.y)
+	var upper := minf(nave.end.y, gallery.end.y)
+	if nave.size == Vector2.ZERO or gallery.size == Vector2.ZERO or nave == gallery \
+			or absf(nave.end.x - gallery.position.x) > .05 or upper <= lower:
+		_circuit_fail("actual nave/gallery collision floors do not share a supported doorway")
+		return {}
+	return {"door": Vector3((nave.end.x + gallery.position.x) * .5, 0, (lower + upper) * .5), "aisle": aisle}
 
 
 func _has_visible_model(node: Node) -> bool:
