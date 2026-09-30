@@ -26,7 +26,7 @@ func test_refresh_is_not_additive_and_replay_or_wrong_scope_never_mutates() -> v
 	var second := EFFECTS.stage_application(first.state, "snare", moves.move("snare"), _host("host-action-2"), 300, 10)
 	assert_true(second.ok)
 	assert_eq(second.state.statuses["foe-1"].root.expires_at_ms, 1300, "refresh uses current maximum rather than adding old remaining duration")
-	var after := second.state.duplicate(true)
+	var after: Dictionary = second.state.duplicate(true)
 	assert_false(EFFECTS.stage_application(second.state, "snare", moves.move("snare"), _host("host-action-2"), 301, 10).ok)
 	for field: String in ["generation", "hostile", "geometry_connected", "target_hp"]:
 		var bad := _host("refused-" + field)
