@@ -1,0 +1,106 @@
+{
+  "source_commit": "840ede55d539d6d87aa70377e4c4ab74cfc9ffa1",
+  "route_config_sha256": "45ff86b6c229a0340d3730e83cce95f5ee8f36d303b1e540a226b12a33a48f05",
+  "started_utc": "2026-09-30T04:37:19.194126+00:00",
+  "cases": [
+    {
+      "biome": "water",
+      "preset": "Medium",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=water",
+        "--preset=Medium,High",
+        "--source-commit=840ede55d539d6d87aa70377e4c4ab74cfc9ffa1",
+        "--output=D:/tetherbound/lookdev-water-forward-r1/water-medium-high"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-water-forward-r1\\home-water-medium-high",
+      "elapsed_seconds": 109.73499999998603,
+      "process_presets": [
+        "Medium",
+        "High"
+      ],
+      "case_index": 0,
+      "scene_reused_across_presets": true,
+      "raw_log": "D:\\tetherbound\\lookdev-water-forward-r1\\water-medium-high.log",
+      "receipt": "D:\\tetherbound\\lookdev-water-forward-r1\\water-medium-high\\medium\\route.json",
+      "receipt_error": "",
+      "sample_count": 234,
+      "wall_frame_ms": {
+        "mean": 34.799226495726494,
+        "p50": 32.911500000000004,
+        "p95": 53.69969999999999,
+        "p99": 72.19862999999991,
+        "maximum": 82.479
+      }
+    },
+    {
+      "biome": "water",
+      "preset": "High",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=water",
+        "--preset=Medium,High",
+        "--source-commit=840ede55d539d6d87aa70377e4c4ab74cfc9ffa1",
+        "--output=D:/tetherbound/lookdev-water-forward-r1/water-medium-high"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-water-forward-r1\\home-water-medium-high",
+      "elapsed_seconds": 109.73499999998603,
+      "process_presets": [
+        "Medium",
+        "High"
+      ],
+      "case_index": 1,
+      "scene_reused_across_presets": true,
+      "raw_log": "D:\\tetherbound\\lookdev-water-forward-r1\\water-medium-high.log",
+      "receipt": "D:\\tetherbound\\lookdev-water-forward-r1\\water-medium-high\\high\\route.json",
+      "receipt_error": "",
+      "sample_count": 182,
+      "wall_frame_ms": {
+        "mean": 44.72434065934066,
+        "p50": 35.765,
+        "p95": 84.87915,
+        "p99": 91.34074999999999,
+        "maximum": 107.849
+      }
+    }
+  ],
+  "requested_cases": [
+    {
+      "biome": "water",
+      "preset": "Medium"
+    },
+    {
+      "biome": "water",
+      "preset": "High"
+    }
+  ],
+  "scope": "Computer production-scene render routes. No earned campaign, blinded visual approval, Hall proof or owner Ally result.",
+  "complete": true,
+  "all_twelve_route_cases_complete": false
+}

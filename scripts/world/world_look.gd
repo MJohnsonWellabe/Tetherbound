@@ -26,6 +26,8 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 ## CHARACTER_MODEL directly above: this node never builds or owns the terrain.
 const PLAYGROUND_WORLD := preload("res://scripts/world/playground_world.gd")
 
+const GRAPHICS_PREFS := preload("res://scripts/ui/graphics_prefs.gd")
+
 const DEFAULT_TIME := "day"
 
 ## Nodes in this group get their clock snapped back to morning by
@@ -98,6 +100,16 @@ func _ready() -> void:
 	_verify = OS.get_cmdline_args().has(VERIFY_FLAG)
 	if _verify:
 		_report_daynight_config()
+	# World cameras may become current after this node's _ready; also runs
+	# for frozen capture clocks without advancing the authored time of day.
+	call_deferred("refresh_graphics")
+
+
+func refresh_graphics() -> void:
+	if _cycle != null:
+		_apply_blended(_cycle.hour_at(_elapsed_seconds))
+	GRAPHICS_PREFS.apply_viewport(get_viewport())
+	GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d())
 
 
 ## Real time passing, not gameplay -- there is no pause here on purpose: the
@@ -195,6 +207,9 @@ func set_clock_frozen(frozen: bool) -> void:
 
 
 func _process(delta: float) -> void:
+	# Cameras can change after ready (combat/travel/capture). Quality is local
+	# presentation; it must apply even when this clock is frozen.
+	GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d())
 	if _cycle == null:
 		return
 	if _clock_frozen:
@@ -925,6 +940,7 @@ func _apply_sun(cfg: Dictionary) -> void:
 	# case that rendered the whole ground as fully occluded. A faint shadow
 	# is what overcast actually looks like; no shadow blanks the terrain.
 	sun.shadow_opacity = float(cfg.get("shadow_opacity", 1.0))
+	GRAPHICS_PREFS.apply_sun(sun)
 
 
 ## An image sky if the time of day names one, the procedural gradient otherwise.
@@ -1172,3 +1188,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	env.adjustment_brightness = float(cfg.get("adjustment_brightness", 1.0))
 	env.adjustment_contrast = float(cfg.get("adjustment_contrast", 1.0))
 	env.adjustment_saturation = float(cfg.get("adjustment_saturation", 1.0))
+	# Last: time/weather must not overwrite device quality choices.
+	GRAPHICS_PREFS.apply_environment(env)
+	GRAPHICS_PREFS.apply_viewport(get_viewport())
+	GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d())
