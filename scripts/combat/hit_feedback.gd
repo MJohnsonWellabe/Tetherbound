@@ -45,12 +45,16 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 static func launch(action_id: String, encounter_id: String, attacker_uid: String,
 		target_uid: String, move_id: String, slot: String, from: Vector3,
 		to: Vector3, travel_seconds: float, body_generation: int = 0,
-		target_ground: Vector3 = Vector3.INF, target_visual_bounds: AABB = AABB(), mastery_rank: int = 1) -> Dictionary:
+		target_ground: Vector3 = Vector3.INF, target_visual_bounds: AABB = AABB(), mastery_rank: int = 1,
+		mastery_action_id: String = "") -> Dictionary:
 	var value := {"action_id": action_id, "encounter_id": encounter_id,
 		"attacker_uid": attacker_uid, "target_uid": target_uid, "move_id": move_id,
 		"slot": slot, "from": from, "to": to, "travel_seconds": maxf(0.0, travel_seconds),
 		"body_generation": body_generation, "mastery_rank": clampi(mastery_rank, 1, 5), "seed": action_id.hash(),
 		"impact_audio_owner": "receipt"}
+	# Authority allocates this once. It is separate from visual counters which
+	# can repeat in a new world; presentation never uses it to award anything.
+	if not mastery_action_id.is_empty(): value["mastery_action_id"] = mastery_action_id
 	if target_ground.is_finite(): value["target_ground"] = target_ground
 	if target_visual_bounds.size.x > 0.0 and target_visual_bounds.size.y > 0.0 and target_visual_bounds.size.z > 0.0 \
 			and target_visual_bounds.position.is_finite() and target_visual_bounds.size.is_finite():

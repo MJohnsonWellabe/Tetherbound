@@ -84,9 +84,12 @@ func test_saturation_retains_every_credited_identity_and_all_rank_thresholds() -
 func test_mastery_launch_metadata_is_frozen_without_changing_geometry_or_timing() -> void:
 	var feedback := preload("res://scripts/combat/hit_feedback.gd")
 	var first := feedback.launch("fight:1:1","fight","companion-1","wild-1","pebble_toss","quick",Vector3.ZERO,Vector3.RIGHT,.2,7,Vector3.INF,AABB(),1)
-	var fifth := feedback.launch("fight:1:1","fight","companion-1","wild-1","pebble_toss","quick",Vector3.ZERO,Vector3.RIGHT,.2,7,Vector3.INF,AABB(),5)
+	var durable_id := MASTERY.new_action_identity("fight:1:1")
+	var fifth := feedback.launch("fight:1:1","fight","companion-1","wild-1","pebble_toss","quick",Vector3.ZERO,Vector3.RIGHT,.2,7,Vector3.INF,AABB(),5,durable_id)
 	assert_true(fifth.is_read_only())
 	assert_eq(fifth.mastery_rank,5)
+	assert_eq(fifth.mastery_action_id,durable_id,"authority identity survives the frozen pending action")
+	assert_ne(MASTERY.new_action_identity("fight:1:1"),durable_id,"recreated presentation counters cannot reuse a durable use receipt")
 	for key: String in ["from","to","travel_seconds","body_generation","seed"]:
 		assert_eq(fifth[key],first[key],"mastery never changes tells, reach or host schedule")
 	var receipt := feedback.receipt("fight:1:1","pebble_toss",{},"quick",9.0,1.0,false,Vector3.RIGHT)

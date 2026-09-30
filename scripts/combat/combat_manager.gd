@@ -48,6 +48,7 @@ const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 ## file's.
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 ## T3-TYPECHART. Type effectiveness, keyed on the ATTACKING MOVE's type against
 ## the DEFENDING CREATURE's species type — see its own header for why that
 ## keying rather than species-against-species. Pure config reader, no scene
@@ -2617,11 +2618,14 @@ func _resolve_player_strike() -> void:
 	_impact_serial += 1
 	var move_id := str(creature.move_quick if bool(_pending_move.get("is_quick", false)) else creature.move_charged)
 	var frozen_move := _pending_move.duplicate(true)
+	var mastery_rank := MOVE_MASTERY.rank_for(creature, move_id)
+	var action_id := "%s:solo:%d" % [_encounter_id, _impact_serial]
 	var muzzle := origin + facing * (float(_ally_body.call("body_radius")) if _ally_body.has_method("body_radius") else 0.0)
-	var launch := HIT_FEEDBACK.launch("%s:solo:%d" % [_encounter_id, _impact_serial],
+	var launch := HIT_FEEDBACK.launch(action_id,
 		_encounter_id, str(creature.get("uid")), str(_enemy.get("uid")), move_id,
 		"quick" if bool(frozen_move.get("is_quick", false)) else "charged", muzzle, target,
-		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation, _wild.global_position, _body_world_bounds(_wild))
+		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation, _wild.global_position, _body_world_bounds(_wild),
+		mastery_rank, MOVE_MASTERY.new_action_identity(action_id))
 	present_host_attack_launch(launch)
 	if float(launch.travel_seconds) > 0.0:
 		await get_tree().create_timer(float(launch.travel_seconds), false).timeout
@@ -2778,7 +2782,20 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		)
 		if stagger_crit:
 			damage *= _poise_crit_scale()
+		# Rank belongs to the accepted launch, including a hit crossing a rank
+		# threshold. Contact time, reach, cost and geometry do not change.
+		damage *= MOVE_MASTERY.power_multiplier(int(launch.get("mastery_rank", 1)))
+		var hp_before := float(_enemy.hp)
 		killed = _enemy.take_damage(damage)
+		# No await or client callback occurs between the actual HP debit and
+		# this character-scope mutation. The timer's UID/generation guard above
+		# prevents a replacement target/attacker from receiving the credit.
+		if not launch.is_empty():
+			MOVE_MASTERY.credit_landed_use(self, creature, {
+				"action_id": str(launch.get("mastery_action_id", "")),
+				"move_id": move_id, "attacker_uid": str(creature.get("uid")),
+				"target_uid": str(_enemy.get("uid")), "target_hp_before": hp_before,
+				"applied_damage": maxf(0.0, hp_before - float(_enemy.hp))})
 	var stagger_triggered := stagger_triggered_override
 	if damage_override < 0.0 and not killed and _wild.has_method("apply_poise_damage"):
 		var force_interrupt := not is_quick and enemy_is_winding_up() \
