@@ -740,6 +740,7 @@ func _ensure_containers() -> void:
 	# The map and the Realm Hearts ask about flags across BOTH stores: a
 	# Cloudreach landmark gated on a world flag and a hint gated on a personal
 	# one have to answer from one object.
+	_merged_progression.bind_traveler(local, world)
 	local.flag_reader = _merged_progression
 	local.call("configure", _items)
 	# Hand the local player's feed to `progression_feed.gd`'s static entry
