@@ -1,5 +1,11 @@
 # F21 impact work in progress
 
+## F23 source checkpoint, not acceptance
+
+The next coherent source batch adds canonical known/loadout/mastery fields, 70 learnset records (57 base species, 12 registered Water variants, one reserved Stormursa), ten authored utility definitions with agreed VFX blocks, five rank thresholds, immutable optional rank metadata, bounded landed-use receipt staging, station compare-and-swap staging, and detached whole-party save/import refusal before personal mutation. The additive v28 path retains old equipped moves with zero invented use credit; it does not change the reset/version rules. The typed carrier projects canonical move fields at serialization while retaining other lanes' cap, breakthrough, evolution, traits and Best records.
+
+`../f23/content-static.json` checks the actual tracked data/schema shape and tier ordinals against current defaults, with no static errors. Godot parsing and the named new logic tests are pending the serialized engine token. Mastery credit is not yet connected to accepted HP commits or admission/rejoin authority; utility input/status lifecycles, camp/altar editing and Backpack learning-only behavior remain unwired. No F23 criterion is claimed. Existing visual action IDs use encounter/action counters and are not durable across process restarts; the new host-only process-epoch identity helper must be frozen once per accepted action before credit integration. Previous actual Fireball and camera proofs retain their exact older source pins.
+
 ## Camera archive byte normalization
 
 `camera-native-r2/archive-normalization-receipt.json` independently compares raw `git show 25f2f77769f39381b433e0971d884e8b57e88ae6:<path>` bytes with every original observed hash. All 15 original files match their observed raw hashes. The nine PNGs and matrix JSON remain byte-identical in Git. Five native/parser text logs were normalized from CRLF to LF by Git; the receipt records both hashes and proves this is their only byte difference. The original `source-proof.json` raw hashes are retained. This is an archive audit, with no runtime replay or changed result.

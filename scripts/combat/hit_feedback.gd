@@ -19,7 +19,7 @@ static func weight_for(move: Dictionary, fallback_slot: String) -> String:
 static func receipt(action_id: String, move_id: String, move: Dictionary,
 		fallback_slot: String, damage: float, type_mult: float, critical: bool,
 		direction: Vector3, target_height: float = 0.0,
-		profile_scale: float = 1.0, target_uid: String = "", sound_position: Vector3 = Vector3.INF) -> Dictionary:
+		profile_scale: float = 1.0, target_uid: String = "", sound_position: Vector3 = Vector3.INF, mastery_rank: int = 1) -> Dictionary:
 	var cfg := config()
 	var weight := weight_for(move, fallback_slot)
 	var spec: Dictionary = cfg.get("weights", {}).get(weight, {})
@@ -29,7 +29,7 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 	var result := {"action_id": action_id, "move_id": move_id, "target_uid": target_uid, "slot": fallback_slot,
 		"weight": weight, "damage": maxf(0.0, damage), "type_mult": type_mult,
 		"critical": critical, "direction": flat.normalized(),
-		"impact_audio_owner": "receipt", "mastery_rank": 1,
+		"impact_audio_owner": "receipt", "mastery_rank": clampi(mastery_rank, 1, 5),
 		"hitstop_seconds": float(cfg.get("critical_hitstop_seconds", 0.0)) if critical else float(spec.get("hitstop_seconds", 0.0)),
 		"knockback_m": maxf(0.0, float(spec.get("knockback_m", 0.0)) * scale * clampf(profile_scale, 0.0, 1.0)),
 		"recoil_m": float(spec.get("recoil_m", 0.0)),
@@ -45,11 +45,11 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 static func launch(action_id: String, encounter_id: String, attacker_uid: String,
 		target_uid: String, move_id: String, slot: String, from: Vector3,
 		to: Vector3, travel_seconds: float, body_generation: int = 0,
-		target_ground: Vector3 = Vector3.INF, target_visual_bounds: AABB = AABB()) -> Dictionary:
+		target_ground: Vector3 = Vector3.INF, target_visual_bounds: AABB = AABB(), mastery_rank: int = 1) -> Dictionary:
 	var value := {"action_id": action_id, "encounter_id": encounter_id,
 		"attacker_uid": attacker_uid, "target_uid": target_uid, "move_id": move_id,
 		"slot": slot, "from": from, "to": to, "travel_seconds": maxf(0.0, travel_seconds),
-		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash(),
+		"body_generation": body_generation, "mastery_rank": clampi(mastery_rank, 1, 5), "seed": action_id.hash(),
 		"impact_audio_owner": "receipt"}
 	if target_ground.is_finite(): value["target_ground"] = target_ground
 	if target_visual_bounds.size.x > 0.0 and target_visual_bounds.size.y > 0.0 and target_visual_bounds.size.z > 0.0 \

@@ -1,0 +1,12 @@
+{
+  "_comment": "F23 prototype: character-scope per-creature mastery from host-resolved landed hits. Uses saturate at rank5; durable per-move event identities prevent snapshot/rejoin replay. Never changes move timing, range, cone or resource cost.",
+  "rank_thresholds": [
+    0,
+    25,
+    75,
+    150,
+    300
+  ],
+  "damage_per_rank": 0.05,
+  "max_known_moves": 128
+}
