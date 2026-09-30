@@ -333,7 +333,7 @@ func _build_impact() -> void:
 	var surface_offset := _impact_visual_origin(profile) - _contact_position()
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
-	if str(profile.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
+	if str(profile.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	core.position = surface_offset
@@ -341,7 +341,7 @@ func _build_impact() -> void:
 		var scale := float(layer.get("size_scale", 1.0))
 		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
 			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
-		if str(layer.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
+		if str(layer.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
 		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
 		part.reparent(_impact, false)
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
@@ -351,7 +351,7 @@ func _build_impact() -> void:
 			part.position.y = ground.y - _contact_position().y + scale_factor * float(layer.get("ground_lift_scale", 0.3))
 	if bool(_row.impact_layer):
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
-		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
+		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
 		secondary.set_meta("base_opacity", 0.65)
 		secondary.reparent(_impact, false)
 		secondary.position = surface_offset

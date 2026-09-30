@@ -11,6 +11,7 @@ const DUST_SHADER := preload("res://assets/vfx/shaders/dust_plume.gdshader")
 const AUTHORED := preload("res://scripts/vfx/authored_effect_geometry.gd")
 const TONGUE_SHADER := preload("res://assets/vfx/shaders/flame_tongue.gdshader")
 const TONGUE_TEXTURE := preload("res://assets/vfx/textures/flame_tongue_v2.png")
+const EXPLOSION_SHADER := preload("res://assets/vfx/shaders/fire_explosion.gdshader")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
 ## Forward+. No screen-space distortion or GPU particles are required.
@@ -42,7 +43,7 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			return FLUID.ice_crystal(size, profile)
 		"stone":
 			return stone(size, profile)
-		"flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_foam":
+		"flame_orb", "fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam":
 			var card := QuadMesh.new()
 			card.size = Vector2.ONE * size * float(profile.get("card_extent_scale", 3.2))
 			return card
@@ -79,6 +80,16 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
 	var out := ShaderMaterial.new()
+	if kind == "fire_explosion":
+		out.shader = EXPLOSION_SHADER
+		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff0a8"))))
+		out.set_shader_parameter("flame_colour", colour)
+		out.set_shader_parameter("ember_colour", Color(str(profile.get("ember_colour", "#85250a"))))
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.95)))
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.2)))
+		out.set_shader_parameter("edge_breakup", float(profile.get("edge_breakup", 0.19)))
+		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.45)))
+		return out
 	if kind == "flame_tongue" or (kind == "soft_trail" and str(profile.get("style", "")) == "painted_flame"):
 		out.shader = TONGUE_SHADER
 		out.set_shader_parameter("flame_texture", TONGUE_TEXTURE)
