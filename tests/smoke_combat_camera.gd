@@ -43,6 +43,9 @@ func _init() -> void:
 func _run() -> void:
 	await process_frame
 	create_timer(900.0).timeout.connect(func() -> void: _fail("bounded camera witness exceeded 900s"); _report())
+	if not _matrix_renderer_preflight():
+		_report()
+		return
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
 	# Raw B/LB events also reach the autoload menu. A manually-instanced world
@@ -89,6 +92,23 @@ func _capture_combat_entry() -> void:
 		return
 
 
+## Fail before the expensive world boot if the requested matrix would only
+## capture a fallback preset or the wrong viewport. Source identity is checked
+## by the external clean-HEAD launcher; runtime checks its receipt syntax.
+func _matrix_renderer_preflight() -> bool:
+	var requested := false
+	var preset := "Low"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--matrix-dir="): requested = true
+		elif argument.begins_with("--matrix-preset="): preset = argument.trim_prefix("--matrix-preset=")
+	if not requested: return true
+	if DisplayServer.get_name() == "headless" or GRAPHICS.choose(preset) != OK \
+			or GRAPHICS.restart_required() or RenderingServer.get_current_rendering_method() != GRAPHICS.requested_renderer() \
+			or root.get_visible_rect().size != Vector2(1920,1080):
+		_fail("matrix refused before world boot: actual renderer/preset and1920x1080 required")
+		return false
+	return true
+
 ## Optional F21#4 pixels from the normal production rig. All original input,
 ## aim/exit and render-corner checks continue after restoring this scoped fixture.
 ## Only the three actual authored species are swapped, never their scales.
@@ -104,8 +124,10 @@ func _capture_size_matrix() -> void:
 	var pattern := RegEx.new()
 	pattern.compile("^[0-9a-f]{40}$")
 	if DisplayServer.get_name() == "headless" or pattern.search(source) == null \
-			or DirAccess.dir_exists_absolute(directory) or GRAPHICS.choose(preset) != OK:
-		_fail("matrix needs real renderer, exact source SHA, valid persisted preset and fresh output directory")
+			or DirAccess.dir_exists_absolute(directory) or GRAPHICS.choose(preset) != OK \
+			or GRAPHICS.restart_required() or RenderingServer.get_current_rendering_method() != GRAPHICS.requested_renderer() \
+			or root.get_visible_rect().size != Vector2(1920,1080):
+		_fail("matrix needs matching actual renderer/preset,1920x1080,exact source SHA and fresh output directory")
 		return
 	if DirAccess.make_dir_recursive_absolute(directory) != OK:
 		_fail("could not create fresh matrix output")
