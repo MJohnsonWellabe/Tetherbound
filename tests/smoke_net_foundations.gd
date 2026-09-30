@@ -11,6 +11,9 @@ func _initialize() -> void:
 	_run()
 
 func _run() -> void:
+	# Let Game._ready finish before the harness relinquishes coordinator world
+	# ownership; its initialization would otherwise reclaim the unused world.
+	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
 	if not await launch(2, "world"):
 		quit(await finish())
