@@ -4,6 +4,31 @@
   "_comment_slots": "`slot` is \"quick\" (fast, low-commitment, builds energy) or \"charged\" (the energy-spend finisher). Quick moves carry `energy_gain`; charged moves carry `energy_cost`, mirroring combat.json's energy.gain_per_quick / energy.charged_cost so a designer tuning one move at a time does not have to touch two files to keep them honest.",
   "_comment_f10_2_starter_parity": "F10#2 (owner 2026-09-27 23:55: starters similar in skill and strength). ripple_jab 0.14/0.18 -> 0.22/0.24 and gale_peck 0.12/0.15 -> 0.22/0.34 windup/recovery. The very short melee quicks let a mashing Ripplet or Galewisp poise-lock Capacitor Alpha and never get caught mid-swing, so reading the fight bought nothing (C2 ratio 0.98 and 0.71 against Terrapup's 0.42). Windup 0.22 matches pebble_toss; Galewisp pays its extra commitment in recovery instead, because a 0.24-0.26 s windup no longer fits a CURRENT's 0.55 s recovery window. Evidence ralph/reports/BALANCE/.",
   "moves": {
+    "fireball": {
+      "display_name": "Fireball",
+      "type": "fire",
+      "slot": "charged",
+      "weight": "heavy",
+      "power": 1.2,
+      "energy_cost": 100,
+      "range": 9.0,
+      "cone_degrees": 28.0,
+      "windup": 0.46,
+      "recovery": 0.5,
+      "lunge": 0.0,
+      "vfx": {
+        "kind": "projectile",
+        "archetype": "fireball",
+        "count": 1,
+        "size": 0.45,
+        "colour": "#f6a132",
+        "arc": 0.08,
+        "speed": 20.0,
+        "spread": 0.0,
+        "trail": 1.2,
+        "impact_scale": 1.3
+      }
+    },
     "pebble_toss": {
       "display_name": "Pebble Toss",
       "type": "ground",
@@ -16,9 +41,16 @@
       "recovery": 0.24,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 3,
+        "size": 0.2,
         "colour": "#d9b26a",
-        "speed": 26.0
+        "arc": 0.75,
+        "speed": 26.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
+        "kind": "projectile",
+        "archetype": "stone_throw"
       }
     },
     "stone_rush": {
@@ -33,8 +65,16 @@
       "recovery": 0.5,
       "lunge": 7.5,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "charge_dash"
       }
     },
     "bramble_whip": {
@@ -49,8 +89,16 @@
       "recovery": 0.2,
       "lunge": 2.6,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "slash_trail"
       }
     },
     "warren_charge": {
@@ -65,8 +113,16 @@
       "recovery": 0.45,
       "lunge": 8.5,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "charge_dash"
       }
     },
     "root_nibble": {
@@ -81,8 +137,16 @@
       "recovery": 0.18,
       "lunge": 3.0,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "slash_trail"
       }
     },
     "rootquake": {
@@ -97,8 +161,16 @@
       "recovery": 0.6,
       "lunge": 0.0,
       "vfx": {
+        "count": 1,
+        "size": 0.6,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "area",
-        "colour": "#d9b26a"
+        "archetype": "quake_ring"
       }
     },
     "pack_bite": {
@@ -113,8 +185,16 @@
       "recovery": 0.17,
       "lunge": 3.8,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "slash_trail"
       }
     },
     "trailblaze_pounce": {
@@ -129,8 +209,16 @@
       "recovery": 0.5,
       "lunge": 9.0,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "charge_dash"
       }
     },
     "burrow_strike": {
@@ -145,8 +233,16 @@
       "recovery": 0.26,
       "lunge": 1.2,
       "vfx": {
+        "count": 4,
+        "size": 0.36,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "area",
-        "colour": "#d9b26a"
+        "archetype": "root_stone_spikes"
       }
     },
     "tremor_roll": {
@@ -161,8 +257,16 @@
       "recovery": 0.55,
       "lunge": 8.0,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "charge_dash"
       }
     },
     "hoofbeat": {
@@ -177,8 +281,16 @@
       "recovery": 0.22,
       "lunge": 3.2,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "slash_trail"
       }
     },
     "verdant_burst": {
@@ -193,9 +305,16 @@
       "recovery": 0.55,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 4,
+        "size": 0.36,
         "colour": "#d9b26a",
-        "speed": 18.0
+        "arc": 0.0,
+        "speed": 18.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "root_stone_spikes"
       }
     },
     "antler_slam": {
@@ -210,8 +329,16 @@
       "recovery": 0.6,
       "lunge": 6.0,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "slash_trail"
       }
     },
     "ripple_jab": {
@@ -226,8 +353,16 @@
       "recovery": 0.24,
       "lunge": 3.2,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#57b6e8"
+        "archetype": "slash_trail"
       }
     },
     "undertow": {
@@ -242,9 +377,16 @@
       "recovery": 0.55,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.9,
         "colour": "#57b6e8",
-        "speed": 16.0
+        "arc": 0.0,
+        "speed": 16.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "tidal_wave"
       }
     },
     "splash_snap": {
@@ -259,8 +401,16 @@
       "recovery": 0.19,
       "lunge": 3.0,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#57b6e8"
+        "archetype": "slash_trail"
       }
     },
     "riptide_rush": {
@@ -275,8 +425,16 @@
       "recovery": 0.5,
       "lunge": 8.0,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#57b6e8"
+        "archetype": "charge_dash"
       }
     },
     "shell_bash": {
@@ -291,8 +449,16 @@
       "recovery": 0.26,
       "lunge": 2.4,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#57b6e8"
+        "archetype": "slash_trail"
       }
     },
     "tail_splash": {
@@ -307,9 +473,16 @@
       "recovery": 0.24,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 4,
+        "size": 0.3,
         "colour": "#57b6e8",
-        "speed": 22.0
+        "arc": 0.0,
+        "speed": 22.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
+        "kind": "projectile",
+        "archetype": "bubble_volley"
       }
     },
     "gale_peck": {
@@ -324,8 +497,16 @@
       "recovery": 0.34,
       "lunge": 3.4,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#dbeaf7"
+        "archetype": "slash_trail"
       }
     },
     "sky_rend": {
@@ -340,9 +521,16 @@
       "recovery": 0.5,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.7,
         "colour": "#dbeaf7",
-        "speed": 34.0
+        "arc": 0.0,
+        "speed": 34.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "projectile",
+        "archetype": "wind_blade"
       }
     },
     "talon_dive": {
@@ -357,8 +545,16 @@
       "recovery": 0.24,
       "lunge": 4.5,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#dbeaf7"
+        "archetype": "charge_dash"
       }
     },
     "storm_strike": {
@@ -373,8 +569,16 @@
       "recovery": 0.55,
       "lunge": 7.0,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#dbeaf7"
+        "archetype": "charge_dash"
       }
     },
     "quick_flit": {
@@ -389,8 +593,16 @@
       "recovery": 0.13,
       "lunge": 3.6,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#dbeaf7"
+        "archetype": "slash_trail"
       }
     },
     "night_swoop": {
@@ -405,8 +617,16 @@
       "recovery": 0.5,
       "lunge": 9.0,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#dbeaf7"
+        "archetype": "charge_dash"
       }
     },
     "gust_burst": {
@@ -421,9 +641,16 @@
       "recovery": 0.45,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.7,
         "colour": "#dbeaf7",
-        "speed": 20.0
+        "arc": 0.0,
+        "speed": 20.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "tornado"
       }
     },
     "rock_throw": {
@@ -438,9 +665,16 @@
       "recovery": 0.24,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.7,
         "colour": "#d9b26a",
-        "speed": 28.0
+        "arc": 1.15,
+        "speed": 28.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.3,
+        "kind": "projectile",
+        "archetype": "stone_throw"
       }
     },
     "stone_spike": {
@@ -455,9 +689,16 @@
       "recovery": 0.5,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 4,
+        "size": 0.36,
         "colour": "#d9b26a",
-        "speed": 20.0
+        "arc": 0.0,
+        "speed": 20.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "root_stone_spikes"
       }
     },
     "earth_fist": {
@@ -472,8 +713,16 @@
       "recovery": 0.62,
       "lunge": 6.5,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#d9b26a"
+        "archetype": "slash_trail"
       }
     },
     "earthshatter": {
@@ -488,8 +737,16 @@
       "recovery": 0.75,
       "lunge": 0.0,
       "vfx": {
+        "count": 1,
+        "size": 0.6,
+        "colour": "#d9b26a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "area",
-        "colour": "#d9b26a"
+        "archetype": "quake_ring"
       }
     },
     "aqua_shot": {
@@ -504,9 +761,16 @@
       "recovery": 0.22,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.18,
         "colour": "#57b6e8",
-        "speed": 30.0
+        "arc": 0.0,
+        "speed": 30.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.0,
+        "kind": "projectile",
+        "archetype": "water_jet"
       }
     },
     "tidal_burst": {
@@ -521,9 +785,16 @@
       "recovery": 0.52,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.9,
         "colour": "#57b6e8",
-        "speed": 18.0
+        "arc": 0.0,
+        "speed": 18.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "tidal_wave"
       }
     },
     "riptide_lance": {
@@ -538,9 +809,16 @@
       "recovery": 0.55,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.18,
         "colour": "#57b6e8",
-        "speed": 36.0
+        "arc": 0.0,
+        "speed": 36.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "projectile",
+        "archetype": "water_jet"
       }
     },
     "leviathan_surge": {
@@ -555,9 +833,16 @@
       "recovery": 0.75,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.9,
         "colour": "#57b6e8",
-        "speed": 22.0
+        "arc": 0.0,
+        "speed": 22.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "tidal_wave"
       }
     },
     "wind_blade": {
@@ -572,9 +857,16 @@
       "recovery": 0.22,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.7,
         "colour": "#dbeaf7",
-        "speed": 32.0
+        "arc": 0.0,
+        "speed": 32.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.0,
+        "kind": "projectile",
+        "archetype": "wind_blade"
       }
     },
     "aerial_flash": {
@@ -589,8 +881,16 @@
       "recovery": 0.52,
       "lunge": 11.0,
       "vfx": {
+        "count": 1,
+        "size": 0.23,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#dbeaf7"
+        "archetype": "charge_dash"
       }
     },
     "cyclone": {
@@ -605,8 +905,16 @@
       "recovery": 0.65,
       "lunge": 0.0,
       "vfx": {
+        "count": 1,
+        "size": 0.7,
+        "colour": "#dbeaf7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "area",
-        "colour": "#dbeaf7"
+        "archetype": "tornado"
       }
     },
     "heavenfall": {
@@ -621,9 +929,16 @@
       "recovery": 0.8,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.7,
         "colour": "#dbeaf7",
-        "speed": 26.0
+        "arc": 0.0,
+        "speed": 26.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "wind_blade"
       }
     },
     "shadow_nip": {
@@ -638,8 +953,16 @@
       "recovery": 0.18,
       "lunge": 3.4,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#9b5fd0",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#9b5fd0"
+        "archetype": "slash_trail"
       }
     },
     "gloom_surge": {
@@ -654,9 +977,16 @@
       "recovery": 0.55,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.42,
         "colour": "#9b5fd0",
-        "speed": 15.0
+        "arc": 0.0,
+        "speed": 15.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "shadow_bolt"
       }
     },
     "spark_bite": {
@@ -671,8 +1001,16 @@
       "recovery": 0.16,
       "lunge": 3.6,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#f5d24a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#f5d24a"
+        "archetype": "slash_trail"
       }
     },
     "arc_lash": {
@@ -687,9 +1025,16 @@
       "recovery": 0.45,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.2,
         "colour": "#f5d24a",
-        "speed": 38.0
+        "arc": 0.0,
+        "speed": 38.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "projectile",
+        "archetype": "chain_lightning"
       }
     },
     "ember_bite": {
@@ -704,8 +1049,16 @@
       "recovery": 0.2,
       "lunge": 3.0,
       "vfx": {
+        "count": 8,
+        "size": 0.09,
+        "colour": "#f07a2b",
+        "arc": 0.25,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "area",
-        "colour": "#f07a2b"
+        "archetype": "ember_burst"
       }
     },
     "cinder_burst": {
@@ -720,9 +1073,16 @@
       "recovery": 0.55,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.65,
         "colour": "#f07a2b",
-        "speed": 14.0
+        "arc": 0.0,
+        "speed": 14.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "flame_cone"
       }
     },
     "mind_ripple": {
@@ -737,9 +1097,16 @@
       "recovery": 0.22,
       "lunge": 0.0,
       "vfx": {
+        "count": 1,
+        "size": 0.5,
+        "colour": "#a6b4ed",
+        "arc": 0.0,
+        "speed": 18.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "projectile",
-        "colour": "#c39bf0",
-        "speed": 18.0
+        "archetype": "psychic_pulse"
       }
     },
     "rift_pulse": {
@@ -754,9 +1121,16 @@
       "recovery": 0.5,
       "lunge": 0.0,
       "vfx": {
+        "count": 1,
+        "size": 0.5,
+        "colour": "#a6b4ed",
+        "arc": 0.0,
+        "speed": 12.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "cone",
-        "colour": "#c39bf0",
-        "speed": 12.0
+        "archetype": "psychic_pulse"
       }
     },
     "frost_claw": {
@@ -771,8 +1145,16 @@
       "recovery": 0.19,
       "lunge": 4.0,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#a8dcf0",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#a8dcf0"
+        "archetype": "slash_trail"
       }
     },
     "glacier_break": {
@@ -787,8 +1169,16 @@
       "recovery": 0.6,
       "lunge": 8.0,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#a8dcf0",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "melee",
-        "colour": "#a8dcf0"
+        "archetype": "slash_trail"
       }
     },
     "static_snap": {
@@ -803,8 +1193,16 @@
       "recovery": 0.16,
       "lunge": 3.6,
       "vfx": {
+        "count": 2,
+        "size": 0.65,
+        "colour": "#f5d24a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.36,
+        "trail": 1.0,
+        "impact_scale": 1.0,
         "kind": "melee",
-        "colour": "#f5d24a"
+        "archetype": "slash_trail"
       }
     },
     "voltaic_whip": {
@@ -819,9 +1217,16 @@
       "recovery": 0.45,
       "lunge": 0.0,
       "vfx": {
-        "kind": "projectile",
+        "count": 1,
+        "size": 0.2,
         "colour": "#f5d24a",
-        "speed": 38.0
+        "arc": 0.0,
+        "speed": 38.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "projectile",
+        "archetype": "chain_lightning"
       }
     },
     "thunder_break": {
@@ -836,8 +1241,16 @@
       "recovery": 0.65,
       "lunge": 0.0,
       "vfx": {
+        "count": 1,
+        "size": 0.24,
+        "colour": "#f5d24a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
         "kind": "area",
-        "colour": "#f5d24a"
+        "archetype": "sky_lightning"
       }
     },
     "stormfall": {
@@ -852,9 +1265,391 @@
       "recovery": 0.8,
       "lunge": 0.0,
       "vfx": {
-        "kind": "cone",
+        "count": 1,
+        "size": 0.24,
         "colour": "#f5d24a",
-        "speed": 26.0
+        "arc": 0.0,
+        "speed": 26.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 1.2,
+        "kind": "cone",
+        "archetype": "sky_lightning"
+      }
+    },
+    "snare": {
+      "display_name": "Snare",
+      "type": "ground",
+      "slot": "utility",
+      "weight": "medium",
+      "power": 1.0,
+      "base_power": 2.25,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 5.0,
+      "cone_degrees": 70.0,
+      "windup": 0.25,
+      "recovery": 0.3,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "root",
+        "scope": "target",
+        "duration": 1.0,
+        "boss_duration": 0.5,
+        "interrupt_protected": false,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "cone",
+        "archetype": "root_stone_spikes",
+        "count": 3,
+        "size": 0.35,
+        "colour": "#85a654",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.42,
+        "trail": 1.0,
+        "impact_scale": 1.2
+      }
+    },
+    "slow_field": {
+      "display_name": "Slow Field",
+      "type": "water",
+      "slot": "utility",
+      "weight": "light",
+      "power": 1.0,
+      "base_power": 0.0,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.3,
+      "recovery": 0.35,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "slow_field",
+        "scope": "target_point",
+        "duration": 3.0,
+        "radius": 2.5,
+        "movement_multiplier": 0.5,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "debuff_hex",
+        "count": 1,
+        "size": 2.5,
+        "colour": "#91bed2",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 0.55
+      }
+    },
+    "shove": {
+      "display_name": "Shove",
+      "type": "air",
+      "slot": "utility",
+      "weight": "medium",
+      "power": 1.0,
+      "base_power": 3.15,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 4.0,
+      "cone_degrees": 80.0,
+      "windup": 0.25,
+      "recovery": 0.35,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "push",
+        "scope": "target",
+        "push_metres": 2.0,
+        "heavy_boss_push_metres": 0.75,
+        "swept": true,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "cone",
+        "archetype": "wind_blade",
+        "count": 3,
+        "size": 0.55,
+        "colour": "#d5e3d7",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.55,
+        "trail": 0.75,
+        "impact_scale": 1.0
+      }
+    },
+    "dash_strike": {
+      "display_name": "Dash Strike",
+      "type": "ground",
+      "slot": "utility",
+      "weight": "medium",
+      "power": 1.0,
+      "base_power": 4.5,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 6.0,
+      "cone_degrees": 70.0,
+      "windup": 0.25,
+      "recovery": 0.35,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "dash_strike",
+        "scope": "target",
+        "advance_metres": 6.0,
+        "swept": true,
+        "invulnerable": false,
+        "maximum_hits_per_action": 1,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "melee",
+        "archetype": "charge_dash",
+        "count": 1,
+        "size": 0.28,
+        "colour": "#d4e5de",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.35,
+        "impact_scale": 1.0
+      }
+    },
+    "veil": {
+      "display_name": "Veil",
+      "type": "air",
+      "slot": "utility",
+      "weight": "light",
+      "power": 1.0,
+      "base_power": 0.0,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 0.0,
+      "cone_degrees": 0.0,
+      "windup": 0.2,
+      "recovery": 0.3,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "movement_buff",
+        "scope": "self",
+        "duration": 1.5,
+        "movement_multiplier": 1.4,
+        "invulnerable": false,
+        "damage_reduction": 0.0,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "buff_aura",
+        "count": 1,
+        "size": 0.65,
+        "colour": "#bed9e3",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.25,
+        "impact_scale": 0.6
+      }
+    },
+    "heal_pulse": {
+      "display_name": "Heal Pulse",
+      "type": "water",
+      "slot": "utility",
+      "weight": "light",
+      "power": 1.0,
+      "base_power": 0.0,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 0.0,
+      "cone_degrees": 0.0,
+      "windup": 0.35,
+      "recovery": 0.4,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "heal",
+        "scope": "self",
+        "max_hp_fraction": 0.12,
+        "revive": false,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "heal_pulse",
+        "count": 1,
+        "size": 1.2,
+        "colour": "#8fc6a0",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 0.8,
+        "impact_scale": 0.7
+      }
+    },
+    "bramble_trap": {
+      "display_name": "Bramble Trap",
+      "type": "ground",
+      "slot": "utility",
+      "weight": "light",
+      "power": 1.0,
+      "base_power": 0.0,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 5.0,
+      "cone_degrees": 360.0,
+      "windup": 0.3,
+      "recovery": 0.35,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "trap",
+        "scope": "target_point",
+        "arming_seconds": 0.5,
+        "root_seconds": 0.8,
+        "boss_root_seconds": 0.4,
+        "trigger_radius": 1.25,
+        "duration": 6.0,
+        "maximum_per_source": 1,
+        "maximum_triggers": 1,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "root_stone_spikes",
+        "count": 6,
+        "size": 0.32,
+        "colour": "#788e46",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.85,
+        "trail": 0.7,
+        "impact_scale": 1.1
+      }
+    },
+    "hearten": {
+      "display_name": "Hearten",
+      "type": "air",
+      "slot": "utility",
+      "weight": "light",
+      "power": 1.0,
+      "base_power": 0.0,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 0.0,
+      "cone_degrees": 0.0,
+      "windup": 0.3,
+      "recovery": 0.35,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "next_hit_buff",
+        "scope": "self",
+        "duration": 4.0,
+        "power_multiplier": 1.15,
+        "maximum_landed_hits": 1,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "buff_aura",
+        "count": 1,
+        "size": 0.85,
+        "colour": "#e8c473",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.05,
+        "impact_scale": 0.8
+      }
+    },
+    "sap": {
+      "display_name": "Sap",
+      "type": "ground",
+      "slot": "utility",
+      "weight": "light",
+      "power": 1.0,
+      "base_power": 0.0,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 7.0,
+      "cone_degrees": 40.0,
+      "windup": 0.3,
+      "recovery": 0.35,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "damage_taken_debuff",
+        "scope": "target",
+        "duration": 4.0,
+        "damage_multiplier": 1.1,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "cone",
+        "archetype": "debuff_hex",
+        "count": 1,
+        "size": 0.65,
+        "colour": "#9181b6",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.0,
+        "impact_scale": 0.75
+      }
+    },
+    "quake_ring": {
+      "display_name": "Quake Ring",
+      "type": "ground",
+      "slot": "utility",
+      "weight": "medium",
+      "power": 1.0,
+      "base_power": 2.7,
+      "wind_cost": 24.0,
+      "cooldown": 10.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "range": 3.0,
+      "cone_degrees": 360.0,
+      "windup": 0.4,
+      "recovery": 0.45,
+      "lunge": 0.0,
+      "utility": {
+        "kind": "quake_ring",
+        "scope": "self_ring",
+        "radius": 3.0,
+        "push_metres": 0.8,
+        "swept": true,
+        "maximum_hits_per_action": 1,
+        "duration_policy": "refresh_remaining_maximum"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "quake_ring",
+        "count": 1,
+        "size": 3.0,
+        "colour": "#aa9868",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 0.7,
+        "impact_scale": 0.7
       }
     }
   },

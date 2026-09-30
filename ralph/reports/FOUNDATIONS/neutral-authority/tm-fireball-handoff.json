@@ -1,0 +1,9 @@
+{
+  "source": "ce12aae9d9205b0829df7acd2a2b082e32de4a73",
+  "source_path": "data/items/items.json",
+  "source_json_pointer": "/items/tm_fireball",
+  "source_git_blob": "2cf189852fd5ad65a652b70691ae532ba4d4ff33",
+  "isolated_row_bytes_sha256": "7372c9e548c23c4aa17e20c71e311d52a784e0f20e77d5d4ca0dc3684ef1f284",
+  "canonical_row_sha256": "73c2aade38e964d386d696283351e6231b9266d41d6ea16c4af61da1c245e5cd",
+  "scope": "ONE exact TM ItemDB row only; no other item rows, inventory/crafting/gameplay activation or current main/training replacement"
+}

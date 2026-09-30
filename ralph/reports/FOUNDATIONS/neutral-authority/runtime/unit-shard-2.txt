@@ -1,0 +1,2176 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+shard 2/4: 168 of 670 test files
+  ok    test_ally_occlusion_fade.gd :: test_a_foe_in_front_of_the_ally_is_never_hidden_by_it
+  ok    test_ally_occlusion_fade.gd :: test_a_foe_off_to_the_side_is_not_hidden
+  ok    test_ally_occlusion_fade.gd :: test_a_small_foe_straight_behind_a_big_ally_is_hidden
+  ok    test_ally_occlusion_fade.gd :: test_a_swap_made_during_the_fade_is_not_undone
+  ok    test_ally_occlusion_fade.gd :: test_apply_dithers_every_surface_and_restores_what_was_there
+  ok    test_ally_occlusion_fade.gd :: test_head_point_leads_the_base_along_the_flat_facing
+  ok    test_ally_occlusion_fade.gd :: test_the_ally_can_hide_a_long_foes_head_while_its_centre_column_is_clear
+  ok    test_ally_occlusion_fade.gd :: test_the_ally_transform_moves_the_ellipsoid
+  ok    test_ally_occlusion_fade.gd :: test_the_config_is_declared
+  ok    test_ally_occlusion_fade.gd :: test_the_dither_covers_the_wanted_fraction_at_the_camera_distance
+  ok    test_ally_occlusion_fade.gd :: test_the_empty_corner_of_the_bounds_box_does_not_count
+  ok    test_audio_cues.gd :: test_cue_map_has_the_nine_named_cues
+  ok    test_audio_cues.gd :: test_every_cue_resolves_to_a_file_on_disk
+  ok    test_audio_cues.gd :: test_play_does_not_crash_headless_called_twice
+  ok    test_audio_cues.gd :: test_play_unknown_cue_does_not_crash
+  ok    test_audio_cues.gd :: test_should_play_is_false_inside_the_window
+  ok    test_audio_cues.gd :: test_should_play_is_true_again_well_after_the_window
+  ok    test_audio_cues.gd :: test_should_play_is_true_exactly_at_the_window_edge
+  ok    test_audio_cues.gd :: test_should_play_is_true_on_first_ask
+  ok    test_audio_cues.gd :: test_should_play_rate_limits_independently_per_cue
+  ok    test_band4_upper_meadows.gd :: test_band4_fields_at_least_one_alpha_or_special_encounter
+  ok    test_band4_upper_meadows.gd :: test_band4_fields_at_least_one_optional_trainer_outside_the_sigil_gate
+  ok    test_band4_upper_meadows.gd :: test_band4_fields_its_own_gatherable_ironwood
+  ok    test_band4_upper_meadows.gd :: test_band4_has_more_than_one_route_loop_off_its_own_spine
+  ok    test_band4_upper_meadows.gd :: test_band4_wild_ecology_is_not_a_single_species_monoculture
+  ok    test_band4_upper_meadows.gd :: test_cumulative_roster_pressure_by_band4_beats_the_five_slot_cap
+  ok    test_band4_upper_meadows.gd :: test_ridge_flock_does_not_overlap_the_road_visibility_pair
+  ok    test_band4_upper_meadows.gd :: test_the_three_captains_occupy_spatially_distinct_places
+  FAIL  test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file
+          expected , got clearings[2].x is 2.0, expected -22.0  (clearings: the merged entry does not match the pre-split file — clearings[2].x is 2.0, expected -22.0)
+          expected , got clearings[4].x is 78.0, expected 13.0  (clearings: the merged entry does not match the pre-split file — clearings[4].x is 78.0, expected 13.0)
+          expected , got footprints[0].x is 2.0, expected -22.0  (footprints: the merged entry does not match the pre-split file — footprints[0].x is 2.0, expected -22.0)
+          expected , got footprints[6].x is 44.0, expected -2.5  (footprints: the merged entry does not match the pre-split file — footprints[6].x is 44.0, expected -2.5)
+  ok    test_band_vegetation.gd :: test_no_band_file_entry_is_dropped_by_the_merge
+  ok    test_band_vegetation.gd :: test_order_is_unique_across_every_band_and_key
+  ok    test_band_vegetation.gd :: test_scatter_rules_config_carries_both_split_arrays
+  ok    test_band_vegetation.gd :: test_south_bridge_dynamic_cover_footprint_followed_the_relocated_crossing
+  ok    test_band_vegetation.gd :: test_the_head_file_no_longer_carries_the_positional_arrays
+  ok    test_broken_tower_landmark.gd :: test_broken_tower_is_an_open_asymmetric_walkable_ruin
+  ok    test_broken_tower_landmark.gd :: test_broken_tower_night_fill_has_a_visible_bounded_source
+  ok    test_broken_tower_landmark.gd :: test_broken_tower_uses_installed_brick_art_not_primitive_drums
+  ok    test_broken_tower_landmark.gd :: test_bulk_wildlife_scatter_stays_out_of_the_named_ruin
+  ok    test_broken_tower_landmark.gd :: test_exposed_wall_ends_and_collapse_are_fractured_without_route_collision
+  ok    test_broken_tower_landmark.gd :: test_route_arch_widens_the_silhouette_without_sealing_the_mouth
+  ok    test_broken_tower_landmark.gd :: test_route_facing_west_cut_has_deep_installed_masonry_returns
+  ok    test_broken_tower_landmark.gd :: test_watch_purpose_and_threshold_are_visible_without_new_route_collision
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_rebuild_retires_solid_shoulders_and_preserves_open_wear_lane
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_ruts_are_one_feathered_embedded_wear_field
+  ok    test_burrow_warrens_visual_identity.gd :: test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable
+  ok    test_burrow_warrens_visual_identity.gd :: test_den_shell_clears_measured_guardian_camera_segments
+  ok    test_burrow_warrens_visual_identity.gd :: test_facade_is_one_continuous_mantle_not_applied_shoulder_plates
+  ok    test_burrow_warrens_visual_identity.gd :: test_first_interior_uses_organic_earth_finish_with_den_and_vault_boundaries
+  ok    test_burrow_warrens_visual_identity.gd :: test_guardian_scale_fits_the_approved_den_after_the_global_creature_pass
+  ok    test_burrow_warrens_visual_identity.gd :: test_threshold_uses_a_restrained_inner_practical_without_route_collision
+  ok    test_candy_progression_safety.gd :: test_a_candy_at_the_cap_grants_nothing_and_pushes_nothing
+  ok    test_candy_progression_safety.gd :: test_a_candy_cannot_target_a_fainted_creature
+  ok    test_candy_progression_safety.gd :: test_a_candy_keeps_the_hp_fraction_and_the_banked_xp
+  ok    test_candy_progression_safety.gd :: test_a_clamped_candy_announces_only_the_levels_it_granted
+  ok    test_candy_progression_safety.gd :: test_a_great_candy_two_below_the_cap_grants_both
+  ok    test_candy_progression_safety.gd :: test_a_rare_candy_one_below_the_cap_grants_one_level_and_stops_at_the_cap
+  ok    test_candy_progression_safety.gd :: test_rare_candy_is_one_level_up_with_levels_gained_three
+  ok    test_candy_progression_safety.gd :: test_the_satchel_line_says_the_cap_clamped_a_partial_candy
+  ok    test_candy_progression_safety.gd :: test_the_satchel_refuses_a_creature_already_at_the_cap_with_a_reason
+  ok    test_candy_progression_safety.gd :: test_the_three_candies_grant_one_two_and_three_levels
+  ok    test_chapter_content_map.gd :: test_every_build_cost_names_a_material_the_world_can_supply
+  ok    test_chapter_content_map.gd :: test_every_region_has_human_opposition_in_it
+  ok    test_chapter_content_map.gd :: test_every_region_has_wild_creatures_in_it
+  ok    test_chapter_content_map.gd :: test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for
+  ok    test_character_hair_split.gd :: test_hiding_the_real_ponytail_leaves_no_part_named_hair
+  ok    test_character_hair_split.gd :: test_no_hair_config_leaves_the_base_models_default_look_untouched
+  ok    test_character_hair_split.gd :: test_real_ponytail_recolours_without_losing_its_texture
+  ok    test_character_hair_split.gd :: test_the_real_ponytail_mesh_is_found_and_shown_by_default
+  ok    test_characterize_flag_keys.gd :: test_band_pickups_flag_id_delegates_to_the_cache_prefix_keyed_on_the_pickup_id
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_defaults_realm_to_meadows
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_for_a_bare_item_with_no_placement_is_cache_colon_item_id
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_for_a_meadows_placement_is_cache_colon_placement_id
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_for_a_placement_in_another_realm_is_realm_qualified
+  ok    test_characterize_flag_keys.gd :: test_harvest_node_flag_id_is_harvest_node_colon_node_id
+  ok    test_characterize_flag_keys.gd :: test_key_pickup_flag_id_is_pickup_colon_item_id
+  ok    test_characterize_flag_keys.gd :: test_saddle_fitted_flag_is_saddle_fitted_underscore_species_id
+  ok    test_characterize_flag_keys.gd :: test_tm_pickup_flag_prefix_is_tm_colon
+  ok    test_characterize_flag_keys.gd :: test_wild_once_flag_format_is_literally_wild_once_percent_d_on_the_spawn_order
+  ok    test_characterize_progression_feed.gd :: test_bond_near_is_neither_moment_nor_tick
+  ok    test_characterize_progression_feed.gd :: test_clear_bumps_epoch_so_a_reused_seq_cannot_replay_old_presentation_cursors
+  ok    test_characterize_progression_feed.gd :: test_clear_resets_seq_and_revision_to_zero_and_empties_the_log
+  ok    test_characterize_progression_feed.gd :: test_drain_bumps_revision_but_leaves_epoch_and_seq_untouched
+  ok    test_characterize_progression_feed.gd :: test_drain_empties_the_log_and_returns_what_was_in_it
+  ok    test_characterize_progression_feed.gd :: test_is_moment_is_true_only_for_level_up_bond_milestone_and_reward_summary
+  ok    test_characterize_progression_feed.gd :: test_is_tick_is_true_only_for_xp_gained_and_bond_credit
+  ok    test_characterize_progression_feed.gd :: test_peek_since_hands_back_copies_not_the_stored_dictionary
+  ok    test_characterize_progression_feed.gd :: test_peek_since_returns_only_strictly_newer_events_oldest_first_and_does_not_consume
+  ok    test_characterize_progression_feed.gd :: test_push_increments_latest_seq_and_revision_by_one_per_event
+  ok    test_characterize_progression_feed.gd :: test_push_stamps_kind_seq_creature_id_name_and_species_on_the_stored_event
+  ok    test_characterize_progression_feed.gd :: test_push_with_a_null_creature_still_stores_the_event_using_the_payload_name
+  ok    test_characterize_progression_feed.gd :: test_xp_fraction_is_current_over_needed_clamped_and_one_when_nothing_is_needed
+  ok    test_characterize_progression_feed.gd :: test_xp_helpers_return_zero_false_zero_for_a_null_creature
+  ok    test_characterize_progression_feed.gd :: test_xp_near_uses_one_level_matched_wild_win_against_the_real_curve
+  ok    test_characterize_progression_feed.gd :: test_xp_remaining_is_needed_minus_current_xp_against_the_real_curve
+  ok    test_cloudreach_atmosphere.gd :: test_mix_and_presentation_do_not_invent_rewards
+  ok    test_cloudreach_atmosphere.gd :: test_navigation_gates_waterward_and_reload_preserves_only_this_realm
+  ok    test_cloudreach_atmosphere.gd :: test_realms_have_distinct_extent_and_ui_preserves_legacy_fallback
+  ok    test_cloudreach_atmosphere.gd :: test_settlement_ambience_sits_on_each_inhabited_settlement
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_broken_arch_catalogue_no_longer_stands_between_the_old_slabs
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_broken_arch_uses_installed_gateway_asymmetry_and_no_collision
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_cloudreach_world_mounts_dedicated_broken_arch_presentation
+  ok    test_cloudreach_chapter_data.gd :: test_audio_contract_covers_atmosphere_and_marks_nonblocking_gaps
+  ok    test_cloudreach_chapter_data.gd :: test_camps_support_recovery_without_punitive_hunger
+  ok    test_cloudreach_chapter_data.gd :: test_chapter_contract_parses_and_targets_cloudreach
+  ok    test_cloudreach_chapter_data.gd :: test_finale_is_named_mechanical_replaceable_and_not_an_hp_sponge
+  ok    test_cloudreach_chapter_data.gd :: test_main_chain_has_three_causal_acts_and_persistent_flags
+  ok    test_cloudreach_chapter_data.gd :: test_map_contract_uses_real_landmarks_and_covers_every_region
+  ok    test_cloudreach_chapter_data.gd :: test_midpoint_unlocks_fly_then_a_separate_grounded_route
+  ok    test_cloudreach_chapter_data.gd :: test_npc_cast_reuses_installed_bodies_and_is_distributed
+  ok    test_cloudreach_chapter_data.gd :: test_optional_content_has_multistep_exploration_fly_and_trainer_chains
+  ok    test_cloudreach_chapter_data.gd :: test_pickups_are_authored_persistent_and_cover_directive_rewards
+  ok    test_cloudreach_chapter_data.gd :: test_progression_feedback_continues_xp_level_and_bond_signals
+  ok    test_cloudreach_chapter_data.gd :: test_resource_tier_has_distinct_materials_and_authored_nodes
+  ok    test_cloudreach_chapter_data.gd :: test_story_problem_is_structured_around_the_authorized_conflict
+  ok    test_cloudreach_chapter_data.gd :: test_trainer_ladder_escalates_through_composition_and_replaceable_teams
+  ok    test_cloudreach_chapter_data.gd :: test_victory_grants_both_realm_rewards_and_changes_the_world
+  ok    test_cloudreach_chapter_data.gd :: test_wild_encounter_tables_cover_regions_without_freezing_final_species
+  ok    test_cloudreach_counterweight_seal.gd :: test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed
+  ok    test_cloudreach_counterweight_seal.gd :: test_every_stair_point_past_the_gate_is_fly_sealed
+  ok    test_cloudreach_counterweight_seal.gd :: test_gate_spans_the_route_ridge_walkable_width
+  ok    test_cloudreach_counterweight_seal.gd :: test_gate_stands_where_the_pass_enters_upper_cloudreach_past_the_beacon
+  ok    test_cloudreach_counterweight_seal.gd :: test_legal_pre_unlock_content_is_outside_every_upper_seal
+  ok    test_cloudreach_counterweight_seal.gd :: test_nothing_fly_gated_is_walkable_before_the_upper_unlock
+  ok    test_cloudreach_finale.gd :: test_a_different_store_resets_even_mid_fight
+  ok    test_cloudreach_finale.gd :: test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift
+  ok    test_cloudreach_finale.gd :: test_break_the_eye_reload_without_a_delta_still_resets
+  ok    test_cloudreach_finale.gd :: test_break_the_eye_without_a_ledger_resets_conservatively
+  ok    test_cloudreach_finale.gd :: test_client_pending_network_repair_submits_once_and_settles_once
+  ok    test_cloudreach_finale.gd :: test_client_pending_win_settles_from_revision_poll_alone
+  ok    test_cloudreach_finale.gd :: test_client_pending_win_submits_once_and_settles_once_when_delta_lands
+  ok    test_cloudreach_finale.gd :: test_finale_to_chapter_complete_raises_no_legendary_offer
+  ok    test_cloudreach_finale.gd :: test_hazards_rotate_telegraph_and_preserve_three_lee_pockets
+  ok    test_cloudreach_finale.gd :: test_older_unearned_save_cannot_infer_a_captain_win_from_relay_flags
+  ok    test_cloudreach_finale.gd :: test_production_win_is_required_and_idempotent
+  ok    test_cloudreach_finale.gd :: test_refused_pending_intent_releases_its_guard
+  ok    test_cloudreach_finale.gd :: test_reloaded_flags_that_no_longer_admit_the_encounter_reset_it
+  ok    test_cloudreach_finale.gd :: test_restore_resets_once_the_fight_is_over
+  ok    test_cloudreach_finale.gd :: test_restore_resets_when_another_trainer_is_being_fought
+  ok    test_cloudreach_finale.gd :: test_save_restores_partial_relays_and_repairs_only_completed_network
+  ok    test_cloudreach_finale.gd :: test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases
+  ok    test_cloudreach_finale.gd :: test_without_a_director_a_sweep_resets_the_encounter
+  ok    test_cloudreach_friendly_palette.gd :: test_cloudreach_scripts_placing_crimson_leaf_models_route_them_through_the_palette
+  ok    test_cloudreach_friendly_palette.gd :: test_friendly_cloudreach_presentation_configs_carry_no_red
+  ok    test_cloudreach_friendly_palette.gd :: test_observatory_edge_trees_wear_the_green_region_leaf
+  ok    test_cloudreach_landing_map.gd :: test_a_survey_is_map_knowledge_even_without_the_bells
+  ok    test_cloudreach_landing_map.gd :: test_every_landing_declares_its_region_gate
+  ok    test_cloudreach_landing_map.gd :: test_nothing_is_known_before_the_bells_or_a_survey
+  ok    test_cloudreach_landing_map.gd :: test_sync_is_idempotent_and_restores_after_a_map_reload
+  ok    test_cloudreach_landing_map.gd :: test_the_bells_reveal_only_the_landings_whose_region_is_open
+  ok    test_cloudreach_observatory_latch.gd :: test_it_is_optional
+  ok    test_cloudreach_observatory_latch.gd :: test_the_chain_runs_in_order_and_needs_the_summit_open
+  ok    test_cloudreach_observatory_latch.gd :: test_the_latch_builds_a_walkable_descent_between_existing_pads
+  ok    test_cloudreach_production_integration.gd :: test_bridge_cut_does_not_remove_its_neighboring_approach
+  ok    test_cloudreach_production_integration.gd :: test_counterweight_barrier_is_on_restricted_branch_not_lower_junction
+  ok    test_cloudreach_production_integration.gd :: test_scene_composer_contract_has_no_meadows_story_or_duplicate_feed
+  ok    test_cloudreach_production_integration.gd :: test_spatial_surface_broadphase_preserves_stack_and_negative_cells
+  ok    test_cloudreach_resources.gd :: test_cloudreach_tools_use_equipped_working_tool_not_hidden_ownership
+  ok    test_cloudreach_resources.gd :: test_every_recipe_is_arrival_gated_and_crafts_the_declared_useful_result
+  ok    test_cloudreach_resources.gd :: test_every_resource_has_inventory_identity_stack_and_saved_slots
+  ok    test_cloudreach_resources.gd :: test_full_satchel_can_craft_when_the_last_ingredient_stacks_free_room
+  ok    test_cloudreach_resources.gd :: test_full_satchel_recipe_refuses_without_spending_ingredients
+  ok    test_cloudreach_resources.gd :: test_gather_sources_have_persistent_day_scoped_identity_and_existing_art
+  ok    test_cloudreach_resources.gd :: test_preserve_has_real_temporary_stamina_and_shared_meal_effects
+
+  CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  {  }
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/29    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003   10/20    3948     +8   25     23/20  27 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        5241   16/32    7456     +7   31     29/26  31 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra        555     2/4    1020     +4   34     32/29  33 31 31 31 31    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     2/4    1020     +0    -       -/-  34 32 32 32 32       0  34 32 32 32 32       0       0
+  exit 34 32 32 32 32  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 8; shortfalls: []
+  supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
+
+  ok    test_cloudreach_route_ledger.gd :: test_every_retained_member_meets_each_required_fights_band
+  ok    test_cloudreach_route_ledger.gd :: test_gates_are_respected_leg_by_leg
+  ok    test_cloudreach_route_ledger.gd :: test_negative_controls_fail_the_same_assertion
+  ok    test_cloudreach_route_ledger.gd :: test_no_required_step_requires_a_catch
+  ok    test_cloudreach_route_ledger.gd :: test_required_coin_income_before_the_finale_covers_two_losses
+  ok    test_cloudreach_route_ledger.gd :: test_required_interaction_costs_have_a_150_percent_route_supply
+  ok    test_cloudreach_route_ledger.gd :: test_the_replayed_route_follows_the_harness_and_the_data_gates
+  ok    test_cloudreach_route_ledger.gd :: test_the_retained_five_leave_cloudreach_inside_the_envelope
+  ok    test_cloudreach_stormward_overlook.gd :: test_cloudreach_world_mounts_the_dedicated_stormward_presentation
+  ok    test_cloudreach_stormward_overlook.gd :: test_stormward_catalogue_uses_the_authored_south_crown_endpoint
+  ok    test_cloudreach_stormward_overlook.gd :: test_stormward_threshold_is_open_directional_and_visual_only
+  ok    test_cloudreach_waycamp_shelter.gd :: test_it_is_optional_and_gates_no_story
+  ok    test_cloudreach_waycamp_shelter.gd :: test_it_upgrades_galefoot_and_adds_no_camp
+  ok    test_cloudreach_waycamp_shelter.gd :: test_the_bed_check_reads_this_peers_resting_companion
+  ok    test_cloudreach_waycamp_shelter.gd :: test_the_chain_completes_in_order_through_real_events
+  ok    test_cloudreach_waycamp_shelter.gd :: test_the_shelter_costs_four_fiber_and_leaves_a_rain_cover
+  ok    test_cloudreach_waycamp_shelter.gd :: test_the_sheltered_bed_pays_its_rest_xp_once_more
+  ok    test_cloudreach_world_payoffs.gd :: test_side_payoffs_restore_each_independent_canonical_fact
+  ok    test_cloudreach_world_payoffs.gd :: test_tavi_rematch_is_a_distinct_once_only_tier_using_the_existing_team_and_reward
+  ok    test_combat_arena_bystanders.gd :: test_bystanders_inside_the_ring_step_straight_out_to_its_edge
+  ok    test_combat_arena_bystanders.gd :: test_only_set_dressing_joins_the_group
+  ok    test_combat_arena_bystanders.gd :: test_the_arena_config_turns_it_on
+  ok    test_combat_camera_framing_tunables.gd :: test_a_large_pair_widens_the_frame
+  ok    test_combat_camera_framing_tunables.gd :: test_a_small_pair_is_pushed_in_below_the_base_distance
+  ok    test_combat_camera_framing_tunables.gd :: test_ally_floor_is_measured_along_the_arm
+  ok    test_combat_camera_framing_tunables.gd :: test_min_extra_zero_is_the_old_widen_only_behaviour
+  ok    test_combat_camera_framing_tunables.gd :: test_pivot_height_follows_the_tallest_fighter_within_bounds
+  ok    test_combat_camera_framing_tunables.gd :: test_the_ally_floor_beats_the_push_in
+  ok    test_combat_camera_framing_tunables.gd :: test_the_framing_code_never_rescales_a_creature
+  ok    test_combat_camera_framing_tunables.gd :: test_the_push_in_stops_at_min_extra
+  ok    test_combat_camera_framing_tunables.gd :: test_the_shipped_tunables_are_on_and_sane
+  ok    test_combat_depth_targets.gd :: test_missing_targets_fail_closed_and_authored_values_match_spec
+  ok    test_combat_depth_targets.gd :: test_reader_floor_must_win_and_ratio_boundary_is_inclusive
+  ok    test_combat_depth_targets.gd :: test_top_requires_wipes_from_band_three_and_reader_wins
+  ok    test_combat_depth_targets.gd :: test_wild_cost_and_single_hit_limits_are_not_softened
+  ok    test_combat_depth_targets.gd :: test_zero_damage_floor_cannot_pass_ratio_by_vacuity
+  ok    test_combat_flee_buffer.gd :: test_flee_buffer_in_an_initialized_tree
+  ok    test_combat_realm_owned_begin.gd :: test_realm_owned_and_default_begin_in_initialized_tree
+  ok    test_combat_stagger.gd :: test_a_hit_during_player_windup_cancels_the_committed_swing
+  ok    test_combat_stagger.gd :: test_empty_player_poise_roots_then_arms_exactly_one_critical
+  ok    test_combat_stagger.gd :: test_hitstop_uses_the_three_authored_beats
+  ok    test_combat_stagger.gd :: test_host_record_stamps_hp_and_break_state_atomically
+  ok    test_combat_stagger.gd :: test_observer_record_applies_authoritative_stagger_once
+  ok    test_combat_stagger.gd :: test_poise_tuning_is_complete_and_safe
+  ok    test_combat_stagger.gd :: test_recovered_player_requires_a_new_poise_break
+  ok    test_combat_stagger.gd :: test_recovered_wild_requires_a_new_poise_break
+  ok    test_combat_stagger.gd :: test_strike_authors_record_sync_quietly_before_their_verdict
+  ok    test_combat_stagger.gd :: test_wild_poise_break_cancels_telegraph_without_emitting_a_strike
+  ok    test_combat_stagger.gd :: test_wild_poise_regenerates_only_after_the_quiet_delay
+  ok    test_companion_presence.gd :: test_a_bond_node_completing_is_the_strongest_moment
+  ok    test_companion_presence.gd :: test_a_dialogue_panel_blocks_and_hurt_pose_lets_go_under_it
+  ok    test_companion_presence.gd :: test_a_loaded_save_or_party_swap_does_not_celebrate_old_bond
+  ok    test_companion_presence.gd :: test_a_moving_trainer_resets_the_stillness_clock
+  ok    test_companion_presence.gd :: test_a_victory_cut_by_the_teardown_turns_into_a_greeting_on_redeploy
+  ok    test_companion_presence.gd :: test_acknowledges_a_trainer_who_stands_still_for_the_configured_delay
+  ok    test_companion_presence.gd :: test_acknowledgment_respects_its_cooldown
+  ok    test_companion_presence.gd :: test_acknowledgment_walks_up_then_holds_the_pivot_and_restores_it
+  ok    test_companion_presence.gd :: test_aiming_riding_prompts_lockout_and_build_ghosts_all_block
+  ok    test_companion_presence.gd :: test_camera_safe_flank_does_not_swing_behind_the_view_during_diagonal_travel
+  ok    test_companion_presence.gd :: test_care_for_a_different_creature_is_not_this_creatures_moment
+  ok    test_companion_presence.gd :: test_care_from_the_satchel_waits_for_the_menu_to_close
+  ok    test_companion_presence.gd :: test_care_respects_its_cooldown
+  ok    test_companion_presence.gd :: test_each_care_kind_has_its_own_motion
+  ok    test_companion_presence.gd :: test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_basis
+  ok    test_companion_presence.gd :: test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_line
+  ok    test_companion_presence.gd :: test_far_from_any_camp_nothing_settles
+  ok    test_companion_presence.gd :: test_galecrest_gaze_uses_an_upright_axis_and_tracks_upper_body
+  ok    test_companion_presence.gd :: test_higher_bond_acknowledges_sooner
+  ok    test_companion_presence.gd :: test_higher_bond_makes_the_victory_warmer
+  ok    test_companion_presence.gd :: test_hunger_reads_as_tired_too
+  ok    test_companion_presence.gd :: test_low_hp_slows_the_gait_lowers_the_head_and_flinches
+  ok    test_companion_presence.gd :: test_nothing_starts_in_combat_and_a_running_reaction_is_cut
+  ok    test_companion_presence.gd :: test_presence_approach_cannot_pull_a_large_follower_inside_its_safe_flank
+  ok    test_companion_presence.gd :: test_settles_beside_a_lit_campfire_and_stands_up_to_move
+  ok    test_companion_presence.gd :: test_the_bond_milestone_hook_is_the_same_entry
+  ok    test_companion_presence.gd :: test_the_camp_group_is_an_opt_in_camp_source
+  ok    test_companion_presence.gd :: test_the_camp_scan_costs_nothing_while_the_creature_is_moving
+  ok    test_companion_presence.gd :: test_the_fixture_is_a_real_rigged_follower
+  ok    test_companion_presence.gd :: test_the_head_turns_toward_a_near_trainer_and_not_a_far_one
+  ok    test_companion_presence.gd :: test_victory_fires_on_the_result_beat_and_hops
+  ok    test_companion_presence.gd :: test_victory_waits_out_a_fight_that_is_still_running
+  ok    test_conversation_camera_aftermath_profile.gd :: test_aftermath_frames_wider_than_the_villager_push_in
+  ok    test_conversation_camera_aftermath_profile.gd :: test_aftermath_lens_stays_near_a_far_speaker
+  ok    test_conversation_camera_aftermath_profile.gd :: test_unknown_and_empty_profiles_are_the_ordinary_shot
+  ok    test_creature_condition.gd :: test_a_fainted_creature_is_never_ready
+  ok    test_creature_condition.gd :: test_a_fainted_creature_takes_no_credit_for_the_win
+  ok    test_creature_condition.gd :: test_a_fresh_creature_starts_short_of_ready
+  ok    test_creature_condition.gd :: test_a_full_creature_refuses_plain_food
+  ok    test_creature_condition.gd :: test_a_resting_creature_does_not_starve_in_its_bed
+  ok    test_creature_condition.gd :: test_every_threshold_is_data
+  ok    test_creature_condition.gd :: test_fainting_costs_the_rest_and_the_mood
+  ok    test_creature_condition.gd :: test_feeding_cannot_push_past_the_maximum
+  ok    test_creature_condition.gd :: test_feeding_restores_the_meter_and_lifts_the_mood
+  ok    test_creature_condition.gd :: test_hunger_drags_the_mood_down_faster
+  ok    test_creature_condition.gd :: test_nourishment_drains_over_real_time
+  ok    test_creature_condition.gd :: test_rest_lapses_after_the_configured_time_awake
+  ok    test_creature_condition.gd :: test_starving_a_creature_never_hurts_it
+  ok    test_creature_condition.gd :: test_the_label_reads_as_ready_when_it_is
+  ok    test_creature_condition.gd :: test_the_starting_values_come_from_the_config
+  ok    test_creature_condition.gd :: test_the_summary_names_what_to_go_and_fix
+  ok    test_creature_condition.gd :: test_the_three_states_are_earned_separately
+  ok    test_creature_condition.gd :: test_winning_fights_raises_the_mood
+  ok    test_creature_rest_pose.gd :: test_authored_rest_isolated_torso_deform_preserves_children_and_restores_exactly
+  ok    test_creature_rest_pose.gd :: test_authored_rest_lower_shell_mesh_deform_is_isolated_and_reversible
+  ok    test_creature_rest_pose.gd :: test_authored_rest_model_rotation_is_relative_idempotent_and_reversible
+  ok    test_creature_rest_pose.gd :: test_galecrest_zero_roll_keeps_its_existing_faint_only_path
+  ok    test_creature_rest_pose.gd :: test_negative_roll_lifts_not_dips
+  ok    test_creature_rest_pose.gd :: test_positive_roll_is_unchanged
+  ok    test_creature_rest_pose.gd :: test_terrapup_authored_prone_rest_is_idempotent_and_reversible
+  ok    test_creature_rest_pose.gd :: test_water_candidate_hurt_to_camp_and_resume_restores_pose_boundaries
+  ok    test_creature_rest_pose.gd :: test_water_companion_settle_uses_and_releases_the_same_candidate
+  ok    test_creature_rest_pose.gd :: test_water_rest_candidate_endpoint_is_unmodified_idempotent_and_reversible
+  ok    test_creature_rest_pose.gd :: test_water_rest_candidate_gate_preserves_legacy_roll_for_all_four_ids
+  ok    test_creature_rest_pose.gd :: test_water_rest_candidate_rejects_other_species_models_and_existing_recipes
+  ok    test_day_cycle.gd :: test_a_keyframe_with_no_hour_is_not_part_of_the_cycle
+  ok    test_day_cycle.gd :: test_config_loads
+  ok    test_day_cycle.gd :: test_day_length_seconds_is_never_zero_or_negative
+  ok    test_day_cycle.gd :: test_elapsed_for_hour_is_the_inverse_of_hour_at
+  ok    test_day_cycle.gd :: test_hour_at_wraps_every_day_length
+  ok    test_day_cycle.gd :: test_interpolate_at_blends_between_the_two_bracketing_keyframes
+  ok    test_day_cycle.gd :: test_interpolate_at_never_snaps_the_instant_preset_at_changes
+  ok    test_day_cycle.gd :: test_interpolate_at_returns_zero_t_exactly_on_a_keyframe
+  ok    test_day_cycle.gd :: test_interpolate_at_wraps_past_midnight
+  ok    test_day_cycle.gd :: test_is_dark_matches_the_configured_window
+  ok    test_day_cycle.gd :: test_preset_at_picks_the_latest_keyframe_at_or_before_the_hour
+  ok    test_day_cycle.gd :: test_preset_at_wraps_past_midnight_to_the_last_keyframe
+  ok    test_dialogue_gift_capacity.gd :: test_an_existing_stack_with_room_accepts_the_batch
+  ok    test_dialogue_gift_capacity.gd :: test_failed_gift_blocks_a_flag_that_precedes_it_in_the_batch
+  ok    test_dialogue_gift_capacity.gd :: test_full_bag_keeps_selas_gear_and_rescue_available_for_retry
+WARNING: a give: effect reads give:<item_id>:<count>; got 'give:heartstone'
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _gift_batch_fits (res://scripts/story/sequence_director.gd:642)
+       [1] _drain_effects (res://scripts/story/sequence_director.gd:597)
+       [2] _drain (res://tests/test_dialogue_gift_capacity.gd:123)
+       [3] test_invalid_gifts_block_the_batch_before_any_flag_is_written (res://tests/test_dialogue_gift_capacity.gd:116)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: dialogue gives 'no_such_item', which data/items/items.json does not define
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _gift_batch_fits (res://scripts/story/sequence_director.gd:654)
+       [1] _drain_effects (res://scripts/story/sequence_director.gd:597)
+       [2] _drain (res://tests/test_dialogue_gift_capacity.gd:123)
+       [3] test_invalid_gifts_block_the_batch_before_any_flag_is_written (res://tests/test_dialogue_gift_capacity.gd:116)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: a give: effect count must be positive; got 'give:heartstone:0'
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _gift_batch_fits (res://scripts/story/sequence_director.gd:647)
+       [1] _drain_effects (res://scripts/story/sequence_director.gd:597)
+       [2] _drain (res://tests/test_dialogue_gift_capacity.gd:123)
+       [3] test_invalid_gifts_block_the_batch_before_any_flag_is_written (res://tests/test_dialogue_gift_capacity.gd:116)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_dialogue_gift_capacity.gd :: test_invalid_gifts_block_the_batch_before_any_flag_is_written
+  ok    test_dialogue_gift_capacity.gd :: test_two_gifts_competing_for_one_slot_apply_nothing
+  ok    test_director_card_best_survivability.gd :: test_card_defence_matches_solo_best_creature_survivability
+  ok    test_dual_type.gd :: test_a_mono_typed_defender_is_completely_unchanged
+  ok    test_dual_type.gd :: test_a_secondary_type_is_never_the_same_as_the_primary
+  ok    test_dual_type.gd :: test_an_unauthored_second_type_changes_nothing
+  ok    test_dual_type.gd :: test_case_and_whitespace_survive_the_second_type
+  ok    test_dual_type.gd :: test_every_species_move_exists_and_matches_one_of_its_own_types
+  ok    test_dual_type.gd :: test_every_species_type_is_from_the_declared_vocabulary
+  ok    test_dual_type.gd :: test_every_variant_names_a_real_base_species_and_reuses_its_mesh
+  ok    test_dual_type.gd :: test_no_aspect_variant_is_reachable_by_evolving
+  ok    test_dual_type.gd :: test_no_trainer_roster_creature_is_dual_typed
+  ok    test_dual_type.gd :: test_opposed_halves_cancel_to_exactly_neutral
+  ok    test_dual_type.gd :: test_order_does_not_matter
+  ok    test_dual_type.gd :: test_the_configured_cap_bounds_the_result
+  ok    test_dual_type.gd :: test_the_expansion_actually_shipped_its_dual_types
+  ok    test_dual_type.gd :: test_the_two_halves_multiply
+  ok    test_dual_type.gd :: test_the_worst_multiplier_the_real_data_can_produce_is_one_double_weakness
+  ok    test_encounter_combat_override.gd :: test_a_key_the_enemy_block_does_not_own_is_dropped
+  ok    test_encounter_combat_override.gd :: test_an_absent_block_changes_nothing_at_all
+  ok    test_encounter_combat_override.gd :: test_an_override_cannot_leak_onto_a_body_that_did_not_author_one
+  ok    test_encounter_combat_override.gd :: test_an_override_lays_over_the_shipped_block_without_erasing_it
+  ok    test_encounter_combat_override.gd :: test_the_warrens_guardian_authors_a_real_profile
+  ok    test_enemy_named_attack.gd :: test_absent_cadence_keeps_legacy_quick_fallback
+  ok    test_enemy_named_attack.gd :: test_host_resolver_uses_selected_move_id_for_type_and_payload
+  ok    test_enemy_named_attack.gd :: test_opted_in_body_alternates_and_freezes_its_named_attack
+  ok    test_enemy_named_attack.gd :: test_rotated_parent_world_direction_keeps_facing_and_quick_cone
+  ok    test_enemy_named_attack.gd :: test_solo_resolver_uses_the_same_selected_move
+  ok    test_equipment_portable_save.gd :: test_current_portable_character_without_equipment_clears_previous_worn_state
+  ok    test_equipment_portable_save.gd :: test_switching_two_portable_characters_and_reset_never_leaks_gear
+  ok    test_equipment_portable_save.gd :: test_v1_portable_character_is_refused_without_touching_file_or_worn_state
+  ok    test_equipment_portable_save.gd :: test_v2_portable_disk_roundtrip_keeps_worn_item_outside_inventory
+  ok    test_equipment_portable_save.gd :: test_world_partition_merge_keeps_guest_gear_and_host_world_facts
+  ok    test_fainting.gd :: test_a_fainted_creature_refuses_to_become_the_active_one
+  ok    test_fainting.gd :: test_all_fainted_is_false_with_a_healthy_member_and_true_once_all_are_down
+  ok    test_fainting.gd :: test_heal_fully_still_unfaints_this_is_rest_not_a_potion
+  ok    test_fainting.gd :: test_heal_refuses_a_fainted_creature
+  ok    test_fainting.gd :: test_heal_still_tops_up_a_creature_that_is_only_hurt
+  ok    test_fainting.gd :: test_rest_grants_the_same_rest_bonus_xp_camp_gives
+  ok    test_fainting.gd :: test_rest_on_a_null_creature_does_nothing_and_does_not_crash
+  ok    test_fainting.gd :: test_rest_resets_energy_the_same_way_heal_fully_does
+  ok    test_fainting.gd :: test_rest_revives_a_fainted_creature
+  ok    test_fainting.gd :: test_rest_tops_up_a_creature_that_was_only_hurt
+  ok    test_fainting.gd :: test_revive_only_acts_on_a_fainted_creature
+  ok    test_fainting.gd :: test_revive_restores_half_and_clears_fainted
+  ok    test_fight_ring_occluders.gd :: test_a_bush_harvested_during_the_fight_stays_harvested
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:456)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:173)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:469)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:173)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [5] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:173)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [2] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:173)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:456)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:176)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:469)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:176)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [5] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:176)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [2] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:176)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:179)
+       [1] _init (res://tests/run_tests.gd:120)
+  ok    test_fight_ring_occluders.gd :: test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not
+  ok    test_fight_ring_occluders.gd :: test_an_overlapping_second_ring_does_not_take_the_same_plant_twice
+  ok    test_fight_ring_occluders.gd :: test_closing_the_arena_puts_every_hidden_plant_back_where_it_stood
+  ok    test_fight_ring_occluders.gd :: test_ground_a_site_cleared_for_good_is_never_restored_by_a_fight
+  ok    test_fight_ring_occluders.gd :: test_nothing_happens_without_an_instancer
+  ok    test_fight_ring_occluders.gd :: test_only_what_stands_inside_the_ring_is_hidden
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:456)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [4] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:184)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:469)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [4] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:184)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:272)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [5] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:184)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:168)
+       [2] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:184)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+   GDScript backtrace (most recent call first):
+       [0] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:195)
+       [1] _init (res://tests/run_tests.gd:120)
+  ok    test_fight_ring_occluders.gd :: test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes
+  ok    test_fight_ring_occluders.gd :: test_the_first_ring_closing_leaves_plants_the_second_still_holds_hidden
+  ok    test_follower_floor_station.gd :: test_airborne_trainer_snap_skips_the_floor_rules
+  ok    test_follower_floor_station.gd :: test_default_snap_keeps_an_ordinary_seat
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _tick_follow (res://scripts/creatures/follower_creature.gd:275)
+       [1] test_no_verified_station_closes_on_the_trainer_and_stops_clear (res://tests/test_follower_floor_station.gd:106)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] face_towards (res://scripts/creatures/creature_body.gd:2678)
+       [1] _tick_follow (res://scripts/creatures/follower_creature.gd:275)
+       [2] test_no_verified_station_closes_on_the_trainer_and_stops_clear (res://tests/test_follower_floor_station.gd:106)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_follower_floor_station.gd :: test_no_verified_station_closes_on_the_trainer_and_stops_clear
+  ok    test_follower_floor_station.gd :: test_stopping_following_releases_the_footprint_exception
+  ok    test_follower_floor_station.gd :: test_validator_places_the_leash_snap
+  ok    test_follower_floor_station.gd :: test_validator_station_steers_and_is_not_rechecked_every_frame
+  ok    test_follower_floor_station.gd :: test_without_a_validator_the_station_is_unchanged
+  ok    test_four_biome_road_capture.gd :: test_launch_args_keep_defaults_when_options_are_absent
+  ok    test_four_biome_road_capture.gd :: test_launch_args_parse_out_and_only_as_independent_options
+  ok    test_fresh_opening_target.gd :: test_aim_recovery_walks_round_a_blocked_line_at_throwing_range
+  ok    test_fresh_opening_target.gd :: test_earned_key_walk_requires_the_exact_actionable_prompt
+GATE A OPENING +42.01s — engaged exact live target  (bramblebun)
+  ok    test_fresh_opening_target.gd :: test_exact_admitted_body_is_accepted_and_absent_body_is_rejected
+AIM READINESS input-commit camera=<none> forward=<none> player=<none> target=(inf, inf, inf) current={ "eligible": false, "reason": "reticle_outside_body" } preview={ "eligible": true, "trajectory_blocked": false }
+AIM READINESS input-commit camera=<none> forward=<none> player=<none> target=(inf, inf, inf) current={ "eligible": true, "reason": "eligible" } preview={ "eligible": true, "trajectory_blocked": true }
+AIM READINESS input-commit camera=<none> forward=<none> player=<none> target=(inf, inf, inf) current={ "eligible": true, "reason": "eligible" } preview={ "eligible": true, "trajectory_blocked": false }
+AIM READINESS input-commit camera=<none> forward=<none> player=<none> target=(inf, inf, inf) current={ "eligible": true, "reason": "eligible" } preview={  }
+  ok    test_fresh_opening_target.gd :: test_final_throw_rejects_stale_eligible_preview_and_actual_obstruction
+  ok    test_fresh_opening_target.gd :: test_offered_creature_cannot_be_replaced_by_another_body_of_the_same_species
+  ok    test_fresh_opening_target.gd :: test_transient_readiness_uses_current_verdict_and_clear_preview_without_failing
+  ok    test_gate_a_material_route_contract.gd :: test_route_declares_the_full_prebuild_material_invariant
+  ok    test_gate_a_material_route_contract.gd :: test_route_forbids_state_staging_and_private_resource_introspection
+  ok    test_gate_a_material_route_contract.gd :: test_route_selects_live_resources_through_public_identity
+  ok    test_gate_f_bedroll_placement.gd :: test_canonical_record_rejects_removed_foreign_or_unmatched_nodes
+  ok    test_gate_f_bedroll_placement.gd :: test_existing_bedroll_is_not_proof_that_ignored_input_placed_one
+  ok    test_gate_f_bedroll_placement.gd :: test_four_stances_share_one_budget_without_fourfold_expansion
+  ok    test_gate_f_bedroll_placement.gd :: test_input_receipt_without_correct_new_readback_never_passes
+  ok    test_gate_f_bedroll_placement.gd :: test_invalid_ghost_removed_tent_and_cost_abort_never_press
+  ok    test_gate_f_bedroll_placement.gd :: test_success_requires_new_committed_bedroll_and_balances_wait_units
+  ok    test_gate_f_catch_survival_driver.gd :: test_aim_context_refuses_before_any_lb_and_lockout_is_bounded
+  ok    test_gate_f_catch_survival_driver.gd :: test_faint_or_foe_change_cannot_be_treated_as_recovery
+  ok    test_gate_f_catch_survival_driver.gd :: test_forward_physical_handoffs_wait_cooldown_and_preserve_foe
+  ok    test_gate_f_catch_survival_driver.gd :: test_healthy_pilot_or_no_eligible_improvement_does_not_press
+  ok    test_gate_f_catch_survival_driver.gd :: test_input_success_without_pilot_readback_never_passes
+  ok    test_gate_f_catch_survival_driver.gd :: test_wrapped_forward_eligible_selection_skips_unavailable_members
+  ok    test_gate_f_downstream_combat.gd :: test_bram_completion_requires_his_production_victory_before_recovery
+  ok    test_gate_f_downstream_combat.gd :: test_bridge_handoffs_require_pressure_and_actual_pilot_changes
+  ok    test_gate_f_downstream_combat.gd :: test_trainer_dialogue_stops_at_context_handoff_in_both_evidence_lanes
+  ok    test_gate_f_harness_predicates.gd :: test_chip_to_floor_is_priced_at_its_full_swing_budget
+  ok    test_gate_f_harness_predicates.gd :: test_no_gate3_engage_or_challenge_step_is_a_bare_press
+  ok    test_gate_f_harness_predicates.gd :: test_no_gate3_walk_aims_at_a_spawn_centre_it_cannot_engage_from
+  ok    test_gate_f_harness_predicates.gd :: test_no_gate3_walk_leg_is_scripted_across_an_authored_terrain_carve
+  ok    test_gate_f_harness_predicates.gd :: test_only_the_authored_seed_gives_the_segments_the_species_they_name
+    (skipped S02: no committed telemetry to derive from)
+    (skipped S04: no committed telemetry to derive from)
+    (skipped S05: no committed telemetry to derive from)
+  ok    test_gate_f_harness_predicates.gd :: test_the_route_row_thresholds_leave_headroom_below_the_shortest_run
+  ok    test_gate_f_harness_predicates.gd :: test_the_s06_seed_carries_a_revive_for_every_fight_it_scripts
+  ok    test_gate_f_harness_predicates.gd :: test_the_s09_seed_satchel_survives_the_games_own_save_reader
+  ok    test_gate_f_one_bed_team_rest.gd :: test_already_rested_team_uses_no_input_or_nights
+  ok    test_gate_f_one_bed_team_rest.gd :: test_cost_interruption_and_nonplaced_bed_refuse_before_input
+  ok    test_gate_f_one_bed_team_rest.gd :: test_focus_navigation_is_bounded_and_does_not_accept_wrong_member
+  ok    test_gate_f_one_bed_team_rest.gd :: test_occupied_bed_is_not_emptied_by_early_wake
+  ok    test_gate_f_one_bed_team_rest.gd :: test_reuses_same_bed_for_four_tired_rows_and_skips_first_rested_member
+  ok    test_gate_f_one_bed_team_rest.gd :: test_sleep_callback_success_requires_day_rest_and_bed_release_evidence
+  ok    test_gate_f_one_bed_team_rest.gd :: test_wrong_panel_or_wrong_row_assignment_never_claims_a_night
+  ok    test_gate_f_rig.gd :: test_a_capture_step_with_no_explicit_id_is_still_planned
+  ok    test_gate_f_rig.gd :: test_a_context_failure_skips_the_rest_rather_than_continuing
+  ok    test_gate_f_rig.gd :: test_a_degenerate_frame_is_measured_and_failed
+  ok    test_gate_f_rig.gd :: test_a_degraded_preflight_never_reads_as_a_pass
+  ok    test_gate_f_rig.gd :: test_a_disk_breach_is_a_hard_refusal_the_acknowledgement_cannot_waive
+  ok    test_gate_f_rig.gd :: test_a_logic_lane_hands_its_captures_over_rather_than_failing_them
+  ok    test_gate_f_rig.gd :: test_a_matrix_cell_out_of_context_is_skipped_and_not_counted
+  ok    test_gate_f_rig.gd :: test_a_press_the_live_context_does_not_list_is_refused_and_names_the_collision
+  ok    test_gate_f_rig.gd :: test_a_save_and_a_load_can_carry_a_measured_duration
+  ok    test_gate_f_rig.gd :: test_a_segment_is_costed_in_frames_before_launch
+  ok    test_gate_f_rig.gd :: test_a_skipped_step_is_a_verdict_of_its_own
+  ok    test_gate_f_rig.gd :: test_a_wait_stops_when_the_cost_gate_trips_mid_step
+  ok    test_gate_f_rig.gd :: test_an_unbacked_delegation_is_a_blocker_at_step_one
+  ok    test_gate_f_rig.gd :: test_an_untakeable_capture_reports_fail_not_pass
+  ok    test_gate_f_rig.gd :: test_arrival_at_an_entity_is_a_3d_question
+  ok    test_gate_f_rig.gd :: test_boot_and_in_play_probes_share_price_basis_and_sample_receipts
+  ok    test_gate_f_rig.gd :: test_capture_seq_is_planned_frame_by_frame
+  ok    test_gate_f_rig.gd :: test_context_matching_handles_exact_prefix_negation_and_lists
+  ok    test_gate_f_rig.gd :: test_cost_sampling_counts_controller_settle_frames_between_sparse_ticks
+  ok    test_gate_f_rig.gd :: test_cost_sampling_still_prices_sustained_real_slowdown_above_the_ceiling
+  ok    test_gate_f_rig.gd :: test_cost_sampling_windows_neither_duplicate_frames_nor_include_paid_load_time
+  ok    test_gate_f_rig.gd :: test_cost_windows_wait_for_both_engine_counters_and_elapsed_time
+  ok    test_gate_f_rig.gd :: test_dialogue_advance_is_a_predicate_not_a_press_count
+  ok    test_gate_f_rig.gd :: test_every_schema_event_type_is_emitted_by_something
+  ok    test_gate_f_rig.gd :: test_interact_is_never_pressed_without_a_live_prompt
+  ok    test_gate_f_rig.gd :: test_menu_tab_navigation_prices_its_bounded_wait
+  ok    test_gate_f_rig.gd :: test_missing_evidence_fails_the_process_but_a_failed_expectation_does_not
+  ok    test_gate_f_rig.gd :: test_mixed_cost_budgets_use_physics_price_with_fast_process_frames
+  ok    test_gate_f_rig.gd :: test_mixed_cost_budgets_use_process_price_during_physics_catch_up
+  ok    test_gate_f_rig.gd :: test_route_and_the_recorder_are_driven_by_play_time_not_wall_time
+  ok    test_gate_f_rig.gd :: test_save_navigation_does_not_assume_a_fixed_tab_count
+  ok    test_gate_f_rig.gd :: test_the_advance_button_is_read_off_the_panel
+  ok    test_gate_f_rig.gd :: test_the_capture_preflight_exists_and_blocks
+  ok    test_gate_f_rig.gd :: test_the_closing_inventory_runs_as_code
+  ok    test_gate_f_rig.gd :: test_the_cost_gate_reprices_after_every_boot_not_only_the_first
+  ok    test_gate_f_rig.gd :: test_the_cost_model_prices_the_expensive_steps
+  ok    test_gate_f_rig.gd :: test_the_degenerate_thresholds_separate_night_from_useless
+  ok    test_gate_f_rig.gd :: test_the_entity_walk_reuses_the_repos_one_navigator
+  ok    test_gate_f_rig.gd :: test_the_expensive_detectors_do_not_run_every_frame
+  ok    test_gate_f_rig.gd :: test_the_feature_flag_walk_finds_nested_switches
+  ok    test_gate_f_rig.gd :: test_the_frame_cost_probe_cannot_become_the_cost_it_measures
+  ok    test_gate_f_rig.gd :: test_the_freeze_record_is_cross_checked_against_reality
+  ok    test_gate_f_rig.gd :: test_the_freeze_record_may_describe_lanes_and_still_binds_without_them
+  ok    test_gate_f_rig.gd :: test_the_gitignore_shots_rule_is_the_one_that_was_wrong
+  ok    test_gate_f_rig.gd :: test_the_inventory_asks_whether_git_will_carry_the_captures
+  ok    test_gate_f_rig.gd :: test_the_lane_check_runs_before_the_cost_probe
+  ok    test_gate_f_rig.gd :: test_the_new_detectors_are_seeded_on_boot
+  ok    test_gate_f_rig.gd :: test_the_no_capture_acknowledgement_cannot_waive_a_cost_breach
+  ok    test_gate_f_rig.gd :: test_the_physical_collision_the_press_guard_exists_for_is_real
+  ok    test_gate_f_rig.gd :: test_the_preflight_only_gates_segments_that_plan_evidence
+  ok    test_gate_f_rig.gd :: test_the_preflight_prices_disk_as_well_as_time
+  ok    test_gate_f_rig.gd :: test_the_press_guard_passes_through_what_the_map_does_not_describe
+  ok    test_gate_f_rig.gd :: test_the_press_step_refuses_before_it_injects
+  ok    test_gate_f_rig.gd :: test_the_probe_reads_the_inventory_count_key_the_game_writes
+  ok    test_gate_f_rig.gd :: test_the_run_level_inventory_checks_the_debt_was_paid
+  ok    test_gate_f_rig.gd :: test_the_run_records_the_config_feature_flags
+  ok    test_gate_f_rig.gd :: test_the_run_records_which_clock_each_consumer_reads
+  ok    test_gate_f_rig.gd :: test_the_run_shots_directory_is_not_gitignored
+  ok    test_gate_f_rig.gd :: test_the_runner_declares_its_own_logic_lane_so_a_run_can_start
+  ok    test_gate_f_rig.gd :: test_the_runner_refuses_a_capture_segment_in_logic_mode
+    (skipped: res://ralph/GATE_F_MASTER_PROTOCOL.md is not in this checkout — verify-unit-tests sparse-checks out !/ralph/. The enum was checked against SEGMENT_SCHEMA.md only; run this locally or in a full checkout to verify the two agree.)
+  ok    test_gate_f_rig.gd :: test_the_schema_doc_and_the_protocol_agree_on_the_enum
+  ok    test_gate_f_rig.gd :: test_the_verdict_ledger_counts_skips_separately
+  ok    test_gate_f_rig.gd :: test_the_worked_split_pair_declares_both_halves
+  ok    test_gate_f_village_passage.gd :: test_clear_same_side_walk_needs_no_detour_and_unrelated_open_gate_cannot_cut_fence
+  FAIL  test_gate_f_village_passage.gd :: test_closed_gate_refuses_crossing_but_allows_outside_detour
+          expected true, got false  ({ "ok": false, "reason": "no verified open village passage connects this walk to its target", "waypoints": [] })
+          expected true, got false  (Both endpoints outside does not make a fence-crossing chord valid)
+  ok    test_gate_f_village_passage.gd :: test_existing_endpoint_can_leave_padding_but_cannot_cut_through_it
+  ok    test_gate_f_village_passage.gd :: test_native_r14_inside_to_galecrest_and_reverse_use_open_passage
+  ok    test_gate_f_village_passage.gd :: test_near_panel_walk_away_and_square_corner_clearance
+  ok    test_gate_f_village_passage.gd :: test_next_replans_a_small_moving_target_across_fence
+  ok    test_gather_point_props.gd :: test_a_standing_stone_point_builds_no_prop
+  ok    test_gather_point_props.gd :: test_a_standing_wood_point_builds_no_prop
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] test_felled_pickup_exposes_the_same_read_only_resource_identity (res://tests/test_gather_point_props.gd:107)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] test_felled_pickup_exposes_the_same_read_only_resource_identity (res://tests/test_gather_point_props.gd:107)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] test_felled_pickup_exposes_the_same_read_only_resource_identity (res://tests/test_gather_point_props.gd:107)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_gather_point_props.gd :: test_felled_pickup_exposes_the_same_read_only_resource_identity
+  ok    test_gather_point_props.gd :: test_production_scatter_label_uses_the_actual_resource_verb
+  ok    test_gather_point_props.gd :: test_public_resource_identity_supports_route_selection_without_private_fields
+  ok    test_gather_point_props.gd :: test_the_standing_prompt_defaults_to_chop
+  ok    test_grass_field_profiles.gd :: test_profiles_own_independent_copies
+  ok    test_grass_field_profiles.gd :: test_water_profile_clearances_match_small_service_footprints
+  ok    test_grass_field_profiles.gd :: test_water_profile_uses_its_own_surface_ids_and_sea_gate
+  ok    test_harvest_permanence.gd :: test_bit_get_out_of_range_is_false_not_a_crash
+  ok    test_harvest_permanence.gd :: test_bit_set_and_get_round_trip_every_bit_independently
+  ok    test_harvest_permanence.gd :: test_bitset_bytes_rounds_up_to_the_nearest_byte
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_clear_felled_forgets_the_tracking_entry
+  ok    test_harvest_permanence.gd :: test_fell_on_an_unknown_key_still_chops_but_stands_nothing
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_fell_removes_the_standing_placement_and_stands_a_felled_pickup
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_fell_tracks_the_placement_in_felled_for_persistence
+  ok    test_harvest_permanence.gd :: test_harvest_permanently_on_an_unknown_index_does_nothing
+  ok    test_harvest_permanence.gd :: test_harvest_permanently_sets_the_bit_and_forgets_the_lookup_entry
+  ok    test_harvest_permanence.gd :: test_harvest_permanently_twice_on_the_same_index_is_a_no_op_the_second_time
+  ok    test_harvest_permanence.gd :: test_harvested_count_reports_only_what_is_actually_chopped
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+       [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 1 in 12 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+       [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 4 in 48 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+       [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 6 of 8 in 96 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+       [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+       [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density
+  ok    test_harvest_permanence.gd :: test_marking_stamps_a_stable_layer_and_index_on_every_harvestable_placement
+  ok    test_harvest_permanence.gd :: test_new_bitset_starts_all_clear
+  ok    test_harvest_permanence.gd :: test_restore_from_game_applies_saved_chops_on_top_of_a_fresh_build
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_restore_from_game_does_not_restand_an_already_gathered_chop
+  ok    test_harvest_permanence.gd :: test_restore_from_game_ignores_a_layer_whose_bitset_size_no_longer_matches
+  ok    test_harvest_permanence.gd :: test_restore_from_game_never_un_chops_something_already_removed_this_session
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] restore_from_game (res://scripts/world/vegetation.gd:2508)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] restore_from_game (res://scripts/world/vegetation.gd:2508)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] restore_from_game (res://scripts/world/vegetation.gd:2508)
+       [5] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_restore_from_game_restands_a_felled_pickup_the_save_still_owes
+  ok    test_harvest_permanence.gd :: test_sync_state_to_game_writes_a_base64_bitset_per_layer
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [3] fell (res://scripts/world/vegetation.gd:2289)
+       [4] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2302)
+       [4] fell (res://scripts/world/vegetation.gd:2289)
+       [5] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_sync_state_to_game_writes_felled_vegetation_alongside_harvested
+  ok    test_highfield_visual_identity.gd :: test_highfield_has_an_open_stock_gate_and_working_drover_story
+  ok    test_highfield_visual_identity.gd :: test_highfield_has_one_safe_vertical_pasture_identity
+  ok    test_hud_party_vitals.gd :: test_benched_damage_and_faint_refresh_without_roster_change_or_reveal
+  ok    test_hud_party_vitals.gd :: test_default_off_preserves_existing_refresh_behavior
+  ok    test_hud_party_vitals.gd :: test_recovery_and_bed_assignment_refresh_existing_rows
+  ok    test_human_swim_visual.gd :: test_default_off_leaves_art_bones_and_animation_untouched
+  ok    test_human_swim_visual.gd :: test_disabling_candidate_while_swimming_restores_visuals_immediately
+  ok    test_human_swim_visual.gd :: test_leaving_water_restores_exact_art_and_bone_pose_and_resumes_animation
+  ok    test_human_swim_visual.gd :: test_local_and_remote_use_existing_aquatic_snapshot
+  ok    test_human_swim_visual.gd :: test_mounted_and_paused_mount_are_excluded_and_other_poses_take_precedence
+  ok    test_human_swim_visual.gd :: test_paused_human_freezes_stroke_and_does_not_write_simulation
+  ok    test_human_swim_visual.gd :: test_swimming_neutralises_entry_tilt_and_restores_it_without_rewinding_facing
+  ok    test_input_context_collisions.gd :: test_every_action_is_declared_live_somewhere
+  ok    test_input_context_collisions.gd :: test_no_declared_action_has_gone_missing_from_the_input_map
+  ok    test_input_context_collisions.gd :: test_no_two_live_actions_share_a_joypad_input
+  ok    test_input_context_collisions.gd :: test_the_declaration_and_the_input_map_both_parse
+  ok    test_interaction_arbiter_register_perf.gd :: test_register_dedupes_and_unregisters
+  ok    test_interaction_arbiter_register_perf.gd :: test_register_perf_budget
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_item_cache_pickup.gd:158)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_item_cache_pickup.gd:158)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_item_cache_pickup.gd:158)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+       [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [2] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_a_missing_model_still_falls_back_to_a_real_box
+  ok    test_item_cache_pickup.gd :: test_every_cache_placement_names_a_model_that_actually_exists
+  ok    test_item_cache_pickup.gd :: test_flag_id_is_stable_per_item_so_two_caches_never_collide
+  ok    test_item_cache_pickup.gd :: test_flag_id_is_the_cache_prefix_plus_the_item_id
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+       [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [2] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] detach (res://scripts/world/pickup_glow.gd:148)
+       [2] _deactivate (res://scripts/world/item_cache_pickup.gd:121)
+       [3] restore_progression_from_game (res://scripts/world/item_cache_pickup.gd:114)
+       [4] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:112)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_restore_deactivates_a_node_whose_item_was_already_taken
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+       [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [2] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_restore_leaves_an_untaken_node_alone
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+       [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [2] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_restore_with_no_game_leaves_the_node_alone
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+       [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [2] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled
+  ok    test_item_cache_pickup.gd :: test_was_taken_is_false_with_an_empty_item_id
+  ok    test_item_cache_pickup.gd :: test_was_taken_is_false_with_no_game_at_all
+  ok    test_item_cache_pickup.gd :: test_was_taken_is_per_item_not_global
+  ok    test_item_cache_pickup.gd :: test_was_taken_reads_the_real_flag_store
+  ok    test_kickoff_script_syntax.gd :: test_logic_journey_lanes_do_not_record_fixed_fps_movies
+  ok    test_kickoff_script_syntax.gd :: test_no_interpolation_is_read_as_a_drive_qualified_variable
+  ok    test_kickoff_script_syntax.gd :: test_opening_segments_choose_a_character_before_waiting_for_the_world
+  ok    test_level_up_announcement.gd :: test_a_multi_level_jump_is_one_line_naming_the_levels_gained
+  ok    test_level_up_announcement.gd :: test_an_ordinary_award_produces_the_plain_xp_line
+  ok    test_level_up_announcement.gd :: test_another_creatures_award_does_not_write_the_active_creatures_line
+  ok    test_level_up_announcement.gd :: test_disconnecting_the_event_path_removes_the_announcement
+  ok    test_level_up_announcement.gd :: test_the_level_up_line_names_the_creature_and_its_new_level
+  ok    test_level_up_announcement.gd :: test_the_level_up_line_says_what_changed
+  ok    test_level_up_announcement.gd :: test_the_line_reports_the_evolution_level_when_the_jump_crosses_it
+  ok    test_level_up_announcement.gd :: test_the_previous_fights_award_is_not_re_announced
+  ok    test_level_up_announcement.gd :: test_the_unlock_threshold_is_data_driven_and_gates
+  ok    test_look_prefs.gd :: test_a_config_that_ships_inverted_can_still_be_uninverted
+  ok    test_look_prefs.gd :: test_aim_assistance_steps_full_reduced_off_and_persists
+  ok    test_look_prefs.gd :: test_assist_off_withholds_the_launch_lead_and_says_why
+  ok    test_look_prefs.gd :: test_assist_strength_scales_the_soft_magnet_and_the_stick_slowdown
+  ok    test_look_prefs.gd :: test_defaults_leave_the_tuned_camera_exactly_as_it_was
+  ok    test_look_prefs.gd :: test_each_axis_inverts_on_its_own
+  ok    test_look_prefs.gd :: test_look_settings_survive_a_relaunch_and_keep_reduced_motion
+  ok    test_look_prefs.gd :: test_sensitivity_scales_both_axes_and_is_clamped
+  ok    test_look_prefs.gd :: test_the_camera_rig_reads_the_players_look_settings
+  ok    test_look_prefs.gd :: test_the_menu_applies_saved_look_settings_at_launch
+  ok    test_map_icons.gd :: test_every_landmark_icon_resolves_to_a_vendored_file
+  ok    test_map_icons.gd :: test_every_vendored_icon_actually_loads_as_a_texture
+  ok    test_map_icons.gd :: test_every_vendored_icon_has_real_pixel_dimensions
+  ok    test_map_icons.gd :: test_the_always_required_icons_are_vendored
+  ok    test_map_icons.gd :: test_the_map_tab_extends_the_menu_tab_contract
+  ok    test_map_icons.gd :: test_the_map_tab_is_registered_in_the_menu
+  ok    test_map_realm_view.gd :: test_cloudreachs_own_discovery_alone_unlocks_the_selector_without_any_flag
+  ok    test_map_realm_view.gd :: test_meadows_is_the_only_available_realm_until_cloudreach_is_reachable
+  ok    test_map_realm_view.gd :: test_player_marker_and_objective_only_draw_in_the_players_own_realm
+  ok    test_map_realm_view.gd :: test_realm_link_labels_and_icon_come_from_map_json_and_name_the_destination
+  ok    test_map_realm_view.gd :: test_realm_link_points_are_read_from_the_shared_transition_source
+  ok    test_map_realm_view.gd :: test_selector_uses_all_unlocked_registry_realms_not_a_binary_pair
+  ok    test_map_realm_view.gd :: test_standing_in_cloudreach_unlocks_the_selector_and_defaults_the_view_there
+  ok    test_map_realm_view.gd :: test_switching_the_view_reads_the_other_realms_map_state_without_moving_the_active_map
+  ok    test_meadow_healing_land_heals.gd :: test_a_fallen_pylon_is_never_toppled_twice_and_lay_down_keeps_its_collider_down
+WARNING: meadow_healing: ApproachConduits/Pylon_0 is left standing (authored null in pylons.falls, or no clear direction)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1531)
+       [1] test_an_authored_null_stays_standing_and_a_baked_azimuth_is_obeyed (res://tests/test_meadow_healing_land_heals.gd:293)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_meadow_healing_land_heals.gd :: test_an_authored_null_stays_standing_and_a_baked_azimuth_is_obeyed
+WARNING: meadow_healing: UnbakedConduits/Pylon_0 is not in pylons.falls; searching (roads and ground only) -- re-bake the table
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1526)
+       [1] test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted (res://tests/test_meadow_healing_land_heals.gd:280)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: meadow_healing: UnbakedConduits/Pylon_0 is left standing (authored null in pylons.falls, or no clear direction)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1531)
+       [1] test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted (res://tests/test_meadow_healing_land_heals.gd:280)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_meadow_healing_land_heals.gd :: test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted
+  ok    test_meadow_healing_land_heals.gd :: test_by_default_a_fallen_pylon_leaves_no_collider
+  ok    test_meadow_healing_land_heals.gd :: test_edge_jitter_is_deterministic_and_bounded
+  ok    test_meadow_healing_land_heals.gd :: test_fall_angle_follows_the_ground
+  ok    test_meadow_healing_land_heals.gd :: test_fall_direction_is_deterministic_and_unit
+  ok    test_meadow_healing_land_heals.gd :: test_footprint_covers_the_full_fallen_body_to_the_tip
+  ok    test_meadow_healing_land_heals.gd :: test_herd_placement_is_deterministic_spaced_and_clear_of_the_veridian
+  ok    test_meadow_healing_land_heals.gd :: test_herd_placement_skips_malformed_entries
+  ok    test_meadow_healing_land_heals.gd :: test_herd_scale_is_up_only
+  ok    test_meadow_healing_land_heals.gd :: test_inline_disc_reads_like_a_station_and_rejects_malformed
+  ok    test_meadow_healing_land_heals.gd :: test_neighbours_in_a_run_never_fall_alike
+  ok    test_meadow_healing_land_heals.gd :: test_overlapping_discs_share_one_world_aligned_grid
+  ok    test_meadow_healing_land_heals.gd :: test_polyline_distance
+  ok    test_meadow_healing_land_heals.gd :: test_regreen_alpha_takes_the_worst_station_and_spares_roads
+  ok    test_meadow_healing_land_heals.gd :: test_regreen_config_names_real_baked_stations_and_installed_textures
+  ok    test_meadow_healing_land_heals.gd :: test_resting_half_depth_is_half_the_lying_thickness
+  ok    test_meadow_healing_land_heals.gd :: test_station_falloff_is_full_in_the_core_and_zero_at_the_rim
+  ok    test_meadow_healing_land_heals.gd :: test_station_falloff_matches_the_heightfield_drain_factor
+  ok    test_meadow_healing_land_heals.gd :: test_the_baked_table_covers_every_pylon_run_with_real_azimuths
+  ok    test_meadow_healing_land_heals.gd :: test_the_healed_field_greens_at_full_density
+  ok    test_meadow_healing_land_heals.gd :: test_the_healed_ground_blooms_deterministically_inside_the_stations
+  ok    test_meadow_healing_land_heals.gd :: test_the_herd_grazes_in_clusters_not_a_ring
+  ok    test_meadow_healing_land_heals.gd :: test_the_herd_groups_around_the_stag
+  ok    test_meadow_healing_land_heals.gd :: test_the_herd_scatter_is_a_pure_function_of_its_seed
+  ok    test_meadow_healing_land_heals.gd :: test_the_overlays_feather_their_edge_and_bias_over_the_slope
+  ok    test_meadow_healing_land_heals.gd :: test_the_severed_spokes_stay_standing
+  ok    test_meadow_healing_land_heals.gd :: test_topple_keeps_scale_and_zero_angle_is_identity
+  ok    test_meadow_healing_land_heals.gd :: test_topple_tips_up_toward_the_fall_direction_about_the_pivot
+  ok    test_meadows_banner_capture_0912.gd :: test_canopy_night_exposure_is_bounded_and_instance_local
+  ok    test_meadows_banner_capture_0912.gd :: test_capture_does_not_build_or_restyle_display_subjects
+  ok    test_meadows_banner_capture_0912.gd :: test_capture_has_a_fresh_complete_sixteen_frame_plan
+  ok    test_meadows_banner_capture_0912.gd :: test_capture_resolves_real_production_subjects_and_fails_closed
+  ok    test_meadows_banner_capture_0912.gd :: test_hall_banner_foliage_cleanup_is_bounded_to_the_breach_growth
+  ok    test_meadows_banner_capture_0912.gd :: test_selected_sites_still_consume_the_shipped_banner_families
+  ok    test_meadows_banner_capture_0912.gd :: test_shared_standard_profile_preserves_colour_weave_and_geometry
+  ok    test_meadows_earned_camp_segment.gd :: test_full_camp_plan_reads_three_beds_from_the_live_catalogue
+  ok    test_meadows_earned_camp_segment.gd :: test_one_bed_lesson_remains_a_primitive_without_claiming_three_bed_readiness
+  ok    test_meadows_earned_rest_segment.gd :: test_bed_assignment_maps_registered_order_back_to_reordered_party_slots
+  ok    test_meadows_earned_rest_segment.gd :: test_feeding_fills_above_the_fed_line_and_never_past_max
+  ok    test_meadows_earned_rest_segment.gd :: test_food_shortfall_reads_thresholds_and_leaves_fed_unhappy_creatures_for_rest
+  ok    test_meadows_earned_rest_segment.gd :: test_legacy_feeding_and_sleep_composition_are_fail_closed
+  ok    test_meadows_earned_rest_segment.gd :: test_paid_bed_receipt_rejects_free_removed_foreign_and_wrong_structures
+[meadows_earned_rest] FAIL: Earned rest needs the existing tree, world and Game
+  ok    test_meadows_earned_rest_segment.gd :: test_rest_refuses_missing_live_context_without_claiming_a_night
+  ok    test_meadows_earned_rest_segment.gd :: test_rest_source_has_no_injected_prerequisites_or_direct_care_callbacks
+  ok    test_meadows_earned_warrens_segment.gd :: test_current_band_trail_reaches_authored_quarry_before_undertrail
+  ok    test_meadows_earned_warrens_segment.gd :: test_guardian_items_require_exact_configured_deltas_not_just_preowned_stock
+  ok    test_meadows_earned_warrens_segment.gd :: test_guardian_route_uses_current_ungated_passages_and_refuses_a_closed_branch
+  ok    test_meadows_earned_warrens_segment.gd :: test_guardian_xp_tracks_instance_identity_survival_and_level_rollover
+  ok    test_meadows_earned_warrens_segment.gd :: test_interleaved_walk_progress_and_combat_restart_the_confinement_window
+  ok    test_meadows_earned_warrens_segment.gd :: test_interleaved_walk_recovers_a_moving_but_confined_leg
+EARNED WARRENS FAIL — Earned Warrens needs the existing tree, world and Game
+  ok    test_meadows_earned_warrens_segment.gd :: test_missing_live_context_cannot_claim_a_clear
+  ok    test_meadows_earned_warrens_segment.gd :: test_on_the_bank_reads_height_above_the_apron
+  ok    test_meadows_earned_warrens_segment.gd :: test_quarry_nodes_above_the_worked_cut_are_reached_up_the_haul_apron
+  ok    test_meadows_earned_warrens_segment.gd :: test_reachable_source_uses_input_and_observation_without_fixture_callbacks
+  ok    test_meadows_earned_warrens_segment.gd :: test_real_battle_deadline_and_same_five_are_strict
+  ok    test_meadows_earned_warrens_segment.gd :: test_rotated_live_marker_approach_is_outside_and_never_projects_rooms_to_terrain
+  ok    test_meadows_earned_warrens_segment.gd :: test_segment_chain_compiles_through_the_warden
+  ok    test_meadows_final_visual_capture_batch_0912.gd :: test_every_focused_location_harness_fails_closed_and_accounts_for_its_plan
+  ok    test_meadows_final_visual_capture_batch_0912.gd :: test_existing_combined_and_bramblebun_tools_keep_their_production_contracts
+  ok    test_meadows_final_visual_capture_batch_0912.gd :: test_riding_plan_uses_the_real_mount_path_and_paired_fit_views
+  ok    test_meadows_final_visual_capture_batch_0912.gd :: test_shared_output_contract_requires_a_new_named_report_round
+  ok    test_meadows_final_visual_capture_batch_0912.gd :: test_village_and_location_plans_cover_the_0912_judgment_angles
+[save] minted character id 'character-6aaced41cf455290314f3a5edab3a4b4' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_already_upgraded_completed_save_is_repaired_without_losing_selection
+[save] minted character id 'character-51c8fcda77124ac86b251bcc4860786b' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_completed_legacy_save_refuses_without_repair_or_mutation
+[save] minted character id 'character-df99ea8a473b7c5ab76883bfb933c568' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_current_completed_save_recovers_only_earned_rewards
+[save] minted character id 'character-015ddf5f6e2b74d3a805f38e39bfd3b8' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_earned_unplaced_heart_and_key_survive_disk_round_trip
+[save] minted character id 'character-297c776d54f2e3bac1c29350f1e66189' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_legacy_tournament_winner_recovers_only_the_saddle_pattern
+[save] minted character id 'character-b7c24dda92f10cc833148f8256e74be2' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_unfinished_meadows_save_does_not_receive_warden_rewards
+  ok    test_meadows_thin_woods_0912.gd :: test_existing_clearings_still_default_to_fully_open
+  ok    test_meadows_thin_woods_0912.gd :: test_only_the_two_owner_named_zones_opt_into_partial_clearings
+  ok    test_meadows_thin_woods_0912.gd :: test_partial_clearings_keep_some_blocking_scatter_but_remove_most
+  ok    test_minimap_terrain_region.gd :: test_corridor_world_window_maps_to_rectangular_texture_pixels
+  ok    test_minimap_terrain_region.gd :: test_nearby_objective_keeps_its_bearing_when_decluttered
+  ok    test_minimap_terrain_region.gd :: test_objective_at_player_yields_to_the_centred_player_arrow
+  ok    test_minimap_terrain_region.gd :: test_region_conversion_scales_each_axis_independently
+  ok    test_minimap_terrain_region.gd :: test_rotated_layer_uses_the_square_diagonal_to_cover_corners
+  ok    test_moves_data.gd :: test_a_species_charged_move_is_actually_slotted_charged
+  ok    test_moves_data.gd :: test_a_species_quick_move_is_actually_slotted_quick
+  ok    test_moves_data.gd :: test_an_unknown_move_id_degrades_gracefully
+  ok    test_moves_data.gd :: test_charged_moves_declare_energy_cost
+  ok    test_moves_data.gd :: test_every_move_has_a_display_name
+  FAIL  test_moves_data.gd :: test_every_move_has_a_valid_slot
+          expected true, got false  (move 'snare' has an unrecognised slot 'utility')
+          expected true, got false  (move 'slow_field' has an unrecognised slot 'utility')
+          expected true, got false  (move 'shove' has an unrecognised slot 'utility')
+          expected true, got false  (move 'dash_strike' has an unrecognised slot 'utility')
+          expected true, got false  (move 'veil' has an unrecognised slot 'utility')
+          expected true, got false  (move 'heal_pulse' has an unrecognised slot 'utility')
+          expected true, got false  (move 'bramble_trap' has an unrecognised slot 'utility')
+          expected true, got false  (move 'hearten' has an unrecognised slot 'utility')
+          expected true, got false  (move 'sap' has an unrecognised slot 'utility')
+          expected true, got false  (move 'quake_ring' has an unrecognised slot 'utility')
+  ok    test_moves_data.gd :: test_every_move_has_positive_power
+  ok    test_moves_data.gd :: test_every_move_type_is_from_the_known_vocabulary
+  ok    test_moves_data.gd :: test_every_species_declares_a_quick_and_a_charged_move
+  ok    test_moves_data.gd :: test_every_species_move_id_exists_in_the_move_table
+  ok    test_moves_data.gd :: test_quick_moves_declare_energy_gain
+  ok    test_named_fight_tell_timing.gd :: test_every_citation_is_still_in_bosses
+  ok    test_named_fight_tell_timing.gd :: test_every_meadows_named_fight_fights_with_the_bosses_tell_and_recovery
+  ok    test_named_fight_tell_timing.gd :: test_every_member_of_every_named_meadows_fight_is_pinned
+  ok    test_named_fight_tell_timing.gd :: test_every_pinned_body_keeps_the_combat_recovery_floor
+  ok    test_named_fight_tell_timing.gd :: test_other_contracts_cited_here_still_say_so
+  ok    test_named_fight_tell_timing.gd :: test_the_guardian_earth_fist_is_the_charged_step_of_its_sequence
+  ok    test_net_catch_race_observation.gd :: test_client_caught_outcome_comes_from_host_resolution
+  ok    test_net_catch_race_observation.gd :: test_client_first_breakout_is_one_granted_throw
+  ok    test_net_catch_race_observation.gd :: test_host_first_admission_remains_a_grant
+  ok    test_net_catch_race_observation.gd :: test_pending_without_host_response_is_not_a_grant
+  ok    test_net_catch_race_observation.gd :: test_two_completed_throws_are_two_grants_not_one
+  ok    test_net_strike_transaction.gd :: test_actual_dispatch_isolates_damage_outside_the_strike_transaction
+  ok    test_net_strike_transaction.gd :: test_actual_dispatch_rejects_friendly_damage_inside_refused_transaction
+  ok    test_net_strike_transaction.gd :: test_refusal_cannot_damage_opponent_or_reuse_an_unrelated_receipt
+  ok    test_net_strike_transaction.gd :: test_transaction_requires_matching_refusal_and_an_unchanged_enemy_hit_tally
+  ok    test_old_mill_crossing_visual_identity.gd :: test_canonical_name_is_shared_by_crossing_landmark_and_player_destination
+  ok    test_old_mill_crossing_visual_identity.gd :: test_mill_and_sign_sightlines_are_scoped_clearings_not_bald_footprints
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_builds_one_exposed_hero_wheel_on_the_prefab_drive_line
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_builds_one_physical_canonical_sign_off_the_route
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_installs_supported_warm_practicals_on_route_and_mechanism
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill
+  ok    test_opening_healing_kit.gd :: test_a_potion_cannot_be_crafted_before_the_village_tools
+  ok    test_opening_healing_kit.gd :: test_a_revive_does_nothing_for_a_creature_that_is_merely_hurt
+  ok    test_opening_healing_kit.gd :: test_the_faint_floor_correctly_does_not_fire_for_cap2s_party
+  ok    test_opening_healing_kit.gd :: test_the_healing_gift_covers_the_damage_the_capstone_carried_out_of_s02
+  ok    test_opening_healing_kit.gd :: test_the_opening_hands_over_food
+  ok    test_opening_healing_kit.gd :: test_the_opening_hands_over_something_that_heals_a_living_creature
+  ok    test_party_seam.gd :: test_a_chosen_creature_joins_the_party
+  ok    test_party_seam.gd :: test_a_creature_added_through_the_seam_lands_in_the_real_party
+ERROR: Game.party has no add(); the opening cannot use the real party and is falling back to its own list. Fix the call in scripts/story/party_seam.gd.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _party (res://scripts/story/party_seam.gd:115)
+       [1] has_game_state (res://scripts/story/party_seam.gd:126)
+       [2] test_a_party_that_does_not_answer_the_interface_is_not_quietly_accepted (res://tests/test_party_seam.gd:244)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_party_seam.gd :: test_a_party_that_does_not_answer_the_interface_is_not_quietly_accepted
+  ok    test_party_seam.gd :: test_a_party_under_any_other_name_is_not_the_autoload
+  ok    test_party_seam.gd :: test_adding_nothing_is_refused
+  ok    test_party_seam.gd :: test_an_empty_name_leaves_the_species_name_alone
+  ok    test_party_seam.gd :: test_naming_a_creature_changes_the_name_the_game_shows
+  ok    test_party_seam.gd :: test_the_fallback_refuses_at_the_same_number_the_real_party_does
+  ok    test_party_seam.gd :: test_the_opening_adds_two_creatures_and_the_party_holds_both
+  ok    test_party_seam.gd :: test_the_real_party_refuses_the_sixth_creature_through_the_seam
+  ok    test_party_seam.gd :: test_the_seam_keeps_no_party_of_its_own_while_the_real_one_is_there
+  ok    test_party_seam.gd :: test_the_seam_knows_whether_the_real_party_has_landed_yet
+  ok    test_party_seam.gd :: test_the_seam_reads_the_party_rather_than_remembering_it
+  ok    test_party_seam.gd :: test_the_sixth_creature_is_refused_rather_than_dropped
+  ok    test_party_seam.gd :: test_what_the_seam_hands_back_cannot_be_appended_to
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_budget_stop_never_becomes_victory_even_at_won_boundary
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_complete_requires_all_three_saved_phases_and_no_failures
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_hidden_panel_is_expired_only_after_queue_and_pause_clear
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_hidden_paused_or_modal_receipt_is_not_a_captureable_receipt
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_observer_rejection_and_image_failure_survive_terminal_export
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_partial_failure_keeps_valid_images_without_claiming_lifecycle_complete
+  ok    test_phase2_fight_capture_lifecycle.gd :: test_receipt_must_be_new_visible_from_expected_trainer_and_in_banner
+  ok    test_player_hp.gd :: test_a_full_armor_set_still_lets_a_lethal_fall_hurt
+  ok    test_player_hp.gd :: test_apply_landing_with_defense_reduces_damage_by_that_fraction
+  ok    test_player_hp.gd :: test_apply_landing_with_no_defense_matches_pre_r7_7_behaviour
+  ok    test_player_hp.gd :: test_defense_argument_is_clamped_so_a_bad_caller_cannot_invert_damage
+  ok    test_player_hp.gd :: test_equipping_a_different_slot_item_does_not_disturb_an_existing_slot
+  ok    test_player_hp.gd :: test_equipping_a_real_piece_fills_its_own_slot
+  ok    test_player_hp.gd :: test_equipping_a_second_piece_in_the_same_slot_displaces_the_first
+  ok    test_player_hp.gd :: test_every_armor_item_names_one_of_the_five_slots
+  ok    test_player_hp.gd :: test_refuses_a_non_armor_item
+  ok    test_player_hp.gd :: test_refuses_an_unknown_item_id
+  ok    test_player_hp.gd :: test_storm_mitigation_combines_real_worn_item_fields
+  ok    test_player_hp.gd :: test_storm_mitigation_reads_worn_slots_not_inventory
+  ok    test_player_hp.gd :: test_storm_mitigation_uses_configured_full_set_count
+  ok    test_player_hp.gd :: test_total_defense_is_zero_unequipped
+  ok    test_player_hp.gd :: test_total_defense_never_exceeds_the_cap
+  ok    test_player_hp.gd :: test_total_defense_sums_every_equipped_piece
+  ok    test_player_hp.gd :: test_unequip_empties_the_slot_and_returns_what_was_there
+  ok    test_player_hp.gd :: test_unequip_refuses_a_slot_name_outside_the_five
+  ok    test_player_state.gd :: test_a_fresh_player_starts_in_the_meadows_with_an_empty_bar
+  ok    test_player_state.gd :: test_alpha_pins_ride_inside_the_realm_map_rather_than_at_the_top_level
+  ok    test_player_state.gd :: test_assign_refuses_an_out_of_range_slot_and_a_refused_kind
+  ok    test_player_state.gd :: test_assigning_an_item_already_on_the_bar_moves_it_rather_than_copying_it
+  ok    test_player_state.gd :: test_autofill_takes_usable_things_in_bag_order_and_skips_materials
+  ok    test_player_state.gd :: test_load_data_of_an_empty_dictionary_is_a_working_fresh_player
+ERROR: Character move loadout refused before applying personal state.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] load_data (res://autoload/player_state.gd:425)
+       [1] test_load_data_survives_garbage_in_every_field (res://tests/test_player_state.gd:254)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_player_state.gd :: test_load_data_survives_garbage_in_every_field
+WARNING: unknown species: not_a_species
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] make_creature (res://autoload/player_state.gd:366)
+       [1] test_make_creature_builds_from_species_json_and_refuses_an_unknown_species (res://tests/test_player_state.gd:141)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_player_state.gd :: test_make_creature_builds_from_species_json_and_refuses_an_unknown_species
+  ok    test_player_state.gd :: test_map_for_builds_one_map_per_realm_and_reuses_it
+  ok    test_player_state.gd :: test_map_for_refuses_a_realm_with_no_implemented_map
+  ok    test_player_state.gd :: test_map_returns_the_map_of_the_realm_this_player_is_standing_in
+ERROR: Character move loadout refused before applying personal state.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] load_data (res://autoload/player_state.gd:425)
+       [1] test_old_player_payload_loads_unregistered_with_fresh_valid_creature_ids (res://tests/test_player_state.gd:235)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_player_state.gd :: test_old_player_payload_loads_unregistered_with_fresh_valid_creature_ids
+  ok    test_player_state.gd :: test_ordered_tournament_selection_round_trips_with_creature_identity
+  ok    test_player_state.gd :: test_reset_empties_the_player_but_keeps_the_flag_store_and_the_feed
+  ok    test_player_state.gd :: test_save_data_carries_no_world_key
+  ok    test_player_state.gd :: test_save_data_carries_the_player_half_and_redesign_carrier
+  ok    test_player_state.gd :: test_save_then_load_round_trips_everything
+  ok    test_player_state.gd :: test_skills_are_personal_survive_save_and_reset_without_historical_xp
+  ok    test_player_state.gd :: test_the_bar_holds_tools_consumables_and_food_and_refuses_raw_materials
+  ok    test_player_state.gd :: test_the_two_realm_maps_describe_two_differently_shaped_worlds
+  ok    test_player_state.gd :: test_two_players_hold_two_separate_flag_stores_and_two_separate_feeds
+  ok    test_practice_fight_level.gd :: test_the_band_split_baseline_mirrors_the_pin
+  ok    test_practice_fight_level.gd :: test_the_practice_cluster_still_exists_where_the_opening_walks_to_it
+  ok    test_practice_fight_level.gd :: test_the_progression_curve_still_documents_the_same_opening_level
+  ok    test_practice_fight_level.gd :: test_the_teaching_fight_is_pinned_and_does_not_roll_the_band
+  ok    test_prompt_arbiter.gd :: test_a_blank_label_is_not_an_offer
+  ok    test_prompt_arbiter.gd :: test_a_statement_carries_no_button_glyph
+  ok    test_prompt_arbiter.gd :: test_an_actionable_offer_carries_the_button_glyph
+  ok    test_prompt_arbiter.gd :: test_identical_offers_are_still_told_apart_by_index
+  ok    test_prompt_arbiter.gd :: test_junk_in_the_offer_list_is_ignored_rather_than_fatal
+  ok    test_prompt_arbiter.gd :: test_nothing_on_offer_draws_nothing
+  ok    test_prompt_arbiter.gd :: test_priority_beats_proximity
+  ok    test_prompt_arbiter.gd :: test_the_nearest_thing_wins
+  ok    test_prompt_arbiter.gd :: test_ties_go_to_the_first_registered
+  ok    test_prompt_arbiter.gd :: test_walking_between_the_starters_moves_the_prompt
+  ok    test_realm_crossing_context.gd :: test_epoch_session_and_owner_cancellation_are_independent_of_realm_readiness
+  ok    test_realm_crossing_context.gd :: test_new_game_and_unexpected_realm_change_cancel_captured_context
+  ok    test_realm_crossing_context.gd :: test_solo_context_preserves_no_network_transaction
+  ok    test_realm_look_overlay.gd :: test_only_the_meadows_scene_carries_the_meadows_look
+  ok    test_realm_look_overlay.gd :: test_the_meadows_haze_lives_in_the_meadows_overlay
+  ok    test_realm_look_overlay.gd :: test_the_overlay_merges_key_by_key_and_leaves_both_inputs_alone
+  ok    test_realm_shell_transition_guard.gd :: test_legacy_synchronous_world_is_ready_once_it_matches
+  ok    test_realm_shell_transition_guard.gd :: test_shell_stand_up_waits_for_the_hosts_announced_scene
+  ok    test_realm_shell_transition_guard.gd :: test_sliced_cloudreach_keeps_authored_landmark_traversal_crowns
+  ok    test_realm_world_components.gd :: test_components_build_their_world_contract_without_external_assets
+  ok    test_realm_world_components.gd :: test_default_retired_gate_neither_unlocks_nor_routes_with_an_earned_key
+  ok    test_realm_world_components.gd :: test_gate_never_unlocks_without_the_durable_key_flag
+  ok    test_realm_world_components.gd :: test_gate_passes_realm_and_authored_entry_to_game_router
+  ok    test_realm_world_components.gd :: test_gate_unlock_retains_key_and_persists_its_own_flag
+  ok    test_realm_world_components.gd :: test_home_circle_presentation_uses_the_large_crescent_mesh
+  ok    test_realm_world_components.gd :: test_shrine_exposes_all_four_durable_states
+  ok    test_register_building.gd :: test_multiple_registrations_each_keep_their_own_yaw
+  ok    test_register_building.gd :: test_register_building_defaults_yaw_to_zero
+  ok    test_register_building.gd :: test_register_building_records_paid_status_for_safe_dismantle_refunds
+  ok    test_register_building.gd :: test_register_building_still_stores_position_as_a_three_element_array
+  ok    test_register_building.gd :: test_register_building_stores_the_given_yaw
+  ok    test_register_building.gd :: test_restored_records_keep_the_uid_counter_past_them
+  ok    test_revive_authority.gd :: test_cancel_highwater_refuses_old_start_and_old_cancel_cannot_stop_new_attempt
+  ok    test_revive_authority.gd :: test_duplicate_replay_and_competing_reviver_never_reset_or_double_grant
+  ok    test_revive_authority.gd :: test_host_clock_completes_only_at_three_seconds_and_consumes_window_first
+  ok    test_revive_authority.gd :: test_host_tick_cancels_movement_range_body_and_realm_changes
+  ok    test_revive_authority.gd :: test_nonfinite_and_unregistered_views_are_rejected
+  ok    test_revive_authority.gd :: test_one_reviver_cannot_open_two_targets_and_acceptance_advances_attempt_order
+  ok    test_revive_authority.gd :: test_reviver_becoming_downed_cancels_the_host_channel
+  ok    test_revive_authority.gd :: test_window_expiry_and_attempt_replacement_cancel_authorization_without_death
+  ok    test_rideable_roster.gd :: test_every_saddle_mount_multiplier_sits_in_one_to_two
+  ok    test_rideable_roster.gd :: test_exactly_five_meadows_and_five_owner_water_species_are_rideable
+  ok    test_rideable_roster.gd :: test_mount_offset_is_measured_and_sane
+  ok    test_rideable_roster.gd :: test_mudsnout_and_ashtusk_carry_no_rideable_block_at_all
+  ok    test_rideable_roster.gd :: test_no_saddle_mount_out_runs_meadowhart
+  ok    test_rideable_roster.gd :: test_none_of_the_three_new_mounts_carries_a_climb_limit
+  ok    test_rideable_roster.gd :: test_r1_4_table_values
+  ok    test_rideable_roster.gd :: test_the_three_new_mounts_require_a_saddle
+  ok    test_rideable_roster.gd :: test_water_swimmers_require_swim_saddle_and_other_water_species_cannot_carry
+  ok    test_rise_cache_marker_clearance_0912.gd :: test_marker_full_aabb_clears_the_tm_interaction_circle
+  ok    test_route_strip_subject_boxes.gd :: test_a_creature_box_is_its_own_body_not_its_spawn_allowance
+  ok    test_route_strip_subject_boxes.gd :: test_fighters_at_the_arena_separation_are_not_reported_as_interpenetrating
+  ok    test_route_strip_subject_boxes.gd :: test_fighters_with_real_daylight_between_them_pass_the_gap
+  ok    test_route_strip_subject_boxes.gd :: test_one_fighter_directly_behind_the_other_is_still_reported
+  ok    test_route_strip_subject_boxes.gd :: test_the_gap_is_asked_of_fighters_only_not_of_the_trainer
+  ok    test_route_strip_subject_boxes.gd :: test_the_interpenetration_report_replaces_the_screen_overlap_one
+  ok    test_route_strip_subject_boxes.gd :: test_two_fighters_at_the_arenas_own_separation_do_not_read_as_overlapping
+  ok    test_route_strip_subject_boxes.gd :: test_two_fighters_closed_to_melee_still_do_not_read_as_overlapping
+  ok    test_route_strip_subject_boxes.gd :: test_two_fighters_standing_inside_each_other_are_reported_as_such
+  ok    test_route_strip_subject_boxes.gd :: test_two_fighters_touching_on_screen_are_refused_when_a_gap_is_required
+  ok    test_save_redesign.gd :: test_all_pre_redesign_versions_refuse_before_applying
+  ok    test_save_redesign.gd :: test_character_schema_is_new_and_refuses_old_portable_files
+[save] minted character id 'character-0bcc9c69d5a739d7210f87eff5ce4159' for slot 1 (no existing locator)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:745)
+       [1] test_current_merged_slot_cannot_bypass_old_split_version_barrier (res://tests/test_save_redesign.gd:110)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_redesign.gd :: test_current_merged_slot_cannot_bypass_old_split_version_barrier
+  ok    test_save_redesign.gd :: test_malformed_old_metadata_is_listed_without_casting_payloads
+  ok    test_save_redesign.gd :: test_non_integral_non_finite_or_missing_versions_are_invalid
+[save] minted character id 'character-092c423db94aa626cc99e80018baa0b9' for slot 1 (no existing locator)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:745)
+       [1] test_old_character_refusal_survives_valid_or_missing_world (res://tests/test_save_redesign.gd:130)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:745)
+       [1] test_old_character_refusal_survives_valid_or_missing_world (res://tests/test_save_redesign.gd:135)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_redesign.gd :: test_old_character_refusal_survives_valid_or_missing_world
+  ok    test_save_redesign.gd :: test_read_only_legacy_portable_discovery_and_new_namespace_writes
+  ok    test_save_redesign.gd :: test_v27_fixture_refuses_with_message_without_live_or_disk_mutation
+  ok    test_save_redesign.gd :: test_world_schema_is_new_and_refuses_old_authority
+  ok    test_scatter_proximity_index.gd :: test_boundary_distance_counts_as_near_like_the_scan
+  ok    test_scatter_proximity_index.gd :: test_index_matches_the_linear_scan_everywhere
+  ok    test_session_build_compat.gd :: test_content_hash_is_order_independent_and_sensitive_to_bytes_and_paths
+  ok    test_session_build_compat.gd :: test_current_fingerprint_matches_itself_and_names_every_part
+  ok    test_session_build_compat.gd :: test_each_mismatch_names_what_differs
+  ok    test_session_build_compat.gd :: test_identical_fingerprint_is_admitted
+  ok    test_session_build_compat.gd :: test_missing_or_malformed_fingerprint_is_refused_not_admitted
+  ok    test_session_build_compat.gd :: test_token_is_the_short_display_form
+  ok    test_session_build_compat.gd :: test_wire_protocol_marker_is_pinned
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+  ok    test_session_snapshot.gd :: test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack
+[session] snapshot applied (2 keys, day 7)
+  ok    test_session_snapshot.gd :: test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _abort_host_snapshot (res://scripts/net/session.gd:1019)
+       [1] _expire_snapshot_sends (res://scripts/net/session.gd:1528)
+       [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:248)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_shared_wild_host_fight.gd :: test_catch_pause_suspends_authority_physics_and_breakout_resumes_prior_state
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_forwards_pick_and_host_hit_through_its_authority_adapter
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_never_claims_the_host_as_the_local_fallback_peer
+  ok    test_shared_wild_host_fight.gd :: test_terminal_outcome_is_latched_so_ecology_can_finalize_once
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_rejects_wrong_body_realm_species_and_terminal_record
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_selects_only_the_active_matching_announcement
+  ok    test_skyrill_replacement.gd :: test_replacement_is_compact_and_keeps_all_gameplay_clips
+  ok    test_spawn_tables.gd :: test_a_new_world_seed_is_never_the_authored_one
+  ok    test_spawn_tables.gd :: test_a_rolled_alpha_is_never_crowded_against_another_alpha
+  ok    test_spawn_tables.gd :: test_a_rolled_alpha_never_crowds_an_authored_one
+  ok    test_spawn_tables.gd :: test_a_rolled_alpha_never_lands_on_a_cluster_that_authored_its_own
+  ok    test_spawn_tables.gd :: test_a_rolled_cluster_keeps_its_position_count_and_order
+  ok    test_spawn_tables.gd :: test_a_rolled_species_never_appears_in_a_region_its_table_excludes
+  ok    test_spawn_tables.gd :: test_a_rolled_world_actually_moves_most_of_the_population
+  ok    test_spawn_tables.gd :: test_a_rolled_world_is_still_the_ground_dominant_meadows
+  ok    test_spawn_tables.gd :: test_a_rolled_world_keeps_the_same_headcount
+  ok    test_spawn_tables.gd :: test_a_save_seed_survives_resolution_when_nothing_overrides_it
+  ok    test_spawn_tables.gd :: test_different_seeds_build_different_worlds
+  ok    test_spawn_tables.gd :: test_every_rolled_spawn_entry_names_a_table_that_exists
+  ok    test_spawn_tables.gd :: test_every_table_entry_declares_a_tier_that_carries_weight
+  ok    test_spawn_tables.gd :: test_every_table_region_gate_names_a_real_region
+  ok    test_spawn_tables.gd :: test_every_table_species_is_in_the_species_table
+  ok    test_spawn_tables.gd :: test_every_table_weather_gate_names_a_real_preset
+  ok    test_spawn_tables.gd :: test_no_aspect_variant_can_be_rolled
+  ok    test_spawn_tables.gd :: test_no_evolved_form_can_be_rolled
+  ok    test_spawn_tables.gd :: test_no_region_exceeds_its_scarce_tier_caps
+  ok    test_spawn_tables.gd :: test_no_starter_species_can_be_rolled
+  ok    test_spawn_tables.gd :: test_the_authored_seed_reproduces_the_authored_world
+  ok    test_spawn_tables.gd :: test_the_config_loads_and_declares_tables
+  ok    test_spawn_tables.gd :: test_the_new_world_flag_is_a_declared_boolean
+  ok    test_spawn_tables.gd :: test_the_plan_only_ever_touches_clusters_that_opted_in
+  ok    test_spawn_tables.gd :: test_the_same_seed_builds_the_same_world_twice
+  ok    test_spawn_tables.gd :: test_the_tier_weights_land_inside_the_owner_s_own_rarity_bands
+  ok    test_spawn_tables.gd :: test_two_scarce_encounters_are_never_in_the_same_clearing
+  ok    test_steam_invite_ui.gd :: test_a_deliberate_end_or_a_direct_join_offers_no_friend_rejoin
+  ok    test_steam_invite_ui.gd :: test_a_friend_join_whose_link_dropped_offers_the_same_lobby_again
+  ok    test_steam_invite_ui.gd :: test_a_restarted_guest_still_sees_its_saved_portable_characters
+  ok    test_steam_invite_ui.gd :: test_a_steam_join_does_not_place_a_saved_pose_before_the_host_is_known
+  ok    test_steam_invite_ui.gd :: test_cold_steam_invite_parser_accepts_both_launch_forms
+  ok    test_steam_invite_ui.gd :: test_deliberate_new_friend_character_clears_stale_identity_and_world
+  ok    test_steam_invite_ui.gd :: test_native_lobby_failure_invalidates_a_ready_join_before_character_selection
+  ok    test_steam_invite_ui.gd :: test_players_invite_button_preserves_specific_coordinator_error
+  ok    test_steam_invite_ui.gd :: test_selected_portable_character_replaces_run_state_without_loading_its_world
+  ok    test_steam_invite_ui.gd :: test_the_join_friend_screen_names_who_sent_the_invitation
+  ok    test_steam_invite_ui.gd :: test_unresolved_native_request_cannot_advertise_actionable_retry
+  ok    test_stormheart_ancient_trunk.gd :: test_articulated_bark_is_finite_and_preserves_full_upper_floor_clearance
+  ok    test_stormheart_ancient_trunk.gd :: test_integrated_candidate_preserves_every_physical_shape
+  ok    test_stormheart_ancient_trunk.gd :: test_nested_detail_and_trunk_flags_cannot_override_disabled_master
+  ok    test_stormheart_ancient_trunk.gd :: test_oblique_supports_reach_both_endpoints_without_skew
+  ok    test_stormheart_wayfinding.gd :: test_stormheart_ascent_has_a_threshold_and_a_complete_warm_light_chain
+  ok    test_stormheart_wayfinding.gd :: test_wayfinding_is_visual_only_and_simulation_shell_stays_unchanged
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_an_ally_clear_of_the_column_keeps_its_shoulder
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_an_ally_under_the_left_column_lowers_the_shoulder_by_its_overlap
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_mosshock_collider_covers_its_art_width
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_arm_stops_short_of_a_foe_render_box_in_its_way
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_cap_never_goes_below_its_floor
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_config_declares_both_fixes
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_left_column_bound_covers_the_compact_fight_column
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_occlusion_swing_never_puts_the_foe_in_front_of_the_ally
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_rig_applies_and_clears_the_body_limit
+  ok    test_stormwood_b_combat_camera_fit.gd :: test_the_trainer_is_capped_only_while_on_the_column
+  ok    test_stormwood_b_named_cues.gd :: test_a_route_cue_cannot_be_staggered
+  ok    test_stormwood_b_named_cues.gd :: test_bodies_without_a_route_cue_stagger_as_before
+  ok    test_stormwood_b_named_cues.gd :: test_both_keys_are_whitelisted_overrides
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] set_engaged (res://scripts/creatures/wild_creature.gd:550)
+       [1] test_every_exit_from_a_tell_drops_the_cue_and_the_cone (res://tests/test_stormwood_b_named_cues.gd:174)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_stormwood_b_named_cues.gd :: test_every_exit_from_a_tell_drops_the_cue_and_the_cone
+  ok    test_stormwood_b_named_cues.gd :: test_guard_stance_draws_the_hit_shape_and_changes_no_numbers
+  ok    test_stormwood_b_named_cues.gd :: test_route_cue_ends_with_its_tell
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] facing (res://scripts/creatures/creature_body.gd:1776)
+       [1] _begin_lunge (res://scripts/creatures/wild_creature.gd:1039)
+       [2] _enter (res://scripts/creatures/wild_creature.gd:802)
+       [3] test_route_cue_shows_the_route_first_then_the_ordinary_tell (res://tests/test_stormwood_b_named_cues.gd:105)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] begin_combat_burst (res://scripts/creatures/creature_body.gd:1830)
+       [1] _begin_lunge (res://scripts/creatures/wild_creature.gd:1049)
+       [2] _enter (res://scripts/creatures/wild_creature.gd:802)
+       [3] test_route_cue_shows_the_route_first_then_the_ordinary_tell (res://tests/test_stormwood_b_named_cues.gd:105)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] face_towards (res://scripts/creatures/creature_body.gd:2678)
+       [1] begin_combat_burst (res://scripts/creatures/creature_body.gd:1830)
+       [2] _begin_lunge (res://scripts/creatures/wild_creature.gd:1049)
+       [3] _enter (res://scripts/creatures/wild_creature.gd:802)
+       [4] test_route_cue_shows_the_route_first_then_the_ordinary_tell (res://tests/test_stormwood_b_named_cues.gd:105)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _begin_lunge (res://scripts/creatures/wild_creature.gd:1061)
+       [1] _enter (res://scripts/creatures/wild_creature.gd:802)
+       [2] test_route_cue_shows_the_route_first_then_the_ordinary_tell (res://tests/test_stormwood_b_named_cues.gd:105)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_stormwood_b_named_cues.gd :: test_route_cue_shows_the_route_first_then_the_ordinary_tell
+  ok    test_stormwood_b_named_cues.gd :: test_stormwood_data_opts_the_two_fights_in
+  ok    test_stormwood_b_named_cues.gd :: test_unset_keys_leave_the_tell_exactly_as_before
+  ok    test_stormwood_camps.gd :: test_camp_data_has_six_safe_full_service_sites_and_reserved_beds
+  ok    test_stormwood_camps.gd :: test_rest_adapter_preserves_shared_rest_and_grounded_bed_contract
+  ok    test_stormwood_continuous_interaction_race.gd :: test_requested_provider_remains_the_only_success_path
+  ok    test_stormwood_continuous_interaction_race.gd :: test_roaming_wild_button_edge_is_resolved_without_counting_target_activation
+  ok    test_stormwood_continuous_interaction_race.gd :: test_wrapper_binds_a_unique_scratch_save_before_yield_and_reset
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_frame_and_crown_costs_balance_the_authored_route
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_segment_parses_and_declares_the_paid_terminal_contract
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_segment_uses_live_controller_surfaces_and_contains_no_state_bypass
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_six_selected_sources_match_the_live_catalogue_and_indivisible_yields
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_the_footing_entry_route_never_climbs_onto_the_slab
+  ok    test_stormwood_deepwood_circuit.gd :: test_acceptance_credits_earlier_authored_trainer_wins
+  ok    test_stormwood_deepwood_circuit.gd :: test_any_three_distinct_production_trainers_advance_real_quest_events
+  ok    test_stormwood_deepwood_circuit.gd :: test_completed_circuit_preserves_rooks_prior_dialogue_fallback
+  ok    test_stormwood_earned_marrow_segment.gd :: test_a_break_lap_visits_every_unstruck_conduit_once_round_the_rim
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 1 at 229.7 s: { "slot": 1 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 2 at 229.7 s: { "slot": 2 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 3 at 229.7 s: { "slot": 3 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 4 at 229.8 s: { "slot": 4 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 5 at 229.8 s: { "slot": 5 }
+  ok    test_stormwood_earned_marrow_segment.gd :: test_actual_roster_finished_is_separate_from_conduit_release
+  ok    test_stormwood_earned_marrow_segment.gd :: test_bank_selection_uses_actual_positions_and_excludes_accepted_conduits
+  ok    test_stormwood_earned_marrow_segment.gd :: test_conservative_travel_bound_accounts_for_actual_start_speed_and_remaining_banks
+  ok    test_stormwood_earned_marrow_segment.gd :: test_controller_preserves_one_window_and_production_authority
+  ok    test_stormwood_earned_marrow_segment.gd :: test_deck_route_avoids_the_core_hole_and_the_ascent_band
+  ok    test_stormwood_earned_marrow_segment.gd :: test_missing_live_entry_cannot_claim_release
+  ok    test_stormwood_encounters_data.gd :: test_catalogue_census_meets_the_stormwood_minimums
+  ok    test_stormwood_encounters_data.gd :: test_positions_and_named_ranks_are_explicit_and_valid
+  ok    test_stormwood_encounters_data.gd :: test_tables_are_replaceable_and_obey_role_and_crown_limits
+GLASS FIELD APPROACH at=(-250.0, 5080.0) mesh_radius=4.89039516448975 wander=7.0 road=31.9501152038574 required=28.0903951644897 max_slope=17.1324307257917 nearest_baked_solid=22.8825672149658
+  ok    test_stormwood_glass_field_approach.gd :: test_named_alpha_clears_route_camera_and_wander_without_changing_encounter
+  ok    test_stormwood_harvest_progression.gd :: test_authored_crown_claim_reconciles_through_the_chapter_event
+  ok    test_stormwood_harvest_progression.gd :: test_crown_reconciliation_does_not_change_cinder_verge_behavior
+  ok    test_stormwood_harvest_progression.gd :: test_readiness_uses_catalogue_amounts_and_unique_shared_claims
+  ok    test_stormwood_harvest_progression.gd :: test_saved_completion_and_authority_shell_are_not_rewritten
+  ok    test_stormwood_harvest_progression.gd :: test_sufficient_early_claims_reconcile_when_recipe_is_learned
+  ok    test_stormwood_interaction_spacing.gd :: test_negative_control_detects_a_stacked_pair
+  ok    test_stormwood_interaction_spacing.gd :: test_no_two_interaction_circles_overlap
+  ok    test_stormwood_interaction_spacing.gd :: test_same_person_pairs_are_still_real
+  ok    test_stormwood_named_fight_clearings.gd :: test_every_named_fight_arena_is_clear_of_baked_colliders
+  ok    test_stormwood_pickup_runtime.gd :: test_catalogue_mounts_only_current_ordinary_item_definitions
+  ok    test_stormwood_pickup_runtime.gd :: test_every_mountable_item_resolves_to_installed_pickup_art
+  ok    test_stormwood_pickup_runtime.gd :: test_stable_placement_flags_are_realm_qualified
+  ok    test_stormwood_pickup_runtime.gd :: test_withheld_rows_are_story_events_or_missing_item_definitions
+  ok    test_stormwood_portrait_presentation.gd :: test_disabled_or_missing_plate_preserves_original_conversation
+  ok    test_stormwood_portrait_presentation.gd :: test_enabled_portraits_cover_named_and_side_conversations_without_changing_story
+  ok    test_stormwood_road_current.gd :: test_chunks_are_range_limited_shadowless_and_have_no_collision
+  ok    test_stormwood_road_current.gd :: test_colours_come_from_config_and_are_yellow_gold
+  ok    test_stormwood_road_current.gd :: test_every_route_and_spur_is_covered_by_current_chunks
+  ok    test_stormwood_road_current.gd :: test_nothing_is_built_on_a_simulation_only_world
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _poll (res://scripts/world/stormwood_road_current.gd:170)
+       [1] test_reduced_motion_calms_flow_and_removes_flicker (res://tests/test_stormwood_road_current.gd:164)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_stormwood_road_current.gd :: test_reduced_motion_calms_flow_and_removes_flicker
+  ok    test_stormwood_road_current.gd :: test_ribbon_stays_inside_the_painted_lane_and_flows_toward_the_dynamo
+  ok    test_stormwood_road_current.gd :: test_spur_current_is_a_thin_yellow_crack_and_roads_are_not_flagged
+  ok    test_stormwood_road_current.gd :: test_storm_intensity_follows_config_per_phase
+  ok    test_stormwood_route_walkability.gd :: test_deepwood_reaches_the_dynamo_by_two_separate_roads
+  ok    test_stormwood_route_walkability.gd :: test_every_authored_road_corridor_is_walkable
+  ok    test_stormwood_route_walkability.gd :: test_ordinary_roads_never_enter_the_glass_sink
+  ok    test_stormwood_route_walkability.gd :: test_the_alternate_dynamo_approach_joins_authored_places
+  ok    test_stormwood_shelter.gd :: test_canopy_uses_scaled_live_placements_and_stops_after_chopping
+  ok    test_stormwood_shelter.gd :: test_deadwood_and_rocks_do_not_claim_leaf_shelter
+  ok    test_stormwood_surge.gd :: test_cycle_boundaries_and_rod_aftermath_timing
+  ok    test_stormwood_surge.gd :: test_glass_sink_floor_is_a_strike_window_through_every_weather_phase
+  ok    test_stormwood_surge.gd :: test_insulation_charge_windows_and_nonlethal_entry_hp
+  ok    test_stormwood_surge.gd :: test_shelter_and_gentle_ground_policy
+  ok    test_stormwood_trainers_data.gd :: test_anchors_are_unique_grounded_and_near_authored_routes
+  ok    test_stormwood_trainers_data.gd :: test_no_two_trainers_share_a_challenge_circle
+  ok    test_stormwood_trainers_data.gd :: test_parties_ranks_and_critical_ladder_are_live_and_bounded
+  ok    test_stormwood_trainers_data.gd :: test_route_grounding_ignores_pocket_spurs
+  ok    test_stormwood_trainers_data.gd :: test_trainer_census_covers_all_regions_and_path_classes
+  ok    test_story_world_catchup.gd :: test_a_defeat_flag_is_a_world_flag
+  ok    test_story_world_catchup.gd :: test_a_personal_flag_reaches_only_the_peer_it_names
+  ok    test_story_world_catchup.gd :: test_a_shared_camp_flag_reaches_every_named_peer
+  ok    test_story_world_catchup.gd :: test_a_world_flag_commits_once_and_is_a_noop_the_second_time
+  ok    test_story_world_catchup.gd :: test_an_ordinary_personal_flag_is_not_shared
+  ok    test_story_world_catchup.gd :: test_can_open_and_spend_are_all_or_nothing
+  ok    test_story_world_catchup.gd :: test_every_moved_on_flag_is_world_scoped
+  ok    test_story_world_catchup.gd :: test_spend_records_nothing
+  ok    test_story_world_catchup.gd :: test_the_boss_flag_is_a_world_flag_and_is_in_the_set
+  ok    test_story_world_catchup.gd :: test_the_delta_readers_tell_a_world_flag_from_everything_else
+  ok    test_story_world_catchup.gd :: test_the_generic_beaten_conversation_exists
+  ok    test_story_world_catchup.gd :: test_the_shared_camp_flags_are_player_scoped_and_shared
+  ok    test_story_world_catchup.gd :: test_try_open_still_spends_and_records_together
+  ok    test_stronghold_dialogue_budget.gd :: test_every_stronghold_line_reads_in_one_glance
+  ok    test_stronghold_dialogue_budget.gd :: test_the_flag_hooks_survive_the_cut
+  ok    test_stronghold_dialogue_budget.gd :: test_the_stronghold_file_is_the_table_this_measures
+  ok    test_stronghold_dialogue_budget.gd :: test_the_warden_challenge_is_short
+  ok    test_stronghold_dialogue_budget.gd :: test_the_warden_keeps_his_worldview_through_the_cut
+  ok    test_stronghold_dialogue_budget.gd :: test_the_warden_speaks_with_his_own_portrait
+  ok    test_stronghold_dialogue_budget.gd :: test_the_whole_ending_is_under_budget
+  ok    test_telegraph_glow.gd :: test_state_ring_clears_body_footprint_and_follows_sloped_ground
+  ok    test_telegraph_glow.gd :: test_state_ring_rides_the_water_surface_over_a_seabed
+  ok    test_telegraph_glow.gd :: test_the_ring_spawns_lifted_depth_tested_and_frees_after_its_beat
+  ok    test_telegraph_glow.gd :: test_the_telegraph_colour_stays_out_of_the_reserved_oxblood_band
+  ok    test_tether_lamp.gd :: test_housing_is_narrower_than_the_lens
+  ok    test_tether_lamp.gd :: test_the_housing_still_reaches_behind_the_lens
+  ok    test_tether_lamp.gd :: test_the_lamp_still_shows_teal_from_directly_behind
+  ok    test_tether_lamp.gd :: test_the_lens_hides_the_housing_from_the_front
+  ok    test_tether_relay_scale_hierarchy_0912.gd :: test_hero_is_primary_mass_without_stealing_console_clearance
+  ok    test_tether_relay_scale_hierarchy_0912.gd :: test_pad_supports_the_hero_with_an_industrial_scale_ladder
+  ok    test_throw_aim_slope.gd :: test_assisted_throw_over_a_rise_clears_the_ground_and_reaches_the_target
+  ok    test_throw_aim_slope.gd :: test_flat_ground_assisted_launch_is_unchanged
+  ok    test_throw_aim_slope.gd :: test_no_clearing_arc_keeps_the_default
+  ok    test_throw_aim_slope.gd :: test_open_sky_reticle_is_unchanged
+  ok    test_throw_aim_slope.gd :: test_reticle_on_a_slope_sits_on_the_visible_surface
+  ok    test_throw_aim_slope.gd :: test_the_constructed_rise_is_the_reported_shape
+  ok    test_throw_aim_slope.gd :: test_the_live_aim_paths_use_the_terrain_aware_solve
+  ok    test_tidewake_nerissa_break_tether.gd :: test_final_riptusk_carries_the_break_tether_heavy_tell
+  ok    test_tournament.gd :: test_a_fed_team_reads_fed_even_while_it_is_tired
+  ok    test_tournament.gd :: test_a_fresh_board_names_the_draw_and_decides_nothing
+  ok    test_tournament.gd :: test_a_full_but_untrained_party_is_not_allowed_to_enter
+  ok    test_tournament.gd :: test_a_genuinely_fresh_player_still_gets_the_registration_briefing_first
+  ok    test_tournament.gd :: test_a_hungry_team_mid_bracket_is_still_offered_its_round
+  ok    test_tournament.gd :: test_a_later_round_names_nobody_until_its_feeders_are_decided
+  ok    test_tournament.gd :: test_a_levelled_team_in_poor_condition_is_not_allowed_in
+  ok    test_tournament.gd :: test_a_lost_bout_stays_undecided_on_the_board
+  ok    test_tournament.gd :: test_a_lost_round_is_still_on_offer
+  ok    test_tournament.gd :: test_a_lost_round_retried_from_the_ring_skips_the_banter_and_offers_begin_again
+  ok    test_tournament.gd :: test_a_party_at_the_authored_level_is_trained
+  ok    test_tournament.gd :: test_a_ready_full_roster_cannot_add_a_sixth_creature
+  ok    test_tournament.gd :: test_a_ready_team_has_nothing_to_report
+  ok    test_tournament.gd :: test_a_rested_fed_happy_team_is_allowed_in
+  ok    test_tournament.gd :: test_a_team_ready_but_untrained_before_ever_meeting_the_marshal_skips_registration
+  ok    test_tournament.gd :: test_a_team_that_has_drained_below_the_threshold_is_not_fed
+  ok    test_tournament.gd :: test_a_team_that_is_already_ready_before_ever_meeting_the_marshal_is_offered_sign_up_in_one_visit
+  ok    test_tournament.gd :: test_an_impossible_sixth_creature_cannot_disqualify_a_ready_team
+  ok    test_tournament.gd :: test_each_rounds_banter_conversation_sets_at_ring_and_starts_no_battle
+  ok    test_tournament.gd :: test_each_rounds_begin_conversation_ends_on_its_own_battle_effect
+  ok    test_tournament.gd :: test_each_rounds_win_flag_is_its_trainers_defeat_flag
+  ok    test_tournament.gd :: test_enough_creatures_satisfies_the_team_condition
+  ok    test_tournament.gd :: test_every_branch_that_can_be_a_first_meeting_writes_the_opening_registration_handoff
+  ok    test_tournament.gd :: test_every_conversation_the_marshal_can_open_exists
+  ok    test_tournament.gd :: test_every_fought_round_is_a_real_trainer_and_an_existing_band_one_name
+  ok    test_tournament.gd :: test_every_painted_name_fits_its_slot_at_every_stage
+  ok    test_tournament.gd :: test_every_round_names_a_distinct_at_ring_flag_and_begin_conversation
+  ok    test_tournament.gd :: test_every_simulated_result_waits_on_a_flag_a_round_actually_sets
+  ok    test_tournament.gd :: test_every_slot_is_a_distinct_name_and_one_of_them_is_you
+  ok    test_tournament.gd :: test_exactly_four_slots_are_never_fought
+  ok    test_tournament.gd :: test_first_entry_missing_second_or_third_bed_gets_the_camp_preparation_line
+  ok    test_tournament.gd :: test_five_ready_creatures_do_not_implicitly_register
+  ok    test_tournament.gd :: test_no_party_at_all_is_not_fed
+  ok    test_tournament.gd :: test_no_party_at_all_reads_as_not_ready
+  ok    test_tournament.gd :: test_no_tournament_round_stands_up_a_second_body
+  ok    test_tournament.gd :: test_one_creature_is_not_a_team
+  ok    test_tournament.gd :: test_one_creature_out_of_condition_holds_the_team_back
+  ok    test_tournament.gd :: test_one_hungry_entrant_holds_the_feed_step_open
+  ok    test_tournament.gd :: test_one_level_below_the_threshold_is_not_trained
+  ok    test_tournament.gd :: test_only_explicit_entrants_need_care_and_order_is_preserved
+  ok    test_tournament.gd :: test_registration_requires_the_full_five_creature_roster
+  ok    test_tournament.gd :: test_round_result_message_announces_the_championship_for_the_final_round
+  ok    test_tournament.gd :: test_round_result_message_is_empty_for_an_out_of_range_index
+  ok    test_tournament.gd :: test_round_result_message_names_the_next_round
+  ok    test_tournament.gd :: test_the_board_does_not_contest_the_practice_trainers_prompt
+  ok    test_tournament.gd :: test_the_boards_spoken_line_tracks_the_bracket
+  ok    test_tournament.gd :: test_the_bracket_has_eight_slots_and_three_fought_rounds
+  ok    test_tournament.gd :: test_the_bridge_key_moved_off_the_tournaments_finalist
+  ok    test_tournament.gd :: test_the_champions_line_says_the_mount_can_be_ridden
+  ok    test_tournament.gd :: test_the_columns_fit_across_the_panel
+  ok    test_tournament.gd :: test_the_final_is_what_sets_the_tournament_won_contract_flag
+  ok    test_tournament.gd :: test_the_final_opponent_fields_the_rideable_meadowhart
+  ok    test_tournament.gd :: test_the_marshal_offers_the_explicit_begin_choice_only_once_the_player_is_at_ring
+  ok    test_tournament.gd :: test_the_marshal_walks_the_whole_ladder_in_order
+  ok    test_tournament.gd :: test_the_meadowhart_is_the_finals_last_creature
+  ok    test_tournament.gd :: test_the_party_size_threshold_comes_from_the_config
+  ok    test_tournament.gd :: test_the_readiness_report_names_the_creature_and_the_problem
+  ok    test_tournament.gd :: test_the_registrar_briefing_writes_the_opening_registration_handoff
+  ok    test_tournament.gd :: test_the_sign_up_line_is_what_writes_tournament_entered
+  ok    test_tournament.gd :: test_the_simulated_quarter_finals_resolve_after_the_players_own
+  ok    test_tournament.gd :: test_the_threshold_can_never_exceed_the_five_creature_cap
+  ok    test_tournament.gd :: test_tournament_sign_up_requires_compact_camp_and_care_not_a_workbench
+  ok    test_tournament.gd :: test_winning_the_final_grants_the_saddle_pattern
+  ok    test_trail_camp_arrival_identity.gd :: test_arrival_lens_is_minimal_road_centred_and_only_shallowly_joins_camp
+  ok    test_trail_camp_arrival_identity.gd :: test_arrival_lens_preserves_ground_cover_layers
+  ok    test_trail_camp_arrival_identity.gd :: test_capture_uses_real_road_and_rejects_buried_eyes
+  ok    test_trail_camp_arrival_identity.gd :: test_roadside_threshold_is_installed_visible_source_art_without_collision
+  ok    test_trail_camp_arrival_identity.gd :: test_threshold_flanks_the_route_and_stays_outside_functional_camp_circles
+  ok    test_trainer_appearance_choice.gd :: test_local_model_reads_the_choice_from_game_local
+  ok    test_trainer_appearance_choice.gd :: test_missing_choice_keeps_the_original_trainer_fallback
+  ok    test_trainer_appearance_choice.gd :: test_remote_spawn_choice_wins_over_the_viewers_local_choice
+  ok    test_trainer_run_lean.gd :: test_lean_ease_converges_and_returns_to_zero
+  ok    test_trainer_run_lean.gd :: test_lean_is_zero_at_rest_and_walk
+  ok    test_trainer_run_lean.gd :: test_lean_rises_monotonically_to_configured_max
+  ok    test_trainer_run_lean.gd :: test_playback_scale_monotonic_and_clamped
+  ok    test_tutorial_faint_floor.gd :: test_a_revived_follower_becomes_visible_again_without_a_new_fight
+  ok    test_tutorial_faint_floor.gd :: test_the_configured_fraction_puts_a_fainted_starter_back_on_its_feet
+  ok    test_tutorial_faint_floor.gd :: test_the_floor_cannot_follow_the_player_out_of_the_opening
+  ok    test_tutorial_faint_floor.gd :: test_the_floor_is_held_every_frame_beside_the_orb_floor
+  ok    test_tutorial_faint_floor.gd :: test_the_floor_never_reaches_into_a_running_fight
+  ok    test_tutorial_faint_floor.gd :: test_the_opening_configures_a_floor_under_a_wiped_tutorial_party
+  ok    test_tutorial_faint_floor.gd :: test_the_opening_still_hands_over_the_revives_d40_requires
+  ok    test_tutorial_faint_floor.gd :: test_the_wipe_predicate_still_distinguishes_a_wipe_from_a_bad_day
+  ok    test_veg_corridor.gd :: test_band_scale_defaults_to_full_density_with_no_matching_band
+  ok    test_veg_corridor.gd :: test_band_scale_picks_the_band_that_contains_z
+  ok    test_veg_corridor.gd :: test_corridor_fill_absent_or_empty_changes_nothing
+  ok    test_veg_corridor.gd :: test_corridor_fill_density_scale_zero_changes_nothing
+WARNING: scatter anchor at (-58.0, 199.0) placed 1 of 3 in 36 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_corridor_fill_never_places_past_the_real_corridor_bounds (res://tests/test_veg_corridor.gd:82)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_corridor_fill_never_places_past_the_real_corridor_bounds (res://tests/test_veg_corridor.gd:82)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 1 in 12 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_corridor_fill_never_places_past_the_real_corridor_bounds (res://tests/test_veg_corridor.gd:82)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 4 in 48 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_corridor_fill_never_places_past_the_real_corridor_bounds (res://tests/test_veg_corridor.gd:82)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 6 of 8 in 96 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_corridor_fill_never_places_past_the_real_corridor_bounds (res://tests/test_veg_corridor.gd:82)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_corridor_fill_never_places_past_the_real_corridor_bounds (res://tests/test_veg_corridor.gd:82)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_veg_corridor.gd :: test_corridor_fill_never_places_past_the_real_corridor_bounds
+  ok    test_veg_corridor.gd :: test_drygrass_carries_a_band_gradient_over_the_real_band_table
+  ok    test_veg_corridor.gd :: test_layer_band_scale_is_absent_by_default
+  ok    test_veg_corridor.gd :: test_layer_band_scale_is_keyed_by_band_id_and_may_exceed_one
+WARNING: scatter anchor at (-58.0, 199.0) placed 1 of 3 in 36 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_the_real_meadow_places_something_outside_the_old_square (res://tests/test_veg_corridor.gd:51)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_the_real_meadow_places_something_outside_the_old_square (res://tests/test_veg_corridor.gd:51)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 1 in 12 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_the_real_meadow_places_something_outside_the_old_square (res://tests/test_veg_corridor.gd:51)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 4 in 48 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_the_real_meadow_places_something_outside_the_old_square (res://tests/test_veg_corridor.gd:51)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 6 of 8 in 96 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_the_real_meadow_places_something_outside_the_old_square (res://tests/test_veg_corridor.gd:51)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] test_the_real_meadow_places_something_outside_the_old_square (res://tests/test_veg_corridor.gd:51)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_veg_corridor.gd :: test_the_real_meadow_places_something_outside_the_old_square
+  ok    test_vegetation_siting.gd :: test_a_disc_heals_only_what_it_covers_and_holds_the_rest
+  ok    test_vegetation_siting.gd :: test_a_disc_that_matches_nothing_holds_everything
+  ok    test_vegetation_siting.gd :: test_a_heal_that_places_nothing_does_not_reset_the_count
+  ok    test_vegetation_siting.gd :: test_a_second_unfiltered_heal_is_a_no_op
+  ok    test_vegetation_siting.gd :: test_a_small_bush_still_reaches_the_floor_radius
+  ok    test_vegetation_siting.gd :: test_a_standing_dead_tree_counts_as_solid_scatter
+  ok    test_vegetation_siting.gd :: test_a_zero_radius_disc_matches_nothing
+  ok    test_vegetation_siting.gd :: test_an_empty_within_heals_everything
+  ok    test_vegetation_siting.gd :: test_an_empty_within_passed_explicitly_heals_everything_too
+  ok    test_vegetation_siting.gd :: test_collidable_layers_are_not_recorded_as_soft_occluders
+  ok    test_vegetation_siting.gd :: test_ground_cover_is_not_treated_as_an_occluder
+  ok    test_vegetation_siting.gd :: test_prop_offset_clears_the_collider_of_the_thing_it_was_felled_from
+  ok    test_vegetation_siting.gd :: test_prop_offset_for_a_non_colliding_layer_is_the_floor
+  ok    test_vegetation_siting.gd :: test_prop_offset_grows_with_the_placements_own_scale
+  ok    test_vegetation_siting.gd :: test_prop_offset_never_shrinks_below_the_old_constant
+  ok    test_vegetation_siting.gd :: test_regrown_accumulates_across_partial_heals
+  ok    test_vegetation_siting.gd :: test_solid_scatter_index_agrees_with_the_linear_query
+  ok    test_vegetation_siting.gd :: test_the_callers_margin_is_added_to_the_placements_own_reach
+  ok    test_vegetation_siting.gd :: test_the_reach_is_measured_from_the_models_own_bounding_box
+  ok    test_village_boundary.gd :: test_a_panel_on_a_slope_pitches_to_put_both_posts_on_the_ground
+  ok    test_village_boundary.gd :: test_every_gate_stands_on_the_boundary_line
+  ok    test_village_boundary.gd :: test_every_road_leaves_through_a_gate
+  ok    test_village_boundary.gd :: test_every_village_harvest_node_is_inside_the_fence
+  ok    test_village_boundary.gd :: test_every_village_key_gate_opens_clear_of_its_real_terrain
+  ok    test_village_boundary.gd :: test_everything_band_0_needs_is_inside_the_fence
+  ok    test_village_boundary.gd :: test_readable_lock_fit_is_village_only_and_keeps_open_behavior_intact
+  ok    test_village_boundary.gd :: test_the_edge_behind_halda_no_longer_has_air_in_it
+  ok    test_village_boundary.gd :: test_the_fence_is_the_edge_of_band_0_and_not_of_the_chapter
+  ok    test_village_boundary.gd :: test_the_fit_stays_as_near_the_prefabs_own_length_as_whole_panels_allow
+  ok    test_village_boundary.gd :: test_the_outline_is_an_authored_line_and_not_a_box
+  ok    test_village_boundary.gd :: test_the_panels_laid_along_every_edge_meet_end_to_end
+  ok    test_village_boundary.gd :: test_the_village_gathering_lesson_is_the_size_a_human_signed_off
+  ok    test_village_boundary.gd :: test_village_gates_author_a_visible_rustic_threshold
+  ok    test_village_boundary.gd :: test_village_threshold_uses_installed_sources_joinery_and_no_new_collision
+  ok    test_village_road_topology.gd :: test_each_subarea_is_backed_by_what_stands_there
+  ok    test_village_road_topology.gd :: test_every_house_door_fronts_a_road
+  ok    test_village_road_topology.gd :: test_every_junction_is_a_branch_off_the_through_road
+  ok    test_village_road_topology.gd :: test_every_lane_keeps_its_painted_band_off_every_building
+  ok    test_village_road_topology.gd :: test_every_side_lane_leaves_the_through_road_and_ends_in_its_subarea
+  ok    test_village_road_topology.gd :: test_every_subarea_is_named_by_a_fingerpost_on_its_road
+  ok    test_village_road_topology.gd :: test_every_village_road_leaves_the_fence_through_a_gate
+  ok    test_village_road_topology.gd :: test_no_harvest_prompt_sits_inside_a_village_door_prompt
+  ok    test_village_road_topology.gd :: test_no_road_centreline_runs_through_a_building
+  ok    test_village_road_topology.gd :: test_one_continuous_through_road_runs_from_grandpas_door_to_trailgate
+  ok    test_village_road_topology.gd :: test_the_three_named_subareas_exist_and_are_served_by_roads
+  ok    test_village_road_topology.gd :: test_the_through_road_continues_to_the_south_bridge
+  ok    test_village_road_topology.gd :: test_the_topology_block_names_real_roads_and_places
+  ok    test_village_road_topology.gd :: test_the_well_is_on_the_main_street_and_no_junction_crowds_the_green
+  ok    test_village_road_topology.gd :: test_village_door_prompt_radius_is_the_one_this_test_guards
+  ok    test_voltarach_colourway.gd :: test_ordinary_policy_preserves_source_regions_while_alpha_stays_authored
+  ok    test_voltarach_colourway.gd :: test_outputs_are_board_palette_not_magenta_duplicates
+  ok    test_water_alpha_state.gd :: test_abandoned_fight_cannot_replace_the_original_wounded_opponent
+  ok    test_water_alpha_state.gd :: test_breakout_restores_active_fight_without_unlocking
+  ok    test_water_alpha_state.gd :: test_catch_uses_stored_claimant_decision_rejects_outsider_and_replay
+  ok    test_water_alpha_state.gd :: test_expired_catch_cannot_resolve_or_cancel_a_new_claim
+  ok    test_water_alpha_state.gd :: test_only_live_enemy_zero_hp_resolves_defeat_once
+  ok    test_water_alpha_state.gd :: test_phase_thresholds_are_monotonic_and_do_not_reset_on_healing
+  ok    test_water_alpha_state.gd :: test_repeated_peer_cannot_add_a_different_character_entitlement
+  ok    test_water_alpha_state.gd :: test_runtime_transport_stamps_monotonic_strike_actions
+  ok    test_water_alpha_state.gd :: test_two_participants_join_the_same_wounded_enemy_without_reset
+  ok    test_water_capture_transaction.gd :: test_catching_xp_saves_with_receipt_and_rolls_back_on_failure
+  ok    test_water_capture_transaction.gd :: test_failed_decline_remains_retryable_and_released_best_loses_title
+  ok    test_water_capture_transaction.gd :: test_failed_save_restores_exact_members_order_selection_and_flags
+  ok    test_water_capture_transaction.gd :: test_full_party_replacement_keeps_other_members_in_place_and_decline_is_durable
+  ok    test_water_capture_transaction.gd :: test_receipt_and_party_are_visible_in_one_save_and_replay_is_inert
+  ok    test_water_capture_transaction.gd :: test_wrong_identity_invalid_claim_and_owned_pending_never_mutate
+  ok    test_water_creature_replacements.gd :: test_replacements_import_with_complete_gameplay_animation_sets
+  ok    test_water_creature_replacements.gd :: test_torrentoad_is_squat_and_abyssal_is_long_bodied
+  ok    test_water_dialogue_delivery.gd :: test_iona_delivery_without_an_idle_frame
+  ok    test_water_dock_dressing.gd :: test_every_dressing_model_is_installed
+  ok    test_water_dock_dressing.gd :: test_installed_lantern_emits_only_from_glass_and_light_follows_insert
+  ok    test_water_dock_dressing.gd :: test_lantern_light_and_piling_tint_are_not_team_tether_red
+  ok    test_water_dock_dressing.gd :: test_layer_is_presentation_only_and_clear_of_the_lane
+  ok    test_water_dock_dressing.gd :: test_material_override_covers_root_mesh_and_children_without_mutating_source
+  ok    test_water_dune_groves.gd :: test_canopy_and_understory_reuse_deterministic_validated_centres
+  ok    test_water_dune_groves.gd :: test_clearance_and_slope_rejections_are_not_bypassed_for_groves
+  ok    test_water_dune_groves.gd :: test_disabled_groves_leave_the_original_placement_stream_exact
+  ok    test_water_dune_groves.gd :: test_no_relief_exhausts_bounded_search_without_fallback_groves
+  ok    test_water_dune_groves.gd :: test_relief_reads_upwind_terrain_and_rejects_flat_or_reversed_slope
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_authored_clearance_leaves_workbench_and_bed_even_at_walk_tolerance
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_farewell_policy_preserves_unique_species_and_picks_lowest_duplicate
+WATER SWIMMER PREPARATION FAILED: Preparation requires the actual post-Iona ready Water world and settled belt
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_missing_live_entry_fails_without_synthetic_fallback
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_real_refcounted_identities_are_not_rejected_by_sign
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_supply_selection_respects_surplus_and_actual_tidal_recipe_rows
+  ok    test_water_first_shore_current_notice.gd :: test_existing_world_lesson_flag_updates_the_same_notice_and_reload_rebinds_it
+  ok    test_water_first_shore_current_notice.gd :: test_notice_is_grounded_beside_the_route_and_never_adds_a_boundary
+  ok    test_water_first_shore_welcome_site.gd :: test_welcome_beacon_builds_an_open_collidable_arch_and_practical_light
+  ok    test_water_first_shore_welcome_site.gd :: test_welcome_beacon_realizes_the_authored_landmark_clear_of_the_route
+  ok    test_water_guardian_participants.gd :: test_ack_rpc_guardian_branch_resolves_only_the_senders_claim
+  ok    test_water_guardian_participants.gd :: test_begin_and_refuse_establish_world_identity_before_minting
+  ok    test_water_guardian_participants.gd :: test_chamber_decline_refused_by_host_leaves_the_next_invite_presentable
+  ok    test_water_guardian_participants.gd :: test_chamber_refusal_without_a_claim_settles_once_and_grants_nothing
+  ok    test_water_guardian_participants.gd :: test_character_receipt_makes_replayed_claim_inert_and_never_a_sixth
+  ok    test_water_guardian_participants.gd :: test_claim_ids_key_on_world_instance_and_fall_back_to_world_id_only_when_empty
+  ok    test_water_guardian_participants.gd :: test_decline_grants_nothing_settles_offer_and_forbids_a_second
+  ok    test_water_guardian_participants.gd :: test_decline_in_flight_holds_a_crossing_claim_until_the_host_answers
+  ok    test_water_guardian_participants.gd :: test_decline_journal_failure_restores_everything
+  ok    test_water_guardian_participants.gd :: test_decline_rpc_maps_the_sender_to_its_own_character_only
+  ok    test_water_guardian_participants.gd :: test_each_participant_has_an_independent_claim_id
+  ok    test_water_guardian_participants.gd :: test_edda_fallback_is_authored_speech_without_effects
+  ok    test_water_guardian_participants.gd :: test_edda_greeting_is_rerouted_through_the_participant_gate
+  ok    test_water_guardian_participants.gd :: test_edda_offers_only_to_a_character_that_may_still_answer
+  ok    test_water_guardian_participants.gd :: test_held_claim_decline_is_confirmed_only_after_the_host_journals_it
+  ok    test_water_guardian_participants.gd :: test_legacy_pending_claim_is_replayed_for_its_recipient_and_marked_on_resolve
+  ok    test_water_guardian_participants.gd :: test_legacy_receipt_for_the_same_slot_is_treated_as_received_conservatively
+  ok    test_water_guardian_participants.gd :: test_legacy_recipient_is_recorded_when_the_legacy_claim_is_answered
+  ok    test_water_guardian_participants.gd :: test_legacy_settled_recipient_is_never_granted_a_duplicate
+  ok    test_water_guardian_participants.gd :: test_multi_peer_empty_journal_offers_nobody
+  ok    test_water_guardian_participants.gd :: test_other_participants_in_a_legacy_world_with_a_journal_get_their_own_offer
+  ok    test_water_guardian_participants.gd :: test_participants_are_every_journaled_nerissa_row_whatever_its_status
+  ok    test_water_guardian_participants.gd :: test_pending_only_guest_row_admits_the_guest_and_refuses_the_non_fighting_host
+  ok    test_water_guardian_participants.gd :: test_pure_rule_mirrors_meadows_but_empty_set_means_host_local_only
+  ok    test_water_guardian_participants.gd :: test_receive_claim_keeps_separate_characters_and_world_instances_apart
+  ok    test_water_guardian_participants.gd :: test_refusal_journal_failure_restores_everything
+  ok    test_water_guardian_participants.gd :: test_reload_mid_claim_replays_and_resolves_from_disk
+  ok    test_water_guardian_participants.gd :: test_solo_view_only_the_host_may_answer
+  ok    test_water_guardian_participants.gd :: test_solo_world_without_rows_offers_only_the_local_character
+  ok    test_water_guardian_participants.gd :: test_stale_queued_claim_from_another_world_or_character_cannot_drive_a_decline
+  ok    test_water_guardian_participants.gd :: test_trainer_id_is_the_installed_veilfall_captain
+  ok    test_water_guardian_participants.gd :: test_two_characters_have_separate_prompt_state
+  ok    test_water_guardian_participants.gd :: test_two_worlds_sharing_slot_zero_have_independent_claims_and_no_erasure
+  ok    test_water_guardian_participants.gd :: test_unknown_legacy_recipient_world_offers_named_participants_and_the_receipt_holder_gets_nothing
+  ok    test_water_guardian_participants.gd :: test_world_restoration_settles_once_on_first_resolution_whoever_accepts
+  ok    test_water_gull_rest_signal_site.gd :: test_initialized_signal_site_geometry_passes_without_engine_errors
+  ok    test_water_gull_rest_signal_site.gd :: test_signal_spire_is_an_installed_bounded_gull_rest_composition
+  ok    test_water_lantern_return.gd :: test_cache_is_the_original_candy_i_row_and_stays_ungated
+  ok    test_water_lantern_return.gd :: test_chain_records_are_declared_world_flags
+  ok    test_water_lantern_return.gd :: test_chain_speech_carries_no_line_effects
+  ok    test_water_lantern_return.gd :: test_lead_needs_the_lesson_and_pell_beside_the_speaker
+  ok    test_water_lantern_return.gd :: test_local_request_is_revealed_by_the_lead_and_completed_by_the_return
+  ok    test_water_lantern_return.gd :: test_pell_briefs_first_then_leads_to_the_arch
+  ok    test_water_lantern_return.gd :: test_pell_hears_the_return_only_from_a_character_who_claimed
+  ok    test_water_lantern_return.gd :: test_return_before_the_lead_also_records_the_lead
+  ok    test_water_lantern_return.gd :: test_return_requires_this_characters_own_cache_receipt
+  ok    test_water_lantern_return.gd :: test_unknown_or_malformed_step_requests_refuse
+  ok    test_water_map_state.gd :: test_character_json_roundtrip_keeps_water_fog_landmark_region_and_alpha_pin
+  ok    test_water_map_state.gd :: test_old_character_without_water_map_starts_hidden_and_preserves_meadows_map
+  ok    test_water_map_state.gd :: test_two_characters_on_different_islands_never_share_fog_regions_or_pins
+  ok    test_water_map_state.gd :: test_water_extent_and_authored_destinations_are_independent_of_meadows
+  ok    test_water_named_grass_clearance.gd :: test_default_off_is_an_exact_spawn_noop
+  ok    test_water_named_grass_clearance.gd :: test_enabled_footprint_preserves_actor_prompt_and_collision
+  ok    test_water_named_grass_clearance.gd :: test_offscreen_simulation_and_other_realms_do_not_register
+  ok    test_water_named_grass_clearance.gd :: test_radius_is_local_bounded_and_invalid_input_has_no_effect
+  ok    test_water_named_grass_clearance.gd :: test_reused_npc_and_existing_clearance_are_not_overwritten
+  ok    test_water_realm_transition.gd :: test_primary_callback_retires_alpha_and_releases_catch_without_losing_durable_result
+  ok    test_water_realm_transition.gd :: test_primary_settlement_tracks_only_local_pending_results_not_active_fights
+  ok    test_water_realm_transition.gd :: test_veilfall_inherits_closed_request_and_response_gates
+  ok    test_water_realm_transition.gd :: test_water_submit_completion_names_and_receiver_dispatch
+  ok    test_water_relic.gd :: test_compass_cannot_be_placed_unearned_or_activated_unplaced
+  ok    test_water_relic.gd :: test_compass_replaces_each_older_power_without_stacking
+  ok    test_water_relic.gd :: test_compass_uses_the_production_named_relic_and_tunable_guard
+  ok    test_water_relic.gd :: test_save_round_trip_preserves_only_the_placed_compass_selection
+  ok    test_water_sluice_twin_pumps.gd :: test_twin_pumps_are_grounded_solid_and_leave_the_main_route_open
+  ok    test_water_tidal_guard_combat.gd :: test_actual_owner_health_mutation_and_ordinary_strike_in_initialized_tree
+  ok    test_water_traversal_save.gd :: test_corrupt_aquatic_data_rejects_the_entire_pose
+  ok    test_water_traversal_save.gd :: test_exhaustion_survives_json_and_pose_sanitisation_without_session_ids
+  ok    test_water_traversal_save.gd :: test_mount_identity_round_trip_uses_owned_party_slot_not_transport_id
+  ok    test_water_traversal_save.gd :: test_old_pose_is_preserved_and_aquatic_state_cannot_attach_to_another_realm
+  ok    test_water_traversal_save.gd :: test_pause_and_mount_modes_are_data_without_importing_transport_revision
+  ok    test_wild_alphas.gd :: test_every_alpha_is_a_bonus_over_its_band_not_an_absolute_level
+  ok    test_wild_alphas.gd :: test_every_alpha_is_visibly_bigger
+  ok    test_wild_alphas.gd :: test_every_alpha_says_why_it_is_there
+  ok    test_wild_alphas.gd :: test_growing_a_body_grows_the_radius_the_catch_maths_uses
+  ok    test_wild_alphas.gd :: test_the_chapter_fields_a_handful_of_alphas
+  ok    test_wild_alphas.gd :: test_the_director_applies_the_bonus_additively
+  ok    test_wild_alphas.gd :: test_the_tutorial_meadow_has_no_alpha
+  ok    test_world_look_fog_energy.gd :: test_every_art_preset_fog_on_screen_meets_its_rendered_horizon
+  ok    test_world_look_fog_energy.gd :: test_fog_is_scaled_by_a_dimmed_sky
+  ok    test_world_look_fog_energy.gd :: test_full_and_brighter_skies_leave_fog_unchanged
+  ok    test_world_weather.gd :: test_clear_is_weighted_as_the_single_most_likely_preset
+  ok    test_world_weather.gd :: test_every_preset_environment_colour_clears_the_saturation_floor
+  ok    test_world_weather.gd :: test_every_preset_sky_colour_clears_the_saturation_floor
+  ok    test_world_weather.gd :: test_fog_density_add_stays_below_the_whiteout_ceiling
+  ok    test_world_weather.gd :: test_pick_next_favours_the_higher_weighted_preset_over_many_rolls
+  ok    test_world_weather.gd :: test_pick_next_forces_clear_once_the_cap_is_reached
+  ok    test_world_weather.gd :: test_pick_next_never_exceeds_max_consecutive_non_clear
+  ok    test_world_weather.gd :: test_weather_json_has_the_four_expected_presets
+
+1268 tests, 1768889 assertions, 3 failed
+
+  test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file — expected , got clearings[2].x is 2.0, expected -22.0  (clearings: the merged entry does not match the pre-split file — clearings[2].x is 2.0, expected -22.0)
+  test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file — expected , got clearings[4].x is 78.0, expected 13.0  (clearings: the merged entry does not match the pre-split file — clearings[4].x is 78.0, expected 13.0)
+  test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file — expected , got footprints[0].x is 2.0, expected -22.0  (footprints: the merged entry does not match the pre-split file — footprints[0].x is 2.0, expected -22.0)
+  test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file — expected , got footprints[6].x is 44.0, expected -2.5  (footprints: the merged entry does not match the pre-split file — footprints[6].x is 44.0, expected -2.5)
+  test_gate_f_village_passage.gd :: test_closed_gate_refuses_crossing_but_allows_outside_detour — expected true, got false  ({ "ok": false, "reason": "no verified open village passage connects this walk to its target", "waypoints": [] })
+  test_gate_f_village_passage.gd :: test_closed_gate_refuses_crossing_but_allows_outside_detour — expected true, got false  (Both endpoints outside does not make a fence-crossing chord valid)
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'snare' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'slow_field' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'shove' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'dash_strike' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'veil' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'heal_pulse' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'bramble_trap' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'hearten' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'sap' has an unrecognised slot 'utility')
+  test_moves_data.gd :: test_every_move_has_a_valid_slot — expected true, got false  (move 'quake_ring' has an unrecognised slot 'utility')
+WARNING: 3 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)

@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | F16 main. Neutral289 source/parser PASS; units1 red6+hidden aborts,2/3 running; vitals4 PASS, callers OFF. |
-| `tb/hub` | F17, F18 | #0–#3 main109. M1r4 wood-wall FAIL; routev2 SOURCEFAIL/change approach. F18 held. |
-| `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 858b resolver SOURCE PASS/OFF; save compatibility draft. Incoming/heal/loadout authority integration open. |
-| `tb/vfx` | F25, F35 | 9a6 ShadowBolt WIP; R17 selected18 native PASS; R14 blind craft FAIL/identity PASS, OFF. |
-| `tb/lookdev` | F26 | #0/#1/#2/#4 main109. f220 material strict MET/censuses0; Cloud full craft FAIL/#3 and Ally/default #5 open. |
-| `tb/training` | F27–F30, F37 | #0 items main;2229 capXP/Master/chest source, legacy XP unwired; spend/runtime open. |
-| `tb/homestead` | F31–F34 | 510273 OFF greenhouse/Pearl/refining SOURCE PASS; mount guard/durable settlement open. |
+| `tb/foundations` | F16 | PR496 core main; wire8 gear/inactive power admission 4/49 native0; callers/solo/equipCAS/relic/ownerACK OPEN. |
+| `tb/hub` | F17, F18 | #0-#3 main; ROOT8316 shape correction in source review. Actual M1 and F18 OPEN. |
+| `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
+| `tb/combat` | F21–F24 | Live6155 FAIL54/119 overlaps archivedf384; production lag/body-limit fix active; F23 held. |
+| `tb/vfx` | F25, F35 | 8fae preserved/held; R17 stone PASS, R14 craft FAIL; library OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main. ade7b cliff OFF/held; full bar open; Ally owner-gated. |
+| `tb/training` | F27–F30, F37 | #0 main; Altar0e89 preserved/held; durable player path open. |
+| `tb/homestead` | F31–F34 | 499e8 preserved/held; Forge +Den080c source PASS, mounted durable path open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |

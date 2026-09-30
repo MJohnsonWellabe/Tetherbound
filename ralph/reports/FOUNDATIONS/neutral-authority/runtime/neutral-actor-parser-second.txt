@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "matches_after" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/actor_vitals_delivery.gd:183)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "matches_unsaved" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/actor_vitals_delivery.gd:271)
+ERROR: Failed to load script "res://scripts/net/actor_vitals_delivery.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

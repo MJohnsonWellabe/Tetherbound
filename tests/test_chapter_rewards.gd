@@ -15,6 +15,7 @@ extends "res://tests/test_case.gd"
 ## badly placed: unobtainable. Nothing failed, because nothing was looking.
 
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 ## Read as TEXT, not preloaded. `playground_world.gd` extends Node3D and pulls
@@ -102,6 +103,15 @@ func _obtainable_tms() -> Dictionary:
 		found[id] = "world pickup"
 	for id: String in _stormwood_tms_mounted_by_runtime():
 		found[id] = "Stormwood world pickup"
+	# The actual Meadows world also mounts validated per-band item caches.
+	# Do not limit obtainable finds to the retired TM_AT literal table.
+	var catalogue: Dictionary = _json(ITEMS_PATH).get("items", {})
+	for spec: Dictionary in BAND_PICKUPS.load_all():
+		var item := str(spec.get("item", ""))
+		if item.begins_with("tm_"):
+			assert_true(catalogue.has(item), "a mounted band TM must exist in ItemDB")
+			found[item] = "validated mounted Meadows band pickup"
+
 	for vendor: Variant in (_json(TRADE_PATH).get("vendors", {}) as Dictionary).values():
 		for good: Variant in ((vendor as Dictionary).get("goods", {}) as Dictionary).keys():
 			if str(good).begins_with("tm_"):

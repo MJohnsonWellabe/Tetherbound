@@ -1,0 +1,47 @@
+{
+  "status": "Source-only sealed review; original 786 FAIL and narrow f56 PASS both retained; runtime pending",
+  "files": [
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\FAIL-786.txt",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/FAIL-786.txt",
+      "sha256": "cf778d107aea23cd6e90fc44a61c3273679bf536e9466e87441545c0636f66d1",
+      "bytes": 1273
+    },
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\source-audit.json",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/source-audit.json",
+      "sha256": "9290e7d1e0be3813cb02e62959f8af572e8ca011f12ac37701baadb3e3c3139c",
+      "bytes": 2180
+    },
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\successor-f56\\strict-review.txt",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/successor-f56/strict-review.txt",
+      "sha256": "0168c3d9e58d6907a45878c852642c5bce1cff445d63b779291e5ac0f6b0134d",
+      "bytes": 7573
+    },
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\successor-f56\\source-audit.json",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/successor-f56/source-audit.json",
+      "sha256": "0c49ba134f2b449f8cf885dc690963da1d628182ba82ebf84b2acc5a26d4eeca",
+      "bytes": 1033
+    },
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\successor-f56\\786-to-f56.patch",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/successor-f56/786-to-f56.patch",
+      "sha256": "b153fc5b472ad5486b7ee4806e4351721b1967c00c66888989507b97cd82d355",
+      "bytes": 5372
+    },
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\successor-f56\\assembly.json",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/successor-f56/assembly.json",
+      "sha256": "630f1d81e6e9faaa474d184d711731eebb411fc2f97fde18c901260db8b20e89",
+      "bytes": 7005
+    },
+    {
+      "source": ".tmp\\independent-neutral-repairs-review\\successor-f56\\test_village_street_0912.gd",
+      "archive": "ralph/reports/FOUNDATIONS/neutral-authority/independent-repairs/successor-f56/test_village_street_0912.gd",
+      "sha256": "d5bde2cb66d71971025eec1d059037bc81441277c018d0642d45edfbe3108691",
+      "bytes": 17959
+    }
+  ]
+}

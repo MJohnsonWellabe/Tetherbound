@@ -27,7 +27,8 @@
       "essence_type": "ground",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise a ground creature's level at the Altar."
+      "blurb": "Raise a ground creature's level at the Altar.",
+      "description": "Spend Ground Essence at the Altar to pay for a ground creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_water": {
       "name": "Water Essence",
@@ -37,7 +38,8 @@
       "essence_type": "water",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise a water creature's level at the Altar."
+      "blurb": "Raise a water creature's level at the Altar.",
+      "description": "Spend Water Essence at the Altar to pay for a water creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_air": {
       "name": "Air Essence",
@@ -47,7 +49,8 @@
       "essence_type": "air",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise an air creature's level at the Altar."
+      "blurb": "Raise an air creature's level at the Altar.",
+      "description": "Spend Air Essence at the Altar to pay for an air creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_electric": {
       "name": "Electric Essence",
@@ -57,7 +60,8 @@
       "essence_type": "electric",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise an electric creature's level at the Altar."
+      "blurb": "Raise an electric creature's level at the Altar.",
+      "description": "Spend Electric Essence at the Altar to pay for an electric creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_fire": {
       "name": "Fire Essence",
@@ -67,7 +71,8 @@
       "essence_type": "fire",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise a fire creature's level at the Altar."
+      "blurb": "Raise a fire creature's level at the Altar.",
+      "description": "Spend Fire Essence at the Altar to pay for a fire creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_dark": {
       "name": "Dark Essence",
@@ -77,7 +82,8 @@
       "essence_type": "dark",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise a dark creature's level at the Altar."
+      "blurb": "Raise a dark creature's level at the Altar.",
+      "description": "Spend Dark Essence at the Altar to pay for a dark creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_ice": {
       "name": "Ice Essence",
@@ -87,7 +93,8 @@
       "essence_type": "ice",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise an ice creature's level at the Altar."
+      "blurb": "Raise an ice creature's level at the Altar.",
+      "description": "Spend Ice Essence at the Altar to pay for an ice creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "essence_psychic": {
       "name": "Psychic Essence",
@@ -97,7 +104,8 @@
       "essence_type": "psychic",
       "sellable": false,
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Raise a psychic creature's level at the Altar."
+      "blurb": "Raise a psychic creature's level at the Altar.",
+      "description": "Spend Psychic Essence at the Altar to pay for a psychic creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
     },
     "tether_candy": {
       "name": "Tether Candy",
@@ -1186,6 +1194,16 @@
       "world_model_scale": 0.42,
       "blurb": "One electric creature, one lesson.",
       "description": "A gold-lit teaching orb carrying Voltaic Whip. An electric creature can learn this charged move; the orb is spent after the lesson."
+    },
+    "tm_fireball": {
+      "name": "TM: Fireball",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#f6a132",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A burning orb that bursts when it reaches its target.",
+      "description": "A burning orb that bursts when it reaches its target. Teaching it spends the disc, and it replaces the creature's charged move. Fire creatures can learn it.",
+      "move": "fireball"
     },
     "tm_thunder_break": {
       "name": "TM: Thunder Break",

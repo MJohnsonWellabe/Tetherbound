@@ -1,0 +1,384 @@
+diff --git a/ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/source-provenance.json b/ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/source-provenance.json
+new file mode 100644
+index 0000000000..5bc8973cda
+--- /dev/null
++++ b/ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/source-provenance.json
+@@ -0,0 +1,106 @@
++{
++  "base": "79c3ff4e5dd93d40171b9fb9ac238768864c4562",
++  "status": "Source packet only; independent source review and combined actual caller/runtime batch pending. No acceptance criterion credit.",
++  "wire_protocol": "tetherbound-invite-v8",
++  "save_schema": 28,
++  "paths": [
++    {
++      "path": "scripts/net/character_authority.gd",
++      "canonical_lf_sha256": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539"
++    },
++    {
++      "path": "scripts/net/session.gd",
++      "canonical_lf_sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571"
++    },
++    {
++      "path": "scripts/net/build_fingerprint.gd",
++      "canonical_lf_sha256": "c780d838c73ca7d36c4ca94cdeb20a4a53cbcbb6ed709b05c257099a9cf409d6"
++    },
++    {
++      "path": "tests/test_actor_vitals_authority.gd",
++      "canonical_lf_sha256": "5707a6725ed677059420a48447fa5d685ac1ec0ecefc498fc9a696eb525cd2cc"
++    },
++    {
++      "path": "tests/test_session_build_compat.gd",
++      "canonical_lf_sha256": "fd79e1aba1614b38d75b82908e4d86dd416201708c65a8eeabb4f8d3cd3c0242"
++    }
++  ],
++  "actual_producer": "PlayerState.save_data() -> CharacterAuthority.portable_projection() -> Session _rpc_peer_hello validation -> same seed_admitted_character record. Host local uses same save_data/seed/refresh; rejoin retains admitted stable character, never replaces state.",
++  "field_sources": [
++    {
++      "field": "equipment",
++      "source": "PlayerState.equipment -> PlayerEquipment.save_data(): exact helmet,upper_body,lower_body,boots,backpack strings",
++      "authority": "Host ItemDB validates known armor/kind/exact slot. No packet tier, stat total or sixth slot. Stored once in same admitted record; local refresh is not gear CAS."
++    },
++    {
++      "field": "realm_hearts",
++      "source": "PlayerState.hearts -> RealmHeartState.save_data(): exact active_id string",
++      "authority": "Known runtime IDs only; original portable/record legacy selection retained. Existing loader uses merged world placed flags, which do not prove personal hang."
++    },
++    {
++      "field": "redesign_character.relics_hung",
++      "source": "Existing validated character carrier/save28 schema and declared character scope",
++      "authority": "Typed storage preserved; no protected personal live hang producer on main. Detached combat view empties hung array and active_id until that actual producer exists."
++    }
++  ],
++  "read_consumer": "Session.admitted_character_state(peer_id) -> same registered stable character -> CharacterAuthority.actor_stat_state(character_id). Same detached canonical party UID/care/moves; actual gear; realm_hearts.active_id empty and redesign_character.relics_hung empty; baseline incoming multiplier1.0, no relic entitlement inferred. CAS/revision/writer/journal APIs unchanged.",
++  "generation_boundary": "Combat owns actual body ObjectID/private monotonic generation binding and nonbinding UID/body/revision rechecks. This packet supplies the canonical owned row to those existing preserved callers; it adds no alternate actor registry or client body claim.",
++  "legitimate_absent_saved_defaults": "PlayerState.load_data of v28 missing equipment/realm_hearts reconstructs actual five-empty-slot PlayerEquipment and inactive RealmHeartState. Received v8 hello must explicitly carry both; malformed present/missing packet fields fail closed.",
++  "rejoin": "Same stable character retained despite different peer, fresh party/gear/selected-power packet. Host local invalid refresh now returns empty read instead of silently exposing previous successful state.",
++  "actual_baseline_item_ids": [
++    {
++      "id": "hide_helm",
++      "slot": "helmet",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "hide_vest",
++      "slot": "upper_body",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "hide_leggings",
++      "slot": "lower_body",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "hide_boots",
++      "slot": "boots",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "travel_pack",
++      "slot": "backpack",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "insulated_helm",
++      "slot": "helmet",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "insulated_vest",
++      "slot": "upper_body",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "insulated_leggings",
++      "slot": "lower_body",
++      "tether_pouch_tier": null
++    },
++    {
++      "id": "insulated_boots",
++      "slot": "boots",
++      "tether_pouch_tier": null
++    }
++  ],
++  "protected_producer_gap": "No personal relic-hang or typed host gear-update CAS is implemented or claimed. The actor read is conservatively inactive for relics, initial admission captures worn items, and saved portable sources are never rewritten. Future producer must use same authoritative record/durable receipts; no invented entitlement.",
++  "unchanged_durable_invariants": "One admitted registry; prepared bool world/character writers and typed actor-vitals journal/owner guards untouched. Save28 modern/legacy734 codec unchanged. No schema/default files or LedgerRpc modification necessary.",
++  "minimum_unrun_methods": [
++    "test_actor_vitals_authority.gd :: test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes",
++    "test_actor_vitals_authority.gd :: test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power",
++    "test_session_build_compat.gd existing pinned-version/mismatch methods"
++  ],
++  "existing_callers_not_applied": "Combat Manager/Director/CreatureBody and ignored net-owner Heal/status packets remain excluded. Future actual combined incoming/heal/owner-save-failure/rejoin proof pending.",
++  "no_engine": "No engine, unit suite, CI dispatch or independent reviewer launched by author."
++}
+diff --git a/scripts/net/build_fingerprint.gd b/scripts/net/build_fingerprint.gd
+index 1a8679a35f..99fbfbf0e6 100644
+--- a/scripts/net/build_fingerprint.gd
++++ b/scripts/net/build_fingerprint.gd
+@@ -26,11 +26,12 @@ extends RefCounted
+ ## This is compatibility, not authentication. A modified client can claim any
+ ## fingerprint; the host still validates every transaction on its own state.
+ 
+-## v7: hello requires a validated portable-character authority projection;
++## v8: hello also requires canonical personal equipment and realm_hearts;
++## v7 peers lack these actor-stat inputs and cannot join this contract.
+ ## older peers are refused before registry admission or snapshot preparation.
+ ## Typed actor-vitals journal/receipt RPCs share this required wire contract.
+ ## Save schema remains v28; this marker only versions network compatibility.
+-const WIRE_PROTOCOL := "tetherbound-invite-v7"
++const WIRE_PROTOCOL := "tetherbound-invite-v8"
+ const CONTENT_ROOT := "res://data"
+ const CONTENT_EXTENSION := "json"
+ ## Hex digits of the content hash shown to players. Long enough to tell builds
+diff --git a/scripts/net/character_authority.gd b/scripts/net/character_authority.gd
+index d6ea84f670..d9b3ad0b42 100644
+--- a/scripts/net/character_authority.gd
++++ b/scripts/net/character_authority.gd
+@@ -9,7 +9,9 @@ const REDESIGN := preload("res://scripts/data/redesign_state.gd")
+ const RULES := preload("res://scripts/world/death_satchel_rules.gd")
+ const PORTAL := preload("res://scripts/net/portal_escrow_validation.gd")
+ const REWARD := preload("res://scripts/net/reward_delivery.gd")
+-const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow"]
++const EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
++const BIOMES := preload("res://scripts/data/biome_order.gd")
++const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
+ var _records: Dictionary = {}
+ var _world_instance := ""
+ var _portal_stages: Dictionary = {}
+@@ -47,7 +49,52 @@ static func portable_projection(personal: Dictionary) -> Dictionary:
+ 				vitals[key] = row.duplicate(true) if row is Dictionary else row
+ 	return {"character_id": personal.get("character_id"), "party": personal.get("party"),
+ 		"redesign_character": personal.get("redesign_character"), "inventory": personal.get("inventory"),
+-		"portal_escrow": rows, "vitals_escrow": vitals}
++		"portal_escrow": rows, "vitals_escrow": vitals,
++		"equipment": personal.get("equipment", empty_equipment()),
++		"realm_hearts": personal.get("realm_hearts", {"active_id": ""})}
++
++
++## Only the portable codec's legitimate absent-field defaults. A received
++## hello must carry both fields explicitly; malformed present values never
++## become empty gear or an inactive selection through this projection.
++static func empty_equipment() -> Dictionary:
++	var slots: Dictionary = {}
++	for slot: String in EQUIPMENT.SLOTS:
++		slots[slot] = ""
++	return slots
++
++
++static func equipment_errors(raw: Variant) -> Array[String]:
++	if not raw is Dictionary or raw.size() != EQUIPMENT.SLOTS.size():
++		return ["admitted equipment requires exactly the five personal slots"]
++	for slot: String in EQUIPMENT.SLOTS:
++		if not raw.has(slot) or not raw[slot] is String:
++			return ["invalid admitted equipment slot " + slot]
++		var id: String = raw[slot]
++		if id.is_empty():
++			continue
++		var items := RULES.db()
++		if not bool(items.call("has", id)):
++			return ["unknown admitted equipment " + id]
++		var definition: Dictionary = items.call("definition", id)
++		if definition.get("kind") != "armor" or definition.get("armor_slot") != slot:
++			return ["admitted equipment belongs to another slot"]
++		if definition.has("tether_pouch_tier"):
++			var tier: Variant = definition.tether_pouch_tier
++			if slot != "backpack" or not (tier is int or tier is float) \
++					or not is_finite(float(tier)) or float(tier) != floor(float(tier)) \
++					or float(tier) < 1.0 or float(tier) > 4.0:
++				return ["invalid authored admitted pouch tier"]
++	return []
++
++
++static func heart_selection_errors(raw: Variant) -> Array[String]:
++	if not raw is Dictionary or raw.size() != 1 or not raw.get("active_id") is String:
++		return ["admitted realm hearts require only the personal active_id"]
++	var id: String = raw.active_id
++	if not id.is_empty() and not BIOMES.runtime_ids(false).has(id):
++		return ["unknown admitted realm heart selection"]
++	return []
+ 
+ 
+ static func errors(raw: Variant, expected_character: String) -> Array[String]:
+@@ -62,6 +109,8 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
+ 		return ["portable authority belongs to another character"]
+ 	var failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)
+ 	failures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))
++	failures.append_array(equipment_errors(raw.equipment))
++	failures.append_array(heart_selection_errors(raw.realm_hearts))
+ 	if raw.party is Array:
+ 		for row: Variant in raw.party:
+ 			if not row is Dictionary:
+@@ -111,6 +160,21 @@ func state(character_id: String) -> Dictionary:
+ 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
+ 
+ 
++## Actual combat consumers use this detached view of the SAME admitted row.
++## RealmHeartState currently activates from merged world flags; those cannot
++## prove this traveler's personal relic hang. Keep the portable legacy choice
++## and typed hung array in state(), but expose no power until a protected
++## personal grant/hang producer exists. Empty selection yields baseline 1.0.
++## No per-request stats, cloned ownership registry or inferred receipt here.
++func actor_stat_state(character_id: String) -> Dictionary:
++	var personal := state(character_id)
++	if personal.is_empty():
++		return {}
++	personal.realm_hearts = {"active_id": ""}
++	personal.redesign_character.relics_hung = []
++	return personal
++
++
+ func revision(character_id: String) -> int:
+ 	return int(_records[character_id].revision) if _records.has(character_id) else -1
+ 
+@@ -127,6 +191,11 @@ func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
+ 	var current := state(character_id)
+ 	var candidate := raw.duplicate(true)
+ 	candidate["vitals_escrow"] = raw.get("vitals_escrow", {}).duplicate(true)
++	# Gear/selection are captured once at actual admission. This local save
++	# projection is not an equip CAS and cannot refresh a command profile on a
++	# later hit. Future host-authorized gear changes need their typed doorway.
++	candidate["equipment"] = current.equipment.duplicate(true)
++	candidate["realm_hearts"] = current.realm_hearts.duplicate(true)
+ 	# A failed owner settlement still leaves the durable world debit committed.
+ 	# Preserve its host entitlement while the actual local key remains pending
+ 	# for atomic personal retry, rather than minting a second host-owned key.
+diff --git a/scripts/net/session.gd b/scripts/net/session.gd
+index b8ecf4c133..37e2ec57ce 100644
+--- a/scripts/net/session.gd
++++ b/scripts/net/session.gd
+@@ -1740,6 +1740,8 @@ func _game() -> Node:
+ 
+ 
+ ## Shared detached truth for protected keys and the host combat roster.
++## Equipment comes from the one admitted personal record; legacy realm power
++## is inactive in this read view until protected personal hang is implemented.
+ func admitted_character_state(peer_id: int) -> Dictionary:
+ 	if not is_host() or not _bind_character_authority():
+ 		return {}
+@@ -1750,11 +1752,13 @@ func admitted_character_state(peer_id: int) -> Dictionary:
+ 		var game := _game()
+ 		if game != null and game.get("local") != null:
+ 			var portable := CHARACTER_AUTHORITY.portable_projection(game.get("local").save_data())
+-			_character_authority.call("refresh_host_local", portable, character)
++			var refreshed: Dictionary = _character_authority.call("refresh_host_local", portable, character)
++			if not bool(refreshed.get("ok", false)):
++				return {}
+ 			var recovered: Dictionary = _character_authority.call("recover_durable_vitals", character, game.get("world").reward_deliveries)
+ 			if not bool(recovered.get("ok", false)):
+ 				return {}
+-	return _character_authority.call("state", character)
++	return _character_authority.call("actor_stat_state", character)
+ 
+ 
+ func admitted_character_revision(peer_id: int) -> int:
+diff --git a/tests/test_actor_vitals_authority.gd b/tests/test_actor_vitals_authority.gd
+index 714c646d69..039bd4eb90 100644
+--- a/tests/test_actor_vitals_authority.gd
++++ b/tests/test_actor_vitals_authority.gd
+@@ -98,6 +98,80 @@ func _receipt(uid: String, ordinal: int) -> Dictionary:
+ 	return {"receipt_id": "host_process:hit_%d" % ordinal, "encounter_id": "encounter_a",
+ 		"creature_uid": uid, "body_generation": 1, "vitals_revision": ordinal}
+ 
++
++func test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes() -> void:
++	var player := _player()
++	var portable := _portable(player)
++	assert_true(AUTHORITY.equipment_errors(portable.equipment).is_empty())
++	assert_true(AUTHORITY.heart_selection_errors(portable.realm_hearts).is_empty())
++	assert_eq(portable.equipment.size(), 5, "actual PlayerEquipment supplies five empty slots")
++	assert_eq(portable.realm_hearts.active_id, "", "fresh actual personal selection is inactive")
++	assert_true(AUTHORITY.errors(portable, "owner_a").is_empty())
++	var old: Dictionary = player.save_data()
++	old.erase("equipment")
++	old.erase("realm_hearts")
++	var restored := PLAYER.new()
++	restored.configure(ITEMS.new())
++	restored.load_data(old)
++	assert_true(AUTHORITY.errors(_portable(restored), "owner_a").is_empty(), "old28 missing saved carriers use actual PlayerState defaults")
++	player.inventory.add("travel_pack", 1)
++	assert_true(player.equipment.equip_from_inventory("travel_pack", player.inventory))
++	portable = _portable(player)
++	assert_eq(portable.equipment.backpack, "travel_pack")
++	assert_true(AUTHORITY.errors(portable, "owner_a").is_empty(), "actual owned armor ID uses the authored backpack slot")
++	var invalid := portable.duplicate(true)
++	invalid.erase("equipment")
++	assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "missing received carrier is not a legacy saved default")
++	for id: Variant in ["potion_small", "hide_helm", "unknown_pack", 3]:
++		invalid = portable.duplicate(true)
++		invalid.equipment.backpack = id
++		assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "refuse wrong kind/slot/unknown/non-string equipment")
++	invalid = portable.duplicate(true)
++	invalid.equipment.erase("helmet")
++	invalid.equipment["weapon"] = ""
++	assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "same-size foreign slot cannot replace a real slot")
++	for selection: Variant in [{}, {"active_id": 4}, {"active_id": "biome5"}, {"active_id": "", "power": 9}]:
++		invalid = portable.duplicate(true)
++		invalid.realm_hearts = selection
++		assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "selection carries no client power or reserved ID")
++	invalid = portable.duplicate(true)
++	invalid["defence"] = 99999
++	assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "client-derived stat totals never enter the portable authority shape")
++
++
++func test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power() -> void:
++	var player := _player()
++	player.inventory.add("travel_pack", 1)
++	assert_true(player.equipment.equip_from_inventory("travel_pack", player.inventory))
++	# Typed storage fixture, not an earned relic: legacy selection cannot power
++	# the actor even when the portable array claims that relic is hung.
++	player.hearts.load_data({"active_id": "water"})
++	player.redesign_character.relics_hung = ["tidewake"]
++	var portable := _portable(player)
++	var authority := AUTHORITY.new()
++	assert_true(authority.bind_world("namespace_a"))
++	assert_true(authority.seed_admitted_character(portable, "owner_a").ok)
++	var original := authority.state("owner_a")
++	var actor := authority.actor_stat_state("owner_a")
++	assert_eq(actor.equipment.backpack, "travel_pack")
++	assert_eq(actor.realm_hearts.active_id, "")
++	assert_true(actor.redesign_character.relics_hung.is_empty())
++	assert_eq(original.realm_hearts.active_id, "water", "actual portable legacy choice is retained")
++	assert_eq(original.redesign_character.relics_hung, ["tidewake"], "typed storage is not rewritten")
++	actor.equipment.backpack = ""
++	actor.party[0].uid = "foreign_actor"
++	assert_true(AUTHORITY.equivalent(authority.state("owner_a"), original), "detached read cannot mutate the admitted party or worn IDs")
++	assert_true(authority.actor_stat_state("foreign_owner").is_empty())
++	var fresh_rejoin := _portable(_player())
++	assert_true(authority.seed_admitted_character(fresh_rejoin, "owner_a").already_seeded)
++	assert_true(AUTHORITY.equivalent(authority.state("owner_a"), original), "new peer/roster/gear cannot replace stable admitted identity")
++	player.inventory.add("hide_helm", 1)
++	assert_true(player.equipment.equip_from_inventory("hide_helm", player.inventory))
++	assert_true(authority.refresh_host_local(_portable(player), "owner_a").ok)
++	assert_eq(authority.state("owner_a").equipment.helmet, "", "a later local save read is not an equipped-gear authority CAS")
++	assert_eq(authority.state("owner_a").equipment.backpack, "travel_pack")
++	assert_eq(player.save_data().realm_hearts.active_id, "water", "inactive combat view never edits the portable source")
++
+ func _row(portable: Dictionary, ordinal: int, hp: float, previous: Variant = null) -> Dictionary:
+ 	var owned: Dictionary = portable.party[0]
+ 	return ACTOR.next_record("world_a", "namespace_a", "session_a", "owner_a", owned.uid,
+diff --git a/tests/test_session_build_compat.gd b/tests/test_session_build_compat.gd
+index a6cb8b07b2..1291447efe 100644
+--- a/tests/test_session_build_compat.gd
++++ b/tests/test_session_build_compat.gd
+@@ -21,7 +21,7 @@ func test_identical_fingerprint_is_admitted() -> void:
+ func test_wire_protocol_marker_is_pinned() -> void:
+ 	# Changing this is a deliberate compatibility break: bump it together with
+ 	# the RPC surface and update this line in the same change.
+-	assert_eq(FINGERPRINT.WIRE_PROTOCOL, "tetherbound-invite-v7")
++	assert_eq(FINGERPRINT.WIRE_PROTOCOL, "tetherbound-invite-v8")
+ 
+ 
+ func test_current_fingerprint_matches_itself_and_names_every_part() -> void:
+@@ -47,7 +47,12 @@ func test_each_mismatch_names_what_differs() -> void:
+ 	var old_verdict := FINGERPRINT.compare(_local(), old_peer)
+ 	assert_false(bool(old_verdict.ok), "old portable-admission contract cannot join")
+ 	assert_eq(old_verdict.code, "incompatible_version")
+-	assert_true(str(old_verdict.reason).contains("host tetherbound-invite-v7, yours tetherbound-invite-v6"))
++	assert_true(str(old_verdict.reason).contains("host tetherbound-invite-v8, yours tetherbound-invite-v6"))
++	old_peer["wire_protocol"] = "tetherbound-invite-v7"
++	old_verdict = FINGERPRINT.compare(_local(), old_peer)
++	assert_false(bool(old_verdict.ok), "old admitted core lacks the required personal stat carriers")
++	assert_eq(old_verdict.code, "incompatible_version")
++	assert_true(str(old_verdict.reason).contains("host tetherbound-invite-v8, yours tetherbound-invite-v7"))
+ 	var theirs := _local()
+ 	theirs["wire_protocol"] = FINGERPRINT.WIRE_PROTOCOL + "-older"
+ 	var verdict := FINGERPRINT.compare(_local(), theirs)
