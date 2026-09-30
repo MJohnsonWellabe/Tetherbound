@@ -1,0 +1,41 @@
+{
+	"frames": [
+		{
+			"body": [
+				8.5798397064209,
+				0.900770962238312,
+				14.2087469100952
+			],
+			"camera": [
+				7.16916131973267,
+				2.95061826705933,
+				14.2087459564209
+			],
+			"height": 1080,
+			"image": "farm-door-day.png",
+			"renderer": "gl_compatibility",
+			"time": "day",
+			"width": 1920,
+			"yaw": -1.5707963267949
+		},
+		{
+			"body": [
+				8.5798397064209,
+				0.900770962238312,
+				14.2087469100952
+			],
+			"camera": [
+				7.16916656494141,
+				2.95061874389648,
+				14.2087469100952
+			],
+			"height": 1080,
+			"image": "farm-door-night.png",
+			"renderer": "gl_compatibility",
+			"time": "night",
+			"width": 1920,
+			"yaw": -1.5707963267949
+		}
+	],
+	"shortcuts": "authored post-opening flags/starter; one inherited initial farmhouse floor placement/yaw; injected parsed joypad/look; production WorldLook day/night frozen and clear weather. No body/camera/HUD/model changes, image resizing, real-device or full visual-bar verdict."
+}
