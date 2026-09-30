@@ -1,0 +1,82 @@
+--- original/tests/smoke_move_effects_library.gd
++++ derived/.tmp/f25-r24/capture.gd
+@@ -22,6 +22,9 @@
+ var _medium := false
+ var _light_lifecycle: Dictionary = {}
+ var _identity := ""
++# Scoped visual diagnostic only. Default original harness coverage is retained.
++var _capture_families := PackedStringArray()
++var _capture_ranks: Array[int] = []
+ 
+ func _initialize() -> void:
+ 	call_deferred("_run")
+@@ -32,6 +35,12 @@
+ 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
+ 		if arg == "--medium": _medium = true
+ 		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
++		if arg.begins_with("--families="): _capture_families = arg.trim_prefix("--families=").split(",")
++		if arg.begins_with("--ranks="):
++			for token: String in arg.trim_prefix("--ranks=").split(","):
++				if token not in ["1", "2", "3", "4", "5"] or _capture_ranks.has(int(token)):
++					push_error("Ranks must be distinct explicit integers from 1 to 5"); quit(1); return
++				_capture_ranks.append(int(token))
+ 	if _batch not in ["identities", "mastery", "library", "profile", "clock"]:
+ 		push_error("Unknown effect batch"); quit(1); return
+ 	if _batch in ["identities", "mastery", "profile"] and DisplayServer.get_name() == "headless":
+@@ -44,6 +53,14 @@
+ 				if _identity == "%s:r%d" % [str(case.id), rank]: known_identity = true
+ 		if _batch != "identities" or not known_identity:
+ 			push_error("Named identity must select one configured identity/rank in the identities batch"); quit(1); return
++	if not _capture_families.is_empty() or not _capture_ranks.is_empty():
++		if _batch != "mastery":
++			push_error("Family/rank selectors are explicit mastery visual diagnostics only"); quit(1); return
++		var seen_families: Dictionary = {}
++		for family: String in _capture_families:
++			if not LIBRARY.config().archetypes.has(family) or seen_families.has(family):
++				push_error("Families must name distinct configured archetypes"); quit(1); return
++			seen_families[family] = true
+ 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
+ 	_moves = data.moves
+ 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_out)):
+@@ -125,6 +142,7 @@
+ 		if _batch == "clock":
+ 			await _exercise({"id": "legacy-clock", "archetype": "stone_throw", "move_id": "pebble_toss", "legacy": true}, 1, 1, false)
+ 		for archetype: String in LIBRARY.config().archetypes:
++			if not _capture_families.is_empty() and not _capture_families.has(archetype): continue
+ 			var case := {"id": archetype, "archetype": archetype}
+ 			var chosen := ""
+ 			var count := 0
+@@ -137,7 +155,9 @@
+ 					chosen = id
+ 			if not chosen.is_empty(): case["move_id"] = chosen
+ 			if _batch == "mastery":
+-				for rank in range(1, 6): await _exercise(case, rank, 1, true)
++				for rank in range(1, 6):
++					if not _capture_ranks.is_empty() and not _capture_ranks.has(rank): continue
++					await _exercise(case, rank, 1, true)
+ 			else:
+ 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
+ 	var report := {"scope": "production_effect_nodes_synthetic_arena", "batch": _batch,
+@@ -147,6 +167,7 @@
+ 		"target": {"species": str(_scenarios.get("target_species", "mudsnout")), "production_model": _target != null, "scope": "posed production body; no encounter or HP authority"},
+ 		"medium_features": _medium, "cases": _records, "failures": _failures,
+ 		"light_lifecycle": _light_lifecycle, "selected_identity": _identity,
++		"selected_families": _capture_families, "selected_ranks": _capture_ranks,
+ 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
+ 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
+ 	var file := FileAccess.open(_out.path_join("results.json"), FileAccess.WRITE)
+@@ -387,6 +408,14 @@
+ 	var profile: Dictionary = row.body
+ 	var radius := float(row.parameters.size)
+ 	if str(profile.shape) == "stone": radius *= 1.5 # Authored geological ridges and randomized body scale.
++	if str(profile.shape) == "ice_crystal":
++		# Existing authored prism upper tip (.14,.55*height,.07), lower tip
++		# (0,-.45*height,0) and ring radius1 at -.12*height. Include each
++		# exact envelope instead of treating a long crystal as a radius1 orb.
++		var height := float(profile.get("height_ratio", 3.8))
++		var upper := sqrt(0.14 * 0.14 + 0.07 * 0.07 + pow(0.55 * height, 2.0))
++		var ring := sqrt(1.0 + pow(0.12 * height, 2.0))
++		radius *= maxf(upper, maxf(absf(0.45 * height), ring))
+ 	if str(profile.shape) == "flame_orb": radius *= float(profile.get("card_extent_scale", 3.2)) * 0.5
+ 	for layer: Dictionary in profile.get("layers", []):
+ 		var extent := float(layer.get("size_scale", 1.0)) * float(layer.get("card_extent_scale", 3.2)) * 0.5
