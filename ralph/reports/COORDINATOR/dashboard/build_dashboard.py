@@ -203,6 +203,16 @@ debt_tbl = "".join(
 lanes = "".join(
     f'<tr><td>{E(l["lane"])}</td><td>{E(l.get("now", ""))}</td><td>{E(l.get("next", ""))}</td></tr>'
     for l in status.get("lanes", []))
+lane_activity = "".join(
+    f'<tr><td>{E(l["lane"])}</td><td>{E(l.get("checkpoint", ""))}</td></tr>'
+    for l in status.get("lane_activity", []))
+lane_activity_section = (
+    '<section class="panel"><h2>Latest lane activity</h2>'
+    f'<p class="meta">Last lane refresh {E(status.get("last_lane_refresh", ""))}. '
+    'Branch checkpoints below do not increase acceptance on main.</p>'
+    '<div class="tbl"><table><thead><tr><th>Lane</th><th>Latest checkpoint</th></tr></thead>'
+    f'<tbody>{lane_activity}</tbody></table></div></section>'
+    if lane_activity else "")
 legend = "".join(f'<span class="leg">{pill(k)} {counts[k]}</span>' for k in ORDER)
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
@@ -316,6 +326,7 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
     <div class="tbl"><table><thead><tr><th>Batch</th><th>SHA</th><th>State</th><th>Contents</th></tr></thead><tbody>{batches}</tbody></table></div></section>
   <section class="panel"><h2>Lanes</h2>
     <div class="tbl"><table><thead><tr><th>Lane</th><th>Working on</th><th>Next</th></tr></thead><tbody>{lanes}</tbody></table></div></section>
+  {lane_activity_section}
   <div class="two">
     <section class="panel"><h3>Decisions made</h3><ul class="plain">{li(status.get("decisions", []))}</ul></section>
     <section class="panel"><h3>Needs the owner</h3><ul class="plain">{li(status.get("owner_needs", []))}</ul></section>
