@@ -138,6 +138,12 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("porosity", float(profile.get("porosity", 0.62)))
 		out.set_shader_parameter("curl_scale", float(profile.get("curl_scale", 6.0)))
 		out.set_shader_parameter("heat_warp", float(profile.get("heat_warp", 0.22)))
+		out.set_shader_parameter("afterburn_strength", float(profile.get("afterburn_strength", 0.0)))
+		out.set_shader_parameter("afterburn_start", float(profile.get("afterburn_start", 0.04)))
+		out.set_shader_parameter("afterburn_end", float(profile.get("afterburn_end", 0.32)))
+		out.set_shader_parameter("afterburn_colour", Color(str(profile.get("afterburn_colour", "#574c40"))))
+		out.set_shader_parameter("emission_fade_power", float(profile.get("emission_fade_power", 2.2)))
+		out.set_shader_parameter("afterburn_porosity", float(profile.get("afterburn_porosity", 0.55)))
 		return out
 	if kind == "flame_tongue" or (kind == "soft_trail" and str(profile.get("style", "")) == "painted_flame"):
 		out.shader = TONGUE_SHADER

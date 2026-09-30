@@ -373,6 +373,7 @@ func _build_impact() -> void:
 	if bool(profile.get("air_surface", false)): core.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
 	if bool(profile.get("shadow_surface", false)): core.material_override = GEOMETRY.authored_material("shadow_surface", profile, _colour)
 	if bool(profile.get("root_stone_surface", false)): core.material_override = GEOMETRY.authored_material("root_stone_surface", profile, _colour)
+	if bool(profile.get("thermal_aftermath", false)) and str(profile.get("shape", "")) == "fire_explosion": core.set_meta("thermal_aftermath", true)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	core.position = surface_offset
@@ -381,6 +382,7 @@ func _build_impact() -> void:
 		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
 			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
 		if str(layer.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
+		if bool(layer.get("thermal_aftermath", false)) and str(layer.get("shape", "")) == "fire_explosion": part.set_meta("thermal_aftermath", true)
 		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
 		part.reparent(_impact, false)
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
@@ -391,6 +393,7 @@ func _build_impact() -> void:
 	if bool(_row.impact_layer):
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
 		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
+		if bool(profile.get("thermal_aftermath", false)) and str(profile.get("secondary_shape", "")) == "fire_explosion": secondary.set_meta("thermal_aftermath", true)
 		secondary.set_meta("base_opacity", 0.65)
 		secondary.reparent(_impact, false)
 		secondary.position = surface_offset
@@ -501,6 +504,8 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 func _update_puffs(u: float) -> void:
 	if _puffs == null: return
 	var profile: Dictionary = _row.impact
+	if bool(profile.get("thermal_aftermath", false)) and str(profile.get("puff_shape", "")) == "fire_explosion" and _puffs.material_override is ShaderMaterial:
+		(_puffs.material_override as ShaderMaterial).set_shader_parameter("impact_age", u)
 	var growth_u := pow(u, clampf(float(profile.get("growth_power", 1.0)), 0.2, 3.0))
 	var extent := _puff_extent * lerpf(float(profile.get("puff_start_radius_scale", 0.65)), float(profile.get("puff_end_radius_scale", 1.4)), growth_u)
 	var reveal := pow(u, maxf(0.0, float(profile.puff_reveal_power))) if profile.has("puff_reveal_power") else 1.0
@@ -521,6 +526,8 @@ func _update_impact(u: float, delta: float) -> void:
 		if child is MeshInstance3D:
 			var alpha := (1.0 - u) * float(child.get_meta("base_opacity", profile.get("opacity", 0.82)))
 			_set_opacity(child.material_override, alpha)
+			if bool(child.get_meta("thermal_aftermath", false)) and child.material_override is ShaderMaterial:
+				(child.material_override as ShaderMaterial).set_shader_parameter("impact_age", u)
 	var growth_u := pow(u, clampf(float(profile.get("growth_power", 1.0)), 0.2, 3.0))
 	var growth := lerpf(float(profile.get("initial_grow", 0.35)), float(profile.get("grow", 2.0)), growth_u)
 	for child: Node in _impact.get_children():

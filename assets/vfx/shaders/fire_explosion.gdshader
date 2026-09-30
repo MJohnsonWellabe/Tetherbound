@@ -13,6 +13,15 @@ uniform float edge_breakup = 0.19;
 uniform float porosity = 0.62;
 uniform float curl_scale = 6.0;
 uniform float heat_warp = 0.22;
+// Optional presentation age from the existing impact lifetime. Zero strength
+// preserves the original material for every profile that does not opt in.
+uniform float impact_age = 0.0;
+uniform float afterburn_strength = 0.0;
+uniform float afterburn_start = 0.04;
+uniform float afterburn_end = 0.32;
+uniform vec4 afterburn_colour : source_color = vec4(0.34, 0.30, 0.25, 1.0);
+uniform float emission_fade_power = 2.2;
+uniform float afterburn_porosity = 0.55;
 varying float phase_seed;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -56,12 +65,19 @@ void fragment() {
     float heat = clamp(interior * 0.48 + curls * 0.42 + folds * 0.24, 0.0, 1.0);
     vec3 colour = mix(ember_colour.rgb, flame_colour.rgb, smoothstep(0.07, 0.40, heat));
     colour = mix(colour, hot_colour.rgb, smoothstep(0.60, 0.94, heat));
+    float cooling = smoothstep(afterburn_start, max(afterburn_start + 0.001, afterburn_end), clamp(impact_age, 0.0, 1.0))
+                  * clamp(afterburn_strength, 0.0, 1.0);
+    // Cooling retains a few narrow hot folds and exposes the target through
+    // advected holes instead of holding the same luminous mass until deletion.
+    colour = mix(colour, afterburn_colour.rgb, cooling * mix(1.0, 0.65, folds));
     ALBEDO = colour;
     // Curved view-space normals admit the same local world/light interaction
     // as the dust cards, while hot folds carry their own bounded emission.
     NORMAL = normalize(vec3(p.x * 0.5, -p.y * 0.5, sqrt(max(0.15, 1.0 - dot(p, p) * 0.5))));
     ROUGHNESS = 0.9;
     SPECULAR = 0.0;
-    EMISSION = colour * emission_strength * (0.25 + smoothstep(0.28, 0.90, heat) * 0.75);
-    ALPHA = mask * opacity * mix(1.0, density, clamp(porosity, 0.0, 1.0));
+    EMISSION = colour * emission_strength * (0.25 + smoothstep(0.28, 0.90, heat) * 0.75)
+             * pow(max(0.0, 1.0 - cooling), max(0.1, emission_fade_power));
+    ALPHA = mask * opacity * mix(1.0, density, clamp(porosity, 0.0, 1.0))
+          * mix(1.0, density, cooling * clamp(afterburn_porosity, 0.0, 1.0));
 }
