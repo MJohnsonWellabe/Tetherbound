@@ -74,25 +74,42 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var profile := pair_profile(ally, foe, config)
 	var point := pivot(ally, foe, config, profile)
 	var start_pitch := pitch + (deg_to_rad(float(profile.get("pitch_offset_deg", 0.0))) if apply_pitch_offset else 0.0)
-	var offsets: Array = config.get("orbit_candidates_deg", [0.0,15.0,-15.0,30.0,-30.0,45.0,-45.0,60.0,-60.0])
+	var offsets: Array = (config.get("orbit_candidates_deg", [0.0,15.0,-15.0,30.0,-30.0,45.0,-45.0,60.0,-60.0]) as Array).duplicate()
+	# A fixed angular grid can miss the narrow side-on interval between a
+	# short body and a tall neighbour. Include the actual pair's side-on view;
+	# manual grace and obstruction handling remain at the caller.
+	var line := foe.get_center() - ally.get_center()
+	if Vector2(line.x,line.z).length_squared() > 0.0001:
+		var side_yaw := atan2(line.x,line.z) + PI * .5
+		for side: float in [side_yaw, side_yaw + PI]:
+			var offset := rad_to_deg(wrapf(side-yaw,-PI,PI))
+			if not offsets.has(offset): offsets.append(offset)
+	offsets.sort_custom(func(a: Variant,b: Variant) -> bool: return absf(float(a)) < absf(float(b)))
+	var maximum := maxf(0.01,float(config.get("max_distance_m",48.0)))
+	var distance_steps := clampi(int(config.get("separation_distance_steps",8)),1,12)
+	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
 	for raw: Variant in offsets:
 		var offset := float(raw)
 		var basis := Basis.from_euler(Vector3(start_pitch, yaw + deg_to_rad(offset), 0.0))
-		var distance := maxf(base_distance + float(profile.get("distance_offset_m", 0.0)), required_distance(ally, foe, point, basis,
+		var minimum := maxf(base_distance + float(profile.get("distance_offset_m", 0.0)), required_distance(ally, foe, point, basis,
 			vertical_fov_deg, aspect, float(config.get("frame_fill", 0.82)), float(config.get("near_clearance_m", 0.5))))
-		distance = minf(distance, float(config.get("max_distance_m", 48.0)))
-		var transform := Transform3D(basis, point + basis.z * distance)
-		var a := project_box(ally, transform, vertical_fov_deg, aspect, 0.05)
-		var b := project_box(foe, transform, vertical_fov_deg, aspect, 0.05)
-		if not bool(a.get("valid", false)) or not bool(b.get("valid", false)): continue
-		var overlap := overlap_ratio(a.rect, b.rect)
-		var passed := bool(a.in_frame) and bool(b.in_frame) and overlap <= float(config.get("max_actor_overlap", 0.0))
-		var framed := bool(a.in_frame) and bool(b.in_frame)
-		var candidate := {"pair": profile.pair, "pivot": point, "distance": distance, "pitch": start_pitch,
-			"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}
-		if best.is_empty() or (framed and not bool(best.framed)) \
-				or (framed == bool(best.framed) and overlap < float(best.overlap)):
-			best = candidate
-		if passed: return candidate
+		# Framing alone does not separate projected boxes. Search bounded
+		# distances as well, preserving native size and the hard distance cap.
+		for step: int in distance_steps + 1:
+			var distance := minf(minimum * pow(distance_scale,step),maximum) if step < distance_steps else maximum
+			var transform := Transform3D(basis, point + basis.z * distance)
+			var a := project_box(ally, transform, vertical_fov_deg, aspect, 0.05)
+			var b := project_box(foe, transform, vertical_fov_deg, aspect, 0.05)
+			if not bool(a.get("valid", false)) or not bool(b.get("valid", false)): continue
+			var overlap := overlap_ratio(a.rect, b.rect)
+			var passed := bool(a.in_frame) and bool(b.in_frame) and overlap <= float(config.get("max_actor_overlap", 0.0))
+			var framed := bool(a.in_frame) and bool(b.in_frame)
+			var candidate := {"pair": profile.pair, "pivot": point, "distance": distance, "pitch": start_pitch,
+				"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}
+			if best.is_empty() or (framed and not bool(best.framed)) \
+					or (framed == bool(best.framed) and overlap < float(best.overlap)):
+				best = candidate
+			if passed: return candidate
+			if distance >= maximum: break
 	return best
