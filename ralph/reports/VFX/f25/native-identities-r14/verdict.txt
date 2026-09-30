@@ -1,0 +1,19 @@
+Source: 89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e
+Selected unit: PASS, one test, 27 assertions, exit 0.
+Native Compatibility identities: RED, exit 1, Lease remains small-stones:r1.
+All 12 cases and all 36 untouched 1920x1080 PNGs retained; original motion AVI retained.
+All 18 new light lifecycle/audio observation checks passed.
+All Godot console/GUI processes exited; token explicitly released.
+No parser/shader errors. No native check removed or weakened.
+
+First-case evidence: arrival at wall 1.792404s, impact capture at wall 2.253433s,
+42 end slots, separate schedule and arrival both process frame 78.
+Fixture termination uses wall time, while MovieMaker advances effect presentation
+at fixed 30fps. Cold shader/material work and image/movie encoding can consume wall
+time without the same simulation advancement. This is the leading diagnosis, not
+a proven production leak fix. Preserve RED pending exact clock/release witness.
+The other eleven original cases end with zero slots.
+
+Scope: synthetic production nodes/posed model only. No real combat/HP/player path,
+four-creature Medium performance, Ally, final audio mix or independent craft PASS.
+All F25 criteria remain OPEN and the production library remains flag-off.

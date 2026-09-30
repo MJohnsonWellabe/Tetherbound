@@ -1,0 +1,24 @@
+{
+  "source_commit": "89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-vfx",
+    "--script",
+    "res://tests/run_tests.gd",
+    "--",
+    "--only=test_move_effects.gd::test_light_cap_is_global_idempotent_and_reclaims_existing_lease"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 7.062,
+  "tracked_process_ids": [
+    268,
+    11412
+  ],
+  "owned_orphan_cleanup": [],
+  "godot_processes_remaining": [],
+  "errors": [],
+  "scope": "Selected light lease check or synthetic production-node presentation; no gameplay/HP/performance/full craft proof"
+}
