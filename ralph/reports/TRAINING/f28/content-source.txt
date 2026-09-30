@@ -1,6 +1,14 @@
 F28 content authoring scope and evidence
 
 Exact owned files: data/config/masters.json and data/recipes/feasts.json.
+New owned scripts/creatures/breakthrough.gd validates authored recipe tables
+and provides detached cook/feed intent plans only, always ready_to_commit:false
+and with no state/save/item/cap mutation. Both disabled flags refuse gameplay
+plans; unknown output SKUs, unknown recipe, wrong type, missing personal recipe,
+missing attachment tier, material/capacity deficit and absent admitted creature
+mirror refuse. It does not manufacture caught-above-cap history or compose
+ultimate/traits/learnset/evolution/Dive effects; those are named commit needs.
+This new source is unparsed/unexecuted and needs the same later scoped batch.
 No F29 source, learnset, creature roster/evolution field, actor asset, terrain,
 shared state, Session, ItemDB consumer or runtime station changed.
 F27/F31 activation dependencies remain held; both data files are disabled and
