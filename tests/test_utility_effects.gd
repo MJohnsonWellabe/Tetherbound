@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 const EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 const MOVES := preload("res://scripts/creatures/move_db.gd")
 const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
 func _host(action_id: String = "host-action-1") -> Dictionary:
 	return {"action_id": action_id, "encounter_id": "fight-1", "generation": 3,
@@ -218,3 +219,30 @@ func test_actor_vitals_fail_closed_on_shapes_capacity_and_receipt_budget() -> vo
 	var corrupt: Dictionary = staged.duplicate(true)
 	corrupt.amount = {}
 	assert_false(host.commit_actor_vitals(corrupt).ok, "host API refuses malformed proposal without conversion crash")
+
+
+func test_movement_lease_is_owner_scoped_and_duplicate_cannot_extend_or_resurrect_root() -> void:
+	var body := CREATURE_BODY.new()
+	assert_false(body.apply_combat_movement_status("owned-1", 3, 1, 0.0, 1.0), "unbound body cannot receive a status")
+	assert_true(body.bind_combat_movement_owner("owned-1", 3))
+	assert_true(body.apply_combat_movement_status("owned-1", 3, 1, 0.0, 1.0))
+	var expiry := int(body.get("_combat_movement_status").expires_at_ms)
+	assert_eq(body.combat_movement_multiplier(expiry - 1), 0.0)
+	assert_eq(body.combat_movement_multiplier(expiry), 1.0, "expiry returns ordinary locomotion without granting immunity")
+	assert_true(body.apply_combat_movement_status("owned-1", 3, 1, 0.0, 60.0))
+	assert_eq(body.get("_combat_movement_status").expires_at_ms, expiry, "duplicate may not extend the deadline")
+	assert_eq(body.combat_movement_multiplier(expiry + 1), 1.0)
+	assert_false(body.apply_combat_movement_status("owned-2", 3, 2, 0.0, 1.0))
+	assert_false(body.apply_combat_movement_status("owned-1", 2, 2, 0.0, 1.0))
+	assert_false(body.apply_combat_movement_status("owned-1", 3, 0, 1.15, 1.0))
+	assert_false(body.apply_combat_movement_status("owned-1", 3, 2, NAN, 1.0))
+	assert_false(body.apply_combat_movement_status("owned-1", 3, 2, 1.15, INF))
+	assert_false(body.bind_combat_movement_owner("replacement-uid", 3))
+	assert_true(body.bind_combat_movement_owner("owned-1", 4))
+	assert_eq(body.combat_movement_multiplier(), 1.0, "new body generation clears stale root")
+	assert_false(body.apply_combat_movement_status("owned-1", 3, 99, 0.0, 1.0))
+	assert_true(body.apply_combat_movement_status("owned-1", 4, 2, 1.15, 1.0))
+	body.reset_combat_movement_owner()
+	assert_eq(body.combat_movement_multiplier(), 1.0)
+	assert_false(body.apply_combat_movement_status("owned-1", 4, 99, 0.0, 1.0))
+	body.free()
