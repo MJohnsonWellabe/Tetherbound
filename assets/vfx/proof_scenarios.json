@@ -1,0 +1,71 @@
+{
+  "scope": "Actual production effect nodes in synthetic scene; not gameplay acceptance.",
+  "warmup_frames": 30,
+  "identity_travel_seconds": 0.7,
+  "ranks": [
+    1,
+    3,
+    5
+  ],
+  "capture_phases": {
+    "flight": 0.78,
+    "contact": 1,
+    "impact": 1.14
+  },
+  "identities": [
+    {
+      "id": "small-stones",
+      "move_id": "pebble_toss",
+      "archetype": "stone_throw"
+    },
+    {
+      "id": "large-stone",
+      "move_id": "rock_throw",
+      "archetype": "stone_throw"
+    },
+    {
+      "id": "burning-orb",
+      "move_id": "fireball",
+      "archetype": "fireball"
+    },
+    {
+      "id": "descending-bolt",
+      "move_id": "thunder_break",
+      "archetype": "sky_lightning"
+    }
+  ],
+  "ordinary_player_witness": {
+    "scope": "Separate production combat input path; no HP/result fixture mutation.",
+    "moves": [
+      "pebble_toss",
+      "rock_throw",
+      "fireball",
+      "thunder_break"
+    ],
+    "observe": [
+      "accepted action/resources",
+      "immutable host launch",
+      "effect contact",
+      "host damage result",
+      "first visible damage number"
+    ],
+    "assert": [
+      "No damage/number before visible hit",
+      "Presentation cancellation never controls host timing",
+      "Compatibility draws four identities"
+    ]
+  },
+  "four_creature_medium_witness": {
+    "scope": "Separate real admitted four-creature encounter on actual Forward+ Medium, 1920x1080.",
+    "choose_load": "Select highest-cost actual move combination from four-effect profiles and trigger via admitted actions.",
+    "record": [
+      "actual settings/renderer",
+      "creature/move ids",
+      "raw frame samples",
+      "P95/P99",
+      "particle peak/cap",
+      "log/capture provenance"
+    ],
+    "limits": "Synthetic profile ranks candidates only; cannot certify fight or Ally."
+  }
+}
