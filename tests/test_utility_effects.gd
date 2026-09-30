@@ -475,7 +475,7 @@ func test_ultimate_meter_refuses_fake_gain_and_bounded_history_never_evicts_repl
 	var original_limit: Variant = cfg.receipt_limit_per_creature
 	cfg.receipt_limit_per_creature = 3
 	var host := ENCOUNTER_HOST.new(1)
-	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "position": [2, 0, 0], "card": {"uid": "foe-1"}}, "owned-1", "character-1")
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0, "position": [2, 0, 0], "card": {"uid": "foe-1"}}, "owned-1", "character-1")
 	var id := str(record.encounter_id)
 	host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 1)
 	var baseline: Dictionary = host.record(id).duplicate(true)
