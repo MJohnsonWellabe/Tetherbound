@@ -51,3 +51,27 @@ retains its complete branched stroke through early impact. This is geometry and
 material work based on the restored Palworld combat reference, not a shutter
 or global-grade adjustment. These source changes require new native captures
 and independent judging; they do not establish a visual PASS.
+
+## Native identity rework captures (r3)
+
+Executed exact pushed source: `a90aa0c0563d29903842529c256d1f3581465437`.
+Godot 4.7 official `5b4e0cb0f`, native OpenGL Compatibility, NVIDIA GTX 1060
+3GB / driver 560.94; 1920×1080; isolated APPDATA `D:/tetherbound/vfx-proof-home`.
+Command: `Godot_v4.7-stable_win64_console.exe --path D:/tetherbound/redesign-vfx --rendering-method gl_compatibility --resolution 1920x1080 --script tests/smoke_move_effects_library.gd -- --batch=identities --out=D:/tetherbound/vfx-identities-native-r3`.
+
+Native exit 0, 12 cases, 0 failures, 0 ERROR/SCRIPT ERROR lines. The retained
+`native-identities-r3/` contains all 36 neutral PNGs, unmodified raw results and
+native log, plus SHA-256 inventory. Independently checked PNG headers are all
+1920×1080; each flight shutter preceded arrival, each contact/impact shutter
+followed actual arrival, every arrival frame equals its separately created
+local schedule frame, and all particle leases release to zero. No shader repair
+was needed during this run. Original procedural shader/geometry provenance is
+recorded in `assets/vfx/procedural_provenance.csv`.
+
+Scope remains four actual production move profiles at ranks 1/3/5 in the
+synthetic arena, slowed to 0.7-second travel, with process-local library opt-in.
+It is not an earned player path, multiplayer damage/contact witness, all-24
+visual result, Medium four-creature fight performance result or Ally result.
+The tracked flag remains off. The r1/r2 rejected evidence is preserved. A fresh
+independent code-blind judge must assess these PNGs against the full visual bar;
+native execution and source improvements alone do not close F25#2 or #5.
