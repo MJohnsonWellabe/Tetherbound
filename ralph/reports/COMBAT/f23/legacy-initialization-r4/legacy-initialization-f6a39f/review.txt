@@ -1,0 +1,23 @@
+Independent narrow successor source gate: SOURCE PASS (bounded; no acceptance MET)
+Legacy initializer R4 / f6a39f.
+
+Frozen exact qualification
+Base 858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf.
+legacy-initialization.patch SHA256 f6a39f5f4d541ce6f5be6398b44db4fcaf2b1685002bd213e38197f53f259c21.
+Panel candidate SHA256 4f6342d57824a7d6b9f801b3db02c25c2cc0b0d291043906e3cb7d4f7ffcdf12.
+Exact hunk application against frozen base reproduces every supplied candidate hash. CreatureInstance, Teaching, SaveGame and LoadoutService are byte-identical to the reviewed R3 outputs. Only Panel.open differs; see r3-to-r4.diff, source-basis.json and candidate-hashes.json. R1/R2 and the original R3 SOURCE FAIL remain intact.
+
+R3 P2 correction passes
+Candidate scripts/ui/loadout_panel.gd:37-48.
+After successful prepare_legacy_loadouts and before selection/mouse/view mutation, the caller now repeats _open, _closing, pending edit, INPUT_OWNER.current and station availability guards. It rereads Game and party and requires the same Game, the same party, nonnull party and size 1..5. Selection uses that verified current party.
+If an emitting fallback callback opens another input owner, the post-initializer guard refuses the outer opening. If the same panel opened or became closing/pending during the callback, the explicit local state guard also refuses. Changed/unavailable station, replaced Game/party or now-empty/oversized party refuse before mouse/view/selection changes. The successful personal initialization remains persisted; refusal of the view does not erase or roll it back. No new callback boundary is introduced between the verified current-party guard and selecting its first member in the actual Party implementation.
+
+Reused findings and remaining scope
+The unchanged strict whole-party canonical UID/species/carrier checks, preserved quick/charged/known/slots/mastery, earned level/tier-only added knowledge, no automatic compatible-TM/default-signature grants, positive use history refusal, detached whole-party staging, actual inactive Session/host checks after cleanup and before mutation, and complete seven-field/marker rollback on prepared-save false retain their source qualification from:
+D:/tetherbound/redesign-combat/.tmp/independent-combat-review/legacy-initialization-a4320d/review.txt
+That raw report remains SOURCE FAIL for its original panel candidate; this successor does not rewrite it.
+Real prepared-writer behavior remains pinned at neutral commit 289efe0d8d76d9c27e2efecb465e47246b32f454 in the R3 neutral-source-basis.json. The base-858 SaveGame candidate lacks save_character_prepared and currently fails closed; Foundation must port the compatibility codec onto its actual prepared-writer implementation without replacing that whole neutral file. No unpinned integration adaptation is approved here.
+Named authored enabled Altar/camp player path, hosted Session admission normalization/CAS, actual personal-write refusal/reload, native reentrant completion, station refusal UI and ACK/rejoin evidence remain OPEN. No F23 acceptance criterion is MET from this source gate, and no main merge or runtime success is implied.
+
+Operations
+Independent read-only small correction review, exact hash/hunk freeze and byte-delta verification; unchanged source results reused. No engine/parser/tests/GPU/import/render/export, Git mutation, tracked edit, board/STATE change or Foundation source modification. Native syntax and runtime behavior are not proved by source inspection. No test was altered, disabled or quarantined.

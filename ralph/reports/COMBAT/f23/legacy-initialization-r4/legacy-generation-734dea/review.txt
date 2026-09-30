@@ -1,0 +1,34 @@
+INDEPENDENT NARROW SOURCE GATE — LEGACY/INITIALIZED LOADOUT CODEC
+Verdict: SOURCE PASS for the bounded local v28 additive-absence distinction.
+This does not close F23 or prove runtime/save/co-op behavior. The legacy initialization gap below remains open before activation claims.
+
+Frozen identity and scope
+- Combat source base: 858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf.
+- Patch SHA256: 734dea247b91dcb75899cb9bc86f656b6bbbd2d702a51533e501afd452800855.
+- Candidate CreatureInstance SHA256: 6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8.
+- Candidate Teaching SHA256: 912a26ba74c9d6bf87bfb52320989dec0f311ab840f1ad3188aa8781afe516c7.
+- Candidate SaveGame SHA256: faa1bb30215ace6d2dc8876cec359ebd362766f5d90d86107b5847121691ad03.
+- Patch/manifest, exact pinned source blobs and in-memory candidate files are frozen beside this review under baseline/ and candidate/. Exact hunks reconstruct all three declared hashes. No test or fourth product file is in the patch.
+- Separate actual neutral baseline: 289efe0d8d76d9c27e2efecb465e47246b32f454; SaveGame SHA256 acd722433f3d0d7393ff0c689f7b65ce7fdb1f44f349a1515950a7dc809079d8. Frozen separately under neutral-289-baseline/.
+
+Bounded source findings
+1. The new bool loadout_initialized is live-only and starts false. It is not a client-supplied permission, durable schema version, invented known ID, or fixture-name exception. initialize_loadout requires an actual Dictionary moves block before setting true. Existing from_species sets the real authored defaults and invokes that initializer; its source body is unchanged. Custom/no-moves definitions therefore no longer gain F23 knowledge merely by coinciding with a catalogue/learnset ID.
+2. _party_to_array always preserves the original quick/charged and unrelated individual state. It emits the complete seven-field document if the marker is true OR any known moves, mastery-use dictionary, mastery-receipt dictionary, utility/ultimate string, nonzero revision or edit receipt is present. Thus clearing the live marker cannot hide populated modern state. There is no partial seven-field writer branch.
+3. _array_to_party validates the whole party/carrier before clear/apply as previously. It reconstructs CreatureInstance.new(), preserving the distinction instead of invoking from_species. A valid present seven-field document sets the marker true and restores all modern values, including a legitimate all-empty document. Absent modern fields leave the marker false and preserve original equipped quick/charged strings; the next ordinary save does not invent modern knowledge/mastery/eligibility. No identity/species/stat repair or duplicate-UID remint code changed.
+4. party_loadout_errors, admitted_party_errors, allowed_saved_moves, stage_saved_loadout, stage_loadout_edit and character_loadout_mirror compare exactly with the pinned original. Partial modern documents still refuse; canonical UID uniqueness, saved slot/knowledge/mastery/receipt validity, authored eligibility, typed mirror and strict admitted known-species rules are unchanged. The compare-carrier branch still rejects missing modern fields when a modern move carrier already exists. Local old-row tolerance does not become an admission fallback.
+5. refresh_known_moves now returns for uninitialized rows. Initialized real authored creatures and restored modern rows still gain eligible knowledge when the existing level methods call refresh; the guard changes no level/stat arithmetic. This also prevents ordinary leveling of local legacy/custom rows from silently restamping their generation.
+6. All CreatureInstance function bodies are unchanged. Only Teaching.initialize_loadout/refresh_known_moves and SaveGame._party_to_array/_array_to_party change. Snapshot, schema/version/refusal and all other save functions remain identical to the declared combat base. No v27-or-older reset/refusal behavior, test assertion, fixture, test selection or skip/quarantine is altered.
+
+Neutral adaptation boundary
+The combat858 file is not the integrated neutral289 file and must not replace it wholesale. The two codec function bodies in actual neutral289 are exactly equal to the combat858 originals; therefore the narrowly reviewed SaveGame codec hunks can be adapted without changing neutral prepared/world-journal methods. The actual neutral save_world_prepared and _write_world_snapshot exist and are captured. This review did not apply or reconstruct an integrated neutral candidate, so it does not certify a future adaptation or merge. The sole foundation owner must keep those hooks intact and check the actual adapted semantic delta.
+
+Explicit legacy gameplay/initialization gap
+A known-species old v28 row with no seven-field document remains uninitialized after Continue and has an empty modern known list, even if its saved quick/charged IDs are legitimate. The only actual initialize_loadout call found is from_species; the restoration path uses new(). Existing gain_xp/gain_levels/set_level call refresh, which now returns for such rows. The current local Altar stage cannot equip a nonempty quick/charged request absent from that empty known list. The active-session Altar path explicitly refuses an encoded row without known_moves as canonical_loadout_unavailable. There is no implemented authoritative station/admission initialization transaction for these existing owned rows in this patch.
+This is a disclosed future integration requirement: initialize from actual authored definitions/earned eligibility at an appropriate host-owned boundary while preserving UID, existing equipped moves, earned knowledge, mirror, personal durability and rollback. Do not mint packet identities, arbitrarily trust saved moves, reset earned records, or claim old-row F23 functionality from this codec pass. The patch's purpose is honest local absence compatibility, not a completed migration to playable modern loadouts.
+
+Checks and shortcuts
+- Only pinned-source reading, hash freeze, exact in-memory hunk application and bounded source-function comparisons ran. Audit: ../legacy_generation_734dea_audit.py.
+- No Godot parser/import, unit test, actual save/load, writer failure, owner-save failure, co-op/rejoin, GPU/render/export, Git mutation or tracked write occurred.
+- The three original failing methods are untouched by this patch; no assertion was adapted to get green. Their affected execution remains necessary to claim the reported failures fixed. Previously reported broad batch native1/six failures are retained, not regraded or attributed to passing behavior here.
+- Neutral-adapted semantics and actual runtime behavior remain separate future gates. Minimum affected post-batch checks are appropriate after that source gate; no repeated broad suite is requested by this report.
+- Prior combat R3 c66227 bounded SOURCEPASS is independent and unchanged. No F23/F24 acceptance MET, owner-save or runtime activation proof is granted.

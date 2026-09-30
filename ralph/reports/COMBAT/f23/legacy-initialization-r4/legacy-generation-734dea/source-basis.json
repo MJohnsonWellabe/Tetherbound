@@ -1,0 +1,37 @@
+{
+  "source_base": "858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf",
+  "pinned_sources": {
+    "scripts/creatures/creature_instance.gd": {
+      "git_blob": "042a5d113c80f0b066f378b89966242785a81d41",
+      "sha256": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428"
+    },
+    "scripts/creatures/teaching.gd": {
+      "git_blob": "ea52250aec6d4376fdd0b36d8e6a39dbf2655d67",
+      "sha256": "b329abd6c96a94d37d31e6908fafa4554373d0119856157d4eaa84ac53f61267"
+    },
+    "scripts/save/save_game.gd": {
+      "git_blob": "179cb0bf7579369d93c90f8d156610a05f5f113b",
+      "sha256": "70b7084ec5e45d00d14ca8d9ec9490f21159d6a8872359a4d2a1693d2e59dfdc"
+    },
+    "scripts/creatures/loadout_service.gd": {
+      "git_blob": "e1eeef1f70f4e34ae0560d449b93d86758ea7fc6",
+      "sha256": "9f0ff0e0e5ebafa0c9e4d557bcba09215938e7a00cbd2b6a96f7ffd10d0d7b39"
+    },
+    "scripts/creatures/creature_species.gd": {
+      "git_blob": "57f04e6c88a1f61da14b795d2965b2ee2991da20",
+      "sha256": "22be0364b448437e0afc075c2141b709fd6ad1be22dfc85d34435290d30591e3"
+    },
+    "data/creatures/species.json": {
+      "git_blob": "d209ccb6585e14ef27e1a1af48cde9fa284f19e5",
+      "sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f"
+    },
+    "data/moves/learnsets.json": {
+      "git_blob": "a794ed984db588bce5eef0b08197aee5bdaf4b24",
+      "sha256": "f5e149572b3fbb102811fb3b477b461735280308d0e7a588de00ac843d4c5bc9"
+    },
+    "tests/test_save_format.gd": {
+      "git_blob": "b4bb2b707b777ab38059e5b3d18c7e6f704fe667",
+      "sha256": "43e5d9fdb2c19a327a75f9398248f4e60551be2e960757bf2c4611d31abf40d8"
+    }
+  }
+}

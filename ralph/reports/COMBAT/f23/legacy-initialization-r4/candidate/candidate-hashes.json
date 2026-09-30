@@ -1,0 +1,16 @@
+{
+  "base": "858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf",
+  "predecessor": "734dea247b91dcb75899cb9bc86f656b6bbbd2d702a51533e501afd452800855 remains frozen/source-passed compatibility only; initialization R2 immutable, R3 also rechecks no active Session/host ownership after emitting fallback and before commit.; R3 SOURCEFAIL caller UI reentrancy preserved. R4 repeats UI/open/input/party/station guard after initializer before mouse/view mutation; successful persisted init is never rolled back for UI refusal.",
+  "tracked_edits": false,
+  "checks": "git apply --check only; no parser/engine/runtime",
+  "authority": "Registered local Altar/camp, host-owned live Party and validated save projection, all rows staged before mutation, prepared bool portable writer and whole field rollback. Active Session refuses initialization; foundation single admission must normalize first validated portable baseline or expose explicit CAS. No public packet knowledge import.",
+  "limits": "Positive old mastery without actual receipt history refuses without resetting it. Unknown local catalogue fallback stays readable but uninitialized. Session admission/ACK/rejoin, station refusal UI and named actual path proof remain open. No F23 MET.",
+  "sha256": {
+    "legacy-initialization.patch": "f6a39f5f4d541ce6f5be6398b44db4fcaf2b1685002bd213e38197f53f259c21",
+    "scripts\\creatures\\creature_instance.gd": "6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8",
+    "scripts\\creatures\\teaching.gd": "6cc79006a58b93d482665d99f6d220cdd26bf2e9bb581898b6547dcd7b523b26",
+    "scripts\\save\\save_game.gd": "faa1bb30215ace6d2dc8876cec359ebd362766f5d90d86107b5847121691ad03",
+    "scripts\\creatures\\loadout_service.gd": "dd14e87156e42e29df3eb71acd5e7a46d253fbeff386938e236b1653e039b8b8",
+    "scripts\\ui\\loadout_panel.gd": "4f6342d57824a7d6b9f801b3db02c25c2cc0b0d291043906e3cb7d4f7ffcdf12"
+  }
+}

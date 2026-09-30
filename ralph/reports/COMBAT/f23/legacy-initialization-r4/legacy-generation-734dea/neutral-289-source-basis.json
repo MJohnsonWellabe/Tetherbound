@@ -1,0 +1,12 @@
+{
+  "neutral_ref": "289efe0d8d76d9c27e2efecb465e47246b32f454",
+  "save_game_sha256": "acd722433f3d0d7393ff0c689f7b65ce7fdb1f44f349a1515950a7dc809079d8",
+  "unchanged_codec_functions": [
+    "_party_to_array",
+    "_array_to_party"
+  ],
+  "untouched_prepared_functions": [
+    "save_world_prepared",
+    "_write_world_snapshot"
+  ]
+}

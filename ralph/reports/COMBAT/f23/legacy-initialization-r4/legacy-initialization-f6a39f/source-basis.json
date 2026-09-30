@@ -1,0 +1,65 @@
+{
+  "base": "858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf",
+  "source_pins": {
+    "scripts/creatures/creature_instance.gd": {
+      "git_blob": "042a5d113c80f0b066f378b89966242785a81d41",
+      "sha256": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428"
+    },
+    "scripts/creatures/teaching.gd": {
+      "git_blob": "ea52250aec6d4376fdd0b36d8e6a39dbf2655d67",
+      "sha256": "b329abd6c96a94d37d31e6908fafa4554373d0119856157d4eaa84ac53f61267"
+    },
+    "scripts/save/save_game.gd": {
+      "git_blob": "179cb0bf7579369d93c90f8d156610a05f5f113b",
+      "sha256": "70b7084ec5e45d00d14ca8d9ec9490f21159d6a8872359a4d2a1693d2e59dfdc"
+    },
+    "scripts/creatures/loadout_service.gd": {
+      "git_blob": "e1eeef1f70f4e34ae0560d449b93d86758ea7fc6",
+      "sha256": "9f0ff0e0e5ebafa0c9e4d557bcba09215938e7a00cbd2b6a96f7ffd10d0d7b39"
+    },
+    "scripts/ui/loadout_panel.gd": {
+      "git_blob": "3cc374dd0e765dd02efbe9b7dc1b8fd6140d0e2f",
+      "sha256": "9336ad25a2c498c5ac4ee800e1e667536d028ff2de6511d1668380a32d85967a"
+    },
+    "autoload/player_state.gd": {
+      "git_blob": "5be5d554a5babb912ce464e3f640709ab1fe44b2",
+      "sha256": "e3be7612f71f0f28ea29a37ae3ddc98913153f4f30983b0b9ea8f8290d1b3b65"
+    },
+    "autoload/game_state.gd": {
+      "git_blob": "af22e22780983cdcbe5b8fc1a95d7385ac2c0aa3",
+      "sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5"
+    },
+    "autoload/party.gd": {
+      "git_blob": "3ffc648ed4daef742d4881c7205b8f2e3bf89100",
+      "sha256": "d2ae303789477f9027faa7e2bb675c2b76ddc64ddb8c794c49a3a4a9febb6f70"
+    },
+    "scripts/creatures/move_mastery.gd": {
+      "git_blob": "3eca151deaa82062539750522e5f5c2938de4ca6",
+      "sha256": "7993a8350276fcb63e82e84e827f00dde42847e18d2aa29f57416efe6c9355c2"
+    },
+    "scripts/creatures/move_db.gd": {
+      "git_blob": "ada1a8d7e32f7a028d3c9e108f32d395fe716ccb",
+      "sha256": "9eae060a43a49a550e259bf6f3cbd73bc7c3ddc37e76329580102933cd882b9d"
+    },
+    "data/moves/moves.json": {
+      "git_blob": "bfe11ac44e062a1508f9aed0a31bc2b320ec1871",
+      "sha256": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886"
+    },
+    "data/moves/learnsets.json": {
+      "git_blob": "a794ed984db588bce5eef0b08197aee5bdaf4b24",
+      "sha256": "f5e149572b3fbb102811fb3b477b461735280308d0e7a588de00ac843d4c5bc9"
+    },
+    "data/moves/tms.json": {
+      "git_blob": "e738099fa90220683938d4e4927765b5cfedce3b",
+      "sha256": "c7f55456b4b77833e7cea1305cec9fcf2a7dc90d202a8e64025c92f7092a1dc6"
+    },
+    "data/creatures/species.json": {
+      "git_blob": "d209ccb6585e14ef27e1a1af48cde9fa284f19e5",
+      "sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f"
+    },
+    "scripts/net/session.gd": {
+      "git_blob": "49a29095f3ccaa7fe4ac36afd69dcc08db2b9a31",
+      "sha256": "a981315eb7c635895c1ca2445be9d474049bf02bd0f645ea306ce511d2ca69c0"
+    }
+  }
+}
