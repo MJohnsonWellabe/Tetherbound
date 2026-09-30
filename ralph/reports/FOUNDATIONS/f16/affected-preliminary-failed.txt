@@ -1,0 +1,154 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_equipment_player_path.gd,test_realm_map_persistence.gd,test_realm_world_records.gd,test_stormwood_environment_save.gd,test_save_redesign.gd,test_character_save_format.gd,test_world_save_format.gd: 7 of 667 test files
+  ok    test_character_save_format.gd :: test_a_character_file_is_one_party_and_nothing_more
+  ok    test_character_save_format.gd :: test_a_character_names_the_world_it_last_played_without_belonging_to_it
+  ok    test_character_save_format.gd :: test_a_client_writes_its_own_character_and_only_that
+  ok    test_character_save_format.gd :: test_a_corrupt_character_file_reads_as_nothing_to_load
+  ok    test_character_save_format.gd :: test_a_missing_character_reads_as_nothing_to_load
+WARNING: character 'slot-1' is version 29, this build reads 28 -- not loading
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] read (res://scripts/save/character_save.gd:261)
+       [1] test_a_newer_than_this_build_character_file_refuses (res://tests/test_character_save_format.gd:382)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_character_save_format.gd :: test_a_newer_than_this_build_character_file_refuses
+  ok    test_character_save_format.gd :: test_a_save_writes_a_character_file_at_the_partitioned_path
+  ok    test_character_save_format.gd :: test_apply_refuses_a_character_that_is_not_there
+  ok    test_character_save_format.gd :: test_apply_restores_a_character_onto_a_player_state
+  ok    test_character_save_format.gd :: test_existing_character_id_survives_saves_to_other_slots_and_reload
+[save] minted character id 'character-a13fef21de701ce3848085154d91425f' for slot 0 (no existing locator)
+[save] minted character id 'character-886916dc5b1a0b08ec0f360485b9be76' for slot 0 (no existing locator)
+  ok    test_character_save_format.gd :: test_independent_characters_using_the_same_slot_get_distinct_portable_ids_and_reload
+  ok    test_character_save_format.gd :: test_only_player_scope_flags_land_in_the_character_file
+  ok    test_character_save_format.gd :: test_portable_character_disk_round_trip_preserves_five_uids_selection_and_flags
+  ok    test_character_save_format.gd :: test_rewriting_character_does_not_turn_malformed_provenance_into_identity
+  ok    test_character_save_format.gd :: test_rewriting_character_preserves_world_instance_envelope
+  ok    test_character_save_format.gd :: test_save_character_refuses_an_empty_id_and_a_missing_game
+  ok    test_character_save_format.gd :: test_scratch_save_does_not_mint_or_rename_live_identity
+  ok    test_character_save_format.gd :: test_the_character_file_carries_no_world_key
+  ok    test_character_save_format.gd :: test_the_character_file_carries_the_character_half_and_its_envelope
+  ok    test_character_save_format.gd :: test_the_character_file_values_are_the_ones_the_game_held
+  ok    test_character_save_format.gd :: test_the_fog_a_player_walked_off_is_in_their_character_file
+  ok    test_character_save_format.gd :: test_the_real_saver_writes_characters_under_the_d100_directory
+WARNING: save: refusing unsafe character id
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _character_id_for (res://scripts/save/save_game.gd:1106)
+       [1] _prepare_snapshot (res://scripts/save/save_game.gd:426)
+       [2] save (res://scripts/save/save_game.gd:412)
+       [3] test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation (res://tests/test_character_save_format.gd:121)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_character_save_format.gd :: test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation
+  ok    test_character_save_format.gd :: test_version_four_pending_escrow_without_world_instance_is_preserved_refused_by_redesign
+  ok    test_character_save_format.gd :: test_version_three_character_without_world_instance_remains_readable_refused_by_redesign
+  ok    test_character_save_format.gd :: test_version_two_character_remains_readable_with_legacy_escrow_refused_by_redesign
+  ok    test_equipment_player_path.gd :: test_equip_swap_and_unequip_conserve_real_items_in_a_full_bag
+  ok    test_equipment_player_path.gd :: test_flat_v23_migration_preserves_inventory_and_clears_legacy_gear
+  ok    test_equipment_player_path.gd :: test_invalid_or_missing_carried_item_cannot_create_equipment
+  ok    test_equipment_player_path.gd :: test_legacy_and_malformed_equipment_reset_without_cross_slot_items
+  ok    test_equipment_player_path.gd :: test_portable_character_roundtrip_preserves_worn_gear_separately
+  ok    test_realm_map_persistence.gd :: test_authoritative_payloads_override_alias_and_reset_new_game_clears_both
+  FAIL  test_realm_map_persistence.gd :: test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid
+          expected true, got false
+          expected true, got false
+          expected 0.0, got 0.00421333312988
+SCRIPT ERROR: Invalid call. Nonexistent function 'map_display_name' in base 'RefCounted (map_state.gd)'.
+   at: test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save (res://tests/test_realm_map_persistence.gd:142)
+   GDScript backtrace (most recent call first):
+       [0] test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save (res://tests/test_realm_map_persistence.gd:142)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_realm_map_persistence.gd :: test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save
+          expected true, got false
+  ok    test_realm_map_persistence.gd :: test_save_reload_in_existing_realms_retains_configured_payloads_and_ui_contract
+  ok    test_realm_map_persistence.gd :: test_third_configured_realm_round_trips_its_own_fog_and_legacy_owner
+  ok    test_realm_map_persistence.gd :: test_transition_there_and_back_preserves_exact_meadows_fog_and_instances
+  ok    test_realm_map_persistence.gd :: test_version_one_chain_retains_pre_cloudreach_fields_and_produces_configured_maps
+  ok    test_realm_world_records.gd :: test_cloudreach_records_do_not_block_snap_or_satisfy_meadows_home
+ERROR: unscoped flag: upper_open
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] store_for (res://autoload/merged_progression.gd:71)
+       [1] set_flag (res://autoload/merged_progression.gd:56)
+       [2] test_home_selection_and_cloudreach_authored_camps_cannot_cross_realms_or_unlocks (res://tests/test_realm_world_records.gd:81)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_realm_world_records.gd :: test_home_selection_and_cloudreach_authored_camps_cannot_cross_realms_or_unlocks
+  ok    test_realm_world_records.gd :: test_legacy_migration_defaults_to_meadows_not_current_realm_and_preserves_indices
+  ok    test_realm_world_records.gd :: test_real_save_there_and_back_preserves_multiple_satchels_and_buildings
+  ok    test_save_redesign.gd :: test_all_pre_redesign_versions_refuse_before_applying
+  ok    test_save_redesign.gd :: test_character_schema_is_new_and_refuses_old_portable_files
+[save] minted character id 'character-3122d0fb66174092501fc9fd7070ef00' for slot 1 (no existing locator)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:732)
+       [1] test_current_merged_slot_cannot_bypass_old_split_version_barrier (res://tests/test_save_redesign.gd:110)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_redesign.gd :: test_current_merged_slot_cannot_bypass_old_split_version_barrier
+  ok    test_save_redesign.gd :: test_malformed_old_metadata_is_listed_without_casting_payloads
+  ok    test_save_redesign.gd :: test_non_integral_non_finite_or_missing_versions_are_invalid
+[save] minted character id 'character-8c15d5533f96d38ee2e003bf8629ce06' for slot 1 (no existing locator)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:732)
+       [1] test_old_character_refusal_survives_valid_or_missing_world (res://tests/test_save_redesign.gd:130)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:732)
+       [1] test_old_character_refusal_survives_valid_or_missing_world (res://tests/test_save_redesign.gd:135)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_redesign.gd :: test_old_character_refusal_survives_valid_or_missing_world
+  ok    test_save_redesign.gd :: test_read_only_legacy_portable_discovery_and_new_namespace_writes
+  ok    test_save_redesign.gd :: test_v27_fixture_refuses_with_message_without_live_or_disk_mutation
+  ok    test_save_redesign.gd :: test_world_schema_is_new_and_refuses_old_authority
+  ok    test_stormwood_environment_save.gd :: test_reset_and_malformed_environment_return_to_empty_state
+  ok    test_stormwood_environment_save.gd :: test_v22_migration_adds_an_empty_environment_without_mutating_legacy_payload
+  ok    test_stormwood_environment_save.gd :: test_world_save_partition_keeps_environment_in_the_world_half
+  ok    test_stormwood_environment_save.gd :: test_world_state_snapshot_preserves_nested_environment_for_a_late_joiner
+[save] minted character id 'character-70ea8878ca79cbb9493cd3c7ca9c5015' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_a_client_save_writes_no_world_file
+  ok    test_world_save_format.gd :: test_a_corrupt_world_file_reads_as_nothing_to_load
+[save] minted character id 'character-c0b0d4769f0c701529d9afffae243564' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_a_host_save_writes_a_world_file_at_the_partitioned_path
+  ok    test_world_save_format.gd :: test_a_missing_world_reads_as_nothing_to_load
+[save] minted character id 'character-0a1cbaf2af90597edcb05bd7455f81ed' for slot 1 (no existing locator)
+WARNING: world 'slot-1' is version 29, this build reads 28 -- not loading
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] read (res://scripts/save/world_save.gd:225)
+       [1] test_a_newer_than_this_build_world_file_refuses (res://tests/test_world_save_format.gd:226)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_world_save_format.gd :: test_a_newer_than_this_build_world_file_refuses
+  ok    test_world_save_format.gd :: test_a_scratch_save_writes_no_world_no_character_and_renames_nobody
+[save] minted character id 'character-a6dd16238e8128b0b027949a22ad8f89' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_only_world_scope_flags_land_in_the_world_file
+[save] minted character id 'character-8510710118c533e6ba5b9ce32ab7bacd' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_resaving_a_world_keeps_its_created_at_and_moves_last_played
+  ok    test_world_save_format.gd :: test_save_world_refuses_on_a_client_and_refuses_an_empty_id
+  ok    test_world_save_format.gd :: test_split_world_state_marker_prevents_a_second_water_retarget
+  ok    test_world_save_format.gd :: test_split_world_state_preserves_later_legitimate_water_reward
+  ok    test_world_save_format.gd :: test_split_world_state_repairs_only_legacy_cloudreach_water_entitlements
+  ok    test_world_save_format.gd :: test_the_real_saver_writes_worlds_under_the_d100_directory
+[save] minted character id 'character-83d11eef9d1e2c8cdb8df954ae083948' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_slot_owns_the_world_id_so_a_new_game_does_not_overwrite_the_old_world
+[save] minted character id 'character-bf7630e6ebe0229503c8251b745715c2' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_state_payload_loads_straight_into_a_world_state
+[save] minted character id 'character-0badaa194069b9b8d0f2d6db2d700d7c' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_carries_no_character_key
+[save] minted character id 'character-c8d9ad5a73ecde1d271a1c9f6fe0caa3' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_carries_the_world_half_and_its_envelope
+[save] minted character id 'character-bc125c02ca1df0ec733dd7b306f66d1b' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_values_are_the_ones_the_game_held
+[save] minted character id 'character-c9b77ab81a8e54c5734ef06b2b68fdec' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_version_one_world_refuses_without_changing_reward_journal
+
+74 tests, 863 assertions, 2 failed
+
+  test_realm_map_persistence.gd :: test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid — expected true, got false
+  test_realm_map_persistence.gd :: test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid — expected true, got false
+  test_realm_map_persistence.gd :: test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid — expected 0.0, got 0.00421333312988
+  test_realm_map_persistence.gd :: test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save — expected true, got false
+Native Godot exit status: 1

@@ -1,5 +1,10 @@
 extends SceneTree
 
+## Retired-path regression fixture: RD-35 redesign saves are current schema,
+## but this probe deliberately enables the single legacy physical-crossing
+## flag. Production remains default-off; this is not portal-loop acceptance.
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
 ## Production Stormwood -> Water seam proof.
 ##
 ## The fixture supplies only the already-earned finale prerequisite through the
@@ -27,6 +32,7 @@ var _finished := false
 
 
 func _init() -> void:
+	assert(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	_run.call_deferred()
 
 

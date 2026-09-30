@@ -379,7 +379,7 @@ func test_a_save_with_no_pins_round_trips_as_no_pins() -> void:
 	assert_eq(int(read.map.call("alpha_pin_count")), 0)
 
 
-func test_a_pre_seventeen_save_loads_with_no_pins_rather_than_refusing() -> void:
+func test_a_pre_seventeen_save_is_refused_without_changing_live_pins() -> void:
 	# The migration default. A version bump that bricks an existing save is a
 	# strictly worse failure than the feature not being there — `save_game.gd`'s
 	# own `_migrate_v13` neighbour says so.
@@ -400,9 +400,13 @@ func test_a_pre_seventeen_save_loads_with_no_pins_rather_than_refusing() -> void
 	file = null
 
 	var read: RefCounted = _game()
-	assert_true(saver.call("load_slot", read, 1),
-		"a VERSION 16 save must still load after the alpha-pin bump")
-	assert_eq(int(read.map.call("alpha_pin_count")), 0)
+	read.map.call("pin_alpha", 999, "terrapup", "Sentinel", Vector3.ZERO, "alpha")
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var live_before: Dictionary = saver.call("snapshot", read)
+	assert_false(saver.call("load_slot", read, 1), "RD-35 refuses VERSION 16")
+	assert_eq(str(saver.get("last_load_result").get("code", "")), "incompatible_old_version")
+	assert_eq(saver.call("snapshot", read), live_before, "refusal leaves current pins and map intact")
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before)
 
 
 func test_a_corrupt_pinned_set_loads_as_no_pins_rather_than_crashing() -> void:

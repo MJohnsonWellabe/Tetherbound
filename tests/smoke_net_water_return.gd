@@ -34,6 +34,12 @@ func _run() -> void:
 	if not _require(_peers.size() == 2, "coordinator tracks exactly two Water peers"):
 		quit(await finish())
 		return
+	# Retired physical-route regression only; shipping redesign crossings stay off.
+	for peer in 2:
+		var legacy: Dictionary = await step(peer, "legacy_physical_crossings_fixture", {"regression": "water_return"})
+		if not _require(_passed(legacy), "disclosed retired-path fixture enabled in peer %d" % peer):
+			quit(await finish())
+			return
 
 	var host_hello: Dictionary = (_peers[0] as Dictionary).get("hello", {}) as Dictionary
 	var client_hello: Dictionary = (_peers[1] as Dictionary).get("hello", {}) as Dictionary

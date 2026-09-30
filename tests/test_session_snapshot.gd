@@ -4,6 +4,13 @@ const SESSION := preload("res://scripts/net/session.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const GAME_STATE := preload("res://autoload/game_state.gd")
+const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+
+class AckSession extends "res://scripts/net/session.gd":
+	var acknowledgement_calls := 0
+	func _send_snapshot_ack(_transfer_id: int, _index: int) -> bool:
+		acknowledgement_calls += 1
+		return true
 
 
 class GameStub extends Node:
@@ -87,6 +94,59 @@ func test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta() -> v
 		"only the latest post-BEGIN registry is installed")
 	game.free()
 
+
+func _redesign_bootstrap(carrier: Variant) -> Dictionary:
+	var game := GameStub.new()
+	var session := AckSession.new()
+	var ledger := LedgerRpcStub.new(game.events)
+	game.add_child(session)
+	session.add_child(ledger)
+	session.set("_mode", "client")
+	(session.get("_box") as Dictionary)["snapshot"] = false
+	var encoded: Dictionary = SNAPSHOT_TRANSFER.new().encode_snapshot({"day": 7, "redesign_world": carrier}, 98)
+	assert_eq(encoded.chunks.size(), 1, "this probe observes the final snapshot acknowledgement")
+	assert_true(session.call("_receive_snapshot_begin", encoded.descriptor, false))
+	assert_true(session.queue_bootstrap_delta({"seq": 2, "ops": []}))
+	var registry := PEER_REGISTRY.new()
+	registry.add(1, "host", "Host")
+	session.call("_rpc_registry", registry.save_data())
+	var applied: bool = session.call("_receive_snapshot_chunk", 98, 0, encoded.chunks[0], true)
+	return {"game": game, "session": session, "ledger": ledger, "applied": applied}
+
+func test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack() -> void:
+	var unknown := REDESIGN_STATE.defaults("world")
+	unknown.portal_unlocks = ["unknown_biome"]
+	for carrier: Variant in [null, unknown]:
+		var fixture := _redesign_bootstrap(carrier)
+		var game: GameStub = fixture.game
+		var session: AckSession = fixture.session
+		assert_false(fixture.applied)
+		assert_true(game.applied_snapshot.is_empty())
+		assert_eq(game.events, [])
+		assert_eq((fixture.ledger as LedgerRpcStub).applied, [])
+		assert_eq(int(session.registry().call("size")), 0)
+		assert_false(session.snapshot_ready())
+		assert_false(session.handshake_snapshot_applied())
+		assert_eq(session.acknowledgement_calls, 0)
+		assert_true(str((session.get("_box") as Dictionary).get("failure_reason", "")).contains("invalid redesign data"))
+		game.free()
+
+func test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack() -> void:
+	var carrier := {"portal_unlocks": ["tidewake"], "shrine_display": {"meadows": true},
+		"station_tiers": {"forge": 2}, "node_cycles": {"essence_ground": 3},
+		"rematch_cycles": {"meadows": 4}, "alpha_cycles": {"meadows": 5},
+		"bounty_day": 6, "fifth_arch_stirred": true}
+	var fixture := _redesign_bootstrap(carrier)
+	var game: GameStub = fixture.game
+	var session: AckSession = fixture.session
+	assert_true(fixture.applied)
+	assert_eq(game.applied_snapshot.redesign_world, carrier)
+	assert_eq(game.events, ["snapshot", "delta"])
+	assert_eq(int(session.registry().call("size")), 1)
+	assert_true(session.snapshot_ready())
+	assert_true(session.handshake_snapshot_applied())
+	assert_eq(session.acknowledgement_calls, 1)
+	game.free()
 
 func test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one() -> void:
 	var host := GAME_STATE.new()

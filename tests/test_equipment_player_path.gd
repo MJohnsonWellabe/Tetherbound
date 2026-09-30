@@ -83,7 +83,8 @@ func test_flat_v23_migration_preserves_inventory_and_clears_legacy_gear() -> voi
 	var saver := SAVE.new("user://equipment_migration/")
 	var old := {"version": 23, "inventory": [{"id": "insulated_vest", "n": 1}]}
 	var migrated: Dictionary = saver.call("_migrate_to_current", old, 23, 1)
-	assert_eq(migrated.version, SAVE.VERSION)
+	# Historical helper regression only; real old-save reads refuse at RD-35.
+	assert_eq(migrated.version, 27, "retired migration must stop before the redesign reset")
 	assert_eq(migrated.equipment, {})
 	assert_eq(migrated.inventory, old.inventory)
 	assert_false(old.has("equipment"), "migration must not mutate source payload")

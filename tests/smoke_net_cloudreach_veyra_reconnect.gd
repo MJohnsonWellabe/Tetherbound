@@ -53,6 +53,9 @@ func _initialize() -> void:
 
 func _scenario() -> Dictionary:
 	var steps: Array = [
+		# Disclosed RD-35/F16 retired entry fixture; real boss/rejoin checks unchanged.
+		{"peer": "all", "action": "legacy_physical_crossings_fixture", "args": {"regression": "cloudreach_veyra_reconnect"},
+			"label": "disclosed retired crossing fixture; shipping default remains off"},
 		{"peer": "all", "action": "boot", "args": {"scene": "world"}, "budget_frames": 20000,
 			"label": "each peer boots its own fresh Meadows world"},
 		{"peer": "all", "action": "story_flag", "args": {"flag": "realm_key_cloudreach", "scope": "world"},

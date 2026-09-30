@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/stations",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "workbench",
+          "forge",
+          "kitchen",
+          "altar",
+          "den",
+          "farm"
+        ]
+      },
+      "home_only": {
+        "const": true
+      },
+      "attachment_slots": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 8
+      }
+    },
+    "required": [
+      "id",
+      "home_only",
+      "attachment_slots"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "workbench"
+          },
+          "attachment_slots": {
+            "const": 0
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge"
+          },
+          "attachment_slots": {
+            "const": 8
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen"
+          },
+          "attachment_slots": {
+            "const": 8
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar"
+          },
+          "attachment_slots": {
+            "const": 8
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den"
+          },
+          "attachment_slots": {
+            "const": 8
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "farm"
+          },
+          "attachment_slots": {
+            "const": 0
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 6,
+  "uniqueItems": true,
+  "maxItems": 6
+}

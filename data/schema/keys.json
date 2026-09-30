@@ -1,0 +1,47 @@
+[
+  {
+    "id": "home_key",
+    "kind": "home",
+    "protected": true
+  },
+  {
+    "id": "portal_key_meadows",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_tidewake",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_cloudreach",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_stormwood",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_biome5",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_biome6",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_biome7",
+    "kind": "portal",
+    "protected": true
+  },
+  {
+    "id": "portal_key_biome8",
+    "kind": "portal",
+    "protected": true
+  }
+]

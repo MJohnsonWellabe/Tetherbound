@@ -1,0 +1,65 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  [t] live phase (a-c) done at 48 ms
+  [t] loaded phase (e) done at 417 ms
+[rift_crossing] the player crossed the rebuilt storm road span into Cloudreach
+  [t] frame 0 realm -> cloudreach at 589 ms
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:461)
+[village_npcs] placed 11 of 11
+[climax] no 'CloudreachNoStronghold' node; standing the climax on its own fallback coordinates
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:235)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:211)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:119)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:462)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:235)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:211)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:119)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:462)
+  [t] trigger entries done at 162784 ms (the Cloudreach scene load blocks here)
+  PASS: setup: 'legendary_freed' starts unset
+  PASS: setup: 'realm_key_cloudreach' starts unset
+  PASS: setup: 'realm_gate_cloudreach_unlocked' starts unset
+  PASS: (a) build() enables the crossing's own processing
+  PASS: (a) before legendary_freed: no deck, no trigger (decks=0 triggers=0 openings=0)
+  PASS: (a) 36.4s of other flag changes without legendary_freed: still no span, no collapse wait
+  PASS: (b) flag lands live: crossing enters the collapse wait with nothing built yet
+  PASS: (b) just short of hold+dissipate (10.20s): still no deck/trigger
+  PASS: (b) collapse finished: span built once and animating in (openings=1 decks=1 triggers=1)
+  PASS: (b) deck grows from the near abutment (scale.x=0.020)
+  PASS: (b) after appear_seconds: span_ready(), exactly one deck (collider live) and one trigger
+  PASS: (c) setup: the revision really moved (7 -> 12)
+  PASS: (c) five further flag/revision changes: no reopen, no rebuild, same deck and trigger instances (openings=1)
+  PASS: (c) opening the span does not itself mark the realm gate crossed
+  PASS: (e) setup: Game.save_game() with legendary_freed set
+  PASS: (e) setup: flags blanked before the load
+  PASS: (e) setup: Game.load_game()
+  PASS: (e) setup: legendary_freed and realm_key_cloudreach came back from disk
+  PASS: (e) later load with legendary_freed: open at build, one deck, one trigger, full scale, no collapse wait/appear
+  PASS: (e) stepping the loaded crossing past collapse+appear: nothing replayed or rebuilt
+  PASS: (d) setup: realm gate not yet crossed
+  PASS: (d) setup: starting realm is meadows (meadows)
+  PASS: (d) first entry writes realm_gate_cloudreach_unlocked
+  PASS: (d) two entries in the same frame: enter_realm called once (crossings_fired=1)
+  PASS: (d) the same-frame duplicate entry writes nothing (revision 19 -> 19)
+  PASS: (d) at least one further entry on a later frame before the swap (2)
+  PASS: (d) after 2 later-frame entries: enter_realm still called once (crossings_fired=1)
+  PASS: (d) the one crossing reached the Cloudreach scene
+  PASS: (d) realm changed exactly once, meadows -> cloudreach, and stayed (changes=1 now=cloudreach)
+  PASS: (d) realm_gate_cloudreach_unlocked still set in Cloudreach
+rift gate opens once: 30 pass, 0 fail, 163288 ms
+RIFT GATE OPENS ONCE OK
+Native Godot exit status: 0

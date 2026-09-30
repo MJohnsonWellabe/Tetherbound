@@ -1,5 +1,7 @@
 extends Node
 
+const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+
 ## Stage B Wave 2 lane 2.A. THE SESSION: host, join, leave, and the handshake.
 ##
 ## Mounted by `game_state.gd::_ready()` as `/root/Game/Session`. A child of the
@@ -1017,6 +1019,13 @@ func _finalize_snapshot_receive() -> bool:
 	var game := _game()
 	if game == null or not game.has_method("apply_world_snapshot"):
 		_fail_snapshot_receive("The received world snapshot could not be applied.", true)
+		return false
+	# Reject the whole bootstrap before any world, registry or queued-delta
+	# mutation. WorldState's void loader refusal must never be acknowledged.
+	var redesign_errors := REDESIGN_STATE.validate("world",
+		data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	if not redesign_errors.is_empty():
+		_fail_snapshot_receive("The received world snapshot contains invalid redesign data.", true)
 		return false
 	var ledger_rpc := get_node_or_null(^"LedgerRpc")
 	if not _bootstrap_deltas.is_empty() \

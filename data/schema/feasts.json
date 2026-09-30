@@ -1,0 +1,87 @@
+[
+  {
+    "id": "feast_t1",
+    "tier": 1,
+    "breaks_level": 10,
+    "station_id": "kitchen",
+    "biome": "meadows",
+    "attuned_types": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ]
+  },
+  {
+    "id": "feast_t2",
+    "tier": 2,
+    "breaks_level": 20,
+    "station_id": "kitchen",
+    "biome": "meadows",
+    "attuned_types": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ]
+  },
+  {
+    "id": "feast_t3",
+    "tier": 3,
+    "breaks_level": 30,
+    "station_id": "kitchen",
+    "biome": "tidewake",
+    "attuned_types": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ]
+  },
+  {
+    "id": "feast_t4",
+    "tier": 4,
+    "breaks_level": 40,
+    "station_id": "kitchen",
+    "biome": "cloudreach",
+    "attuned_types": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ]
+  },
+  {
+    "id": "feast_t5",
+    "tier": 5,
+    "breaks_level": 50,
+    "station_id": "kitchen",
+    "biome": "stormwood",
+    "attuned_types": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ]
+  }
+]

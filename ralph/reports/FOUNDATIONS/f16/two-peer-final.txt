@@ -1,0 +1,60 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14748 control_port=60977 home=D:/tetherbound/foundations-net-final/home-0 log=D:/tetherbound/foundations-net-final/peer-0.log
+coordinator: launched peer 1 (client) pid=5276 control_port=60978 home=D:/tetherbound/foundations-net-final/home-1 log=D:/tetherbound/foundations-net-final/peer-1.log
+coordinator: peer 0 hello: {"enet_port":34401.0,"godot_version":"4.7-stable (official)","main_sha":"e457754ddeb2","peer":0.0,"pid":14748.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/foundations-net-final/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":34402.0,"godot_version":"4.7-stable (official)","main_sha":"e457754ddeb2","peer":1.0,"pid":5276.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/foundations-net-final/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: two distinct isolated peer homes
+PASS: peer 0 host : hosting udp/34401 as peer 1
+PASS: peer 0 foundations_state seed: full F16 carrier witness seed
+PASS: peer 0 foundations_state roundtrip: full F16 carrier witness roundtrip
+PASS: peer 0 full-carrier inspection succeeds
+PASS: host populated all 8 world / 14 personal / 9 per-creature fields
+PASS: peer 1 join : joined 127.0.0.1:34401 as peer 1858110589 after 17 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 foundations_state seed: full F16 carrier witness seed
+PASS: peer 1 foundations_state roundtrip: full F16 carrier witness roundtrip
+PASS: peer 1 full-carrier inspection succeeds
+PASS: guest populated every personal and per-creature field
+PASS: host snapshot carries all 8 world fields
+PASS: personal fixture payloads are distinct
+PASS: stable host and guest identities differ
+PASS: current schema 28 on both peers
+PASS: production durable files exist
+PASS: peer 1 foundations_state forge_world: full F16 carrier witness forge_world
+PASS: peer 0 full-carrier inspection succeeds
+PASS: guest forged world never mutates host live state
+PASS: guest world-save refusal preserves host disk bytes
+PASS: peer 1 leave : client left cleanly after 0 frames
+PASS: peer 1 wipe_character : in-memory character blanked (party 1 -> 0), id 'character-30f903efc0d92ca8c85b1ed1b41c1cde' kept, file untouched
+PASS: peer 1 foundations_state clear_world: full F16 carrier witness clear_world
+PASS: peer 1 full-carrier inspection succeeds
+PASS: all personal memory erased before rejoin
+PASS: guest world projection erased before rejoin
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:555)
+       [1] write_snapshot (res://scripts/save/save_game.gd:540)
+WARNING: fallback autosave: could not commit save
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _on_fallback_completed (res://scripts/save/save_game.gd:529)
+       [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+       [2] poll_fallback (res://scripts/save/save_game.gd:516)
+       [3] _tick_autosave (res://autoload/game_state.gd:1011)
+       [4] _process (res://autoload/game_state.gd:1056)
+PASS: peer 1 production_join : title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:34401 as peer 579624993 after 90 frames
+PASS: peer 0 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 full-carrier inspection succeeds
+PASS: peer 0 full-carrier inspection succeeds
+PASS: actual title rejoin keeps named portable identity
+PASS: named-ID disk rejoin restores full personal and per-creature payload
+PASS: rejoin restores host-authoritative full world payload
+PASS: host personal carrier remains its own
+F16 full populated two-peer storage witness; fixtures, direct title join callback, production saves/reload/ENet disclosed
+ALL CHECKS PASSED
+Native Godot exit status: 0

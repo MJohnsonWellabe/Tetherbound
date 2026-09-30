@@ -32,7 +32,8 @@ func test_legacy_migration_defaults_to_meadows_not_current_realm_and_preserves_i
 		"realm_maps": {"meadows": {"visited_b64": "abc"}}, "realm_hearts": {"active": "meadows"},
 		"player_pose": {"traversal": {"mode": "flying"}}}
 	var migrated: Dictionary = saves._migrate_to_current(original, 19, 0)
-	assert_eq(migrated.version, SAVE.VERSION)
+	# Historical helper regression only; real old-save reads refuse at RD-35.
+	assert_eq(migrated.version, 27, "retired migration must stop before the redesign reset")
 	assert_eq(migrated.placed_buildings[0].realm, "meadows")
 	assert_eq(migrated.placed_buildings[1], null)
 	assert_eq(migrated.placed_buildings[2].realm, "cloudreach")

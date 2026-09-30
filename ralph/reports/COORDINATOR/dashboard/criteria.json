@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-30T02:20:55Z",
+ "generated_at": "2026-09-30T02:56:39Z",
  "main_sha": "82eda1835",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
@@ -912,11 +912,11 @@
    "title": "Foundations: save reset, schemas and biome order",
    "chapter": "Wave 0 · Foundations",
    "lane": "tb/foundations",
-   "pct": 0,
+   "pct": 100,
    "counts": {
-    "met": 0,
+    "met": 5,
     "partial": 0,
-    "in_progress": 5,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -924,33 +924,33 @@
    "criteria": [
     {
      "text": "Save schema bumped past v27; loading any v27-or-older save shows a clear 'older version, start a new game' message, never crashes and never overwrites the old file (unit test with a v27 fixture).",
-     "status": "in_progress",
-     "evidence": "",
-     "gap": "Candidate 94b81b02c independently re-checked MET; exact title refusal/file preservation evidence and focused regressions pass. Required broad F16 batch validation, full-ci and main landing remain; board count unchanged."
+     "status": "met",
+     "evidence": "Schema28 refuses<=27 before mutation; all old title/picker/Steam paths explain start-new-game and preserve disk. Independent strict MET94b; actual title/NewGame/autosave e457 native0. Proof: ralph/reports/FOUNDATIONS/f16/recheck-save-refusal-final.md and title-grandpa-final.txt.",
+     "gap": ""
     },
     {
      "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10–100); a schema test fails on a missing or unknown id.",
-     "status": "in_progress",
-     "evidence": "",
-     "gap": "All 14 schema/catalog pairs independently re-checked MET on 94b81b02c, including six real-loader station slot rejection cases. Batch validation and main landing remain."
+     "status": "met",
+     "evidence": "Fourteen schemas/catalogs validate finite IDs/foreign references/owner tuples, eight slots/four live and caps10–100. Independent strict MET94b; six station negative cases and numeric schema9/226/0 native0. Proof: recheck-schemas-final.md, affected-final.txt, runtime-numeric-enum.txt.",
+     "gap": ""
     },
     {
      "text": "Biome order is one config list (meadows, tidewake, cloudreach, stormwood, then four reserved slots); a test proves no gameplay code hard-codes the old Meadows→Cloudreach→Stormwood→Water order.",
-     "status": "in_progress",
-     "evidence": "",
-     "gap": "Central eight-slot order and actual map/journal/credits/shrine consumers independently re-checked MET on 94b81b02c; production shrine and source-scan tests pass. Batch validation/main landing remain; F19/F20 campaign narrative still open."
+     "status": "met",
+     "evidence": "One eight-slot config drives map/journal/credits/shrine; real shrine positions and consumer-scan regression pass. Independent strict MET94b. Proof: recheck-order-final.md and focused-final.txt. Later campaign reorder remains F19/F20.",
+     "gap": ""
     },
     {
      "text": "Every new durable field declares scope (world or character) and transaction semantics in the flag-scope registry; a two-peer save/reload round trip preserves them.",
-     "status": "in_progress",
-     "evidence": "Independent strict candidate MET: 32d4b9e36 / pushed evidence 1fb68ea08; committed two-peer-final.txt / two-peer-host.txt / two-peer-guest.txt evidence under ralph/reports/FOUNDATIONS/f16. Runtime source e457754dd, two real ENet processes, ALL CHECKS PASSED/native0, full 8/14/9 carrier payloads; registry scope/authority/transactions declared.",
-     "gap": "Candidate only until full batch, full-ci PR and landing. Authored fixtures, direct title callbacks, same-process memory wipe, JSON numeric normalization disclosed. Two closed-channel host sends at leave retained; original coordinator fallback error retained, readiness-only delta independently probed. Future gameplay transactions not claimed."
+     "status": "met",
+     "evidence": "Full populated8world/14personal/9creature fields survive two real ENet peers production save/reload and named-ID title rejoin; guest forged world refused. Independent strict MET32d4. Proof: recheck-carriers-final.md, two-peer-final.txt, full host/guest payload logs. Authored fixtures/direct callback/same-process wipe/closed-channel errors disclosed.",
+     "gap": ""
     },
     {
      "text": "New game from the title reaches Grandpa's opening on the new schema with an empty satchel apart from authored gifts; the full unit suite is green.",
-     "status": "in_progress",
-     "evidence": "Committed title-grandpa-final.txt on 32d4b9e36 / pushed evidence 1fb68ea08, runtime e457754dd/native0: physical New Game and bed wake, six actual authored Grandpa dialogue lines to starter picker, authored-gifts-only empty satchel, production v28 autosave and old files preserved.",
-     "gap": "Actual player-path clause independently PASS; whole criterion NOT MET while full unit batch remains open. RD-35 portable expectation repaired; two obsolete satchel expectations and sparse manifest-only omission being repaired from actual shard failures. Fixtures/direct callbacks/loft teleport/injected taps disclosed; no device/visual claim."
+     "status": "met",
+     "evidence": "Actual physical NewGame/bedwake/all6Grandpa lines reaches starter picker with authored-gifts-only empty satchel and v28 autosave. Required667-file batch and affected repairs provide passing witnesses for5422/5422 current methods. Proof: recheck-opening-final.md, title-grandpa-final.txt, unit-membership-reuse.json and complete logs. Historical red shards preserved; RD36 reuse, no skips/disables/quarantine.",
+     "gap": ""
     }
    ]
   },

@@ -50,7 +50,7 @@ func test_the_real_saver_writes_worlds_under_the_d100_directory() -> void:
 	# a default-constructed saver would use.
 	var shipped: RefCounted = SAVE_GAME.new()
 	assert_eq(str((shipped.call("worlds") as RefCounted).call("path_for", "w1")),
-		"user://worlds/w1/world.json")
+		"user://worlds/redesign-v28/w1/world.json")
 
 
 # --- what is in it ------------------------------------------------------------
@@ -227,7 +227,7 @@ func test_a_newer_than_this_build_world_file_refuses() -> void:
 		"there is nothing to migrate an unreleased future format DOWN from")
 
 
-func test_version_one_world_reads_with_an_empty_reward_journal() -> void:
+func test_version_one_world_refuses_without_changing_reward_journal() -> void:
 	var game := FIXTURE.populated_game(db)
 	assert_true(saver.save(game, 1))
 	var path := str(worlds.call("path_for", "slot-1"))
@@ -238,12 +238,13 @@ func test_version_one_world_reads_with_an_empty_reward_journal() -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	file.close()
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var before: Dictionary = saver.snapshot(game)
 	var state: Dictionary = worlds.call("state", "slot-1")
-	assert_false(state.is_empty(), "the prior world format remains readable")
-	var restored: RefCounted = WORLD_STATE.new()
-	restored.call("load_data", state)
-	assert_eq(restored.get("reward_deliveries"), {})
-	assert_eq(str(restored.get("reward_delivery_namespace")), "")
+	assert_eq(state, {}, "RD-35 refuses pre-redesign world saves")
+	assert_eq(worlds.last_load_result.code, "incompatible_old_version")
+	assert_eq(saver.snapshot(game), before)
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
 
 
 # --- envelope behaviour -------------------------------------------------------

@@ -120,6 +120,8 @@ func is_unlocked(game: Node) -> bool:
 ## intentionally retained: it is the player's record of completing the prior
 ## realm, not a consumable tooth snapped off in this one lock.
 func try_unlock(game: Node) -> bool:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return false
 	if is_unlocked(game):
 		return true
 	if not has_key(game) or unlock_flag == "":
@@ -146,6 +148,8 @@ func try_unlock(game: Node) -> bool:
 ## Returning true means the request was issued; the asynchronous transition is
 ## still Game's responsibility.
 func try_enter(game: Node) -> bool:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return false
 	if game == null or not is_unlocked(game) or destination_realm == "":
 		return false
 	if not game.has_method("enter_realm"):

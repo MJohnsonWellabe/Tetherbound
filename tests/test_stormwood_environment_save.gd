@@ -21,8 +21,9 @@ func test_v22_migration_adds_an_empty_environment_without_mutating_legacy_payloa
 	var saver := SAVE_GAME.new()
 	var migrated: Dictionary = saver._migrate_to_current(legacy, 22, 1)
 
-	assert_eq(int(migrated.get("version", 0)), SAVE_GAME.VERSION,
-		"a v22 save reaches the current v23 format")
+	# Historical helper regression only; real old-save reads refuse at RD-35.
+	assert_eq(int(migrated.get("version", 0)), 27,
+		"retired migration must stop before the redesign reset")
 	assert_eq(migrated.get("realm_environment"), {},
 		"a pre-weather save starts no realm weather cycle")
 	assert_eq(float(migrated.get("clock_elapsed_seconds", -2.0)), 531.25,

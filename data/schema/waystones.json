@@ -1,0 +1,50 @@
+[
+  {
+    "id": "meadows_entry",
+    "biome": "meadows",
+    "entry_id": "meadows_entry",
+    "status": "live"
+  },
+  {
+    "id": "tidewake_entry",
+    "biome": "tidewake",
+    "entry_id": "tidewake_entry",
+    "status": "live"
+  },
+  {
+    "id": "cloudreach_entry",
+    "biome": "cloudreach",
+    "entry_id": "cloudreach_entry",
+    "status": "live"
+  },
+  {
+    "id": "stormwood_entry",
+    "biome": "stormwood",
+    "entry_id": "stormwood_entry",
+    "status": "live"
+  },
+  {
+    "id": "biome5_entry",
+    "biome": "biome5",
+    "entry_id": "biome5_entry",
+    "status": "reserved"
+  },
+  {
+    "id": "biome6_entry",
+    "biome": "biome6",
+    "entry_id": "biome6_entry",
+    "status": "reserved"
+  },
+  {
+    "id": "biome7_entry",
+    "biome": "biome7",
+    "entry_id": "biome7_entry",
+    "status": "reserved"
+  },
+  {
+    "id": "biome8_entry",
+    "biome": "biome8",
+    "entry_id": "biome8_entry",
+    "status": "reserved"
+  }
+]

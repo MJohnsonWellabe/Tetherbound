@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=15324 control_port=54502 home=D:/tetherbound/foundations-net-rd36/home-0 log=D:/tetherbound/foundations-net-rd36/peer-0.log
+coordinator: launched peer 1 (client) pid=15416 control_port=54503 home=D:/tetherbound/foundations-net-rd36/home-1 log=D:/tetherbound/foundations-net-rd36/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29161.0,"godot_version":"4.7-stable (official)","main_sha":"09bbf2e33227","peer":0.0,"pid":15324.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/foundations-net-rd36/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29162.0,"godot_version":"4.7-stable (official)","main_sha":"09bbf2e33227","peer":1.0,"pid":15416.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/foundations-net-rd36/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: two distinct isolated peer homes
+PASS: peer 0 host : hosting udp/29161 as peer 1
+FAIL: peer 0 foundations_state seed: ["$.creatures.creature-1b22f37882b93688cffabdfc4b05b308.cap_level: unknown id/value 20"]
+FAIL: peer 0 foundations_state seed: ["$.creatures.creature-1b22f37882b93688cffabdfc4b05b308.cap_level: unknown id/value 20"]
+Native Godot exit status: 1

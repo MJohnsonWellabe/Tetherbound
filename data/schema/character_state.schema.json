@@ -1,0 +1,1908 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/character_state",
+  "type": "object",
+  "properties": {
+    "portal_unlocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "waystones_activated": {
+      "type": "object",
+      "properties": {
+        "meadows": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "tidewake": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "cloudreach": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "stormwood": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "biome5": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "biome6": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "biome7": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "biome8": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "meadows_entry",
+              "tidewake_entry",
+              "cloudreach_entry",
+              "stormwood_entry",
+              "biome5_entry",
+              "biome6_entry",
+              "biome7_entry",
+              "biome8_entry"
+            ]
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "last_waystones": {
+      "type": "object",
+      "properties": {
+        "meadows": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "tidewake": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "cloudreach": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "stormwood": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "biome5": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "biome6": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "biome7": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        },
+        "biome8": {
+          "type": "string",
+          "enum": [
+            "",
+            "meadows_entry",
+            "tidewake_entry",
+            "cloudreach_entry",
+            "stormwood_entry",
+            "biome5_entry",
+            "biome6_entry",
+            "biome7_entry",
+            "biome8_entry"
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "relics_held": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "relics_hung": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "attachment_recipes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "forge_meadows",
+          "forge_tidewake",
+          "forge_cloudreach",
+          "forge_stormwood",
+          "forge_biome5",
+          "forge_biome6",
+          "forge_biome7",
+          "forge_biome8",
+          "kitchen_meadows",
+          "kitchen_tidewake",
+          "kitchen_cloudreach",
+          "kitchen_stormwood",
+          "kitchen_biome5",
+          "kitchen_biome6",
+          "kitchen_biome7",
+          "kitchen_biome8",
+          "altar_meadows",
+          "altar_tidewake",
+          "altar_cloudreach",
+          "altar_stormwood",
+          "altar_biome5",
+          "altar_biome6",
+          "altar_biome7",
+          "altar_biome8",
+          "den_meadows",
+          "den_tidewake",
+          "den_cloudreach",
+          "den_stormwood",
+          "den_biome5",
+          "den_biome6",
+          "den_biome7",
+          "den_biome8"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "feast_recipes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "feast_t1",
+          "feast_t2",
+          "feast_t3",
+          "feast_t4",
+          "feast_t5"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "master_wins": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "master_t1",
+          "master_t2",
+          "master_t3",
+          "master_t4",
+          "master_t5"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "release_receipts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "transaction_receipts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "research_receipts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "bounty_receipts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "pouch_tier": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4
+    },
+    "creatures": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "cap_level": {
+            "type": "integer",
+            "enum": [
+              10,
+              20,
+              30,
+              40,
+              50,
+              60,
+              70,
+              80,
+              90,
+              100
+            ]
+          },
+          "breakthroughs": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "evolution_choices": {
+            "type": "object",
+            "properties": {
+              "1": {
+                "type": "string",
+                "enum": [
+                  "stay",
+                  "tuskroot",
+                  "ashtusk",
+                  "cannonback",
+                  "stormcapra",
+                  "stormursa"
+                ]
+              },
+              "2": {
+                "type": "string",
+                "enum": [
+                  "stay",
+                  "tuskroot",
+                  "ashtusk",
+                  "cannonback",
+                  "stormcapra",
+                  "stormursa"
+                ]
+              },
+              "3": {
+                "type": "string",
+                "enum": [
+                  "stay",
+                  "tuskroot",
+                  "ashtusk",
+                  "cannonback",
+                  "stormcapra",
+                  "stormursa"
+                ]
+              },
+              "4": {
+                "type": "string",
+                "enum": [
+                  "stay",
+                  "tuskroot",
+                  "ashtusk",
+                  "cannonback",
+                  "stormcapra",
+                  "stormursa"
+                ]
+              },
+              "5": {
+                "type": "string",
+                "enum": [
+                  "stay",
+                  "tuskroot",
+                  "ashtusk",
+                  "cannonback",
+                  "stormcapra",
+                  "stormursa"
+                ]
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "rolled_traits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "hardy"
+              ]
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "taught_traits": {
+            "type": "object",
+            "properties": {
+              "1": {
+                "type": "string",
+                "enum": [
+                  "hardy"
+                ]
+              },
+              "2": {
+                "type": "string",
+                "enum": [
+                  "hardy"
+                ]
+              },
+              "3": {
+                "type": "string",
+                "enum": [
+                  "hardy"
+                ]
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "known_moves": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pebble_toss",
+                "stone_rush",
+                "bramble_whip",
+                "warren_charge",
+                "root_nibble",
+                "rootquake",
+                "pack_bite",
+                "trailblaze_pounce",
+                "burrow_strike",
+                "tremor_roll",
+                "hoofbeat",
+                "verdant_burst",
+                "antler_slam",
+                "ripple_jab",
+                "undertow",
+                "splash_snap",
+                "riptide_rush",
+                "shell_bash",
+                "tail_splash",
+                "gale_peck",
+                "sky_rend",
+                "talon_dive",
+                "storm_strike",
+                "quick_flit",
+                "night_swoop",
+                "gust_burst",
+                "rock_throw",
+                "stone_spike",
+                "earth_fist",
+                "earthshatter",
+                "aqua_shot",
+                "tidal_burst",
+                "riptide_lance",
+                "leviathan_surge",
+                "wind_blade",
+                "aerial_flash",
+                "cyclone",
+                "heavenfall",
+                "shadow_nip",
+                "gloom_surge",
+                "spark_bite",
+                "arc_lash",
+                "ember_bite",
+                "cinder_burst",
+                "mind_ripple",
+                "rift_pulse",
+                "frost_claw",
+                "glacier_break",
+                "static_snap",
+                "voltaic_whip",
+                "thunder_break",
+                "stormfall"
+              ]
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          },
+          "loadout": {
+            "type": "object",
+            "properties": {
+              "quick": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "pebble_toss",
+                  "stone_rush",
+                  "bramble_whip",
+                  "warren_charge",
+                  "root_nibble",
+                  "rootquake",
+                  "pack_bite",
+                  "trailblaze_pounce",
+                  "burrow_strike",
+                  "tremor_roll",
+                  "hoofbeat",
+                  "verdant_burst",
+                  "antler_slam",
+                  "ripple_jab",
+                  "undertow",
+                  "splash_snap",
+                  "riptide_rush",
+                  "shell_bash",
+                  "tail_splash",
+                  "gale_peck",
+                  "sky_rend",
+                  "talon_dive",
+                  "storm_strike",
+                  "quick_flit",
+                  "night_swoop",
+                  "gust_burst",
+                  "rock_throw",
+                  "stone_spike",
+                  "earth_fist",
+                  "earthshatter",
+                  "aqua_shot",
+                  "tidal_burst",
+                  "riptide_lance",
+                  "leviathan_surge",
+                  "wind_blade",
+                  "aerial_flash",
+                  "cyclone",
+                  "heavenfall",
+                  "shadow_nip",
+                  "gloom_surge",
+                  "spark_bite",
+                  "arc_lash",
+                  "ember_bite",
+                  "cinder_burst",
+                  "mind_ripple",
+                  "rift_pulse",
+                  "frost_claw",
+                  "glacier_break",
+                  "static_snap",
+                  "voltaic_whip",
+                  "thunder_break",
+                  "stormfall"
+                ]
+              },
+              "charged": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "pebble_toss",
+                  "stone_rush",
+                  "bramble_whip",
+                  "warren_charge",
+                  "root_nibble",
+                  "rootquake",
+                  "pack_bite",
+                  "trailblaze_pounce",
+                  "burrow_strike",
+                  "tremor_roll",
+                  "hoofbeat",
+                  "verdant_burst",
+                  "antler_slam",
+                  "ripple_jab",
+                  "undertow",
+                  "splash_snap",
+                  "riptide_rush",
+                  "shell_bash",
+                  "tail_splash",
+                  "gale_peck",
+                  "sky_rend",
+                  "talon_dive",
+                  "storm_strike",
+                  "quick_flit",
+                  "night_swoop",
+                  "gust_burst",
+                  "rock_throw",
+                  "stone_spike",
+                  "earth_fist",
+                  "earthshatter",
+                  "aqua_shot",
+                  "tidal_burst",
+                  "riptide_lance",
+                  "leviathan_surge",
+                  "wind_blade",
+                  "aerial_flash",
+                  "cyclone",
+                  "heavenfall",
+                  "shadow_nip",
+                  "gloom_surge",
+                  "spark_bite",
+                  "arc_lash",
+                  "ember_bite",
+                  "cinder_burst",
+                  "mind_ripple",
+                  "rift_pulse",
+                  "frost_claw",
+                  "glacier_break",
+                  "static_snap",
+                  "voltaic_whip",
+                  "thunder_break",
+                  "stormfall"
+                ]
+              },
+              "utility": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "pebble_toss",
+                  "stone_rush",
+                  "bramble_whip",
+                  "warren_charge",
+                  "root_nibble",
+                  "rootquake",
+                  "pack_bite",
+                  "trailblaze_pounce",
+                  "burrow_strike",
+                  "tremor_roll",
+                  "hoofbeat",
+                  "verdant_burst",
+                  "antler_slam",
+                  "ripple_jab",
+                  "undertow",
+                  "splash_snap",
+                  "riptide_rush",
+                  "shell_bash",
+                  "tail_splash",
+                  "gale_peck",
+                  "sky_rend",
+                  "talon_dive",
+                  "storm_strike",
+                  "quick_flit",
+                  "night_swoop",
+                  "gust_burst",
+                  "rock_throw",
+                  "stone_spike",
+                  "earth_fist",
+                  "earthshatter",
+                  "aqua_shot",
+                  "tidal_burst",
+                  "riptide_lance",
+                  "leviathan_surge",
+                  "wind_blade",
+                  "aerial_flash",
+                  "cyclone",
+                  "heavenfall",
+                  "shadow_nip",
+                  "gloom_surge",
+                  "spark_bite",
+                  "arc_lash",
+                  "ember_bite",
+                  "cinder_burst",
+                  "mind_ripple",
+                  "rift_pulse",
+                  "frost_claw",
+                  "glacier_break",
+                  "static_snap",
+                  "voltaic_whip",
+                  "thunder_break",
+                  "stormfall"
+                ]
+              },
+              "ultimate": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "pebble_toss",
+                  "stone_rush",
+                  "bramble_whip",
+                  "warren_charge",
+                  "root_nibble",
+                  "rootquake",
+                  "pack_bite",
+                  "trailblaze_pounce",
+                  "burrow_strike",
+                  "tremor_roll",
+                  "hoofbeat",
+                  "verdant_burst",
+                  "antler_slam",
+                  "ripple_jab",
+                  "undertow",
+                  "splash_snap",
+                  "riptide_rush",
+                  "shell_bash",
+                  "tail_splash",
+                  "gale_peck",
+                  "sky_rend",
+                  "talon_dive",
+                  "storm_strike",
+                  "quick_flit",
+                  "night_swoop",
+                  "gust_burst",
+                  "rock_throw",
+                  "stone_spike",
+                  "earth_fist",
+                  "earthshatter",
+                  "aqua_shot",
+                  "tidal_burst",
+                  "riptide_lance",
+                  "leviathan_surge",
+                  "wind_blade",
+                  "aerial_flash",
+                  "cyclone",
+                  "heavenfall",
+                  "shadow_nip",
+                  "gloom_surge",
+                  "spark_bite",
+                  "arc_lash",
+                  "ember_bite",
+                  "cinder_burst",
+                  "mind_ripple",
+                  "rift_pulse",
+                  "frost_claw",
+                  "glacier_break",
+                  "static_snap",
+                  "voltaic_whip",
+                  "thunder_break",
+                  "stormfall"
+                ]
+              }
+            },
+            "required": [
+              "quick",
+              "charged",
+              "utility",
+              "ultimate"
+            ],
+            "additionalProperties": false
+          },
+          "mastery": {
+            "type": "object",
+            "properties": {
+              "pebble_toss": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "stone_rush": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "bramble_whip": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "warren_charge": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "root_nibble": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "rootquake": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "pack_bite": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "trailblaze_pounce": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "burrow_strike": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "tremor_roll": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "hoofbeat": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "verdant_burst": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "antler_slam": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ripple_jab": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "undertow": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "splash_snap": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "riptide_rush": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "shell_bash": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "tail_splash": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "gale_peck": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "sky_rend": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "talon_dive": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "storm_strike": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "quick_flit": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "night_swoop": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "gust_burst": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "rock_throw": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "stone_spike": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "earth_fist": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "earthshatter": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "aqua_shot": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "tidal_burst": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "riptide_lance": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "leviathan_surge": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "wind_blade": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "aerial_flash": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "cyclone": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "heavenfall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "shadow_nip": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "gloom_surge": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "spark_bite": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "arc_lash": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ember_bite": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "cinder_burst": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "mind_ripple": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "rift_pulse": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "frost_claw": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "glacier_break": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "static_snap": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "voltaic_whip": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "thunder_break": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "stormfall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "best": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cap_level",
+          "breakthroughs",
+          "evolution_choices",
+          "rolled_traits",
+          "taught_traits",
+          "known_moves",
+          "loadout",
+          "mastery",
+          "best"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "portal_unlocks",
+    "waystones_activated",
+    "last_waystones",
+    "relics_held",
+    "relics_hung",
+    "attachment_recipes",
+    "feast_recipes",
+    "master_wins",
+    "release_receipts",
+    "transaction_receipts",
+    "research_receipts",
+    "bounty_receipts",
+    "pouch_tier",
+    "creatures"
+  ],
+  "additionalProperties": false
+}

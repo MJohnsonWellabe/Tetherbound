@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/evolution_lines",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "mudsnout_tuskroot",
+          "mudsnout_ashtusk",
+          "mosshell_cannonback",
+          "craghorn_stormcapra",
+          "staticub_stormursa"
+        ]
+      },
+      "source": {
+        "type": "string",
+        "enum": [
+          "mudsnout",
+          "mosshell",
+          "craghorn",
+          "staticub"
+        ]
+      },
+      "target": {
+        "type": "string",
+        "enum": [
+          "tuskroot",
+          "ashtusk",
+          "cannonback",
+          "stormcapra",
+          "stormursa"
+        ]
+      },
+      "breaks_level": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 50
+      },
+      "extra_ingredient": {
+        "type": "string",
+        "enum": [
+          "",
+          "heartstone",
+          "sunstone"
+        ]
+      },
+      "enabled": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "id",
+      "source",
+      "target",
+      "breaks_level",
+      "extra_ingredient",
+      "enabled"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "mudsnout_tuskroot"
+          },
+          "breaks_level": {
+            "const": 20
+          },
+          "source": {
+            "const": "mudsnout"
+          },
+          "target": {
+            "const": "tuskroot"
+          },
+          "extra_ingredient": {
+            "const": "heartstone"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "mudsnout_ashtusk"
+          },
+          "breaks_level": {
+            "const": 20
+          },
+          "source": {
+            "const": "mudsnout"
+          },
+          "target": {
+            "const": "ashtusk"
+          },
+          "extra_ingredient": {
+            "const": "sunstone"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "mosshell_cannonback"
+          },
+          "breaks_level": {
+            "const": 30
+          },
+          "source": {
+            "const": "mosshell"
+          },
+          "target": {
+            "const": "cannonback"
+          },
+          "extra_ingredient": {
+            "const": ""
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "craghorn_stormcapra"
+          },
+          "breaks_level": {
+            "const": 40
+          },
+          "source": {
+            "const": "craghorn"
+          },
+          "target": {
+            "const": "stormcapra"
+          },
+          "extra_ingredient": {
+            "const": ""
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "staticub_stormursa"
+          },
+          "breaks_level": {
+            "const": 50
+          },
+          "source": {
+            "const": "staticub"
+          },
+          "target": {
+            "const": "stormursa"
+          },
+          "extra_ingredient": {
+            "const": ""
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 5,
+  "uniqueItems": true,
+  "maxItems": 5
+}

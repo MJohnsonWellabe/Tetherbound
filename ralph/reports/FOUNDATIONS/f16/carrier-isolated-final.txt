@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+Production-load full carrier preserved=true; numeric representation Variant equal=false; canonical JSON equal=true
+Personal: {"attachment_recipes":["forge_meadows"],"bounty_receipts":["bounty:storage-1"],"creatures":{"creature-e66ad718f36ebf7e42e28d92e33471e7":{"best":true,"breakthroughs":[1.0],"cap_level":20.0,"evolution_choices":{"1":"stay"},"known_moves":["pebble_toss","stone_rush"],"loadout":{"charged":"stone_rush","quick":"pebble_toss","ultimate":"","utility":""},"mastery":{"pebble_toss":{"rank":1.0,"uses":2.0}},"rolled_traits":["hardy"],"taught_traits":{"1":"hardy"}}},"feast_recipes":["feast_t1"],"last_waystones":{"tidewake":"tidewake_entry"},"master_wins":["master_t1"],"portal_unlocks":["tidewake"],"pouch_tier":1.0,"release_receipts":["release:storage-1"],"relics_held":["tidewake"],"relics_hung":["meadows"],"research_receipts":["research:storage-1"],"transaction_receipts":["craft:storage-1"],"waystones_activated":{"tidewake":["tidewake_entry"]}}
+World: {"alpha_cycles":{"meadows":5.0},"bounty_day":6.0,"fifth_arch_stirred":true,"node_cycles":{"essence_ground":3.0},"portal_unlocks":["tidewake","cloudreach"],"rematch_cycles":{"meadows":4.0},"shrine_display":{"meadows":true},"station_tiers":{"forge":2.0}}
+Native Godot exit status: 0

@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/material_tiers",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "tier_1",
+          "tier_2",
+          "tier_3",
+          "tier_4",
+          "tier_5",
+          "tier_6",
+          "tier_7",
+          "tier_8"
+        ]
+      },
+      "tier": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "live",
+          "reserved"
+        ]
+      },
+      "raws": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "wood",
+            "stone",
+            "fiber",
+            "rootstone",
+            "ironwood",
+            "sunleaf",
+            "driftwood",
+            "reed_fiber",
+            "reef_stone",
+            "sluice_metal",
+            "tide_bloom",
+            "tide_pearl",
+            "windworn_heartwood",
+            "cliffglass_ore",
+            "gale_fiber",
+            "skyplume",
+            "cloudberry",
+            "thunderwood",
+            "stormglass",
+            "conductor_vine",
+            "glowmoss",
+            "sparkfur",
+            "voltcap"
+          ]
+        },
+        "minItems": 0,
+        "uniqueItems": true
+      },
+      "refined": {
+        "type": "string",
+        "enum": [
+          "",
+          "rootiron_ingot",
+          "tidesteel_ingot",
+          "skyglass_ingot",
+          "stormglass_plate"
+        ]
+      }
+    },
+    "required": [
+      "id",
+      "tier",
+      "biome",
+      "status",
+      "raws",
+      "refined"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "tier_1"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_2"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_3"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_4"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_6"
+          },
+          "tier": {
+            "const": 6
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_7"
+          },
+          "tier": {
+            "const": 7
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tier_8"
+          },
+          "tier": {
+            "const": 8
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 8,
+  "uniqueItems": true,
+  "maxItems": 8
+}
