@@ -2907,13 +2907,19 @@ func _observe_combat_feedback(manager: Node) -> Dictionary:
 			var feedback := preload("res://scripts/combat/hit_feedback.gd")
 			var expected := str(feedback.number_style(receipt, on_enemy).get("text", ""))
 			var hud := current_scene.find_child("CombatHUD", true, false) if current_scene != null else null
+			var camera := current_scene.get_viewport().get_camera_3d() if current_scene != null else null
+			var number_probe := {"hud_present": hud != null, "camera_present": camera != null,
+				"world_position": [_at.x, _at.y, _at.z],
+				"behind_camera": camera.is_position_behind(_at) if camera != null else false,
+				"hud_connected": manager.is_connected("impact_confirmed", Callable(hud, "_on_impact_confirmed")) if hud != null else false,
+				"number_config": feedback.config().get("numbers", {}).duplicate(true)}
 			var number_seen := false
 			if hud != null:
 				for label: Variant in hud.get("_damage_numbers"):
 					if label is Label and is_instance_valid(label) and label.text == expected: number_seen = true
 			var row := {"action_id": id, "on_enemy": on_enemy, "own_hit": bool(receipt.get("own_hit", true)),
 				"receipt_read_only": receipt.is_read_only(), "weight": str(receipt.get("weight", "")),
-				"damage": float(receipt.get("damage", 0.0)), "number_text": expected, "number_seen": number_seen,
+				"damage": float(receipt.get("damage", 0.0)), "number_text": expected, "number_seen": number_seen, "number_probe": number_probe,
 				"host_resolved_defence": bool(receipt.get("host_resolved_defence", false)),
 				"host_poise": float(receipt.get("host_poise", -1.0)), "local_poise": float(manager.get("_player_poise")),
 				"host_staggered": bool(receipt.get("host_staggered", false)), "local_action": int(manager.get("_action")),

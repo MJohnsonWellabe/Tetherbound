@@ -610,7 +610,7 @@ func _run() -> void:
 		var observer_count := 0
 		for raw: Dictionary in rows:
 			check(bool(raw.get("receipt_read_only", false)), "peer %d received immutable host feedback %s" % [peer, raw.action_id])
-			check(bool(raw.get("number_seen", false)), "peer %d rendered actual damage-number Label for %s" % [peer, raw.action_id])
+			check(bool(raw.get("number_seen", false)), "peer %d rendered actual damage-number Label for %s (%s)" % [peer, raw.action_id, str(raw.get("number_probe", {}))])
 			check(bool(raw.get("target_hitstop_active", false)) and bool(raw.get("target_physics_paused", false)),
 				"peer %d impact froze actual target body for %s" % [peer, raw.action_id])
 			if not bool(raw.get("own_hit", true)):
