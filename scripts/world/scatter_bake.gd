@@ -180,6 +180,29 @@ static func _read_manifest(world_name: String) -> Dictionary:
 	return parsed if parsed is Dictionary else {}
 
 
+static func is_usable(world_name: String, base_seed: int, fingerprint: int = -1) -> bool:
+	# A regional generation never bypasses its effective file/source receipt
+	# checks, even when the retained original fingerprint matches live source.
+	if has_stable_harvest_ids(world_name):
+		return is_incremental_usable(world_name, base_seed, fingerprint)
+	return is_fresh(world_name, base_seed, fingerprint)
+
+
+static func has_stable_harvest_ids(world_name: String) -> bool:
+	return bool(_read_manifest(world_name).get("stable_harvest_ids", false))
+
+
+static func is_incremental_usable(world_name: String, base_seed: int, fingerprint: int) -> bool:
+	var manifest := _read_manifest(world_name)
+	if int(manifest.get("base_seed", -1)) != base_seed or not bool(manifest.get("stable_harvest_ids", false)):
+		return false
+	for pair: Variant in manifest.get("regions", []):
+		if not pair is Array or pair.size() != 2 \
+				or not FileAccess.file_exists(_region_path(world_name, Vector2i(int(pair[0]), int(pair[1])))):
+			return false
+	return TERRAIN_BAKE.is_incremental_usable(_bake_dir(world_name), config_fingerprint() if fingerprint < 0 else fingerprint)
+
+
 ## Load every region file for `world_name` and merge them back into the same
 ## shape `scatter_rules.all_placements` returns: `{ layer_name: Array[Dictionary] }`,
 ## with `drained_out` filled the same way (layer_name -> Array of the
@@ -196,7 +219,7 @@ static func _read_manifest(world_name: String) -> Dictionary:
 ## region file it came from.
 static func load_all(
 	world_name: String, drained_out: Dictionary = {},
-	skip_layers: Dictionary = {}, skipped_out: Dictionary = {}
+	skip_layers: Dictionary = {}, skipped_out: Dictionary = {}, identity_bounds_out: Dictionary = {}
 ) -> Dictionary:
 	var manifest := _read_manifest(world_name)
 	var by_layer_unordered: Dictionary = {}
@@ -225,10 +248,16 @@ static func load_all(
 	var t_read1 := Time.get_ticks_msec()
 
 	var by_layer: Dictionary = {}
+	# Bounds exist independently of surviving placement records. A completely
+	# removed layer must retain its retired IDs and durable save bitset size.
+	identity_bounds_out.merge(stable_identity_bounds(manifest, skip_layers), true)
+	for layer: String in identity_bounds_out:
+		by_layer[layer] = []
 	var placements := 0
 	for layer_name: String in by_layer_unordered.keys():
 		placements += (by_layer_unordered[layer_name] as Array).size()
-		by_layer[layer_name] = _reorder(by_layer_unordered[layer_name])
+		var identity_bound := int((manifest.get("identity_high_water", {}) as Dictionary).get(layer_name, -1)) + 1
+		by_layer[layer_name] = _reorder(by_layer_unordered[layer_name], bool(manifest.get("stable_harvest_ids", false)), identity_bound)
 	for layer_name: String in drained_unordered.keys():
 		placements += (drained_unordered[layer_name] as Array).size()
 		drained_out[layer_name] = _reorder(drained_unordered[layer_name])
@@ -239,6 +268,17 @@ static func load_all(
 		region_list.size(), placements, skipped, t_read1 - t_read0,
 		by_layer.size() + drained_out.size(), Time.get_ticks_msec() - t_read1])
 	return by_layer
+
+
+static func stable_identity_bounds(manifest: Dictionary, skip_layers: Dictionary = {}) -> Dictionary:
+	var out := {}
+	var bounds: Variant = manifest.get("identity_high_water", {})
+	if not bool(manifest.get("stable_harvest_ids", false)) or not bounds is Dictionary:
+		return out
+	for layer: String in bounds:
+		if not skip_layers.has(layer):
+			out[layer] = int(bounds[layer]) + 1
+	return out
 
 
 ## `entries` is an Array of `{ order: int, placement: Dictionary }`, gathered
@@ -264,8 +304,12 @@ static func load_all(
 ## walks each layer's array by index, so a different order chooses different
 ## trees as gatherable. Anything that is not a dense permutation falls back to
 ## the original sort, which is kept below verbatim.
-static func _reorder(entries: Array) -> Array[Dictionary]:
+static func _reorder(entries: Array, preserve_identity: bool = false, identity_bound: int = 0) -> Array[Dictionary]:
 	var count := entries.size()
+	if preserve_identity:
+		for wrapped: Dictionary in entries:
+			wrapped["placement"]["harvest_identity"] = int(wrapped["order"])
+			wrapped["placement"]["harvest_identity_bound"] = identity_bound
 	var out: Array[Dictionary] = []
 	out.resize(count)
 	var seen := PackedByteArray()
@@ -282,7 +326,8 @@ static func _reorder(entries: Array) -> Array[Dictionary]:
 	if dense:
 		return out
 
-	push_warning("scatter bake orders are not a dense permutation; sorting instead")
+	if not preserve_identity:
+		push_warning("scatter bake orders are not a dense permutation; sorting instead")
 	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a["order"]) < int(b["order"]))
 	var sorted: Array[Dictionary] = []
@@ -383,6 +428,8 @@ static func write_all(
 	region_size: float, base_seed: int, source_fingerprint: int = -1
 ) -> Dictionary:
 	var dir_path := _bake_dir(world_name)
+	if has_stable_harvest_ids(world_name):
+		return {"ok":false,"code":"stable_ids_require_identity_preserving_writer"}
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(dir_path)):
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir_path))
 
@@ -412,7 +459,10 @@ static func write_all(
 		return a.x < b.x or (a.x == b.x and a.y < b.y))
 	for region: Vector2i in regions:
 		var path := _region_path(world_name, region)
-		bytes_written += _write_region(path, by_region[region])
+		var written := _write_region(path, by_region[region])
+		if written < 0:
+			return {"ok": false, "regions": 0, "bytes": 0, "kept": 0, "drained": 0}
+		bytes_written += written
 		region_list.append([region.x, region.y])
 
 	var manifest := {
@@ -433,6 +483,165 @@ static func write_all(
 	manifest_file = null
 
 	return {"regions": regions.size(), "bytes": bytes_written, "kept": total_kept, "drained": total_drained}
+
+
+## Old full bakes write `i` within EACH layer, and load_all places it back
+## at array index i. Prove that equivalence before converting to stable IDs;
+## a malformed/gapped legacy bake is refused rather than reinterpreted.
+static func orders_are_dense(entries: Array) -> bool:
+	var seen := PackedByteArray()
+	seen.resize(entries.size())
+	for entry: Dictionary in entries:
+		var order := int(entry.get("order", -1))
+		if order < 0 or order >= seen.size() or seen[order] != 0:
+			return false
+		seen[order] = 1
+	return true
+
+
+static func _identity_key(placement: Dictionary) -> String:
+	var point: Vector3 = placement.position
+	var coordinates := PackedByteArray()
+	coordinates.resize(8)
+	coordinates.encode_float(0, point.x)
+	coordinates.encode_float(4, point.z)
+	return str(placement.model) + ":" + coordinates.hex_encode()
+
+
+## Region files outside selection are never opened for writing. Their old
+## array-index identities survive; matched local objects retain theirs,
+## additions use monotonically new slots, and removals leave retired holes.
+static func write_regions(world_name: String, by_layer: Dictionary, drained: Dictionary,
+		region_size: float, base_seed: int, selection: Array, test_data_dir: String = "", scope_file: String = "") -> Dictionary:
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_BAKE.CONFIG_PATH))
+	if not config is Dictionary or not valid_world_selection(selection, config.get("world_bounds", {}), region_size):
+		return {"ok": false, "code": "invalid_region_selection"}
+	# Normalize once at the API boundary. Every subsequent selection, lookup,
+	# catalog and receipt uses the same validated integer-cell representation.
+	selection = TERRAIN_BAKE.canonical_regions(selection)
+	var data_dir := _bake_dir(world_name)
+	if not test_data_dir.is_empty():
+		if not OS.has_feature("debug") or not test_data_dir.begins_with("user://"):
+			return {"ok": false, "code": "invalid_test_directory"}
+		data_dir = test_data_dir
+	var scope := {}
+	if test_data_dir.is_empty():
+		scope = TERRAIN_BAKE.read_village_scope(scope_file, selection)
+		if scope.is_empty():
+			return {"ok":false,"code":"invalid_village_scope"}
+	var prior := TERRAIN_BAKE.read_manifest(data_dir)
+	if int(prior.get("base_seed", -1)) != base_seed or float(prior.get("region_size", -1)) != region_size:
+		return {"ok": false, "code": "incompatible_base_bake"}
+	var prior_catalog := TERRAIN_BAKE.canonical_regions(prior.get("regions", []))
+	if prior_catalog.is_empty():
+		return {"ok": false, "code": "invalid_base_catalog"}
+	var selected := {}
+	for pair: Array in selection:
+		selected[Vector2i(int(pair[0]), int(pair[1]))] = true
+	var old_kept := {}
+	var old_drained := {}
+	for pair: Array in prior_catalog:
+		var path := data_dir.path_join(_region_path(world_name, Vector2i(int(pair[0]), int(pair[1]))).get_file())
+		var input := FileAccess.open(path, FileAccess.READ)
+		if input == null or input.get_32() != MAGIC or input.get_32() != FORMAT_VERSION:
+			return {"ok": false, "code": "invalid_base_region"}
+		input.seek(0)
+		_read_region(input, old_kept, old_drained)
+		var read_ok := input.get_error() == OK
+		input.close()
+		if not read_ok:
+			return {"ok": false, "code": "incomplete_base_region"}
+	var raw_high_water: Variant = prior.get("identity_high_water", {})
+	if not raw_high_water is Dictionary:
+		return {"ok": false, "code": "invalid_identity_registry"}
+	var high_water: Dictionary = raw_high_water.duplicate(true)
+	# First conversion validates ALL old kept layers, including ones absent
+	# from the new authored placement set and still present outside selection.
+	for layer: String in old_kept:
+		var records: Array = old_kept[layer]
+		if not bool(prior.get("stable_harvest_ids", false)) and not orders_are_dense(records):
+			return {"ok": false, "code": "legacy_order_not_dense"}
+		var identities := {}
+		var maximum := int(high_water.get(layer, -1))
+		for record: Dictionary in records:
+			var identity := int(record.order)
+			if identity < 0 or identities.has(identity):
+				return {"ok": false, "code": "duplicate_identity"}
+			identities[identity] = true
+			maximum = maxi(maximum, identity)
+		high_water[layer] = maximum
+	var buckets := {}
+	for group: String in ["kept", "drained"]:
+		var old: Dictionary = old_kept if group == "kept" else old_drained
+		var current: Dictionary = by_layer if group == "kept" else drained
+		for layer: String in current:
+			var records: Array = old.get(layer, [])
+			if not bool(prior.get("stable_harvest_ids", false)) and not orders_are_dense(records):
+				return {"ok": false, "code": "legacy_order_not_dense"}
+			var identities := {}
+			for record: Dictionary in records:
+				var identity := int(record.order)
+				if identity < 0 or identities.has(identity):
+					return {"ok": false, "code": "duplicate_identity"}
+				identities[identity] = true
+			var maximum := int(high_water.get(layer, -1)) if group == "kept" else -1
+			var matches := {}
+			for record: Dictionary in records:
+				maximum = maxi(maximum, int(record.order))
+				var placement: Dictionary = record.placement
+				var point: Vector3 = placement.position
+				if selected.has(region_of(Vector2(point.x, point.z), region_size)):
+					var key := _identity_key(placement)
+					if not matches.has(key):
+						matches[key] = []
+					(matches[key] as Array).append(int(record.order))
+			for placement: Dictionary in current[layer]:
+				var point: Vector3 = placement.position
+				if not selected.has(region_of(Vector2(point.x, point.z), region_size)):
+					continue
+				var key := _identity_key(placement)
+				var available: Array = matches.get(key, [])
+				var identity := int(available.pop_front()) if not available.is_empty() else maximum + 1
+				maximum = maxi(maximum, identity)
+				_bucket(buckets, region_size, layer, placement, group, identity)
+			if group == "kept":
+				high_water[layer] = maximum
+	var stage := "res://.tmp/scatter-patch-%d-%d-%d" % [OS.get_process_id(), int(Time.get_unix_time_from_system()), Time.get_ticks_usec()]
+	if DirAccess.make_dir_recursive_absolute(stage) != OK:
+		return {"ok": false, "code": "stage_failed"}
+	var files: Array[String] = []
+	# JSON numbers are floats. Canonicalize before Array.has so an existing
+	# cell cannot be appended again solely because the new selection uses ints.
+	var catalog: Array = []
+	for pair: Array in prior_catalog:
+		catalog.append(pair.duplicate())
+	for pair: Array in selection:
+		var region := Vector2i(int(pair[0]), int(pair[1]))
+		var name := _region_path(world_name, region).get_file()
+		if _write_region(stage.path_join(name), buckets.get(region, {})) < 0:
+			return {"ok": false, "code": "write_failed"}
+		files.append(name)
+		var cell := [region.x,region.y]
+		if not catalog.has(cell):
+			catalog.append(cell)
+	var patch := {"config_fingerprint": config_fingerprint(), "regions": selection.duplicate(true),
+		"identity_high_water": high_water, "region_catalog": catalog,
+		"scope": "explicit regional scatter update; outside bytes and base provenance retained"}
+	patch.merge(scope, true)
+	var success := TERRAIN_BAKE.promote_regional_update(data_dir, stage, files, patch)
+	return {"ok": success, "code": "" if success else "promotion_failed", "regions": selection.size()}
+
+
+static func valid_world_selection(selection: Variant, bounds: Dictionary, region_size: float) -> bool:
+	if region_size <= 0 or not TERRAIN_BAKE.valid_region_selection(selection):
+		return false
+	for pair: Array in selection:
+		var at := Vector2(float(pair[0]), float(pair[1])) * region_size
+		if at.x < float(bounds.get("min_x", INF)) or at.y < float(bounds.get("min_z", INF)) \
+				or at.x + region_size > float(bounds.get("max_x", -INF)) \
+				or at.y + region_size > float(bounds.get("max_z", -INF)):
+			return false
+	return true
 
 
 static func _bucket(by_region: Dictionary, region_size: float, layer_name: String, placement: Dictionary, bucket: String, order: int) -> void:
@@ -465,7 +674,8 @@ static func _write_region(path: String, layers: Dictionary) -> int:
 
 	var absolute_path := ProjectSettings.globalize_path(path)
 	var file := FileAccess.open(absolute_path, FileAccess.WRITE)
-	assert(file != null, "Failed to open scatter region for writing: %s (error %s)" % [absolute_path, FileAccess.get_open_error()])
+	if file == null:
+		return -1
 	file.store_32(MAGIC)
 	file.store_32(FORMAT_VERSION)
 	file.store_32(model_list.size())
@@ -486,6 +696,9 @@ static func _write_region(path: String, layers: Dictionary) -> int:
 			_write_placement(file, wrapped as Dictionary, model_index)
 
 	var size := file.get_length()
+	if file.get_error() != OK:
+		file.close()
+		return -1
 	file = null
 	return size
 

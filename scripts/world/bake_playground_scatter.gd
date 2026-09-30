@@ -39,7 +39,33 @@ func _init() -> void:
 	var world_size := float(config.get("world_size", 512))
 	var region_size := float(config.get("region_size", 256))
 	var base_seed := int(RULES.config().get("seed", 1))
+	var selection: Array = []
+	var regional := false
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--regions="):
+			continue
+		regional = true
+		for pair: String in arg.substr("--regions=".length()).split(",", false):
+			var parts := pair.split(":")
+			if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
+				push_error("Invalid scatter region selection: " + pair)
+				quit(1)
+				return
+			selection.append([parts[0].to_int(), parts[1].to_int()])
+	if regional and not BAKE.valid_world_selection(selection, config.world_bounds, region_size):
+		push_error("Scatter selection is empty, duplicated or outside the authored world")
+		quit(1)
+		return
 
+	var scope_file := ""
+	if regional:
+		for arg: String in OS.get_cmdline_user_args():
+			if arg.begins_with("--scope-proof="):
+				scope_file = arg.substr("--scope-proof=".length())
+		if BAKE.TERRAIN_BAKE.read_village_scope(scope_file, selection).is_empty():
+			push_error("Regional scatter writer needs matching independently reviewed village scope proof")
+			quit(1)
+			return
 	var field: RefCounted = HEIGHTFIELD.new(config)
 	var drained: Dictionary = {}
 	var t0 := Time.get_ticks_msec()
@@ -56,7 +82,16 @@ func _init() -> void:
 	print("computed %d placements (%d drained) across %d layers in %d ms" % [
 		kept_total, drained_total, by_layer.size(), elapsed])
 
+	if regional:
+		var patched := BAKE.write_regions(WORLD_NAME, by_layer, drained, region_size, base_seed, selection, "", scope_file)
+		print("regional scatter update: " + JSON.stringify(patched))
+		quit(0 if bool(patched.get("ok", false)) else 1)
+		return
 	var result := BAKE.write_all(WORLD_NAME, by_layer, drained, region_size, base_seed)
+	if result.get("ok", true) == false:
+		push_error("Scatter region write failed; no new manifest published")
+		quit(1)
+		return
 	print("baked -> data/scatter/%s (%d regions, %d bytes, %.1f bytes/placement)" % [
 		WORLD_NAME, result["regions"], result["bytes"],
 		float(result["bytes"]) / maxf(1.0, float(result["kept"] + result["drained"]))])

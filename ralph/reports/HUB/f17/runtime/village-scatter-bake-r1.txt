@@ -1,0 +1,47 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: scatter anchor at (-58.0, 199.0) placed 1 of 3 in 36 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] _init (res://scripts/world/bake_playground_scatter.gd:72)
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] _init (res://scripts/world/bake_playground_scatter.gd:72)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 1 in 12 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] _init (res://scripts/world/bake_playground_scatter.gd:72)
+WARNING: scatter anchor at (2.0, 47.0) placed 0 of 4 in 48 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] _init (res://scripts/world/bake_playground_scatter.gd:72)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 6 of 8 in 96 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] _init (res://scripts/world/bake_playground_scatter.gd:72)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+       [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+       [2] all_placements (res://scripts/world/scatter_rules.gd:1594)
+       [3] _init (res://scripts/world/bake_playground_scatter.gd:72)
+computed 816062 placements (3800 drained) across 11 layers in 495478 ms
+regional scatter update: {"code":"","ok":true,"regions":4}
+SOURCE_SHA=af78aa2256ea0356b403205e009262e04aa78cf5 NATIVE_EXIT=0 ELAPSED_SECONDS=506.2750081

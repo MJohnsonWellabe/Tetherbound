@@ -11,7 +11,7 @@
       "flag_id": "opening:beat:choose",
       "scope": "player",
       "label": "Go down and hear Grandpa out.",
-      "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa"},
+      "beacon": {"position": [2, 14], "display_name": "Grandpa"},
       "how": "He is waiting at the table downstairs. {interact} when you are next to him.",
       "_comment": "OP-0830-4. Real flag, already written by sequence_director.gd::_set_beat -- `opening:beat:choose` is set the moment his briefing's last line fires `beat:starter_choice`, so this rung is DONE exactly when he has been heard."
     },
@@ -20,7 +20,7 @@
       "flag_id": "opening:beat:return_starter",
       "scope": "player",
       "label": "Choose your first creature and give it a name.",
-      "beacon": {"position": [-22.0, -16.0], "display_name": "Your first creature"},
+      "beacon": {"position": [2, 14], "display_name": "Your first creature"},
       "how": "Grandpa opens all three orbs. Look at each one, take the one you want, then type a name.",
       "_comment": "OP-0830-4. `opening:beat:return_starter` is set by `_adopt()` the frame the named creature reaches the party. The `how` names no button on purpose: the picker and the naming grid are both modal and draw their own prompts, so a glyph here would be the third instruction on screen for one action."
     },
@@ -29,7 +29,7 @@
       "flag_id": "opening:beat:walk_out",
       "scope": "player",
       "label": "Show Grandpa your creature before you head out.",
-      "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa"},
+      "beacon": {"position": [2, 14], "display_name": "Grandpa"},
       "how": "He has not moved from the table. {interact} to talk -- he has orbs for you, and the door is his to open.",
       "_comment": "OP-0830-4, and the rung the whole ladder was missing. THIS is the beat the owner got stuck on: 'after the first conversation with grandpa you're trapped in his house with nothing telling you to talk to him again before you can go.' The door gate (grandpa_house.gd::_build_door_gate) stays solid until `opening:beat:walk_out`, and the only thing that sets it is the `beat:first_encounter` effect on the last line of `grandpa_first_catch` -- i.e. talking to him a second time. Nothing said so. It says so now, and sequence_director.gd::_refresh_door_gate additionally calls the player back when they push on the shut door, the same way spec sec1D already required for the FIRST required conversation."
     },
@@ -58,7 +58,7 @@
       "flag_id": "tam_tools_given",
       "scope": "player",
       "label": "Meet Tam in the village and take his tools.",
-      "beacon": {"position": [8.0, 12.0], "display_name": "Tam"},
+      "beacon": {"position": [26, 20], "display_name": "Tam"},
       "how": "Tam is the village smith, south-east of the well. {interact} to talk: axe for trees, pickaxe for stone, knife for fiber.",
       "_comment": "OP23-04, a NEW rung and the one the ladder was missing. Real flag, already wired: data/dialogue/village.json's `village_tam_tools` carries `flag:tam_tools_given` on the same line as its three `give:` effects. Everything below this rung presupposes those tools -- item_db.harvest_yield()'s rule is right-tool = full, no tool = half, WRONG tool = nothing, so a player without the knife gathers ZERO fiber and cannot afford an orb, a camp or a bed. Gate B's own harness discovered this the hard way and wrote it down: \"'natural route requires Tam's axe before it can harvest', which was not a harness bug -- it was a real beat of Gate B this file had skipped\" (tests/smoke_gate_b_continuous.gd). A ladder that skips the rung the player is actually standing on is the whole of what OP23-04 reports."
     },
@@ -76,7 +76,7 @@
       "flag_id": "tournament_training_ready",
       "scope": "player",
       "label": "Train with your team before the tournament.",
-      "beacon": {"position": [13.0, 9.0], "display_name": "Bryn's practice ring"},
+      "beacon": {"position": [78, 44], "display_name": "Bryn's practice ring"},
       "how": "Villagers who offer a fight are the training -- Bryn at the practice ring first. Wins are levels. Get your whole team to level 5.",
       "_comment": "CONTRACT flag -- RG19 owns the permanent level/condition threshold. Winning fights, gaining XP, or whatever RG19's condition model actually gates entry on should set this, not an invented second number.",
       "_comment_owner_0901": "archive/owner/OWNER_PLAYTEST_2026-09-01.md item 12: this rung named no concrete target, so a player reading the quest screen saw 'wins are levels' with nothing to aim for. The '5' here must stay in sync with data/config/tournament.json's entry.min_level (currently being lowered from 6 to 5 on ralph/OWNER-0901-TOURNAMENT-LEVEL5, matching Halda's tournament_halda_train dialogue) -- if that number ever moves again, update this line in the same change."
@@ -127,7 +127,7 @@
       "scope": "player",
       "retired_by": "tournament_entered",
       "label": "Choose three with Halda, then feed your entrants.",
-      "beacon": {"position": [23.5, 11.5], "display_name": "Tournament grounds"},
+      "beacon": {"position": [88.5, 46.5], "display_name": "Tournament grounds"},
       "how": "Speak to Halda to register three entrants. Open the satchel with {inventory}, Use a food item, and feed each hungry entrant.",
       "_comment_retired_by": "T5-STORY-2, and the fix for the worst narrative-drive defect measured on this branch. `tournament_team_fed` is VOLATILE (see below) and `tournament.gd::_process` rewrites it from the live team ONCE A SECOND FOR THE WHOLE GAME, with no gate on whether the tournament is still ahead of the player. `quest_log.gd::tracked_text()` is 'first unset flag in file order', so the moment a team goes hungry -- which on this chapter's own ~1.1/min satiety drain across three to four hours is most of it -- the HUD's one tracked line snapped back to this rung and STAYED there for the rest of the chapter.\n\nMeasured, not reasoned: `tools/_probe_story_drive.gd` walks the chapter's own flags in this file's order against a live Meadows and prints the tracked line at each rung. Before this key, 'Feed your team before you sign up.' was the tracked line at EVERY rung from the tournament run-up to the end of the game -- South Bridge, the warrens, the relay, all three captains, the Hall, the Warden, freeing what is under it, and the walk home. The game's single answer to 'what now' spent the last two thirds of its own story naming a tutorial about food, and the eleven beats below this one were unreachable by the tracked line on a hungry save.\n\n`tournament_entered` is the honest retirement flag because it is what the rung's own words name: the line says 'before you sign up', and once you have signed up there is no 'before' left. The lesson is not weakened -- the rung still appears, still waits on real feeding, and still puts itself back on the HUD every time the team goes hungry RIGHT UP TO registration, which is the whole of what the 2026-08-23 directive asked for. It simply stops outranking the Warden afterwards.\n\nIt is not a prerequisite and not branching: one flag, checked with `has`, exactly the shape `revealed_by` already established one entry below. See `quest_log.gd::_done()`.",
       "_comment": "OWNER DIRECTIVE 2026-08-23 (section 2): \"Keep the satiety drain rate; teach it. The ~1.1/min drain stays. The guided tutorial chain adds an explicit 'feed your team' step before tournament sign-up so arriving hungry reads as a deliberate care ritual, not a trap.\" The drain is untouched (data/config/creature_condition.json) -- this rung is the teaching half of that ruling and nothing else.\n\nThe flag is VOLATILE, like the whole-team condition flag immediately below it: `tournament.gd::_write_entry_flags()` writes it true or false from `creature_condition.gd`'s own `fed` answer over the same entrants `condition_ready()` reads, so a team that goes hungry again puts the line BACK on the HUD. That is the correct behaviour for a state rather than an event -- the two contract flags above it record that something happened and are never cleared; being fed is a fact about today. Ordered after the sleep because that is the ritual the directive describes: rest them, feed them, then walk to Halda.\n\nIt is `fed` alone rather than `condition_ready` on purpose. Rested and happy have their own rungs and their own fixes; a line that says \"feed your team\" while the real failure is an unrested creature is the class of defect OP23-03 and OP23-04 are both reports of."
@@ -138,7 +138,7 @@
       "scope": "player",
       "retired_by": "tournament_entered",
       "label": "Rest and feed your registered three before you sign up.",
-      "beacon": {"position": [23.5, 11.5], "display_name": "Halda's readiness board"},
+      "beacon": {"position": [88.5, 46.5], "display_name": "Halda's readiness board"},
       "how": "Choose your three with Halda. Assign tired or unhappy entrants to Creature Beds with {interact}, then sleep at your Bedroll. Feed hungry entrants; their selection cards show who still needs care. Your other two do not need to qualify for this round.",
       "_comment": "The paid-camp playthrough reached the entry instruction while team members still needed rest. One completed sleep and the separate fed flag do not mean the explicitly registered three are ready. Read tournament.gd's existing volatile condition_ready verdict without introducing another threshold or requiring five beds. Registration retires this preparation rung so later fatigue cannot pull the chapter guidance back to the tournament."
     },
@@ -147,7 +147,7 @@
       "flag_id": "tournament_entered",
       "scope": "player",
       "label": "Enter the village tournament.",
-      "beacon": {"position": [23.5, 11.5], "display_name": "Halda"},
+      "beacon": {"position": [88.5, 46.5], "display_name": "Halda"},
       "how": "Halda runs the bracket in the north field past the square. {interact} to sign up; her board names anything missing.",
       "_comment": "CONTRACT flag -- RG19's own tournament-entry system. This objective must not duplicate RG19's eligibility checklist; it only reflects RG19's own verdict."
     },
@@ -156,7 +156,7 @@
       "flag_id": "tournament_won",
       "scope": "world",
       "label": "Win the village tournament.",
-      "beacon": {"position": [20.0, 12.0], "display_name": "Tournament ring"},
+      "beacon": {"position": [85, 47], "display_name": "Tournament ring"},
       "how": "Three rounds. Lose one and you can heal your team and ask Halda for the same round again.",
       "_comment": "CONTRACT flag -- RG19's own tournament victory state."
     },
@@ -287,7 +287,7 @@
       "flag_id": "meadows_acknowledged",
       "scope": "world",
       "label": "Go back through the Meadows and see what changed.",
-      "beacon": {"position": [-22.0, -16.0], "display_name": "Grandpa's Village"},
+      "beacon": {"position": [2, 14], "display_name": "Grandpa's Village"},
       "how": "Walk back the way you came in. Everyone you passed on the road has something to say about it now.",
       "_why": "GATE-E, prompt 68's last finale line ('surface the post-Warden world-state acknowledgment / next-world hint without entering Biome 2') and prompt 69's 'post-win acknowledgment'. SG46 already wrote the words (data/dialogue/meadows_freed.json) and SG44/SG46 already change the world; what was missing was the one line that sends the player back out to meet them, so the ending is a walk home through a healed region rather than a fade after the last flag. Completed by ANY of those post-victory conversations -- each carries `flag:meadows_acknowledged` -- so the villagers, the foreman and the traveller at the storm road all satisfy it and none of them is a required stop. This is the chapter's last main entry on purpose: the tracked line goes empty after it, which quest_log.gd's own header documents as the finished state, and D23 forbids the next one from existing here."
     }
