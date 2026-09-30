@@ -1,6 +1,6 @@
 {
   "criterion": "F21#4",
-  "integration_base": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
+  "integration_base": "7dcd2a8649660553f38702f2de71390efc6f1343",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
   "status": "F21#4 NOT MET. R3 nativeFAIL fully preserved; adaptive intermediate-angle source and explicit canonical hitstop receipt await source/native/blind gates.",
@@ -228,7 +228,8 @@
       "Safety correction can change camera pose promptly when smooth follow is invalid; dynamic pixel readability and correction quality need fresh independent blind judgment.",
       "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
       "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
-    ]
+    ],
+    "dependency_delta": "Merged landed7dcd actor lifetime/Heal prerequisite. All six listed camera hashes unchanged by merge; actor_vitals.runtime_enabled remains false, so no new actor/Heal gameplay activation. Fresh camera native successor still required, old9507 is not transferred as PASS."
   },
   "live_runtime_r2": {
     "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
