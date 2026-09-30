@@ -7144,8 +7144,10 @@ func _foundations_payload() -> Dictionary:
 	var character_id := str(local.get("character_id"))
 	var world_path := str((saver.call("worlds") as RefCounted).call("path_for", world_id))
 	var character_path := str((saver.call("characters") as RefCounted).call("path_for", character_id))
-	return {"world": (world.get("redesign_world") as Dictionary).duplicate(true),
-		"character": (local.get("redesign_character") as Dictionary).duplicate(true),
+	# Compare the complete JSON payload in its persisted numeric domain. Godot
+	# otherwise treats runtime int 20 and parsed JSON float 20.0 as unequal.
+	return {"world": JSON.parse_string(JSON.stringify(world.get("redesign_world"))),
+		"character": JSON.parse_string(JSON.stringify(local.get("redesign_character"))),
 		"world_id": world_id, "character_id": character_id,
 		"world_disk_sha256": FileAccess.get_sha256(world_path) if FileAccess.file_exists(world_path) else "",
 		"character_disk_sha256": FileAccess.get_sha256(character_path) if FileAccess.file_exists(character_path) else "",
@@ -7218,4 +7220,6 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		world.set("redesign_world", FOUNDATIONS_STATE.defaults("world"))
 	elif mode != "inspect":
 		return {"verdict": "ERROR", "detail": "unknown F16 witness mode " + mode}
-	return {"verdict": "PASS", "data": _foundations_payload(), "detail": "full F16 carrier witness " + mode}
+	var payload := _foundations_payload()
+	print("F16 full carrier ", mode, ": ", JSON.stringify(payload))
+	return {"verdict": "PASS", "data": payload, "detail": "full F16 carrier witness " + mode}
