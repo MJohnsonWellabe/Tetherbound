@@ -398,3 +398,93 @@ func test_utility_target_requires_the_exact_live_engine_without_wild_local_fallb
 	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "wild", true, "fight-a", "foe-b", "foe-a", "fight-a"), "actual body and engine enemy must be the same UID")
 	assert_true(DIRECTOR.utility_opponent_association_valid("fight-a", "trainer", false, "fight-a", "foe-a", "foe-a", "fight-a"))
 	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "trainer", false, "fight-a", "foe-a", "foe-a", "fight-b"), "trainer local binding must name the same encounter")
+
+
+func _meter_contact(action_id: String, uid: String = "owned-1", slot: String = "quick",
+		hp_before: float = 100.0, hp_after: float = 90.0) -> Dictionary:
+	return {"action_id": action_id, "source_uid": uid, "target_uid": "foe-1",
+		"slot": slot, "hp_before": hp_before, "hp_after": hp_after}
+
+
+func test_ultimate_meter_credits_host_debit_once_and_keeps_uid_meter_across_switch_rejoin() -> void:
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0, "card": {"uid": "foe-1"}}, "owned-1", "character-1")
+	var id := str(record.encounter_id)
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 1).ok)
+	var baseline: Dictionary = host.record(id).duplicate(true)
+	var first: Dictionary = host.stage_ultimate_credit(id, 1, 1, _meter_contact("accepted-action-1"))
+	assert_true(first.ok)
+	assert_eq(host.record(id), baseline, "staging grants no meter or receipt")
+	assert_true(host.commit_ultimate_credit(first).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 6.0)
+	host.set_opponent_hp(id, 90.0, 100.0)
+	baseline = host.record(id).duplicate(true)
+	assert_true(host.stage_ultimate_credit(id, 1, 1, _meter_contact("accepted-action-1")).duplicate)
+	assert_false(host.commit_ultimate_credit(first).ok)
+	assert_eq(host.record(id), baseline, "original accepted contact cannot grant twice")
+	var tampered := _meter_contact("accepted-action-1", "owned-1", "charged")
+	assert_false(host.stage_ultimate_credit(id, 1, 1, tampered).ok, "same receipt cannot claim a larger slot gain")
+	for index: int in range(2, 18):
+		var hp_before := float(host.record(id).opponent.hp)
+		var contact := _meter_contact("accepted-action-%d" % index, "owned-1", "quick", hp_before, hp_before - 1.0)
+		var proposal: Dictionary = host.stage_ultimate_credit(id, 1, 1, contact)
+		assert_true(proposal.ok)
+		assert_true(host.commit_ultimate_credit(proposal).ok)
+		host.set_opponent_hp(id, float(contact.hp_after), 100.0)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 100.0, "repeated authored gains cap at 100")
+	var saturation_contact := _meter_contact("saturation-contact", "owned-1", "quick", 74.0, 73.0)
+	var saturation: Dictionary = host.stage_ultimate_credit(id, 1, 1, saturation_contact)
+	assert_true(host.commit_ultimate_credit(saturation).ok)
+	host.set_opponent_hp(id, 73.0, 100.0)
+	assert_true(host.stage_ultimate_credit(id, 1, 1, saturation_contact).duplicate)
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("owned-2"), 2).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-2"), 0.0)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 100.0, "bench neither gains nor loses meter")
+	assert_false(host.stage_ultimate_credit(id, 1, 1, _meter_contact("bench-hit")).ok)
+	host.join(id, 2, "other-player", "character-2")
+	assert_true(host.leave(id, 1).ok)
+	assert_true(host.join(id, 7, "owned-2", "character-1").ok)
+	assert_eq(host.ultimate_meter(id, 7, "owned-1"), 100.0, "retained stable character state survives changed transport peer")
+	assert_eq(host.ultimate_meter(id, 7, "owned-2"), 0.0, "rejoin creates no refill")
+	assert_false(ENCOUNTER_HOST.presentation_snapshot(host.record(id)).participants[7].has("ultimate_state"))
+	var next: Dictionary = host.open(7, "meadows", "wild", {"hp": 100.0, "card": {"uid": "foe-1"}}, "owned-1", "character-1")
+	assert_eq(host.ultimate_meter(str(next.encounter_id), 7, "owned-1"), 0.0, "next encounter starts empty")
+
+
+func test_ultimate_meter_refuses_fake_gain_and_bounded_history_never_evicts_replays() -> void:
+	var cfg: Dictionary = ENCOUNTER_HOST.MATH.config().ultimate
+	var original_limit: Variant = cfg.receipt_limit_per_creature
+	cfg.receipt_limit_per_creature = 3
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "card": {"uid": "foe-1"}}, "owned-1", "character-1")
+	var id := str(record.encounter_id)
+	host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 1)
+	var baseline: Dictionary = host.record(id).duplicate(true)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, _meter_contact("no-debit", "owned-1", "quick", 100.0, 100.0)).ok, "no HP debit grants nothing")
+	assert_false(host.stage_ultimate_credit(id, 1, 1, _meter_contact("incoming-debit", "owned-1", "damage_taken")).ok, "incoming damage grants nothing even with a positive HP debit")
+	var inflated := _meter_contact("fake-gain")
+	inflated.gain = 999.0
+	assert_false(host.stage_ultimate_credit(id, 1, 1, inflated).ok, "numeric gain claims are not part of accepted receipt shape")
+	var friendly := _meter_contact("friendly-hit")
+	friendly.target_uid = "owned-1"
+	assert_false(host.stage_ultimate_credit(id, 1, 1, friendly).ok)
+	assert_false(host.stage_ultimate_credit(id, 1, 2, _meter_contact("wrong-body")).ok)
+	assert_eq(host.record(id), baseline)
+	var zero: Dictionary = host.stage_ultimate_credit(id, 1, 1, _meter_contact("ultimate-contact", "owned-1", "ultimate"))
+	assert_true(host.commit_ultimate_credit(zero).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 0.0, "ultimate deals damage without filling itself")
+	host.set_opponent_hp(id, 90.0, 100.0)
+	var charged_contact := _meter_contact("charged-contact", "owned-1", "charged", 90.0, 80.0)
+	var charged: Dictionary = host.stage_ultimate_credit(id, 1, 1, charged_contact)
+	assert_true(host.commit_ultimate_credit(charged).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 14.0)
+	host.set_opponent_hp(id, 80.0, 100.0)
+	var utility_contact := _meter_contact("damaging-utility-contact", "owned-1", "utility", 80.0, 79.0)
+	assert_true(host.commit_ultimate_credit(host.stage_ultimate_credit(id, 1, 1, utility_contact)).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 18.0, "damaging utility contributes the authored four")
+	host.set_opponent_hp(id, 79.0, 100.0)
+	baseline = host.record(id).duplicate(true)
+	assert_eq(host.stage_ultimate_credit(id, 1, 1, _meter_contact("new-after-bound", "owned-1", "quick", 79.0, 78.0)).code, "receipt_budget")
+	assert_true(host.stage_ultimate_credit(id, 1, 1, charged_contact).duplicate, "exact duplicate handled before capacity refusal")
+	assert_eq(host.record(id), baseline, "bound refuses new receipt and never evicts old replay protection")
+	cfg.receipt_limit_per_creature = original_limit

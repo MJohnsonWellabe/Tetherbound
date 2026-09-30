@@ -1,6 +1,12 @@
 {
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
+  "ultimate": {
+    "_scope": "Encounter-only host participant/creature meter; portable saves and peer presentation never grant or refill it.",
+    "max": 100.0,
+    "gain": {"quick": 6.0, "charged": 14.0, "utility": 4.0, "ultimate": 0.0, "damage_taken": 0.0},
+    "receipt_limit_per_creature": 4096
+  },
   "utility_limits": {
     "_scope": "Host-only encounter ledger; retained action identities refuse replay until encounter teardown. Fail closed at the bound, never evict receipts to allow reapplication.",
     "receipt_limit_per_encounter": 4096,
