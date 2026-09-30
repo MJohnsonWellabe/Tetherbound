@@ -517,23 +517,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T06:28:00Z",
+ "last_lane_refresh": "2026-09-30T07:28:00Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "F16 all five landed #467; at this refresh main remains102/280 after landed F26#1/#2. Hub pushed fcc3bbf463 source8ee152a47: corrected actual Hall doorway, Stoneyard sign and berry prompt geometry18 tests/3437assertions/0failed native0; initial44/3982/4red retained. Regional cache source draft is under independent identity/transaction review, not applied or baked. Actual controller, bakes and full visual bar remain open; no F17 MET."
+   "checkpoint": "Hub pushed bf0f38b20: actual four-region terrain/scatter generation native0, all60 outside terrain and252 outside scatter files byte-identical; matched harvest IDs retained and additions above old maxima. Regional logic5/65/0 and affected13-method passing union; initial checkout-line-ending failure retained and unchanged terrain tests5/20/0 after LF-only correction. At this refresh main102/280; F17 strict closure/player paths/visual bar remain open. F18 protected-policy and authority drafts advance in ignored scratch."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat pushed46f51 incoming host receipt; actual Settings pad proof07f PASS, Fireball090 final flash assertion still requires its scoped rerun. Next F21 camera matrix source coding is approved. Historical hosted first-HP and authority/rejoin evidence retained; no new F21–24 MET."
+   "checkpoint": "Combat pushed b013e4379: actual7401 Fireball pickup/backpack teaching/quick-hit/cast/contact/HP/number and instant incoming-flash player proof native0; actual two-peer host-target incoming ledger and retained first-HP/observer/authority checks native0. Camera/feedback16/199/0 plus guest-driver parser0. Strict-zero nine-pair camera/native/blind matrix and actual guest incoming replay pending; no new F21–24 MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX r4 evidence e164e7982 executed98efd1911 native0/36 PNGs; fresh blind F25#2 FAIL: Fireball orb/explosion unreadable. Lightning target identity passes stills and sampled1/3/5 scaling is a narrow PASS, whole#5 remains FAIL. Flag off; raw rejected reviews retained. Actual bounds-measured clear flight, smooth burning core/soft envelope and silhouette burst rework underway."
+   "checkpoint": "VFX pushed a74500624: bounds-measured clear flight, burning core/envelopes, leased target-bound impact and softer lightning source; static53/53 mapping,24archetypes/5tier definitions and budgets PASS, native r5 queued. R4 e164/98efd native0/36 PNGs retains fresh blind F25#2/#5 whole FAIL; sampled1/3/5 scaling and lightning target identity are bounded observations. Flag off; no F25 MET."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "F26#1/#2 landed #470; main102. Native Water Low/Medium/High and Meadows Low passes retained. Forward+ Meadows Medium crashed3221225725 before receipt, blocking the remaining matrix. Root diagnostic2ed reproduced native0xc00000fd; first/second-chance contexts recorded, dump writer failed/raw stack read0, no verified caller. Stack-probe __chkstk RVA6650296; source unchanged and runtime blocked. Address analysis underway; material/full-matrix/Ally gates open."
+   "checkpoint": "F26#1/#2 landed #470. Root pushed6e0612f1f central-budget upload scheduler fix; independent source PASS and scheduler check-only native0. Affected Forward+ Meadows Medium route failed3221225725 after116.625s before frames/receipt; scheduler yielded through vegetation then434props. Prior native0xc00000fd/raw diagnostics retained; upload approach changes next. Water3preset/MeadowsLow passes reused, remaining matrix/material/Ally gates open; no new F26 MET."
   }
  ]
 }
