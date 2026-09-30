@@ -142,6 +142,16 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
 	assert_eq(int((_read("res://data/config/cloudreach_solmane_climax.json").get("legendary", {}) as Dictionary).get("level", 0)), 44)
 
 
+func test_chapter_arrival_does_not_require_a_second_legacy_world_key() -> void:
+	for realm: String in ["cloudreach", "stormwood"]:
+		var old_key := "realm_key_" + realm
+		for act: Dictionary in _read("res://data/config/%s_chapter.json" % realm).get("acts", []):
+			assert_false((act.get("entry_flags", []) as Array).has(old_key),
+				"actual portal admission is the sole crossrealm entry gate")
+			for row: Dictionary in act.get("objectives", []):
+				assert_false((row.get("requires_flags", []) as Array).has(old_key))
+
+
 func test_boss_hand_offs_keep_typed_keys_distinct_from_item_skus() -> void:
 	var config := _read("res://data/config/chapter_rewards.json")
 	var targets := {

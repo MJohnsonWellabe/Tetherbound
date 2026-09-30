@@ -193,8 +193,20 @@ def derive():
     write_edits("data/config/burrow_warrens.json", warrens)
 
     cloud = lambda n: half_down(31 + (n - 19) * 13 / 15)
+    def retired_entry_clauses(data, old_key):
+        # F18's actual portal admission owns entry. These chapter clauses must
+        # not require a second, obsolete world key after successful arrival.
+        for act in data["acts"]:
+            act["entry_flags"] = [flag for flag in act.get("entry_flags", []) if flag != old_key]
+            for row in act["objectives"]:
+                row["requires_flags"] = [flag for flag in row.get("requires_flags", []) if flag != old_key]
+        entry = data.get("persistent_flags", {}).get("entry")
+        if isinstance(entry, list):
+            data["persistent_flags"]["entry"] = [flag for flag in entry if flag != old_key]
     def cloud_chapter(data):
         levels(data, cloud)
+        retired_entry_clauses(data, "realm_key_cloudreach")
+        data["acts"][0]["objectives"][0]["how"] = "Follow the cliff road to the first camp."
         # Wild endpoints follow the declared 29–43 envelope, not trainer formula.
         for table in data["encounter_tables"]:
             before = next(t for t in json.loads(source("data/config/cloudreach_chapter.json"))["encounter_tables"] if t["id"] == table["id"])
@@ -254,7 +266,10 @@ def derive():
         data["captive"]["placeholder_species"] = "fulgocobra"
         data["captive"]["level"] = 55
     write_edits("data/config/stormwood_dynamo.json", dynamo)
-    write_edits("data/config/stormwood_chapter.json", lambda d: d["final_encounter"].update(legendary_level=55))
+    def storm_chapter(data):
+        data["final_encounter"]["legendary_level"] = 55
+        retired_entry_clauses(data, "realm_key_stormwood")
+    write_edits("data/config/stormwood_chapter.json", storm_chapter)
 
 
 if __name__ == "__main__":
