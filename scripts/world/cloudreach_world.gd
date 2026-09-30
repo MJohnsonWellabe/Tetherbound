@@ -411,7 +411,7 @@ func _ready() -> void:
 	await _build_step("gates")
 	_build_bridges()
 	await _build_step("bridges")
-	if bool(_shell_build.call("is_slicing")):
+	if bool(_shell_build.call("uses_multiplayer_staging")):
 		_build_sliced_landmark_placeholders()
 	else:
 		await _build_landmarks()
@@ -460,7 +460,7 @@ func _ready() -> void:
 	chapter.name = "CloudreachChapter"
 	add_child(chapter)
 	runtime.call("mount", self, chapter, _realm_map,
-		bool(_shell_build.call("is_slicing")))
+		bool(_shell_build.call("uses_multiplayer_staging")))
 	await _build_step("mount")
 	# `get_window()` is the REAL window even for a world that is not the
 	# current scene: an unguarded capture here takes the pointer away from the
@@ -2069,7 +2069,7 @@ func _build_routes() -> void:
 		# Solo—the playable-first bar—keeps the complete authored shoulders.
 		# A live multiplayer build uses the already-authored visible/colliding
 		# route ribbons below as its explicit route placeholder.
-		if bool(_shell_build.call("is_slicing")):
+		if bool(_shell_build.call("uses_multiplayer_staging")):
 			_shell_build.call("mark", "routes:%s:geological_shoulders:deferred" % str(spec.get("id", "Route")))
 		else:
 			await _build_route_shoulders(root, spec, points, width)

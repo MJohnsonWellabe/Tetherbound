@@ -37,15 +37,15 @@ extends RefCounted
 ## but no frame is ever held, so the session survives and so does everyone
 ## standing in it.
 ##
-## ## Inert outside a shell
+## ## Renderer upload batches
 ##
-## `begin(world, false)` makes every call here a synchronous no-op that does
-## not yield, so a player crossing into a realm for real still gets the world
-## built before the first frame is drawn, exactly as it always was. GDScript's
-## `await` on a coroutine that returns without suspending resumes immediately
-## in the same frame, so the awaits threaded through the world scripts cost a
-## live build nothing. That is what keeps `smoke_cloudreach_transition` and
-## `smoke_cloudreach_arrival_walk` unchanged.
+## Forward+ also slices solo builds. The locked Windows Vulkan driver builds
+## its buffer-barrier array on the stack. One unsliced Meadows boot queued
+## 177006 barriers (9912336 bytes), exceeding the engine's 8 MiB stack.
+## Existing inner-loop breathe calls allow uploads between construction slices;
+## every placement, collision, harvest identity and model remains present.
+## Compatibility solo builds retain their synchronous behavior. World roots
+## already hold their local player while this scheduler is active.
 
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 
@@ -72,10 +72,10 @@ const DEFAULT_BUDGET_MS := 8
 ## harness both give up on. So the slice here is coarse -- the build stays
 ## nearly as fast as it was -- and its only job is that frames keep happening.
 ##
-## Solo play is NOT sliced at any budget. `begin()` asks the session, and with
-## no session it slices nothing, so single-player boot is byte-for-byte the
-## build it always was.
+## Compatibility solo builds remain unsliced. Forward+ solo builds use the
+## separate renderer-upload budget below.
 const CROSSING_BUDGET_MS := 100
+const FORWARD_BUILD_BUDGET_MS := 16
 
 ## `tools/net/peer_runner.gd` heartbeats every 60 PHYSICS frames and
 ## `tests/helpers/net_harness.gd` declares a peer silent after 15 s without
@@ -95,6 +95,7 @@ const LONG_SLICE_MS := 250
 
 var _tree: SceneTree = null
 var _active := false
+var _multiplayer_staging := false
 var _budget_ms := DEFAULT_BUDGET_MS
 var _frame_started_ms := 0
 var _step_started_ms := 0
@@ -119,7 +120,7 @@ var _profile_step_ms := 0
 ## Decide whether this build is sliced at all, and how finely. `shell` is the
 ## world's own `simulation_only`.
 ##
-## Three cases, and only the third is the common one:
+## Four cases:
 ##
 ##   1. a SHELL on a host -- the finest slice, because other people are
 ##      playing in a different world on this same process and every
@@ -128,10 +129,12 @@ var _profile_step_ms := 0
 ##      This is the player who walked through the gate, building their own
 ##      destination. They are looking at a loading transition and know it; the
 ##      only thing that must survive is their connection;
-##   3. everything else, which is all of single-player -- not sliced, not
-##      yielded, not changed in any way. Every `await` on this object resumes
-##      in the same frame.
+##   3. Forward+ solo -- allow resource uploads through existing inner-loop
+##      yields rather than queuing the whole world in one construction slice;
+##   4. Compatibility solo -- synchronous, with every await resuming in the
+##      same frame.
 func begin(world: Node, shell: bool) -> void:
+	_multiplayer_staging = false
 	_profile_load = OS.get_cmdline_user_args().has("--profile-realm-load")
 	_profile_step_ms = Time.get_ticks_msec()
 	_began_ms = _profile_step_ms
@@ -145,27 +148,41 @@ func begin(world: Node, shell: bool) -> void:
 		return
 	var cfg := PERF_CONFIG.config()
 	if shell:
+		_multiplayer_staging = true
 		_budget_ms = DEFAULT_BUDGET_MS
 		if cfg.has("shell_build_budget_ms"):
 			_budget_ms = maxi(1, int(cfg["shell_build_budget_ms"]))
 	elif _in_live_session(world):
+		_multiplayer_staging = true
 		_budget_ms = CROSSING_BUDGET_MS
 		if cfg.has("crossing_build_budget_ms"):
 			_budget_ms = maxi(1, int(cfg["crossing_build_budget_ms"]))
+	elif RenderingServer.get_current_rendering_method() == "forward_plus":
+		_budget_ms = maxi(1, int(cfg.get("forward_build_budget_ms", FORWARD_BUILD_BUDGET_MS)))
 	else:
 		_active = false
 		return
 	_frame_started_ms = Time.get_ticks_msec()
 	_step_started_ms = _frame_started_ms
 	_began_ms = _frame_started_ms
-	mark("begin:%s" % ("shell" if shell else "live_crossing"))
+	var mode := "forward_upload"
+	if shell:
+		mode = "shell"
+	elif _multiplayer_staging:
+		mode = "live_crossing"
+	mark("begin:" + mode)
 
 
 ## Whether this particular build is yielding frames. World roots use this to
-## keep their not-yet-grounded local player inert only during a live-session
-## transition; solo builds remain exactly as they were.
+## keep their not-yet-grounded local player inert while construction yields.
 func is_slicing() -> bool:
 	return _active
+
+
+## Existing network-only content staging is independent of renderer uploads.
+## Forward+ solo still builds the full authored landmarks and route shoulders.
+func uses_multiplayer_staging() -> bool:
+	return _multiplayer_staging
 
 
 ## Live diagnostic breadcrumb emitted BEFORE a potentially costly authored
