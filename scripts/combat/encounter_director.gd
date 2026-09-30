@@ -2577,7 +2577,7 @@ func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionar
 	var deployment: Dictionary = (_deployed_by.get(peer_id, {}) as Dictionary).duplicate(true)
 	var body_identity: Dictionary = {}
 	if peer_id == _local_peer_id():
-		if _ally == null or body.get("instance") != _ally: return {}
+		if _ally == null or not local_actor_body_matches(body, _ally_body, peer_id): return {}
 		body_identity = {"character_id": _local_character_id(), "species_id": str(_ally.get("species_id")),
 			"creature_uid": str(_ally.get("uid"))}
 		if deployment.is_empty():
@@ -2610,8 +2610,14 @@ func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionar
 
 ## One canonical deployment UID, including the frozen-tournament boundary.
 ## Remote bodies expose their host-spawned character/species identity; local
-## bodies additionally expose the real saved instance UID. Presentation numeric
+## bodies are matched to the director-held follower and real saved instance UID. Presentation numeric
 ## card stats never establish either identity or an admitted resource profile.
+static func local_actor_body_matches(body: Node3D, local_body: Node3D, peer_id: int) -> bool:
+	return peer_id > 0 and is_instance_valid(body) and is_instance_valid(local_body) \
+		and not body.is_queued_for_deletion() and body == local_body \
+		and int(body.get("owner_peer_id")) == peer_id
+
+
 static func deployment_identity_matches(owned: Dictionary, deployment: Dictionary,
 		body_identity: Dictionary, character_id: String, frozen_roster: Array) -> bool:
 	var uid: Variant = owned.get("uid")

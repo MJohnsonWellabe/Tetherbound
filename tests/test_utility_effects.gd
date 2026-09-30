@@ -5,6 +5,7 @@ const MOVES := preload("res://scripts/creatures/move_db.gd")
 const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
+const FOLLOWER := preload("res://scripts/creatures/follower_creature.gd")
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 
 func _host(action_id: String = "host-action-1") -> Dictionary:
@@ -354,6 +355,16 @@ func test_admitted_deployment_rejects_split_card_uid_and_frozen_outer_uid_bypass
 		assert_false(DIRECTOR.deployment_identity_matches(owned, deployment, wrong, "character-1", ["owned-1"]))
 	body.creature_uid = "other-local-instance"
 	assert_false(DIRECTOR.deployment_identity_matches(owned, deployment, body, "character-1", []), "actual local instance identity is also required")
+	# Actual production follower has owner_peer_id, not a saved `instance`.
+	var follower := FOLLOWER.new()
+	var other_follower := FOLLOWER.new()
+	follower.owner_peer_id = 1
+	other_follower.owner_peer_id = 1
+	assert_true(DIRECTOR.local_actor_body_matches(follower, follower, 1))
+	assert_false(DIRECTOR.local_actor_body_matches(other_follower, follower, 1), "same-owner unrelated body cannot replace director follower")
+	assert_false(DIRECTOR.local_actor_body_matches(follower, follower, 2))
+	follower.free()
+	other_follower.free()
 
 
 func test_admitted_wind_ignores_peer_numeric_profile_and_refuses_malformed_saved_inputs() -> void:
