@@ -345,23 +345,38 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 	var refusals := 0
 	var press_after := 0
 	var points: Array = boundary.points
+	# A resident conversation can leave the real capsule inside its furnished
+	# house. First reach that actual doorway's centre, then clear its front;
+	# only then follow the authored village/field road. A diagonal northward
+	# pursuit from Bram's interior hit its retained wall in the original run.
+	var departure := _containing_house_departure()
+	if not bool(departure.ok):
+		return _fail("The actual village house lacks a validated physical exit route")
+	var departure_points: Array = departure.points
+	var departure_index := 0
+	var required_departure := int(departure.get("required_points", 0))
+	if not departure_points.is_empty():
+		_receipt("wild_house_departure", {"house": departure.house, "points": departure_points})
 	if not points.is_empty():
 		_receipt("wild_boundary_route", {"target": str(target.name), "gate": boundary.gate, "points": points})
 	_receipt("wild_approach", _approach_snapshot(target))
 	for _frame in APPROACH_FRAMES:
 		if _fighting():
 			_stick(0, 0)
-			if waypoint < points.size():
+			if departure_index < required_departure or waypoint < points.size():
 				return _fail("Combat interrupted the required physical village gate crossing")
 			return _verify_engagement(target, allow_neighbour)
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
 			return _fail("The selected living wild disappeared before engagement")
 		closest = minf(closest, _player.global_position.distance_to(target.global_position))
 		var offer: Dictionary = _arbiter.call("winner")
-		if waypoint >= points.size() and _frame >= press_after and _arbiter.call("winning_provider") == _director \
+		if departure_index >= required_departure and waypoint >= points.size() and _frame >= press_after and _arbiter.call("winning_provider") == _director \
 				and bool(offer.get("actionable", false)) \
 				and _director.call("_engageable") == target:
 			_stick(0, 0)
+			if departure_index < departure_points.size():
+				_receipt("wild_departure_early_engage", {"completed_points": departure_index,
+					"planned_points": departure_points.size(), "target": str(target.name)})
 			_receipt("wild_interact", _approach_snapshot(target))
 			await _tap("interact")
 			for _settle in 120:
@@ -386,7 +401,19 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 				return _fail("The offered wild did not enter combat after Interact")
 			# Walk on toward it (the approach below) before pressing again.
 			press_after = _frame + 30
-		if waypoint < points.size():
+		if departure_index < departure_points.size():
+			var step: Dictionary = departure_points[departure_index]
+			var at: Vector2 = step.at
+			var radius := 0.25 if step.kind == "threshold" else 0.8
+			if Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= radius \
+					and _player.is_on_floor():
+				_receipt("wild_house_route_point", {"kind": step.kind, "index": departure_index,
+					"player": str(_player.global_position), "floor": _player.is_on_floor(), "approach_frames": _frame})
+				departure_index += 1
+				_nav.reset()
+			else:
+				_nav.step(Vector3(at.x, _player.global_position.y, at.y))
+		elif waypoint < points.size():
 			if not _open_boundary_gate(str(boundary.gate)):
 				_stick(0, 0)
 				return _fail("The actual village gate closed during the selected wild's approach")
@@ -408,8 +435,92 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 	stalled["approach_frames"] = APPROACH_FRAMES
 	stalled["boundary_gate"] = boundary.gate
 	stalled["boundary_waypoint"] = waypoint
+	stalled["departure_waypoint"] = departure_index
 	_receipt("wild_approach_failed", stalled)
 	return _fail("Ordinary movement did not reach the practice-meadow wild: " + JSON.stringify(stalled))
+
+
+func _containing_house_departure() -> Dictionary:
+	var none := {"ok": true, "house": "", "points": [], "required_points": 0}
+	var recipes: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/building_prefabs.json"))
+	if not recipes is Dictionary or not recipes.get("prefabs") is Dictionary:
+		return {"ok": false}
+	var selected: Node3D = null
+	var threshold := Vector3.ZERO
+	var front := Vector3.ZERO
+	var inside := false
+	for candidate: Node in _tree.get_nodes_in_group("village_road_houses"):
+		if not candidate is Node3D or not _world.is_ancestor_of(candidate):
+			continue
+		var door := candidate.get_node_or_null(^"Door") as Node3D
+		if door == null or candidate.get_node_or_null(^"Interior") == null \
+				or door.get_script() == null or door.get_script().resource_path != "res://scripts/world/village_door.gd":
+			continue
+		var label := str(candidate.name)
+		var prefab := label.substr(0, label.rfind("_"))
+		var recipe: Variant = recipes.prefabs.get(prefab)
+		if not recipe is Dictionary or not recipe.get("room") is Dictionary:
+			continue
+		var room: Dictionary = recipe.room
+		var width := float(room.get("inner_half_w", 0.0))
+		var depth := float(room.get("inner_half_d", 0.0))
+		if not is_finite(width) or not is_finite(depth) or width <= 0.0 or depth <= 0.0:
+			return {"ok": false}
+		var local_at: Vector3 = candidate.to_local(_player.global_position)
+		var within := absf(local_at.x) <= width + 0.4 and absf(local_at.z) <= depth + 0.4 \
+			and local_at.y >= 0.0 and local_at.y <= 3.0
+		var offset := _player.global_position - door.global_position
+		offset.y = 0.0
+		if not within and offset.length() > 4.0:
+			continue
+		if selected != null:
+			return {"ok": false} # Ambiguous overlapping house identity.
+		selected = candidate
+		threshold = door.global_position
+		front = threshold - candidate.global_position
+		front.y = 0.0
+		if front.length_squared() < 0.01 or not bool(door.call("is_open")):
+			return {"ok": false}
+		front = front.normalized()
+		inside = within or offset.dot(front) < 1.0
+	if selected == null:
+		return none
+	var route: Array = []
+	if inside:
+		route.append({"kind": "threshold", "at": Vector2(threshold.x, threshold.z)})
+		route.append({"kind": "outside", "at": Vector2(threshold.x + front.x * 1.8, threshold.z + front.z * 1.8)})
+	var village: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village.json"))
+	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	if not village is Dictionary or not village.get("road_plan") is Dictionary \
+			or not terrain is Dictionary or not terrain.get("paths") is Dictionary \
+			or not terrain.paths.get("routes") is Array:
+		return {"ok": false}
+	var ends: Array[Vector2] = []
+	for key: String in ["road_start", "road_end"]:
+		var raw: Variant = village.road_plan.get(key)
+		if not _route_pair_valid(raw):
+			return {"ok": false}
+		ends.append(Vector2(float(raw[0]), float(raw[1])))
+	var road_at := Geometry2D.get_closest_point_to_segment(Vector2(threshold.x, threshold.z), ends[0], ends[1])
+	route.append({"kind": "village_road", "at": road_at})
+	var matches := 0
+	for authored: Variant in terrain.paths.routes:
+		if not authored is Dictionary or authored.get("label") != "Practice Meadow":
+			continue
+		matches += 1
+		if not authored.get("points") is Array or authored.points.is_empty():
+			return {"ok": false}
+		for raw: Variant in authored.points:
+			if not _route_pair_valid(raw):
+				return {"ok": false}
+			route.append({"kind": "field_road", "at": Vector2(float(raw[0]), float(raw[1]))})
+	return {"ok": matches == 1, "house": str(selected.get_path()), "points": route,
+		"required_points": 2 if inside else 0}
+
+
+func _route_pair_valid(raw: Variant) -> bool:
+	return raw is Array and raw.size() == 2 and (raw[0] is int or raw[0] is float) \
+		and (raw[1] is int or raw[1] is float) and is_finite(float(raw[0])) and is_finite(float(raw[1]))
 
 
 func _boundary_approach(target: Node3D) -> Dictionary:
