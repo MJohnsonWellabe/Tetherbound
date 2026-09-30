@@ -143,6 +143,7 @@
       "max_travel_seconds": 0.42
     },
     "fallback": "mesh_compatibility",
+    "scene_light_cap": 4,
     "archetypes": {
       "stone_throw": {
         "body": {
@@ -322,6 +323,15 @@
         }
       },
       "fireball": {
+        "light": {
+          "enabled": true,
+          "colour": "#ffb357",
+          "body_range_m": 2.8,
+          "body_energy": 1.1,
+          "impact_range_m": 4.0,
+          "impact_energy": 2.1,
+          "flicker": 0.12
+        },
         "body": {
           "shape": "burning_core",
           "motion": "projectile",
@@ -872,6 +882,15 @@
         ]
       },
       "sky_lightning": {
+        "light": {
+          "enabled": true,
+          "colour": "#fff0bd",
+          "body_range_m": 2.4,
+          "body_energy": 0.45,
+          "impact_range_m": 3.8,
+          "impact_energy": 2.4,
+          "flicker": 0.04
+        },
         "body": {
           "shape": "beam",
           "motion": "sky",

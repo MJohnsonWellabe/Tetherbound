@@ -1,0 +1,33 @@
+{
+  "base_commit": "c92fc648aef89ef2aa9a27f6eee3992ea4b292ae",
+  "library_enabled": false,
+  "scope": "new Fireball/SkyLightning presentation light rows, scene-wide cap4, shared-lifetime light leases",
+  "existing_functions_unchanged": {
+    "scripts/vfx/move_effect.gd": [
+      "configure",
+      "_process",
+      "_finish_presentation",
+      "_projectile_position",
+      "_contact_position",
+      "_play_launch",
+      "_play_impact",
+      "_exit_tree",
+      "action_id",
+      "encounter_id",
+      "confirm_presentation_impact"
+    ],
+    "scripts/vfx/move_effect_budget.gd": [
+      "reserve",
+      "used",
+      "release"
+    ]
+  },
+  "unproved": [
+    "GDScript compilation",
+    "global cap/exhaustion/idempotence/release in engine",
+    "cancel and natural effect lifecycle",
+    "visual local-light interaction",
+    "four-creature Medium performance",
+    "all F25 acceptance rows"
+  ]
+}

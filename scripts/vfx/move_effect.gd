@@ -36,6 +36,8 @@ var _puff_origin := Vector3.ZERO
 var _rng := RandomNumberGenerator.new()
 var _colour: Color
 var _presentation_clock: SceneTreeTimer
+var _light: OmniLight3D
+var _light_profile: Dictionary = {}
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -96,6 +98,7 @@ func _ready() -> void:
 			trail.set_meta("body_index", i)
 			trail.set_meta("layer", layer)
 			_trails.append(trail)
+	_build_light()
 	_update_bodies(0.0)
 	_play_launch()
 	if _context.has("travel_seconds") and _travel > 0.0:
@@ -112,6 +115,17 @@ func _mesh_node(mesh: Mesh, colour: Color, opacity: float = 1.0, lit: bool = fal
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
 	return node
+
+func _build_light() -> void:
+	_light_profile = _row.get("light", {})
+	if not bool(_light_profile.get("enabled", false)) or _bodies.is_empty(): return
+	if not BUDGET.reserve_light(_lease, maxi(0, int(_config.get("scene_light_cap", 0)))): return
+	_light = OmniLight3D.new()
+	_light.light_color = Color(str(_light_profile.get("colour", _params.colour)))
+	_light.shadow_enabled = false
+	_light.omni_range = maxf(0.01, float(_light_profile.get("body_range_m", 2.8)))
+	_light.light_energy = maxf(0.0, float(_light_profile.get("body_energy", 1.0)))
+	add_child(_light)
 
 func _process(delta: float) -> void:
 	if not _arrived and _presentation_clock != null:
@@ -249,6 +263,13 @@ func _update_bodies(t: float) -> void:
 			var start := contact + Vector3.UP * float(_row.body.get("sky_height", 6.0))
 			trail_head = start.lerp(contact, clampf((t - float(_row.body.get("marker_fraction", 0.65))) / maxf(0.001, 1.0 - float(_row.body.get("marker_fraction", 0.65))), 0.0, 1.0))
 		_append_trail_point(i, trail_head)
+	if _light != null and not _bodies.is_empty():
+		_light.visible = _bodies[0].visible
+		_light.position = _bodies[0].position
+		if mode == "sky" and not (_histories[0] as Array).is_empty():
+			_light.position = (_histories[0] as Array).back()
+		var flicker := clampf(float(_light_profile.get("flicker", 0.12)), 0.0, 0.3)
+		_light.light_energy = maxf(0.0, float(_light_profile.get("body_energy", 1.0))) * (1.0 - flicker * (0.5 + 0.5 * sin(_elapsed * 19.0)))
 
 func _projectile_position(t: float, index: int) -> Vector3:
 	var direction := (_to - _from).normalized()
@@ -331,6 +352,11 @@ func _build_impact() -> void:
 	# Only child presentation geometry moves to the measured surface. The
 	# frozen contact endpoint, arrived clock and host gameplay stay unchanged.
 	var surface_offset := _impact_visual_origin(profile) - _contact_position()
+	if _light != null:
+		_light.visible = true
+		_light.position = _impact.position + surface_offset
+		_light.omni_range = maxf(0.01, float(_light_profile.get("impact_range_m", 4.0)))
+		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6)))
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
 	if str(profile.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
@@ -468,6 +494,8 @@ func _update_puffs(u: float) -> void:
 
 func _update_impact(u: float, delta: float) -> void:
 	if _impact == null: return
+	if _light != null:
+		_light.light_energy = maxf(0.0, float(_light_profile.get("impact_energy", 1.6))) * pow(1.0 - u, 2.0)
 	var profile: Dictionary = _row.impact
 	_update_puffs(u)
 	for child: Node in _impact.get_children():
@@ -549,5 +577,6 @@ func cancel_presentation() -> void:
 	# This cannot cancel an earned action or an authoritative pending hit.
 	# Stop local processing now; deferred deletion still releases the lease.
 	set_process(false)
+	if _light != null: _light.visible = false
 	_arrived = true
 	queue_free()
