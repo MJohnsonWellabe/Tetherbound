@@ -4,9 +4,9 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 ## 0. Resume here
 
-**Resume (owner redesign, 2026-09-29):** the owner's design interview replaced the Phase 1 and Phase 2 plans. Every lane now works from **`CODEX_START_HERE.md`**: owner decisions RD-01..RD-35, Waves 0–3, features F16–F49, lanes with owned files, work orders, and landing, hourly push and board rules. Start with **Wave 0 (`tb/foundations`, F16)**. `tb/combat`, `tb/vfx` and `tb/lookdev` may prototype in parallel. The detailed Phase 1/2 lane history that stood here (serial closer, Meadows/Stormwood/Tidewake/Cloudreach/Cards/Combat-spacing handoffs, Phase 2c/2d wind-downs) is in Git at `1c3f0b0d` (`git show 1c3f0b0d:docs/STATE.md`).
+**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-35, Waves 0–3, F16–F49, ownership and run rules. Wave 0 F16 must land before Wave 1 implementation. Combat/VFX/lookdev read-only prototypes are complete. Prior lane/wind-down history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** `ralph/reports/COORDINATOR/dashboard/` (`criteria.json`, `status.json`, `build_dashboard.py`; README for the scoring rule and republishing). **Criteria met: 95 of 280.** That is 95 of the original 101 (F01–F15) plus 0 of 179 redesign criteria (F16–F49, ACCEPTANCE §6.2). No chapter is accepted. Current /goal execution starts from e2de59571; F16#0 is in progress, and no new criteria are counted. Main was green at `8f5dd6ed2` (full CI run 36626653020), and the rolling download was rebuilt there.
+**Board:** `ralph/reports/COORDINATOR/dashboard/` (`criteria.json`, `status.json`, `build_dashboard.py`; README for the scoring rule and republishing). **Criteria met: 95 of 280.** That is 95 of the original 101 (F01–F15) plus 0 of 179 redesign criteria (F16–F49, ACCEPTANCE §6.2). No chapter is accepted. Goal source baseline e2de59571; main 3cc8e789c. F16 in progress; no new acceptance counted. Main was green at `8f5dd6ed2` (full CI run 36626653020), and the rolling download was rebuilt there.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -28,12 +28,12 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | F16#0 implementing v28 refusal on current main e2de59571; proof/re-check open |
+| `tb/foundations` | F16 | WIP cf702dc0e pushed; main merged at 2014963ea; focused 166/2240/0 and title/autosave witness inspected; F16#0 final review/full units open |
 | `tb/hub` | F17, F18 | waits on F16 |
 | `tb/reorder` | F19, F20 | waits on F16, F18 |
-| `tb/combat` | F21–F24 | read-only impact/authority prototype active; edits and landings after F16 |
-| `tb/vfx` | F25, F35 | read-only archetype/arrival prototype active; edits and landings after F16 |
-| `tb/lookdev` | F26 | read-only preset/runtime prototype active; edits and landings after F16 |
+| `tb/combat` | F21–F24 | prototype complete; independent F16 review; edits after F16 |
+| `tb/vfx` | F25, F35 | prototype complete; independent schema/carrier review; edits after F16 |
+| `tb/lookdev` | F26 | prototype complete; Wave 1 ready after F16 |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
@@ -41,7 +41,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | `tb/hud` | F42 | Wave 2 |
 | `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
 
-**Active ownership:** `tb/foundations` owns the F16 save/title refusal, central-order consumers and legacy-crossing gate call sites through Wave 0; hub/reorder take those paths only after F16. Exact extra paths are in board `status.json` WIP. `tb/redesign-board` holds board/STATE writes during this slice. Godot writers serialize; no prototype runs Godot. Reference boards restored in the clean board checkout.
+**Active ownership:** `tb/foundations` owns the F16 save/title refusal, central-order consumers and legacy-crossing gate call sites through Wave 0; hub/reorder take those paths only after F16. Exact extra paths are in board `status.json` WIP. `tb/redesign-board` holds board/STATE writes during this slice. Godot import/render/export writers serialize; distinct-user-dir two-peer headless groups run together. Reference boards restored in the clean board checkout.
 
 ### Open owner decisions
 
