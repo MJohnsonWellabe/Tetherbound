@@ -1,0 +1,5 @@
+Low: native0, 11021 frames, mean13.739ms/P9518.107/P9926.301/max152.297; 2 actual waypoints.
+Medium: native0, 5895 frames, mean25.749ms/P9530.547/P9932.483/max209.890; 2 actual waypoints.
+High: native0, 4601 frames, mean32.967ms/P9537.949/P9941.555/max52.936; 2 actual waypoints.
+
+Locked Godot4.7/GTX1060 3GB/1920x1080. Production scene, real InputMap/collision route, declared initial placement and own warmup; live clock/weather, no between-waypoint teleport or speedup. Medium/High reuse one world. Loading excluded from sampled frame times. Source receipts/raw logs/original PNG retained. No full visual-bar, earned campaign, Ally or integrated-run claim. Compatibility default unchanged.

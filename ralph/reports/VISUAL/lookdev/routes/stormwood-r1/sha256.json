@@ -1,0 +1,18 @@
+{
+  "source_commit": "81148bbf2c51236709cb57d605a0d7bf92c221d8",
+  "text_encoding": "Git canonical LF; original PNG bytes unchanged",
+  "sha256": {
+    "matrix.json": "fd525bf522d87e6f79352a71fc28de55fff1c376db756e319eea1583ceb5becf",
+    "stormwood-low.log": "4fb90fe493ba00c0cb8a263c2c94c8608705e8b0ffb08610729c88384fab8e69",
+    "stormwood-medium-high.log": "c1d13d18a582e1fc1cfd4e2c38f5fb799cc9006289480dac7caab3091fd775f5",
+    "high/end.png": "09f3893abf5a485447c7c550f037c572228f0c45d64f8323d29940a43ee4a908",
+    "high/route.json": "dce35e27dd306340ee9b3b62b0f9c8c40a856234e0f01a1962285eae3bdb08db",
+    "high/start.png": "c42062311fcd67be6126c733185513e0b8b21211a2cf9193a2c1aa4c08502998",
+    "low/end.png": "94587b58e2d89470959d05f7e5ba9663e5fdda035924265f5de56e42af914738",
+    "low/route.json": "f93d12b40311e17d5837fc67f6fca3e3da45631a173e0bf43a7ffe4a9f58d7e4",
+    "low/start.png": "09d3b18683c35a6b118b3a7cd28ee49f502535578b80ecd1ab8b91eb4e2f877b",
+    "medium/end.png": "baf83ba5823f78305a3246547aeb63c06de524e41da748a5500f10813ad94d95",
+    "medium/route.json": "0b0481d7506851f67c9fde6ff222797594cc586e31e2736ad50ba30175cde6d4",
+    "medium/start.png": "cfe48ecdd8b83b3219b6f4018b70b46b58c48e24416a6d1af8dc467584e8ce62"
+  }
+}
