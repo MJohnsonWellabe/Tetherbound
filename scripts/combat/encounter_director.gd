@@ -2495,7 +2495,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		_encounter_host.call("set_phase", encounter_id, "done" if runtime != null else "resolving")
 	# Reconcile observer contact before the reliable absolute-HP snapshot.
 	_host_publish_peer_impact(encounter_id, peer_id, impact)
-	_host_after_encounter_change(encounter_id, peer_id)
+	_host_after_encounter_change(encounter_id, peer_id, 0, impact)
 	if deliver:
 		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
 		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
@@ -2807,8 +2807,10 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 ## The record changed, so everybody in it is told. §3: nothing else is
 ## authoritative, so this is the only broadcast a participant's HUD needs.
 func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
-		terminal_catcher: int = 0) -> void:
+		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	# Presentation metadata on this accepted-hit snapshot only; not save state.
+	if not resolved_impact.is_empty(): rec["resolved_impact"] = resolved_impact.duplicate()
 	if rec.is_empty():
 		_release_tournament_roster(encounter_id)
 		return

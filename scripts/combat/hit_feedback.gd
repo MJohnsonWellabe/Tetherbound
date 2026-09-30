@@ -134,3 +134,12 @@ static func with_launch(receipt: Dictionary, launch: Dictionary, vfx: Dictionary
 	if contact.is_finite(): frozen["sound_position"] = contact
 	frozen.make_read_only()
 	return frozen
+
+## Device-local tactile amplitude never changes the frozen gameplay receipt.
+static func rumble_spec(impact: Dictionary, scale: float) -> Dictionary:
+	if str(impact.get("weight", "light")) not in ["heavy", "ultimate"] or scale <= 0.0: return {}
+	var spec: Dictionary = config().get("rumble", {}).get(str(impact.get("weight", "light")), {})
+	if spec.is_empty(): return {}
+	return {"weak": clampf(float(spec.get("weak", 0.0)) * scale, 0.0, 1.0),
+		"strong": clampf(float(spec.get("strong", 0.0)) * scale, 0.0, 1.0),
+		"seconds": maxf(0.0, float(spec.get("seconds", 0.0)))}

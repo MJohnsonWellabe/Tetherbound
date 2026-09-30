@@ -607,6 +607,16 @@ func _run() -> void:
 				check(int(launched.get("contact_process_frame", -1)) >= 0 and int(launched.contact_process_frame) <= int(raw.impact_process_frame),
 					"peer %d damage number followed actual visible contact for %s" % [peer, raw.action_id])
 		check(observer_count > 0, "peer %d observed other player's actual host impact with timed target lease" % peer)
+		var actor_snapshot_count := 0
+		for snapshot: Dictionary in (view.get("feedback", {}) as Dictionary).get("hp_snapshots", []):
+			var launched: Dictionary = snapshot.get("launch", {})
+			if float(launched.get("travel_seconds", 0.0)) <= 0.0: continue
+			check(bool(snapshot.get("contact_at_hp_write", false)),
+				"peer %d first actual snapshot HP write followed contact for %s" % [peer, snapshot.action_id])
+			for raw: Dictionary in rows:
+				if str(raw.action_id) == str(snapshot.action_id) and bool(raw.get("own_hit", true)):
+					actor_snapshot_count += 1
+		if peer == 1: check(actor_snapshot_count > 0, "guest actor exercised first snapshot HP write before its own verdict")
 	check(incoming_count > 0, "real host enemy AI produced an incoming impact and number on a participant")
 
 	# --- host action/replay/cooldown authority --------------------------------

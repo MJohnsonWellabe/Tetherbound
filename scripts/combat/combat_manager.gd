@@ -52,6 +52,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## keying rather than species-against-species. Pure config reader, no scene
 ## tree, same shape as PROGRESSION above.
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 
@@ -62,7 +63,11 @@ signal hit_landed(on_enemy: bool, amount: float)
 ## Host-resolved impact presentation; never an HP or authority callback.
 signal impact_confirmed(on_enemy: bool, receipt: Dictionary, world_position: Vector3)
 signal attack_launched(on_enemy: bool, launch: Dictionary, presentation: Node3D)
+## Synchronous witness of the first actual absolute snapshot HP assignment.
+signal host_snapshot_hp_applied(action_id: String, before: float, after: float)
 signal staggered(on_enemy: bool)
+## Last local pad that actually supplied input; observers never rumble it.
+var _feedback_device := -1
 ## T3-TYPECHART. The type verdict for the hit `hit_landed` is about to report:
 ## 1 advantaged, -1 disadvantaged, 0 neutral. Emitted IMMEDIATELY BEFORE
 ## `hit_landed` for the same hit, and only for hits that actually landed.
@@ -2823,13 +2828,22 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if participants.has(peer_id):
 			_sync_authoritative_wind(participants[peer_id] as Dictionary)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var snapshot_impact: Dictionary = rec.get("resolved_impact", {})
+	if state == State.ACTIVE and _enemy != null and not snapshot_impact.is_empty() \
+		and str(snapshot_impact.get("target_uid", "")) == str(_enemy.get("uid")):
+		# The host's accepted receipt travels with this same HP snapshot, so
+		# even the acting guest reconciles contact before the first HP write.
+		PROJECTILE.confirm_impact(get_tree(), str(snapshot_impact.get("action_id", "")))
 	var was_staggered := enemy_is_staggered()
 	if _enemy != null and opponent.has("hp"):
 		var hp_max := maxf(1.0, float(opponent.get("hp_max", _enemy.max_hp)))
 		var hp := clampf(float(opponent["hp"]), 0.0, hp_max)
-		var dropped: bool = hp < float(_enemy.hp) - 0.001
+		var hp_before := float(_enemy.hp)
+		var dropped: bool = hp < hp_before - 0.001
 		_enemy.max_hp = hp_max
 		_enemy.hp = hp
+		if dropped and not snapshot_impact.is_empty():
+			host_snapshot_hp_applied.emit(str(snapshot_impact.get("action_id", "")), hp_before, hp)
 		if dropped and not quiet and _wild != null and hp > 0.0:
 			# Somebody else's blow. The body reacts so a teammate's hits are
 			# visible rather than the bar moving on its own.
@@ -3176,6 +3190,15 @@ func _drive_player_creature() -> void:
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:
 		_ally_body.call("request_move", direction)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton and event.pressed:
+		_feedback_device = event.device
+	elif event is InputEventJoypadMotion and absf(event.axis_value) >= 0.3:
+		_feedback_device = event.device
+	elif (event is InputEventKey or event is InputEventMouseButton) and event.is_pressed():
+		_feedback_device = -1
 
 
 func _read_player_input() -> void:
@@ -3809,7 +3832,7 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
-	if shake_camera: _nudge_camera_on_landing(charged)
+	if shake_camera and impact.is_empty(): _nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
 	if not bool(cfg.get("enabled", true)):
 		return
@@ -4863,6 +4886,11 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 func _present_impact(on_enemy: bool, impact: Dictionary, target_body: Node3D, applied_damage: float = -1.0) -> void:
 	if not HIT_FEEDBACK.admit(_seen_impact_actions, impact): return
 	_begin_hitstop(float(impact.get("hitstop_seconds", 0.0)))
+	if str(impact.get("weight", "light")) in ["heavy", "ultimate"]:
+		_nudge_camera_on_landing(true)
+		var rumble := HIT_FEEDBACK.rumble_spec(impact, MOTION_PREFS.rumble_scale())
+		if not rumble.is_empty() and Input.get_connected_joypads().has(_feedback_device):
+			Input.start_joy_vibration(_feedback_device, float(rumble.weak), float(rumble.strong), float(rumble.seconds))
 	var bounds := _body_world_bounds(target_body)
 	var where := bounds.position + Vector3(bounds.size.x * 0.5,
 		bounds.size.y + float(HIT_FEEDBACK.config().get("numbers", {}).get("target_offset_m", 0.0)), bounds.size.z * 0.5)
