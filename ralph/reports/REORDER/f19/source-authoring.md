@@ -61,10 +61,19 @@ Foundation will author it only after successful durable Home arrival for the
 same admitted character who already holds or has hung the Stormwood relic.
 The consumer requires matching character identity and Meadows, never a host
 world's ahead flags. The producer is not yet implemented or proved.
-Dialogue substitutes current names, a retained starter-exclusive species
-from the actual opening roster or an honest absent status, earned companion
-counters or an honest no-history fallback, and existing personal chapter
-answers. An accepted offer does not imply that companion is still retained.
+Dialogue substitutes current names, existing companion history counters or
+an honest no-history fallback, and existing personal chapter answers. An
+accepted offer does not imply that companion is still retained. Starter
+status now consumes only the actual-choice receipt
+`starter_choice:<character-id>:<creature-uid>` from the same personal journal.
+The current UID must match before Grandpa says the original companion remains;
+a known UID absent from the five yields an honest absent status. A legacy or
+conflicting record yields explicitly unknown status. A traded-in starter
+species never proves this character chose it. Foundation owns atomic actual
+adoption/save and declared receipt production, still pending. Creature counters
+are lifetime history, so the text no longer attributes a prior owner's travels,
+rests or feeds to this character. No invented identity, event log or reset is
+introduced; exact personal bond memory remains a separate proof obligation.
 Credits retain the existing character save/rollback and once-only receipts.
 The old tests now explicitly use synthetic receipt fixtures for isolated
 consumer and disk-persistence checks; **they are not earned route/arrival

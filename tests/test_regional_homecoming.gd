@@ -12,6 +12,7 @@ class Member:
 	var nickname: String = ""
 	var display_name: String = ""
 	var species_id: String = ""
+	var uid: String = ""
 	var landmarks_visited_together := 0
 	var battles_fought := 0
 	var rest_nights_together := 0
@@ -295,17 +296,43 @@ func test_return_receipt_is_bound_to_its_character_and_requires_complete_identit
 	assert_false(HOMECOMING.eligible(other), "another peer does not inherit the return")
 
 
-func test_starter_and_memory_are_read_from_current_creatures_only() -> void:
+func test_starter_identity_requires_actual_character_and_creature_receipt() -> void:
 	var party := PartyStub.new()
 	var starter := Member.new("Terrapup", "Pip")
 	starter.species_id = "terrapup"
+	starter.uid = "original-starter"
 	starter.landmarks_visited_together = 3
 	party.rows = [starter]
-	assert_true(HOMECOMING.starter_status(party).contains("Pip"))
+	# Explicit consumer fixtures, not earned adoption/save provenance.
+	var receipts := ["starter_choice:character-homecoming:original-starter"]
+	assert_true(HOMECOMING.starter_status(party, "character-homecoming", receipts).contains("Pip"))
+	assert_true(HOMECOMING.starter_status(party).contains("I can't tell"),
+		"a current starter-exclusive species cannot establish the original choice")
+	assert_true(HOMECOMING.starter_status(party, "another-character", receipts).contains("I can't tell"))
+	var game := GameStub.new()
+	game.party = party
+	game.local.redesign_character.transaction_receipts = receipts.duplicate()
+	assert_true(str(HOMECOMING.substitutions(game).get("starter_status", "")).contains("Pip"),
+		"the real dialogue substitution reads this character's personal receipt")
+	game.local.character_id = "another-character"
+	assert_true(str(HOMECOMING.substitutions(game).get("starter_status", "")).contains("I can't tell"))
 	assert_true(HOMECOMING.bond_memory(party).contains("3 landmarks"))
+	assert_false(HOMECOMING.bond_memory(party).contains("You and"),
+		"lifetime counters cannot attribute a previous owner's travels to this trainer")
+	var traded := Member.new("Terrapup", "New Pip")
+	traded.species_id = "terrapup"
+	traded.uid = "traded-starter"
+	party.rows = [traded]
+	assert_true(HOMECOMING.starter_status(party, "character-homecoming", receipts).contains("no longer travelling"))
+	assert_false(HOMECOMING.starter_status(party, "character-homecoming", receipts).contains("New Pip"))
+	assert_eq(HOMECOMING.starter_choice_uid("character-homecoming",
+		["starter_choice:character-homecoming:"]), "")
+	assert_eq(HOMECOMING.starter_choice_uid("character-homecoming",
+		receipts + ["starter_choice:character-homecoming:conflicting-starter"]), "")
 	party.rows.clear()
-	assert_true(HOMECOMING.starter_status(party).contains("no longer travelling"))
-	assert_false(HOMECOMING.starter_status(party).contains("Pip"))
+	assert_true(HOMECOMING.starter_status(party, "character-homecoming", receipts).contains("no longer travelling"))
+	assert_true(HOMECOMING.starter_status(party).contains("I can't tell"), "legacy status remains explicitly unknown")
+	assert_false(HOMECOMING.starter_status(party, "character-homecoming", receipts).contains("Pip"))
 	assert_false(HOMECOMING.bond_memory(party).contains("3 landmarks"))
 
 

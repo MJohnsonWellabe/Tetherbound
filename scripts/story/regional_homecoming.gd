@@ -5,7 +5,7 @@ extends RefCounted
 ## saves this character's conversation and credits acknowledgement.
 
 const HOME_RETURN_PREFIX := "home_return_after_stormwood:"
-const OPENING_PATH := "res://data/config/opening.json"
+const STARTER_CHOICE_PREFIX := "starter_choice:"
 const SEEN_FLAG := "homecoming_seen"
 const CREDITS_SEEN_FLAG := "regional_credits_seen"
 const INITIAL_PREFIX := "regional_homecoming_"
@@ -61,22 +61,48 @@ static func substitutions(game: Object) -> Dictionary:
 	var names := party_names(_party(game))
 	for index in names.size():
 		out["party_%d" % (index + 1)] = names[index]
-	out["starter_status"] = starter_status(_party(game))
+	out["starter_status"] = starter_status(_party(game), character_id(game), _transaction_receipts(game))
 	out["bond_memory"] = bond_memory(_party(game))
 	out["chapter_choices"] = chapter_choices(_player_flags(game))
 	return out
 
 
-static func starter_status(party: Object) -> String:
-	var opening: Variant = JSON.parse_string(FileAccess.get_file_as_string(OPENING_PATH))
-	var starters: Array = (opening.get("starters", {}) as Dictionary).get("species", []) \
-		if opening is Dictionary else []
+## Opening owns the atomic actual-choice receipt. A current starter species can
+## have been traded in; species alone never identifies this character's choice.
+static func starter_status(party: Object, id: String = "", receipts: Array = []) -> String:
+	var chosen_uid := starter_choice_uid(id, receipts)
+	if chosen_uid.is_empty():
+		return "I can't tell whether your first companion is still travelling with you. That beginning still matters."
 	for member: Object in _members(party):
-		if starters.has(str(member.get("species_id"))):
+		if str(member.get("uid")) == chosen_uid:
 			return "%s, the companion you chose here, is still beside you." % _name(member)
-	# The absent starter's chosen species/name is not stored in this module.
-	# Do not invent its identity or say it rejoined the current party.
+	# The chosen companion is absent. Its old name/species are not recorded here;
+	# acknowledge absence without inventing them or resurrecting that creature.
 	return "Your first companion is no longer travelling with you. That beginning still matters."
+
+
+static func starter_choice_uid(id: String, receipts: Array) -> String:
+	if id.is_empty():
+		return ""
+	var chosen := ""
+	for raw: Variant in receipts:
+		if not raw is String:
+			continue
+		var pieces := str(raw).split(":")
+		if pieces.size() != 3 or pieces[0] != STARTER_CHOICE_PREFIX.trim_suffix(":") \
+				or pieces[1] != id or pieces[2].is_empty():
+			continue
+		if not chosen.is_empty() and chosen != pieces[2]:
+			return "" # Conflicting records cannot identify an original companion.
+		chosen = pieces[2]
+	return chosen
+
+
+static func _transaction_receipts(game: Object) -> Array:
+	var local: Variant = game.get("local") if game != null else null
+	var personal: Variant = local.get("redesign_character") if local is Object else null
+	var receipts: Variant = personal.get("transaction_receipts", []) if personal is Dictionary else null
+	return receipts.duplicate() if receipts is Array else []
 
 
 static func bond_memory(party: Object) -> String:
@@ -89,13 +115,13 @@ static func bond_memory(party: Object) -> String:
 				continue
 			match counter:
 				"landmarks_visited_together":
-					return "You and %s reached %d landmarks together. Those places belong to your story." % [name, count]
+					return "%s's story already holds %d landmarks. There is room for more on the road ahead." % [name, count]
 				"battles_fought":
-					return "%s stood beside you through %d battles. I remember when you were only setting out." % [name, count]
+					return "%s has fought %d battles. I'm glad their road brought them here." % [name, count]
 				"rest_nights_together":
-					return "You gave %s a bed through %d nights. A journey is made of quiet care, too." % [name, count]
+					return "%s has rested through %d nights. A journey is made of quiet care, too." % [name, count]
 				"feeds_together":
-					return "You fed %s %d times along the way. I'm glad you looked after each other." % [name, count]
+					return "%s has been fed %d times along the way. Quiet care belongs in their story, too." % [name, count]
 	# A newly replaced team may have no earned counters. Never invent a battle,
 	# landmark or night's rest to fill the emotional beat.
 	return "You brought this company home. There is room here to make more memories together."
