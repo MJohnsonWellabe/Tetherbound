@@ -1,0 +1,23 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_hit_feedback.gd,test_combat_feedback.gd,test_shared_wild_host_fight.gd: 3 of 669 test files
+  ok    test_combat_feedback.gd :: test_nudge_returns_to_neutral_without_changing_aim
+  ok    test_combat_feedback.gd :: test_only_charged_landing_requests_camera_nudge
+  ok    test_combat_feedback.gd :: test_player_stagger_uses_distinct_glow_and_reuses_duplicate_record
+  ok    test_combat_feedback.gd :: test_reduced_motion_keeps_the_hitstop_clock_but_not_the_visual_freeze
+  ok    test_combat_feedback.gd :: test_reduced_motion_removes_the_impact_roll_only
+  ok    test_combat_feedback.gd :: test_state_glow_survives_hitstop_and_ends_on_interruption
+  ok    test_hit_feedback.gd :: test_critical_effective_resisted_and_ordinary_numbers_differ
+  ok    test_hit_feedback.gd :: test_frozen_launch_rejects_replacement_actors_generation_and_realm
+  ok    test_hit_feedback.gd :: test_giant_and_profile_reductions_apply_once
+  ok    test_hit_feedback.gd :: test_replayed_and_older_hits_do_not_repeat_and_issuers_are_independent
+  ok    test_hit_feedback.gd :: test_weighted_feedback_is_immutable_and_preserves_host_damage
+  ok    test_shared_wild_host_fight.gd :: test_catch_pause_suspends_authority_physics_and_breakout_resumes_prior_state
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_forwards_pick_and_host_hit_through_its_authority_adapter
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_never_claims_the_host_as_the_local_fallback_peer
+  ok    test_shared_wild_host_fight.gd :: test_terminal_outcome_is_latched_so_ecology_can_finalize_once
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_rejects_wrong_body_realm_species_and_terminal_record
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_selects_only_the_active_matching_announcement
+
+17 tests, 65 assertions, 0 failed
+Native Godot exit status: 0

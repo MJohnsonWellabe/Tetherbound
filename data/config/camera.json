@@ -45,5 +45,87 @@
       "_comment_swing_search": "Extra degrees of swing to try, in order, when even the closer shot has no room BEHIND the trainer. A corner is the case: backed into one, the wall is a metre behind the player's shoulders and the open floor is off to the side, so a shot that insists on standing behind them ends up either in the wall or in the back of their head -- captured once, the trainer's hair filling the middle of frame with Bram entirely hidden behind it. Swinging the camera round the pivot walks it toward the room that does exist and turns the shot into a profile two-shot, which is what a person with a camera would do in that corner. Tried nearest-first, both ways, and the first swing whose measured room fits the arm wins; if none fits, the roomiest is used.",
       "swing_search_deg": [0.0, 25.0, -25.0, 50.0, -50.0, 75.0, -75.0, 100.0, -100.0]
     }
+  },
+
+  "fight": {
+    "_comment": "F21#4 presentation framing from both measured rendered bounds. All nine pair offsets preserve actual body scale. Solver diagnostics do not replace the code-blind size-matrix judge. Spring-arm/world sweep and manual-look grace remain authoritative for the local camera.",
+    "enabled": true,
+    "size_classes": {
+      "small_max_m": 2.5,
+      "normal_max_m": 5.0
+    },
+    "midpoint_bias": 0.5,
+    "max_actor_overlap": 0.0,
+    "frame_fill": 0.82,
+    "near_clearance_m": 0.5,
+    "max_distance_m": 48.0,
+    "lag": 4.0,
+    "orbit_speed_deg_s": 90.0,
+    "separation_distance_steps": 8,
+    "separation_distance_scale": 1.2,
+    "separation_guard_m": 0.15,
+    "tracking_dead_zone_deg": 1.0,
+    "orbit_candidates_deg": [
+      0.0,
+      15.0,
+      -15.0,
+      30.0,
+      -30.0,
+      45.0,
+      -45.0,
+      60.0,
+      -60.0,
+      75.0,
+      -75.0,
+      90.0,
+      -90.0
+    ],
+    "size_matrix": {
+      "small/small": {
+        "distance_offset_m": 0.0,
+        "height_offset_m": 0.0,
+        "pitch_offset_deg": 0.0
+      },
+      "small/normal": {
+        "distance_offset_m": 1.0,
+        "height_offset_m": 0.0,
+        "pitch_offset_deg": -2.0
+      },
+      "small/giant": {
+        "distance_offset_m": 2.0,
+        "height_offset_m": 0.2,
+        "pitch_offset_deg": -5.0
+      },
+      "normal/small": {
+        "distance_offset_m": 1.0,
+        "height_offset_m": 0.0,
+        "pitch_offset_deg": -2.0
+      },
+      "normal/normal": {
+        "distance_offset_m": 1.0,
+        "height_offset_m": 0.0,
+        "pitch_offset_deg": -2.0
+      },
+      "normal/giant": {
+        "distance_offset_m": 2.0,
+        "height_offset_m": 0.2,
+        "pitch_offset_deg": -5.0
+      },
+      "giant/small": {
+        "distance_offset_m": 2.0,
+        "height_offset_m": 0.2,
+        "pitch_offset_deg": -5.0
+      },
+      "giant/normal": {
+        "distance_offset_m": 2.0,
+        "height_offset_m": 0.2,
+        "pitch_offset_deg": -5.0
+      },
+      "giant/giant": {
+        "distance_offset_m": 2.0,
+        "height_offset_m": 0.2,
+        "pitch_offset_deg": -5.0
+      }
+    }
   }
 }

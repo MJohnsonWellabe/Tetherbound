@@ -29,6 +29,8 @@ const GROUP := "camera_rig"
 
 var yaw: float = 0.0
 var pitch: float = 0.0
+## Presentation-only offset relative to target + profile height; reset on every takeover.
+var _framing_pivot_offset := Vector3.ZERO
 
 var _distance: float = 5.2
 var _height: float = 1.75
@@ -256,6 +258,7 @@ func _load_config() -> void:
 ## ease, because a fight opening with a hard cut loses the connection between
 ## "the animal I walked up to" and "the animal I am fighting".
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	_framing_pivot_offset = Vector3.ZERO
 	_impact_nudge_left = 0.0
 	rotation.z = 0.0
 	set_lens_lift(0.0)
@@ -653,11 +656,23 @@ static func _world_point(node: Node3D) -> Vector3:
 ## The leg above VERTICAL_SWEEP_FROM_M is swept like the shoulder leg below.
 const VERTICAL_SWEEP_FROM_M := 1.0
 
+## Combat midpoint composition only; no target, input, aim or scale mutation.
+func set_framing_pivot_offset(offset: Vector3) -> void:
+	_framing_pivot_offset = offset if offset.is_finite() else Vector3.ZERO
+
+func framing_pivot_offset() -> Vector3:
+	return _framing_pivot_offset
+
 func _pivot_anchor() -> Vector3:
-	var base_up := minf(_height, VERTICAL_SWEEP_FROM_M)
+	var height := maxf(0.0, _height + _framing_pivot_offset.y)
+	var base_up := minf(height, VERTICAL_SWEEP_FROM_M)
 	var anchor := _world_point(_target) + Vector3.UP * base_up
-	if _height > base_up:
-		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, _height - base_up)
+	if height > base_up:
+		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, height - base_up)
+	var lateral := Vector3(_framing_pivot_offset.x, 0.0, _framing_pivot_offset.z)
+	var length := lateral.length()
+	if length > 0.001:
+		anchor += lateral / length * _free_distance_behind(anchor, lateral / length, length)
 	return anchor
 
 
@@ -685,12 +700,13 @@ func _follow(delta: float) -> void:
 	# The lagged point can approach from a different side than today's desired
 	# shoulder. Sweep that complete anchor-to-candidate leg too, so smoothing
 	# cannot tunnel the pivot through a corner the lateral cast avoided.
-	if not is_zero_approx(_shoulder):
-		var candidate_leg := candidate - anchor
+	if not is_zero_approx(_shoulder) or not _framing_pivot_offset.is_zero_approx():
+		var safe_anchor := _world_point(_target) + Vector3.UP * minf(maxf(0.0, _height + _framing_pivot_offset.y), VERTICAL_SWEEP_FROM_M)
+		var candidate_leg := candidate - safe_anchor
 		var candidate_length := candidate_leg.length()
 		if candidate_length > 0.001:
-			candidate = anchor + candidate_leg / candidate_length * _free_distance_behind(
-				anchor, candidate_leg / candidate_length, candidate_length)
+			candidate = safe_anchor + candidate_leg / candidate_length * _free_distance_behind(
+				safe_anchor, candidate_leg / candidate_length, candidate_length)
 	global_position = candidate
 
 	# Once the rig has arrived, hand pacing back to the normal follow lag —

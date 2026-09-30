@@ -1,0 +1,20 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_impact_audio.gd,test_hit_feedback.gd,test_combat_feedback.gd: 3 of 670 test files
+  ok    test_combat_feedback.gd :: test_nudge_returns_to_neutral_without_changing_aim
+  ok    test_combat_feedback.gd :: test_only_charged_landing_requests_camera_nudge
+  ok    test_combat_feedback.gd :: test_player_stagger_uses_distinct_glow_and_reuses_duplicate_record
+  ok    test_combat_feedback.gd :: test_reduced_motion_keeps_the_hitstop_clock_but_not_the_visual_freeze
+  ok    test_combat_feedback.gd :: test_reduced_motion_removes_the_impact_roll_only
+  ok    test_combat_feedback.gd :: test_state_glow_survives_hitstop_and_ends_on_interruption
+  ok    test_hit_feedback.gd :: test_critical_effective_resisted_and_ordinary_numbers_differ
+  ok    test_hit_feedback.gd :: test_flash_styles_share_host_crit_type_facts_and_resisted_reads_weaker
+  ok    test_hit_feedback.gd :: test_frozen_launch_rejects_replacement_actors_generation_and_realm
+  ok    test_hit_feedback.gd :: test_giant_and_profile_reductions_apply_once
+  ok    test_hit_feedback.gd :: test_replayed_hits_refuse_but_legitimate_out_of_order_impacts_and_issuers_are_independent
+  ok    test_hit_feedback.gd :: test_weighted_feedback_is_immutable_and_preserves_host_damage
+  ok    test_impact_audio.gd :: test_contact_retains_semantic_layers_and_reuses_bounded_mix
+  ok    test_impact_audio.gd :: test_stereo_downmix_rate_pitch_and_peak_keep_all_layers
+  ok    test_impact_audio.gd :: test_unsupported_compression_refuses_instead_of_dropping_a_layer
+
+15 tests, 68 assertions, 0 failed

@@ -1,0 +1,3 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+F25 batch=clock cases=25 failures=0 renderer=gl_compatibility out=D:/tetherbound/vfx-clock-final scope=synthetic_no_combat

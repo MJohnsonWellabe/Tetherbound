@@ -1,0 +1,21 @@
+{
+  "scope": "Named F23 core only; no actual player/host-credit/rejoin/utility acceptance",
+  "runs": [
+    {
+      "source": "5126c719e69fa2bfb5141e85abbf0d0a0a458425",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/test_move_mastery.gd"
+      ],
+      "profile": "D:/tetherbound/combat-f23-core-r1-home",
+      "native_exit": 1,
+      "elapsed_seconds": 0.2970000000204891,
+      "log": "D:\\tetherbound\\combat-f23-core-r1\\parser.txt"
+    }
+  ]
+}
