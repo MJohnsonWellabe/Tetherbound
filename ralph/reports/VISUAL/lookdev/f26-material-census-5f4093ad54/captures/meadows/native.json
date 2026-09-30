@@ -1,0 +1,33 @@
+{
+  "source_commit": "5f4093ad54e4675b782ab1f04129e1047c0977df",
+  "native_exit": 0,
+  "elapsed_seconds": 278.687,
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--preset=Medium",
+    "--source-commit=5f4093ad54e4675b782ab1f04129e1047c0977df",
+    "--output=D:/tetherbound/f26-material-meadows-medium-5f4093ad54",
+    "--biome=meadows",
+    "--times=day",
+    "--subset=Grandpa's Village"
+  ],
+  "timed_out": false,
+  "errors": [],
+  "observed_source_sha256_before_native": {
+    "tools/capture_renderer_material_census.gd": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+    "tools/catalogue_survey.gd": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159",
+    "tools/lookdev_capture_bootstrap.gd": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+    "data/config/art.json": "086e1f94de6d0ac44f8f8d13adb0cfb11751ff6a18d3c3c95ff727882abe082d"
+  },
+  "tracked_source_clean_after_native": true,
+  "scope": "One Medium/day original production-camera frame with tree-wide binding census. Staged audit travel/clock and isolated user data; no earned campaign, performance, full-bar, Ally or criterion closure."
+}

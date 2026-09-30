@@ -1,0 +1,267 @@
+{
+  "_comment": "OF26 follow-up, extended by FOUR-BIOME-BUILD. This is the SOURCE scripts/ui/tab_settings.gd draws its rows from: a hand-curated, always-complete list with exactly two testable spots per Meadows band, Cloudreach/Stormwood region, or Water island. All four shipped biomes are offered regardless of the realm the player is standing in or has discovered. Every row uses GameState.debug_teleport_to(x, z, realm_id, entry_id), the same real scene-change and grounding path tested by tests/smoke_realm_teleport.gd.",
+  "_comment_bands": "Meadows band ids/boundaries are data/config/chapter_curve.json's own five `regions` (band1_lower_meadows .. band5_stronghold_approach), the file docs/specs/MEADOWS_PROGRESSION_SPEC.md section 3's prose bands actually compile down to in the shipped world (z_to boundaries, matched against scripts/world/world_perimeter.gd by tests/test_chapter_curve.gd). Every position below is a REAL authored place already used elsewhere in the game -- a map region/landmark centre from data/config/map_landmarks.json, or (band 5's approach) the first of the Hall's own approach_pylons in data/config/stronghold.json -- picked to be spread well apart within its band rather than clustered at one end of it, not invented for this list.",
+  "_comment_cloudreach": "Cloudreach's own six authored regions (data/config/cloudreach_world.json's `regions`, ordered 1-6 per docs/biomes/cloudreach/BUILD_CLOUDREACH_CLIFFS_TO_COMPLETION.md section 11) each already carry exactly two landmarks inside their own `bounds` box -- verified by point-in-box against the live config, not guessed -- so both of that biome's spots per region are its own two named landmarks, position taken as (x, z) with the altitude (y) dropped: `debug_teleport_to` derives height from the destination world's own `ground_height_at`, exactly as every other row on this screen already does.",
+  "_comment_stormwood": "Stormwood's six named regions come directly from stormwood_world.json. Two real landmarks per region are used so each row lands on authored ground and the locked late regions remain directly testable without manufacturing story flags.",
+  "_comment_water": "Water's twelve islands come directly from water_world.json. Each has two authored safe destinations: landmark positions where two exist, otherwise one landmark plus a terrain-grounded arrival/departure safe position. Y is deliberately omitted because the destination world's ground_height_at supplies it.",
+  "_comment_entry_ids": "`entry_id` is resolved at build time by GameState._debug_teleport_entry_id_for() from each realm's authored transition source: cloudreach_world.json, stormwood_world.json, water_world.json, or realm_transitions.json. It is not duplicated in this list, so re-authoring an arrival anchor updates the menu path from the same edit.",
+
+  "biomes": [
+    {
+      "id": "meadows",
+      "display_name": "Meadows",
+      "bands": [
+        {
+          "id": "band1_lower_meadows",
+          "display_name": "Band 1 — Lower Meadows",
+          "spots": [
+            { "display_name": "Grandpa's Village", "position": [6.0, -22.0] },
+            { "display_name": "The South Bridge", "position": [9.0, 1300.0], "_comment": "Use the authored village-side approach road, not the trench centre: terrain-height teleport at the centre lands below the bridge deck and triggers recovery." }
+          ]
+        },
+        {
+          "id": "band2_stone_and_root",
+          "display_name": "Band 2 — Stone & Root",
+          "spots": [
+            { "display_name": "The Old Quarry", "position": [403.0, 1794.0] },
+            { "display_name": "The Burrow Warrens", "position": [-328.7, 2581.7], "view_heading_deg": -45.0, "_comment": "Use the authored exterior approach 40m in front of the mouth, looking along the cave's 315-degree depth axis. The landmark centre is inside the mouth volume and lets the spring arm collapse against cave geometry; this stand remains inside the named map region and clear of the nearby Burrowback cluster." }
+          ]
+        },
+        {
+          "id": "band3_the_river_lock",
+          "display_name": "Band 3 — The River Lock",
+          "spots": [
+            { "display_name": "The Tether Relay", "position": [350.0, 3760.0] },
+            { "display_name": "Old Mill Crossing", "position": [-152.0, 4170.0], "_comment": "Use the authored near-side approach road; the landmark centre is the channel beneath the bridge deck." }
+          ]
+        },
+        {
+          "id": "band4_upper_meadows_ironwood",
+          "display_name": "Band 4 — Upper Meadows / Ironwood",
+          "spots": [
+            { "display_name": "The Ironwood Grove", "position": [-345.0, 5060.0] },
+            { "display_name": "The Ridgeline Watch", "position": [-250.0, 6490.0] }
+          ]
+        },
+        {
+          "id": "band5_stronghold_approach",
+          "display_name": "Band 5 — Stronghold Approach",
+          "spots": [
+            { "display_name": "Stronghold Approach", "position": [0.0, 7000.0], "view_heading_deg": 0.0, "_comment": "Use the authored Band 5 road entry named by stronghold.json, looking north along the pylon run toward the Hall. The former coordinate was the first pylon's exact centre and collapsed the camera into its collision; this keeps the machinery intact and places it off the walking line." },
+            { "display_name": "Meadows Hall", "position": [8.0, 7590.0] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloudreach",
+      "display_name": "Cloudreach Cliffs",
+      "bands": [
+        {
+          "id": "gate_lower_cliffs",
+          "display_name": "Region 1 — Cloudreach Gate / Lower Cliffs",
+          "spots": [
+            { "display_name": "Realm Gate Crag", "position": [-15.5, -202.0], "view_heading_deg": -11.0 },
+            { "display_name": "Galefoot Waycamp", "position": [-286.0, 535.0], "view_heading_deg": 155.0 }
+          ]
+        },
+        {
+          "id": "broken_causeways",
+          "display_name": "Region 2 — Broken Causeways",
+          "spots": [
+            { "display_name": "Three Bells Bridge", "position": [-535.0, 1274.5], "view_heading_deg": 52.0 },
+            { "display_name": "Broken Skyroad Arch", "position": [365.0, 1925.0], "view_heading_deg": -42.0 }
+          ]
+        },
+        {
+          "id": "windscar_ravine",
+          "display_name": "Region 3 — Windscar Ravine",
+          "spots": [
+            { "display_name": "Windscar Beacon", "position": [-260.0, 2680.0] },
+            { "display_name": "Windscar Flight Aerie", "position": [373.0, 3262.5357], "view_heading_deg": -115.0, "_comment": "Use the authored final ground-route point outside the dais, looking into the complete launch compass and perches. The former coordinate was the flight-lesson centre and let the third-person camera and roadside wildlife replace the named-place overview." }
+          ]
+        },
+        {
+          "id": "high_roost_sky_shrine",
+          "display_name": "Region 4 — High Roost / Sky Shrine",
+          "spots": [
+            { "display_name": "Sky Shrine", "position": [1110.0, 2885.0], "view_heading_deg": 180.0, "_comment": "South crown-edge overview facing the complete sanctuary. The former point was the heartstone centre and let the pedestal and wind armature occlude the shrine." },
+            { "display_name": "The High Perches", "position": [900.0, 2700.0] }
+          ]
+        },
+        {
+          "id": "upper_cloudreach",
+          "display_name": "Region 5 — Upper Cloudreach",
+          "spots": [
+            { "display_name": "Cliffhold", "position": [-340.0, 3970.0] },
+            { "display_name": "Old Wind Observatory", "position": [430.0, 4500.0] }
+          ]
+        },
+        {
+          "id": "summit_final_stronghold",
+          "display_name": "Region 6 — Summit / Final Stronghold",
+          "spots": [
+            { "display_name": "Summit Eyrie", "position": [211.3, 5395.05], "view_heading_deg": -112.04, "_comment": "Authored elevated summit-overlook-loop stand 120 m north-east of the aviary, looking down/back toward the complete dome. The landmark-centre arrival put the spring arm inside the drum; the first south-road correction remained below the crown and the fixed-pitch production camera cropped the entire dome above frame." },
+			{ "display_name": "Stormward Overlook", "position": [-418.0, 5634.0], "view_heading_deg": -6.0, "_comment": "South-crown arrival inside both the production ground-height footprint and the existing 32 m-wide sloped crown, facing the open threshold, restored-wind descent and Stormwood gate. The former centre point spawned inside the 20 m portal; the first lateral candidate at z=5630 sat on collision but outside ground_height_at's 17 m landmark footprint, so debug travel correctly refused it." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stormwood",
+      "display_name": "The Stormwood",
+      "bands": [
+        {
+          "id": "cinder_verge",
+          "display_name": "Region 1 — Cinder Verge",
+          "spots": [
+            { "display_name": "The Struck Sentinel", "position": [-320.0, 240.0] },
+            { "display_name": "Verge Rod Station", "position": [-604.0, 772.0], "view_heading_deg": -38.4, "_comment": "Ash Road approach, 74 m southeast of the occupied pylon/Officer Maren seat. Keeps the trainer and production spring arm off the station geometry while facing the landmark." }
+          ]
+        },
+        {
+          "id": "glowmoss_hollows",
+          "display_name": "Region 2 — Glowmoss Hollows",
+          "spots": [
+            { "display_name": "The Lantern Pools", "position": [-380.0, 1400.0] },
+            { "display_name": "Crown Overlook", "position": [160.0, 1980.0] }
+          ]
+        },
+        {
+          "id": "conductor_run",
+          "display_name": "Region 3 — The Conductor Run",
+          "spots": [
+            { "display_name": "Rodline Post", "position": [-700.0, 2300.0] },
+            { "display_name": "The Capacitor Grove", "position": [-1080.0, 3020.0] }
+          ]
+        },
+        {
+          "id": "hollow_crown",
+          "display_name": "Region 4 — The Hollow Crown",
+          "spots": [
+            { "display_name": "The Crown Arch", "position": [459.0, 2700.0], "view_heading_deg": 90.0, "_comment": "Ordinary west-side Crown arrival, 26 m before the occupied arch/Senn seat. Faces east through the complete arch instead of placing the camera inside it." },
+            { "display_name": "The Crown Heartstone", "position": [650.0, 2700.0], "view_heading_deg": 76.5, "_comment": "Ordinary Crown interior approach from the arch, 50 m west of the guardian seat and facing the heartstone at (700, 2712). Avoids spawning inside the named encounter." }
+          ]
+        },
+        {
+          "id": "deepwood",
+          "display_name": "Region 5 — The Deepwood",
+          "spots": [
+            { "display_name": "Lantern Hollow", "position": [-450.0, 3960.0] },
+            { "display_name": "The Fallen Giant", "position": [-240.0, 4463.6], "view_heading_deg": 92.3, "_comment": "Deepwood Road west approach, 90 m before the shared Fallen Giant arch/Blackwater elder seat. Keeps the trainer off the named creature while facing the landmark." }
+          ]
+        },
+        {
+          "id": "dynamo",
+          "display_name": "Region 6 — The Dynamo",
+          "spots": [
+            { "display_name": "The Glass Field", "position": [-310.0, 5050.0] },
+            { "display_name": "The Stormheart Tree", "position": [-100.0, 5470.0] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "water",
+      "display_name": "Tidewake",
+      "bands": [
+        {
+          "id": "first_shore",
+          "display_name": "Island 1 — First Shore",
+          "spots": [
+            { "display_name": "First Shore Welcome Beacon", "position": [35.707, 98.104] },
+            { "display_name": "First Shore Horizon Stones", "position": [-63.636, 75.838] }
+          ]
+        },
+        {
+          "id": "reedhaven",
+          "display_name": "Island 2 — Reedhaven",
+          "spots": [
+            { "display_name": "Reedhaven Woven Hall", "position": [-54.0, 440.0] },
+            { "display_name": "Reedhaven Root Walk", "position": [98.207, 496.7] }
+          ]
+        },
+        {
+          "id": "brine_steps",
+          "display_name": "Island 3 — Brine Steps",
+          "spots": [
+            { "display_name": "The Tidal Stairstones", "position": [329.729, 723.208] },
+            { "display_name": "Brine Steps East Beach", "position": [383.462, 828.074] }
+          ]
+        },
+        {
+          "id": "shellwatch",
+          "display_name": "Island 4 — Shellwatch",
+          "spots": [
+            { "display_name": "Shellwatch Rescue Jetty", "position": [267.004, 1006.349] },
+            { "display_name": "Shellwatch Cradle Beach", "position": [436.92, 1246.15] }
+          ]
+        },
+        {
+          "id": "tidal_cradle",
+          "display_name": "Island 5 — Tidal Cradle",
+          "spots": [
+            { "display_name": "Aquaryn Tidal Basin", "position": [601.574, 1389.434] },
+            { "display_name": "Tidal Cradle Saddle Camp", "position": [841.384, 1595.928] }
+          ]
+        },
+        {
+          "id": "salt_crown",
+          "display_name": "Island 6 — Salt Crown",
+          "spots": [
+            { "display_name": "Salt Crown Tide Shrine", "position": [211.08, 2332.231] },
+            { "display_name": "Salt Crown Return Bell", "position": [291.855, 2228.1] }
+          ]
+        },
+        {
+          "id": "sluice_isle",
+          "display_name": "Island 7 — Sluice Isle",
+          "spots": [
+            { "display_name": "Sluice Isle Twin Pumps", "position": [905.1, 2864.564] },
+            { "display_name": "Sluice Channel Bridge", "position": [819.785, 3131.357] }
+          ]
+        },
+        {
+          "id": "veilfall",
+          "display_name": "Island 8 — The Veilfall",
+          "spots": [
+            { "display_name": "The Veilfall Cascade", "position": [335.208, 3885.711] },
+            { "display_name": "Veilfall Mountain Crown", "position": [200.0, 4140.0] }
+          ]
+        },
+        {
+          "id": "lantern_cove",
+          "display_name": "Island 9 — Lantern Cove",
+          "spots": [
+            { "display_name": "Lantern Cove Drift Arch", "position": [-292.115, 191.068] },
+            { "display_name": "Lantern Cove Beach", "position": [-267.245, 129.805] }
+          ]
+        },
+        {
+          "id": "gull_rest",
+          "display_name": "Island 10 — Gull Rest",
+          "spots": [
+            { "display_name": "Gull Rest Signal Spire", "position": [-72.615, 899.886] },
+            { "display_name": "Gull Rest Beach", "position": [-56.825, 789.065] }
+          ]
+        },
+        {
+          "id": "drowned_garden",
+          "display_name": "Island 11 — Drowned Garden",
+          "spots": [
+            { "display_name": "Drowned Garden Terraces", "position": [1105.458, 2223.33] },
+            { "display_name": "Drowned Garden Beach", "position": [1058.315, 2249.446] }
+          ]
+        },
+        {
+          "id": "deep_watch",
+          "display_name": "Island 12 — Deep Watch",
+          "spots": [
+            { "display_name": "Deep Watch Lookout", "position": [1300.0, 3490.0] },
+            { "display_name": "Deep Watch Beach", "position": [1260.318, 3403.144] }
+          ]
+        }
+      ]
+    }
+  ]
+}
