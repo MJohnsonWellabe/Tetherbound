@@ -1,0 +1,39 @@
+# F26 computer route candidate
+
+`tools/capture_lookdev_route.gd` extends the existing production-scene survey
+and uses the existing physical InputMap navigator. Route poses, warmup, image
+size, seed and budgets live in `data/config/lookdev_routes.json`. The route
+walks through live collision after one declared initial setup teleport.
+
+`tools/run_lookdev_routes.py` runs only the requested combinations, serially,
+with an isolated device/save directory for each. It preserves native logs,
+actual renderer/adapter, source commit, route configuration hash, ordinary
+production-camera metadata, environment at start/end, screenshots and every
+raw wall/process/physics frame sample. Screenshot I/O brackets the timed
+interval. Wall-frame percentiles are derived from raw samples; they are not
+GPU-only measurements. A first failure stops the batch without a retry.
+
+Start with one route after the coordinator grants the Godot writer slot:
+
+```powershell
+python tools/run_lookdev_routes.py --godot <Godot-console-executable> --biome water --preset Low --output <new-evidence-directory>
+```
+
+Omit `--biome` and `--preset` for the full four-biome, three-preset computer
+matrix only once the initial setup works. Each native capture uses 1920×1080;
+Low requires Compatibility and Medium/High require Forward+. A clean source
+checkout is mandatory. Existing evidence directories are never overwritten.
+
+Status: **source candidate only; native capture and independent source review
+are pending.** This helper does not satisfy F26#4 by itself. The current
+Meadows route precedes the F17 farmhouse/street/Hall layout and must be
+replaced before integrated acceptance. The Hall is not yet rendered. Fresh
+production-scene setup is not an earned campaign run. Combat, owner Ally
+performance, code-blind visual matrices, High/Medium look approval, every
+material path and the F49 integrated run need their own evidence.
+
+Non-Stormwood routes explicitly pin day/clear weather using the existing
+survey helper. Stormwood keeps the production Surge clock and weather live;
+the receipt records the observed phase at both ends. A fight or dialogue that
+holds locomotion consumes the declared route budget and can fail the route;
+the tool never dismisses it, grants progress or teleports past it.

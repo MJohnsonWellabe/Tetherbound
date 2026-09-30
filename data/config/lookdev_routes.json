@@ -1,0 +1,45 @@
+{
+  "revision": "F26-route-1",
+  "_scope": "Computer preset comparison only: actual production world, trainer, camera and InputMap locomotion. Declared initial teleport; no earned progression or four-creature fight claim. Hall route replaces village segment once F17 is integrated.",
+  "capture": {
+    "resolution": [1920, 1080],
+    "seed": 2042,
+    "warmup_frames": 120,
+    "minimum_timed_frames": 120,
+    "leg_budget_frames": 3600,
+    "maximum_wall_seconds": 900,
+    "arrival_tolerance_m": 1.2,
+    "floor_clearance_m": 0.4,
+    "pose_frames": 30
+  },
+  "routes": {
+    "meadows": {
+      "source": "res://data/config/terrain_playground.json",
+      "description": "Current village main street; legacy well obstacle may force a natural navigator detour. Replace with F17 farm-to-Hall main street before integrated matrix acceptance.",
+      "start": [10.5, -16.0],
+      "waypoints": [[10.5, 2.0], [13.79, 22.4]],
+      "height_mode": "ground"
+    },
+    "water": {
+      "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+      "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+      "start": [12.0, 150.0],
+      "waypoints": [[5.0, 174.0], [22.0, 168.0]],
+      "height_mode": "ground"
+    },
+    "cloudreach": {
+      "source": "res://data/config/cloudreach_world.json arrival_gate_road; tools/capture_cloudreach_frame_matrix.gd MOTION_WAYPOINTS",
+      "description": "Continuous authored arrival road toward Galefoot. XYZ heights select stacked floors; the production collider remains required.",
+      "start": [0.0, 105.0, -260.0],
+      "waypoints": [[-80.0, 130.0, 40.0], [-300.0, 145.0, 200.0], [-280.0, 180.0, 490.0]],
+      "height_mode": "authored"
+    },
+    "stormwood": {
+      "source": "res://data/config/stormwood_world.json ash_road",
+      "description": "Authored Cinder Verge arrival to Ashfoot, with the real Surge state observed and reported; no phase pin or day/night override.",
+      "start": [-300.0, 180.0],
+      "waypoints": [[-350.0, 450.0], [-650.0, 830.0]],
+      "height_mode": "ground"
+    }
+  }
+}
