@@ -81,5 +81,13 @@
       5
     ],
     "scope": "Authored library visual coverage only; no earned mastery claim."
+  },
+  "transit_shutter": {
+    "method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+    "clearance_m": 0.16,
+    "before_entry_scale": 0.8,
+    "maximum_fraction": 0.65,
+    "minimum_fraction": 0.12,
+    "non_transit_scope": "Sky/target/self/beam/radial effects retain the configured flight phase; this is not a horizontal projectile shutter."
   }
 }

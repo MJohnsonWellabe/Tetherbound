@@ -8,6 +8,7 @@ const LEGACY := preload("res://scripts/vfx/legacy_move_travel.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 const CREATURE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
 var _moves: Dictionary
@@ -158,6 +159,16 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var independent_result_frame := [-1]
 	var flight_ready := [false]
 	var impact_ready := [false]
+	var target_bounds := AABB()
+	if capture and _target != null:
+		var pivot := _target.call("model_pivot") as Node3D
+		if pivot == null:
+			_failures.append("Production model pivot missing " + encounter); return
+		target_bounds = pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+		if not target_bounds.position.is_finite() or not target_bounds.size.is_finite() or target_bounds.size.x <= 0.0 or target_bounds.size.y <= 0.0 or target_bounds.size.z <= 0.0:
+			_failures.append("Production model bounds invalid " + encounter); return
+	var transit := {}
+	var effects: Array[Node3D] = []
 	var started := Time.get_ticks_usec()
 	for i in simultaneous:
 		var z := float(i) * 2 - float(simultaneous - 1)
@@ -165,8 +176,14 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		if capture and _target != null: to = _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
 		var context := {"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
 			 "mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)}
+		if capture:
+			context["target_visual_bounds"] = {"position": target_bounds.position, "size": target_bounds.size}
+			transit = _transit_shutter(row, Vector3(-3, to.y, z), to, target_bounds)
+			if transit.has("error"):
+				_failures.append(str(transit.error) + " " + encounter); return
 		var effect: Node3D = LEGACY.launch(_arena, Vector3(-3, to.y, z), to, spec, context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, Vector3(-3, to.y, z), to, spec, context)
 		if effect == null: _failures.append("Launch failed " + id); return
+		effects.append(effect)
 		effect.connect("arrived", func() -> void:
 			arrivals[0] += 1
 			arrival_frames.append(Engine.get_process_frames())
@@ -177,7 +194,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		# Disk capture can stretch wall time without advancing the same amount
 		# of presentation time. Shutters follow its timer/contact, never a wall
 		# duration inference; recorded wall timestamps retain the real stalls.
-		create_timer(travel * float(_scenarios.capture_phases.flight), false).timeout.connect(func() -> void: flight_ready[0] = true)
+		create_timer(travel * float(transit.fraction), false).timeout.connect(func() -> void: flight_ready[0] = true)
 	# Same separate idle timer combat owns; it never waits for the node. This
 	# local clock proof makes no HP mutation and cannot replace player evidence.
 	create_timer(travel, false).timeout.connect(func() -> void:
@@ -210,7 +227,18 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 				var captured_elapsed := float(Time.get_ticks_usec() - started) / 1000000.0
 				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
-					"nominal_travel_fraction": _scenarios.capture_phases[phase]}
+					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
+				if phase == "flight" and bool(transit.get("clear_transit_required", false)):
+					var clear := true
+					var positions: Array[Vector3] = []
+					for effect: Node3D in effects:
+						var bodies: Array = effect.get("_bodies")
+						for body: MeshInstance3D in bodies:
+							positions.append(body.global_position)
+							if target_bounds.grow(float(transit.envelope_radius_m)).has_point(body.global_position): clear = false
+					captured[phase]["actual_body_positions"] = positions
+					captured[phase]["clear_of_expanded_target_bounds"] = clear
+					if not clear: _failures.append("Flight body reached measured target envelope " + encounter)
 				if phase == "flight" and int(arrivals[0]) > 0:
 					_failures.append("Flight frame reached after contact " + encounter)
 				if phase != "flight" and int(arrivals[0]) != simultaneous:
@@ -224,12 +252,38 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	if capture and captured.size() != _scenarios.capture_phases.size(): _failures.append("Incomplete identity frames " + encounter)
 	_records.append({"id": id, "move_id": move_id, "rank": rank, "simultaneous": simultaneous,
 		"resolved_count": row.parameters.count, "resolved_size": row.parameters.size, "travel_seconds": travel,
+		"transit_shutter": transit, "target_visual_bounds": {"position": target_bounds.position, "size": target_bounds.size},
 		"arrivals": arrivals[0], "arrival_wall_seconds": arrival_wall, "particle_budget": row.budget,
 		"arrival_process_frames": arrival_frames, "independent_schedule_process_frame": independent_result_frame[0],
 		"peak_slots": peak, "end_slots": BUDGET.used(encounter), "captures_at_wall_seconds": captured,
 		"wall_frame_ms": frames, "cpu_process_ms": cpu, "p95_ms": _percentile(frames, 0.95), "p99_ms": _percentile(frames, 0.99)})
 	LIBRARY.cancel_encounter(self, encounter)
 	await process_frame
+
+func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds: AABB) -> Dictionary:
+	var result := {"fraction": float(_scenarios.capture_phases.flight), "clear_transit_required": false}
+	if str(row.body.get("motion", "")) != "projectile": return result
+	var profile: Dictionary = row.body
+	var radius := float(row.parameters.size)
+	if str(profile.shape) == "stone": radius *= 1.5 # Authored geological ridges and randomized body scale.
+	if str(profile.shape) == "flame_orb": radius *= float(profile.get("card_extent_scale", 3.2)) * 0.5
+	for layer: Dictionary in profile.get("layers", []):
+		var extent := float(layer.get("size_scale", 1.0)) * float(layer.get("card_extent_scale", 3.2)) * 0.5
+		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
+		extent += Vector3(float(offset[0]), float(offset[1]), float(offset[2])).length()
+		radius = maxf(radius, float(row.parameters.size) * extent)
+	radius += maxf(0.0, float(row.parameters.get("spread", 0.0)))
+	var cfg: Dictionary = _scenarios.transit_shutter
+	radius += float(cfg.clearance_m)
+	var expanded := target_bounds.grow(radius)
+	if expanded.has_point(from): return {"error": "No independently clear transit origin"}
+	var entry: Variant = expanded.intersects_segment(from, to)
+	if not entry is Vector3: return {"error": "Transit does not intersect measured target envelope"}
+	var fraction := from.distance_to(entry as Vector3) / maxf(0.001, from.distance_to(to))
+	var shutter := minf(float(cfg.maximum_fraction), fraction * float(cfg.before_entry_scale))
+	if shutter < float(cfg.minimum_fraction): return {"error": "No usable clear transit interval"}
+	return {"fraction": shutter, "clear_transit_required": true, "envelope_radius_m": radius,
+		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r5-measured-clear-transit"}
 
 func _percentile(samples: Array[float], fraction: float) -> float:
 	if samples.is_empty(): return 0.0

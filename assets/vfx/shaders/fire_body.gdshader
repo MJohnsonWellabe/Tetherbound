@@ -11,6 +11,7 @@ uniform bool billboard = true;
 uniform bool dust = false;
 // 0 burning body, 1 continuous trail, 2 expanding burst, 3 ember.
 uniform int effect_mode = 0;
+varying float phase_seed;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -25,6 +26,7 @@ float smoke(vec2 p) {
 }
 
 void vertex() {
+    phase_seed = INSTANCE_CUSTOM.x * 6.283185;
     if (billboard) {
         vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
         MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0] * scale.x,
@@ -34,7 +36,7 @@ void vertex() {
 
 void fragment() {
     vec2 p = vec2(UV.x * 2.0 - 1.0, 1.0 - UV.y * 2.0);
-    float time = TIME * flow_speed;
+    float time = TIME * flow_speed + phase_seed;
     float billow = smoke(p * 3.0 + vec2(0.23 * time, -time));
     float heat;
     float mask;

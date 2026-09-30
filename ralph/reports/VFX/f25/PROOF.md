@@ -131,3 +131,46 @@ mastery, player-camera world combat, multiplayer damage ordering, Medium fight
 performance or Ally proof. A fresh independent code-blind review must assess
 the PNGs before any identity/quality PASS. The tracked feature flag stays off;
 no acceptance row is closed by this native execution result.
+
+## R4 rejection and changed construction / shutter approach
+
+The exact fresh independent r4 verdict is preserved verbatim in
+`native-identities-r4/strict-review.txt`. F25#2 failed: Fireball still lacked a
+separately readable burning orb, trail and explosion. Pebble Toss and Rock Throw
+were identifiable in flight, but their impacts were largely hidden by the
+production creature. Lightning intersected the visible target, passing that
+bounded identity observation, while its rigid sparse finish remained below the
+full bar. Four rank-1/3/5 samples visibly scaled; whole F25#5 failed because the
+finish and wider library/rank/earned coverage remain unproven. The synthetic
+scene limits world/atmosphere coverage and says nothing about unseen worlds.
+No motion, sound, HP timing or performance acceptance follows from these stills.
+
+After repeated failures the new construction separates a smooth physical hot
+core from animated soft flame envelopes and its continuous trail. This replaces
+the plume-only body read while retaining real depth occlusion. Contact uses
+eight independently seeded soft puffs distributed around the frozen measured
+target bounds, alongside ballistic debris/embers. Those eight puffs consume
+the existing impact lease, leaving sixteen chips/embers; they never add slots
+beyond the existing ordinary/ultimate/encounter budgets. Dust is grounded and
+settles; the lightning contact envelope surrounds the struck body while the
+actual descending bolt still uses its frozen ground endpoint. Optional bounds
+are presentation metadata only and cannot alter collision, HP or host travel.
+
+Reference study included the restored Palworld forest combat board: readable
+body silhouettes and warm bursts extend beyond the struck creature's rim.
+No reference pixels, textures or geometry were copied. Source provenance records
+the original hand-authored shader/geometry hashes, with zero Meshy generations.
+These source changes have not yet been rendered or independently judged.
+
+The r5 shutter revision derives horizontal projectile flight timing from the
+actual posed production model's measured world AABB, conservatively expanded
+by the resolved body/layer envelope and clearance. It chooses a timer-progress
+moment before that intersection and records the chosen fraction, measured
+bounds and actual body positions. If no clear interval exists, or actual bodies
+reach the expanded target envelope at the shutter, the batch fails. The model,
+pose, camera and travel endpoints are unchanged; the body is not resized or
+relocated for a photograph. Sky and other non-transit families retain the
+configured phase and disclose that distinction. Contact and impact still follow
+the actual arrival signal, with their original phases preserved. Earlier
+rejected frames and reports remain intact. The library remains disabled;
+every F25 acceptance criterion remains open.

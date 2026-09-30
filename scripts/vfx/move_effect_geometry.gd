@@ -1,6 +1,7 @@
 extends RefCounted
 
 const FIRE_SHADER := preload("res://assets/vfx/shaders/fire_body.gdshader")
+const FIRE_CORE_SHADER := preload("res://assets/vfx/shaders/fire_core.gdshader")
 const STONE_SHADER := preload("res://assets/vfx/shaders/stone_body.gdshader")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
@@ -25,7 +26,7 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			var card := QuadMesh.new()
 			card.size = Vector2.ONE * size * float(profile.get("card_extent_scale", 3.2))
 			return card
-		"orb", "bubble":
+		"orb", "bubble", "burning_core":
 			var sphere := SphereMesh.new()
 			sphere.radius = size
 			sphere.height = size * 2.0
@@ -58,6 +59,11 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
 	var out := ShaderMaterial.new()
+	if kind == "burning_core":
+		out.shader = FIRE_CORE_SHADER
+		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff2b2"))))
+		out.set_shader_parameter("flame_colour", colour)
+		return out
 	if kind in ["flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_trail"]:
 		out.shader = FIRE_SHADER
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff3a6"))))

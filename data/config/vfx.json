@@ -212,7 +212,19 @@
               "at_ground": true,
               "ground_lift_scale": 0.38
             }
-          ]
+          ],
+          "puff_count": 8,
+          "puff_shape": "soft_dust",
+          "puff_at_ground": true,
+          "puff_colour": "#b5a17c",
+          "puff_radius_scale": 1.4,
+          "target_envelope_scale": 0.65,
+          "puff_start_radius_scale": 0.85,
+          "puff_end_radius_scale": 1.4,
+          "puff_size_scale": 1.6,
+          "puff_opacity": 0.48,
+          "puff_lift_m": 0.3,
+          "puff_grow": 1.8
         },
         "sound": {
           "launch": "vfx_stone_throw_launch",
@@ -300,7 +312,7 @@
       },
       "fireball": {
         "body": {
-          "shape": "flame_orb",
+          "shape": "burning_core",
           "motion": "projectile",
           "lit": false,
           "opacity": 0.97,
@@ -315,7 +327,38 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "layers": [],
+          "layers": [
+            {
+              "shape": "flame_orb",
+              "size_scale": 1.3,
+              "colour": "#ff780a",
+              "hot_colour": "#ffe991",
+              "ember_colour": "#bd2905",
+              "opacity": 0.7,
+              "flow_speed": 3.7,
+              "card_extent_scale": 3.5,
+              "offset": [
+                0,
+                0.15,
+                0
+              ]
+            },
+            {
+              "shape": "flame_orb",
+              "size_scale": 1.05,
+              "colour": "#ffad1e",
+              "hot_colour": "#fff4bd",
+              "ember_colour": "#d84307",
+              "opacity": 0.6,
+              "flow_speed": 4.2,
+              "card_extent_scale": 3.0,
+              "offset": [
+                0,
+                0.42,
+                0.08
+              ]
+            }
+          ],
           "hot_colour": "#fff1a2",
           "ember_colour": "#b33107",
           "card_extent_scale": 3.5,
@@ -349,39 +392,22 @@
           "hot_colour": "#fff0a0",
           "ember_colour": "#a82505",
           "mote_colour": "#ffd176",
-          "layers": [
-            {
-              "shape": "fire_bloom",
-              "size_scale": 0.8,
-              "colour": "#ff9d1a",
-              "hot_colour": "#ffe791",
-              "ember_colour": "#c43c08",
-              "opacity": 0.72,
-              "offset": [
-                0.65,
-                0.45,
-                0.25
-              ]
-            },
-            {
-              "shape": "fire_bloom",
-              "size_scale": 0.72,
-              "colour": "#ff8012",
-              "hot_colour": "#ffdf70",
-              "ember_colour": "#ab2505",
-              "opacity": 0.66,
-              "offset": [
-                -0.7,
-                0.15,
-                -0.15
-              ]
-            }
-          ],
+          "layers": [],
           "initial_grow": 1.0,
           "secondary_shape": "fire_bloom",
           "secondary_rotation_x": 0.0,
           "mote_end_scale": 0.15,
-          "card_extent_scale": 3.6
+          "card_extent_scale": 3.6,
+          "puff_count": 8,
+          "puff_shape": "fire_bloom",
+          "puff_radius_scale": 1.3,
+          "target_envelope_scale": 0.6,
+          "puff_start_radius_scale": 0.85,
+          "puff_end_radius_scale": 1.55,
+          "puff_size_scale": 1.5,
+          "puff_opacity": 0.8,
+          "puff_lift_m": 0.85,
+          "puff_grow": 1.7
         },
         "sound": {
           "launch": "vfx_fireball_launch",
@@ -710,13 +736,13 @@
           "max_length_m": 1.2
         },
         "impact": {
-          "shape": "lightning_crack",
+          "shape": "soft_ember",
           "duration": 0.48,
           "grow": 3.0,
           "heat": 0.6,
           "opacity": 0.95,
-          "mote_shape": "shard",
-          "mote_size": 0.055,
+          "mote_shape": "soft_ember",
+          "mote_size": 0.075,
           "speed": 4.4,
           "gravity": 7.0,
           "width": 0.12,
@@ -726,8 +752,22 @@
           "ray_width_ratio": 0.055,
           "mote_colour": "#fff7c1",
           "initial_grow": 0.8,
-          "secondary_shape": "lightning_crack",
-          "secondary_rotation_x": 0.0
+          "secondary_shape": "soft_ember",
+          "secondary_rotation_x": 0.0,
+          "layers": [],
+          "contact_anchor": "target",
+          "puff_count": 8,
+          "puff_shape": "soft_ember",
+          "puff_colour": "#fff0b1",
+          "puff_radius_scale": 1.5,
+          "target_envelope_scale": 0.58,
+          "puff_start_radius_scale": 0.9,
+          "puff_end_radius_scale": 1.35,
+          "puff_size_scale": 1.5,
+          "puff_opacity": 0.85,
+          "puff_lift_m": 0.6,
+          "puff_grow": 1.3,
+          "card_extent_scale": 3.4
         },
         "sound": {
           "launch": "vfx_sky_lightning_launch",
