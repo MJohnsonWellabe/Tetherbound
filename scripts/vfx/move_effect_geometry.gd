@@ -90,6 +90,9 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.2)))
 		out.set_shader_parameter("edge_breakup", float(profile.get("edge_breakup", 0.19)))
 		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.45)))
+		out.set_shader_parameter("porosity", float(profile.get("porosity", 0.62)))
+		out.set_shader_parameter("curl_scale", float(profile.get("curl_scale", 6.0)))
+		out.set_shader_parameter("heat_warp", float(profile.get("heat_warp", 0.22)))
 		return out
 	if kind == "flame_tongue" or (kind == "soft_trail" and str(profile.get("style", "")) == "painted_flame"):
 		out.shader = TONGUE_SHADER
