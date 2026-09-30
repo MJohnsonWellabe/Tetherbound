@@ -1,0 +1,85 @@
+{
+  "base_commit": "f978de241976123e2be36c21b575228409ed9c72",
+  "scope": "Bounded source only; no parser/native/visual/full-craft or acceptance PASS",
+  "methods": [
+    {
+      "file": "scripts/vfx/move_effect.gd",
+      "changed_methods": [
+        "_build_impact",
+        "_ready"
+      ],
+      "unchanged_methods": [
+        "_append_trail_point",
+        "_build_light",
+        "_build_puffs",
+        "_contact_position",
+        "_cue",
+        "_exit_tree",
+        "_finish_presentation",
+        "_impact_visual_origin",
+        "_mesh_node",
+        "_play_impact",
+        "_play_launch",
+        "_process",
+        "_projectile_position",
+        "_set_opacity",
+        "_update_bodies",
+        "_update_impact",
+        "_update_puffs",
+        "_update_trail",
+        "action_id",
+        "cancel_presentation",
+        "configure",
+        "confirm_presentation_impact",
+        "encounter_id"
+      ]
+    },
+    {
+      "file": "scripts/vfx/move_effect_geometry.gd",
+      "changed_methods": [
+        "authored_material"
+      ],
+      "unchanged_methods": [
+        "_bolt_segment",
+        "_stone_point",
+        "_triangle",
+        "_uv_quad",
+        "band",
+        "bolt",
+        "flowing_ribbon",
+        "glint",
+        "impact_rays",
+        "material",
+        "plume",
+        "quad",
+        "ribbon",
+        "shape",
+        "sigil",
+        "stone",
+        "vortex",
+        "wave"
+      ]
+    }
+  ],
+  "only_profile_changed": "root_stone_spikes body material, trail presentation, impact material/stage/debris",
+  "all_other_profile_data_unchanged": true,
+  "duration_extent_params_mastery_budgets_sound_mapping_unchanged": true,
+  "existing_node_mesh_instance_counts_unchanged": true,
+  "debris_mesh_resource_changed": "orb -> existing authored stone; vertex topology differs, no extra debris slots",
+  "no_added_light_particle_or_voice": true,
+  "frozen_R17_source_evidence_untouched": true,
+  "active_cues_unchanged": 175,
+  "library_enabled": false,
+  "shader_sha256_lf": "bd9f91e4a6104165067c42f7e30a2ad698ada037e827b20fe1b1e3153ffb0c4a",
+  "installed_source_texture": {
+    "path": "assets/environment/terrain/stylised/rock_scree_Color.png",
+    "sha256": "e213bc5576fe6a2c023f826f8cad982d6a239faa5467ffb01429d7ab226fc21c",
+    "bytes": 1181588,
+    "modified": false
+  },
+  "limits": [
+    "Existing cone geometry/silhouette remains; full world-integrated bar needs fresh code-blind motion and scene judgment",
+    "Alpha-blended Compatibility material and changed debris topology need affected native/performance evidence",
+    "No earned-player, multiplayer, host-HP or real four-creature Medium proof"
+  ]
+}

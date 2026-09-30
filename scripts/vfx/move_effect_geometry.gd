@@ -16,6 +16,7 @@ const EXPLOSION_SHADER := preload("res://assets/vfx/shaders/fire_explosion.gdsha
 const WIND_SHADER := preload("res://assets/vfx/shaders/wind_surface.gdshader")
 const BUBBLE_SHADER := preload("res://assets/vfx/shaders/bubble_surface.gdshader")
 const SHADOW_SHADER := preload("res://assets/vfx/shaders/shadow_surface.gdshader")
+const ROOT_STONE_SHADER := preload("res://assets/vfx/shaders/root_stone_surface.gdshader")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
 ## Forward+. No screen-space distortion or GPU particles are required.
@@ -94,6 +95,16 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 0.7)))
 		out.set_shader_parameter("center_opacity", float(profile.get("center_opacity", 0.045)))
 		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.14)))
+		return out
+	if kind == "root_stone_surface":
+		out.shader = ROOT_STONE_SHADER
+		out.set_shader_parameter("surface_texture", STONE_TEXTURE)
+		out.set_shader_parameter("stone_colour", Color(str(profile.get("stone_colour", "#706451"))))
+		out.set_shader_parameter("mineral_colour", Color(str(profile.get("mineral_colour", "#b3a68a"))))
+		out.set_shader_parameter("surface_scale", float(profile.get("surface_scale", 1.2)))
+		out.set_shader_parameter("texture_blend", float(profile.get("texture_blend", 0.42)))
+		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.9)))
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
 		return out
 	if kind == "shadow_surface":
 		out.shader = SHADOW_SHADER

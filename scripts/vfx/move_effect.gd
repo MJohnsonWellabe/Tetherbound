@@ -71,6 +71,7 @@ func _ready() -> void:
 		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.authored_material("ion_filament", profile, _colour)
 		if bool(profile.get("air_surface", false)): body.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
 		if bool(profile.get("shadow_surface", false)): body.material_override = GEOMETRY.authored_material("shadow_surface", profile, _colour)
+		if bool(profile.get("root_stone_surface", false)): body.material_override = GEOMETRY.authored_material("root_stone_surface", profile, _colour)
 		_bodies.append(body)
 		var history: Array[Vector3] = []
 		_histories.append(history)
@@ -371,6 +372,7 @@ func _build_impact() -> void:
 	if str(profile.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 	if bool(profile.get("air_surface", false)): core.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
 	if bool(profile.get("shadow_surface", false)): core.material_override = GEOMETRY.authored_material("shadow_surface", profile, _colour)
+	if bool(profile.get("root_stone_surface", false)): core.material_override = GEOMETRY.authored_material("root_stone_surface", profile, _colour)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	core.position = surface_offset
@@ -409,7 +411,8 @@ func _build_impact() -> void:
 		_motes.multimesh = multimesh
 		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
 		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal", "bubble"]:
-			_motes.material_override = GEOMETRY.authored_material(str(profile.mote_shape), profile, Color(str(profile.get("mote_colour", _params.colour))))
+			var mote_material := "root_stone_surface" if bool(profile.get("root_stone_surface", false)) else str(profile.mote_shape)
+			_motes.material_override = GEOMETRY.authored_material(mote_material, profile, Color(str(profile.get("mote_colour", _params.colour))))
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
 	for i in count:
