@@ -111,6 +111,11 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	var six := before.duplicate(true)
 	for index: int in 5: six.append(before[0].duplicate(true))
 	assert_false(TEACHING.party_loadout_errors(six,character).is_empty(),"all portable paths refuse six rows before partial restore or file writes")
+	for identity: Variant in [null,"",42,"creature_not_a_uid"]:
+		var wrong := before.duplicate(true)
+		wrong[0].uid = identity
+		assert_false(TEACHING.party_loadout_errors(wrong,character).is_empty(),"new canonical document never remints an invalid stored identity")
+	assert_false(TEACHING.party_loadout_errors([before[0],before[0].duplicate(true)],character).is_empty(),"new canonical duplicates refuse before clear/apply")
 	var bad := entries[0].duplicate(true)
 	bad.loadout_revision = .5
 	entries.append(bad)
@@ -130,6 +135,9 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	assert_eq(preserved.creatures[creature.uid].breakthroughs,[1,2])
 	assert_eq(preserved.creatures[creature.uid].taught_traits,{"1":"hardy"},"move mirror preserves other lane's earned records")
 	assert_true(TEACHING.party_loadout_errors(before,preserved,true).is_empty())
+	var missing := before.duplicate(true)
+	for field: String in ["known_moves","move_mastery_uses","move_mastery_receipts","move_utility","move_ultimate","loadout_revision","loadout_last_edit"]: missing[0].erase(field)
+	assert_false(TEACHING.party_loadout_errors(missing,preserved,true).is_empty(),"a marked persisted move carrier cannot erase its entire canonical generation")
 	var stripped := preserved.duplicate(true)
 	stripped.creatures[creature.uid].erase("mastery_receipts")
 	stripped.creatures[creature.uid].loadout.quick = "stone_rush"

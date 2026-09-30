@@ -139,6 +139,11 @@ static func party_loadout_errors(entries: Variant, character: Variant = {}, comp
 		errors.append("character creatures must be an object")
 		return errors
 	var moves := MOVE_DB.load_default()
+	var identities := {}
+	for raw: Variant in entries:
+		if raw is Dictionary and raw.get("uid") is String:
+			identities[raw.uid] = int(identities.get(raw.uid,0))+1
+	var instances := load("res://scripts/creatures/creature_instance.gd") as GDScript
 	for index: int in entries.size():
 		var saved: Variant = entries[index]
 		# Existing row tolerance is unchanged for pre-F23 v28 documents.
@@ -146,7 +151,14 @@ static func party_loadout_errors(entries: Variant, character: Variant = {}, comp
 		var has_new := false
 		for field: String in ["known_moves","move_mastery_uses","move_mastery_receipts","move_utility","move_ultimate","loadout_revision","loadout_last_edit"]:
 			if saved.has(field): has_new = true
-		if not has_new: continue
+		if not has_new:
+			var old_record: Variant = character.get("creatures",{}).get(str(saved.get("uid","")),{})
+			if compare_carrier and old_record is Dictionary and (old_record.has("mastery_receipts") or old_record.has("loadout_revision") or old_record.has("loadout_last_edit")):
+				errors.append("party[%d]: missing canonical fields for existing move carrier" % index)
+			continue
+		if not saved.get("uid") is String or not instances.valid_uid(str(saved.get("uid",""))) or int(identities.get(str(saved.get("uid","")),0))!=1:
+			errors.append("party[%d]: invalid or repeated canonical move identity" % index)
+			continue
 		var raw_level: Variant = saved.get("level",1)
 		if not (raw_level is int or raw_level is float) or not is_finite(float(raw_level)) or floor(float(raw_level))!=float(raw_level) or float(raw_level)<1.0 or float(raw_level)>100.0:
 			errors.append("party[%d]: invalid loadout level" % index)
