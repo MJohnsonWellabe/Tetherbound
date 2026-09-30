@@ -387,6 +387,8 @@ func _build_sign() -> void:
 ## checks before it will hand the player back — D110 preserves that contract
 ## rather than editing a file this task does not own.
 func _on_trigger_entered(body: Node3D) -> void:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return
 	if _entered:
 		return
 	if not body is CharacterBody3D or body.name != "Player":

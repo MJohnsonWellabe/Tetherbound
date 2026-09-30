@@ -1,5 +1,9 @@
 extends SceneTree
 
+const FOUNDATIONS_STATE := preload("res://scripts/data/redesign_state.gd")
+const FOUNDATIONS_SAVE := preload("res://scripts/save/save_game.gd")
+const FOUNDATIONS_ORDER := preload("res://scripts/data/biome_order.gd")
+
 ## Net harness peer process. Stage B Wave 0 lane 0.F.
 ## docs/specs/MP_NET_HARNESS_CONTRACT.md §2-§5.
 ##
@@ -636,6 +640,13 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_tournament_setup(args)
 		"save_reload_here":
 			out = await _step_save_reload_here(args)
+		"foundations_state":
+			out = await _step_foundations_state(args)
+		"legacy_physical_crossings_fixture":
+			var regression := str(args.get("regression", ""))
+			var enabled := regression in ["veridian_same_five", "water_return"] \
+				and FOUNDATIONS_ORDER.set_test_overrides({"legacy_physical_crossings": true})
+			out = {"verdict": "PASS" if enabled else "FAIL", "detail": "disclosed retired crossing fixture: " + regression}
 		"save_character_here":
 			out = _step_save_character_here(args)
 		"wipe_character":
@@ -6519,13 +6530,15 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			# proved nothing, because the host reported 0 too. It is a real
 			# comparison now -- the host's is non-empty and the client's is
 			# still empty -- which is what the smoke asserts.
-			return _save_dir_entries("user://worlds")
+			var worlds_game := root.get_node_or_null(^"Game")
+			return (worlds_game.get("save_system").worlds() as RefCounted).call("list_ids") if worlds_game != null else []
 		"characters_dir_entries":
 			# D100's `user://characters/` -- the PORTABLE half, which every
 			# peer writes for itself and only for itself. The client half of
 			# the pair above: a client writes no world and exactly one
 			# character.
-			return _save_dir_entries("user://characters")
+			var characters_game := root.get_node_or_null(^"Game")
+			return (characters_game.get("save_system").characters() as RefCounted).call("list_ids") if characters_game != null else []
 		"character_file":
 			# The local peer's own character file, as `{id, keys}` -- enough for
 			# a smoke to assert whose it is and that it carries a character
@@ -6537,11 +6550,12 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var csave: Variant = cgame.get("save_system")
 			if csave == null:
 				return null
-			var ids: Array = _save_dir_entries("user://characters")
-			if ids.is_empty():
+			var character_id := str((cgame.get("local") as RefCounted).get("character_id"))
+			var characters: RefCounted = csave.call("characters")
+			if character_id.is_empty() or not bool(characters.call("has", character_id)):
 				return {}
-			var cdata: Dictionary = (csave.call("characters") as RefCounted).call("read", str(ids[0]))
-			return {"id": str(ids[0]), "keys": cdata.keys(), "party": (cdata.get("party", []) as Array).size()}
+			var cdata: Dictionary = characters.call("read", character_id)
+			return {"id": character_id, "keys": cdata.keys(), "party": (cdata.get("party", []) as Array).size()}
 		_:
 			return null
 
@@ -7117,3 +7131,95 @@ func _step_guardian_pilot(args: Dictionary) -> Dictionary:
 	var won := str(result.get("outcome", "")) == "won" and pilot.hits_dealt > 0
 	return {"verdict": "PASS" if won else "FAIL", "data": result,
 		"detail": "input pilot outcome=%s hits=%d frames=%d gap=%.2f" % [str(result.get("outcome", "")), pilot.hits_dealt, int(result.get("frames", 0)), float(result.get("final_gap", -1.0))]}
+
+## F16 storage witness only. Future training/portal/craft transaction verbs are
+## not earned or invoked here; these are declared, valid carrier fixtures.
+func _foundations_payload() -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null: return {}
+	var world: RefCounted = game.get("world")
+	var local: RefCounted = game.get("local")
+	var saver: RefCounted = game.get("save_system")
+	var world_id := str(world.get("world_id"))
+	var character_id := str(local.get("character_id"))
+	var world_path := str((saver.call("worlds") as RefCounted).call("path_for", world_id))
+	var character_path := str((saver.call("characters") as RefCounted).call("path_for", character_id))
+	# Compare the complete JSON payload in its persisted numeric domain. Godot
+	# otherwise treats runtime int 20 and parsed JSON float 20.0 as unequal.
+	return {"world": JSON.parse_string(JSON.stringify(world.get("redesign_world"))),
+		"character": JSON.parse_string(JSON.stringify(local.get("redesign_character"))),
+		"world_id": world_id, "character_id": character_id,
+		"world_disk_sha256": FileAccess.get_sha256(world_path) if FileAccess.file_exists(world_path) else "",
+		"character_disk_sha256": FileAccess.get_sha256(character_path) if FileAccess.file_exists(character_path) else "",
+		"schema": FOUNDATIONS_SAVE.VERSION, "host": bool(game.call("is_host"))}
+
+func _step_foundations_state(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	if game == null: return {"verdict": "ERROR", "detail": "no Game for F16 witness"}
+	var world: RefCounted = game.get("world")
+	var local: RefCounted = game.get("local")
+	var saver: RefCounted = game.get("save_system")
+	var mode := str(args.get("mode", "inspect"))
+	if mode == "seed":
+		var marker := clampi(int(args.get("marker", 1)), 1, 2)
+		var party: RefCounted = local.get("party")
+		if int(party.call("size")) == 0:
+			var created_creature: RefCounted = game.call("make_creature", "terrapup", "Storage fixture")
+			if created_creature == null or not bool(party.call("add", created_creature)):
+				return {"verdict": "FAIL", "detail": "could not create one disclosed owned fixture creature"}
+		var owned_creature: RefCounted = party.call("at", 0)
+		var uid := str(owned_creature.get("uid"))
+		var biome := "tidewake" if marker == 1 else "cloudreach"
+		var suffix := "storage-%d" % marker
+		var personal := {"portal_unlocks": [biome],
+			"waystones_activated": {biome: [biome + "_entry"]}, "last_waystones": {biome: biome + "_entry"},
+			"relics_held": [biome], "relics_hung": ["meadows"], "attachment_recipes": ["forge_meadows"],
+			"feast_recipes": ["feast_t1"], "master_wins": ["master_t1"],
+			"release_receipts": ["release:" + suffix], "transaction_receipts": ["craft:" + suffix],
+			"research_receipts": ["research:" + suffix], "bounty_receipts": ["bounty:" + suffix],
+			"pouch_tier": marker, "creatures": {uid: {"cap_level": 20,
+				"breakthroughs": [1], "evolution_choices": {"1": "stay"}, "rolled_traits": ["hardy"],
+				"taught_traits": {"1": "hardy"}, "known_moves": ["pebble_toss", "stone_rush"],
+				"loadout": {"quick": "pebble_toss", "charged": "stone_rush", "utility": "", "ultimate": ""},
+				"mastery": {"pebble_toss": {"uses": marker + 1, "rank": 1}}, "best": true}}}
+		var errors := FOUNDATIONS_STATE.validate("character", personal, [uid])
+		var hosted := {"portal_unlocks": ["tidewake", "cloudreach"], "shrine_display": {"meadows": true},
+			"station_tiers": {"forge": 2}, "node_cycles": {"essence_ground": 3},
+			"rematch_cycles": {"meadows": 4}, "alpha_cycles": {"meadows": 5},
+			"bounty_day": 6, "fifth_arch_stirred": true}
+		if bool(game.call("is_host")): errors.append_array(FOUNDATIONS_STATE.validate("world", hosted))
+		if not errors.is_empty(): return {"verdict": "FAIL", "detail": str(errors)}
+		local.set("redesign_character", personal)
+		if bool(game.call("is_host")):
+			world.set("redesign_world", hosted)
+			world.set("revision", int(world.get("revision")) + 1)
+	elif mode == "roundtrip":
+		var before := _foundations_payload()
+		var result := await _step_save_reload_here({})
+		if str(result.get("verdict", "")) != "PASS": return result
+		var after := _foundations_payload()
+		if before.character != after.character or before.world != after.world:
+			return {"verdict": "FAIL", "detail": "production reload lost a full redesign carrier", "data": after}
+	elif mode == "forge_world":
+		if bool(game.call("is_host")): return {"verdict": "FAIL", "detail": "negative control requires a guest"}
+		var forged: Dictionary = (world.get("redesign_world") as Dictionary).duplicate(true)
+		forged.bounty_day = 999
+		if not FOUNDATIONS_STATE.validate("world", forged).is_empty():
+			return {"verdict": "FAIL", "detail": "forged fixture must remain valid data"}
+		world.set("redesign_world", forged)
+		var world_id := str(world.get("world_id"))
+		if bool(saver.call("save_world", game, world_id)):
+			return {"verdict": "FAIL", "detail": "guest wrote a forged authoritative world"}
+		var path := str((saver.call("worlds") as RefCounted).call("path_for", world_id))
+		if FileAccess.file_exists(path):
+			return {"verdict": "FAIL", "detail": "guest created a host-world file despite refusal"}
+	elif mode == "clear_world":
+		var session: Node = game.get("session")
+		if session != null and bool(session.call("is_active")):
+			return {"verdict": "FAIL", "detail": "memory-loss world fixture requires a disconnected peer"}
+		world.set("redesign_world", FOUNDATIONS_STATE.defaults("world"))
+	elif mode != "inspect":
+		return {"verdict": "ERROR", "detail": "unknown F16 witness mode " + mode}
+	var payload := _foundations_payload()
+	print("F16 full carrier ", mode, ": ", JSON.stringify(payload))
+	return {"verdict": "PASS", "data": payload, "detail": "full F16 carrier witness " + mode}

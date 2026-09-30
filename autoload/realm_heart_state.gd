@@ -23,6 +23,10 @@ extends RefCounted
 ## Hearts is correct behaviour, not drift.
 
 const CONFIG_PATH := "res://data/config/realm_hearts.json"
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
+func ordered_realm_ids() -> Array[String]:
+	return BIOME_ORDER.ordered_runtime_ids((_config.get("realms", {}) as Dictionary).keys())
 
 var revision: int = 0
 var _config: Dictionary = {}

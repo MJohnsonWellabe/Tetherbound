@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/gear_tiers",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "gear_tier_1",
+          "gear_tier_2",
+          "gear_tier_3",
+          "gear_tier_4",
+          "gear_tier_5",
+          "gear_tier_6",
+          "gear_tier_7",
+          "gear_tier_8"
+        ]
+      },
+      "tier": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "live",
+          "reserved"
+        ]
+      },
+      "slots": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "harness",
+            "charm"
+          ]
+        },
+        "minItems": 2,
+        "uniqueItems": true,
+        "maxItems": 2
+      },
+      "max_upgrade": {
+        "const": 3
+      }
+    },
+    "required": [
+      "id",
+      "tier",
+      "biome",
+      "status",
+      "slots",
+      "max_upgrade"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_1"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_2"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_3"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_4"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_6"
+          },
+          "tier": {
+            "const": 6
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_7"
+          },
+          "tier": {
+            "const": 7
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gear_tier_8"
+          },
+          "tier": {
+            "const": 8
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "slots": {
+            "const": [
+              "harness",
+              "charm"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 8,
+  "uniqueItems": true,
+  "maxItems": 8
+}

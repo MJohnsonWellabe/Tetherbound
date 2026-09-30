@@ -138,7 +138,7 @@ func test_a_save_writes_a_character_file_at_the_partitioned_path() -> void:
 func test_the_real_saver_writes_characters_under_the_d100_directory() -> void:
 	var shipped: RefCounted = SAVE_GAME.new()
 	assert_eq(str((shipped.call("characters") as RefCounted).call("path_for", "c1")),
-		"user://characters/c1/character.json")
+		"user://characters/redesign-v28/c1/character.json")
 
 
 # --- what is in it ------------------------------------------------------------
@@ -382,7 +382,7 @@ func test_a_newer_than_this_build_character_file_refuses() -> void:
 	assert_eq(characters.call("read", "slot-1"), {})
 
 
-func test_version_two_character_remains_readable_with_legacy_escrow() -> void:
+func test_version_two_character_remains_readable_with_legacy_escrow_refused_by_redesign() -> void:
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
@@ -396,12 +396,17 @@ func test_version_two_character_remains_readable_with_legacy_escrow() -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	file.close()
-	var read: Dictionary = characters.call("read", "slot-1")
-	assert_false(read.is_empty(), "the prior character format remains readable")
-	assert_true((read.get("satchel_escrow", {}) as Dictionary).has("death-txn"))
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var modified_before := FileAccess.get_modified_time(path)
+	var live_before: Dictionary = saver.snapshot(game).duplicate(true)
+	assert_eq(characters.call("read", "slot-1"), {}, "RD-35 refuses old portable characters")
+	assert_eq(str(characters.get("last_load_result").get("code", "")), "incompatible_old_version")
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before)
+	assert_eq(FileAccess.get_modified_time(path), modified_before)
+	assert_eq(saver.snapshot(game), live_before, "escrow and party remain unchanged")
 
 
-func test_version_three_character_without_world_instance_remains_readable() -> void:
+func test_version_three_character_without_world_instance_remains_readable_refused_by_redesign() -> void:
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
@@ -411,13 +416,17 @@ func test_version_three_character_without_world_instance_remains_readable() -> v
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	file.close()
-	var read: Dictionary = characters.call("read", "slot-1")
-	assert_false(read.is_empty(), "v3 predates pose provenance but remains readable")
-	assert_eq(str(read.get("last_world_instance_id", "")), "",
-		"missing legacy provenance is explicitly unknown")
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var modified_before := FileAccess.get_modified_time(path)
+	var live_before: Dictionary = saver.snapshot(game).duplicate(true)
+	assert_eq(characters.call("read", "slot-1"), {}, "RD-35 refuses old portable characters")
+	assert_eq(str(characters.get("last_load_result").get("code", "")), "incompatible_old_version")
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before)
+	assert_eq(FileAccess.get_modified_time(path), modified_before)
+	assert_eq(saver.snapshot(game), live_before, "escrow and party remain unchanged")
 
 
-func test_version_four_pending_escrow_without_world_instance_is_preserved() -> void:
+func test_version_four_pending_escrow_without_world_instance_is_preserved_refused_by_redesign() -> void:
 	var game := _legacy_id_game()
 	var escrow := {"pending-death": {
 		"kind": "death_satchel_transfer", "status": "pending",
@@ -437,20 +446,11 @@ func test_version_four_pending_escrow_without_world_instance_is_preserved() -> v
 	file.store_string(JSON.stringify(data))
 	file.close()
 
-	var read: Dictionary = characters.call("read", "slot-1")
-	assert_false(read.is_empty(), "v4 remains readable on the v5 character reader")
-	var restored: Dictionary = read.get("satchel_escrow", {}).get("pending-death", {})
-	assert_eq(str(restored.get("kind", "")), "death_satchel_transfer")
-	assert_eq(str(restored.get("status", "")), "pending")
-	assert_eq(str(restored.get("world_id", "")), "slot-1")
-	assert_eq(str(restored.get("character_id", "")), "slot-1")
-	assert_eq(int((restored.get("stacks", []) as Array)[0].get("n", 0)), 2)
-	var restored_intent: Dictionary = restored.get("intent", {})
-	assert_eq(str(restored_intent.get("kind", "")), "death_satchel_transfer")
-	assert_eq(str(restored_intent.get("txn_id", "")), "pending-death")
-	assert_eq(str(restored_intent.get("world_id", "")), "slot-1",
-		"legacy escrow is preserved without inventing world provenance")
-	assert_false(restored.has("world_instance_id"))
-	assert_false(restored_intent.has("world_instance_id"))
-	assert_eq(str(read.get("last_world_instance_id", "")), "",
-		"missing legacy world provenance stays unknown")
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var modified_before := FileAccess.get_modified_time(path)
+	var live_before: Dictionary = saver.snapshot(game).duplicate(true)
+	assert_eq(characters.call("read", "slot-1"), {}, "RD-35 refuses old portable characters")
+	assert_eq(str(characters.get("last_load_result").get("code", "")), "incompatible_old_version")
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before)
+	assert_eq(FileAccess.get_modified_time(path), modified_before)
+	assert_eq(saver.snapshot(game), live_before, "escrow and party remain unchanged")

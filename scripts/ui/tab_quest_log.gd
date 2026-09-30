@@ -72,7 +72,9 @@ func build() -> void:
 	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	page.add_child(title)
 
-	_main_list = _section(page, "MAIN STORY")
+	var game := state()
+	if game != null: _log.call("set_realm", str(game.get("current_realm")))
+	_main_list = _section(page, str(_log.call("chapter_heading")))
 	_local_list = _section(page, "LOCAL REQUESTS")
 
 	poll()

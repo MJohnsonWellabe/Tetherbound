@@ -1684,7 +1684,7 @@ func _configured_map_realms() -> Array[String]:
 	if game != null:
 		var local: Variant = game.get("local")
 		if local is RefCounted and (local as RefCounted).has_method("mapped_realm_ids"):
-			return (local as RefCounted).call("mapped_realm_ids")
+			return preload("res://scripts/data/biome_order.gd").ordered_runtime_ids((local as RefCounted).call("mapped_realm_ids"))
 	var ids: Array[String] = ["meadows", "cloudreach"]
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/realm_hearts.json"))
 	var realms: Variant = (parsed as Dictionary).get("realms", {}) if parsed is Dictionary else {}
@@ -1694,10 +1694,7 @@ func _configured_map_realms() -> Array[String]:
 			var definition: Variant = (realms as Dictionary)[raw_id]
 			if definition is Dictionary and (definition as Dictionary).has("map_world_path") and not ids.has(realm_id):
 				ids.append(realm_id)
-	ids.sort()
-	ids.erase("meadows")
-	ids.push_front("meadows")
-	return ids
+	return preload("res://scripts/data/biome_order.gd").ordered_runtime_ids(ids)
 
 
 func _realm_entry_key(realm_id: String) -> String:

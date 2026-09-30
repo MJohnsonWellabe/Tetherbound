@@ -1,0 +1,258 @@
+[
+  {
+    "id": "forge_meadows",
+    "station_id": "forge",
+    "biome": "meadows",
+    "tier": 1,
+    "status": "live",
+    "display_name": "Bellows"
+  },
+  {
+    "id": "forge_tidewake",
+    "station_id": "forge",
+    "biome": "tidewake",
+    "tier": 2,
+    "status": "live",
+    "display_name": "Tide quench tank"
+  },
+  {
+    "id": "forge_cloudreach",
+    "station_id": "forge",
+    "biome": "cloudreach",
+    "tier": 3,
+    "status": "live",
+    "display_name": "Wind furnace"
+  },
+  {
+    "id": "forge_stormwood",
+    "station_id": "forge",
+    "biome": "stormwood",
+    "tier": 4,
+    "status": "live",
+    "display_name": "Storm coil"
+  },
+  {
+    "id": "forge_biome5",
+    "station_id": "forge",
+    "biome": "biome5",
+    "tier": 5,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "forge_biome6",
+    "station_id": "forge",
+    "biome": "biome6",
+    "tier": 6,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "forge_biome7",
+    "station_id": "forge",
+    "biome": "biome7",
+    "tier": 7,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "forge_biome8",
+    "station_id": "forge",
+    "biome": "biome8",
+    "tier": 8,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "kitchen_meadows",
+    "station_id": "kitchen",
+    "biome": "meadows",
+    "tier": 1,
+    "status": "live",
+    "display_name": "Spice rack"
+  },
+  {
+    "id": "kitchen_tidewake",
+    "station_id": "kitchen",
+    "biome": "tidewake",
+    "tier": 2,
+    "status": "live",
+    "display_name": "Smoker"
+  },
+  {
+    "id": "kitchen_cloudreach",
+    "station_id": "kitchen",
+    "biome": "cloudreach",
+    "tier": 3,
+    "status": "live",
+    "display_name": "Cold cellar"
+  },
+  {
+    "id": "kitchen_stormwood",
+    "station_id": "kitchen",
+    "biome": "stormwood",
+    "tier": 4,
+    "status": "live",
+    "display_name": "Storm oven"
+  },
+  {
+    "id": "kitchen_biome5",
+    "station_id": "kitchen",
+    "biome": "biome5",
+    "tier": 5,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "kitchen_biome6",
+    "station_id": "kitchen",
+    "biome": "biome6",
+    "tier": 6,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "kitchen_biome7",
+    "station_id": "kitchen",
+    "biome": "biome7",
+    "tier": 7,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "kitchen_biome8",
+    "station_id": "kitchen",
+    "biome": "biome8",
+    "tier": 8,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "altar_meadows",
+    "station_id": "altar",
+    "biome": "meadows",
+    "tier": 1,
+    "status": "live",
+    "display_name": "Meadow lens"
+  },
+  {
+    "id": "altar_tidewake",
+    "station_id": "altar",
+    "biome": "tidewake",
+    "tier": 2,
+    "status": "live",
+    "display_name": "Tide lens"
+  },
+  {
+    "id": "altar_cloudreach",
+    "station_id": "altar",
+    "biome": "cloudreach",
+    "tier": 3,
+    "status": "live",
+    "display_name": "Sky lens"
+  },
+  {
+    "id": "altar_stormwood",
+    "station_id": "altar",
+    "biome": "stormwood",
+    "tier": 4,
+    "status": "live",
+    "display_name": "Storm lens"
+  },
+  {
+    "id": "altar_biome5",
+    "station_id": "altar",
+    "biome": "biome5",
+    "tier": 5,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "altar_biome6",
+    "station_id": "altar",
+    "biome": "biome6",
+    "tier": 6,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "altar_biome7",
+    "station_id": "altar",
+    "biome": "biome7",
+    "tier": 7,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "altar_biome8",
+    "station_id": "altar",
+    "biome": "biome8",
+    "tier": 8,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "den_meadows",
+    "station_id": "den",
+    "biome": "meadows",
+    "tier": 1,
+    "status": "live",
+    "display_name": "Straw bedding"
+  },
+  {
+    "id": "den_tidewake",
+    "station_id": "den",
+    "biome": "tidewake",
+    "tier": 2,
+    "status": "live",
+    "display_name": "Hot spring"
+  },
+  {
+    "id": "den_cloudreach",
+    "station_id": "den",
+    "biome": "cloudreach",
+    "tier": 3,
+    "status": "live",
+    "display_name": "Cliff perches"
+  },
+  {
+    "id": "den_stormwood",
+    "station_id": "den",
+    "biome": "stormwood",
+    "tier": 4,
+    "status": "live",
+    "display_name": "Grounded bedding"
+  },
+  {
+    "id": "den_biome5",
+    "station_id": "den",
+    "biome": "biome5",
+    "tier": 5,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "den_biome6",
+    "station_id": "den",
+    "biome": "biome6",
+    "tier": 6,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "den_biome7",
+    "station_id": "den",
+    "biome": "biome7",
+    "tier": 7,
+    "status": "reserved",
+    "display_name": "Sealed"
+  },
+  {
+    "id": "den_biome8",
+    "station_id": "den",
+    "biome": "biome8",
+    "tier": 8,
+    "status": "reserved",
+    "display_name": "Sealed"
+  }
+]

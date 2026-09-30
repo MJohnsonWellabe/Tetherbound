@@ -124,7 +124,7 @@ func _build_relic_slots() -> void:
 	] if home_circle_enabled else [Vector3(-3, 0, 0), Vector3(3, 0, 0), Vector3(0, 0, -3)]
 	var yaws := [-PI * 0.5, PI, PI * 0.5]
 	var index := 0
-	for id: String in definitions:
+	for id: String in preload("res://scripts/data/biome_order.gd").ordered_runtime_ids(definitions.keys()):
 		if id == heart_id:
 			continue
 		var slot := (get_script() as Script).new() as Node3D

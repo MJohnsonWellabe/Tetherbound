@@ -9,6 +9,7 @@ const REALM_HEARTS := preload("res://autoload/realm_heart_state.gd")
 const SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
 const TIDEGLASS_SHRINE := preload("res://assets/props/tideglass_shrine/tideglass_shrine.glb")
 const GATE := preload("res://scripts/world/realm_gate.gd")
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 
 class FakeGame extends Node:
@@ -28,6 +29,9 @@ var gate: Node3D = null
 
 
 func before_each() -> void:
+	# These existing gate regressions exercise the explicitly retired flag-on
+	# branch. The default-off control below verifies shipping behavior.
+	assert_true(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	game = FakeGame.new()
 	game.progression = PROGRESSION.new()
 	game.realm_hearts = REALM_HEARTS.new({
@@ -44,9 +48,24 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	BIOME_ORDER.clear_test_overrides()
 	shrine.free()
 	gate.free()
 	game.free()
+
+
+func test_default_retired_gate_neither_unlocks_nor_routes_with_an_earned_key() -> void:
+	BIOME_ORDER.clear_test_overrides()
+	assert_false(BIOME_ORDER.legacy_physical_crossings())
+	game.progression.set_flag("realm_key_cloudreach")
+	var before: Dictionary = game.progression.save_data().duplicate(true)
+	assert_false(gate.try_unlock(game))
+	assert_eq(game.progression.save_data(), before)
+	game.progression.set_flag("realm_gate_cloudreach_unlocked")
+	before = game.progression.save_data().duplicate(true)
+	assert_false(gate.try_enter(game))
+	assert_eq(game.entered_realm, "")
+	assert_eq(game.progression.save_data(), before)
 
 
 func test_shrine_exposes_all_four_durable_states() -> void:

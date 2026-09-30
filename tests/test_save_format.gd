@@ -211,7 +211,7 @@ func test_malformed_player_pose_falls_back_as_one_unit() -> void:
 	assert_eq(read.saved_player_pose, {}, "a malformed pose should use the world's authored spawn")
 
 
-func test_version_11_save_loads_without_inventing_a_player_pose() -> void:
+func test_version_11_save_loads_without_inventing_a_player_pose_refused_by_redesign() -> void:
 	var written := _game()
 	written.saved_player_pose = {
 		"position": [50.0, 3.0, 25.0],
@@ -229,8 +229,7 @@ func test_version_11_save_loads_without_inventing_a_player_pose() -> void:
 	_write_legacy_slot_json(1, data)
 
 	var read := _game(false)
-	assert_true(saver.load_slot(read, 1), "the pre-RG7 format should migrate")
-	assert_eq(read.saved_player_pose, {}, "an old save should retain normal authored-spawn fallback")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
 func test_save_then_load_round_trips_the_day_counter() -> void:
@@ -376,7 +375,7 @@ func test_a_species_the_catalogue_forgot_keeps_what_the_save_said() -> void:
 ## canonical and this species/shape instead: a pre-GAME-F4 save with none of
 ## the three fields at all, repaired from `species.json`'s meadowhart entry
 ## rather than terrapup's).
-func test_save_then_load_repairs_missing_base_stats_from_species_json() -> void:
+func test_save_then_load_repairs_missing_base_stats_from_species_json_refused_by_redesign() -> void:
 	# An old-format save (VERSION < the one that added base_hp/attack/defence)
 	# carries none of the three. `_array_to_party` must repair them from
 	# species.json rather than leaving them at 1.0/1.0/1.0.
@@ -400,17 +399,9 @@ func test_save_then_load_repairs_missing_base_stats_from_species_json() -> void:
 	}))
 	file.close()
 
-	assert_true(saver.load_slot(game, 1))
-	var loaded: RefCounted = game.party.at(0)
-	assert_almost_eq(float(loaded.get("base_hp")), 115.0)
-	assert_almost_eq(float(loaded.get("base_attack")), 16.0)
-	assert_almost_eq(float(loaded.get("base_defence")), 17.0)
+	_assert_old_slot_refused_unchanged(game, 1)
 
 
-## GATE-F-LEG-S07's own version of the same species-lookup fallback coverage:
-## a save written before this fix has no `base_hp`/`base_attack`/
-## `base_defence` keys at all and must reconstruct them from `species.json`
-## rather than falling back to `CreatureInstance`'s own bare class defaults.
 func test_a_save_with_no_base_stats_reconstructs_them_from_species() -> void:
 	var written := _game(false)
 	var creature: RefCounted = CREATURE.from_species("terrapup", {
@@ -524,7 +515,7 @@ func test_save_then_load_round_trips_permanently_harvested_vegetation() -> void:
 	assert_eq(read.harvested_vegetation.get("rocks"), Marshalls.raw_to_base64(PackedByteArray([0b00000010, 0b00000000])))
 
 
-func test_v9_save_migrates_with_nothing_harvested() -> void:
+func test_v9_save_migrates_with_nothing_harvested_refused_by_redesign() -> void:
 	var v9_data := {
 		"version": 9,
 		"day": 11,
@@ -546,17 +537,9 @@ func test_v9_save_migrates_with_nothing_harvested() -> void:
 	read.map = MAP_STATE.new()
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-
-	assert_eq(read.day, 11)
-	assert_eq(read.harvested_vegetation, {}, "a save predating HARVEST-ALL has nothing chopped yet")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-## T3-ENCOUNTER / VERSION 15. The world seed IS the rolled wild population:
-## `encounter_director.gd` derives every rolled cluster's species from
-## (world_seed, order) rather than storing it, which is what lets a rolled world
-## need no per-creature persistence. The whole of that rests on this one integer
-## surviving a save.
 func test_save_then_load_round_trips_the_world_seed() -> void:
 	var written := _game()
 	written.world_seed = 90210
@@ -572,7 +555,7 @@ func test_save_then_load_round_trips_the_world_seed() -> void:
 ## world -- the seed at which the roller is never entered -- so a save written
 ## before rolled populations existed comes back into exactly the world it was
 ## saved from rather than an approximation of it.
-func test_a_save_predating_rolled_populations_loads_the_authored_world() -> void:
+func test_a_save_predating_rolled_populations_loads_the_authored_world_refused_by_redesign() -> void:
 	var v14_data := {
 		"version": 14,
 		"day": 11,
@@ -598,15 +581,9 @@ func test_a_save_predating_rolled_populations_loads_the_authored_world() -> void
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
 	read.world_seed = 4242  # deliberately dirty, so a no-op migration would show
-	assert_true(saver.load_slot(read, 1))
-	assert_eq(read.world_seed, 0,
-		"a save predating rolled populations must load the authored world, not whatever was in memory")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-## RG9 / VERSION 11. A tree chopped but never picked up must come back on
-## reload with its felled pile still standing -- the wood the chop already
-## earned must not silently vanish just because the player saved before
-## walking over to collect it.
 func test_save_then_load_round_trips_felled_vegetation() -> void:
 	var written := _game()
 	written.harvested_vegetation = {"trees": Marshalls.raw_to_base64(PackedByteArray([0b00000001]))}
@@ -624,7 +601,7 @@ func test_save_then_load_round_trips_felled_vegetation() -> void:
 	assert_eq(record.get("position"), [4.0, 1.0, -2.0])
 
 
-func test_v10_save_migrates_with_nothing_felled() -> void:
+func test_v10_save_migrates_with_nothing_felled_refused_by_redesign() -> void:
 	var v10_data := {
 		"version": 10,
 		"day": 11,
@@ -647,19 +624,9 @@ func test_v10_save_migrates_with_nothing_felled() -> void:
 	read.map = MAP_STATE.new()
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-
-	assert_eq(read.day, 11)
-	assert_eq(read.felled_vegetation, {}, "a save predating RG9 has nothing felled-but-ungathered yet")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-## The gap this file did not have a test for, and which shipped: `load_slot`
-## used to dispatch migrations through a hand-written per-version `if/elif`
-## ladder that carried branches for versions 1-5 and none for 6 or 7, so a
-## save written between the hotbar change and the elixir one was REFUSED even
-## though `_migrate_v6` and `_migrate_v7` both existed and worked. R7.6
-## replaced the ladder with a loop; this asserts the property the ladder could
-## not keep — EVERY version this build claims to read actually loads.
 func test_every_readable_save_version_actually_loads() -> void:
 	for version in range(1, SAVE_GAME.VERSION + 1):
 		var written := _game()
@@ -677,10 +644,11 @@ func test_every_readable_save_version_actually_loads() -> void:
 		_write_legacy_slot_json(2, data)
 
 		var read := _game(false)
-		assert_true(saver.load_slot(read, 2),
-			"a version %d save did not load, but this build claims to read %d"
-				% [version, SAVE_GAME.VERSION])
-		assert_eq(read.day, 7, "a version %d save loaded but lost its day" % version)
+		if version <= SAVE_GAME.RESET_MAX_VERSION:
+			_assert_old_slot_refused_unchanged(read, 2)
+		else:
+			assert_true(saver.load_slot(read, 2), "the current schema remains readable")
+			assert_eq(read.day, 7, "current save retains its day")
 
 
 func test_save_then_load_round_trips_a_placed_buildings_rotation() -> void:
@@ -773,7 +741,7 @@ func test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched() -> voi
 	assert_eq(game.day, 2, "a newer save must be left alone, not guessed at")
 
 
-func test_version_twenty_five_pending_escrow_migrates_without_inventing_provenance() -> void:
+func test_version_twenty_five_pending_escrow_migrates_without_inventing_provenance_refused_by_redesign() -> void:
 	var written := _game(false)
 	written.local.character_id = "legacy-escrow-character"
 	var escrow := {"pending-death": {
@@ -793,22 +761,7 @@ func test_version_twenty_five_pending_escrow_migrates_without_inventing_provenan
 	file.close()
 
 	var loaded := _game(false)
-	assert_true(saver.load_slot(loaded, 1), "a v25 slot remains loadable after the v26 barrier")
-	var restored: Dictionary = loaded.local.satchel_escrow.get("pending-death", {})
-	assert_eq(str(restored.get("kind", "")), "death_satchel_transfer")
-	assert_eq(str(restored.get("status", "")), "pending")
-	assert_eq(str(restored.get("world_id", "")), "slot-1")
-	assert_eq(str(restored.get("character_id", "")), "legacy-escrow-character")
-	assert_eq(int((restored.get("stacks", []) as Array)[0].get("n", 0)), 2,
-		"v25 escrow survives unchanged rather than receiving invented provenance")
-	var restored_intent: Dictionary = restored.get("intent", {})
-	assert_eq(str(restored_intent.get("kind", "")), "death_satchel_transfer")
-	assert_eq(str(restored_intent.get("txn_id", "")), "pending-death")
-	assert_eq(str(restored_intent.get("world_id", "")), "slot-1")
-	assert_false(restored.has("world_instance_id"),
-		"v25 escrow does not receive invented world provenance")
-	assert_false(restored_intent.has("world_instance_id"),
-		"v25 escrow intent does not receive invented world provenance")
+	_assert_old_slot_refused_unchanged(loaded, 1)
 
 
 func test_save_and_load_reject_an_out_of_range_slot() -> void:
@@ -920,7 +873,7 @@ func test_save_then_load_round_trips_building_yaw() -> void:
 	assert_almost_eq(float(entry.get("yaw_deg")), 90.0)
 
 
-func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> void:
+func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load_refused_by_redesign() -> void:
 	var v1_data := {
 		"version": 1,
 		"day": 5,
@@ -948,27 +901,7 @@ func test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load() -> v
 	read.map = MAP_STATE.new()
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-
-	assert_eq(read.day, 5)
-
-	var creature: RefCounted = read.party.at(0)
-	assert_eq(str(creature.get("nickname")), "Old Save Creature")
-	assert_eq(int(creature.get("level")), 3, "migration.v1_creature_level from progression.json")
-	assert_eq(int(creature.get("xp")), 0)
-	assert_eq(int(creature.get("bond")), 0)
-	assert_eq(str(creature.get("move_quick")), "pebble_toss", "terrapup's own species.json moves")
-	assert_eq(str(creature.get("move_charged")), "stone_rush")
-
-	assert_eq(read.inventory.stack_at(1), {"id": "wood", "n": 5})
-
-	assert_eq(read.placed_buildings.size(), 1)
-	var building := read.placed_buildings[0] as Dictionary
-	assert_almost_eq(float(building.get("yaw_deg", -1.0)), 0.0)
-
-	assert_almost_eq(read.satiety, 100.0, 0.0001, "a v1 save has no satiety on record; migrate to full")
-	assert_almost_eq(read.map.discovered_fraction(), 0.0, 0.0001, "a v1 save predates the map; fog stays fresh")
-	assert_eq(read.progression.all_set(), [], "a v1 save predates progression flags too; nothing to recover")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
 func test_a_version_newer_than_this_build_is_refused() -> void:
@@ -1060,7 +993,7 @@ func test_save_then_load_round_trips_individuality_and_traits() -> void:
 	assert_eq(str(loaded.get("trait_secondary")), "calm")
 
 
-func test_v4_save_migrates_with_average_individuality_and_no_traits() -> void:
+func test_v4_save_migrates_with_average_individuality_and_no_traits_refused_by_redesign() -> void:
 	var v4_data := {
 		"version": 4,
 		"day": 8,
@@ -1090,19 +1023,7 @@ func test_v4_save_migrates_with_average_individuality_and_no_traits() -> void:
 	read.map = MAP_STATE.new()
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-
-	assert_eq(read.day, 8)
-	var creature: RefCounted = read.party.at(0)
-	assert_eq(str(creature.get("nickname")), "Pre-R4.2 Save")
-	assert_almost_eq(float(creature.get("iv_hp")), 0.5, 0.0001, "a save predating R4.2 reads as perfectly average")
-	assert_almost_eq(float(creature.get("iv_attack")), 0.5, 0.0001)
-	assert_almost_eq(float(creature.get("iv_defence")), 0.5, 0.0001)
-	assert_eq(str(creature.get("trait_primary")), "", "a save predating R4.2 has no trait to recover")
-	assert_eq(str(creature.get("trait_secondary")), "")
-
-
-# --- VERSION 6: shiny (OF27) -------------------------------------------------
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
 func test_save_then_load_round_trips_shiny() -> void:
@@ -1129,7 +1050,7 @@ func test_save_then_load_round_trips_a_non_shiny_creature_too() -> void:
 	assert_false(bool(read.party.at(0).get("shiny")))
 
 
-func test_v5_save_migrates_with_shiny_false() -> void:
+func test_v5_save_migrates_with_shiny_false_refused_by_redesign() -> void:
 	var v5_data := {
 		"version": 5,
 		"day": 9,
@@ -1161,20 +1082,10 @@ func test_v5_save_migrates_with_shiny_false() -> void:
 	read.map = MAP_STATE.new()
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-
-	assert_eq(read.day, 9)
-	var creature: RefCounted = read.party.at(0)
-	assert_eq(str(creature.get("nickname")), "Pre-OF27 Save")
-	assert_false(bool(creature.get("shiny")), "a save predating OF27 reads as not shiny, never retroactively rare")
-	# The fields VERSION 5 already carried must still be intact after the
-	# extra migration step -- a shiny migration that clobbers individuality
-	# would be its own regression.
-	assert_almost_eq(float(creature.get("iv_hp")), 0.6, 0.0001)
-	assert_eq(str(creature.get("trait_primary")), "bold")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
+func test_v2_save_migrates_with_a_fresh_progression_store_refused_by_redesign() -> void:
 	var v2_data := {
 		"version": 2,
 		"day": 6,
@@ -1191,32 +1102,9 @@ func test_v2_save_migrates_with_a_fresh_progression_store() -> void:
 
 	var read := _game(false)
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-	assert_eq(read.day, 6)
-	assert_almost_eq(read.satiety, 80.0)
-	assert_eq(read.progression.all_set(), [], "a v2 save predates progression flags; nothing to recover")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-## --- the tournament across a save (26-RG19) -----------------------------------
-##
-## N01-SAVE-FORMAT, 2026-09-05. The five tests in this section (the three
-## bracket tests, `test_condition_survives_a_save` and
-## `test_a_pre_condition_save_loads_at_the_configured_start`) were green from
-## the day they landed (d409939e) without a single one of their assertions
-## ever running. They called `saver.save_game()` / `saver.load_game()` -- the
-## `Game` autoload's method names, which `save_game.gd` has never had (its API
-## is `save()` / `load_slot()`). GDScript aborts a method on a nonexistent
-## call, `run_tests.gd` only reads the `failures` list afterwards, and an
-## aborted method has an empty one -- so each printed `ok` beside a SCRIPT
-## ERROR nobody grepped for. The pre-condition test also opened
-## `save_0.json`; the saver writes `slot_0.json`. Every test below now uses
-## the saver's real API and was seen red for the right reason before this
-## comment was written (see `ralph/reports/N01-SAVE-FORMAT-0905/REPORT.md`).
-
-## 26-RG19's own acceptance list: "save/load does not duplicate rewards or
-## regress to pre-tournament objective." The bracket is nothing but flags and
-## a satchel, so this is the whole of that requirement -- and until now
-## nothing tested it at all.
 func test_a_half_fought_bracket_survives_a_save() -> void:
 	var game := _game()
 	game.progression.set_flag("tournament_team_ready")
@@ -1307,7 +1195,7 @@ func test_condition_survives_a_save() -> void:
 
 ## A save written before the condition model existed loads as a creature that
 ## was never measured, not as one that is starving.
-func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
+func test_a_pre_condition_save_loads_at_the_configured_start_refused_by_redesign() -> void:
 	var game := _game()
 	assert_true(saver.save(game, 0))
 
@@ -1333,23 +1221,7 @@ func test_a_pre_condition_save_loads_at_the_configured_start() -> void:
 	# start" cannot be the loader leaving the party it found alone.
 	loaded.party.at(0).set("nourishment", 3.0)
 	loaded.party.at(0).set("happiness", 2.0)
-	assert_true(saver.load_slot(loaded, 0), "a version 12 save no longer loads at all")
-	var back: RefCounted = loaded.party.at(0)
-	var cfg: Dictionary = CONDITION.config()
-	assert_almost_eq(float(back.get("nourishment")),
-		float(cfg.get("nourishment", {}).get("start", 70.0)), 0.001,
-		"a creature from before the model came back starving rather than unmeasured")
-	assert_almost_eq(float(back.get("happiness")),
-		float(cfg.get("happiness", {}).get("start", 55.0)), 0.001)
-
-
-# --- GAME-F4: base stats must survive a save/load, or the next level-up ------
-# destroys the creature (`_apply_level_stats` recomputes max_hp/attack/defence
-# FROM base_hp/base_attack/base_defence every time; those three were never
-# written to the save at all, so a loaded creature silently carried the class
-# default of 1.0 until its next level-up, elixir or evolve rebuilt it from
-# that -- a level 4 Terrapup with 1.18 max hp instead of ~124. Measured in
-# play and reproduced here without a world.
+	_assert_old_slot_refused_unchanged(loaded, 0)
 
 
 func test_save_then_load_round_trips_base_stats_and_survives_a_level_up() -> void:
@@ -1395,7 +1267,7 @@ func test_save_then_load_round_trips_base_stats_and_survives_a_level_up() -> voi
 ## comments on this class already promised and neither ever implemented --
 ## rather than leaving the class default of 1.0 standing until the next
 ## level-up destroys the creature.
-func test_a_pre_gamef4_save_migrates_base_stats_from_species_json() -> void:
+func test_a_pre_gamef4_save_migrates_base_stats_from_species_json_refused_by_redesign() -> void:
 	var v15_data := {
 		"version": 15,
 		"day": 12,
@@ -1430,42 +1302,9 @@ func test_a_pre_gamef4_save_migrates_base_stats_from_species_json() -> void:
 	read.map = MAP_STATE.new()
 	read.map.configure({})
 	read.progression = PROGRESSION_STATE.new()
-	assert_true(saver.load_slot(read, 1))
-
-	var creature: RefCounted = read.party.at(0)
-	# terrapup's real data/creatures/species.json entry, not the 100/20/20
-	# shorthand this file's own `_game()` fixture uses for a fresh instance.
-	assert_almost_eq(float(creature.get("base_hp")), 120.0, 0.001,
-		"a save predating GAME-F4 must repair base_hp from species.json, not leave it at the class default of 1.0")
-	assert_almost_eq(float(creature.get("base_attack")), 22.0, 0.001)
-	assert_almost_eq(float(creature.get("base_defence")), 20.0, 0.001)
-
-	# Prove it the way the audit did: level the migrated creature up and
-	# confirm it grows instead of collapsing toward the class default.
-	var cfg := PROGRESSION.config()
-	creature.gain_xp(int(creature.call("xp_to_next", cfg)), cfg)
-	assert_true(float(creature.get("max_hp")) > 10.0,
-		"GAME-F4: a migrated creature's first level-up collapsed its stats toward the class default of 1.0")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-## --- the day/night clock across a save (N14-ROUTED-FOLLOWUPS, VERSION 19) ------
-##
-## N13-NIGHT-RESUME §5 root-caused the owner's "There is no night time" report
-## and found the clock had no memory of any kind: `save_game.gd` had no clock
-## key at all (`grep -in "elapsed\|hour\|clock"` over its 1013 lines returned
-## three comments about respawn timers and nothing else), so every Continue
-## rebuilt the world at 08:00 and the player walked the 350 seconds to nightfall
-## again. These three tests cover the format half of the fix.
-##
-## All three go through `saver.save()` / `saver.load_slot()` -- the saver's real
-## API. N01-SAVE-FORMAT found five tests in this file that had been green for
-## days without a single assertion running because they called `save_game()` /
-## `load_game()`, which this class has never had; GDScript aborts the method on
-## a nonexistent call and `run_tests.gd` only reads the empty `failures` list
-## afterwards. Not reintroducing that is the point of naming it here.
-
-## The whole finding, in one round trip: save at an hour that is not morning,
-## reload, and the hour must survive.
 func test_the_hour_survives_a_save_and_reload() -> void:
 	var written := _game(false)
 	# 19:40 on `art.json`'s 600-second day: late enough to be a different look
@@ -1487,7 +1326,7 @@ func test_the_hour_survives_a_save_and_reload() -> void:
 ## A save written before VERSION 19 has no memory of the hour, and the migration
 ## must say so rather than invent one -- the sentinel opens that save at the
 ## authored morning, exactly as the old build did.
-func test_a_pre_clock_save_loads_with_no_carried_hour() -> void:
+func test_a_pre_clock_save_loads_with_no_carried_hour_refused_by_redesign() -> void:
 	var written := _game(false)
 	written.clock_elapsed_seconds = 480.0
 	assert_true(saver.save(written, 1))
@@ -1500,13 +1339,9 @@ func test_a_pre_clock_save_loads_with_no_carried_hour() -> void:
 
 	var read := _game(false)
 	read.clock_elapsed_seconds = 123.0
-	assert_true(saver.load_slot(read, 1))
-	assert_true(read.clock_elapsed_seconds < 0.0,
-		"a VERSION 18 save must migrate to 'no carried clock', not to hour 123")
+	_assert_old_slot_refused_unchanged(read, 1)
 
 
-## The file is trusted no further than any other save field. A corrupt clock
-## must fall back to the sentinel, not restore the world to hour NaN.
 func test_a_corrupt_clock_falls_back_to_no_carried_hour() -> void:
 	for junk: Variant in ["nineteen", null, {"hour": 19}, [19.0], true]:
 		var written := _game(false)
@@ -1627,3 +1462,21 @@ func test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_fla
 	assert_eq(str(loaded.party.tournament_selection()[0].get("display_name")), "Entrant 3")
 	for flag: String in ["tournament_team_ready", "tournament_training_ready", "tournament_quarter_won"]:
 		assert_true(loaded.progression.has(flag), "round/readiness flag '%s' was lost" % flag)
+
+## RD-35 supersedes migration-through-load. Historical direct migration-helper
+## tests remain; old fixtures exercise typed refusal and preserve every live value.
+func _assert_old_slot_refused_unchanged(game: Object, slot: int) -> void:
+	var path: String = saver.slot_path(slot)
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var modified_before := FileAccess.get_modified_time(path)
+	var live_before: Dictionary = saver.snapshot(game).duplicate(true)
+	var world_ids: Array = saver.worlds().list_ids().duplicate()
+	var character_ids: Array = saver.characters().list_ids().duplicate()
+	assert_false(saver.load_slot(game, slot), "RD-35 refuses the old schema")
+	assert_eq(str(saver.last_load_result.get("code", "")), "incompatible_old_version")
+	assert_true(str(saver.last_load_result.get("message", "")).to_lower().contains("start a new game"))
+	assert_eq(saver.snapshot(game), live_before, "refusal changes no live state")
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before, "refusal preserves original bytes")
+	assert_eq(FileAccess.get_modified_time(path), modified_before, "refusal never rewrites the file")
+	assert_eq(saver.worlds().list_ids(), world_ids, "refusal mints no split world")
+	assert_eq(saver.characters().list_ids(), character_ids, "refusal mints no portable character")

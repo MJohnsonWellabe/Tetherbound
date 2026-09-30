@@ -40,7 +40,8 @@ const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migrati
 ## This file's own format version, independent of the merged slot format's.
 ## Version 2 protects the reward namespace and pending-delivery journal from a
 ## v1 build that would otherwise silently drop both on its next save.
-const VERSION := 2
+const VERSION := 28
+const OLD_VERSION_MESSAGE := "This save is from an older version. Start a new game. Your old save has been kept."
 
 ## Written by `write()` around the state payload. Deliberately NOT part of the
 ## partition: these describe the FILE, not the world, and the key-coverage test
@@ -52,12 +53,14 @@ const ENVELOPE_KEYS: Array[String] = [
 ## The v22 keys this half owns outright, under their own names. `progression`
 ## is not here: it is the split key, and its world scope arrives as `flags`.
 const STATE_KEYS: Array[String] = [
+	"redesign_world",
 	"day", "clock_elapsed_seconds", "world_seed", "placed_buildings", "farm_plots",
 	"death_satchels", "harvested_vegetation", "felled_vegetation", "realm_environment",
 	"water_capture_claims", "reward_deliveries", "reward_delivery_namespace",
 ]
 
 var _dir: String
+var last_load_result: Dictionary = {}
 
 ## id -> the envelope fields a re-save must PRESERVE rather than recompute.
 ##
@@ -150,6 +153,9 @@ static func scope_flags(v22: Dictionary, scope: String) -> Array:
 ## preserved from any file already there, so re-saving a world does not
 ## repeatedly claim it was created just now.
 func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
+	var contract := preload("res://scripts/data/redesign_state.gd")
+	if not contract.validate("world", payload.get("redesign_world", contract.defaults("world"))).is_empty():
+		return false
 	if world_id.is_empty():
 		return false
 	var dir := dir_for(world_id)
@@ -196,6 +202,7 @@ func _envelope_of(data: Dictionary) -> Dictionary:
 ## `world_id`'s file, or {} for missing, unreadable, non-object or
 ## newer-than-this-build content.
 func read(world_id: String) -> Dictionary:
+	last_load_result = {"ok": false, "code": "unreadable_save", "message": "That world could not be loaded."}
 	if not has(world_id):
 		return {}
 	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(path_for(world_id)), FileAccess.READ)
@@ -206,12 +213,24 @@ func read(world_id: String) -> Dictionary:
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
 	var data := parsed as Dictionary
+	var raw_version: Variant = data.get("version", null)
+	if not is_number(raw_version) or not is_finite(float(raw_version)) or float(raw_version) != floor(float(raw_version)):
+		last_load_result = {"ok": false, "code": "invalid_version", "message": "That world has an invalid version."}
+		return {}
 	var version := int(data.get("version", 0)) if is_number(data.get("version")) else 0
+	if version <= 27:
+		last_load_result = {"ok": false, "code": "incompatible_old_version", "message": OLD_VERSION_MESSAGE}
+		return {}
 	if version < 1 or version > VERSION:
 		push_warning("world '%s' is version %d, this build reads %d -- not loading" % [
 			world_id, version, VERSION,
 		])
 		return {}
+	var errors := preload("res://scripts/data/redesign_state.gd").validate("world", data.get("redesign_world", preload("res://scripts/data/redesign_state.gd").defaults("world")))
+	if not errors.is_empty():
+		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That world contains invalid data.", "errors": errors}
+		return {}
+	last_load_result = {"ok": true, "code": "ok", "message": ""}
 	return data
 
 

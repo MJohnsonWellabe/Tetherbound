@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "live": ["meadows", "tidewake", "cloudreach", "stormwood"],
+  "reserved": ["biome5", "biome6", "biome7", "biome8"],
+  "runtime_aliases": {"tidewake": "water"},
+  "display_names": {"meadows": "The Meadows", "tidewake": "Tidewake", "cloudreach": "Cloudreach Cliffs", "stormwood": "The Stormwood", "biome5": "Sealed", "biome6": "Sealed", "biome7": "Sealed", "biome8": "Sealed"},
+  "legacy_physical_crossings": false
+}

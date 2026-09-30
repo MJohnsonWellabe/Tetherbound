@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/traits",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "hardy"
+        ]
+      },
+      "rarity": {
+        "type": "string",
+        "enum": [
+          "common",
+          "rare",
+          "epic"
+        ]
+      },
+      "effect": {
+        "type": "string",
+        "enum": [
+          "max_hp_scale"
+        ]
+      },
+      "magnitude": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0.12
+      }
+    },
+    "required": [
+      "id",
+      "rarity",
+      "effect",
+      "magnitude"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "hardy"
+          },
+          "effect": {
+            "const": "max_hp_scale"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 1,
+  "uniqueItems": true
+}

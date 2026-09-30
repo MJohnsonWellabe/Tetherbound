@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/feasts",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "feast_t1",
+          "feast_t2",
+          "feast_t3",
+          "feast_t4",
+          "feast_t5"
+        ]
+      },
+      "tier": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "breaks_level": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 50
+      },
+      "station_id": {
+        "const": "kitchen"
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "attuned_types": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "ground",
+            "water",
+            "air",
+            "electric",
+            "fire",
+            "dark",
+            "ice",
+            "psychic"
+          ]
+        },
+        "minItems": 8,
+        "uniqueItems": true,
+        "maxItems": 8
+      }
+    },
+    "required": [
+      "id",
+      "tier",
+      "breaks_level",
+      "station_id",
+      "biome",
+      "attuned_types"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "feast_t1"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "station_id": {
+            "const": "kitchen"
+          },
+          "breaks_level": {
+            "const": 10
+          },
+          "attuned_types": {
+            "const": [
+              "ground",
+              "water",
+              "air",
+              "electric",
+              "fire",
+              "dark",
+              "ice",
+              "psychic"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "feast_t2"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "station_id": {
+            "const": "kitchen"
+          },
+          "breaks_level": {
+            "const": 20
+          },
+          "attuned_types": {
+            "const": [
+              "ground",
+              "water",
+              "air",
+              "electric",
+              "fire",
+              "dark",
+              "ice",
+              "psychic"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "feast_t3"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "station_id": {
+            "const": "kitchen"
+          },
+          "breaks_level": {
+            "const": 30
+          },
+          "attuned_types": {
+            "const": [
+              "ground",
+              "water",
+              "air",
+              "electric",
+              "fire",
+              "dark",
+              "ice",
+              "psychic"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "feast_t4"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "station_id": {
+            "const": "kitchen"
+          },
+          "breaks_level": {
+            "const": 40
+          },
+          "attuned_types": {
+            "const": [
+              "ground",
+              "water",
+              "air",
+              "electric",
+              "fire",
+              "dark",
+              "ice",
+              "psychic"
+            ]
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "feast_t5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "station_id": {
+            "const": "kitchen"
+          },
+          "breaks_level": {
+            "const": 50
+          },
+          "attuned_types": {
+            "const": [
+              "ground",
+              "water",
+              "air",
+              "electric",
+              "fire",
+              "dark",
+              "ice",
+              "psychic"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 5,
+  "uniqueItems": true,
+  "maxItems": 5
+}

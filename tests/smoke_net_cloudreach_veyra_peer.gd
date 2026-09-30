@@ -113,7 +113,7 @@ func _veyra_state(args: Dictionary) -> Dictionary:
 				rows.append({"source": str(row.get("source", "")), "character_id": str(row.get("character_id", "")),
 					"status": str(row.get("status", ""))})
 	var file_text := ""
-	var file_path := "user://characters/%s/character.json" % character_id
+	var file_path := "user://characters/redesign-v28/%s/character.json" % character_id
 	if not character_id.is_empty() and FileAccess.file_exists(file_path):
 		file_text = FileAccess.get_file_as_string(file_path)
 	var inventory: RefCounted = game.get("inventory")

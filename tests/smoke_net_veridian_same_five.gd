@@ -63,6 +63,13 @@ func _run() -> void:
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
+	# Retired physical-route regression only; shipping redesign crossings stay off.
+	for peer in 2:
+		var legacy: Dictionary = await step(peer, "legacy_physical_crossings_fixture", {"regression": "veridian_same_five"})
+		check(str(legacy.get("verdict", "")) == "PASS", "disclosed retired-path fixture enabled in peer %d" % peer)
+		if str(legacy.get("verdict", "")) != "PASS":
+			quit(await finish())
+			return
 	var host_hello: Dictionary = (_peers[0] as Dictionary).get("hello", {}) as Dictionary
 	_port = int(host_hello.get("enet_port", 0))
 	check(_port > 0, "host reported its ENet port in hello (%d)" % _port)

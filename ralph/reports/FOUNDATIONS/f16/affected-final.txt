@@ -1,0 +1,302 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_equipment_player_path.gd,test_realm_map_persistence.gd,test_realm_world_records.gd,test_stormwood_environment_save.gd,test_save_redesign.gd,test_character_save_format.gd,test_world_save_format.gd,test_atomic_save_file.gd,test_schema_redesign.gd: 9 of 667 test files
+  ok    test_atomic_save_file.gd :: test_backup_rename_refusal_leaves_canonical_untouched
+  ok    test_atomic_save_file.gd :: test_canonical_wins_over_leftover_previous
+[save] minted character id 'character-47bf70458068563557f9bd64b6dd7edf' for slot 3 (no existing locator)
+  ok    test_atomic_save_file.gd :: test_character_half_failure_rolls_slot_and_world_back_to_same_generation
+  ok    test_atomic_save_file.gd :: test_commit_refusal_rolls_back_original_bytes
+  ok    test_atomic_save_file.gd :: test_corrupt_canonical_falls_back_for_slot_listing_loading_and_existence
+  ok    test_atomic_save_file.gd :: test_corrupt_canonical_falls_back_for_world_and_multiplayer_character_readers
+  ok    test_atomic_save_file.gd :: test_corrupt_canonical_without_valid_backup_is_not_listed_as_a_save
+  ok    test_atomic_save_file.gd :: test_create_and_replace_unicode_document
+[save] minted character id 'character-f5d12c5934091b1d300f5c3d9250afc3' for slot 1 (no existing locator)
+  ok    test_atomic_save_file.gd :: test_current_corrupt_canonical_recovers_and_loads_without_rewriting_files
+  ok    test_atomic_save_file.gd :: test_delete_removes_canonical_and_backup_for_every_save_store
+  ok    test_atomic_save_file.gd :: test_failed_commit_over_corrupt_canonical_preserves_valid_previous
+  ok    test_atomic_save_file.gd :: test_flush_failure_preserves_previous
+  ok    test_atomic_save_file.gd :: test_interrupted_replacement_reloads_through_all_save_readers
+  ok    test_atomic_save_file.gd :: test_pre_redesign_slot_without_previous_refuses_without_mutation
+  ok    test_atomic_save_file.gd :: test_real_directory_collision_refuses_commit_without_deleting_directory
+  ok    test_atomic_save_file.gd :: test_rollback_refusal_retains_readable_previous_and_next_write_recovers
+  ok    test_atomic_save_file.gd :: test_short_first_write_does_not_publish_partial_save
+  ok    test_atomic_save_file.gd :: test_short_write_preserves_previous_and_reports_failure
+[save] minted character id 'character-5327c66da9c753759124a95b54b1a421' for slot 4 (no existing locator)
+  ok    test_atomic_save_file.gd :: test_successful_split_commit_finishes_all_retained_backups
+  ok    test_character_save_format.gd :: test_a_character_file_is_one_party_and_nothing_more
+  ok    test_character_save_format.gd :: test_a_character_names_the_world_it_last_played_without_belonging_to_it
+  ok    test_character_save_format.gd :: test_a_client_writes_its_own_character_and_only_that
+  ok    test_character_save_format.gd :: test_a_corrupt_character_file_reads_as_nothing_to_load
+  ok    test_character_save_format.gd :: test_a_missing_character_reads_as_nothing_to_load
+WARNING: character 'slot-1' is version 29, this build reads 28 -- not loading
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] read (res://scripts/save/character_save.gd:261)
+       [1] test_a_newer_than_this_build_character_file_refuses (res://tests/test_character_save_format.gd:382)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_character_save_format.gd :: test_a_newer_than_this_build_character_file_refuses
+  ok    test_character_save_format.gd :: test_a_save_writes_a_character_file_at_the_partitioned_path
+  ok    test_character_save_format.gd :: test_apply_refuses_a_character_that_is_not_there
+  ok    test_character_save_format.gd :: test_apply_restores_a_character_onto_a_player_state
+  ok    test_character_save_format.gd :: test_existing_character_id_survives_saves_to_other_slots_and_reload
+[save] minted character id 'character-36443bd52d56f297c7bd4b4f827b2450' for slot 0 (no existing locator)
+[save] minted character id 'character-fd907bd80a9c98aa5b8bcb1d1a54abd5' for slot 0 (no existing locator)
+  ok    test_character_save_format.gd :: test_independent_characters_using_the_same_slot_get_distinct_portable_ids_and_reload
+  ok    test_character_save_format.gd :: test_only_player_scope_flags_land_in_the_character_file
+  ok    test_character_save_format.gd :: test_portable_character_disk_round_trip_preserves_five_uids_selection_and_flags
+  ok    test_character_save_format.gd :: test_rewriting_character_does_not_turn_malformed_provenance_into_identity
+  ok    test_character_save_format.gd :: test_rewriting_character_preserves_world_instance_envelope
+  ok    test_character_save_format.gd :: test_save_character_refuses_an_empty_id_and_a_missing_game
+  ok    test_character_save_format.gd :: test_scratch_save_does_not_mint_or_rename_live_identity
+  ok    test_character_save_format.gd :: test_the_character_file_carries_no_world_key
+  ok    test_character_save_format.gd :: test_the_character_file_carries_the_character_half_and_its_envelope
+  ok    test_character_save_format.gd :: test_the_character_file_values_are_the_ones_the_game_held
+  ok    test_character_save_format.gd :: test_the_fog_a_player_walked_off_is_in_their_character_file
+  ok    test_character_save_format.gd :: test_the_real_saver_writes_characters_under_the_d100_directory
+WARNING: save: refusing unsafe character id
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _character_id_for (res://scripts/save/save_game.gd:1106)
+       [1] _prepare_snapshot (res://scripts/save/save_game.gd:426)
+       [2] save (res://scripts/save/save_game.gd:412)
+       [3] test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation (res://tests/test_character_save_format.gd:121)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_character_save_format.gd :: test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation
+  ok    test_character_save_format.gd :: test_version_four_pending_escrow_without_world_instance_is_preserved_refused_by_redesign
+  ok    test_character_save_format.gd :: test_version_three_character_without_world_instance_remains_readable_refused_by_redesign
+  ok    test_character_save_format.gd :: test_version_two_character_remains_readable_with_legacy_escrow_refused_by_redesign
+  ok    test_equipment_player_path.gd :: test_equip_swap_and_unequip_conserve_real_items_in_a_full_bag
+  ok    test_equipment_player_path.gd :: test_flat_v23_migration_preserves_inventory_and_clears_legacy_gear
+  ok    test_equipment_player_path.gd :: test_invalid_or_missing_carried_item_cannot_create_equipment
+  ok    test_equipment_player_path.gd :: test_legacy_and_malformed_equipment_reset_without_cross_slot_items
+  ok    test_equipment_player_path.gd :: test_portable_character_roundtrip_preserves_worn_gear_separately
+  ok    test_realm_map_persistence.gd :: test_authoritative_payloads_override_alias_and_reset_new_game_clears_both
+  ok    test_realm_map_persistence.gd :: test_explicit_cloudreach_legacy_tag_stays_owned_by_cloudreach_while_load_refuses
+  ok    test_realm_map_persistence.gd :: test_legacy_single_map_helper_preserves_meadows_while_old_load_refuses
+  ok    test_realm_map_persistence.gd :: test_save_reload_in_existing_realms_retains_configured_payloads_and_ui_contract
+  ok    test_realm_map_persistence.gd :: test_third_configured_realm_round_trips_its_own_fog_and_legacy_owner
+  ok    test_realm_map_persistence.gd :: test_transition_there_and_back_preserves_exact_meadows_fog_and_instances
+  ok    test_realm_map_persistence.gd :: test_version_one_chain_retains_pre_cloudreach_fields_and_produces_configured_maps
+  ok    test_realm_world_records.gd :: test_cloudreach_records_do_not_block_snap_or_satisfy_meadows_home
+ERROR: unscoped flag: upper_open
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] store_for (res://autoload/merged_progression.gd:71)
+       [1] set_flag (res://autoload/merged_progression.gd:56)
+       [2] test_home_selection_and_cloudreach_authored_camps_cannot_cross_realms_or_unlocks (res://tests/test_realm_world_records.gd:81)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_realm_world_records.gd :: test_home_selection_and_cloudreach_authored_camps_cannot_cross_realms_or_unlocks
+  ok    test_realm_world_records.gd :: test_legacy_migration_defaults_to_meadows_not_current_realm_and_preserves_indices
+  ok    test_realm_world_records.gd :: test_real_save_there_and_back_preserves_multiple_satchels_and_buildings
+  ok    test_save_redesign.gd :: test_all_pre_redesign_versions_refuse_before_applying
+  ok    test_save_redesign.gd :: test_character_schema_is_new_and_refuses_old_portable_files
+[save] minted character id 'character-33c96bf11bdedbbac041c40f1fa48519' for slot 1 (no existing locator)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:732)
+       [1] test_current_merged_slot_cannot_bypass_old_split_version_barrier (res://tests/test_save_redesign.gd:110)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_redesign.gd :: test_current_merged_slot_cannot_bypass_old_split_version_barrier
+  ok    test_save_redesign.gd :: test_malformed_old_metadata_is_listed_without_casting_payloads
+  ok    test_save_redesign.gd :: test_non_integral_non_finite_or_missing_versions_are_invalid
+[save] minted character id 'character-bd966b29d448aac23111d4cf447717ce' for slot 1 (no existing locator)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:732)
+       [1] test_old_character_refusal_survives_valid_or_missing_world (res://tests/test_save_redesign.gd:130)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: save slot 1 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:732)
+       [1] test_old_character_refusal_survives_valid_or_missing_world (res://tests/test_save_redesign.gd:135)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_redesign.gd :: test_old_character_refusal_survives_valid_or_missing_world
+  ok    test_save_redesign.gd :: test_read_only_legacy_portable_discovery_and_new_namespace_writes
+  ok    test_save_redesign.gd :: test_v27_fixture_refuses_with_message_without_live_or_disk_mutation
+  ok    test_save_redesign.gd :: test_world_schema_is_new_and_refuses_old_authority
+  ok    test_schema_redesign.gd :: test_durable_schema_rejects_unknown_fields_ids_and_unowned_uid
+  ok    test_schema_redesign.gd :: test_eight_slots_have_exactly_four_live_and_four_sealed
+  ok    test_schema_redesign.gd :: test_every_authored_contract_validates
+  ok    test_schema_redesign.gd :: test_foreign_unknown_ids_and_wrong_slot_pairs_refuse
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:35)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_schema_redesign.gd :: test_missing_unknown_and_duplicate_ids_fail_in_every_table
+  ok    test_schema_redesign.gd :: test_registry_declares_scope_transactions_and_every_schema_field
+ERROR: Redesign data refused: $[0]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:69)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[1]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:69)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[2]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:69)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[3]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:69)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[4]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:69)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[5]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:69)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_schema_redesign.gd :: test_station_attachment_slot_contract_refuses_wrong_slots_through_loader
+  ok    test_stormwood_environment_save.gd :: test_reset_and_malformed_environment_return_to_empty_state
+  ok    test_stormwood_environment_save.gd :: test_v22_migration_adds_an_empty_environment_without_mutating_legacy_payload
+  ok    test_stormwood_environment_save.gd :: test_world_save_partition_keeps_environment_in_the_world_half
+  ok    test_stormwood_environment_save.gd :: test_world_state_snapshot_preserves_nested_environment_for_a_late_joiner
+[save] minted character id 'character-61eba510f774024929a699b12014a8a4' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_a_client_save_writes_no_world_file
+  ok    test_world_save_format.gd :: test_a_corrupt_world_file_reads_as_nothing_to_load
+[save] minted character id 'character-de806a7cf1808efa6f254065cd997f1b' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_a_host_save_writes_a_world_file_at_the_partitioned_path
+  ok    test_world_save_format.gd :: test_a_missing_world_reads_as_nothing_to_load
+[save] minted character id 'character-8b27f35490250898d4a8013ae3764197' for slot 1 (no existing locator)
+WARNING: world 'slot-1' is version 29, this build reads 28 -- not loading
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] read (res://scripts/save/world_save.gd:225)
+       [1] test_a_newer_than_this_build_world_file_refuses (res://tests/test_world_save_format.gd:226)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_world_save_format.gd :: test_a_newer_than_this_build_world_file_refuses
+  ok    test_world_save_format.gd :: test_a_scratch_save_writes_no_world_no_character_and_renames_nobody
+[save] minted character id 'character-a720ab4ca05ef153ad4940b5464ec9cb' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_only_world_scope_flags_land_in_the_world_file
+[save] minted character id 'character-96e18d1219d81c18892eac1ba7687401' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_resaving_a_world_keeps_its_created_at_and_moves_last_played
+  ok    test_world_save_format.gd :: test_save_world_refuses_on_a_client_and_refuses_an_empty_id
+  ok    test_world_save_format.gd :: test_split_world_state_marker_prevents_a_second_water_retarget
+  ok    test_world_save_format.gd :: test_split_world_state_preserves_later_legitimate_water_reward
+  ok    test_world_save_format.gd :: test_split_world_state_repairs_only_legacy_cloudreach_water_entitlements
+  ok    test_world_save_format.gd :: test_the_real_saver_writes_worlds_under_the_d100_directory
+[save] minted character id 'character-c39c1c891df4171037bfece495606652' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_slot_owns_the_world_id_so_a_new_game_does_not_overwrite_the_old_world
+[save] minted character id 'character-ad55caae93866ee6c469a15a22d41399' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_state_payload_loads_straight_into_a_world_state
+[save] minted character id 'character-aaed91ad00bd0db034869e85c29541c8' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_carries_no_character_key
+[save] minted character id 'character-7fcd5a18a78ebe9c02e82e7e567fd4c5' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_carries_the_world_half_and_its_envelope
+[save] minted character id 'character-0fc2e1a2739a7759276c5b86cccedb84' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_values_are_the_ones_the_game_held
+[save] minted character id 'character-8b5279afc03ea772a8ae51f3b4c5d56f' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_version_one_world_refuses_without_changing_reward_journal
+
+100 tests, 1252 assertions, 0 failed
+Native Godot exit status: 0

@@ -4,6 +4,17 @@ const GATE := preload("res://scripts/world/stormwood_water_gate.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 const LEDGER := preload("res://scripts/net/world_ledger.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
+
+func before_each() -> void:
+	# Keep the retired transaction regressions under an explicit same-flag
+	# fixture; production default-off refusal has its own negative control.
+	assert_true(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
+
+
+func after_each() -> void:
+	BIOME_ORDER.clear_test_overrides()
 
 
 class Saver extends RefCounted:
@@ -49,6 +60,22 @@ func fixture() -> RefCounted:
 	game.world.flags.set_flag(GATE.WATERWARD_FLAG)
 	game.world.flags.set_flag(GATE.WATER_KEY_FLAG)
 	return game
+
+
+func test_default_retired_gate_refuses_without_key_consumption_or_journal() -> void:
+	BIOME_ORDER.clear_test_overrides()
+	assert_false(BIOME_ORDER.legacy_physical_crossings())
+	var game := fixture()
+	var ledger := LEDGER.new(game.world)
+	var before: Dictionary = game.world.save_data().duplicate(true)
+	var sequence := int(ledger.seq)
+	var result := GATE.host_commit(game, ledger)
+	assert_false(result.ok)
+	assert_eq(result.code, "legacy_physical_crossings_disabled")
+	assert_eq(game.world.save_data(), before)
+	assert_eq(ledger.seq, sequence)
+	assert_eq(game.save_system.writes, 0)
+	assert_false(GATE.request_allowed(game.world.flags, Vector3.ZERO, Vector3.ZERO, 6.0))
 
 
 func test_unlock_consumes_key_and_opens_gate_in_one_saved_delta() -> void:

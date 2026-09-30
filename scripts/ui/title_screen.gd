@@ -820,7 +820,8 @@ func _show_load_slots() -> void:
 			# D100's "Legacy saves" mark: a slot from an older build, which
 			# this load will split into a world and a character without
 			# touching the slot file itself.
-			var legacy := " (Legacy)" if bool(info.get("legacy", false)) else ""
+			var result: Dictionary = info.get("load_result", {})
+			var legacy := " (Older version)" if str(result.get("code", "")) == "incompatible_old_version" else ""
 			button.text = "%s%s — Day %d · %d Pals" % [
 				label, legacy, int(info.get("day", 1)), int(info.get("party_size", 0))]
 			var chosen := slot
@@ -828,6 +829,9 @@ func _show_load_slots() -> void:
 			if first == null:
 				first = button
 		_load_box.add_child(button)
+	var new_game := _button("New Game")
+	new_game.pressed.connect(_on_new_pressed)
+	_load_box.add_child(new_game)
 	var back := _button("Back")
 	back.pressed.connect(_show_main)
 	_load_box.add_child(back)
@@ -837,7 +841,9 @@ func _show_load_slots() -> void:
 func _load_slot(slot: int) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game == null or not bool(game.call("load_game", slot)):
-		_status.text = "That save could not be loaded."
+		var saver: Variant = game.get("save_system") if game != null else null
+		var result: Dictionary = saver.get("last_load_result") if saver != null else {}
+		_status.text = str(result.get("message", "That save could not be loaded."))
 		return
 	_enter_world("Loading realm…")
 
@@ -1007,6 +1013,9 @@ func _show_portable_character_select(on_pick: Callable = Callable(),
 			var character_id := str(raw_id)
 			var state: Dictionary = (characters as Object).call("state", character_id)
 			if state.is_empty():
+				var result: Dictionary = (characters as Object).get("last_load_result")
+				if str(result.get("code", "")) == "incompatible_old_version":
+					_status.text = str(result.message)
 				continue
 			var display_name := str(state.get("display_name", "Trainer")).strip_edges()
 			if display_name.is_empty():
@@ -1070,7 +1079,7 @@ func _start_pending_steam_join() -> void:
 
 	var summary := prepare_steam_join(game, _steam_character_pending)
 	if summary.is_empty():
-		_status.text = "That portable character could not be loaded. Choose another character."
+		_status.text = _portable_load_message(game)
 		_steam_character_pending = {}
 		_show_portable_character_select()
 		return
@@ -1122,8 +1131,8 @@ static func steam_character_summary(game: Object) -> Dictionary:
 static func prepare_steam_character(game: Object, selection: Dictionary) -> bool:
 	if game == null:
 		return false
-	game.call("reset_for_new_game")
 	if str(selection.get("kind", "")) == "new":
+		game.call("reset_for_new_game")
 		_set_fresh_player_identity(game, str(selection.get("appearance_id", "trainer")),
 			str(selection.get("display_name", "Trainer")))
 		return true
@@ -1133,6 +1142,9 @@ static func prepare_steam_character(game: Object, selection: Dictionary) -> bool
 	if not save_system is Object or not (save_system as Object).has_method("characters"):
 		return false
 	var characters: Variant = (save_system as Object).call("characters")
+	if not characters is Object or (characters.call("state", str(selection.get("character_id", ""))) as Dictionary).is_empty():
+		return false
+	game.call("reset_for_new_game")
 	return characters is Object and bool((characters as Object).call("apply", game,
 		str(selection.get("character_id", ""))))
 
@@ -1547,9 +1559,11 @@ func _join_as_saved_character(address: String, port: int, character_id: String) 
 	var local: Variant = game.get("local") if game != null else null
 	if local == null:
 		return
+	var previous_character_id := str(local.get("character_id"))
 	(local as RefCounted).set("character_id", character_id)
 	if not _has_portable_returning_character(game):
-		_status.text = "That portable character could not be loaded. Choose another character."
+		(local as RefCounted).set("character_id", previous_character_id)
+		_status.text = _portable_load_message(game)
 		_join_via(address, port)
 		return
 	_begin_join(address, port, 0.0)
@@ -1673,6 +1687,15 @@ static func rejoin_pose_candidate(game: Node) -> Dictionary:
 	return {"pose": saved.get("player_pose", {}), "world_instance_id": saved.get("last_world_instance_id", null)}
 
 
+static func _portable_load_message(game: Node) -> String:
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver is Object:
+		var result: Dictionary = saver.call("characters").get("last_load_result")
+		if str(result.get("code", "")) == "incompatible_old_version":
+			return str(result.message)
+	return "That portable character could not be loaded. Choose another character or start a new game."
+
+
 static func _mount_rejoin_pose(game: Node, candidate: Dictionary) -> void:
 	var existing := game.get_node_or_null(^"RejoinPose")
 	if existing != null:
@@ -1706,7 +1729,9 @@ static func _saved_portable_character_ids(game: Node) -> Array:
 	if not characters is Object or not (characters as Object).has_method("list_ids"):
 		return out
 	for raw_id: Variant in (characters as Object).call("list_ids") as Array:
-		if not ((characters as Object).call("state", str(raw_id)) as Dictionary).is_empty():
+		var state: Dictionary = (characters as Object).call("state", str(raw_id))
+		var result: Dictionary = (characters as Object).get("last_load_result")
+		if not state.is_empty() or str(result.get("code", "")) == "incompatible_old_version":
 			out.append(str(raw_id))
 	return out
 

@@ -50,6 +50,9 @@ const MAP_LANDMARKS_PATH := "res://data/config/map_landmarks.json"
 const CLOUDREACH_WORLD_PATH := "res://data/config/cloudreach_world.json"
 const CLOUDREACH_CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const REALM_HEARTS_PATH := "res://data/config/realm_hearts.json"
+const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+var redesign_character: Dictionary = REDESIGN_STATE.defaults("character")
 
 ## Registry order prefers the original chapters. A map never grants entry.
 const DEFAULT_MAPPED_REALMS: Array[String] = ["meadows", "cloudreach"]
@@ -138,6 +141,7 @@ func _init() -> void:
 ## "no reset happened". `clear()` is the feed's own new-game reset and bumps the
 ## epoch, exactly as `Game.reset_for_new_game()` has always called it.
 func reset() -> void:
+	redesign_character = REDESIGN_STATE.defaults("character")
 	satchel_escrow.clear()
 	skills.load_data({})
 	flags.call("load_data", {})
@@ -258,7 +262,7 @@ func mapped_realm_ids() -> Array[String]:
 	remaining.sort()
 	for realm_id: Variant in remaining:
 		ids.append(str(realm_id))
-	return ids
+	return BIOME_ORDER.ordered_runtime_ids(ids)
 
 
 func map_definition_for(realm_id: String) -> Dictionary:
@@ -386,6 +390,7 @@ func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 func save_data() -> Dictionary:
 	var saver: RefCounted = SAVE_GAME.new()
 	return {
+		"redesign_character": redesign_character.duplicate(true),
 		"character_id": character_id,
 		"display_name": display_name,
 		"chosen_character": chosen_character,
@@ -408,6 +413,12 @@ func save_data() -> Dictionary:
 
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state.
 func load_data(data: Dictionary) -> void:
+	var redesign: Variant = data.get("redesign_character", REDESIGN_STATE.defaults("character"))
+	var redesign_errors := REDESIGN_STATE.validate("character", redesign, REDESIGN_STATE.uids(data.get("party", [])))
+	if not redesign_errors.is_empty():
+		push_error("Character schema refused: %s" % "; ".join(redesign_errors))
+		return
+	redesign_character = redesign.duplicate(true)
 	var loader: RefCounted = SAVE_GAME.new()
 	character_id = str(data.get("character_id", character_id))
 	display_name = str(data.get("display_name", display_name))
