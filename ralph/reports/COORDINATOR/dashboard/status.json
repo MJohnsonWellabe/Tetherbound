@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30T15:48:17Z",
+ "updated": "2026-09-30T16:38:05Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
   "Criteria met: 108 of 280. Original:95/101; redesign:13/179. F16 all5, F17#0/#1/#2/#3 and F26#1/#2/#4 and F27#0 landed by this cut. F17 services strict MET from one actual physical day/night circuit; M1/co-op/full craft and F26 material/visual/Ally rows remain open.",
@@ -518,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T15:48:17Z",
+ "last_lane_refresh": "2026-09-30T16:38:05Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "At this refresh main107/280 via PR486 and hourly main1daa: F17#0\u2013#3 and F26#1/#2/#4 landed. Fresh earned M1 f5de native1/334.312s: opening/first catch/key/NPC gifts/equipped gathers PASS; team approach exhausted3600frames inside actual Bram inn. Farmhouse r1/r2 reds retained; new224ad actual threshold-centre/outside+authored field route source awaiting independent gate. F17#4/#5/#6 open. Shared portal/vitals/roster/reward boundary remains ignored supporting draft, F18 held; owner retry/save reentrancy counterexamples being corrected."
+   "checkpoint": "At this refresh main108/280 at2459: F16 all5, F17#0\u2013#3, F26#1/#2/#4 and F27#0 landed. Fresh M1 r4 source9510 native1/354.500s: opening/first catch/key/gifts passed, wood gather stalled on actual farmhouse wall before the new team route. All prior reds retained; coherent shared navigation draft is under independent source review, no retry or F17#4/#5/#6 credit. Neutral authority c023 is pushed on tb/foundations: one registry, mandatory portable wire v7, exact frozen F23 serializers, typed durable vitals/prepared writers; complete source gate pending, no engine or acceptance proof. F18 held."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat c207 ultimate source OFF, latest two-method2/110/0 native0/no errors; prior2b34 actor/status5/68/0 plus two parsers native0 retained. Prior portable10/734+initialized16 corrected native0 retained; aborted nine-method false-green red preserved. Remote loadout/HP/Heal await same durable world journal and owner bool-save/ACK/rejoin authority. F21\u201324 open/no MET."
+   "checkpoint": "Combat df99 source merged main2459; canonical ce12 move-state package is frozen for neutral integration. Ultimate two-method2/110/0 native0 and preceding actor/status5/68+parsers clean retained; corrected portable10/734+initialized16 native0 retained, aborted nine-method false-green red preserved. Commands/HP/Heal/loadout remain unconnected until admitted gear and durable owner-save/ACK/rejoin authority. No new F21\u201324 MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX89a075 r14 selected unit27 PASS and18 light/lifecycle PASS, existing smallstones:r1 lease FAIL/native batch1;36PNG retained. Fresh truly code-blind36-frame review DONE: full reference craft FAIL, sampled identity/escalation PASS; ranks2/4 unproved. Raw review archived. Library OFF/all F25 open; rejected rounds retained."
+   "checkpoint": "VFX bdda WIP; R17 new phase source PASS/native selected small-stones pending. Actual R14 original36-frame blind full reference craft FAIL, sampled identity/escalation PASS, ranks2/4 unproved. Original r14 native1 smallstones lease failure/all36PNG and selected27 plus18 lifecycle passes retained. Library OFF/all F25 open; new source is not visual proof."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "F26#1/#2/#4 landed/full12 native1920 routes strict MET. Water/Storm native mounted material archive59cd raw Git blobs verified; no #0 credit yet. Current scoped Water census native0/84.172s, Meadows active/Cloud queued at5f source. Cloud Medium/High48 full-bar FAIL, #0/#3/#5 open. Essence a247 and village34-prop content candidates OFF. F27 item-only minimal cut static strict review pending; training2c246 UI SOURCE PASS/runtime-authority open. F32 typed crop/essence225 source OFF; canonical resolver aeb76 legacy depletion still needs durable once-only host integration. No new MET."
+   "checkpoint": "Lookdev b6a archive: scoped Water84.172s/Meadows278.687s/Cloud258s censuses all native0/error0. Whole F26 material gate pending; Cloud Medium/High48 full-bar FAIL, #0/#3/#5 open; #1/#2/#4 landed. Training item-only PR489 landed F27#0 static strict MET; runtime essence/spend remains open. Homestead acdab inactive renewable bootstrap/crop SOURCE PASS; canonical resolver/legacy-depletion milestone need one durable host transaction. No further MET."
   }
  ]
 }
