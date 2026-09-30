@@ -32,13 +32,22 @@ uniform float crevice_scale = 0.09;
 // which means "use texture_scale" -- so the shader alone, with no config, is
 // exactly the shipped look and this is opt-in from `visual.geology`.
 uniform float normal_scale = 0.0;
+// F26 course candidate, bound by WorldLook from art.json's existing presets.
+// courses: enabled, texture repeats/m, course height/m, joint strength.
+// weathering: course warp/m, sheltered stain, normal strength, texture contrast.
+// OFF preserves the accepted equations below; no extra texture fetches ON.
+global uniform vec4 cloudreach_rock_courses;
+global uniform vec4 cloudreach_rock_weathering;
+global uniform float cloudreach_rock_joint_width;
 float noise3(vec3 p) { return sin(p.x * 0.83 + sin(p.z * 0.67)) * 0.5 + sin(p.z * 0.49 + p.y * 0.37) * 0.5; }
-void cloudreach_rock(vec3 world_position, vec3 world_normal, out vec3 albedo, out vec3 detail_normal) {
+void cloudreach_rock(vec3 world_position, vec3 world_normal, float rock_footprint, out vec3 albedo, out vec3 detail_normal) {
 	vec3 weight = pow(abs(world_normal), vec3(4.0));
 	weight /= max(weight.x + weight.y + weight.z, 0.001);
-	vec3 tex = texture(rock_texture, world_position.zy * texture_scale).rgb * weight.x;
-	tex += texture(rock_texture, world_position.xz * texture_scale).rgb * weight.y;
-	tex += texture(rock_texture, world_position.xy * texture_scale).rgb * weight.z;
+	float candidate = clamp(cloudreach_rock_courses.x, 0.0, 1.0);
+	float albedo_scale = mix(texture_scale, cloudreach_rock_courses.y, candidate);
+	vec3 tex = texture(rock_texture, world_position.zy * albedo_scale).rgb * weight.x;
+	tex += texture(rock_texture, world_position.xz * albedo_scale).rgb * weight.y;
+	tex += texture(rock_texture, world_position.xy * albedo_scale).rgb * weight.z;
 	float bend = noise3(world_position * 0.027) * 8.0;
 	float macro=clamp(noise3(world_position*0.016)*0.5+0.5,0.0,1.0);
 	float face=abs(sin(world_position.x*0.019-world_position.z*0.024+bend*0.04));
@@ -86,9 +95,49 @@ void cloudreach_rock(vec3 world_position, vec3 world_normal, out vec3 albedo, ou
 
 	// Broad stone planes, not a repeated white corrugated stripe system.
 	albedo=stone*mix(vec3(0.82),tex*1.28,0.52);
+	if (candidate > 0.0) {
+		// Metre-scale bedding, interrupted across a face instead of realm-wide
+		// rings. World Y keeps one course language across cliff/crown seams.
+		float course_height = max(cloudreach_rock_courses.z, 0.5);
+		float warp = noise3(world_position * vec3(0.037, 0.0, 0.041))
+			* cloudreach_rock_weathering.x;
+		float course = (world_position.y + warp) / course_height;
+		float bed = floor(course);
+		float edge = min(fract(course), 1.0 - fract(course)) * course_height;
+		float continuity = smoothstep(0.24, 0.74,
+			noise3(vec3(world_position.x * 0.071, bed * 1.73,
+			world_position.z * 0.083)) * 0.5 + 0.5);
+		// Derivative AA fades subpixel joints, preventing distance zebra bands.
+		float aa = max(rock_footprint, 0.025);
+		float course_visibility = 1.0 - smoothstep(cloudreach_rock_joint_width,
+			max(cloudreach_rock_joint_width + 0.025, course_height * 0.12), rock_footprint);
+		float joint = (1.0 - smoothstep(cloudreach_rock_joint_width,
+			cloudreach_rock_joint_width + aa, edge))
+			* continuity * steepness * course_visibility;
+		float bed_tone = noise3(vec3(bed * 1.37,
+			world_position.x * 0.009, world_position.z * 0.011)) * 0.5 + 0.5;
+		bed_tone = mix(0.5, bed_tone, course_visibility);
+		vec3 course_stone = mix(stone_dark, stone_light,
+			clamp(0.40 + macro * 0.24 + bed_tone * 0.20, 0.0, 1.0));
+		// Desaturate the installed rock detail into relief/value variation;
+		// the authored stone palette, not the texture's brown cast, owns hue.
+		float grain = dot(tex, vec3(0.2126, 0.7152, 0.0722));
+		course_stone *= mix(1.0, clamp(grain * 1.6, 0.65, 1.18),
+			cloudreach_rock_weathering.w);
+		course_stone *= 1.0 - joint * cloudreach_rock_courses.w;
+		float seep = smoothstep(0.62, 0.9,
+			noise3(world_position * vec3(0.12, 0.017, 0.13)) * 0.5 + 0.5);
+		course_stone = mix(course_stone, strata_ochre_tint,
+			seep * steepness * cloudreach_rock_weathering.y);
+		course_stone = mix(course_stone,
+			mix(course_stone * (1.0 + ledge_lighten), ledge_moss_tint, ledge_moss_strength),
+			ledge_mask * clamp(0.55 + macro * 0.5, 0.0, 1.0));
+		albedo = mix(albedo, course_stone, candidate);
+	}
 	// Rock-family normals are projected on the same world-space faces. Strong
 	// strata remain metre-scale; normal relief supplies readable close stone.
 	float n_scale = normal_scale > 0.0 ? normal_scale : texture_scale;
+	n_scale = mix(n_scale, cloudreach_rock_courses.y, candidate);
 	vec3 nx=texture(rock_normal,world_position.zy*n_scale).xyz*2.0-1.0;
 	vec3 ny=texture(rock_normal,world_position.xz*n_scale).xyz*2.0-1.0;
 	vec3 nz=texture(rock_normal,world_position.xy*n_scale).xyz*2.0-1.0;
@@ -96,4 +145,13 @@ void cloudreach_rock(vec3 world_position, vec3 world_normal, out vec3 albedo, ou
 	detail+=vec3(ny.x,ny.z*sign(world_normal.y),ny.y)*weight.y;
 	detail+=vec3(nz.x,nz.y,nz.z*sign(world_normal.z))*weight.z;
 	detail_normal=normalize(mix(world_normal,detail,0.38));
+	if (candidate > 0.0) {
+		// Tangential perturbation preserves each authored face's hemisphere.
+		// A sampled normal must not turn a cliff into a lit horizontal shelf.
+		vec3 face_normal = normalize(world_normal);
+		vec3 tangent_detail = detail - face_normal * dot(detail, face_normal);
+		vec3 course_normal = normalize(face_normal
+			+ tangent_detail * cloudreach_rock_weathering.z);
+		detail_normal = normalize(mix(detail_normal, course_normal, candidate));
+	}
 }

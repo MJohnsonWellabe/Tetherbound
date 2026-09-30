@@ -1,0 +1,21 @@
+{
+  "baseline": "9806bef7bcd893e3b8b4856dd7f45e47f7c3f9c7",
+  "ignored_files_before": 3202,
+  "ignored_files_after": 3202,
+  "changed": [],
+  "added": [],
+  "missing": [],
+  "ignored_bytes_preserved": true,
+  "vfx_config_unchanged": true,
+  "vfx_sha256": "55c9a3b7ecd4e23a39ac06b307a9c36daa29419613283a3fd699a90a35621699",
+  "candidate_preset_enabled": {
+    "Low": false,
+    "Medium": false,
+    "High": false
+  },
+  "engine_executed": false,
+  "checks": "Read-only byte fingerprints, JSON data inspection and git diff --check; no Godot/parser/import/render/export/tests.",
+  "moves_sha256": "02bb6a0bac1826be9a27bb9c4b1fa018ba85e9c142d0cc2b0c19d011c64dfe14",
+  "move_count": 52,
+  "moves_file_unchanged": true
+}

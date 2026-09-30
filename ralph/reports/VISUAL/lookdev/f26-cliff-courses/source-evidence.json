@@ -1,0 +1,100 @@
+{
+  "baseline": "9806bef7bcd893e3b8b4856dd7f45e47f7c3f9c7",
+  "archived_capture_source": "f43cde88acde0648123b89895d3023e1f5c50a08",
+  "reference_restoration": "Cleared skip-worktree then git checkout -- docs/reference before first image inspection.",
+  "references_viewed": [
+    {
+      "path": "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png",
+      "sha256": "b3c24bf3a4a9d460b4528710a86683f842e0a2408afe17373b964392f9d21097"
+    },
+    {
+      "path": "docs/reference/palworld-04-plateau-landmark.jpg",
+      "sha256": "3e29e3661fcd56bb937657c4ba10630e03f9046bff076b9e737bbc8cc1a6775c"
+    }
+  ],
+  "frames_viewed": [
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/medium/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "sha256": "d65ea37e4c91b2aa7722aa3fb6586f96c8f5a964150befe774b50e7392a7dd08"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/medium/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png",
+      "sha256": "7ac921898ee7af28a74aaedb1c32aa1619e9d4d4dd991ca775e40749c32d1e7b"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/high/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "sha256": "0b8eeb3e955a367913682f83f6c267d020fff289efb3f1396fe2f80443ddb2a8"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/high/cloudreach__broken_causeways__03__three_bells_bridge__day.png",
+      "sha256": "0d3197784d4953fb8e55b87f292bbbb9f9558d6be7bce8d3219e8cd0960fcc31"
+    }
+  ],
+  "matching_archived_controls": [
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/medium/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "sha256": "d65ea37e4c91b2aa7722aa3fb6586f96c8f5a964150befe774b50e7392a7dd08"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/medium/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png",
+      "sha256": "7ac921898ee7af28a74aaedb1c32aa1619e9d4d4dd991ca775e40749c32d1e7b"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/high/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "sha256": "0b8eeb3e955a367913682f83f6c267d020fff289efb3f1396fe2f80443ddb2a8"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/high/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png",
+      "sha256": "a7a32370134d77f4c6ccef309f5957c94a0bd5b87dbbacb5327f91c4012b3eed"
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/high/cloudreach__broken_causeways__03__three_bells_bridge__day.png",
+      "sha256": "0d3197784d4953fb8e55b87f292bbbb9f9558d6be7bce8d3219e8cd0960fcc31"
+    }
+  ],
+  "archived_verdicts": {
+    "Medium": "FAIL",
+    "High": "FAIL"
+  },
+  "judge": "ralph/reports/VISUAL/lookdev/cloudreach-visual-r1/independent-codeblind-review.txt",
+  "current_source_files": [
+    {
+      "path": "data/config/art.json",
+      "sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "canonical_git_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
+    },
+    {
+      "path": "docs/design/ART_DIRECTION.md",
+      "sha256": "49a220020689177de28eb420a0fe686bbf6714ce0370a3da071abe93fc875765",
+      "canonical_git_sha256": "dc2e874d8adb00fb27770204d8a1b3eca44b79c7d5246130222eb6e98dbb07b6"
+    },
+    {
+      "path": "project.godot",
+      "sha256": "9249f84f1c29c70b547525bf7113d809ec6763db618c24df554df982fe8a9c0e",
+      "canonical_git_sha256": "05b3fa1ddc651ef460ef0b28a632a0120ba26fddd8120af4f76c6fc3ced29307"
+    },
+    {
+      "path": "scripts/world/world_look.gd",
+      "sha256": "839b73a60d6435b53258c335a99400bd8c61354b88aaa4008603a3248ae146c2",
+      "canonical_git_sha256": "839b73a60d6435b53258c335a99400bd8c61354b88aaa4008603a3248ae146c2"
+    },
+    {
+      "path": "shaders/cloudreach_cliff.gdshader",
+      "sha256": "cfcee0071d829365f398f91fea585de81e24cdfaa1f151f944a86f75e38dbe5f",
+      "canonical_git_sha256": "6b7db06109dbe5be6271573a32a193b54cc637765de57165d57ca8329809b23a"
+    },
+    {
+      "path": "shaders/cloudreach_rock.gdshaderinc",
+      "sha256": "480157be859351e1ab0789f3699bbe7ef891bf541a1360e6716139dc8b3497c4",
+      "canonical_git_sha256": "8e0a7e6a8c0423fff6d72cff99bdcd86760659a3432efd02304327925333ebcf"
+    },
+    {
+      "path": "shaders/cloudreach_surface.gdshader",
+      "sha256": "47af123762e91a21ec0e5a38fbd7c5492e69d998145ddd12c26b33ba53cffdf6",
+      "canonical_git_sha256": "202ce64935df6718b4ef36a7df6f7fe472a5494e0676379298bb734b57f5d7bd"
+    }
+  ],
+  "new_frame_evidence": "NONE; ROOT engine token required",
+  "criterion": "F26#3 OPEN; no visual PASS or MET claimed",
+  "source_hash_scope": "sha256 is observed working-tree bytes; canonical_git_sha256 records staged LF bytes for replay after checkout."
+}
