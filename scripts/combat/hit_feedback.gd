@@ -12,7 +12,8 @@ static func weight_for(move: Dictionary, fallback_slot: String) -> String:
 	var cfg := config()
 	var weights: Dictionary = cfg.get("weights", {})
 	var defaults: Dictionary = cfg.get("slot_weights", {})
-	var weight := str(move.get("weight", defaults.get(fallback_slot, "light")))
+	var authored_slot := str(move.get("slot", fallback_slot))
+	var weight := str(move.get("weight", defaults.get(authored_slot, "light")))
 	return weight if weights.has(weight) else str(defaults.get(fallback_slot, "light"))
 
 static func receipt(action_id: String, move_id: String, move: Dictionary,
@@ -25,7 +26,7 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 	var giant := target_height >= float(cfg.get("giant_height_m", INF))
 	var scale := float(cfg.get("giant_knockback_scale", 1.0)) if giant else 1.0
 	var flat := Vector3(direction.x, 0.0, direction.z)
-	var result := {"action_id": action_id, "move_id": move_id, "target_uid": target_uid,
+	var result := {"action_id": action_id, "move_id": move_id, "target_uid": target_uid, "slot": fallback_slot,
 		"weight": weight, "damage": maxf(0.0, damage), "type_mult": type_mult,
 		"critical": critical, "direction": flat.normalized(),
 		"hitstop_seconds": float(cfg.get("critical_hitstop_seconds", 0.0)) if critical else float(spec.get("hitstop_seconds", 0.0)),
@@ -37,6 +38,26 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 		"reaction_back_seconds": float(spec.get("reaction_back_seconds", 0.0))}
 	result.make_read_only()
 	return result
+
+## Flat host schedule. No client aim, callbacks, HP or RNG is accepted here.
+static func launch(action_id: String, encounter_id: String, attacker_uid: String,
+		target_uid: String, move_id: String, slot: String, from: Vector3,
+		to: Vector3, travel_seconds: float, body_generation: int = 0) -> Dictionary:
+	var value := {"action_id": action_id, "encounter_id": encounter_id,
+		"attacker_uid": attacker_uid, "target_uid": target_uid, "move_id": move_id,
+		"slot": slot, "from": from, "to": to, "travel_seconds": maxf(0.0, travel_seconds),
+		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash()}
+	value.make_read_only()
+	return value
+
+static func launch_matches(value: Dictionary, encounter_id: String,
+		attacker_uid: String, target_uid: String, body_generation: int = 0) -> bool:
+	var seconds := float(value.get("travel_seconds", -1.0))
+	return is_finite(seconds) and seconds >= 0.0 \
+		and str(value.get("encounter_id", "")) == encounter_id \
+		and str(value.get("attacker_uid", "")) == attacker_uid \
+		and str(value.get("target_uid", "")) == target_uid \
+		and int(value.get("body_generation", -1)) == body_generation
 
 static func impulse_for(receipt: Dictionary) -> float:
 	# CreatureBody damps proportionally to current speed; total unobstructed

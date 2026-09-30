@@ -335,6 +335,8 @@ var _combat_flinch_tween: Tween = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
 var _combat_hitstop_active := false
+var _combat_manager_hitstop_requested := false
+var _combat_timed_hitstop_count := 0
 var _combat_hitstop_physics_was_active := true
 
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow quad, built lazily on
@@ -2005,6 +2007,23 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -
 ## and the manager's clock pause, so timing and positions are unchanged, and
 ## skips only the visual freeze: the animation and flinch keep playing.
 func set_combat_hitstop(active: bool) -> void:
+	_combat_manager_hitstop_requested = active
+	_apply_combat_hitstop(active or _combat_timed_hitstop_count > 0)
+
+
+## Shared host simulation has no local player's clock to release a freeze.
+## Independent timed leases prevent one manager releasing an overlapping hit.
+func begin_combat_impact_hitstop(seconds: float) -> void:
+	if seconds <= 0.0 or not is_inside_tree():
+		return
+	_combat_timed_hitstop_count += 1
+	_apply_combat_hitstop(true)
+	await get_tree().create_timer(seconds, false).timeout
+	_combat_timed_hitstop_count = maxi(0, _combat_timed_hitstop_count - 1)
+	_apply_combat_hitstop(_combat_manager_hitstop_requested or _combat_timed_hitstop_count > 0)
+
+
+func _apply_combat_hitstop(active: bool) -> void:
 	if active == _combat_hitstop_active:
 		return
 	_combat_hitstop_active = active

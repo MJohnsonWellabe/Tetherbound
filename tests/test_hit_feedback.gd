@@ -20,6 +20,16 @@ func test_weighted_feedback_is_immutable_and_preserves_host_damage() -> void:
 	assert_true(heavy.hitstop_seconds > light.hitstop_seconds)
 	assert_eq(light.damage, 17.25, "presentation never rerolls host damage")
 	assert_eq(light.direction, Vector3.RIGHT)
+	assert_eq(FEEDBACK.weight_for({"slot": "charged"}, "quick"), "heavy", "incoming named moves use their authored weight even through the enemy quick fallback")
+
+func test_frozen_launch_rejects_replacement_actors_generation_and_realm() -> void:
+	var launch := FEEDBACK.launch("fight:2:4", "fight", "owned-1", "wild-1", "stone_rush", "charged", Vector3.ZERO, Vector3.RIGHT, 0.2, 7)
+	assert_true(launch.is_read_only())
+	assert_true(FEEDBACK.launch_matches(launch, "fight", "owned-1", "wild-1", 7))
+	assert_false(FEEDBACK.launch_matches(launch, "next-fight", "owned-1", "wild-1", 7))
+	assert_false(FEEDBACK.launch_matches(launch, "fight", "replacement-owned", "wild-1", 7))
+	assert_false(FEEDBACK.launch_matches(launch, "fight", "owned-1", "replacement-wild", 7))
+	assert_false(FEEDBACK.launch_matches(launch, "fight", "owned-1", "wild-1", 8), "same UID cannot reuse an old body generation")
 
 func test_giant_and_profile_reductions_apply_once() -> void:
 	var normal := FEEDBACK.receipt("a", "stone_rush", {}, "charged", 20.0, 1.0, false, Vector3.RIGHT)
