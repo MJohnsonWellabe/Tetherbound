@@ -1468,243 +1468,243 @@
             "at": [
               -6,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -6,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -4,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -4,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -2,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -2,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               0,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               0,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               2,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               2,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               4,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               4,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               6,
               0.0,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               6,
               3.12,
-              -15
+              15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -6,
               0.0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -6,
               3.12,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -4,
               0.0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -4,
               3.12,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -2,
               0.0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               -2,
               3.12,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               2,
               0.0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               2,
               3.12,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               4,
               0.0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               4,
               3.12,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               6,
               0.0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_UnevenBrick_Straight",
             "at": [
               6,
               3.12,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_Arch",
             "at": [
               0,
               0,
-              15
+              -15
             ],
-            "yaw_deg": 0
+            "yaw_deg": 180
           },
           {
             "module": "Wall_Plaster_Window_Wide_Flat",
@@ -2786,7 +2786,7 @@
             "at": [
               0,
               3.12,
-              -15
+              15
             ],
             "size": [
               14.4,
@@ -2798,7 +2798,7 @@
             "at": [
               -4.25,
               3.12,
-              15
+              -15
             ],
             "size": [
               5.5,
@@ -2810,7 +2810,7 @@
             "at": [
               4.25,
               3.12,
-              15
+              -15
             ],
             "size": [
               5.5,
@@ -2822,7 +2822,7 @@
             "at": [
               0,
               5.15,
-              15
+              -15
             ],
             "size": [
               3,
@@ -2891,7 +2891,7 @@
             ]
           }
         ],
-        "_why": "F17 installed MegaKit stone/timber shell; tall nave with open west arrival and side shrine. Physical floor/walls use explicit boxes; never combined-AABB seals the interior."
+        "_why": "Installed native MegaKit modules; road-facing nave entrance is local z=-15, matching CrossingHall.entrance; east side-room doorway remains local x=7,z=0. Collider opening and rendered Wall_Arch share the entrance."
       },
     "river_bank_perch": {
       "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 24.0, "_why_broken_roll_deg": "F03#1 round-5 judge: at 16 degrees the buckled boards read as one pale slab changing shape. 24 degrees, with the timber rails below tilting the same way, reads as a collapsed frame before and a braced one after."},

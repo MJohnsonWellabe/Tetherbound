@@ -1488,20 +1488,20 @@
         ]
       },
       {
-        "_why_f01": "F01-a. One-arm fingerpost at the Stoneyard Lane mouth so the side lane and its subarea are named in the world, not only on the map. `at` stands 2.5m off the through-road's centreline and 3.6m off the lane's, on the inn side of the crossroads; the arm points up the lane, so a player walking the through-road sees the plank broadside.",
+        "_why_f01": "Stoneyard fingerpost remains three metres off the real Stoneyard Lane and points along its field approach; resource patch and label unchanged.",
         "at": [
-          8.0,
-          -18.5
+          17,
+          -24
         ],
         "label": "The Stoneyard",
         "points": [
           [
-            10.5,
-            -16.0
+            20,
+            -24
           ],
           [
-            13.6,
-            -20.0
+            20,
+            -26
           ]
         ]
       },

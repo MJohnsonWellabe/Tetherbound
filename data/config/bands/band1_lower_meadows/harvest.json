@@ -414,8 +414,8 @@
    "amount": 3,
    "label": "Pick berries",
    "at": [
-    28.0,
-    6.0
+     30,
+     8
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,

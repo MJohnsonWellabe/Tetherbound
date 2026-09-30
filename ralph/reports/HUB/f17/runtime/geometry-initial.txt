@@ -1,0 +1,74 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_village_redesign_topology.gd,test_village_main_street.gd,test_village_road_topology.gd,test_village_boundary.gd: 4 of 668 test files
+  ok    test_village_boundary.gd :: test_a_panel_on_a_slope_pitches_to_put_both_posts_on_the_ground
+  ok    test_village_boundary.gd :: test_every_gate_stands_on_the_boundary_line
+  ok    test_village_boundary.gd :: test_every_road_leaves_through_a_gate
+  ok    test_village_boundary.gd :: test_every_village_harvest_node_is_inside_the_fence
+  ok    test_village_boundary.gd :: test_every_village_key_gate_opens_clear_of_its_real_terrain
+  ok    test_village_boundary.gd :: test_everything_band_0_needs_is_inside_the_fence
+  ok    test_village_boundary.gd :: test_readable_lock_fit_is_village_only_and_keeps_open_behavior_intact
+  ok    test_village_boundary.gd :: test_the_edge_behind_halda_no_longer_has_air_in_it
+  ok    test_village_boundary.gd :: test_the_fence_is_the_edge_of_band_0_and_not_of_the_chapter
+  ok    test_village_boundary.gd :: test_the_fit_stays_as_near_the_prefabs_own_length_as_whole_panels_allow
+  ok    test_village_boundary.gd :: test_the_outline_is_an_authored_line_and_not_a_box
+  ok    test_village_boundary.gd :: test_the_panels_laid_along_every_edge_meet_end_to_end
+  ok    test_village_boundary.gd :: test_the_village_gathering_lesson_is_the_size_a_human_signed_off
+  ok    test_village_boundary.gd :: test_village_gates_author_a_visible_rustic_threshold
+  ok    test_village_boundary.gd :: test_village_threshold_uses_installed_sources_joinery_and_no_new_collision
+  ok    test_village_main_street.gd :: test_bram_moved_with_the_inn_and_his_door_meets_the_green
+  ok    test_village_main_street.gd :: test_every_exit_stays_connected_to_the_main_street
+  ok    test_village_main_street.gd :: test_every_village_beacon_is_outside_buildings_and_reachable
+  ok    test_village_main_street.gd :: test_every_villager_and_trainer_is_outside_buildings_and_reachable
+  ok    test_village_main_street.gd :: test_neither_moved_building_blocks_the_main_street
+  ok    test_village_main_street.gd :: test_no_two_building_footprints_overlap
+  ok    test_village_main_street.gd :: test_the_inn_faces_the_green_and_no_longer_covers_the_spawn
+  ok    test_village_main_street.gd :: test_the_main_street_exists_and_is_straight_at_x_10_5
+  ok    test_village_main_street.gd :: test_the_stone_cottage_faces_the_street_from_the_greens_east_side
+  ok    test_village_main_street.gd :: test_the_trail_gate_is_reached_over_village_roads
+  ok    test_village_main_street.gd :: test_the_well_stands_on_the_street_axis_at_the_centre_of_the_green
+  ok    test_village_redesign_topology.gd :: test_actual_houses_face_the_same_straight_road_at_native_scale
+  FAIL  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+          expected true, got false  (trainer capsule clears real Hall wall boxes)
+  ok    test_village_redesign_topology.gd :: test_home_exit_and_hall_connect_to_the_authored_main_road
+  ok    test_village_road_topology.gd :: test_each_subarea_is_backed_by_what_stands_there
+  ok    test_village_road_topology.gd :: test_every_house_door_fronts_a_road
+  ok    test_village_road_topology.gd :: test_every_junction_is_a_branch_off_the_through_road
+  ok    test_village_road_topology.gd :: test_every_lane_keeps_its_painted_band_off_every_building
+  ok    test_village_road_topology.gd :: test_every_side_lane_leaves_the_through_road_and_ends_in_its_subarea
+  FAIL  test_village_road_topology.gd :: test_every_subarea_is_named_by_a_fingerpost_on_its_road
+          expected true, got false  (a one-arm fingerpost names The Stoneyard beside the road that serves it)
+  ok    test_village_road_topology.gd :: test_every_village_road_leaves_the_fence_through_a_gate
+  FAIL  test_village_road_topology.gd :: test_no_harvest_prompt_sits_inside_a_village_door_prompt
+          expected true, got false  (the cottage_a door at (27.00,5.00) is 1.41m from the harvest node at (28.0, 6.0), inside its 3.0m prompt)
+  FAIL  test_village_road_topology.gd :: test_no_road_centreline_runs_through_a_building
+          expected true, got false  (road crossing_hall_approach runs through the building footprint at (107.0,14.0))
+  ok    test_village_road_topology.gd :: test_one_continuous_through_road_runs_from_grandpas_door_to_trailgate
+  ok    test_village_road_topology.gd :: test_the_three_named_subareas_exist_and_are_served_by_roads
+  ok    test_village_road_topology.gd :: test_the_through_road_continues_to_the_south_bridge
+  ok    test_village_road_topology.gd :: test_the_topology_block_names_real_roads_and_places
+  ok    test_village_road_topology.gd :: test_the_well_is_on_the_main_street_and_no_junction_crowds_the_green
+  ok    test_village_road_topology.gd :: test_village_door_prompt_radius_is_the_one_this_test_guards
+
+44 tests, 3982 assertions, 4 failed
+
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance — expected true, got false  (trainer capsule clears real Hall wall boxes)
+  test_village_road_topology.gd :: test_every_subarea_is_named_by_a_fingerpost_on_its_road — expected true, got false  (a one-arm fingerpost names The Stoneyard beside the road that serves it)
+  test_village_road_topology.gd :: test_no_harvest_prompt_sits_inside_a_village_door_prompt — expected true, got false  (the cottage_a door at (27.00,5.00) is 1.41m from the harvest node at (28.0, 6.0), inside its 3.0m prompt)
+  test_village_road_topology.gd :: test_no_road_centreline_runs_through_a_building — expected true, got false  (road crossing_hall_approach runs through the building footprint at (107.0,14.0))
