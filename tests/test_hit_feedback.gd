@@ -53,3 +53,16 @@ func test_critical_effective_resisted_and_ordinary_numbers_differ() -> void:
 	assert_true(FEEDBACK.number_style(weak, true).font_px < base.font_px)
 	assert_true(FEEDBACK.number_style(crit, true).colour != base.colour)
 	assert_true(FEEDBACK.number_style(plain, false).font_px < base.font_px)
+
+
+func test_flash_styles_share_host_crit_type_facts_and_resisted_reads_weaker() -> void:
+	var plain := FEEDBACK.receipt("a", "", {}, "quick", 20.0, 1.0, false, Vector3.RIGHT)
+	var crit := FEEDBACK.receipt("b", "", {}, "quick", 20.0, 1.25, true, Vector3.RIGHT)
+	var effective := FEEDBACK.receipt("c", "", {}, "quick", 20.0, 1.25, false, Vector3.RIGHT)
+	var resisted := FEEDBACK.receipt("d", "", {}, "quick", 20.0, 0.8, false, Vector3.RIGHT)
+	assert_true(FEEDBACK.flash_style(crit).strength_scale > FEEDBACK.flash_style(plain).strength_scale)
+	assert_true(FEEDBACK.flash_style(effective).strength_scale > FEEDBACK.flash_style(plain).strength_scale)
+	assert_true(FEEDBACK.flash_style(resisted).strength_scale < FEEDBACK.flash_style(plain).strength_scale)
+	assert_ne(FEEDBACK.flash_style(crit).colour, FEEDBACK.flash_style(effective).colour)
+	assert_eq(FEEDBACK.style_key(crit), "critical", "crit owns combined crit/effective flash and number identity")
+	assert_eq(crit.impact_audio_owner, "receipt")

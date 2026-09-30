@@ -2708,6 +2708,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
 	var impact := impact_override if not impact_override.is_empty() else _new_impact(move_id, "quick" if is_quick else "charged", damage, type_mult, stagger_crit, facing, _wild, str(launch.get("action_id", "")))
+	if not launch.is_empty(): impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
 	# Session knockback was applied once by the host resolver, including its
 	# listen-server body. Guest proxies never move from presentation callbacks.
 	if damage_override < 0.0:
@@ -2739,12 +2740,12 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		muzzle = origin + facing * float(_ally_body.call("body_radius"))
 	var shot: Node3D = null
 	if not bool(impact.get("presentation_launched", false)) and launch.is_empty():
-		shot = PROJECTILE.launch(host, muzzle, target, vfx)
+		shot = PROJECTILE.launch(host, muzzle, target, vfx, impact)
 	if shot != null:
 		var landing: Vector3 = target
-		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint, _wild, hit_fraction))
+		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint, _wild, hit_fraction, impact))
 	else:
-		_flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction)
+		_flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction, impact)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -2754,8 +2755,8 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	hit_effectiveness.emit(true, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
 		_announce_stagger(true)
-	hit_landed.emit(true, damage)
 	_present_impact(true, impact, _wild)
+	hit_landed.emit(true, damage)
 	state_changed.emit()
 	if killed:
 		_award_victory()
@@ -3004,6 +3005,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		_encounter_id, str(_enemy.get("uid")), str(card.get("creature_uid", "")),
 		move_id, "quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), 0, target_body.global_position)
 	var impact := _new_impact(move_id, "quick", damage, type_mult, false, facing, target_body, str(launch.action_id), str(card.get("creature_uid", "")))
+	impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
 	var payload := {"damage": damage, "type_mult": type_mult, "move_id": move_id,
 		"lunge": float(cfg.get("lunge", 3.4)), "impact": impact}
 	var peer_id := int(pick.get("peer_id", 0))
@@ -3069,12 +3071,12 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	else:
 		_play_combat_flinch(_ally_body, impact.direction, impact)
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+		_ally_body, damage / maxf(1.0, float(creature.max_hp)), impact)
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
 	if stagger_triggered:
 		_announce_stagger(false)
-	hit_landed.emit(false, damage)
 	_present_impact(false, impact, _ally_body, damage)
+	hit_landed.emit(false, damage)
 	state_changed.emit()
 	if killed:
 		CONDITION.note_faint(creature, CONDITION.config())
@@ -3724,6 +3726,7 @@ func _finish_solo_enemy_strike(cfg: Dictionary, launch: Dictionary) -> void:
 	var killed: bool = creature.take_damage(damage)
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var impact := _new_impact(move_id, "quick", damage, type_mult, stagger_crit, facing, _ally_body, str(launch.action_id))
+	impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
 	_ally_body.call("add_impulse", impact.direction, HIT_FEEDBACK.impulse_for(impact))
 	if killed:
 		_ally_body.call("play_faint")
@@ -3731,13 +3734,13 @@ func _finish_solo_enemy_strike(cfg: Dictionary, launch: Dictionary) -> void:
 		_play_combat_flinch(_ally_body, facing, impact)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+		_ally_body, damage / maxf(1.0, float(creature.max_hp)), impact)
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
 		_announce_stagger(false)
-	hit_landed.emit(false, damage)
 	_present_impact(false, impact, _ally_body, damage)
+	hit_landed.emit(false, damage)
 	state_changed.emit()
 	if killed:
 		# RG19-spec/D68. A creature carried off the field is neither happy nor
@@ -3793,7 +3796,7 @@ func _handle_active_faint() -> void:
 ## and this is the ONE place the spark, the body flash and -- when the blow
 ## emptied the bar -- the KO puff are fired from; `combat_vfx.gd` reads the
 ## struck instance's `fainted` flag here rather than needing a hook of its own.
-func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0) -> void:
+func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0, impact: Dictionary = {}, shake_camera: bool = true) -> void:
 	# Parented into the WORLD, not to this manager. CombatManager is a plain
 	# Node, and a Node3D hung under one is outside the 3D transform chain: the
 	# burst was created correctly twelve times in a row and rendered none of
@@ -3801,7 +3804,7 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
-	_nudge_camera_on_landing(charged)
+	if shake_camera: _nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
 	if not bool(cfg.get("enabled", true)):
 		return
@@ -3814,13 +3817,15 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	var colour := Color(str(spec.get("colour", "#ffd27a")))
 	if tint != null:
 		colour = (tint as Color).lerp(colour, 0.35)
+	var style := HIT_FEEDBACK.flash_style(impact)
+	if style.has("colour"): colour = Color(str(style.colour))
 	FLASH.burst(
 		host,
 		where,
 		colour,
-		float(spec.get("radius", 1.5)),
-		float(spec.get("duration", 0.34)),
-		float(spec.get("strength", 1.0)),
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
+		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
@@ -4820,9 +4825,12 @@ func _new_impact(move_id: String, slot: String, damage: float, type_mult: float,
 	if target_uid.is_empty():
 		var target_instance := _enemy if target_body == _wild else active_creature()
 		if target_instance != null: target_uid = str(target_instance.get("uid"))
+	var contact := Vector3.INF
+	if is_instance_valid(target_body):
+		contact = target_body.global_position if str(_moves.move(move_id).get("vfx", {}).get("archetype", "")) == "root_stone_spikes" else target_body.call("centre")
 	return HIT_FEEDBACK.receipt(action_id, move_id, _moves.move(move_id), slot,
 		damage, type_mult, critical, direction, height,
-		float(profile.get("knockback_scale", HIT_FEEDBACK.config().get("default_profile_knockback_scale", 1.0))), target_uid)
+		float(profile.get("knockback_scale", HIT_FEEDBACK.config().get("default_profile_knockback_scale", 1.0))), target_uid, contact)
 
 func _host_body_hitstop(body: Node3D, impact: Dictionary) -> void:
 	if is_instance_valid(body) and body.has_method("begin_combat_impact_hitstop"):
@@ -4869,6 +4877,9 @@ func present_host_peer_impact(impact: Dictionary) -> void:
 	# Only the observed actor's presentation receives the frozen host lease.
 	# This never pauses the observing player's combat or resource clocks.
 	_host_body_hitstop(_wild, impact)
+	_flash_at(_wild.call("centre"), str(impact.get("weight", "light")) in ["heavy", "ultimate"],
+		VFX.tint_for_type(_moves.type_of(str(impact.get("move_id", "")))), _wild,
+		float(impact.get("damage", 0.0)) / maxf(1.0, float(_enemy.max_hp)), impact, false)
 	if _enemy != null and float(_enemy.hp) > 0.0:
 		_play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO), impact)
 	var bounds := _body_world_bounds(_wild)

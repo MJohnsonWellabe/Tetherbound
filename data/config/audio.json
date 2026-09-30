@@ -140,6 +140,52 @@
   },
 
   "combat": {
+    "impact_feedback": {
+      "enabled": true,
+      "weight_tuning": {
+        "light": {
+          "gain_db": -2.0,
+          "pitch": 1.1
+        },
+        "medium": {
+          "gain_db": -1.0,
+          "pitch": 1.0
+        },
+        "heavy": {
+          "gain_db": 0.0,
+          "pitch": 0.88
+        },
+        "ultimate": {
+          "gain_db": 0.0,
+          "pitch": 0.8
+        }
+      },
+      "fallback_body": "impact_normal",
+      "effectiveness_layers": {
+        "effective": {
+          "sound": "impact_super",
+          "gain_db": -10.0,
+          "pitch": 1.05
+        },
+        "resisted": {
+          "sound": "impact_weak",
+          "gain_db": -10.0,
+          "pitch": 0.95
+        }
+      },
+      "critical_layer": {
+        "sound": "impact_super",
+        "gain_db": -8.0,
+        "pitch": 1.4
+      },
+      "receiver_layer": {
+        "sound": "damage_taken",
+        "gain_db": -8.0,
+        "pitch": 1.0
+      },
+      "resisted_body_gain_db": -4.0,
+      "peer_gain_db": -4.0
+    },
     "_comment": "Which sound answers which of combat_manager.gd's existing signals. Nothing in the combat code was changed to add audio -- these are all signals it already emitted. `effectiveness` keys are type_chart.gd's classify() values.",
     "effectiveness_sound": {
       "-1": "impact_weak",

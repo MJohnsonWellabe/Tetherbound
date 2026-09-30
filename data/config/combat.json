@@ -381,6 +381,31 @@
       "default_profile_knockback_scale": 1.0,
       "receipt_history_limit": 256,
       "receipt_sequence_window": 256,
+      "flashes": {
+        "ordinary": {
+          "radius_scale": 1.0,
+          "strength_scale": 1.0,
+          "duration_scale": 1.0
+        },
+        "critical": {
+          "colour": "#ffe4a0",
+          "radius_scale": 1.25,
+          "strength_scale": 1.6,
+          "duration_scale": 1.15
+        },
+        "effective": {
+          "colour": "#b0fff1",
+          "radius_scale": 1.1,
+          "strength_scale": 1.2,
+          "duration_scale": 1.0
+        },
+        "resisted": {
+          "colour": "#b7bfc5",
+          "radius_scale": 0.8,
+          "strength_scale": 0.6,
+          "duration_scale": 0.8
+        }
+      },
       "numbers": {
         "enabled": true,
         "mode": "on",

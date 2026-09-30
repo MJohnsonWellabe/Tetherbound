@@ -2480,7 +2480,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		{"action_id": str(launch.action_id), "striker_body": striker,
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
-	var impact: Dictionary = (rolled.get("impact", {}) as Dictionary).duplicate()
+	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
 	impact["presentation_launched"] = float(launch.travel_seconds) > 0.0
 	impact.make_read_only()
 	rolled["impact"] = impact

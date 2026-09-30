@@ -19,7 +19,7 @@ static func weight_for(move: Dictionary, fallback_slot: String) -> String:
 static func receipt(action_id: String, move_id: String, move: Dictionary,
 		fallback_slot: String, damage: float, type_mult: float, critical: bool,
 		direction: Vector3, target_height: float = 0.0,
-		profile_scale: float = 1.0, target_uid: String = "") -> Dictionary:
+		profile_scale: float = 1.0, target_uid: String = "", sound_position: Vector3 = Vector3.INF) -> Dictionary:
 	var cfg := config()
 	var weight := weight_for(move, fallback_slot)
 	var spec: Dictionary = cfg.get("weights", {}).get(weight, {})
@@ -29,6 +29,7 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 	var result := {"action_id": action_id, "move_id": move_id, "target_uid": target_uid, "slot": fallback_slot,
 		"weight": weight, "damage": maxf(0.0, damage), "type_mult": type_mult,
 		"critical": critical, "direction": flat.normalized(),
+		"impact_audio_owner": "receipt", "mastery_rank": 1,
 		"hitstop_seconds": float(cfg.get("critical_hitstop_seconds", 0.0)) if critical else float(spec.get("hitstop_seconds", 0.0)),
 		"knockback_m": maxf(0.0, float(spec.get("knockback_m", 0.0)) * scale * clampf(profile_scale, 0.0, 1.0)),
 		"recoil_m": float(spec.get("recoil_m", 0.0)),
@@ -36,6 +37,7 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 		"recoil_degrees": float(spec.get("recoil_degrees", 0.0)),
 		"reaction_out_seconds": float(spec.get("reaction_out_seconds", 0.0)),
 		"reaction_back_seconds": float(spec.get("reaction_back_seconds", 0.0))}
+	if sound_position.is_finite(): result["sound_position"] = sound_position
 	result.make_read_only()
 	return result
 
@@ -47,7 +49,8 @@ static func launch(action_id: String, encounter_id: String, attacker_uid: String
 	var value := {"action_id": action_id, "encounter_id": encounter_id,
 		"attacker_uid": attacker_uid, "target_uid": target_uid, "move_id": move_id,
 		"slot": slot, "from": from, "to": to, "travel_seconds": maxf(0.0, travel_seconds),
-		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash()}
+		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash(),
+		"impact_audio_owner": "receipt"}
 	if target_ground.is_finite(): value["target_ground"] = target_ground
 	value.make_read_only()
 	return value
@@ -96,13 +99,7 @@ static func admit(history: Dictionary, receipt: Dictionary, commit: bool = true)
 
 static func number_style(receipt: Dictionary, on_enemy: bool) -> Dictionary:
 	var cfg: Dictionary = config().get("numbers", {})
-	var key := "ordinary"
-	if bool(receipt.get("critical", false)):
-		key = "critical"
-	elif float(receipt.get("type_mult", 1.0)) > 1.0:
-		key = "effective"
-	elif float(receipt.get("type_mult", 1.0)) < 1.0:
-		key = "resisted"
+	var key := style_key(receipt)
 	var style: Dictionary = cfg.get("styles", {}).get(key, {}).duplicate(true)
 	var own_hit := bool(receipt.get("own_hit", true))
 	var peer_scale := 1.0 if own_hit else float(cfg.get("peer_size_scale", 1.0))
@@ -110,3 +107,30 @@ static func number_style(receipt: Dictionary, on_enemy: bool) -> Dictionary:
 	style["opacity"] = 1.0 if own_hit else float(cfg.get("peer_opacity", 1.0))
 	style["text"] = str(style.get("prefix", "")) + str(int(ceil(float(receipt.get("applied_damage", receipt.get("damage", 0.0))))))
 	return style
+
+
+static func style_key(receipt: Dictionary) -> String:
+	var key := "ordinary"
+	if bool(receipt.get("critical", false)):
+		key = "critical"
+	elif float(receipt.get("type_mult", 1.0)) > 1.0:
+		key = "effective"
+	elif float(receipt.get("type_mult", 1.0)) < 1.0:
+		key = "resisted"
+	return key
+
+
+static func flash_style(receipt: Dictionary) -> Dictionary:
+	return (config().get("flashes", {}) as Dictionary).get(style_key(receipt), {}).duplicate(true)
+
+
+## Freeze the scheduled contact position and audio owner alongside a host hit.
+## This copies presentation metadata only; damage/poise facts remain untouched.
+static func with_launch(receipt: Dictionary, launch: Dictionary, vfx: Dictionary) -> Dictionary:
+	var frozen := receipt.duplicate()
+	frozen["mastery_rank"] = int(launch.get("mastery_rank", receipt.get("mastery_rank", 1)))
+	frozen["impact_audio_owner"] = str(launch.get("impact_audio_owner", "receipt"))
+	var contact: Vector3 = launch.get("target_ground", launch.get("to", Vector3.INF)) if str(vfx.get("archetype", "")) == "root_stone_spikes" else launch.get("to", Vector3.INF)
+	if contact.is_finite(): frozen["sound_position"] = contact
+	frozen.make_read_only()
+	return frozen
