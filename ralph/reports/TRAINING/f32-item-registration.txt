@@ -1,0 +1,37 @@
+F32 shared item catalogue authoring evidence
+
+Allocation from coordinator: training remains the sole data/items/items.json
+writer. This is the actual ItemDB catalogue; no data/config/items.json exists
+or was created. F32 homestead crop/node source read at f4e7cc61d6.
+Contract read: HOMESTEAD 5.1, 5.3, 5.4; CODEX_START_HERE F32.
+
+Added exactly 17 SKUs:
+attuned_ground, attuned_water, attuned_air, attuned_electric, attuned_fire,
+attuned_dark, attuned_ice, attuned_psychic (material, stack 50);
+seed_ground, seed_water, seed_air, seed_electric, seed_fire, seed_dark,
+seed_ice, seed_psychic (resource, stack 50);
+tide_pearl (resource, stack 30).
+
+Seed display names match farm.json crop names: Rootbud, Tidebud, Galebloom,
+Sparkstem, Emberbloom, Duskcap, Frostbloom, Mindleaf. Crops still use their
+existing exact outputs: two attuned ingredients + three type essence.
+No harvesting consumer, seed vendor availability, crop yield, timer, recipe,
+attachment, source entitlement, source placement or world authority changed.
+All new item grants/debits must use the existing host transaction path.
+
+Four legacy IDs hide_helm, hide_vest, hide_leggings, hide_boots now display as
+Padded Helm/Vest/Leggings/Boots with woven/fiber padding descriptions. Only
+name, blurb and description changed. IDs, kind, stack, icon, colour, armor_slot,
+defense, recipe and equipment semantics are preserved exactly.
+
+Static authoring check PASS: JSON parses, added keys are exactly the allocated
+17, every seed name/id and crop output matches the homestead farm table, all
+pre-existing definitions remain equal except the four allowed display fields;
+those four have no hide/meat/bone/blood/butchery wording. git diff --check
+passes. No unit/engine/import/render/GPU/full-CI work run.
+
+Scope limits: installed berries/stone icon silhouettes are stand-ins. Native
+ItemDB, stacking, actual acquisition, four-character contention, grooming and
+code-blind visual proof remain pending; no F32 criterion closes here. Tide
+Pearl is present in the homestead tier-material declaration, but this item row
+does not create an actual gatherable node. That source stays with homestead.
