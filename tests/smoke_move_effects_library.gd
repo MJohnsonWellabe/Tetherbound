@@ -3,6 +3,7 @@ extends SceneTree
 ## Actual production effect-node batch in a synthetic arena. No combat, HP or
 ## result fixture mutation. Cannot certify the required four-creature fight.
 ## --batch=identities|mastery|library|profile|clock --out=<directory> --medium
+## --identity=<id>:r<rank> selects one explicit identity for an affected rerun.
 const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 const LEGACY := preload("res://scripts/vfx/legacy_move_travel.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
@@ -20,6 +21,7 @@ var _out := "user://move-effects-preview"
 var _batch := "identities"
 var _medium := false
 var _light_lifecycle: Dictionary = {}
+var _identity := ""
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -29,11 +31,19 @@ func _run() -> void:
 		if arg.begins_with("--batch="): _batch = arg.trim_prefix("--batch=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
 		if arg == "--medium": _medium = true
+		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
 	if _batch not in ["identities", "mastery", "library", "profile", "clock"]:
 		push_error("Unknown effect batch"); quit(1); return
 	if _batch in ["identities", "mastery", "profile"] and DisplayServer.get_name() == "headless":
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
+	if not _identity.is_empty():
+		var known_identity := false
+		for case: Dictionary in _scenarios.identities:
+			for rank: int in _scenarios.ranks:
+				if _identity == "%s:r%d" % [str(case.id), rank]: known_identity = true
+		if _batch != "identities" or not known_identity:
+			push_error("Named identity must select one configured identity/rank in the identities batch"); quit(1); return
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
 	_moves = data.moves
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_out)):
@@ -108,7 +118,9 @@ func _run() -> void:
 	if _batch == "identities":
 		await _exercise_light_lifecycle()
 		for case: Dictionary in _scenarios.identities:
-			for rank: int in _scenarios.ranks: await _exercise(case, rank, 1, true)
+			for rank: int in _scenarios.ranks:
+				if _identity.is_empty() or _identity == "%s:r%d" % [str(case.id), rank]:
+					await _exercise(case, rank, 1, true)
 	else:
 		if _batch == "clock":
 			await _exercise({"id": "legacy-clock", "archetype": "stone_throw", "move_id": "pebble_toss", "legacy": true}, 1, 1, false)
@@ -134,7 +146,7 @@ func _run() -> void:
 		"engine": Engine.get_version_info(),
 		"target": {"species": str(_scenarios.get("target_species", "mudsnout")), "production_model": _target != null, "scope": "posed production body; no encounter or HP authority"},
 		"medium_features": _medium, "cases": _records, "failures": _failures,
-		"light_lifecycle": _light_lifecycle,
+		"light_lifecycle": _light_lifecycle, "selected_identity": _identity,
 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
 	var file := FileAccess.open(_out.path_join("results.json"), FileAccess.WRITE)
@@ -303,7 +315,14 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var peak := BUDGET.used(encounter)
 	var previous := Time.get_ticks_usec()
 	var timeout := maxi(2000000, int((travel + float(row.impact.duration) + 1) * 1000000))
-	while Time.get_ticks_usec() - started < timeout:
+	# Presentation and capture shutters use the idle simulation clock. Movie
+	# encoding/material work may spend wall time without equivalent advancement.
+	# Keep the same lifetime allowance on that clock for captures, plus a finite
+	# wall watchdog. Noncapture profiling retains its original wall deadline.
+	var capture_deadline: SceneTreeTimer = create_timer(float(timeout) / 1000000.0, false) if capture else null
+	var wall_watchdog := 30000000 if capture else timeout
+	while Time.get_ticks_usec() - started < wall_watchdog:
+		if capture and capture_deadline.time_left <= 0.0: break
 		await process_frame
 		var now := Time.get_ticks_usec()
 		var elapsed := float(now - started) / 1000000.0
@@ -342,6 +361,8 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					_failures.append("Contact/impact frame taken before arrival " + encounter)
 		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0: break
 	if int(arrivals[0]) != simultaneous: _failures.append("Missing arrival " + encounter)
+	var watchdog_expired := capture and Time.get_ticks_usec() - started >= wall_watchdog
+	if watchdog_expired: _failures.append("Capture wall watchdog expired " + encounter)
 	if peak > int(LIBRARY.config().encounter_particle_cap): _failures.append("Budget overflow " + encounter)
 	if BUDGET.used(encounter) != 0: _failures.append("Lease remains " + encounter)
 	for frame: int in arrival_frames:
@@ -353,6 +374,9 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		"arrivals": arrivals[0], "arrival_wall_seconds": arrival_wall, "particle_budget": row.budget,
 		"arrival_process_frames": arrival_frames, "independent_schedule_process_frame": independent_result_frame[0],
 		"peak_slots": peak, "end_slots": BUDGET.used(encounter), "captures_at_wall_seconds": captured,
+		"end_process_frame": Engine.get_process_frames(), "end_wall_seconds": float(Time.get_ticks_usec() - started) / 1000000.0,
+		"lifetime_deadline_clock": "idle_simulation" if capture else "wall", "lifetime_allowance_seconds": float(timeout) / 1000000.0,
+		"wall_watchdog_expired": watchdog_expired,
 		"wall_frame_ms": frames, "cpu_process_ms": cpu, "p95_ms": _percentile(frames, 0.95), "p99_ms": _percentile(frames, 0.99)})
 	LIBRARY.cancel_encounter(self, encounter)
 	await process_frame
