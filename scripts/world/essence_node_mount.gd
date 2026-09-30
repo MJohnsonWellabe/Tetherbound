@@ -101,17 +101,17 @@ static func placement_verdict(world: Node3D, spec: Dictionary,
 			break
 	if collision == null or trainer.collision_mask == 0:
 		return {"ok": false, "reason": "Actual trainer collision shape is unavailable."}
-	var position := Vector3(x, ground, z)
-	var transform := collision.global_transform
-	transform.origin = position + collision.global_position - trainer.global_position \
+	var site_position := Vector3(x, ground, z)
+	var shape_transform := collision.global_transform
+	shape_transform.origin = site_position + collision.global_position - trainer.global_position \
 		+ Vector3.UP * maxf(0.0, float(tuning.get("body_ground_clearance_m", 0.06)))
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
-	query.transform = transform
+	query.transform = shape_transform
 	query.collision_mask = trainer.collision_mask
 	query.exclude = [trainer.get_rid()]
 	query.collide_with_areas = false
 	if not world.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty():
 		return {"ok": false, "reason": "Trainer capsule overlaps a terrain or prop collider."}
-	return {"ok": true, "position": position, "body_clearance_proven": true,
+	return {"ok": true, "position": site_position, "body_clearance_proven": true,
 		"ordinary_player_path_proven": false}

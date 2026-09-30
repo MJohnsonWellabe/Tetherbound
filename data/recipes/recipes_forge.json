@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "authored_proposals_not_runtime_registered",
+  "_comment": "F32#1 / HOMESTEAD §5.2: four canonical RD-33 refining outputs. This file is not loaded into the ordinary crafting catalogue yet. F31 owns the reachable Forge, personal attachment-tier validation and tap-start player path; foundation owns each unit's atomic material debit/output receipt. Provisional starting costs remain subject to F47's supply/solvency ledger.",
+  "station": "forge",
+  "manual_channel": {
+    "seconds_per_unit": 1.5,
+    "radius_m": 3.0,
+    "tap_start": true,
+    "held_input": false,
+    "queue": false,
+    "offline_production": false,
+    "commit_per_unit": true,
+    "pay_unstarted_units": false,
+    "stop_on": [
+      "out_of_radius",
+      "another_modal",
+      "combat"
+    ]
+  },
+  "recipes": {
+    "rootiron_ingot": {
+      "name": "Rootiron Ingot",
+      "station": "forge",
+      "tier": 1,
+      "required_attachment_tier": 1,
+      "cost": [
+        { "id": "rootstone", "n": 2 },
+        { "id": "ironwood", "n": 1 }
+      ],
+      "output": { "id": "rootiron_ingot", "n": 1 },
+      "blurb": "Refine quarry rootstone with old-growth ironwood at the Forge."
+    },
+    "tidesteel_ingot": {
+      "name": "Tidesteel Ingot",
+      "station": "forge",
+      "tier": 2,
+      "required_attachment_tier": 2,
+      "cost": [
+        { "id": "sluice_metal", "n": 2 },
+        { "id": "reef_stone", "n": 1 }
+      ],
+      "output": { "id": "tidesteel_ingot", "n": 1 },
+      "blurb": "Refine weathered sluice metal with reef stone at the Forge."
+    },
+    "skyglass_ingot": {
+      "name": "Skyglass Ingot",
+      "station": "forge",
+      "tier": 3,
+      "required_attachment_tier": 3,
+      "cost": [
+        { "id": "cliffglass_ore", "n": 2 },
+        { "id": "windworn_heartwood", "n": 1 }
+      ],
+      "output": { "id": "skyglass_ingot", "n": 1 },
+      "blurb": "Refine cliffglass ore with windworn heartwood at the Forge."
+    },
+    "stormglass_plate": {
+      "name": "Stormglass Plate",
+      "station": "forge",
+      "tier": 4,
+      "required_attachment_tier": 4,
+      "cost": [
+        { "id": "stormglass", "n": 2 },
+        { "id": "thunderwood", "n": 1 }
+      ],
+      "output": { "id": "stormglass_plate", "n": 1 },
+      "blurb": "Refine stormglass with thunderwood into a plate at the Forge."
+    }
+  }
+}
