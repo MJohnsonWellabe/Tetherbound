@@ -29,6 +29,7 @@ var _mote_positions: Array[Vector3] = []
 var _velocities: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 var _colour: Color
+var _presentation_clock: SceneTreeTimer
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -76,6 +77,12 @@ func _ready() -> void:
 		_trails.append(trail)
 	_update_bodies(0.0)
 	_play_launch()
+	if _context.has("travel_seconds") and _travel > 0.0:
+		# The host creates its separate authoritative timer after launch returns.
+		# Both timers have the same idle clock and birth phase; this one can
+		# finish visuals only and is independent of the damage transaction.
+		_presentation_clock = get_tree().create_timer(_travel, false)
+		_presentation_clock.timeout.connect(_finish_presentation, CONNECT_ONE_SHOT)
 
 func _mesh_node(mesh: Mesh, colour: Color, opacity: float = 1.0, lit: bool = false) -> MeshInstance3D:
 	var node := MeshInstance3D.new()
@@ -86,19 +93,16 @@ func _mesh_node(mesh: Mesh, colour: Color, opacity: float = 1.0, lit: bool = fal
 	return node
 
 func _process(delta: float) -> void:
-	_elapsed += delta
+	if not _arrived and _presentation_clock != null:
+		_elapsed = maxf(0.0, _travel - _presentation_clock.time_left)
+	else:
+		_elapsed += delta
 	var t := clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
 	if not _arrived:
 		_update_bodies(t)
 		_update_trail()
-		if _elapsed >= _travel:
-			_arrived = true
-			_build_impact()
-			_play_impact()
-			# Emitted after the contact body exists, never during _ready, so
-			# existing launch(...).arrived.connect callers cannot miss it.
-			arrived.emit()
-			presentation_arrived.emit(_context)
+		if _presentation_clock == null and _elapsed >= _travel:
+			_finish_presentation()
 	else:
 		_update_trail()
 		var duration := float((_row.impact as Dictionary).get("duration", 0.45))
@@ -108,6 +112,18 @@ func _process(delta: float) -> void:
 		for trail: MeshInstance3D in _trails:
 			(trail.material_override as StandardMaterial3D).albedo_color.a = (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78))
 		if u >= 1.0: queue_free()
+
+func _finish_presentation() -> void:
+	if _arrived: return
+	_elapsed = _travel
+	_update_bodies(1.0)
+	_arrived = true
+	_build_impact()
+	_play_impact()
+	# Contact geometry exists before the later host timer can resolve HP.
+	# No observer of this informational signal can authorize a gameplay hit.
+	arrived.emit()
+	presentation_arrived.emit(_context)
 
 func _update_bodies(t: float) -> void:
 	var mode := str((_row.body as Dictionary).get("motion", "projectile"))
@@ -303,4 +319,5 @@ func cancel_presentation() -> void:
 	# This cannot cancel an earned action or an authoritative pending hit.
 	# Stop local processing now; deferred deletion still releases the lease.
 	set_process(false)
+	_arrived = true
 	queue_free()

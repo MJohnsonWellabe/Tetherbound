@@ -52,6 +52,7 @@ var _kind: String = "projectile"
 var _done: bool = false
 var _action_id: String = ""
 var _encounter_id: String = "global"
+var _presentation_clock: SceneTreeTimer
 
 var _body: MeshInstance3D = null
 var _mesh: ImmediateMesh = null
@@ -85,6 +86,13 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	shot._encounter_id = str(context.get("encounter_id", "global"))
 	parent.add_child(shot)
 	shot.global_position = from
+	if context.has("travel_seconds") and shot._travel > 0.0:
+		# Match the host's idle SceneTreeTimer time domain and creation phase.
+		# This independent timer only moves/finishes the local drawing. Removing
+		# the shot cannot change the host's separately owned gameplay timer.
+		shot.set_physics_process(false)
+		shot._presentation_clock = shot.get_tree().create_timer(shot._travel, false)
+		shot._presentation_clock.timeout.connect(shot._finish_presentation, CONNECT_ONE_SHOT)
 	return shot
 
 
@@ -154,9 +162,21 @@ func _physics_process(delta: float) -> void:
 	global_position = _from.lerp(_to, t)
 	_redraw(t)
 	if t >= 1.0:
-		_done = true
-		arrived.emit()
-		queue_free()
+		_finish_presentation()
+
+func _process(_delta: float) -> void:
+	if _done or _presentation_clock == null: return
+	_elapsed = maxf(0.0, _travel - _presentation_clock.time_left)
+	var t := clampf(_elapsed / maxf(_travel, 0.001), 0.0, 1.0)
+	global_position = _from.lerp(_to, t)
+	_redraw(t)
+
+func _finish_presentation() -> void:
+	if _done: return
+	_done = true
+	global_position = _to
+	arrived.emit()
+	queue_free()
 
 
 ## The bolt itself, rebuilt each frame in local space.
@@ -249,5 +269,7 @@ func encounter_id() -> String:
 	return _encounter_id
 
 func cancel_presentation() -> void:
+	_done = true
 	set_process(false)
+	set_physics_process(false)
 	queue_free()

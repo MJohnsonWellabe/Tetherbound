@@ -2,8 +2,9 @@ extends SceneTree
 
 ## Actual production effect-node batch in a synthetic arena. No combat, HP or
 ## result fixture mutation. Cannot certify the required four-creature fight.
-## --batch=identities|library|profile --out=<directory> --medium
+## --batch=identities|library|profile|clock --out=<directory> --medium
 const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
+const LEGACY := preload("res://scripts/vfx/legacy_move_travel.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 var _arena: Node3D
 var _moves: Dictionary
@@ -22,7 +23,7 @@ func _run() -> void:
 		if arg.begins_with("--batch="): _batch = arg.trim_prefix("--batch=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
 		if arg == "--medium": _medium = true
-	if _batch not in ["identities", "library", "profile"]:
+	if _batch not in ["identities", "library", "profile", "clock"]:
 		push_error("Unknown effect batch"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
@@ -86,6 +87,8 @@ func _run() -> void:
 		for case: Dictionary in _scenarios.identities:
 			for rank: int in _scenarios.ranks: await _exercise(case, rank, 1, true)
 	else:
+		if _batch == "clock":
+			await _exercise({"id": "legacy-clock", "archetype": "stone_throw", "move_id": "pebble_toss", "legacy": true}, 1, 1, false)
 		for archetype: String in LIBRARY.config().archetypes:
 			var case := {"id": archetype, "archetype": archetype}
 			var chosen := ""
@@ -126,16 +129,24 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var travel := float(_scenarios.identity_travel_seconds) if capture else LIBRARY.travel_seconds(Vector3(-3, 1.5, 0), Vector3(3, 1.5, 0), spec)
 	var arrivals := [0]
 	var arrival_wall: Array[float] = []
+	var arrival_frames: Array[int] = []
+	var independent_result_frame := [-1]
 	var started := Time.get_ticks_usec()
 	for i in simultaneous:
 		var z := float(i) * 2 - float(simultaneous - 1)
-		var effect := LIBRARY.launch(_arena, Vector3(-3, 1.5, z), Vector3(3, 1.5, z), spec,
-			{"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
-			 "mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)})
+		var context := {"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
+			 "mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)}
+		var effect: Node3D = LEGACY.launch(_arena, Vector3(-3, 1.5, z), Vector3(3, 1.5, z), spec, context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, Vector3(-3, 1.5, z), Vector3(3, 1.5, z), spec, context)
 		if effect == null: _failures.append("Launch failed " + id); return
 		effect.connect("arrived", func() -> void:
 			arrivals[0] += 1
+			arrival_frames.append(Engine.get_process_frames())
 			arrival_wall.append(float(Time.get_ticks_usec() - started) / 1000000.0))
+	# Same separate idle timer combat owns; it never waits for the node. This
+	# local clock proof makes no HP mutation and cannot replace player evidence.
+	create_timer(travel, false).timeout.connect(func() -> void:
+		independent_result_frame[0] = Engine.get_process_frames()
+		if int(arrivals[0]) != simultaneous: _failures.append("Contact not ready at independent schedule " + encounter))
 	var frames: Array[float] = []
 	var cpu: Array[float] = []
 	var captured := {}
@@ -160,14 +171,17 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				var path := _out.path_join("sequence-%02d-%s.png" % [_records.size(), phase])
 				if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 				captured[phase] = elapsed
-		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0: break
+		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0: break
 	if int(arrivals[0]) != simultaneous: _failures.append("Missing arrival " + encounter)
 	if peak > int(LIBRARY.config().encounter_particle_cap): _failures.append("Budget overflow " + encounter)
 	if BUDGET.used(encounter) != 0: _failures.append("Lease remains " + encounter)
+	for frame: int in arrival_frames:
+		if frame != int(independent_result_frame[0]): _failures.append("Presentation/schedule frame mismatch " + encounter)
 	if capture and captured.size() != _scenarios.capture_phases.size(): _failures.append("Incomplete identity frames " + encounter)
 	_records.append({"id": id, "move_id": move_id, "rank": rank, "simultaneous": simultaneous,
 		"resolved_count": row.parameters.count, "resolved_size": row.parameters.size, "travel_seconds": travel,
 		"arrivals": arrivals[0], "arrival_wall_seconds": arrival_wall, "particle_budget": row.budget,
+		"arrival_process_frames": arrival_frames, "independent_schedule_process_frame": independent_result_frame[0],
 		"peak_slots": peak, "end_slots": BUDGET.used(encounter), "captures_at_wall_seconds": captured,
 		"wall_frame_ms": frames, "cpu_process_ms": cpu, "p95_ms": _percentile(frames, 0.95), "p99_ms": _percentile(frames, 0.99)})
 	LIBRARY.cancel_encounter(self, encounter)
