@@ -111,3 +111,46 @@ func test_current_merged_slot_cannot_bypass_old_split_version_barrier() -> void:
 	assert_eq(saver.last_load_result.code, "incompatible_old_version")
 	assert_eq(saver.snapshot(game), before)
 	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
+
+func test_old_character_refusal_survives_valid_or_missing_world() -> void:
+	var saver: RefCounted = fixture.saver
+	var game: RefCounted = fixture._game()
+	assert_true(saver.save(game, 1))
+	var slot: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(1)))
+	var character_id := str(slot.split_locator.character_id)
+	var characters: RefCounted = saver.characters()
+	var path: String = characters.path_for(character_id)
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	data.version = 6
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(JSON.stringify(data))
+	file.close()
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var before: Dictionary = saver.snapshot(game)
+	assert_false(saver.load_slot(game, 1))
+	assert_eq(saver.last_load_result.code, "incompatible_old_version")
+	assert_eq(saver.snapshot(game), before)
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
+	saver.worlds().delete(str(slot.split_locator.world_id))
+	assert_false(saver.load_slot(game, 1))
+	assert_eq(saver.last_load_result.code, "incompatible_old_version")
+	assert_eq(saver.snapshot(game), before)
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
+
+func test_read_only_legacy_portable_discovery_and_new_namespace_writes() -> void:
+	var root := FIXTURE.TEST_DIR + "portable_namespaces/"
+	var legacy := root + "old/"
+	var current := root + "new/"
+	var characters := CHARACTER.new(current, legacy)
+	var old_path := legacy + "legacy-id/character.json"
+	DirAccess.make_dir_recursive_absolute(old_path.get_base_dir())
+	var original := JSON.stringify({"version": 6, "character_id": "legacy-id", "party": []})
+	var file := FileAccess.open(old_path, FileAccess.WRITE)
+	file.store_string(original)
+	file.close()
+	assert_eq(characters.list_ids(), ["legacy-id"])
+	assert_eq(characters.state("legacy-id"), {})
+	assert_eq(characters.last_load_result.code, "incompatible_old_version")
+	assert_true(characters.write("fresh-id", {"party": []}))
+	assert_true(FileAccess.file_exists(current + "fresh-id/character.json"))
+	assert_eq(FileAccess.get_file_as_string(old_path), original)

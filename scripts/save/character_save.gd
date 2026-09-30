@@ -82,9 +82,10 @@ var _envelope_cache: Dictionary = {}
 var last_load_result: Dictionary = {}
 
 
-func _init(dir: String = "user://characters/redesign-v28/") -> void:
+func _init(dir: String = "user://characters/redesign-v28/", legacy_dir: String = "") -> void:
 	_dir = dir if dir.ends_with("/") else dir + "/"
-	if _dir == "user://characters/redesign-v28/": _legacy_dir = "user://characters/"
+	_legacy_dir = legacy_dir if legacy_dir.is_empty() or legacy_dir.ends_with("/") else legacy_dir + "/"
+	if _dir == "user://characters/redesign-v28/" and _legacy_dir.is_empty(): _legacy_dir = "user://characters/"
 
 
 func root_dir() -> String:

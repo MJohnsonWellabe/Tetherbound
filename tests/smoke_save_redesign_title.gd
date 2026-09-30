@@ -8,6 +8,8 @@ const SCRATCH := "user://foundations_title/"
 const FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
 var _old_bytes: PackedByteArray
 var _old_path: String
+var _old_character_path: String
+var _old_character_bytes: PackedByteArray
 var _check_refusal := true
 
 func _run() -> void:
@@ -19,6 +21,12 @@ func _run() -> void:
 	_old_bytes = FileAccess.get_file_as_bytes("res://data/schema/fixtures/v27_save.json")
 	var file := FileAccess.open(_old_path, FileAccess.WRITE)
 	file.store_buffer(_old_bytes)
+	file.close()
+	_old_character_path = SCRATCH + "old/characters/legacy-portable/character.json"
+	DirAccess.make_dir_recursive_absolute(_old_character_path.get_base_dir())
+	_old_character_bytes = JSON.stringify({"version": 6, "character_id": "legacy-portable", "party": []}).to_utf8_buffer()
+	file = FileAccess.open(_old_character_path, FileAccess.WRITE)
+	file.store_buffer(_old_character_bytes)
 	file.close()
 	await super._run()
 
@@ -36,6 +44,15 @@ func _pad(button_index: int) -> void:
 			_fail("title refusal mutated live game")
 		if FileAccess.get_file_as_bytes(_old_path) != _old_bytes:
 			_fail("title refusal overwrote the old save")
+		if not current_scene.call("_saved_portable_character_ids", game).has("legacy-portable"):
+			_fail("read-only legacy portable character discovery omitted the old character")
+		current_scene.call("_show_portable_character_select")
+		if not status.text.contains("older version"):
+			_fail("portable picker silently omitted an old character without the refusal message")
+		var before_steam: Dictionary = game.save_system.snapshot(game)
+		var ready: bool = current_scene.call("prepare_steam_character", game, {"kind": "existing", "character_id": "legacy-portable"})
+		if ready or game.save_system.snapshot(game) != before_steam:
+			_fail("Steam old-character refusal reset or mutated live state")
 		current_scene.call("_show_main")
 	await super._pad(button_index)
 
@@ -56,8 +73,10 @@ func _verify_opening() -> void:
 		_fail("fresh game production autosave refused")
 	if FileAccess.get_file_as_bytes(_old_path) != _old_bytes:
 		_fail("New Game/autosave overwrote the old canonical save")
+	if FileAccess.get_file_as_bytes(_old_character_path) != _old_character_bytes:
+		_fail("New Game/autosave overwrote the old portable character")
 	var disk: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(game.save_system.slot_path(0)))
 	if int(disk.get("version", 0)) != 28: _fail("new namespace autosave is not v28")
-	print("F16 title evidence: old canonical preserved; refusal UI displayed; physical New Game reached Grandpa opening; empty satchel; production autosave v28")
+	print("F16#0 title evidence: old merged and portable files preserved; refusal UI displayed; physical New Game reached the opening director; empty satchel; production autosave v28. Grandpa conversation is not exercised by this witness.")
 	FIXTURE.wipe(SCRATCH)
 	quit(0 if _failures.is_empty() else 1)

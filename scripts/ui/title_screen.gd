@@ -1559,8 +1559,10 @@ func _join_as_saved_character(address: String, port: int, character_id: String) 
 	var local: Variant = game.get("local") if game != null else null
 	if local == null:
 		return
+	var previous_character_id := str(local.get("character_id"))
 	(local as RefCounted).set("character_id", character_id)
 	if not _has_portable_returning_character(game):
+		(local as RefCounted).set("character_id", previous_character_id)
 		_status.text = _portable_load_message(game)
 		_join_via(address, port)
 		return

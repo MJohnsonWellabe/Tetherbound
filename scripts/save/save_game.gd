@@ -330,7 +330,7 @@ func _init(dir: String = "user://saves/", legacy_dir: String = "") -> void:
 	else:
 		_legacy_dir = legacy_dir if legacy_dir.is_empty() or legacy_dir.ends_with("/") else legacy_dir + "/"
 		_worlds = WORLD_SAVE.new(_dir + "worlds/")
-		_characters = CHARACTER_SAVE.new(_dir + "characters/")
+		_characters = CHARACTER_SAVE.new(_dir + "characters/", _legacy_dir + "characters/" if not _legacy_dir.is_empty() else "")
 
 
 ## The two savers, for a caller that needs to read a world or a character

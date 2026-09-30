@@ -13,7 +13,7 @@ func after_each() -> void:
 	fixture.after_each()
 
 
-func test_completed_legacy_save_recovers_only_earned_rewards() -> void:
+func test_completed_legacy_save_refuses_without_repair_or_mutation() -> void:
 	var written: RefCounted = fixture._game(false)
 	written.progression.set_flag("defeated_warden")
 	assert_true(fixture.saver.save(written, 1))
@@ -25,6 +25,29 @@ func test_completed_legacy_save_recovers_only_earned_rewards() -> void:
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	file.close()
+	var restored: RefCounted = fixture._game(false)
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var modified := FileAccess.get_modified_time(path)
+	var before: Dictionary = fixture.saver.snapshot(restored).duplicate(true)
+	var world_ids: Array = fixture.saver.worlds().list_ids().duplicate()
+	var character_ids: Array = fixture.saver.characters().list_ids().duplicate()
+	assert_false(fixture.saver.load_slot(restored, 1), "RD-35 refuses the v16 payload before reward repair")
+	assert_eq(fixture.saver.last_load_result.code, "incompatible_old_version")
+	assert_eq(fixture.saver.snapshot(restored), before)
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
+	assert_eq(FileAccess.get_modified_time(path), modified)
+	assert_eq(fixture.saver.worlds().list_ids(), world_ids)
+	assert_eq(fixture.saver.characters().list_ids(), character_ids)
+	assert_false(restored.progression.has("realm_key_cloudreach"))
+	assert_false(restored.realm_hearts.is_earned("meadows", restored.progression))
+
+
+func test_current_completed_save_recovers_only_earned_rewards() -> void:
+	# Preserve the existing reward-repair regression on an accepted format.
+	# This is a constructed current-schema fixture, not an earned checkpoint.
+	var written: RefCounted = fixture._game(false)
+	written.progression.set_flag("defeated_warden")
+	assert_true(fixture.saver.save(written, 1))
 	var restored: RefCounted = fixture._game(false)
 	assert_true(fixture.saver.load_slot(restored, 1))
 	assert_true(restored.progression.has("realm_key_cloudreach"))

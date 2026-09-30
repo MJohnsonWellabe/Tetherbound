@@ -2,13 +2,28 @@ extends RefCounted
 
 ## RD-09/10: one order, preserving the established Water runtime namespace.
 const PATH := "res://data/config/biome_order.json"
+static var _test_overrides: Dictionary = {}
+
+## Isolated regression fixtures may exercise retired crossings using the SAME
+## flag. Shipping defaults stay in JSON; this hook is unavailable in release.
+static func set_test_overrides(overrides: Dictionary) -> bool:
+	if not OS.has_feature("debug"): return false
+	for key: Variant in overrides:
+		if key != "legacy_physical_crossings" or not overrides[key] is bool: return false
+	_test_overrides = overrides.duplicate(true)
+	return true
+
+static func clear_test_overrides() -> void:
+	_test_overrides = {}
 
 static func config() -> Dictionary:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 	if not raw is Dictionary or not raw.get("live") is Array or not raw.get("reserved") is Array:
 		push_error("Biome order config is missing or invalid")
 		return {}
-	return raw
+	var out: Dictionary = raw.duplicate(true)
+	out.merge(_test_overrides, true)
+	return out
 
 static func ids(include_reserved: bool = true) -> Array[String]:
 	var data := config()

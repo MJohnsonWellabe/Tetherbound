@@ -6,6 +6,16 @@ const PROGRESSION := preload("res://autoload/progression_state.gd")
 const STORMWOOD_WORLD := preload("res://scripts/world/stormwood_world.gd")
 const STORMWOOD_FIELD := preload("res://scripts/world/stormwood_heightfield.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
+
+func before_each() -> void:
+	# Historical return-path coverage deliberately enables the retired flag.
+	assert_true(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
+
+
+func after_each() -> void:
+	BIOME_ORDER.clear_test_overrides()
 
 
 class WorldFixture extends RefCounted:
@@ -31,6 +41,25 @@ func _mounted_gate() -> Dictionary:
 		"res://data/config/water_world.json"))
 	water.call("_build_return_gate")
 	return {"world": water, "gate": water.get_node_or_null(^"StormwoodReturnRealmGate")}
+
+
+func test_default_retired_return_gate_does_not_move_a_player() -> void:
+	BIOME_ORDER.clear_test_overrides()
+	assert_false(BIOME_ORDER.legacy_physical_crossings())
+	var mounted := _mounted_gate()
+	var water: Node3D = mounted.world
+	var gate: Node3D = mounted.gate
+	var game := GameFixture.new()
+	game.world = WorldFixture.new()
+	game.world.flags.set_flag("realm_gate_water_unlocked")
+	var before: Dictionary = game.world.flags.save_data().duplicate(true)
+	assert_true(gate != null)
+	if gate != null:
+		assert_false(gate.call("try_enter", game))
+	assert_eq(game.enter_calls, 0)
+	assert_eq(game.world.flags.save_data(), before)
+	water.free()
+	game.free()
 
 
 func _collision_child(body: Node) -> CollisionShape3D:

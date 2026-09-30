@@ -1,0 +1,15 @@
+# F16#0 closing candidate evidence
+
+Criterion: saves and character saves use schema versions greater than 27; loading v27 or older returns `incompatible_old_version`, clearly directs the player to start a new game, does not crash, and never overwrites the old file.
+
+Merged candidate baseline: origin/main `3cc8e789c` merged into `tb/foundations` at `2014963ea`. This artifact requests an independent strict re-check; it does not mark an acceptance row met.
+
+The save, portable-character and world readers refuse old versions before migration or live mutation. Split-pair loading retains the typed refusal even when the other half is absent. Version validation rejects fractional/nonfinite/invalid values. Slot metadata is guarded before old/malformed fields are displayed. The real title and portable LAN/Steam selection paths show the shared older-version/New Game message. Read-only legacy slot and portable discovery remain available; current writes use the `redesign-v28` namespace so a subsequent New Game/autosave cannot replace historical files.
+
+Focused runtime: `focused-final.txt`, 192 tests, 2435 assertions, zero failures. The twelve files cover old merged/character/world readers, disk bytes and mtime preservation, live snapshot preservation, unsafe old slot metadata, split old-world and old-character combinations, read-only portable discovery, current identity/split roundtrips, schema rejection, actual order consumers and default-off physical gate controls. Intentional schema negative cases emit their expected structured authoring errors; assertions and runner result pass.
+
+Actual title runtime: `title-refusal-new-game.txt`, exit 0. The witness calls the real title load and portable picker callbacks to expose refusal, tests the real Steam preparation callback for live-state preservation, then sends physical controller input through New Game, its confirmation and body card into the production Meadows opening director. It invokes production `Game.autosave_here()` and verifies new schema 28 disk data plus unchanged old merged and portable bytes.
+
+Disclosed shortcuts: the v27 fixture is minimal handcrafted authored data, not an earned legacy checkpoint. Refusal callbacks are invoked by the harness; trainer-name acceptance uses the existing `_confirm` seam. New Game/controller/menu/world construction and the first autosave use production paths. This witness only checks opening-director and Grandpa/bed prompt readiness, not the actual Grandpa conversation; it does not close F16#4. Future redesign carriers/catalogs and transaction declarations included in this candidate are supporting infrastructure, with later mechanics and F16#1–#4 acceptance still open. Legacy gate unit regression fixtures explicitly enable the same default-off `legacy_physical_crossings` flag through a debug-only override, alongside separate refusal controls; they are not proof of the future portal loop.
+
+Independent preliminary artifacts retain their original failed/open findings for audit. Closing strict review and one complete four-shard unit run remain required before the row/PR lands.
