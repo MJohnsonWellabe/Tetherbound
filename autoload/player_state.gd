@@ -1,6 +1,6 @@
 extends RefCounted
 
-## D98 / docs/specs/MP_STATE_SEAM.md §1: THIS TRAINER and THIS TEAM.
+## D98 / docs/specs/MP_STATE_SEAM.md Â§1: THIS TRAINER and THIS TEAM.
 ##
 ## One per peer. The local one is `Game.local`; from Wave 2 the host also holds
 ## every connected peer's in `Game.players`. Every `Game.<x>` this file holds --
@@ -10,7 +10,7 @@ extends RefCounted
 ## `current_realm`, `pending_realm_entry` -- stays readable and writable under
 ## its old name as a forwarding property on `Game`. `Game.party` permanently
 ## means "the local player's party" (D98), not transitionally: every process
-## keeps exactly one local player (the execution plan's §2 simplification).
+## keeps exactly one local player (the execution plan's Â§2 simplification).
 ##
 ## Three things moved here that used to be process-global, and each is the
 ## point of the move rather than a tidy-up:
@@ -372,7 +372,7 @@ func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 
 # --- save / load ------------------------------------------------------------
 
-## The PLAYER half of today's v22 save dictionary (`MP_STATE_SEAM.md` §4), which
+## The PLAYER half of today's v22 save dictionary (`MP_STATE_SEAM.md` Â§4), which
 ## 1.C writes to `user://characters/<character_id>/character.json`. The v22 key
 ## names are kept verbatim except the two the partition renames
 ## (`current_realm` -> `realm`, `progression` -> `flags`, its player half).
@@ -389,7 +389,7 @@ func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 ## `character_save.gd` and this call goes with them.
 func save_data() -> Dictionary:
 	var saver: RefCounted = SAVE_GAME.new()
-	return {
+	var data := {
 		"redesign_character": redesign_character.duplicate(true),
 		"character_id": character_id,
 		"display_name": display_name,
@@ -409,10 +409,21 @@ func save_data() -> Dictionary:
 		"realm_maps": map_payloads(),
 		"flags": flags.save_data() if flags != null else {},
 	}
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	if teaching.party_loadout_errors(data.party,data.redesign_character).is_empty():
+		data.redesign_character = teaching.character_loadout_mirror(data.party,data.redesign_character)
+	return data
 
 
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state.
 func load_data(data: Dictionary) -> void:
+	if not preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(data.get("satchel_escrow", {}), str(data.get("character_id", character_id))).is_empty() \
+			or not preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(data.get("satchel_escrow", {}), str(data.get("character_id", character_id))).is_empty():
+		push_error("Typed portal escrow refused before applying personal state.")
+		return
+	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true).is_empty():
+		push_error("Character move loadout refused before applying personal state.")
+		return
 	var redesign: Variant = data.get("redesign_character", REDESIGN_STATE.defaults("character"))
 	var redesign_errors := REDESIGN_STATE.validate("character", redesign, REDESIGN_STATE.uids(data.get("party", [])))
 	if not redesign_errors.is_empty():
@@ -425,7 +436,7 @@ func load_data(data: Dictionary) -> void:
 	chosen_character = str(data.get("chosen_character", "trainer"))
 	if chosen_character.is_empty():
 		chosen_character = "trainer"
-	loader.call("_array_to_party", data.get("party", []), party)
+	loader.call("_array_to_party", data.get("party", []), party,redesign_character)
 	party.call("restore_tournament_selection", data.get("tournament_selection", []))
 	loader.call("_array_to_inventory", data.get("inventory", []), inventory)
 	if equipment != null:
