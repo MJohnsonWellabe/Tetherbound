@@ -1,0 +1,18 @@
+{
+  "source": "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-combat",
+    "--script",
+    "tests/smoke_net_shared_wild_fight.gd",
+    "--",
+    "--feedback"
+  ],
+  "native_exit": 0,
+  "elapsed_seconds": 203.03100000007544,
+  "profile": "D:\\tetherbound\\combat-guest-incoming-r2\\initial-home",
+  "output_dir": "D:\\tetherbound\\combat-guest-incoming-r2",
+  "scope": "Original full --feedback witness, every assertion retained; diagnostic fields added, no product number repair asserted"
+}
