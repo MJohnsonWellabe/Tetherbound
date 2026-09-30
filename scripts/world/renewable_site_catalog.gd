@@ -2,7 +2,7 @@ extends RefCounted
 
 ## One source-derived F32 registry for host claims, save validation and mounts.
 ## This cache contains detached definitions, never stock, receipts or inventory.
-## Unmounted additional material proposals are deliberately not registered.
+## Additional material proposals stay unregistered while their block is OFF.
 const BANDS := preload("res://scripts/data/band_content.gd")
 const ESSENCE := preload("res://scripts/world/essence_node_catalog.gd")
 const REALMS := ["meadows", "water", "cloudreach", "stormwood"]
@@ -175,7 +175,11 @@ static func _load() -> void:
 				orders[order] = true
 				_ordinary("meadows", row, meadows_policy, "order:" + str(row["order"]),
 					"item", "amount", "at", 2, path)
-	_load_rows("water", _read(WATER_PATH), WATER_PATH, "harvest", "item_id", "yield", 3)
+	var water := _read(WATER_PATH)
+	_load_rows("water", water, WATER_PATH, "harvest", "item_id", "yield", 3)
+	_load_additional_materials("meadows", meadows, meadows_policy, MEADOWS_PATH)
+	var water_policy: Variant = water.get("renewable")
+	_load_additional_materials("water", water, water_policy if water_policy is Dictionary else {}, WATER_PATH)
 	var cloud := _read(CLOUD_PATH)
 	var chapter := _read(CLOUD_CHAPTER_PATH)
 	var tier: Variant = chapter.get("resource_tier")
@@ -239,3 +243,82 @@ static func _load_rows(realm: String, config: Dictionary, source_path: String,
 				continue
 			row["requires_flag"] = gates[region]
 		_ordinary(realm, row, policy, row["id"], item_key, amount_key, "position", position_size, source_path)
+
+
+## Only validated, explicitly enabled additional sites enter the SAME registry.
+## A default-OFF block changes no known IDs or existing depleted stock. Actual
+## terrain/player-path proof is a prerequisite, not something this parser earns.
+static func _load_additional_materials(realm: String, config: Dictionary,
+		policy: Dictionary, source_path: String) -> void:
+	# Ordinary parsing already validated this realm/policy. Never cast a
+	# malformed raw policy or admit extras into a failed canonical realm.
+	if _invalid.has(realm):
+		return
+	var block: Variant = config.get("additional_material_node_candidates")
+	if not block is Dictionary or typeof(block.get("runtime_enabled")) != TYPE_BOOL:
+		_fail(realm, "Malformed additional-material enablement")
+		return
+	if block["runtime_enabled"] == false:
+		return
+	var rows: Variant = block.get("nodes")
+	if policy.is_empty() or not rows is Array or rows.is_empty():
+		_fail(realm, "Malformed enabled additional-material catalogue")
+		return
+	for raw: Variant in rows:
+		if not raw is Dictionary or raw.get("realm") != realm \
+				or typeof(raw.get("terrain_and_player_path_proven")) != TYPE_BOOL \
+				or raw["terrain_and_player_path_proven"] != true \
+				or not raw.get("item") is String or not (policy["materials"] as Array).has(raw["item"]) \
+				or not _integer(raw.get("amount")) \
+				or raw.get("outputs") != {raw["item"]: int(raw["amount"])} \
+				or not _integer(raw.get("respawn_days")) \
+				or not _point(raw.get("at"), 2) \
+				or not raw.get("model") is String or raw["model"].is_empty() \
+				or not _point([raw.get("model_scale")], 1) or float(raw["model_scale"]) <= 0.0:
+			_fail(realm, "Unproved or malformed additional-material site")
+			continue
+		var anchor: Variant = raw.get("anchor")
+		if not anchor is Dictionary or not anchor.get("id") is String \
+				or not _point(anchor.get("offset_xz_m"), 2):
+			_fail(realm, "Malformed additional-material anchor")
+			continue
+		# Read the already loaded canonical ordinary anchor, not a second list.
+		var sites: Dictionary = _sites[realm]
+		var parent: Variant = sites.get(anchor["id"])
+		if not parent is Dictionary or parent.get("source_additional_material", false) == true:
+			_fail(realm, "Unknown ordinary additional-material anchor")
+			continue
+		var expected := Vector2(float(parent["at"][0]), float(parent["at"][1])) \
+			+ Vector2(float(anchor["offset_xz_m"][0]), float(anchor["offset_xz_m"][1]))
+		var actual := Vector2(float(raw["at"][0]), float(raw["at"][1]))
+		if not expected.is_equal_approx(actual):
+			_fail(realm, "Additional-material position differs from its source anchor")
+			continue
+		if realm == "water" and (typeof(raw.get("requires_dive")) != TYPE_BOOL or raw["requires_dive"] != false):
+			_fail(realm, "Main-island material candidates cannot require Dive")
+			continue
+		var site: Dictionary = raw.duplicate(true)
+		# Offsets never remove the anchor's host phase/route restrictions.
+		for key: String in ["requires_flag", "requires_world_flags", "availability"]:
+			if site.has(key) and site[key] != parent.get(key):
+				_fail(realm, "Additional-material prerequisite conflicts with its anchor")
+			elif parent.has(key):
+				site[key] = parent[key].duplicate(true) if parent[key] is Array else parent[key]
+		site["source_additional_material"] = true
+		site["order"] = "material:" + str(site.get("id", ""))
+		_add(realm, site, source_path)
+
+
+## World owners mount only admitted IDs from the canonical resolver. Disabled
+## or unproved source candidates do not become known stock through this query.
+static func additional_materials_for(realm: String) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	if not realm in REALMS:
+		return result
+	_load()
+	if _invalid.has(realm):
+		return result
+	for site: Dictionary in (_sites[realm] as Dictionary).values():
+		if site.get("source_additional_material", false) == true:
+			result.append(site.duplicate(true))
+	return result

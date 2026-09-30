@@ -266,3 +266,88 @@ static func _candidate_accents(part: Node3D, accents: Dictionary) -> bool:
 		if not found.has(key):
 			return false
 	return true
+
+
+## F32 extra-material mount seam for the world owner. The default-OFF source
+## block and required terrain/path evidence keep all six candidates unknown.
+## This uses the SAME canonical site and host stock as ordinary/essence nodes;
+## it never registers a site from presentation or creates a stock fallback.
+func mount_additional_materials(world: Node3D, realm: String,
+		trainer: CharacterBody3D) -> Dictionary:
+	# Resolve residency from the actual owning shell before stock or terrain.
+	# A separate caller realm string cannot place Meadows stock in Water.
+	if world == null or not world.is_inside_tree() or not world.has_method("world_realm") \
+			or world.call("world_realm") != realm or trainer == null or not trainer.is_inside_tree() \
+			or not is_inside_tree() or not world.is_ancestor_of(self) or not world.is_ancestor_of(trainer) \
+			or world.get_world_3d() == null or get_world_3d() != world.get_world_3d() \
+			or trainer.get_world_3d() != world.get_world_3d():
+		return {"mounted_ids": [], "reason": "Actual world, mount and trainer residency must agree."}
+	var game := world.get_node_or_null(^"/root/Game")
+	var state: Variant = game.get("world") if game != null else null
+	if not state is Object or not state.has_method("renewable_stock_state"):
+		return {"mounted_ids": [], "reason": "Host renewable registry is not ready."}
+	var items: RefCounted = game.get("items")
+	var tuning: Dictionary = CATALOGUE.read().get("placement_validation", {})
+	for spec: Dictionary in RENEWABLE_SITES.additional_materials_for(realm):
+		var id := str(spec["id"])
+		if _mounted.has(id) and is_instance_valid(_mounted[id]):
+			continue
+		var stock: Variant = state.call("renewable_stock_state", realm, id)
+		if not stock is Dictionary or stock.is_empty():
+			_refusals[id] = "Host site is not registered."
+			continue
+		if not _items_registered(spec, items):
+			_refusals[id] = "Canonical inventory items are not registered."
+			continue
+		var model := str(spec["model"])
+		if not ResourceLoader.exists(model) or not load(model) is PackedScene:
+			_refusals[id] = "Installed resource model is unavailable."
+			continue
+		var verdict := placement_verdict(world, spec, trainer, tuning)
+		if not bool(verdict.get("ok", false)):
+			_refusals[id] = str(verdict.get("reason", "Placement unavailable."))
+			continue
+		if realm == "water" and not _additional_water_dry(world, verdict["position"], tuning):
+			_refusals[id] = "Actual baked terrain and live water surface do not establish a dry Pearl bed."
+			continue
+		# Declared proof and this body query do not substitute for the earned
+		# player route or actual Water depth/approach witness before enablement.
+		var node := HARVEST.new()
+		node.name = id.replace(":", "_")
+		add_child(node)
+		node.global_position = verdict["position"]
+		node.call("setup", CATALOGUE.harvest_spec(spec, stock))
+		_mounted[id] = node
+		_refusals.erase(id)
+	return census()
+
+
+## Conservative dry-only Pearl beds: use the actual live WaterSurface plane
+## and actual ground_height_at (baked Terrain3D), never WaterHeightfield's
+## analytic height_at or an anchor's historical sampled height. Missing sea,
+## transformed/non-planar surface, submerged/slope-neighbour ground refuses.
+## This bounds the local placement only; it does not prove an approach route.
+static func _additional_water_dry(world: Node3D, at: Vector3, tuning: Dictionary) -> bool:
+	var surface := world.get_node_or_null(^"WaterSurface") as MeshInstance3D
+	if surface == null or not surface.is_inside_tree() or not surface.mesh is PlaneMesh \
+			or not surface.global_transform.basis.is_equal_approx(Basis.IDENTITY):
+		return false
+	var plane := surface.mesh as PlaneMesh
+	# Geometry orientation/offset can differ even with identity node basis.
+	# Existing WaterSurface builds the default FACE_Y, zero-offset plane.
+	if plane.orientation != PlaneMesh.FACE_Y or plane.center_offset != Vector3.ZERO \
+			or not plane.size.is_finite() or plane.size.x <= 0.0 or plane.size.y <= 0.0 \
+			or not surface.global_position.is_finite() or not at.is_finite():
+		return false
+	var local := surface.to_local(at)
+	if absf(local.x) > plane.size.x * 0.5 or absf(local.z) > plane.size.y * 0.5:
+		return false
+	var sea := surface.global_position.y
+	if not is_finite(sea) or at.y < sea:
+		return false
+	var step := maxf(0.1, float(tuning.get("slope_sample_m", 0.75)))
+	for offset: Vector2 in [Vector2(step, 0), Vector2(-step, 0), Vector2(0, step), Vector2(0, -step)]:
+		var ground := float(world.call("ground_height_at", at.x + offset.x, at.z + offset.y))
+		if not is_finite(ground) or ground < sea:
+			return false
+	return true

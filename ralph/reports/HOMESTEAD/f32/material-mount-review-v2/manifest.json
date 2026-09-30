@@ -1,0 +1,37 @@
+{
+  "base": "510273afd622a8eb02861c39c16e5f83d42b43ac",
+  "supersedes_unapplied_patch_sha256": "5dbd344ef41c59a15fe5ddb56822cece766fb8fa2d85076e513de4339e0a8528",
+  "patch_sha256": "8659aed3abe3dfd0e3c2f72176b151a4e2dc27ec9e3ddf04dff6b30caac0827b",
+  "paths": {
+    "data/config/harvest.json": {
+      "before_normalized_lf_sha256": "f4e90520ebe344910758de2986af5692017dc77f34bd83e2ab8b570781c80ed6",
+      "expected_after_normalized_lf_sha256": "2c55815cf0ca8fb705c36d4745bbe8e042d16cf6034ff98efeb67c0d64363c38"
+    },
+    "data/config/water_pickups.json": {
+      "before_normalized_lf_sha256": "fe1691b1b7ee822f339bc5ced55e864594315f4be7de32d5b9119eed69ac3f5d",
+      "expected_after_normalized_lf_sha256": "644ed24641f584202f28ded3966ca3af908c446bdc5e6f665f29bf2c81f04854"
+    },
+    "scripts/world/renewable_site_catalog.gd": {
+      "before_normalized_lf_sha256": "270efb65afee4c760152dc44326bd7caa915466237180d7cba7c620e30ffca60",
+      "expected_after_normalized_lf_sha256": "a10bbc09a62b215ea16c35db5ddbea803efc4e6f21f03011f2d4248617a491b0"
+    },
+    "scripts/world/essence_node_mount.gd": {
+      "before_normalized_lf_sha256": "30d9a6a025e7e18869ce167435d3c886268bdb290956ae2e50174617f7055773",
+      "expected_after_normalized_lf_sha256": "c8a016eec1656b24ffab1f74fdb2b903476eac672309d1e68728444778f0a2d0"
+    }
+  },
+  "source_state": "FROZEN ignored/unapplied corrected full proposal; existing549 known definitions unchanged whenOFF; all6 additional IDs UNKNOWN/unmounted",
+  "corrections": [
+    "P2 world.world_realm equality + actualworld ancestry for mount/trainer + same nonnull World3D for all3 before stock/terrain",
+    "P2 livePlaneMesh FACE_Y + exactzero center_offset + positivefinite extents/positions",
+    "Selfaudit invalidordinaryrealm/policy earlyrefusal beforeenabled rawArray cast",
+    "Scene-name-only colon sanitization matching existing WaterScenePickups; canonicalID unchanged"
+  ],
+  "proof_markers_changed": false,
+  "runtime_enabled": false,
+  "new_stock_or_receipt_service": false,
+  "engine_or_tests_run": false,
+  "water_geometry_primary_source": "https://docs.godotengine.org/en/stable/classes/class_planemesh.html",
+  "acceptance_met": [],
+  "packet_note": "THIS is the single review submission successor to frozen5dbd v1. Earlier local v2 draft5c697 was never submitted for review and is preserved separately; this packet explicitly adds World3D equality per ROOT."
+}

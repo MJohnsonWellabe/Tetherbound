@@ -1,0 +1,54 @@
+--- v1/scripts/world/renewable_site_catalog.gd
++++ v2/scripts/world/renewable_site_catalog.gd
+@@ -250,6 +250,10 @@
+ ## terrain/player-path proof is a prerequisite, not something this parser earns.
+ static func _load_additional_materials(realm: String, config: Dictionary,
+ 		policy: Dictionary, source_path: String) -> void:
++	# Ordinary parsing already validated this realm/policy. Never cast a
++	# malformed raw policy or admit extras into a failed canonical realm.
++	if _invalid.has(realm):
++		return
+ 	var block: Variant = config.get("additional_material_node_candidates")
+ 	if not block is Dictionary or typeof(block.get("runtime_enabled")) != TYPE_BOOL:
+ 		_fail(realm, "Malformed additional-material enablement")
+--- v1/scripts/world/essence_node_mount.gd
++++ v2/scripts/world/essence_node_mount.gd
+@@ -274,8 +274,14 @@
+ ## it never registers a site from presentation or creates a stock fallback.
+ func mount_additional_materials(world: Node3D, realm: String,
+ 		trainer: CharacterBody3D) -> Dictionary:
+-	if world == null or not world.is_inside_tree():
+-		return {"mounted_ids": [], "reason": "World residency is not ready."}
++	# Resolve residency from the actual owning shell before stock or terrain.
++	# A separate caller realm string cannot place Meadows stock in Water.
++	if world == null or not world.is_inside_tree() or not world.has_method("world_realm") \
++			or world.call("world_realm") != realm or trainer == null or not trainer.is_inside_tree() \
++			or not is_inside_tree() or not world.is_ancestor_of(self) or not world.is_ancestor_of(trainer) \
++			or world.get_world_3d() == null or get_world_3d() != world.get_world_3d() \
++			or trainer.get_world_3d() != world.get_world_3d():
++		return {"mounted_ids": [], "reason": "Actual world, mount and trainer residency must agree."}
+ 	var game := world.get_node_or_null(^"/root/Game")
+ 	var state: Variant = game.get("world") if game != null else null
+ 	if not state is Object or not state.has_method("renewable_stock_state"):
+@@ -307,7 +313,7 @@
+ 		# Declared proof and this body query do not substitute for the earned
+ 		# player route or actual Water depth/approach witness before enablement.
+ 		var node := HARVEST.new()
+-		node.name = id
++		node.name = id.replace(":", "_")
+ 		add_child(node)
+ 		node.global_position = verdict["position"]
+ 		node.call("setup", CATALOGUE.harvest_spec(spec, stock))
+@@ -327,6 +333,12 @@
+ 			or not surface.global_transform.basis.is_equal_approx(Basis.IDENTITY):
+ 		return false
+ 	var plane := surface.mesh as PlaneMesh
++	# Geometry orientation/offset can differ even with identity node basis.
++	# Existing WaterSurface builds the default FACE_Y, zero-offset plane.
++	if plane.orientation != PlaneMesh.FACE_Y or plane.center_offset != Vector3.ZERO \
++			or not plane.size.is_finite() or plane.size.x <= 0.0 or plane.size.y <= 0.0 \
++			or not surface.global_position.is_finite() or not at.is_finite():
++		return false
+ 	var local := surface.to_local(at)
+ 	if absf(local.x) > plane.size.x * 0.5 or absf(local.z) > plane.size.y * 0.5:
+ 		return false

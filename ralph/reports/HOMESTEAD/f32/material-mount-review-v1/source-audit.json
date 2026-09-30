@@ -1,0 +1,157 @@
+{
+  "base": "510273afd622a8eb02861c39c16e5f83d42b43ac",
+  "patch_sha256": "5dbd344ef41c59a15fe5ddb56822cece766fb8fa2d85076e513de4339e0a8528",
+  "manifest_sha256": "4ec08310b634dabbb78145f66c6681c3e6d0b082203508e1f078162d696a0434",
+  "exact_four_paths_and_every_hunk_checked": true,
+  "paths": {
+    "data/config/harvest.json": {
+      "hunks_checked": 1,
+      "before_normalized_lf_sha256": "f4e90520ebe344910758de2986af5692017dc77f34bd83e2ab8b570781c80ed6",
+      "after_normalized_lf_sha256": "2c55815cf0ca8fb705c36d4745bbe8e042d16cf6034ff98efeb67c0d64363c38",
+      "expected_file_exact": true
+    },
+    "data/config/water_pickups.json": {
+      "hunks_checked": 1,
+      "before_normalized_lf_sha256": "fe1691b1b7ee822f339bc5ced55e864594315f4be7de32d5b9119eed69ac3f5d",
+      "after_normalized_lf_sha256": "644ed24641f584202f28ded3966ca3af908c446bdc5e6f665f29bf2c81f04854",
+      "expected_file_exact": true
+    },
+    "scripts/world/renewable_site_catalog.gd": {
+      "hunks_checked": 3,
+      "before_normalized_lf_sha256": "270efb65afee4c760152dc44326bd7caa915466237180d7cba7c620e30ffca60",
+      "after_normalized_lf_sha256": "43d0251bb1950b421d42bb6400b33b30aa7e0eae62ec9f201e2ab5301244e5fc",
+      "expected_file_exact": true
+    },
+    "scripts/world/essence_node_mount.gd": {
+      "hunks_checked": 1,
+      "before_normalized_lf_sha256": "30d9a6a025e7e18869ce167435d3c886268bdb290956ae2e50174617f7055773",
+      "after_normalized_lf_sha256": "e2a35e0fc2d0b43c2619b96eec791e09d95ba44ab43a266e4029775abf65cd05",
+      "expected_file_exact": true
+    }
+  },
+  "json_delta_only_two_off_gates_and_comments": {
+    "data/config/harvest.json": true,
+    "data/config/water_pickups.json": true
+  },
+  "base_resolver_byte_equal_prior_22d8": true,
+  "ordinary_counts": {
+    "meadows": 151,
+    "water": 181,
+    "cloudreach": 15,
+    "stormwood": 170
+  },
+  "essence_count": 32,
+  "known_definition_count_OFF": 549,
+  "six_unmounted_candidates": [
+    {
+      "id": "meadows:sunleaf:patch:01",
+      "realm": "meadows",
+      "unknown_ordinary": true,
+      "unknown_essence": true,
+      "configured_proof_false": true,
+      "anchor": "order:1000",
+      "coordinates_match_anchor": true,
+      "at": [
+        3.0,
+        141.0
+      ],
+      "output": {
+        "sunleaf": 3
+      },
+      "policy_tier": 1,
+      "model_exists_at_base": true
+    },
+    {
+      "id": "meadows:sunleaf:patch:02",
+      "realm": "meadows",
+      "unknown_ordinary": true,
+      "unknown_essence": true,
+      "configured_proof_false": true,
+      "anchor": "order:2008",
+      "coordinates_match_anchor": true,
+      "at": [
+        158.0,
+        1565.0
+      ],
+      "output": {
+        "sunleaf": 3
+      },
+      "policy_tier": 1,
+      "model_exists_at_base": true
+    },
+    {
+      "id": "meadows:sunleaf:patch:03",
+      "realm": "meadows",
+      "unknown_ordinary": true,
+      "unknown_essence": true,
+      "configured_proof_false": true,
+      "anchor": "order:4007",
+      "coordinates_match_anchor": true,
+      "at": [
+        -297.0,
+        5075.0
+      ],
+      "output": {
+        "sunleaf": 3
+      },
+      "policy_tier": 1,
+      "model_exists_at_base": true
+    },
+    {
+      "id": "water:tide_pearl:reef_bed:first_shore:01",
+      "realm": "water",
+      "unknown_ordinary": true,
+      "unknown_essence": true,
+      "configured_proof_false": true,
+      "anchor": "water:first_shore:harvest:005",
+      "coordinates_match_anchor": true,
+      "at": [
+        80.0,
+        -24.0
+      ],
+      "output": {
+        "tide_pearl": 2
+      },
+      "policy_tier": 2,
+      "model_exists_at_base": true
+    },
+    {
+      "id": "water:tide_pearl:reef_bed:reedhaven:01",
+      "realm": "water",
+      "unknown_ordinary": true,
+      "unknown_essence": true,
+      "configured_proof_false": true,
+      "anchor": "water:reedhaven:harvest:006",
+      "coordinates_match_anchor": true,
+      "at": [
+        -154.0,
+        506.0
+      ],
+      "output": {
+        "tide_pearl": 2
+      },
+      "policy_tier": 2,
+      "model_exists_at_base": true
+    },
+    {
+      "id": "water:tide_pearl:reef_bed:brine_steps:01",
+      "realm": "water",
+      "unknown_ordinary": true,
+      "unknown_essence": true,
+      "configured_proof_false": true,
+      "anchor": "water:brine_steps:harvest:017",
+      "coordinates_match_anchor": true,
+      "at": [
+        544.0,
+        534.0
+      ],
+      "output": {
+        "tide_pearl": 2
+      },
+      "policy_tier": 2,
+      "model_exists_at_base": true
+    }
+  ],
+  "packet_stable_during_capture": true,
+  "method": "Pinned JSON/source and exact unified-patch reconstruction into ignored artifacts only; no engine, runtime simulation, tests, GPU or Git mutation."
+}
