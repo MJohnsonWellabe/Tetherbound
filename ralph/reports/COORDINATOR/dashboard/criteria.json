@@ -33,12 +33,12 @@
     {
      "text": "Normal-controller DAY walk reaches every opening NPC, camp and gate",
      "status": "met",
-     "evidence": "ralph/reports/MEADOWS/f01-walks/day_d41ff2f0 (render 36439730921: tests/capture_village_walk.gd --route=visits --time=day --from-title, PASS visited=11, max_off_road 0.00 m, controller events only); code-blind verdict code_blind_judge_verdict_day_d41ff2f0.md PASS (gates, lived-in camp with fire/tent/bedroll, key on its post); strict re-check RECHECK_F01_2.md MET. Bars A/B â†’ Phase 2 catalog."
+     "evidence": "ralph/reports/MEADOWS/f01-walks/day_d41ff2f0 (render 36439730921: tests/capture_village_walk.gd --route=visits --time=day --from-title, PASS visited=11, max_off_road 0.00 m, controller events only); code-blind verdict code_blind_judge_verdict_day_d41ff2f0.md PASS (gates, lived-in camp with fire/tent/bedroll, key on its post); strict re-check RECHECK_F01_2.md MET. Bars A/B \u00e2\u2020\u2019 Phase 2 catalog."
     },
     {
      "text": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate",
      "status": "met",
-     "evidence": "ralph/reports/MEADOWS/f01-walks/night_d41ff2f0 (render 36439735704: tests/capture_village_walk.gd --route=visits --time=night --from-title, PASS visited=11 at 23:00, controller events only); the old key hangs glowing on its post by The Rise and reads in the world (key_post.json); code-blind verdict code_blind_judge_verdict_night_d41ff2f0.md PASS; strict re-check RECHECK_F01_3.md MET. Bars A/B â†’ Phase 2 catalog."
+     "evidence": "ralph/reports/MEADOWS/f01-walks/night_d41ff2f0 (render 36439735704: tests/capture_village_walk.gd --route=visits --time=night --from-title, PASS visited=11 at 23:00, controller events only); the old key hangs glowing on its post by The Rise and reads in the world (key_post.json); code-blind verdict code_blind_judge_verdict_night_d41ff2f0.md PASS; strict re-check RECHECK_F01_3.md MET. Bars A/B \u00e2\u2020\u2019 Phase 2 catalog."
     },
     {
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
@@ -81,7 +81,7 @@
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
      "status": "met",
      "evidence": "Batch 13: fresh ordinary save crosses the South Bridge with no teleport | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
@@ -121,10 +121,10 @@
      "text": "No repeated wilds required",
      "status": "met",
      "evidence": "Batch 13: practice-wild supply; fresh saves earn L5 from non-repeated wilds (3 seeds) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
-     "text": "WORLD Â§3.1 route spacing and A7 measured on the same route",
+     "text": "WORLD \u00c2\u00a73.1 route spacing and A7 measured on the same route",
      "status": "met",
      "evidence": "ralph/reports/MEADOWS-PAYOFFS/earned-bridge/hall-seed15-r41-0336cf9f.txt, ledger-seed15-r41-0336cf9f.jsonl.txt, strict-recompute-r41.txt @ tb/meadows-route d9fce875 (batch 61): one continuous seed-15 run measures route spacing and A7 together; a7_violations [], every window at most 213 m except the Home-materials trip (308 m); independent re-check MET. Shortcuts disclosed: Home-materials out-and-back over 250 m (accepted skipped sub-part, owner 13:20); harness walker, one seed, one run per content version; caches count within 40 m without line of sight (A7 passes because of the 17 placed caches); unmapped vista not detected; run stops at warden_arena_entered.",
      "gap": "",
@@ -151,7 +151,7 @@
      "status": "met",
      "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f03/ (README, RECHECK). Lure read: judge F (MEADOWS-PAYOFFS/six-activities/earned/LURE-JUDGE-earned-f.md). Unstaged ordinary-input walks to each prompt: Bram, Juno (walks_122a8efb), Doss (earned/lure0/doss-f), herd at night (herd_night_walk_8fc88f20, fire 0.65/glow 2.4), vault (vault_cleared_36d88a84), Hall from the south (hall_south_14e917a3, pack at (-45,7300) r8 wander 5, nameplate depth-tested; --hall-decline OK 44.4 m). Independent strict re-check: MET.",
      "gap": "",
-     "note": "Disclosed: start saves are fixtures (tests/fixtures/f03_lure_saves/README.md), vault uses the guardian-cleared save; the walker plans on the road graph, sets the rig yaw/pitch, glances, flees fights, unsticks and toggles the companion (doss-f/herd --off-road-cost=10); judges r12/r13 PARTLY (Doss/herd/Hall), overridden by the re-check (r13 took the player's Gale for the alpha; Doss witness is doss-f). Open: no watcher figure at the herd fire; hall_16 shows \"You backed off.\" after the walker's Engage. Bars A/B â†’ Phase 2 catalog."
+     "note": "Disclosed: start saves are fixtures (tests/fixtures/f03_lure_saves/README.md), vault uses the guardian-cleared save; the walker plans on the road graph, sets the rig yaw/pitch, glances, flees fights, unsticks and toggles the companion (doss-f/herd --off-road-cost=10); judges r12/r13 PARTLY (Doss/herd/Hall), overridden by the re-check (r13 took the player's Gale for the alpha; Doss witness is doss-f). Open: no watcher figure at the herd fire; hall_16 shows \"You backed off.\" after the walker's Engage. Bars A/B \u00e2\u2020\u2019 Phase 2 catalog."
     },
     {
      "text": "Each is a distinct optional action",
@@ -163,7 +163,7 @@
      "text": "Useful once-only reward and acknowledgement",
      "status": "met",
      "evidence": "Batch 13: Doss repeat step fixed; usefulness judged | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”",
+     "gap": "\u00e2\u20ac\u201d",
      "note": "Batch 17 (#269) merged 11:39; full-ci run 36237141477 green on 05b6d86b; only the render workflow/docs landed between"
     },
     {
@@ -184,19 +184,19 @@
      "text": "No story gate requires a detour",
      "status": "met",
      "evidence": "test_no_qualified_activity_gates_or_is_credited_by_the_main_route passes (main)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Exact source IDs and rejected candidates recorded",
      "status": "met",
      "evidence": "F03 candidate table with IDs and rejections (cart, Farro, Pond alpha, Ironwood) on main",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Vault Elder and Hall alpha have local objective rows",
      "status": "met",
      "evidence": "main 3a01cdeb: objectives.json band2_warrens_vault_elder, band5_hall_alpha_galecrest",
-     "gap": "â€”",
+     "gap": "\u00e2\u20ac\u201d",
      "missing": ""
     }
    ]
@@ -237,9 +237,9 @@
     {
      "text": "Warden: named tactical question visible at normal distance",
      "status": "met",
-     "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f04/warden_3b6f965a/ (render 36427399935), JUDGE_r3_3b6f965a.md (Warden PASS), RECHECK_F04_3.md. \"!! HEAVY â€” get clear\" on every 1.10 s tell with Tuskroot in frame; victory lines frame Aldis head to foot with no ally or fallen ace in front (fallen bodies clear at the cut; ally stands behind the lens) and the combat HUD gone. Independent strict re-check: MET.",
+     "evidence": "Meadows lane (tb/meadows): ralph/reports/MEADOWS/f04/warden_3b6f965a/ (render 36427399935), JUDGE_r3_3b6f965a.md (Warden PASS), RECHECK_F04_3.md. \"!! HEAVY \u00e2\u20ac\u201d get clear\" on every 1.10 s tell with Tuskroot in frame; victory lines frame Aldis head to foot with no ally or fallen ace in front (fallen bodies clear at the cut; ally stands behind the lens) and the combat HUD gone. Independent strict re-check: MET.",
      "gap": "",
-     "note": "Disclosed: capture_named_fight.gd harness (teleport to the stand; real challenge prompt), --live-member resolves members 1-4 as won, --resolve=won, level-3 fixture creature with scripted dodge, --keep-alive available. Outside this row: creature hides the Warden after the dialogue (F04#6/#7), ring hugs the feet (tell clause). Bars A/B â†’ Phase 2 catalog."
+     "note": "Disclosed: capture_named_fight.gd harness (teleport to the stand; real challenge prompt), --live-member resolves members 1-4 as won, --resolve=won, level-3 fixture creature with scripted dodge, --keep-alive available. Outside this row: creature hides the Warden after the dialogue (F04#6/#7), ring hugs the feet (tell clause). Bars A/B \u00e2\u2020\u2019 Phase 2 catalog."
     },
     {
      "text": "Real hit/avoidance witness per fight",
@@ -252,7 +252,7 @@
      "text": "Specified tell/recovery timing",
      "status": "met",
      "evidence": "test_named_fight_tell_timing.gd (resolves effective tell/recovery through the game's own merge; pinned to BOSSES with citation check): 6 tests, 230 assertions pass on main 5132387d (coordinator local run)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Distinct aftermath per fight",
@@ -301,21 +301,21 @@
      "text": "Solo accept at capacity (five) via ceremony: no sixth slot, no accidental release",
      "status": "met",
      "evidence": "main 10b635d3: smoke_veridian_offer_choice (walked to each prompt, save/reload after each answer), CI job verify-veridian-offer green on 377cec6c (run 36160763068); independent evidence audit",
-     "gap": "â€”",
+     "gap": "\u00e2\u20ac\u201d",
      "missing": ""
     },
     {
      "text": "Solo refuse paths (space and capacity) complete",
      "status": "met",
      "evidence": "main 10b635d3: smoke_veridian_offer_choice (walked to each prompt, save/reload after each answer), CI job verify-veridian-offer green on 377cec6c (run 36160763068); independent evidence audit",
-     "gap": "â€”",
+     "gap": "\u00e2\u20ac\u201d",
      "missing": ""
     },
     {
      "text": "Full refusal produces the saved herd display",
      "status": "met",
      "evidence": "Batch 13 (0ca7bb7b): herd grouped around the stag (meadow_healing.json) + durable two-peer display | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Only fight participants are offered",
@@ -348,7 +348,7 @@
      "text": "Physical gate opens exactly once and carries the same five into Cloudreach",
      "status": "met",
      "evidence": "smoke_net_veridian_same_five (two peers, CI net shard, green on #246) carries the same five UIDs, no sixth, through the physical crossing; gate-once latch smoke_rift_gate_opens_once in CI; on main 5c8948ea",
-     "gap": "â€”",
+     "gap": "\u00e2\u20ac\u201d",
      "missing": "Earned save; two peers"
     }
    ]
@@ -431,7 +431,7 @@
    },
    "criteria": [
     {
-     "text": "Six WORLD Â§11 activities, one per principal region, pass Â§5",
+     "text": "Six WORLD \u00c2\u00a711 activities, one per principal region, pass \u00c2\u00a75",
      "status": "met",
      "evidence": "ralph/reports/CLOUDREACH/b/f07-0-six-activities-witness/default-five/run-3-2d144ebd/ @ tb/cloudreach-b 34502d97 (batch 60): F07#0 SIX ACTIVITIES PASS with the default five (no flier): lure, real action, payoff, acknowledgement and disk-reload survival for all six; Cliff Circuit pays tm_rock_throw per ruling 5856818138, covered by test_every_retained_five_has_a_usable_circuit_pick; Waycamp bed rest pays 2x rest XP; independent re-check MET. Shortcuts disclosed: fixture flags through Act II; L30 five using Maela's loaner for flights; teleport to each prompt; 4 Gale Fiber granted; Tavi via mechanics-mode lethal seam after real challenge input; accelerated clock. Bells/Aeries map-pin and stamina payoffs unit-tested only.",
      "gap": "",
@@ -441,7 +441,7 @@
      "text": "Each payoff useful to retained five with saved state",
      "status": "met",
      "evidence": "Batch 13: two-peer activity payoff witness (smoke_net_cloudreach_activity_payoffs) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Measured 885-second no-action stretch removed",
@@ -490,30 +490,30 @@
      "text": "Wind roads, Wings/shrine, Stormwood key persist through solo reload",
      "status": "met",
      "evidence": "smoke_cloudreach_persistence_tail in CI (green on #246): wind roads, Wings/shrine and Stormwood key written once and restored after disk reload with nothing re-granted, plus 2 negative controls; on main 5c8948ea",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Same persist through two-peer reload/reconnect without double grants",
      "status": "met",
      "evidence": "Batch 14: client routes Veyra's win to the host; no client world-flag writes (unit + reconnect witness) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Correct high-perch production camera",
      "status": "met",
      "evidence": "ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5/ @ tb/cloudreach 9e850f5b (Phase 1 lane landing): tools/capture_cloudreach_high_perch_live.gd, one continuous flight per time of day through the scene's own CameraRig, never frozen or replaced (Fly 7.5 m arm in flight, 5.2 m on foot): Jump in the air launches the glide, held move-forward lands it on the crown, the trainer walks to the rim and looks over the drop, crosses the court, launches north by a second Jump and glides away looking back. 12/12 frames, 0 failures. Code-blind judge (prompt verbatim in judge-prompt.md): CAMERA READ PASS (height YES, crowding PARTLY, arrival/departure PARTLY, night YES/PARTLY). Independent strict re-check: MET. Shortcuts disclosed: fixture start (BOOT_FLAGS incl. fly_traversal_unlocked, four-creature party with no flier), Maela's loaner carries every flight, air teleport to the arrival start once per time of day, yaw written each frame as the stick, pitch -32 deg for the rim-out frame, clock pinned, HUD hidden, PNG->JPG.",
      "gap": "",
-     "note": "Bars A/B â†’ Phase 2 catalog (aerie dome/towers/banners, rock, cloud floor; the c3 judge failed both bars). Non-blocking readability defects recorded in r5/verdict.md (landed frame boxed by needles; gate wall hides the landing ring at 20 m; court view has only a far cloud height cue). Phase 2c fresh native chapter matrix (37 rows, plus four summit views) and independent regional/paired reviews: Bars A/B NO/NO; visual debt remains open. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/regional-baseline-judge.md and paired-visual-judge.md. P2-021/P2-022 candidates are disabled after FAIL; no Phase 2 visual closure. Obstructed matrix rows remain inadequate evidence."
+     "note": "Bars A/B \u00e2\u2020\u2019 Phase 2 catalog (aerie dome/towers/banners, rock, cloud floor; the c3 judge failed both bars). Non-blocking readability defects recorded in r5/verdict.md (landed frame boxed by needles; gate wall hides the landing ring at 20 m; court view has only a far cloud height cue). Phase 2c fresh native chapter matrix (37 rows, plus four summit views) and independent regional/paired reviews: Bars A/B NO/NO; visual debt remains open. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/regional-baseline-judge.md and paired-visual-judge.md. P2-021/P2-022 candidates are disabled after FAIL; no Phase 2 visual closure. Obstructed matrix rows remain inadequate evidence."
     },
     {
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "met",
      "evidence": "ralph/reports/CLOUDREACH/f08-4-settlements/ @ tb/cloudreach 1178e18a (Phase 1 lane landing), README.md. Game: two working residents each at Galefoot (first visit) and Cliffhold (upper route open), walking clear of every cottage along the arrival lanes (tests pin occupancy and footprint clearance); Cliffhold's settlement ambience moved from Tavi's ring onto Cliffhold; the Broken Causeways crown is carved down to broken_causeway_main's climb (the summit's crown_cut), which had run inside the crown so the road vanished into a grass wall. Frame matrix (production CameraRig) r1/r1c/r1d/r1f; code-blind judge 1: settlements A PASS (Galefoot YES, Cliffhold PARTLY), night C PASS, routes B FAIL on the buried causeway; after the carve, fresh judge 2: B PASS, C PASS. Independent strict re-check: MET. Shortcuts disclosed: fixture start, teleport to stands, clock pinned, HUD hidden, --active=terrapup for settlement rows, rows 16/18 capture-stand defects not judged, two stand changes after judge 1, judge 2 told High Roost is glide-only (plus a leniency line and the F08#3 glide frames), row 37 day under post-finale flags, verdicts are lane summaries, JPG stills.",
      "gap": "",
-     "note": "Bars A/B â†’ Phase 2 catalog (Cliffhold distinctness and night lights, settlement and cliff materials; Codex towers and occupied terrace stay off). Recorded, not blocking: companion fills frames on the rope bridge (09) and at the aviary (29); High Roost reverse/rim views show no next landing; row 14 frames no beacon. Phase 2c fresh native chapter matrix (37 rows, plus four summit views) and independent regional/paired reviews: Bars A/B NO/NO; visual debt remains open. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/regional-baseline-judge.md and paired-visual-judge.md. P2-021/P2-022 candidates are disabled after FAIL; no Phase 2 visual closure. Obstructed matrix rows remain inadequate evidence."
+     "note": "Bars A/B \u00e2\u2020\u2019 Phase 2 catalog (Cliffhold distinctness and night lights, settlement and cliff materials; Codex towers and occupied terrace stay off). Recorded, not blocking: companion fills frames on the rope bridge (09) and at the aviary (29); High Roost reverse/rim views show no next landing; row 14 frames no beacon. Phase 2c fresh native chapter matrix (37 rows, plus four summit views) and independent regional/paired reviews: Bars A/B NO/NO; visual debt remains open. Evidence: ralph/reports/VISUAL/phase2/cloudreach/p2-022/regional-baseline-judge.md and paired-visual-judge.md. P2-021/P2-022 candidates are disabled after FAIL; no Phase 2 visual closure. Obstructed matrix rows remain inadequate evidence."
     },
     {
-     "text": "Solmane freed after Veyra volunteers to each finale participant like Meadowsâ€™ Veridian; never wild or catchable",
+     "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows\u00e2\u20ac\u2122 Veridian; never wild or catchable",
      "status": "met",
      "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/ at tb/cloudreach-b 45ef17fd (batch 67): two-peer run3 PASS. The host accepts at four and ends with five including Solmane; the guest refuses at five with the same uids. Each character gets its own receipt, with no re-offer after rejoin or host reload. Solo: 6 of 6 cases pass (VERIFIER 1 rerun). Summit tables hold tempestwing. Coordinator re-check: MET apart from the solo sixth case, now disclosed.",
      "gap": "",
@@ -553,7 +553,7 @@
      "text": "Arch pairs; a closed Arch cannot be bypassed",
      "status": "met",
      "evidence": "smoke_stormwood_closed_arch_bypass.gd on main 5132387d: 8 approaches with jumps and 5 Rootgate lines cannot bypass; the opened pair walks through. 9 passed, 0 failed (coordinator local run)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Four loops, three shortcuts, five pockets, alternate routes physically traversable",
@@ -566,7 +566,7 @@
      "text": "Two peers and reload retain the same world gates",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS stormwood_f09_arch_gates_two_peer_reload (52 rows, 0 FAIL): a relit Arch pair, a dark pair and the Rootgate keep their state for both peers through save/reload; on main 5c8948ea",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     }
    ]
   },
@@ -585,17 +585,17 @@
    },
    "criteria": [
     {
-     "text": "All six selected chains satisfy Â§5 (lure/action/payoff/acknowledgement)",
+     "text": "All six selected chains satisfy \u00c2\u00a75 (lure/action/payoff/acknowledgement)",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: ralph/reports/STORMWOOD/b/f10_0/CLOSE.md: fixture upstream flags, explore_at travel, granted materials and Free Build arches, scripted circuit wins; TM smoke on a stub world, solo host; Dark Arches payoff shown by an edge-clamped minimap frame only. Independent re-check: MET.",
      "gap": "Green full CI 36308727062 on main 3dad15f41 (batch 49).",
-     "note": "Dark Arches map payoff and six-chain Â§5. Stormwood-B (#303)."
+     "note": "Dark Arches map payoff and six-chain \u00c2\u00a75. Stormwood-B (#303)."
     },
     {
      "text": "Persistent receipts for each chain",
      "status": "met",
      "evidence": "Batch 13: stormwood_f10_side_chain_receipts two-process proof | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Named fights pass C2/C3",
@@ -657,7 +657,7 @@
      "text": "Eligible peers accept/refuse independently at space and capacity",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS: mirror (host refuses, guest accepts), host full lets Stormheart go, guest full releases a belt member; ralph/reports/STORMWOOD-PROGRESS/two_peer on main 5132387d",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Through disconnect/reload without duplicated grants",
@@ -677,7 +677,7 @@
      "text": "Once-opened physical Tidewake gate persists",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS stormwood_f11_waterward_gate_two_peer_reload: host charts, guest opens the Waterward gate once, both keep it through save/reload (the 2 FAIL rows are the expected closed-before baseline); on main 5c8948ea",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     }
    ]
   },
@@ -696,7 +696,7 @@
    },
    "criteria": [
     {
-     "text": "Level-0 human swimming, original five, finishes every mandatory hop â‰¥20% stamina at 15% deviation",
+     "text": "Level-0 human swimming, original five, finishes every mandatory hop \u00e2\u2030\u00a520% stamina at 15% deviation",
      "status": "met",
      "evidence": "ralph/reports/TIDEWAKE/b/f12_0_walked_hops/PROOF.md @ d6c7025b3 (#306 via #316); green full CI 36276939256",
      "gap": "",
@@ -706,25 +706,25 @@
      "text": "Combat pause while swimming",
      "status": "met",
      "evidence": "Batch 12 (#258): f12_combat_pause_two_peer proof PASS (guest and host swimmers) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Drowning and safe shore",
      "status": "met",
      "evidence": "CI on 3c517985 (merged in 5132387d): smoke_water_swimming (gradual drowning, stops on dry landing) OK 22 assertions; smoke_water_player_death 36 checks, 0 failures",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Optional mounted route, dismount/remount",
      "status": "met",
      "evidence": "Batch 14: mount state replicated reliably; host no longer stays MOUNTED (replication test) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Reload agrees",
      "status": "met",
      "evidence": "CI on 3c517985: smoke_water_reconnect_save 21/0 (midwater pose restored, drowning resumes) and smoke_water_mounted_reconnect_save 43/0",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Remote rider identity agrees",
@@ -737,7 +737,7 @@
      "text": "No optional mount opens an uncleared gate",
      "status": "met",
      "evidence": "Batch 14: forced-dismount/recovery never lands past a closed seal (closed-seal unit + sealed-anchor reload smoke) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     }
    ]
   },
@@ -776,9 +776,9 @@
      "note": "Open bug for Tidewake full: in 1 of 5 two-peer runs, the host's reed gather press was dropped with the knife held. Root-cause it; it does not reopen the row."
     },
     {
-     "text": "Six local chains, one per group, satisfy Â§5",
+     "text": "Six local chains, one per group, satisfy \u00c2\u00a75",
      "status": "met",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_3/ @ tb/tidewake 8d7e3ddf (Phase 1 lane landing): one uninterrupted production run of all six chains, tests/smoke_tidewake_b_chain_route.gd --continuous: 619 checks, 0 failures, exit 0. Every inter-island leg swum by real input (35 SWIM legs, retained five, no mount); each chain lure -> action -> payoff -> acknowledgement (Pell, Adair, Otto, Edda, Orsen with a real Tidecoil win then the separate chart control, Halen with gathered driftwood/reed and a bed rest); production save, reset, load, then every requester re-greeted with acknowledgement and no re-offer. Lure: WORLD Â§11 counts NPC knowledge; every requester names the place (HUD toast for five, dialogue for Orsen) and a lead now pins its destination on the Tidewake map (98ce9985, water_local_chains.json lead_map_pins, test_water_lead_map_pins 5 tests). Two-peer: full/f13_3_chains two_peer_local_chains_1fa83a57.log ALL CHECKS PASSED. Independent strict re-check: MET.",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_3/ @ tb/tidewake 8d7e3ddf (Phase 1 lane landing): one uninterrupted production run of all six chains, tests/smoke_tidewake_b_chain_route.gd --continuous: 619 checks, 0 failures, exit 0. Every inter-island leg swum by real input (35 SWIM legs, retained five, no mount); each chain lure -> action -> payoff -> acknowledgement (Pell, Adair, Otto, Edda, Orsen with a real Tidecoil win then the separate chart control, Halen with gathered driftwood/reed and a bed rest); production save, reset, load, then every requester re-greeted with acknowledgement and no re-offer. Lure: WORLD \u00c2\u00a711 counts NPC knowledge; every requester names the place (HUD toast for five, dialogue for Orsen) and a lead now pins its destination on the Tidewake map (98ce9985, water_local_chains.json lead_map_pins, test_water_lead_map_pins 5 tests). Two-peer: full/f13_3_chains two_peer_local_chains_1fa83a57.log ALL CHECKS PASSED. Independent strict re-check: MET.",
      "gap": "",
      "note": "Relaxed proof (owner 2026-09-27). Shortcuts disclosed: declared fixture start (retained five at L43, pickaxe/axe/knife, upstream story flags; the log's 'DRY RUN' self-label predates the relaxed rule); one position write to the Deep Watch landing after the Tidecoil win; harness-planned walks steered by real stick input, headless; the run tree carried the Tidecoil surface-mode data since reverted to main's (a524fb4d run covers main's setup, 619/0); the map frame is a fixture capture; the two-peer run used teleports and fixture materials. Recorded, not fixed: after Tidecoil a swimmer-less player may be left in the cliff-foot shallows (the harness pose); the 3-10 min detour budget is unmeasured; lure props (Lantern WEAK 4/4) and the pin look -> Phase 2 catalog. Landed by the Tidewake Phase 1 lane."
     },
@@ -791,7 +791,7 @@
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
      "status": "met",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/ @ tb/tidewake 811c3244/8d7e3ddf (Phase 1 lane landing), VERDICTS.md and RECHECK.md. Function under STATE Â§1 ruling 4. Code-blind judges (tools/capture_tidewake_f13_5.gd, production CameraRig and HUD): Veilfall distance read YES (the same cone and falls from First Shore, Tidal Cradle and Sluice Isle, gaining detail); docks 7/7 INHABITED (r1: six of seven empty; scripts/world/water_dock_residents.gd stands two installed-cast dock hands at every mandatory dock, presentation only, built from data on every peer, test_water_dock_residents 3 tests); currents read as moving water with the correct direction from motion (foam comets along each lane, water_current_flow shader; still-frame arrow WEAK 3/3). Independent strict re-check: MET.",
+     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/ @ tb/tidewake 811c3244/8d7e3ddf (Phase 1 lane landing), VERDICTS.md and RECHECK.md. Function under STATE \u00c2\u00a71 ruling 4. Code-blind judges (tools/capture_tidewake_f13_5.gd, production CameraRig and HUD): Veilfall distance read YES (the same cone and falls from First Shore, Tidal Cradle and Sluice Isle, gaining detail); docks 7/7 INHABITED (r1: six of seven empty; scripts/world/water_dock_residents.gd stands two installed-cast dock hands at every mandatory dock, presentation only, built from data on every peer, test_water_dock_residents 3 tests); currents read as moving water with the correct direction from motion (foam comets along each lane, water_current_flow shader; still-frame arrow WEAK 3/3). Independent strict re-check: MET.",
      "gap": "",
      "note": "Relaxed proof (owner 2026-09-27). Shortcuts disclosed: teleport stands and mid-chapter flags; xvfb + llvmpipe opengl3 at 1280x720, no device capture; day only, clock frozen; motion judged from still pairs 0.5 s apart; dock and Veilfall frames not re-shot after the comet change. Recorded -> Phase 2 catalog: still-frame current direction, Veilfall small from First Shore, dock coves share one template with small static figures, the Sluice Isle control block hides the player from the approach stand, Veilfall interior room identity WEAK (pumps/sluices/banners placed, route readable). Landed by the Tidewake Phase 1 lane."
     }
@@ -815,7 +815,7 @@
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "met",
      "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md. C2: top trainers against the option-(c) bar on main 1e0ddd39 (optc_1e0ddd39/): Tess, Calder, Venn reader win 1.00 x3, masher lead-faint 1.00, reader/masher party cost <= 0.19, chapter-level masher loss 1.00. Venn's Riptusk lane now locks at 0.25 of the tell (it failed at 0.33-0.50 reader win). Aquaryn (3 starters) and Tidecoil pass under the named-wild ruling. C3 under the fixed rubric (phase1/C3_RUBRIC.md, two code-blind judges, both >=90%): Aquaryn PASS from the ordinary route (aquaryn_route_r6: 100/100), Tidecoil PASS (tidecoil_r12: 100/91.7). Tells observed 0.80-0.90 s. | C3 (serial closer lane, 2026-09-29): Tess on main f4ebca9e plus Mirejaw side-on camera (camera_composition_yaw_deg 70, trainer beside the ally), ralph/reports/CLOSER/f14_0_tess/r1/. Two code-blind judges under C3_RUBRIC.md: A 33/36 = 91.7%, B 36/36 = 100%; strict re-check with its own calls A 94.4%, B 94.4% (STRICT_RECHECK.md); tell-start markings 6/6. All seven Mirejaw frames near the ally pass. Margin rests on borderline HUD and ally-overlap calls on Riverdrake/Sirenseal; the 0.25 s clause is unverifiable in stills. One render; met on this round.",
-     "gap": "â€”",
+     "gap": "\u00e2\u20ac\u201d",
      "note": "C2 met under option (c). Tidewake lane (Phase 1)."
     },
     {
@@ -843,13 +843,13 @@
      "text": "Never an owned sixth",
      "status": "met",
      "evidence": "Batch 12 (#258): f14_guardian_never_sixth plus forged-accept proof PASS | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Disconnect/reload cannot duplicate or erase it",
      "status": "met",
      "evidence": "Batch 13: solo-win-then-invite journal (host-only, Nerissa); ledger ids | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     }
    ]
   },
@@ -871,13 +871,13 @@
      "text": "Host and guest settle the dock exchange once",
      "status": "met",
      "evidence": "Batch 11 (#255, 14674ed5): two-peer dock settle, charged once across crash/loss; host checks its own world instance | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Paid-debit crash/retry settles once",
      "status": "met",
      "evidence": "Batch 11 (#255): water_dock_debit wired; crash-after-send/after-delta/commit-lost proofs PASS; unit 16/116 + 5/26 | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Measured physical return without A7 empty interval",
@@ -897,20 +897,20 @@
      "text": "Credits occur once",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS ralph/reports/TIDEWAKE/f15_homecoming_credits_reload: host and guest each roll credits once, acknowledged once, no second roll after disk reload",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     },
     {
      "text": "Reload resumes safe completed world with local requests, no fifth key or sequel prompt",
      "status": "met",
      "evidence": "test_homecoming_ending_invariants + credits reload smoke on main (batch 3 CI green 36107136757)",
-     "gap": "â€”"
+     "gap": "\u00e2\u20ac\u201d"
     }
    ]
   },
   {
    "id": "F16",
    "title": "Foundations: save reset, schemas and biome order",
-   "chapter": "Wave 0 Â· Foundations",
+   "chapter": "Wave 0 \u00c2\u00b7 Foundations",
    "lane": "tb/foundations",
    "pct": 100,
    "counts": {
@@ -929,13 +929,13 @@
      "gap": ""
     },
     {
-     "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10â€“100); a schema test fails on a missing or unknown id.",
+     "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10\u00e2\u20ac\u201c100); a schema test fails on a missing or unknown id.",
      "status": "met",
-     "evidence": "Fourteen schemas/catalogs validate finite IDs/foreign references/owner tuples, eight slots/four live and caps10â€“100. Independent strict MET94b; six station negative cases and numeric schema9/226/0 native0. Proof: recheck-schemas-final.md, affected-final.txt, runtime-numeric-enum.txt.",
+     "evidence": "Fourteen schemas/catalogs validate finite IDs/foreign references/owner tuples, eight slots/four live and caps10\u00e2\u20ac\u201c100. Independent strict MET94b; six station negative cases and numeric schema9/226/0 native0. Proof: recheck-schemas-final.md, affected-final.txt, runtime-numeric-enum.txt.",
      "gap": ""
     },
     {
-     "text": "Biome order is one config list (meadows, tidewake, cloudreach, stormwood, then four reserved slots); a test proves no gameplay code hard-codes the old Meadowsâ†’Cloudreachâ†’Stormwoodâ†’Water order.",
+     "text": "Biome order is one config list (meadows, tidewake, cloudreach, stormwood, then four reserved slots); a test proves no gameplay code hard-codes the old Meadows\u00e2\u2020\u2019Cloudreach\u00e2\u2020\u2019Stormwood\u00e2\u2020\u2019Water order.",
      "status": "met",
      "evidence": "One eight-slot config drives map/journal/credits/shrine; real shrine positions and consumer-scan regression pass. Independent strict MET94b. Proof: recheck-order-final.md and focused-final.txt. Later campaign reorder remains F19/F20.",
      "gap": ""
@@ -957,7 +957,7 @@
   {
    "id": "F17",
    "title": "Village road and the Crossing Hall",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/hub",
    "pct": 29,
    "counts": {
@@ -970,9 +970,9 @@
    },
    "criteria": [
     {
-     "text": "Overhead plan and topology test: one straight road, 8â€“10 houses facing it on both sides, the homestead plot at the road's start beside the Meadows exit, the Crossing Hall at the road's end; road-graph test passes.",
+     "text": "Overhead plan and topology test: one straight road, 8\u00e2\u20ac\u201c10 houses facing it on both sides, the homestead plot at the road's start beside the Meadows exit, the Crossing Hall at the road's end; road-graph test passes.",
      "status": "met",
-     "evidence": "ralph/reports/HUB/f17/overhead-plan.svg, geometry-corrected.txt (8ee:18tests/3437assertions/0failed/native0), regional-generation-result.md and actual8-file receipt/outside312-byte/ID audit atbf0. Actual parsed-joypad farmhouse-door/MainStreet/Hall-nave walk895cff native0/175.714s and unchanged mandatory smoke_playground native0/96.515s; existing dummy material-null error class matches F16 baseline. Independent re-check: fresh combat strict MET bf0 plus physical-path delta PASS895/56180, recheck-f17-0.md. Shortcuts disclosed: config-derived SVG/offline regional generation; source-aware unchanged proof reuse; authored post-opening flags/starter, one initial floor placement/yaw, then real input/collision; headless, no visual/device/earned/MP claim. F17#1â€“#6 remain open; main credit on feature PR landing.",
+     "evidence": "ralph/reports/HUB/f17/overhead-plan.svg, geometry-corrected.txt (8ee:18tests/3437assertions/0failed/native0), regional-generation-result.md and actual8-file receipt/outside312-byte/ID audit atbf0. Actual parsed-joypad farmhouse-door/MainStreet/Hall-nave walk895cff native0/175.714s and unchanged mandatory smoke_playground native0/96.515s; existing dummy material-null error class matches F16 baseline. Independent re-check: fresh combat strict MET bf0 plus physical-path delta PASS895/56180, recheck-f17-0.md. Shortcuts disclosed: config-derived SVG/offline regional generation; source-aware unchanged proof reuse; authored post-opening flags/starter, one initial floor placement/yaw, then real input/collision; headless, no visual/device/earned/MP claim. F17#1\u00e2\u20ac\u201c#6 remain open; main credit on feature PR landing.",
      "gap": ""
     },
     {
@@ -984,7 +984,7 @@
     {
      "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",
      "status": "met",
-     "evidence": "Independent strict MET: ralph/reports/HUB/f17/recheck-f17-2.md, candidate9131f8a9f2/executed1d34b8d3bd. Actual production nave signs one home + three live-capable + four sealed arches; sealed material #303947 emission off; Shrine Room eight signed pedestals. All16 physical controller approaches reached0.433â€“0.539m/on_floor, native0/242.640s; runtime/hall-circuit-r1.txt and receipt. Shortcuts disclosed: authored opening/starter, one initial farmhouse pose, injected joypad/headless structural visibility; darkness verified from material source, not native pixels. No visual/device/travel/co-op claim; F17#1 strict DAY NO/NIGHT NO retained. Main credit only at this PR landing.",
+     "evidence": "Independent strict MET: ralph/reports/HUB/f17/recheck-f17-2.md, candidate9131f8a9f2/executed1d34b8d3bd. Actual production nave signs one home + three live-capable + four sealed arches; sealed material #303947 emission off; Shrine Room eight signed pedestals. All16 physical controller approaches reached0.433\u00e2\u20ac\u201c0.539m/on_floor, native0/242.640s; runtime/hall-circuit-r1.txt and receipt. Shortcuts disclosed: authored opening/starter, one initial farmhouse pose, injected joypad/headless structural visibility; darkness verified from material source, not native pixels. No visual/device/travel/co-op claim; F17#1 strict DAY NO/NIGHT NO retained. Main credit only at this PR landing.",
      "gap": ""
     },
     {
@@ -1006,7 +1006,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE Â§4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
+     "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE \u00c2\u00a74: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1016,7 +1016,7 @@
   {
    "id": "F18",
    "title": "Home Key, portal keys and waystones",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/hub",
    "pct": 0,
    "counts": {
@@ -1047,7 +1047,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Each live biome has 3â€“5 waystones activated by touch; a portal sends the player to their last activated waystone in that biome (entry point if none); activation persists through reload.",
+     "text": "Each live biome has 3\u00e2\u20ac\u201c5 waystones activated by touch; a portal sends the player to their last activated waystone in that biome (entry point if none); activation persists through reload.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1059,7 +1059,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Ordinary-input loop witness: deep in a biome â†’ Home Key â†’ use a homestead station â†’ portal back to the waystone, with a save/reload between steps.",
+     "text": "Ordinary-input loop witness: deep in a biome \u00e2\u2020\u2019 Home Key \u00e2\u2020\u2019 use a homestead station \u00e2\u2020\u2019 portal back to the waystone, with a save/reload between steps.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1069,7 +1069,7 @@
   {
    "id": "F19",
    "title": "Biome reorder and level curve",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/reorder",
    "pct": 0,
    "counts": {
@@ -1082,19 +1082,19 @@
    },
    "criteria": [
     {
-     "text": "The order Meadows â†’ Tidewake â†’ Cloudreach â†’ Stormwood drives the config, map, journal, portal signs and credits.",
+     "text": "The order Meadows \u00e2\u2020\u2019 Tidewake \u00e2\u2020\u2019 Cloudreach \u00e2\u2020\u2019 Stormwood drives the config, map, journal, portal signs and credits.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Level bands: Meadows 3â†’22 (wild 2â€“20, Warden ~21â€“22), Tidewake 20â†’33 (wild 18â€“32, Nerissa ~32â€“33), Cloudreach 31â†’44 (wild 29â€“43, Veyra ~43â€“44), Stormwood 42â†’55 (wild 40â€“54, finale ~54â€“55); wild tables and named trainer teams re-derived; a curve test pins them.",
+     "text": "Level bands: Meadows 3\u00e2\u2020\u201922 (wild 2\u00e2\u20ac\u201c20, Warden ~21\u00e2\u20ac\u201c22), Tidewake 20\u00e2\u2020\u201933 (wild 18\u00e2\u20ac\u201c32, Nerissa ~32\u00e2\u20ac\u201c33), Cloudreach 31\u00e2\u2020\u201944 (wild 29\u00e2\u20ac\u201c43, Veyra ~43\u00e2\u20ac\u201c44), Stormwood 42\u00e2\u2020\u201955 (wild 40\u00e2\u20ac\u201c54, finale ~54\u00e2\u20ac\u201c55); wild tables and named trainer teams re-derived; a curve test pins them.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Boss hand-offs: Warden â†’ Tidewake key; Tidewake finale â†’ Cloudreach key; Veyra â†’ Stormwood key; Stormwood finale â†’ fifth key; each biome relic still granted; every participant receives their own.",
+     "text": "Boss hand-offs: Warden \u00e2\u2020\u2019 Tidewake key; Tidewake finale \u00e2\u2020\u2019 Cloudreach key; Veyra \u00e2\u2020\u2019 Stormwood key; Stormwood finale \u00e2\u2020\u2019 fifth key; each biome relic still granted; every participant receives their own.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1122,7 +1122,7 @@
   {
    "id": "F20",
    "title": "Ending after Stormwood and the fifth key",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/reorder",
    "pct": 0,
    "counts": {
@@ -1169,7 +1169,7 @@
   {
    "id": "F21",
    "title": "Combat impact and camera",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/combat",
    "pct": 0,
    "counts": {
@@ -1222,7 +1222,7 @@
   {
    "id": "F22",
    "title": "Enemy patterns, anti-mash and role identity",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/combat",
    "pct": 0,
    "counts": {
@@ -1241,7 +1241,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win â‰¥0.9; masher loses the lead creature materially more often).",
+     "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win \u00e2\u2030\u00a50.9; masher loses the lead creature materially more often).",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1269,7 +1269,7 @@
   {
    "id": "F23",
    "title": "Move loadout: three slots, ultimate, learnsets and mastery",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/combat",
    "pct": 0,
    "counts": {
@@ -1306,7 +1306,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Move mastery ranks 1â€“5 rise with use; each rank raises damage and upgrades the move's effect tier; mastery persists.",
+     "text": "Move mastery ranks 1\u00e2\u20ac\u201c5 rise with use; each rank raises damage and upgrades the move's effect tier; mastery persists.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1322,7 +1322,7 @@
   {
    "id": "F24",
    "title": "Tether Commands (trainer support, no damage)",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/combat",
    "pct": 0,
    "counts": {
@@ -1375,7 +1375,7 @@
   {
    "id": "F25",
    "title": "Move effects library (real pebbles, fireballs, lightning)",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/vfx",
    "pct": 0,
    "counts": {
@@ -1428,7 +1428,7 @@
   {
    "id": "F26",
    "title": "Renderer and look development (Palworld + Valheim bar)",
-   "chapter": "Wave 1 Â· World, order, combat and look",
+   "chapter": "Wave 1 \u00c2\u00b7 World, order, combat and look",
    "lane": "tb/lookdev",
    "pct": 46,
    "counts": {
@@ -1455,23 +1455,23 @@
     {
      "text": "Each biome has a documented look bar (sky, fog, sun shafts, time-of-day grade, weather mood) with reference boards in ART_DIRECTION.",
      "status": "met",
-     "evidence": "docs/design/ART_DIRECTION.md Â§4.1; ralph/reports/VISUAL/lookdev/graphics-presets-candidate.md: /root/vfx independent strict MET, restored biome A+B references inspected. Written target only; absent external reference images disclosed.",
+     "evidence": "docs/design/ART_DIRECTION.md \u00c2\u00a74.1; ralph/reports/VISUAL/lookdev/graphics-presets-candidate.md: /root/vfx independent strict MET, restored biome A+B references inspected. Written target only; absent external reference images disclosed.",
      "gap": ""
     },
     {
      "text": "A code-blind judge rates each biome's frame matrix as meeting the new bar on High and Medium.",
      "status": "in_progress",
-     "evidence": "ART_DIRECTION Â§4.1 full-bar target and source-reviewed capture adapters in VISUAL/lookdev/computer-route-candidate.md",
+     "evidence": "ART_DIRECTION \u00c2\u00a74.1 full-bar target and source-reviewed capture adapters in VISUAL/lookdev/computer-route-candidate.md",
      "gap": "Complete High/Medium frame matrices and independent code-blind full-bar verdicts remain open."
     },
     {
-     "text": "Computer captures at 1920Ã—1080 record frame time per preset for a scripted route in each biome.",
+     "text": "Computer captures at 1920\u00c3\u20141080 record frame time per preset for a scripted route in each biome.",
      "status": "in_progress",
      "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: native0 Medium506/High481frames at1920x1080 on integrated Hall route; Water3cases retained, total5/12 current cases.",
      "gap": "Integrated MeadowsLow and all3 Cloudreach/Stormwood cases remain open; old MeadowsLow legacy route is retained history."
     },
     {
-     "text": "Owner ROG Ally test: Medium handheld holds â‰¥30 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
+     "text": "Owner ROG Ally test: Medium handheld holds \u00e2\u2030\u00a530 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
      "status": "blocked",
      "evidence": "Conservative Compatibility default retained under RD-25; status.json owner_needs",
      "gap": "Owner Ally Medium 15 W/1920x1080 scripted route test required once a test build is ready. Recommended: keep Compatibility default until at least 30 fps, 40 preferred."
@@ -1481,7 +1481,7 @@
   {
    "id": "F27",
    "title": "Type essence and chosen leveling",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
    "pct": 0,
    "counts": {
@@ -1534,7 +1534,7 @@
   {
    "id": "F28",
    "title": "Breakthroughs, Masters and Ascension Feasts",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
    "pct": 0,
    "counts": {
@@ -1587,7 +1587,7 @@
   {
    "id": "F29",
    "title": "Evolution lines (one per biome)",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
    "pct": 0,
    "counts": {
@@ -1600,7 +1600,7 @@
    },
    "criteria": [
     {
-     "text": "Four lines: Mudsnout â†’ Tuskroot or Ashtusk at L20 (heartstone/sunstone as feast ingredient), Mosshell â†’ Cannonback at L30, Craghorn â†’ Stormcapra at L40, Staticub â†’ the new Stormwood storm bear at L50.",
+     "text": "Four lines: Mudsnout \u00e2\u2020\u2019 Tuskroot or Ashtusk at L20 (heartstone/sunstone as feast ingredient), Mosshell \u00e2\u2020\u2019 Cannonback at L30, Craghorn \u00e2\u2020\u2019 Stormcapra at L40, Staticub \u00e2\u2020\u2019 the new Stormwood storm bear at L50.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1634,7 +1634,7 @@
   {
    "id": "F30",
    "title": "Traits and Trait Seeds",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
    "pct": 0,
    "counts": {
@@ -1647,7 +1647,7 @@
    },
    "criteria": [
     {
-     "text": "About 30 traits in Common, Rare and Epic tiers; wild creatures roll 0â€“3; alphas and night or weather spawns roll better.",
+     "text": "About 30 traits in Common, Rare and Epic tiers; wild creatures roll 0\u00e2\u20ac\u201c3; alphas and night or weather spawns roll better.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1681,7 +1681,7 @@
   {
    "id": "F31",
    "title": "Homestead stations and upgrades",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
    "pct": 0,
    "counts": {
@@ -1706,7 +1706,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic â†’ Tidewake tier, and so on; Stormwood's relic â†’ reserved tier 5); the player then carries one chosen relic power.",
+     "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic \u00e2\u2020\u2019 Tidewake tier, and so on; Stormwood's relic \u00e2\u2020\u2019 reserved tier 5); the player then carries one chosen relic power.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1740,7 +1740,7 @@
   {
    "id": "F32",
    "title": "Materials, attuned nodes and essence farming",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
    "pct": 0,
    "counts": {
@@ -1753,7 +1753,7 @@
    },
    "criteria": [
     {
-     "text": "The four tier material sets (Meadows rootstone/ironwoodâ€¦, Tidewake driftwood/reef stone/sluice metal/tide bloom/Tide Pearl, Cloudreach heartwood/cliffglass/gale fiber/skyplume, Stormwood thunderwood/stormglass/conductor vine/glowmoss/sparkfur/voltcap) are gatherable in their biome.",
+     "text": "The four tier material sets (Meadows rootstone/ironwood\u00e2\u20ac\u00a6, Tidewake driftwood/reef stone/sluice metal/tide bloom/Tide Pearl, Cloudreach heartwood/cliffglass/gale fiber/skyplume, Stormwood thunderwood/stormglass/conductor vine/glowmoss/sparkfur/voltcap) are gatherable in their biome.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1793,7 +1793,7 @@
   {
    "id": "F33",
    "title": "Creature gear and trainer gear",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
    "pct": 0,
    "counts": {
@@ -1840,7 +1840,7 @@
   {
    "id": "F34",
    "title": "Forward camps",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
    "pct": 0,
    "counts": {
@@ -1887,7 +1887,7 @@
   {
    "id": "F35",
    "title": "Signature ultimates",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/vfx",
    "pct": 0,
    "counts": {
@@ -1900,7 +1900,7 @@
    },
    "criteria": [
     {
-     "text": "16â€“20 shared typeÃ—role ultimates exist and every non-unique species maps to one (test).",
+     "text": "16\u00e2\u20ac\u201c20 shared type\u00c3\u2014role ultimates exist and every non-unique species maps to one (test).",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1918,7 +1918,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Presentation lasts 2â€“3 s with no longer loss of control and stays readable in four-player fights.",
+     "text": "Presentation lasts 2\u00e2\u20ac\u201c3 s with no longer loss of control and stays readable in four-player fights.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1934,7 +1934,7 @@
   {
    "id": "F36",
    "title": "Creature art: priority models, poses and scale",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/creature-art",
    "pct": 0,
    "counts": {
@@ -1947,7 +1947,7 @@
    },
    "criteria": [
     {
-     "text": "About 25â€“30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
+     "text": "About 25\u00e2\u20ac\u201c30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -1975,7 +1975,7 @@
   {
    "id": "F37",
    "title": "Ripplet swim and dive",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
    "pct": 0,
    "counts": {
@@ -2022,7 +2022,7 @@
   {
    "id": "F38",
    "title": "Meadows and village: visual catalog burn-down to the full bar",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/visual-meadows",
    "pct": 0,
    "counts": {
@@ -2035,7 +2035,7 @@
    },
    "criteria": [
     {
-     "text": "After F26 look-dev, the biome is re-captured (â‰¥200 frames) and its catalog rows re-scored against the new bar.",
+     "text": "After F26 look-dev, the biome is re-captured (\u00e2\u2030\u00a5200 frames) and its catalog rows re-scored against the new bar.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2075,7 +2075,7 @@
   {
    "id": "F39",
    "title": "Tidewake: visual catalog burn-down to the full bar",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
    "pct": 0,
    "counts": {
@@ -2088,7 +2088,7 @@
    },
    "criteria": [
     {
-     "text": "After F26 look-dev, the biome is re-captured (â‰¥200 frames) and its catalog rows re-scored against the new bar.",
+     "text": "After F26 look-dev, the biome is re-captured (\u00e2\u2030\u00a5200 frames) and its catalog rows re-scored against the new bar.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2128,7 +2128,7 @@
   {
    "id": "F40",
    "title": "Cloudreach: visual catalog burn-down to the full bar",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/visual-cloudreach",
    "pct": 0,
    "counts": {
@@ -2141,7 +2141,7 @@
    },
    "criteria": [
     {
-     "text": "After F26 look-dev, the biome is re-captured (â‰¥200 frames) and its catalog rows re-scored against the new bar.",
+     "text": "After F26 look-dev, the biome is re-captured (\u00e2\u2030\u00a5200 frames) and its catalog rows re-scored against the new bar.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2181,7 +2181,7 @@
   {
    "id": "F41",
    "title": "Stormwood: visual catalog burn-down to the full bar",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/visual-stormwood",
    "pct": 0,
    "counts": {
@@ -2194,7 +2194,7 @@
    },
    "criteria": [
     {
-     "text": "After F26 look-dev, the biome is re-captured (â‰¥200 frames) and its catalog rows re-scored against the new bar.",
+     "text": "After F26 look-dev, the biome is re-captured (\u00e2\u2030\u00a5200 frames) and its catalog rows re-scored against the new bar.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2234,7 +2234,7 @@
   {
    "id": "F42",
    "title": "HUD, menus and new-system screens",
-   "chapter": "Wave 2 Â· Creature power, homestead and visuals",
+   "chapter": "Wave 2 \u00c2\u00b7 Creature power, homestead and visuals",
    "lane": "tb/hud",
    "pct": 0,
    "counts": {
@@ -2265,7 +2265,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "Every new screen passes a 1920Ã—1080 and 1280Ã—800 readability capture.",
+     "text": "Every new screen passes a 1920\u00c3\u20141080 and 1280\u00c3\u2014800 readability capture.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2275,7 +2275,7 @@
   {
    "id": "F43",
    "title": "Bounty board",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/loop",
    "pct": 0,
    "counts": {
@@ -2316,7 +2316,7 @@
   {
    "id": "F44",
    "title": "Rematches and alpha respawns",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/loop",
    "pct": 0,
    "counts": {
@@ -2335,7 +2335,7 @@
      "gap": "Not started (redesign 2026-09-29)."
     },
     {
-     "text": "After credits, leaders and bosses return at the endgame tier (L55â€“60).",
+     "text": "After credits, leaders and bosses return at the endgame tier (L55\u00e2\u20ac\u201c60).",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2357,7 +2357,7 @@
   {
    "id": "F45",
    "title": "Research log",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/loop",
    "pct": 0,
    "counts": {
@@ -2398,7 +2398,7 @@
   {
    "id": "F46",
    "title": "Onboarding for the new systems",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/loop",
    "pct": 0,
    "counts": {
@@ -2432,8 +2432,8 @@
   },
   {
    "id": "F47",
-   "title": "Economy, balance and the 15â€“25 hour clear",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "title": "Economy, balance and the 15\u00e2\u20ac\u201c25 hour clear",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/balance",
    "pct": 0,
    "counts": {
@@ -2446,7 +2446,7 @@
    },
    "criteria": [
     {
-     "text": "An agent-piloted normal route estimates a 15â€“25 hour clear; the owner's play pass confirms the range.",
+     "text": "An agent-piloted normal route estimates a 15\u00e2\u20ac\u201c25 hour clear; the owner's play pass confirms the range.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2480,7 +2480,7 @@
   {
    "id": "F48",
    "title": "Co-op across the new loop",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/coop",
    "pct": 0,
    "counts": {
@@ -2493,7 +2493,7 @@
    },
    "criteria": [
     {
-     "text": "A two-peer session runs hub â†’ homestead crafting â†’ portal â†’ Master â†’ feast â†’ boss â†’ relic hang, with each player's receipts separate.",
+     "text": "A two-peer session runs hub \u00e2\u2020\u2019 homestead crafting \u00e2\u2020\u2019 portal \u00e2\u2020\u2019 Master \u00e2\u2020\u2019 feast \u00e2\u2020\u2019 boss \u00e2\u2020\u2019 relic hang, with each player's receipts separate.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2521,7 +2521,7 @@
   {
    "id": "F49",
    "title": "Integrated four-biome run and release proof",
-   "chapter": "Wave 3 Â· Loop, balance and release",
+   "chapter": "Wave 3 \u00c2\u00b7 Loop, balance and release",
    "lane": "tb/release",
    "pct": 0,
    "counts": {
@@ -2534,7 +2534,7 @@
    },
    "criteria": [
     {
-     "text": "One save runs new game â†’ Meadows â†’ Tidewake â†’ Cloudreach â†’ Stormwood â†’ Home Key homecoming â†’ credits in the new order, with shortcuts disclosed.",
+     "text": "One save runs new game \u00e2\u2020\u2019 Meadows \u00e2\u2020\u2019 Tidewake \u00e2\u2020\u2019 Cloudreach \u00e2\u2020\u2019 Stormwood \u00e2\u2020\u2019 Home Key homecoming \u00e2\u2020\u2019 credits in the new order, with shortcuts disclosed.",
      "status": "not_started",
      "evidence": "",
      "gap": "Not started (redesign 2026-09-29)."
@@ -2592,7 +2592,7 @@
   {
    "id": "C2",
    "status": "met",
-   "note": "Integrated run passed independent re-check (Phase 1 lane landing); all feeders met (F07#0-#4, F08#3, F08#4). Bars A/B â†’ Phase 2 catalog.",
+   "note": "Integrated run passed independent re-check (Phase 1 lane landing); all feeders met (F07#0-#4, F08#3, F08#4). Bars A/B \u00e2\u2020\u2019 Phase 2 catalog.",
    "integrated_run": "ralph/reports/CLOUDREACH/c2-card/ (Phase 1 lane landing): run-1 at 4fc380f4, one uninterrupted earned run from c1_arrival (C1 CARD PASS, CONTINUOUS PASS, 18,865 m): 296 activity intervals, longest travel gap 98.18 s, none over 120 s; the same five throughout (L21-26 to L24-29), no new catch, Senn/Maela/Voss/Veyra won live; six-activities witness at 1178e18a SIX ACTIVITIES PASS (lure, action, payoff, acknowledgement, disk reload each); frame matrix by the F08#3 and F08#4 code-blind verdicts. Shortcuts disclosed: earned-checkpoint start, accelerated clock, live-combat pilot writes camera yaw, Title Load by signal, logged walking aids, loaner flights (owned-carrier Fly is open debt), Solmane skipped by this harness (C3/F08#5), six activities from a fixture start with teleports, composite of three runs."
   },
   {
@@ -2638,22 +2638,22 @@
  ],
  "cross_cutting": [
   {
-   "id": "Visual bar (Â§4)",
+   "id": "Visual bar (\u00c2\u00a74)",
    "status": "failing",
    "note": "Bars A/B open: Meadows R7 key art no/Palworld yes (R9 re-judge pending); Cloudreach matrix A no; Tidewake surf fails."
   },
   {
-   "id": "Ally device performance (Â§7)",
+   "id": "Ally device performance (\u00c2\u00a77)",
    "status": "not_started",
    "note": "No ROG Ally hardware measurement for this plan; horizon/flowers cost and 1080p/15W targets unmeasured."
   },
   {
-   "id": "Internet co-op (Â§7)",
+   "id": "Internet co-op (\u00c2\u00a77)",
    "status": "blocked",
    "note": "Main fe07d0d2 adds world-save ownership gates, Steam archive cache and portable-across-hosts ENet smoke; rolling export still lacks GodotSteam (opt-in, default off); blocked on AppID/partner access, four accounts on separate networks."
   },
   {
-   "id": "Release reliability (Â§7)",
+   "id": "Release reliability (\u00c2\u00a77)",
    "status": "not_started",
    "note": "No five solo / two four-peer exported-binary clears; migration and 10x cycle checks not run as release gate (ENet teardown race fixed in harness only)."
   }
