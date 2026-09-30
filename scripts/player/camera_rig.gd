@@ -31,6 +31,7 @@ var yaw: float = 0.0
 var pitch: float = 0.0
 ## Presentation-only offset relative to target + profile height; reset on every takeover.
 var _framing_pivot_offset := Vector3.ZERO
+var _fight_yaw_target: Variant = null
 
 var _distance: float = 5.2
 var _height: float = 1.75
@@ -258,6 +259,7 @@ func _load_config() -> void:
 ## ease, because a fight opening with a hard cut loses the connection between
 ## "the animal I walked up to" and "the animal I am fighting".
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	_fight_yaw_target = null
 	_framing_pivot_offset = Vector3.ZERO
 	_impact_nudge_left = 0.0
 	rotation.z = 0.0
@@ -583,10 +585,10 @@ func _apply_tracking(delta: float) -> void:
 		return
 	if not bool(_tracking_config.get("enabled", true)) or _tracking_manual_left > 0.0:
 		return
-	var neutral: Variant = _tracking_neutral_yaw()
+	var neutral: Variant = _tracking_neutral_yaw() if _fight_yaw_target == null else _fight_yaw_target
 	if neutral == null:
 		return
-	var wanted := float(neutral) + deg_to_rad(_clearance_extra_deg)
+	var wanted := float(neutral) + (deg_to_rad(_clearance_extra_deg) if _fight_yaw_target == null else 0.0)
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:
@@ -659,6 +661,11 @@ const VERTICAL_SWEEP_FROM_M := 1.0
 ## Combat midpoint composition only; no target, input, aim or scale mutation.
 func set_framing_pivot_offset(offset: Vector3) -> void:
 	_framing_pivot_offset = offset if offset.is_finite() else Vector3.ZERO
+
+## One solved absolute orbit, rather than two independently lagged neutral and
+## clearance angles. Manual look/grace still owns _apply_tracking above.
+func set_fight_yaw_target(radians: Variant) -> void:
+	_fight_yaw_target = radians if (radians is float or radians is int) and is_finite(float(radians)) else null
 
 func framing_pivot_offset() -> Vector3:
 	return _framing_pivot_offset

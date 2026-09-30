@@ -1168,6 +1168,8 @@ func _take_camera() -> void:
 		tracking.merge(_opponent_camera("tracking"), true)
 		if bool(FIGHT_CAMERA.config().get("enabled", false)):
 			tracking["dead_zone_deg"] = float(FIGHT_CAMERA.config().get("tracking_dead_zone_deg", 1.0))
+			tracking["strength"] = float(FIGHT_CAMERA.config().get("tracking_strength", 4.0))
+			tracking["max_speed_deg"] = float(FIGHT_CAMERA.config().get("orbit_speed_deg_s", 90.0))
 		# F14#0 C3: an opponent's own `camera_composition_yaw_deg` (a trainer
 		# team member's combat override) wins over both blocks above.
 		var authored_yaw := opponent_composition_yaw_deg(_wild)
@@ -1438,17 +1440,24 @@ func _update_fight_camera_matrix(delta: float) -> bool:
 		_fight_camera_solution = {}
 		if _camera_rig.has_method("set_framing_pivot_offset"):
 			_camera_rig.call("set_framing_pivot_offset", Vector3.ZERO)
+		if _camera_rig.has_method("set_fight_yaw_target"):
+			_camera_rig.call("set_fight_yaw_target", null)
 		return false
 	var ally := _body_world_bounds(_ally_body)
 	var foe := _body_world_bounds(_wild)
 	if ally.size.is_zero_approx() or foe.size.is_zero_approx(): return false
+	var ally_points := _body_world_corners(_ally_body)
+	var foe_points := _body_world_corners(_wild)
+	if ally_points.size() != 8 or foe_points.size() != 8: return false
 	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
 	if camera == null: return false
 	var viewport := camera.get_viewport().get_visible_rect().size
 	var cfg: Dictionary = MATH.config().get("camera", {})
 	var manual := float(_camera_rig.get("_tracking_manual_left")) > 0.0
-	var neutral: Variant = _camera_rig.call("_tracking_neutral_yaw")
-	var yaw := float(_camera_rig.get("yaw")) if manual or neutral == null else float(neutral)
+	# Preserve the nearest clear current view. Re-solving relative to a moving
+	# neutral plus an independently lagged clearance angle made stick movement
+	# curve around the foe and repeatedly carried the lens through its body.
+	var yaw := float(_camera_rig.get("yaw"))
 	var local := fight.duplicate()
 	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
 	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
@@ -1456,7 +1465,7 @@ func _update_fight_camera_matrix(delta: float) -> bool:
 		local["orbit_candidates_deg"] = [0.0]
 		local["allow_pair_side_views"] = false
 	var solution := FIGHT_CAMERA.solve(ally, foe, yaw, float(_camera_rig.get("pitch")),
-		camera.fov, viewport.x / maxf(viewport.y, 1.0), float(cfg.get("distance", 6.0)), local, false)
+		camera.fov, viewport.x / maxf(viewport.y, 1.0), float(cfg.get("distance", 6.0)), local, false, ally_points, foe_points)
 	if solution.is_empty(): return false
 	_fight_camera_solution = solution
 	var weight := 1.0 - exp(-maxf(float(fight.get("lag", 4.0)), 0.01) * delta)
@@ -1464,22 +1473,20 @@ func _update_fight_camera_matrix(delta: float) -> bool:
 	var live_offset: Vector3 = _camera_rig.call("framing_pivot_offset")
 	_camera_rig.call("set_framing_pivot_offset", live_offset.lerp(offset, weight))
 	# Fit the current live orbit too while neutral correction is still easing.
-	var current_fit := FIGHT_CAMERA.required_distance(ally, foe, (_camera_rig as Node3D).global_position,
+	var current_fit := FIGHT_CAMERA.required_distance_points(ally_points, foe_points, (_camera_rig as Node3D).global_position,
 		(_camera_rig as Node3D).global_basis.orthonormalized(), camera.fov,
 		viewport.x / maxf(viewport.y, 1.0), float(fight.get("frame_fill", 0.82)), float(fight.get("near_clearance_m", 0.5)))
 	var wanted := minf(maxf(float(solution.distance), current_fit), float(local.max_distance_m))
 	_camera_rig.set("_distance", lerpf(float(_camera_rig.get("_distance")), wanted, weight))
 	_camera_rig.set("_shoulder", 0.0)
-	if not manual and _camera_rig.has_method("set_clearance_extra"):
-		var current := float(_camera_rig.call("clearance_extra"))
-		_camera_rig.call("set_clearance_extra", move_toward(current, float(solution.yaw_offset_deg),
-			maxf(float(fight.get("orbit_speed_deg_s", 90.0)), 1.0) * delta))
+	if _camera_rig.has_method("set_fight_yaw_target"):
+		_camera_rig.call("set_fight_yaw_target", yaw + deg_to_rad(float(solution.yaw_offset_deg)))
 	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
 	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
 	# Measure the ACTUAL current camera as well; requested fit must not be
 	# mistaken for a pass when a wall, manual look or smoothing prevents it.
-	var actual_ally := FIGHT_CAMERA.project_box(ally, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
-	var actual_foe := FIGHT_CAMERA.project_box(foe, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
+	var actual_ally := FIGHT_CAMERA.project_points(ally_points, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
+	var actual_foe := FIGHT_CAMERA.project_points(foe_points, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
 	_fight_camera_solution["actual_framed"] = bool(actual_ally.get("in_frame", false)) and bool(actual_foe.get("in_frame", false))
 	_fight_camera_solution["actual_overlap"] = FIGHT_CAMERA.overlap_ratio(actual_ally.rect, actual_foe.rect) \
 		if bool(actual_ally.get("valid", false)) and bool(actual_foe.get("valid", false)) else 1.0
@@ -1674,6 +1681,13 @@ func _update_combat_body_clear(clear: Dictionary) -> void:
 		return
 	var pivot: Vector3 = (_camera_rig as Node3D).global_position
 	var arm := (_camera_rig as Node3D).global_basis.z * float(_camera_rig.get("_distance"))
+	if bool(FIGHT_CAMERA.config().get("enabled", false)):
+		var model := _wild.call("model_pivot") as Node3D if _wild.has_method("model_pivot") else null
+		if model != null and model.is_inside_tree():
+			_camera_rig.call("set_body_limit", FIGHT_CAMERA.oriented_body_limit(pivot, pivot + arm,
+				_body_render_bounds(_wild), model.global_transform, float(clear.get("margin_m", 0.35)),
+				float(clear.get("min_length_m", 2.0))))
+			return
 	_camera_rig.call("set_body_limit", body_limit_along_arm(pivot, pivot + arm,
 		_body_world_bounds(_wild), float(clear.get("margin_m", 0.35)),
 		float(clear.get("min_length_m", 2.0))))
@@ -1704,6 +1718,12 @@ func _body_world_bounds(body: Node3D) -> AABB:
 		return AABB()
 	var model := body.call("model_pivot") as Node3D
 	return model.global_transform * local if model != null and model.is_inside_tree() else AABB()
+
+func _body_world_corners(body: Node3D) -> PackedVector3Array:
+	var local := _body_render_bounds(body)
+	if local.size.is_zero_approx() or not body.is_inside_tree(): return PackedVector3Array()
+	var model := body.call("model_pivot") as Node3D
+	return FIGHT_CAMERA.box_points(local, model.global_transform) if model != null and model.is_inside_tree() else PackedVector3Array()
 
 
 ## MEADOWS-VISUAL-PASS: while the piloted ally hides the foe from the live

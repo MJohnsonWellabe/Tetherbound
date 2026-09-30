@@ -65,9 +65,40 @@ func test_rig_takeover_clears_midpoint_offset_and_runtime_pitch_is_not_accumulat
 	rig.set_framing_pivot_offset(Vector3.INF)
 	assert_eq(rig.framing_pivot_offset(), Vector3.ZERO)
 	rig.set_framing_pivot_offset(Vector3(2,1,3))
+	rig.set_fight_yaw_target(1.2)
+	assert_eq(rig.get("_fight_yaw_target"),1.2)
 	rig.set_target(null)
 	assert_eq(rig.framing_pivot_offset(), Vector3.ZERO, "throw, exploration and new targets cannot inherit fight composition")
+	assert_eq(rig.get("_fight_yaw_target"),null,"aim/exit clears solved absolute fight orbit")
 	rig.free()
+
+func test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_lens_collapse() -> void:
+	var local := AABB(Vector3(-2,0,-0.4),Vector3(4,2,0.8))
+	var basis := Basis(Vector3.UP,PI*0.25)
+	var pose_a := Transform3D(basis,Vector3.ZERO)
+	var pose_b := Transform3D(basis,basis.z*1.4)
+	var a: AABB = pose_a*local
+	var b: AABB = pose_b*local
+	assert_true(a.intersects(b),"axis-aligned enclosing boxes overlap in empty rotated corner volume")
+	var points_a := FIT.box_points(local,pose_a)
+	var points_b := FIT.box_points(local,pose_b)
+	var fit := FIT.solve(a,b,PI*0.75,deg_to_rad(-25),68,16.0/9.0,9.5,FIT.config(),false,points_a,points_b)
+	assert_true(bool(fit.get("pass",false)),"actual rotated measured model boxes remain separable: "+str(fit))
+	assert_eq(float(fit.get("overlap",1.0)),0.0,"strict zero overlap is retained")
+	assert_eq(float(fit.get("yaw_offset_deg",1000)),0.0,"already-clear current orbit does not chase a different neutral heading")
+	var camera_basis := Basis.from_euler(Vector3(float(fit.pitch),PI*0.75,0))
+	var shot := Transform3D(camera_basis,(fit.pivot as Vector3)+camera_basis.z*float(fit.distance))
+	var projected_a := FIT.project_points(points_a,shot,68,16.0/9.0,0.05)
+	var projected_b := FIT.project_points(points_b,shot,68,16.0/9.0,0.05)
+	assert_true(bool(projected_a.in_frame) and bool(projected_b.in_frame))
+	assert_eq(FIT.overlap_ratio(projected_a.rect,projected_b.rect),0.0)
+	assert_eq(local.size,Vector3(4,2,0.8),"measurement never changes model/collision size")
+	assert_eq(points_a.size(),8)
+	for index: int in 8: assert_eq(points_a[index],pose_a*local.get_endpoint(index))
+	assert_eq(FIT.oriented_body_limit(Vector3(1.6,3,1.6),Vector3(1.6,-2,1.6),local,pose_a,0.1,0.1),INF,
+		"empty enclosing-box corner cannot collapse the lens to its minimum arm")
+	var hit := FIT.oriented_body_limit(Vector3(0,3,0),Vector3(0,-2,0),local,pose_a,0.1,0.1)
+	assert_true(is_finite(hit) and hit>0.0 and hit<=1.0,"actual model intersection still limits the lens")
 
 func _body(height: float, feet: Vector3) -> AABB:
 	var width := height * 0.7

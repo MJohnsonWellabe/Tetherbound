@@ -256,7 +256,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 	var cfg := FIT.config()
 	var cases: Array[Dictionary] = []
 	var case_index := 0
-	print("LIVE MATRIX SCOPE: physically entered solo encounter; staged authored roster/start poses and fresh action/Wind/poise per pair; all simulation, AI, collision, HUD and camera live throughout 120 settling + 180 scored observations; no rescale, invulnerability, HP grants during observation or earned-campaign claim")
+	print("LIVE MATRIX SCOPE: physically entered solo encounter; staged authored roster/start poses and fresh action/Wind/poise per pair; all simulation, AI, collision, HUD and camera live throughout 120 settling + 180 observed physics boundaries; every actual post-draw view scored after settling; no rescale, invulnerability, HP grants during observation or earned-campaign claim")
 	for ally_class: String in kinds:
 		for foe_class: String in kinds:
 			if int(_manager.get("state")) != 1: # State.ACTIVE
@@ -305,86 +305,112 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 			var pair := ally_class + "/" + foe_class
 			var case_started := Time.get_ticks_msec()
 			var samples: Array[Dictionary] = []
+			var render_samples: Array[Dictionary] = []
 			var pictures: Array[Dictionary] = []
-			var ally_motion := 0.0
-			var foe_motion := 0.0
-			var rig_motion := 0.0
-			var previous_ally := _ally.global_position
-			var previous_foe := _wild.global_position
-			var previous_rig := _rig.global_position
-			var movement_start := _ally.global_position
-			var movement_end := _ally.global_position
-			var quick_seen := false
-			var passed := true
-			# Setup settling is recorded but not scored as a stable composition.
-			# The following 180 observations are all scored, not selected passes.
-			for frame: int in 300:
-				var observed_frame := frame - 120
+			var ctx := {"clock":0,"quick_seen":false,"ally_motion":0.0,"foe_motion":0.0,"rig_motion":0.0,
+				"previous_ally":_ally.global_position,"previous_foe":_wild.global_position,"previous_rig":_rig.global_position,
+				"movement_start":_ally.global_position,"movement_end":_ally.global_position}
+			# Input timing belongs to physics, independent of PNG/readback speed.
+			# Sample each pre-physics boundary; rendered geometry is separately
+			# sampled after EVERY draw, when the production idle rig has run.
+			var drive := func() -> void:
+				if int(ctx.clock) >= 300: return
+				var observed_frame := int(ctx.clock)-120
 				if observed_frame == 30:
-					movement_start = _ally.global_position
-					_send_axis(LEFT_Y, -0.85)
+					ctx.movement_start = _ally.global_position
+					_send_axis(LEFT_Y,-0.85)
 				elif observed_frame == 90:
-					movement_end = _ally.global_position
-					_send_axis(LEFT_Y, 0.0)
+					ctx.movement_end = _ally.global_position
+					_send_axis(LEFT_Y,0.0)
 				elif observed_frame == 120:
-					_send_axis(JOY_AXIS_TRIGGER_RIGHT, 1.0)
+					_send_axis(JOY_AXIS_TRIGGER_RIGHT,1.0)
 				elif observed_frame == 122:
-					_send_axis(JOY_AXIS_TRIGGER_RIGHT, 0.0)
-				await physics_frame
-				await RenderingServer.frame_post_draw
-				if int(_manager.get("state")) != 1 or Time.get_ticks_msec() - case_started > 30000:
-					_fail("live matrix " + pair + " ended or exceeded its 30s case budget at " + str(frame))
-					passed = false
-					break
-				var live := _manager.is_physics_processing() and _ally.is_physics_processing() \
-					and _wild.is_physics_processing() and bool(_wild.get("engaged")) and _rig.is_processing()
-				var a_bounds: AABB = _manager.call("_body_world_bounds", _ally)
-				var b_bounds: AABB = _manager.call("_body_world_bounds", _wild)
-				var viewport := root.get_visible_rect().size
-				var aspect := viewport.x / maxf(viewport.y, 1.0)
-				var a := FIT.project_box(a_bounds, _camera.get_camera_transform(), _camera.fov, aspect, _camera.near)
-				var b := FIT.project_box(b_bounds, _camera.get_camera_transform(), _camera.fov, aspect, _camera.near)
-				var measured_pair := FIT.size_class(a_bounds.size.y, cfg) + "/" + FIT.size_class(b_bounds.size.y, cfg)
-				var framed := bool(a.get("in_frame", false)) and bool(b.get("in_frame", false))
-				var overlap := FIT.overlap_ratio(a.rect, b.rect) if bool(a.get("valid", false)) and bool(b.get("valid", false)) else 1.0
-				var action := int(_manager.get("_action"))
+					_send_axis(JOY_AXIS_TRIGGER_RIGHT,0.0)
 				var pending: Dictionary = _manager.get("_pending_move") as Dictionary
-				if observed_frame >= 120 and action in [1, 2] and bool(pending.get("is_quick", false)): quick_seen = true
-				ally_motion += _ally.global_position.distance_to(previous_ally)
-				foe_motion += _wild.global_position.distance_to(previous_foe)
-				rig_motion += _rig.global_position.distance_to(previous_rig)
-				previous_ally = _ally.global_position
-				previous_foe = _wild.global_position
-				previous_rig = _rig.global_position
-				var good := live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap)
-				if observed_frame >= 0 and not good: passed = false
-				samples.append({"frame":frame,"observed_frame":observed_frame,"ticks_ms":Time.get_ticks_msec(),
-					"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),"live":live,
+				var action := int(_manager.get("_action"))
+				if observed_frame >= 120 and action in [1,2] and bool(pending.get("is_quick",false)): ctx.quick_seen = true
+				ctx.ally_motion += _ally.global_position.distance_to(ctx.previous_ally)
+				ctx.foe_motion += _wild.global_position.distance_to(ctx.previous_foe)
+				ctx.rig_motion += _rig.global_position.distance_to(ctx.previous_rig)
+				ctx.previous_ally = _ally.global_position
+				ctx.previous_foe = _wild.global_position
+				ctx.previous_rig = _rig.global_position
+				samples.append({"frame":int(ctx.clock),"observed_frame":observed_frame,"ticks_ms":Time.get_ticks_msec(),
+					"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),
 					"input":[Input.get_joy_axis(0,JOY_AXIS_LEFT_Y),Input.get_action_strength("move_forward"),Input.get_action_strength("combat_quick")],
 					"ally_position":_point_record(_ally.global_position),"foe_position":_point_record(_wild.global_position),
-					"ally_bounds":_bounds_record(a_bounds),"foe_bounds":_bounds_record(b_bounds),"measured_pair":measured_pair,
-					"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),"framed":framed,"overlap":overlap,
-					"ally_hp":int(ally_instance.get("hp")),"foe_hp":int(foe_instance.get("hp")),"action":action,"pending_quick":bool(pending.get("is_quick",false)),"foe_intent":int(_wild.get("_intent")),
+					"ally_hp":int(ally_instance.get("hp")),"foe_hp":int(foe_instance.get("hp")),"action":action,
+					"pending_quick":bool(pending.get("is_quick",false)),"foe_intent":int(_wild.get("_intent")),
 					"ally_on_floor":bool(_ally.call("is_on_floor")),"foe_on_floor":bool(_wild.call("is_on_floor")),
+					"manager_state":int(_manager.get("state")),"camera_position":_point_record(_camera.global_position)})
+				ctx.clock += 1
+			physics_frame.connect(drive)
+			var passed := true
+			var milestones := [0,30,60,90,120,179]
+			while int(ctx.clock) < 300:
+				await RenderingServer.frame_post_draw
+				# Retain the actual final/aborted view too, even if this draw
+				# follows boundary300 or an encounter ending in that interval.
+				var observed_frame := int(ctx.clock)-120
+				var live := _manager.is_physics_processing() and _ally.is_physics_processing() \
+					and _wild.is_physics_processing() and bool(_wild.get("engaged")) and _rig.is_processing()
+				var a_bounds: AABB = _manager.call("_body_world_bounds",_ally)
+				var b_bounds: AABB = _manager.call("_body_world_bounds",_wild)
+				var a_points: PackedVector3Array = _manager.call("_body_world_corners",_ally)
+				var b_points: PackedVector3Array = _manager.call("_body_world_corners",_wild)
+				var a_corners: Array = []
+				var b_corners: Array = []
+				for point: Vector3 in a_points: a_corners.append(_point_record(point))
+				for point: Vector3 in b_points: b_corners.append(_point_record(point))
+				var viewport := root.get_visible_rect().size
+				var aspect := viewport.x/maxf(viewport.y,1.0)
+				var a := FIT.project_points(a_points,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var b := FIT.project_points(b_points,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var axis_a := FIT.project_box(a_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var axis_b := FIT.project_box(b_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var measured_pair := FIT.size_class(a_bounds.size.y,cfg)+"/"+FIT.size_class(b_bounds.size.y,cfg)
+				var framed := bool(a.get("in_frame",false)) and bool(b.get("in_frame",false))
+				var overlap := FIT.overlap_ratio(a.rect,b.rect) if bool(a.get("valid",false)) and bool(b.get("valid",false)) else 1.0
+				var good := live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap)
+				var body_limit: float = _rig.call("body_limit")
+				if observed_frame >= 0 and not good: passed = false
+				render_samples.append({"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),
+					"observed_frame":observed_frame,"ticks_ms":Time.get_ticks_msec(),"live":live,"measured_pair":measured_pair,
+					"ally_bounds":_bounds_record(a_bounds),"foe_bounds":_bounds_record(b_bounds),"ally_model_corners":a_corners,"foe_model_corners":b_corners,
+					"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),"framed":framed,"overlap":overlap,
+					"world_aabb_ally_rect":_rect_record(axis_a),"world_aabb_foe_rect":_rect_record(axis_b),
+					"world_aabb_overlap":FIT.overlap_ratio(axis_a.rect,axis_b.rect) if bool(axis_a.get("valid",false)) and bool(axis_b.get("valid",false)) else 1.0,
 					"actual_camera_position":_point_record(_camera.global_position),"actual_camera_basis":[_point_record(_camera.global_basis.x),_point_record(_camera.global_basis.y),_point_record(_camera.global_basis.z)],
 					"actual_rig_pivot":_point_record(_rig.global_position),"actual_rig_yaw":float(_rig.yaw),"spring_length":_rig.spring_length,
+					"arm_hit_length":_rig.get_hit_length(),"body_limit":body_limit if is_finite(body_limit) else null,
 					"requested_solution":_camera_solution_record(),"manual_grace_seconds":float(_rig.get("_tracking_manual_left"))})
-				if observed_frame in [0, 30, 60, 90, 120, 179]:
+				if pictures.size() < milestones.size() and observed_frame >= int(milestones[pictures.size()]):
 					var image := root.get_texture().get_image()
 					var pixels := _pixel_summary(image)
-					var filename := "%02d-%03d.png" % [case_index, observed_frame]
+					var filename := "%02d-%03d.png" % [case_index,int(milestones[pictures.size()])]
 					var wrote := bool(pixels.get("nonblank",false)) and image != null \
 						and image.get_width() == 1920 and image.get_height() == 1080 and image.save_png(directory.path_join(filename)) == OK
 					if not wrote: passed = false
-					pictures.append({"png":filename,"frame":frame,"process_frame":Engine.get_process_frames(),"pass":wrote,"pixels":pixels})
-			_send_axis(LEFT_Y, 0.0)
-			_send_axis(JOY_AXIS_TRIGGER_RIGHT, 0.0)
-			var input_travel := movement_end.distance_to(movement_start)
-			passed = passed and samples.size() == 300 and pictures.size() == 6 and input_travel >= 0.5 and foe_motion >= 0.05 and rig_motion >= 0.3 and quick_seen
-			if not passed: _fail("live matrix " + pair + " failed framing/simulation/motion/quick evidence; input travel=" + str(input_travel))
+					pictures.append({"png":filename,"requested_observed_frame":milestones[pictures.size()],"actual_observed_frame":observed_frame,
+						"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),"pass":wrote,"pixels":pixels})
+				if int(_manager.get("state")) != 1 or Time.get_ticks_msec()-case_started > 30000:
+					_fail("live matrix "+pair+" ended or exceeded its 30s budget at physics boundary "+str(ctx.clock))
+					passed = false
+					break
+			physics_frame.disconnect(drive)
+			_send_axis(LEFT_Y,0.0)
+			_send_axis(JOY_AXIS_TRIGGER_RIGHT,0.0)
+			var input_travel: float = (ctx.movement_end as Vector3).distance_to(ctx.movement_start as Vector3)
+			var scored_renders := 0
+			for row: Dictionary in render_samples:
+				if int(row.observed_frame) >= 0: scored_renders += 1
+			passed = passed and samples.size() == 300 and pictures.size() == 6 and scored_renders >= 6 \
+				and input_travel >= 0.5 and float(ctx.foe_motion) >= 0.05 and float(ctx.rig_motion) >= 0.3 and bool(ctx.quick_seen)
+			if not passed: _fail("live matrix "+pair+" failed strict rendered framing/live motion/quick evidence; input travel="+str(input_travel))
 			cases.append({"pair":pair,"ally_species":kinds[ally_class],"foe_species":kinds[foe_class],"pass":passed,
-				"elapsed_ms":Time.get_ticks_msec()-case_started,"input_travel_m":input_travel,"ally_path_m":ally_motion,"foe_path_m":foe_motion,"rig_path_m":rig_motion,
-				"quick_action_observed":quick_seen,"samples":samples,"pictures":pictures})
+				"elapsed_ms":Time.get_ticks_msec()-case_started,"input_travel_m":input_travel,"ally_path_m":ctx.ally_motion,
+				"foe_path_m":ctx.foe_motion,"rig_path_m":ctx.rig_motion,"quick_action_observed":ctx.quick_seen,
+				"samples":samples,"render_samples":render_samples,"scored_render_count":scored_renders,"pictures":pictures})
 			case_index += 1
 	# Do not turn an ended/failed encounter back into ACTIVE to restore a fixture.
 	# Such a run aborts truthfully before the retained original control sequence.
@@ -416,8 +442,9 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 	else:
 		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
 			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
-			"resolution":[1920,1080],"mode":"live","settling_observations":120,"scored_observations":180,"case_wall_budget_ms":30000,
-			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
+			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap, inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
+			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; quick trigger at120, release122. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
+			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
 			"cases":cases,"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
 		output.close()
 	for frame: int in 30: await physics_frame
