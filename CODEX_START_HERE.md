@@ -925,8 +925,10 @@ same criteria, numbered from zero (`F27#3`).
 - **Hourly board update:** the board-duty holder (§4) runs
   `python3 ralph/reports/COORDINATOR/dashboard/build_dashboard.py` after refreshing
   `status.json` (headline, lanes, WIP). It commits JSON plus HTML through a small docs PR with
-  auto-merge. If the Artifact tool is available, it republishes to the board URL in
-  `ralph/reports/COORDINATOR/README.md`. Board headline format:
+  auto-merge. Publish the landed HTML to the existing owner-private Site in
+  `ralph/reports/COORDINATOR/README.md` when Sites tools are available, and give the owner its
+  rendered remote link. Keep the same Site/URL and private audience; the legacy Artifact
+  tool may additionally refresh its old URL when available. Board headline format:
   `Criteria met: N of 280` (it grows only if the owner adds features).
 - Evidence goes in `ralph/reports/<LANE>/` (for example `ralph/reports/TRAINING/f28/`).
 
