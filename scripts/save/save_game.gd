@@ -1875,7 +1875,7 @@ func _party_to_array(party: Variant) -> Array:
 		return out
 	for creature: Variant in ((party as RefCounted).call("members") as Array):
 		var instance := creature as RefCounted
-		out.append({
+		var row := {
 			"uid": str(instance.get("uid")),
 			"species_id": str(instance.get("species_id")),
 			"display_name": str(instance.get("display_name")),
@@ -1922,13 +1922,6 @@ func _party_to_array(party: Variant) -> Array:
 			"feeds_together": int(instance.get("feeds_together")),
 			"move_quick": str(instance.get("move_quick")),
 			"move_charged": str(instance.get("move_charged")),
-			"move_utility": str(instance.get("move_utility")),
-			"move_ultimate": str(instance.get("move_ultimate")),
-			"known_moves": (instance.get("known_moves") as Array).duplicate(),
-			"move_mastery_uses": (instance.get("move_mastery_uses") as Dictionary).duplicate(true),
-			"move_mastery_receipts": (instance.get("move_mastery_receipts") as Dictionary).duplicate(true),
-			"loadout_revision": int(instance.get("loadout_revision")),
-			"loadout_last_edit": (instance.get("loadout_last_edit") as Dictionary).duplicate(true),
 			"iv_hp": float(instance.get("iv_hp")),
 			"iv_attack": float(instance.get("iv_attack")),
 			"iv_defence": float(instance.get("iv_defence")),
@@ -1941,7 +1934,25 @@ func _party_to_array(party: Variant) -> Array:
 			"nourishment": float(instance.get("nourishment")),
 			"happiness": float(instance.get("happiness")),
 			"rested_seconds_left": float(instance.get("rested_seconds_left")),
-		})
+		}
+		# Never stamp new-format identity/eligibility onto an uninitialized
+		# pre-F23 local row. Any actual new field content still demands strict
+		# serialization/preflight, so erasing a live marker cannot hide it.
+		if bool(instance.get("loadout_initialized")) or not (instance.get("known_moves") as Array).is_empty() \
+			or not (instance.get("move_mastery_uses") as Dictionary).is_empty() \
+			or not (instance.get("move_mastery_receipts") as Dictionary).is_empty() \
+			or not str(instance.get("move_utility")).is_empty() or not str(instance.get("move_ultimate")).is_empty() \
+			or int(instance.get("loadout_revision")) != 0 or not (instance.get("loadout_last_edit") as Dictionary).is_empty():
+			row.merge({
+				"move_utility": str(instance.get("move_utility")),
+				"move_ultimate": str(instance.get("move_ultimate")),
+				"known_moves": (instance.get("known_moves") as Array).duplicate(),
+				"move_mastery_uses": (instance.get("move_mastery_uses") as Dictionary).duplicate(true),
+				"move_mastery_receipts": (instance.get("move_mastery_receipts") as Dictionary).duplicate(true),
+				"loadout_revision": int(instance.get("loadout_revision")),
+				"loadout_last_edit": (instance.get("loadout_last_edit") as Dictionary).duplicate(true),
+			})
+		out.append(row)
 	return out
 
 
@@ -2027,6 +2038,7 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 		creature.move_charged = str(d.get("move_charged", ""))
 		var loadout := teaching.stage_saved_loadout(d,teaching.allowed_saved_moves(d,character),preload("res://scripts/creatures/move_db.gd").load_default())
 		if not bool(loadout.get("needs_defaults",true)):
+			creature.loadout_initialized = true
 			var known: Array[String] = []
 			for move: String in loadout.values.known_moves: known.append(move)
 			creature.known_moves = known
@@ -2036,11 +2048,9 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 			creature.move_mastery_receipts = loadout.values.move_mastery_receipts
 			creature.loadout_revision = int(loadout.values.loadout_revision)
 			creature.loadout_last_edit = loadout.values.loadout_last_edit
-		else:
-			# Additive v28 absence preserves the equipped old moves, with zero
-			# earned use credit and no automatic loadout edits on Continue.
-			for move: String in [creature.move_quick,creature.move_charged]:
-				if not move.is_empty() and not creature.known_moves.has(move): creature.known_moves.append(move)
+		# Additive v28 absence remains uninitialized: preserve original equipped
+		# quick/charged strings without silently creating a modern known list,
+		# mastery or new schema marker on the next save.
 		# Elixir points (D47). Absent on any save older than VERSION 8, and 0
 		# is exactly right for one: a creature from before elixirs existed
 		# never drank any.

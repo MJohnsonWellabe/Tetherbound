@@ -278,6 +278,7 @@ static func _same_edit_receipt(a: Variant, b: Variant) -> bool:
 	return true
 
 static func refresh_known_moves(creature: RefCounted, completed_tiers: Array = []) -> void:
+	if not bool(creature.get("loadout_initialized")): return
 	var known: Array[String] = []
 	for old: String in creature.get("known_moves"): known.append(old)
 	for id: String in available_moves(str(creature.get("species_id")),int(creature.get("level")),completed_tiers):
@@ -285,6 +286,8 @@ static func refresh_known_moves(creature: RefCounted, completed_tiers: Array = [
 	creature.set("known_moves",known)
 
 static func initialize_loadout(creature: RefCounted, definition: Dictionary) -> void:
+	if not definition.get("moves") is Dictionary: return
+	creature.set("loadout_initialized",true)
 	var known: Array[String] = []
 	var defaults: Dictionary = definition.get("moves",{})
 	for slot: String in ["quick","charged","utility","ultimate"]:

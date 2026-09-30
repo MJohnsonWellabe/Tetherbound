@@ -181,6 +181,10 @@ var move_mastery_uses: Dictionary = {}
 var move_mastery_receipts: Dictionary = {}
 var loadout_revision: int = 0
 var loadout_last_edit: Dictionary = {}
+## Live generation marker only; the saved seven-field document is the durable
+## marker. Legacy/custom definitions without an authored moves block retain
+## their original quick/charged codec until explicitly initialized.
+var loadout_initialized: bool = false
 
 ## G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). This individual's behaviour
 ## override when it fights AS AN OPPONENT, carried here for the same reason

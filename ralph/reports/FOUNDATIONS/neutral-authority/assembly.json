@@ -28,7 +28,15 @@
     "data/progression/flag_scopes.json",
     "tests/test_session_snapshot.gd",
     "data/items/items.json",
-    "CODEX_START_HERE.md"
+    "CODEX_START_HERE.md",
+    "tests/test_moves_data.gd",
+    "tests/test_farming.gd",
+    "tests/test_map_baker.gd",
+    "tests/test_village_street_0912.gd",
+    "tests/test_vegetation_human_prompt_height.gd",
+    "tests/fixtures/historical_prompt_tree_b2ea1455.json",
+    "tests/test_chapter_rewards.gd",
+    "data/config/bands/band5_stronghold_approach/pickups.json"
   ],
   "canonical_f23_dependency_pin": "ce12aae9d9205b0829df7acd2a2b082e32de4a73",
   "sha256": {
@@ -38,15 +46,15 @@
     "scripts/net/character_authority.gd": "05795eca422c10c4517f03f436fedd67ba5090839fbe31b22e6af31d5f43f652",
     "scripts/net/session.gd": "907bff5b2a10dad3f5673ea97f3c5d6383ee36e7fe68da05c1712bc63db7da3c",
     "scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
-    "scripts/save/save_game.gd": "acd722433f3d0d7393ff0c689f7b65ce7fdb1f44f349a1515950a7dc809079d8",
+    "scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
     "scripts/save/character_save.gd": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
     "autoload/player_state.gd": "403f03fd5ecb162a43e6d0b85b02eaa7da2c45c27e7cde265cc8c3bb20f98400",
     "scripts/save/world_save.gd": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
     "autoload/world_state.gd": "fd5b167d8cc9a63cf3b4d27d75d467a4c9908c29a3227f5204f5c66e82fc58a6",
     "scripts/net/world_ledger.gd": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
     "scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
-    "scripts/creatures/creature_instance.gd": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428",
-    "scripts/creatures/teaching.gd": "b329abd6c96a94d37d31e6908fafa4554373d0119856157d4eaa84ac53f61267",
+    "scripts/creatures/creature_instance.gd": "6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8",
+    "scripts/creatures/teaching.gd": "912a26ba74c9d6bf87bfb52320989dec0f311ab840f1ad3188aa8781afe516c7",
     "scripts/creatures/move_mastery.gd": "7993a8350276fcb63e82e84e827f00dde42847e18d2aa29f57416efe6c9355c2",
     "data/config/move_mastery.json": "b80f37c11385f217cbab302b52802092a36655fa25b20ec3e7aafdf948865e06",
     "data/moves/learnsets.json": "f5e149572b3fbb102811fb3b477b461735280308d0e7a588de00ac843d4c5bc9",
@@ -58,7 +66,15 @@
     "data/progression/flag_scopes.json": "087c7c46247680c3a55fb296b396c714eabdf90ee75e4d7a7e62c24fa338f2ed",
     "tests/test_session_snapshot.gd": "52d8299aa7c188934ef3086efb1f54fe7506a738c98126b35584092ae6fcf731",
     "data/items/items.json": "2f2431760e04af540ce25bae977612eeaf12b6d9983cda0a6cba1aed6fc839ca",
-    "CODEX_START_HERE.md": "24ca531e6beb908dcdbcbe6eb7065d4e5b191c9b4053cf72c710f8f63b759118"
+    "CODEX_START_HERE.md": "24ca531e6beb908dcdbcbe6eb7065d4e5b191c9b4053cf72c710f8f63b759118",
+    "tests/test_moves_data.gd": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
+    "tests/test_farming.gd": "1107498508aea329a5e4c01c7b2c7ac83900cf7c038c909609f3c99e77c7d634",
+    "tests/test_map_baker.gd": "36bc3b5c003da529c173a6103aef76c8d59d540db87c02781ba6e317283f68bd",
+    "tests/test_village_street_0912.gd": "f35cf5b1b50285eefc66954ddb94a7f3bf8cb2f8523e811bf1d0ec889cc3b6c9",
+    "tests/test_vegetation_human_prompt_height.gd": "b5b52ede2d90034ae747f321ab1c4143716acacbf14cb1a1b1081686b54ef44a",
+    "tests/fixtures/historical_prompt_tree_b2ea1455.json": "64c4805ac49bfffc975b81e2d39d82efc28cd020abf9f846c9b907f7a3b3eaf1",
+    "tests/test_chapter_rewards.gd": "c070dda6eebd3e288ea29dc5bc1f388e823a3432e1146d50f4c25ed15fde13cd",
+    "data/config/bands/band5_stronghold_approach/pickups.json": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40"
   },
   "status": "Independent source gates passed; initial shard parser cascade retained; four affected parser repairs pass native0; full unit batch pending.",
   "correction_base": "c023214bf718f38410fb90156a490e84713a112f",
@@ -71,5 +87,6 @@
     "isolated_row_bytes_sha256": "7372c9e548c23c4aa17e20c71e311d52a784e0f20e77d5d4ca0dc3684ef1f284",
     "canonical_row_sha256": "73c2aade38e964d386d696283351e6231b9266d41d6ea16c4af61da1c245e5cd",
     "scope": "ONE exact TM ItemDB row only; no other item rows, inventory/crafting/gameplay activation or current main/training replacement"
-  }
+  },
+  "post_batch_repair_status": "source-only reviewed734 codec hunks and allocated fixture/availability adaptations; affected native checks await exact successor gate"
 }
