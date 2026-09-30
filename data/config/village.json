@@ -1,102 +1,7 @@
 {
   "_comment": "The opening settlement. EV6: every structure is a PREFAB from data/config/building_prefabs.json, composed from the Medieval Village MegaKit (docs/specs/ASSET_LEDGER.md, D24 -- the one civilian architectural family) and placed by scripts/world/village.gd: stood on the ground by asking the world (D09), given the prefab's own colliders or one AABB box, at kit-native scale (no scale corrections -- the kit is authored in real metres, walls measured 2.0w x 3.12h). Positions are world metres on the fixed farmhouse/square flats plus OWNER-0912's matching south-street pad. ALL TUNABLE.",
-  "_comment_layout": "OWNER-0912 / C3 village street replan. Grandpa's house remains the fixed west endpoint, the well remains the bend, and the settlement now reads as an L-shaped street: farmhouse and inn on the west leg, then Mira's shop and Tam's workshop facing each other across the south leg toward TrailGate. The matching level pad, worked-soil aprons, thresholds, vegetation exclusions and role-based NPC positions are authored in their owning configs and require the integration terrain/scatter bake plus production visual proof.",
-  "_comment_main_street": "OPTION-B (owner 2026-09-29): the L-shaped street is replaced by one straight main street at x=10.5 (terrain_playground.json paths.approaches village_main_street). The well stands on its axis at [10.5,-6], the centre of a small walkable green (village_topology.green, radius 4, no collision). The inn moved 4.1 m to [-2.5,-6] and turned to yaw 90 so its door faces the green from the west; the stone cottage moved 12.0 m to [19.5,-6] and turned to yaw -90 to face the street from the east. Its threshold, the inn threshold and the cottage cart moved with them; Mira, Oskar's pen, Tam, Halda, the bracket board and Grandpa did not. The building aprons, flats and scatter footprints mirror these poses.",
+  "_comment_layout": "RD-29/F17: one straight eastward village road, homestead at [2,14] beside TrailGate, eight native-scale houses on both sides and the Crossing Hall at [107,14]. Field/practice-wild geography remains unchanged. Layout rebuilds identically on every peer; no save reset.",
   "structures": [
-    {
-      "prefab": "well",
-      "at": [
-        10.5,
-        -6.0
-      ],
-      "yaw_deg": 15.0,
-      "_why": "the square's centre; slightly off-axis so the square does not read as gridded"
-    },
-    {
-      "prefab": "workshop",
-      "at": [
-        2.0,
-        12.0
-      ],
-      "yaw_deg": 90.0,
-      "_why": "OWNER-0912 / C3 V-1. Tam's broad arch bay faces east across the south street, opposite Mira's shop. Its rear working yard is bounded on the west and south, while the street-facing bay remains open."
-    },
-    {
-      "prefab": "wagon",
-      "at": [
-        -6.5,
-        12.0
-      ],
-      "yaw_deg": 90.0,
-      "_why": "OWNER-0912. The smith's delivery wagon moves with the workshop into its fenced rear yard, leaving the east-facing work bay and south street unobstructed."
-    },
-    {
-      "prefab": "cottage_a",
-      "at": [
-        18.0,
-        4.0
-      ],
-      "yaw_deg": -90.0,
-      "interior": "shop",
-      "_why": "OWNER-0912 / C3 V-1. Mira's shop is the first house on the east side of the south leg. Its real doorway faces west onto passing traffic; the OF31/D39 shop interior, counter and merchant crest move with the shell."
-    },
-    {
-      "prefab": "cottage_b",
-      "at": [
-        19.5,
-        -6.0
-      ],
-      "yaw_deg": -90.0,
-      "interior": "cottage",
-      "_why": "OWNER-0912 / C3 V-1. The stone cottage moves four metres onto the south side of the west street leg and turns its real doorway north-west toward that road. The move remains on its existing 0.9m cottage/square pads."
-    },
-    {
-      "prefab": "fence_run",
-      "at": [
-        28.0,
-        4.0
-      ],
-      "yaw_deg": 90.0,
-      "_why": "OWNER-0912. A single rear rail makes Oskar's creature pen behind Mira's shop legible while keeping the west-facing shop threshold and street open."
-    },
-    {
-      "prefab": "fence_run",
-      "at": [
-        -10.0,
-        15.0
-      ],
-      "yaw_deg": 90.0,
-      "_why": "OWNER-0912. The workshop's west rear-yard rail encloses tools and deliveries instead of cutting diagonally across an unrelated lawn; its south end meets the short back rail."
-    },
-    {
-      "prefab": "fence_run",
-      "at": [
-        -7.0,
-        18.0
-      ],
-      "yaw_deg": 0.0,
-      "_why": "OWNER-0912. The workshop's short south rear rail meets the west rail as an L, but stops well before the south street and TrailGate approach."
-    },
-    {
-      "prefab": "square_oak_a",
-      "at": [
-        25.5,
-        -9.5
-      ],
-      "yaw_deg": 40.0,
-      "scale": 1.25,
-      "_why": "canopy behind the cottage pair -- the key art frames its square with trees and the scatter's clearings hold them off by design, so the settlement's own trees are authored here. 5m+ clear of route 4's path edge and 4.9m from the nearest villager."
-    },
-    {
-      "prefab": "square_oak_b",
-      "at": [
-        1.0,
-        10.5
-      ],
-      "yaw_deg": 160.0,
-      "scale": 1.15,
-      "_why": "behind the workshop, crown just above its ridge from the square. 8m+ clear of the north-west path."
-    },
     {
       "prefab": "mill",
       "at": [
@@ -131,107 +36,117 @@
       "_comment_ow5d": "OW5D relocation: (-100,100) -> (-350,507) per docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2. `yaw_deg` 75 is UNCHANGED -- the table only specifies the new position, and re-deriving the door-facing angle for the new pond-route geometry is a judgement call left to the reviewer/OW5C (which owns the pond route's actual new path polyline). Flagged, not guessed at."
     },
     {
+      "id": "mira_shop",
+      "display_name": "Mira’s Shop",
+      "prefab": "cottage_a",
+      "at": [
+        26,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "shop"
+    },
+    {
+      "id": "tam_workshop",
+      "display_name": "Tam’s Workshop",
+      "prefab": "workshop",
+      "at": [
+        26,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true
+    },
+    {
+      "id": "bram_inn",
+      "display_name": "Bram’s Inn",
       "prefab": "inn",
       "at": [
-        -2.5,
-        -6.0
+        44,
+        2
       ],
-      "yaw_deg": 90.0,
-      "interior": "inn",
-      "_why": "OWNER-0912 village visual acceptance repair. The first street replan stood the long inn parallel to the west road at [-6,-14], so its wall/canopy footprint physically crossed the painted route and the public door faced along it. The inn now stands wholly on the south side of the shared street at [-1.5,-2], with its broad public facade facing north across a short forecourt. Its canopy clears the west road's full painted band; threshold, pad, apron, exclusion and Bram's interior pose move with the same transform."
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "inn"
     },
     {
-      "prefab": "doorstep",
+      "id": "halda_house",
+      "display_name": "Halda’s House",
+      "prefab": "cottage_b",
       "at": [
-        13.87,
-        5.0
+        44,
+        26
       ],
-      "yaw_deg": -90.0,
-      "_why": "OWNER-0912. Mira's threshold is the prefab's local [1,4.13] point transformed through the new [18,4], -90 degree shop pose, landing directly on the south street side."
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
     },
     {
-      "prefab": "doorstep",
+      "id": "research_house",
+      "display_name": "Research House",
+      "prefab": "cottage_a",
       "at": [
-        16.37,
-        -5.0
+        62,
+        2
       ],
-      "yaw_deg": -90.0,
-      "_why": "OWNER-0912. cottage_b's existing local threshold [1,3.13] transformed through the new [-110deg] building pose, so the path cue moves with the actual door."
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "cottage"
     },
     {
-      "prefab": "doorstep",
+      "id": "oskar_house",
+      "display_name": "Oskar’s House",
+      "prefab": "cottage_b",
       "at": [
-        3.6,
-        -6.0
+        62,
+        26
       ],
-      "yaw_deg": 90.0,
-      "_why": "OWNER-0912 village visual acceptance repair. The inn's local +Z public threshold transforms to [-1.5,-8.1], facing the west street across a short forecourt without placing paving or porch geometry across its painted band."
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
     },
     {
-      "prefab": "fence_run",
+      "id": "alder_house",
+      "display_name": "Alder Cottage",
+      "prefab": "cottage_b",
       "at": [
-        -22.0,
-        -4.3
+        80,
+        2
       ],
-      "yaw_deg": 0.0,
-      "_why": "VP5: the north rail of Grandpa's kitchen garden. farm.json's six plots sit in a 2x3 block at x -24.4..-19.6, z -9.0..-6.6, north of the house, and until now stood in open lawn -- the 2026-08-31 baseline judge: 'fenced paddocks appear ... with nothing in them' and, the other way round, a worked garden with no fence reads as scatter. This rail and the west one below make the plots an enclosure that visibly encloses something. East and south left open, which is the side the player and Old Perrin (-15,-5) approach the beds from."
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "cottage"
     },
     {
-      "prefab": "fence_run",
+      "id": "orchard_house",
+      "display_name": "Orchard Cottage",
+      "prefab": "cottage_a",
       "at": [
-        -26.8,
-        -7.8
+        80,
+        26
       ],
-      "yaw_deg": 90.0,
-      "_why": "VP5: the garden's west rail; 0.95m clear of the farmhouse's north wall extent (z -11.85), 1.2m clear of the western plot column."
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
     },
     {
-      "prefab": "wagon",
+      "id": "village_well",
+      "prefab": "well",
       "at": [
-        -29.0,
-        -4.0
+        34,
+        5
       ],
-      "yaw_deg": 15.0,
-      "_why": "VP5: the farm's own cart, drawn up beside the garden's west rail with its shafts toward the field road -- the key art's settlement panel sells a lived-in yard with exactly a well, a fence line and a cart. 3.2m from the berry bush at (-32,-1), 2.4m from the west plot column, well inside the boundary (x -40 at this z)."
+      "yaw_deg": 15
     },
     {
-      "prefab": "wagon",
+      "id": "crossing_hall",
+      "prefab": "crossing_hall_shell",
       "at": [
-        25.0,
-        -3.0
+        107,
+        14
       ],
-      "yaw_deg": 110.0,
-      "_why": "OWNER-0912. The cottage cart follows cottage_b east into its back yard instead of being stranded at the old wall line; it stays off the Practice Meadow path."
-    },
-    {
-      "prefab": "square_oak_a",
-      "at": [
-        31.5,
-        1.5
-      ],
-      "yaw_deg": 75.0,
-      "scale": 1.1,
-      "_why": "VP5: village-edge canopy on the east, between Fenn's corner and the boundary fence (3.9m inside the [37,-2]->[30,11] edge), so the settlement is framed by trees on the side the tournament and route-out frames look toward rather than ending in bare fence. 5m from the berry node at (28,6), 7m from Fenn."
-    },
-    {
-      "prefab": "square_oak_b",
-      "at": [
-        5.0,
-        21.0
-      ],
-      "yaw_deg": 200.0,
-      "scale": 1.05,
-      "_why": "VP5: village-edge canopy on the north, 4.2m inside the fence's [11.6,22.21]->[0.37,27.23] run and 8.9m west of the corridor road's gate, so the road leaves the village under a tree rather than across a lawn. 5.8m from the berry node at (0,18)."
-    },
-    {
-      "prefab": "square_oak_a",
-      "at": [
-        -5.0,
-        -33.0
-      ],
-      "yaw_deg": 300.0,
-      "scale": 1.2,
-      "_why": "VP5: village-edge canopy on the south, closing the open grass the approach frame (eye [27,-31]) sees behind the square. 7.6m from the fiber node at (2,-30), 11m from Garrick and the deadwood at (6,-34), 35m from the practice cluster's spawn disk."
+      "yaw_deg": 90
     },
     {
       "prefab": "square_oak_a",
@@ -304,7 +219,116 @@
       ],
       "yaw_deg": 90.0,
       "_why_f01": "F01-b Berry Field's west rail (z -28.5..-22.5), 4.4m clear of Grandpa's south-east work-yard props and 3m clear of the twins' yard crate."
+    },
+    {
+      "id": "mira_shop_threshold",
+      "prefab": "doorstep",
+      "at": [
+        27,
+        7.9
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "tam_workshop_threshold",
+      "prefab": "doorstep",
+      "at": [
+        26,
+        19.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "bram_inn_threshold",
+      "prefab": "doorstep",
+      "at": [
+        44,
+        10.6
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "halda_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        43,
+        21.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "research_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        63,
+        7.9
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "oskar_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        61,
+        21.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "alder_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        81,
+        6.9
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "orchard_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        79,
+        20.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
     }
   ],
-  "_comment_vp5": "VP5 (visual-parity village lane), 2026-09-02: the entries after `inn` are daylight dressing -- three door thresholds, two garden rails plus a yard rail, two carts and three edge oaks -- placed against the BUILT scene's collider extents (a scratch layout probe printing every structure's world AABB, door node, marker and NPC), not against the recipe comments. The owner's standing constraint applies: not one more object than the yard needs, no new villagers."
+  "_comment_vp5": "VP5 (visual-parity village lane), 2026-09-02: the entries after `inn` are daylight dressing -- three door thresholds, two garden rails plus a yard rail, two carts and three edge oaks -- placed against the BUILT scene's collider extents (a scratch layout probe printing every structure's world AABB, door node, marker and NPC), not against the recipe comments. The owner's standing constraint applies: not one more object than the yard needs, no new villagers.",
+  "road_plan": {
+    "home_centre": [
+      2,
+      14
+    ],
+    "home_door": [
+      8.3,
+      14
+    ],
+    "road_start": [
+      8.3,
+      14
+    ],
+    "road_end": [
+      91,
+      14
+    ],
+    "width_m": 5.2,
+    "hall_centre": [
+      107,
+      14
+    ],
+    "hall_yaw_deg": 90,
+    "exit_gate": "TrailGate",
+    "houses_required": [
+      8,
+      10
+    ]
+  }
 }

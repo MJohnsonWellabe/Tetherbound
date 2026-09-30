@@ -959,21 +959,21 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 0,
+   "pct": 14,
    "counts": {
-    "met": 0,
+    "met": 1,
+    "not_started": 6,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 7,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Overhead plan and topology test: one straight road, 8–10 houses facing it on both sides, the homestead plot at the road's start beside the Meadows exit, the Crossing Hall at the road's end; road-graph test passes.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "ralph/reports/HUB/f17/overhead-plan.svg, geometry-corrected.txt (8ee:18tests/3437assertions/0failed/native0), regional-generation-result.md and actual8-file receipt/outside312-byte/ID audit atbf0. Actual parsed-joypad farmhouse-door/MainStreet/Hall-nave walk895cff native0/175.714s and unchanged mandatory smoke_playground native0/96.515s; existing dummy material-null error class matches F16 baseline. Independent re-check: fresh combat strict MET bf0 plus physical-path delta PASS895/56180, recheck-f17-0.md. Shortcuts disclosed: config-derived SVG/offline regional generation; source-aware unchanged proof reuse; authored post-opening flags/starter, one initial floor placement/yaw, then real input/collision; headless, no visual/device/earned/MP claim. F17#1–#6 remain open; main credit on feature PR landing.",
+     "gap": ""
     },
     {
      "text": "From Grandpa's farm door at the normal camera, the Crossing Hall reads as the destination down the road (code-blind judge YES, day and night).",

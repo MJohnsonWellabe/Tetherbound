@@ -212,6 +212,8 @@ var _felled: Dictionary = {}
 ## can be ABSENT from `_harvested` entirely on this build, e.g. a config edit
 ## that dropped it — this dict answers "how many, if at all" in one lookup).
 var _harvest_layer_counts: Dictionary = {}
+# Only a validated stable-ID cache authorizes prefix restoration of old saves.
+var _stable_harvest_layers: Dictionary = {}
 ## D97. The realm this scatter belongs to, stamped on every
 ## `deplete_vegetation` intent and on every flag this file reads back. Settable
 ## rather than read from `Game.current_realm`: from Wave 6 two peers stand in
@@ -501,6 +503,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
+	_stable_harvest_layers.clear()
 	_harvest_lookup.clear()
 	_harvest_nodes.clear()
 	_harvest_collision_lookup.clear()
@@ -560,8 +563,14 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
 	var skipped: Dictionary = {}
 	var by_layer: Dictionary
-	if BAKE.is_fresh(_realm_bake_name, base_seed, _realm_fingerprint):
-		by_layer = BAKE.load_all(_realm_bake_name, _drained, suppressed, skipped)
+	var identity_bounds := {}
+	if BAKE.is_usable(_realm_bake_name, base_seed, _realm_fingerprint):
+		by_layer = BAKE.load_all(_realm_bake_name, _drained, suppressed, skipped, identity_bounds)
+	elif BAKE.has_stable_harvest_ids(_realm_bake_name):
+		# Recomputing a corrupt/stale stable generation would silently assign
+		# fresh array IDs to old chopped trees. Refuse until repaired offline.
+		push_error("Stable harvest generation is invalid; repair scoped bake before playing: " + _realm_bake_name)
+		return
 	elif _realm_bake_name != BAKE_WORLD_NAME:
 		push_error("Missing or stale %s scatter bake; rebuild before playing this realm." % _realm_bake_name)
 		return
@@ -603,7 +612,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_ridgeline_groundmat_visual(by_layer)
 
 	await _breathe(slicer)
-	_mark_harvestable(by_layer)
+	_mark_harvestable(by_layer, identity_bounds)
 	var t_mark1 := Time.get_ticks_msec()
 	await _breathe(slicer)
 
@@ -671,8 +680,12 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 ## INSTANCE, at the exact index it assigns in its own MultiMesh -- that index
 ## is what both the collider placement and the interact point have to agree
 ## on.
-func _mark_harvestable(by_layer: Dictionary) -> void:
-	for layer_name: String in by_layer.keys():
+func _mark_harvestable(by_layer: Dictionary, stable_identity_bounds: Dictionary = {}) -> void:
+	var layers := by_layer.keys()
+	for layer: String in stable_identity_bounds:
+		if not layers.has(layer):
+			layers.append(layer)
+	for layer_name: String in layers:
 		var layer: Dictionary = _vegetation_config().get("layers", {}).get(layer_name, {})
 		var item_id := str(layer.get("harvest_item", ""))
 		if item_id == "":
@@ -681,9 +694,15 @@ func _mark_harvestable(by_layer: Dictionary) -> void:
 		if fraction <= 0.0:
 			continue
 		var amount := int(layer.get("harvest_amount", 2))
-		var placements: Array = by_layer[layer_name]
-		_harvest_layer_counts[layer_name] = placements.size()
-		_harvested[layer_name] = _new_bitset(placements.size())
+		var placements: Array = by_layer.get(layer_name, [])
+		var identity_count := maxi(placements.size(), int(stable_identity_bounds.get(layer_name, 0)))
+		if stable_identity_bounds.has(layer_name):
+			_stable_harvest_layers[layer_name] = true
+		for placement: Dictionary in placements:
+			identity_count = maxi(identity_count, int(placement.get("harvest_identity", -1)) + 1)
+			identity_count = maxi(identity_count, int(placement.get("harvest_identity_bound", 0)))
+		_harvest_layer_counts[layer_name] = identity_count
+		_harvested[layer_name] = _new_bitset(identity_count)
 		# A stride through the layer's own draw order, not an independent
 		# per-instance coin flip -- spreads harvest points evenly across the
 		# whole layer instead of letting chance cluster (or skip) them.
@@ -694,16 +713,17 @@ func _mark_harvestable(by_layer: Dictionary) -> void:
 		# and this is exactly the lever for that.
 		var stride := maxi(1, roundi(1.0 / fraction))
 		for i in placements.size():
-			if i % stride != 0:
-				continue
 			var placement: Dictionary = placements[i]
+			var identity := int(placement.get("harvest_identity", i))
+			if identity % stride != 0:
+				continue
 			placement["harvest_item"] = item_id
 			placement["harvest_amount"] = amount
 			# HARVEST-ALL/D60: no more respawn. `harvest_respawn_seconds` (the
 			# old JSON key) is gone -- a chopped placement is removed for
 			# good, never dimmed-and-timed-out. See harvest_permanently().
 			placement["harvest_layer"] = layer_name
-			placement["harvest_index"] = i
+			placement["harvest_index"] = identity
 
 
 ## HARVEST-ALL/D60. A real bitset, not one byte per flag: at this density
@@ -2410,7 +2430,7 @@ func restore_from_game(game: Object) -> void:
 			continue  # this build's config has no such harvestable layer
 		var raw := Marshalls.base64_to_raw(str((saved as Dictionary)[layer_name]))
 		var current: PackedByteArray = _harvested[layer_name]
-		if raw.size() != current.size():
+		if raw.size() != current.size() and not (_stable_harvest_layers.has(layer_name) and raw.size() <= current.size()):
 			# The layer's placement count changed under this save (a config
 			# edit, a seed bump) -- a bitset that no longer lines up index-
 			# for-index with today's scatter cannot be trusted, the same
@@ -2423,6 +2443,11 @@ func restore_from_game(game: Object) -> void:
 				continue
 			var key := "%s#%d" % [layer_name, i]
 			harvest_permanently(layer_name, i)
+			# A retired slot has no live render lookup, but its saved bit remains
+			# durable; a later addition never receives that old identity.
+			var restored: PackedByteArray = _harvested[layer_name]
+			_bit_set(restored, i)
+			_harvested[layer_name] = restored
 			if not felled.has(key):
 				continue
 			var record: Dictionary = felled[key]

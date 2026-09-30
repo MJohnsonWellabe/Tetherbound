@@ -1,0 +1,24 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_village_redesign_topology.gd,test_village_road_topology.gd: 2 of 668 test files
+  ok    test_village_redesign_topology.gd :: test_actual_houses_face_the_same_straight_road_at_native_scale
+  ok    test_village_redesign_topology.gd :: test_hall_entry_and_shrine_room_have_physical_walk_clearance
+  ok    test_village_redesign_topology.gd :: test_home_exit_and_hall_connect_to_the_authored_main_road
+  ok    test_village_road_topology.gd :: test_each_subarea_is_backed_by_what_stands_there
+  ok    test_village_road_topology.gd :: test_every_house_door_fronts_a_road
+  ok    test_village_road_topology.gd :: test_every_junction_is_a_branch_off_the_through_road
+  ok    test_village_road_topology.gd :: test_every_lane_keeps_its_painted_band_off_every_building
+  ok    test_village_road_topology.gd :: test_every_side_lane_leaves_the_through_road_and_ends_in_its_subarea
+  ok    test_village_road_topology.gd :: test_every_subarea_is_named_by_a_fingerpost_on_its_road
+  ok    test_village_road_topology.gd :: test_every_village_road_leaves_the_fence_through_a_gate
+  ok    test_village_road_topology.gd :: test_no_harvest_prompt_sits_inside_a_village_door_prompt
+  ok    test_village_road_topology.gd :: test_no_road_centreline_runs_through_a_building
+  ok    test_village_road_topology.gd :: test_one_continuous_through_road_runs_from_grandpas_door_to_trailgate
+  ok    test_village_road_topology.gd :: test_the_three_named_subareas_exist_and_are_served_by_roads
+  ok    test_village_road_topology.gd :: test_the_through_road_continues_to_the_south_bridge
+  ok    test_village_road_topology.gd :: test_the_topology_block_names_real_roads_and_places
+  ok    test_village_road_topology.gd :: test_the_well_is_on_the_main_street_and_no_junction_crowds_the_green
+  ok    test_village_road_topology.gd :: test_village_door_prompt_radius_is_the_one_this_test_guards
+
+18 tests, 3437 assertions, 0 failed
+SOURCE 8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea; native=0; elapsed=7.6368471

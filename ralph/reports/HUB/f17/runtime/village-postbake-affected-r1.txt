@@ -1,0 +1,26 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_terrain_bake_freshness.gd,test_scatter_perf_budget.gd,test_ridgeline_groundmat_composition.gd: 3 of 669 test files
+  ok    test_ridgeline_groundmat_composition.gd :: test_composition_is_bounded_and_preserves_the_terrain_offset
+  ok    test_ridgeline_groundmat_composition.gd :: test_invalid_route_or_rock_destination_falls_back_exactly
+  ok    test_ridgeline_groundmat_composition.gd :: test_only_the_two_clovers_inside_the_zone_move
+  ok    test_ridgeline_groundmat_composition.gd :: test_runtime_config_does_not_invalidate_the_committed_scatter_bake
+  ok    test_ridgeline_groundmat_composition.gd :: test_zone_feather_reaches_an_exact_zero_at_the_boundary
+  ok    test_scatter_perf_budget.gd :: test_playground_bake_is_committed_and_fresh
+[scatter bake] load phases (ms): read[256 regions, 820820 placements, 0 skipped]=2494 reorder[20 layers]=8202
+  ok    test_scatter_perf_budget.gd :: test_playground_bake_loads_within_budget
+[scatter bake] load phases (ms): read[256 regions, 820820 placements, 0 skipped]=2488 reorder[20 layers]=8410
+  ok    test_scatter_perf_budget.gd :: test_scatter_batch_count_stays_bounded
+  FAIL  test_terrain_bake_freshness.gd :: test_fingerprint_ignores_crlf_line_endings
+          expected false, got true  (res://data/config/terrain_playground.json already carries CR bytes; the committed file must be LF)
+          expected 2494404415, got 2292539031  (a CRLF checkout of terrain_playground.json moved the terrain bake fingerprint (2292539031 vs 2494404415), so a Windows bake stamps a manifest Linux CI reads as stale)
+  ok    test_terrain_bake_freshness.gd :: test_fingerprint_moves_when_the_config_changes
+  ok    test_terrain_bake_freshness.gd :: test_lf_and_crlf_terrain_configs_share_the_same_fingerprint
+  ok    test_terrain_bake_freshness.gd :: test_missing_manifest_is_not_fresh
+  ok    test_terrain_bake_freshness.gd :: test_playground_terrain_bake_is_committed_and_fresh
+
+13 tests, 47 assertions, 1 failed
+
+  test_terrain_bake_freshness.gd :: test_fingerprint_ignores_crlf_line_endings — expected false, got true  (res://data/config/terrain_playground.json already carries CR bytes; the committed file must be LF)
+  test_terrain_bake_freshness.gd :: test_fingerprint_ignores_crlf_line_endings — expected 2494404415, got 2292539031  (a CRLF checkout of terrain_playground.json moved the terrain bake fingerprint (2292539031 vs 2494404415), so a Windows bake stamps a manifest Linux CI reads as stale)
+SOURCE_SHA=af78aa2256ea0356b403205e009262e04aa78cf5 NATIVE_EXIT=1 ELAPSED_SECONDS=28.1452306

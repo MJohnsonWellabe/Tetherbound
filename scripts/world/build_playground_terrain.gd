@@ -51,8 +51,8 @@ func _init() -> void:
 ## Region set on the command line: `-- --regions=col:row,col:row,...` (region
 ## LOCATIONS, Terrain3D's own convention -- a region's world origin is
 ## `location * region_size * vertex_spacing`, see terrain_region_alignment.gd).
-## Absent or empty: every region in the configured world bounds, i.e. a full
-## bake. Dirty-region detection from a config diff is deliberately NOT built
+## Absent: every region in the configured world bounds, i.e. a full
+## bake. An explicit empty selection fails closed. Dirty-region detection from a config diff is deliberately NOT built
 ## here -- that is a further, separate decision and guessing at it now would
 ## produce something wrong; this only takes an explicit set.
 func _requested_region_locations(bounds: Dictionary, region_size: int, spacing: float) -> Array[Vector2i]:
@@ -62,10 +62,14 @@ func _requested_region_locations(bounds: Dictionary, region_size: int, spacing: 
 			var out: Array[Vector2i] = []
 			for pair: String in raw.split(",", false):
 				var parts := pair.split(":")
-				if parts.size() != 2:
+				if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_int():
 					push_error("--regions entry %s is not COL:ROW" % pair)
 					return []
-				out.append(Vector2i(int(parts[0]), int(parts[1])))
+				var location := Vector2i(int(parts[0]), int(parts[1]))
+				if out.has(location) or not ALIGNMENT.region_locations(bounds, region_size, spacing).has(location):
+					push_error("--regions repeats or exceeds the authored region grid: " + pair)
+					return []
+				out.append(location)
 			return out
 	return ALIGNMENT.region_locations(bounds, region_size, spacing)
 
@@ -118,6 +122,28 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--data-dir="):
 			data_dir = arg.substr("--data-dir=".length())
+	var regional_update := not full_bake and data_dir == DATA_DIR
+	var scope := {}
+	if regional_update:
+		var selected: Array = []
+		for location: Vector2i in locations:
+			selected.append([location.x,location.y])
+		var scope_file := ""
+		for arg: String in OS.get_cmdline_user_args():
+			if arg.begins_with("--scope-proof="):
+				scope_file = arg.substr("--scope-proof=".length())
+		scope = TERRAIN_BAKE.read_village_scope(scope_file, selected)
+		if scope.is_empty():
+			push_error("Regional terrain writer needs matching independently reviewed village scope proof")
+			quit(1)
+			return
+	var output_dir := data_dir
+	if regional_update:
+		output_dir = "res://.tmp/terrain-patch-%d-%d-%d" % [OS.get_process_id(), int(Time.get_unix_time_from_system()), Time.get_ticks_usec()]
+		if DirAccess.make_dir_recursive_absolute(output_dir) != OK:
+			push_error("Could not stage the regional terrain bake")
+			quit(1)
+			return
 
 	var colour_cfg: Dictionary = config.get("colour", {})
 	# EV4-hillside-seam: texture-band decisions are deliberately sampled at a
@@ -134,7 +160,7 @@ func _run() -> void:
 	var terrain: Node = ClassDB.instantiate("Terrain3D")
 	terrain.set("region_size", region_size)
 	terrain.set("vertex_spacing", spacing)
-	terrain.set("data_directory", data_dir)
+	terrain.set("data_directory", output_dir)
 	root.add_child(terrain)
 	await process_frame
 
@@ -166,9 +192,29 @@ func _run() -> void:
 	print("  height range %.1fm .. %.1fm (relief %.1fm)" % [lowest, highest, highest - lowest])
 	print("  %.1f%% of the surface is steeper than 30 degrees" % (100.0 * steep_samples / float(total_pixels)))
 
-	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(data_dir)):
-		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(data_dir))
-	data.call("save_directory", data_dir)
+	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(output_dir)):
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_dir))
+	data.call("save_directory", output_dir)
+	if regional_update:
+		var files: Array[String] = []
+		for name: String in DirAccess.get_files_at(output_dir):
+			if name.ends_with(".res"):
+				var region := ResourceLoader.load(output_dir.path_join(name), "", ResourceLoader.CACHE_MODE_IGNORE)
+				if region == null or not region.is_class("Terrain3DRegion"):
+					push_error("Regional terrain staging produced an invalid resource: " + name)
+					quit(1)
+					return
+				files.append(name)
+		var selected: Array = []
+		for location: Vector2i in locations:
+			selected.append([location.x, location.y])
+		var patch := {"config_fingerprint": TERRAIN_BAKE.config_fingerprint(),
+			"regions": selected, "scope": "explicit regional terrain update; untouched full-bake provenance retained"}
+		patch.merge(scope, true)
+		if files.size() != locations.size() or not TERRAIN_BAKE.promote_regional_update(data_dir, output_dir, files, patch):
+			push_error("Regional terrain promotion failed; previous generation retained")
+			quit(1)
+			return
 
 	# Stamp the freshness manifest only for a full bake: a `--regions=` subset
 	# run (the bit-identity test's own use of this script) touches a fraction
