@@ -46,7 +46,11 @@ Independent VFX source review of `d9cdb9788` identified inherited callback
 suppression as a timing blocker before any native capture. This candidate
 restores both callback sets and unfreezes the clock before measurement.
 Malformed sample structures now produce a preserved failed matrix summary.
-The updated diff still needs the reviewer's strict re-check.
+Independent VFX source re-check passed the route timing repair at
+`1186526b921f7746dbaf514f0b7f7ac0649640f7`. The runner now also rejects
+non-finite samples and distinguishes requested-case completion from all
+twelve route cases. This small summary-only change has not rerun the native
+route; its prior raw evidence remains pinned to the executed source.
 
 Visual matrix adapters `capture_lookdev_catalogue.gd` and
 `capture_lookdev_stormwood.gd` select actual device presets before mounting
@@ -54,3 +58,9 @@ the existing production-camera capture paths. Stormwood uses the existing
 four-phase and aftermath fixture, always-purple grade, ordinary HUD and
 declared phase/health staging. These adapters are pending native validation;
 their stills are separate from performance samples and earned player proof.
+The independent review identified zero-frame completion, overwriting,
+receipt-write failure and early null-world failure paths. The current delta
+requires fresh explicit output paths, all five Stormwood stands and all
+phases, and checked receipt writes. Failure completion never dereferences a
+missing world. These adapter guards remain pending strict re-check/native
+validation and do not change the executed route.

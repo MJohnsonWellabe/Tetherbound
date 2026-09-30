@@ -10,6 +10,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -51,6 +52,7 @@ def run() -> int:
              for preset in (args.preset or ["Low", "Medium", "High"])]
     matrix = {"source_commit": source, "route_config_sha256": hashlib.sha256(config_bytes).hexdigest(),
               "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(), "cases": [],
+              "requested_cases": [{"biome": biome, "preset": preset} for biome, preset in cases],
               "scope": "Computer production-scene render routes. No earned campaign, blinded visual approval, Hall proof or owner Ally result."}
     failed = False
     for biome, preset in cases:
@@ -83,11 +85,15 @@ def run() -> int:
         receipt_error = ""
         try:
             receipt = json.loads(receipt_path.read_text(encoding="utf-8")) if receipt_path.exists() else {}
+            if not isinstance(receipt, dict):
+                raise ValueError("Receipt must be a JSON object")
         except (OSError, ValueError) as exc:
             receipt = {}
             receipt_error = str(exc)
         try:
             samples = [float(row["wall_ms"]) for row in receipt.get("samples", [])]
+            if any(not math.isfinite(value) or value <= 0 for value in samples):
+                raise ValueError("Frame samples must be finite positive milliseconds")
         except (KeyError, TypeError, ValueError) as exc:
             samples = []
             receipt_error = f"Malformed frame samples: {exc}"
@@ -107,6 +113,8 @@ def run() -> int:
                                      "maximum": max(samples)}
         matrix["cases"].append(case)
         matrix["complete"] = all(item["complete"] for item in matrix["cases"]) and len(matrix["cases"]) == len(cases)
+        matrix["all_twelve_route_cases_complete"] = matrix["complete"] and set(cases) == {
+            (biome_id, quality) for biome_id in config["routes"] for quality in ("Low", "Medium", "High")}
         (output / "matrix.json").write_text(json.dumps(matrix, indent=2) + "\n", encoding="utf-8")
         print(f"{biome}/{preset}: {'PASS' if complete else 'FAIL'} ({len(samples)} frames, exit {exit_code})", flush=True)
         if not complete:

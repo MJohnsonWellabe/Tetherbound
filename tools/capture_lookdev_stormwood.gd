@@ -2,10 +2,11 @@ extends "res://tools/capture_stormwood_f10_matrix.gd"
 
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
 var _graphics_capture: Dictionary = {}
+const FULL_STAND_COUNT := 5
 
 
 func _run() -> void:
-	_graphics_capture = BOOTSTRAP.prepare(self)
+	_graphics_capture = BOOTSTRAP.prepare(self, "--out=")
 	if _graphics_capture.is_empty():
 		quit(1)
 		return
@@ -14,8 +15,9 @@ func _run() -> void:
 	_phases_only.assign(PHASES)
 	_hud = true
 	for arg: String in OS.get_cmdline_user_args():
-		if arg.begins_with("--phases=") or arg == "--no-aftermath":
-			push_error("Look-dev Stormwood matrix requires all phases and aftermath")
+		if arg.begins_with("--phases=") or arg == "--no-aftermath" \
+				or arg.begins_with("--stands=") or arg.begins_with("--custom="):
+			push_error("Look-dev Stormwood matrix requires all five authored stands, phases and aftermath")
 			quit(2)
 			return
 	await super._run()
@@ -28,7 +30,8 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 
 
 func _done() -> void:
-	var expected := _matrix_stands().size() * (PHASES.size() + 1)
+	# No world access here: a failed mount must still produce a failed receipt.
+	var expected := FULL_STAND_COUNT * (PHASES.size() + 1)
 	if _frames.size() != expected:
 		_failures.append("Stormwood matrix captured %d/%d planned frames" % [_frames.size(), expected])
 	var file := FileAccess.open("%s/frames_%s.json" % [_output_dir, _label], FileAccess.WRITE)
