@@ -51,6 +51,9 @@ static func wild_win_candidate(outcome: Dictionary, character_id: String,
 	var instance := str(outcome.get("world_instance_id", ""))
 	var encounter := str(outcome.get("encounter_id", ""))
 	var realm := str(outcome.get("realm", ""))
+	var table: Variant = config.get("species")
+	if not table is Dictionary:
+		return {"ok": false, "code": "invalid_shed_table"}
 	var participants: Variant = outcome.get("participants")
 	if instance.is_empty() or encounter.is_empty() or character_id.is_empty() \
 			or str(outcome.get("kind", "")) != "wild" or outcome.get("won") != true \
@@ -78,6 +81,8 @@ static func wild_win_candidate(outcome: Dictionary, character_id: String,
 			return {"ok": false, "code": "invalid_trusted_defeated_roster"}
 		seen[uid] = true
 		var profile := _profile(config, species)
+		if table.has(species) and profile.is_empty():
+			return {"ok": false, "code": "invalid_shed_table"}
 		if profile.is_empty() or not (profile["wild_realms"] as Array).has(realm):
 			continue
 		var roll: Variant = host_rolls.get(uid)
@@ -101,11 +106,15 @@ static func den_groom_candidate(character_id: String, owned_party: Array,
 			or host_world_day < 1 or owned_party.is_empty() or owned_party.size() > 5:
 		return {"ok": false, "code": "invalid_host_groom_context"}
 	var policy: Variant = config.get("den_grooming")
+	var table: Variant = config.get("species")
+	if not table is Dictionary:
+		return {"ok": false, "code": "invalid_shed_table"}
 	if not policy is Dictionary or policy.get("clock") != "host_world_day" \
 			or not bool(policy.get("manual_tap", false)) \
 			or not bool(policy.get("once_per_owned_uid_per_day", false)) \
 			or bool(policy.get("offline_production", true)) \
-			or bool(policy.get("automatic_production", true)):
+			or bool(policy.get("automatic_production", true)) \
+			or not bool(policy.get("compose_with_care_essence", false)):
 		return {"ok": false, "code": "invalid_shed_table"}
 	var selected := {}
 	var seen := {}
@@ -124,6 +133,8 @@ static func den_groom_candidate(character_id: String, owned_party: Array,
 	if received_receipts.has(receipt):
 		return {"ok": false, "code": "already_groomed", "receipt_id": receipt}
 	var profile := _profile(config, str(selected.get("species", "")))
+	if table.has(str(selected.get("species", ""))) and profile.is_empty():
+		return {"ok": false, "code": "invalid_shed_table"}
 	var outputs := {}
 	if not profile.is_empty():
 		outputs[str(profile["item"])] = int(profile["den_amount"])
