@@ -1,0 +1,21 @@
+Later sky-lightning fringe source candidate, extending 8fae061e36; library OFF.
+Keep frozen R24 before9a6dbc823c / after05ccfe3b34 unchanged and separate.
+
+Original R14 full-craft failure: fine luminous fringes softened the largest
+bolt; dense branches crossed/broadened the apparent target hit area; impact
+was insufficiently distinct. R17 already added bounded post-contact body fade.
+This candidate reduces high-frequency filament/corona sway and vein strength,
+narrows/dims the colored sheath, and reduces its flat emission floor while
+preserving the bright central core and complete existing jagged strike arcs.
+
+Installed local ion_filament material/bolt geometry is adapted without new
+images/assets/imports, branches, particles, lights, audio, mesh instances or
+screen-space effects. Defaults preserve other electrical consumers. Sky body
+and impact opt in through material data; branch counts/mastery, six-meter
+stroke path, target/ground anchors, .22s contact hold/fade, travel/impact timers,
+core width/emission, budgets and 175 mapped cues remain unchanged.
+
+No parser, native, before/after visual or full craft PASS. Existing overlapping
+branch layout remains a possible full-bar failure; reducing one fringe defect
+does not establish the owner bar or target readability in real combat. Keep OFF
+and independently judge fresh originals/motion when a later token is granted.

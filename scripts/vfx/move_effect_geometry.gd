@@ -195,6 +195,10 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("corona_opacity", float(profile.get("corona_opacity", 0.5)))
 		out.set_shader_parameter("emission_floor", float(profile.get("emission_floor", 0.2)))
 		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.4)))
+		out.set_shader_parameter("filament_sway", float(profile.get("filament_sway", 0.06)))
+		out.set_shader_parameter("corona_sway", float(profile.get("corona_sway", 0.12)))
+		out.set_shader_parameter("corona_power", float(profile.get("corona_power", 1.55)))
+		out.set_shader_parameter("vein_strength", float(profile.get("vein_strength", 1.0)))
 		return out
 	if kind == "burning_core":
 		out.shader = FIRE_CORE_SHADER
