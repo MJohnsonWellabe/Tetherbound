@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: new process loads persisted custom device choices
+PASS: new process retains requested Forward+ renderer
+Fresh-process graphics reload: actual renderer=forward_plus
