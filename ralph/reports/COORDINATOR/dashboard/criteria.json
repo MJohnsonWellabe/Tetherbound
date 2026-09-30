@@ -1449,7 +1449,7 @@
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
      "status": "met",
-     "evidence": "ralph/reports/VISUAL/lookdev/recheck-presets.md: /root/combat strict MET at 8090a70ce; 19 production Settings pad checks + fresh-process persistence and actual Low/Medium/High GPU Water camera ranges. Shortcuts disclosed in the recheck.",
+     "evidence": "ralph/reports/VISUAL/lookdev/recheck-presets.md: 19 production Settings pad checks + fresh-process persistence and actual Low/Medium/High GPU Water camera ranges. Shortcuts disclosed: persistence is headless; restart routing uses declared fake objects; no OS restart or Ally; Shadow Off retains minimum atlas cost. Independent re-check: /root/combat strict MET at 8090a70ce.",
      "gap": ""
     },
     {
