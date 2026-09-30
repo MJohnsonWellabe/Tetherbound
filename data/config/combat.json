@@ -375,6 +375,10 @@
           "reaction_back_seconds": 0.11
         }
       },
+      "rumble": {
+        "heavy": {"weak": 0.2, "strong": 0.35, "seconds": 0.09},
+        "ultimate": {"weak": 0.3, "strong": 0.5, "seconds": 0.14}
+      },
       "critical_hitstop_seconds": 0.12,
       "giant_height_m": 5.0,
       "giant_knockback_scale": 0.5,

@@ -184,7 +184,13 @@
         "pitch": 1.0
       },
       "resisted_body_gain_db": -4.0,
-      "peer_gain_db": -4.0
+      "peer_gain_db": -4.0,
+      "contact_mix": {
+        "mix_rate": 22050,
+        "peak_limit": 0.85,
+        "max_seconds": 1.0,
+        "cache_entries": 64
+      }
     },
     "_comment": "Which sound answers which of combat_manager.gd's existing signals. Nothing in the combat code was changed to add audio -- these are all signals it already emitted. `effectiveness` keys are type_chart.gd's classify() values.",
     "effectiveness_sound": {

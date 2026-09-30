@@ -1,0 +1,27 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: production Settings shell opens
+PASS: graphics joins input owner without world input
+PASS: shipping default remains Low
+PASS: physical A chooses Medium and persists Forward+ request
+PASS: renderer change offers explicit restart without arming restart
+PASS: physical Down skips unavailable Forward+ toggles
+SCRIPT ERROR: Trying to assign an array of type "Array" to a variable of type "Array[String]".
+   at: _cycle_option (res://scripts/ui/graphics_settings.gd:96)
+   GDScript backtrace (most recent call first):
+       [0] _cycle_option (res://scripts/ui/graphics_settings.gd:96)
+       [1] <anonymous lambda> (res://scripts/ui/graphics_settings.gd:38)
+FAIL: shadow toggle selects Custom and persists
+PASS: physical A enables device-only frame readout
+PASS: Later leaves the game running
+PASS: graphics focus reaches existing audio controls
+PASS: audio focus returns to graphics
+FAIL: fresh preference load retains choices
+PASS: canonical device document validates
+PASS: contradictory Low label with Medium renderer is rejected
+PASS: host restart saves world through existing checked API
+PASS: failed host save blocks restart preparation
+PASS: guest restart saves only its own character with captured pose
+PASS: incomplete guest join cannot save or restart
+PASS: failed portable save blocks restart preparation
+Graphics Settings bounded proof: 2 failures; actual renderer=gl_compatibility

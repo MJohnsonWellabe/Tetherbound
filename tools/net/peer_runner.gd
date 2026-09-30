@@ -644,7 +644,11 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_foundations_state(args)
 		"legacy_physical_crossings_fixture":
 			var regression := str(args.get("regression", ""))
-			var enabled := regression in ["veridian_same_five", "water_return"] \
+			var enabled := regression in ["veridian_same_five", "water_return", "cloudreach_midride_rejoin",
+				"cloudreach_activity_payoffs", "cloudreach_riding", "realm_owner_disconnect_mid_fight",
+				"session_host_first_realm", "split_realms", "stormwood_finalized_death",
+				"stormwood_glass_for_bryn", "stormwood_hosted_trainers", "stormwood_livewire",
+				"stormwood_realms", "stormwood_stormheart_offers", "water_alpha", "cloudreach_veyra_reconnect"] \
 				and FOUNDATIONS_ORDER.set_test_overrides({"legacy_physical_crossings": true})
 			out = {"verdict": "PASS" if enabled else "FAIL", "detail": "disclosed retired crossing fixture: " + regression}
 		"save_character_here":
@@ -2877,7 +2881,7 @@ func _combat_manager() -> Node:
 ## report actual signals, body leases and HUD nodes, never manufacture a result.
 func _observe_combat_feedback(manager: Node) -> Dictionary:
 	if not manager.has_meta("f21_observations"):
-		var state := {"launches": {}, "impacts": []}
+		var state := {"launches": {}, "impacts": [], "hp_snapshots": []}
 		manager.set_meta("f21_observations", state)
 		manager.connect("attack_launched", func(on_enemy: bool, launch: Dictionary, presentation: Node3D) -> void:
 			var id := str(launch.get("action_id", ""))
@@ -2886,6 +2890,15 @@ func _observe_combat_feedback(manager: Node) -> Dictionary:
 			state.launches[id] = row
 			if presentation != null and is_instance_valid(presentation):
 				presentation.connect("arrived", func() -> void: row["contact_process_frame"] = Engine.get_process_frames(), CONNECT_ONE_SHOT)
+		)
+		manager.connect("host_snapshot_hp_applied", func(action_id: String, before: float, after: float) -> void:
+			var launch: Dictionary = state.launches.get(action_id, {})
+			var row := {"action_id": action_id, "before": before, "after": after,
+				"contact_at_hp_write": int(launch.get("contact_process_frame", -1)) >= 0,
+				"launch": launch.duplicate(true), "hp_write_process_frame": Engine.get_process_frames()}
+			state.hp_snapshots.append(row)
+			if state.hp_snapshots.size() > 256: state.hp_snapshots.pop_front()
+			print("F21 actual snapshot HP write ", JSON.stringify(row))
 		)
 		manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _at: Vector3) -> void:
 			var id := str(receipt.get("action_id", ""))
@@ -2901,6 +2914,9 @@ func _observe_combat_feedback(manager: Node) -> Dictionary:
 			var row := {"action_id": id, "on_enemy": on_enemy, "own_hit": bool(receipt.get("own_hit", true)),
 				"receipt_read_only": receipt.is_read_only(), "weight": str(receipt.get("weight", "")),
 				"damage": float(receipt.get("damage", 0.0)), "number_text": expected, "number_seen": number_seen,
+				"host_resolved_defence": bool(receipt.get("host_resolved_defence", false)),
+				"host_poise": float(receipt.get("host_poise", -1.0)), "local_poise": float(manager.get("_player_poise")),
+				"host_staggered": bool(receipt.get("host_staggered", false)), "local_action": int(manager.get("_action")),
 				"hitstop_seconds": float(receipt.get("hitstop_seconds", 0.0)), "knockback_m": float(receipt.get("knockback_m", 0.0)),
 				"target_hitstop_active": bool(body.get("_combat_hitstop_active")) if is_instance_valid(body) else false,
 				"target_physics_paused": not body.is_physics_processing() if is_instance_valid(body) else false,

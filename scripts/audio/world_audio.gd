@@ -41,6 +41,7 @@ extends Node
 
 const CONFIG := preload("res://scripts/audio/audio_manager.gd")
 const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+const IMPACT_AUDIO := preload("res://scripts/combat/impact_audio.gd")
 const MOVE_EFFECTS := preload("res://scripts/vfx/move_effect_library.gd")
 const MOVES := preload("res://scripts/creatures/move_db.gd")
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
@@ -590,22 +591,29 @@ func _on_impact_confirmed(on_enemy: bool, receipt: Dictionary, at: Vector3) -> v
 	var sounds: Dictionary = row.get("sound", {})
 	var cue := str(sounds.get("impact_mastery" if rank >= 5 else "impact", ""))
 	var path := str(CONFIG.section("move_effect_cues").get(cue, ""))
+	var layers: Array = []
 	if path.is_empty():
-		CONFIG.play_at(str(cfg.get("fallback_body", "impact_normal")), at, "SFX", gain, float(weight.get("pitch", 1.0)))
+		path = CONFIG.sfx_path(str(cfg.get("fallback_body", "impact_normal")))
 	else:
-		CONFIG.play_file_at(path, "receipt:" + str(receipt.get("action_id", "")) + ":body", at, "SFX",
-			gain + float(sounds.get("gain_db", -7.0)), float(weight.get("pitch", 1.0)))
+		gain += float(sounds.get("gain_db", -7.0))
+	layers.append({"stream": CONFIG.stream(path), "gain_db": gain, "pitch": float(weight.get("pitch", 1.0))})
 	var effectiveness := "effective" if float(receipt.get("type_mult", 1.0)) > 1.0 else "resisted"
 	if float(receipt.get("type_mult", 1.0)) != 1.0:
-		_play_impact_layer(cfg.get("effectiveness_layers", {}).get(effectiveness, {}), at)
-	if bool(receipt.get("critical", false)): _play_impact_layer(cfg.get("critical_layer", {}), at)
-	if not on_enemy: _play_impact_layer(cfg.get("receiver_layer", {}), at)
+		_append_impact_layer(layers, cfg.get("effectiveness_layers", {}).get(effectiveness, {}))
+	if bool(receipt.get("critical", false)): _append_impact_layer(layers, cfg.get("critical_layer", {}))
+	if not on_enemy: _append_impact_layer(layers, cfg.get("receiver_layer", {}))
+	var contact := IMPACT_AUDIO.compose(layers, cfg.get("contact_mix", {}))
+	if contact == null:
+		push_error("Impact contact layers require valid WAV streams.")
+		return
+	CONFIG.play_stream_at(contact, "receipt:" + str(receipt.get("action_id", "")) + ":contact", at)
 
 
-func _play_impact_layer(spec: Dictionary, at: Vector3) -> void:
+func _append_impact_layer(layers: Array, spec: Dictionary) -> void:
 	var cue := str(spec.get("sound", ""))
 	if cue.is_empty(): return
-	CONFIG.play_at(cue, at, "SFX", float(spec.get("gain_db", 0.0)), float(spec.get("pitch", 1.0)))
+	layers.append({"stream": CONFIG.stream(CONFIG.sfx_path(cue)),
+		"gain_db": float(spec.get("gain_db", 0.0)), "pitch": float(spec.get("pitch", 1.0))})
 
 
 func _on_attack_missed(_by_player: bool) -> void:

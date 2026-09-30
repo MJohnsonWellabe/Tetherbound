@@ -45,13 +45,18 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 static func launch(action_id: String, encounter_id: String, attacker_uid: String,
 		target_uid: String, move_id: String, slot: String, from: Vector3,
 		to: Vector3, travel_seconds: float, body_generation: int = 0,
-		target_ground: Vector3 = Vector3.INF) -> Dictionary:
+		target_ground: Vector3 = Vector3.INF, target_visual_bounds: AABB = AABB()) -> Dictionary:
 	var value := {"action_id": action_id, "encounter_id": encounter_id,
 		"attacker_uid": attacker_uid, "target_uid": target_uid, "move_id": move_id,
 		"slot": slot, "from": from, "to": to, "travel_seconds": maxf(0.0, travel_seconds),
 		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash(),
 		"impact_audio_owner": "receipt"}
 	if target_ground.is_finite(): value["target_ground"] = target_ground
+	if target_visual_bounds.size.x > 0.0 and target_visual_bounds.size.y > 0.0 and target_visual_bounds.size.z > 0.0 \
+			and target_visual_bounds.position.is_finite() and target_visual_bounds.size.is_finite():
+		var bounds := {"position": target_visual_bounds.position, "size": target_visual_bounds.size}
+		bounds.make_read_only()
+		value["target_visual_bounds"] = bounds
 	value.make_read_only()
 	return value
 
@@ -134,3 +139,84 @@ static func with_launch(receipt: Dictionary, launch: Dictionary, vfx: Dictionary
 	if contact.is_finite(): frozen["sound_position"] = contact
 	frozen.make_read_only()
 	return frozen
+
+## Device-local tactile amplitude never changes the frozen gameplay receipt.
+static func rumble_spec(impact: Dictionary, scale: float) -> Dictionary:
+	if str(impact.get("weight", "light")) not in ["heavy", "ultimate"] or scale <= 0.0: return {}
+	var spec: Dictionary = config().get("rumble", {}).get(str(impact.get("weight", "light")), {})
+	if spec.is_empty(): return {}
+	return {"weak": clampf(float(spec.get("weak", 0.0)) * scale, 0.0, 1.0),
+		"strong": clampf(float(spec.get("strong", 0.0)) * scale, 0.0, 1.0),
+		"seconds": maxf(0.0, float(spec.get("seconds", 0.0)))}
+
+## Host-only private ledger: encounter + peer + current deployed UID.
+## Time, pool, regen and critical window are resolved from host config.
+static func defence_state(target_uid: String, now_ms: int, cfg: Dictionary) -> Dictionary:
+	return {"target_uid": target_uid, "poise": maxf(1.0, float(cfg.get("max", 40.0))),
+		"last_ms": now_ms, "quiet_until_ms": now_ms, "stagger_until_ms": now_ms,
+		"pause_until_ms": now_ms, "stagger_active": false, "critical_ready": false, "actions": {}}
+
+static func advance_defence(state: Dictionary, now_ms: int, cfg: Dictionary) -> void:
+	now_ms = maxi(now_ms, int(state.last_ms))
+	if bool(state.get("stagger_active", false)) and now_ms >= int(state.stagger_until_ms):
+		# Match CombatManager._reset_player_poise at actual stagger recovery.
+		state.poise = maxf(1.0, float(cfg.get("max", 40.0)))
+		state.quiet_until_ms = now_ms
+		state.critical_ready = false
+		state.stagger_active = false
+	var regen_start := maxi(int(state.last_ms), maxi(int(state.quiet_until_ms),
+		maxi(int(state.stagger_until_ms), int(state.pause_until_ms))))
+	if now_ms > regen_start:
+		state.poise = minf(maxf(1.0, float(cfg.get("max", 40.0))),
+			float(state.poise) + float(cfg.get("regen_per_second", 20.0)) * (now_ms - regen_start) / 1000.0)
+	state.last_ms = now_ms
+
+## Local action/poise clocks pause for the union of accepted hitstop leases.
+## Only an independently accepted host receipt may call this; observer feedback
+## never extends the observer's defensive state.
+static func pause_defence(state: Dictionary, now_ms: int, seconds: float, cfg: Dictionary) -> void:
+	advance_defence(state, now_ms, cfg)
+	var previous_end := maxi(now_ms, int(state.pause_until_ms))
+	var next_end := maxi(previous_end, now_ms + int(round(maxf(0.0, seconds) * 1000.0)))
+	var uncovered := next_end - previous_end
+	if int(state.stagger_until_ms) > now_ms: state.stagger_until_ms += uncovered
+	if int(state.quiet_until_ms) > now_ms: state.quiet_until_ms += uncovered
+	state.pause_until_ms = next_end
+
+static func resolve_defence_hit(state: Dictionary, base_damage: float, multiplier: float,
+		now_ms: int, hitstop_seconds: float, cfg: Dictionary) -> Dictionary:
+	advance_defence(state, now_ms, cfg)
+	var critical := bool(state.critical_ready) and now_ms < int(state.stagger_until_ms)
+	if critical: state.critical_ready = false
+	var damage := maxf(0.0, base_damage) * clampf(multiplier, 0.0, 1.0)
+	if critical: damage *= maxf(1.0, float(cfg.get("crit_scale", 1.5)))
+	state.poise = maxf(0.0, float(state.poise) - damage)
+	var freeze_ms := int(round(maxf(0.0, hitstop_seconds) * 1000.0))
+	pause_defence(state, now_ms, hitstop_seconds, cfg)
+	freeze_ms = maxi(0, int(state.pause_until_ms) - now_ms)
+	state.quiet_until_ms = now_ms + int(round(maxf(0.0, float(cfg.get("regen_delay", 2.0))) * 1000.0)) + freeze_ms
+	var staggered := float(state.poise) <= 0.0
+	if staggered:
+		state.stagger_active = true
+		state.critical_ready = true
+		state.stagger_until_ms = now_ms + int(round(maxf(0.0, float(cfg.get("stagger_seconds", 0.6))) * 1000.0)) + freeze_ms
+		# Existing local regen waits through the stagger before its quiet beat.
+		state.quiet_until_ms += int(round(maxf(0.0, float(cfg.get("stagger_seconds", 0.6))) * 1000.0))
+	var result := {"damage": damage, "critical": critical, "poise": float(state.poise),
+		"staggered": staggered, "critical_ready": bool(state.critical_ready),
+		"stagger_left": maxf(0.0, float(int(state.stagger_until_ms) - now_ms - freeze_ms) / 1000.0),
+		"quiet_left": maxf(0.0, float(int(state.quiet_until_ms) - now_ms - freeze_ms) / 1000.0 - (float(cfg.get("stagger_seconds", 0.6)) if staggered else 0.0))}
+	result.make_read_only()
+	return result
+
+static func with_defence(impact: Dictionary, defence: Dictionary) -> Dictionary:
+	var resolved := impact.duplicate()
+	resolved.damage = float(defence.damage)
+	resolved.critical = bool(defence.critical)
+	resolved.hitstop_seconds = float(config().get("critical_hitstop_seconds", 0.0)) if resolved.critical else float(impact.get("hitstop_seconds", 0.0))
+	resolved.host_resolved_defence = true
+	resolved.host_poise = float(defence.poise)
+	resolved.host_staggered = bool(defence.staggered)
+	resolved.host_critical_ready = bool(defence.critical_ready)
+	resolved.make_read_only()
+	return resolved

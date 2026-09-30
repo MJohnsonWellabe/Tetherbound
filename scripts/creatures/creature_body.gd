@@ -1998,6 +1998,9 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -
 	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(float(profile.get("recoil_degrees", 0.0))), out_seconds)
 	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, back_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, back_seconds)
+	# An existing host lease also owns a newly created delayed reaction tween.
+	if _combat_hitstop_active and not MOTION_PREFS.reduced_motion():
+		_combat_flinch_tween.pause()
 
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager

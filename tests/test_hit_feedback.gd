@@ -66,3 +66,131 @@ func test_flash_styles_share_host_crit_type_facts_and_resisted_reads_weaker() ->
 	assert_ne(FEEDBACK.flash_style(crit).colour, FEEDBACK.flash_style(effective).colour)
 	assert_eq(FEEDBACK.style_key(crit), "critical", "crit owns combined crit/effective flash and number identity")
 	assert_eq(crit.impact_audio_owner, "receipt")
+
+func test_rumble_off_and_weight_do_not_modify_host_receipt_or_timing() -> void:
+	var motion := preload("res://scripts/ui/motion_prefs.gd")
+	var prefs_type := preload("res://scripts/ui/key_bindings.gd")
+	var path := "user://__test_f21_rumble.json"
+	var old := motion.rumble_percent()
+	var prefs := prefs_type.new(path)
+	motion.set_rumble_percent(40)
+	motion.store_to(prefs)
+	assert_true(bool(prefs.save()))
+	motion.set_rumble_percent(100)
+	var restored := prefs_type.new(path)
+	assert_eq(restored.load_overrides(), prefs_type.LOAD_OK)
+	motion.load_from(restored)
+	assert_eq(motion.rumble_percent(), 40, "device preference survives actual settings file")
+	var heavy := FEEDBACK.receipt("heavy", "fireball", {"slot": "charged"}, "charged", 20.0, 1.0, false, Vector3.RIGHT)
+	var normal := FEEDBACK.rumble_spec(heavy, 1.0)
+	var reduced := FEEDBACK.rumble_spec(heavy, motion.rumble_scale())
+	assert_almost_eq(reduced.strong, normal.strong * 0.4, 0.00001)
+	assert_eq(reduced.seconds, normal.seconds, "amplitude preference never changes receipt timing")
+	motion.set_rumble_percent(-1)
+	assert_eq(motion.rumble_percent(), 0)
+	assert_true(FEEDBACK.rumble_spec(heavy, motion.rumble_scale()).is_empty())
+	assert_true(FEEDBACK.rumble_spec({"weight": "light"}, 1.0).is_empty())
+	assert_eq(heavy.damage, 20.0)
+	assert_true(heavy.is_read_only())
+	motion.set_rumble_percent(200)
+	assert_eq(motion.rumble_percent(), 100)
+	motion.set_rumble_percent(old)
+	if FileAccess.file_exists(path): DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+class IncomingHeartStub extends RefCounted:
+	var placed := true
+	func is_placed(id: String, _progression: RefCounted) -> bool:
+		return placed and id == "placed-heart"
+	func heart(_id: String) -> Dictionary:
+		return {"power": {"incoming_damage_multiplier": 0.75}}
+
+func test_host_defensive_poise_break_bonus_expiry_and_peer_scope() -> void:
+	var cfg := {"max": 20.0, "regen_delay": 0.1, "regen_per_second": 20.0,
+		"stagger_seconds": 0.2, "crit_scale": 1.5}
+	var struck := FEEDBACK.defence_state("owned-a", 0, cfg)
+	var untouched := FEEDBACK.defence_state("owned-b", 0, cfg)
+	var first := FEEDBACK.resolve_defence_hit(struck, 25.0, 1.0, 0, 0.03, cfg)
+	assert_false(first.critical)
+	assert_true(first.staggered)
+	assert_eq(first.poise, 0.0)
+	assert_almost_eq(first.stagger_left, 0.2, 0.00001)
+	assert_almost_eq(first.quiet_left, 0.1, 0.00001, "quiet beat follows presentation stagger as before")
+	var bonus := FEEDBACK.resolve_defence_hit(struck, 8.0, 0.5, 100, 0.12, cfg)
+	assert_true(bonus.critical)
+	assert_eq(bonus.damage, 6.0, "one host relic multiplier and one host critical multiplier")
+	assert_eq(untouched.poise, 20.0)
+	assert_false(untouched.critical_ready)
+	assert_eq(untouched.target_uid, "owned-b")
+	var expired := FEEDBACK.resolve_defence_hit(struck, 1.0, 1.0, 1000, 0.03, cfg)
+	assert_false(expired.critical, "expired bonus cannot survive a later strike")
+	assert_false(expired.staggered)
+	assert_true(expired.poise > 0.0, "host regen resumes after its frozen stagger/quiet intervals")
+	var receipt := FEEDBACK.receipt("f:enemy:1", "root_nibble", {}, "quick", 8.0, 0.8, false, Vector3.LEFT)
+	var resolved := FEEDBACK.with_defence(receipt, bonus)
+	assert_true(resolved.is_read_only())
+	assert_true(resolved.critical)
+	assert_true(resolved.host_resolved_defence)
+	assert_eq(resolved.host_poise, bonus.poise)
+	assert_eq(resolved.host_staggered, bonus.staggered)
+	assert_eq(resolved.damage, 6.0)
+	assert_eq(resolved.type_mult, 0.8)
+	assert_eq(receipt.damage, 8.0, "pre-resolution receipt remains detached")
+
+func test_host_relic_resolution_ignores_numeric_peer_claims_and_unplaced_identity() -> void:
+	var director := preload("res://scripts/combat/encounter_director.gd")
+	var hearts := IncomingHeartStub.new()
+	var progression := RefCounted.new()
+	var card := {"active_relic_id": "placed-heart", "incoming_damage_multiplier": 0.01}
+	assert_eq(director.validate_card_incoming_multiplier(card, hearts, progression), 0.75)
+	hearts.placed = false
+	assert_eq(director.validate_card_incoming_multiplier(card, hearts, progression), 1.0)
+	hearts.placed = true
+	assert_eq(director.validate_card_incoming_multiplier({"active_relic_id": "forged-heart"}, hearts, progression), 1.0)
+	assert_eq(director.validate_card_incoming_multiplier(card, null, progression), 1.0)
+
+func test_host_stagger_recovery_resets_pool_before_the_next_hit() -> void:
+	var cfg := {"max": 40.0, "regen_delay": 2.0, "regen_per_second": 20.0,
+		"stagger_seconds": 0.6, "crit_scale": 1.5}
+	var state := FEEDBACK.defence_state("owned-a", 0, cfg)
+	assert_true(FEEDBACK.resolve_defence_hit(state, 50.0, 1.0, 0, 0.03, cfg).staggered)
+	var next := FEEDBACK.resolve_defence_hit(state, 5.0, 1.0, 650, 0.03, cfg)
+	assert_false(next.critical)
+	assert_false(next.staggered, "local recovery restores resistance; the host must do the same")
+	assert_eq(next.poise, 35.0)
+
+func test_host_defensive_pause_unions_overlap_and_outgoing_hits_extend_stagger() -> void:
+	var cfg := {"max": 40.0, "regen_delay": 2.0, "regen_per_second": 20.0,
+		"stagger_seconds": 0.6, "crit_scale": 1.5}
+	var state := FEEDBACK.defence_state("owned-a", 0, cfg)
+	FEEDBACK.resolve_defence_hit(state, 50.0, 1.0, 0, 0.1, cfg)
+	FEEDBACK.pause_defence(state, 20, 0.03, cfg)
+	assert_eq(state.stagger_until_ms, 700, "a covered pause never adds another full lease")
+	FEEDBACK.pause_defence(state, 50, 0.12, cfg)
+	assert_eq(state.stagger_until_ms, 770, "only the new 70ms extends the paused action clock")
+	FEEDBACK.advance_defence(state, 710, cfg)
+	assert_true(state.critical_ready, "outgoing accepted impact still pauses the actor's stagger window")
+	FEEDBACK.advance_defence(state, 771, cfg)
+	assert_eq(state.poise, 40.0)
+	assert_false(state.critical_ready)
+	var overlap := FEEDBACK.defence_state("owned-b", 0, cfg)
+	FEEDBACK.pause_defence(overlap, 0, 0.1, cfg)
+	var incoming := FEEDBACK.resolve_defence_hit(overlap, 50.0, 1.0, 20, 0.03, cfg)
+	assert_eq(overlap.stagger_until_ms, 700, "new stagger waits the remaining 80ms, not just its new 30ms")
+	assert_almost_eq(incoming.stagger_left, 0.6, 0.00001)
+
+func test_launch_freezes_real_visual_bounds_without_affecting_host_schedule() -> void:
+	var box := AABB(Vector3(4,2,8), Vector3(3,5,4))
+	var launch := FEEDBACK.launch("fight:2:5", "fight", "own", "wild", "fireball", "charged", Vector3.ZERO, Vector3.ONE, 0.25, 4, Vector3(4,0,8), box)
+	assert_true(launch.is_read_only())
+	assert_true((launch.target_visual_bounds as Dictionary).is_read_only())
+	assert_eq(launch.target_visual_bounds.position, box.position)
+	assert_eq(launch.target_visual_bounds.size, box.size)
+	assert_eq(launch.travel_seconds, 0.25, "envelope never changes the accepted host arrival")
+	assert_true(FEEDBACK.launch_matches(launch,"fight","own","wild",4))
+	box.size = Vector3.ONE
+	assert_eq(launch.target_visual_bounds.size, Vector3(3,5,4), "later body changes cannot rewrite frozen presentation context")
+	for size: Vector3 in [Vector3(-1,2,3), Vector3(1,0,3), Vector3.INF]:
+		var invalid := FEEDBACK.launch("fight:2:6","fight","own","wild","fireball","charged",Vector3.ZERO,Vector3.ONE,0.25,4,Vector3.INF,AABB(Vector3.ZERO,size))
+		assert_false(invalid.has("target_visual_bounds"), "invalid envelope omitted without changing host timing")
+		assert_eq(invalid.travel_seconds, 0.25)
+

@@ -80,6 +80,12 @@
       ]
     },
 
+    "graphics_settings": {
+      "_comment": "Embedded Settings graphics surface owns input through the existing menu shell. No world actions; restart is an explicit menu-confirm verb.",
+      "includes": ["menu"],
+      "actions": []
+    },
+
     "menu_backpack": {
       "_comment": "The satchel tab on top of the shell. `interact` (X) is its Use verb (tab_backpack.gd::USE_ACTION) and is live on the same frame as the three backpack_* verbs, which is why backpack_assign could not stay on X. Its three verbs are Menu / R3 / L3.",
       "includes": ["menu"],

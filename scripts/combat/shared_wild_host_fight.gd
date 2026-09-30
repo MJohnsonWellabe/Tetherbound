@@ -93,3 +93,6 @@ func stop_opponent() -> void:
 		_wild.set_physics_process(_catch_physics_was_processing)
 	_catch_paused = false
 	super.stop_opponent()
+
+func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
+	return authority_link.call("host_resolve_enemy_hit", encounter_id, peer_id, payload)

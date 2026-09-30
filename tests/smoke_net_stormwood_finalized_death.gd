@@ -12,6 +12,14 @@ func _run() -> void:
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
+	# RD-35/F16: explicit retired-crossing fixture in isolated debug peers.
+	# All original authority, encounter and persistence assertions remain.
+	for fixture_peer in 2:
+		var legacy: Dictionary = await step(fixture_peer, "legacy_physical_crossings_fixture", {"regression": "stormwood_finalized_death"})
+		check(legacy.get("verdict") == "PASS", "disclosed retired crossing fixture enabled")
+		if legacy.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	if not await _require_step(0, "host"):
 		quit(await finish())
 		return

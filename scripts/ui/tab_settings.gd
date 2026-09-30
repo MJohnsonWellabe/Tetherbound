@@ -35,6 +35,8 @@ extends "res://scripts/ui/menu_tab.gd"
 const CONFIG_PATH := "res://data/config/menu.json"
 const DEBUG_TELEPORT_SPOTS_PATH := "res://data/config/debug_teleport_spots.json"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+const GRAPHICS_SETTINGS := preload("res://scripts/ui/graphics_settings.gd")
+var _graphics: VBoxContainer = null
 
 ## How long the global reset stays armed after the first press. Long enough to
 ## make the second press deliberate, short enough that it cannot be a surprise
@@ -141,6 +143,15 @@ func build() -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 14)
 	_scroll.add_child(list)
+	_graphics = GRAPHICS_SETTINGS.new()
+	list.add_child(_graphics)
+	_graphics.changed.connect(_on_graphics_changed)
+	_graphics.restart_requested.connect(_on_graphics_restart)
+	# Wire disabled feature rows too: they become reachable after Forward+
+	# starts, and must scroll into view on the same controller focus path.
+	for control: Node in _graphics.get_children():
+		if control is Button:
+			control.focus_entered.connect(func() -> void: _keep_visible(control as Control))
 
 	var settings: Dictionary = _config.get("settings", {}) as Dictionary
 	var sections: Variant = settings.get("sections", [])
@@ -938,11 +949,33 @@ func _wire_volume_graph() -> void:
 	# as the head of the chain, and is no longer the head.
 	_free_build_button.focus_neighbor_top = _free_build_button.get_path_to(
 		_volume_reset_button if lane.is_empty() else lane[lane.size() - 1])
+	if _graphics != null:
+		var first_audio: Control = (_volume_rows[0] as Dictionary)["button"]
+		var last_graphics: Control = _graphics.last_focus()
+		last_graphics.focus_neighbor_bottom = last_graphics.get_path_to(first_audio)
+		first_audio.focus_neighbor_top = first_audio.get_path_to(last_graphics)
+
+
+func _on_graphics_changed() -> void:
+	_wire_focus_graph(_teleport_section != null and _teleport_section.visible)
+	for look: Node in get_tree().get_nodes_in_group(&"day_cycle"):
+		if look.has_method("refresh_graphics"):
+			look.call("refresh_graphics")
+
+
+func _on_graphics_restart() -> void:
+	if menu == null or not menu.has_method("restart_for_graphics"):
+		_graphics.report_restart_failure("Restart the game to apply the renderer change.")
+		return
+	_graphics.begin_restart()
+	var result: String = await menu.call("restart_for_graphics")
+	if result != "":
+		_graphics.report_restart_failure(result)
 
 
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
-	for control: Control in [_reduced_motion_button, _shake_button, _look_sensitivity_button,
+	for control: Control in [_reduced_motion_button, _shake_button, _rumble_slider, _look_sensitivity_button,
 			_invert_x_button, _invert_y_button, _aim_assist_button, _text_size_button,
 			_dialogue_bg_button]:
 		if control != null:
@@ -1227,6 +1260,8 @@ var _look_max := LOOK_PREFS.FALLBACK_MAX_PERCENT
 var _look_step := 10
 var _shake_button: Button = null
 var _shake_label := "Camera shake"
+var _rumble_slider: HSlider = null
+var _rumble_label: Label = null
 var _invert_x_button: Button = null
 var _invert_x_label := "Invert horizontal look"
 var _invert_y_button: Button = null
@@ -1270,6 +1305,24 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	_look_min = int(access.get("look_sensitivity_min_percent", LOOK_PREFS.FALLBACK_MIN_PERCENT))
 	_look_max = int(access.get("look_sensitivity_max_percent", LOOK_PREFS.FALLBACK_MAX_PERCENT))
 	_look_step = maxi(1, int(access.get("look_sensitivity_step_percent", 10)))
+	var rumble_row := HBoxContainer.new()
+	rumble_row.add_theme_constant_override("separation", 16)
+	list.add_child(rumble_row)
+	_rumble_label = Label.new()
+	_rumble_label.custom_minimum_size = Vector2(360, 56)
+	_rumble_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_rumble_label.add_theme_font_size_override("font_size", 22)
+	rumble_row.add_child(_rumble_label)
+	_rumble_slider = HSlider.new()
+	_rumble_slider.custom_minimum_size = Vector2(320, 56)
+	_rumble_slider.min_value = 0
+	_rumble_slider.max_value = 100
+	_rumble_slider.step = _look_step
+	_rumble_slider.focus_mode = Control.FOCUS_ALL
+	_rumble_slider.set_value_no_signal(MOTION_PREFS.rumble_percent())
+	_rumble_slider.focus_entered.connect(func() -> void: _keep_visible(_rumble_slider))
+	_rumble_slider.value_changed.connect(_on_rumble_changed)
+	rumble_row.add_child(_rumble_slider)
 	_look_sensitivity_label = str(access.get("look_sensitivity_label", _look_sensitivity_label))
 	_look_sensitivity_button = _settings_row(list)
 	_invert_x_label = str(access.get("invert_look_x_label", _invert_x_label))
@@ -1362,6 +1415,7 @@ func _poll_accessibility() -> void:
 ## volume rows are (`_poll_audio()`): `_input` belongs to the rebind capture.
 func _poll_look() -> void:
 	_poll_shake()
+	_poll_rumble()
 	_poll_dialogue_text()
 	if _look_sensitivity_button == null:
 		return
@@ -1423,6 +1477,30 @@ func _poll_shake() -> void:
 	_shake_button.add_theme_color_override("font_color",
 		COLOUR_QUIET if percent == 0 or MOTION_PREFS.reduced_motion() else
 		(COLOUR_DEFAULT if percent == 100 else COLOUR_CHANGED))
+
+
+## Device-local UX §18 control. Native slider input handles both pad left/right
+## and mouse; the existing vertical focus chain keeps it reachable and visible.
+func _on_rumble_changed(value: float) -> void:
+	MOTION_PREFS.set_rumble_percent(int(round(value)))
+	var bindings: RefCounted = _bindings()
+	var saved := false
+	if bindings != null:
+		MOTION_PREFS.store_to(bindings)
+		saved = bool(bindings.call("save"))
+	if not saved:
+		say("Rumble changed for this session only — the settings file could not be written.")
+	_poll_rumble()
+
+
+func _poll_rumble() -> void:
+	if _rumble_slider == null or _rumble_label == null:
+		return
+	var percent := MOTION_PREFS.rumble_percent()
+	_rumble_slider.set_value_no_signal(percent)
+	_rumble_label.text = "  Rumble:  %s" % ("Off" if percent == 0 else "%d%%" % percent)
+	_rumble_label.add_theme_color_override("font_color",
+		COLOUR_QUIET if percent == 0 else COLOUR_DEFAULT)
 
 
 func _on_text_size() -> void:
