@@ -46,7 +46,13 @@ void fragment() {
 	// Clip the density integration to opaque scene depth instead of testing
 	// the proxy face. Compatibility uses OpenGL's [-1,1] NDC depth range.
 	float raw_depth = texture(scene_depth,SCREEN_UV).r;
-	vec4 scene_view = INV_PROJECTION_MATRIX*vec4(SCREEN_UV*2.0-1.0,raw_depth*2.0-1.0,1.0);
+	// OpenGL Compatibility has [-1,1] depth; Forward+ has [0,1].
+	#if CURRENT_RENDERER == RENDERER_COMPATIBILITY
+	vec3 ndc = vec3(SCREEN_UV*2.0-1.0,raw_depth*2.0-1.0);
+	#else
+	vec3 ndc = vec3(SCREEN_UV*2.0-1.0,raw_depth);
+	#endif
+	vec4 scene_view = INV_PROJECTION_MATRIX*vec4(ndc,1.0);
 	if (abs(scene_view.w)>0.00001) {
 		float opaque_view_depth = -scene_view.z/scene_view.w;
 		float exit_view_depth = max(-VERTEX.z,0.00001);

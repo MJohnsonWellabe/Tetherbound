@@ -35,6 +35,8 @@ extends "res://scripts/ui/menu_tab.gd"
 const CONFIG_PATH := "res://data/config/menu.json"
 const DEBUG_TELEPORT_SPOTS_PATH := "res://data/config/debug_teleport_spots.json"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+const GRAPHICS_SETTINGS := preload("res://scripts/ui/graphics_settings.gd")
+var _graphics: VBoxContainer = null
 
 ## How long the global reset stays armed after the first press. Long enough to
 ## make the second press deliberate, short enough that it cannot be a surprise
@@ -141,6 +143,15 @@ func build() -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 14)
 	_scroll.add_child(list)
+	_graphics = GRAPHICS_SETTINGS.new()
+	list.add_child(_graphics)
+	_graphics.changed.connect(_on_graphics_changed)
+	_graphics.restart_requested.connect(_on_graphics_restart)
+	# Wire disabled feature rows too: they become reachable after Forward+
+	# starts, and must scroll into view on the same controller focus path.
+	for control: Node in _graphics.get_children():
+		if control is Button:
+			control.focus_entered.connect(func() -> void: _keep_visible(control as Control))
 
 	var settings: Dictionary = _config.get("settings", {}) as Dictionary
 	var sections: Variant = settings.get("sections", [])
@@ -938,6 +949,28 @@ func _wire_volume_graph() -> void:
 	# as the head of the chain, and is no longer the head.
 	_free_build_button.focus_neighbor_top = _free_build_button.get_path_to(
 		_volume_reset_button if lane.is_empty() else lane[lane.size() - 1])
+	if _graphics != null:
+		var first_audio: Control = (_volume_rows[0] as Dictionary)["button"]
+		var last_graphics: Control = _graphics.last_focus()
+		last_graphics.focus_neighbor_bottom = last_graphics.get_path_to(first_audio)
+		first_audio.focus_neighbor_top = first_audio.get_path_to(last_graphics)
+
+
+func _on_graphics_changed() -> void:
+	_wire_focus_graph(_teleport_section != null and _teleport_section.visible)
+	for look: Node in get_tree().get_nodes_in_group(&"day_cycle"):
+		if look.has_method("refresh_graphics"):
+			look.call("refresh_graphics")
+
+
+func _on_graphics_restart() -> void:
+	if menu == null or not menu.has_method("restart_for_graphics"):
+		_graphics.report_restart_failure("Restart the game to apply the renderer change.")
+		return
+	_graphics.begin_restart()
+	var result: String = await menu.call("restart_for_graphics")
+	if result != "":
+		_graphics.report_restart_failure(result)
 
 
 func _accessibility_lane() -> Array[Control]:

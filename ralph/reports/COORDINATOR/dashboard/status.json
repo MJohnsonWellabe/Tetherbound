@@ -2,7 +2,7 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 100 of 280. Original: 95/101; redesign: 5/179. All five F16 criteria independently MET and landed main b2ea1455a via PR #467.",
+  "Criteria met: 102 of 280. Original: 95/101; redesign: 7/179. F16 all five and F26#1/#2 independently MET and landed main via #467/#470 (39840191c).",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -390,7 +390,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "now": "F26 source c6c39e6bd, evidence 2fbeff38d pushed: 19 focused Settings checks/native 0 and fresh-process Forward+ persistence pass; F26#2 independent candidate PASS, unlanded pending F16.",
+   "now": "F26#1/#2 independently strict MET and landed via #470 main39840191c; persistent presets and reference-backed look bar. Water Low/Medium/High native PASS (3/12 cases); other material/visual/route/owner Ally gates open.",
    "next": "Work order in CODEX_START_HERE §6: F26"
   },
   {
@@ -521,7 +521,7 @@
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "F16 landed main b2ea1455a via #467, all five criteria MET; selected full CI36667090983 and final required CI36670808563 passed with disclosed docs-only source reuse. At this refresh main has100/280. Hub source6f083d1d4: actual road/eight houses/Hall and opening/arena poses implemented; warm import native0 and44 geometry tests/3982assertions/4failing methods preserved. Exact real Hall entry, sign and berry pose repairs underway; player/bake/visual proof open."
+   "checkpoint": "F16 landed main b2ea1455a via #467, all five criteria MET; selected full CI36667090983 and final required CI36670808563 passed with disclosed docs-only source reuse. At this refresh main has102/280 after F26#1/#2 also landed #470. Hub source6f083d1d4: actual road/eight houses/Hall and opening/arena poses implemented; warm import native0 and44 geometry tests/3982assertions/4failing methods preserved. Exact real Hall entry, sign and berry pose repairs underway; player/bake/visual proof open."
   },
   {
    "lane": "tb/combat",
@@ -533,7 +533,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "Lookdev source8090a70ce: independent strict F26#1 MET and F26#2 documentation MET candidates; actual graphics PR in preparation closing only those two, main still100 at this refresh. Nineteen Settings checks, fresh-process renderer persistence and named native preset evidence retained. Nine remaining F26#4 routes now executing under serialized root GPU token; other graphics rows remain open."
+   "checkpoint": "F26#1 strict /root/combat MET and #2 /root/vfx MET, landed #470 main39840191c, official selected head CI6012 and traceability SUCCESS. Water Low/Medium/High native PASS three of12 cases; nine remaining F26#4 cases executing in root serializedGPU group pinned841940955. Material/matrix/Ally gates remain open."
   }
  ]
 }
