@@ -1624,7 +1624,7 @@ func _adopt_character_id(wanted_id: String) -> void:
 
 
 ## D100's portable half, on the way back IN, and the other half of
-## `_save_character_here()` above. **Ã‚Â§17 item 21.**
+## `_save_character_here()` above. **§17 item 21.**
 ##
 ## `character_save.gd::apply()` was written by lane 1.C as "the entry point for
 ## the multiplayer paths that have a character id and no slot at all" and had no

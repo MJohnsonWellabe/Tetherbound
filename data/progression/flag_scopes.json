@@ -227,13 +227,13 @@
   },
   "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in.",
   "durable_fields": {
-    "reward_deliveries.actor_vitals:<world-namespace>:<character-id>:<creature-uid>": {
+    "reward_deliveries.actor_vitals:<sha256>": {
       "scope": "world",
       "authority": "host admitted character and retained actor revision only",
       "transaction": "typed absolute vitality CAS; prepared atomic world journal before actor commit; defer publication until exact actor commit",
       "persistence": "existing atomic world document; rollback journal/CAS on write refusal; cumulative latest receipt retained across owner save failure and rejoin"
     },
-    "satchel_escrow.actor_vitals:<world-namespace>:<character-id>:<creature-uid>": {
+    "satchel_escrow.actor_vitals:<sha256>": {
       "scope": "character",
       "authority": "owning peer validates exact latest host world journal and owned UID",
       "transaction": "absolute HP/fainted and typed settled marker in bool atomic character write before exact latest ACK; no resurrection",

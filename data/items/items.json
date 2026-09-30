@@ -1187,6 +1187,16 @@
       "blurb": "One electric creature, one lesson.",
       "description": "A gold-lit teaching orb carrying Voltaic Whip. An electric creature can learn this charged move; the orb is spent after the lesson."
     },
+    "tm_fireball": {
+      "name": "TM: Fireball",
+      "kind": "tm",
+      "stack": 1,
+      "colour": "#f6a132",
+      "icon": "res://assets/ui/icons/items/tm_charged.png",
+      "blurb": "A burning orb that bursts when it reaches its target.",
+      "description": "A burning orb that bursts when it reaches its target. Teaching it spends the disc, and it replaces the creature's charged move. Fire creatures can learn it.",
+      "move": "fireball"
+    },
     "tm_thunder_break": {
       "name": "TM: Thunder Break",
       "kind": "tm",

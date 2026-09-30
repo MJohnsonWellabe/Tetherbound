@@ -5,16 +5,16 @@ extends RefCounted
 ## progression/satiety/the map database (VERSION 2), SB9's progression-flag
 ## store (VERSION 3), every death satchel the player has left in the world
 ## (VERSION 4, R3.2), each creature's individuality rolls and traits
-## (VERSION 5, R4.2), and â€” as of VERSION 9 â€” what each bed of the berry farm
+## (VERSION 5, R4.2), and — as of VERSION 9 — what each bed of the berry farm
 ## is growing (R7.6).
 ##
 ## Same shape `docs/decisions/D15` set for `user://settings.json`: JSON, a
-## `version` field from the first write, and never fatal on load â€” a missing,
+## `version` field from the first write, and never fatal on load — a missing,
 ## corrupt, or newer-than-this-build slot just means "nothing to load", the
 ## same three "carry on, do not brick the player" cases D15 named for
 ## settings.
 ##
-## ## VERSION 2 â€” what changed, and the migration story
+## ## VERSION 2 — what changed, and the migration story
 ##
 ## D30 (creature progression: level/xp/bond/moves) and D33 (the map database) both
 ## landed after VERSION 1 shipped, and D29 (satiety) needed its own slot in
@@ -26,31 +26,31 @@ extends RefCounted
 ## catalogue no longer knows, same "trust nothing you cannot look up" rule
 ## `_array_to_party` already followed); satiety is set to full
 ## (`data/config/vitals.json`'s `satiety.max`, fallback 100); the map comes
-## back fresh (nothing visited, nothing discovered â€” there is no fog trail to
+## back fresh (nothing visited, nothing discovered — there is no fog trail to
 ## recover from a save that predates the map); and every building gets
 ## `yaw_deg: 0.0`. `_migrate_v1` lands on VERSION 2's shape and then chains
 ## into `_migrate_v2` below, same as a real VERSION 2 file would.
 ##
-## ## VERSION 3 â€” SB9's progression flags
+## ## VERSION 3 — SB9's progression flags
 ##
 ## `autoload/progression_state.gd` did not exist before this, so a VERSION 1
-## or 2 save has no flags to recover â€” `_migrate_v2` hands back an empty
+## or 2 save has no flags to recover — `_migrate_v2` hands back an empty
 ## store, the same "nothing to migrate FROM" answer VERSION 1 -> 2 already
 ## gave the map. A version newer than this build still refuses exactly as
-## VERSION 1 always refused everything but itself â€” there is still nothing to
+## VERSION 1 always refused everything but itself — there is still nothing to
 ## migrate an unreleased future format DOWN from.
 ##
-## ## VERSION 4 â€” death satchels (R3.2)
+## ## VERSION 4 — death satchels (R3.2)
 ##
 ## `GameState.death_satchels` did not exist before this either, so the same
 ## "nothing to migrate FROM" answer applies again: `_migrate_v3` hands back
 ## an empty list. A death satchel dropped under an older build is simply not
-## in that save â€” it was never written down anywhere for this to recover.
+## in that save — it was never written down anywhere for this to recover.
 ##
-## ## VERSION 5 â€” individuality and traits (R4.2)
+## ## VERSION 5 — individuality and traits (R4.2)
 ##
 ## `creature_instance.gd`'s `iv_hp`/`iv_attack`/`iv_defence` and
-## `trait_primary`/`trait_secondary` did not exist before this â€” same
+## `trait_primary`/`trait_secondary` did not exist before this — same
 ## "nothing to migrate FROM" answer again. `_migrate_v4` sets every migrated
 ## creature's IVs to 0.5 (perfectly average, `PROGRESSION.individuality_
 ## multiplier`'s own no-op value) and both trait fields to "" (no trait
@@ -58,26 +58,26 @@ extends RefCounted
 ## existed should read as: unremarkable and untraited, not retroactively
 ## graded.
 ##
-## ## VERSION 6 â€” shiny (OF27)
+## ## VERSION 6 — shiny (OF27)
 ##
-## `creature_instance.gd`'s `shiny` did not exist before this â€” same
+## `creature_instance.gd`'s `shiny` did not exist before this — same
 ## "nothing to migrate FROM" answer every migration above already gives.
 ## `_migrate_v5` sets every migrated creature's `shiny` to `false`: a
 ## creature caught before the roll existed was never entered into it, the
 ## same way a save from before R4.2 was never entered into the individuality
 ## roll and comes back merely average rather than retroactively perfect.
 ##
-## ## VERSION 7 â€” the hotbar became assignable
+## ## VERSION 7 — the hotbar became assignable
 ##
 ## The hotbar used to be a view, not state: `playground_hud.gd` mirrored
 ## satchel slots 0-4, so there was nothing to save. Owner directive after
 ## playing made it a real assignable bar of item ids, which means it is now
 ## state and has to survive a quit. `_migrate_v6` writes an empty bar and
 ## `game_state.gd::autofill_hotbar()` refills it from what the player is
-## carrying â€” the closest honest reconstruction of what the old mirror showed,
+## carrying — the closest honest reconstruction of what the old mirror showed,
 ## minus the raw materials that used to occupy action slots and do nothing.
 ##
-## ## VERSION 8 â€” permanent stat elixirs (D47)
+## ## VERSION 8 — permanent stat elixirs (D47)
 ##
 ## `creature_instance.gd`'s `boost_hp`/`boost_attack`/`boost_defence` did not
 ## exist before this. Same "nothing to migrate FROM" answer every migration
@@ -85,13 +85,13 @@ extends RefCounted
 ## read side defaults each to 0, which is what a creature that never drank an
 ## elixir has. The migration exists only to move the version number.
 ##
-## ## VERSION 9 â€” the berry farm's beds (R7.6)
+## ## VERSION 9 — the berry farm's beds (R7.6)
 ##
 ## `game_state.gd::farm_plots` did not exist before this, so `_migrate_v8`
 ## gives the same "nothing to migrate FROM" answer: an empty list, read back
 ## as six fallow beds. This is the first save field whose value CHANGES while
-## the player is nowhere near it â€” a sown bed ripens off `day`, not off a
-## timer running in a loaded scene â€” which is exactly why it had to be in the
+## the player is nowhere near it — a sown bed ripens off `day`, not off a
+## timer running in a loaded scene — which is exactly why it had to be in the
 ## file rather than rebuilt on load the way a harvest node's respawn clock is.
 ##
 ## VERSION 9 is also where the migration DISPATCH was rewritten from a
@@ -101,35 +101,35 @@ extends RefCounted
 ## build that had both of their migration steps sitting right there. See that
 ## function's own comment.
 ##
-## ## VERSION 10 â€” permanently-chopped vegetation (HARVEST-ALL, D60)
+## ## VERSION 10 — permanently-chopped vegetation (HARVEST-ALL, D60)
 ##
 ## `game_state.gd::harvested_vegetation` did not exist before this. Same
 ## "nothing to migrate FROM" answer every migration above gives: `_migrate_v9`
-## hands back `{}`, read as "nothing chopped yet" â€” a save from before this
+## hands back `{}`, read as "nothing chopped yet" — a save from before this
 ## shipped predates permanent harvesting entirely, so every tree and rock it
 ## remembers comes back exactly as it was, not retroactively cleared.
 ##
-## ## VERSION 11 â€” felled-but-ungathered piles (RG9)
+## ## VERSION 11 — felled-but-ungathered piles (RG9)
 ##
 ## `game_state.gd::felled_vegetation` did not exist before this. A VERSION 10
 ## save has nothing chopped-but-not-yet-picked-up to remember by construction
-## â€” chop-then-gather did not exist yet, every chop paid out immediately â€” so
+## — chop-then-gather did not exist yet, every chop paid out immediately — so
 ## `_migrate_v10` hands back `{}`, the identical "nothing to migrate FROM"
 ## answer every step above gives its own new field.
 ##
-## ## GAME-F4 â€” `base_hp`/`base_attack`/`base_defence` join the party fields,
+## ## GAME-F4 — `base_hp`/`base_attack`/`base_defence` join the party fields,
 ## with NO version bump
 ##
 ## Unlike every field above, these are not new state: `creature_instance.gd`
 ## has always carried them, `_party_to_array` simply never wrote them, so
-## `_array_to_party` always left them at the class default of 1.0 â€” invisible
+## `_array_to_party` always left them at the class default of 1.0 — invisible
 ## until the next level-up/elixir/evolve recomputed the real stats FROM that
 ## 1.0 and destroyed them (`_apply_level_stats`). This is a bug fix to what a
 ## save has always been supposed to mean, not a new field a pre-fix save
 ## honestly has nothing for, so it does not get a `_migrate_vN` step: every
 ## `_array_to_party` read (regardless of the save's stamped version, VERSION
 ## 15 included) falls back to the creature's `species.json` entry when
-## `base_hp` is absent â€” the exact repair `apply_species_definition` was
+## `base_hp` is absent — the exact repair `apply_species_definition` was
 ## already promised to do by two comments that pre-date this fix. A version
 ## bump here would need a `_migrate_v15` that does nothing a version-agnostic
 ## default in `_array_to_party` cannot already do, and would carry the real
@@ -140,13 +140,13 @@ extends RefCounted
 ## through the production Load path went from 117.60 max hp to 1.18 on its
 ## next level-up) -- the bump was reverted here for the same reason S09's was.
 ##
-## ## VERSION 16 â€” OWNER-0901-BOND-MILESTONES
+## ## VERSION 16 — OWNER-0901-BOND-MILESTONES
 ##
 ## Bond became an ordered ladder of concrete tasks instead of a bare 0-100
 ## meter (owner playtest 2026-09-01). Four of its five tasks needed a new
 ## per-creature counter: `landmarks_visited_together`, `distance_m_together`,
 ## `rest_nights_together`, `feeds_together` (the fifth, `battles_fought`,
-## already existed â€” see `bond_milestones.json`'s own comment). Same "nothing
+## already existed — see `bond_milestones.json`'s own comment). Same "nothing
 ## to migrate FROM" answer `_migrate_v13` gives battles_fought's own siblings:
 ## a pre-16 save was not counting any of these, so zero is the true statement
 ## that the history was never kept, not a placeholder. The legacy `bond` int
@@ -155,7 +155,7 @@ extends RefCounted
 ## VERSION 15 (T3-ENCOUNTER's `world_seed`) went in on `main`, hence 16 rather
 ## than the 15 an earlier pass on this branch used before rebasing.
 ##
-## ## VERSION 17 â€” REALMS AND REALM HEARTS
+## ## VERSION 17 — REALMS AND REALM HEARTS
 ##
 ## Cloudreach adds a second world scene and the one-active Realm Heart choice.
 ## `current_realm` selects the scene Continue enters; `realm_hearts` stores the
@@ -168,13 +168,13 @@ extends RefCounted
 ## `_migrate_to_current` dispatches `_migrate_v<version>` in a loop, so a v16 save
 ## now runs `_migrate_v16` (realms) and then `_migrate_v17` (pins).
 
-## ## VERSION 18 â€” CL-W1, the alpha pin set
+## ## VERSION 18 — CL-W1, the alpha pin set
 ##
 ## Owner directive D-0904B-1 with amendment A-3: an alpha within 300 m pins
 ## itself to the map and the pin stays until that alpha is caught or beaten.
-## The closure plan's *fails if* on that row is exactly this file's problem â€”
+## The closure plan's *fails if* on that row is exactly this file's problem —
 ## "the pinned set is not persisted; a pin that survives only until the next
-## load is worse than none" â€” so `alpha_pins` is a top-level key here, written
+## load is worse than none" — so `alpha_pins` is a top-level key here, written
 ## from and read back into `map_state.gd`'s own `alpha_pin_save_data()` /
 ## `alpha_pin_load_data()`.
 ##
@@ -195,7 +195,7 @@ extends RefCounted
 ## ## The satiety seam
 ##
 ## Satiety lives on `PlayerVitals` (`scripts/player/player_vitals.gd`), a
-## plain `RefCounted` hanging off the live `Player` node â€” not on `Game`, and
+## plain `RefCounted` hanging off the live `Player` node — not on `Game`, and
 ## not reachable from here without going through the scene tree, which this
 ## file deliberately never does (see below). So `game` is asked for it
 ## instead, through the same duck-typed contract `day`/`party`/`inventory`
@@ -203,7 +203,7 @@ extends RefCounted
 ##
 ##   - if `game` has a `player_vitals()` method and it returns something,
 ##     that live object is read from (on save) or written to directly (on
-##     load) â€” the actual value a running game cares about, never copied.
+##     load) — the actual value a running game cares about, never copied.
 ##   - otherwise, a plain `satiety` property on `game` itself is the
 ##     fallback: read on save, written on load. This is the path a headless
 ##     test double (or `Game` itself before any world scene exists) takes,
@@ -216,11 +216,11 @@ extends RefCounted
 ##
 ## ## Pure logic, no nodes
 ##
-## `tests/test_save_format.gd` exercises this headlessly â€” the same split
+## `tests/test_save_format.gd` exercises this headlessly — the same split
 ## `autoload/party.gd`, `autoload/inventory.gd` and `scripts/ui/key_bindings.gd`
 ## all already draw. `game` below is whatever object holds `day`, `party`,
 ## `inventory`, `placed_buildings`, `map` and `satiety` as properties (plus,
-## optionally, a `player_vitals()` method) â€” the `Game` autoload in the real
+## optionally, a `player_vitals()` method) — the `Game` autoload in the real
 ## build, a small fake in tests.
 
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
@@ -229,28 +229,28 @@ const PROGRESSION_CONFIG_PATH := "res://data/config/progression.json"
 const VITALS_CONFIG_PATH := "res://data/config/vitals.json"
 const SPECIES_PATH := "res://data/creatures/species.json"
 
-## VERSION 18 â€” Fly state, stamina fraction, active party slot, and verified
+## VERSION 18 — Fly state, stamina fraction, active party slot, and verified
 ## ground recovery anchor inside player_pose. Airborne reloads resume safely
 ## grounded; old poses migrate unchanged and all realm rewards are preserved.
-## VERSION 19 â€” separate realm-map fog and discoveries. Untagged legacy map
+## VERSION 19 — separate realm-map fog and discoveries. Untagged legacy map
 ## payloads belong to Meadows even when an early save selected Cloudreach.
-## VERSION 20 â€” realm ownership for player buildings and death satchels.
+## VERSION 20 — realm ownership for player buildings and death satchels.
 ## Untagged records migrate to Meadows even when a v19 save selects Cloudreach.
-## VERSION 21 â€” CL-W1's alpha pin set (lane W11-ALPHA-PINS-0904).
+## VERSION 21 — CL-W1's alpha pin set (lane W11-ALPHA-PINS-0904).
 ##
 ## NOTE (landing lane): W11 and Cloudreach have now collided on a save version
 ## twice. W11 first authored 17, was moved to 18 when Cloudreach claimed 17, and
 ## is moved again to 21 here because Cloudreach's branch claims 18, 19 and 20.
 ## The owner's standing rule is that Cloudreach wins, so the pin set takes the
 ## next free number each time. `_migrate_to_current` dispatches
-## `_migrate_v<version>` in a loop, so a v16 save now runs realms (16â†’17), fly
-## state (17â†’18), realm fog (18â†’19), realm ownership (19â†’20) and finally the
-## pins (20â†’21), in that order.
-## VERSION 22 â€” the carried day clock (N14-ROUTED-FOLLOWUPS, from
-## N13-NIGHT-RESUME Â§5). Before this key the format carried no clock at all, so
+## `_migrate_v<version>` in a loop, so a v16 save now runs realms (16→17), fly
+## state (17→18), realm fog (18→19), realm ownership (19→20) and finally the
+## pins (20→21), in that order.
+## VERSION 22 — the carried day clock (N14-ROUTED-FOLLOWUPS, from
+## N13-NIGHT-RESUME §5). Before this key the format carried no clock at all, so
 ## every Continue rebuilt the world at 08:00 and the player walked the 350
 ## seconds to nightfall again. Negative means "no carried clock, open at the
-## authored morning" â€” `game_state.gd::CLOCK_UNSET`. N14 authored it as 19,
+## authored morning" — `game_state.gd::CLOCK_UNSET`. N14 authored it as 19,
 ## which Cloudreach owns; it takes the next free number here for the same
 ## reason the pin set did.
 ## Version 24 adds owned equipment. Older builds must refuse the new payload
@@ -271,7 +271,7 @@ const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
 ## Written automatically whenever the player rests (`scripts/build/camp.gd`).
 ## Slots 1-4 are the player's own manual saves. Nothing enforces the split
-## beyond this comment â€” any slot reads and writes the same way.
+## beyond this comment — any slot reads and writes the same way.
 const AUTOSAVE_SLOT := 0
 ## Metadata on a merged slot file.  It is deliberately written by the ordinary
 ## host slot writer, not `snapshot()`: probe/scratch snapshots must remain the
@@ -367,7 +367,7 @@ func delete_slot(slot: int) -> bool:
 	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.delete(slot_path(slot))
 
 
-## What a slot list screen needs without loading it onto live state â€” empty
+## What a slot list screen needs without loading it onto live state — empty
 ## for no save, an unreadable file, or a version this build cannot read.
 func slot_info(slot: int) -> Dictionary:
 	var data := _read(slot)
@@ -633,7 +633,7 @@ func snapshot(game: Object) -> Dictionary:
 		"world_seed": int(game.get("world_seed")) if game.get("world_seed") != null else 0,
 		"felled_vegetation": (game.get("felled_vegetation") as Dictionary).duplicate(true),
 		"player_pose": _capture_traversal_pose(game),
-		# N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME Â§5. VERSION 19. Before
+		# N14-ROUTED-FOLLOWUPS, from N13-NIGHT-RESUME §5. VERSION 19. Before
 		# this key the format carried no clock at all, so every Continue
 		# rebuilt the world at 08:00 and the player walked the 350 seconds to
 		# nightfall again. Negative means "no carried clock, open at the
@@ -680,7 +680,7 @@ func _restore_equipment(game: Object, raw: Variant) -> void:
 		equipment.call("load_data", raw)
 
 
-## Rehydrate `game` from `slot`. Returns whether a save was actually applied â€”
+## Rehydrate `game` from `slot`. Returns whether a save was actually applied —
 ## false, with `game` left untouched, for a missing, corrupt, or
 ## newer-than-this-build file.
 func load_slot(game: Object, slot: int) -> bool:
@@ -815,7 +815,7 @@ func load_slot(game: Object, slot: int) -> bool:
 		game.call("restore_realm_maps", _realm_map_payloads(data))
 
 	# CL-W1. STRICTLY AFTER whichever map restore ran above, because both clear
-	# every dynamic marker wholesale â€” restoring the pins first would rebuild
+	# every dynamic marker wholesale — restoring the pins first would rebuild
 	# their markers and then immediately throw them away, which is the "a pin
 	# that survives only until the next load is worse than none" failure the row
 	# is written against.
@@ -824,7 +824,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	# interaction rather than a tidy-up. The pin restore used to sit inside the
 	# `not game.has_method("restore_realm_maps")` branch above. Cloudreach's
 	# VERSION 19 work ADDED `restore_realm_maps`, so that branch became
-	# permanently false and the pins stopped being loaded at all â€”
+	# permanently false and the pins stopped being loaded at all —
 	# `smoke_alpha_pins` failed with "the pin did not survive a real save and
 	# load". Neither lane is wrong on its own; only the combination is. Running
 	# it unconditionally after both paths satisfies W11's ordering requirement
@@ -1393,8 +1393,8 @@ static func _finite_number(value: Variant) -> bool:
 ## ladder that listed, per starting version, every step from there to the top.
 ## The ladder was O(versions squared) lines to maintain and it had already
 ## rotted: it carried branches for versions 1 through 5 and none for 6 or 7,
-## so a VERSION 6 or VERSION 7 save â€” anything written between the hotbar
-## change and the elixir one â€” fell through to the final `elif version !=
+## so a VERSION 6 or VERSION 7 save — anything written between the hotbar
+## change and the elixir one — fell through to the final `elif version !=
 ## VERSION` and was REFUSED with "not loading", despite `_migrate_v6` and
 ## `_migrate_v7` both existing, being complete, and being called from the five
 ## older branches. The bug was invisible from either end: the migrations
@@ -1466,10 +1466,10 @@ func _migrate_v26(data: Dictionary) -> Dictionary:
 
 
 ## VERSION 1 -> VERSION 2. See the class header for what each field becomes.
-## `data` is trusted no further than any other save file â€” every read below
+## `data` is trusted no further than any other save file — every read below
 ## has the same "wrong type, missing key -> a safe default" tolerance
 ## `_array_to_party`/`_array_to_inventory` already apply to VERSION 2 data.
-## Lands on VERSION 2's own shape, not the build's current `VERSION` â€” the
+## Lands on VERSION 2's own shape, not the build's current `VERSION` — the
 ## caller chains straight into `_migrate_v2` after this, same as a real
 ## VERSION 2 file would.
 func _migrate_v1(data: Dictionary) -> Dictionary:
@@ -1509,10 +1509,10 @@ func _migrate_v1(data: Dictionary) -> Dictionary:
 
 
 ## VERSION 2 -> VERSION 3. SB9's progression flags did not exist in VERSION 2,
-## so there is nothing to recover â€” a save from before this system existed
+## so there is nothing to recover — a save from before this system existed
 ## starts with every flag unset, the same "nothing to migrate FROM" answer
 ## VERSION 1 -> 2 already gave the map (no fog trail predates the map either).
-## Lands on VERSION 3's own shape, not the build's current `VERSION` â€” every
+## Lands on VERSION 3's own shape, not the build's current `VERSION` — every
 ## caller chains straight into `_migrate_v3` after this, same as a real
 ## VERSION 3 file would.
 func _migrate_v2(data: Dictionary) -> Dictionary:
@@ -1523,8 +1523,8 @@ func _migrate_v2(data: Dictionary) -> Dictionary:
 
 
 ## VERSION 3 -> VERSION 4. `death_satchels` (R3.2) did not exist in VERSION 3
-## either â€” same "nothing to migrate FROM" answer as `_migrate_v2` above.
-## Lands on VERSION 4's own shape via a literal, not `VERSION` â€” R4.2's own
+## either — same "nothing to migrate FROM" answer as `_migrate_v2` above.
+## Lands on VERSION 4's own shape via a literal, not `VERSION` — R4.2's own
 ## VERSION 5 bump is the reason why: this used to read `migrated["version"] =
 ## VERSION`, which was harmless only by coincidence while VERSION 4 was the
 ## newest version this file knew about, and would have silently skipped
@@ -1540,11 +1540,11 @@ func _migrate_v3(data: Dictionary) -> Dictionary:
 
 
 ## VERSION 4 -> VERSION 5. `iv_hp`/`iv_attack`/`iv_defence`/`trait_primary`/
-## `trait_secondary` (R4.2) did not exist in VERSION 4 either â€” same
+## `trait_secondary` (R4.2) did not exist in VERSION 4 either — same
 ## "nothing to migrate FROM" answer as every migration above. Every party
 ## member gets 0.5 on each IV (perfectly average, `PROGRESSION.
 ## individuality_multiplier`'s own no-op value, and the same default
-## `creature_instance.gd`'s fields already carry) and "" on both traits â€”
+## `creature_instance.gd`'s fields already carry) and "" on both traits —
 ## a creature caught before this system existed is unremarkable and
 ## untraited, not retroactively rolled.
 func _migrate_v4(data: Dictionary) -> Dictionary:
@@ -1564,7 +1564,7 @@ func _migrate_v4(data: Dictionary) -> Dictionary:
 	return migrated
 
 
-## VERSION 5 -> VERSION 6. `shiny` (OF27) did not exist in VERSION 5 either â€”
+## VERSION 5 -> VERSION 6. `shiny` (OF27) did not exist in VERSION 5 either —
 ## same "nothing to migrate FROM" answer as every migration above. Every
 ## party member gets `false`: a creature caught before the roll existed was
 ## never entered into it, not retroactively granted the rare outcome. Lands
@@ -1605,7 +1605,7 @@ func _migrate_v7(data: Dictionary) -> Dictionary:
 	return migrated
 
 
-## VERSION 8 -> 9: R7.6's farm beds. An empty list â€” the same "nothing to
+## VERSION 8 -> 9: R7.6's farm beds. An empty list — the same "nothing to
 ## migrate FROM" answer every step above gives, and the right one here: a save
 ## written before the farm existed recorded no crop because there was no
 ## ground to sow. `game_state.gd::farm_plot_at()` reads a short or missing
@@ -1619,7 +1619,7 @@ func _migrate_v8(data: Dictionary) -> Dictionary:
 
 
 ## VERSION 9 -> 10: HARVEST-ALL/D60's permanently-chopped vegetation. An
-## empty dictionary â€” the same "nothing to migrate FROM" answer every step
+## empty dictionary — the same "nothing to migrate FROM" answer every step
 ## above gives: a save written before this shipped recorded no chopped
 ## placements because nothing was permanently removable yet, so the meadow
 ## and quarry come back exactly as dense as they were the day that save was
@@ -1631,7 +1631,7 @@ func _migrate_v9(data: Dictionary) -> Dictionary:
 	return migrated
 
 
-## VERSION 10 -> 11: RG9's felled-but-ungathered piles. An empty dictionary â€”
+## VERSION 10 -> 11: RG9's felled-but-ungathered piles. An empty dictionary —
 ## a VERSION 10 save predates chop-then-gather entirely, so every chop it
 ## remembers already paid out immediately; there is no pile left owed.
 func _migrate_v10(data: Dictionary) -> Dictionary:
@@ -1687,7 +1687,7 @@ func _migrate_v11(data: Dictionary) -> Dictionary:
 ## migration; it breaks loading for EVERY existing save, back to version 1,
 ## because the chain cannot get past 13. That is exactly what happened when the
 ## history counters landed, and `test_save_format.gd` caught it.
-## VERSION 15 â€” the world seed (T3-ENCOUNTER)
+## VERSION 15 — the world seed (T3-ENCOUNTER)
 ##
 ## `game_state.gd::world_seed` did not exist before this. The same "nothing to
 ## migrate FROM" answer every step above gives its own new field, and here it is
@@ -1835,7 +1835,7 @@ func _read_json_file(path: String) -> Dictionary:
 	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
 
 
-## `data/config/vitals.json`'s `satiety.max`, fallback 100 â€” "full" for a
+## `data/config/vitals.json`'s `satiety.max`, fallback 100 — "full" for a
 ## VERSION 1 migration, and the last-resort default for a VERSION 2 file
 ## that is somehow missing its own `satiety` key.
 func _default_satiety() -> float:
@@ -1843,7 +1843,7 @@ func _default_satiety() -> float:
 	return float((satiety_cfg as Dictionary).get("max", 100.0)) if typeof(satiety_cfg) == TYPE_DICTIONARY else 100.0
 
 
-## The live `PlayerVitals`, if `game` can reach one â€” see the class header's
+## The live `PlayerVitals`, if `game` can reach one — see the class header's
 ## "satiety seam" section.
 func _live_vitals(game: Object) -> RefCounted:
 	if not game.has_method("player_vitals"):
@@ -1946,7 +1946,7 @@ func _party_to_array(party: Variant) -> Array:
 
 
 ## Fields are set directly rather than going through `CreatureInstance.from_species`
-## so a load never depends on `species.json` still defining the species â€”
+## so a load never depends on `species.json` still defining the species —
 ## an instance's saved stats are trusted as-is, the same "carry on with what
 ## the file says" spirit as the rest of this class.
 func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {}) -> void:
@@ -2145,7 +2145,7 @@ func _hotbar_to_array(game: Object) -> Array:
 	return (game.get("hotbar") as Array).duplicate()
 
 
-## JSON has no integer type â€” every number round-trips as a float
+## JSON has no integer type — every number round-trips as a float
 ## (`JSON.parse_string`), so a stack read back from a save would otherwise
 ## carry `"n": 12.0` instead of `12`. `id`/`n` are Inventory's own stack
 ## contract (see `autoload/inventory.gd`); `durability` is optional and only

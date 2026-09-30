@@ -1,6 +1,6 @@
 extends RefCounted
 
-## D98 / docs/specs/MP_STATE_SEAM.md Â§1: THIS TRAINER and THIS TEAM.
+## D98 / docs/specs/MP_STATE_SEAM.md §1: THIS TRAINER and THIS TEAM.
 ##
 ## One per peer. The local one is `Game.local`; from Wave 2 the host also holds
 ## every connected peer's in `Game.players`. Every `Game.<x>` this file holds --
@@ -10,7 +10,7 @@ extends RefCounted
 ## `current_realm`, `pending_realm_entry` -- stays readable and writable under
 ## its old name as a forwarding property on `Game`. `Game.party` permanently
 ## means "the local player's party" (D98), not transitionally: every process
-## keeps exactly one local player (the execution plan's Â§2 simplification).
+## keeps exactly one local player (the execution plan's §2 simplification).
 ##
 ## Three things moved here that used to be process-global, and each is the
 ## point of the move rather than a tidy-up:
@@ -372,7 +372,7 @@ func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 
 # --- save / load ------------------------------------------------------------
 
-## The PLAYER half of today's v22 save dictionary (`MP_STATE_SEAM.md` Â§4), which
+## The PLAYER half of today's v22 save dictionary (`MP_STATE_SEAM.md` §4), which
 ## 1.C writes to `user://characters/<character_id>/character.json`. The v22 key
 ## names are kept verbatim except the two the partition renames
 ## (`current_realm` -> `realm`, `progression` -> `flags`, its player half).
