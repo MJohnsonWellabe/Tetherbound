@@ -3,7 +3,7 @@
   "integration_base": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "F21#4 NOT MET. Both original live failures retained; changed-approach final constrained draw source is unexecuted and awaits independent source/native/dynamic blind gates.",
+  "status": "F21#4 NOT MET: executed9507 live r3 native1, five pairs pass/four fail. All nine300tick/54PNG records preserved.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -303,6 +303,27 @@
       "Unexecuted source; cannot establish that real moving meshes never intersect or tracker lag never overlaps.",
       "Changed production framing requires fresh native/pixel gates; literal zero overlap has not been relaxed.",
       "No shared CreatureBody/collision/AI/scale or authority changes; staged roster/start positions are not earned campaign evidence."
+    ]
+  },
+  "live_runtime_r3": {
+    "source": "9507b405b75a3e4be3f84780853dfa40b7aba889",
+    "proof": "camera-live-r3/source-proof.json",
+    "native_exit": 1,
+    "elapsed_seconds": 302.5779999999795,
+    "complete_cases": 9,
+    "original_png_count": 54,
+    "passed_pairs": [
+      "small/small",
+      "small/normal",
+      "small/giant",
+      "normal/normal",
+      "giant/small"
+    ],
+    "failed_pairs": [
+      "normal/small",
+      "normal/giant",
+      "giant/normal",
+      "giant/giant"
     ]
   }
 }
