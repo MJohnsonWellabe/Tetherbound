@@ -169,3 +169,11 @@ plus actual Altar/release two-peer save/reload/rejoin duplication witness.
 Reuse that batch across F27 related rows. No automatic broad suites/full-ci.
 This batch is requested, not executed/passed. Independent strict review remains
 required before any acceptance closure. F27#5 earned route ledger is separate.
+
+Independent corrected-source re-check: STRICT SOURCE PASS on 2c246b7e29 for
+ the two originally requested UI fixes only. Byte-faithful raw report archived
+ as independent-source-review-2c246b.txt, SHA256
+ 96136f0057875b9a597b1c99e6e2939f157cc9b2c4562a951d8988c01397d66a.
+ Durable existing-journal request-id decision mapping and release-id ceremony
+ producer/rejoin remain UNPROVEN. No engine test or criterion acceptance is
+ implied; all F27 rows remain OPEN.

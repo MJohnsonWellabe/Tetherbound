@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "status": "authored_profiles_not_runtime_mounted",
+  "_scope": "F28 content proposals against canonical F16 masters.json. F27/F31 dependency landing, actual placement, character authority, single-creature combat adapter and native proof are required before activation. No new actor assets, boss/trainer table edits or live grants.",
+  "canonical_schema": "res://data/schema/masters.json",
+  "entry": {
+    "selected_creatures": 1,
+    "opponents": 1,
+    "choose_actual_owned_uid": true,
+    "conscious_required": true,
+    "maximum_owned_creatures": 5,
+    "switching": false,
+    "fleeing": false,
+    "catching": false,
+    "opponent_owner_kind": "trainer",
+    "extra_combatants": false,
+    "human_damage": false,
+    "tether_commands": true,
+    "tag_switch_combo": false
+  },
+  "co_op": {
+    "duels": "sequential_per_character",
+    "spectators_earn_recipe": false,
+    "authority": "host_validated_duel",
+    "character_identity": "admitted_stable_character",
+    "recipe_scope": "character",
+    "arena_scope": "world",
+    "reconnect": "resume_or_void_never_infer_win",
+    "owner_decision_pending": "TRAINING section12 Q3 conservative per-character reading"
+  },
+  "first_win_chest": {
+    "tether_candy_item": "tether_candy",
+    "tether_candy_count": 2,
+    "recipe_from": "canonical_master.feast_id",
+    "once_per_character_and_master": true,
+    "cap_lift_on_win": false,
+    "full_inventory": "retain_personal_claim_at_chest",
+    "repeat_before_rematch_reward": false,
+    "commit": "recipe_knowledge_and_candy_receipt_once_in_existing_character_journal"
+  },
+  "loss": {
+    "retry_cooldown_seconds": 0,
+    "faint_only_chosen_creature": true,
+    "inventory_penalty": false,
+    "recipe_grant": false
+  },
+  "masters": {
+    "master_t1": {
+      "name": "Master Orin",
+      "cast_key": "villager_quarryman",
+      "site": {
+        "location_hint": "Old Quarry approach off the haul road",
+        "access": "on_foot",
+        "before_named_fights": [
+          "Burrow Warrens guardian",
+          "Captain Vance"
+        ],
+        "off_main_path": true,
+        "signposted": true,
+        "placement_status": "not_placed",
+        "terrain_and_normal_player_path_proven": false
+      },
+      "creature": {
+        "species_id": "burrowback",
+        "level_from": "canonical_master.cap_level",
+        "profile": "WALL"
+      },
+      "combat_question": "Wait for the opening.",
+      "board": {
+        "show_species_type_and_role": true,
+        "instruction": "Two quick jabs, then a heavy slam. Punish recovery instead of trading into the armored front."
+      },
+      "pattern": {
+        "quick_jabs_before_heavy": 2,
+        "heavy_telegraph_seconds": 1.1,
+        "heavy_recovery_seconds": 1.2
+      }
+    },
+    "master_t2": {
+      "name": "Master Briar",
+      "cast_key": "villager_ranger",
+      "site": {
+        "location_hint": "Ironwood ridge off the Upper Meadows road",
+        "access": "on_foot",
+        "before_named_fights": [
+          "Sigil gate",
+          "Hald"
+        ],
+        "off_main_path": true,
+        "signposted": true,
+        "placement_status": "not_placed",
+        "terrain_and_normal_player_path_proven": false
+      },
+      "creature": {
+        "species_id": "ashtusk",
+        "level_from": "canonical_master.cap_level",
+        "profile": "CHARGER"
+      },
+      "combat_question": "Own the lane.",
+      "board": {
+        "show_species_type_and_role": true,
+        "instruction": "Sidestep paired charges. The second charge re-aims; punish from the side without standing in the old ember lane."
+      },
+      "pattern": {
+        "charges_per_pair": 2,
+        "reaim_delay_seconds": 0.4,
+        "heavy_telegraph_seconds": 1.1,
+        "ember_lane_seconds": 2.0
+      }
+    },
+    "master_t3": {
+      "name": "Master Maris",
+      "cast_key": "field_researcher",
+      "site": {
+        "location_hint": "Gull Rest outer island",
+        "access": "human_swim",
+        "before_named_fights": [
+          "Veilfall"
+        ],
+        "off_main_path": true,
+        "signposted": true,
+        "placement_status": "not_placed",
+        "terrain_and_normal_player_path_proven": false
+      },
+      "creature": {
+        "species_id": "cannonback",
+        "level_from": "canonical_master.cap_level",
+        "profile": "CURRENT"
+      },
+      "combat_question": "Close the distance.",
+      "board": {
+        "show_species_type_and_role": true,
+        "instruction": "Break volley line of sight behind basalt cover, then use your utility to close through slow-field pressure."
+      },
+      "pattern": {
+        "volley_period_seconds": 1.2,
+        "heavy_telegraph_seconds": 1.1,
+        "near_recovery_seconds": 1.5,
+        "cover_required": true
+      }
+    },
+    "master_t4": {
+      "name": "Master Vale",
+      "cast_key": "wandering_trainer",
+      "site": {
+        "location_hint": "High Perches off High Roost",
+        "access": "fly",
+        "before_named_fights": [
+          "Veyra"
+        ],
+        "off_main_path": true,
+        "signposted": true,
+        "placement_status": "not_placed",
+        "terrain_and_normal_player_path_proven": false
+      },
+      "creature": {
+        "species_id": "stormcapra",
+        "level_from": "canonical_master.cap_level",
+        "profile": "CHARGER"
+      },
+      "combat_question": "Hold your footing.",
+      "board": {
+        "show_species_type_and_role": true,
+        "instruction": "Fight from the lee pockets. A charge that misses near the edge staggers the Master creature; punish that opening."
+      },
+      "pattern": {
+        "heavy_telegraph_seconds": 1.1,
+        "edge_miss_stagger_seconds": 1.2,
+        "recovery_current_return_seconds": 3.0,
+        "instant_fall_death": false,
+        "recovery_current_hp_scale": 0.5,
+        "recovery_current_nonlethal": true
+      }
+    },
+    "master_t5": {
+      "name": "Master Sorrel",
+      "cast_key": "alpha_tracker",
+      "site": {
+        "location_hint": "Rod-protected clearing in Capacitor Grove",
+        "access": "on_foot",
+        "before_named_fights": [
+          "Deepwood fights"
+        ],
+        "off_main_path": true,
+        "signposted": true,
+        "placement_status": "not_placed",
+        "terrain_and_normal_player_path_proven": false
+      },
+      "creature": {
+        "species_id": "voltarach",
+        "level_from": "canonical_master.cap_level",
+        "profile": "ACE",
+        "future_upgrade": {
+          "source": "F29 approved Staticub evolution target",
+          "requires_asset_scale_provenance_and_codeblind_pass": true,
+          "enabled": false,
+          "fallback_species_id": "voltarach"
+        }
+      },
+      "combat_question": "Everything at once.",
+      "board": {
+        "show_species_type_and_role": true,
+        "instruction": "Read the heavy and dodge-response mix-up, survive the one ultimate from its safe pocket, then spend your ultimate in recovery."
+      },
+      "pattern": {
+        "heavy_telegraph_seconds": 1.1,
+        "post_dodge_followup_telegraph_seconds": 0.8,
+        "ultimate_hp_threshold": 0.5,
+        "ultimates_per_duel": 1,
+        "ultimate_telegraph_seconds": 1.5,
+        "ultimate_recovery_seconds": 2.0,
+        "storm_lightning_inside_arena": false
+      }
+    }
+  }
+}
