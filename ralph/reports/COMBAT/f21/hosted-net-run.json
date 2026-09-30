@@ -1,0 +1,124 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 360.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"control_port": 49838,
+			"exited": true,
+			"hashes": [
+				363161455,
+				363161455,
+				363161455
+			],
+			"hello": {
+				"enet_port": 30361.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "09eb2acb99dd",
+				"peer": 0.0,
+				"pid": 15932.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/combat-hosted-f21-v3/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 446.0,
+				"physics_frame": 1200.0,
+				"pos": [
+					27.8060398101807,
+					0.331712305545807,
+					-36.8944358825684
+				],
+				"session_peers": [
+					1.0,
+					1975663903.0
+				],
+				"state_hash": 363161455.0,
+				"t": 160.088,
+				"type": "heartbeat"
+			},
+			"pid": 15932,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"control_port": 49839,
+			"exited": true,
+			"hashes": [
+				363161455,
+				363161455,
+				363161455
+			],
+			"hello": {
+				"enet_port": 30362.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "09eb2acb99dd",
+				"peer": 1.0,
+				"pid": 5212.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/combat-hosted-f21-v3/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 591.0,
+				"physics_frame": 1380.0,
+				"pos": [
+					20.2864017486572,
+					0.886766076087952,
+					-34.5683441162109
+				],
+				"session_peers": [
+					1.0,
+					1975663903.0
+				],
+				"state_hash": 363161455.0,
+				"t": 159.158,
+				"type": "heartbeat"
+			},
+			"pid": 5212,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "f21-hosted-reconcile-09eb",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}
