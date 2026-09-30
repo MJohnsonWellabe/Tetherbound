@@ -75,6 +75,30 @@ func _levels(team: Array) -> Array:
 	return out
 
 
+func _assert_no_level_gate(node: Variant, context: String) -> void:
+	if node is Dictionary:
+		for raw_key: Variant in node:
+			var key := str(raw_key)
+			if key.begins_with("_"):
+				continue
+			if key in ["min_level", "challenge_level"]:
+				assert_true(int(node[raw_key]) <= 0,
+					"recommended levels must not hard-gate a chapter fight: " + context + "/" + key)
+			_assert_no_level_gate(node[raw_key], context + "/" + key)
+	elif node is Array:
+		for index in node.size():
+			_assert_no_level_gate(node[index], context + "/" + str(index))
+
+
+func test_chapter_trainers_have_no_active_hidden_level_gate() -> void:
+	var meadows := BAND_CONTENT.load_config("res://data/config/trainers.json", "trainers")
+	assert_true((meadows.get("trainers", []) as Array).size() > 0)
+	_assert_no_level_gate(meadows, "Meadows merged trainers")
+	for path: String in ["res://data/config/water_characters.json",
+			"res://data/config/cloudreach_chapter.json", "res://data/config/stormwood_trainers.json"]:
+		_assert_no_level_gate(_read(path), path)
+
+
 func test_four_chapter_curve_uses_foundation_order_and_pins_owner_envelopes() -> void:
 	assert_eq(ORDER.runtime_ids(), ["meadows", "water", "cloudreach", "stormwood"])
 	var chapters: Dictionary = CURVE.config().get("chapters", {})
