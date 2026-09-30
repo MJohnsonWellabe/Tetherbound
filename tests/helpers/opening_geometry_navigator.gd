@@ -413,16 +413,18 @@ func _choose(point: Vector2, tolerance: float) -> bool:
 	for index in range(-1, mini(MAX_CHOICES, candidates.size())):
 		var candidate := point if index < 0 else candidates[index]
 		var displacement := candidate - from
-		var distance := maxf(0.0, displacement.length() - (tolerance if index < 0 else THRESHOLD_RADIUS))
 		var direction := Vector3(displacement.x, 0.0, displacement.y).normalized()
-		var result := _motion(_body.global_transform, direction * distance)
-		if refused():
-			return false
-		if not result.blocked and _supported_step(direction):
+		# An entire fixed-height sweep hits ordinary rising terrain. Choose only
+		# a provisional heading from the current production-length step; repeat
+		# its unchanged capsule/floor/clearance guards before every stick input.
+		# This is never a certificate for the unwalked remainder of a road leg.
+		if _supported_step(direction):
 			_route.append(candidate)
 			if index >= 0:
 				_route.append(point)
 			return true
+		if refused():
+			return false
 	_stop_geometry("no admitted direct/existing-road leg; uneven floor or multiple bends may be incomplete")
 	return false
 
