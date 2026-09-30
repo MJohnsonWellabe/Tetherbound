@@ -189,3 +189,8 @@ func test_launch_freezes_real_visual_bounds_without_affecting_host_schedule() ->
 	assert_true(FEEDBACK.launch_matches(launch,"fight","own","wild",4))
 	box.size = Vector3.ONE
 	assert_eq(launch.target_visual_bounds.size, Vector3(3,5,4), "later body changes cannot rewrite frozen presentation context")
+	for size: Vector3 in [Vector3(-1,2,3), Vector3(1,0,3), Vector3.INF]:
+		var invalid := FEEDBACK.launch("fight:2:6","fight","own","wild","fireball","charged",Vector3.ZERO,Vector3.ONE,0.25,4,Vector3.INF,AABB(Vector3.ZERO,size))
+		assert_false(invalid.has("target_visual_bounds"), "invalid envelope omitted without changing host timing")
+		assert_eq(invalid.travel_seconds, 0.25)
+

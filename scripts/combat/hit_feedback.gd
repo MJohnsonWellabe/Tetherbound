@@ -52,7 +52,8 @@ static func launch(action_id: String, encounter_id: String, attacker_uid: String
 		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash(),
 		"impact_audio_owner": "receipt"}
 	if target_ground.is_finite(): value["target_ground"] = target_ground
-	if not target_visual_bounds.size.is_zero_approx() and target_visual_bounds.position.is_finite() and target_visual_bounds.size.is_finite():
+	if target_visual_bounds.size.x > 0.0 and target_visual_bounds.size.y > 0.0 and target_visual_bounds.size.z > 0.0 \
+			and target_visual_bounds.position.is_finite() and target_visual_bounds.size.is_finite():
 		var bounds := {"position": target_visual_bounds.position, "size": target_visual_bounds.size}
 		bounds.make_read_only()
 		value["target_visual_bounds"] = bounds
