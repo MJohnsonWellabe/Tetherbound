@@ -92,7 +92,8 @@ ESSENCE.stage_care(admitted, character_id, actual_owned_uid, host_day,
 Acceptance disclosure: F27#0 item source authored; #1 defeat/release arithmetic
 authored (including capped care staging) but live source producers and
 care/research/nodes/crops proof pending;
-#2 reduced XP helper authored, actual combat unchanged; #3 staged Altar spend
+#2 reduced XP and cap-aware detached XP/candy math authored, actual combat
+and legacy generic candy consumers unchanged; #3 staged Altar spend
 and controller surface authored, host service/mount/actual path pending;
 #4 requires live two-peer reconnect/reload/CAS proof; #5 ordinary earned route
 ledger still required. No F27 row can close from this checkpoint alone.
@@ -104,3 +105,46 @@ parses. git diff --check passes. These are static authoring checks only.
 RD36/RD37: minimal shared native check batch after integration prevents missing
 API/parser/authority defects; reuse it across related criteria and keep coding
 other authorized content while that batch runs. Never skip/disable/quarantine.
+
+Typed release UI integration, authored in tab_creatures.gd:
+configure_release_service(Node) requires quote_release(pending_uid,
+ released_uid), submit_release(request), release_completed(release_id,result).
+Quote fields: ok, ceremony_id (actual host pending offer/capture identifier),
+ pending_uid, released_uid, expected_character_revision, payout:[{id,n}].
+Request fields: release_id, ceremony_id, pending_uid, released_uid,
+ expected_character_revision. Empty released_uid means decline the unaccepted
+ newcomer; quote payout MUST be empty. Otherwise it names the actual owned
+ released UID and the host recomputes ESSENCE.stage_release. There is no
+ client-supplied party, candidate creature, payout, balance, cost or cap.
+The host owns pending capture/offer lookup + eligibility + capture/release
+ receipts and same-record expected_character_revision CAS. Stable character
+ comes from the admitted sender, never request identity. Full release + actual
+ accepted replacement + inventory + receipt + saved pending settlement +
+ selection/traversal cleanup MUST be one promotion, never staged separately.
+Callbacks MUST follow local promotion and pending settlement. UI verifies
+ current roster replacement and that the old pending uid cleared before the
+ goodbye/payout message. A transport ACK alone retains the pending request.
+The waiting screen permits return to the belt without abandoning the id or
+ inventing rollback; changing the choice while pending cannot send another
+ request. Rebuilding UI preserves the pending transaction fields. Once the
+ injected authority is enabled, a missing/refusing service cannot fall back
+ to direct UI roster mutation. Original pre-F27 capture/volunteer paths stay
+ unchanged until foundation mounts this feature, and do not pay essence.
+
+PROGRESSION.staged_xp(actual_host_row, admitted_cap, positive_amount,cfg)
+ builds a detached multi-level XP candidate, keeps HP fraction/stats/history,
+ stops at the cap and discards excess/banked capped XP. Does not emit events,
+ grant items, revive, promote or save. Invalid rows/awards/caps refuse {}.
+PROGRESSION.staged_candy_levels(actual_host_row, admitted_cap, host_item_levels,
+ cfg) preserves legacy Good/Great/Rare Candy level counts, stops at cap, and
+ refuses capped targets so the host consumes no candy. Host resolves actual
+ ItemDB level_up and commits the one item debit + candidate + receipt together.
+Tether Candy remains Altar-only stage_spend and never the generic candy path.
+
+Proposed single minimal check batch after a granted engine slot and host seam:
+parse the three owned training/UI scripts; targeted pure spend/release/care,
+positive participant XP and boundary XP/candy cases; existing release smoke
+plus actual Altar/release two-peer save/reload/rejoin duplication witness.
+Reuse that batch across F27 related rows. No automatic broad suites/full-ci.
+This batch is requested, not executed/passed. Independent strict review remains
+required before any acceptance closure. F27#5 earned route ledger is separate.

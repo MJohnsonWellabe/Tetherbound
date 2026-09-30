@@ -91,20 +91,7 @@ static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary) -> Dic
 	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
 			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) < 1 or int(level_raw) >= cap:
 		return {}
-	for field: String in ["hp", "max_hp", "base_hp", "base_attack", "base_defence", "iv_hp", "iv_attack", "iv_defence", "xp", "levels_gained_with_you"]:
-		var raw: Variant = row.get(field)
-		if not (raw is int or raw is float) or not is_finite(float(raw)) or float(raw) < 0.0:
-			return {}
-	for stat: String in ["hp", "attack", "defence"]:
-		var boost: Variant = row.get("boost_" + stat, 0)
-		if not (boost is int or boost is float) or not is_finite(float(boost)) \
-				or float(boost) < 0.0 or float(boost) != floorf(float(boost)) \
-				or float(row["iv_" + stat]) > 1.0 or float(row["base_" + stat]) <= 0.0:
-			return {}
-	if float(row.max_hp) <= 0.0 or float(row.hp) > float(row.max_hp) \
-			or float(row.xp) != floorf(float(row.xp)) or int(row.xp) >= xp_to_next(int(row.level), cfg) \
-			or float(row.levels_gained_with_you) != floorf(float(row.levels_gained_with_you)):
-		return {}
+	if not _staged_row_valid(row, cfg): return {}
 	var next := row.duplicate(true)
 	var fraction := float(row.hp) / float(row.max_hp)
 	next.level = int(row.level) + 1
@@ -119,6 +106,71 @@ static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary) -> Dic
 		next["max_hp" if stat == "hp" else stat] = value
 	next.hp = float(next.max_hp) * fraction
 	return next
+
+
+static func _staged_row_valid(row: Dictionary, cfg: Dictionary) -> bool:
+	var level_raw: Variant = row.get("level")
+	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
+			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) < 1 or int(level_raw) > 100:
+		return false
+	for field: String in ["hp", "max_hp", "base_hp", "base_attack", "base_defence", "iv_hp", "iv_attack", "iv_defence", "xp", "levels_gained_with_you"]:
+		var raw: Variant = row.get(field)
+		if not (raw is int or raw is float) or not is_finite(float(raw)) or float(raw) < 0.0:
+			return false
+	for stat: String in ["hp", "attack", "defence"]:
+		var boost: Variant = row.get("boost_" + stat, 0)
+		if not (boost is int or boost is float) or not is_finite(float(boost)) \
+				or float(boost) < 0.0 or float(boost) != floorf(float(boost)) \
+				or float(row["iv_" + stat]) > 1.0 or float(row["base_" + stat]) <= 0.0:
+			return false
+	if float(row.max_hp) <= 0.0 or float(row.hp) > float(row.max_hp) \
+			or float(row.xp) != floorf(float(row.xp)) or int(row.xp) >= xp_to_next(int(row.level), cfg) \
+			or float(row.levels_gained_with_you) != floorf(float(row.levels_gained_with_you)):
+		return false
+	return true
+
+
+## Detached participant XP for the host defeat/rest transaction. Caller owns
+## eligibility, positive award math and the creature's admitted typed cap.
+## At the cap XP becomes zero; it cannot bank for a later breakthrough.
+static func staged_xp(row: Dictionary, cap: int, amount: int, cfg: Dictionary) -> Dictionary:
+	if cap < 1 or cap > 100 or amount <= 0 or amount > 2147483647: return {}
+	var current := row.duplicate(true)
+	var level_raw: Variant = current.get("level")
+	var banked: Variant = current.get("xp")
+	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
+			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) > cap: return {}
+	if not (banked is int or banked is float) or not is_finite(float(banked)) \
+			or float(banked) < 0.0 or float(banked) != floorf(float(banked)) \
+			or float(banked) > 2147483647: return {}
+	if int(level_raw) == cap: current.xp = 0
+	if not _staged_row_valid(current, cfg): return {}
+	if int(current.level) == cap: return current
+	var remaining := int(current.xp) + amount
+	current.xp = 0
+	while int(current.level) < cap:
+		var needed := xp_to_next(int(current.level), cfg)
+		if needed <= 0: return {}
+		if remaining < needed: break
+		remaining -= needed
+		current = staged_next_level(current, cap, cfg)
+		if current.is_empty(): return {}
+	current.xp = 0 if int(current.level) == cap else remaining
+	return current
+
+
+## Existing Good/Great/Rare Candy keep their authored number of levels. The
+## host resolves the actual item definition and consumes ONE item atomically
+## with this candidate. At cap no candidate means no candy is consumed.
+static func staged_candy_levels(row: Dictionary, cap: int, count: int, cfg: Dictionary) -> Dictionary:
+	if cap < 1 or cap > 100 or count <= 0 or count > 2147483647 or not _staged_row_valid(row, cfg): return {}
+	if int(row.level) >= cap: return {}
+	var current := row.duplicate(true)
+	var levels := mini(count, cap - int(row.level))
+	for _index: int in levels:
+		current = staged_next_level(current, cap, cfg)
+		if current.is_empty(): return {}
+	return current
 
 
 ## What one party member's share of `amount` xp is, floored so a three-way
