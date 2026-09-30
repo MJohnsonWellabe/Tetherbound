@@ -25,6 +25,7 @@
   "tether_candy_item": "tether_candy",
   "tether_candy_cost": 1,
   "altar_interaction_radius_m": 3.0,
+  "altar_result_retry_seconds": 2,
   "maximum_transaction_receipts": 4096,
   "maximum_release_receipts": 4096,
   "level_spend_xp_policy": "preserve_until_cap_then_discard",

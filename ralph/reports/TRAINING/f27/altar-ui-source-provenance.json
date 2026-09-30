@@ -1,0 +1,27 @@
+{
+  "parent_training_commit": "0e89dbb79a5e67ad823e0b0e30a83d82721d7f2e",
+  "integration_main_pin_observed": "9806bef7bcd893e3b8b4856dd7f45e47f7c3f9c7",
+  "owned_source_sha256_lf": {
+    "data/config/essence.json": "b07cb040b0135394fc01bf279d9553f230d119691ea368d4f9ef7cea6ffd3eab",
+    "scripts/creatures/essence.gd": "fe34d0d3a1d64b3243afa28a1e9b05bfd8fa138bb287ef00407a73a723907218",
+    "scripts/ui/altar_panel.gd": "fb4c8b95fd873528fc80a70f68eeb02c8cb25c6a762660560fa087a8b64413d5",
+    "scripts/ui/tab_creatures.gd": "6da6f1c7b434b8d7fc37915f0c0ba5b0e377d626706a5d4c7a3b81d3b2b390e3",
+    "scripts/ui/altar_service.gd": "607865d4646fd69a12ca9a4a527c3b2ee5cca33079c8b6d9839acf68fb2600fd",
+    "scripts/ui/creature_training_readout.gd": "305d185d8fc817970137a173656143fc34d8ce2e0e0c68039757d1ba9f1b8311"
+  },
+  "source_contract_sha256": "931310283c928ca479aa3381786a0d7968421b236253a757cda822be33803ef4",
+  "engine_unit_ci_gpu_runs": 0,
+  "shared_source_changed": false,
+  "portable_fields_added": false,
+  "actual_homestead_caller_mounted": false,
+  "shared_session_doors_present": false,
+  "acceptance_claim": false,
+  "independent_review": "Pending exact pushed checkpoint review by root",
+  "authoring_checks": [
+    "JSON parse retry config and bounded integer",
+    "exact source ownership allowlist",
+    "LF-normalized SHA256 checkpoint",
+    "git diff --check and cached diff --check"
+  ],
+  "real_path_proof": "Not executed; named integration proof remains open"
+}

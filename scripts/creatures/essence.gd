@@ -65,6 +65,8 @@ static func configuration_errors(cfg: Dictionary) -> Array[String]:
 	if errors.is_empty() and float(cfg.auto_xp_scale) >= 1.0: errors.append("automatic combat XP must be positive and reduced")
 	if cfg.get("tether_candy_item") != "tether_candy" or cfg.get("tether_candy_cost") != 1:
 		errors.append("one canonical Tether Candy pays one level")
+	if cfg.has("altar_result_retry_seconds") and not _integer(cfg.altar_result_retry_seconds, 1, 30):
+		errors.append("invalid Altar result retry interval")
 	var node_yield: Variant = cfg.get("attuned_node_yield")
 	if not node_yield is Array or node_yield.size() != 2 \
 			or not _integer(node_yield[0], 1, 2147483647) or not _integer(node_yield[1], 1, 2147483647):

@@ -30,6 +30,7 @@ const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const TRAINING_READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -229,6 +230,9 @@ var _appraisal_pips: Control = null
 var _appraisal_stars: int = 0
 var _detail_traits: Label = null
 var _detail_trait_desc: Label = null
+var _detail_training_cap: Label = null
+var _detail_training_essence: Label = null
+var _detail_training_traits: Label = null
 var _detail_xp: Label = null
 var _detail_xp_bar: ProgressBar = null
 var _move_quick_icon: TextureRect = null
@@ -852,6 +856,12 @@ func _build_detail() -> Control:
 	_best_caption.add_theme_color_override("font_color", UITokens.WARNING)
 	bond_wrap.add_child(_best_caption)
 
+	# Keep the existing move rows above this extra readout. The existing detail
+	# scroll exposes the authored power/slot information at the same text floor.
+	_detail_training_cap = _training_label(panel)
+	_detail_training_essence = _training_label(panel)
+	_detail_training_traits = _training_label(panel)
+
 	_detail_status = Label.new()
 	_detail_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_status.add_theme_font_size_override("font_size", UITokens.FONT_READ)
@@ -874,6 +884,17 @@ func _build_detail() -> Control:
 	panel.add_child(_detail_hint)
 
 	return panel
+
+
+func _training_label(parent: Node) -> Label:
+	var label := Label.new()
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.visible = false
+	parent.add_child(label)
+	return label
 
 
 ## R4.6's ceremony: sits in the same slot `_build_detail()`'s panel occupies
@@ -1285,6 +1306,12 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_appraisal_pips.queue_redraw()
 		_detail_traits.text = ""
 		_detail_trait_desc.text = ""
+		_detail_training_cap.text = ""
+		_detail_training_essence.text = ""
+		_detail_training_traits.text = ""
+		_detail_training_cap.visible = false
+		_detail_training_essence.visible = false
+		_detail_training_traits.visible = false
 		_detail_xp.text = ""
 		_detail_xp_bar.value = 0.0
 		_move_quick_name.text = ""
@@ -1366,6 +1393,16 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_detail_traits.visible = not _detail_traits.text.is_empty()
 	_detail_trait_desc.visible = not _detail_trait_desc.text.is_empty()
 
+	var game := state()
+	var player: RefCounted = game.get("local") if game != null else null
+	var training := TRAINING_READOUT.inspect_owned(player, creature)
+	_detail_training_cap.text = training.cap_text
+	_detail_training_essence.text = training.essence_text
+	_detail_training_traits.text = training.trait_text
+	_detail_training_cap.visible = not _detail_training_cap.text.is_empty()
+	_detail_training_essence.visible = not _detail_training_essence.text.is_empty()
+	_detail_training_traits.visible = not _detail_training_traits.text.is_empty()
+
 	var xp: int = int(creature.get("xp"))
 	var xp_needed: int = int(creature.call("xp_to_next", cfg))
 	# "EXP", not "XP": kenney_future's capital X is a two-bar glyph almost
@@ -1377,6 +1414,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_detail_xp_bar.value = 0.0 if xp_needed <= 0 else clampf(float(xp) / float(xp_needed), 0.0, 1.0) * 100.0
 	if _detail_xp_next != null:
 		_detail_xp_next.text = _xp_next_line(creature, cfg, _inventory())
+		if training.at_cap == true:
+			_detail_xp_next.text = "Current ceiling" if int(training.cap) == 60 else "Breakthrough needed"
 
 	_fill_move_row(
 		str(creature.get("move_quick")), "QUICK", creature_type,

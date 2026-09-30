@@ -16,6 +16,7 @@ extends CanvasLayer
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const PARTY := preload("res://autoload/party.gd")
 
 var _service: Node = null
@@ -23,6 +24,8 @@ var _station_key := ""
 var _creature_uid := ""
 var _pending_id := ""
 var _quote: Dictionary = {}
+var _quote_code := "quote_unavailable"
+var _pending_durable := false
 var _open := false
 var _closing := false
 var _status := "Choose who grows, then choose their essence or a Tether Candy."
@@ -122,7 +125,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _station_available(station_key: String) -> bool:
-	return is_instance_valid(_service) and bool(_service.call("station_available", station_key))
+	if not is_instance_valid(_service): return false
+	var available: Variant = _service.call("station_available", station_key)
+	return available is bool and available == true
 
 
 func _party() -> RefCounted:
@@ -140,14 +145,36 @@ func _creature() -> RefCounted:
 
 func _refresh_quote() -> void:
 	_quote = {}
+	_quote_code = "station_unavailable"
 	if not _station_available(_station_key) or _creature() == null: return
 	var raw: Variant = _service.call("quote_essence_spend", _station_key, _creature_uid)
-	if raw is Dictionary and bool(raw.get("ok", false)) and raw.get("creature_uid") == _creature_uid \
-			and raw.get("payments") is Array and raw.get("level") is int \
-			and raw.get("cap") is int and raw.get("expected_character_revision") is int \
-			and int(raw.level) >= 1 and int(raw.level) <= int(raw.cap) \
-			and int(raw.cap) <= 60 and int(raw.expected_character_revision) >= 0:
+	if raw is Dictionary and raw.get("ok") is bool and raw.ok == true and raw.get("creature_uid") == _creature_uid \
+			and raw.get("payments") is Array and raw.payments.size() <= 3 and ESSENCE._integer(raw.get("level"), 1, 60) \
+			and ESSENCE._integer(raw.get("cap"), 1, 60) \
+			and ESSENCE._integer(raw.get("expected_character_revision"), 0, 2147483646) \
+			and int(raw.level) <= int(raw.cap):
+		var seen := {}
+		for payment: Variant in raw.payments:
+			if not _valid_payment(payment) or seen.has(payment.id):
+				_quote_code = "quote_unavailable"
+				return
+			seen[payment.id] = true
+		if int(raw.level) < int(raw.cap) and raw.payments.is_empty():
+			_quote_code = "quote_unavailable"
+			return
 		_quote = raw.duplicate(true)
+		for field: String in ["level", "cap", "expected_character_revision"]: _quote[field] = int(_quote[field])
+		_quote_code = ""
+	elif raw is Dictionary:
+		_quote_code = str(raw.get("code", "quote_unavailable"))
+	else:
+		_quote_code = "quote_unavailable"
+
+
+func _message(code: String) -> String:
+	if is_instance_valid(_service) and _service.has_method("refusal_text"):
+		return str(_service.call("refusal_text", code))
+	return "Leveling is unavailable for this companion. Your choice has not been confirmed."
 
 
 func _button(parent: Node, text: String, callback: Callable, enabled: bool = true) -> Button:
@@ -156,6 +183,7 @@ func _button(parent: Node, text: String, callback: Callable, enabled: bool = tru
 	button.custom_minimum_size.y = 48
 	button.add_theme_font_size_override("font_size", TOKENS.FONT_BODY)
 	button.disabled = not enabled or not _pending_id.is_empty()
+	button.focus_mode = Control.FOCUS_ALL
 	button.pressed.connect(callback)
 	parent.add_child(button)
 	return button
@@ -170,7 +198,11 @@ func _label(parent: Node, text: String, size: int = TOKENS.FONT_BODY) -> Label:
 	return label
 
 
-func _rebuild() -> void:
+func _rebuild(prefer_payment: bool = false) -> void:
+	var focus_key := ""
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if is_instance_valid(focused) and _root != null and _root.is_ancestor_of(focused):
+		focus_key = str(focused.get_meta("altar_focus_key", ""))
 	if _root != null:
 		remove_child(_root)
 		_root.queue_free()
@@ -192,7 +224,7 @@ func _rebuild() -> void:
 	layout.add_theme_constant_override("separation", 12)
 	panel.add_child(layout)
 	_label(layout, "Altar · Chosen leveling", TOKENS.FONT_TITLE)
-	_label(layout, "Waiting for host… B leaves this screen." if not _pending_id.is_empty() else _status)
+	_label(layout, _status)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_theme_constant_override("separation", 24)
@@ -202,10 +234,17 @@ func _rebuild() -> void:
 	columns.add_child(roster)
 	var party := _party()
 	var first: Button = null
+	var selected_roster: Button = null
+	var roster_buttons: Array[Button] = []
+	var payment_buttons: Array[Button] = []
+	var first_payment: Button = null
 	if party != null:
 		for creature: RefCounted in party.call("members"):
 			var uid := str(creature.get("uid"))
 			var button := _button(roster, "%s · Level %d" % [str(creature.call("label")), int(creature.get("level"))], _select_creature.bind(uid))
+			button.set_meta("altar_focus_key", "creature:" + uid)
+			roster_buttons.append(button)
+			if uid == _creature_uid: selected_roster = button
 			if first == null: first = button
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -220,14 +259,13 @@ func _rebuild() -> void:
 	if selected == null:
 		_label(choices, "That companion is no longer in your team.")
 	elif _quote.is_empty():
-		_label(choices, "Leveling is unavailable. Your items and companion remain unchanged.")
+		_label(choices, _message(_quote_code))
 	else:
 		_label(choices, "%s · Level %d / cap %d" % [str(selected.call("label")), int(_quote.level), int(_quote.cap)], TOKENS.FONT_HEADING)
 		if int(_quote.level) >= int(_quote.cap):
-			_label(choices, "Breakthrough needed · Reach the next tier with an Ascension Feast.")
+			_label(choices, "Current ceiling · Level 60 is the highest tier this journey." if int(_quote.cap) == 60 else "Breakthrough needed · Reach the next tier with an Ascension Feast.")
 		else:
 			_label(choices, "Raise to level %d. Each payment raises one level." % (int(_quote.level) + 1))
-			var first_payment: Button = null
 			for payment: Variant in _quote.payments:
 				if not _valid_payment(payment): continue
 				var cost := int(payment.cost)
@@ -235,17 +273,53 @@ func _rebuild() -> void:
 				var enough := available >= cost
 				var text := "%s · Cost %d · Have %d%s" % [str(payment.name), cost, available, "" if enough else " · Need more"]
 				var button := _button(choices, text, _spend.bind(str(payment.id)), enough)
+				button.set_meta("altar_focus_key", "payment:" + str(payment.id))
+				payment_buttons.append(button)
 				if enough and first_payment == null: first_payment = button
-			if first_payment != null: first = first_payment
-	_label(layout, "A Choose / Raise level · B Leave · Spend saves at this Altar")
+	if selected != null:
+		var game := get_node_or_null(^"/root/Game")
+		var player: RefCounted = game.get("local") if game != null else null
+		var readout := READOUT.inspect_owned(player, selected)
+		if not str(readout.essence_text).is_empty(): _label(choices, readout.essence_text)
+		if not str(readout.trait_text).is_empty(): _label(choices, readout.trait_text)
+	_label(layout, "A Choose / Raise level · B Leave")
 	TOKENS.make_text_legible(_root)
+	_wire_focus(roster_buttons, payment_buttons, selected_roster)
+	if selected_roster != null: first = selected_roster
+	if prefer_payment and first_payment != null: first = first_payment
+	else:
+		for button: Button in roster_buttons + payment_buttons:
+			if not button.disabled and str(button.get_meta("altar_focus_key", "")) == focus_key:
+				first = button
+				break
 	if first != null and not first.disabled: first.call_deferred("grab_focus")
+
+
+func _wire_focus(roster: Array[Button], payments: Array[Button], selected: Button) -> void:
+	var enabled_roster: Array[Button] = []
+	var enabled_payments: Array[Button] = []
+	for button: Button in roster:
+		if not button.disabled: enabled_roster.append(button)
+	for button: Button in payments:
+		if not button.disabled: enabled_payments.append(button)
+	var roster_target: Button = selected if selected != null and not selected.disabled else (enabled_roster[0] if not enabled_roster.is_empty() else null)
+	var payment_target: Button = enabled_payments[0] if not enabled_payments.is_empty() else null
+	for column: Array in [enabled_roster, enabled_payments]:
+		for index: int in column.size():
+			var button: Button = column[index]
+			button.focus_neighbor_top = button.get_path_to(column[(index + column.size() - 1) % column.size()])
+			button.focus_neighbor_bottom = button.get_path_to(column[(index + 1) % column.size()])
+			button.focus_previous = button.focus_neighbor_top
+			button.focus_next = button.focus_neighbor_bottom
+			button.focus_neighbor_left = button.get_path_to(roster_target if column == enabled_payments and roster_target != null else button)
+			button.focus_neighbor_right = button.get_path_to(payment_target if column == enabled_roster and payment_target != null else button)
+
 
 
 func _valid_payment(raw: Variant) -> bool:
 	if not raw is Dictionary or not raw.get("id") is String or not raw.get("name") is String \
-			or not raw.get("cost") is int or not raw.get("available") is int \
-			or int(raw.cost) < 1 or int(raw.available) < 0: return false
+			or raw.name.is_empty() or not ESSENCE._integer(raw.get("cost"), 1, 2147483647) \
+			or not ESSENCE._integer(raw.get("available"), 0, 2147483647): return false
 	if raw.id == "tether_candy": return int(raw.cost) == 1
 	var creature := _creature()
 	if creature == null: return false
@@ -258,7 +332,7 @@ func _select_creature(uid: String) -> void:
 	if not _pending_id.is_empty(): return
 	_creature_uid = uid
 	_refresh_quote()
-	_rebuild()
+	_rebuild(true)
 
 
 func _spend(payment_item: String) -> void:
@@ -274,6 +348,8 @@ func _spend(payment_item: String) -> void:
 		if _valid_payment(payment) and payment.id == payment_item and int(payment.available) >= int(payment.cost): permitted = true
 	if not permitted or int(_quote.level) >= int(_quote.cap): return
 	_pending_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_pending_durable = false
+	_status = "Waiting for the host to save this level. B leaves this screen."
 	var request := {"spend_id": _pending_id, "creature_uid": _creature_uid,
 		"expected_level": int(_quote.level), "payment_item": payment_item,
 		"expected_character_revision": int(_quote.expected_character_revision)}
@@ -283,20 +359,18 @@ func _spend(payment_item: String) -> void:
 
 func _on_completed(spend_id: String, result: Dictionary) -> void:
 	if spend_id != _pending_id or _pending_id.is_empty(): return
-	if result.get("resolved") != true:
-		_status = "Your saved choice is still being recovered. Reconnect to continue."
+	if result.get("durable") == true: _pending_durable = true
+	var terminal := result.get("resolved") == true and result.get("ok") is bool
+	if result.get("ok") == true and (result.get("saved") != true or result.get("durable") != true):
+		terminal = false
+	if result.get("ok") == false and _pending_durable: terminal = false
+	if not terminal:
+		_status = str(result.get("reason", _message(str(result.get("code", "awaiting_saved_decision")))))
 		if _open: _rebuild()
 		return
 	_pending_id = ""
-	var reason := str(result.get("reason", result.get("code", "refused")))
-	var messages := {"station_unavailable": "Return to the Altar outside combat to raise a level.",
-		"station_missing": "The Altar is no longer here.", "insufficient_items": "You need more of that essence.",
-		"breakthrough_needed": "This companion needs a breakthrough before another level.",
-		"stale_level": "Your companion's level changed. Choose the payment again.",
-		"stale_revision": "Your team or items changed. Choose the payment again.",
-		"save_failed": "Couldn't save. Your items and companion remain unchanged.",
-		"owner_save_failed": "Your character could not save the accepted change. Reconnect to recover it."}
-	_status = "Level raised and saved." if bool(result.get("ok", false)) else str(messages.get(reason, "Couldn't raise that level. Refresh your team before trying again."))
+	_pending_durable = false
+	_status = "Level raised and saved." if result.ok == true else str(result.get("reason", _message(str(result.get("code", "refused")))))
 	if _open:
 		_refresh_quote()
 		_rebuild()
