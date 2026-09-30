@@ -75,7 +75,9 @@
     "parser.txt": {
       "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
       "bytes": 73,
-      "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+      "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+      "archived_readable_sha256": "c5dd95c9eab073523046778b6edec97c15bdce4fe8104f82b574aab1870161a1",
+      "archive_transform": "Readable transcript normalizes LF and removes a terminal blank line to satisfy diff-check; exact native bytes remain unchanged in raw-log-envelope.json and raw_sha256."
     }
   }
 }
