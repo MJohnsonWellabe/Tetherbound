@@ -26,8 +26,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        43,
-        45
+        18,
+        20
       ],
       "entries": [
         {
@@ -67,8 +67,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        43,
-        45
+        18,
+        20
       ],
       "entries": [
         {
@@ -108,8 +108,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        45,
-        47
+        20,
+        23
       ],
       "entries": [
         {
@@ -149,8 +149,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        45,
-        47
+        20,
+        23
       ],
       "entries": [
         {
@@ -190,8 +190,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        45,
-        47
+        20,
+        23
       ],
       "entries": [
         {
@@ -231,8 +231,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        45,
-        47
+        20,
+        23
       ],
       "entries": [
         {
@@ -272,8 +272,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        45,
-        47
+        20,
+        23
       ],
       "entries": [
         {
@@ -313,8 +313,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        45,
-        47
+        20,
+        23
       ],
       "entries": [
         {
@@ -354,8 +354,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        47,
-        49
+        23,
+        25
       ],
       "entries": [
         {
@@ -395,8 +395,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        47,
-        49
+        23,
+        25
       ],
       "entries": [
         {
@@ -436,8 +436,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        49,
-        51
+        25,
+        27
       ],
       "entries": [
         {
@@ -477,8 +477,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        49,
-        51
+        25,
+        27
       ],
       "entries": [
         {
@@ -518,8 +518,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        51,
-        53
+        27,
+        30
       ],
       "entries": [
         {
@@ -559,8 +559,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        51,
-        53
+        27,
+        30
       ],
       "entries": [
         {
@@ -600,8 +600,8 @@
       "habitat": "land",
       "amphibious": false,
       "level_range": [
-        53,
-        55
+        30,
+        32
       ],
       "entries": [
         {
@@ -641,8 +641,8 @@
       "habitat": "shallows",
       "amphibious": true,
       "level_range": [
-        53,
-        55
+        30,
+        32
       ],
       "entries": [
         {
@@ -8344,7 +8344,7 @@
       "display_name": "Lantern Shell Sentinel",
       "island_id": "lantern_cove",
       "species_id": "cannonback",
-      "level": 45,
+      "level": 22,
       "replaces_wild_site_id": "water_lantern_cove_wild_006",
       "position": [
         -431.554,
@@ -8374,7 +8374,7 @@
       "display_name": "Basalt Claw",
       "island_id": "gull_rest",
       "species_id": "cragclaw",
-      "level": 47,
+      "level": 24,
       "replaces_wild_site_id": "water_gull_rest_wild_006",
       "position": [
         -75.328,
@@ -8404,7 +8404,7 @@
       "display_name": "Root Watcher",
       "island_id": "brine_steps",
       "species_id": "mirejaw",
-      "level": 47,
+      "level": 24,
       "replaces_wild_site_id": "water_brine_steps_wild_016",
       "position": [
         326.835,
@@ -8434,7 +8434,7 @@
       "display_name": "Garden Songweaver",
       "island_id": "drowned_garden",
       "species_id": "sirenseal",
-      "level": 51,
+      "level": 29,
       "replaces_wild_site_id": "water_drowned_garden_wild_008",
       "position": [
         1064.267,
@@ -8464,7 +8464,7 @@
       "display_name": "Tidecoil, the Abyss Serpent",
       "island_id": "deep_watch",
       "species_id": "tidecoil",
-      "level": 54,
+      "level": 32,
       "replaces_wild_site_id": "water_deep_watch_wild_008",
       "position": [
         1262.0,
@@ -8498,7 +8498,7 @@
       "resolution": "host_confirms_catch_or_defeat_once",
       "reward_role": "skill_candy_iii",
       "reward_delivery": "deduplicated_personal_reward_placement_reserved_in_pickup_data_no_direct_grant",
-      "region_level_exception": "Owner fixed Tidecoil level 54 apex; random Tether Current tables remain <=53.",
+      "region_level_exception": "F19: optional Tidecoil apex L32; normal wild tables remain within Tidewake 18–32.",
       "status": "authored_optional_encounter_not_runtime_instantiated"
     }
   ],

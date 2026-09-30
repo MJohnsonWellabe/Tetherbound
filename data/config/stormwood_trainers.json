@@ -22,18 +22,18 @@
       "critical_order": 1,
       "humanoid_key": "young_trainer",
       "rank": "trainer",
-      "ace_level": 33,
+      "ace_level": 43,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "stormraven",
-          "level": 32,
+          "level": 42,
           "replacement_point": "trainers.tamsin_surge_lesson.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "voltwig",
-          "level": 33,
+          "level": 43,
           "replacement_point": "trainers.tamsin_surge_lesson.party.2"
         }
       ],
@@ -59,18 +59,18 @@
       "critical_order": 2,
       "humanoid_key": "wandering_trainer",
       "rank": "trainer",
-      "ace_level": 34,
+      "ace_level": 44,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "thundertunnel",
-          "level": 33,
+          "level": 43,
           "replacement_point": "trainers.rodfolk_pathfinder_elin.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "sparkit",
-          "level": 34,
+          "level": 44,
           "replacement_point": "trainers.rodfolk_pathfinder_elin.party.2"
         }
       ],
@@ -96,24 +96,24 @@
       "critical_order": 4,
       "humanoid_key": "grunt_c",
       "rank": "lieutenant",
-      "ace_level": 36,
+      "ace_level": 46,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "tanglevolt",
-          "level": 35,
+          "level": 45,
           "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 36,
+          "level": 46,
           "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "sparkit",
-          "level": 36,
+          "level": 46,
           "replacement_point": "trainers.lieutenant_dace_hollows_rod.party.3"
         }
       ],
@@ -139,18 +139,18 @@
       "critical_order": 5,
       "humanoid_key": "wandering_trainer",
       "rank": "trainer",
-      "ace_level": 35,
+      "ace_level": 45,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "mosshock",
-          "level": 34,
+          "level": 44,
           "replacement_point": "trainers.traveller_ivo_lantern_pools.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 35,
+          "level": 45,
           "replacement_point": "trainers.traveller_ivo_lantern_pools.party.2"
         }
       ],
@@ -177,24 +177,24 @@
       "critical_order": 6,
       "humanoid_key": "officer_a",
       "rank": "lieutenant",
-      "ace_level": 39,
+      "ace_level": 50,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "tanglevolt",
-          "level": 37,
+          "level": 47,
           "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "tanglevolt",
-          "level": 38,
+          "level": 48,
           "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "stormraven",
-          "level": 39,
+          "level": 50,
           "replacement_point": "trainers.lieutenant_varga_rodline_bridge.party.3"
         }
       ],
@@ -221,24 +221,24 @@
       "critical_order": 3,
       "humanoid_key": "officer_b",
       "rank": "officer",
-      "ace_level": 34,
+      "ace_level": 44,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "sparkit",
-          "level": 32,
+          "level": 42,
           "replacement_point": "trainers.officer_maren_verge_rod.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "voltwig",
-          "level": 33,
+          "level": 43,
           "replacement_point": "trainers.officer_maren_verge_rod.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "mosshock",
-          "level": 34,
+          "level": 44,
           "replacement_point": "trainers.officer_maren_verge_rod.party.3"
         }
       ],
@@ -264,18 +264,18 @@
       "critical_order": 7,
       "humanoid_key": "craftsperson",
       "rank": "trainer",
-      "ace_level": 40,
+      "ace_level": 51,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "staticub",
-          "level": 39,
+          "level": 50,
           "replacement_point": "trainers.archwright_senn_crown_footing.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "stormraven",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.archwright_senn_crown_footing.party.2"
         }
       ],
@@ -301,18 +301,18 @@
       "critical_order": 8,
       "humanoid_key": "field_researcher",
       "rank": "trainer",
-      "ace_level": 40,
+      "ace_level": 51,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "staticub",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.archivist_wen_crown_trial.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "sparkit",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.archivist_wen_crown_trial.party.2"
         }
       ],
@@ -338,18 +338,18 @@
       "critical_order": 9,
       "humanoid_key": "lost_traveler",
       "rank": "trainer",
-      "ace_level": 41,
+      "ace_level": 52,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "glimmermoth",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.crown_wayfarer_nell.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.crown_wayfarer_nell.party.2"
         }
       ],
@@ -376,24 +376,24 @@
       "critical_order": 10,
       "humanoid_key": "officer_a",
       "rank": "officer",
-      "ace_level": 42,
+      "ace_level": 53,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "stormbrush",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.officer_nysa_deepwood_rod.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.officer_nysa_deepwood_rod.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "staticub",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.officer_nysa_deepwood_rod.party.3"
         }
       ],
@@ -419,18 +419,18 @@
       "critical_order": 11,
       "humanoid_key": "local_historian",
       "rank": "trainer",
-      "ace_level": 41,
+      "ace_level": 52,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "stormraven",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.rodfolk_guard_bram.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "staticub",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.rodfolk_guard_bram.party.2"
         }
       ],
@@ -457,24 +457,24 @@
       "critical_order": 12,
       "humanoid_key": "officer_b",
       "rank": "lieutenant",
-      "ace_level": 42,
+      "ace_level": 53,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "thundertunnel",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.outerworks_lieutenant_sera.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "sparkit",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.outerworks_lieutenant_sera.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "stormbrush",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.outerworks_lieutenant_sera.party.3"
         }
       ],
@@ -500,24 +500,24 @@
       "critical_order": 13,
       "humanoid_key": "officer_b",
       "rank": "officer",
-      "ace_level": 43,
+      "ace_level": 54,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "stormraven",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.officer_kestrel_outer_works.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "tanglevolt",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.officer_kestrel_outer_works.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "mosshock",
-          "level": 43,
+          "level": 54,
           "replacement_point": "trainers.officer_kestrel_outer_works.party.3"
         }
       ],
@@ -546,36 +546,36 @@
       "critical_order": 14,
       "humanoid_key": "captain_a",
       "rank": "captain",
-      "ace_level": 44,
+      "ace_level": 55,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "tanglevolt",
-          "level": 42,
+          "level": 54,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "stormraven",
-          "level": 43,
+          "level": 54,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "stormbrush",
-          "level": 43,
+          "level": 54,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.3"
         },
         {
           "slot": 4,
           "placeholder_species": "sparkit",
-          "level": 44,
+          "level": 55,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.4"
         },
         {
           "slot": 5,
           "placeholder_species": "voltarach",
-          "level": 44,
+          "level": 55,
           "replacement_point": "trainers.captain_marrow_dynamo_core.party.5"
         }
       ],
@@ -602,18 +602,18 @@
       "critical_order": 0,
       "humanoid_key": "young_trainer",
       "rank": "trainer",
-      "ace_level": 33,
+      "ace_level": 43,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "voltwig",
-          "level": 32,
+          "level": 42,
           "replacement_point": "trainers.tamsin_ash_ring.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "stormraven",
-          "level": 33,
+          "level": 43,
           "replacement_point": "trainers.tamsin_ash_ring.party.2"
         }
       ],
@@ -639,18 +639,18 @@
       "critical_order": 0,
       "humanoid_key": "alpha_tracker",
       "rank": "trainer",
-      "ace_level": 34,
+      "ace_level": 44,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "thundertunnel",
-          "level": 33,
+          "level": 43,
           "replacement_point": "trainers.ranger_pax_sentinel.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 34,
+          "level": 44,
           "replacement_point": "trainers.ranger_pax_sentinel.party.2"
         }
       ],
@@ -676,18 +676,18 @@
       "critical_order": 0,
       "humanoid_key": "courier",
       "rank": "trainer",
-      "ace_level": 35,
+      "ace_level": 45,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "mosshock",
-          "level": 34,
+          "level": 44,
           "replacement_point": "trainers.courier_pim_pool_loop.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "sparkit",
-          "level": 35,
+          "level": 45,
           "replacement_point": "trainers.courier_pim_pool_loop.party.2"
         }
       ],
@@ -714,18 +714,18 @@
       "critical_order": 0,
       "humanoid_key": "wandering_trainer",
       "rank": "trainer",
-      "ace_level": 36,
+      "ace_level": 46,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "mosshock",
-          "level": 35,
+          "level": 45,
           "replacement_point": "trainers.traveller_ivo_moss_detour.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 36,
+          "level": 46,
           "replacement_point": "trainers.traveller_ivo_moss_detour.party.2"
         }
       ],
@@ -751,18 +751,18 @@
       "critical_order": 0,
       "humanoid_key": "rival_trainer",
       "rank": "trainer",
-      "ace_level": 37,
+      "ace_level": 47,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "tanglevolt",
-          "level": 36,
+          "level": 46,
           "replacement_point": "trainers.rodline_scout_kael.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "sparkit",
-          "level": 37,
+          "level": 47,
           "replacement_point": "trainers.rodline_scout_kael.party.2"
         }
       ],
@@ -789,18 +789,18 @@
       "critical_order": 0,
       "humanoid_key": "trader",
       "rank": "trainer",
-      "ace_level": 38,
+      "ace_level": 48,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "voltwig",
-          "level": 37,
+          "level": 47,
           "replacement_point": "trainers.rodline_keeper_fenn.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "mosshock",
-          "level": 38,
+          "level": 48,
           "replacement_point": "trainers.rodline_keeper_fenn.party.2"
         }
       ],
@@ -826,18 +826,18 @@
       "critical_order": 0,
       "humanoid_key": "young_trainer",
       "rank": "trainer",
-      "ace_level": 39,
+      "ace_level": 50,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "tanglevolt",
-          "level": 38,
+          "level": 48,
           "replacement_point": "trainers.rodline_duelist_ren.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "stormraven",
-          "level": 39,
+          "level": 50,
           "replacement_point": "trainers.rodline_duelist_ren.party.2"
         }
       ],
@@ -863,24 +863,24 @@
       "critical_order": 0,
       "humanoid_key": "rival_trainer",
       "rank": "ace",
-      "ace_level": 42,
+      "ace_level": 53,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "stormraven",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.rook_circuit_lantern.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "staticub",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.rook_circuit_lantern.party.2"
         },
         {
           "slot": 3,
           "placeholder_species": "stormbrush",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.rook_circuit_lantern.party.3"
         }
       ],
@@ -906,18 +906,18 @@
       "critical_order": 0,
       "humanoid_key": "lost_traveler",
       "rank": "trainer",
-      "ace_level": 41,
+      "ace_level": 52,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "staticub",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.circuit_lena_giant.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "thundertunnel",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.circuit_lena_giant.party.2"
         }
       ],
@@ -943,18 +943,18 @@
       "critical_order": 0,
       "humanoid_key": "wandering_trainer",
       "rank": "trainer",
-      "ace_level": 42,
+      "ace_level": 53,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "mosshock",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.circuit_orin_blackwater.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "glimmermoth",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.circuit_orin_blackwater.party.2"
         }
       ],
@@ -980,18 +980,18 @@
       "critical_order": 0,
       "humanoid_key": "creature_caretaker",
       "rank": "trainer",
-      "ace_level": 40,
+      "ace_level": 51,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "mosshock",
-          "level": 39,
+          "level": 50,
           "replacement_point": "trainers.circuit_mira_lantern.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "staticub",
-          "level": 40,
+          "level": 51,
           "replacement_point": "trainers.circuit_mira_lantern.party.2"
         }
       ],
@@ -1018,18 +1018,18 @@
       "critical_order": 0,
       "humanoid_key": "young_trainer",
       "rank": "trainer",
-      "ace_level": 42,
+      "ace_level": 53,
       "party": [
         {
           "slot": 1,
           "placeholder_species": "sparkit",
-          "level": 41,
+          "level": 52,
           "replacement_point": "trainers.circuit_tavi_rodline.party.1"
         },
         {
           "slot": 2,
           "placeholder_species": "tanglevolt",
-          "level": 42,
+          "level": 53,
           "replacement_point": "trainers.circuit_tavi_rodline.party.2"
         }
       ],

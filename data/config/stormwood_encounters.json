@@ -10,8 +10,8 @@
       "region_id": "cinder_verge",
       "surge_phase": "calm",
       "level_range": [
-        30,
-        34
+        40,
+        44
       ],
       "catchable": true,
       "replaceable": true,
@@ -41,8 +41,8 @@
       "region_id": "cinder_verge",
       "surge_phase": "surge",
       "level_range": [
-        32,
-        35
+        42,
+        45
       ],
       "catchable": true,
       "replaceable": true,
@@ -72,8 +72,8 @@
       "region_id": "glowmoss_hollows",
       "surge_phase": "calm",
       "level_range": [
-        32,
-        36
+        42,
+        46
       ],
       "catchable": true,
       "replaceable": true,
@@ -103,8 +103,8 @@
       "region_id": "glowmoss_hollows",
       "surge_phase": "surge",
       "level_range": [
-        34,
-        37
+        44,
+        48
       ],
       "catchable": true,
       "replaceable": true,
@@ -134,8 +134,8 @@
       "region_id": "conductor_run",
       "surge_phase": "calm",
       "level_range": [
-        34,
-        38
+        44,
+        49
       ],
       "catchable": true,
       "replaceable": true,
@@ -165,8 +165,8 @@
       "region_id": "conductor_run",
       "surge_phase": "surge",
       "level_range": [
-        36,
-        39
+        46,
+        50
       ],
       "catchable": true,
       "replaceable": true,
@@ -196,8 +196,8 @@
       "region_id": "hollow_crown",
       "surge_phase": "calm",
       "level_range": [
-        37,
-        40
+        48,
+        51
       ],
       "catchable": true,
       "replaceable": true,
@@ -227,8 +227,8 @@
       "region_id": "hollow_crown",
       "surge_phase": "surge",
       "level_range": [
-        38,
-        40
+        49,
+        51
       ],
       "catchable": true,
       "replaceable": true,
@@ -258,8 +258,8 @@
       "region_id": "deepwood",
       "surge_phase": "calm",
       "level_range": [
-        38,
-        42
+        49,
+        53
       ],
       "catchable": true,
       "replaceable": true,
@@ -289,8 +289,8 @@
       "region_id": "deepwood",
       "surge_phase": "surge",
       "level_range": [
-        39,
-        42
+        50,
+        53
       ],
       "catchable": true,
       "replaceable": true,
@@ -320,8 +320,8 @@
       "region_id": "dynamo",
       "surge_phase": "calm",
       "level_range": [
-        40,
-        42
+        51,
+        53
       ],
       "catchable": true,
       "replaceable": true,
@@ -351,8 +351,8 @@
       "region_id": "dynamo",
       "surge_phase": "surge",
       "level_range": [
-        41,
-        43
+        52,
+        54
       ],
       "catchable": true,
       "replaceable": true,
@@ -5747,7 +5747,7 @@
         25,
         1660
       ],
-      "level": 38,
+      "level": 48,
       "behavior_profile": "CHARGER",
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
@@ -5765,7 +5765,7 @@
         86,
         3020
       ],
-      "level": 40,
+      "level": 51,
       "behavior_profile": "DIVER",
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
@@ -5783,7 +5783,7 @@
         2700
       ],
       "_why_moved_f11": "The guardian's seat was exactly Archivist Wen's ([700, 74.15, 2700]), so near the guardian Wen's Greet prompt (2.6 m) won the arbiter over the guardian's engage offer (3.9 m) and a player could not challenge it: earned F11 runner run 29, four approaches, winner '.../Archivist Wen/Interactable'. Moved 60 m west onto the approach from the Crown arch (the plateau is flat at y 74 there), still guarding the heartstone grove; 40 m from Wen and 34 m from the nearest Crown record.",
-      "level": 41,
+      "level": 52,
       "behavior_profile": "WALL",
       "placeholder_species": "staticub",
       "replacement_point": "named_encounters.crown_guardian_placeholder",
@@ -5801,7 +5801,7 @@
         4385
       ],
       "_why_moved_f11": "Stood exactly on circuit trainer Lena, so near it 'Challenge Lena' and the guardian's engage offer competed for one press. Moved 21 m off Lena and 21 m off the road, same height above the ground.",
-      "level": 43,
+      "level": 54,
       "behavior_profile": "ACE",
       "placeholder_species": "tanglevolt",
       "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
@@ -5820,7 +5820,7 @@
         4450
       ],
       "_why_moved_f11": "Stood exactly on Rook (NPC and circuit trainer) inside the d_giant arch, 8 m from route pickup 16. Moved 22 m east, 11 m off the road and 30 m from pickup 16, same height above the ground.",
-      "level": 43,
+      "level": 54,
       "behavior_profile": "CURRENT",
       "placeholder_species": "mosshock",
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
@@ -5837,7 +5837,7 @@
         100,
         5080
       ],
-      "level": 42,
+      "level": 53,
       "behavior_profile": "CHARGER",
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.glass_field_alpha_placeholder",
@@ -5856,12 +5856,12 @@
       260,
       5470
     ],
-    "level": 44,
+    "level": 55,
     "placeholder_species": "fulgocobra",
     "scale": 1.8,
     "colourway": "alpha_stormheart",
     "replacement_point": "legendary_placeholder.stormheart_placeholder",
-    "catchable": true,
+    "catchable": false,
     "five_slot": true
   }
 }

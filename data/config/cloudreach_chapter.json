@@ -494,11 +494,11 @@
       "region_id": "gate_lower_cliffs",
       "body_profile": "rival_trainer",
       "rank": "local",
-      "level_band": [19, 21],
+      "level_band": [31, 33],
       "mechanics": ["basic_switching", "ledge_spacing"],
       "defeat_flag": "defeated_cloudreach_ila",
       "optional": true,
-      "team_contract": {"selection_key": "cloudreach.trainer.ila", "replaceable": true, "slots": [{"role": "fast_opener", "placeholder_species": "breezetail", "level": 19}, {"role": "air_finisher", "placeholder_species": "ribbonray", "level": 21}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.ila", "replaceable": true, "slots": [{"role": "fast_opener", "placeholder_species": "breezetail", "level": 31}, {"role": "air_finisher", "placeholder_species": "ribbonray", "level": 33}]}
     },
     {
       "id": "trainer_orrin_bridge_watch",
@@ -506,11 +506,11 @@
       "region_id": "broken_causeways",
       "body_profile": "wandering_trainer",
       "rank": "local",
-      "level_band": [21, 23],
+      "level_band": [33, 34],
       "mechanics": ["narrow_arena", "forced_reposition"],
       "defeat_flag": "defeated_cloudreach_orrin",
       "optional": true,
-      "team_contract": {"selection_key": "cloudreach.trainer.orrin", "replaceable": true, "slots": [{"role": "bridge_controller", "placeholder_species": "aeriex", "level": 21}, {"role": "durable_anchor", "placeholder_species": "craghorn", "level": 23}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.orrin", "replaceable": true, "slots": [{"role": "bridge_controller", "placeholder_species": "aeriex", "level": 33}, {"role": "durable_anchor", "placeholder_species": "craghorn", "level": 34}]}
     },
     {
       "id": "tether_lieutenant_senn",
@@ -518,11 +518,11 @@
       "region_id": "broken_causeways",
       "body_profile": "grunt_c",
       "rank": "grunt",
-      "level_band": [22, 24],
+      "level_band": [34, 35],
       "mechanics": ["anchor_pulse", "switch_pressure"],
       "defeat_flag": "defeated_cloudreach_senn",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.trainer.senn", "replaceable": true, "slots": [{"role": "disruptor", "placeholder_species": "cliffspike", "level": 22}, {"role": "pursuer", "placeholder_species": "cloudfang", "level": 24}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.senn", "replaceable": true, "slots": [{"role": "disruptor", "placeholder_species": "cliffspike", "level": 34}, {"role": "pursuer", "placeholder_species": "cloudfang", "level": 35}]}
     },
     {
       "id": "keeper_maela_trial",
@@ -530,11 +530,11 @@
       "region_id": "windscar_ravine",
       "body_profile": "creature_caretaker",
       "rank": "mentor",
-      "level_band": [23, 25],
+      "level_band": [34, 36],
       "mechanics": ["crosswind_lanes", "movement_test", "recovery_window"],
       "defeat_flag": "completed_cloudreach_maela_trial_battle",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.trainer.maela", "replaceable": true, "slots": [{"role": "wind_tutor", "placeholder_species": "aeriex", "level": 23}, {"role": "flight_ace", "placeholder_species": "galecrest", "level": 25}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.maela", "replaceable": true, "slots": [{"role": "wind_tutor", "placeholder_species": "aeriex", "level": 34}, {"role": "flight_ace", "placeholder_species": "galecrest", "level": 36}]}
     },
     {
       "id": "young_trainer_tavi_upper_ring",
@@ -542,11 +542,11 @@
       "region_id": "upper_cloudreach",
       "body_profile": "young_trainer",
       "rank": "ace",
-      "level_band": [26, 29],
+      "level_band": [37, 40],
       "mechanics": ["three_creature_composition", "counter_switching", "elevation_control"],
       "defeat_flag": "defeated_cloudreach_tavi",
       "optional": true,
-      "team_contract": {"selection_key": "cloudreach.trainer.tavi", "replaceable": true, "slots": [{"role": "terrain_controller", "placeholder_species": "craghorn", "level": 26}, {"role": "switch_punisher", "placeholder_species": "skyrill", "level": 28}, {"role": "air_ace", "placeholder_species": "galecrest", "level": 29}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.tavi", "replaceable": true, "slots": [{"role": "terrain_controller", "placeholder_species": "craghorn", "level": 37}, {"role": "switch_punisher", "placeholder_species": "skyrill", "level": 39}, {"role": "air_ace", "placeholder_species": "galecrest", "level": 40}]}
     },
     {
       "id": "officer_voss_summit_approach",
@@ -554,11 +554,11 @@
       "region_id": "summit_final_stronghold",
       "body_profile": "officer_b",
       "rank": "elite",
-      "level_band": [29, 31],
+      "level_band": [40, 41],
       "mechanics": ["gust_hazards", "positional_denial", "aggressive_switching"],
       "defeat_flag": "defeated_cloudreach_voss",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.trainer.voss", "replaceable": true, "slots": [{"role": "edge_denial", "placeholder_species": "stormcapra", "level": 29}, {"role": "heavy_pressure", "placeholder_species": "cloudfang", "level": 30}, {"role": "switching_ace", "placeholder_species": "skyrill", "level": 31}]}
+      "team_contract": {"selection_key": "cloudreach.trainer.voss", "replaceable": true, "slots": [{"role": "edge_denial", "placeholder_species": "stormcapra", "level": 40}, {"role": "heavy_pressure", "placeholder_species": "cloudfang", "level": 41}, {"role": "switching_ace", "placeholder_species": "skyrill", "level": 41}]}
     },
     {
       "id": "captain_veyra_storm_anchor",
@@ -566,18 +566,18 @@
       "region_id": "summit_final_stronghold",
       "body_profile": "captain_b",
       "rank": "captain",
-      "level_band": [31, 34],
+      "level_band": [43, 44],
       "mechanics": ["wind", "positioning", "switching", "recovery_planning"],
       "defeat_flag": "captain_veyra_defeated",
       "optional": false,
-      "team_contract": {"selection_key": "cloudreach.final.captain_veyra", "replaceable": true, "slots": [{"role": "crosswind_controller", "placeholder_species": "aeriex", "level": 31}, {"role": "positional_pursuer", "placeholder_species": "cloudfang", "level": 32}, {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}]}
+      "team_contract": {"selection_key": "cloudreach.final.captain_veyra", "replaceable": true, "slots": [{"role": "crosswind_controller", "placeholder_species": "aeriex", "level": 43}, {"role": "positional_pursuer", "placeholder_species": "cloudfang", "level": 43}, {"role": "summit_ace", "placeholder_species": "galecrest", "level": 44}]}
     }
   ],
   "encounter_tables": [
     {
       "id": "cloudreach_lower_wild",
       "region_ids": ["gate_lower_cliffs"],
-      "level_range": [18, 22],
+      "level_range": [29, 33],
       "selection_key": "cloudreach.wild.lower",
       "replaceable": true,
       "catchable": true,
@@ -590,7 +590,7 @@
     {
       "id": "cloudreach_causeway_wild",
       "region_ids": ["broken_causeways"],
-      "level_range": [20, 25],
+      "level_range": [31, 36],
       "selection_key": "cloudreach.wild.causeways",
       "replaceable": true,
       "catchable": true,
@@ -603,7 +603,7 @@
     {
       "id": "cloudreach_windscar_wild",
       "region_ids": ["windscar_ravine"],
-      "level_range": [24, 27],
+      "level_range": [35, 37],
       "selection_key": "cloudreach.wild.windscar",
       "replaceable": true,
       "catchable": true,
@@ -616,7 +616,7 @@
     {
       "id": "cloudreach_high_roost_wild",
       "region_ids": ["high_roost_sky_shrine"],
-      "level_range": [28, 30],
+      "level_range": [38, 40],
       "selection_key": "cloudreach.wild.high_roost",
       "replaceable": true,
       "catchable": true,
@@ -630,7 +630,7 @@
     {
       "id": "cloudreach_upper_wild",
       "region_ids": ["upper_cloudreach"],
-      "level_range": [28, 31],
+      "level_range": [38, 41],
       "selection_key": "cloudreach.wild.upper",
       "replaceable": true,
       "catchable": true,
@@ -644,7 +644,7 @@
     {
       "id": "cloudreach_upper_released_wild",
       "region_ids": ["upper_cloudreach"],
-      "level_range": [28, 31],
+      "level_range": [38, 41],
       "selection_key": "cloudreach.wild.upper_released",
       "replaceable": true,
       "catchable": true,
@@ -659,7 +659,7 @@
     {
       "id": "cloudreach_summit_wild",
       "region_ids": ["summit_final_stronghold"],
-      "level_range": [30, 33],
+      "level_range": [40, 43],
       "selection_key": "cloudreach.wild.summit",
       "replaceable": true,
       "catchable": true,
@@ -673,7 +673,7 @@
     {
       "id": "cloudreach_summit_restored_wild",
       "region_ids": ["summit_final_stronghold"],
-      "level_range": [30, 33],
+      "level_range": [40, 43],
       "selection_key": "cloudreach.wild.summit_restored",
       "replaceable": true,
       "catchable": true,
@@ -972,9 +972,9 @@
       "art_status": "installed_species_roster",
       "captain_body_profile": "captain_b",
       "slots": [
-        {"role": "crosswind_controller", "placeholder_species": "aeriex", "level": 31},
-        {"role": "positional_pursuer", "placeholder_species": "cloudfang", "level": 32},
-        {"role": "summit_ace", "placeholder_species": "galecrest", "level": 34}
+        {"role": "crosswind_controller", "placeholder_species": "aeriex", "level": 43},
+        {"role": "positional_pursuer", "placeholder_species": "cloudfang", "level": 43},
+        {"role": "summit_ace", "placeholder_species": "galecrest", "level": 44}
       ]
     },
     "failure_recovery": "A loss returns the player to Summit Bivouac with world-state flags intact and no duplicated one-time rewards.",

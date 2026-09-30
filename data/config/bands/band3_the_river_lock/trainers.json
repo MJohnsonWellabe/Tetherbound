@@ -279,7 +279,7 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 16,
+          "level": 18,
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
@@ -293,7 +293,7 @@
         },
         {
           "species": "trailpup",
-          "level": 16,
+          "level": 18,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -304,7 +304,7 @@
         },
         {
           "species": "burrowback",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -315,7 +315,7 @@
         },
         {
           "species": "duskhush",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -326,7 +326,7 @@
         },
         {
           "species": "brooktail",
-          "level": 16,
+          "level": 18,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,

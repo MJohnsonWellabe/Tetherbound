@@ -430,11 +430,11 @@
       "team": [
         {
           "species": "trailpup",
-          "level": 15
+          "level": 17
         },
         {
           "species": "burrowback",
-          "level": 16
+          "level": 18
         }
       ],
       "reward": {
@@ -469,15 +469,15 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 16
+          "level": 18
         },
         {
           "species": "reedwing",
-          "level": 17
+          "level": 19
         },
         {
           "species": "mudsnout",
-          "level": 17
+          "level": 19
         }
       ],
       "reward": {
@@ -517,7 +517,7 @@
       "team": [
         {
           "species": "galecrest",
-          "level": 18,
+          "level": 20,
           "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-7. DIVER -- hit-and-run, short tell, comes again from a new side. Hald is 'the last check of the kit, not the HP' (W-8): a diver that keeps repositioning is what makes a player burn a potion mid-fight rather than just outlasting one long trade. Inert until G-2's `wild_creature.gd` merge lands.",
           "combat": {
             "telegraph": 0.4,
@@ -533,7 +533,7 @@
         },
         {
           "species": "burrowback",
-          "level": 19,
+          "level": 21,
           "_why_combat": "G-2/G-3, W-7. Left at DEFAULT deliberately, the same floor-role Corr and Verrick hold earlier in the band (see their own `_why_combat` in this file's other rows) -- Hald's team is meant to read as DIVER and WALL either side of one ordinary fighter, not three novelties at once. `stronghold_courtyard`'s own team stays fully DEFAULT for the same reason: the first behavioural surprise inside the Hall is reserved for Hald, right before the Warden fields five, so it lands as a real step rather than diluting across every fight in the building.",
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
@@ -545,7 +545,7 @@
         },
         {
           "species": "trailpup",
-          "level": 19,
+          "level": 21,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -556,7 +556,7 @@
         },
         {
           "species": "duskhush",
-          "level": 19,
+          "level": 21,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -567,7 +567,7 @@
         },
         {
           "species": "mosshell",
-          "level": 19,
+          "level": 21,
           "_why_combat": "G-2/G-3, W-7. WALL -- slow, heavy, stands its ground, the punish window is long. Mosshell is the type answer this row exists to add (Water, per W-7's own point); giving it the profile that rewards a patient, well-spaced fight matches a shelled creature's own read and pairs with the DIVER above it to bracket the ordinary burrowback in the middle. Inert until G-2 lands.",
           "combat": {
             "telegraph": 0.85,
@@ -624,7 +624,7 @@
       "team": [
         {
           "species": "duskhush",
-          "level": 16,
+          "level": 18,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -635,7 +635,7 @@
         },
         {
           "species": "tuskroot",
-          "level": 16,
+          "level": 18,
           "combat": {
             "preferred_range": 4.5,
             "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
@@ -652,7 +652,7 @@
         },
         {
           "species": "burrowback",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -663,7 +663,7 @@
         },
         {
           "species": "mosshell",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -674,7 +674,7 @@
         },
         {
           "species": "meadowhart",
-          "level": 16,
+          "level": 18,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
@@ -737,7 +737,7 @@
       "team": [
         {
           "species": "trailpup",
-          "level": 16,
+          "level": 18,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -748,7 +748,7 @@
         },
         {
           "species": "duskhush",
-          "level": 16,
+          "level": 18,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -759,7 +759,7 @@
         },
         {
           "species": "trailpup",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -770,7 +770,7 @@
         },
         {
           "species": "tuskroot",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -781,7 +781,7 @@
         },
         {
           "species": "galecrest",
-          "level": 16,
+          "level": 18,
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
@@ -850,7 +850,7 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 16,
+          "level": 18,
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
@@ -864,7 +864,7 @@
         },
         {
           "species": "trailpup",
-          "level": 16,
+          "level": 18,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -875,7 +875,7 @@
         },
         {
           "species": "burrowback",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -886,7 +886,7 @@
         },
         {
           "species": "duskhush",
-          "level": 16,
+          "level": 18,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -897,7 +897,7 @@
         },
         {
           "species": "brooktail",
-          "level": 16,
+          "level": 18,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
@@ -957,7 +957,7 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 18,
+          "level": 21,
           "moves": {
             "quick": "rock_throw"
           },
@@ -975,7 +975,7 @@
         },
         {
           "species": "galecrest",
-          "level": 18,
+          "level": 21,
           "moves": {
             "quick": "wind_blade"
           },
@@ -994,7 +994,7 @@
         },
         {
           "species": "brooktail",
-          "level": 19,
+          "level": 21,
           "moves": {
             "quick": "aqua_shot"
           },
@@ -1011,7 +1011,7 @@
         },
         {
           "species": "meadowhart",
-          "level": 19,
+          "level": 22,
           "moves": {
             "quick": "rock_throw"
           },
@@ -1032,7 +1032,7 @@
         },
         {
           "species": "tuskroot",
-          "level": 20,
+          "level": 22,
           "moves": {
             "quick": "rock_throw"
           },
