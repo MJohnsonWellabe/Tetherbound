@@ -380,17 +380,17 @@
   },
   {
    "lane": "tb/combat",
-   "now": "F21 branch implementation authorized under RD-37 against pushed F16 candidate; combat feedback/host receipts/reactions/numbers draft applying; lands after F16",
+   "now": "F21 implementation pushed 683575cb3: host impact receipts, feedback primitives, reactions and number policy; runtime proof underway, lands after F16.",
    "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
   },
   {
    "lane": "tb/vfx",
-   "now": "F25 branch implementation authorized under RD-37; 24 archetypes/52 move maps/mastery/budgets and original cues draft applying; lands after F16",
+   "now": "F25 implementation pushed c58488e09: 24 archetypes, 52 move mappings, mastery tiers, budgets and original cues; runtime batch prepared, awaiting serialized token after combat, lands after F16.",
    "next": "Work order in CODEX_START_HERE §6: F25, F35"
   },
   {
    "lane": "tb/lookdev",
-   "now": "F26 graphics branch ready; persistent preset/settings/renderer draft, independent persistence issue being fixed; lands after F16",
+   "now": "F26 source c6c39e6bd, evidence 2fbeff38d pushed: 19 focused Settings checks/native 0 and fresh-process Forward+ persistence pass; F26#2 independent candidate PASS, unlanded pending F16.",
    "next": "Work order in CODEX_START_HERE §6: F26"
   },
   {
@@ -516,5 +516,6 @@
   "Codex branch tb/x04-cross-game-visual-sweep is merged in batch 67. Cloudreach towers and terrace flags are OFF; Stormwood's judged r5 lightning won over Codex's bolt; the Stormheart hero candidate is unwired and .gdignored; Codex's joined current-wave surfaces (1560de9e) were not kept (Tidewake's b0ce38fc script is), so their stale test was removed. Phase 2 may revisit.",
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
- ]
+ ],
+ "last_lane_refresh": "2026-09-30T03:28:16Z"
 }
