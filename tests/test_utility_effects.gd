@@ -197,6 +197,9 @@ func test_actor_vitals_fail_closed_on_shapes_capacity_and_receipt_budget() -> vo
 	var host := ENCOUNTER_HOST.new(1)
 	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 30.0}, "owned-1", "character-1")
 	var id := str(record.encounter_id)
+	assert_false(host.join(id, 2, "another-uid", "character-1").ok,
+		"duplicate stable character refuses before either actor row is seeded")
+	assert_eq(host.participant_count(id), 1)
 	var baseline: Dictionary = host.record(id).duplicate(true)
 	for key: String in ["uid", "hp", "max_hp", "fainted"]:
 		var bad := _owned_vitals()

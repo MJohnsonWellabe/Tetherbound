@@ -241,11 +241,11 @@ func join(encounter_id: String, peer_id: int, creature_uid: String = "",
 		# must not re-seat you at a new `joined_seq`; a retried intent is the
 		# ordinary shape of an unreliable world.
 		return _ok("engage", peer_id, {"encounter_id": encounter_id, "rejoined": true})
-	# Once actor state exists, one admitted character cannot have two active
-	# participant rows. The host registry supplies the stable identity.
+	# One admitted character cannot have two active participant rows, even
+	# before actor HP is seeded. The host registry supplies the stable identity.
 	if not character_id.is_empty():
 		for active: Dictionary in participants.values():
-			if active.has("actor_vitals") and str(active.get("character_id", "")) == character_id:
+			if str(active.get("character_id", "")) == character_id:
 				return _refuse("engage", peer_id, "duplicate_character", "That character is already in this fight.")
 	_strike_state_for(encounter_id).erase(peer_id)
 	_add_participant(record, peer_id, creature_uid, character_id)
