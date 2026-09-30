@@ -417,6 +417,9 @@ func save_data() -> Dictionary:
 
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state.
 func load_data(data: Dictionary) -> void:
+	if not preload("res://scripts/world/portal_arch.gd").escrow_errors(data.get("satchel_escrow", {}), str(data.get("character_id", character_id))).is_empty():
+		push_error("Typed portal escrow refused before applying personal state.")
+		return
 	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true).is_empty():
 		push_error("Character move loadout refused before applying personal state.")
 		return

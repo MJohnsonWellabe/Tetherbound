@@ -417,7 +417,9 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## worker's saver and file handles are separate from the main-thread saver.
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
-	if not _redesign_errors(snapshot(game)).is_empty():
+	var portal_owner: Variant = game.get("local")
+	var portal_character := str(portal_owner.get("character_id")) if portal_owner is Object else ""
+	if not _redesign_errors(snapshot(game), portal_character).is_empty():
 		push_error("Save refused: invalid redesign state")
 		return {}
 	var world_id := ""
@@ -645,10 +647,11 @@ static func _redesign_payload(owner: Variant, scope: String) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else REDESIGN_STATE.defaults(scope)
 
 
-static func _redesign_errors(data: Dictionary) -> Array[String]:
+static func _redesign_errors(data: Dictionary, character_id: String = "") -> Array[String]:
 	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
 	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
 	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
+	errors.append_array(preload("res://scripts/world/portal_arch.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	return errors
 
 
@@ -682,7 +685,7 @@ func load_slot(game: Object, slot: int) -> bool:
 	last_load_result = version_result(data.get("version", null))
 	if not bool(last_load_result.ok):
 		return false
-	var redesign_errors := _redesign_errors(data)
+	var redesign_errors := _redesign_errors(data, slot_locator_character(slot))
 	if not redesign_errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That save contains invalid data.", "errors": redesign_errors}
 		return false

@@ -1,0 +1,13 @@
+{
+  "raise_seconds": 2.0,
+  "cancel_on_damage": true,
+  "key_item": "home_key",
+  "arrival": "home_arrival",
+  "arch_interaction_radius_m": 3.6,
+  "portal_items": {
+    "tidewake": "tidewake_portal_key",
+    "cloudreach": "cloudreach_portal_key",
+    "stormwood": "stormwood_portal_key",
+    "biome5": "fifth_portal_key"
+  }
+}

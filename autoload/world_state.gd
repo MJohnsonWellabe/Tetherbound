@@ -25,6 +25,7 @@ extends RefCounted
 
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const PORTAL := preload("res://scripts/world/portal_arch.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
 
@@ -385,6 +386,24 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"portal_unlock", "portal_ack":
+			if not PORTAL.valid_world_op(op, reward_delivery_namespace):
+				return false
+			var id := str(op.receipt)
+			if str(op.op) == "portal_ack":
+				if not flags.has(id):
+					return false
+				id = PORTAL.ack_receipt(str(op.biome), str(op.character_id))
+			if flags.has(id):
+				return false
+			if str(op.op) == "portal_unlock":
+				if str(op.biome) == "biome5":
+					redesign_world.fifth_arch_stirred = true
+				elif not redesign_world.portal_unlocks.has(str(op.biome)):
+					redesign_world.portal_unlocks.append(str(op.biome))
+			flags.set_flag(id, true)
+			revision += 1
+			return true
 		"reward_delivery_accept":
 			var accept_id := str(op.get("delivery_id", ""))
 			var accept_character := str(op.get("character_id", ""))

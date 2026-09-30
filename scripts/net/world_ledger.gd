@@ -85,6 +85,7 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const STORMWOOD_ARCHES := preload("res://scripts/world/stormwood_arch_rules.gd")
 const STORMWOOD_HARVEST := preload("res://scripts/world/stormwood_harvest_rules.gd")
 var _stormwood_harvest_rules: RefCounted
+const PORTAL := preload("res://scripts/world/portal_arch.gd")
 const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 
@@ -163,6 +164,8 @@ const HOST_ONLY_GRANT_SOURCE_PREFIXES := [
 ## `legacy_unresolved`, emptying the journal. Matched as prefixes, so the two
 ## exact settlement ids also cover any future flag named after them.
 const HOST_ONLY_FLAG_PREFIXES := [
+	"portal_unlock:",
+	"portal_ack:",
 	"water_claim:guardian:",
 	"water_guardian_",
 	"water_currents_restored",
@@ -244,6 +247,17 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
 	match kind:
+		"portal_unlock":
+			var actor: Dictionary = intent.get("_portal_actor", {}) if intent.get("_portal_actor") is Dictionary else {}
+			var result: Dictionary = PORTAL.host_ops(intent, actor, world, peer_id, _actor_character)
+			if not bool(result.get("ok", false)):
+				return _refuse(kind, peer_id, str(result.code), str(result.reason))
+			return _commit(result.ops, kind, peer_id, realm)
+		"portal_ack":
+			var result: Dictionary = PORTAL.ack_ops(intent, world, _actor_character)
+			if not bool(result.get("ok", false)):
+				return _refuse(kind, peer_id, str(result.code), str(result.reason))
+			return _commit(result.ops, kind, peer_id, realm)
 		"stormwood_disable_rod":
 			return _stormwood_disable_rod(intent, peer_id, realm)
 		"stormwood_harvest":
