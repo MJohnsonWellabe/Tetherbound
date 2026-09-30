@@ -2,11 +2,14 @@ extends SceneTree
 
 ## Actual production effect-node batch in a synthetic arena. No combat, HP or
 ## result fixture mutation. Cannot certify the required four-creature fight.
-## --batch=identities|library|profile|clock --out=<directory> --medium
+## --batch=identities|mastery|library|profile|clock --out=<directory> --medium
 const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 const LEGACY := preload("res://scripts/vfx/legacy_move_travel.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
+const CREATURE := preload("res://scenes/creatures/creature.tscn")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 var _arena: Node3D
+var _target: CharacterBody3D
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -23,9 +26,9 @@ func _run() -> void:
 		if arg.begins_with("--batch="): _batch = arg.trim_prefix("--batch=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
 		if arg == "--medium": _medium = true
-	if _batch not in ["identities", "library", "profile", "clock"]:
+	if _batch not in ["identities", "mastery", "library", "profile", "clock"]:
 		push_error("Unknown effect batch"); quit(1); return
-	if _batch in ["identities", "profile"] and DisplayServer.get_name() == "headless":
+	if _batch in ["identities", "mastery", "profile"] and DisplayServer.get_name() == "headless":
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
@@ -65,6 +68,18 @@ func _run() -> void:
 	camera.position = Vector3(0, 5, 14)
 	camera.look_at(Vector3(0, 1.5, 0), Vector3.UP)
 	camera.current = true
+	if _batch in ["identities", "mastery"]:
+		# Production creature scene/script/model, with no encounter, AI or HP
+		# transaction. This establishes visible target coverage only.
+		_target = CREATURE.instantiate() as CharacterBody3D
+		_target.set_script(CREATURE_BODY)
+		_arena.add_child(_target)
+		_target.call("setup", str(_scenarios.get("target_species", "mudsnout")))
+		_target.set_physics_process(false)
+		_target.position = Vector3(3, 0, 0)
+		_target.rotation.y = -PI * 0.5
+		if not bool(_target.call("has_model")):
+			push_error("Identity evidence requires the actual production creature model"); quit(1); return
 	if _medium:
 		if RenderingServer.get_current_rendering_method() != "forward_plus":
 			push_error("Medium requires actual Forward+"); quit(1); return
@@ -105,11 +120,15 @@ func _run() -> void:
 					count = int(row.parameters.count)
 					chosen = id
 			if not chosen.is_empty(): case["move_id"] = chosen
-			await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
+			if _batch == "mastery":
+				for rank in range(1, 6): await _exercise(case, rank, 1, true)
+			else:
+				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
 	var report := {"scope": "production_effect_nodes_synthetic_arena", "batch": _batch,
 		"renderer": RenderingServer.get_current_rendering_method(), "resolution": [root.size.x, root.size.y],
 		"display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
 		"engine": Engine.get_version_info(),
+		"target": {"species": str(_scenarios.get("target_species", "mudsnout")), "production_model": _target != null, "scope": "posed production body; no encounter or HP authority"},
 		"medium_features": _medium, "cases": _records, "failures": _failures,
 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
@@ -142,9 +161,11 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var started := Time.get_ticks_usec()
 	for i in simultaneous:
 		var z := float(i) * 2 - float(simultaneous - 1)
+		var to := Vector3(3, 1.5, z)
+		if capture and _target != null: to = _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
 		var context := {"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
 			 "mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)}
-		var effect: Node3D = LEGACY.launch(_arena, Vector3(-3, 1.5, z), Vector3(3, 1.5, z), spec, context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, Vector3(-3, 1.5, z), Vector3(3, 1.5, z), spec, context)
+		var effect: Node3D = LEGACY.launch(_arena, Vector3(-3, to.y, z), to, spec, context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, Vector3(-3, to.y, z), to, spec, context)
 		if effect == null: _failures.append("Launch failed " + id); return
 		effect.connect("arrived", func() -> void:
 			arrivals[0] += 1

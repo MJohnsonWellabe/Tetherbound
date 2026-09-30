@@ -75,3 +75,34 @@ visual result, Medium four-creature fight performance result or Ally result.
 The tracked flag remains off. The r1/r2 rejected evidence is preserved. A fresh
 independent code-blind judge must assess these PNGs against the full visual bar;
 native execution and source improvements alone do not close F25#2 or #5.
+
+## Second blind quality rejection and replacement approach
+
+The fresh independent r3 review failed F25#2 and the whole F25#5 criterion.
+Its report is preserved in `native-identities-r3/strict-review.txt`: convincing
+small stones and a single boulder still had rectangular trails and tiny rigid
+impacts; the corrugated trail, solid crumpled orb, sphere burst, rigid spikes and
+gray halo did not read as flame/explosion. Lightning descended from above, but
+the arena contained no visible target and therefore could not prove striking
+one. The sampled four families visibly scaled at ranks 1/3/5, which does not
+prove all-24/ranks-1-through-5 or earned mastery. The plain arena limits coverage
+and is not a judgment of unseen world content. All failed evidence is preserved.
+
+After this second quality rejection the next implementation replaces the solid
+deformed flame shell and closed corrugated tube entirely. Camera-facing soft
+procedural flame layers and continuous centerline ribbons use global UVs,
+animated opacity tongues and fading silhouette edges. Explosion layers and
+embers use the same soft field, with no rigid spikes or enclosing gray sphere.
+Stone contact uses warm dust and varied physical chip trajectories that fall
+and settle at frozen ground height; the hard radial splash geometry is removed
+from its profile. These change rendering only, never host HP or action timing.
+
+The next identity harness stages the actual production Mudsnout CreatureBody
+and imported model, failing if the model is absent. It aims at that body's real
+height and keeps the frozen ground endpoint. The body is posed with physical
+movement disabled; there is no encounter, AI or HP mutation. This can establish
+visible target coverage but cannot replace the earned player path. A separate
+`mastery` capture batch covers all 24 authored archetypes at every rank 1–5;
+unused families resolve directly from the library and the batch makes no earned
+mastery claim. These source drafts have not been rendered or independently
+judged. The feature remains flag-off and every F25 criterion remains open.

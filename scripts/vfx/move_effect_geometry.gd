@@ -21,7 +21,11 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 	match kind:
 		"stone":
 			return stone(size, profile)
-		"orb", "bubble", "flame_orb", "fire_bloom":
+		"flame_orb", "fire_bloom", "soft_dust", "soft_ember":
+			var card := QuadMesh.new()
+			card.size = Vector2.ONE * size * float(profile.get("card_extent_scale", 3.2))
+			return card
+		"orb", "bubble":
 			var sphere := SphereMesh.new()
 			sphere.radius = size
 			sphere.height = size * 2.0
@@ -54,13 +58,16 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
 	var out := ShaderMaterial.new()
-	if kind in ["flame_orb", "fire_bloom"]:
+	if kind in ["flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_trail"]:
 		out.shader = FIRE_SHADER
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff3a6"))))
 		out.set_shader_parameter("flame_colour", colour)
 		out.set_shader_parameter("ember_colour", Color(str(profile.get("ember_colour", "#7b1806"))))
-		out.set_shader_parameter("turbulence", float(profile.get("turbulence", 0.075)))
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
+		out.set_shader_parameter("billboard", kind != "soft_trail")
+		out.set_shader_parameter("dust", kind == "soft_dust" or bool(profile.get("dust", false)))
+		out.set_shader_parameter("effect_mode", 1 if kind == "soft_trail" else (2 if kind in ["fire_bloom", "soft_dust"] else (3 if kind == "soft_ember" else 0)))
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.4)))
 		return out
 	if kind == "stone":
 		out.shader = STONE_SHADER
@@ -68,6 +75,42 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("mineral_colour", Color(str(profile.get("mineral_colour", "#bca67d"))))
 		return out
 	return material(colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
+
+## One continuous camera-facing strip with a smooth centerline and global UVs.
+static func flowing_ribbon(points: Array[Vector3], width: float, camera_position: Vector3) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	if points.size() < 2 or width <= 0.0: return mesh
+	var smooth: Array[Vector3] = []
+	for i in points.size() - 1:
+		var a := points[maxi(0, i - 1)]
+		var b := points[i]
+		var c := points[i + 1]
+		var d := points[mini(points.size() - 1, i + 2)]
+		for step in 4:
+			var t := float(step) / 4.0
+			smooth.append(0.5 * ((2.0 * b) + (-a + c) * t + (2.0 * a - 5.0 * b + 4.0 * c - d) * t * t + (-a + 3.0 * b - 3.0 * c + d) * t * t * t))
+	smooth.append(points.back())
+	var edges: Array[Vector3] = []
+	for i in smooth.size():
+		var tangent := (smooth[mini(i + 1, smooth.size() - 1)] - smooth[maxi(0, i - 1)]).normalized()
+		var across := tangent.cross((camera_position - smooth[i]).normalized()).normalized()
+		if across.length_squared() < 0.001: across = Vector3.UP
+		edges.append(across * width)
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in smooth.size() - 1:
+		var v0 := float(i) / float(smooth.size() - 1)
+		var v1 := float(i + 1) / float(smooth.size() - 1)
+		_uv_quad(mesh, smooth[i] - edges[i], smooth[i] + edges[i], smooth[i + 1] + edges[i + 1], smooth[i + 1] - edges[i + 1], v0, v1)
+	mesh.surface_end()
+	return mesh
+
+static func _uv_quad(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3, d: Vector3, v0: float, v1: float) -> void:
+	var points: Array[Vector3] = [a, b, c, a, c, d]
+	var uvs: Array[Vector2] = [Vector2(0, v0), Vector2(1, v0), Vector2(1, v1), Vector2(0, v0), Vector2(1, v1), Vector2(0, v1)]
+	for i in 6:
+		mesh.surface_set_uv(uvs[i])
+		mesh.surface_set_color(Color.WHITE)
+		mesh.surface_add_vertex(points[i])
 
 ## Irregular geological chunks with face normals, not smoothly shaded balls.
 static func stone(size: float, profile: Dictionary) -> ImmediateMesh:

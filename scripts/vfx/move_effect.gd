@@ -27,6 +27,7 @@ var _marker: MeshInstance3D
 var _motes: MultiMeshInstance3D
 var _mote_positions: Array[Vector3] = []
 var _velocities: Array[Vector3] = []
+var _mote_bases: Array[Basis] = []
 var _rng := RandomNumberGenerator.new()
 var _colour: Color
 var _presentation_clock: SceneTreeTimer
@@ -81,6 +82,9 @@ func _ready() -> void:
 		var trail_layers := 2 if bool(_row.secondary_trail) and int(BUDGET.allocation(_lease).get("trail", 0)) >= _bodies.size() * 6 else 1
 		for layer in trail_layers:
 			var trail := _mesh_node(ImmediateMesh.new(), Color.WHITE, float((_row.trail as Dictionary).get("opacity", 0.78)))
+			var trail_profile: Dictionary = _row.trail.duplicate(true)
+			trail_profile["dust"] = str(trail_profile.get("style", "air")) not in ["flame", "ember", "ion"]
+			trail.material_override = GEOMETRY.authored_material("soft_trail", trail_profile, Color(str(trail_profile.get("colour", _params.colour))))
 			trail.set_meta("body_index", i)
 			trail.set_meta("layer", layer)
 			_trails.append(trail)
@@ -123,7 +127,7 @@ func _process(delta: float) -> void:
 			# impact, so the visual actually joins sky, target and ground.
 			body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
 		for trail: MeshInstance3D in _trails:
-			(trail.material_override as StandardMaterial3D).albedo_color.a = (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78))
+			_set_opacity(trail.material_override, (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78)))
 		if u >= 1.0: queue_free()
 
 func _finish_presentation() -> void:
@@ -266,7 +270,10 @@ func _update_trail() -> void:
 					"dust": points[i].y -= amplitude * (1.0 - f)
 					_: points[i].y += sin(phase) * amplitude * sin(f * PI)
 			var width := float(profile.get("width", 0.08)) * float(_params.trail) * (0.48 if layer == 1 else 1.0)
-			trail.mesh = GEOMETRY.plume(points, width, colour, _elapsed * 8.0) if style == "flame" else GEOMETRY.ribbon(points, width, colour)
+			var camera := get_viewport().get_camera_3d()
+			var camera_position := camera.global_position if camera != null else _from + Vector3(0, 5, 14)
+			trail.mesh = GEOMETRY.flowing_ribbon(points, width, camera_position)
+			(trail.material_override as ShaderMaterial).set_shader_parameter("flame_colour", colour)
 
 func _build_impact() -> void:
 	if _marker != null: _marker.visible = false
@@ -277,21 +284,24 @@ func _build_impact() -> void:
 	var scale_factor := float(_params.size) * float(_params.impact_scale)
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
-	if str(profile.get("shape", "")) == "fire_bloom": core.material_override = GEOMETRY.authored_material("fire_bloom", profile, _colour)
+	if str(profile.get("shape", "")) in ["fire_bloom", "soft_dust"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	for layer: Dictionary in profile.get("layers", []):
 		var scale := float(layer.get("size_scale", 1.0))
 		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
 			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
-		if str(layer.get("shape", "")) == "fire_bloom": part.material_override = GEOMETRY.authored_material("fire_bloom", layer, Color(str(layer.get("colour", _params.colour))))
+		if str(layer.get("shape", "")) in ["fire_bloom", "soft_dust"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
 		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
 		part.reparent(_impact, false)
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 		part.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * scale_factor
+		if bool(layer.get("at_ground", false)):
+			var ground: Vector3 = _context.get("target_ground", _to)
+			part.position.y = ground.y - _contact_position().y + scale_factor * float(layer.get("ground_lift_scale", 0.3))
 	if bool(_row.impact_layer):
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
-		if str(profile.get("secondary_shape", "")) == "fire_bloom": secondary.material_override = GEOMETRY.authored_material("fire_bloom", profile, _colour)
+		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "soft_dust"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
 		secondary.set_meta("base_opacity", 0.65)
 		secondary.reparent(_impact, false)
 		secondary.rotation.x = float(profile.get("secondary_rotation_x", PI * 0.5))
@@ -306,13 +316,18 @@ func _build_impact() -> void:
 		_motes = MultiMeshInstance3D.new()
 		_motes.multimesh = multimesh
 		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
+		if str(profile.get("mote_shape", "")) == "soft_ember":
+			_motes.material_override = GEOMETRY.authored_material("soft_ember", profile, Color(str(profile.get("mote_colour", _params.colour))))
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
 	for i in count:
-		_mote_positions.append(Vector3.ZERO)
-		_motes.multimesh.set_instance_transform(i, Transform3D.IDENTITY)
+		var start := Vector3(_rng.randf_range(-0.08, 0.08), _rng.randf_range(-0.03, 0.08), _rng.randf_range(-0.08, 0.08)) * scale_factor
+		_mote_positions.append(start)
+		var varied_basis := Basis.from_euler(Vector3(_rng.randf() * TAU, _rng.randf() * TAU, _rng.randf() * TAU)).scaled(Vector3.ONE * _rng.randf_range(0.55, 1.45))
+		_mote_bases.append(varied_basis)
+		_motes.multimesh.set_instance_transform(i, Transform3D(varied_basis, start))
 		var direction := Vector3(_rng.randf_range(-1.0, 1.0), _rng.randf_range(0.2, 1.0), _rng.randf_range(-1.0, 1.0)).normalized()
-		_velocities.append(direction * float(profile.get("speed", 3.8)))
+		_velocities.append(direction * float(profile.get("speed", 3.8)) * _rng.randf_range(0.65, 1.25))
 
 func _update_impact(u: float, delta: float) -> void:
 	if _impact == null: return
@@ -320,21 +335,28 @@ func _update_impact(u: float, delta: float) -> void:
 	for child: Node in _impact.get_children():
 		if child is MeshInstance3D:
 			var alpha := (1.0 - u) * float(child.get_meta("base_opacity", profile.get("opacity", 0.82)))
-			if child.material_override is ShaderMaterial:
-				(child.material_override as ShaderMaterial).set_shader_parameter("opacity", alpha)
-			elif child.material_override is StandardMaterial3D:
-				var material := child.material_override as StandardMaterial3D
-				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-				material.albedo_color.a = alpha
+			_set_opacity(child.material_override, alpha)
 	var growth := lerpf(float(profile.get("initial_grow", 0.35)), float(profile.get("grow", 2.0)), u)
 	for child: Node in _impact.get_children():
 		if child is Node3D and child != _motes: child.scale = Vector3.ONE * growth
 	if _motes != null:
-		(_motes.material_override as StandardMaterial3D).albedo_color.a = (1.0 - u) * float(profile.get("opacity", 0.82))
+		_set_opacity(_motes.material_override, (1.0 - u) * float(profile.get("opacity", 0.82)))
 	for i in _mote_positions.size():
 		_velocities[i].y -= float(profile.get("gravity", 5.0)) * delta
 		_mote_positions[i] += _velocities[i] * delta
-		_motes.multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY.scaled(Vector3.ONE * lerpf(1.0, 0.05, u)), _mote_positions[i]))
+		var ground: Vector3 = _context.get("target_ground", _to)
+		var floor_y := ground.y - _contact_position().y + float(profile.get("mote_size", 0.045))
+		if bool(profile.get("settle_on_ground", false)) and _mote_positions[i].y < floor_y:
+			_mote_positions[i].y = floor_y
+			_velocities[i] = Vector3.ZERO
+		_motes.multimesh.set_instance_transform(i, Transform3D(_mote_bases[i].scaled(Vector3.ONE * lerpf(1.0, float(profile.get("mote_end_scale", 0.05)), u)), _mote_positions[i]))
+
+func _set_opacity(material: Material, alpha: float) -> void:
+	if material is ShaderMaterial:
+		(material as ShaderMaterial).set_shader_parameter("opacity", alpha)
+	elif material is StandardMaterial3D:
+		(material as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		(material as StandardMaterial3D).albedo_color.a = alpha
 
 func _cue(name: String) -> String:
 	var sounds: Dictionary = _row.sound

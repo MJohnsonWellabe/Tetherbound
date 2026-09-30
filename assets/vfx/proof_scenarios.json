@@ -67,5 +67,19 @@
       "log/capture provenance"
     ],
     "limits": "Synthetic profile ranks candidates only; cannot certify fight or Ally."
+  },
+  "target_species": "mudsnout",
+  "target_scope": "Posed production CreatureBody and imported model; no encounter, AI or HP transactions. Not an earned gameplay path.",
+  "mastery_capture": {
+    "batch": "mastery",
+    "archetypes": 24,
+    "ranks": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "scope": "Authored library visual coverage only; no earned mastery claim."
   }
 }
