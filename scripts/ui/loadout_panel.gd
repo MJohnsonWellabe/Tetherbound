@@ -29,7 +29,7 @@ func _ready() -> void:
 	visible = false
 
 func open(station_key: String) -> bool:
-	if _open or _closing or INPUT_OWNER.current(get_tree()) != null \
+	if _open or _closing or not _pending_id.is_empty() or INPUT_OWNER.current(get_tree()) != null \
 			or not bool(_service.call("station_available", station_key)): return false
 	var game := get_node_or_null(^"/root/Game")
 	var party: RefCounted = game.get("party") if game != null else null
@@ -67,7 +67,11 @@ func _process(_delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not _open: return
 	if event.is_action_pressed("menu_cancel") or event.is_action_pressed("ui_cancel"):
-		if _pending_id.is_empty():
+		if not _pending_id.is_empty():
+			# Leaving hides the panel, not the already submitted host request.
+			# Retain its identity until completion; never invent a local rollback.
+			close()
+		else:
 			if not _slot.is_empty():
 				_slot = ""
 				_rebuild()
@@ -118,7 +122,7 @@ func _rebuild() -> void:
 	title.add_theme_font_size_override("font_size", TOKENS.FONT_TITLE)
 	layout.add_child(title)
 	var status := Label.new()
-	status.text = "Host pending…" if not _pending_id.is_empty() else _status
+	status.text = "Waiting for host… B leaves this screen." if not _pending_id.is_empty() else _status
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	layout.add_child(status)
 	var columns := HBoxContainer.new()
@@ -206,5 +210,13 @@ func _on_completed(edit_id: String, result: Dictionary) -> void:
 	if edit_id != _pending_id: return
 	_pending_id = ""
 	_slot = ""
-	_status = "Equipped and saved." if bool(result.get("ok", false)) else "Not equipped: " + str(result.get("reason", "refused"))
+	var reason := str(result.get("reason", "refused"))
+	var messages := {"station_missing": "The station is no longer here.",
+		"station_unavailable": "Return to the camp outside combat to change your loadout.",
+		"save_failed": "Couldn't save. Your loadout stayed the same.",
+		"owner_save_failed": "The host accepted the change, but your character could not save. Reconnect to recover it.",
+		"stale_revision": "Your loadout changed. Choose the move again.",
+		"admission_unavailable": "Loadouts aren't ready in this session yet.",
+		"station_cas_not_connected": "Loadouts aren't ready in this session yet."}
+	_status = "Equipped and saved." if bool(result.get("ok", false)) else str(messages.get(reason, "Couldn't equip that move. Your loadout stayed the same."))
 	if _open: _rebuild()

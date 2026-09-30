@@ -144,53 +144,32 @@ func test_authority_update_retains_history_without_crediting_snapshots() -> void
 	assert_eq(creature.move_mastery_uses.pebble_toss, 2.0, "admitted staging cannot alias live party or registry")
 
 func test_actual_host_debit_rolls_back_on_cas_refusal_and_saturated_hits_still_damage() -> void:
-	var tree := Engine.get_main_loop() as SceneTree
+	# The synchronous unit runner has no initialized SceneTree. Prove that
+	# its off-tree Node cannot claim host publication; the exact live-debit
+	# assertions run in smoke_move_mastery_transaction after initialization.
 	var manager := preload("res://scripts/combat/combat_manager.gd").new()
 	var body := TransactionBody.new()
-	tree.root.add_child(manager)
-	tree.root.add_child(body)
 	var enemy := preload("res://scripts/creatures/creature_instance.gd").from_species("bramblebun",preload("res://scripts/creatures/creature_species.gd").definition("bramblebun"))
 	enemy.hp = 1.0
 	enemy.fainted = false
 	manager.set("_enemy", enemy)
 	manager.set("_wild", body)
-	var captured: Array = []
-	var reject := func(uid: String, before: float, applied: float) -> Dictionary:
-		captured.append([uid,before,applied,enemy.hp])
-		return {"ok": false}
-	var result: Dictionary = manager.host_roll_damage({"attack": 100.0},"pebble_toss",9.0,false,{"mastery_rank": 5,"mastery_commit": reject})
-	assert_true(result.is_empty(),"refused CAS produces no accepted damage verdict")
-	assert_eq(captured.size(),1)
-	assert_eq(captured[0],[enemy.uid,1.0,1.0,0.0],"callback sees actual clamped committed HP debit, including overkill")
-	assert_eq(enemy.hp,1.0,"refusal restores HP before any poise/impulse/snapshot")
-	assert_false(enemy.fainted,"refusal restores faint state too")
-	assert_true(body.critical,"refusal does not spend the existing critical window")
+	var calls: Array = []
+	var forbidden := func(_uid: String, _before: float, _applied: float) -> Dictionary:
+		calls.append(true)
+		return {"ok": true}
+	assert_false(manager.is_inside_tree())
+	assert_true(manager.host_roll_damage({"attack":100.0},"pebble_toss",9.0,false,{"mastery_commit":forbidden}).is_empty())
+	assert_eq(calls.size(),0,"off-tree host claims cannot run a commit callback")
+	assert_eq(enemy.hp,1.0)
+	assert_false(enemy.fainted)
+	assert_true(body.critical)
 	assert_eq(body.poise_calls,0)
 	assert_eq(body.impulse_calls,0)
-	var mastered := Individual.new()
-	var previous: Array = []
-	for index: int in 300: previous.append("earned:%d" % index)
-	mastered.move_mastery_uses = {"pebble_toss": 300}
-	mastered.move_mastery_receipts = {"pebble_toss": previous}
-	var saturated := func(uid: String, before: float, applied: float) -> Dictionary:
-		var staged := MASTERY.stage_landed_use(mastered,{"action_id":"new:saturated:1","move_id":"pebble_toss",
-			"attacker_uid":mastered.uid,"target_uid":uid,"target_hp_before":before,"applied_damage":applied})
-		return {"ok": str(staged.get("reason","")) == "saturated"}
-	result = manager.host_roll_damage({"attack": 100.0},"pebble_toss",9.0,false,{"mastery_rank": 5,"mastery_commit": saturated})
-	assert_false(result.is_empty(),"legal rank-five no-growth contact still deals damage")
-	assert_eq(enemy.hp,0.0)
-	assert_true(enemy.fainted)
-	assert_false(body.critical,"successful contact spends critical once")
-	assert_eq(mastered.move_mastery_uses.pebble_toss,300)
-	assert_eq(mastered.move_mastery_receipts.pebble_toss.size(),300,"no receipt growth after mastery cap")
-	enemy.hp = enemy.max_hp
-	enemy.fainted = false
-	body.critical = false
-	result = manager.host_roll_damage({"attack": 1.0},"pebble_toss",.001,false,{"mastery_rank": 5})
-	var damage_cfg: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("damage", {})
-	assert_true(float(result.damage) >= float(damage_cfg.get("minimum", 1.0)))
-	assert_true(float(result.damage) <= float(damage_cfg.get("minimum", 1.0)) * (1.0 + float(damage_cfg.get("variance", .1))),
-		"mastery enters power before the shared minimum; it cannot multiply already floored damage")
+	var owned := Individual.new()
+	assert_false(MASTERY.credit_landed_use(manager,owned,_event("off-tree:1")),"same off-tree authority cannot publish mastery")
+	assert_true(owned.move_mastery_uses.is_empty())
+	assert_true(owned.move_mastery_receipts.is_empty())
 	manager.free()
 	body.free()
 

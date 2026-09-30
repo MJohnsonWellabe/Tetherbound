@@ -1,0 +1,18 @@
+{
+  "source": "6a2c690135ec45467b07933c4c999869c36c153e",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--verbose",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-combat",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_move_mastery.gd"
+  ],
+  "scope": "Same nine methods only; verbose cleanup diagnostic after plain cache changed no shutdown outcome",
+  "native_exit": 0,
+  "elapsed_seconds": 4.297000000020489,
+  "raw_sha256": "b73fb6c2304802eb884718047f2b8ec156163ec8aba99b43854960c9b420c610"
+}
