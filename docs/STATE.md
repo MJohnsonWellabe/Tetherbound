@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 103 of 280:** original 95/101, redesign 8/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 104 of 280:** original 95/101, redesign 9/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -29,11 +29,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | F17#0 main; six rows open. F18#0 strict candidate MET, opening native0/logic10/67/0; dependency hold. Hall circuit9c69 active. |
+| `tb/hub` | F17, F18 | #0/#2 main380e46; #1 DAY NO/NIGHT NO. a4b Hall/canopy source WIP; F18 dependency hold, one registry/CAS draft. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | da308: typed save/mastery source WIP. Native9-pair zero-overlap/control PASS; blind narrow PASS/full craft open. Label red retained. |
-| `tb/vfx` | F25, F35 | 47e r7 unrendered. R6 native0/12cases/36PNG; blind identities PASS/full craft FAIL/mastery partial. Flag off; all F25 open. |
-| `tb/lookdev` | F26 | #1/#2 main. #477 fix landed; Medium506/High481 and Cloudreach3 presets native0, 8/12routes. Reds retained; visual/device/Ally open. |
+| `tb/combat` | F21–F24 | 130d host-debit aborted red/d7 initialized smoke source; prior7/700/0 valid. Camera narrow PASS/full craft open; CAS/ACK drafts. |
+| `tb/vfx` | F25, F35 | R7 native12/36/0, fullcraft FAIL/flag off. R8 native12/36/0; fresh blind unresolved; all F25 open. |
+| `tb/lookdev` | F26 | #1/#2 main; Stormwood3 native0/current11/12. MeadowLow dialogue-hold red; d5e fixture fix source PASS/Low running. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
