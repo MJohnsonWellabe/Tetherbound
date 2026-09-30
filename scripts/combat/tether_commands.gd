@@ -88,7 +88,8 @@ static func empty_state(encounter_id: String, character_id: String, admitted_tie
 ## generation, admitted owned UIDs and real legal-action/item/target readers.
 ## This is a detached proposal only: no bag debit, HP, pose, scene, callback,
 ## save or live meter write occurs. External transaction failure discards it.
-static func stage(state: Dictionary, intent: Dictionary, host: Dictionary) -> Dictionary:
+static func stage(state: Dictionary, intent: Dictionary, host: Dictionary,
+		authority: RefCounted = null) -> Dictionary:
 	var cfg := config()
 	if not valid_config(cfg) or state.is_empty(): return _refuse("invalid_config")
 	if intent.size() != 4 or not intent.get("encounter_id") is String \
@@ -100,7 +101,7 @@ static func stage(state: Dictionary, intent: Dictionary, host: Dictionary) -> Di
 		or not _whole(state.get("rally_until_ms"), 0, 9007199254740991): return _refuse("invalid_state")
 	if intent.encounter_id != state.get("encounter_id") or host.get("encounter_id") != intent.encounter_id \
 		or host.get("character_id") != state.get("character_id") \
-		or host.get("generation") != intent.generation or host.get("phase") != "active" \
+		or typeof(host.get("generation")) != TYPE_INT or host.generation != intent.generation or host.get("phase") != "active" \
 		or host.get("participant") != true: return _refuse("wrong_scope")
 	var uid: Variant = host.get("active_uid")
 	var owned: Variant = host.get("owned_uids")
@@ -109,21 +110,35 @@ static func stage(state: Dictionary, intent: Dictionary, host: Dictionary) -> Di
 		or not _whole(host.get("now_ms"), 0, 9007199254740991): return _refuse("invalid_actor")
 	var command := str(intent.command_id)
 	if command not in ["rally", "item_throw", "tag_switch", "snare"]: return _refuse("unknown_command")
+	# Resolve the existing canonical actor/participant anchor, not a claimed
+	# tier in state/context. No Script instance can arrive through an RPC.
+	if authority == null or authority.get_script() == null \
+		or authority.get_script().resource_path != "res://scripts/net/encounter_host.gd" \
+		or typeof(host.get("peer_id")) != TYPE_INT or int(host.peer_id) <= 0:
+		return _refuse("admission_not_ready")
+	var anchor: Dictionary = authority.call("command_gear_anchor", str(intent.encounter_id),
+		int(host.peer_id), str(state.character_id), str(uid), int(intent.generation))
+	if anchor.is_empty(): return _refuse("admission_not_ready")
+	if not CHECK._number(state.get("meter"), 0.0, float(cfg.meter.max)) \
+		or not _whole(state.get("revision"), 0, 2147483646) \
+		or not state.get("gear") is Dictionary: return _refuse("invalid_state")
+	var gear: Dictionary = state.gear
+	if not _whole(anchor.get("tier"), 1, 4) or anchor != gear_profile(int(anchor.tier)) \
+		or gear != anchor: return _refuse("invalid_gear")
 	var receipts: Dictionary = state.get("receipts", {})
 	var key := "%d:%d" % [int(intent.generation), int(intent.sequence)]
-	var prior: Dictionary = receipts.get(key, {})
+	var raw_prior: Variant = receipts.get(key, {})
+	if not raw_prior is Dictionary: return _refuse("invalid_state")
+	var prior: Dictionary = raw_prior
 	if not prior.is_empty():
+		if not prior.get("intent") is Dictionary or not prior.get("effect") is Dictionary \
+			or not CHECK._identity(prior.get("source_uid")): return _refuse("invalid_state")
 		if prior.intent != intent or prior.source_uid != uid: return _refuse("receipt_conflict")
 		return {"ok": true, "duplicate": true, "receipt": prior.duplicate(true)}
 	if not _whole(state.get("last_sequence"), 0, 2147483647) \
 		or int(intent.sequence) <= int(state.last_sequence): return _refuse("replayed_sequence")
 	if receipts.size() >= int(cfg.receipt_limit_per_player): return _refuse("receipt_budget")
 	if host.get("command_allowed") != true: return _refuse("illegal_state")
-	if not CHECK._number(state.get("meter"), 0.0, float(cfg.meter.max)) \
-		or not _whole(state.get("revision"), 0, 2147483646) \
-		or not state.get("gear") is Dictionary: return _refuse("invalid_state")
-	var gear: Dictionary = state.gear
-	if not _whole(gear.get("tier"), 1, 4) or gear != gear_profile(int(gear.tier)): return _refuse("invalid_gear")
 	var cost := float(cfg[command].cost)
 	if float(state.meter) < cost: return _refuse("insufficient_meter")
 	var now := int(host.now_ms)
@@ -154,6 +169,12 @@ static func stage(state: Dictionary, intent: Dictionary, host: Dictionary) -> Di
 			"creature_strikes": [{"source_uid": str(uid), "source_kind": "creature", "power_multiplier": float(cfg.tag_switch.outgoing_power_multiplier)},
 				{"source_uid": incoming, "source_kind": "creature", "power_multiplier": float(cfg.tag_switch.incoming_power_multiplier)}]})
 	else:
+		var record: Dictionary = authority.call("record", str(intent.encounter_id))
+		var opponent: Variant = record.get("opponent")
+		if record.get("kind") != "wild" or not opponent is Dictionary \
+			or opponent.get("owner_npc") != "" or not CHECK._number(opponent.get("hp"), 0.001, 1000000000.0) \
+			or not opponent.get("card") is Dictionary \
+			or opponent.card.get("uid") != host.get("opponent_uid"): return _refuse("not_snareable")
 		if host.get("opponent_kind") != "wild" or host.get("opponent_owned") != false \
 			or host.get("snare_immune") != false or host.get("opponent_alive") != true \
 			or not CHECK._identity(host.get("opponent_uid")) or host.opponent_uid == uid: return _refuse("not_snareable")

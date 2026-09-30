@@ -1527,6 +1527,22 @@ func ultimate_meter(encounter_id: String, peer_id: int, creature_uid: String) ->
 	return float(participant.get("ultimate_state", {}).get("meters", {}).get(creature_uid, 0.0))
 
 
+## F24 read-only admission anchor in the existing participant row. No public
+## tier setter/remint door: the single validated Session admission transport
+## must supply command_admission once from owned equipped gear. That producer
+## is not wired yet, so live commands currently fail closed. A command/state
+## dictionary cannot replace this anchor, and actor switching keeps it.
+func command_gear_anchor(encounter_id: String, peer_id: int, character_id: String,
+		creature_uid: String, body_generation: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id, character_id)
+	var actor := actor_vitals(encounter_id, peer_id, creature_uid, body_generation)
+	if participant.is_empty() or actor.is_empty() or bool(actor.fainted): return {}
+	var raw: Variant = participant.get("command_admission")
+	if not raw is Dictionary or raw.get("character_id") != character_id \
+		or not raw.get("profile") is Dictionary: return {}
+	return (raw.profile as Dictionary).duplicate(true)
+
+
 ## Exact latest rows still awaiting durable handoff. Detached output permits
 ## teardown retry for disconnected owners, without trusting a new client HP.
 func pending_actor_vitals(encounter_id: String) -> Array:
@@ -1585,6 +1601,7 @@ static func presentation_snapshot(rec: Dictionary) -> Dictionary:
 	for participant: Dictionary in (out.get("participants", {}) as Dictionary).values():
 		participant.erase("actor_generation")
 		participant.erase("ultimate_state")
+		participant.erase("command_admission")
 		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
 			actor.erase("receipts")
 			actor.erase("body_instance_id")
