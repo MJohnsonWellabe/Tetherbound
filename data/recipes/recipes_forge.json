@@ -3,6 +3,18 @@
   "status": "authored_proposals_not_runtime_registered",
   "_comment": "F32#1 / HOMESTEAD §5.2: four canonical RD-33 refining outputs. This file is not loaded into the ordinary crafting catalogue yet. F31 owns the reachable Forge, personal attachment-tier validation and tap-start player path; foundation owns each unit's atomic material debit/output receipt. Provisional starting costs remain subject to F47's supply/solvency ledger.",
   "station": "forge",
+  "_comment_attachment_bootstrap": "F32/F31 source dependency correction: each tier attachment costs two of its own refined ingot, so raw-to-ingot refinement cannot require that same attachment. These four basic refining recipes require the actual built Forge and the actor's applicable personal learned/unlocked recipe eligibility. required_attachment_tier is explicitly zero; tier metadata stays 1–4. No previous-tier gate is invented. Gear, upgrades and all other station tier gates retain their owning contracts. This unregistered table grants guests no recipe, tier, blueprint or attachment rights.",
+  "authority_contract": {
+    "station_scope": "world",
+    "recipe_eligibility_scope": "character",
+    "inputs_and_outputs_scope": "character",
+    "requires_actual_built_station": true,
+    "recipe_eligibility": "Canonical host character recipe/unlock state where the owning recipe contract requires it; clients supply no learned flag or eligibility baseline.",
+    "transaction": "Each completed manual unit atomically debits canonical raw costs, grants one output and records one stable-character receipt at the actual host-world Forge, or changes nothing.",
+    "client_cost_day_tier_or_inventory_authoritative": false,
+    "grants_recipe_tier_blueprint_or_attachment_to_guest": false,
+    "registration": "Inactive source proposals only; F31/foundation own registration, station/character authentication and durable transaction composition."
+  },
   "manual_channel": {
     "seconds_per_unit": 1.5,
     "radius_m": 3.0,
@@ -23,7 +35,7 @@
       "name": "Rootiron Ingot",
       "station": "forge",
       "tier": 1,
-      "required_attachment_tier": 1,
+      "required_attachment_tier": 0,
       "cost": [
         { "id": "rootstone", "n": 2 },
         { "id": "ironwood", "n": 1 }
@@ -35,7 +47,7 @@
       "name": "Tidesteel Ingot",
       "station": "forge",
       "tier": 2,
-      "required_attachment_tier": 2,
+      "required_attachment_tier": 0,
       "cost": [
         { "id": "sluice_metal", "n": 2 },
         { "id": "reef_stone", "n": 1 }
@@ -47,7 +59,7 @@
       "name": "Skyglass Ingot",
       "station": "forge",
       "tier": 3,
-      "required_attachment_tier": 3,
+      "required_attachment_tier": 0,
       "cost": [
         { "id": "cliffglass_ore", "n": 2 },
         { "id": "windworn_heartwood", "n": 1 }
@@ -59,7 +71,7 @@
       "name": "Stormglass Plate",
       "station": "forge",
       "tier": 4,
-      "required_attachment_tier": 4,
+      "required_attachment_tier": 0,
       "cost": [
         { "id": "stormglass", "n": 2 },
         { "id": "thunderwood", "n": 1 }

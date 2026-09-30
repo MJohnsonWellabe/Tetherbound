@@ -1,0 +1,179 @@
+{
+  "method": "Source dependency graph only; no engine, simulation, gameplay, unit tests or CI run.",
+  "before_source_commit": "225e449dd25a5891b5563975e1bd3be64f258f0d",
+  "after_source_commit": "Commit containing this artifact and corrected inactive recipes_forge.json.",
+  "source_status": "Authored proposals remain not runtime registered.",
+  "scope_of_exception": "Only the four raw-to-ingot refining recipes. Gear/upgrades/other station tier gates and previous-relic personal attachment-blueprint rules are unchanged.",
+  "guest_eligibility": "Guest uses actual host world Forge context and own canonical character recipe eligibility/inventory; no recipe/tier/blueprint/attachment right is granted by refinement.",
+  "criteria_state": "All six F32 criteria OPEN/UNPROVED. Source graph correction is not actual Forge/player-path/authority proof.",
+  "recipes": {
+    "rootiron_ingot": {
+      "tier_metadata_before": 1,
+      "tier_metadata_after": 1,
+      "attachment": "Bellows",
+      "attachment_own_ingot_cost": 2,
+      "attachment_cost_source": "docs/design/HOMESTEAD.md section4 startingattachmentcost:8eachprimaryraw+2ownrefinedingot",
+      "before_required_attachment_tier": 1,
+      "before_cycle": [
+        "rootiron_ingot refinement requires Bellows",
+        "Bellows requires 2 rootiron_ingot"
+      ],
+      "after_required_attachment_tier": 0,
+      "after_refinement_requires": "Actual built Forge, canonical raws and applicable personal recipe/unlock eligibility; no own-attachment or invented previous-tier gate.",
+      "raw_cost_before": [
+        {
+          "id": "rootstone",
+          "n": 2
+        },
+        {
+          "id": "ironwood",
+          "n": 1
+        }
+      ],
+      "raw_cost_after": [
+        {
+          "id": "rootstone",
+          "n": 2
+        },
+        {
+          "id": "ironwood",
+          "n": 1
+        }
+      ],
+      "output_before": {
+        "id": "rootiron_ingot",
+        "n": 1
+      },
+      "output_after": {
+        "id": "rootiron_ingot",
+        "n": 1
+      }
+    },
+    "tidesteel_ingot": {
+      "tier_metadata_before": 2,
+      "tier_metadata_after": 2,
+      "attachment": "Tide quench tank",
+      "attachment_own_ingot_cost": 2,
+      "attachment_cost_source": "docs/design/HOMESTEAD.md section4 startingattachmentcost:8eachprimaryraw+2ownrefinedingot",
+      "before_required_attachment_tier": 2,
+      "before_cycle": [
+        "tidesteel_ingot refinement requires Tide quench tank",
+        "Tide quench tank requires 2 tidesteel_ingot"
+      ],
+      "after_required_attachment_tier": 0,
+      "after_refinement_requires": "Actual built Forge, canonical raws and applicable personal recipe/unlock eligibility; no own-attachment or invented previous-tier gate.",
+      "raw_cost_before": [
+        {
+          "id": "sluice_metal",
+          "n": 2
+        },
+        {
+          "id": "reef_stone",
+          "n": 1
+        }
+      ],
+      "raw_cost_after": [
+        {
+          "id": "sluice_metal",
+          "n": 2
+        },
+        {
+          "id": "reef_stone",
+          "n": 1
+        }
+      ],
+      "output_before": {
+        "id": "tidesteel_ingot",
+        "n": 1
+      },
+      "output_after": {
+        "id": "tidesteel_ingot",
+        "n": 1
+      }
+    },
+    "skyglass_ingot": {
+      "tier_metadata_before": 3,
+      "tier_metadata_after": 3,
+      "attachment": "Wind furnace",
+      "attachment_own_ingot_cost": 2,
+      "attachment_cost_source": "docs/design/HOMESTEAD.md section4 startingattachmentcost:8eachprimaryraw+2ownrefinedingot",
+      "before_required_attachment_tier": 3,
+      "before_cycle": [
+        "skyglass_ingot refinement requires Wind furnace",
+        "Wind furnace requires 2 skyglass_ingot"
+      ],
+      "after_required_attachment_tier": 0,
+      "after_refinement_requires": "Actual built Forge, canonical raws and applicable personal recipe/unlock eligibility; no own-attachment or invented previous-tier gate.",
+      "raw_cost_before": [
+        {
+          "id": "cliffglass_ore",
+          "n": 2
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 1
+        }
+      ],
+      "raw_cost_after": [
+        {
+          "id": "cliffglass_ore",
+          "n": 2
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 1
+        }
+      ],
+      "output_before": {
+        "id": "skyglass_ingot",
+        "n": 1
+      },
+      "output_after": {
+        "id": "skyglass_ingot",
+        "n": 1
+      }
+    },
+    "stormglass_plate": {
+      "tier_metadata_before": 4,
+      "tier_metadata_after": 4,
+      "attachment": "Storm coil",
+      "attachment_own_ingot_cost": 2,
+      "attachment_cost_source": "docs/design/HOMESTEAD.md section4 startingattachmentcost:8eachprimaryraw+2ownrefinedingot",
+      "before_required_attachment_tier": 4,
+      "before_cycle": [
+        "stormglass_plate refinement requires Storm coil",
+        "Storm coil requires 2 stormglass_plate"
+      ],
+      "after_required_attachment_tier": 0,
+      "after_refinement_requires": "Actual built Forge, canonical raws and applicable personal recipe/unlock eligibility; no own-attachment or invented previous-tier gate.",
+      "raw_cost_before": [
+        {
+          "id": "stormglass",
+          "n": 2
+        },
+        {
+          "id": "thunderwood",
+          "n": 1
+        }
+      ],
+      "raw_cost_after": [
+        {
+          "id": "stormglass",
+          "n": 2
+        },
+        {
+          "id": "thunderwood",
+          "n": 1
+        }
+      ],
+      "output_before": {
+        "id": "stormglass_plate",
+        "n": 1
+      },
+      "output_after": {
+        "id": "stormglass_plate",
+        "n": 1
+      }
+    }
+  }
+}
